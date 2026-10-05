@@ -232,20 +232,43 @@ def slot_notional(a: dict) -> float:
     return min(per_slot, equity * a["max_position_notional_pct"] / 100)
 
 
+def is_extended(ctx: DayContext, cfg: dict) -> bool:
+    """Extended tier: liquid enough to scan, too thin to trade on an ordinary day."""
+    adv = ctx.avg_dollar_volume
+    return not np.isnan(adv) and adv < cfg["universe"]["min_avg_dollar_volume"]
+
+
+def universe_ok(ctx: DayContext, cfg: dict) -> bool:
+    """Prior-day filters shared by backtest and paper runner (no look-ahead)."""
+    u, c = cfg["universe"], cfg["costs"]
+    adv = ctx.avg_dollar_volume
+    floor = min(u.get("extended_min_avg_dollar_volume", u["min_avg_dollar_volume"]), u["min_avg_dollar_volume"])
+    return (
+        ctx.prev_close >= c["min_price"]
+        and ctx.atr / ctx.prev_close * 100 >= u.get("min_atr_pct", 0.0)
+        and (np.isnan(adv) or adv >= floor)
+    )
+
+
+def in_play_filter(ctxs: list, orv: list, cfg: dict) -> tuple[list, list]:
+    """Extended-tier names stay only on days they are in play (opening rvol >= extended_min_rvol)."""
+    need = cfg["universe"].get("extended_min_rvol", 0.0)
+    keep = [i for i, c in enumerate(ctxs)
+            if not is_extended(c, cfg) or (not np.isnan(orv[i]) and orv[i] >= need)]
+    return [ctxs[i] for i in keep], [orv[i] for i in keep]
+
+
 class Backtester:
     def __init__(self, strategies: list[Strategy], cfg: dict):
         self.strategies = strategies
         self.cfg = cfg
         self.costs = Costs.from_cfg(cfg["costs"])
+        self.costs_ext = Costs.from_cfg({**cfg["costs"], "slippage_per_share": cfg["costs"].get(
+            "extended_slippage_per_share", cfg["costs"].get("slippage_per_share", 0.01))})
         self.flatten = t(cfg["session"]["flatten_by"])
 
     def _universe_ok(self, ctx: DayContext) -> bool:
-        u, c = self.cfg["universe"], self.cfg["costs"]
-        return (
-            ctx.prev_close >= c["min_price"]
-            and ctx.atr >= u["min_atr"]
-            and (np.isnan(ctx.avg_dollar_volume) or ctx.avg_dollar_volume >= u["min_avg_dollar_volume"])
-        )
+        return universe_ok(ctx, self.cfg)
 
     def run(self, data: dict[str, pd.DataFrame], progress: bool = False) -> pd.DataFrame:
         hist = {s: SymbolHistory(s, df) for s, df in data.items() if not df.empty}
@@ -258,6 +281,7 @@ class Backtester:
             for c in ctxs:
                 rv = c.rvol()
                 orv.append(rv.iloc[min(4, len(rv) - 1)] if len(rv) else np.nan)
+            ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
             order = np.argsort(-np.nan_to_num(np.array(orv, dtype=float), nan=-1))
             for rank, i in enumerate(order, 1):
                 ctxs[i].rank_rvol = rank if not np.isnan(orv[i]) else None
@@ -266,7 +290,7 @@ class Backtester:
                     if not strat.eligible(c):
                         continue
                     for sig in strat.signals(c):
-                        tr = simulate(sig, c.bars, self.flatten, self.costs)
+                        tr = simulate(sig, c.bars, self.flatten, self.costs_ext if is_extended(c, self.cfg) else self.costs)
                         if tr:
                             candidates.append(tr)
             if progress and n % 20 == 0:

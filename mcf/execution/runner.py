@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-from ..backtest.engine import SymbolHistory
+from ..backtest.engine import SymbolHistory, in_play_filter, universe_ok
 from ..data.alpaca_data import fetch_bars
 from ..journal import Journal
 from ..strategies.base import Strategy, t
@@ -59,9 +59,10 @@ class PaperRunner:
             # append today's bars to history so the context gets prior-day stats for `today`
             h2 = SymbolHistory(sym, pd.concat([h.intraday, bars]))
             ctx = h2.context(today)
-            if ctx is not None:
+            if ctx is not None and universe_ok(ctx, self.cfg):
                 ctxs.append(ctx)
         orv = [c.rvol().iloc[min(4, len(c.bars) - 1)] for c in ctxs]
+        ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
         for rank, i in enumerate(np.argsort(-np.nan_to_num(np.array(orv, float), nan=-1)), 1):
             ctxs[i].rank_rvol = rank
         return ctxs

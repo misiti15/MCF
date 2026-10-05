@@ -23,7 +23,8 @@ class OpeningRangeBreakout(Strategy):
     name = "orb"
 
     def eligible(self, ctx):
-        return ctx.rank_rvol is not None and ctx.rank_rvol <= self.params.get("top_n", 20)
+        return (ctx.rank_rvol is not None and ctx.rank_rvol <= self.params.get("top_n", 20)
+                and ctx.atr >= self.params.get("min_atr", 0.0))
 
     def generate(self, ctx: DayContext):
         hi, lo, last = F.opening_range(ctx.bars, self.range_minutes)

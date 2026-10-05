@@ -20,6 +20,9 @@ gates:
   min_expectancy_r: 0.0         # strictly above
   min_trades: 200
   min_profit_factor: 1.2
+  # Sustainability (owner 2026-10-05: win rate must come with *sustainable* profit):
+  min_months: 6                  # out-of-sample span long enough to see more than one regime
+  min_positive_month_rate: 0.67  # net-positive R in at least 2 of every 3 months
 
 exits:
   # Scale-out: bank part of the position at +scale_out_r R, move the rest to breakeven.
@@ -35,6 +38,7 @@ costs:
   slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
   slippage_per_share: 0.01       # per side, against us — published ORB edges die at ~2c/share
   stop_slippage_per_share: 0.02  # extra adverse fill on stop exits
+  extended_slippage_per_share: 0.03  # extended-tier names: wider spreads, so 3x the core assumption
   commission_per_share: 0.0      # Alpaca equities are commission-free
   min_price: 5.0                 # ignore sub-$5 names by default (spreads/halts)
 
@@ -45,15 +49,19 @@ session:
   flatten_by: "15:55"            # all intraday positions closed by this time
 
 universe:
-  max_symbols: 3500                  # top N by consolidated ADV (owner: scan ~3,500+)
-  min_avg_dollar_volume: 10000000    # 20d avg daily $ volume, consolidated (SIP) — not IEX
-  min_atr: 0.50                     # daily ATR(14) in dollars
+  # Owner 2026-10-05: no fixed count — include every name with tradeable liquidity and movement.
+  max_symbols: null                  # no cap; the filters below define the universe
+  min_avg_dollar_volume: 5000000     # core tier: 20d avg daily $ volume, consolidated (SIP) — not IEX
+  extended_min_avg_dollar_volume: 1000000  # extended tier: scanned, traded only when in play
+  extended_min_rvol: 3.0             # extended tier needs opening rvol >= 3x (its volume then ~= core)
+  min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
 
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
   orb:
     enabled: true
+    min_atr: 0.50                 # daily ATR(14) in dollars (published ORB study filter)
     range_minutes: 5
     stop_atr_frac: 0.10
     target_r: null                # null = hold to flatten time (as in the published ORB study)

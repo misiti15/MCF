@@ -10,11 +10,14 @@
 ## Phase 0.5: MarcoFlow lessons and owner decisions ✅ (2026-10-05)
 - [x] MarcoFlow history in SQLite, deep-dive analysis (`docs/MARCOFLOW_ANALYSIS.md`), and a reference source on the dashboard
 - [x] Decisions log (`docs/DECISIONS.md`), data/broker choice (`docs/DATA_AND_BROKER.md`)
-- [x] Scale-out exits, 100-slot sizing, long/short with an easy-to-borrow check, promotion gates (win ≥55% AND expectancy >0)
+- [x] Scale-out exits, 100-slot sizing, long/short with an easy-to-borrow check, promotion gates (now success ≥65%, win ≥65%, expectancy >0, PF ≥1.2)
 - [x] Daily Brief email (`mcf brief --send`); hosted dashboard (private Claude artifact)
 
 ## Phase 1: Real data and validation (next)
-- [ ] Alpaca paper keys in `.env`; network access to `*.alpaca.markets`; SIP plan ($99) before paper results are judged
+- [x] Alpaca paper keys verified (2026-10-05). They are MarcoFlow's account; its 126 leftover positions were closed (`reports/marcoflow_closeout/`). A separate MCF paper account is still recommended.
+- [ ] SIP plan ($99, Algo Trader Plus): owner approved 2026-10-05. After subscribing, set `data.feed: sip` and `ALPACA_DATA_FEED=sip`.
+- [x] Universe without a fixed cap: 4,947 symbols (3,755 core ≥ $5M ADV, 1,192 extended $1–5M traded only when in play), ATR ≥ 1% of price
+- [x] Sustainability gate: ≥ 6 months out of sample and net-positive R in ≥ 2/3 of months, on top of the win-rate / expectancy / profit-factor gates
 - [ ] Download 2–5 years of 1-minute bars for the liquid universe. Storage is roughly 1–2 GB of parquet per year for about 3,000 names.
 - [ ] Import MarcoFlow trade history and data; compare its setups and results to ours
 - [ ] Walk-forward validation: parameters fit on rolling in-sample windows, reported only out of sample
@@ -22,6 +25,7 @@
 - [ ] Parallel backtest by date (multiprocessing) for the full universe
 - [ ] Full noise-band implementation: trailing stop and re-entries
 - [ ] Overnight→intraday cross-sectional reversal setup
+- [ ] MarcoFlow-family setups rebuilt as explicit rules and run through the same gates (see `docs/RESEARCH.md` §5)
 
 ## Phase 2: Paper trading at scale
 - [ ] Websocket streaming bars (SIP `bars` wildcard `*`) instead of polling, for 3,000+ symbols

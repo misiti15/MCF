@@ -98,7 +98,7 @@ def cmd_universe(args, cfg):
     from .data.universe import build_universe
 
     df = build_universe(cfg, args.out or "data/universe.csv")
-    print(f"{len(df)} symbols; ADV ${df.adv.min() / 1e6:.0f}M..${df.adv.max() / 1e9:.1f}B; "
+    print(f"{len(df)} symbols ({df.tier.value_counts().to_dict()}); ADV ${df.adv.min() / 1e6:.0f}M..${df.adv.max() / 1e9:.1f}B; "
           f"shortable+ETB {int((df.shortable & df.easy_to_borrow).sum())}")
 
 

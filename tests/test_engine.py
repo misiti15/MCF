@@ -124,3 +124,32 @@ def test_success_is_first_touch_independent_of_exit():
     assert tr.success == 1
     tr = simulate(Signal("X", "t", 1, 0, stop=99.0), day_bars([100, 100, 99.5, 98.9, 101.5]), FLAT, 0.0)
     assert tr.success == 0
+
+
+def test_gate_requires_sustained_months():
+    from mcf.analytics.metrics import gate_check
+
+    gates = {"min_months": 3, "min_positive_month_rate": 0.67}
+    # one big month carries three losing ones: totals look fine, sustainability fails
+    dates = ["2026-01-05"] * 10 + ["2026-02-05", "2026-03-05", "2026-04-05"]
+    r = [3.0] * 10 + [-1.0] * 3
+    tr = pd.DataFrame({"date": dates, "r_multiple": r, "pnl": [x * 100 for x in r]})
+    s = summarize(tr)
+    assert s["months"] == 4 and s["positive_month_rate"] == 0.25
+    ok, fails = gate_check(s, gates)
+    assert not ok and any("positive months" in f for f in fails)
+
+
+def test_extended_tier_only_when_in_play():
+    from types import SimpleNamespace
+
+    from mcf.backtest.engine import in_play_filter, universe_ok
+
+    cfg = load_config()
+    u = cfg["universe"]
+    mk = lambda adv, atr=1.0: SimpleNamespace(prev_close=20.0, atr=atr, avg_dollar_volume=adv)
+    core, ext, thin = mk(u["min_avg_dollar_volume"] * 2), mk(u["extended_min_avg_dollar_volume"] * 2), mk(1.0)
+    assert universe_ok(core, cfg) and universe_ok(ext, cfg) and not universe_ok(thin, cfg)
+    assert not universe_ok(mk(core.avg_dollar_volume, atr=0.05), cfg)  # T-bill-like: no movement
+    ctxs, orv = in_play_filter([core, ext, ext], [0.5, 1.0, u["extended_min_rvol"]], cfg)
+    assert ctxs == [core, ext] and orv == [0.5, u["extended_min_rvol"]]
