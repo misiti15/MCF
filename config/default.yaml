@@ -1,0 +1,83 @@
+# MCF default configuration. Copy to config/local.yaml to override (local.yaml is merged on top).
+
+account:
+  starting_equity: 100000        # paper account size used for sizing in backtests
+  risk_per_trade_pct: 0.25       # % of equity risked per trade (entry -> stop distance)
+  max_position_notional_pct: 20  # cap any single position at this % of equity
+  max_concurrent_positions: 20
+  max_positions_per_strategy: 10  # per-setup sleeve so one setup can't starve the others
+  max_daily_loss_r: 6            # stop opening new trades after losing this many R in a day
+  max_trades_per_day: 30
+
+costs:
+  slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
+  slippage_per_share: 0.01       # per side, against us — published ORB edges die at ~2c/share
+  stop_slippage_per_share: 0.02  # extra adverse fill on stop exits
+  commission_per_share: 0.0      # Alpaca equities are commission-free
+  min_price: 5.0                 # ignore sub-$5 names by default (spreads/halts)
+
+session:
+  timezone: America/New_York
+  open: "09:30"
+  close: "16:00"
+  flatten_by: "15:55"            # all intraday positions closed by this time
+
+universe:
+  min_avg_dollar_volume: 20000000   # 20d average daily $ volume
+  min_atr: 0.50                     # daily ATR(14) in dollars
+  stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
+
+strategies:
+  # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
+  orb:
+    enabled: true
+    range_minutes: 5
+    stop_atr_frac: 0.10
+    target_r: null                # null = hold to flatten time (as in the published ORB study)
+    min_rvol: 1.0
+  vwap_reclaim:
+    enabled: false               # experimental
+    earliest: "10:00"
+    latest: "14:30"
+    lookback_bars: 15
+    min_rvol: 1.5
+    target_r: 2.0
+  gap_and_go:
+    enabled: false               # experimental: vendor-only evidence
+    min_gap_pct: 4.0
+    range_minutes: 5
+    min_rvol: 2.0
+    target_r: 2.0
+    exit_by: "11:30"
+  gap_fade:
+    enabled: false               # experimental
+    min_gap_pct: 1.0
+    max_gap_pct: 3.0
+    range_minutes: 15
+    max_rvol: 1.5
+    exit_by: "12:00"
+  intraday_momentum:
+    enabled: true
+    symbols: [SPY, QQQ, IWM, DIA]
+    signal_time: "10:00"
+    entry_time: "15:30"
+    min_abs_return_pct: 0.25
+    stop_atr_frac: 0.25
+  noise_band_momentum:
+    enabled: true
+    symbols: [SPY, QQQ]
+    band_mult: 1.0
+    first_check: "10:00"
+    last_check: "15:30"
+  vwap_reversion:
+    enabled: false               # experimental: weak evidence, negative skew (see docs/RESEARCH.md)
+    band_std: 2.5
+    earliest: "10:00"
+    latest: "15:00"
+    max_rvol: 3.0
+    stop_std: 1.0
+
+data:
+  cache_dir: data/cache
+  journal_path: data/journal.db
+  feed: iex                      # iex (free) | sip (paid, full tape)

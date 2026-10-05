@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCF Trading Dashboard</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --pos: #2a78d6; --neg: #e34948; --s1: #2a78d6;
+  --good: #006300; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; justify-content: space-between; }
+h1 { font-size: 20px; margin: 0; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+.sub { color: var(--ink-2); font-size: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); max-width: 100%; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.tile, .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.tile .k { color: var(--ink-2); font-size: 12px; }
+.tile .v { font-size: 24px; font-weight: 600; margin-top: 2px; }
+.tile .n { color: var(--muted); font-size: 12px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.card { min-width: 0; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 13px; }
+th, td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th:first-child, td:first-child, .l { text-align: left; }
+th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
+.up { color: var(--good); } .down { color: var(--bad); }
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12); display: none; z-index: 10; white-space: nowrap; }
+.note { color: var(--ink-2); font-size: 12px; margin-top: 8px; }
+.empty { color: var(--muted); padding: 30px; text-align: center; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>MCF Intraday Trading Dashboard</h1>
+      <div class="sub" id="gen"></div>
+    </div>
+  </header>
+  <div class="controls">
+    <select id="src" aria-label="Data source"></select>
+    <select id="strat" aria-label="Setup filter"></select>
+    <select id="side" aria-label="Side filter">
+      <option value="all">Long &amp; short</option><option value="1">Long only</option><option value="-1">Short only</option>
+    </select>
+    <select id="range" aria-label="Date range">
+      <option value="0">All dates</option><option value="5">Last 5 sessions</option>
+      <option value="20">Last 20 sessions</option><option value="60">Last 60 sessions</option>
+    </select>
+  </div>
+  <div id="body"></div>
+</main>
+<div id="tip"></div>
+<script>
+const DATA = /*__DATA__*/null;
+const F = {sym:0, strat:1, side:2, date:3, et:4, xt:5, entry:6, exit:7, reason:8, r:9, pnl:10, sh:11};
+const $ = s => document.querySelector(s);
+const fmt$ = v => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
+const pct = v => isFinite(v) ? (v * 100).toFixed(1) + "%" : "–";
+const r2 = v => isFinite(v) ? v.toFixed(2) : "–";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tip = $("#tip");
+function showTip(e, html) { tip.innerHTML = html; tip.style.display = "block";
+  const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8); tip.style.left = x + "px"; tip.style.top = (e.clientY + 14) + "px"; }
+function hideTip() { tip.style.display = "none"; }
+
+function stats(ts) {
+  const n = ts.length; if (!n) return {n:0};
+  const rs = ts.map(t => t[F.r]); const wins = rs.filter(r => r > 0), losses = rs.filter(r => r <= 0);
+  const gw = ts.filter(t => t[F.pnl] > 0).reduce((a,t) => a + t[F.pnl], 0);
+  const gl = -ts.filter(t => t[F.pnl] <= 0).reduce((a,t) => a + t[F.pnl], 0);
+  const avgW = wins.length ? wins.reduce((a,b)=>a+b,0)/wins.length : 0;
+  const avgL = losses.length ? losses.reduce((a,b)=>a+b,0)/losses.length : 0;
+  const days = {}; ts.forEach(t => days[t[F.date]] = (days[t[F.date]] || 0) + t[F.pnl]);
+  let eq = 0, peak = 0, dd = 0; Object.keys(days).sort().forEach(d => { eq += days[d]; peak = Math.max(peak, eq); dd = Math.min(dd, eq - peak); });
+  const dv = Object.values(days);
+  return { n, win: wins.length / n, exp: rs.reduce((a,b)=>a+b,0)/n, totR: rs.reduce((a,b)=>a+b,0),
+    pf: gl > 0 ? gw / gl : Infinity, pnl: gw - gl, dd, avgW, avgL,
+    be: (wins.length && losses.length) ? Math.abs(avgL) / (avgW + Math.abs(avgL)) : NaN,
+    green: dv.filter(v => v > 0).length / dv.length, days: dv.length };
+}
+
+function tile(k, v, n, cls="") { return `<div class="tile"><div class="k">${k}</div><div class="v ${cls}">${v}</div><div class="n">${n||""}</div></div>`; }
+
+function lineChart(points, opts={}) {
+  // points: [{x: label, y: value}]
+  const W = 560, H = 220, L = 56, R = 12, T = 10, B = 26;
+  if (!points.length) return '<div class="empty">No data</div>';
+  const ys = points.map(p => p.y); let lo = Math.min(0, ...ys), hi = Math.max(0, ...ys); if (hi === lo) hi = lo + 1;
+  const X = i => L + (W - L - R) * (points.length === 1 ? 0.5 : i / (points.length - 1));
+  const Y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  const ticks = niceTicks(lo, hi, 4);
+  let g = ticks.map(v => `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${opts.fmt ? opts.fmt(v) : v}</text>`).join("");
+  g += `<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--axis)"/>`;
+  const step = Math.max(1, Math.ceil(points.length / 6));
+  points.forEach((p, i) => { if (i % step === 0) g += `<text x="${X(i)}" y="${H-8}" text-anchor="middle">${esc(p.x)}</text>`; });
+  const d = points.map((p, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(p.y).toFixed(1)}`).join("");
+  const id = "c" + Math.random().toString(36).slice(2);
+  setTimeout(() => {
+    const svg = document.getElementById(id); if (!svg) return;
+    const cross = svg.querySelector(".cross"), dot = svg.querySelector(".dot");
+    svg.addEventListener("mousemove", e => {
+      const b = svg.getBoundingClientRect(); const sx = (e.clientX - b.left) / b.width * W;
+      const i = Math.max(0, Math.min(points.length - 1, Math.round((sx - L) / (W - L - R) * (points.length - 1))));
+      cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.style.display = "";
+      dot.setAttribute("cx", X(i)); dot.setAttribute("cy", Y(points[i].y)); dot.style.display = "";
+      showTip(e, `<b>${esc(points[i].x)}</b><br>${opts.label || "Value"}: ${opts.fmt ? opts.fmt(points[i].y) : points[i].y}` + (points[i].extra || ""));
+    });
+    svg.addEventListener("mouseleave", () => { hideTip(); cross.style.display = "none"; dot.style.display = "none"; });
+  });
+  return `<svg id="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.label||"chart"}">${g}
+    <path d="${d}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>
+    <line class="cross" y1="${T}" y2="${H-B}" stroke="var(--axis)" style="display:none"/>
+    <circle class="dot" r="4" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" style="display:none"/></svg>`;
+}
+
+function barChart(items, opts={}) {
+  // items: [{x, y, tip}] ; diverging colour by sign
+  const W = 560, H = 220, L = 56, R = 12, T = 10, B = 26;
+  if (!items.length) return '<div class="empty">No data</div>';
+  const ys = items.map(p => p.y); let lo = Math.min(0, ...ys), hi = Math.max(0, ...ys); if (hi === lo) hi = lo + 1;
+  const Y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  const bw = (W - L - R) / items.length, gap = Math.min(2, bw * 0.2);
+  const ticks = niceTicks(lo, hi, 4);
+  let g = ticks.map(v => `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${opts.fmt ? opts.fmt(v) : v}</text>`).join("");
+  const step = Math.max(1, Math.ceil(items.length / 8));
+  items.forEach((p, i) => {
+    const x = L + i * bw + gap / 2, w = Math.max(1, bw - gap), y0 = Y(0), y1 = Y(p.y);
+    const top = Math.min(y0, y1), h = Math.max(1, Math.abs(y1 - y0)), rr = Math.min(4, w / 2, h);
+    // rounded data-end, square baseline end
+    const path = p.y >= 0
+      ? `M${x},${y0}V${top+rr}Q${x},${top} ${x+rr},${top}H${x+w-rr}Q${x+w},${top} ${x+w},${top+rr}V${y0}Z`
+      : `M${x},${y0}V${top+h-rr}Q${x},${top+h} ${x+rr},${top+h}H${x+w-rr}Q${x+w},${top+h} ${x+w},${top+h-rr}V${y0}Z`;
+    g += `<path d="${path}" fill="${p.y >= 0 ? "var(--pos)" : "var(--neg)"}"/>`;
+    g += `<rect x="${L + i * bw}" y="${T}" width="${bw}" height="${H-T-B}" fill="transparent" data-i="${i}"/>`;
+    if (i % step === 0) g += `<text x="${x + w/2}" y="${H-8}" text-anchor="middle">${esc(p.x)}</text>`;
+  });
+  g += `<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--axis)"/>`;
+  const id = "b" + Math.random().toString(36).slice(2);
+  setTimeout(() => {
+    const svg = document.getElementById(id); if (!svg) return;
+    svg.querySelectorAll("rect[data-i]").forEach(r => {
+      r.addEventListener("mousemove", e => showTip(e, items[+r.dataset.i].tip));
+      r.addEventListener("mouseleave", hideTip);
+    });
+  });
+  return `<svg id="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.label||"bar chart"}">${g}</svg>`;
+}
+
+function niceTicks(lo, hi, n) {
+  const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => span / s <= n) || mag * 10;
+  const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(10)); return out;
+}
+
+function groupTable(ts, keyFn, title, order) {
+  const groups = {}; ts.forEach(t => { const k = keyFn(t); (groups[k] = groups[k] || []).push(t); });
+  let keys = Object.keys(groups); keys = order ? order.filter(k => groups[k]) : keys.sort();
+  const rows = keys.map(k => { const s = stats(groups[k]); return `<tr><td>${esc(k)}</td><td>${s.n}</td><td>${pct(s.win)}</td>
+    <td>${pct(s.be)}</td><td class="${s.exp>0?"up":"down"}">${r2(s.exp)}</td><td>${r2(s.pf)}</td><td class="${s.pnl>0?"up":"down"}">${fmt$(s.pnl)}</td></tr>`; }).join("");
+  return `<div class="card"><h2>${title}</h2><div class="tablewrap"><table><thead><tr><th>${title.split(" by ")[1] || "Group"}</th><th>Trades</th>
+    <th>Win %</th><th title="Win rate needed to break even given avg win/loss size">B/E win</th><th>Exp. R</th><th>PF</th><th>P/L</th></tr></thead>
+    <tbody>${rows}</tbody></table></div></div>`;
+}
+
+function render() {
+  const src = DATA.sources[+$("#src").value]; const body = $("#body");
+  if (!src) { body.innerHTML = '<div class="card empty">No runs in the journal yet. Run <code>mcf backtest</code> or start paper trading.</div>'; return; }
+  let ts = src.trades;
+  const st = $("#strat").value, sd = $("#side").value, rg = +$("#range").value;
+  if (st !== "all") ts = ts.filter(t => t[F.strat] === st);
+  if (sd !== "all") ts = ts.filter(t => t[F.side] === +sd);
+  if (rg) { const ds = [...new Set(ts.map(t => t[F.date]))].sort().slice(-rg); const keep = new Set(ds); ts = ts.filter(t => keep.has(t[F.date])); }
+  const s = stats(ts);
+  if (!s.n) { body.innerHTML = '<div class="card empty">No trades match these filters.</div>'; return; }
+
+  const days = {}; ts.forEach(t => { const d = days[t[F.date]] = days[t[F.date]] || {pnl:0, n:0, w:0}; d.pnl += t[F.pnl]; d.n++; if (t[F.r] > 0) d.w++; });
+  const dk = Object.keys(days).sort(); let eq = 0;
+  const eqPts = dk.map(d => { eq += days[d].pnl; return {x: d.slice(5), y: eq, extra: `<br>Day P/L: ${fmt$(days[d].pnl)}<br>Trades: ${days[d].n}, win ${pct(days[d].w/days[d].n)}`}; });
+  const dayBars = dk.map(d => ({x: d.slice(5), y: days[d].pnl, tip: `<b>${d}</b><br>P/L ${fmt$(days[d].pnl)}<br>${days[d].n} trades · win ${pct(days[d].w/days[d].n)}`}));
+  // rolling 20-trade win rate vs breakeven: is the edge holding?
+  const roll = []; const N = Math.min(20, ts.length);
+  for (let i = N - 1; i < ts.length; i++) { const w = ts.slice(i - N + 1, i + 1); roll.push({x: ts[i][F.date].slice(5), y: w.reduce((a,t)=>a+t[F.r],0)/N}); }
+  const tod = {}; ts.forEach(t => { const [h, m] = t[F.et].split(":").map(Number); const k = `${String(h).padStart(2,"0")}:${m < 30 ? "00" : "30"}`; (tod[k] = tod[k] || []).push(t); });
+  const todBars = Object.keys(tod).sort().map(k => { const x = stats(tod[k]); return {x: k, y: x.exp, tip: `<b>${k} entries</b><br>Expectancy ${r2(x.exp)}R<br>${x.n} trades · win ${pct(x.win)}`}; });
+
+  const recent = ts.slice(-50).reverse().map(t => `<tr><td>${t[F.date]}</td><td class="l">${esc(t[F.sym])}</td><td class="l">${esc(t[F.strat])}</td><td class="l">${t[F.side] > 0 ? "Long" : "Short"}</td>
+    <td>${t[F.et]}</td><td>${t[F.xt]}</td><td>${t[F.entry].toFixed(2)}</td><td>${t[F.exit].toFixed(2)}</td><td class="l">${esc(t[F.reason])}</td>
+    <td class="${t[F.r]>0?"up":"down"}">${r2(t[F.r])}</td><td class="${t[F.pnl]>0?"up":"down"}">${fmt$(t[F.pnl])}</td></tr>`).join("");
+
+  body.innerHTML = `
+  <div class="tiles">
+    ${tile("Net P/L", fmt$(s.pnl), `${s.days} sessions`, s.pnl >= 0 ? "up" : "down")}
+    ${tile("Trades", s.n.toLocaleString(), `${(s.n / s.days).toFixed(1)} / day`)}
+    ${tile("Win rate", pct(s.win), `break-even ${pct(s.be)} · goal 90%`)}
+    ${tile("Expectancy", r2(s.exp) + "R", `avg win ${r2(s.avgW)}R · loss ${r2(s.avgL)}R`, s.exp >= 0 ? "up" : "down")}
+    ${tile("Profit factor", r2(s.pf), "gross win / gross loss")}
+    ${tile("Max drawdown", fmt$(s.dd), "closed-trade, daily")}
+    ${tile("Green days", pct(s.green), "sessions with P/L > 0")}
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Cumulative P/L</h2>${lineChart(eqPts, {label: "Cumulative P/L", fmt: fmt$})}</div>
+    <div class="card"><h2>Daily P/L</h2>${barChart(dayBars, {label: "Daily P/L", fmt: fmt$})}</div>
+    <div class="card"><h2>Rolling ${N}-trade expectancy (R)</h2>${lineChart(roll, {label: "Expectancy (R)", fmt: v => v.toFixed(2)})}
+      <div class="note">Above 0 means the edge is holding. A sustained drop below 0 is the signal to pause a setup.</div></div>
+    <div class="card"><h2>Expectancy by entry time (R)</h2>${barChart(todBars, {label: "Expectancy by time of day", fmt: v => v.toFixed(2)})}</div>
+  </div>
+  <div class="grid2">
+    ${groupTable(ts, t => t[F.strat], "Performance by setup")}
+    ${groupTable(ts, t => ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date(t[F.date] + "T12:00").getDay()], "Performance by weekday", ["Mon","Tue","Wed","Thu","Fri"])}
+    ${groupTable(ts, t => t[F.date].slice(0, 7), "Performance by month")}
+    ${groupTable(ts, t => t[F.reason], "Performance by exit reason")}
+  </div>
+  <div class="card"><h2>Most recent trades</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th class="l">Symbol</th><th class="l">Setup</th><th class="l">Side</th>
+    <th>In</th><th>Out</th><th>Entry</th><th>Exit</th><th class="l">Exit reason</th><th>R</th><th>P/L</th></tr></thead><tbody>${recent}</tbody></table></div></div>`;
+}
+
+function init() {
+  $("#gen").textContent = "Generated " + (DATA ? DATA.generated : "–");
+  if (!DATA || !DATA.sources.length) { render(); return; }
+  $("#src").innerHTML = DATA.sources.map((s, i) => `<option value="${i}">${s.kind === "paper" ? "Paper" : "Backtest"}: ${esc(s.label)} (${s.created})</option>`).join("");
+  const fillStrats = () => { const src = DATA.sources[+$("#src").value]; const ss = [...new Set(src.trades.map(t => t[F.strat]))].sort();
+    $("#strat").innerHTML = `<option value="all">All setups</option>` + ss.map(s => `<option>${esc(s)}</option>`).join(""); };
+  fillStrats();
+  $("#src").addEventListener("change", () => { fillStrats(); render(); });
+  ["#strat", "#side", "#range"].forEach(s => $(s).addEventListener("change", render));
+  render();
+}
+init();
+</script>
+</body>
+</html>
