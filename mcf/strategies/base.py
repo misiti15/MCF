@@ -49,6 +49,7 @@ class DayContext:
     avg_cum_volume: np.ndarray | None = None  # avg cumulative volume by minute-of-session (prior 14d)
     avg_move: np.ndarray | None = None        # avg |close/open-1| by minute-of-session (prior 14d)
     rank_rvol: int | None = None # rank among the day's universe by opening relative volume (1 = highest)
+    prior5: pd.DataFrame | None = None        # prior sessions' last 5-minute bars (layer warm-up)
     _cache: dict = field(default_factory=dict, repr=False)
 
     @property

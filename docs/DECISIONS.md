@@ -2,6 +2,17 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-05: third round (go-live)
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| Fill realism | Paper fills anything the price touches; results must be as close to real fills as possible. | Before every order: live SIP quote. Skip if the spread is > 30 bps or > 25% of the stop distance; cap size at 10% of the symbol's recent 1-minute volume. Every trade records entry slippage vs the signal price and an adjusted P/L that adds real-book stop slippage; target fills are flagged as touch fills. See `live:` in config. |
+| Universe | More tickers only if they are good for the setups. | Two tiers, no fixed count (4,954 today). Extended-tier names ($1–5M ADV) trade only when in play (opening rvol ≥ 3×), at 3× the slippage assumption. |
+| 9:30–9:50 | Soft rule: very volatile and hard to capture with any latency; there may be opportunities. | `live.no_entry_before: "09:50"`. Signals in the window are journaled as **shadow** and simulated after the close, so the window's real value is measured before the rule is revisited. Discovery also starts at 09:50. |
+| New setups | A built-in way to add setups as they're noticed, e.g. layered rules (RSI14 > 65 + above the 20 SMA). | Weekly `discover` workflow mines 1–3-layer rules on ~1,500 liquid names, 60 sessions: found on the older 2/3, checked on the newest 1/3, first trigger per symbol-day, costs in R. Candidates appear in the dashboard's Setup lab. Promotion is a config entry (`type: rule`), never automatic. |
+| Data | Subscribed to Alpaca Algo Trader Plus (SIP). | `data.feed: sip`; real-time SIP bars and quotes verified 2026-10-05. |
+| Go-live | Trade and collect data automatically from the 2026-10-06 open; show it live on the dashboard as "MCF Update" against MarcoFlow. | GitHub Actions `trade` workflow (see `docs/OPERATIONS.md`); status every 2 minutes on the `mcf-data` branch; dashboard section "MCF Update" reads it. MCF closes only its own positions (`mcf-` order ids). |
+
 ## 2026-10-05: second round
 
 | Topic | Owner decision | How MCF applies it |

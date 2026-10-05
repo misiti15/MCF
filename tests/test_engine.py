@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from mcf.analytics.metrics import breakdowns, summarize
-from mcf.backtest.engine import Backtester, Costs, simulate
+from mcf.backtest.engine import Backtester, Costs, SymbolHistory, simulate
 from mcf.config import load_config
 from mcf.data.bars import TZ
 from mcf.data.synthetic import make_universe
@@ -147,9 +147,70 @@ def test_extended_tier_only_when_in_play():
 
     cfg = load_config()
     u = cfg["universe"]
-    mk = lambda adv, atr=1.0: SimpleNamespace(prev_close=20.0, atr=atr, avg_dollar_volume=adv)
+    mk = lambda adv, atr=1.0: SimpleNamespace(symbol="XYZ", prev_close=20.0, atr=atr, avg_dollar_volume=adv)
     core, ext, thin = mk(u["min_avg_dollar_volume"] * 2), mk(u["extended_min_avg_dollar_volume"] * 2), mk(1.0)
     assert universe_ok(core, cfg) and universe_ok(ext, cfg) and not universe_ok(thin, cfg)
     assert not universe_ok(mk(core.avg_dollar_volume, atr=0.05), cfg)  # T-bill-like: no movement
     ctxs, orv = in_play_filter([core, ext, ext], [0.5, 1.0, u["extended_min_rvol"]], cfg)
     assert ctxs == [core, ext] and orv == [0.5, u["extended_min_rvol"]]
+
+
+def test_job_window():
+    from mcf.execution.session import job_deadline
+
+    live = {"start_from": "08:00", "max_job_minutes": 340}
+    ts = lambda s: pd.Timestamp(s, tz="America/New_York")
+    assert job_deadline(ts("2026-10-06 07:35"), live) is None          # too early (EST-only cron line)
+    assert job_deadline(ts("2026-10-06 08:35"), live) == ts("2026-10-06 14:15")
+    assert job_deadline(ts("2026-10-06 16:15"), live) is None          # after the session
+    assert job_deadline(ts("2026-10-10 10:00"), live) is None          # Saturday
+
+
+def test_rule_strategy_matches_layer_definition():
+    from mcf.data.bars import resample
+    from mcf.layers import layer_frame, rule_mask
+    from mcf.strategies.setups import RuleStrategy
+
+    cfg = load_config()
+    cfg["universe"]["min_avg_dollar_volume"] = 0
+    data = make_universe(["AAA"], days=30)
+    hist = SymbolHistory("AAA", data["AAA"])
+    day = sorted(hist.by_day)[-1]
+    ctx = hist.context(day)
+    layers = ["above VWAP", "within 2% of open"]
+    sigs = RuleStrategy("rule_t", layers, "long").generate(ctx)
+    d5 = resample(ctx.bars, "5min")
+    rv = ctx.rvol().to_numpy()[[min(ctx.bars.index.searchsorted(x + pd.Timedelta(minutes=4)), len(ctx.bars) - 1) for x in d5.index]]
+    hits = np.flatnonzero(rule_mask(layer_frame(d5, ctx.prior5, ctx.prev_close, rv), layers))
+    if len(hits):
+        assert sigs and ctx.bars.index[sigs[0].bar_index] == d5.index[hits[0]] + pd.Timedelta(minutes=4)
+        assert sigs[0].stop < ctx.bars["close"].iloc[sigs[0].bar_index]
+    else:
+        assert not sigs
+
+
+def test_discovery_mines_synthetic():
+    from mcf.data.bars import resample
+    from mcf.discovery import build_frame, mine, wilson_lb
+
+    cfg = load_config()
+    cfg["discovery"].update(min_train=20, min_test=5, max_layers=2)
+    data = {s: resample(df, "5min") for s, df in make_universe(["AAA", "BBB", "CCC"], days=40).items()}
+    x = build_frame(data, cfg, log=lambda *_: None)
+    assert len(x) and {"succ_long", "r_short", "rsi", "rvol"} <= set(x.columns)
+    assert x.tod.min() >= 950                       # owner's 9:30-9:50 caution respected
+    res, meta = mine(x, cfg)
+    assert meta["rules_tried"] > 0
+    assert 0 <= wilson_lb(5, 10) < 0.5
+
+
+def test_pinned_symbols_bypass_universe_filters():
+    from types import SimpleNamespace
+
+    from mcf.backtest.engine import pinned_symbols, universe_ok
+
+    cfg = load_config()
+    assert {"SPY", "QQQ"} <= pinned_symbols(cfg)
+    spy = SimpleNamespace(symbol="SPY", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)   # ATR 0.93% < 1%
+    other = SimpleNamespace(symbol="XYZ", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)
+    assert universe_ok(spy, cfg) and not universe_ok(other, cfg)

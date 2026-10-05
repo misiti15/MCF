@@ -108,6 +108,22 @@ strategies:
     max_rvol: 3.0
     stop_std: 1.0
 
+discovery:
+  # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.
+  # Promote a replicated candidate by adding it under `strategies:` with type: rule, e.g.
+  #   rule_hot_short:
+  #     enabled: true
+  #     type: rule
+  #     side: short
+  #     layers: ["RSI14 > 65", "below 20 SMA"]
+  max_symbols: 1500              # top core names by ADV
+  sessions: 60                   # ~3 months of 5-minute SIP bars; older 2/3 = find, newest 1/3 = check
+  max_layers: 3                  # owner: more layers = more precise, "to a certain point"
+  min_train: 150                 # first-trigger samples needed in the find period
+  min_test: 60                   # and in the check period
+  r_atr_frac: 0.25               # R = 0.25 x daily ATR
+  report_top: 40
+
 report:
   email_to: misiti15@gmail.com   # daily brief recipient
   dashboard_url: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow   # private Claude artifact (free)
@@ -115,4 +131,17 @@ report:
 data:
   cache_dir: data/cache
   journal_path: data/journal.db
-  feed: iex                      # iex (free) | sip (paid, full tape)
+  feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
+
+live:
+  # Paper fills anything the price touches. These checks keep paper results close to what a real
+  # order book would give, so paper P/L is evidence and not an upper bound.
+  no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are
+                                 # journaled as "shadow" and what-if simulated, so the window is measured.
+  max_spread_bps: 30             # live SIP quote at decision time
+  max_spread_risk_frac: 0.25     # spread must be <= 25% of the stop distance (else the spread eats R)
+  max_participation: 0.10        # order <= 10% of the symbol's average 1-minute volume (last 5 bars)
+  status_every_min: 2            # dashboard refresh cadence
+  start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
+  max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
+  fetch_batch: 400

@@ -205,6 +205,8 @@ class SymbolHistory:
         self.avg_move = mv.rolling(rvol_lookback, min_periods=5).mean().shift(1)
         self.avg_move.index = pd.to_datetime(self.avg_move.index)
         self.by_day = {d: g for d, g in intraday.groupby(intraday.index.date)}
+        from ..data.bars import resample
+        self.i5 = resample(intraday, "5min")
 
     def context(self, d) -> DayContext | None:
         ts = pd.Timestamp(d)
@@ -222,6 +224,7 @@ class SymbolHistory:
             prev_high=float(self.prev_high[ts]), prev_low=float(self.prev_low[ts]),
             atr=float(a), avg_dollar_volume=float(self.adv.get(ts, np.nan)), avg_cum_volume=acv,
             avg_move=self.avg_move.loc[ts].to_numpy() if ts in self.avg_move.index else None,
+            prior5=self.i5[self.i5.index.date < d].tail(40),
         )
 
 
@@ -238,8 +241,16 @@ def is_extended(ctx: DayContext, cfg: dict) -> bool:
     return not np.isnan(adv) and adv < cfg["universe"]["min_avg_dollar_volume"]
 
 
+def pinned_symbols(cfg: dict) -> set[str]:
+    """Symbols an enabled setup names explicitly (e.g. index ETFs). Always in the universe:
+    the universe filters exist to pick names for scanned setups, not to veto a named instrument."""
+    return {s for st in cfg.get("strategies", {}).values() if st.get("enabled") for s in st.get("symbols", [])}
+
+
 def universe_ok(ctx: DayContext, cfg: dict) -> bool:
     """Prior-day filters shared by backtest and paper runner (no look-ahead)."""
+    if ctx.symbol in pinned_symbols(cfg):
+        return True
     u, c = cfg["universe"], cfg["costs"]
     adv = ctx.avg_dollar_volume
     floor = min(u.get("extended_min_avg_dollar_volume", u["min_avg_dollar_volume"]), u["min_avg_dollar_volume"])

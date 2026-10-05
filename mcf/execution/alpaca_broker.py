@@ -53,6 +53,18 @@ class AlpacaBroker:
     def close_position(self, symbol: str):
         return self.client.close_position(symbol)
 
+    def cancel_orders_with_prefix(self, prefix: str) -> int:
+        """Cancel open orders whose client_order_id starts with `prefix` (this system's orders only)."""
+        from alpaca.trading.enums import QueryOrderStatus
+        from alpaca.trading.requests import GetOrdersRequest
+
+        n = 0
+        for o in self.client.get_orders(GetOrdersRequest(status=QueryOrderStatus.OPEN, nested=True, limit=500)):
+            if (o.client_order_id or "").startswith(prefix):
+                self.client.cancel_order_by_id(o.id)
+                n += 1
+        return n
+
     def flatten_all(self):
         self.client.cancel_orders()
         return self.client.close_all_positions(cancel_orders=True)

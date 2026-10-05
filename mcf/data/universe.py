@@ -84,9 +84,12 @@ def build_universe(cfg: dict, out_path: str = "data/universe.csv") -> pd.DataFra
     assets = candidate_assets(tc)
     stats = daily_stats(dc, assets["symbol"].tolist())
     df = assets.merge(stats, on="symbol", how="inner")
+    from ..backtest.engine import pinned_symbols
+
     floor = min(u.get("extended_min_avg_dollar_volume", u["min_avg_dollar_volume"]), u["min_avg_dollar_volume"])
-    df = df[(df.price >= c["min_price"]) & (df.adv >= floor) & (df.days >= 15)
-            & (df.atr_pct >= u.get("min_atr_pct", 0.0))]
+    keep = ((df.price >= c["min_price"]) & (df.adv >= floor) & (df.days >= 15)
+            & (df.atr_pct >= u.get("min_atr_pct", 0.0)))
+    df = df[keep | df.symbol.isin(pinned_symbols(cfg))]
     df = df.sort_values("adv", ascending=False)
     if u.get("max_symbols"):
         df = df.head(u["max_symbols"])

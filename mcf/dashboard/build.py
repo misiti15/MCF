@@ -27,7 +27,8 @@ def _pack(trades: pd.DataFrame) -> list[list]:
     ]
 
 
-def build(journal_path: str | Path, out: str | Path, fragment: bool = False, kinds: set[str] | None = None) -> Path:
+def build(journal_path: str | Path, out: str | Path, fragment: bool = False, kinds: set[str] | None = None,
+          live_section: bool = True) -> Path:
     """fragment=True strips the document skeleton (for hosts that wrap the page, e.g. Artifacts).
     kinds limits which run kinds are included (e.g. {"paper", "reference"} to hide demo backtests)."""
     j = Journal(journal_path)
@@ -46,7 +47,9 @@ def build(journal_path: str | Path, out: str | Path, fragment: bool = False, kin
     order = {"paper": 0, "live": 0, "backtest": 1, "reference": 2}
     sources.sort(key=lambda s: (order.get(s["kind"], 3), -s["id"]))
     payload = {"generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "sources": sources}
-    html = TEMPLATE.read_text().replace("/*__DATA__*/null", json.dumps(payload, separators=(",", ":")))
+    live = TEMPLATE.with_name("live.html").read_text() if live_section else ""
+    html = (TEMPLATE.read_text().replace("<!--__LIVE__-->", live)
+            .replace("/*__DATA__*/null", json.dumps(payload, separators=(",", ":"))))
     if fragment:
         import re
 

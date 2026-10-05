@@ -7,6 +7,7 @@ These are starting points to be validated on real data — not proven edges.
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
 from .. import features as F
 from .base import DayContext, Signal, Strategy, t
@@ -234,6 +235,52 @@ class NoiseBandMomentum(Strategy):
         return []
 
 
+class RuleStrategy(Strategy):
+    """A layered rule promoted from setup discovery (mcf/discovery.py), e.g.
+    short when "RSI14 > 65" + "below 20 SMA". Enters at the close of the FIRST complete 5-minute bar
+    where every layer holds (same definition the miner measured); stop 1R, target `target_r` R,
+    with R = r_atr_frac x daily ATR. Configure under `strategies:` with `type: rule`."""
+
+    name = "rule"
+
+    def __init__(self, name: str, layers: list[str], side: str, r_atr_frac: float = 0.25,
+                 target_r: float | None = 1.0, **params):
+        super().__init__(layers=layers, side=side, r_atr_frac=r_atr_frac, target_r=target_r, **params)
+        self.name = name
+        from ..layers import LABELS
+
+        unknown = [x for x in layers if x not in LABELS]
+        if unknown:
+            raise ValueError(f"{name}: unknown layers {unknown}")
+
+    def generate(self, ctx: DayContext):
+        from ..data.bars import resample
+        from ..layers import layer_frame, rule_mask
+
+        bars = ctx.bars
+        d5 = resample(bars, "5min")
+        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]          # complete 5-min bars only
+        if d5.empty:
+            return []
+        rv = ctx.rvol()
+        ends = [bars.index.searchsorted(ts + pd.Timedelta(minutes=4)) for ts in d5.index]
+        ends = [min(e, len(bars) - 1) for e in ends]
+        f = layer_frame(d5, ctx.prior5, ctx.prev_close, rv.to_numpy()[ends])
+        hits = np.flatnonzero(rule_mask(f, self.layers))
+        if not len(hits):
+            return []
+        i = hits[0]
+        side = 1 if self.side == "long" else -1
+        px = float(f["close"].iloc[i])
+        r = self.r_atr_frac * ctx.atr
+        if r <= 0:
+            return []
+        tgt = None if self.target_r is None else px + side * self.target_r * r
+        return [Signal(ctx.symbol, self.name, side, int(ends[i]), stop=px - side * r, target=tgt,
+                       meta={"layers": " + ".join(self.layers)})]
+
+
 REGISTRY: dict[str, type[Strategy]] = {
     c.name: c
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
@@ -247,7 +294,12 @@ def build_strategies(cfg: dict) -> list[Strategy]:
     exits = cfg.get("exits", {})
     for name, params in cfg.get("strategies", {}).items():
         params = {**exits, **params}
-        if not params.pop("enabled", True) or name not in REGISTRY:
+        if not params.pop("enabled", True):
+            continue
+        if params.pop("type", None) == "rule":
+            out.append(RuleStrategy(name=name, **params))
+            continue
+        if name not in REGISTRY:
             continue
         if name == "orb":
             params.setdefault("top_n", top_n)
