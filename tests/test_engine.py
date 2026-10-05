@@ -112,3 +112,15 @@ def test_scale_out_keeps_runner():
     tr = simulate(sig, bars, FLAT, 0.0)
     assert tr.exit_reason == "scaled+target"
     assert tr.r_multiple == pytest.approx(0.5 * 1 + 0.5 * 4)
+
+
+def test_success_is_first_touch_independent_of_exit():
+    # long, risk 1: price goes +1R first, then collapses through the stop -> trade loses, signal succeeded
+    bars = day_bars([100, 100, 101.2, 100.2, 98.5, 98.0])
+    tr = simulate(Signal("X", "t", 1, 0, stop=99.0), bars, FLAT, 0.0)
+    assert tr.r_multiple < 0 and tr.success == 1
+    bars = day_bars([100, 100, 99.5, 98.8, 101.5, 102])
+    tr = simulate(Signal("X", "t", 1, 0, stop=98.0), bars, FLAT, 0.0)   # risk 2: -1R = 98 not hit, +1R = 102 hit
+    assert tr.success == 1
+    tr = simulate(Signal("X", "t", 1, 0, stop=99.0), day_bars([100, 100, 99.5, 98.9, 101.5]), FLAT, 0.0)
+    assert tr.success == 0

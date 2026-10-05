@@ -95,12 +95,11 @@ def cmd_download(args, cfg):
 
 def cmd_universe(args, cfg):
     load_dotenv()
-    from .data.alpaca_data import tradable_universe
+    from .data.universe import build_universe
 
-    syms = tradable_universe()
-    print(f"{len(syms)} tradable symbols")
-    if args.out:
-        open(args.out, "w").write("\n".join(syms))
+    df = build_universe(cfg, args.out or "data/universe.csv")
+    print(f"{len(df)} symbols; ADV ${df.adv.min() / 1e6:.0f}M..${df.adv.max() / 1e9:.1f}B; "
+          f"shortable+ETB {int((df.shortable & df.easy_to_borrow).sum())}")
 
 
 def cmd_dashboard(args, cfg):

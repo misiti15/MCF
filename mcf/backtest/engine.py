@@ -43,6 +43,7 @@ class Trade:
     r_multiple: float
     mae_r: float
     mfe_r: float
+    success: int = 0      # signal quality: +1R reached before -1R (rest of session, independent of exits)
     shares: int = 0
     pnl: float = 0.0
     meta: str = ""
@@ -72,6 +73,24 @@ class Costs:
             return px
         extra = self.stop_extra_per_share if reason == "stop" else 0.0
         return px * (1 - side * self.bps / 1e4) - side * (self.per_share + extra)
+
+
+def first_touch(h, l, j, fill, risk, side, times, until: time, k: float = 1.0) -> int:
+    """1 if price reaches +k*R before -k*R from the fill bar until `until`; 0 otherwise.
+    Both inside one bar counts as a failure (order unknown). Neither touched counts as a failure.
+    This is the owner's success/fail model: it measures whether the setup called direction,
+    independent of how the exit was managed."""
+    up, dn = fill + side * k * risk, fill - side * k * risk
+    for i in range(j, len(h)):
+        if times[i] >= until:
+            break
+        hit_up = h[i] >= up if side == 1 else l[i] <= up
+        hit_dn = l[i] <= dn if side == 1 else h[i] >= dn
+        if hit_dn:
+            return 0
+        if hit_up:
+            return 1
+    return 0
 
 
 def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | float") -> Trade | None:
@@ -145,6 +164,7 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
         exit_px = done_value + (1 - done_frac) * exit_px   # average exit price across both pieces
         reason = f"scaled+{reason}"
     r = side * (exit_px - fill) / risk
+    success = first_touch(h, l, j, fill, risk, side, times, flatten)
     idx = bars.index
     # time exits fill at a bar open, so the exit timestamp is that bar's start; others at bar end
     exit_ts = idx[k_exit] if reason.endswith("time") else idx[k_exit] + pd.Timedelta(minutes=1)
@@ -155,7 +175,7 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
         entry=float(fill), stop=float(sig.stop),
         target=None if sig.target is None else float(sig.target),
         exit_time=exit_ts, exit=float(exit_px), exit_reason=reason,
-        r_multiple=float(r), mae_r=float(mae), mfe_r=float(max(mfe, r)),
+        r_multiple=float(r), mae_r=float(mae), mfe_r=float(max(mfe, r)), success=success,
         meta=";".join(f"{k}={v:.4g}" if isinstance(v, float) else f"{k}={v}" for k, v in sig.meta.items()),
     )
 

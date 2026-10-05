@@ -64,6 +64,20 @@ Replays every target/stop pair over each signal's full-horizon max favourable (M
 
 Read: on MarcoFlow's entries, raising the win rate by tightening the target or widening the stop drives expectancy to ≤ 0 — the signal itself has too little directional edge for geometry to fix. MCF has to find entries whose *first move* is in our favour, not tune exits on weak entries.
 
+### 2b. Symmetric success test: did the signal call direction?
+
+The owner's success/fail model: did price move **+X in our favour before −X against**? Equal distances remove the geometry effect, so a coin-flip signal scores 50%. 'Both' = both touched within the horizon, order unknown.
+
+| move | success first % | fail first % | both % | neither % | success among decided % |
+|---|---|---|---|---|---|
+| ±0.25% | 22.4 | 23.9 | 45.2 | 8.5 | 48.4 |
+| ±0.5% | 26.9 | 28.2 | 23.6 | 21.3 | 48.9 |
+| ±0.75% | 25.3 | 26.5 | 13.0 | 35.2 | 48.9 |
+| ±1.0% | 21.8 | 23.5 | 7.5 | 47.1 | 48.1 |
+| ±0.5%, alerted only | 28.5 | 26.8 | 33.9 | 10.8 | 51.5 |
+
+**MarcoFlow's signals succeed ~48–49% of the time on a symmetric test (alerted: ~51.5%)**: a coin flip. Its higher headline win rates came from target/stop geometry, not prediction. MCF's success gate is this symmetric test at ±1R (≥65%).
+
 ## 3. Same replay on paper trades (real fills)
 
 Uses `peakPct`/`troughPct` recorded while the position was actually held (so excursions are truncated by MarcoFlow's own exits — an optimistic-for-tight-targets view). Entry slippage is already inside these numbers; 0.05% exit cost added.

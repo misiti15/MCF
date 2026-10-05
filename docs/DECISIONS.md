@@ -2,6 +2,15 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-05: second round
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| Success model | **Win % first, then tweak setups to hold winners longer.** | Two-stage scorecard. (1) **Success rate** = price reached +1R before −1R, measured to the end of the session whatever the exit did. It is symmetric, so a coin-flip setup scores 50% and target/stop geometry can't inflate it. Setups are selected on this first. (2) Exit tuning (scale-outs, trails, holding longer) then raises P/L on setups that already pass (1). |
+| Threshold | **65%** | Gates: success rate ≥ 65% **and** realized win rate ≥ 65% **and** expectancy > 0, out of sample, after costs, ≥ 200 trades. |
+| Universe | Scan about 3,500+ tickers often. A bigger pool means more chances; favour liquid names for easy entry and exit. | `mcf universe`: top 3,500 by **consolidated** 20-day $ volume (≥ $10M), price ≥ $5, shortable/ETB flags. `mcf.data.scanner`: snapshot scan of the whole universe every minute (35 requests per pass, within the free 200/min limit). |
+| Shorting | Crucial. | Kept as a hard requirement for the execution venue (see `docs/DATA_AND_BROKER.md`). |
+
 ## 2026-10-05: first round of answers
 
 | # | Topic | Owner decision | How MCF applies it |

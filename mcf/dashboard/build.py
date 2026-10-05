@@ -21,7 +21,8 @@ def _pack(trades: pd.DataFrame) -> list[list]:
     return [
         [r.symbol, r.strategy, int(r.side), str(r.date), e.strftime("%H:%M"), x.strftime("%H:%M"),
          round(float(r.entry), 4), round(float(r.exit), 4), r.exit_reason,
-         round(float(r.r_multiple), 4), round(float(r.pnl), 2), int(r.shares)]
+         round(float(r.r_multiple), 4), round(float(r.pnl), 2), int(r.shares),
+         None if pd.isna(getattr(r, "success", None)) else int(r.success)]
         for r, e, x in zip(trades.itertuples(), et, xt)
     ]
 

@@ -19,6 +19,7 @@ def summarize(trades: pd.DataFrame) -> dict:
     sharpe = daily.mean() / daily.std() * np.sqrt(252) if len(daily) > 1 and daily.std() > 0 else np.nan
     return {
         "trades": int(len(trades)),
+        "success_rate": float(trades["success"].mean()) if "success" in trades and trades["success"].notna().any() else float("nan"),
         "win_rate": float((r > 0).mean()),
         "avg_win_r": float(wins.mean()) if len(wins) else 0.0,
         "avg_loss_r": float(losses.mean()) if len(losses) else 0.0,
@@ -40,6 +41,7 @@ def _group(trades: pd.DataFrame, key) -> pd.DataFrame:
     g = trades.groupby(key)
     out = pd.DataFrame({
         "trades": g.size(),
+        "success_rate": g["success"].mean() if "success" in trades else np.nan,
         "win_rate": g["r_multiple"].apply(lambda r: (r > 0).mean()),
         "expectancy_r": g["r_multiple"].mean(),
         "total_r": g["r_multiple"].sum(),
@@ -79,6 +81,9 @@ def gate_check(summary: dict, gates: dict) -> tuple[bool, list[str]]:
     fails = []
     if summary.get("trades", 0) < gates.get("min_trades", 0):
         fails.append(f"only {summary.get('trades', 0)} trades (< {gates['min_trades']})")
+    sr = summary.get("success_rate")
+    if gates.get("min_success_rate") and not (sr is not None and sr == sr and sr >= gates["min_success_rate"]):
+        fails.append(f"success rate {sr:.1%} < {gates['min_success_rate']:.0%}")
     if summary.get("win_rate", 0) < gates.get("min_win_rate", 0):
         fails.append(f"win rate {summary.get('win_rate', 0):.1%} < {gates['min_win_rate']:.0%}")
     if summary.get("expectancy_r", 0) <= gates.get("min_expectancy_r", 0):

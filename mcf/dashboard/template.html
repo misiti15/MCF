@@ -85,7 +85,7 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 <div id="tip"></div>
 <script>
 const DATA = /*__DATA__*/null;
-const F = {sym:0, strat:1, side:2, date:3, et:4, xt:5, entry:6, exit:7, reason:8, r:9, pnl:10, sh:11};
+const F = {sym:0, strat:1, side:2, date:3, et:4, xt:5, entry:6, exit:7, reason:8, r:9, pnl:10, sh:11, ok:12};
 const $ = s => document.querySelector(s);
 const fmt$ = v => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
 const pct = v => isFinite(v) ? (v * 100).toFixed(1) + "%" : "–";
@@ -106,7 +106,9 @@ function stats(ts) {
   const days = {}; ts.forEach(t => days[t[F.date]] = (days[t[F.date]] || 0) + t[F.pnl]);
   let eq = 0, peak = 0, dd = 0; Object.keys(days).sort().forEach(d => { eq += days[d]; peak = Math.max(peak, eq); dd = Math.min(dd, eq - peak); });
   const dv = Object.values(days);
-  return { n, win: wins.length / n, exp: rs.reduce((a,b)=>a+b,0)/n, totR: rs.reduce((a,b)=>a+b,0),
+  const known = ts.filter(t => t[F.ok] !== null && t[F.ok] !== undefined);
+  const succ = known.length ? known.filter(t => t[F.ok] === 1).length / known.length : NaN;
+  return { n, succ, win: wins.length / n, exp: rs.reduce((a,b)=>a+b,0)/n, totR: rs.reduce((a,b)=>a+b,0),
     pf: gl > 0 ? gw / gl : Infinity, pnl: gw - gl, dd, avgW, avgL,
     be: (wins.length && losses.length) ? Math.abs(avgL) / (avgW + Math.abs(avgL)) : NaN,
     green: dv.filter(v => v > 0).length / dv.length, days: dv.length };
@@ -189,9 +191,9 @@ function groupTable(ts, keyFn, title, order) {
   const groups = {}; ts.forEach(t => { const k = keyFn(t); (groups[k] = groups[k] || []).push(t); });
   let keys = Object.keys(groups); keys = order ? order.filter(k => groups[k]) : keys.sort();
   const rows = keys.map(k => { const s = stats(groups[k]); return `<tr><td>${esc(k)}</td><td>${s.n}</td><td>${pct(s.win)}</td>
-    <td>${pct(s.be)}</td><td class="${s.exp>0?"up":"down"}">${r2(s.exp)}</td><td>${r2(s.pf)}</td><td class="${s.pnl>0?"up":"down"}">${fmt$(s.pnl)}</td></tr>`; }).join("");
+    <td>${pct(s.succ)}</td><td>${pct(s.be)}</td><td class="${s.exp>0?"up":"down"}">${r2(s.exp)}</td><td>${r2(s.pf)}</td><td class="${s.pnl>0?"up":"down"}">${fmt$(s.pnl)}</td></tr>`; }).join("");
   return `<div class="card"><h2>${title}</h2><div class="tablewrap"><table><thead><tr><th>${title.split(" by ")[1] || "Group"}</th><th>Trades</th>
-    <th>Win %</th><th title="Win rate needed to break even given avg win/loss size">B/E win</th><th>Exp. R</th><th>PF</th><th>P/L</th></tr></thead>
+    <th>Win %</th><th title="+1R reached before −1R">Success %</th><th title="Win rate needed to break even given avg win/loss size">B/E win</th><th>Exp. R</th><th>PF</th><th>P/L</th></tr></thead>
     <tbody>${rows}</tbody></table></div></div>`;
 }
 
@@ -224,7 +226,8 @@ function render() {
   <div class="tiles">
     ${tile("Net P/L", fmt$(s.pnl), `${s.days} sessions`, s.pnl >= 0 ? "up" : "down")}
     ${tile("Trades", s.n.toLocaleString(), `${(s.n / s.days).toFixed(1)} / day`)}
-    ${tile("Win rate", pct(s.win), `break-even ${pct(s.be)} · goal 90%`)}
+    ${tile("Success rate", pct(s.succ), "+1R before −1R · goal 65%", s.succ >= 0.65 ? "up" : (isFinite(s.succ) ? "down" : ""))}
+    ${tile("Win rate", pct(s.win), `break-even ${pct(s.be)} · goal 65%`, s.win >= 0.65 ? "up" : "down")}
     ${tile("Expectancy", r2(s.exp) + "R", `avg win ${r2(s.avgW)}R · loss ${r2(s.avgL)}R`, s.exp >= 0 ? "up" : "down")}
     ${tile("Profit factor", r2(s.pf), "gross win / gross loss")}
     ${tile("Max drawdown", fmt$(s.dd), "closed-trade, daily")}

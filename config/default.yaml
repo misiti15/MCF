@@ -12,8 +12,11 @@ account:
   max_trades_per_day: 400
 
 gates:
-  # A setup goes live (paper -> funds) only when ALL hold out of sample, after costs (owner decision 2026-10-05)
-  min_win_rate: 0.55
+  # A setup goes live (paper -> funds) only when ALL hold out of sample, after costs.
+  # Owner decision 2026-10-05 (rev 2): 65%. Success = +1R reached before -1R (signal quality, checked first);
+  # win rate = trade closed green after exit management (checked second); expectancy must stay > 0.
+  min_success_rate: 0.65
+  min_win_rate: 0.65
   min_expectancy_r: 0.0         # strictly above
   min_trades: 200
   min_profit_factor: 1.2
@@ -42,7 +45,8 @@ session:
   flatten_by: "15:55"            # all intraday positions closed by this time
 
 universe:
-  min_avg_dollar_volume: 20000000   # 20d average daily $ volume
+  max_symbols: 3500                  # top N by consolidated ADV (owner: scan ~3,500+)
+  min_avg_dollar_volume: 10000000    # 20d avg daily $ volume, consolidated (SIP) — not IEX
   min_atr: 0.50                     # daily ATR(14) in dollars
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
 

@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS trades (
     symbol TEXT, strategy TEXT, side INTEGER, date TEXT,
     signal_time TEXT, entry_time TEXT, entry REAL, stop REAL, target REAL,
     exit_time TEXT, exit REAL, exit_reason TEXT,
-    r_multiple REAL, mae_r REAL, mfe_r REAL, shares INTEGER, pnl REAL, meta TEXT,
+    r_multiple REAL, mae_r REAL, mfe_r REAL, success INTEGER, shares INTEGER, pnl REAL, meta TEXT,
     broker_order_id TEXT
 );
 CREATE INDEX IF NOT EXISTS trades_run ON trades(run_id);
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS orders (
 
 TRADE_COLS = [
     "symbol", "strategy", "side", "date", "signal_time", "entry_time", "entry", "stop", "target",
-    "exit_time", "exit", "exit_reason", "r_multiple", "mae_r", "mfe_r", "shares", "pnl", "meta",
+    "exit_time", "exit", "exit_reason", "r_multiple", "mae_r", "mfe_r", "success", "shares", "pnl", "meta",
 ]
 
 
@@ -51,6 +51,10 @@ class Journal:
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(str(path))
         self.db.executescript(SCHEMA)
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(trades)")}
+        if "success" not in cols:  # additive migration for journals created before 2026-10-05
+            self.db.execute("ALTER TABLE trades ADD COLUMN success INTEGER")
+            self.db.commit()
 
     def new_run(self, kind: str, label: str = "", config: dict | None = None) -> int:
         cur = self.db.execute(

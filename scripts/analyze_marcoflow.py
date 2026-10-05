@@ -120,6 +120,26 @@ def main(argv=None):
       "drives expectancy to ≤ 0 — the signal itself has too little directional edge for geometry to fix. "
       "MCF has to find entries whose *first move* is in our favour, not tune exits on weak entries.\n")
 
+    # ---------------------------------------------------------------- symmetric success
+    w("### 2b. Symmetric success test: did the signal call direction?\n")
+    w("The owner's success/fail model: did price move **+X in our favour before −X against**? Equal distances "
+      "remove the geometry effect, so a coin-flip signal scores 50%. 'Both' = both touched within the horizon, order unknown.\n")
+    rows = []
+    for X in (0.25, 0.5, 0.75, 1.0):
+        up, dn = obs.mfe >= X, obs.mae >= X
+        cs, cf = (up & ~dn).mean(), (dn & ~up).mean()
+        rows.append((f"±{X}%", cs * 100, cf * 100, (up & dn).mean() * 100, (~up & ~dn).mean() * 100, cs / (cs + cf) * 100))
+    a = obs[obs.alertedAt.notna()]
+    up, dn = a.mfe >= 0.5, a.mae >= 0.5
+    rows.append(("±0.5%, alerted only", (up & ~dn).mean() * 100, (dn & ~up).mean() * 100, (up & dn).mean() * 100,
+                 (~up & ~dn).mean() * 100, (up & ~dn).sum() / ((up & ~dn).sum() + (dn & ~up).sum()) * 100))
+    sym = pd.DataFrame(rows, columns=["move", "success first %", "fail first %", "both %", "neither %",
+                                      "success among decided %"]).set_index("move")
+    w(md(sym, 1) + "\n")
+    w("**MarcoFlow's signals succeed ~48–49% of the time on a symmetric test (alerted: ~51.5%)**: a coin flip. "
+      "Its higher headline win rates came from target/stop geometry, not prediction. MCF's success gate is this "
+      "symmetric test at ±1R (≥65%).\n")
+
     # ---------------------------------------------------------------- paper geometry
     w("## 3. Same replay on paper trades (real fills)\n")
     w("Uses `peakPct`/`troughPct` recorded while the position was actually held (so excursions are truncated by MarcoFlow's own exits — "
