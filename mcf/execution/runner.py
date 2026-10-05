@@ -90,6 +90,8 @@ class PaperRunner:
                     self._enter(sig, px, key)
 
     def _enter(self, sig, px, key):
+        if key in self.fired:
+            return
         ok, why = self.risk.check(sig, px)
         if not ok:
             print(f"skip {sig.symbol} {sig.strategy}: {why}")
@@ -97,7 +99,9 @@ class PaperRunner:
         qty = self.risk.size(sig, px)
         if qty < 1:
             return
-        coid = f"{sig.strategy}-{sig.symbol}-{datetime.now():%Y%m%d%H%M%S}"
+        # deterministic id: Alpaca rejects a duplicate client_order_id, so a racing second
+        # submit for the same setup/symbol/day cannot double-fill (MarcoFlow lost ~$1.1k this way)
+        coid = f"{sig.strategy}-{sig.symbol}-{datetime.now():%Y%m%d}"
         try:
             o = self.broker.submit_bracket(sig, qty, coid)
         except Exception as e:  # broker rejects are journaled, not fatal

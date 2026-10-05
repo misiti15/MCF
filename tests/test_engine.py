@@ -85,3 +85,13 @@ def test_full_backtest_runs_and_no_lookahead():
 
 def test_registry_complete():
     assert {"orb", "noise_band_momentum", "intraday_momentum"} <= set(REGISTRY)
+
+
+def test_marcoflow_client_blocks_action_endpoints():
+    from mcf import marcoflow
+
+    for bad in ("/api/agent/tick", "/api/paper/tick", "/api/agent/heartbeat", "/api/agent/daily-brief"):
+        with pytest.raises(PermissionError):
+            marcoflow.get(bad)
+    with pytest.raises(PermissionError):
+        marcoflow.get("/api/observations", key="x")
