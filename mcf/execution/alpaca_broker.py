@@ -14,6 +14,14 @@ class AlpacaBroker:
 
         self.client = TradingClient(os.environ["ALPACA_API_KEY"], os.environ["ALPACA_SECRET_KEY"], paper=paper)
 
+    def can_short(self, symbol: str) -> bool:
+        """Shortable and easy-to-borrow per the broker (cached for the session)."""
+        cache = self.__dict__.setdefault("_short_cache", {})
+        if symbol not in cache:
+            a = self.client.get_asset(symbol)
+            cache[symbol] = bool(a.shortable and a.easy_to_borrow)
+        return cache[symbol]
+
     def equity(self) -> float:
         return float(self.client.get_account().equity)
 

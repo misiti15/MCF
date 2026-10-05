@@ -2,12 +2,31 @@
 
 account:
   starting_equity: 100000        # paper account size used for sizing in backtests
-  risk_per_trade_pct: 0.25       # % of equity risked per trade (entry -> stop distance)
-  max_position_notional_pct: 20  # cap any single position at this % of equity
-  max_concurrent_positions: 20
-  max_positions_per_strategy: 10  # per-setup sleeve so one setup can't starve the others
-  max_daily_loss_r: 6            # stop opening new trades after losing this many R in a day
-  max_trades_per_day: 30
+  slots: 100                     # owner decision 2026-10-05: 100 concurrent slots
+  buying_power_multiple: 2.0     # capital per slot = equity x this / slots (= $2,000 at $100k)
+  risk_per_trade_pct: 0.25       # max % of equity lost if the stop is hit (sizing = min(risk, slot))
+  max_position_notional_pct: 10  # hard cap on any single position
+  max_concurrent_positions: 100
+  max_positions_per_strategy: 60  # per-setup sleeve so one setup can't use every slot
+  max_daily_loss_r: 20           # risk control (not a signal filter): stop new entries after -20R in a day
+  max_trades_per_day: 400
+
+gates:
+  # A setup goes live (paper -> funds) only when ALL hold out of sample, after costs (owner decision 2026-10-05)
+  min_win_rate: 0.55
+  min_expectancy_r: 0.0         # strictly above
+  min_trades: 200
+  min_profit_factor: 1.2
+
+exits:
+  # Scale-out: bank part of the position at +scale_out_r R, move the rest to breakeven.
+  # Raises win rate without capping runners. Applied to every setup unless a setup overrides it.
+  scale_out_r: 1.0
+  scale_out_frac: 0.5
+
+shorts:
+  enabled: true                  # owner decision: both directions
+  require_easy_to_borrow: true   # live: only short names the broker flags shortable + ETB
 
 costs:
   slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
@@ -76,6 +95,10 @@ strategies:
     latest: "15:00"
     max_rvol: 3.0
     stop_std: 1.0
+
+report:
+  email_to: misiti15@gmail.com   # daily brief recipient
+  dashboard_url: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow   # private Claude artifact (free)
 
 data:
   cache_dir: data/cache

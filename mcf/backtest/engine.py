@@ -112,6 +112,9 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
 
     exit_px, reason, k_exit = None, None, None
     mae, mfe = 0.0, 0.0
+    stop = sig.stop
+    scale_px = None if not sig.scale_out_r else fill + side * sig.scale_out_r * risk
+    scaled, done_frac, done_value = False, 0.0, 0.0   # value = sum(frac * exit price)
     for k in range(j, n):
         if times[k] >= exit_t:
             exit_px, reason, k_exit = o[k], "time", k
@@ -119,25 +122,32 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
         adverse = (l[k] if side == 1 else h[k])
         favorable = (h[k] if side == 1 else l[k])
         mae = min(mae, side * (adverse - fill) / risk)
-        hit_stop = (l[k] <= sig.stop) if side == 1 else (h[k] >= sig.stop)
+        hit_stop = (l[k] <= stop) if side == 1 else (h[k] >= stop)
         hit_tgt = sig.target is not None and ((h[k] >= sig.target) if side == 1 else (l[k] <= sig.target))
         if hit_stop:
-            gap_through = (o[k] < sig.stop) if side == 1 else (o[k] > sig.stop)
-            exit_px = o[k] if (gap_through and k > j) else sig.stop
-            reason, k_exit = "stop", k
+            gap_through = (o[k] < stop) if side == 1 else (o[k] > stop)
+            exit_px = o[k] if (gap_through and k > j) else stop
+            reason, k_exit = ("breakeven" if scaled else "stop"), k
             break
         mfe = max(mfe, side * (favorable - fill) / risk)
+        if scale_px is not None and not scaled and side * (favorable - scale_px) >= 0:
+            # resting limit for part of the position; remaining stop moves to breakeven from next bar
+            scaled, done_frac, done_value = True, sig.scale_out_frac, sig.scale_out_frac * scale_px
+            stop = fill
         if hit_tgt:
             exit_px, reason, k_exit = sig.target, "target", k
             break
     if exit_px is None:
         exit_px, reason, k_exit = c[-1], "eod", n - 1
 
-    exit_px = costs.exit(exit_px, side, reason)
+    exit_px = costs.exit(exit_px, side, "stop" if reason == "breakeven" else reason)
+    if scaled:
+        exit_px = done_value + (1 - done_frac) * exit_px   # average exit price across both pieces
+        reason = f"scaled+{reason}"
     r = side * (exit_px - fill) / risk
     idx = bars.index
     # time exits fill at a bar open, so the exit timestamp is that bar's start; others at bar end
-    exit_ts = idx[k_exit] if reason == "time" else idx[k_exit] + pd.Timedelta(minutes=1)
+    exit_ts = idx[k_exit] if reason.endswith("time") else idx[k_exit] + pd.Timedelta(minutes=1)
     return Trade(
         symbol=sig.symbol, strategy=sig.strategy, side=side, date=idx[0].date(),
         signal_time=idx[sig.bar_index] + pd.Timedelta(minutes=1),
@@ -195,6 +205,13 @@ class SymbolHistory:
         )
 
 
+def slot_notional(a: dict) -> float:
+    """Capital per slot: equity x buying-power multiple / slots, capped by max_position_notional_pct."""
+    equity = float(a["starting_equity"] if "equity" not in a else a["equity"])
+    per_slot = equity * a.get("buying_power_multiple", 1.0) / a.get("slots", a["max_concurrent_positions"])
+    return min(per_slot, equity * a["max_position_notional_pct"] / 100)
+
+
 class Backtester:
     def __init__(self, strategies: list[Strategy], cfg: dict):
         self.strategies = strategies
@@ -228,7 +245,7 @@ class Backtester:
                 for strat in self.strategies:
                     if not strat.eligible(c):
                         continue
-                    for sig in strat.generate(c)[: strat.max_signals_per_day]:
+                    for sig in strat.signals(c):
                         tr = simulate(sig, c.bars, self.flatten, self.costs)
                         if tr:
                             candidates.append(tr)
@@ -240,7 +257,7 @@ class Backtester:
         a = self.cfg["account"]
         equity = float(a["starting_equity"])
         risk_dollars = equity * a["risk_per_trade_pct"] / 100
-        max_notional = equity * a["max_position_notional_pct"] / 100
+        max_notional = slot_notional(a)
         cps = self.cfg["costs"]["commission_per_share"]
         accepted: list[Trade] = []
         cands.sort(key=lambda x: (x.entry_time, x.symbol))

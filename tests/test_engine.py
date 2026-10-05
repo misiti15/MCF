@@ -95,3 +95,20 @@ def test_marcoflow_client_blocks_action_endpoints():
             marcoflow.get(bad)
     with pytest.raises(PermissionError):
         marcoflow.get("/api/observations", key="x")
+
+
+def test_scale_out_then_breakeven_is_a_small_win():
+    # entry 100 at bar1, risk 1 (stop 99). Rally to 101 (=1R) -> half off, stop to 100, then fall back
+    bars = day_bars([100, 100, 100.6, 101.2, 100.5, 99.5, 99.0])
+    sig = Signal("X", "t", 1, 0, stop=99.0, scale_out_r=1.0, scale_out_frac=0.5)
+    tr = simulate(sig, bars, FLAT, 0.0)
+    assert tr.exit_reason == "scaled+breakeven"
+    assert tr.r_multiple == pytest.approx(0.5)
+
+
+def test_scale_out_keeps_runner():
+    bars = day_bars([100, 100, 101.5, 103, 104, 105])
+    sig = Signal("X", "t", 1, 0, stop=99.0, target=104.0, scale_out_r=1.0)
+    tr = simulate(sig, bars, FLAT, 0.0)
+    assert tr.exit_reason == "scaled+target"
+    assert tr.r_multiple == pytest.approx(0.5 * 1 + 0.5 * 4)

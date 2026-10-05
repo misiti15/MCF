@@ -107,3 +107,11 @@
 - **Liquidity:** use consolidated volume for relative volume and ADV, never IEX.
 - **Tag every run and trade with its config version** so results are compared by era.
 - **Data-count health checks** per ET day, with an external scheduler.
+
+## Deep-dive findings (2026-10-05, `docs/MARCOFLOW_ANALYSIS.md`)
+- **No target/stop pair on MarcoFlow's entries reaches ≥55% wins with positive expectancy**, for longs or shorts. Signal-level average return is about 0 in every hour, regime and price slice. The entries carry little directional edge, and exits can't fix that.
+- The tracker's "4h" horizon is market hours. Median resolution is 19 clock hours, so signal-level stats are not intraday stats.
+- Win rate by price band (59% under $5 vs 29% over $100) comes from fixed-% targets against different volatility, not from edge. **Use ATR/R-based stops and targets.**
+- Holds of 5 minutes or less won 14.9% (470 trades). The fixed 1.25% stop and 0.3% trail (activated at +0.3%) were inside normal noise.
+- `volumeRatio` is 0 in most rows, so the volume features were effectively missing.
+- Owner decisions for MCF are in `docs/DECISIONS.md`, and the data/broker choice in `docs/DATA_AND_BROKER.md`.

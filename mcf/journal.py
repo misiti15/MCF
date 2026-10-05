@@ -95,7 +95,7 @@ class Journal:
             args.append(kind)
         df = pd.read_sql(q + " ORDER BY t.entry_time", self.db, params=args)
         for c in ("entry_time", "exit_time", "signal_time"):
-            df[c] = pd.to_datetime(df[c], utc=True, errors="coerce").dt.tz_convert("America/New_York")
+            df[c] = pd.to_datetime(df[c], utc=True, errors="coerce", format="ISO8601").dt.tz_convert("America/New_York")
         return df
 
     def latest_run(self, kind: str) -> int | None:

@@ -31,6 +31,8 @@ class Signal:
     entry_price: float | None = None
     entry_valid_bars: int = 30   # for stop entries: bars the order stays working
     exit_by: time | None = None  # time-based exit (default = session flatten time)
+    scale_out_r: float | None = None  # take scale_out_frac off at this many R, then stop -> breakeven
+    scale_out_frac: float = 0.5
     meta: dict[str, Any] = field(default_factory=dict)
 
 
@@ -93,6 +95,17 @@ class Strategy:
 
     def generate(self, ctx: DayContext) -> list[Signal]:
         raise NotImplementedError
+
+    def signals(self, ctx: DayContext) -> list[Signal]:
+        """generate() plus exit settings shared by every setup (from config), capped per day.
+        Both the backtester and the live runner call this, never generate() directly."""
+        out = self.generate(ctx)[: self.max_signals_per_day]
+        so = self.params.get("scale_out_r")
+        for sig in out:
+            if so and sig.scale_out_r is None:
+                sig.scale_out_r = so
+                sig.scale_out_frac = self.params.get("scale_out_frac", 0.5)
+        return out
 
     def eligible(self, ctx: DayContext) -> bool:
         """Cheap universe filter evaluated before generate()."""

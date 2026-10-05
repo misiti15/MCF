@@ -27,8 +27,10 @@ class RiskManager:
         per_share = abs(ref_price - sig.stop)
         if per_share <= 0:
             return 0
+        from ..backtest.engine import slot_notional
+
         risk = self.equity * self.a["risk_per_trade_pct"] / 100
-        cap = self.equity * self.a["max_position_notional_pct"] / 100
+        cap = slot_notional({**self.a, "equity": self.equity})
         return int(min(risk / per_share, cap / ref_price))
 
     def check(self, sig: Signal, ref_price: float) -> tuple[bool, str]:

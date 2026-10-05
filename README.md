@@ -3,7 +3,11 @@
 Research → backtest → paper trade → (eventually) live, for intraday setups across a 3,000–4,000
 symbol US equity/ETF universe. Crypto and options guidance come later (see `docs/ROADMAP.md`).
 
-**Status: Phase 0 (foundation).** The engine, setup library, Alpaca paper-trading loop and
+**Start here:** `MARCOFLOW_CONTEXT.md` (lessons from the predecessor), `docs/DECISIONS.md` (owner decisions),
+`docs/DATA_AND_BROKER.md` (stack), `docs/MARCOFLOW_ANALYSIS.md` (data deep-dive). Hosted dashboard:
+https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow
+
+**Status: Phase 0.5.** The engine, setup library, Alpaca paper-trading loop and
 dashboard are built and tested on synthetic data. No strategy has been validated on real data yet.
 
 ## Design principles
@@ -45,6 +49,10 @@ mcf download --symbols SPY,QQQ,AAPL --start 2024-01-01 --end 2025-01-01 --feed s
 mcf backtest --start 2024-01-01 --label "baseline"
 mcf dashboard
 mcf paper --watchlist SPY,QQQ,AAPL,NVDA,TSLA   # runs one session, then reconciles and rebuilds the dashboard
+mcf brief --send                      # daily brief email (needs MCF_SMTP_* in .env)
+python scripts/import_marcoflow.py    # rebuild data/marcoflow.sqlite from the committed export
+python scripts/analyze_marcoflow.py   # regenerate docs/MARCOFLOW_ANALYSIS.md
+python scripts/marcoflow_to_journal.py  # MarcoFlow trades as a dashboard reference source
 ```
 Data you already have, such as a MarcoFlow export, can be imported from CSV with
 `BarStore.from_csv_dir(csv_dir, "data/cache")`. Each CSV holds one symbol, with a timestamp column

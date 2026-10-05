@@ -72,3 +72,17 @@ def daily_by_strategy(trades: pd.DataFrame) -> pd.DataFrame:
     if trades is None or trades.empty:
         return pd.DataFrame()
     return trades.pivot_table(index="date", columns="strategy", values="pnl", aggfunc="sum").fillna(0).sort_index()
+
+
+def gate_check(summary: dict, gates: dict) -> tuple[bool, list[str]]:
+    """Owner's promotion gates: win rate well above 50% AND positive expectancy, after costs."""
+    fails = []
+    if summary.get("trades", 0) < gates.get("min_trades", 0):
+        fails.append(f"only {summary.get('trades', 0)} trades (< {gates['min_trades']})")
+    if summary.get("win_rate", 0) < gates.get("min_win_rate", 0):
+        fails.append(f"win rate {summary.get('win_rate', 0):.1%} < {gates['min_win_rate']:.0%}")
+    if summary.get("expectancy_r", 0) <= gates.get("min_expectancy_r", 0):
+        fails.append(f"expectancy {summary.get('expectancy_r', 0):+.3f}R not above {gates['min_expectancy_r']}")
+    if summary.get("profit_factor", 0) < gates.get("min_profit_factor", 0):
+        fails.append(f"profit factor {summary.get('profit_factor', 0):.2f} < {gates['min_profit_factor']}")
+    return not fails, fails

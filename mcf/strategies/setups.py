@@ -243,8 +243,9 @@ REGISTRY: dict[str, type[Strategy]] = {
 def build_strategies(cfg: dict) -> list[Strategy]:
     out = []
     top_n = cfg.get("universe", {}).get("stocks_in_play_top_n", 20)
+    exits = cfg.get("exits", {})
     for name, params in cfg.get("strategies", {}).items():
-        params = dict(params)
+        params = {**exits, **params}
         if not params.pop("enabled", True) or name not in REGISTRY:
             continue
         if name == "orb":

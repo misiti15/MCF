@@ -26,11 +26,15 @@ def _pack(trades: pd.DataFrame) -> list[list]:
     ]
 
 
-def build(journal_path: str | Path, out: str | Path) -> Path:
+def build(journal_path: str | Path, out: str | Path, fragment: bool = False, kinds: set[str] | None = None) -> Path:
+    """fragment=True strips the document skeleton (for hosts that wrap the page, e.g. Artifacts).
+    kinds limits which run kinds are included (e.g. {"paper", "reference"} to hide demo backtests)."""
     j = Journal(journal_path)
     runs = j.runs()
     sources = []
     for _, run in runs.sort_values("id", ascending=False).iterrows():
+        if kinds and run["kind"] not in kinds:
+            continue
         tr = j.trades(run_id=int(run["id"]))
         label = run["label"] or f"run {run['id']}"
         sources.append({
@@ -38,9 +42,14 @@ def build(journal_path: str | Path, out: str | Path) -> Path:
             "created": run["created_at"][:16].replace("T", " "), "trades": _pack(tr),
         })
     # paper runs first: they are the source of truth once live
-    sources.sort(key=lambda s: (s["kind"] != "paper", -s["id"]))
+    order = {"paper": 0, "live": 0, "backtest": 1, "reference": 2}
+    sources.sort(key=lambda s: (order.get(s["kind"], 3), -s["id"]))
     payload = {"generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "sources": sources}
     html = TEMPLATE.read_text().replace("/*__DATA__*/null", json.dumps(payload, separators=(",", ":")))
+    if fragment:
+        import re
+
+        html = re.sub(r"(?is)<!doctype html>|</?html[^>]*>|</?head>|</?body>|<meta [^>]*>", "", html).strip()
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html)

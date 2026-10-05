@@ -250,7 +250,7 @@ function render() {
 function init() {
   $("#gen").textContent = "Generated " + (DATA ? DATA.generated : "–");
   if (!DATA || !DATA.sources.length) { render(); return; }
-  $("#src").innerHTML = DATA.sources.map((s, i) => `<option value="${i}">${s.kind === "paper" ? "Paper" : "Backtest"}: ${esc(s.label)} (${s.created})</option>`).join("");
+  $("#src").innerHTML = DATA.sources.map((s, i) => `<option value="${i}">${({paper: "Paper", backtest: "Backtest", reference: "Reference", live: "Live"})[s.kind] || s.kind}: ${esc(s.label)} (${s.created})</option>`).join("");
   const fillStrats = () => { const src = DATA.sources[+$("#src").value]; const ss = [...new Set(src.trades.map(t => t[F.strat]))].sort();
     $("#strat").innerHTML = `<option value="all">All setups</option>` + ss.map(s => `<option>${esc(s)}</option>`).join(""); };
   fillStrats();

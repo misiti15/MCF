@@ -12,11 +12,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import datetime
 
 import pandas as pd
 
-from .analytics.metrics import breakdowns, summarize
+from .analytics.metrics import breakdowns, gate_check, summarize
 from .backtest.engine import Backtester
 from .config import load_config, load_dotenv
 from .data.store import BarStore
@@ -30,9 +31,14 @@ def _symbols(arg: str | None, store: BarStore) -> list[str]:
     return store.symbols()
 
 
-def _print_report(trades: pd.DataFrame) -> None:
+def _print_report(trades: pd.DataFrame, cfg: dict | None = None) -> None:
     s = summarize(trades)
     print(json.dumps({k: (round(v, 4) if isinstance(v, float) else v) for k, v in s.items()}, indent=2))
+    if cfg and not trades.empty:
+        print("\n== promotion gates (per setup) ==")
+        for name, g in trades.groupby("strategy"):
+            ok, fails = gate_check(summarize(g), cfg.get("gates", {}))
+            print(f"  {name:<22} {'PASS' if ok else 'FAIL: ' + '; '.join(fails)}")
     b = breakdowns(trades)
     for name in ("strategy", "time_of_day", "weekday", "exit_reason"):
         if name in b:
@@ -51,7 +57,7 @@ def cmd_backtest(args, cfg):
         strategies = [s for s in strategies if s.name in keep]
     print(f"backtesting {len(data)} symbols with {[s.name for s in strategies]}")
     trades = Backtester(strategies, cfg).run(data, progress=True)
-    _print_report(trades)
+    _print_report(trades, cfg)
     j = Journal(cfg["data"]["journal_path"])
     run = j.new_run("backtest", args.label or f"bt {args.start}..{args.end or 'now'}", cfg)
     j.add_trades(run, trades)
@@ -67,7 +73,7 @@ def cmd_demo(args, cfg):
     cfg["universe"]["min_avg_dollar_volume"] = 0
     cfg["account"]["max_daily_loss_r"] = 1e9  # random data trips the daily stop; lift it so every setup shows
     trades = Backtester(build_strategies(cfg), cfg).run(data)
-    _print_report(trades)
+    _print_report(trades, cfg)
     j = Journal(cfg["data"]["journal_path"])
     run = j.new_run("backtest", "DEMO synthetic data (not real results)", cfg)
     j.add_trades(run, trades)
@@ -101,6 +107,18 @@ def cmd_dashboard(args, cfg):
     from .dashboard.build import build
 
     print("dashboard:", build(cfg["data"]["journal_path"], args.out))
+
+
+def cmd_brief(args, cfg):
+    load_dotenv()
+    from .report.brief import build_brief, send_email
+
+    subject, text, html_body = build_brief(Journal(cfg["data"]["journal_path"]), args.day, args.kind,
+                                           cfg.get("report", {}).get("dashboard_url"))
+    print(text)
+    if args.send:
+        send_email(subject, text, html_body, os.environ.get("MCF_EMAIL_TO") or cfg["report"]["email_to"])
+        print("sent")
 
 
 def cmd_paper(args, cfg):
@@ -148,6 +166,12 @@ def main(argv=None):
     db = sub.add_parser("dashboard")
     db.add_argument("--out", default="reports/dashboard.html")
     db.set_defaults(fn=cmd_dashboard)
+
+    br = sub.add_parser("brief", help="daily brief (prints; --send emails it)")
+    br.add_argument("--day")
+    br.add_argument("--kind", default="paper", choices=["paper", "backtest", "live", "reference"])
+    br.add_argument("--send", action="store_true")
+    br.set_defaults(fn=cmd_brief)
 
     pp = sub.add_parser("paper")
     pp.add_argument("--watchlist", help="comma-separated; default = all cached symbols")

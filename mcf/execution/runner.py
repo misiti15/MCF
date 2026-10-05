@@ -79,7 +79,7 @@ class PaperRunner:
                 key = (ctx.symbol, strat.name)
                 if key in self.fired or not strat.eligible(ctx):
                     continue
-                for sig in strat.generate(ctx)[: strat.max_signals_per_day]:
+                for sig in strat.signals(ctx):
                     if sig.entry_type == "market" and sig.bar_index != last:
                         continue
                     if sig.entry_type == "stop":
@@ -92,6 +92,13 @@ class PaperRunner:
     def _enter(self, sig, px, key):
         if key in self.fired:
             return
+        if sig.side == -1:
+            sh = self.cfg.get("shorts", {})
+            if not sh.get("enabled", True):
+                return
+            if sh.get("require_easy_to_borrow", True) and not self.broker.can_short(sig.symbol):
+                print(f"skip {sig.symbol} {sig.strategy}: not shortable/ETB")
+                return
         ok, why = self.risk.check(sig, px)
         if not ok:
             print(f"skip {sig.symbol} {sig.strategy}: {why}")
