@@ -346,8 +346,7 @@ def test_runner_manage_time_stop_and_trail(tmp_path):
     calls = []
     broker = SimpleNamespace(positions=lambda: {"AAA": 1, "BBB": 1}, equity=lambda: 1e5,
                              orders_today_with_prefix=lambda p, a: [],
-                             cancel_orders_for_symbol=lambda s, p: calls.append(("cancel", s)),
-                             close_position=lambda s: calls.append(("close", s)),
+                             close_mcf_position=lambda s, p: calls.append(("close", s)) or True,
                              move_stop=lambda s, px, p: calls.append(("move", s, px)))
     cfg = load_config()
     cfg["data"]["journal_path"] = str(tmp_path / "j.db")

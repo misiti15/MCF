@@ -90,6 +90,9 @@ class Publisher:
     def push(self, paths: list[str], message: str):
         if not self.enabled:
             return
+        paths = [p for p in paths if (self.dir / p).exists()]
+        if not paths:
+            return
         self._git("add", *paths)
         if subprocess.run(["git", "-C", str(self.dir), "diff", "--cached", "--quiet"]).returncode == 0:
             return
