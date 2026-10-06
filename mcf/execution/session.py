@@ -30,6 +30,28 @@ def job_deadline(now: pd.Timestamp, live: dict) -> pd.Timestamp | None:
     return now + pd.Timedelta(minutes=live.get("max_job_minutes", 340))
 
 
+SETUP_KEYS = ("strategies", "exits", "shorts", "live", "universe")
+
+
+def freeze_setups(cfg: dict, state_dir: str | Path, now: pd.Timestamp) -> str:
+    """Owner rule (2026-10-06): setups change only outside market hours. The first job of a session
+    snapshots the setup-defining config to state/setups/<date>.json; every later job that day trades
+    that snapshot, so an edit merged during market hours waits for the next session."""
+    import json
+
+    d = Path(state_dir) / "setups"
+    d.mkdir(parents=True, exist_ok=True)
+    snap = d / f"{now.date()}.json"
+    if snap.exists():
+        frozen = json.loads(snap.read_text())
+        changed = [k for k in SETUP_KEYS if cfg.get(k) != frozen.get(k)]
+        cfg.update({k: frozen[k] for k in SETUP_KEYS if k in frozen})
+        return (f"setups frozen for {now.date()} (snapshot {snap.name})"
+                + (f"; ignoring intraday edits to: {', '.join(changed)}" if changed else ""))
+    snap.write_text(json.dumps({k: cfg.get(k) for k in SETUP_KEYS}, indent=1, default=str))
+    return f"setups snapshot written for {now.date()} ({len([s for s in cfg['strategies'].values() if s.get('enabled')])} enabled)"
+
+
 def priors_path(state_dir: str | Path, day) -> Path:
     return Path(state_dir) / "cache" / f"priors-{day}.pkl"
 

@@ -72,10 +72,44 @@ class PaperRunner:
                 self.fired.add((r.symbol, r.strategy))
                 self.open_strategy[r.symbol] = r.strategy
         self.risk.state.trades_today = int((sig.status == "submitted").sum()) if len(sig) else 0
+        if not self.dry_run:
+            self._restore_from_broker(today)
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
             self.risk.state.realized_r = float(done.loc[done.date == str(today), "r_multiple"].sum())
         self._sync_open()
+
+    def _restore_from_broker(self, today):
+        """The broker is the source of truth for what MCF holds: the journal on the state branch can lag a
+        crashed or cancelled job by a few minutes. Every MCF order id is mcf-<strategy>-<symbol>-<YYYYMMDD>."""
+        after = pd.Timestamp(f"{today} 00:00", tz=NY).to_pydatetime()
+        try:
+            orders = self.broker.orders_today_with_prefix(COID_PREFIX, after)
+        except Exception as e:
+            print(f"broker restore skipped: {e}")
+            return
+        known = set(self.journal.open_orders(self.run_id).broker_order_id) | set(
+            self.journal.signals(self.run_id, str(today)).broker_order_id.dropna())
+        added = 0
+        for o in orders:
+            try:
+                strategy, symbol, _ = o.client_order_id[len(COID_PREFIX):].rsplit("-", 2)
+            except ValueError:
+                continue
+            self.seen.add((symbol, strategy))
+            self.fired.add((symbol, strategy))
+            self.open_strategy.setdefault(symbol, strategy)
+            if str(o.id) in known:
+                continue
+            side = 1 if str(getattr(o.side, "value", o.side)).lower() == "buy" else -1
+            stop = next((float(l.stop_price) for l in (o.legs or []) if getattr(l, "stop_price", None)), float("nan"))
+            tgt = next((float(l.limit_price) for l in (o.legs or []) if getattr(l, "limit_price", None)), None)
+            ref = float(o.filled_avg_price) if o.filled_avg_price else float("nan")
+            self.journal.record_order(self.run_id, symbol, strategy, side, int(float(o.qty or 0)), ref, stop, tgt,
+                                      str(o.id), "submitted", '{"restored_from_broker": true}')
+            added += 1
+        if added:
+            print(f"restored {added} MCF orders from the broker that the journal had not saved yet")
 
     def _mcf_symbols(self) -> set[str]:
         return set(self.open_strategy)

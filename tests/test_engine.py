@@ -260,3 +260,35 @@ def test_research_setups_run_in_backtester():
     if len(trades):
         et = pd.to_datetime(trades.entry_time)
         assert (et.dt.time >= pd.Timestamp("09:50").time()).all()   # every research setup respects 09:50
+
+
+def test_setup_freeze_ignores_intraday_edits(tmp_path):
+    from mcf.execution.session import freeze_setups
+
+    now = pd.Timestamp("2026-10-07 09:00", tz="America/New_York")
+    cfg = load_config()
+    assert "snapshot written" in freeze_setups(cfg, tmp_path, now)
+    edited = load_config()
+    edited["strategies"]["orb"]["enabled"] = not cfg["strategies"]["orb"]["enabled"]
+    note = freeze_setups(edited, tmp_path, now.replace(hour=13))
+    assert "ignoring intraday edits to: strategies" in note
+    assert edited["strategies"]["orb"]["enabled"] == cfg["strategies"]["orb"]["enabled"]
+
+
+def test_restore_from_broker_recovers_unsaved_orders(tmp_path):
+    from types import SimpleNamespace
+
+    from mcf.execution.runner import PaperRunner
+
+    leg = SimpleNamespace(stop_price=99.0, limit_price=None)
+    order = SimpleNamespace(client_order_id="mcf-heat_fade_short-AMD-20261006", id="abc", side="sell", qty="3",
+                            filled_avg_price="100.0", legs=[leg])
+    broker = SimpleNamespace(orders_today_with_prefix=lambda p, a: [order], positions=lambda: {"AMD": object()},
+                             equity=lambda: 100000.0)
+    cfg = load_config()
+    cfg["data"]["journal_path"] = str(tmp_path / "j.db")
+    r = PaperRunner(cfg, [], {}, broker=broker)
+    r.restore(pd.Timestamp("2026-10-06").date())
+    assert ("AMD", "heat_fade_short") in r.fired and r.open_strategy["AMD"] == "heat_fade_short"
+    assert "AMD" in r.risk.state.open_symbols
+    assert r.journal.open_orders(r.run_id).broker_order_id.tolist() == ["abc"]

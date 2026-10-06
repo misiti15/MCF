@@ -148,6 +148,10 @@ def cmd_live(args, cfg):
         return
     slot = f"job {now:%H:%M}"
     _state_cfg(cfg, args.state_dir)
+    from .execution.session import freeze_setups
+
+    note = freeze_setups(cfg, args.state_dir, now)
+    print(note)
     pub = Publisher(args.state_dir, enabled=not args.no_push)
     priors = prep(cfg, args.state_dir, now.date())
     status = os.path.join(args.state_dir, "status.json")
@@ -156,7 +160,7 @@ def cmd_live(args, cfg):
     def on_status(st):
         paths = ["status.json"]
         ts = pd.Timestamp.now(tz=NY)
-        if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=30) or st["phase"] in ("closed", "handover"):
+        if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=2) or st["phase"] in ("closed", "handover"):
             paths.append("journal.db")
             last["journal"] = ts
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
@@ -165,7 +169,7 @@ def cmd_live(args, cfg):
     runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
                          on_status=on_status)
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups"]
     end = pd.Timestamp.now(tz=NY)
     if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
         from .report.daily_review import write_review
