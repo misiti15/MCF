@@ -183,6 +183,16 @@ strategies:
     window: [1105, 1330]
     gate: gap+
     scale_out_r: null
+  # ---- Layered-setup swarm 2026-10-06 (research/setups2/SWARM.md): ~855,600 configurations, 9 finalists,
+  # one survived the locked test. Paper only.
+  exhaustion_short:
+    enabled: true
+    type: lab
+    module: research/setups2/candidates/volume_flip_1.py   # RSI5 > 90, > 1% above 5-min SMA20, bearish RSI divergence, 13:00-15:00
+    min_adv: 95000000            # the study's population: ~1,200 most liquid names
+    window: [1300, 1500]
+    prefilter: new_high_100m
+    scale_out_r: null
 
 discovery:
   # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.

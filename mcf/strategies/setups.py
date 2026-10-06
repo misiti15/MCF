@@ -377,8 +377,9 @@ class LabStrategy(Strategy):
     name = "lab"
     GEOMS = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5)}
 
-    def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0, **params):
-        super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, **params)
+    def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0,
+                 window: tuple | list | None = None, prefilter: str | None = None, **params):
+        super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, window=window, prefilter=prefilter, **params)
         self.name = name
         import importlib.util
         import sys
@@ -400,9 +401,18 @@ class LabStrategy(Strategy):
         n = len(ctx.bars)
         if n < 5 or n % 5:
             return False   # live: evaluate once per completed 5-minute bar
+        if n == 390:
+            return True    # full-day context (backtest): the mask's own time layers apply
         end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
         hhmm = end.hour * 100 + end.minute
-        return n == 390 or 950 <= hhmm <= 1500
+        lo, hi = self.window or (950, 1500)
+        if not lo <= hhmm <= hi:
+            return False
+        if self.prefilter == "new_high_100m":
+            # bear_div needs the latest 5-minute high to be the highest of 20 bars (100 minutes)
+            h = ctx.bars["high"].to_numpy()
+            return len(h) >= 100 and h[-5:].max() >= h[-100:].max()
+        return True
 
     def generate(self, ctx: DayContext):
         from ..data.bars import resample

@@ -160,7 +160,7 @@ def cmd_live(args, cfg):
     def on_status(st):
         paths = ["status.json"]
         ts = pd.Timestamp.now(tz=NY)
-        if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=30) or st["phase"] in ("closed", "handover"):
+        if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=2) or st["phase"] in ("closed", "handover"):
             paths.append("journal.db")
             last["journal"] = ts
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
