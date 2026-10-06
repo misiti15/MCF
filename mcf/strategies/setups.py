@@ -7,6 +7,7 @@ These are starting points to be validated on real data — not proven edges.
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
 from .. import features as F
 from .base import DayContext, Signal, Strategy, t
@@ -23,7 +24,8 @@ class OpeningRangeBreakout(Strategy):
     name = "orb"
 
     def eligible(self, ctx):
-        return ctx.rank_rvol is not None and ctx.rank_rvol <= self.params.get("top_n", 20)
+        return (ctx.rank_rvol is not None and ctx.rank_rvol <= self.params.get("top_n", 20)
+                and ctx.atr >= self.params.get("min_atr", 0.0))
 
     def generate(self, ctx: DayContext):
         hi, lo, last = F.opening_range(ctx.bars, self.range_minutes)
@@ -233,11 +235,146 @@ class NoiseBandMomentum(Strategy):
         return []
 
 
+class RuleStrategy(Strategy):
+    """A layered rule promoted from setup discovery (mcf/discovery.py), e.g.
+    short when "RSI14 > 65" + "below 20 SMA". Enters at the close of the FIRST complete 5-minute bar
+    where every layer holds (same definition the miner measured); stop 1R, target `target_r` R,
+    with R = r_atr_frac x daily ATR. Configure under `strategies:` with `type: rule`."""
+
+    name = "rule"
+
+    def __init__(self, name: str, layers: list[str], side: str, r_atr_frac: float = 0.25,
+                 target_r: float | None = 1.0, **params):
+        super().__init__(layers=layers, side=side, r_atr_frac=r_atr_frac, target_r=target_r, **params)
+        self.name = name
+        from ..layers import LABELS
+
+        unknown = [x for x in layers if x not in LABELS]
+        if unknown:
+            raise ValueError(f"{name}: unknown layers {unknown}")
+
+    def generate(self, ctx: DayContext):
+        from ..data.bars import resample
+        from ..layers import layer_frame, rule_mask
+
+        bars = ctx.bars
+        d5 = resample(bars, "5min")
+        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]          # complete 5-min bars only
+        if d5.empty:
+            return []
+        rv = ctx.rvol()
+        ends = [bars.index.searchsorted(ts + pd.Timedelta(minutes=4)) for ts in d5.index]
+        ends = [min(e, len(bars) - 1) for e in ends]
+        f = layer_frame(d5, ctx.prior5, ctx.prev_close, rv.to_numpy()[ends])
+        hits = np.flatnonzero(rule_mask(f, self.layers))
+        if not len(hits):
+            return []
+        i = hits[0]
+        side = 1 if self.side == "long" else -1
+        px = float(f["close"].iloc[i])
+        r = self.r_atr_frac * ctx.atr
+        if r <= 0:
+            return []
+        tgt = None if self.target_r is None else px + side * self.target_r * r
+        return [Signal(ctx.symbol, self.name, side, int(ends[i]), stop=px - side * r, target=tgt,
+                       meta={"layers": " + ".join(self.layers)})]
+
+
+class HeatStrategy(Strategy):
+    """A re-weighted MarcoFlow heat score (mcf/research/heat.py) from the heat-score study.
+    `formula` names a module file exposing score(df), LONG_AT and SHORT_AT (research/heat/candidates/*.py).
+    Enters at the close of the first complete 5-minute bar where the score crosses its threshold
+    (long >= LONG_AT, short <= SHORT_AT); stop 1R, target `target_r` R, R = r_atr_frac x daily ATR —
+    the same outcome model the study measured. Configure under `strategies:` with `type: heat`."""
+
+    name = "heat"
+
+    def __init__(self, name: str, formula: str, r_atr_frac: float = 0.25, target_r: float | None = 1.0,
+                 sides: str = "both", min_adv: float = 0.0, window: tuple | list | None = None,
+                 gate: str | None = None, **params):
+        super().__init__(formula=formula, r_atr_frac=r_atr_frac, target_r=target_r, sides=sides, min_adv=min_adv,
+                         window=window, gate=gate, **params)
+        self.name = name
+        import importlib.util
+        from pathlib import Path
+
+        path = Path(formula)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parents[2] / path
+        spec = importlib.util.spec_from_file_location(f"heat_{name}", path)
+        self.mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.mod)
+
+    def eligible(self, ctx):
+        """Cheap pre-filters matching the study: its population (min_adv), its time window (bar-close HHMM)
+        and its gate. Live, the score is evaluated only when a 5-minute bar has just completed."""
+        if ctx.avg_dollar_volume < self.min_adv:
+            return False
+        n = len(ctx.bars)
+        if n < 5 or n % 5:
+            return False
+        end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
+        hhmm = end.hour * 100 + end.minute
+        if self.window and not (self.window[0] <= hhmm and (hhmm <= self.window[1] or n == 390)):
+            return False   # full-day context (backtest) is always evaluated
+        o = float(ctx.bars["open"].iloc[0])
+        last = float(ctx.bars["close"].iloc[-1])
+        if self.gate == "fo-" and n < 390 and not last < o:
+            return False
+        if self.gate == "fo+" and n < 390 and not last > o:
+            return False
+        if self.gate == "gap+" and not o > ctx.prev_close:
+            return False
+        if self.gate == "gap-" and not o < ctx.prev_close:
+            return False
+        return True
+
+    def generate(self, ctx: DayContext):
+        from ..data.bars import resample
+        from ..research.heat import heat_frame
+
+        bars = ctx.bars
+        d5 = resample(bars, "5min")
+        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
+        if d5.empty:
+            return []
+        hist = d5 if ctx.prior5 is None or ctx.prior5.empty else pd.concat([ctx.prior5, d5])
+        f = heat_frame(hist).iloc[-len(d5):].copy()
+        f["atr_d"] = ctx.atr
+        f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
+        s = np.asarray(self.mod.score(f), dtype=float)
+        ok = (f["tod"].to_numpy() >= 950) & (f["tod"].to_numpy() <= 1500)
+        cands = []
+        if self.sides in ("both", "long") and getattr(self.mod, "LONG_AT", None) is not None:
+            hit = np.flatnonzero(ok & (s >= self.mod.LONG_AT))
+            if len(hit):
+                cands.append((hit[0], 1))
+        if self.sides in ("both", "short") and getattr(self.mod, "SHORT_AT", None) is not None:
+            hit = np.flatnonzero(ok & (s <= self.mod.SHORT_AT))
+            if len(hit):
+                cands.append((hit[0], -1))
+        out = []
+        for i, side in sorted(cands):
+            end = min(bars.index.searchsorted(d5.index[i] + pd.Timedelta(minutes=4)), len(bars) - 1)
+            px, r = float(d5["close"].iloc[i]), self.r_atr_frac * ctx.atr
+            if r <= 0:
+                continue
+            tgt = None if self.target_r is None else px + side * self.target_r * r
+            out.append(Signal(ctx.symbol, self.name, side, int(end), stop=px - side * r, target=tgt,
+                              meta={"heat_score": float(s[i])}))
+        return out[:1]
+
+
 REGISTRY: dict[str, type[Strategy]] = {
     c.name: c
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
               VWAPReversion)
 }
+from .research_setups import RESEARCH_REGISTRY  # noqa: E402
+
+REGISTRY.update(RESEARCH_REGISTRY)
 
 
 def build_strategies(cfg: dict) -> list[Strategy]:
@@ -246,7 +383,22 @@ def build_strategies(cfg: dict) -> list[Strategy]:
     exits = cfg.get("exits", {})
     for name, params in cfg.get("strategies", {}).items():
         params = {**exits, **params}
-        if not params.pop("enabled", True) or name not in REGISTRY:
+        if not params.pop("enabled", True):
+            continue
+        kind = params.pop("type", None)
+        if kind == "rule":
+            out.append(RuleStrategy(name=name, **params))
+            continue
+        if kind == "heat":
+            out.append(HeatStrategy(name=name, **params))
+            continue
+        cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
+        if cls_name not in REGISTRY:
+            continue
+        if cls_name != name:
+            st = REGISTRY[cls_name](**params)
+            st.name = name
+            out.append(st)
             continue
         if name == "orb":
             params.setdefault("top_n", top_n)

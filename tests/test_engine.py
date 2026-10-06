@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from mcf.analytics.metrics import breakdowns, summarize
-from mcf.backtest.engine import Backtester, Costs, simulate
+from mcf.backtest.engine import Backtester, Costs, SymbolHistory, simulate
 from mcf.config import load_config
 from mcf.data.bars import TZ
 from mcf.data.synthetic import make_universe
@@ -124,3 +124,139 @@ def test_success_is_first_touch_independent_of_exit():
     assert tr.success == 1
     tr = simulate(Signal("X", "t", 1, 0, stop=99.0), day_bars([100, 100, 99.5, 98.9, 101.5]), FLAT, 0.0)
     assert tr.success == 0
+
+
+def test_gate_requires_sustained_months():
+    from mcf.analytics.metrics import gate_check
+
+    gates = {"min_months": 3, "min_positive_month_rate": 0.67}
+    # one big month carries three losing ones: totals look fine, sustainability fails
+    dates = ["2026-01-05"] * 10 + ["2026-02-05", "2026-03-05", "2026-04-05"]
+    r = [3.0] * 10 + [-1.0] * 3
+    tr = pd.DataFrame({"date": dates, "r_multiple": r, "pnl": [x * 100 for x in r]})
+    s = summarize(tr)
+    assert s["months"] == 4 and s["positive_month_rate"] == 0.25
+    ok, fails = gate_check(s, gates)
+    assert not ok and any("positive months" in f for f in fails)
+
+
+def test_extended_tier_only_when_in_play():
+    from types import SimpleNamespace
+
+    from mcf.backtest.engine import in_play_filter, universe_ok
+
+    cfg = load_config()
+    u = cfg["universe"]
+    mk = lambda adv, atr=1.0: SimpleNamespace(symbol="XYZ", prev_close=20.0, atr=atr, avg_dollar_volume=adv)
+    core, ext, thin = mk(u["min_avg_dollar_volume"] * 2), mk(u["extended_min_avg_dollar_volume"] * 2), mk(1.0)
+    assert universe_ok(core, cfg) and universe_ok(ext, cfg) and not universe_ok(thin, cfg)
+    assert not universe_ok(mk(core.avg_dollar_volume, atr=0.05), cfg)  # T-bill-like: no movement
+    ctxs, orv = in_play_filter([core, ext, ext], [0.5, 1.0, u["extended_min_rvol"]], cfg)
+    assert ctxs == [core, ext] and orv == [0.5, u["extended_min_rvol"]]
+
+
+def test_job_window():
+    from mcf.execution.session import job_deadline
+
+    live = {"start_from": "08:00", "max_job_minutes": 340}
+    ts = lambda s: pd.Timestamp(s, tz="America/New_York")
+    assert job_deadline(ts("2026-10-06 07:35"), live) is None          # too early (EST-only cron line)
+    assert job_deadline(ts("2026-10-06 08:35"), live) == ts("2026-10-06 14:15")
+    assert job_deadline(ts("2026-10-06 16:15"), live) is None          # after the session
+    assert job_deadline(ts("2026-10-10 10:00"), live) is None          # Saturday
+
+
+def test_rule_strategy_matches_layer_definition():
+    from mcf.data.bars import resample
+    from mcf.layers import layer_frame, rule_mask
+    from mcf.strategies.setups import RuleStrategy
+
+    cfg = load_config()
+    cfg["universe"]["min_avg_dollar_volume"] = 0
+    data = make_universe(["AAA"], days=30)
+    hist = SymbolHistory("AAA", data["AAA"])
+    day = sorted(hist.by_day)[-1]
+    ctx = hist.context(day)
+    layers = ["above VWAP", "within 2% of open"]
+    sigs = RuleStrategy("rule_t", layers, "long").generate(ctx)
+    d5 = resample(ctx.bars, "5min")
+    rv = ctx.rvol().to_numpy()[[min(ctx.bars.index.searchsorted(x + pd.Timedelta(minutes=4)), len(ctx.bars) - 1) for x in d5.index]]
+    hits = np.flatnonzero(rule_mask(layer_frame(d5, ctx.prior5, ctx.prev_close, rv), layers))
+    if len(hits):
+        assert sigs and ctx.bars.index[sigs[0].bar_index] == d5.index[hits[0]] + pd.Timedelta(minutes=4)
+        assert sigs[0].stop < ctx.bars["close"].iloc[sigs[0].bar_index]
+    else:
+        assert not sigs
+
+
+def test_discovery_mines_synthetic():
+    from mcf.data.bars import resample
+    from mcf.discovery import build_frame, mine, wilson_lb
+
+    cfg = load_config()
+    cfg["discovery"].update(min_train=20, min_test=5, max_layers=2)
+    data = {s: resample(df, "5min") for s, df in make_universe(["AAA", "BBB", "CCC"], days=40).items()}
+    x = build_frame(data, cfg, log=lambda *_: None)
+    assert len(x) and {"succ_long", "r_short", "rsi", "rvol"} <= set(x.columns)
+    assert x.tod.min() >= 950                       # owner's 9:30-9:50 caution respected
+    res, meta = mine(x, cfg)
+    assert meta["rules_tried"] > 0
+    assert 0 <= wilson_lb(5, 10) < 0.5
+
+
+def test_pinned_symbols_bypass_universe_filters():
+    from types import SimpleNamespace
+
+    from mcf.backtest.engine import pinned_symbols, universe_ok
+
+    cfg = load_config()
+    assert {"SPY", "QQQ"} <= pinned_symbols(cfg)
+    spy = SimpleNamespace(symbol="SPY", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)   # ATR 0.93% < 1%
+    other = SimpleNamespace(symbol="XYZ", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)
+    assert universe_ok(spy, cfg) and not universe_ok(other, cfg)
+
+
+def test_daily_review_compares_days(tmp_path):
+    from mcf.journal import Journal
+    from mcf.report.daily_review import build_review, to_markdown
+
+    j = Journal(tmp_path / "j.db")
+    rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    row = dict(symbol="AAA", strategy="orb", side=1, signal_time="2026-10-05T10:00:00-04:00",
+               entry_time="2026-10-05T10:01:00-04:00", entry=10.0, stop=9.9, target=None,
+               exit_time="2026-10-05T15:55:00-04:00", exit=10.2, exit_reason="flatten", mae_r=None, mfe_r=None,
+               success=1, shares=100, meta="", slip_bps=4.0, pnl_adj=20.0)
+    j.add_trades(rid, pd.DataFrame([{**row, "date": "2026-10-05", "r_multiple": 2.0, "pnl": 20.0},
+                                    {**row, "date": "2026-10-06", "r_multiple": -1.0, "pnl": -10.0, "slip_bps": 25.0}]))
+    rv = build_review(j, rid, "2026-10-06")
+    assert rv["today"]["trades"] == 1 and rv["yesterday"]["exp_r"] == 2.0
+    assert rv["beat_rolling5"]["exp_r"] is False
+    assert any("slippage" in f for f in rv["findings"])
+    assert "daily review" in to_markdown(rv)
+
+
+def test_heat_strategy_runs_on_context():
+    from mcf.strategies.setups import HeatStrategy
+
+    data = make_universe(["AAA"], days=30)
+    hist = SymbolHistory("AAA", data["AAA"])
+    ctx = hist.context(sorted(hist.by_day)[-1])
+    st = HeatStrategy("heat_original", "research/heat/candidates/_original.py")
+    for s in st.generate(ctx):
+        assert s.side in (1, -1) and (s.stop < s.target if s.side == 1 else s.stop > s.target)
+
+
+def test_research_setups_run_in_backtester():
+    cfg = load_config()
+    cfg["universe"]["min_avg_dollar_volume"] = 0
+    research = ["orb20_a", "orb20_b", "gap_continuation", "gap_sma20", "index_gap_fill", "close_momentum",
+                "eod_reversal", "vwap_pullback"]
+    for name, st in cfg["strategies"].items():
+        st["enabled"] = name in research
+    strats = build_strategies(cfg)
+    assert sorted(s.name for s in strats) == sorted(research)
+    data = make_universe(["SPY", "QQQ", "AAA", "BBB", "CCC"], days=40)
+    trades = Backtester(strats, cfg).run(data)
+    if len(trades):
+        et = pd.to_datetime(trades.entry_time)
+        assert (et.dt.time >= pd.Timestamp("09:50").time()).all()   # every research setup respects 09:50

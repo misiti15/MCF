@@ -17,6 +17,7 @@ def summarize(trades: pd.DataFrame) -> dict:
     eq = daily.cumsum()
     dd = (eq - eq.cummax()).min() if len(eq) else 0.0
     sharpe = daily.mean() / daily.std() * np.sqrt(252) if len(daily) > 1 and daily.std() > 0 else np.nan
+    monthly = trades.groupby(pd.to_datetime(trades["date"]).dt.strftime("%Y-%m"))["r_multiple"].sum()
     return {
         "trades": int(len(trades)),
         "success_rate": float(trades["success"].mean()) if "success" in trades and trades["success"].notna().any() else float("nan"),
@@ -30,6 +31,9 @@ def summarize(trades: pd.DataFrame) -> dict:
         "daily_sharpe": float(sharpe),
         "green_day_rate": float((daily > 0).mean()) if len(daily) else 0.0,
         "days": int(len(daily)),
+        "months": int(len(monthly)),
+        "positive_month_rate": float((monthly > 0).mean()) if len(monthly) else 0.0,
+        "worst_month_r": float(monthly.min()) if len(monthly) else 0.0,
         # break-even win rate given this payoff profile: p*W = (1-p)*|L|
         "breakeven_win_rate": float(
             abs(losses.mean()) / (wins.mean() + abs(losses.mean()))
@@ -77,7 +81,8 @@ def daily_by_strategy(trades: pd.DataFrame) -> pd.DataFrame:
 
 
 def gate_check(summary: dict, gates: dict) -> tuple[bool, list[str]]:
-    """Owner's promotion gates: win rate well above 50% AND positive expectancy, after costs."""
+    """Owner's promotion gates: win rate well above 50% AND positive expectancy, after costs,
+    AND sustained — profitable in most months, not carried by one lucky stretch."""
     fails = []
     if summary.get("trades", 0) < gates.get("min_trades", 0):
         fails.append(f"only {summary.get('trades', 0)} trades (< {gates['min_trades']})")
@@ -90,4 +95,8 @@ def gate_check(summary: dict, gates: dict) -> tuple[bool, list[str]]:
         fails.append(f"expectancy {summary.get('expectancy_r', 0):+.3f}R not above {gates['min_expectancy_r']}")
     if summary.get("profit_factor", 0) < gates.get("min_profit_factor", 0):
         fails.append(f"profit factor {summary.get('profit_factor', 0):.2f} < {gates['min_profit_factor']}")
+    if summary.get("months", 0) < gates.get("min_months", 0):
+        fails.append(f"only {summary.get('months', 0)} months of trades (< {gates['min_months']})")
+    if summary.get("positive_month_rate", 0) < gates.get("min_positive_month_rate", 0):
+        fails.append(f"positive months {summary.get('positive_month_rate', 0):.0%} < {gates['min_positive_month_rate']:.0%}")
     return not fails, fails

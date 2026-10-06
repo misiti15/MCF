@@ -5,7 +5,9 @@
   mcf universe                     list tradable symbols (Alpaca assets)
   mcf backtest --start 2024-01-01 [--symbols ...] [--label name]
   mcf dashboard [--out reports/dashboard.html]
-  mcf paper --watchlist SPY,QQQ,...  run one paper-trading session on Alpaca
+  mcf discover                     weekly setup discovery -> reports/discovery (candidates only)
+  mcf prep                         pre-market: universe + priors into the state dir
+  mcf live [--dry-run]             one CI job of the live paper session (runs to close or job limit)
 """
 
 from __future__ import annotations
@@ -98,7 +100,7 @@ def cmd_universe(args, cfg):
     from .data.universe import build_universe
 
     df = build_universe(cfg, args.out or "data/universe.csv")
-    print(f"{len(df)} symbols; ADV ${df.adv.min() / 1e6:.0f}M..${df.adv.max() / 1e9:.1f}B; "
+    print(f"{len(df)} symbols ({df.tier.value_counts().to_dict()}); ADV ${df.adv.min() / 1e6:.0f}M..${df.adv.max() / 1e9:.1f}B; "
           f"shortable+ETB {int((df.shortable & df.easy_to_borrow).sum())}")
 
 
@@ -120,17 +122,71 @@ def cmd_brief(args, cfg):
         print("sent")
 
 
-def cmd_paper(args, cfg):
+def _state_cfg(cfg, state_dir):
+    cfg["data"]["journal_path"] = os.path.join(state_dir, "journal.db")
+    return cfg
+
+
+def cmd_prep(args, cfg):
+    load_dotenv()
+    from .execution.session import NY, prep
+
+    day = pd.Timestamp(args.day) if args.day else pd.Timestamp.now(tz=NY)
+    prep(cfg, args.state_dir, day.date())
+
+
+def cmd_live(args, cfg):
+    """One CI slot of the live paper session (see mcf/execution/session.py)."""
     load_dotenv()
     from .execution.runner import PaperRunner
+    from .execution.session import NY, Publisher, job_deadline, prep
 
-    store = BarStore(cfg["data"]["cache_dir"])
-    watch = _symbols(args.watchlist, store)
-    hist = store.load_many(watch, start=(pd.Timestamp.now() - pd.Timedelta(days=40)).date())
-    PaperRunner(cfg, build_strategies(cfg), watch, hist).run_day()
-    from .dashboard.build import build
+    now = pd.Timestamp.now(tz=NY)
+    until = job_deadline(now, cfg.get("live", {}))
+    if until is None and not args.force:
+        print(f"{now:%a %H:%M} ET is outside the trading-job window: nothing to do")
+        return
+    slot = f"job {now:%H:%M}"
+    _state_cfg(cfg, args.state_dir)
+    pub = Publisher(args.state_dir, enabled=not args.no_push)
+    priors = prep(cfg, args.state_dir, now.date())
+    status = os.path.join(args.state_dir, "status.json")
+    last = {"journal": None}
 
-    build(cfg["data"]["journal_path"], "reports/dashboard.html")
+    def on_status(st):
+        paths = ["status.json"]
+        ts = pd.Timestamp.now(tz=NY)
+        if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=30) or st["phase"] in ("closed", "handover"):
+            paths.append("journal.db")
+            last["journal"] = ts
+        pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
+
+    print(f"{slot}: {len(priors)} symbols, until {until or 'close'}, dry_run={args.dry_run}")
+    runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
+                         on_status=on_status)
+    runner.run(until=until)
+    paths = ["status.json", "journal.db", "universe.csv"]
+    end = pd.Timestamp.now(tz=NY)
+    if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
+        from .report.daily_review import write_review
+
+        md = write_review(runner.journal, runner.run_id, str(end.date()), os.path.join(args.state_dir, "reviews"),
+                          runner.health)
+        print(md.read_text())
+        paths.append("reviews")
+    pub.push(paths, f"{slot} done {now.date()}")
+
+
+def cmd_discover(args, cfg):
+    load_dotenv()
+    from .data.universe import load_universe
+    from .discovery import run_discovery
+
+    if args.max_symbols:
+        cfg.setdefault("discovery", {})["max_symbols"] = args.max_symbols
+    uni = load_universe(args.universe)
+    p = run_discovery(cfg, uni, args.out)
+    print(f"tried {p['rules_tried']:,} rules; {p['passed_train']} passed training; {p['replicated']} replicated -> {args.out}")
 
 
 def main(argv=None):
@@ -172,9 +228,23 @@ def main(argv=None):
     br.add_argument("--send", action="store_true")
     br.set_defaults(fn=cmd_brief)
 
-    pp = sub.add_parser("paper")
-    pp.add_argument("--watchlist", help="comma-separated; default = all cached symbols")
-    pp.set_defaults(fn=cmd_paper)
+    pr = sub.add_parser("prep", help="pre-market: build universe + priors into the state dir")
+    pr.add_argument("--state-dir", default="state")
+    pr.add_argument("--day")
+    pr.set_defaults(fn=cmd_prep)
+
+    dc = sub.add_parser("discover", help="weekly layered-rule mining (candidates only, never auto-traded)")
+    dc.add_argument("--universe", default="data/universe.csv")
+    dc.add_argument("--out", default="reports/discovery")
+    dc.add_argument("--max-symbols", type=int)
+    dc.set_defaults(fn=cmd_discover)
+
+    lv = sub.add_parser("live", help="run one slot of the live paper session")
+    lv.add_argument("--state-dir", default="state")
+    lv.add_argument("--force", action="store_true", help="run even outside the job window")
+    lv.add_argument("--dry-run", action="store_true", help="scan and journal signals, place no orders")
+    lv.add_argument("--no-push", action="store_true")
+    lv.set_defaults(fn=cmd_live)
 
     args = p.parse_args(argv)
     args.fn(args, load_config(args.config))

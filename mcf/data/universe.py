@@ -4,9 +4,13 @@ MarcoFlow lesson: its universe was curated by hand + an IEX-volume ADV screen, a
 understates the tape ~30-40x. MCF ranks by *consolidated* average dollar volume from SIP daily
 bars (free on Alpaca when >15 min old), so liquidity numbers are real.
 
-Filters (config `universe`): price >= min_price, 20d ADV >= min_avg_dollar_volume, active & tradable,
-major exchange, common stock or ETF (no warrants/units/rights/preferreds). Keeps the top `max_symbols`
-by ADV. Records shortable / easy_to_borrow so short setups know what they can sell.
+Filters (config `universe`): price >= min_price, ATR >= min_atr_pct of price (drops T-bill/money-market
+ETFs that cannot move enough to beat costs), active & tradable, major exchange, common stock or ETF
+(no warrants/units/rights/preferreds). Two tiers, no fixed count:
+  core      20d ADV >= min_avg_dollar_volume           tradable every day
+  extended  20d ADV >= extended_min_avg_dollar_volume  tradable only on days it is in play
+            (opening rvol >= extended_min_rvol), at extended_slippage_per_share costs
+`max_symbols` (null = no cap) only trims by ADV if set. Records shortable / easy_to_borrow.
 """
 
 from __future__ import annotations
@@ -80,8 +84,17 @@ def build_universe(cfg: dict, out_path: str = "data/universe.csv") -> pd.DataFra
     assets = candidate_assets(tc)
     stats = daily_stats(dc, assets["symbol"].tolist())
     df = assets.merge(stats, on="symbol", how="inner")
-    df = df[(df.price >= c["min_price"]) & (df.adv >= u["min_avg_dollar_volume"]) & (df.days >= 15)]
-    df = df.sort_values("adv", ascending=False).head(u.get("max_symbols", 3500)).reset_index(drop=True)
+    from ..backtest.engine import pinned_symbols
+
+    floor = min(u.get("extended_min_avg_dollar_volume", u["min_avg_dollar_volume"]), u["min_avg_dollar_volume"])
+    keep = ((df.price >= c["min_price"]) & (df.adv >= floor) & (df.days >= 15)
+            & (df.atr_pct >= u.get("min_atr_pct", 0.0)))
+    df = df[keep | df.symbol.isin(pinned_symbols(cfg))]
+    df = df.sort_values("adv", ascending=False)
+    if u.get("max_symbols"):
+        df = df.head(u["max_symbols"])
+    df = df.reset_index(drop=True)
+    df["tier"] = np.where(df.adv >= u["min_avg_dollar_volume"], "core", "extended")
     df["adv_rank"] = np.arange(1, len(df) + 1)
     df["built_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)

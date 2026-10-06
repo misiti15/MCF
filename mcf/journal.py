@@ -32,6 +32,14 @@ CREATE TABLE IF NOT EXISTS trades (
     broker_order_id TEXT
 );
 CREATE INDEX IF NOT EXISTS trades_run ON trades(run_id);
+CREATE TABLE IF NOT EXISTS signals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER, day TEXT, ts TEXT, symbol TEXT, strategy TEXT, side INTEGER,
+    ref_price REAL, stop REAL, target REAL, entry_type TEXT, entry_price REAL, bar_index INTEGER,
+    status TEXT,                   -- submitted | skipped | shadow | rejected | dry_run
+    reason TEXT, qty INTEGER, broker_order_id TEXT, info TEXT
+);
+CREATE INDEX IF NOT EXISTS signals_day ON signals(run_id, day);
 CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     run_id INTEGER, created_at TEXT, symbol TEXT, strategy TEXT, side INTEGER,
@@ -52,9 +60,10 @@ class Journal:
         self.db = sqlite3.connect(str(path))
         self.db.executescript(SCHEMA)
         cols = {r[1] for r in self.db.execute("PRAGMA table_info(trades)")}
-        if "success" not in cols:  # additive migration for journals created before 2026-10-05
-            self.db.execute("ALTER TABLE trades ADD COLUMN success INTEGER")
-            self.db.commit()
+        for col, typ in (("success", "INTEGER"), ("slip_bps", "REAL"), ("pnl_adj", "REAL")):
+            if col not in cols:  # additive migrations for older journals
+                self.db.execute(f"ALTER TABLE trades ADD COLUMN {col} {typ}")
+        self.db.commit()
 
     def new_run(self, kind: str, label: str = "", config: dict | None = None) -> int:
         cur = self.db.execute(
@@ -75,7 +84,7 @@ class Journal:
         for c in TRADE_COLS:
             if c not in df:
                 df[c] = None
-        df = df[TRADE_COLS + (["broker_order_id"] if "broker_order_id" in df else [])]
+        df = df[TRADE_COLS + [c for c in ("broker_order_id", "slip_bps", "pnl_adj") if c in df]]
         for c in ("date", "signal_time", "entry_time", "exit_time"):
             df[c] = df[c].astype(str)
         df.insert(0, "run_id", run_id)
@@ -114,6 +123,23 @@ class Journal:
              target, order_id, status, meta),
         )
         self.db.commit()
+
+    def record_signal(self, run_id, day, ts, symbol, strategy, side, ref_price, stop, target, entry_type,
+                      entry_price, bar_index, status, reason, qty=0, order_id=None, info=""):
+        self.db.execute(
+            "INSERT INTO signals(run_id,day,ts,symbol,strategy,side,ref_price,stop,target,entry_type,entry_price,"
+            "bar_index,status,reason,qty,broker_order_id,info) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (run_id, day, ts, symbol, strategy, side, ref_price, stop, target, entry_type, entry_price,
+             bar_index, status, reason, qty, order_id, info),
+        )
+        self.db.commit()
+
+    def signals(self, run_id: int, day: str | None = None) -> pd.DataFrame:
+        q, args = "SELECT * FROM signals WHERE run_id=?", [run_id]
+        if day:
+            q += " AND day=?"
+            args.append(day)
+        return pd.read_sql(q + " ORDER BY id", self.db, params=args)
 
     def open_orders(self, run_id: int) -> pd.DataFrame:
         return pd.read_sql("SELECT * FROM orders WHERE run_id=? AND status NOT IN ('closed','rejected','expired')",

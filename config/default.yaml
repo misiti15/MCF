@@ -20,6 +20,9 @@ gates:
   min_expectancy_r: 0.0         # strictly above
   min_trades: 200
   min_profit_factor: 1.2
+  # Sustainability (owner 2026-10-05: win rate must come with *sustainable* profit):
+  min_months: 6                  # out-of-sample span long enough to see more than one regime
+  min_positive_month_rate: 0.67  # net-positive R in at least 2 of every 3 months
 
 exits:
   # Scale-out: bank part of the position at +scale_out_r R, move the rest to breakeven.
@@ -35,6 +38,7 @@ costs:
   slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
   slippage_per_share: 0.01       # per side, against us — published ORB edges die at ~2c/share
   stop_slippage_per_share: 0.02  # extra adverse fill on stop exits
+  extended_slippage_per_share: 0.03  # extended-tier names: wider spreads, so 3x the core assumption
   commission_per_share: 0.0      # Alpaca equities are commission-free
   min_price: 5.0                 # ignore sub-$5 names by default (spreads/halts)
 
@@ -45,15 +49,19 @@ session:
   flatten_by: "15:55"            # all intraday positions closed by this time
 
 universe:
-  max_symbols: 3500                  # top N by consolidated ADV (owner: scan ~3,500+)
-  min_avg_dollar_volume: 10000000    # 20d avg daily $ volume, consolidated (SIP) — not IEX
-  min_atr: 0.50                     # daily ATR(14) in dollars
+  # Owner 2026-10-05: no fixed count — include every name with tradeable liquidity and movement.
+  max_symbols: null                  # no cap; the filters below define the universe
+  min_avg_dollar_volume: 5000000     # core tier: 20d avg daily $ volume, consolidated (SIP) — not IEX
+  extended_min_avg_dollar_volume: 1000000  # extended tier: scanned, traded only when in play
+  extended_min_rvol: 3.0             # extended tier needs opening rvol >= 3x (its volume then ~= core)
+  min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
 
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
   orb:
-    enabled: true
+    enabled: false   # screen 2026-10-06: -0.33R/trade over 63 sessions (pre-09:50 entries -0.59R); paper off
+    min_atr: 0.50                 # daily ATR(14) in dollars (published ORB study filter)
     range_minutes: 5
     stop_atr_frac: 0.10
     target_r: null                # null = hold to flatten time (as in the published ORB study)
@@ -80,14 +88,14 @@ strategies:
     max_rvol: 1.5
     exit_by: "12:00"
   intraday_momentum:
-    enabled: true
+    enabled: true   # screen 2026-10-06: +0.013R/trade, break-even; paper on for data (index ETFs, cheap)
     symbols: [SPY, QQQ, IWM, DIA]
     signal_time: "10:00"
     entry_time: "15:30"
     min_abs_return_pct: 0.25
     stop_atr_frac: 0.25
   noise_band_momentum:
-    enabled: true
+    enabled: false   # screen 2026-10-06: -0.49R/trade (simplified version, not the paper's full rules); paper off
     symbols: [SPY, QQQ]
     band_mult: 1.0
     first_check: "10:00"
@@ -100,6 +108,97 @@ strategies:
     max_rvol: 3.0
     stop_std: 1.0
 
+  # ---- 2026-10-06 research sweep (research/setups_research.json). Paper-trade only after the screening
+  # backtest (research/setup_screen.md); funds only via the promotion gates. Exits as specced (no scale-out).
+  orb20_a:
+    enabled: true   # screen 2026-10-06: PASSED (+0.021R, PF 1.11, 443 trades); thin edge, paper only
+    class: orb20
+    variant: A                   # stop 0.5 x range, target 0.75 x range (higher win rate)
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  orb20_b:
+    enabled: false
+    class: orb20
+    variant: B                   # stop 0.15 ATR, no target, hold to close (paper-style)
+    stop_atr: 0.15
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  gap_continuation:
+    enabled: false
+    min_gap_pct: 3.0
+    min_rvol: 3.0
+    target_r: 2.0
+    entry_until: "11:00"
+    scale_out_r: null
+  gap_sma20:
+    enabled: false
+    mirror: true                 # also test the long mirror (gap up through SMA20)
+    stop_atr: 0.05
+    scale_out_r: null
+  index_gap_fill:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    stop_gap_mult: 1.5
+    scale_out_r: null
+  close_momentum:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    gate_mult: 0.5
+    stop_atr: 0.5
+    scale_out_r: null
+  eod_reversal:
+    enabled: false
+    min_drop_pct: 2.0
+    min_adv: 20000000
+    scale_out_r: null
+  vwap_pullback:
+    enabled: false
+    min_rvol: 2.0
+    top_n: 20
+    entry_until: "12:00"
+    scale_out_r: null
+
+  # ---- Heat-score study 2026-10-06 (research/heat/HEAT_STUDY.md): MarcoFlow's heat re-weighted as a
+  # consistent mean-reversion score; positive on train, valid AND the locked test. Paper only.
+  heat_fade_short:
+    enabled: true
+    type: heat
+    formula: research/heat/candidates/regime_9.py
+    sides: short
+    min_adv: 125000000           # the study's population: top ~1,000 names by ADV
+    window: [950, 1030]
+    gate: fo-
+    scale_out_r: null
+  heat_fade_long:
+    enabled: true
+    type: heat
+    formula: research/heat/candidates/regime_5.py
+    sides: long
+    min_adv: 125000000
+    window: [1105, 1330]
+    gate: gap+
+    scale_out_r: null
+
+discovery:
+  # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.
+  # Promote a replicated candidate by adding it under `strategies:` with type: rule, e.g.
+  #   rule_hot_short:
+  #     enabled: true
+  #     type: rule
+  #     side: short
+  #     layers: ["RSI14 > 65", "below 20 SMA"]
+  max_symbols: 1500              # top core names by ADV
+  sessions: 60                   # ~3 months of 5-minute SIP bars; older 2/3 = find, newest 1/3 = check
+  max_layers: 3                  # owner: more layers = more precise, "to a certain point"
+  min_train: 150                 # first-trigger samples needed in the find period
+  min_test: 60                   # and in the check period
+  r_atr_frac: 0.25               # R = 0.25 x daily ATR
+  report_top: 40
+
 report:
   email_to: misiti15@gmail.com   # daily brief recipient
   dashboard_url: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow   # private Claude artifact (free)
@@ -107,4 +206,17 @@ report:
 data:
   cache_dir: data/cache
   journal_path: data/journal.db
-  feed: iex                      # iex (free) | sip (paid, full tape)
+  feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
+
+live:
+  # Paper fills anything the price touches. These checks keep paper results close to what a real
+  # order book would give, so paper P/L is evidence and not an upper bound.
+  no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are
+                                 # journaled as "shadow" and what-if simulated, so the window is measured.
+  max_spread_bps: 30             # live SIP quote at decision time
+  max_spread_risk_frac: 0.25     # spread must be <= 25% of the stop distance (else the spread eats R)
+  max_participation: 0.10        # order <= 10% of the symbol's average 1-minute volume (last 5 bars)
+  status_every_min: 2            # dashboard refresh cadence
+  start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
+  max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
+  fetch_batch: 400

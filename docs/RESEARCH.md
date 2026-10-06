@@ -57,6 +57,23 @@ researched explicitly. It is judged by tail risk (worst day, worst trade in R), 
 3. Overnight→intraday cross-sectional reversal: market-neutral.
 4. Experimental setups only after 1–3 are measured.
 
+## 5. MarcoFlow setup families (added 2026-10-05)
+MarcoFlow had no fixed setups. Its daily review mined the "best rule stack" from recent signals.
+In 83 reviews it named **63 different best rules**, each backed by a **median of 29 trades**, so the
+rules were mostly fitting noise. The recurring themes are still worth testing as explicit,
+fixed-parameter MCF setups, judged by the same gates as everything else:
+
+| Family | MarcoFlow evidence (signal level, not paper) | MCF version to test |
+|---|---|---|
+| Follow-the-drop short | 56.1% (n=8,857), avg return −0.04% | Short continuation after a large down move on rvol, ETB names only |
+| Oversold open bounce (long) | recurring best rule; RSI < 25 in 9:30–11 ET, n≈30 each | Long reclaim of the opening low after a washout, stocks in play |
+| VWAP loss / reclaim | recurring best rule 11–12 ET | Existing `vwap_reclaim`, plus a short-side VWAP loss mirror |
+| Heat-strength ETF longs | best rule 6 times, n≈200 | Covered by noise-band and last-half-hour momentum on index ETFs |
+| Signed-volume pressure | several midday rules, n≈20–30 | Feature for the setups above, not a standalone setup |
+
+No setup is ruled out up front. Every candidate must pass the gates out of sample; nothing is
+promoted on in-sample or signal-level results.
+
 ## Key sources
 - https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4729284 (ORB, stocks in play)
 - https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4416622 (ORB, QQQ); replication https://github.com/giovannibrusco/zarattini-2023-orb-qqq

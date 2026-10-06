@@ -1,0 +1,99 @@
+# MCF live paper session on Alpaca (SIP data). Educational only — not financial advice.
+#
+# Schedules run from the default branch only. Cron is UTC and GitHub may start runs late, so:
+#   * pre-open runs at ~08:35/08:55 ET leave time for prep (universe + priors, ~15 min) before 09:30
+#   * hourly standby runs keep one job queued behind the running one (same concurrency group), so a
+#     crash, a skipped trigger or the 6-hour job limit costs minutes, not the session
+#   * every run decides from the ET clock whether to work (mcf live exits at once outside 08:00-15:50 ET,
+#     on weekends and on market holidays); duplicate UTC lines cover both EDT and EST
+#
+# Required repository secrets: ALPACA_API_KEY, ALPACA_SECRET_KEY (paper account).
+name: trade
+
+on:
+  schedule:
+    - cron: "35,55 12,13 * * 1-5"   # 08:35/08:55 ET (EDT: 12:xx UTC, EST: 13:xx UTC)
+    - cron: "15 14-20 * * 1-5"      # hourly standby during the session
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Scan and journal signals but place no orders"
+        type: boolean
+        default: false
+
+concurrency:
+  group: mcf-trade
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_DATA_FEED: sip
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Window check
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
+          echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Check secrets
+        if: steps.window.outputs.run == 'true'
+        run: |
+          if [ -z "$ALPACA_API_KEY" ] || [ -z "$ALPACA_SECRET_KEY" ]; then
+            echo "::error::Add ALPACA_API_KEY and ALPACA_SECRET_KEY as repository secrets"; exit 1; fi
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        if: steps.window.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+
+      - name: Check out state branch (mcf-data)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git clone -q --depth 50 --branch mcf-data "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan mcf-data
+            echo "# MCF live state (journal, status). Written by the trade workflow." > state/README.md
+            git -C state add README.md
+            git -C state -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "init state branch"
+            git -C state remote add origin "$url" && git -C state push -q origin mcf-data
+          fi
+
+      - name: Restore today's priors
+        if: steps.window.outputs.run == 'true'
+        id: priors
+        uses: actions/cache/restore@v4
+        with:
+          path: state/cache
+          key: priors-${{ steps.window.outputs.day }}
+
+      - name: Pre-market prep (universe + priors)
+        if: steps.window.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
+        run: python -m mcf.cli prep --state-dir state
+
+      - name: Save today's priors
+        if: steps.window.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: state/cache
+          key: priors-${{ steps.window.outputs.day }}
+
+      - name: Trade
+        if: steps.window.outputs.run == 'true'
+        run: python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}

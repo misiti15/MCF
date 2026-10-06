@@ -194,6 +194,7 @@ class SymbolHistory:
         self.prev_low = prev["low"]
         self.atr = F.atr(daily).shift(1)
         self.adv = (daily["close"] * daily["volume"]).rolling(20, min_periods=5).mean().shift(1)
+        self.sma20 = daily["close"].rolling(20, min_periods=15).mean().shift(1)
         prof = F.cum_volume_profile(intraday)
         self.avg_cum = prof.rolling(rvol_lookback, min_periods=5).mean().shift(1)
         self.avg_cum.index = pd.to_datetime(self.avg_cum.index)
@@ -205,6 +206,8 @@ class SymbolHistory:
         self.avg_move = mv.rolling(rvol_lookback, min_periods=5).mean().shift(1)
         self.avg_move.index = pd.to_datetime(self.avg_move.index)
         self.by_day = {d: g for d, g in intraday.groupby(intraday.index.date)}
+        from ..data.bars import resample
+        self.i5 = resample(intraday, "5min")
 
     def context(self, d) -> DayContext | None:
         ts = pd.Timestamp(d)
@@ -222,6 +225,8 @@ class SymbolHistory:
             prev_high=float(self.prev_high[ts]), prev_low=float(self.prev_low[ts]),
             atr=float(a), avg_dollar_volume=float(self.adv.get(ts, np.nan)), avg_cum_volume=acv,
             avg_move=self.avg_move.loc[ts].to_numpy() if ts in self.avg_move.index else None,
+            prior5=self.i5[self.i5.index.date < d].tail(40),
+            sma20=float(self.sma20.get(ts, np.nan)),
         )
 
 
@@ -232,20 +237,64 @@ def slot_notional(a: dict) -> float:
     return min(per_slot, equity * a["max_position_notional_pct"] / 100)
 
 
+def is_extended(ctx: DayContext, cfg: dict) -> bool:
+    """Extended tier: liquid enough to scan, too thin to trade on an ordinary day."""
+    adv = ctx.avg_dollar_volume
+    return not np.isnan(adv) and adv < cfg["universe"]["min_avg_dollar_volume"]
+
+
+def pinned_symbols(cfg: dict) -> set[str]:
+    """Symbols an enabled setup names explicitly (e.g. index ETFs). Always in the universe:
+    the universe filters exist to pick names for scanned setups, not to veto a named instrument."""
+    return {s for st in cfg.get("strategies", {}).values() if st.get("enabled") for s in st.get("symbols", [])}
+
+
+def universe_ok(ctx: DayContext, cfg: dict) -> bool:
+    """Prior-day filters shared by backtest and paper runner (no look-ahead)."""
+    if ctx.symbol in pinned_symbols(cfg):
+        return True
+    u, c = cfg["universe"], cfg["costs"]
+    adv = ctx.avg_dollar_volume
+    floor = min(u.get("extended_min_avg_dollar_volume", u["min_avg_dollar_volume"]), u["min_avg_dollar_volume"])
+    return (
+        ctx.prev_close >= c["min_price"]
+        and ctx.atr / ctx.prev_close * 100 >= u.get("min_atr_pct", 0.0)
+        and (np.isnan(adv) or adv >= floor)
+    )
+
+
+def in_play_filter(ctxs: list, orv: list, cfg: dict) -> tuple[list, list]:
+    """Extended-tier names stay only on days they are in play (opening rvol >= extended_min_rvol)."""
+    need = cfg["universe"].get("extended_min_rvol", 0.0)
+    keep = [i for i, c in enumerate(ctxs)
+            if not is_extended(c, cfg) or (not np.isnan(orv[i]) and orv[i] >= need)]
+    return [ctxs[i] for i in keep], [orv[i] for i in keep]
+
+
+def rank_contexts(ctxs: list) -> None:
+    """Set rank_rvol (5-minute opening rvol) and rank_rvol20 (09:30-09:49 rvol) across the day's names.
+    Shared by the backtester and the live runner so both select 'stocks in play' identically."""
+    for attr, k in (("rank_rvol", 4), ("rank_rvol20", 19)):
+        vals = []
+        for c in ctxs:
+            rv = c.rvol()
+            vals.append(float(rv.iloc[k]) if len(rv) > k else (float(rv.iloc[-1]) if k == 4 and len(rv) else np.nan))
+        arr = np.array(vals, dtype=float)
+        for rank, i in enumerate(np.argsort(-np.nan_to_num(arr, nan=-1)), 1):
+            setattr(ctxs[i], attr, rank if not np.isnan(arr[i]) else None)
+
+
 class Backtester:
     def __init__(self, strategies: list[Strategy], cfg: dict):
         self.strategies = strategies
         self.cfg = cfg
         self.costs = Costs.from_cfg(cfg["costs"])
+        self.costs_ext = Costs.from_cfg({**cfg["costs"], "slippage_per_share": cfg["costs"].get(
+            "extended_slippage_per_share", cfg["costs"].get("slippage_per_share", 0.01))})
         self.flatten = t(cfg["session"]["flatten_by"])
 
     def _universe_ok(self, ctx: DayContext) -> bool:
-        u, c = self.cfg["universe"], self.cfg["costs"]
-        return (
-            ctx.prev_close >= c["min_price"]
-            and ctx.atr >= u["min_atr"]
-            and (np.isnan(ctx.avg_dollar_volume) or ctx.avg_dollar_volume >= u["min_avg_dollar_volume"])
-        )
+        return universe_ok(ctx, self.cfg)
 
     def run(self, data: dict[str, pd.DataFrame], progress: bool = False) -> pd.DataFrame:
         hist = {s: SymbolHistory(s, df) for s, df in data.items() if not df.empty}
@@ -258,15 +307,14 @@ class Backtester:
             for c in ctxs:
                 rv = c.rvol()
                 orv.append(rv.iloc[min(4, len(rv) - 1)] if len(rv) else np.nan)
-            order = np.argsort(-np.nan_to_num(np.array(orv, dtype=float), nan=-1))
-            for rank, i in enumerate(order, 1):
-                ctxs[i].rank_rvol = rank if not np.isnan(orv[i]) else None
+            ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
+            rank_contexts(ctxs)
             for c in ctxs:
                 for strat in self.strategies:
                     if not strat.eligible(c):
                         continue
                     for sig in strat.signals(c):
-                        tr = simulate(sig, c.bars, self.flatten, self.costs)
+                        tr = simulate(sig, c.bars, self.flatten, self.costs_ext if is_extended(c, self.cfg) else self.costs)
                         if tr:
                             candidates.append(tr)
             if progress and n % 20 == 0:
