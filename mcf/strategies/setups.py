@@ -281,6 +281,66 @@ class RuleStrategy(Strategy):
                        meta={"layers": " + ".join(self.layers)})]
 
 
+class HeatStrategy(Strategy):
+    """A re-weighted MarcoFlow heat score (mcf/research/heat.py) from the heat-score study.
+    `formula` names a module file exposing score(df), LONG_AT and SHORT_AT (research/heat/candidates/*.py).
+    Enters at the close of the first complete 5-minute bar where the score crosses its threshold
+    (long >= LONG_AT, short <= SHORT_AT); stop 1R, target `target_r` R, R = r_atr_frac x daily ATR —
+    the same outcome model the study measured. Configure under `strategies:` with `type: heat`."""
+
+    name = "heat"
+
+    def __init__(self, name: str, formula: str, r_atr_frac: float = 0.25, target_r: float | None = 1.0,
+                 sides: str = "both", **params):
+        super().__init__(formula=formula, r_atr_frac=r_atr_frac, target_r=target_r, sides=sides, **params)
+        self.name = name
+        import importlib.util
+        from pathlib import Path
+
+        path = Path(formula)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parents[2] / path
+        spec = importlib.util.spec_from_file_location(f"heat_{name}", path)
+        self.mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.mod)
+
+    def generate(self, ctx: DayContext):
+        from ..data.bars import resample
+        from ..research.heat import heat_frame
+
+        bars = ctx.bars
+        d5 = resample(bars, "5min")
+        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
+        if d5.empty:
+            return []
+        hist = d5 if ctx.prior5 is None or ctx.prior5.empty else pd.concat([ctx.prior5, d5])
+        f = heat_frame(hist).iloc[-len(d5):].copy()
+        f["atr_d"] = ctx.atr
+        f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
+        s = np.asarray(self.mod.score(f), dtype=float)
+        ok = (f["tod"].to_numpy() >= 950) & (f["tod"].to_numpy() <= 1500)
+        cands = []
+        if self.sides in ("both", "long") and getattr(self.mod, "LONG_AT", None) is not None:
+            hit = np.flatnonzero(ok & (s >= self.mod.LONG_AT))
+            if len(hit):
+                cands.append((hit[0], 1))
+        if self.sides in ("both", "short") and getattr(self.mod, "SHORT_AT", None) is not None:
+            hit = np.flatnonzero(ok & (s <= self.mod.SHORT_AT))
+            if len(hit):
+                cands.append((hit[0], -1))
+        out = []
+        for i, side in sorted(cands):
+            end = min(bars.index.searchsorted(d5.index[i] + pd.Timedelta(minutes=4)), len(bars) - 1)
+            px, r = float(d5["close"].iloc[i]), self.r_atr_frac * ctx.atr
+            if r <= 0:
+                continue
+            tgt = None if self.target_r is None else px + side * self.target_r * r
+            out.append(Signal(ctx.symbol, self.name, side, int(end), stop=px - side * r, target=tgt,
+                              meta={"heat_score": float(s[i])}))
+        return out[:1]
+
+
 REGISTRY: dict[str, type[Strategy]] = {
     c.name: c
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
@@ -296,8 +356,12 @@ def build_strategies(cfg: dict) -> list[Strategy]:
         params = {**exits, **params}
         if not params.pop("enabled", True):
             continue
-        if params.pop("type", None) == "rule":
+        kind = params.pop("type", None)
+        if kind == "rule":
             out.append(RuleStrategy(name=name, **params))
+            continue
+        if kind == "heat":
+            out.append(HeatStrategy(name=name, **params))
             continue
         if name not in REGISTRY:
             continue

@@ -214,3 +214,33 @@ def test_pinned_symbols_bypass_universe_filters():
     spy = SimpleNamespace(symbol="SPY", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)   # ATR 0.93% < 1%
     other = SimpleNamespace(symbol="XYZ", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)
     assert universe_ok(spy, cfg) and not universe_ok(other, cfg)
+
+
+def test_daily_review_compares_days(tmp_path):
+    from mcf.journal import Journal
+    from mcf.report.daily_review import build_review, to_markdown
+
+    j = Journal(tmp_path / "j.db")
+    rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    row = dict(symbol="AAA", strategy="orb", side=1, signal_time="2026-10-05T10:00:00-04:00",
+               entry_time="2026-10-05T10:01:00-04:00", entry=10.0, stop=9.9, target=None,
+               exit_time="2026-10-05T15:55:00-04:00", exit=10.2, exit_reason="flatten", mae_r=None, mfe_r=None,
+               success=1, shares=100, meta="", slip_bps=4.0, pnl_adj=20.0)
+    j.add_trades(rid, pd.DataFrame([{**row, "date": "2026-10-05", "r_multiple": 2.0, "pnl": 20.0},
+                                    {**row, "date": "2026-10-06", "r_multiple": -1.0, "pnl": -10.0, "slip_bps": 25.0}]))
+    rv = build_review(j, rid, "2026-10-06")
+    assert rv["today"]["trades"] == 1 and rv["yesterday"]["exp_r"] == 2.0
+    assert rv["beat_rolling5"]["exp_r"] is False
+    assert any("slippage" in f for f in rv["findings"])
+    assert "daily review" in to_markdown(rv)
+
+
+def test_heat_strategy_runs_on_context():
+    from mcf.strategies.setups import HeatStrategy
+
+    data = make_universe(["AAA"], days=30)
+    hist = SymbolHistory("AAA", data["AAA"])
+    ctx = hist.context(sorted(hist.by_day)[-1])
+    st = HeatStrategy("heat_original", "research/heat/candidates/_original.py")
+    for s in st.generate(ctx):
+        assert s.side in (1, -1) and (s.stop < s.target if s.side == 1 else s.stop > s.target)

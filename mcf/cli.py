@@ -162,9 +162,19 @@ def cmd_live(args, cfg):
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
 
     print(f"{slot}: {len(priors)} symbols, until {until or 'close'}, dry_run={args.dry_run}")
-    PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
-                on_status=on_status).run(until=until)
-    pub.push(["status.json", "journal.db", "universe.csv"], f"slot {slot} done {now.date()}")
+    runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
+                         on_status=on_status)
+    runner.run(until=until)
+    paths = ["status.json", "journal.db", "universe.csv"]
+    end = pd.Timestamp.now(tz=NY)
+    if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
+        from .report.daily_review import write_review
+
+        md = write_review(runner.journal, runner.run_id, str(end.date()), os.path.join(args.state_dir, "reviews"),
+                          runner.health)
+        print(md.read_text())
+        paths.append("reviews")
+    pub.push(paths, f"{slot} done {now.date()}")
 
 
 def cmd_discover(args, cfg):
