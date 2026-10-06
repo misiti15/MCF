@@ -1,0 +1,35 @@
+# Owner rule (2026-10-06): setups may only change outside market hours (09:30-16:00 ET, weekdays).
+# This check fails a pull request that changes setup definitions while the market is open.
+# The live runner also freezes the setups for the day at the first job (state/setups/<date>.json).
+name: setup-freeze
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup changes outside market hours only
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          files=$(git diff --name-only "$base"...HEAD -- mcf/strategies research/heat/candidates)
+          cfg=$(python3 - "$base" <<'PY'
+          import subprocess, sys, yaml
+          keys = ("strategies", "exits", "shorts", "live", "universe")
+          old = yaml.safe_load(subprocess.run(["git", "show", f"{sys.argv[1]}:config/default.yaml"], capture_output=True, text=True).stdout or "{}") or {}
+          new = yaml.safe_load(open("config/default.yaml")) or {}
+          print(" ".join(k for k in keys if old.get(k) != new.get(k)))
+          PY
+          )
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ -z "$files$cfg" ]; then echo "no setup changes"; exit 0; fi
+          echo "setup changes: $files ${cfg:+config: $cfg}"
+          if [ "$dow" -le 5 ] && [ "$now" -ge 0930 ] && [ "$now" -lt 1600 ]; then
+            echo "::error::Setup changes may only be merged outside market hours (09:30-16:00 ET). Merge after the close."
+            exit 1
+          fi
+          echo "outside market hours: OK"

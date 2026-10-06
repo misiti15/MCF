@@ -2,14 +2,15 @@
 
 account:
   starting_equity: 100000        # paper account size used for sizing in backtests
-  slots: 100                     # owner decision 2026-10-05: 100 concurrent slots
-  buying_power_multiple: 2.0     # capital per slot = equity x this / slots (= $2,000 at $100k)
+  slots: 160                     # owner 2026-10-06: testing days must not sit out for lack of slots
+  buying_power_multiple: 3.2     # capital per slot = equity x 3.2 / 160 (~$1,930, same size as before);
+                                 # 160 slots use ~$309k, inside Alpaca paper's ~$321k intraday buying power
   risk_per_trade_pct: 0.25       # max % of equity lost if the stop is hit (sizing = min(risk, slot))
   max_position_notional_pct: 10  # hard cap on any single position
-  max_concurrent_positions: 100
-  max_positions_per_strategy: 60  # per-setup sleeve so one setup can't use every slot
+  max_concurrent_positions: 160
+  max_positions_per_strategy: 100 # per-setup sleeve so one setup can't use every slot
   max_daily_loss_r: 20           # risk control (not a signal filter): stop new entries after -20R in a day
-  max_trades_per_day: 400
+  max_trades_per_day: 1000
 
 gates:
   # A setup goes live (paper -> funds) only when ALL hold out of sample, after costs.

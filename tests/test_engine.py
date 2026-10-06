@@ -260,3 +260,16 @@ def test_research_setups_run_in_backtester():
     if len(trades):
         et = pd.to_datetime(trades.entry_time)
         assert (et.dt.time >= pd.Timestamp("09:50").time()).all()   # every research setup respects 09:50
+
+
+def test_setup_freeze_ignores_intraday_edits(tmp_path):
+    from mcf.execution.session import freeze_setups
+
+    now = pd.Timestamp("2026-10-07 09:00", tz="America/New_York")
+    cfg = load_config()
+    assert "snapshot written" in freeze_setups(cfg, tmp_path, now)
+    edited = load_config()
+    edited["strategies"]["orb"]["enabled"] = not cfg["strategies"]["orb"]["enabled"]
+    note = freeze_setups(edited, tmp_path, now.replace(hour=13))
+    assert "ignoring intraday edits to: strategies" in note
+    assert edited["strategies"]["orb"]["enabled"] == cfg["strategies"]["orb"]["enabled"]
