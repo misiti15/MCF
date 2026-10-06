@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 30 · coded: 5 · failed: 15 · configurations tried (all lineages): 160
+Total ideas: 31 · coded: 5 · failed: 15 · configurations tried (all lineages): 160
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -25,6 +25,7 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | shadow-0930 | 09:30-09:50 shadow entries | MCF what_if journal | – | – | – | – | – |
 | idea | marcoflow-mining | Mine MarcoFlow history DB for setups that held up | data/marcoflow.sqlite | – | – | – | – | – |
 | idea | global-indicator-lengths | Indicator lengths across all setups (RSI 7/10/14/21, SMA 10/20/50, ATR 10/14/20) | owner (rule 18) | – | – | – | – | – |
+| idea | window-open-cluster | Cap simultaneous entries when a setup's window opens (heat_fade_long 11:05) | EOD 2026-10-06 (one day, observation only) | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
