@@ -1,0 +1,411 @@
+[
+ {
+  "note": "Educational only - not financial advice. heat_fade_short exit study 2026-10-06; 131 train configurations; finalists scored once on valid. Sizing is slot-capped (fixed notional, risk cap never binds), so stop_mult<1 variants inflate R units: compare exp_r_in_baseline_R_units. No finalist passes in dollar terms; recommendation: keep current exits."
+ },
+ {
+  "variant": {},
+  "baseline": true,
+  "train": {
+   "n": 649,
+   "win_rate": 0.5701,
+   "exp_r": 0.1073,
+   "exp_r_se": 0.0364,
+   "pf": 1.272,
+   "green_days": 0.629,
+   "exp_r_ex_best_day": 0.0592,
+   "avg_minutes": 109.9,
+   "exit_reasons": {
+    "target": 313,
+    "stop": 237,
+    "time": 99
+   },
+   "exp_r_in_baseline_R_units": 0.1073
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.6099,
+   "exp_r": 0.1803,
+   "exp_r_se": 0.0792,
+   "pf": 1.48,
+   "green_days": 0.714,
+   "exp_r_ex_best_day": 0.0816,
+   "avg_minutes": 96.2,
+   "exit_reasons": {
+    "target": 77,
+    "stop": 50,
+    "time": 14
+   },
+   "exp_r_in_baseline_R_units": 0.1803
+  }
+ },
+ {
+  "variant": {
+   "stop_mult": 0.55
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4592,
+   "exp_r": 0.1815,
+   "exp_r_se": 0.0532,
+   "pf": 1.324,
+   "green_days": 0.629,
+   "exp_r_ex_best_day": 0.107,
+   "avg_minutes": 68.1,
+   "exit_reasons": {
+    "stop": 340,
+    "target": 258,
+    "time": 51
+   },
+   "exp_r_in_baseline_R_units": 0.0998
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4752,
+   "exp_r": 0.2361,
+   "exp_r_se": 0.1155,
+   "pf": 1.429,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.1358,
+   "avg_minutes": 46.0,
+   "exit_reasons": {
+    "stop": 73,
+    "target": 62,
+    "time": 6
+   },
+   "exp_r_in_baseline_R_units": 0.1299
+  },
+  "passes_train_valid_gate": true,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "stop_mult": 0.6
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4777,
+   "exp_r": 0.1718,
+   "exp_r_se": 0.0504,
+   "pf": 1.321,
+   "green_days": 0.629,
+   "exp_r_ex_best_day": 0.1054,
+   "avg_minutes": 72.3,
+   "exit_reasons": {
+    "stop": 326,
+    "target": 268,
+    "time": 55
+   },
+   "exp_r_in_baseline_R_units": 0.1031
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4965,
+   "exp_r": 0.2296,
+   "exp_r_se": 0.1089,
+   "pf": 1.442,
+   "green_days": 0.643,
+   "exp_r_ex_best_day": 0.1088,
+   "avg_minutes": 54.1,
+   "exit_reasons": {
+    "stop": 69,
+    "target": 64,
+    "time": 8
+   },
+   "exp_r_in_baseline_R_units": 0.1378
+  },
+  "passes_train_valid_gate": true,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "stop_mult": 0.65
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4869,
+   "exp_r": 0.1446,
+   "exp_r_se": 0.0479,
+   "pf": 1.278,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.0849,
+   "avg_minutes": 77.1,
+   "exit_reasons": {
+    "stop": 317,
+    "target": 272,
+    "time": 60
+   },
+   "exp_r_in_baseline_R_units": 0.094
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.5248,
+   "exp_r": 0.2493,
+   "exp_r_se": 0.1033,
+   "pf": 1.516,
+   "green_days": 0.643,
+   "exp_r_ex_best_day": 0.1214,
+   "avg_minutes": 59.8,
+   "exit_reasons": {
+    "target": 68,
+    "stop": 64,
+    "time": 9
+   },
+   "exp_r_in_baseline_R_units": 0.162
+  },
+  "passes_train_valid_gate": true,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "stop_mult": 0.6,
+   "time_stop_min": 20,
+   "time_stop_min_r": 0.5
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4746,
+   "exp_r": 0.1697,
+   "exp_r_se": 0.0473,
+   "pf": 1.361,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.1005,
+   "avg_minutes": 54.3,
+   "exit_reasons": {
+    "stop": 264,
+    "target": 243,
+    "timestop": 105,
+    "time": 37
+   },
+   "exp_r_in_baseline_R_units": 0.1018
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4539,
+   "exp_r": 0.1287,
+   "exp_r_se": 0.1022,
+   "pf": 1.259,
+   "green_days": 0.5,
+   "exp_r_ex_best_day": 0.0445,
+   "avg_minutes": 40.8,
+   "exit_reasons": {
+    "stop": 62,
+    "target": 54,
+    "timestop": 20,
+    "time": 5
+   },
+   "exp_r_in_baseline_R_units": 0.0772
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "time_stop_min": 20,
+   "time_stop_min_r": 0.5,
+   "target_r": null
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.47,
+   "exp_r": 0.1498,
+   "exp_r_se": 0.0553,
+   "pf": 1.475,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.1084,
+   "avg_minutes": 149.8,
+   "exit_reasons": {
+    "timestop": 296,
+    "time": 223,
+    "stop": 130
+   },
+   "exp_r_in_baseline_R_units": 0.1498
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.3546,
+   "exp_r": -0.1489,
+   "exp_r_se": 0.0784,
+   "pf": 0.657,
+   "green_days": 0.286,
+   "exp_r_ex_best_day": -0.1864,
+   "avg_minutes": 129.6,
+   "exit_reasons": {
+    "timestop": 59,
+    "stop": 45,
+    "time": 37
+   },
+   "exp_r_in_baseline_R_units": -0.1489
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "time_stop_min": 15,
+   "time_stop_min_r": 0.5,
+   "target_r": null
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4561,
+   "exp_r": 0.1431,
+   "exp_r_se": 0.054,
+   "pf": 1.49,
+   "green_days": 0.457,
+   "exp_r_ex_best_day": 0.0988,
+   "avg_minutes": 124.7,
+   "exit_reasons": {
+    "timestop": 358,
+    "time": 184,
+    "stop": 107
+   },
+   "exp_r_in_baseline_R_units": 0.1431
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.3759,
+   "exp_r": -0.1535,
+   "exp_r_se": 0.0746,
+   "pf": 0.625,
+   "green_days": 0.214,
+   "exp_r_ex_best_day": -0.1885,
+   "avg_minutes": 118.4,
+   "exit_reasons": {
+    "timestop": 67,
+    "stop": 40,
+    "time": 34
+   },
+   "exp_r_in_baseline_R_units": -0.1535
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "time_stop_min": 20,
+   "time_stop_min_r": 0.5,
+   "target_r": 1.5
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.5162,
+   "exp_r": 0.1414,
+   "exp_r_se": 0.0339,
+   "pf": 1.507,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.1031,
+   "avg_minutes": 88.0,
+   "exit_reasons": {
+    "timestop": 296,
+    "target": 148,
+    "stop": 110,
+    "time": 95
+   },
+   "exp_r_in_baseline_R_units": 0.1414
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4184,
+   "exp_r": 0.015,
+   "exp_r_se": 0.0765,
+   "pf": 1.041,
+   "green_days": 0.5,
+   "exp_r_ex_best_day": -0.0551,
+   "avg_minutes": 83.3,
+   "exit_reasons": {
+    "timestop": 59,
+    "stop": 36,
+    "target": 29,
+    "time": 17
+   },
+   "exp_r_in_baseline_R_units": 0.015
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "time_stop_min": 30,
+   "time_stop_min_r": 0.6,
+   "target_r": 1.5
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.4977,
+   "exp_r": 0.1463,
+   "exp_r_se": 0.0347,
+   "pf": 1.506,
+   "green_days": 0.571,
+   "exp_r_ex_best_day": 0.1175,
+   "avg_minutes": 87.2,
+   "exit_reasons": {
+    "timestop": 290,
+    "target": 154,
+    "stop": 120,
+    "time": 85
+   },
+   "exp_r_in_baseline_R_units": 0.1463
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4752,
+   "exp_r": 0.0167,
+   "exp_r_se": 0.0779,
+   "pf": 1.044,
+   "green_days": 0.5,
+   "exp_r_ex_best_day": -0.065,
+   "avg_minutes": 89.0,
+   "exit_reasons": {
+    "timestop": 56,
+    "stop": 39,
+    "target": 29,
+    "time": 17
+   },
+   "exp_r_in_baseline_R_units": 0.0167
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ },
+ {
+  "variant": {
+   "time_stop_min": 20,
+   "time_stop_min_r": 0.5
+  },
+  "train": {
+   "n": 649,
+   "win_rate": 0.5624,
+   "exp_r": 0.131,
+   "exp_r_se": 0.0285,
+   "pf": 1.529,
+   "green_days": 0.486,
+   "exp_r_ex_best_day": 0.0834,
+   "avg_minutes": 48.4,
+   "exit_reasons": {
+    "timestop": 296,
+    "target": 225,
+    "stop": 95,
+    "time": 33
+   },
+   "exp_r_in_baseline_R_units": 0.131
+  },
+  "valid": {
+   "n": 141,
+   "win_rate": 0.4965,
+   "exp_r": 0.0932,
+   "exp_r_se": 0.0644,
+   "pf": 1.324,
+   "green_days": 0.643,
+   "exp_r_ex_best_day": 0.0374,
+   "avg_minutes": 47.1,
+   "exit_reasons": {
+    "timestop": 59,
+    "target": 52,
+    "stop": 25,
+    "time": 5
+   },
+   "exp_r_in_baseline_R_units": 0.0932
+  },
+  "passes_train_valid_gate": false,
+  "passes_in_dollars": false
+ }
+]
