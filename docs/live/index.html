@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCF Live</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --pos: #2a78d6; --neg: #e34948; --s1: #2a78d6;
+  --good: #006300; --bad: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1200px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; justify-content: space-between; }
+h1 { font-size: 20px; margin: 0; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+.sub { color: var(--ink-2); font-size: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); max-width: 100%; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.tile, .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+.tile .k { color: var(--ink-2); font-size: 12px; }
+.tile .v { font-size: 24px; font-weight: 600; margin-top: 2px; }
+.tile .n { color: var(--muted); font-size: 12px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.card { min-width: 0; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; font-size: 13px; }
+th, td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th:first-child, td:first-child, .l { text-align: left; }
+th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
+.up { color: var(--good); } .down { color: var(--bad); }
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12); display: none; z-index: 10; white-space: nowrap; }
+.note { color: var(--ink-2); font-size: 12px; margin-top: 8px; }
+.empty { color: var(--muted); padding: 30px; text-align: center; }
+</style>
+</head><body><main>
+<header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
+Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF dashboard</a></div></div></header>
+<!-- MCF Update: live section. Reads status.json and discovery/latest.json from the repo's mcf-data
+     branch through the viewer's GitHub connector (refreshes every minute). Inserted into template.html. -->
+<style>
+#live { display: grid; gap: 14px; margin: 16px 0 26px; }
+#live .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+#live h2.big { font-size: 17px; margin: 0; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); }
+.pill.on { color: var(--good); border-color: currentColor; }
+.pill.warn { color: var(--bad); border-color: currentColor; }
+.chip { display: inline-block; padding: 0 7px; border-radius: 6px; font-size: 11px; border: 1px solid var(--border); color: var(--ink-2); }
+.chip.submitted, .chip.dry_run { color: var(--good); border-color: currentColor; }
+.chip.rejected { color: var(--bad); border-color: currentColor; }
+.chip.shadow { border-style: dashed; }
+.cmp td:nth-child(2), .cmp th:nth-child(2) { font-weight: 600; }
+.lab td.l { white-space: normal; min-width: 220px; }
+#live .msg { color: var(--ink-2); font-size: 13px; }
+#live .msg a { color: var(--s1); }
+</style>
+<section id="live" aria-live="polite">
+  <div class="bar">
+    <div>
+      <h2 class="big">MCF Update — live paper session</h2>
+      <div class="sub" id="lv-asof">Waiting for live data…</div>
+    </div>
+    <span class="pill" id="lv-phase">connecting</span>
+  </div>
+  <div class="msg" id="lv-msg">Live data comes from the <code>mcf-data</code> branch of misiti15/MCF and refreshes every minute (GitHub may cache it for up to 5 minutes).
+    Raw file: <a href="https://github.com/misiti15/MCF/blob/mcf-data/status.json" target="_blank" rel="noopener">status.json</a></div>
+  <div class="tiles" id="lv-tiles"></div>
+  <div class="grid2">
+    <div class="card"><h2>MCF Update vs MarcoFlow</h2><div class="tablewrap" id="lv-cmp"><div class="empty">No MCF trades yet.</div></div>
+      <div class="note">Win = trade closed with P/L &gt; 0 for both systems. MarcoFlow = its paper record, clean window 8/28–10/2. "Adj. P/L" adds the extra stop slippage a real order book charges.</div></div>
+    <div class="card"><h2>Open MCF positions</h2><div class="tablewrap" id="lv-pos"><div class="empty">No open positions.</div></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h2>Signals today</h2><div class="tablewrap" id="lv-sig"><div class="empty">No signals yet.</div></div>
+      <div class="note">Every signal is recorded: <b>submitted</b> (traded), <b>skipped</b> (with the reason), or <b>shadow</b> (9:30–9:50, your caution window). Skipped and shadow signals are simulated after the close so their cost or benefit is measured.</div></div>
+    <div class="card"><h2>Why signals were skipped</h2><div class="tablewrap" id="lv-skip"><div class="empty">Nothing skipped yet.</div></div>
+      <h2 style="margin-top:14px">Closed MCF trades today</h2><div class="tablewrap" id="lv-closed"><div class="empty">No closed trades yet.</div></div></div>
+  </div>
+  <div class="card lab"><h2>Setup lab — weekly discovery</h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
+    <div class="note">Layered rules found on older data and checked on the newest third. Candidates never trade on their own: one becomes a setup only after a full backtest passes the promotion gates and you approve it.</div></div>
+</section>
+<script>
+(() => {
+  const OWNER = "misiti15", REPO = "MCF", REF = "refs/heads/mcf-data";
+  const $l = s => document.querySelector(s);
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const pc = v => v == null ? "–" : (v * 100).toFixed(1) + "%";
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const table = (head, rows) => `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
+
+  // The GitHub connector returns the file inside one of its content blocks; find the JSON.
+  function parse(result) {
+    const texts = [];
+    if (typeof result?.payload === "string") texts.push(result.payload);
+    else if (result?.payload && typeof result.payload === "object") return result.payload;
+    for (const b of result?.content || []) {
+      if (typeof b.text === "string") texts.push(b.text);
+      if (b.resource && typeof b.resource.text === "string") texts.push(b.resource.text);
+    }
+    for (const t of texts) {
+      const i = t.indexOf("{"), j = t.lastIndexOf("}");
+      if (i >= 0 && j > i) { try { return JSON.parse(t.slice(i, j + 1)); } catch (_) {} }
+    }
+    return null;
+  }
+
+  function render(s) {
+    const ageMin = (Date.now() - Date.parse(s.asof)) / 60000;
+    const stale = s.phase === "trading" && ageMin > 10;
+    const ph = $l("#lv-phase");
+    ph.textContent = stale ? `no update for ${Math.round(ageMin)} min` : (s.dry_run ? "dry run · " : "") + s.phase;
+    ph.className = "pill " + (stale ? "warn" : s.phase === "trading" ? "on" : "");
+    $l("#lv-asof").textContent = `Session ${s.session_date} · updated ${s.asof_et} · ${s.disclaimer}`;
+    $l("#lv-msg").hidden = true;
+    const t = s.today || {}, h = s.health || {}, by = t.by_status || {};
+    const tiles = [
+      ["Trades today", t.trades ?? 0, `${t.open_positions ?? 0} open`],
+      ["Win rate", t.trades ? pc(t.win_rate) : "–", t.trades ? `${t.wins} of ${t.trades}` : "no closed trades"],
+      ["P/L today", t.trades ? money(t.pnl) : "–", t.trades ? `adj. ${money(t.pnl_adj)}` : ""],
+      ["Signals", t.signals ?? 0, `${by.submitted ?? by.dry_run ?? 0} taken · ${by.skipped ?? 0} skipped · ${by.shadow ?? 0} shadow`],
+      ["Data health", `${(h.symbols_last_bar ?? 0).toLocaleString()}`, `of ${(h.universe ?? 0).toLocaleString()} symbols had a ${h.last_bar ?? "–"} bar · poll ${h.last_poll_s ?? "–"}s`],
+    ];
+    $l("#lv-tiles").innerHTML = tiles.map(([k, v, n]) => `<div class="tile"><div class="k">${k}</div><div class="v">${e(v)}</div><div class="n">${e(n)}</div></div>`).join("");
+
+    const m = s.marcoflow || {}, all = s.since_start || {};
+    const row = (k, a, b, c) => `<tr><td class="l">${k}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`;
+    $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>MCF today</th><th>MCF since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
+      row("Trades", t.trades ?? 0, all.trades ?? 0, `${m.trades ?? "–"} (${m.trades_per_day ?? "–"}/day)`),
+      row("Win rate", pc(t.win_rate), pc(all.win_rate), pc(m.win_rate)),
+      row("P/L", `<span class="${cls(t.pnl)}">${money(t.pnl)}</span>`, `<span class="${cls(all.pnl)}">${money(all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
+      row("Adj. P/L (real-book stops)", money(t.pnl_adj), money(all.pnl_adj), "–"),
+      row("Avg P/L per trade", money(t.avg_pnl), money(all.avg_pnl), money(m.avg_pnl)),
+      row("Profit factor", t.profit_factor ?? "–", all.profit_factor ?? "–", m.profit_factor ?? "–"),
+      row("Stop-loss exits", pc(t.stop_exit_share), pc(all.stop_exit_share), pc(m.stop_loss_exit_share)),
+      row("Entry slippage vs signal", t.avg_entry_slip_bps == null ? "–" : `${t.avg_entry_slip_bps} bps`, all.avg_entry_slip_bps == null ? "–" : `${all.avg_entry_slip_bps} bps`, m.avg_entry_slip_pct == null ? "–" : `${Math.round(m.avg_entry_slip_pct * -100)} bps`),
+      row("Green days", s.history?.length ? pc(s.history.filter(d => d.pnl > 0).length / s.history.length) : "–", "", pc(m.green_day_rate)),
+    ].join("")}</tbody></table>`;
+
+    $l("#lv-pos").innerHTML = s.positions?.length ? table(["Symbol", "Setup", "Side", "Qty", "Entry", "Last", "Unrealized"],
+      s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${e(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td></tr>`))
+      : `<div class="empty">No open positions.</div>`;
+    $l("#lv-sig").innerHTML = s.signals?.length ? table(["Time", "Symbol", "Setup", "Side", "Price", "Status", "Reason"],
+      s.signals.map(x => `<tr><td class="l">${e(x.t)}</td><td>${e(x.symbol)}</td><td>${e(x.strategy)}</td><td>${x.side > 0 ? "long" : "short"}</td><td>${x.ref ?? "–"}</td><td><span class="chip ${e(x.status)}">${e(x.status)}</span></td><td style="white-space:normal">${e(x.reason)}</td></tr>`))
+      : `<div class="empty">No signals yet.</div>`;
+    const sk = Object.entries(t.skip_reasons || {});
+    $l("#lv-skip").innerHTML = sk.length ? table(["Reason", "Signals"], sk.map(([k, v]) => `<tr><td class="l" style="white-space:normal">${e(k)}</td><td>${v}</td></tr>`)) : `<div class="empty">Nothing skipped yet.</div>`;
+    $l("#lv-closed").innerHTML = s.closed?.length ? table(["Symbol", "Setup", "In", "Out", "Exit", "R", "P/L", "Slip"],
+      s.closed.map(c => `<tr><td class="l">${e(c.symbol)}</td><td>${e(c.strategy)}</td><td>${e(c.entry_t)}</td><td>${e(c.exit_t)}</td><td>${e(c.reason)}</td><td>${c.r ?? "–"}</td><td class="${cls(c.pnl)}">${money(c.pnl)}</td><td>${c.slip_bps ?? "–"}</td></tr>`))
+      : `<div class="empty">No closed trades yet.</div>`;
+  }
+
+  function renderLab(d) {
+    if (!d?.candidates?.length) return;
+    $l("#lv-lab").innerHTML = `<div class="note" style="margin:0 0 8px">Scan of ${e(d.generated)}: ${d.rules_tried?.toLocaleString()} rules tried on ${d.symbols} symbols; ${d.passed_train} beat the baseline while being found, ${d.replicated} held up on newer data.</div>` +
+      table(["Rule", "Side", "Held up", "Found: n / success / exp R", "Checked: n / success / exp R"],
+        d.candidates.slice(0, 15).map(c => `<tr><td class="l">${e(c.layers.join(" + "))}</td><td>${e(c.side)}</td><td>${c.replicated ? "yes" : "no"}</td>
+          <td>${c.train_n} / ${pc(c.train_success)} / ${c.train_exp_r?.toFixed(3)}</td><td>${c.test_n} / ${pc(c.test_success)} / <span class="${cls(c.test_exp_r)}">${c.test_exp_r?.toFixed(3)}</span></td></tr>`));
+  }
+
+  function fail(err, where) {
+    const why = {
+      server_not_connected: "Add the GitHub connector in claude.ai Settings → Connectors to see live data.",
+      needs_reauth: "Reconnect GitHub in claude.ai Settings → Connectors to see live data.",
+      not_in_manifest: "GitHub access is turned off for this page. Allow it from the page's permissions to see live data.",
+      tool_error: "The live file is not there yet. It appears after the first trading job runs.",
+    }[err?.code] || `Live data is unavailable right now (${err?.code || "error"}). It retries every minute.`;
+    if (where === "status") { const m = $l("#lv-msg"); m.hidden = false; m.firstChild.textContent = why + " "; $l("#lv-phase").textContent = "offline"; }
+  }
+
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data/";
+  async function poll(path, fn, where) {
+    try {
+      const r = await fetch(RAW + path + "?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw { code: r.status === 404 ? "tool_error" : "upstream_error" };
+      fn(await r.json());
+    } catch (e) { fail(e && e.code ? e : { code: "upstream_error" }, where); }
+  }
+  const tick = () => { poll("status.json", render, "status"); poll("discovery/latest.json", renderLab, "lab"); };
+  tick();
+  setInterval(tick, 60000);
+})();
+</script>
+
+</main></body></html>

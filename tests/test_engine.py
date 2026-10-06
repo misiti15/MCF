@@ -292,3 +292,24 @@ def test_restore_from_broker_recovers_unsaved_orders(tmp_path):
     assert ("AMD", "heat_fade_short") in r.fired and r.open_strategy["AMD"] == "heat_fade_short"
     assert "AMD" in r.risk.state.open_symbols
     assert r.journal.open_orders(r.run_id).broker_order_id.tolist() == ["abc"]
+
+
+def test_eod_report_top_losers_and_chart(tmp_path):
+    from mcf.journal import Journal
+    from mcf.report import eod
+
+    j = Journal(tmp_path / "j.db")
+    rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    base = dict(strategy="orb20_a", date="2026-10-06", signal_time="2026-10-06T10:00:00-04:00", stop=9.0, target=None,
+                exit_reason="stop", mae_r=None, mfe_r=None, success=0, shares=10, meta="")
+    rows = [dict(base, symbol=f"S{i}", side=1, entry_time="2026-10-06T10:01:00-04:00", entry=10.0,
+                 exit_time=f"2026-10-06T1{1 + i % 4}:05:00-04:00", exit=10.0 - 0.1 * i, r_multiple=-0.1 * i,
+                 pnl=-1.0 * i) for i in range(12)]
+    j.add_trades(rid, pd.DataFrame(rows))
+    idx = pd.date_range("2026-10-06 09:30", "2026-10-06 15:59", freq="1min", tz="America/New_York")
+    spy = pd.DataFrame({"close": np.linspace(700, 705, len(idx))}, index=idx)
+    rep = eod.build(j, rid, "2026-10-06", spy, {"findings": ["x"]})
+    assert rep["png"][:4] == b"\x89PNG" and rep["html"].count("<tr><td>S") == 10
+    assert "S11" in rep["html"] and "S1<" not in rep["html"]   # worst 10 by % lost, best losers dropped
+    eod.save(rep, tmp_path / "reports", "2026-10-06")
+    assert (tmp_path / "reports" / "2026-10-06.csv").exists()
