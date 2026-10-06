@@ -54,6 +54,7 @@ class PaperRunner:
         self.fired: set[tuple[str, str]] = set()
         self.seen: set[tuple[str, str]] = set()      # signals already journaled today
         self.open_strategy: dict[str, str] = {}
+        self.managed: dict[str, dict] = {}   # symbol -> trade-management state (time stop / breakeven / trail)
         self.bars: dict[str, pd.DataFrame] = {}
         self.last_fetch: pd.Timestamp | None = None
         self.health = {"polls": 0, "last_poll_s": None, "symbols_last_bar": 0, "last_bar": None}
@@ -74,6 +75,7 @@ class PaperRunner:
         self.risk.state.trades_today = int((sig.status == "submitted").sum()) if len(sig) else 0
         if not self.dry_run:
             self._restore_from_broker(today)
+            self._restore_management()
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
             self.risk.state.realized_r = float(done.loc[done.date == str(today), "r_multiple"].sum())
@@ -110,6 +112,33 @@ class PaperRunner:
             added += 1
         if added:
             print(f"restored {added} MCF orders from the broker that the journal had not saved yet")
+
+    def _restore_management(self):
+        """Re-arm time stops / breakeven / trailing for MCF positions still open after a restart."""
+        by_name = {s.name: s for s in self.strategies}
+        keys = ("be_at_r", "trail_r", "trail_after_r", "time_stop_min", "time_stop_min_r")
+        try:
+            held = self.broker.positions()
+            orders = self.journal.open_orders(self.run_id)
+        except Exception as e:
+            print(f"management restore skipped: {e}")
+            return
+        for sym, strat in self.open_strategy.items():
+            st = by_name.get(strat)
+            if sym not in held or st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
+                continue
+            rec = orders[orders.symbol == sym].tail(1)
+            if rec.empty:
+                continue
+            rec = rec.iloc[0]
+            entry = float(getattr(held[sym], "avg_entry_price", rec.entry_ref) or rec.entry_ref)
+            self.managed[sym] = {"side": int(rec.side), "entry": entry, "risk": abs(entry - float(rec.stop)),
+                                 "stop": float(rec.stop), "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0,
+                                 **{k: st.params.get(k) for k in keys}}
+            self.managed[sym]["trail_after_r"] = self.managed[sym]["trail_after_r"] or 1.0
+            self.managed[sym]["time_stop_min_r"] = self.managed[sym]["time_stop_min_r"] or 0.0
+        if self.managed:
+            print(f"re-armed trade management for {len(self.managed)} open positions")
 
     def _mcf_symbols(self) -> set[str]:
         return set(self.open_strategy)
@@ -193,9 +222,52 @@ class PaperRunner:
         return ctxs
 
     # ---------------------------------------------------------------- trading
+    def manage(self, now: pd.Timestamp, bars: dict):
+        """Per-minute trade management mirroring simulate(): time stop, breakeven move, trailing stop.
+        Uses completed 1-minute bars since entry; stop changes go to the broker-side stop order."""
+        if not self.managed or self.dry_run:
+            return
+        held = set(self.broker.positions())
+        for sym, m in list(self.managed.items()):
+            if sym not in held:
+                self.managed.pop(sym)
+                continue
+            b = bars.get(sym)
+            if b is None or b.empty or m["risk"] <= 0:
+                continue
+            since = b[b.index >= m["t0"].floor("1min")]
+            if since.empty:
+                continue
+            fav = since["high"].max() if m["side"] == 1 else since["low"].min()
+            m["best"] = max(m["best"], m["side"] * (fav - m["entry"]) / m["risk"])
+            mins = (now - m["t0"]).total_seconds() / 60
+            if m["time_stop_min"] and mins >= m["time_stop_min"] and m["best"] < m["time_stop_min_r"]:
+                try:
+                    self.broker.cancel_orders_for_symbol(sym, COID_PREFIX)
+                    self.broker.close_position(sym)
+                    print(f"TIME STOP {sym}: {mins:.0f} min, best {m['best']:.2f}R")
+                except Exception as e:
+                    print(f"time stop {sym} failed: {e}")
+                self.managed.pop(sym)
+                continue
+            new = m["stop"]
+            if m["be_at_r"] is not None and m["best"] >= m["be_at_r"]:
+                new = max(new, m["entry"]) if m["side"] == 1 else min(new, m["entry"])
+            if m["trail_r"] is not None and m["best"] >= m["trail_after_r"]:
+                tr = m["entry"] + m["side"] * (m["best"] - m["trail_r"]) * m["risk"]
+                new = max(new, tr) if m["side"] == 1 else min(new, tr)
+            if m["side"] * (new - m["stop"]) > 0.005:
+                try:
+                    self.broker.move_stop(sym, round(new, 2), COID_PREFIX)
+                    print(f"STOP {sym} {m['stop']:.2f} -> {new:.2f} (best {m['best']:.2f}R)")
+                    m["stop"] = new
+                except Exception as e:
+                    print(f"move stop {sym} failed: {e}")
+
     def step(self, now: pd.Timestamp):
         today = now.date()
         bars = self.fetch(now)
+        self.manage(now, bars)
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
@@ -301,6 +373,11 @@ class PaperRunner:
         self._sync_open()
         self.journal.record_order(self.run_id, sig.symbol, sig.strategy, sig.side, qty, px, sig.stop,
                                   sig.target, str(o.id), "submitted", json.dumps(info, default=str))
+        if sig.be_at_r is not None or sig.trail_r is not None or sig.time_stop_min:
+            self.managed[sig.symbol] = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": sig.stop,
+                                        "t0": now, "be_at_r": sig.be_at_r, "trail_r": sig.trail_r,
+                                        "trail_after_r": sig.trail_after_r, "time_stop_min": sig.time_stop_min,
+                                        "time_stop_min_r": sig.time_stop_min_r, "best": 0.0}
         self._log(sig, "submitted", "ok", px, now, info, qty, str(o.id))
         print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}")
 

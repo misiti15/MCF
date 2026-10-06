@@ -38,10 +38,14 @@ def load(path: str = "research/exits/data/signals.pkl") -> list[dict]:
     return pickle.load(open(path, "rb"))["signals"]
 
 
-@lru_cache(maxsize=4096)
+@lru_cache(maxsize=2048)
+def _sym(symbol: str) -> dict:
+    df = _store.load(symbol)
+    return {str(d): g for d, g in df.groupby(df.index.date)}
+
+
 def _day(symbol: str, date: str) -> pd.DataFrame:
-    df = _store.load(symbol, start=date, end=date)
-    return df[df.index.date == pd.Timestamp(date).date()]
+    return _sym(symbol).get(date, pd.DataFrame())
 
 
 def run(sigs: list[dict], setup: str, variant: dict | None = None, split: str = "train") -> dict:
