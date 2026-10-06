@@ -45,3 +45,37 @@ exit by 15:55), plus day-clustered t (same formula as `research/reddit_bt/common
   (mean r of all bars at the same date and bar time as each trade).
 - Up to 3 finalists, at most one per family, ranked by valid day-clustered t. Ex-best-day valid exp_r reported.
 - Budget about 3,000 configs; exact count in results.json.
+
+## Results (run 2026-10-06; `python research/rework/lab_families/run.py`, ~65 s)
+
+**Configurations: 4,416 evaluated** = 1,986 in the pre-declared search (8 families x ~83 masks x 3 geometries) +
+2,430 one-step neighbours scored only for the plateau check of the 173 valid-gate candidates (all 3 geometries each).
+This is over the ~3,000 budget: the plateau stage scored every geometry of each neighbour, not only the candidate's.
+Lineage totals: parent swarm ~855,600 configs (obos_levels 31,212; obos_vwap_ma 19,196; trend_pullback ~268k;
+volume_flip 176,256; win_geometry ~361,200) + 4,416 here. 1,052 configs met train eligibility and were looked at on valid.
+
+### Failures first
+- **OVM_L** (obos-vwap-ma long): base valid -0.13/-0.08/-0.10R (n 307). 0 configs pass valid. Dropped again.
+- **OVM_S** (obos-vwap-ma short fade): only 23 train-eligible; best valid -0.018R. 0 pass.
+- **WG3** (win_geometry_3 long t05s1): base valid ~0R; 3 tweaks pass the gate (best +round<.1, valid +0.10R n 64), weak; not chosen.
+- **OL1**: base valid +0.06R t 0.53. 8 tweaks pass (best lwick>=.6 + volumeRatio<.8, valid +0.19R n 94 t 2.99); not chosen (one per family cap, lower t than the three below).
+- **WG2**: base valid n 76; swap_all (macd->emaDiff, flow3->flow flip) valid +0.22R n 109 t 2.79 passes; not in top 3.
+- Global swaps (swap_all) hurt TP and VF on train (+0.02 / +0.05R); OVM_L swap_all has zero trades.
+
+### Finalists (chosen by valid day-clustered t among gate-passers, max one per family)
+| module | side/geom | train n / exp_r / t_dc | valid n / days / exp_r / t_dc | valid ex-best-day | plateau (valid) | window base / same-time ctrl |
+|---|---|---|---|---|---|---|
+| vf_lowvol_div (VF + vol_climax<1) | short t1s1 | 368 / +0.251 / 1.92 | 51 / 13 / +0.354 / 5.63 | +0.310 | 8 nb, mean +0.262, 100% + | +0.032 / +0.094 |
+| tp_slope_rip (TP + sma20_slope<0) | short t05s1 | 268 / +0.087 / 1.54 | 89 / 12 / +0.299 / 5.56 | +0.256 | 12 nb, mean +0.239, 100% + | -0.002 / +0.013 |
+| wg1_pdl_fade (WG1 + dist_pdl<0.25 ATR) | short t1s05 | 328 / +0.155 / 1.83 | 33 / 11 / +0.356 / 4.62 | +0.288 | 8 nb, mean +0.361, 100% + | +0.003 / +0.000 |
+
+### Caveats (read before trusting any of this)
+- **Valid did not discriminate for these families last time**: TP base already had valid t 3.6 (t05s1) and then made
+  +0.015R on the test; WG1/OL1 also passed train+valid and failed the test. 173 of 1,052 eligible configs cleared the
+  valid gate, mostly afternoon/morning shorts: the 14-session valid window favoured shorts. Valid t values of 4-6 on
+  11-13 days are selection-inflated (best of ~1,000 looks).
+- Small samples: wg1_pdl_fade valid n 33 (gate is 30); vf_lowvol_div n 51.
+- Train weaknesses: tp_slope_rip train t 1.54 (just eligible), train half1 +0.023; wg1_pdl_fade train half2 -0.013.
+- tp_slope_rip is a t05s1 high-win geometry (valid win 87.6%); margin is sensitive to slippage.
+- These are reworks of lineages that already used holdout look 1 (Sep16-Oct5): a holdout re-look is look 2 -> t >= 1.5 on both holdouts.
+- Locked holdouts were not read. The lead scores the finalists once.
