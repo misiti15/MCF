@@ -41,3 +41,10 @@ Files:
 - `candidates/` — every candidate
 - `notes/` — each tuner's notes
 - `test_results.csv` — train, valid and test for every candidate
+
+## Live-code-path check
+`HeatStrategy`, the code that trades live, was run through the 1-minute backtester. Fills were conservative: stops and targets resolved on 1-minute bars, plus slippage. The period was the test window, Sep 17 – Oct 5, on 1,226 symbols:
+- heat_fade_long: 616 trades, success 44.6%, win rate 57.6%, **+0.128R**, PF 1.36, green days 69%. The lab measured +0.159R.
+- heat_fade_short: 720 trades, success 46.1%, win rate 52.4%, **+0.040R**, PF 1.05, green days 77%. The lab measured +0.046R.
+
+The deployed code reproduces the study.
