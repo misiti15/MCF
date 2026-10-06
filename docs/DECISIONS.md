@@ -2,6 +2,14 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-06: fourth round (research swarm, heat score, daily improvement)
+
+| Topic | Owner request | What was done |
+|---|---|---|
+| Heat score | Use a bot swarm to tune MarcoFlow's heat score into the best weighted version for viable longs and shorts. | Heat ported and recomputed on SIP data (1,000 names, 63 sessions). Five tuners tried ~19,200 configurations and an auditor checked them; the locked test was scored once. The original is negative everywhere. The surviving version is a *consistent* reversion score, gated by time of day: heat_fade_short (09:50–10:30) and heat_fade_long (11:05–13:30) are paper-only. See `research/heat/HEAT_STUDY.md`. |
+| Setup research | Research as many sources as possible for the most common and best intraday setups, and build setups from them. | Four research families (~117 sources, via search summaries because page fetches were blocked), synthesised into 17 ranked specs. Eight setups were built and screened on 63 sessions of SIP 1-minute bars. Only orb20_a passed, and thinly. The previously enabled ORB-5 and noise-band setups lose after costs and are off. See `research/SETUP_SCREEN.md`. |
+| Daily improvement | Every live day better than the last. | Not achievable for daily P/L: no documented setup does it, and chasing it overfits. Instead, each close produces a review (`reviews/` on the state branch) scoring execution, data, every rule's what-if cost or saving, and results against yesterday and the 5/20-day averages. Setups change only through the gates. |
+
 ## 2026-10-05: third round (go-live)
 
 | Topic | Owner decision | How MCF applies it |
