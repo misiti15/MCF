@@ -48,6 +48,7 @@ for _b in STAGE2_BASES:
         VARIANTS[_b.replace("_1R", f"_{_e}")] = dict(VARIANTS[_b], exit=_e)
 
 FINALISTS: list[str] = []
+_CACHE: dict = {}
 BASELINE = {"stop_atr": 0.25, "target_atr": 0.25}
 
 
@@ -59,10 +60,14 @@ def signals(day, v) -> list[Signal]:
     N, k, m = v["N"], v["k"], v["m"]
     w0, w1 = WINDOWS[v["win"]]
     side = 1 if v["side"] == "long" else -1
-    vw = F.vwap(bars).to_numpy()
+    key = (day.symbol, day.date)
+    if _CACHE.get("key") != key:  # per-day precompute shared across variants (pure speed-up)
+        _CACHE.clear()
+        _CACHE.update(key=key, vw=F.vwap(bars).to_numpy(), pos={ts: i for i, ts in enumerate(bars.index)},
+                      arr=tuple(b5[x].to_numpy(float) for x in ("open", "high", "low", "close", "volume")))
+    vw, pos = _CACHE["vw"], _CACHE["pos"]
     idx = bars.index
-    pos = {ts: i for i, ts in enumerate(idx)}
-    o, h, l, c, vol = (b5[x].to_numpy(float) for x in ("open", "high", "low", "close", "volume"))
+    o, h, l, c, vol = _CACHE["arr"]
     starts = b5.index
     for j in range(max(N, 6), len(b5)):
         st = starts[j]
