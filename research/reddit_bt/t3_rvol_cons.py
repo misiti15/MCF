@@ -47,7 +47,7 @@ for _b in STAGE2_BASES:
     for _e in ("2R", "ts30", "hold45"):
         VARIANTS[_b.replace("_1R", f"_{_e}")] = dict(VARIANTS[_b], exit=_e)
 
-FINALISTS: list[str] = []
+FINALISTS: list[str] = []  # none: 37/38 configs negative on valid; the one positive (hold45, n=17) is one-day driven
 _CACHE: dict = {}
 BASELINE = {"stop_atr": 0.25, "target_atr": 0.25}
 

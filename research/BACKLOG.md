@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 30 · coded: 0 · failed: 10 · configurations tried (all lineages): 0
+Total ideas: 30 · coded: 5 · failed: 15 · configurations tried (all lineages): 160
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -15,11 +15,6 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | live | live-heat_fade_long | Heat-score fade long 11:05-13:30 | heat study | – | – | – | – | – |
 | live | live-exhaustion_short | Afternoon exhaustion short (volume_flip_1) | layered swarm | – | – | – | – | – |
 | live | live-intraday_momentum | Intraday momentum | initial build | – | – | – | – | – |
-| testing | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
-| testing | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
-| testing | t4-rel-strength | Relative strength vs SPY with market/VWAP filters | r/RealDayTrading method (snippets) | – | – | – | – | – |
-| testing | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
-| testing | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
 | idea | reddit-baseline-links | Owner's two r/ai_trading links | owner | – | – | – | – | – |
 | idea | one-per-underlying | One position per underlying index (QQQ/QQQM/QLD...) | owner discussion | – | – | – | – | – |
 | idea | intraday-momentum-paper | First-30-min return predicts last-30-min return (SPY/QQQ) | Gao, Han, Li, Zhou 2018 JFE 'Market intraday momentum' | – | – | – | – | – |
@@ -33,6 +28,11 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
+| failed | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
+| failed | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
+| failed | t4-rel-strength | Relative strength vs SPY with market/VWAP filters | r/RealDayTrading method (snippets) | – | – | – | – | – |
+| failed | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
+| failed | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
 | failed | t1-orb-exits | ORB on stocks in play: exit re-tests | Zarattini/Barbon/Aziz 2024 | – | – | – | – | – |
 | failed | t6-exit-overlay | Breakeven / trail / time stop on live setups | r/algotrading 1t6ex5l (snippet) | – | – | – | – | – |
 | failed | exh-wider-target | exhaustion_short wider target | exit study | – | – | – | – | – |

@@ -52,6 +52,8 @@ for _w in ("early", "late"):
         VARIANTS[f"c0.5_{_w}_{_e}_nt"] = {"c": 0.5, "win": _w, "exit": _e, "trend": False, "beta": "b20"}
         VARIANTS[f"c0.5_{_w}_{_e}_b1"] = {"c": 0.5, "win": _w, "exit": _e, "trend": True, "beta": "b1"}
 
+# Result: all 30 variants have exp_r < 0 on train after costs (best c0.5_late_1R_b1 -0.027R); valid was positive for
+# most (regime-dependent, 14 days) but a finalist needs train > 0 too -> no finalists.
 FINALISTS: list[str] = []
 BASELINE = {"stop_atr": 0.25, "target_atr": 0.25}
 
