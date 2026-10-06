@@ -4,7 +4,9 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 29 · coded: 0 · failed: 10
+Total ideas: 30 · coded: 0 · failed: 10 · configurations tried (all lineages): 0
+
+A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworks whose lineage already used the holdouts must pass on forward data.
 
 | Status | ID | Idea | Source | Train | Valid | Test (once) | Q2 (once) | Forward |
 |---|---|---|---|---|---|---|---|---|
@@ -27,6 +29,7 @@ Total ideas: 29 · coded: 0 · failed: 10
 | idea | sector-rs | Stock vs sector-ETF relative strength | r/RealDayTrading concept | – | – | – | – | – |
 | idea | shadow-0930 | 09:30-09:50 shadow entries | MCF what_if journal | – | – | – | – | – |
 | idea | marcoflow-mining | Mine MarcoFlow history DB for setups that held up | data/marcoflow.sqlite | – | – | – | – | – |
+| idea | global-indicator-lengths | Indicator lengths across all setups (RSI 7/10/14/21, SMA 10/20/50, ATR 10/14/20) | owner (rule 18) | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |

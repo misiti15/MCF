@@ -38,3 +38,16 @@ follows these rules.
     - The gates are fixed in advance in `mcf/research/backlog.py`. A finalist is scored once on the locked holdouts.
     - Only an idea that passes is proposed. It is merged after the close and recorded in the ledger.
     - Failed ideas stay listed, together with their numbers.
+18. **Failed is not final. Every failed or failing idea is reworked before it is dropped.**
+    - **What a rework tries:**
+      - the neighbourhood of each parameter, e.g. RSI 14 → 7/10/21
+      - swapped indicator lengths, applied across all setups at once as well as one setup at a time
+      - each condition removed in turn
+      - one condition added from the feature library
+      - tweaks in pairs
+    - **Guard rails, because every tweak is another chance of a lucky fit:**
+      - Search on train and choose on valid.
+      - Count the configurations tried across the idea's whole lineage, and report the count.
+      - The winner must sit on a plateau: neighbouring settings must also be positive.
+      - If the idea's lineage already used the locked holdouts, a rework cannot be judged on them again. It must pass on forward sessions collected after it was frozen, before it is proposed.
+    - An idea is dropped only after its rework rounds fail. The backlog keeps the full record.

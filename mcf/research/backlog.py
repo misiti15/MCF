@@ -7,11 +7,17 @@ after passing the pre-declared gates below. Approved changes then go in research
 Entry (one JSON object per line):
   {"id", "title", "added", "source", "category": "setup|exit|strategy|risk", "hypothesis",
    "module": "research.reddit_bt.t2_orb15" | null, "variant": "<name in module.VARIANTS>" | null,
-   "status": "idea|coded|testing|failed|finalist|holdout_passed|holdout_failed|proposed|live|retired", "notes"}
+   "status": "idea|coded|testing|failed|rework|finalist|forward_wait|holdout_passed|holdout_failed|proposed|live|retired",
+   "notes", optional: "parent" (id it was reworked from), "holdout_burned" (true when an ancestor already used the
+   locked holdouts), "configs_tried" (cumulative across the whole lineage)}
 
 Pre-declared gates (never changed to fit a candidate):
   finalist        train and valid both exp_r > 0 after costs, valid n >= 30, valid day-clustered t >= 1.5
   holdout_passed  scored ONCE on each locked holdout (test, q2): exp_r > 0 and t >= 1.0 on both
+  plateau         if the module defines NEIGHBORS = {variant: [nearby variant names]} (one parameter one step away),
+                  their mean valid exp_r must also be > 0: a plateau, not a lone spike
+  forward_wait    a reworked idea whose lineage already used the holdouts cannot be judged on them again; it must
+                  pass on sessions collected after it was frozen: >= 20 sessions, >= 60 trades, exp_r > 0, t >= 1.0
   forward         after registration every candidate keeps being scored on new sessions (> 2026-10-05) as they
                   arrive; frozen rules, monitoring only. A live setup whose forward exp_r falls below 0 over
                   >= 100 trades is flagged for review.
@@ -35,8 +41,9 @@ ROOT = Path(__file__).resolve().parents[2]
 BACKLOG = ROOT / "research" / "backlog.jsonl"
 RESULTS = ROOT / "research" / "backlog_results.jsonl"
 REPORT = ROOT / "research" / "BACKLOG.md"
-RUNNABLE = {"coded", "testing", "finalist", "holdout_passed", "proposed", "live"}
-GATE = {"finalist_valid_n": 30, "finalist_valid_t": 1.5, "holdout_t": 1.0, "forward_review_n": 100}
+RUNNABLE = {"coded", "testing", "rework", "finalist", "forward_wait", "holdout_passed", "proposed", "live"}
+GATE = {"finalist_valid_n": 30, "finalist_valid_t": 1.5, "holdout_t": 1.0, "forward_review_n": 100,
+        "forward_sessions": 20, "forward_n": 60, "forward_t": 1.0}
 
 
 def entries() -> list[dict]:
@@ -51,14 +58,14 @@ def results() -> list[dict]:
     return [json.loads(l) for l in RESULTS.read_text().splitlines() if l.strip()] if RESULTS.exists() else []
 
 
-def _score(e: dict, split: str) -> dict:
+def _score(e: dict, split: str, variant: str | None = None) -> dict:
     from research.reddit_bt import common
 
     mod = importlib.import_module(e["module"])
     uni = mod.UNIVERSE
     if uni == "top300":
         uni = (ROOT / "research" / "reddit_bt" / "top300.txt").read_text().split()
-    m = common.run(mod.signals, mod.VARIANTS[e["variant"]], split, universe=uni)
+    m = common.run(mod.signals, mod.VARIANTS[variant or e["variant"]], split, universe=uni)
     m.pop("_rows", None)
     return m
 
@@ -86,9 +93,18 @@ def run(only: str | None = None) -> None:
             _record(e, split, m)
             got[split] = m
             print(e["id"], split, {k: m.get(k) for k in ("n", "win_rate", "exp_r", "t_day_clustered")})
-        if e["status"] in ("coded", "testing"):
+        if e["status"] in ("coded", "testing", "rework"):
             ok = got["train"].get("exp_r", -1) > 0 and _passes(got["valid"], GATE["finalist_valid_n"], GATE["finalist_valid_t"])
-            e["status"] = "finalist" if ok else "failed"
+            nb = getattr(importlib.import_module(e["module"]), "NEIGHBORS", {}).get(e["variant"], [])
+            if ok and nb:
+                vals = [_score(e, "valid", v).get("exp_r", -1) for v in nb]
+                e["plateau_valid_exp_r"] = round(sum(vals) / len(vals), 4)
+                ok = e["plateau_valid_exp_r"] > 0
+            e["status"] = ("forward_wait" if e.get("holdout_burned") else "finalist") if ok else "failed"
+        if e["status"] == "forward_wait":
+            f = got.get("forward", {})
+            if f.get("days", 0) >= GATE["forward_sessions"] and f.get("n", 0) >= GATE["forward_n"]:
+                e["status"] = "proposed" if _passes(f, GATE["forward_n"], GATE["forward_t"]) else "failed"
         f = got.get("forward", {})
         if e["status"] == "live" and f.get("n", 0) >= GATE["forward_review_n"] and f.get("exp_r", 0) < 0:
             e["notes"] = (e.get("notes", "") + f" | {date.today()}: FLAG forward exp_r {f['exp_r']} over {f['n']} trades").strip(" |")
@@ -122,13 +138,17 @@ def report() -> None:
         last[(r["id"], r["split"])] = r
     cell = lambda e, s: (lambda m: "–" if not m else f"{m.get('exp_r', 0):+.3f}R n{m.get('n', 0)} t{m.get('t_day_clustered')}")(
         last.get((e["id"], s), {}).get("metrics"))
-    order = ["live", "proposed", "holdout_passed", "finalist", "testing", "coded", "idea", "holdout_failed", "failed", "retired"]
+    order = ["live", "proposed", "holdout_passed", "finalist", "forward_wait", "rework", "testing", "coded", "idea",
+             "holdout_failed", "failed", "retired"]
     es = sorted(entries(), key=lambda e: order.index(e["status"]) if e["status"] in order else 99)
     lines = ["# Strategy backlog", "", "*Educational only — not financial advice. Generated by `python -m mcf.research.backlog`.*", "",
              "Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) "
              "or fails. Costs are always in; holdouts are scored once; failures stay listed.", "",
              f"Total ideas: {len(es)} · coded: {sum(1 for e in es if e.get('module'))} · "
-             f"failed: {sum(1 for e in es if e['status'] in ('failed', 'holdout_failed'))}", "",
+             f"failed: {sum(1 for e in es if e['status'] in ('failed', 'holdout_failed'))} · "
+             f"configurations tried (all lineages): {sum(e.get('configs_tried', 0) for e in es)}", "",
+             "A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, "
+             "paired tweaks) before it is dropped; reworks whose lineage already used the holdouts must pass on forward data.", "",
              "| Status | ID | Idea | Source | Train | Valid | Test (once) | Q2 (once) | Forward |", "|---|---|---|---|---|---|---|---|---|"]
     for e in es:
         lines.append(f"| {e['status']} | {e['id']} | {e['title']} | {e.get('source', '')} | {cell(e, 'train')} | {cell(e, 'valid')} | "
