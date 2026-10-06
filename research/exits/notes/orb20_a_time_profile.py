@@ -1,8 +1,11 @@
-"""Time-in-trade profile for orb20_a baseline exits (train split only). Educational only — not financial advice."""
+"""Time-in-trade profile for orb20_a baseline exits (train by default; valid descriptive only, after finalists were fixed). Educational only — not financial advice."""
 import numpy as np, pandas as pd
 from research.exits import harness as H
 from mcf.strategies.base import Signal
-sigs = H.load(); lo, hi = H.SPLITS["train"]
+import sys
+SPLIT = sys.argv[1] if len(sys.argv) > 1 else "train"
+assert SPLIT in ("train", "valid")
+sigs = H.load(); lo, hi = H.SPLITS[SPLIT]
 rows = []
 for s in sigs:
     if s["sig"]["strategy"] != "orb20_a" or not (lo <= s["date"] <= hi): continue
