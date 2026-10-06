@@ -9,6 +9,7 @@ Splits by date (docs/RESEARCH_RULES.md):
   valid  2026-08-26 .. 2026-09-15
   test   2026-09-16 .. 2026-10-05   LOCKED
   q2     2026-04-01 .. 2026-06-30   LOCKED (data/cache_q2, warm-up from 2026-03-10)
+  forward 2026-10-06 ..             sessions collected after the rules were frozen (mcf/research/backlog.py)
 Locked splits raise unless MCF_RBT_ALLOW_HOLDOUT=1 (set only by the lead when scoring finalists once).
 
 A strategy module exposes  signals(day: Day, variant: dict) -> list[Signal]  and is run with
@@ -37,7 +38,8 @@ COSTS = Costs.from_cfg(CFG["costs"])
 COSTS_EXT = Costs(COSTS.bps, CFG["costs"].get("extended_slippage_per_share", 0.03), COSTS.stop_extra_per_share)
 MIN_ADV = CFG["universe"]["min_avg_dollar_volume"]
 SPLITS = {"train": ("2026-07-15", "2026-08-25", "data/cache"), "valid": ("2026-08-26", "2026-09-15", "data/cache"),
-          "test": ("2026-09-16", "2026-10-05", "data/cache"), "q2": ("2026-04-01", "2026-06-30", "data/cache_q2")}
+          "test": ("2026-09-16", "2026-10-05", "data/cache"), "q2": ("2026-04-01", "2026-06-30", "data/cache_q2"),
+          "forward": ("2026-10-06", "9999-12-31", "data/cache")}
 LOCKED = {"test", "q2"}
 
 

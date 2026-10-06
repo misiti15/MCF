@@ -29,3 +29,12 @@ follows these rules.
 ## Reporting
 13. **Failures come first, then results.** Numbers carry their sample size, window and standard error.
 14. **No result is rounded, re-labelled or re-windowed to cross a goal line.** If a goal is not met, the report says so.
+
+## Housekeeping vs. strategy (owner, 2026-10-06)
+15. **Housekeeping fixes ship right away.** Bugs, reliability, reporting, dashboards, emails, docs and tooling that do not change which trades are taken or how they exit can go in any time, after tests pass.
+16. **Setup and strategy ideas go into one backlog first:** `research/backlog.jsonl`, rendered as `research/BACKLOG.md`. This covers new setups, setup or exit changes, filters, sizing and risk rules. No idea goes straight into live trading, whatever its source (Reddit, papers, books, the EOD review, the owner, or Claude).
+17. **The backlog is re-tested continuously on all collected data.**
+    - `python -m mcf.research.backlog run` runs every week in the discover workflow, after the bar cache is refreshed. It scores train, valid, and forward. Forward means sessions after the rules were frozen.
+    - The gates are fixed in advance in `mcf/research/backlog.py`. A finalist is scored once on the locked holdouts.
+    - Only an idea that passes is proposed. It is merged after the close and recorded in the ledger.
+    - Failed ideas stay listed, together with their numbers.
