@@ -41,8 +41,8 @@ for _m in (2, 3):
                 for _s in ("long", "short"):
                     VARIANTS[f"m{_m}_N{_N}_k{_k}_{_w}_{_s}_1R"] = _variant(_m, _N, _k, _s, _w)
 # Stage 2 (pre-declared rule): the 2 best stage-1 configs on TRAIN exp_r (n >= 30) get the other 3 exits = 6 configs.
-# Filled in below after the stage-1 train run (see STAGE2_BASES).
-STAGE2_BASES = ["m3_N12_k0.5_am_long_1R", "m2_N12_k0.5_am_long_1R"]
+# Chosen after the stage-1 train run only (valid not looked at).
+STAGE2_BASES = ["m2_N12_k0.25_am_short_1R", "m3_N6_k0.25_am_short_1R"]  # chosen on train: top-2 exp_r with n >= 30
 for _b in STAGE2_BASES:
     for _e in ("2R", "ts30", "hold45"):
         VARIANTS[_b.replace("_1R", f"_{_e}")] = dict(VARIANTS[_b], exit=_e)
