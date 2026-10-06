@@ -243,8 +243,8 @@ class PaperRunner:
             mins = (now - m["t0"]).total_seconds() / 60
             if m["time_stop_min"] and mins >= m["time_stop_min"] and m["best"] < m["time_stop_min_r"]:
                 try:
-                    self.broker.cancel_orders_for_symbol(sym, COID_PREFIX)
-                    self.broker.close_position(sym)
+                    if not self.broker.close_mcf_position(sym, COID_PREFIX):
+                        raise RuntimeError("close not confirmed")
                     print(f"TIME STOP {sym}: {mins:.0f} min, best {m['best']:.2f}R")
                 except Exception as e:
                     print(f"time stop {sym} failed: {e}")
@@ -422,12 +422,31 @@ class PaperRunner:
         print("flatten time: closing MCF positions")
         if self.dry_run:
             return
+        mine = set(self._mcf_symbols())
+        try:   # also every symbol MCF traded today, in case local state missed one
+            mine |= {o.symbol for o in self.broker.orders_today_with_prefix(
+                COID_PREFIX, pd.Timestamp.now(tz=NY).normalize().to_pydatetime())}
+        except Exception as e:
+            print(f"order lookup failed: {e}")
         self.broker.cancel_orders_with_prefix(COID_PREFIX)
-        for sym in self._mcf_symbols() & set(self.broker.positions()):
-            try:
-                self.broker.close_position(sym)
-            except Exception as e:
-                print(f"close {sym} failed: {e}")
+        left = []
+        for attempt in range(3):
+            left = sorted(mine & set(self.broker.positions()))
+            if not left:
+                break
+            for sym in left:
+                try:
+                    if not self.broker.close_mcf_position(sym, COID_PREFIX):
+                        print(f"close {sym} not confirmed (pass {attempt + 1})")
+                except Exception as e:
+                    print(f"close {sym} failed: {e}")
+            _time.sleep(3)
+        left = sorted(mine & set(self.broker.positions()))
+        self.health["flatten_failed"] = left
+        if left:
+            print(f"FLATTEN FAILED: still open after 3 passes: {left}")
+        else:
+            print("flatten complete: no MCF positions open")
 
     def reconcile(self, day):
         """Pair entry/exit fills from Alpaca into closed trades in the journal."""
