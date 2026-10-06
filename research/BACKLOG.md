@@ -6,7 +6,7 @@ Every setup / strategy idea lives here until it passes the pre-declared gates (s
 
 Total ideas: 30 · coded: 0 · failed: 10 · configurations tried (all lineages): 0
 
-A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworks whose lineage already used the holdouts must pass on forward data.
+A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
 | Status | ID | Idea | Source | Train | Valid | Test (once) | Q2 (once) | Forward |
 |---|---|---|---|---|---|---|---|---|

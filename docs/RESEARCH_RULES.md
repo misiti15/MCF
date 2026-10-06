@@ -49,5 +49,8 @@ follows these rules.
       - Search on train and choose on valid.
       - Count the configurations tried across the idea's whole lineage, and report the count.
       - The winner must sit on a plateau: neighbouring settings must also be positive.
-      - If the idea's lineage already used the locked holdouts, a rework cannot be judged on them again. It must pass on forward sessions collected after it was frozen, before it is proposed.
+      - A reworked version may go through the two locked holdouts again (owner, 2026-10-06). Each exact version is still scored only once.
+      - Every extra look by the same lineage raises the bar, because each look leaks a little of the holdout into our choices. The day-clustered t must reach 1.0 on look 1, 1.5 on look 2, 2.0 on look 3 and 2.5 on look 4.
+      - After 4 looks, the lineage is judged only on forward sessions.
+      - A version that passes on look 2 or later goes to paper as **probation**, labelled as a holdout re-look. It is confirmed or retired automatically once it has at least 20 forward sessions and 60 trades.
     - An idea is dropped only after its rework rounds fail. The backlog keeps the full record.
