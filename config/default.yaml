@@ -60,7 +60,7 @@ universe:
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
   orb:
-    enabled: true
+    enabled: false   # screen 2026-10-06: -0.33R/trade over 63 sessions (pre-09:50 entries -0.59R); paper off
     min_atr: 0.50                 # daily ATR(14) in dollars (published ORB study filter)
     range_minutes: 5
     stop_atr_frac: 0.10
@@ -88,14 +88,14 @@ strategies:
     max_rvol: 1.5
     exit_by: "12:00"
   intraday_momentum:
-    enabled: true
+    enabled: true   # screen 2026-10-06: +0.013R/trade, break-even; paper on for data (index ETFs, cheap)
     symbols: [SPY, QQQ, IWM, DIA]
     signal_time: "10:00"
     entry_time: "15:30"
     min_abs_return_pct: 0.25
     stop_atr_frac: 0.25
   noise_band_momentum:
-    enabled: true
+    enabled: false   # screen 2026-10-06: -0.49R/trade (simplified version, not the paper's full rules); paper off
     symbols: [SPY, QQQ]
     band_mult: 1.0
     first_check: "10:00"
@@ -111,7 +111,7 @@ strategies:
   # ---- 2026-10-06 research sweep (research/setups_research.json). Paper-trade only after the screening
   # backtest (research/setup_screen.md); funds only via the promotion gates. Exits as specced (no scale-out).
   orb20_a:
-    enabled: false
+    enabled: true   # screen 2026-10-06: PASSED (+0.021R, PF 1.11, 443 trades); thin edge, paper only
     class: orb20
     variant: A                   # stop 0.5 x range, target 0.75 x range (higher win rate)
     min_rvol: 1.5
