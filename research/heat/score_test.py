@@ -15,7 +15,10 @@ from mcf.research.heat import evaluate, load
 locked = Path(sys.argv[1])
 splits = {"train": load("train"), "valid": load("valid"), "test": load("test", locked)}
 rows = []
+sys.path.insert(0, str(Path("research/heat/candidates").resolve()))
 for f in sorted(Path("research/heat/candidates").glob("*.py")):
+    if f.stem.startswith("_") and f.stem != "_original":
+        continue  # shared helper modules
     spec = importlib.util.spec_from_file_location(f.stem, f)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)

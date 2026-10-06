@@ -291,8 +291,10 @@ class HeatStrategy(Strategy):
     name = "heat"
 
     def __init__(self, name: str, formula: str, r_atr_frac: float = 0.25, target_r: float | None = 1.0,
-                 sides: str = "both", **params):
-        super().__init__(formula=formula, r_atr_frac=r_atr_frac, target_r=target_r, sides=sides, **params)
+                 sides: str = "both", min_adv: float = 0.0, window: tuple | list | None = None,
+                 gate: str | None = None, **params):
+        super().__init__(formula=formula, r_atr_frac=r_atr_frac, target_r=target_r, sides=sides, min_adv=min_adv,
+                         window=window, gate=gate, **params)
         self.name = name
         import importlib.util
         from pathlib import Path
@@ -303,6 +305,30 @@ class HeatStrategy(Strategy):
         spec = importlib.util.spec_from_file_location(f"heat_{name}", path)
         self.mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.mod)
+
+    def eligible(self, ctx):
+        """Cheap pre-filters matching the study: its population (min_adv), its time window (bar-close HHMM)
+        and its gate. Live, the score is evaluated only when a 5-minute bar has just completed."""
+        if ctx.avg_dollar_volume < self.min_adv:
+            return False
+        n = len(ctx.bars)
+        if n < 5 or n % 5:
+            return False
+        end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
+        hhmm = end.hour * 100 + end.minute
+        if self.window and not (self.window[0] <= hhmm and (hhmm <= self.window[1] or n == 390)):
+            return False   # full-day context (backtest) is always evaluated
+        o = float(ctx.bars["open"].iloc[0])
+        last = float(ctx.bars["close"].iloc[-1])
+        if self.gate == "fo-" and n < 390 and not last < o:
+            return False
+        if self.gate == "fo+" and n < 390 and not last > o:
+            return False
+        if self.gate == "gap+" and not o > ctx.prev_close:
+            return False
+        if self.gate == "gap-" and not o < ctx.prev_close:
+            return False
+        return True
 
     def generate(self, ctx: DayContext):
         from ..data.bars import resample
