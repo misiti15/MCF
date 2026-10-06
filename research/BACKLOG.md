@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 31 · coded: 5 · failed: 15 · configurations tried (all lineages): 160
+Total ideas: 40 · coded: 6 · failed: 18 · configurations tried (all lineages): 6055
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -15,6 +15,8 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | live | live-heat_fade_long | Heat-score fade long 11:05-13:30 | heat study | – | – | – | – | – |
 | live | live-exhaustion_short | Afternoon exhaustion short (volume_flip_1) | layered swarm | – | – | – | – | – |
 | live | live-intraday_momentum | Intraday momentum | initial build | – | – | – | – | – |
+| finalist | rw-vf2_rsis3_fast10 | volume_flip_2 with RSI3 / SMA10 | rule-18 rework (lengths) | – | – | – | – | – |
+| finalist | rw-t4_long_nomf | Relative strength vs SPY, long only, 10:30-11:30, no market filter | rule-18 rework (web_families) | – | – | – | – | – |
 | idea | reddit-baseline-links | Owner's two r/ai_trading links | owner | – | – | – | – | – |
 | idea | one-per-underlying | One position per underlying index (QQQ/QQQM/QLD...) | owner discussion | – | – | – | – | – |
 | idea | intraday-momentum-paper | First-30-min return predicts last-30-min return (SPY/QQQ) | Gao, Han, Li, Zhou 2018 JFE 'Market intraday momentum' | – | – | – | – | – |
@@ -24,16 +26,12 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | sector-rs | Stock vs sector-ETF relative strength | r/RealDayTrading concept | – | – | – | – | – |
 | idea | shadow-0930 | 09:30-09:50 shadow entries | MCF what_if journal | – | – | – | – | – |
 | idea | marcoflow-mining | Mine MarcoFlow history DB for setups that held up | data/marcoflow.sqlite | – | – | – | – | – |
-| idea | global-indicator-lengths | Indicator lengths across all setups (RSI 7/10/14/21, SMA 10/20/50, ATR 10/14/20) | owner (rule 18) | – | – | – | – | – |
 | idea | window-open-cluster | Cap simultaneous entries when a setup's window opens (heat_fade_long 11:05) | EOD 2026-10-06 (one day, observation only) | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
-| failed | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
-| failed | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
+| holdout_failed | rw-vf_lowvol_div | exhaustion short + below-average bar volume (vol_climax<1) | rule-18 rework (lab_families) | – | – | – | – | – |
 | failed | t4-rel-strength | Relative strength vs SPY with market/VWAP filters | r/RealDayTrading method (snippets) | – | – | – | – | – |
-| failed | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
-| failed | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
 | failed | t1-orb-exits | ORB on stocks in play: exit re-tests | Zarattini/Barbon/Aziz 2024 | – | – | – | – | – |
 | failed | t6-exit-overlay | Breakeven / trail / time stop on live setups | r/algotrading 1t6ex5l (snippet) | – | – | – | – | – |
 | failed | exh-wider-target | exhaustion_short wider target | exit study | – | – | – | – | – |
@@ -41,3 +39,14 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | failed | noise-band-simple | Noise band (simplified) | setup screen | – | – | – | – | – |
 | failed | heat-original | MarcoFlow original heat score | heat study | – | – | – | – | – |
 | failed | obos-vwap-ma | Overbought/oversold + VWAP + MAs | layered swarm | – | – | – | – | – |
+| failed | global-indicator-lengths | Indicator lengths across all setups (RSI 7/10/14/21, SMA 10/20/50, ATR 10/14/20) | owner (rule 18) | – | – | – | – | – |
+| failed | rw-tp1_atr20 | trend_pullback_1 with ATR20 R | rule-18 rework | – | – | – | – | – |
+| failed | rw-tp_slope_rip | trend pullback short + falling SMA20 slope | rule-18 rework | – | – | – | – | – |
+| failed | rw-wg1_pdl_fade | gap-down fade near prior-day low | rule-18 rework | – | – | – | – | – |
+| failed | rw-t4_long_vwapmf | RS long + SPY>VWAP | rule-18 rework | – | – | – | – | – |
+| failed | rw-t4_both_sectormf | RS both sides, sector-ETF filter | rule-18 rework | – | – | – | – | – |
+| retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
+| retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
+| retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
+| retired | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
+| retired | rw-vf1_rsis7_atr20 | exhaustion_short with RSI7 / ATR20 | rule-18 rework (lengths) | – | – | – | – | – |

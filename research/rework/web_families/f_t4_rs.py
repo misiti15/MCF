@@ -1,4 +1,4 @@
-"""f_t4_long_rs - finalist module from the rule-18 rework of t4_rel_strength (key web_families).
+"""f_t4_rs - finalist module from the rule-18 rework of t4_rel_strength (key web_families).
 
 Educational only - not financial advice. A hypothesis that passed train/valid gates, not evidence; the lead scores
 it once on the locked holdouts.
@@ -8,13 +8,14 @@ lead can score it with  common.run(signals, VARIANTS[name], split, universe=top3
 research/rework/web_families/t4_rs.py restricted to the knobs the finalists use:
 
 Decision on a completed 1-minute bar whose start minute is in [w0, w1] (629..689 -> fills 10:30-11:30); market entry
-at the next 1-min open. LONG ONLY.
+at the next 1-min open. side = long | both (shorts mirror every condition).
   RS     stock return since the 09:30 open minus beta20 x SPY return since the open > c x (daily ATR / prev close),
          and the same over the last 30 bars > 0
   stock  close > session VWAP; cumulative volume > rvol x the 14-session average at the same minute;
          prev close > SMA20 of daily closes
   market mf = "none" (no market filter) | "ema" (SPY 5-min EMA9 > EMA21 on completed bars, warmed with 2 prior
-         sessions) | "vwap" (SPY close > SPY session VWAP)
+         sessions) | "vwap" (SPY close > SPY session VWAP) | "sector" (the stock's sector ETF above its VWAP AND
+         EMA9 > EMA21; sector ETF from sector_map.json, fixed from the 2026-06-15..07-14 warm-up month)
   ranking one trade per symbol per day; at most `cap` per day; within a minute ranked by RS
   exit   stop `stop` x daily ATR below the signal close, target `tgt` R, else flat 15:55
 """
@@ -30,23 +31,30 @@ from mcf.strategies.base import Signal
 
 from research.reddit_bt import common as C
 
-NAME = "f_t4_long_rs"
+NAME = "f_t4_rs"
 UNIVERSE = "top300"
 _U = [s for s in (Path(__file__).resolve().parents[2] / "reddit_bt" / "top300.txt").read_text().split() if s and s != "SPY"]
-BASE = {"c": 0.5, "mf": "none", "rvol": 1.2, "w0": 629, "w1": 689, "stop": 0.25, "tgt": 1.0, "cap": 10}
+import json as _json
+
+SECTOR = _json.loads((Path(__file__).parent / "sector_map.json").read_text())
+SECTORS = sorted(set(SECTOR.values()) - {"SPY"})
+BASE = {"c": 0.5, "mf": "none", "rvol": 1.2, "w0": 629, "w1": 689, "stop": 0.25, "tgt": 1.0, "cap": 10, "side": "long"}
 VARIANTS = {
-    "long_nomf": dict(BASE),
-    "long_emamf": dict(BASE, mf="ema"),
+    "long_nomf": dict(BASE),                       # finalist 1 (valid t 2.54)
+    "long_vwapmf": dict(BASE, mf="vwap"),          # finalist 2 (valid t 1.62)
+    "both_sectormf": dict(BASE, mf="sector", side="both"),   # finalist 3 (valid t 1.61)
+    "long_emamf": dict(BASE, mf="ema"),            # passed the gate, 4th by valid t -> not forwarded (cap 3)
 }
 STEPS = {"c": [0.375, 0.5, 0.625], "rvol": [1.0, 1.2, 1.5], "w0": [614, 629, 644], "w1": [674, 689, 719],
          "stop": [0.2, 0.25, 0.3], "tgt": [0.75, 1.0, 1.5], "cap": [5, 10, 20]}
-for _f in list(VARIANTS):
+for _f in ("long_nomf", "long_vwapmf", "both_sectormf", "long_emamf"):
     for _k, _st in STEPS.items():
         for _x in _st:
             if _x != BASE[_k]:
                 VARIANTS[f"{_f}__{_k}{_x}"] = dict(VARIANTS[_f], **{_k: _x})
-NEIGHBORS = {f: [k for k in VARIANTS if k.startswith(f + "__")] for f in ("long_nomf", "long_emamf")}
-FINALISTS = ["long_nomf", "long_emamf"]
+_HEADS = ("long_nomf", "long_vwapmf", "both_sectormf", "long_emamf")
+NEIGHBORS = {f: [k for k in VARIANTS if k.startswith(f + "__")] for f in _HEADS}
+FINALISTS = ["long_nomf", "long_vwapmf", "both_sectormf"]
 BASELINE = {"stop_atr": 0.25, "target_atr": 0.25}
 
 
@@ -66,8 +74,8 @@ def _grid(g, arr):
     return pd.Series(out).ffill().to_numpy()
 
 
-def _spy(cache, d):
-    days = C._hist(cache, "SPY")[0]
+def _spy(cache, d, sym="SPY"):
+    days = C._hist(cache, sym)[0]
     ds = sorted(days)
     i = ds.index(d)
     prior = [days[x] for x in ds[max(0, i - 2):i]]
@@ -104,6 +112,7 @@ def _table(d):
     _T.clear()
     cache = _cache(d)
     vs, es, spyc, spyo = _spy(cache, d)
+    sec = {e: _spy(cache, d, e)[:2] for e in SECTORS}
     spy_daily = C.day("SPY", d, cache).daily
     GI = np.arange(599, 780) - 570
     rows = {}
@@ -142,7 +151,9 @@ def _table(d):
         c_ = cl[GI]
         b30s = np.where(GI >= 30, cl[np.maximum(GI - 30, 0)], o)
         b30m = np.where(GI >= 30, spyc[np.maximum(GI - 30, 0)], spyo)
-        rows[s] = {"k": kk[GI], "close": c_, "atr": dd.atr, "thr": dd.atr / dd.prev_close,
+        se = SECTOR.get(s, "SPY")
+        sv, ss = (vs, es) if se == "SPY" else sec[se]
+        rows[s] = {"secmf": np.where(sv[GI] == ss[GI], sv[GI], 0), "k": kk[GI], "close": c_, "atr": dd.atr, "thr": dd.atr / dd.prev_close,
                    "trend": np.sign(dd.prev_close - float(dd.daily["close"].iloc[-20:].mean())),
                    "rs": (c_ / o - 1) - beta * (spyc[GI] / spyo - 1),
                    "rs30": (c_ / b30s - 1) - beta * (spyc[GI] / b30m - 1),
@@ -162,23 +173,26 @@ def picks(d, v) -> dict:
     if len(_P) > 500:
         _P.clear()
     rows, mins, vs, es = _table(d)
-    mf = {"none": np.ones(len(mins)), "ema": es, "vwap": vs}[v["mf"]]
-    win = (mins >= v["w0"]) & (mins <= v["w1"]) & (mf == 1)
+    win = (mins >= v["w0"]) & (mins <= v["w1"])
     cands = []
-    for s, r in rows.items():
-        if r["trend"] != 1:
-            continue
-        ok = win & (r["k"] >= 0) & (r["rs"] > v["c"] * r["thr"]) & (r["rs30"] > 0) & (r["vwap"] == 1) & (r["rvol"] > v["rvol"])
-        j = np.nonzero(ok)[0]
-        if len(j):
-            j = int(j[0])
-            cands.append((int(mins[j]), -abs(float(r["rs"][j])), s, int(r["k"][j]), float(r["close"][j]), r["atr"]))
+    for side in ((1,) if v["side"] == "long" else (1, -1)):
+        for s, r in rows.items():
+            if r["trend"] != side:
+                continue
+            mf = {"none": np.full(len(mins), side), "ema": es, "vwap": vs, "sector": r["secmf"]}[v["mf"]]
+            ok = (win & (mf == side) & (r["k"] >= 0) & (side * r["rs"] > v["c"] * r["thr"]) & (side * r["rs30"] > 0)
+                  & (r["vwap"] == side) & (r["rvol"] > v["rvol"]))
+            j = np.nonzero(ok)[0]
+            if len(j):
+                j = int(j[0])
+                cands.append((int(mins[j]), -abs(float(r["rs"][j])), s, int(r["k"][j]), side, float(r["close"][j]),
+                              r["atr"]))
     cands.sort()
     out = {}
-    for mn, _, s, k, c, atr in cands:
+    for mn, _, s, k, side, c, atr in cands:
         if len(out) >= v["cap"]:
             break
-        out.setdefault(s, (k, c, atr))
+        out.setdefault(s, (k, side, c, atr))
     _P[key] = out
     return out
 
@@ -187,8 +201,8 @@ def signals(day, v) -> list[Signal]:
     p = picks(day.date, v).get(day.symbol)
     if p is None:
         return []
-    k, c, atr = p
+    k, side, c, atr = p
     if k + 1 >= len(day.bars):
         return []
     risk = v["stop"] * atr
-    return [Signal(day.symbol, NAME, 1, k, c - risk, c + v["tgt"] * risk)]
+    return [Signal(day.symbol, NAME, side, k, c - side * risk, c + side * v["tgt"] * risk)]
