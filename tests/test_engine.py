@@ -313,3 +313,54 @@ def test_eod_report_top_losers_and_chart(tmp_path):
     assert "S11" in rep["html"] and "S1<" not in rep["html"]   # worst 10 by % lost, best losers dropped
     eod.save(rep, tmp_path / "reports", "2026-10-06")
     assert (tmp_path / "reports" / "2026-10-06.csv").exists()
+
+
+def _path_bars(prices):
+    idx = pd.date_range("2026-10-06 10:00", periods=len(prices), freq="1min", tz="America/New_York")
+    p = np.array(prices, dtype=float)
+    return pd.DataFrame({"open": p, "high": p + 0.05, "low": p - 0.05, "close": p, "volume": 1000.0}, index=idx)
+
+
+def test_time_stop_cuts_trades_that_never_work():
+    bars = _path_bars([100.0] * 60)
+    sig = Signal("X", "t", 1, 0, stop=99.0, time_stop_min=20, time_stop_min_r=0.3)
+    tr = simulate(sig, bars, pd.Timestamp("15:55").time(), 0.0)
+    assert tr.exit_reason == "timestop" and abs(tr.r_multiple) < 0.1
+
+
+def test_breakeven_and_trail_protect_winners():
+    up_then_down = [100 + 0.1 * i for i in range(30)] + [103 - 0.2 * i for i in range(30)]
+    bars = _path_bars(up_then_down)
+    plain = simulate(Signal("X", "t", 1, 0, stop=99.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    trailed = simulate(Signal("X", "t", 1, 0, stop=99.0, trail_r=1.0, trail_after_r=1.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    be = simulate(Signal("X", "t", 1, 0, stop=99.0, be_at_r=1.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    assert trailed.r_multiple > plain.r_multiple and trailed.exit_reason == "trail"
+    assert be.r_multiple > -0.2 > plain.r_multiple   # gap through the breakeven stop fills at the open
+
+
+def test_runner_manage_time_stop_and_trail(tmp_path):
+    from types import SimpleNamespace
+
+    from mcf.execution.runner import PaperRunner
+
+    calls = []
+    broker = SimpleNamespace(positions=lambda: {"AAA": 1, "BBB": 1}, equity=lambda: 1e5,
+                             orders_today_with_prefix=lambda p, a: [],
+                             cancel_orders_for_symbol=lambda s, p: calls.append(("cancel", s)),
+                             close_position=lambda s: calls.append(("close", s)),
+                             move_stop=lambda s, px, p: calls.append(("move", s, px)))
+    cfg = load_config()
+    cfg["data"]["journal_path"] = str(tmp_path / "j.db")
+    r = PaperRunner(cfg, [], {}, broker=broker)
+    t0 = pd.Timestamp("2026-10-07 10:00", tz="America/New_York")
+    r.managed = {"AAA": dict(side=1, entry=100.0, risk=1.0, stop=99.0, t0=t0, be_at_r=None, trail_r=None, trail_after_r=1.0,
+                             time_stop_min=30, time_stop_min_r=0.3, best=0.0),
+                 "BBB": dict(side=1, entry=50.0, risk=1.0, stop=49.0, t0=t0, be_at_r=1.0, trail_r=1.0, trail_after_r=1.0,
+                             time_stop_min=None, time_stop_min_r=0.0, best=0.0)}
+    idx = pd.date_range(t0, periods=35, freq="1min")
+    flat = pd.DataFrame({"open": 100.0, "high": 100.1, "low": 99.9, "close": 100.0, "volume": 1.0}, index=idx)
+    up = pd.DataFrame({"open": 50.0, "high": np.linspace(50, 52.5, 35), "low": 49.9, "close": 50.0, "volume": 1.0}, index=idx)
+    r.manage(t0 + pd.Timedelta(minutes=35), {"AAA": flat, "BBB": up})
+    assert ("close", "AAA") in calls                                   # stale trade cut
+    moves = [c for c in calls if c[0] == "move" and c[1] == "BBB"]
+    assert moves and moves[-1][2] == 51.5                               # trail 1R behind +2.5R best

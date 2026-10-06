@@ -61,6 +61,29 @@ class AlpacaBroker:
         out = self.client.get_orders(GetOrdersRequest(status=QueryOrderStatus.ALL, after=after, nested=True, limit=500))
         return [o for o in out if (o.client_order_id or "").startswith(prefix)]
 
+    def _open_mcf(self, symbol: str, prefix: str):
+        from alpaca.trading.enums import QueryOrderStatus
+        from alpaca.trading.requests import GetOrdersRequest
+
+        req = GetOrdersRequest(status=QueryOrderStatus.OPEN, nested=True, symbols=[symbol], limit=50)
+        return [o for o in self.client.get_orders(req) if (o.client_order_id or "").startswith(prefix)]
+
+    def move_stop(self, symbol: str, stop_price: float, prefix: str) -> None:
+        """Move the open stop leg of this system's bracket/OTO order for `symbol`."""
+        from alpaca.trading.requests import ReplaceOrderRequest
+
+        for parent in self._open_mcf(symbol, prefix):
+            for leg in parent.legs or []:
+                if getattr(leg, "stop_price", None) is not None and str(getattr(leg.status, "value", leg.status)) in (
+                        "new", "accepted", "held", "pending_new"):
+                    self.client.replace_order_by_id(leg.id, ReplaceOrderRequest(stop_price=stop_price))
+                    return
+        raise RuntimeError(f"no open MCF stop leg for {symbol}")
+
+    def cancel_orders_for_symbol(self, symbol: str, prefix: str) -> None:
+        for o in self._open_mcf(symbol, prefix):
+            self.client.cancel_order_by_id(o.id)
+
     def cancel_orders_with_prefix(self, prefix: str) -> int:
         """Cancel open orders whose client_order_id starts with `prefix` (this system's orders only)."""
         from alpaca.trading.enums import QueryOrderStatus

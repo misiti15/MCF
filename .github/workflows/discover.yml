@@ -1,4 +1,5 @@
-# Weekly setup discovery (layered rules). Candidates only — nothing trades automatically.
+# Weekly setup discovery (layered rules) + strategy-backlog re-test on all collected data.
+# Candidates only — nothing trades automatically; passing ideas are proposed, then merged after hours with a ledger entry.
 # Educational only — not financial advice.
 name: discover
 
@@ -36,7 +37,19 @@ jobs:
         run: |
           uni=state/universe.csv; [ -f "$uni" ] || uni=data/universe.csv
           python -m mcf.cli discover --universe "$uni" --out state/discovery
+      - name: Research bar cache
+        uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: lab-cache-${{ github.run_id }}
+          restore-keys: lab-cache-
+      - name: Refresh bars to the last session
+        run: python scripts/refresh_lab_data.py
+      - name: Re-test the strategy backlog (train / valid / forward; holdouts stay locked)
+        run: |
+          python -m mcf.research.backlog run || echo "backlog run failed"
+          mkdir -p state/backlog && cp research/backlog.jsonl research/backlog_results.jsonl research/BACKLOG.md state/backlog/ 2>/dev/null || true
       - name: Publish
         run: |
-          cd state && git add discovery
-          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "discovery $(date +%F)" && git push -q origin HEAD || echo "nothing to publish"
+          cd state && git add discovery backlog
+          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "discovery + backlog $(date +%F)" && git push -q origin HEAD || echo "nothing to publish"
