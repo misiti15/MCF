@@ -6,6 +6,7 @@
   mcf backtest --start 2024-01-01 [--symbols ...] [--label name]
   mcf dashboard [--out reports/dashboard.html]
   mcf discover                     weekly setup discovery -> reports/discovery (candidates only)
+  mcf eod                          end-of-day report email (chart, top-10 losers, CSV)
   mcf prep                         pre-market: universe + priors into the state dir
   mcf live [--dry-run]             one CI job of the live paper session (runs to close or job limit)
 """
@@ -15,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 from datetime import datetime
 
 import pandas as pd
@@ -193,6 +195,36 @@ def cmd_discover(args, cfg):
     print(f"tried {p['rules_tried']:,} rules; {p['passed_train']} passed training; {p['replicated']} replicated -> {args.out}")
 
 
+def cmd_eod(args, cfg):
+    """End-of-day report from the saved journal: chart, top-10 losers, CSV; emailed if SMTP secrets exist."""
+    load_dotenv()
+    import json as _json
+    from datetime import datetime, timedelta
+
+    from .data.priors import _bars, _client
+    from .data.bars import normalize, rth
+    from .report import eod
+
+    day = args.day or str(pd.Timestamp.now(tz="America/New_York").date())
+    _state_cfg(cfg, args.state_dir)
+    j = Journal(cfg["data"]["journal_path"])
+    rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    spy = None
+    try:
+        d0 = datetime.fromisoformat(day)
+        df = _bars(_client(), ["SPY"], d0, d0 + timedelta(days=1), 1, cfg["data"]["feed"])
+        spy = rth(normalize(df.droplevel(0))) if len(df) else None
+    except Exception as e:
+        print(f"SPY bars unavailable: {e}")
+    rv = Path(args.state_dir) / "reviews" / f"{day}.json"
+    review = _json.loads(rv.read_text()) if rv.exists() else None
+    rep = eod.build(j, rid, day, spy, review)
+    eod.save(rep, Path(args.state_dir) / "reports", day)
+    print(rep["subject"])
+    if not args.no_send:
+        eod.send(rep, os.environ.get("MCF_EMAIL_TO") or cfg["report"]["email_to"], day)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="mcf")
     p.add_argument("--config", help="extra YAML merged over config/default.yaml")
@@ -242,6 +274,12 @@ def main(argv=None):
     dc.add_argument("--out", default="reports/discovery")
     dc.add_argument("--max-symbols", type=int)
     dc.set_defaults(fn=cmd_discover)
+
+    eo = sub.add_parser("eod", help="end-of-day report (chart, top losers, CSV), emailed if SMTP secrets set")
+    eo.add_argument("--state-dir", default="state")
+    eo.add_argument("--day")
+    eo.add_argument("--no-send", action="store_true")
+    eo.set_defaults(fn=cmd_eod)
 
     lv = sub.add_parser("live", help="run one slot of the live paper session")
     lv.add_argument("--state-dir", default="state")

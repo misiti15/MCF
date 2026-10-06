@@ -36,6 +36,8 @@ jobs:
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
       ALPACA_DATA_FEED: sip
+      MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
+      MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
       PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4

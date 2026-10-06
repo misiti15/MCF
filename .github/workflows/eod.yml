@@ -1,0 +1,56 @@
+# End-of-day report: chart of the day in 15-minute steps, top 10 losing trades by % lost, all trades as CSV.
+# No AI involved; runs on free GitHub Actions minutes. Educational only — not financial advice.
+# Secrets: MCF_SMTP_USER (Gmail address) and MCF_SMTP_PASSWORD (Gmail app password). Optional MCF_EMAIL_TO.
+name: eod
+
+on:
+  schedule:
+    - cron: "25 20,21 * * 1-5"   # 16:25 ET (EDT 20:25 UTC, EST 21:25 UTC); the other line exits early
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "Session date (YYYY-MM-DD); empty = today"
+        default: ""
+
+concurrency:
+  group: mcf-eod
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_DATA_FEED: sip
+      MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
+      MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
+      MCF_EMAIL_TO: ${{ secrets.MCF_EMAIL_TO }}
+    steps:
+      - name: Window check
+        id: w
+        run: |
+          now=$(TZ=America/New_York date +%H%M)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$now" -ge 1610 ] && [ "$now" -lt 1800 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.w.outputs.run == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.w.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+          cache: pip
+      - if: steps.w.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+      - if: steps.w.outputs.run == 'true'
+        run: git clone -q --depth 20 --branch mcf-data "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
+      - name: Build and email the report
+        if: steps.w.outputs.run == 'true'
+        run: python -m mcf.cli eod --state-dir state ${{ inputs.day && format('--day {0}', inputs.day) || '' }}
+      - name: Save the report to the state branch
+        if: steps.w.outputs.run == 'true'
+        run: |
+          cd state && git add reports && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "EOD report" && git push -q origin HEAD:mcf-data || echo "nothing to save"
