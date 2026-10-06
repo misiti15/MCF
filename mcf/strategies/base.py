@@ -33,6 +33,12 @@ class Signal:
     exit_by: time | None = None  # time-based exit (default = session flatten time)
     scale_out_r: float | None = None  # take scale_out_frac off at this many R, then stop -> breakeven
     scale_out_frac: float = 0.5
+    # trade management (time in trade; protect winners, cut losers). Updates apply from the NEXT bar.
+    be_at_r: float | None = None          # move the stop to breakeven once price has gone +be_at_r R
+    trail_r: float | None = None          # trail the stop trail_r R behind the best price ...
+    trail_after_r: float = 1.0            # ... once price has gone +trail_after_r R
+    time_stop_min: int | None = None      # after this many minutes in the trade ...
+    time_stop_min_r: float = 0.0          # ... exit if the best excursion is still below this many R
     meta: dict[str, Any] = field(default_factory=dict)
 
 
@@ -108,6 +114,9 @@ class Strategy:
             if so and sig.scale_out_r is None:
                 sig.scale_out_r = so
                 sig.scale_out_frac = self.params.get("scale_out_frac", 0.5)
+            for k in ("be_at_r", "trail_r", "trail_after_r", "time_stop_min", "time_stop_min_r"):
+                if self.params.get(k) is not None:
+                    setattr(sig, k, self.params[k])
         return out
 
     def eligible(self, ctx: DayContext) -> bool:

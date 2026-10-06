@@ -313,3 +313,26 @@ def test_eod_report_top_losers_and_chart(tmp_path):
     assert "S11" in rep["html"] and "S1<" not in rep["html"]   # worst 10 by % lost, best losers dropped
     eod.save(rep, tmp_path / "reports", "2026-10-06")
     assert (tmp_path / "reports" / "2026-10-06.csv").exists()
+
+
+def _path_bars(prices):
+    idx = pd.date_range("2026-10-06 10:00", periods=len(prices), freq="1min", tz="America/New_York")
+    p = np.array(prices, dtype=float)
+    return pd.DataFrame({"open": p, "high": p + 0.05, "low": p - 0.05, "close": p, "volume": 1000.0}, index=idx)
+
+
+def test_time_stop_cuts_trades_that_never_work():
+    bars = _path_bars([100.0] * 60)
+    sig = Signal("X", "t", 1, 0, stop=99.0, time_stop_min=20, time_stop_min_r=0.3)
+    tr = simulate(sig, bars, pd.Timestamp("15:55").time(), 0.0)
+    assert tr.exit_reason == "timestop" and abs(tr.r_multiple) < 0.1
+
+
+def test_breakeven_and_trail_protect_winners():
+    up_then_down = [100 + 0.1 * i for i in range(30)] + [103 - 0.2 * i for i in range(30)]
+    bars = _path_bars(up_then_down)
+    plain = simulate(Signal("X", "t", 1, 0, stop=99.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    trailed = simulate(Signal("X", "t", 1, 0, stop=99.0, trail_r=1.0, trail_after_r=1.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    be = simulate(Signal("X", "t", 1, 0, stop=99.0, be_at_r=1.0), bars, pd.Timestamp("15:55").time(), 0.0)
+    assert trailed.r_multiple > plain.r_multiple and trailed.exit_reason == "trail"
+    assert be.r_multiple > -0.2 > plain.r_multiple   # gap through the breakeven stop fills at the open

@@ -149,17 +149,28 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
             reason, k_exit = ("breakeven" if scaled else "stop"), k
             break
         mfe = max(mfe, side * (favorable - fill) / risk)
+        if hit_tgt:
+            exit_px, reason, k_exit = sig.target, "target", k
+            break
+        # trade management for the next bar (no look-ahead inside the current bar)
+        if sig.time_stop_min and (k - j + 1) >= sig.time_stop_min and mfe < sig.time_stop_min_r and k + 1 < n:
+            exit_px, reason, k_exit = o[k + 1], "timestop", k + 1
+            break
+        if sig.be_at_r is not None and mfe >= sig.be_at_r:
+            stop = max(stop, fill) if side == 1 else min(stop, fill)
+        if sig.trail_r is not None and mfe >= sig.trail_after_r:
+            trail = fill + side * (mfe - sig.trail_r) * risk
+            stop = max(stop, trail) if side == 1 else min(stop, trail)
         if scale_px is not None and not scaled and side * (favorable - scale_px) >= 0:
             # resting limit for part of the position; remaining stop moves to breakeven from next bar
             scaled, done_frac, done_value = True, sig.scale_out_frac, sig.scale_out_frac * scale_px
             stop = fill
-        if hit_tgt:
-            exit_px, reason, k_exit = sig.target, "target", k
-            break
     if exit_px is None:
         exit_px, reason, k_exit = c[-1], "eod", n - 1
 
-    exit_px = costs.exit(exit_px, side, "stop" if reason == "breakeven" else reason)
+    exit_px = costs.exit(exit_px, side, "stop" if reason in ("breakeven",) else reason)
+    if reason == "stop" and side * (exit_px - fill) > -0.999 * risk:
+        reason = "trail"   # a stop that had been moved up (breakeven or trailing)
     if scaled:
         exit_px = done_value + (1 - done_frac) * exit_px   # average exit price across both pieces
         reason = f"scaled+{reason}"
