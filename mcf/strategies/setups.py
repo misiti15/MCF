@@ -367,6 +367,77 @@ class HeatStrategy(Strategy):
         return out[:1]
 
 
+class LabStrategy(Strategy):
+    """A layered setup found by the setup-lab swarm (research/setups2/candidates/*.py). The module exposes
+    SIDE ('long'|'short'), GEOM ('t1s1'|'t05s1'|'t1s05': target/stop in R), and mask(df) over the lab
+    feature frame (mcf/research/setup_lab.py). Enters at the close of the FIRST complete 5-minute bar
+    where mask is true (09:50-15:00 bar closes), R = 0.25 x daily ATR, time exit 15:55 — the outcome
+    model the swarm measured. Configure under `strategies:` with `type: lab`."""
+
+    name = "lab"
+    GEOMS = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5)}
+
+    def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0, **params):
+        super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, **params)
+        self.name = name
+        import importlib.util
+        import sys
+        from pathlib import Path
+
+        path = Path(module)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parents[2] / path
+        sys.path.insert(0, str(path.parent))
+        spec = importlib.util.spec_from_file_location(f"lab_{name}", path)
+        self.mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.mod)
+        self.side = 1 if self.mod.SIDE == "long" else -1
+        self.up, self.dn = self.GEOMS[getattr(self.mod, "GEOM", "t1s1")]
+
+    def eligible(self, ctx):
+        if ctx.avg_dollar_volume < self.min_adv:
+            return False
+        n = len(ctx.bars)
+        if n < 5 or n % 5:
+            return False   # live: evaluate once per completed 5-minute bar
+        end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
+        hhmm = end.hour * 100 + end.minute
+        return n == 390 or 950 <= hhmm <= 1500
+
+    def generate(self, ctx: DayContext):
+        from ..data.bars import resample
+        from ..research.heat import heat_frame
+        from ..research.setup_lab import extra_features
+
+        bars = ctx.bars
+        d5 = resample(bars, "5min")
+        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
+        if d5.empty:
+            return []
+        hist = d5 if ctx.prior5 is None or ctx.prior5.empty else pd.concat([ctx.prior5, d5])
+        f = heat_frame(hist)
+        f["atr_d"] = ctx.atr
+        f = f.join(extra_features(hist, f)).iloc[-len(d5):].copy()
+        f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
+        # prior-day levels: the 5-minute history only carries the last 40 prior bars
+        f["dist_pdh_atr"] = (ctx.prev_high - f["close"]) / ctx.atr
+        f["dist_pdl_atr"] = (f["close"] - ctx.prev_low) / ctx.atr
+        tod = f["tod"].to_numpy()
+        m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= 950) & (tod <= 1500)
+        hit = np.flatnonzero(m)
+        if not len(hit):
+            return []
+        i = hit[0]
+        end = min(bars.index.searchsorted(d5.index[i] + pd.Timedelta(minutes=4)), len(bars) - 1)
+        px, r = float(d5["close"].iloc[i]), self.r_atr_frac * ctx.atr
+        if r <= 0:
+            return []
+        s = self.side
+        return [Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
+                       exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})]
+
+
 REGISTRY: dict[str, type[Strategy]] = {
     c.name: c
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
@@ -391,6 +462,9 @@ def build_strategies(cfg: dict) -> list[Strategy]:
             continue
         if kind == "heat":
             out.append(HeatStrategy(name=name, **params))
+            continue
+        if kind == "lab":
+            out.append(LabStrategy(name=name, **params))
             continue
         cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
         if cls_name not in REGISTRY:

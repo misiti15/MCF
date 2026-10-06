@@ -101,3 +101,49 @@ def build(bars: dict[str, pd.DataFrame], cost_ps: float = 0.01, r_frac: float = 
     x = pd.concat(frames)
     x["date"] = x.index.date
     return x
+
+
+# ------------------------------------------------------------------------------------- scoring
+def load(split: str, data_dir: str = "research/setups2/data", columns: list[str] | None = None) -> pd.DataFrame:
+    import os
+    from pathlib import Path
+
+    if split == "test" and not os.environ.get("MCF_LAB_ALLOW_TEST"):
+        raise PermissionError("the test split is locked until final verification")
+    df = pd.read_parquet(Path(data_dir) / f"{split}.parquet", columns=columns)
+    if "date" in df:
+        df["date"] = pd.to_datetime(df["date"]).dt.date
+    return df
+
+
+def evaluate(df: pd.DataFrame, mask, side: str, geom: str = "t1s1") -> dict:
+    """First qualifying bar per symbol-day (entry at that bar's close), outcome under exit geometry `geom`.
+    Returns n, per_day, win_rate (target first), exp_r (after costs), exp_r_se, profit_factor,
+    green_days, green_weeks, and exp_r per calendar half of the sample (stability)."""
+    m = np.asarray(mask, dtype=bool) & np.isfinite(df[f"r_{side}_{geom}"].to_numpy())
+    idx = np.flatnonzero(m)
+    if len(idx) == 0:
+        return {"n": 0}
+    key = df["symbol"].astype(str).to_numpy()[idx] + "|" + df["date"].astype(str).to_numpy()[idx]
+    _, first = np.unique(key, return_index=True)
+    idx = idx[first]
+    r = df[f"r_{side}_{geom}"].to_numpy()[idx].astype(float)
+    w = df[f"win_{side}_{geom}"].to_numpy()[idx].astype(float)
+    dates = df["date"].to_numpy()[idx]
+    t = pd.DataFrame({"date": dates, "r": r})
+    daily = t.groupby("date")["r"].sum()
+    weeks = t.groupby(pd.to_datetime(t["date"]).dt.isocalendar().week)["r"].sum()
+    gw, gl = r[r > 0].sum(), -r[r <= 0].sum()
+    ds = np.array(sorted(set(dates)))
+    half = ds[len(ds) // 2] if len(ds) else None
+    h1, h2 = r[dates < half], r[dates >= half]
+    return {"n": int(len(r)), "per_day": round(len(r) / max(1, daily.size), 1), "win_rate": round(float(np.nanmean(w)), 4),
+            "exp_r": round(float(r.mean()), 4), "exp_r_se": round(float(r.std(ddof=1) / np.sqrt(len(r))) if len(r) > 1 else 0.0, 4),
+            "profit_factor": round(float(gw / gl), 3) if gl > 0 else None,
+            "green_days": round(float((daily > 0).mean()), 3), "green_weeks": round(float((weeks > 0).mean()), 3),
+            "exp_r_half1": round(float(h1.mean()), 4) if len(h1) else None, "exp_r_half2": round(float(h2.mean()), 4) if len(h2) else None}
+
+
+def baseline(df: pd.DataFrame, side: str, geom: str) -> dict:
+    """Every bar qualifies: what the time window alone earns (the bar to beat)."""
+    return evaluate(df, np.ones(len(df), bool), side, geom)
