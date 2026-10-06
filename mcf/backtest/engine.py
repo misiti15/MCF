@@ -194,6 +194,7 @@ class SymbolHistory:
         self.prev_low = prev["low"]
         self.atr = F.atr(daily).shift(1)
         self.adv = (daily["close"] * daily["volume"]).rolling(20, min_periods=5).mean().shift(1)
+        self.sma20 = daily["close"].rolling(20, min_periods=15).mean().shift(1)
         prof = F.cum_volume_profile(intraday)
         self.avg_cum = prof.rolling(rvol_lookback, min_periods=5).mean().shift(1)
         self.avg_cum.index = pd.to_datetime(self.avg_cum.index)
@@ -225,6 +226,7 @@ class SymbolHistory:
             atr=float(a), avg_dollar_volume=float(self.adv.get(ts, np.nan)), avg_cum_volume=acv,
             avg_move=self.avg_move.loc[ts].to_numpy() if ts in self.avg_move.index else None,
             prior5=self.i5[self.i5.index.date < d].tail(40),
+            sma20=float(self.sma20.get(ts, np.nan)),
         )
 
 
@@ -269,6 +271,19 @@ def in_play_filter(ctxs: list, orv: list, cfg: dict) -> tuple[list, list]:
     return [ctxs[i] for i in keep], [orv[i] for i in keep]
 
 
+def rank_contexts(ctxs: list) -> None:
+    """Set rank_rvol (5-minute opening rvol) and rank_rvol20 (09:30-09:49 rvol) across the day's names.
+    Shared by the backtester and the live runner so both select 'stocks in play' identically."""
+    for attr, k in (("rank_rvol", 4), ("rank_rvol20", 19)):
+        vals = []
+        for c in ctxs:
+            rv = c.rvol()
+            vals.append(float(rv.iloc[k]) if len(rv) > k else (float(rv.iloc[-1]) if k == 4 and len(rv) else np.nan))
+        arr = np.array(vals, dtype=float)
+        for rank, i in enumerate(np.argsort(-np.nan_to_num(arr, nan=-1)), 1):
+            setattr(ctxs[i], attr, rank if not np.isnan(arr[i]) else None)
+
+
 class Backtester:
     def __init__(self, strategies: list[Strategy], cfg: dict):
         self.strategies = strategies
@@ -293,9 +308,7 @@ class Backtester:
                 rv = c.rvol()
                 orv.append(rv.iloc[min(4, len(rv) - 1)] if len(rv) else np.nan)
             ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
-            order = np.argsort(-np.nan_to_num(np.array(orv, dtype=float), nan=-1))
-            for rank, i in enumerate(order, 1):
-                ctxs[i].rank_rvol = rank if not np.isnan(orv[i]) else None
+            rank_contexts(ctxs)
             for c in ctxs:
                 for strat in self.strategies:
                     if not strat.eligible(c):

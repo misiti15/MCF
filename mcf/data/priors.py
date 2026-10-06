@@ -38,6 +38,7 @@ class Prior:
     avg_cum: np.ndarray | None        # len 390
     avg_move: np.ndarray | None       # len 390, index ETFs only
     tail5: pd.DataFrame | None = None  # prior sessions' last 40 five-minute bars (rule-layer warm-up)
+    sma20: float = float("nan")        # 20-day SMA of daily closes through the prior session
 
 
 def _client():
@@ -83,7 +84,8 @@ def _daily_part(df: pd.DataFrame, day: date) -> dict[str, dict]:
         last = g.iloc[-1]
         res[sym] = dict(prev_close=float(last["close"]), prev_high=float(last["high"]), prev_low=float(last["low"]),
                         atr=float(a), adv=float((g["close"] * g["volume"]).tail(20).mean()),
-                        avg_volume=float(g["volume"].tail(20).mean()))
+                        avg_volume=float(g["volume"].tail(20).mean()),
+                        sma20=float(g["close"].tail(20).mean()))
     return res
 
 

@@ -346,6 +346,9 @@ REGISTRY: dict[str, type[Strategy]] = {
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
               VWAPReversion)
 }
+from .research_setups import RESEARCH_REGISTRY  # noqa: E402
+
+REGISTRY.update(RESEARCH_REGISTRY)
 
 
 def build_strategies(cfg: dict) -> list[Strategy]:
@@ -363,7 +366,13 @@ def build_strategies(cfg: dict) -> list[Strategy]:
         if kind == "heat":
             out.append(HeatStrategy(name=name, **params))
             continue
-        if name not in REGISTRY:
+        cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
+        if cls_name not in REGISTRY:
+            continue
+        if cls_name != name:
+            st = REGISTRY[cls_name](**params)
+            st.name = name
+            out.append(st)
             continue
         if name == "orb":
             params.setdefault("top_n", top_n)

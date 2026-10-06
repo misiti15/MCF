@@ -244,3 +244,19 @@ def test_heat_strategy_runs_on_context():
     st = HeatStrategy("heat_original", "research/heat/candidates/_original.py")
     for s in st.generate(ctx):
         assert s.side in (1, -1) and (s.stop < s.target if s.side == 1 else s.stop > s.target)
+
+
+def test_research_setups_run_in_backtester():
+    cfg = load_config()
+    cfg["universe"]["min_avg_dollar_volume"] = 0
+    research = ["orb20_a", "orb20_b", "gap_continuation", "gap_sma20", "index_gap_fill", "close_momentum",
+                "eod_reversal", "vwap_pullback"]
+    for name, st in cfg["strategies"].items():
+        st["enabled"] = name in research
+    strats = build_strategies(cfg)
+    assert sorted(s.name for s in strats) == sorted(research)
+    data = make_universe(["SPY", "QQQ", "AAA", "BBB", "CCC"], days=40)
+    trades = Backtester(strats, cfg).run(data)
+    if len(trades):
+        et = pd.to_datetime(trades.entry_time)
+        assert (et.dt.time >= pd.Timestamp("09:50").time()).all()   # every research setup respects 09:50

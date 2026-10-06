@@ -24,7 +24,7 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 import pandas as pd
 
-from ..backtest.engine import Costs, in_play_filter, is_extended, simulate, universe_ok
+from ..backtest.engine import Costs, in_play_filter, is_extended, rank_contexts, simulate, universe_ok
 from ..data.bars import TZ, normalize, rth
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
@@ -149,13 +149,13 @@ class PaperRunner:
                 continue
             ctx = DayContext(symbol=sym, date=today, bars=bars, prev_close=p.prev_close, prev_high=p.prev_high,
                              prev_low=p.prev_low, atr=p.atr, avg_dollar_volume=p.adv,
-                             avg_cum_volume=p.avg_cum, avg_move=p.avg_move, prior5=getattr(p, "tail5", None))
+                             avg_cum_volume=p.avg_cum, avg_move=p.avg_move, prior5=getattr(p, "tail5", None),
+                             sma20=getattr(p, "sma20", float("nan")))
             if universe_ok(ctx, self.cfg):
                 ctxs.append(ctx)
         orv = [c.rvol().iloc[min(4, len(c.bars) - 1)] for c in ctxs]
         ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
-        for rank, i in enumerate(np.argsort(-np.nan_to_num(np.array(orv, float), nan=-1)), 1):
-            ctxs[i].rank_rvol = rank if not np.isnan(orv[i]) else None
+        rank_contexts(ctxs)
         return ctxs
 
     # ---------------------------------------------------------------- trading

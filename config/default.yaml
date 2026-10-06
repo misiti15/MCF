@@ -108,6 +108,61 @@ strategies:
     max_rvol: 3.0
     stop_std: 1.0
 
+  # ---- 2026-10-06 research sweep (research/setups_research.json). Paper-trade only after the screening
+  # backtest (research/setup_screen.md); funds only via the promotion gates. Exits as specced (no scale-out).
+  orb20_a:
+    enabled: false
+    class: orb20
+    variant: A                   # stop 0.5 x range, target 0.75 x range (higher win rate)
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  orb20_b:
+    enabled: false
+    class: orb20
+    variant: B                   # stop 0.15 ATR, no target, hold to close (paper-style)
+    stop_atr: 0.15
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  gap_continuation:
+    enabled: false
+    min_gap_pct: 3.0
+    min_rvol: 3.0
+    target_r: 2.0
+    entry_until: "11:00"
+    scale_out_r: null
+  gap_sma20:
+    enabled: false
+    mirror: true                 # also test the long mirror (gap up through SMA20)
+    stop_atr: 0.05
+    scale_out_r: null
+  index_gap_fill:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    stop_gap_mult: 1.5
+    scale_out_r: null
+  close_momentum:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    gate_mult: 0.5
+    stop_atr: 0.5
+    scale_out_r: null
+  eod_reversal:
+    enabled: false
+    min_drop_pct: 2.0
+    min_adv: 20000000
+    scale_out_r: null
+  vwap_pullback:
+    enabled: false
+    min_rvol: 2.0
+    top_n: 20
+    entry_until: "12:00"
+    scale_out_r: null
+
+
 discovery:
   # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.
   # Promote a replicated candidate by adding it under `strategies:` with type: rule, e.g.
