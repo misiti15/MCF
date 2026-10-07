@@ -21,6 +21,13 @@ import numpy as np
 import pandas as pd
 
 DISCLAIMER = "Educational only — not financial advice."
+VALIDATION = Path(__file__).resolve().parents[2] / "config" / "validation.json"
+
+
+def _validation() -> dict:
+    import json
+
+    return json.loads(VALIDATION.read_text()) if VALIDATION.exists() else {}
 NY = "America/New_York"
 
 
@@ -75,11 +82,15 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
         f"<td>{str(r.entry_time)[11:16]}</td><td>{str(r.exit_time)[11:16]}</td><td>{r.entry:.2f}</td><td>{r.exit:.2f}</td>"
         f"<td>{r.exit_reason}</td><td style='color:#d03b3b'>{r.pct:.2f}%</td><td>${r.pnl:,.2f}</td></tr>"
         for r in losers.itertuples()) or "<tr><td colspan=10>No losing trades today.</td></tr>"
+    val = _validation()
+    vs = val.get("setups", {})
+    banner = (f"<p style='background:#fff4e5;border-left:4px solid #d97706;padding:8px 10px;font-size:13px'>"
+              f"{val['_banner']}</p>") if val.get("_banner") else ""
     by_setup = ""
     if n:
         g = tr.groupby("strategy").agg(trades=("pnl", "size"), pnl=("pnl", "sum"), win=("pnl", lambda p: (p > 0).mean()),
                                        avg_r=("r_multiple", "mean"))
-        by_setup = "".join(f"<tr><td>{k}</td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>${v.pnl:,.2f}</td></tr>"
+        by_setup = "".join(f"<tr><td>{k}<br><span style='font-size:11px;color:#b45309'>{vs.get(k, {}).get('note', '')}</span></td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>${v.pnl:,.2f}</td></tr>"
                            for k, v in g.iterrows())
     findings = "".join(f"<li>{f}</li>" for f in (review or {}).get("findings", [])) or "<li>None today.</li>"
     cid = make_msgid(domain="mcf.local")
@@ -89,7 +100,7 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
 <div style="color:#52514e;font-size:13px">{DISCLAIMER} Paper trading.</div>
 <p style="font-size:15px"><b>{n}</b> trades · win rate <b>{'–' if n == 0 else f'{win:.0%}'}</b> ·
 P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
-<img src="cid:{cid[1:-1]}" alt="SPY and MCF P/L in 15-minute steps" style="max-width:100%">
+{banner}<img src="cid:{cid[1:-1]}" alt="SPY and MCF P/L in 15-minute steps" style="max-width:100%">
 <h3>Top 10 losing trades (by % lost)</h3>
 <table style="border-collapse:collapse;font-size:13px">
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% lost</th><th {td}>P/L</th></tr>

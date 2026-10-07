@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 
 REF = Path(__file__).resolve().parents[2] / "config" / "marcoflow_reference.json"
+VALIDATION = REF.parent / "validation.json"
 DISCLAIMER = "Educational only — not financial advice."
 
 
@@ -95,4 +96,5 @@ def build_status(runner, now, phase: str) -> dict:
         "history": by_day[-30:],
         "since_start": _stats(trades),
         "marcoflow": json.loads(REF.read_text()) if REF.exists() else None,
+        "validation": json.loads(VALIDATION.read_text()) if VALIDATION.exists() else None,
     }
