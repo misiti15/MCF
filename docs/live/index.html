@@ -100,6 +100,16 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
     <div class="card"><h2>Why signals were skipped</h2><div class="tablewrap" id="lv-skip"><div class="empty">Nothing skipped yet.</div></div>
       <h2 style="margin-top:14px">Closed MCF trades today</h2><div class="tablewrap" id="lv-closed"><div class="empty">No closed trades yet.</div></div></div>
   </div>
+  <div class="grid2">
+    <div class="card"><h2>Day by day</h2><div class="tablewrap" id="lv-days"><div class="empty">No completed sessions yet.</div></div>
+      <div class="note">One row per session from the journal (paper). Change = today vs the previous session.</div></div>
+    <div class="card"><h2>Setups and their status</h2><div class="tablewrap" id="lv-val"><div class="empty">–</div></div>
+      <div class="note">Probation = trading in paper to collect data; it has not passed both locked test periods.</div></div>
+  </div>
+  <div class="card"><h2>Scorecard (last 3 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first scorecard appears after 3 market days.</div></div>
+    <div class="note">Live (paper) results per setup over the last 3 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
+  <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
+    <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
   <div class="card lab"><h2>Setup lab — weekly discovery</h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
     <div class="note">Layered rules found on older data and checked on the newest third. Candidates never trade on their own: one becomes a setup only after a full backtest passes the promotion gates and you approve it.</div></div>
 </section>
@@ -163,6 +173,17 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
       row("Green days", s.history?.length ? pc(s.history.filter(d => d.pnl > 0).length / s.history.length) : "–", "", pc(m.green_day_rate)),
     ].join("")}</tbody></table>`;
 
+
+    const hist = s.history || [];
+    $l("#lv-days").innerHTML = hist.length ? table(["Date", "Trades", "Win rate", "P/L", "Adj. P/L", "Avg R", "PF", "Change"],
+      hist.slice().reverse().map((d, i, a) => { const prev = a[i + 1]; const ch = prev ? d.pnl - prev.pnl : null;
+        return `<tr><td class="l">${e(d.date)}</td><td>${d.trades}</td><td>${pc(d.win_rate)}</td><td class="${cls(d.pnl)}">${money(d.pnl)}</td><td>${money(d.pnl_adj)}</td><td>${d.avg_r ?? "–"}</td><td>${d.profit_factor ?? "–"}</td><td class="${cls(ch)}">${ch == null ? "–" : money(ch)}</td></tr>`; }))
+      : `<div class="empty">No completed sessions yet.</div>`;
+    const vs = (s.validation && s.validation.setups) || {};
+    const names = (s.rules && s.rules.strategies) || Object.keys(vs);
+    $l("#lv-val").innerHTML = names.length ? table(["Setup", "Status", "Apr–Jun backtest"],
+      names.map(n => { const v = vs[n] || {}; return `<tr><td class="l">${e(n)}</td><td>${e(v.status || "–")}</td><td class="${cls(v.apr_jun_exp_r)}">${v.apr_jun_exp_r == null ? "–" : (v.apr_jun_exp_r > 0 ? "+" : "") + v.apr_jun_exp_r.toFixed(3) + "R (" + v.apr_jun_n + ")"}</td></tr>`; }))
+      : `<div class="empty">–</div>`;
     $l("#lv-pos").innerHTML = s.positions?.length ? table(["Symbol", "Setup", "Side", "Qty", "Entry", "Last", "Unrealized"],
       s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${e(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td></tr>`))
       : `<div class="empty">No open positions.</div>`;
@@ -174,6 +195,14 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
     $l("#lv-closed").innerHTML = s.closed?.length ? table(["Symbol", "Setup", "In", "Out", "Exit", "R", "P/L", "Slip"],
       s.closed.map(c => `<tr><td class="l">${e(c.symbol)}</td><td>${e(c.strategy)}</td><td>${e(c.entry_t)}</td><td>${e(c.exit_t)}</td><td>${e(c.reason)}</td><td>${c.r ?? "–"}</td><td class="${cls(c.pnl)}">${money(c.pnl)}</td><td>${c.slip_bps ?? "–"}</td></tr>`))
       : `<div class="empty">No closed trades yet.</div>`;
+  }
+
+  function renderScore(d) {
+    if (!d?.setups) return;
+    const el = $l("#lv-score"); if (!el) return;
+    el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}</div>` +
+      table(["Setup", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
+        d.setups.map(x => `<tr><td class="l">${e(x.setup)}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
   }
 
   function renderLab(d) {
@@ -194,7 +223,27 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
     if (where === "status") { const m = $l("#lv-msg"); m.hidden = false; m.firstChild.textContent = why + " "; $l("#lv-phase").textContent = "offline"; }
   }
 
-  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data/";
+
+  async function ideas() {
+    try {
+      const r = await fetch("../live/ideas.json?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) return;
+      const d = await r.json(), items = Array.isArray(d) ? d : (d.items || []);
+      if (!items.length) return;
+      $l("#lv-ideas").innerHTML = table(["Idea", "In one line", "Status", "Why look at it"],
+        items.map(x => `<tr><td class="l">${x.source ? `<a href="${e(x.source)}" target="_blank" rel="noopener">${e(x.title)}</a>` : e(x.title)}</td><td style="white-space:normal">${e(x.one_liner)}</td><td>${e(x.status)}</td><td style="white-space:normal">${e(x.why_interesting)}</td></tr>`));
+    } catch (_) {}
+  }
+  ideas();
+  const ACCT = new URLSearchParams(location.search).get("account") === "testing" ? "testing" : "primary";
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + (ACCT === "testing" ? "mcf-data-testing" : "mcf-data") + "/";
+  {
+    const sw = document.createElement("div");
+    sw.className = "sub";
+    sw.innerHTML = `Account: ${ACCT === "testing" ? '<a href="?">Primary</a> · <b>Testing</b>' : '<b>Primary</b> · <a href="?account=testing">Testing</a>'}`;
+    $l("#lv-asof").after(sw);
+    if (ACCT === "testing") $l("h2.big").textContent = "MCF Testing account — live paper session";
+  }
   async function poll(path, fn, where) {
     try {
       const r = await fetch(RAW + path + "?t=" + Date.now(), { cache: "no-store" });
@@ -202,7 +251,7 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
       fn(await r.json());
     } catch (e) { fail(e && e.code ? e : { code: "upstream_error" }, where); }
   }
-  const tick = () => { poll("status.json", render, "status"); poll("discovery/latest.json", renderLab, "lab"); };
+  const tick = () => { poll("status.json", render, "status"); poll("discovery/latest.json", renderLab, "lab"); poll("reports/scorecard.json", renderScore, "score"); };
   tick();
   setInterval(tick, 60000);
 })();
