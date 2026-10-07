@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 67 · coded: 6 · failed: 27 · configurations tried (all lineages): 3022772
+Total ideas: 68 · coded: 6 · failed: 30 · configurations tried (all lineages): 3022772
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -40,10 +40,8 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | wi-overreaction-fade | Intraday overreaction fade (big range, small net move) | https://www.oekonometrie.uni-saarland.de/papers/Intraday%20Overreaction%20of%20Stock%20Prices.pdf | – | – | – | – | – |
 | idea | wi-intraday-vcp | Tight flag near the high of day (intraday VCP) | https://retailtradersrepository.substack.com/p/goverdhan-gajjala-intraday-vcp | – | – | – | – | – |
 | idea | wi-ema-cross | 9/20 EMA cross on 5-minute bars | https://quantifiedstrategies.substack.com/p/9-ema-trading-strategy-does-it-work | – | – | – | – | – |
-| idea | nl-1007-0950-stopout | Delay or filter heat_fade_short's 09:50 entries | nightly loop 2026-10-07 | – | – | – | – | – |
-| idea | nl-1007-opposite-side | No opposite-side entry on a symbol after a same-day stop | nightly loop 2026-10-07 | – | – | – | – | – |
-| idea | nl-1007-late-holds | Entry cutoffs so 1R targets can still be reached | nightly loop 2026-10-07 | – | – | – | – | – |
 | idea | ops-stop-slippage | Calibrate the cost model to live stop fills | nightly loop 2026-10-07 | – | – | – | – | – |
+| idea | ops-window-drift | Backtest ignores YAML window for heat/lab setups | nightly backtest 2026-10-07 | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
@@ -71,6 +69,9 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | failed | rw-wg1_pdl_fade | gap-down fade near prior-day low | rule-18 rework | – | – | – | – | – |
 | failed | rw-t4_long_vwapmf | RS long + SPY>VWAP | rule-18 rework | – | – | – | – | – |
 | failed | rw-t4_both_sectormf | RS both sides, sector-ETF filter | rule-18 rework | – | – | – | – | – |
+| failed | nl-1007-0950-stopout | Delay or filter heat_fade_short's 09:50 entries | nightly loop 2026-10-07 | – | – | – | – | – |
+| failed | nl-1007-opposite-side | No opposite-side entry on a symbol after a same-day stop | nightly loop 2026-10-07 | – | – | – | – | – |
+| failed | nl-1007-late-holds | Entry cutoffs so 1R targets can still be reached | nightly loop 2026-10-07 | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |

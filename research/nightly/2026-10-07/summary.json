@@ -1,0 +1,90 @@
+{
+ "gate": {
+  "hfs_start0955": {
+   "better_train_valid": false,
+   "valid_d_t": -0.956864266380296,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "hfs_start1000": {
+   "better_train_valid": false,
+   "valid_d_t": -1.441132727543141,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "hfs_range_k0.15": {
+   "better_train_valid": false,
+   "valid_d_t": -1.322569301004855,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "hfs_range_k0.25": {
+   "better_train_valid": false,
+   "valid_d_t": -1.0924683604675633,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "orb20a_until1030": {
+   "better_train_valid": false,
+   "valid_d_t": -0.34967343870191353,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "orb20a_until1100": {
+   "better_train_valid": false,
+   "valid_d_t": -0.485526374447049,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "exh_end1400": {
+   "better_train_valid": false,
+   "valid_d_t": 0.46852037430167764,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "exh_end1430": {
+   "better_train_valid": false,
+   "valid_d_t": -0.8838061117259809,
+   "ex_best_day_pos": false,
+   "pass": false
+  },
+  "opposite_side_block": {
+   "better_train_valid": false,
+   "valid_d_t": -0.4745824268077694,
+   "ex_best_day_pos": false,
+   "pass": false
+  }
+ },
+ "h2_control": {
+  "train": {
+   "n_dropped": 18,
+   "dropped_by_setup": {
+    "exhaustion_short": 4,
+    "heat_fade_long": 11,
+    "intraday_momentum": 3
+   },
+   "dropped_mean_r": 0.16097426278485016,
+   "delta_total": -2.897536730127303,
+   "random_mean": -2.228971108243613,
+   "pct_random_below_actual": 0.4145
+  },
+  "valid": {
+   "n_dropped": 4,
+   "dropped_by_setup": {
+    "heat_fade_long": 3,
+    "orb20_a": 1
+   },
+   "dropped_mean_r": 0.20366029560819002,
+   "delta_total": -0.8146411824327601,
+   "random_mean": 0.19013013889925134,
+   "pct_random_below_actual": 0.287
+  }
+ },
+ "hfs_range_ratio_quantiles": {
+  "0.1": 0.091,
+  "0.25": 0.12,
+  "0.5": 0.16,
+  "0.75": 0.217,
+  "0.9": 0.276
+ }
+}
