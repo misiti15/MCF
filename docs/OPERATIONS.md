@@ -20,7 +20,7 @@ The **`mcf-data` branch** holds the system's state; the workflow creates the bra
 | `universe.csv` | today's universe | daily |
 | `discovery/` | the weekly setup scans | weekly |
 
-Dashboard: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow. The "MCF Update" section reads `status.json` through your GitHub connector and refreshes every minute.
+Dashboard: https://misiti15.github.io/MCF/live/ (GitHub Pages; reads status.json from the mcf-data branch, no connector). EOD reports: https://misiti15.github.io/MCF/live/report.html
 
 ## One-time setup (owner)
 1. Add the repository secrets **ALPACA_API_KEY** and **ALPACA_SECRET_KEY** (paper keys): GitHub → misiti15/MCF → Settings → Secrets and variables → Actions → New repository secret.
