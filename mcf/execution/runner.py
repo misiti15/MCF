@@ -98,6 +98,8 @@ class PaperRunner:
                 strategy, symbol, _ = o.client_order_id[len(COID_PREFIX):].rsplit("-", 2)
             except ValueError:
                 continue
+            if symbol != o.symbol or strategy.startswith("flatten"):
+                continue   # closing orders (prefix-flatten-...) are exits, not entries
             self.seen.add((symbol, strategy))
             self.fired.add((symbol, strategy))
             self.open_strategy.setdefault(symbol, strategy)
