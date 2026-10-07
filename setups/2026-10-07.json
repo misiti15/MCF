@@ -1,0 +1,198 @@
+{
+ "strategies": {
+  "orb": {
+   "enabled": false,
+   "min_atr": 0.5,
+   "range_minutes": 5,
+   "stop_atr_frac": 0.1,
+   "target_r": null,
+   "min_rvol": 1.0
+  },
+  "vwap_reclaim": {
+   "enabled": false,
+   "earliest": "10:00",
+   "latest": "14:30",
+   "lookback_bars": 15,
+   "min_rvol": 1.5,
+   "target_r": 2.0
+  },
+  "gap_and_go": {
+   "enabled": false,
+   "min_gap_pct": 4.0,
+   "range_minutes": 5,
+   "min_rvol": 2.0,
+   "target_r": 2.0,
+   "exit_by": "11:30"
+  },
+  "gap_fade": {
+   "enabled": false,
+   "min_gap_pct": 1.0,
+   "max_gap_pct": 3.0,
+   "range_minutes": 15,
+   "max_rvol": 1.5,
+   "exit_by": "12:00"
+  },
+  "intraday_momentum": {
+   "enabled": true,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA"
+   ],
+   "signal_time": "10:00",
+   "entry_time": "15:30",
+   "min_abs_return_pct": 0.25,
+   "stop_atr_frac": 0.25
+  },
+  "noise_band_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ"
+   ],
+   "band_mult": 1.0,
+   "first_check": "10:00",
+   "last_check": "15:30"
+  },
+  "vwap_reversion": {
+   "enabled": false,
+   "band_std": 2.5,
+   "earliest": "10:00",
+   "latest": "15:00",
+   "max_rvol": 3.0,
+   "stop_std": 1.0
+  },
+  "orb20_a": {
+   "enabled": true,
+   "class": "orb20",
+   "variant": "A",
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "orb20_b": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "B",
+   "stop_atr": 0.15,
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "gap_continuation": {
+   "enabled": false,
+   "min_gap_pct": 3.0,
+   "min_rvol": 3.0,
+   "target_r": 2.0,
+   "entry_until": "11:00",
+   "scale_out_r": null
+  },
+  "gap_sma20": {
+   "enabled": false,
+   "mirror": true,
+   "stop_atr": 0.05,
+   "scale_out_r": null
+  },
+  "index_gap_fill": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "stop_gap_mult": 1.5,
+   "scale_out_r": null
+  },
+  "close_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "gate_mult": 0.5,
+   "stop_atr": 0.5,
+   "scale_out_r": null
+  },
+  "eod_reversal": {
+   "enabled": false,
+   "min_drop_pct": 2.0,
+   "min_adv": 20000000,
+   "scale_out_r": null
+  },
+  "vwap_pullback": {
+   "enabled": false,
+   "min_rvol": 2.0,
+   "top_n": 20,
+   "entry_until": "12:00",
+   "scale_out_r": null
+  },
+  "heat_fade_short": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_9.py",
+   "sides": "short",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1030
+   ],
+   "gate": "fo-",
+   "scale_out_r": null
+  },
+  "heat_fade_long": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_5.py",
+   "sides": "long",
+   "min_adv": 125000000,
+   "window": [
+    1105,
+    1330
+   ],
+   "gate": "gap+",
+   "scale_out_r": null
+  },
+  "exhaustion_short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/setups2/candidates/volume_flip_1.py",
+   "min_adv": 95000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "prefilter": "new_high_100m",
+   "scale_out_r": null
+  }
+ },
+ "exits": {
+  "scale_out_r": 1.0,
+  "scale_out_frac": 0.5
+ },
+ "shorts": {
+  "enabled": true,
+  "require_easy_to_borrow": true
+ },
+ "live": {
+  "no_entry_before": "09:50",
+  "max_spread_bps": 30,
+  "max_spread_risk_frac": 0.25,
+  "max_participation": 0.1,
+  "status_every_min": 2,
+  "start_from": "08:00",
+  "max_job_minutes": 340,
+  "fetch_batch": 400
+ },
+ "universe": {
+  "max_symbols": null,
+  "min_avg_dollar_volume": 5000000,
+  "extended_min_avg_dollar_volume": 1000000,
+  "extended_min_rvol": 3.0,
+  "min_atr_pct": 1.0,
+  "stocks_in_play_top_n": 20
+ }
+}
