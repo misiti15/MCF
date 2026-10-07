@@ -1,0 +1,113 @@
+{
+ "date": "2026-10-07",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 10,
+  "win_rate": 0.4,
+  "exp_r": -0.234,
+  "total_r": -2.34,
+  "pnl": -83.42,
+  "stop_exit_share": 0.6,
+  "pnl_adj": -86.12,
+  "slip_bps": 7.0
+ },
+ "yesterday": {
+  "trades": 34,
+  "win_rate": 0.441,
+  "exp_r": -0.124,
+  "total_r": -4.22,
+  "pnl": -33.62,
+  "stop_exit_share": 0.559,
+  "pnl_adj": -41.3,
+  "slip_bps": 1.8
+ },
+ "rolling5": {
+  "exp_r": -0.124,
+  "win_rate": 0.441,
+  "pnl": -33.62,
+  "slip_bps": 1.8,
+  "stop_exit_share": 0.559
+ },
+ "rolling20": {
+  "exp_r": -0.124,
+  "win_rate": 0.441,
+  "pnl": -33.62,
+  "slip_bps": 1.8,
+  "stop_exit_share": 0.559
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": false,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "heat_fade_long": {
+   "trades": 4,
+   "win_rate": 0.5,
+   "exp_r": -0.077,
+   "total_r": -0.31,
+   "pnl": 3.05,
+   "stop_exit_share": 0.5,
+   "pnl_adj": 2.51,
+   "slip_bps": 3.5
+  },
+  "heat_fade_short": {
+   "trades": 4,
+   "win_rate": 0.25,
+   "exp_r": -0.619,
+   "total_r": -2.48,
+   "pnl": -73.95,
+   "stop_exit_share": 0.75,
+   "pnl_adj": -74.53,
+   "slip_bps": 6.7
+  },
+  "orb20_a": {
+   "trades": 2,
+   "win_rate": 0.5,
+   "exp_r": 0.22,
+   "total_r": 0.44,
+   "pnl": -12.52,
+   "stop_exit_share": 0.5,
+   "pnl_adj": -14.1,
+   "slip_bps": 14.5
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 2,
+   "whatif_exp_r": -0.05,
+   "whatif_total_r": -0.1,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 4,
+   "whatif_exp_r": -0.109,
+   "whatif_total_r": -0.43,
+   "verdict": "rule saved R today"
+  }
+ ],
+ "signals": {
+  "submitted": 16,
+  "skipped": 6
+ },
+ "health": {
+  "polls": 75,
+  "last_poll_s": 8.8,
+  "symbols_last_bar": 3858,
+  "last_bar": "15:53",
+  "flatten_failed": [
+   "HESM",
+   "NEOG",
+   "PENG",
+   "RDW",
+   "RIOT",
+   "WHR"
+  ]
+ },
+ "findings": []
+}
