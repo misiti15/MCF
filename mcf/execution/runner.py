@@ -32,7 +32,7 @@ from .alpaca_broker import AlpacaBroker
 from .risk import RiskManager
 
 NY = TZ
-COID_PREFIX = "mcf-"
+COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mct-" (never touches the other book)
 
 
 class PaperRunner:

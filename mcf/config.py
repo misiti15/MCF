@@ -26,10 +26,13 @@ def _merge(base: dict, override: dict) -> dict:
 def load_config(path: str | Path | None = None) -> dict[str, Any]:
     with open(CONFIG_DIR / "default.yaml") as f:
         cfg = yaml.safe_load(f)
-    for extra in (CONFIG_DIR / "local.yaml", Path(path) if path else None):
+    acct = os.environ.get("MCF_ACCOUNT", "primary")
+    acct_file = CONFIG_DIR / f"account_{acct}.yaml" if acct != "primary" else None
+    for extra in (acct_file, CONFIG_DIR / "local.yaml", Path(path) if path else None):
         if extra and extra.exists():
             with open(extra) as f:
                 cfg = _merge(cfg, yaml.safe_load(f) or {})
+    cfg["account_name"] = acct
     feed = os.environ.get("ALPACA_DATA_FEED")
     if feed:
         cfg["data"]["feed"] = feed

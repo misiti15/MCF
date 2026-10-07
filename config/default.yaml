@@ -57,6 +57,7 @@ universe:
   extended_min_rvol: 3.0             # extended tier needs opening rvol >= 3x (its volume then ~= core)
   min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
+  earnings_blackout_days: 4         # owner 2026-10-07: no trades within 4 trading days of earnings (either side)
 
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.

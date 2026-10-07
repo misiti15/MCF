@@ -12,7 +12,10 @@ class AlpacaBroker:
     def __init__(self, paper: bool = True):
         from alpaca.trading.client import TradingClient
 
-        self.client = TradingClient(os.environ["ALPACA_API_KEY"], os.environ["ALPACA_SECRET_KEY"], paper=paper)
+        # Orders go to ALPACA_TRADE_* when set (the Testing account); market data always uses ALPACA_API_KEY (SIP plan).
+        k = os.environ.get("ALPACA_TRADE_API_KEY") or os.environ["ALPACA_API_KEY"]
+        sec = os.environ.get("ALPACA_TRADE_SECRET_KEY") or os.environ["ALPACA_SECRET_KEY"]
+        self.client = TradingClient(k, sec, paper=paper)
 
     def can_short(self, symbol: str) -> bool:
         """Shortable and easy-to-borrow per the broker (cached for the session)."""

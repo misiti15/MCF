@@ -31,14 +31,17 @@ def _validation() -> dict:
 NY = "America/New_York"
 
 
-def _chart(spy: pd.DataFrame | None, trades: pd.DataFrame, day: str) -> bytes:
+def _chart(spy: pd.DataFrame | None, trades: pd.DataFrame, day: str, intraday: list | None = None) -> bytes:
     import matplotlib
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     grid = pd.date_range(f"{day} 09:30", f"{day} 16:00", freq="15min", tz=NY)
-    fig, (a1, a2) = plt.subplots(2, 1, figsize=(9, 5.2), sharex=True, gridspec_kw={"height_ratios": [1.2, 1]})
+    n = 3 if intraday else 2
+    fig, axes = plt.subplots(n, 1, figsize=(9, 5.2 + 2.4 * (n - 2)), sharex=True,
+                             gridspec_kw={"height_ratios": [1.2, 1, 1.3][:n]})
+    a1, a2 = axes[0], axes[1]
     if spy is not None and len(spy):
         s = spy["close"].resample("15min", label="right", closed="left").last().reindex(grid).ffill()
         a1.plot(s.index, s.values, color="#2a78d6", lw=1.8)
@@ -53,13 +56,24 @@ def _chart(spy: pd.DataFrame | None, trades: pd.DataFrame, day: str) -> bytes:
     a2.bar(pnl.index, pnl.values, width=0.008, color=col)
     a2.axhline(0, color="#898781", lw=0.8)
     a2.set_ylabel("MCF realized P/L ($)")
-    for a in (a1, a2):
+    if intraday:
+        a3 = axes[2]
+        ts = pd.to_datetime([f"{day} {x['t']}" for x in intraday]).tz_localize(NY)
+        names = sorted({k for x in intraday for k in x.get("by_setup", {})})
+        palette = ["#2a78d6", "#d97706", "#7c3aed", "#0b8a3e", "#d03b3b", "#0891b2", "#a16207", "#be185d"]
+        for i, k in enumerate(names):
+            a3.plot(ts, [x.get("by_setup", {}).get(k, 0.0) for x in intraday], lw=1.4, color=palette[i % len(palette)], label=k)
+        a3.plot(ts, [x.get("total", 0.0) for x in intraday], lw=2.2, color="#0b0b0b", label="MCF total")
+        a3.axhline(0, color="#898781", lw=0.8)
+        a3.set_ylabel("P/L incl. open ($)")
+        a3.legend(fontsize=7, ncol=3, frameon=False, loc="upper left")
+    for a in axes:
         a.grid(alpha=0.25)
         a.spines[["top", "right"]].set_visible(False)
     import matplotlib.dates as mdates
 
-    a2.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=NY))
-    a2.xaxis.set_major_locator(mdates.HourLocator(tz=NY))
+    axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=NY))
+    axes[-1].xaxis.set_major_locator(mdates.HourLocator(tz=NY))
     fig.tight_layout()
     buf = io.BytesIO()
     fig.savefig(buf, format="png", dpi=130)
@@ -67,7 +81,45 @@ def _chart(spy: pd.DataFrame | None, trades: pd.DataFrame, day: str) -> bytes:
     return buf.getvalue()
 
 
-def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None):
+def _quality(tr: pd.DataFrame, bars: dict) -> str:
+    """Execution and trade-quality section: signal-to-fill latency, best/worst excursion (MFE/MAE) in R, give-back."""
+    if not len(tr):
+        return ""
+    parts = []
+    if "signal_time" in tr and tr["signal_time"].notna().any():
+        lat = (tr["entry_time"] - tr["signal_time"]).dt.total_seconds().dropna()
+        lat = lat[lat >= 0]
+        if len(lat):
+            parts.append(f"<p>Signal to fill: median <b>{lat.median():.0f}s</b>, 90th percentile {lat.quantile(0.9):.0f}s "
+                         f"({len(lat)} trades). Bars close each minute; the order follows the bar close.</p>")
+    rows = []
+    for r in tr.itertuples():
+        b = bars.get(r.symbol)
+        risk = abs(float(r.entry) - float(r.stop)) if getattr(r, "stop", None) is not None else None
+        if b is None or not len(b) or not risk:
+            continue
+        w = b[(b.index >= r.entry_time.floor("1min")) & (b.index <= r.exit_time)]
+        if not len(w):
+            continue
+        fav = (w["high"].max() - r.entry) if r.side > 0 else (r.entry - w["low"].min())
+        adv = (r.entry - w["low"].min()) if r.side > 0 else (w["high"].max() - r.entry)
+        rows.append((r.symbol, r.strategy, fav / risk, adv / risk, float(r.r_multiple)))
+    if rows:
+        q = pd.DataFrame(rows, columns=["symbol", "setup", "mfe", "mae", "r"])
+        never = (q["mfe"] < 0.25).mean()
+        gave = q[(q["mfe"] >= 1.0) & (q["r"] <= 0)]
+        parts.append(f"<p>Best excursion (MFE): median <b>{q['mfe'].median():.2f}R</b>; worst (MAE) median {q['mae'].median():.2f}R. "
+                     f"<b>{never:.0%}</b> of trades never got +0.25R in our favour; <b>{len(gave)}</b> reached +1R and still closed at or below 0.</p>")
+        top = q.assign(gave=q["mfe"] - q["r"]).sort_values("gave", ascending=False).head(5)
+        td = "style='padding:3px 8px;border-bottom:1px solid #e1e0d9;text-align:left'"
+        parts.append("<table style='border-collapse:collapse;font-size:12px'><tr>" + "".join(f"<th {td}>{h}</th>" for h in ("Symbol", "Setup", "Best R", "Worst R", "Closed R")) + "</tr>" +
+                     "".join(f"<tr><td {td}>{x.symbol}</td><td {td}>{x.setup}</td><td {td}>{x.mfe:+.2f}</td><td {td}>{-x.mae:+.2f}</td><td {td}>{x.r:+.2f}</td></tr>" for x in top.itertuples()) +
+                     "</table><div style='font-size:11px;color:#52514e'>Largest give-backs: how far each trade went our way vs where it closed.</div>")
+    return "<h3>Execution and trade quality</h3>" + "".join(parts) if parts else ""
+
+
+def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None,
+          intraday: list | None = None, bars: dict | None = None):
     tr = journal.trades(run_id=run_id)
     tr = tr[tr["date"].astype(str) == day].copy() if len(tr) else tr
     if len(tr):
@@ -105,6 +157,7 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 <table style="border-collapse:collapse;font-size:13px">
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% lost</th><th {td}>P/L</th></tr>
 {rows}</table>
+{_quality(tr, bars or {})}
 <h3>By setup</h3>
 <table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>P/L</th></tr>
 {by_setup or '<tr><td colspan=5>No trades.</td></tr>'}</table>
@@ -114,7 +167,7 @@ Live page: https://misiti15.github.io/MCF/live/</p></div>"""
     text = f"MCF end of day {day}: {n} trades, P/L ${pnl:,.2f}. {DISCLAIMER}"
     csv = tr.drop(columns=[c for c in ("meta",) if c in tr]).to_csv(index=False) if n else "no trades\n"
     return {"subject": f"MCF EOD {day}: {n} trades, ${pnl:,.0f}", "html": html, "text": text,
-            "png": _chart(spy, tr, day), "cid": cid, "csv": csv}
+            "png": _chart(spy, tr, day, intraday), "cid": cid, "csv": csv}
 
 
 def save(rep: dict, out_dir: str | Path, day: str) -> None:

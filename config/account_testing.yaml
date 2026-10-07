@@ -1,0 +1,18 @@
+# "Testing" paper account (owner 2026-10-07): a second Alpaca paper account for experimental setups and strategies
+# that do not (yet) make strict sense. Same code, same execution/housekeeping fixes as the primary account;
+# its own order-id prefix (mct-), journal and state branch (mcf-data-testing), so the two books never mix.
+# Overlay on config/default.yaml, loaded when MCF_ACCOUNT=testing. Educational only — not financial advice.
+account:
+  slots: 400                     # as many simultaneous tests as possible
+  buying_power_multiple: 3.8     # Alpaca paper intraday buying power is 4x equity; keep a 5% margin
+  max_concurrent_positions: 400
+  max_positions_per_strategy: 150
+  max_daily_loss_r: 60
+  max_trades_per_day: 3000
+# Primary setups are off here; experimental setups are switched on per entry below (tag names, backlog ids).
+strategies:
+  intraday_momentum: {enabled: false}
+  orb20_a: {enabled: false}
+  heat_fade_short: {enabled: false}
+  heat_fade_long: {enabled: false}
+  exhaustion_short: {enabled: false}

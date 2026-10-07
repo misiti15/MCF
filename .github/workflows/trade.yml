@@ -7,7 +7,9 @@
 #   * every run decides from the ET clock whether to work (mcf live exits at once outside 08:00-15:50 ET,
 #     on weekends and on market holidays); duplicate UTC lines cover both EDT and EST
 #
-# Required repository secrets: ALPACA_API_KEY, ALPACA_SECRET_KEY (paper account).
+# Required repository secrets: ALPACA_API_KEY, ALPACA_SECRET_KEY (primary paper account; also the SIP market-data keys).
+# Optional: ALPACA_TESTING_API_KEY, ALPACA_TESTING_SECRET_KEY - the "Testing" paper account (owner 2026-10-07). When set, a
+# second job per run trades config/account_testing.yaml on that account (orders mct-*, state branch mcf-data-testing).
 name: trade
 
 on:
@@ -21,20 +23,28 @@ on:
         type: boolean
         default: false
 
-concurrency:
-  group: mcf-trade
-  cancel-in-progress: false
-
 permissions:
   contents: write
 
 jobs:
   session:
+    strategy:
+      fail-fast: false
+      matrix:
+        account: [primary, testing]
+    concurrency:
+      group: ${{ matrix.account == 'primary' && 'mcf-trade' || 'mcf-trade-testing' }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 355
     env:
+      MCF_ACCOUNT: ${{ matrix.account }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || 'mct-' }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || 'mcf-data-testing' }}
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || '' }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || '' }}
       ALPACA_DATA_FEED: sip
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
@@ -46,7 +56,8 @@ jobs:
         id: window
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
+          if [ "$MCF_ACCOUNT" = "testing" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "Testing account keys not set: skipped"
+          elif [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
           echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
 
       - name: Check secrets
@@ -65,16 +76,16 @@ jobs:
         if: steps.window.outputs.run == 'true'
         run: pip install -q -e ".[alpaca]"
 
-      - name: Check out state branch (mcf-data)
+      - name: Check out state branch (mcf-data / mcf-data-testing)
         if: steps.window.outputs.run == 'true'
         run: |
           url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-          if git clone -q --depth 50 --branch mcf-data "$url" state; then :; else
-            git init -q state && git -C state checkout -q --orphan mcf-data
+          if git clone -q --depth 50 --branch "$STATE_BRANCH" "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan "$STATE_BRANCH"
             echo "# MCF live state (journal, status). Written by the trade workflow." > state/README.md
             git -C state add README.md
             git -C state -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "init state branch"
-            git -C state remote add origin "$url" && git -C state push -q origin mcf-data
+            git -C state remote add origin "$url" && git -C state push -q origin "$STATE_BRANCH"
           fi
 
       - name: Restore today's priors

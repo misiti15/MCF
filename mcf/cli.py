@@ -148,6 +148,8 @@ def cmd_live(args, cfg):
     if until is None and not args.force:
         print(f"{now:%a %H:%M} ET is outside the trading-job window: nothing to do")
         return
+    import json as _json
+
     slot = f"job {now:%H:%M}"
     _state_cfg(cfg, args.state_dir)
     from .execution.session import freeze_setups
@@ -165,13 +167,36 @@ def cmd_live(args, cfg):
         if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=2) or st["phase"] in ("closed", "handover"):
             paths.append("journal.db")
             last["journal"] = ts
+        try:   # intraday attribution: total P/L (closed + open) by setup every status, for the EOD chart
+            by: dict[str, float] = {}
+            for p in st.get("positions") or []:
+                by[p["strategy"]] = by.get(p["strategy"], 0.0) + float(p.get("upl") or 0)
+            for c in st.get("closed") or []:
+                by[c["strategy"]] = by.get(c["strategy"], 0.0) + float(c.get("pnl") or 0)
+            ip = Path(args.state_dir) / "intraday" / f"{now.date()}.jsonl"
+            ip.parent.mkdir(parents=True, exist_ok=True)
+            with ip.open("a") as f:
+                f.write(_json.dumps({"t": st["asof_et"][11:16], "by_setup": {k: round(v, 2) for k, v in by.items()},
+                                     "total": round(sum(by.values()), 2)}) + "\n")
+            paths.append("intraday")
+        except Exception as e:
+            print(f"intraday log failed: {e}")
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
 
+    eb = None
+    if cfg.get("universe", {}).get("earnings_blackout_days"):
+        from .data.earnings import blackout
+
+        eb = blackout(now.date(), sorted(priors), int(cfg["universe"]["earnings_blackout_days"]), args.state_dir)
+        priors = {s: p for s, p in priors.items() if s not in eb["symbols"]}
     print(f"{slot}: {len(priors)} symbols, until {until or 'close'}, dry_run={args.dry_run}")
     runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
                          on_status=on_status)
+    if eb is not None:
+        runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
+                             earnings_complete=eb["complete"])
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv", "setups"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings"]
     end = pd.Timestamp.now(tz=NY)
     if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
         from .report.daily_review import write_review
@@ -218,8 +243,24 @@ def cmd_eod(args, cfg):
         print(f"SPY bars unavailable: {e}")
     rv = Path(args.state_dir) / "reviews" / f"{day}.json"
     review = _json.loads(rv.read_text()) if rv.exists() else None
-    rep = eod.build(j, rid, day, spy, review)
+    ip = Path(args.state_dir) / "intraday" / f"{day}.jsonl"
+    intraday = [_json.loads(l) for l in ip.read_text().splitlines() if l.strip()] if ip.exists() else []
+    bars = {}
+    try:   # 1-minute bars of the day's traded symbols, for best/worst excursion (MFE/MAE) per trade
+        _t = j.trades(run_id=rid)
+        syms = sorted(set(_t.loc[_t["date"].astype(str) == day, "symbol"])) if len(_t) else []
+        if syms:
+            d0 = datetime.fromisoformat(day)
+            raw = _bars(_client(), syms, d0, d0 + timedelta(days=1), 1, cfg["data"]["feed"])
+            bars = {s: rth(normalize(g.droplevel(0))) for s, g in raw.groupby(level=0)}
+    except Exception as e:
+        print(f"trade bars unavailable: {e}")
+    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars)
     eod.save(rep, Path(args.state_dir) / "reports", day)
+    from .report import scorecard
+
+    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 3))
+    scorecard.save(card, args.state_dir)
     print(rep["subject"])
     if not args.no_send:
         eod.send(rep, os.environ.get("MCF_EMAIL_TO") or cfg["report"]["email_to"], day)
