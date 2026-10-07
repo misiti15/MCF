@@ -5,7 +5,7 @@ symbol US equity/ETF universe. Crypto and options guidance come later (see `docs
 
 **Start here:** `MARCOFLOW_CONTEXT.md` (lessons from the predecessor), `docs/DECISIONS.md` (owner decisions),
 `docs/DATA_AND_BROKER.md` (stack), `docs/MARCOFLOW_ANALYSIS.md` (data deep-dive). Hosted dashboard:
-https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow
+https://misiti15.github.io/MCF/live/ (EOD reports: https://misiti15.github.io/MCF/live/report.html)
 
 **Status: Phase 0.5.** The engine, setup library, Alpaca paper-trading loop and
 dashboard are built and tested on synthetic data. No strategy has been validated on real data yet.

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCF EOD Reports</title>
+<style>
+:root { color-scheme: light; --page:#f9f9f7; --surface:#ffffff; --ink:#0b0b0b; --ink-2:#52514e; --border:rgba(11,11,11,.10); --link:#2a78d6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page:#0d0d0d; --surface:#ffffff; --ink:#ffffff; --ink-2:#c3c2b7; --border:rgba(255,255,255,.12); --link:#3987e5; } }
+:root[data-theme="dark"] { --page:#0d0d0d; --surface:#ffffff; --ink:#ffffff; --ink-2:#c3c2b7; --border:rgba(255,255,255,.12); --link:#3987e5; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width:900px; margin:0 auto; padding:20px 16px 48px; }
+header { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom:14px; }
+h1 { font-size:20px; margin:0; } .sub { color:var(--ink-2); font-size:12px; } a { color:var(--link); }
+select { font:inherit; padding:6px 8px; border-radius:8px; border:1px solid var(--border); background:var(--page); color:var(--ink); }
+/* the report itself is an email (light background, dark text): show it on a white sheet in both themes */
+#rep { background:var(--surface); color:#0b0b0b; border:1px solid var(--border); border-radius:12px; padding:16px; overflow-x:auto; }
+#rep img { max-width:100%; height:auto; } #rep table { font-size:12px; }
+</style></head>
+<body><main>
+<header><div><h1>MCF end-of-day reports</h1>
+<div class="sub">Paper trading. Educational only — not financial advice. <a href="./">← Live page</a></div></div>
+<label class="sub">Session <select id="day"></select></label></header>
+<div id="rep"><p>Loading…</p></div>
+<p class="sub">Every trade is also available as a CSV: <a id="csv" href="#">download</a>.</p>
+</main>
+<script>
+(() => {
+  const acct = new URLSearchParams(location.search).get("account") === "testing" ? "mcf-data-testing" : "mcf-data";
+  const RAW = `https://raw.githubusercontent.com/misiti15/MCF/${acct}/`;
+  const sel = document.getElementById("day"), rep = document.getElementById("rep"), csv = document.getElementById("csv");
+  async function show(day) {
+    try {
+      const r = await fetch(`${RAW}reports/${day}.html?t=${Date.now()}`, { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      const html = (await r.text()).replace(new RegExp(`src="${day}\\.png"`, "g"), `src="${RAW}reports/${day}.png"`);
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      doc.querySelectorAll("script").forEach(s => s.remove());
+      rep.innerHTML = doc.body.innerHTML;
+      csv.href = `${RAW}reports/${day}.csv`;
+      const u = new URL(location); u.searchParams.set("day", day); history.replaceState(null, "", u);
+    } catch (e) { rep.innerHTML = `<p>No report for ${day} yet. It is produced right after the 15:55 close.</p>`; }
+  }
+  (async () => {
+    let days = [];
+    try { const s = await (await fetch(`${RAW}status.json?t=${Date.now()}`, { cache: "no-store" })).json();
+          days = (s.history || []).map(h => h.date); if (s.session_date && !days.includes(s.session_date)) days.push(s.session_date); } catch (_) {}
+    days = [...new Set(days)].sort().reverse();
+    if (!days.length) { rep.innerHTML = "<p>No reports yet.</p>"; return; }
+    sel.innerHTML = days.map(d => `<option>${d}</option>`).join("");
+    const want = new URLSearchParams(location.search).get("day");
+    sel.value = days.includes(want) ? want : days[0];
+    sel.onchange = () => show(sel.value);
+    show(sel.value);
+  })();
+})();
+</script>
+</body></html>
