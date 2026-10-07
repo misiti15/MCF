@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 40 · coded: 6 · failed: 18 · configurations tried (all lineages): 6055
+Total ideas: 40 · coded: 6 · failed: 19 · configurations tried (all lineages): 6055
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -16,7 +16,6 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | live | live-exhaustion_short | Afternoon exhaustion short (volume_flip_1) | layered swarm | – | – | – | – | – |
 | live | live-intraday_momentum | Intraday momentum | initial build | – | – | – | – | – |
 | finalist | rw-vf2_rsis3_fast10 | volume_flip_2 with RSI3 / SMA10 | rule-18 rework (lengths) | – | – | – | – | – |
-| finalist | rw-t4_long_nomf | Relative strength vs SPY, long only, 10:30-11:30, no market filter | rule-18 rework (web_families) | – | – | – | – | – |
 | idea | reddit-baseline-links | Owner's two r/ai_trading links | owner | – | – | – | – | – |
 | idea | one-per-underlying | One position per underlying index (QQQ/QQQM/QLD...) | owner discussion | – | – | – | – | – |
 | idea | intraday-momentum-paper | First-30-min return predicts last-30-min return (SPY/QQQ) | Gao, Han, Li, Zhou 2018 JFE 'Market intraday momentum' | – | – | – | – | – |
@@ -31,6 +30,7 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
 | holdout_failed | rw-vf_lowvol_div | exhaustion short + below-average bar volume (vol_climax<1) | rule-18 rework (lab_families) | – | – | – | – | – |
+| holdout_failed | rw-t4_long_nomf | Relative strength vs SPY, long only, 10:30-11:30, no market filter | rule-18 rework (web_families) | – | – | – | – | – |
 | failed | t4-rel-strength | Relative strength vs SPY with market/VWAP filters | r/RealDayTrading method (snippets) | – | – | – | – | – |
 | failed | t1-orb-exits | ORB on stocks in play: exit re-tests | Zarattini/Barbon/Aziz 2024 | – | – | – | – | – |
 | failed | t6-exit-overlay | Breakeven / trail / time stop on live setups | r/algotrading 1t6ex5l (snippet) | – | – | – | – | – |
