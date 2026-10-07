@@ -1,0 +1,1976 @@
+{
+ "heat_fade_long_train": {
+  "eval": {
+   "n": 2144,
+   "days": 40,
+   "win_rate": 0.3703,
+   "exp_r": 0.0278,
+   "t_dc": 0.58,
+   "pf": 1.072,
+   "green_days": 0.55,
+   "ex_best_day": 0.0054,
+   "ctrl": -0.0435,
+   "half1": -0.0464,
+   "half2": 0.1123,
+   "exp_r_prod": 0.0055,
+   "t_dc_prod": 0.11
+  },
+  "label": "regime_5",
+  "n": 2144,
+  "exp_r": 0.0278,
+  "win_share": 0.509,
+  "features": {
+   "rsi": {
+    "auc": 0.526,
+    "win_mean": 19.13,
+    "lose_mean": 18.443,
+    "tercile_exp_r": [
+     -0.006,
+     -0.001,
+     0.091
+    ],
+    "tercile_cut": [
+     16.452,
+     19.92
+    ]
+   },
+   "rsi5": {
+    "auc": 0.481,
+    "win_mean": 14.208,
+    "lose_mean": 15.079,
+    "tercile_exp_r": [
+     0.054,
+     0.014,
+     0.016
+    ],
+    "tercile_cut": [
+     4.878,
+     18.514
+    ]
+   },
+   "momentum": {
+    "auc": 0.494,
+    "win_mean": -1.188,
+    "lose_mean": -1.22,
+    "tercile_exp_r": [
+     0.025,
+     0.014,
+     0.045
+    ],
+    "tercile_cut": [
+     -1.291,
+     -0.726
+    ]
+   },
+   "emaDiff": {
+    "auc": 0.478,
+    "win_mean": -0.526,
+    "lose_mean": -0.533,
+    "tercile_exp_r": [
+     0.049,
+     0.031,
+     0.004
+    ],
+    "tercile_cut": [
+     -0.531,
+     -0.298
+    ]
+   },
+   "macdPct": {
+    "auc": 0.479,
+    "win_mean": -0.473,
+    "lose_mean": -0.469,
+    "tercile_exp_r": [
+     0.049,
+     0.047,
+     -0.013
+    ],
+    "tercile_cut": [
+     -0.491,
+     -0.249
+    ]
+   },
+   "volumeRatio": {
+    "auc": 0.5,
+    "win_mean": 1.062,
+    "lose_mean": 1.098,
+    "tercile_exp_r": [
+     -0.004,
+     0.07,
+     0.017
+    ],
+    "tercile_cut": [
+     0.652,
+     1.11
+    ]
+   },
+   "volumeSurge": {
+    "auc": 0.491,
+    "win_mean": 0.969,
+    "lose_mean": 1.012,
+    "tercile_exp_r": [
+     0.047,
+     0.04,
+     -0.004
+    ],
+    "tercile_cut": [
+     0.681,
+     1.044
+    ]
+   },
+   "pricePosition": {
+    "auc": 0.474,
+    "win_mean": 0.048,
+    "lose_mean": 0.054,
+    "tercile_exp_r": [
+     0.022,
+     0.076,
+     -0.016
+    ],
+    "tercile_cut": [
+     0.017,
+     0.062
+    ]
+   },
+   "vwapDistPct": {
+    "auc": 0.468,
+    "win_mean": -1.97,
+    "lose_mean": -1.873,
+    "tercile_exp_r": [
+     0.07,
+     0.027,
+     -0.015
+    ],
+    "tercile_cut": [
+     -1.987,
+     -1.238
+    ]
+   },
+   "vwap_atr": {
+    "auc": 0.484,
+    "win_mean": -0.351,
+    "lose_mean": -0.345,
+    "tercile_exp_r": [
+     -0.001,
+     0.071,
+     0.012
+    ],
+    "tercile_cut": [
+     -0.389,
+     -0.267
+    ]
+   },
+   "buyPressure": {
+    "auc": 0.509,
+    "win_mean": -0.282,
+    "lose_mean": -0.289,
+    "tercile_exp_r": [
+     0.014,
+     0.021,
+     0.049
+    ],
+    "tercile_cut": [
+     -0.396,
+     -0.19
+    ]
+   },
+   "rsiSlope": {
+    "auc": 0.505,
+    "win_mean": -12.727,
+    "lose_mean": -13.064,
+    "tercile_exp_r": [
+     0.014,
+     0.059,
+     0.01
+    ],
+    "tercile_cut": [
+     -16.673,
+     -8.468
+    ]
+   },
+   "gap": {
+    "auc": 0.505,
+    "win_mean": 1.982,
+    "lose_mean": 1.819,
+    "tercile_exp_r": [
+     0.028,
+     -0.012,
+     0.068
+    ],
+    "tercile_cut": [
+     0.624,
+     1.624
+    ]
+   },
+   "fromOpen": {
+    "auc": 0.47,
+    "win_mean": -3.68,
+    "lose_mean": -3.363,
+    "tercile_exp_r": [
+     0.082,
+     0.04,
+     -0.039
+    ],
+    "tercile_cut": [
+     -3.536,
+     -2.117
+    ]
+   },
+   "fo_atr": {
+    "auc": 0.471,
+    "win_mean": -0.65,
+    "lose_mean": -0.606,
+    "tercile_exp_r": [
+     0.107,
+     -0.014,
+     -0.008
+    ],
+    "tercile_cut": [
+     -0.726,
+     -0.445
+    ]
+   },
+   "tod": {
+    "auc": 0.532,
+    "win_mean": 1178.164,
+    "lose_mean": 1172.605,
+    "tercile_exp_r": [
+     -0.076,
+     0.153,
+     0.02
+    ],
+    "tercile_cut": [
+     1120.0,
+     1215.0
+    ]
+   },
+   "atr_d": {
+    "auc": 0.49,
+    "win_mean": 12.751,
+    "lose_mean": 13.093,
+    "tercile_exp_r": [
+     0.018,
+     0.045,
+     0.019
+    ],
+    "tercile_cut": [
+     5.235,
+     11.314
+    ]
+   },
+   "dist_pdh_atr": {
+    "auc": 0.491,
+    "win_mean": 0.795,
+    "lose_mean": 0.822,
+    "tercile_exp_r": [
+     0.055,
+     0.028,
+     0.001
+    ],
+    "tercile_cut": [
+     0.55,
+     1.023
+    ]
+   },
+   "dist_pdl_atr": {
+    "auc": 0.473,
+    "win_mean": 0.088,
+    "lose_mean": 0.127,
+    "tercile_exp_r": [
+     0.075,
+     0.023,
+     -0.015
+    ],
+    "tercile_cut": [
+     -0.164,
+     0.276
+    ]
+   },
+   "dist_hod_atr": {
+    "auc": 0.514,
+    "win_mean": 0.885,
+    "lose_mean": 0.859,
+    "tercile_exp_r": [
+     0.031,
+     0.024,
+     0.028
+    ],
+    "tercile_cut": [
+     0.682,
+     0.945
+    ]
+   },
+   "dist_lod_atr": {
+    "auc": 0.473,
+    "win_mean": 0.046,
+    "lose_mean": 0.052,
+    "tercile_exp_r": [
+     0.074,
+     0.033,
+     -0.023
+    ],
+    "tercile_cut": [
+     0.013,
+     0.048
+    ]
+   },
+   "sma20_dist_pct": {
+    "auc": 0.488,
+    "win_mean": -1.55,
+    "lose_mean": -1.591,
+    "tercile_exp_r": [
+     -0.002,
+     0.058,
+     0.026
+    ],
+    "tercile_cut": [
+     -1.62,
+     -1.009
+    ]
+   },
+   "sma50_dist_pct": {
+    "auc": 0.478,
+    "win_mean": -1.838,
+    "lose_mean": -1.769,
+    "tercile_exp_r": [
+     0.044,
+     0.063,
+     -0.025
+    ],
+    "tercile_cut": [
+     -1.896,
+     -1.038
+    ]
+   },
+   "sma20_slope_pct": {
+    "auc": 0.493,
+    "win_mean": -0.394,
+    "lose_mean": -0.399,
+    "tercile_exp_r": [
+     0.017,
+     0.044,
+     0.023
+    ],
+    "tercile_cut": [
+     -0.432,
+     -0.209
+    ]
+   },
+   "flow3": {
+    "auc": 0.466,
+    "win_mean": -0.616,
+    "lose_mean": -0.573,
+    "tercile_exp_r": [
+     0.071,
+     -0.001,
+     -0.007
+    ],
+    "tercile_cut": [
+     -1.0,
+     -0.424
+    ]
+   },
+   "flow9prev": {
+    "auc": 0.527,
+    "win_mean": -0.355,
+    "lose_mean": -0.378,
+    "tercile_exp_r": [
+     -0.029,
+     0.037,
+     0.076
+    ],
+    "tercile_cut": [
+     -0.523,
+     -0.239
+    ]
+   },
+   "flowflip": {
+    "auc": 0.466,
+    "win_mean": -0.261,
+    "lose_mean": -0.195,
+    "tercile_exp_r": [
+     0.088,
+     0.028,
+     -0.034
+    ],
+    "tercile_cut": [
+     -0.537,
+     0.0
+    ]
+   },
+   "vol_climax": {
+    "auc": 0.5,
+    "win_mean": 1.062,
+    "lose_mean": 1.098,
+    "tercile_exp_r": [
+     -0.004,
+     0.07,
+     0.017
+    ],
+    "tercile_cut": [
+     0.652,
+     1.11
+    ]
+   },
+   "bear_div": {
+    "auc": 0.495,
+    "win_mean": 0.0,
+    "lose_mean": 0.0,
+    "tercile_exp_r": [
+     0.028,
+     NaN,
+     NaN
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "bull_div": {
+    "auc": 0.511,
+    "win_mean": 0.089,
+    "lose_mean": 0.065,
+    "tercile_exp_r": [
+     0.013,
+     NaN,
+     0.211
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "upper_wick": {
+    "auc": 0.493,
+    "win_mean": 0.191,
+    "lose_mean": 0.191,
+    "tercile_exp_r": [
+     0.047,
+     0.005,
+     0.03
+    ],
+    "tercile_cut": [
+     0.039,
+     0.23
+    ]
+   },
+   "lower_wick": {
+    "auc": 0.493,
+    "win_mean": 0.192,
+    "lose_mean": 0.204,
+    "tercile_exp_r": [
+     0.034,
+     0.06,
+     -0.015
+    ],
+    "tercile_cut": [
+     0.044,
+     0.25
+    ]
+   },
+   "heat": {
+    "auc": 0.474,
+    "win_mean": 9.506,
+    "lose_mean": 11.055,
+    "tercile_exp_r": [
+     0.053,
+     0.067,
+     -0.038
+    ],
+    "tercile_cut": [
+     4.815,
+     18.372
+    ]
+   }
+  }
+ },
+ "heat_fade_long_as_short_train": {
+  "eval": {
+   "n": 2144,
+   "days": 40,
+   "win_rate": 0.3158,
+   "exp_r": -0.0572,
+   "t_dc": -1.2,
+   "pf": 0.866,
+   "green_days": 0.425,
+   "ex_best_day": -0.087,
+   "ctrl": -0.0478,
+   "half1": 0.0151,
+   "half2": -0.1396,
+   "exp_r_prod": -0.0802,
+   "t_dc_prod": -1.68
+  }
+ },
+ "orb_style_long_train": {
+  "eval": {
+   "n": 3438,
+   "days": 40,
+   "win_rate": 0.4023,
+   "exp_r": -0.0652,
+   "t_dc": -1.59,
+   "pf": 0.862,
+   "green_days": 0.325,
+   "ex_best_day": -0.0864,
+   "ctrl": -0.079,
+   "half1": -0.0885,
+   "half2": -0.0393,
+   "exp_r_prod": -0.1175,
+   "t_dc_prod": -2.78
+  },
+  "label": "orb-style",
+  "n": 3438,
+  "exp_r": -0.0652,
+  "win_share": 0.487,
+  "features": {
+   "rsi": {
+    "auc": 0.482,
+    "win_mean": 70.757,
+    "lose_mean": 71.821,
+    "tercile_exp_r": [
+     -0.039,
+     -0.051,
+     -0.107
+    ],
+    "tercile_cut": [
+     66.786,
+     79.476
+    ]
+   },
+   "rsi5": {
+    "auc": 0.505,
+    "win_mean": 84.222,
+    "lose_mean": 84.277,
+    "tercile_exp_r": [
+     -0.085,
+     -0.069,
+     -0.041
+    ],
+    "tercile_cut": [
+     80.52,
+     94.46
+    ]
+   },
+   "momentum": {
+    "auc": 0.506,
+    "win_mean": 1.733,
+    "lose_mean": 1.65,
+    "tercile_exp_r": [
+     -0.079,
+     -0.076,
+     -0.04
+    ],
+    "tercile_cut": [
+     0.568,
+     1.53
+    ]
+   },
+   "emaDiff": {
+    "auc": 0.499,
+    "win_mean": 0.466,
+    "lose_mean": 0.48,
+    "tercile_exp_r": [
+     -0.067,
+     -0.075,
+     -0.053
+    ],
+    "tercile_cut": [
+     0.179,
+     0.522
+    ]
+   },
+   "macdPct": {
+    "auc": 0.499,
+    "win_mean": 0.378,
+    "lose_mean": 0.396,
+    "tercile_exp_r": [
+     -0.061,
+     -0.099,
+     -0.034
+    ],
+    "tercile_cut": [
+     0.137,
+     0.476
+    ]
+   },
+   "volumeRatio": {
+    "auc": 0.49,
+    "win_mean": 2.296,
+    "lose_mean": 2.276,
+    "tercile_exp_r": [
+     -0.011,
+     -0.125,
+     -0.058
+    ],
+    "tercile_cut": [
+     1.736,
+     2.217
+    ]
+   },
+   "volumeSurge": {
+    "auc": 0.506,
+    "win_mean": 1.946,
+    "lose_mean": 2.007,
+    "tercile_exp_r": [
+     -0.079,
+     -0.044,
+     -0.073
+    ],
+    "tercile_cut": [
+     1.062,
+     1.807
+    ]
+   },
+   "pricePosition": {
+    "auc": 0.496,
+    "win_mean": 0.933,
+    "lose_mean": 0.944,
+    "tercile_exp_r": [
+     -0.056,
+     -0.062,
+     -0.077
+    ],
+    "tercile_cut": [
+     0.979,
+     0.995
+    ]
+   },
+   "vwapDistPct": {
+    "auc": 0.514,
+    "win_mean": 1.196,
+    "lose_mean": 1.119,
+    "tercile_exp_r": [
+     -0.113,
+     -0.063,
+     -0.02
+    ],
+    "tercile_cut": [
+     0.548,
+     1.148
+    ]
+   },
+   "vwap_atr": {
+    "auc": 0.5,
+    "win_mean": 0.242,
+    "lose_mean": 0.245,
+    "tercile_exp_r": [
+     -0.055,
+     -0.062,
+     -0.079
+    ],
+    "tercile_cut": [
+     0.173,
+     0.274
+    ]
+   },
+   "buyPressure": {
+    "auc": 0.476,
+    "win_mean": 0.241,
+    "lose_mean": 0.262,
+    "tercile_exp_r": [
+     -0.013,
+     -0.053,
+     -0.13
+    ],
+    "tercile_cut": [
+     0.131,
+     0.388
+    ]
+   },
+   "rsiSlope": {
+    "auc": 0.516,
+    "win_mean": 9.26,
+    "lose_mean": 8.819,
+    "tercile_exp_r": [
+     -0.093,
+     -0.052,
+     -0.051
+    ],
+    "tercile_cut": [
+     4.483,
+     12.023
+    ]
+   },
+   "gap": {
+    "auc": 0.509,
+    "win_mean": 0.412,
+    "lose_mean": 0.278,
+    "tercile_exp_r": [
+     -0.04,
+     -0.116,
+     -0.038
+    ],
+    "tercile_cut": [
+     -0.214,
+     0.67
+    ]
+   },
+   "fromOpen": {
+    "auc": 0.508,
+    "win_mean": 2.165,
+    "lose_mean": 2.112,
+    "tercile_exp_r": [
+     -0.081,
+     -0.077,
+     -0.038
+    ],
+    "tercile_cut": [
+     0.876,
+     2.155
+    ]
+   },
+   "fo_atr": {
+    "auc": 0.492,
+    "win_mean": 0.447,
+    "lose_mean": 0.467,
+    "tercile_exp_r": [
+     -0.082,
+     -0.031,
+     -0.084
+    ],
+    "tercile_cut": [
+     0.276,
+     0.521
+    ]
+   },
+   "tod": {
+    "auc": 0.496,
+    "win_mean": 1036.161,
+    "lose_mean": 1038.117,
+    "tercile_exp_r": [
+     -0.039,
+     -0.097,
+     -0.066
+    ],
+    "tercile_cut": [
+     1005.0,
+     1105.0
+    ]
+   },
+   "atr_d": {
+    "auc": 0.516,
+    "win_mean": 6.085,
+    "lose_mean": 5.955,
+    "tercile_exp_r": [
+     -0.175,
+     -0.014,
+     -0.008
+    ],
+    "tercile_cut": [
+     1.494,
+     4.732
+    ]
+   },
+   "dist_pdh_atr": {
+    "auc": 0.506,
+    "win_mean": -0.101,
+    "lose_mean": -0.135,
+    "tercile_exp_r": [
+     -0.06,
+     -0.104,
+     -0.031
+    ],
+    "tercile_cut": [
+     -0.338,
+     0.097
+    ]
+   },
+   "dist_pdl_atr": {
+    "auc": 0.508,
+    "win_mean": 0.916,
+    "lose_mean": 0.914,
+    "tercile_exp_r": [
+     -0.069,
+     -0.078,
+     -0.048
+    ],
+    "tercile_cut": [
+     0.624,
+     1.112
+    ]
+   },
+   "dist_hod_atr": {
+    "auc": 0.498,
+    "win_mean": 0.008,
+    "lose_mean": 0.008,
+    "tercile_exp_r": [
+     -0.086,
+     -0.027,
+     -0.084
+    ],
+    "tercile_cut": [
+     0.002,
+     0.012
+    ]
+   },
+   "dist_lod_atr": {
+    "auc": 0.487,
+    "win_mean": 0.591,
+    "lose_mean": 0.615,
+    "tercile_exp_r": [
+     -0.082,
+     0.014,
+     -0.13
+    ],
+    "tercile_cut": [
+     0.44,
+     0.667
+    ]
+   },
+   "sma20_dist_pct": {
+    "auc": 0.499,
+    "win_mean": 1.723,
+    "lose_mean": 1.702,
+    "tercile_exp_r": [
+     -0.067,
+     -0.078,
+     -0.049
+    ],
+    "tercile_cut": [
+     0.65,
+     1.66
+    ]
+   },
+   "sma50_dist_pct": {
+    "auc": 0.5,
+    "win_mean": 2.122,
+    "lose_mean": 2.084,
+    "tercile_exp_r": [
+     -0.076,
+     -0.079,
+     -0.04
+    ],
+    "tercile_cut": [
+     0.834,
+     2.226
+    ]
+   },
+   "sma20_slope_pct": {
+    "auc": 0.497,
+    "win_mean": 0.363,
+    "lose_mean": 0.383,
+    "tercile_exp_r": [
+     -0.055,
+     -0.099,
+     -0.041
+    ],
+    "tercile_cut": [
+     0.116,
+     0.445
+    ]
+   },
+   "flow3": {
+    "auc": 0.507,
+    "win_mean": 0.745,
+    "lose_mean": 0.732,
+    "tercile_exp_r": [
+     -0.085,
+     -0.055,
+     NaN
+    ],
+    "tercile_cut": [
+     0.629,
+     1.0
+    ]
+   },
+   "flow9prev": {
+    "auc": 0.472,
+    "win_mean": 0.128,
+    "lose_mean": 0.166,
+    "tercile_exp_r": [
+     -0.008,
+     -0.063,
+     -0.125
+    ],
+    "tercile_cut": [
+     -0.043,
+     0.364
+    ]
+   },
+   "flowflip": {
+    "auc": 0.529,
+    "win_mean": 0.617,
+    "lose_mean": 0.566,
+    "tercile_exp_r": [
+     -0.129,
+     -0.053,
+     -0.014
+    ],
+    "tercile_cut": [
+     0.349,
+     0.835
+    ]
+   },
+   "vol_climax": {
+    "auc": 0.49,
+    "win_mean": 2.296,
+    "lose_mean": 2.276,
+    "tercile_exp_r": [
+     -0.011,
+     -0.125,
+     -0.058
+    ],
+    "tercile_cut": [
+     1.736,
+     2.217
+    ]
+   },
+   "bear_div": {
+    "auc": 0.512,
+    "win_mean": 0.244,
+    "lose_mean": 0.247,
+    "tercile_exp_r": [
+     -0.065,
+     NaN,
+     -0.065
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "bull_div": {
+    "auc": 0.495,
+    "win_mean": 0.002,
+    "lose_mean": 0.005,
+    "tercile_exp_r": [
+     -0.063,
+     NaN,
+     -0.56
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "upper_wick": {
+    "auc": 0.51,
+    "win_mean": 0.062,
+    "lose_mean": 0.061,
+    "tercile_exp_r": [
+     -0.09,
+     -0.074,
+     -0.031
+    ],
+    "tercile_cut": [
+     0.002,
+     0.072
+    ]
+   },
+   "lower_wick": {
+    "auc": 0.481,
+    "win_mean": 0.177,
+    "lose_mean": 0.189,
+    "tercile_exp_r": [
+     -0.008,
+     -0.094,
+     -0.093
+    ],
+    "tercile_cut": [
+     0.038,
+     0.217
+    ]
+   },
+   "heat": {
+    "auc": 0.513,
+    "win_mean": 18.004,
+    "lose_mean": 17.211,
+    "tercile_exp_r": [
+     -0.097,
+     -0.071,
+     -0.028
+    ],
+    "tercile_cut": [
+     10.792,
+     24.825
+    ]
+   }
+  }
+ },
+ "heat_fade_long_valid": {
+  "eval": {
+   "n": 461,
+   "days": 14,
+   "win_rate": 0.397,
+   "exp_r": 0.0854,
+   "t_dc": 1.19,
+   "pf": 1.243,
+   "green_days": 0.714,
+   "ex_best_day": 0.0638,
+   "ctrl": -0.0481,
+   "half1": 0.0563,
+   "half2": 0.1224,
+   "exp_r_prod": 0.06,
+   "t_dc_prod": 0.81
+  },
+  "label": "regime_5",
+  "n": 461,
+  "exp_r": 0.0854,
+  "win_share": 0.544,
+  "features": {
+   "rsi": {
+    "auc": 0.504,
+    "win_mean": 17.941,
+    "lose_mean": 17.816,
+    "tercile_exp_r": [
+     0.092,
+     0.068,
+     0.097
+    ],
+    "tercile_cut": [
+     16.213,
+     19.452
+    ]
+   },
+   "rsi5": {
+    "auc": 0.55,
+    "win_mean": 13.74,
+    "lose_mean": 11.853,
+    "tercile_exp_r": [
+     -0.047,
+     0.119,
+     0.182
+    ],
+    "tercile_cut": [
+     2.593,
+     15.386
+    ]
+   },
+   "momentum": {
+    "auc": 0.519,
+    "win_mean": -1.025,
+    "lose_mean": -1.054,
+    "tercile_exp_r": [
+     0.079,
+     0.023,
+     0.156
+    ],
+    "tercile_cut": [
+     -1.128,
+     -0.651
+    ]
+   },
+   "emaDiff": {
+    "auc": 0.514,
+    "win_mean": -0.434,
+    "lose_mean": -0.471,
+    "tercile_exp_r": [
+     0.024,
+     0.111,
+     0.12
+    ],
+    "tercile_cut": [
+     -0.5,
+     -0.319
+    ]
+   },
+   "macdPct": {
+    "auc": 0.513,
+    "win_mean": -0.388,
+    "lose_mean": -0.434,
+    "tercile_exp_r": [
+     0.043,
+     0.099,
+     0.114
+    ],
+    "tercile_cut": [
+     -0.482,
+     -0.28
+    ]
+   },
+   "volumeRatio": {
+    "auc": 0.497,
+    "win_mean": 1.238,
+    "lose_mean": 1.165,
+    "tercile_exp_r": [
+     0.065,
+     0.137,
+     0.053
+    ],
+    "tercile_cut": [
+     0.705,
+     1.215
+    ]
+   },
+   "volumeSurge": {
+    "auc": 0.47,
+    "win_mean": 1.05,
+    "lose_mean": 1.101,
+    "tercile_exp_r": [
+     0.143,
+     0.099,
+     0.014
+    ],
+    "tercile_cut": [
+     0.721,
+     1.118
+    ]
+   },
+   "pricePosition": {
+    "auc": 0.532,
+    "win_mean": 0.049,
+    "lose_mean": 0.045,
+    "tercile_exp_r": [
+     0.023,
+     0.078,
+     0.156
+    ],
+    "tercile_cut": [
+     0.018,
+     0.056
+    ]
+   },
+   "vwapDistPct": {
+    "auc": 0.479,
+    "win_mean": -1.647,
+    "lose_mean": -1.58,
+    "tercile_exp_r": [
+     0.109,
+     0.04,
+     0.109
+    ],
+    "tercile_cut": [
+     -1.653,
+     -1.176
+    ]
+   },
+   "vwap_atr": {
+    "auc": 0.502,
+    "win_mean": -0.375,
+    "lose_mean": -0.369,
+    "tercile_exp_r": [
+     0.056,
+     0.091,
+     0.109
+    ],
+    "tercile_cut": [
+     -0.408,
+     -0.277
+    ]
+   },
+   "buyPressure": {
+    "auc": 0.463,
+    "win_mean": -0.324,
+    "lose_mean": -0.294,
+    "tercile_exp_r": [
+     0.221,
+     0.018,
+     0.019
+    ],
+    "tercile_cut": [
+     -0.42,
+     -0.209
+    ]
+   },
+   "rsiSlope": {
+    "auc": 0.513,
+    "win_mean": -12.274,
+    "lose_mean": -12.686,
+    "tercile_exp_r": [
+     0.091,
+     -0.046,
+     0.215
+    ],
+    "tercile_cut": [
+     -16.081,
+     -8.234
+    ]
+   },
+   "gap": {
+    "auc": 0.545,
+    "win_mean": 1.741,
+    "lose_mean": 1.292,
+    "tercile_exp_r": [
+     -0.025,
+     0.142,
+     0.138
+    ],
+    "tercile_cut": [
+     0.5,
+     1.335
+    ]
+   },
+   "fromOpen": {
+    "auc": 0.493,
+    "win_mean": -3.009,
+    "lose_mean": -2.963,
+    "tercile_exp_r": [
+     0.094,
+     0.014,
+     0.15
+    ],
+    "tercile_cut": [
+     -3.199,
+     -2.154
+    ]
+   },
+   "fo_atr": {
+    "auc": 0.513,
+    "win_mean": -0.7,
+    "lose_mean": -0.717,
+    "tercile_exp_r": [
+     -0.032,
+     0.213,
+     0.071
+    ],
+    "tercile_cut": [
+     -0.844,
+     -0.511
+    ]
+   },
+   "tod": {
+    "auc": 0.459,
+    "win_mean": 1162.371,
+    "lose_mean": 1171.738,
+    "tercile_exp_r": [
+     0.164,
+     0.071,
+     0.009
+    ],
+    "tercile_cut": [
+     1115.0,
+     1205.0
+    ]
+   },
+   "atr_d": {
+    "auc": 0.501,
+    "win_mean": 9.532,
+    "lose_mean": 10.617,
+    "tercile_exp_r": [
+     0.097,
+     0.049,
+     0.111
+    ],
+    "tercile_cut": [
+     4.591,
+     10.043
+    ]
+   },
+   "dist_pdh_atr": {
+    "auc": 0.515,
+    "win_mean": 0.906,
+    "lose_mean": 0.917,
+    "tercile_exp_r": [
+     0.119,
+     0.014,
+     0.126
+    ],
+    "tercile_cut": [
+     0.67,
+     1.147
+    ]
+   },
+   "dist_pdl_atr": {
+    "auc": 0.501,
+    "win_mean": -0.013,
+    "lose_mean": -0.034,
+    "tercile_exp_r": [
+     0.037,
+     0.128,
+     0.091
+    ],
+    "tercile_cut": [
+     -0.252,
+     0.139
+    ]
+   },
+   "dist_hod_atr": {
+    "auc": 0.501,
+    "win_mean": 0.962,
+    "lose_mean": 0.949,
+    "tercile_exp_r": [
+     0.155,
+     0.012,
+     0.091
+    ],
+    "tercile_cut": [
+     0.74,
+     1.081
+    ]
+   },
+   "dist_lod_atr": {
+    "auc": 0.516,
+    "win_mean": 0.048,
+    "lose_mean": 0.045,
+    "tercile_exp_r": [
+     0.056,
+     0.079,
+     0.122
+    ],
+    "tercile_cut": [
+     0.013,
+     0.043
+    ]
+   },
+   "sma20_dist_pct": {
+    "auc": 0.496,
+    "win_mean": -1.332,
+    "lose_mean": -1.314,
+    "tercile_exp_r": [
+     0.076,
+     0.022,
+     0.161
+    ],
+    "tercile_cut": [
+     -1.403,
+     -0.941
+    ]
+   },
+   "sma50_dist_pct": {
+    "auc": 0.517,
+    "win_mean": -1.554,
+    "lose_mean": -1.717,
+    "tercile_exp_r": [
+     0.033,
+     0.077,
+     0.146
+    ],
+    "tercile_cut": [
+     -1.879,
+     -1.116
+    ]
+   },
+   "sma20_slope_pct": {
+    "auc": 0.495,
+    "win_mean": -0.305,
+    "lose_mean": -0.342,
+    "tercile_exp_r": [
+     0.092,
+     0.066,
+     0.099
+    ],
+    "tercile_cut": [
+     -0.408,
+     -0.208
+    ]
+   },
+   "flow3": {
+    "auc": 0.475,
+    "win_mean": -0.618,
+    "lose_mean": -0.59,
+    "tercile_exp_r": [
+     0.071,
+     0.139,
+     0.075
+    ],
+    "tercile_cut": [
+     -1.0,
+     -0.437
+    ]
+   },
+   "flow9prev": {
+    "auc": 0.502,
+    "win_mean": -0.376,
+    "lose_mean": -0.371,
+    "tercile_exp_r": [
+     0.009,
+     0.236,
+     0.006
+    ],
+    "tercile_cut": [
+     -0.533,
+     -0.26
+    ]
+   },
+   "flowflip": {
+    "auc": 0.496,
+    "win_mean": -0.243,
+    "lose_mean": -0.219,
+    "tercile_exp_r": [
+     0.076,
+     0.07,
+     0.111
+    ],
+    "tercile_cut": [
+     -0.562,
+     -0.008
+    ]
+   },
+   "vol_climax": {
+    "auc": 0.497,
+    "win_mean": 1.238,
+    "lose_mean": 1.165,
+    "tercile_exp_r": [
+     0.065,
+     0.137,
+     0.053
+    ],
+    "tercile_cut": [
+     0.705,
+     1.215
+    ]
+   },
+   "bear_div": {
+    "auc": 0.55,
+    "win_mean": 0.0,
+    "lose_mean": 0.0,
+    "tercile_exp_r": [
+     0.085,
+     NaN,
+     NaN
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "bull_div": {
+    "auc": 0.459,
+    "win_mean": 0.06,
+    "lose_mean": 0.081,
+    "tercile_exp_r": [
+     0.101,
+     NaN,
+     -0.119
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "upper_wick": {
+    "auc": 0.515,
+    "win_mean": 0.206,
+    "lose_mean": 0.201,
+    "tercile_exp_r": [
+     0.101,
+     0.084,
+     0.075
+    ],
+    "tercile_cut": [
+     0.048,
+     0.249
+    ]
+   },
+   "lower_wick": {
+    "auc": 0.531,
+    "win_mean": 0.212,
+    "lose_mean": 0.185,
+    "tercile_exp_r": [
+     0.112,
+     -0.014,
+     0.164
+    ],
+    "tercile_cut": [
+     0.053,
+     0.254
+    ]
+   },
+   "heat": {
+    "auc": 0.505,
+    "win_mean": 14.156,
+    "lose_mean": 13.91,
+    "tercile_exp_r": [
+     0.015,
+     0.168,
+     0.07
+    ],
+    "tercile_cut": [
+     9.405,
+     20.456
+    ]
+   }
+  }
+ },
+ "heat_fade_long_as_short_valid": {
+  "eval": {
+   "n": 461,
+   "days": 14,
+   "win_rate": 0.2928,
+   "exp_r": -0.1162,
+   "t_dc": -1.65,
+   "pf": 0.744,
+   "green_days": 0.286,
+   "ex_best_day": -0.1891,
+   "ctrl": -0.0604,
+   "half1": -0.0876,
+   "half2": -0.1526,
+   "exp_r_prod": -0.1431,
+   "t_dc_prod": -2.04
+  }
+ },
+ "orb_style_long_valid": {
+  "eval": {
+   "n": 1043,
+   "days": 14,
+   "win_rate": 0.4439,
+   "exp_r": -0.0606,
+   "t_dc": -1.03,
+   "pf": 0.877,
+   "green_days": 0.286,
+   "ex_best_day": -0.101,
+   "ctrl": -0.0563,
+   "half1": -0.0638,
+   "half2": -0.0573,
+   "exp_r_prod": -0.1219,
+   "t_dc_prod": -1.99
+  },
+  "label": "orb-style",
+  "n": 1043,
+  "exp_r": -0.0606,
+  "win_share": 0.497,
+  "features": {
+   "rsi": {
+    "auc": 0.536,
+    "win_mean": 70.676,
+    "lose_mean": 67.719,
+    "tercile_exp_r": [
+     -0.12,
+     -0.023,
+     -0.04
+    ],
+    "tercile_cut": [
+     65.029,
+     77.975
+    ]
+   },
+   "rsi5": {
+    "auc": 0.569,
+    "win_mean": 83.883,
+    "lose_mean": 79.829,
+    "tercile_exp_r": [
+     -0.188,
+     -0.092,
+     0.099
+    ],
+    "tercile_cut": [
+     78.995,
+     92.841
+    ]
+   },
+   "momentum": {
+    "auc": 0.555,
+    "win_mean": 1.504,
+    "lose_mean": 1.222,
+    "tercile_exp_r": [
+     -0.182,
+     -0.008,
+     0.006
+    ],
+    "tercile_cut": [
+     0.554,
+     1.435
+    ]
+   },
+   "emaDiff": {
+    "auc": 0.564,
+    "win_mean": 0.469,
+    "lose_mean": 0.328,
+    "tercile_exp_r": [
+     -0.189,
+     -0.033,
+     0.039
+    ],
+    "tercile_cut": [
+     0.136,
+     0.482
+    ]
+   },
+   "macdPct": {
+    "auc": 0.563,
+    "win_mean": 0.394,
+    "lose_mean": 0.247,
+    "tercile_exp_r": [
+     -0.151,
+     -0.08,
+     0.05
+    ],
+    "tercile_cut": [
+     0.1,
+     0.431
+    ]
+   },
+   "volumeRatio": {
+    "auc": 0.518,
+    "win_mean": 2.251,
+    "lose_mean": 2.234,
+    "tercile_exp_r": [
+     -0.098,
+     -0.079,
+     -0.003
+    ],
+    "tercile_cut": [
+     1.712,
+     2.204
+    ]
+   },
+   "volumeSurge": {
+    "auc": 0.491,
+    "win_mean": 1.935,
+    "lose_mean": 2.004,
+    "tercile_exp_r": [
+     -0.058,
+     -0.013,
+     -0.112
+    ],
+    "tercile_cut": [
+     1.025,
+     1.794
+    ]
+   },
+   "pricePosition": {
+    "auc": 0.547,
+    "win_mean": 0.939,
+    "lose_mean": 0.901,
+    "tercile_exp_r": [
+     -0.191,
+     0.052,
+     -0.046
+    ],
+    "tercile_cut": [
+     0.978,
+     0.996
+    ]
+   },
+   "vwapDistPct": {
+    "auc": 0.533,
+    "win_mean": 1.137,
+    "lose_mean": 1.109,
+    "tercile_exp_r": [
+     -0.166,
+     -0.039,
+     0.023
+    ],
+    "tercile_cut": [
+     0.565,
+     1.183
+    ]
+   },
+   "vwap_atr": {
+    "auc": 0.525,
+    "win_mean": 0.276,
+    "lose_mean": 0.274,
+    "tercile_exp_r": [
+     -0.107,
+     -0.068,
+     -0.006
+    ],
+    "tercile_cut": [
+     0.205,
+     0.303
+    ]
+   },
+   "buyPressure": {
+    "auc": 0.5,
+    "win_mean": 0.253,
+    "lose_mean": 0.252,
+    "tercile_exp_r": [
+     -0.088,
+     -0.026,
+     -0.069
+    ],
+    "tercile_cut": [
+     0.142,
+     0.385
+    ]
+   },
+   "rsiSlope": {
+    "auc": 0.517,
+    "win_mean": 10.104,
+    "lose_mean": 9.502,
+    "tercile_exp_r": [
+     -0.092,
+     -0.056,
+     -0.034
+    ],
+    "tercile_cut": [
+     4.63,
+     13.118
+    ]
+   },
+   "gap": {
+    "auc": 0.564,
+    "win_mean": 0.311,
+    "lose_mean": -0.071,
+    "tercile_exp_r": [
+     -0.206,
+     -0.034,
+     0.058
+    ],
+    "tercile_cut": [
+     -0.367,
+     0.572
+    ]
+   },
+   "fromOpen": {
+    "auc": 0.543,
+    "win_mean": 2.088,
+    "lose_mean": 1.9,
+    "tercile_exp_r": [
+     -0.167,
+     -0.067,
+     0.053
+    ],
+    "tercile_cut": [
+     0.864,
+     2.173
+    ]
+   },
+   "fo_atr": {
+    "auc": 0.528,
+    "win_mean": 0.506,
+    "lose_mean": 0.484,
+    "tercile_exp_r": [
+     -0.065,
+     -0.147,
+     0.033
+    ],
+    "tercile_cut": [
+     0.297,
+     0.565
+    ]
+   },
+   "tod": {
+    "auc": 0.526,
+    "win_mean": 1041.496,
+    "lose_mean": 1034.648,
+    "tercile_exp_r": [
+     -0.152,
+     -0.06,
+     0.044
+    ],
+    "tercile_cut": [
+     1005.0,
+     1100.0
+    ]
+   },
+   "atr_d": {
+    "auc": 0.479,
+    "win_mean": 5.423,
+    "lose_mean": 5.973,
+    "tercile_exp_r": [
+     -0.12,
+     0.022,
+     -0.087
+    ],
+    "tercile_cut": [
+     1.426,
+     4.335
+    ]
+   },
+   "dist_pdh_atr": {
+    "auc": 0.453,
+    "win_mean": -0.11,
+    "lose_mean": -0.007,
+    "tercile_exp_r": [
+     0.022,
+     -0.078,
+     -0.125
+    ],
+    "tercile_cut": [
+     -0.303,
+     0.185
+    ]
+   },
+   "dist_pdl_atr": {
+    "auc": 0.555,
+    "win_mean": 0.953,
+    "lose_mean": 0.837,
+    "tercile_exp_r": [
+     -0.165,
+     -0.038,
+     0.02
+    ],
+    "tercile_cut": [
+     0.579,
+     1.131
+    ]
+   },
+   "dist_hod_atr": {
+    "auc": 0.492,
+    "win_mean": 0.008,
+    "lose_mean": 0.008,
+    "tercile_exp_r": [
+     -0.1,
+     0.003,
+     -0.087
+    ],
+    "tercile_cut": [
+     0.001,
+     0.012
+    ]
+   },
+   "dist_lod_atr": {
+    "auc": 0.523,
+    "win_mean": 0.671,
+    "lose_mean": 0.654,
+    "tercile_exp_r": [
+     -0.081,
+     -0.062,
+     -0.038
+    ],
+    "tercile_cut": [
+     0.495,
+     0.723
+    ]
+   },
+   "sma20_dist_pct": {
+    "auc": 0.56,
+    "win_mean": 1.64,
+    "lose_mean": 1.362,
+    "tercile_exp_r": [
+     -0.24,
+     0.06,
+     -0.005
+    ],
+    "tercile_cut": [
+     0.605,
+     1.492
+    ]
+   },
+   "sma50_dist_pct": {
+    "auc": 0.563,
+    "win_mean": 2.065,
+    "lose_mean": 1.68,
+    "tercile_exp_r": [
+     -0.183,
+     -0.043,
+     0.044
+    ],
+    "tercile_cut": [
+     0.697,
+     2.016
+    ]
+   },
+   "sma20_slope_pct": {
+    "auc": 0.572,
+    "win_mean": 0.379,
+    "lose_mean": 0.271,
+    "tercile_exp_r": [
+     -0.173,
+     -0.091,
+     0.084
+    ],
+    "tercile_cut": [
+     0.091,
+     0.405
+    ]
+   },
+   "flow3": {
+    "auc": 0.527,
+    "win_mean": 0.762,
+    "lose_mean": 0.743,
+    "tercile_exp_r": [
+     -0.118,
+     -0.032,
+     NaN
+    ],
+    "tercile_cut": [
+     0.648,
+     1.0
+    ]
+   },
+   "flow9prev": {
+    "auc": 0.507,
+    "win_mean": 0.161,
+    "lose_mean": 0.152,
+    "tercile_exp_r": [
+     -0.087,
+     -0.01,
+     -0.087
+    ],
+    "tercile_cut": [
+     -0.003,
+     0.364
+    ]
+   },
+   "flowflip": {
+    "auc": 0.502,
+    "win_mean": 0.601,
+    "lose_mean": 0.591,
+    "tercile_exp_r": [
+     -0.072,
+     -0.044,
+     -0.066
+    ],
+    "tercile_cut": [
+     0.382,
+     0.838
+    ]
+   },
+   "vol_climax": {
+    "auc": 0.518,
+    "win_mean": 2.251,
+    "lose_mean": 2.234,
+    "tercile_exp_r": [
+     -0.098,
+     -0.079,
+     -0.003
+    ],
+    "tercile_cut": [
+     1.712,
+     2.204
+    ]
+   },
+   "bear_div": {
+    "auc": 0.542,
+    "win_mean": 0.301,
+    "lose_mean": 0.234,
+    "tercile_exp_r": [
+     -0.1,
+     NaN,
+     0.048
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "bull_div": {
+    "auc": 0.497,
+    "win_mean": 0.004,
+    "lose_mean": 0.0,
+    "tercile_exp_r": [
+     -0.062,
+     NaN,
+     0.527
+    ],
+    "tercile_cut": [
+     0.0,
+     0.0
+    ]
+   },
+   "upper_wick": {
+    "auc": 0.489,
+    "win_mean": 0.051,
+    "lose_mean": 0.056,
+    "tercile_exp_r": [
+     -0.094,
+     0.018,
+     -0.101
+    ],
+    "tercile_cut": [
+     0.0,
+     0.064
+    ]
+   },
+   "lower_wick": {
+    "auc": 0.496,
+    "win_mean": 0.186,
+    "lose_mean": 0.191,
+    "tercile_exp_r": [
+     -0.016,
+     -0.088,
+     -0.077
+    ],
+    "tercile_cut": [
+     0.048,
+     0.227
+    ]
+   },
+   "heat": {
+    "auc": 0.538,
+    "win_mean": 18.546,
+    "lose_mean": 16.336,
+    "tercile_exp_r": [
+     -0.138,
+     -0.039,
+     -0.006
+    ],
+    "tercile_cut": [
+     10.863,
+     24.504
+    ]
+   }
+  }
+ }
+}

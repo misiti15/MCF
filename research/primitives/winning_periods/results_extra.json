@@ -1,0 +1,78 @@
+{
+ "caps_tried": 35,
+ "morning_vs_afternoon": {
+  "spearman": 0.147,
+  "afternoon_mean_when_morning_green": 283.5,
+  "n_green_mornings": 29,
+  "afternoon_mean_when_morning_red": 43.2,
+  "n_red_mornings": 15,
+  "afternoon_green_share_when_morning_green": 0.552,
+  "afternoon_green_share_when_morning_red": 0.6
+ },
+ "hfl_vs_morning": {
+  "hfl_mean_when_morning_green": 100.8,
+  "hfl_mean_when_morning_red": 33.1,
+  "hfl_t_when_morning_green": 1.49,
+  "train": {
+   "green": 165.5,
+   "n_green": 19,
+   "red": 23.3,
+   "n_red": 11
+  },
+  "valid": {
+   "green": -22.2,
+   "n_green": 10,
+   "red": 60.2,
+   "n_red": 4
+  }
+ },
+ "concentration": {
+  "total": 9978.9,
+  "top3_days": [
+   "2026-07-29",
+   "2026-07-17",
+   "2026-07-15"
+  ],
+  "top3_sum": 6114.9,
+  "total_ex_top3": 3864.0,
+  "train_ex_top3": 2655.3
+ },
+ "day_drivers": {
+  "spearman_pnl_vs_ntrades": 0.35,
+  "spearman_pnl_vs_abs_mkt": 0.069,
+  "top_quartile_n_days_mean_pnl": 642.5,
+  "other_days_mean_pnl": 88.2
+ },
+ "top3_by_setup": [
+  {
+   "strategy": "exhaustion_short",
+   "n": 154,
+   "pnl": 3688.387,
+   "exp_r": 0.55
+  },
+  {
+   "strategy": "heat_fade_long",
+   "n": 141,
+   "pnl": 2058.018,
+   "exp_r": 0.251
+  },
+  {
+   "strategy": "heat_fade_short",
+   "n": 29,
+   "pnl": 179.637,
+   "exp_r": 0.215
+  },
+  {
+   "strategy": "intraday_momentum",
+   "n": 10,
+   "pnl": 21.807,
+   "exp_r": 0.459
+  },
+  {
+   "strategy": "orb20_a",
+   "n": 14,
+   "pnl": 167.009,
+   "exp_r": 0.142
+  }
+ ]
+}

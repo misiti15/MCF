@@ -1,0 +1,44 @@
+# "Testing" paper account (owner 2026-10-07): a second Alpaca paper account for experimental setups and strategies
+# that do not (yet) make strict sense. Same code, same execution/housekeeping fixes as the primary account;
+# its own order-id prefix (mct-), journal and state branch (mcf-data-testing), so the two books never mix.
+# Overlay on config/default.yaml, loaded when MCF_ACCOUNT=testing. Educational only — not financial advice.
+account:
+  slots: 400                     # as many simultaneous tests as possible
+  buying_power_multiple: 3.8     # Alpaca paper intraday buying power is 4x equity; keep a 5% margin
+  max_concurrent_positions: 400
+  max_positions_per_strategy: 150
+  max_daily_loss_r: 60
+  max_trades_per_day: 3000
+# Primary setups are off here; experimental setups are switched on per entry below (tag names, backlog ids).
+strategies:
+  intraday_momentum: {enabled: false}
+  orb20_a: {enabled: false}
+  heat_fade_short: {enabled: false}
+  heat_fade_long: {enabled: false}
+  exhaustion_short: {enabled: false}
+
+  # ---- Experimental: near-misses of the 2026-10-07 primitives/layering swarm (research/primitives/). They passed
+  # train/valid and the audit but NOT the locked holdouts (research/primitives/holdout/results.json): all are
+  # 13:00-14:30 shorts of gap-down (<= -2.66%) names; each beat a same-window random short on both holdouts.
+  # Forward-tested here only; scorecard every 3 sessions. Backlog ids = the tags.
+  L3-gap-slope-rsi5hi:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  L3-gap-slope-lowdist:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  L3-gap-slope-fromopen:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null

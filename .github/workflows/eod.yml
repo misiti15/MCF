@@ -4,29 +4,38 @@
 name: eod
 
 on:
+  workflow_run:                  # chained: runs as soon as the closing trade job finishes (GitHub cron can start 15+ min late)
+    workflows: [trade]
+    types: [completed]
   schedule:
-    - cron: "25 20,21 * * 1-5"   # 16:25 ET (EDT 20:25 UTC, EST 21:25 UTC); the other line exits early
+    - cron: "25 20,21 * * 1-5"   # backup 16:25 ET (EDT 20:25 UTC, EST 21:25 UTC); skipped if the report already exists
   workflow_dispatch:
     inputs:
       day:
         description: "Session date (YYYY-MM-DD); empty = today"
         default: ""
 
-concurrency:
-  group: mcf-eod
-  cancel-in-progress: false
 
 permissions:
   contents: write
 
 jobs:
   report:
+    strategy:
+      fail-fast: false
+      matrix:
+        account: [primary, testing]
+    concurrency:
+      group: mcf-eod-${{ matrix.account }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
       ALPACA_DATA_FEED: sip
+      MCF_ACCOUNT: ${{ matrix.account }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || 'mcf-data-testing' }}
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
       MCF_EMAIL_TO: ${{ secrets.MCF_EMAIL_TO }}
@@ -35,7 +44,15 @@ jobs:
         id: w
         run: |
           now=$(TZ=America/New_York date +%H%M)
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$now" -ge 1610 ] && [ "$now" -lt 1800 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; fi
+          dow=$(TZ=America/New_York date +%u); day=$(TZ=America/New_York date +%F)
+          run=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then run=true
+          elif [ "$dow" -le 5 ] && [ "$now" -ge 1556 ] && [ "$now" -lt 1800 ]; then
+            # only once per account and day: skip when today's report is already on the state branch
+            if git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" "refs/heads/$STATE_BRANCH" >/dev/null 2>&1 && \
+               ! curl -sfI "https://raw.githubusercontent.com/${{ github.repository }}/$STATE_BRANCH/reports/$day.html" >/dev/null; then run=true; fi
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"; echo "eod run=$run ($MCF_ACCOUNT, ${{ github.event_name }}, $now ET)"
       - uses: actions/checkout@v4
         if: steps.w.outputs.run == 'true'
       - uses: actions/setup-python@v5
@@ -46,11 +63,11 @@ jobs:
       - if: steps.w.outputs.run == 'true'
         run: pip install -q -e ".[alpaca]"
       - if: steps.w.outputs.run == 'true'
-        run: git clone -q --depth 20 --branch mcf-data "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
+        run: git clone -q --depth 20 --branch "$STATE_BRANCH" "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
       - name: Build and email the report
         if: steps.w.outputs.run == 'true'
         run: python -m mcf.cli eod --state-dir state ${{ inputs.day && format('--day {0}', inputs.day) || '' }}
       - name: Save the report to the state branch
         if: steps.w.outputs.run == 'true'
         run: |
-          cd state && git add reports && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "EOD report" && git push -q origin HEAD:mcf-data || echo "nothing to save"
+          cd state && git add reports && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "EOD report" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"

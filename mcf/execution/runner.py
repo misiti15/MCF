@@ -32,7 +32,7 @@ from .alpaca_broker import AlpacaBroker
 from .risk import RiskManager
 
 NY = TZ
-COID_PREFIX = "mcf-"
+COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mct-" (never touches the other book)
 
 
 class PaperRunner:
@@ -98,6 +98,8 @@ class PaperRunner:
                 strategy, symbol, _ = o.client_order_id[len(COID_PREFIX):].rsplit("-", 2)
             except ValueError:
                 continue
+            if symbol != getattr(o, "symbol", symbol) or strategy.startswith("flatten"):
+                continue   # closing orders (prefix-flatten-...) are exits, not entries
             self.seen.add((symbol, strategy))
             self.fired.add((symbol, strategy))
             self.open_strategy.setdefault(symbol, strategy)
