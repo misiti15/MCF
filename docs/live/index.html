@@ -137,6 +137,8 @@ Full history: <a href="https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow">MCF da
     ph.className = "pill " + (stale ? "warn" : s.phase === "trading" ? "on" : "");
     $l("#lv-asof").textContent = `Session ${s.session_date} · updated ${s.asof_et} · ${s.disclaimer}`;
     $l("#lv-msg").hidden = true;
+    const vb = s.validation && s.validation._banner;
+    if (vb) $l("#lv-asof").textContent += ` · ${vb}`;
     const t = s.today || {}, h = s.health || {}, by = t.by_status || {};
     const tiles = [
       ["Trades today", t.trades ?? 0, `${t.open_positions ?? 0} open`],
