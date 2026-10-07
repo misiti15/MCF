@@ -363,3 +363,17 @@ def test_runner_manage_time_stop_and_trail(tmp_path):
     assert ("close", "AAA") in calls                                   # stale trade cut
     moves = [c for c in calls if c[0] == "move" and c[1] == "BBB"]
     assert moves and moves[-1][2] == 51.5                               # trail 1R behind +2.5R best
+
+
+def test_lab_gap_prefilter_skips_names_that_cannot_qualify():
+    from types import SimpleNamespace
+
+    from mcf.strategies.setups import LabStrategy
+
+    st = LabStrategy("g", "research/primitives/layering/finalists/L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1.py",
+                     window=[1300, 1430], prefilter="gap_le:-2.65")
+    idx = pd.date_range("2026-10-07 09:30", periods=215, freq="1min", tz="America/New_York")   # last bar 13:04 -> 13:05 close
+    bars = pd.DataFrame({"open": 97.0, "high": 97.5, "low": 96.5, "close": 97.0, "volume": 1000.0}, index=idx)
+    down = SimpleNamespace(avg_dollar_volume=1e9, bars=bars, prev_close=100.0)
+    flat = SimpleNamespace(avg_dollar_volume=1e9, bars=bars, prev_close=97.5)
+    assert len(bars) % 5 == 0 and st.eligible(down) and not st.eligible(flat)

@@ -16,3 +16,29 @@ strategies:
   heat_fade_short: {enabled: false}
   heat_fade_long: {enabled: false}
   exhaustion_short: {enabled: false}
+
+  # ---- Experimental: near-misses of the 2026-10-07 primitives/layering swarm (research/primitives/). They passed
+  # train/valid and the audit but NOT the locked holdouts (research/primitives/holdout/results.json): all are
+  # 13:00-14:30 shorts of gap-down (<= -2.66%) names; each beat a same-window random short on both holdouts.
+  # Forward-tested here only; scorecard every 3 sessions. Backlog ids = the tags.
+  L3-gap-slope-rsi5hi:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  L3-gap-slope-lowdist:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  L3-gap-slope-fromopen:
+    enabled: true
+    type: lab
+    module: research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1.py
+    window: [1300, 1430]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null

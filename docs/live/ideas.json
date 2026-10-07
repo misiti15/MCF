@@ -1,0 +1,142 @@
+[
+ {
+  "title": "First pullback to VWAP in a trending stock",
+  "one_liner": "Stock trends away from VWAP for 30+ min after the open, then pulls back to VWAP on lighter volume for the first time; enter with the trend on the bounce.",
+  "source": "https://daytradingtoolkit.com/strategies/first-pullback-to-vwap-trend-strategy",
+  "status": "untested",
+  "why_interesting": "The most-cited intraday setup on trader blogs. Our older trend-pullback test used moving averages, not VWAP, and did not require 'first touch'."
+ },
+ {
+  "title": "Red-to-green / green-to-red through prior close",
+  "one_liner": "A stock that opened below yesterday's close crosses back above it on 1.5-2x volume: go long (mirror for green-to-red short); stop just under prior close.",
+  "source": "https://fr.tradingview.com/script/wSvTh08f-Red-to-Green-Green-to-Red-Tracker",
+  "status": "untested",
+  "why_interesting": "Prior close is a level every trader watches and is easy to compute. We tested prior-day high/low but never the prior close itself."
+ },
+ {
+  "title": "End-of-day reversal of intraday losers",
+  "one_liner": "In the last 30 minutes, the day's biggest intraday losers tend to bounce (retail buying, short covering).",
+  "source": "https://www3.nd.edu/~zda/EOD.pdf",
+  "status": "untested",
+  "why_interesting": "Peer-reviewed, highly significant cross-sectional effect; a different time of day from all our live setups."
+ },
+ {
+  "title": "Same half-hour continuation (Heston-Korajczyk-Sadka)",
+  "one_liner": "A stock's return in a given half-hour tends to repeat at the same half-hour on following days, for weeks.",
+  "source": "https://ar5iv.arxiv.org/html/1005.3535",
+  "status": "untested",
+  "why_interesting": "Published in the Journal of Finance; a new kind of signal for us (time-of-day memory per stock)."
+ },
+ {
+  "title": "VWAP trend on QQQ/SPY (Zarattini-Aziz)",
+  "one_liner": "Long QQQ while above VWAP, short while below, flip on each cross; reported Sharpe 2.1 (2018-2023).",
+  "source": "https://concretumgroup.com/volume-weighted-average-price-vwap-the-holy-grail-for-day-trading-systems/",
+  "status": "untested",
+  "why_interesting": "One of the few intraday systems with a public, detailed backtest; very simple rule."
+ },
+ {
+  "title": "Lunch-hour reversal of the morning move",
+  "one_liner": "Morning trends often stall and partly reverse around 12:00-13:30 as volume dries up.",
+  "source": "https://quantpedia.com/lunch-effect-in-the-u-s-stock-market-indices",
+  "status": "untested",
+  "why_interesting": "Ties directly to the owner's question about time windows; our heat_fade_long already lives in this window."
+ },
+ {
+  "title": "Larry Williams volatility breakout",
+  "one_liner": "Buy when price rises above today's open by a fixed fraction (e.g. 0.5-0.7x) of yesterday's range or ATR; mirror for shorts.",
+  "source": "https://www.whselfinvest.de/en/trading_strategies_56_volatility_break_out_larry_williams_free.php",
+  "status": "untested",
+  "why_interesting": "Classic, mechanical, easy to trade; a volatility-scaled 'move from open' trigger we have not tried."
+ },
+ {
+  "title": "Narrow initial balance -> range extension",
+  "one_liner": "If the first hour's range is small versus ATR, a break of that range after 10:30 tends to keep going (trend day).",
+  "source": "https://store.traders.com/-v08-c09-princc-pdf.html",
+  "status": "untested",
+  "why_interesting": "Crabel's contraction/expansion idea; complements NR7 (daily) with an intraday version."
+ },
+ {
+  "title": "Intraday overreaction fade (big range, small net move)",
+  "one_liner": "When a stock's range today is large relative to its net move from the open, the latest swing tends to be corrected the same day.",
+  "source": "https://www.oekonometrie.uni-saarland.de/papers/Intraday%20Overreaction%20of%20Stock%20Prices.pdf",
+  "status": "untested",
+  "why_interesting": "Academic definition of overreaction that is a ratio, not a raw level - new to our metric set."
+ },
+ {
+  "title": "Tight flag near the high of day (intraday VCP)",
+  "one_liner": "Strong stock pauses just under its high of day with shrinking bars and volume, then breaks out.",
+  "source": "https://retailtradersrepository.substack.com/p/goverdhan-gajjala-intraday-vcp",
+  "status": "untested",
+  "why_interesting": "The 'bull flag' is the most popular momentum-trader pattern; we have never coded a contraction-then-break version."
+ },
+ {
+  "title": "9/20 EMA cross on 5-minute bars",
+  "one_liner": "Go with the trend when the fast EMA crosses the slow EMA on 5-minute bars.",
+  "source": "https://quantifiedstrategies.substack.com/p/9-ema-trading-strategy-does-it-work",
+  "status": "untested",
+  "why_interesting": "Extremely popular; a quick baseline that tells us whether a plain crossover has any edge in our universe."
+ },
+ {
+  "title": "NR7 day + opening-range breakout",
+  "one_liner": "After the narrowest daily range of 7 days, trade the break of the morning range.",
+  "source": "https://www.luxalgo.com/library/concept/opening-range-and-orb/",
+  "status": "in-backlog",
+  "why_interesting": "Already in our backlog (nr7-orb); outside sources keep pointing to it as a trend-day filter."
+ },
+ {
+  "title": "First 30 minutes predicts the last 30 (index ETFs)",
+  "one_liner": "If SPY is up in the first half hour, it tends to be up in the last half hour too.",
+  "source": "https://c.mql5.com/forextsd/forum/173/intraday_momentum_-_the_first_half-hour_return_predicts_the_last_half-hour_return.pdf",
+  "status": "in-backlog",
+  "why_interesting": "Peer-reviewed; already in backlog (intraday-momentum-paper); reports of decay since 2018."
+ },
+ {
+  "title": "Gap fade (no-news gaps revert)",
+  "one_liner": "Stocks that gap up overnight give back part of the gap during the day, especially quiet, no-catalyst gaps.",
+  "source": "https://quantpedia.com/short-term-return-reversals-and-intraday-transactions/",
+  "status": "in-backlog",
+  "why_interesting": "Our own escalation study found a short gap-fade candidate (X-gapfade-early) - still being checked."
+ },
+ {
+  "title": "Stocks-in-play 5-min opening range breakout",
+  "one_liner": "Trade the first 5-minute range break only on the top-20 relative-volume names.",
+  "source": "https://bearbulltraders.com/wp-content/uploads/2024/02/MoneyShow-Day-Trading-vs-Investing-ORB-.pdf",
+  "status": "tested-failed",
+  "why_interesting": "Best-documented stock ORB, but our versions after 09:50 failed (orb5, t1-orb-exits); the edge sits before 09:50."
+ },
+ {
+  "title": "Holy Grail (ADX + 20-MA pullback)",
+  "one_liner": "In a strong trend (ADX > 30) buy the first pullback to the 20 MA on a break of the touch bar.",
+  "source": "https://tradingsetupsreview.com/the-holy-grail-trading-setup",
+  "status": "tested-failed",
+  "why_interesting": "Close to our trend-pullback family, which failed its holdout; ADX is not yet a lab column."
+ },
+ {
+  "title": "RSI(2) extreme inside a trend (Connors)",
+  "one_liner": "Buy very short-term oversold readings only when the bigger trend is up.",
+  "source": "https://www.luxalgo.com/library/concept/rsi-2/",
+  "status": "tested-failed",
+  "why_interesting": "Our overbought/oversold + trend filters (obos-vwap-ma) failed; daily-bar evidence does not carry to 5-minute bars."
+ },
+ {
+  "title": "Pin bar / hammer at a key level",
+  "one_liner": "Long lower wick at the day low or prior-day low signals rejection.",
+  "source": "https://daytradingtoolkit.com/strategies/pin-bar-reversal-strategy",
+  "status": "tested-failed",
+  "why_interesting": "Our obos-levels setup used wicks at PDL/PDH and failed its holdout; 5-minute hammers are noisy."
+ },
+ {
+  "title": "Noise-band momentum (SPY)",
+  "one_liner": "Trade SPY only when it leaves its usual intraday move band.",
+  "source": "https://concretumgroup.com/tag/qqq/",
+  "status": "tested-failed",
+  "why_interesting": "Retired here (t7, noise-band-simple); replications report the edge near zero since 2025."
+ },
+ {
+  "title": "Relative-volume breakout from consolidation",
+  "one_liner": "Relative volume (vs same time of day) is the #1 stock filter for day traders.",
+  "source": "https://chartschool.stockcharts.com/table-of-contents/technical-indicators-and-overlays/technical-indicators/relative-volume-rvol",
+  "status": "tested-failed",
+  "why_interesting": "Our RVOL breakout (t3) was retired; lesson so far: volume picks the stock, it does not pick the direction."
+ }
+]

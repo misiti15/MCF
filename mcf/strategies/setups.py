@@ -408,6 +408,12 @@ class LabStrategy(Strategy):
         lo, hi = self.window or (950, 1500)
         if not lo <= hhmm <= hi:
             return False
+        if self.prefilter and self.prefilter.startswith(("gap_le:", "gap_ge:")):
+            # gap is fixed at the open: skip the feature build for names that cannot qualify
+            o = float(ctx.bars["open"].iloc[0])
+            g = (o / ctx.prev_close - 1) * 100 if ctx.prev_close else float("nan")
+            x = float(self.prefilter.split(":", 1)[1])
+            return g <= x if self.prefilter.startswith("gap_le:") else g >= x
         if self.prefilter == "new_high_100m":
             # bear_div needs the latest 5-minute high to be the highest of 20 bars (100 minutes)
             h = ctx.bars["high"].to_numpy()

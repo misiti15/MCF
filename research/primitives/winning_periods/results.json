@@ -1,0 +1,75 @@
+{
+ "n_trades": 2063,
+ "n_days": 44,
+ "train_days": 30,
+ "valid_days": 14,
+ "day_shape": {
+  "peak_gt_0": {
+   "days": 44,
+   "ended_red": 15,
+   "share_ended_red": 0.341,
+   "mean_giveback": 216.4
+  },
+  "peak_gt_50": {
+   "days": 40,
+   "ended_red": 11,
+   "share_ended_red": 0.275,
+   "mean_giveback": 218.6
+  },
+  "peak_gt_100": {
+   "days": 36,
+   "ended_red": 9,
+   "share_ended_red": 0.25,
+   "mean_giveback": 234.9
+  },
+  "peak_gt_200": {
+   "days": 28,
+   "ended_red": 5,
+   "share_ended_red": 0.179,
+   "mean_giveback": 249.8
+  },
+  "all_days": {
+   "days": 44,
+   "green_close": 29,
+   "total": 9978.9,
+   "mean": 226.8,
+   "mean_peak": 443.1,
+   "median_peak_time": "14:12",
+   "hindsight_sum_of_peaks": 19498.3
+  }
+ },
+ "rules_tried": 64,
+ "base": {
+  "train": 8770.1,
+  "valid": 1208.7
+ },
+ "window_rule": {
+  "cells_dropped": [
+   [
+    "heat_fade_long",
+    "12:30"
+   ],
+   [
+    "heat_fade_long",
+    "13:00"
+   ],
+   [
+    "heat_fade_short",
+    "10:30"
+   ],
+   [
+    "intraday_momentum",
+    "15:30"
+   ],
+   [
+    "orb20_a",
+    "10:00"
+   ]
+  ],
+  "train_pnl_removed": -516.5,
+  "valid_pnl_removed": 338.3,
+  "valid_n_removed": 86,
+  "valid_exp_r_removed": 0.104
+ },
+ "feature_join_rate": 0.944
+}

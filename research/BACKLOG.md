@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 40 · coded: 6 · failed: 19 · configurations tried (all lineages): 6055
+Total ideas: 63 · coded: 6 · failed: 27 · configurations tried (all lineages): 3022772
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -15,6 +15,9 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | live | live-heat_fade_long | Heat-score fade long 11:05-13:30 | heat study | – | – | – | – | – |
 | live | live-exhaustion_short | Afternoon exhaustion short (volume_flip_1) | layered swarm | – | – | – | – | – |
 | live | live-intraday_momentum | Intraday momentum | initial build | – | – | – | – | – |
+| probation | L3-gap-slope-lowdist | L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| probation | L3-gap-slope-fromopen | L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| probation | L3-gap-slope-rsi5hi | L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
 | finalist | rw-vf2_rsis3_fast10 | volume_flip_2 with RSI3 / SMA10 | rule-18 rework (lengths) | – | – | – | – | – |
 | idea | reddit-baseline-links | Owner's two r/ai_trading links | owner | – | – | – | – | – |
 | idea | one-per-underlying | One position per underlying index (QQQ/QQQM/QLD...) | owner discussion | – | – | – | – | – |
@@ -26,11 +29,30 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | shadow-0930 | 09:30-09:50 shadow entries | MCF what_if journal | – | – | – | – | – |
 | idea | marcoflow-mining | Mine MarcoFlow history DB for setups that held up | data/marcoflow.sqlite | – | – | – | – | – |
 | idea | window-open-cluster | Cap simultaneous entries when a setup's window opens (heat_fade_long 11:05) | EOD 2026-10-06 (one day, observation only) | – | – | – | – | – |
+| idea | wi-vwap-first-pullback | First pullback to VWAP in a trending stock | https://daytradingtoolkit.com/strategies/first-pullback-to-vwap-trend-strategy | – | – | – | – | – |
+| idea | wi-red-to-green | Red-to-green / green-to-red through prior close | https://fr.tradingview.com/script/wSvTh08f-Red-to-Green-Green-to-Red-Tracker | – | – | – | – | – |
+| idea | wi-eod-reversal | End-of-day reversal of intraday losers | https://www3.nd.edu/~zda/EOD.pdf | – | – | – | – | – |
+| idea | wi-same-halfhour | Same half-hour continuation (Heston-Korajczyk-Sadka) | https://ar5iv.arxiv.org/html/1005.3535 | – | – | – | – | – |
+| idea | wi-vwap-trend-etf | VWAP trend on QQQ/SPY (Zarattini-Aziz) | https://concretumgroup.com/volume-weighted-average-price-vwap-the-holy-grail-for-day-trading-systems/ | – | – | – | – | – |
+| idea | wi-lunch-reversal | Lunch-hour reversal of the morning move | https://quantpedia.com/lunch-effect-in-the-u-s-stock-market-indices | – | – | – | – | – |
+| idea | wi-williams-volbo | Larry Williams volatility breakout | https://www.whselfinvest.de/en/trading_strategies_56_volatility_break_out_larry_williams_free.php | – | – | – | – | – |
+| idea | wi-ib-narrow-extension | Narrow initial balance -> range extension | https://store.traders.com/-v08-c09-princc-pdf.html | – | – | – | – | – |
+| idea | wi-overreaction-fade | Intraday overreaction fade (big range, small net move) | https://www.oekonometrie.uni-saarland.de/papers/Intraday%20Overreaction%20of%20Stock%20Prices.pdf | – | – | – | – | – |
+| idea | wi-intraday-vcp | Tight flag near the high of day (intraday VCP) | https://retailtradersrepository.substack.com/p/goverdhan-gajjala-intraday-vcp | – | – | – | – | – |
+| idea | wi-ema-cross | 9/20 EMA cross on 5-minute bars | https://quantifiedstrategies.substack.com/p/9-ema-trading-strategy-does-it-work | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
 | holdout_failed | rw-vf_lowvol_div | exhaustion short + below-average bar volume (vol_climax<1) | rule-18 rework (lab_families) | – | – | – | – | – |
 | holdout_failed | rw-t4_long_nomf | Relative strength vs SPY, long only, 10:30-11:30, no market filter | rule-18 rework (web_families) | – | – | – | – | – |
+| holdout_failed | P1-gap_V1-short-W4-t1s1 | P1-gap_V1-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | L2-fromOpenD9+gapV1-short-W4-t05s1 | L2-fromOpenD9+gapV1-short-W4-t05s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | L3-distpdlatrV2+vwapDistPctD10+momfall-short-W4-t05s1 | L3-distpdlatrV2+vwapDistPctD10+momfall-short-W4-t05s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | L3-fromOpenD9+gapV1+rsiob-short-W4-t1s1 | L3-fromOpenD9+gapV1+rsiob-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | L3-fromOpenD9+gapV1+vwapDistPctD10-short-W4-t1s1 | L3-fromOpenD9+gapV1+vwapDistPctD10-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | x_gapfade_early_b | x_gapfade_early_b | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | x_bottom_div | x_bottom_div | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_failed | x_vwaploss_run | x_vwaploss_run | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
 | failed | t4-rel-strength | Relative strength vs SPY with market/VWAP filters | r/RealDayTrading method (snippets) | – | – | – | – | – |
 | failed | t1-orb-exits | ORB on stocks in play: exit re-tests | Zarattini/Barbon/Aziz 2024 | – | – | – | – | – |
 | failed | t6-exit-overlay | Breakeven / trail / time stop on live setups | r/algotrading 1t6ex5l (snippet) | – | – | – | – | – |
@@ -50,3 +72,4 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
 | retired | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
 | retired | rw-vf1_rsis7_atr20 | exhaustion_short with RSI7 / ATR20 | rule-18 rework (lengths) | – | – | – | – | – |
+| retired | primitives-map | Layer-1 metric map (12,030 configs) | primitives swarm | – | – | – | – | – |
