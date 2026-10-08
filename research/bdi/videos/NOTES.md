@@ -226,3 +226,279 @@ Per side: 369 (Vol I families) + 320 (Vol II) = 689. Both sides: **1,378 trigger
 | PINCH | adjacent p (0.1 / 0.25 / 0.5 / 1.0) |
 | PWR | departure 0.2 / 0.5 |
 | dcn / vslope | as listed above |
+
+---
+
+## 1. Sources mapped, and what could not be tested
+- **Volume I:**
+  - Ross Cameron: micro-pullback (MP) and volume top (VT, also used as an exit).
+  - Trader Dale: accumulation-block POC retest (BLK).
+  - Fractal Flow: value-area re-entry (VA) and LVN air pocket (LVN).
+  - Jumpstart: AVWAP first retest (AVR) and +2 SD fade (AVF).
+  - Jdub: EMA9 + VWAP ride (JD).
+  - RVOL appears as a layer everywhere.
+- **Volume II matrix:**
+  - Institutional Confluence (IC)
+  - Mean Reversion Envelopes (ENVF fade, ENVC continuation)
+  - Microstructure Sweeps (SWP)
+  - Dual Confluence Nodes (the dcn layer)
+  - Order Flow Precision (OFP)
+- **Other Volume II rules:**
+  - BKTraders 9-EMA ride (BK) with the trail9 exit
+  - the 80% rule as stated (VA30)
+  - Flat-VWAP filter (the vslope layer)
+  - anchor pinch (PINCH)
+  - prior-week AVWAP first retest (PWR)
+- **Not testable, so logged as backlog ideas:**
+  - Daily 200 EMA. The cache starts 2026-06-15, so there are fewer than 70 daily bars; the daily SMA20 was used as a proxy.
+  - Earnings and catalyst anchors: there is no earnings calendar.
+  - Year-open anchor: the quarter open was used instead.
+  - Footprint delta: a tick-rule proxy from 1-minute bars was used instead.
+  - Low-float gappers: there is no float data. The universe is the cache's 1,226 names, mostly liquid.
+  - 1-minute entries: LabStrategy evaluates 5-minute bars, so only 5-minute triggers were scored. Exits were simulated on 1-minute bars.
+
+## 2. What was built
+- **`features.py` / `features2.py`:**
+  - Causal per-day feature functions.
+  - About 190 columns plus 61, covering EMAs, pullback runs, volume tops, 15-minute alignment, cumulative RVOL, the prior-day and composite 1-minute volume profiles, 9 AVWAP anchors with SD, block state machines, sweeps, the delta proxy, the session POC, VWAP slope, and 30-minute value-area bars.
+  - A truncation test (`build.py --test-causal`, `build2.py --test-causal`) recomputes every column on days cut at 4 points and requires equality with the full-day values. It passed.
+- **`build.py` / `build2.py`:**
+  - Features plus structural outcomes for 1,226 symbols x 54 sessions.
+  - Exits are simulated with numba on 1-minute bars.
+  - Read filter: `timestamp < 2026-09-16`.
+  - The rows match the lab frame exactly: close, the VWAP distance (max diff 1e-5 %), atr_d and the upper wick are identical.
+  - 248 lab rows were dropped: 11 symbol-days (BWET 08-05 and 10 VEEA days) have fewer than 60 one-minute bars.
+- **`vid_rules.py`:** every trigger and layer, in numpy only. The scanner and the lab modules call the same code.
+- **`scan.py` / `report.py` / `gen_modules.py` / `finalist_check.py`:** scoring, tables, modules and the extra finalist checks.
+
+## 3. Counts
+| item | count |
+|---|---|
+| Declared (section 0 + 0b) | **690,378** |
+| Scored (train n >= 60) | 520,014 |
+| Counted but unscored (train n < 60) | 170,364 |
+| Plateau neighbours scored | 2,106 |
+| **Total tried** | **692,484** |
+| Lineage context: earlier BDI article grid today | 23,868 |
+
+Gate funnel (cumulative, over scored configurations):
+
+| gate | passing |
+|---|---|
+| train > 0 | 17,719 |
+| + valid > 0 | 5,780 |
+| + valid n >= 30 | 4,664 |
+| + valid t >= 1.5 | 926 |
+| + train half 1 > 0 | 789 |
+| + train half 2 > 0 | 326 |
+| + edge over baseline on train and valid | 326 |
+| + plateau | **312** |
+
+If every configuration had zero true mean, these gates would let through roughly 1-2% by chance, i.e. thousands. Only 0.06% passed, because almost the whole population is negative after costs: the baselines are -0.06 to -0.21R.
+
+## 4. Results - failures first
+
+**No faithful rule passes.** With no layers, none of the 17 families passes the gates on either side, under any exit. Long side mean expectancy per family is -0.11 to -0.18R on train and -0.12 to -0.27R on valid.
+
+### Faithful (no layers, 09:50-15:00), all variants x exits per family
+| fam | side | configs | mean train | mean valid | best train | best valid | train>0 | valid>0 |
+|---|---|---|---|---|---|---|---|---|
+| MP (Ross micro-pullback) | long | 180 | -0.106 | -0.158 | -0.071 | -0.079 | 0 | 0 |
+| MP | short | 180 | -0.079 | -0.091 | -0.034 | -0.001 | 0 | 0 |
+| VT (volume top/bottom entry) | long / short | 12 / 12 | -0.114 / -0.125 | -0.148 / -0.051 | -0.057 / -0.056 | -0.090 / 0.171 | 0 / 0 | 0 / 2 |
+| JD (Jdub) | long / short | 18 / 18 | -0.111 / -0.076 | -0.159 / -0.096 | -0.072 / -0.041 | -0.093 / -0.007 | 0 / 0 | 0 / 0 |
+| BK (9-EMA ride) | long / short | 12 / 12 | -0.139 / -0.089 | -0.190 / -0.114 | -0.082 / -0.054 | -0.121 / 0.003 | 0 / 0 | 0 / 1 |
+| VA (VA re-entry) | long / short | 21 / 21 | -0.129 / -0.076 | -0.227 / -0.113 | -0.052 / -0.049 | -0.119 / -0.060 | 0 / 0 | 0 / 0 |
+| VA30 (80% rule as stated) | long / short | 12 / 12 | -0.133 / -0.119 | -0.227 / -0.149 | -0.093 / -0.077 | -0.179 / -0.102 | 0 / 0 | 0 / 0 |
+| BLK (Dale block) | long / short | 16 / 16 | -0.176 / -0.162 | -0.227 / -0.080 | -0.104 / -0.123 | -0.156 / 0.024 | 0 / 0 | 0 / 2 |
+| LVN | long / short | 12 / 12 | -0.106 / -0.068 | -0.162 / -0.095 | -0.072 / -0.042 | -0.096 / -0.004 | 0 / 0 | 0 / 0 |
+| AVR (AVWAP retest) | long / short | 60 / 60 | -0.141 / -0.113 | -0.171 / -0.090 | -0.056 / 0.012 | -0.076 / 0.297 | 0 / 2 | 0 / 7 |
+| AVF (AVWAP 2SD fade) | long / short | 50 / 50 | -0.141 / -0.095 | -0.137 / -0.062 | -0.075 / -0.049 | -0.089 / 0.012 | 0 / 0 | 0 / 3 |
+| IC (institutional confluence) | long / short | 144 / 144 | -0.153 / -0.077 | -0.220 / -0.112 | -0.057 / 0.035 | -0.079 / 0.131 | 0 / 5 | 0 / 13 |
+| ENVF (2SD envelope fade) | long / short | 10 / 10 | -0.141 / -0.104 | -0.131 / -0.070 | -0.078 / -0.081 | -0.090 / -0.041 | 0 / 0 | 0 / 0 |
+| ENVC (envelope continuation) | long / short | 28 / 28 | -0.132 / -0.091 | -0.165 / -0.144 | -0.076 / 0.019 | -0.105 / -0.076 | 0 / 2 | 0 / 0 |
+| SWP (VWAP sweep + delta) | long / short | 54 / 54 | -0.165 / -0.088 | -0.162 / -0.163 | 0.038 / 0.131 | 0.491 / 0.093 | 1 / 3 | 2 / 2 |
+| OFP (profile + delta) | long / short | 24 / 24 | -0.122 / -0.084 | -0.165 / -0.094 | -0.071 / -0.022 | -0.092 / 0.012 | 0 / 0 | 0 / 2 |
+| PINCH | long / short | 12 / 12 | -0.171 / -0.026 | -0.251 / -0.246 | -0.065 / 0.152 | -0.143 / -0.142 | 0 / 3 | 0 / 0 |
+| PWR (prior-week AVWAP retest) | long / short | 24 / 24 | -0.121 / -0.092 | -0.118 / -0.025 | -0.070 / -0.019 | -0.052 / 0.283 | 0 / 0 | 0 / 5 |
+
+The best faithful configuration positive on both splits is IC pwh break short, tx, AM:
+- Train: n 2,005, +0.068R, t 0.99.
+- Valid: n 704, +0.136R, t 0.91.
+- It fails the t gate.
+
+### Exits: the structural exits are only slightly better than lab geometries, and still negative
+Faithful means over all triggers (09:50-15:00):
+
+| exit | long train | long valid | short train | short valid |
+|---|---|---|---|---|
+| jd | -0.087 | -0.115 | -0.064 | -0.109 |
+| e9c1 | -0.085 | -0.099 | -0.079 | -0.091 |
+| c9 | -0.079 | -0.110 | -0.053 | -0.086 |
+| vt | -0.113 | -0.201 | -0.096 | -0.106 |
+| trail9 | -0.112 | -0.130 | -0.105 | -0.126 |
+| t1s1 | -0.173 | -0.218 | -0.101 | -0.123 |
+
+- The structural exits cut the loss mostly by holding winners shorter and losing less per stop. None turns a family positive.
+- The candle-by-candle trail (trail9, BKTraders) is among the worst exits on almost every family: 5-minute noise stops it out.
+- Ross's volume-top exit (vt) is no better than the plain EMA9 exits.
+
+### Per family: configurations passing the gates (scored; pre-plateau / plateau)
+| family | passing |
+|---|---|
+| AVR | 114 / 110 |
+| IC | 74 / 70 |
+| PWR | 62 / 62 |
+| MP | 43 / 41 |
+| AVF | 16 / 12 |
+| VT | 11 / 11 |
+| OFP | 4 / 4 |
+| SWP | 2 / 2 |
+| JD, BK, BLK, LVN, VA, VA30, ENVC, ENVF, PINCH | 0 |
+
+- **Of the 326 passers, 317 are SHORT and 297 use the tx exit** (hold to 15:55, 2R hard stop).
+- The long side has 9 passers, all with weak train t.
+- dcn (VWAP-POC confluence) appears in 43 passers and vslope in 23. Neither filter rescues any family.
+
+## 5. Finalists (8, chosen by min(train t, valid t); identical trade sets collapsed)
+**All 8 are shorts that need the structural tx exit.** LabStrategy cannot run that exit today (section 7).
+
+All numbers are after costs. "Halves" are the two calendar halves of train.
+
+| # | module | rule | train n / exp / t (halves) | valid n / exp / t | valid ex-best-day | valid ex-top-3-days |
+|---|---|---|---|---|---|---|
+| 1 | VID1-mp-2-vw-any-rsi5_hi-short-am-tx | Ross micro-pullback SHORT: a 1-2 bar higher-low bounce touching VWAP, then the first new-low bar, with RSI(5) >= 70 (09:50-11:30) | 206 / +0.191 / 2.35 (+0.30/+0.11) | 68 / +0.301 / 2.09 | +0.224 | +0.104 |
+| 2 | VID2-ic-pwh-break-01-e9_with-gap_with-short-pm-tx | SMB confluence: session VWAP within 0.1% of the prior-week-high AVWAP, close breaks below the node, below EMA9, gap down >= 1% (11:30-15:00) | 133 / +0.162 / 2.03 (+0.33/+0.02) | 34 / +0.451 / 3.25 | +0.391 | +0.236 |
+| 3 | VID3-mp-1-vw-any-rsi5_hi-short-am-tx | as #1 with a 1-bar pullback (a subset of #1's symbol-days) | 135 / +0.300 / 2.55 (+0.28/+0.32) | 47 / +0.277 / 1.93 | +0.179 | +0.061 |
+| 4 | VID4-mp-1-vw-any-rsi5_lo-gap_with-short-pm-tx | micro-pullback short, RSI(5) <= 30, gap down >= 1% (pm) | 805 / +0.098 / 1.88 (+0.17/+0.01) | 303 / +0.132 / 1.83 | +0.073 | **-0.003** |
+| 5 | VID5-ic-pwh-break-02-rvol15-e9_with-short-am-tx | IC prior-week-high AVWAP node (0.2%) break short, RVOL >= 1.5, below EMA9 (am) | 271 / +0.265 / 1.82 (+0.48/+0.02) | 123 / +0.235 / 2.04 | +0.168 | +0.073 |
+| 6 | VID6-vt-vr2-gap_with-dsma20_with-short-pm-tx | Ross volume top (new HOD, upper wick >= 0.5, volumeRatio >= 2) short on gap-down days below the daily SMA20 (pm) | 137 / +0.188 / 2.01 (+0.17/+0.21) | 82 / +0.317 / 1.78 | +0.255 | **-0.062** |
+| 7 | VID7-mp-1-vw-any-rsi5_hi-pdroom-short-am-tx | #3 plus no prior-day low within 0.5 ATR (a subset of #3) | 75 / +0.268 / 2.07 (+0.21/+0.32) | 30 / +0.358 / 1.78 | +0.257 | +0.066 |
+| 8 | VID8-avr-pdh-any-gap_with-dsma20_with-short-pm-tx | Jumpstart AVWAP (prior-day-high anchor) first retest short, gap down >= 1%, below the daily SMA20 (pm) | 491 / +0.199 / 1.78 (+0.12/+0.30) | 166 / +0.435 / 5.83 | +0.387 | +0.312 |
+
+**Warnings that come with these finalists. Read these before acting on them.**
+1. **The edge lives entirely in the exit.** The same masks with every other exit are flat or negative (`finalist_exits.csv`).
+   - For example, #1 with t1s1 is +0.109 train / +0.076 valid, and with jd it is -0.018 / -0.123.
+   - So these are "short and hold to the close" bets on weak days. The trigger mostly picks the day and the name.
+2. **Regime.** The tx-short random baseline is -0.061R on train but **+0.011R on valid**: the valid window drifted down intraday.
+   - The edge over that baseline is still +0.24 to +0.44R on valid. But a tilt in market direction can carry these results.
+   - The locked holdouts (Sep 16 - Oct 5; Apr-Jun) are the real test.
+3. **Concentration.**
+   - #4 and #6 go negative on valid without their 3 best days.
+   - #2, #5 and #8 lean on train half 1: their half-2 means are +0.02, +0.02 and +0.30 respectively (#8 is fine).
+4. **Overlap.** #1, #3 and #7 are one idea: #7's symbol-days sit inside #3's, and #3's inside #1's. The other pairs overlap 0-17%. So there are **6 distinct ideas**:
+   - the micro-pullback short with RSI5 extreme
+   - the micro-pullback short on gap-down days
+   - the IC prior-week-high node break (2 variants)
+   - the volume top on gap-down days
+   - the AVWAP pdh retest on gap-down days
+5. **Multiple testing.** 692,484 configurations were tried. Each finalist's train t is 1.78 to 2.55, which by itself would not survive a correction across this many tries. The holdouts decide.
+
+### Other passers worth knowing (all gates met, outside the top-8 cut)
+These were not written as modules; `gen_modules.py` can write them.
+- **LabStrategy-runnable (lab geometry)**, PWR prior-week-low AVWAP retest short, gap down >= 1% + below the daily SMA20, pm, t1s1:
+  - Train: n 200, +0.132R, t 1.36.
+  - Valid: n 98, +0.188R, t 2.10, ex-best-day +0.154.
+  - Siblings with rsi5_hi or vwap_against also pass (valid t 2.2-2.9).
+  - 16 lab-geometry configurations passed in total (`passers.csv`).
+- **AVR pdh short, gapper + below the daily SMA20, pm, t1s1:**
+  - Train: n 275, +0.062R, t 1.13.
+  - Valid: n 74, +0.158R, t 1.81.
+- **AVF prior-day-high-volume-bar AVWAP +2SD fade short, RVOL >= 1.5 + gap down, avw exit:**
+  - Train: n 225, +0.127R, t 1.60.
+  - Valid: n 69, +0.369R, t 2.92.
+- **Common thread:** every robust passer is a SHORT on a gap-down / below-SMA20 / extended-RSI5 day. This matches the earlier BDI and MarcoFlow findings (flow-sell into strength, short side less bad).
+
+All 8 modules reproduce the scan exactly (n and expectancy) when run on the lab frame (`finalists_verify.json`).
+
+## 6. Near misses (exactly one gate failed, valid n >= 30)
+1,520 configurations. Failed gate:
+
+| failed gate | configurations |
+|---|---|
+| valid t | 920 |
+| train half 2 | 463 |
+| train half 1 | 137 |
+
+The most useful ones:
+- **ENVF / AVF-open 2SD fade SHORT, gap-down + gapper, pm, t1s1 (lab geometry):**
+  - Train: n 854, +0.085R, t 1.83.
+  - Valid: n 325, +0.153R, t 1.88.
+  - Fails train half 2 (-0.040).
+  - The same mask with the avw exit gives train +0.116R (t 2.64), valid +0.134R (t 1.74), half 2 -0.002.
+  - This is the best LabStrategy-native near miss and a Testing-account candidate.
+- **IC prior-week-high break short, RSI5 <= 30, all day, tx:**
+  - Train: n 1,605, +0.077R, t 1.39.
+  - Valid: n 569, +0.134R, t 1.43.
+  - It is big and simple, and fails valid t only.
+- **IC gap-day AVWAP break short, below EMA9 + gap down, pm, tx:**
+  - Train: n 129, +0.159R.
+  - Valid: n 55, +0.255R, t 2.66.
+  - Fails train half 2 (-0.052).
+- **LVN air-pocket short, below VWAP + gapper, pm, tx:**
+  - Train: n 1,355, +0.079R.
+  - Valid: n 388, +0.188R, t 1.66.
+  - Fails half 2 (-0.107).
+- **VA cross2 short (RVOL >= 1.5 + flow-buy, am), poc exit:** train +0.218R (n 64), valid +0.121R t 1.06. Too small.
+
+The full tables are in `data/report.md` (git-ignored) and `results.csv`. results.csv holds every no-layer configuration plus every configuration positive on both splits with valid n >= 30: 8,727 rows, 1.6 MB.
+
+## 7. What live deployment would need (precisely)
+1. **Exit.**
+   - LabStrategy.GEOMS only has t1s1 / t05s1 / t1s05.
+   - The finalists need "tx": stop at entry + 2R (short), no target, flat at 15:55. That could be a GEOMS entry with a far target (e.g. (100.0, 2.0)).
+   - The research filled entries at the next 1-minute open after the signal bar.
+   - The `jd`, `c9`, `trail9`, `vt`, `poc` and `avw` exits would need real exit-management code. None of them is needed by a finalist.
+2. **Features.** LabStrategy.generate must join:
+   - `features.day_features(ctx.bars, prior_session_1min, ctx.prior5, ctx.avg_cum_volume, ctx.atr)`
+   - `features2.day_features2(ctx.bars, history_1min_since_anchors, prior_session_1min, ctx.atr, anchors, ctx.prev_close)`
+   - and set `d_sma20 = ctx.sma20`, `atr_b = ctx.atr`
+3. **DayContext data.**
+   - DayContext has no prior-session 1-minute bars (needed for the prior-day profile and the pdh/pdl/pdhv anchors).
+   - It has no multi-day 1-minute history (the pwh/pwl/gap/qop AVWAPs). Live could keep running AVWAP sums per anchor instead.
+   - Which finalists depend on these anchors:
+
+     | finalist | anchor data needed |
+     |---|---|
+     | #1, #3, #4, #6, #7 | none |
+     | #2, #5 | the prior week's 1-minute bars |
+     | #8 | prior-session 1-minute bars |
+
+4. **ATR.** Research R uses the lab's atr_d (5-minute-derived daily TR, rolling 14, min 10). LabStrategy passes ctx.atr from the engine. The two can differ slightly.
+5. **Dependencies.** numba is used only by the research build. The masks are numpy-only (`vid_rules.py`).
+
+## 8. Recommendation
+- **Primary account: nothing.**
+  - No finalist has been scored on the locked holdouts yet, and all 8 need an exit LabStrategy does not have.
+  - The result is a short-side, regime-sensitive, hold-to-close effect, found among 692k tries.
+- **Lead: score the holdouts once, in this order:**
+  - **#8** (AVR pdh short): the largest sample, and positive in both train halves.
+  - **#1** (as the representative of #1/#3/#7).
+  - **#5, #2** (IC prior-week-high node).
+  - **#6, #4** (concentrated on valid; lowest priority).
+  - #3 and #7 only if #1 passes; they share its lineage.
+  - Use the look-1 bar (t >= 1.0) on both holdouts.
+- **Testing account** (experimental, tagged, 3-session scorecard), once the tx geometry exists:
+  - the PWR prior-week-low gap-down short (lab t1s1, already runnable)
+  - the ENVF 2SD gap-down fade (lab t1s1 near miss)
+  - VID8
+  - These share the "gap-down afternoon short" theme. Run them as one cluster with a combined risk cap, because they will fire on the same days.
+- **Drop for now (failed, logged in the backlog):**
+  - long micro-pullbacks, Jdub, the BKTraders trail
+  - the volume-profile rules (the 80% rule in both forms, the Dale block, LVN)
+  - the Wysetrade continuation, the anchor pinch
+  - the DCN / flat-VWAP filters as general improvers
+
+## 9. Files and reproduce
+```
+python research/bdi/videos/build.py && python research/bdi/videos/build2.py     # ~90 min on 4 cores, data/ git-ignored
+python research/bdi/videos/scan.py                                               # ~35 min; data/all_results.parquet, counts.json, passers.csv, plateau.csv
+python research/bdi/videos/report.py > research/bdi/videos/data/report.md         # tables + finalists.json + results.csv
+python research/bdi/videos/gen_modules.py && python research/bdi/videos/finalist_check.py
+```
+- Backlog entries `bdi-vid-*` (25):
+  - 8 finalists
+  - 2 extra passer groups
+  - 10 failures, including the grid summary
+  - 5 untestable ideas
+- Educational only - not financial advice.
