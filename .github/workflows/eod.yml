@@ -46,7 +46,8 @@ jobs:
           now=$(TZ=America/New_York date +%H%M)
           dow=$(TZ=America/New_York date +%u); day=$(TZ=America/New_York date +%F)
           run=false
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then run=true
+          if ! git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" "refs/heads/$STATE_BRANCH" >/dev/null 2>&1; then run=false   # account not started yet
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then run=true
           elif [ "$dow" -le 5 ] && [ "$now" -ge 1556 ] && [ "$now" -lt 1800 ]; then
             # only once per account and day: skip when today's report is already on the state branch
             if git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" "refs/heads/$STATE_BRANCH" >/dev/null 2>&1 && \
