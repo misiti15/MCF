@@ -195,6 +195,84 @@ strategies:
     prefilter: new_high_100m
     scale_out_r: null
 
+  # ---- Owner-directed 2026-10-08 (PROBATION, primary account): MarcoFlow's top rule stacks re-scored in the MCF lab
+  # (research/primitives/marcoflow). Train/valid only; NOT scored on the locked holdouts; at production cost most are
+  # negative on train. Added at the owner's explicit request despite RESEARCH_RULES; ledger 2026-10-08-owner-mf5.
+  MF1-945-flowsell-vwapup:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-945-flowsell-vwapup.py
+    min_adv: 95000000
+    window: [950, 1030]
+    scale_out_r: null
+  MF2-open-rsimidhi-flowsell:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  MF3-open-flowsell-rsi5hi:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  MF4-h40-open-flowsell:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-h40-open-flowsell.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  MF5-flowsell-vwapup-rsi5hi:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+
+  # ---- Owner-directed 2026-10-08 (PROBATION, primary account): 5 new setups from the "obvious metrics before big
+  # moves" scan (research/owner1008: 7,374 configs, 33 positive on train+valid). Scored once on the locked holdouts
+  # for information (research/owner1008/holdouts.json): none clears the t >= 1.0 bar on both. Ledger 2026-10-08-owner-ns5.
+  NS1-rsidip-rsi5pop-long:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS1-rsidip-rsi5pop-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS2-sma50break-overbought-short:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS2-sma50break-overbought-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS3-failed-vwap-reclaim-short:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS3-failed-vwap-reclaim-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS4-pm-vwap-reclaim-oversold-short:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py
+    min_adv: 95000000
+    window: [1130, 1500]
+    scale_out_r: null
+  NS5-sma50-flush-oversold-long:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS5-sma50-flush-oversold-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+
 discovery:
   # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.
   # Promote a replicated candidate by adding it under `strategies:` with type: rule, e.g.
