@@ -264,3 +264,20 @@ Also true of every finalist:
 | diag.py | RW1 neighbourhood, week split, re-entry diagnostic |
 | gen_modules.py | writes + verifies modules/RW*.py (verify.json) |
 | results.csv | every scored config (gates column: P both>0, N valid n, T valid t, H halves, B baseline, L plateau) |
+
+## Locked holdouts (scored once by the lead, 2026-10-08 ~11:45 ET; production costs; `score_holdouts.py`, `holdouts.json`)
+Bar for this look: t >= 1.5 on BOTH holdouts (look 2; RW2 look 3 needs 2.0). **None passes.**
+
+| id | test 09-16..10-05 (exp R, t, n) | Apr-Jun (exp R, t, n) | verdict |
+|---|---|---|---|
+| RW5 | +0.303, 1.75, 55 (ex-best +0.163) | +0.068, 0.77, 216 (ex-best +0.024) | only one positive on both; fails t on Apr-Jun -> Testing / probation candidate |
+| RW3 | +0.231, 1.68, 91 | -0.052, -0.56, 339 | fails Apr-Jun |
+| RW2 | +0.162, 1.69, 205 | -0.045, -0.83, 1597 | fails Apr-Jun |
+| RW4 | +0.235, 1.94, 36 | -0.134, -1.67, 358 | fails Apr-Jun |
+| RW6 | +0.123, 0.53, 27 | +0.079, 0.70, 246 (ex-best -0.067) | weak both |
+| RW1 | -0.069, -0.77, 149 | +0.017, 0.26, 625 | fails (lab's best finalist) |
+| RW7 | -0.020, -0.10, 65 | -0.046, -0.59, 292 | fails |
+| RW8 | -0.326, -1.88, 18 | -0.204, -1.88, 101 | fails |
+
+Reading: the short bias that helped in Aug-Oct does not carry into Apr-Jun; train/valid t near 2 shrank to noise out of
+sample for RW1. Educational only - not financial advice.
