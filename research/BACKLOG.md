@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 68 · coded: 6 · failed: 30 · configurations tried (all lineages): 3022772
+Total ideas: 71 · coded: 6 · failed: 31 · configurations tried (all lineages): 3022772
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -42,6 +42,8 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | wi-ema-cross | 9/20 EMA cross on 5-minute bars | https://quantifiedstrategies.substack.com/p/9-ema-trading-strategy-does-it-work | – | – | – | – | – |
 | idea | ops-stop-slippage | Calibrate the cost model to live stop fills | nightly loop 2026-10-07 | – | – | – | – | – |
 | idea | ops-window-drift | Backtest ignores YAML window for heat/lab setups | nightly backtest 2026-10-07 | – | – | – | – | – |
+| idea | orb-news-guard | Skip ORB trades on names with same-day material news | Oct-7 autopsy/BDI | – | – | – | – | – |
+| idea | bdi-fade-opening-swing | Fade an over-extended opening swing (10:00-11:30) | Oct-7 autopsy/BDI | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
@@ -72,6 +74,7 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | failed | nl-1007-0950-stopout | Delay or filter heat_fade_short's 09:50 entries | nightly loop 2026-10-07 | – | – | – | – | – |
 | failed | nl-1007-opposite-side | No opposite-side entry on a symbol after a same-day stop | nightly loop 2026-10-07 | – | – | – | – | – |
 | failed | nl-1007-late-holds | Entry cutoffs so 1R targets can still be reached | nightly loop 2026-10-07 | – | – | – | – | – |
+| failed | exit-hfs-stop-cap-2pct | heat_fade_short: cap the stop at 2% of entry | oct7 exits study (owner max-loss question) | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
