@@ -47,6 +47,16 @@ def frame():
         common = set(lab.symbol)
         out = [p[p.symbol.isin(common)].reset_index(drop=True) for p in out]
     lab = lab.sort_values(keys).reset_index(drop=True)
+    syms = {s: i for i, s in enumerate(sorted(set(lab.symbol)))}
+
+    def k64(x):
+        sc_ = x.symbol.map(syms).fillna(-1).astype(np.int64).to_numpy()
+        dd = pd.to_datetime(x.date).values.astype("datetime64[D]").astype(np.int64)
+        return (sc_ * 100000 + dd) * 10000 + x.tod.astype(np.int64).to_numpy()
+    lk = k64(lab)
+    out = [p[np.isin(k64(p), lk)].reset_index(drop=True) for p in out]   # lab rows only (rsi/atr warm-up drops)
+    # 248 lab rows (11 symbol-days with < 60 one-minute bars: BWET 08-05, VEEA x10) have no video features: dropped
+    lab = lab[np.isin(lk, k64(out[0]))].reset_index(drop=True)
     for parts in out:
         assert len(lab) == len(parts), (len(lab), len(parts))
         for k in keys:
