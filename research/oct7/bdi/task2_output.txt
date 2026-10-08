@@ -1,0 +1,86 @@
+=== (a) funnel, 44 sessions; universe/day 1199, in-play/day 1199 ===
+                   qualifying_bars  symbol_days  eligible_symbol_days  filled_candidates  after_allocator  eligible_symbol_days_per_day  qualifying_bars_per_day  symbol_days_per_day  filled_candidates_per_day  after_allocator_per_day  exp_r_after_alloc  exp_r_train  n_train  t_day_train  exp_r_valid  n_valid  t_day_valid
+setup                                                                                                                                                                                                                                                                                                                             
+intraday_momentum              121          121                   176                121              116                           4.0                      2.8                  2.8                        2.8                      2.6             0.0170       0.0115       80         0.10       0.0292       36         0.25
+orb20_a                        444          444                   571                314              310                          13.0                     10.1                 10.1                        7.1                      7.0             0.0506       0.0502      209         0.68       0.0513      101         0.74
+heat_fade_short               1689          662                 16323                662              661                         371.0                     38.4                 15.0                       15.0                     15.0             0.0755       0.0470      520         0.43       0.1803      141         1.47
+heat_fade_long                2483          613                  8404                613              592                         191.0                     56.4                 13.9                       13.9                     13.5             0.0792       0.1101      484         1.32      -0.0592      108        -0.43
+exhaustion_short               679          401                 17301                401              384                         393.2                     15.4                  9.1                        9.1                      8.7             0.2551       0.2713      333         1.49       0.1492       51         0.90
+portfolio after allocator: 46.9 trades/day; total R 212.4
+=== (b) re-entry (R = own 1R = 0.25 ATR; costs in) ===
+                            config  split    n  trades_per_day    win     exp     tot  t_day  ex_best  reentry_n  reentry_exp  reentry_t  diff_tot  diff_t  diff_ex_best
+0       heat_fade_short|n1|cd0|any  train  521           17.37  0.539  0.0489   25.47   0.45     2.31          0          NaN        NaN       NaN     NaN           NaN
+1       heat_fade_short|n1|cd0|any  valid  141           10.07  0.610  0.1803   25.43   1.47    11.51          0          NaN        NaN       NaN     NaN           NaN
+2      heat_fade_short|n2|cd15|any  train  536           17.87  0.537  0.0441   23.65   0.41     0.49         15      -0.1209      -0.58     -1.81   -0.59         -2.91
+3      heat_fade_short|n2|cd15|any  valid  149           10.64  0.611  0.1758   26.20   1.40    12.05          8       0.0965       0.22      0.77    0.23         -0.97
+4    heat_fade_short|n2|cd15|fresh  train  531           17.70  0.537  0.0436   23.14   0.40    -0.02         10      -0.2323      -0.78     -2.32   -0.80         -3.40
+5    heat_fade_short|n2|cd15|fresh  valid  146           10.43  0.603  0.1650   24.09   1.29    10.17          5      -0.2684      -0.40     -1.34   -0.45         -3.08
+6      heat_fade_short|n2|cd30|any  train  524           17.47  0.536  0.0428   22.42   0.40    -0.75          3      -1.0174        NaN     -3.05   -1.36         -3.05
+7      heat_fade_short|n2|cd30|any  valid  144           10.29  0.611  0.1810   26.07   1.49    12.15          3       0.2141        NaN      0.64    0.69         -0.24
+8    heat_fade_short|n2|cd30|fresh  train  523           17.43  0.537  0.0448   23.43   0.41     0.27          2      -1.0175        NaN     -2.04   -1.44         -2.04
+9    heat_fade_short|n2|cd30|fresh  valid  143           10.21  0.608  0.1768   25.29   1.41    11.37          2      -0.0713        NaN     -0.14   -0.10         -1.02
+10     heat_fade_short|n3|cd15|any  train  536           17.87  0.537  0.0441   23.65   0.41     0.49         15      -0.1209      -0.58     -1.81   -0.59         -2.91
+11     heat_fade_short|n3|cd15|any  valid  149           10.64  0.611  0.1758   26.20   1.40    12.05          8       0.0965       0.22      0.77    0.23         -0.97
+12   heat_fade_short|n3|cd15|fresh  train  531           17.70  0.537  0.0436   23.14   0.40    -0.02         10      -0.2323      -0.78     -2.32   -0.80         -3.40
+13   heat_fade_short|n3|cd15|fresh  valid  146           10.43  0.603  0.1650   24.09   1.29    10.17          5      -0.2684      -0.40     -1.34   -0.45         -3.08
+14     heat_fade_short|n3|cd30|any  train  524           17.47  0.536  0.0428   22.42   0.40    -0.75          3      -1.0174        NaN     -3.05   -1.36         -3.05
+15     heat_fade_short|n3|cd30|any  valid  144           10.29  0.611  0.1810   26.07   1.49    12.15          3       0.2141        NaN      0.64    0.69         -0.24
+16   heat_fade_short|n3|cd30|fresh  train  523           17.43  0.537  0.0448   23.43   0.41     0.27          2      -1.0175        NaN     -2.04   -1.44         -2.04
+17   heat_fade_short|n3|cd30|fresh  valid  143           10.21  0.608  0.1768   25.29   1.41    11.37          2      -0.0713        NaN     -0.14   -0.10         -1.02
+18       heat_fade_long|n1|cd0|any  train  497           16.57  0.549  0.1090   54.18   1.34    26.36          0          NaN        NaN       NaN     NaN           NaN
+19       heat_fade_long|n1|cd0|any  valid  116            8.29  0.500 -0.0251   -2.91  -0.21    -8.32          0          NaN        NaN       NaN     NaN           NaN
+20      heat_fade_long|n2|cd15|any  train  553           18.43  0.566  0.1380   76.34   1.57    38.96         56       0.3956       2.05     22.15    2.01         12.61
+21      heat_fade_long|n2|cd15|any  valid  128            9.14  0.500 -0.0373   -4.77  -0.32   -10.18         12      -0.1548      -0.52     -1.86   -0.54         -2.88
+22    heat_fade_long|n2|cd15|fresh  train  521           17.37  0.559  0.1217   63.38   1.48    33.62         24       0.3833       2.20      9.20    2.09          7.04
+23    heat_fade_long|n2|cd15|fresh  valid  120            8.57  0.500 -0.0260   -3.12  -0.23    -8.53          4      -0.0506      -0.11     -0.20   -0.13         -1.23
+24      heat_fade_long|n2|cd30|any  train  528           17.60  0.562  0.1327   70.04   1.50    34.26         31       0.5116       1.86     15.86    1.82          7.90
+25      heat_fade_long|n2|cd30|any  valid  122            8.71  0.508 -0.0145   -1.77  -0.13    -7.18          6       0.1908       0.51      1.14    0.54          0.11
+26    heat_fade_long|n2|cd30|fresh  train  511           17.03  0.556  0.1187   60.65   1.41    29.87         14       0.4619       1.75      6.47    1.66          3.52
+27    heat_fade_long|n2|cd30|fresh  valid  117            8.36  0.496 -0.0337   -3.94  -0.29    -9.35          1      -1.0307        NaN     -1.03   -1.00         -1.03
+28      heat_fade_long|n3|cd15|any  train  554           18.47  0.565  0.1359   75.31   1.55    37.94         57       0.3707       1.93     21.13    1.90         11.58
+29      heat_fade_long|n3|cd15|any  valid  129            9.21  0.496 -0.0450   -5.81  -0.39   -11.22         13      -0.2228      -0.73     -2.90   -0.75         -3.92
+30    heat_fade_long|n3|cd15|fresh  train  521           17.37  0.559  0.1217   63.38   1.48    33.62         24       0.3833       2.20      9.20    2.09          7.04
+31    heat_fade_long|n3|cd15|fresh  valid  120            8.57  0.500 -0.0260   -3.12  -0.23    -8.53          4      -0.0506      -0.11     -0.20   -0.13         -1.23
+32      heat_fade_long|n3|cd30|any  train  528           17.60  0.562  0.1327   70.04   1.50    34.26         31       0.5116       1.86     15.86    1.82          7.90
+33      heat_fade_long|n3|cd30|any  valid  122            8.71  0.508 -0.0145   -1.77  -0.13    -7.18          6       0.1908       0.51      1.14    0.54          0.11
+34    heat_fade_long|n3|cd30|fresh  train  511           17.03  0.556  0.1187   60.65   1.41    29.87         14       0.4619       1.75      6.47    1.66          3.52
+35    heat_fade_long|n3|cd30|fresh  valid  117            8.36  0.496 -0.0337   -3.94  -0.29    -9.35          1      -1.0307        NaN     -1.03   -1.00         -1.03
+36     exhaustion_short|n1|cd0|any  train  348           11.60  0.687  0.2817   98.03   1.50    44.36          0          NaN        NaN       NaN     NaN           NaN
+37     exhaustion_short|n1|cd0|any  valid   53            3.79  0.642  0.1775    9.41   1.08     2.48          0          NaN        NaN       NaN     NaN           NaN
+38    exhaustion_short|n2|cd15|any  train  360           12.00  0.689  0.2866  103.18   1.47    44.09         12       0.4290       0.87      5.15    0.89         -0.27
+39    exhaustion_short|n2|cd15|any  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0064        NaN     -0.01   -0.01         -1.06
+40  exhaustion_short|n2|cd15|fresh  train  360           12.00  0.689  0.2866  103.18   1.47    44.09         12       0.4290       0.87      5.15    0.89         -0.27
+41  exhaustion_short|n2|cd15|fresh  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0064        NaN     -0.01   -0.01         -1.06
+42    exhaustion_short|n2|cd30|any  train  358           11.93  0.690  0.2892  103.54   1.46    43.16         10       0.5508       0.75      5.51    0.79         -1.20
+43    exhaustion_short|n2|cd30|any  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0062        NaN     -0.01   -0.01         -1.06
+44  exhaustion_short|n2|cd30|fresh  train  356           11.87  0.688  0.2859  101.78   1.46    43.16          8       0.4687       0.66      3.75    0.71         -1.20
+45  exhaustion_short|n2|cd30|fresh  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0062        NaN     -0.01   -0.01         -1.06
+46    exhaustion_short|n3|cd15|any  train  360           12.00  0.689  0.2866  103.18   1.47    44.09         12       0.4290       0.87      5.15    0.89         -0.27
+47    exhaustion_short|n3|cd15|any  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0064        NaN     -0.01   -0.01         -1.06
+48  exhaustion_short|n3|cd15|fresh  train  360           12.00  0.689  0.2866  103.18   1.47    44.09         12       0.4290       0.87      5.15    0.89         -0.27
+49  exhaustion_short|n3|cd15|fresh  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0064        NaN     -0.01   -0.01         -1.06
+50    exhaustion_short|n3|cd30|any  train  358           11.93  0.690  0.2892  103.54   1.46    43.16         10       0.5508       0.75      5.51    0.79         -1.20
+51    exhaustion_short|n3|cd30|any  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0062        NaN     -0.01   -0.01         -1.06
+52  exhaustion_short|n3|cd30|fresh  train  356           11.87  0.688  0.2859  101.78   1.46    43.16          8       0.4687       0.66      3.75    0.71         -1.20
+53  exhaustion_short|n3|cd30|fresh  valid   55            3.93  0.636  0.1709    9.40   0.97     1.42          2      -0.0062        NaN     -0.01   -0.01         -1.06
+configs tried (task 2b): 24 re-entry configs + 3 baselines
+=== portfolio (all live setups, production allocator) ===
+           config  split     n  per_day     exp    tot  t_day  ex_best     pnl
+0      n1|cd0|any  train  1626     54.2  0.1104  179.5   1.78    108.2  8780.0
+1      n1|cd0|any  valid   437     31.2  0.0752   32.9   1.12     17.6  1208.0
+2     n2|cd15|any  train  1707     56.9  0.1202  205.1   1.83    122.5  9765.0
+3     n2|cd15|any  valid   459     32.8  0.0692   31.8   0.96     15.6  1192.0
+4     n2|cd30|any  train  1668     55.6  0.1187  197.9   1.81    117.9  9398.0
+5     n2|cd30|any  valid   448     32.0  0.0773   34.7   1.16     19.4  1268.0
+6     n3|cd15|any  train  1704     56.8  0.1205  205.3   1.83    122.6  9742.0
+7     n3|cd15|any  valid   460     32.9  0.0668   30.7   0.93     14.5  1183.0
+8     n3|cd30|any  train  1668     55.6  0.1187  197.9   1.81    117.9  9398.0
+9     n3|cd30|any  valid   448     32.0  0.0773   34.7   1.16     19.4  1268.0
+10  n2|cd15|fresh  train  1670     55.7  0.1147  191.6   1.80    112.7  9128.0
+11  n2|cd15|fresh  valid   448     32.0  0.0699   31.3   0.99     16.1  1155.0
+12  n2|cd30|fresh  train  1648     54.9  0.1140  187.8   1.77    110.4  9056.0
+13  n2|cd30|fresh  valid   442     31.6  0.0717   31.7   1.03     16.4  1178.0
+14  n3|cd15|fresh  train  1670     55.7  0.1147  191.6   1.80    112.7  9128.0
+15  n3|cd15|fresh  valid   448     32.0  0.0699   31.3   0.99     16.1  1155.0
+16  n3|cd30|fresh  train  1648     54.9  0.1140  187.8   1.77    110.4  9056.0
+17  n3|cd30|fresh  valid   442     31.6  0.0717   31.7   1.03     16.4  1178.0

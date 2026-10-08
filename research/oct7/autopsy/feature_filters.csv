@@ -1,0 +1,29 @@
+setup,filter,split,n,n_keep,base_usd,keep_usd,base_pt,keep_pt,drop_pt,d_vs_random_t_day,p_random_better,ex_best
+heat_fade_short,keep rsi5>50,train,521,466,57.7,604.4,0.11,1.3,-9.94,0.65,0.015,-458.6
+heat_fade_short,keep rsi5>50,valid,141,132,880.3,753.1,6.24,5.71,14.13,-0.91,0.831,-137.9
+heat_fade_short,keep rsi5>60,train,521,433,57.7,455.2,0.11,1.05,-4.52,0.55,0.093,-607.8
+heat_fade_short,keep rsi5>60,valid,141,123,880.3,771.9,6.24,6.28,6.02,0.05,0.502,-125.0
+heat_fade_short,keep rsi5>70,train,521,380,57.7,361.3,0.11,0.95,-2.15,0.49,0.177,-717.8
+heat_fade_short,keep rsi5>70,valid,141,105,880.3,659.2,6.24,6.28,6.14,0.03,0.516,-253.5
+heat_fade_short,keep rsi5>80,train,521,269,57.7,-294.0,0.11,-1.09,1.4,-0.57,0.787,-1540.3
+heat_fade_short,keep rsi5>80,valid,141,68,880.3,344.0,6.24,5.06,7.35,-0.72,0.693,-557.0
+orb20_a,skip rsi14 beyond 85/15 in trade direction,train,212,122,1033.1,505.6,4.87,4.14,5.86,-0.21,0.58,-675.0
+orb20_a,skip rsi14 beyond 85/15 in trade direction,valid,102,71,52.3,-3.7,0.51,-0.05,1.81,-0.19,0.572,-181.9
+orb20_a,skip rsi14 beyond 90/10 in trade direction,train,212,163,1033.1,800.9,4.87,4.91,4.74,0.02,0.511,-360.9
+orb20_a,skip rsi14 beyond 90/10 in trade direction,valid,102,85,52.3,20.6,0.51,0.24,1.87,-0.11,0.557,-146.8
+orb20_a,skip rsi14 beyond 95/5 in trade direction,train,212,192,1033.1,1027.7,4.87,5.35,0.27,0.34,0.364,-104.0
+orb20_a,skip rsi14 beyond 95/5 in trade direction,valid,102,96,52.3,-17.1,0.51,-0.18,11.57,-0.39,0.77,-130.3
+orb20_a,skip |fromOpen|>3%,train,212,121,1033.1,-217.9,4.87,-1.8,13.75,-1.73,0.985,-1475.8
+orb20_a,skip |fromOpen|>3%,valid,102,54,52.3,98.5,0.51,1.82,-0.96,0.4,0.367,-79.8
+orb20_a,skip |fromOpen|>5%,train,212,158,1033.1,615.2,4.87,3.89,7.74,-0.36,0.668,-597.7
+orb20_a,skip |fromOpen|>5%,valid,102,79,52.3,124.6,0.51,1.58,-3.14,0.37,0.318,-53.6
+orb20_a,skip |fromOpen|>8%,train,212,183,1033.1,346.6,4.87,1.89,23.67,-1.31,0.971,-854.6
+orb20_a,skip |fromOpen|>8%,valid,102,91,52.3,153.5,0.51,1.69,-9.2,0.62,0.189,-24.8
+heat_fade_long,skip fromOpen<-3%,train,497,210,3455.7,183.8,6.95,0.88,11.4,-1.53,0.996,-3628.4
+heat_fade_long,skip fromOpen<-3%,valid,116,62,93.0,-152.3,0.8,-2.46,4.54,-2.16,0.948,-384.2
+heat_fade_long,skip fromOpen<-4%,train,497,292,3455.7,158.2,6.95,0.54,16.09,-1.71,1.0,-3606.6
+heat_fade_long,skip fromOpen<-4%,valid,116,83,93.0,-175.1,0.8,-2.11,8.12,-2.1,0.982,-314.4
+heat_fade_long,skip fromOpen<-5%,train,497,334,3455.7,815.9,6.95,2.44,16.2,-1.47,1.0,-2948.8
+heat_fade_long,skip fromOpen<-5%,valid,116,93,93.0,-93.8,0.8,-1.01,8.12,-1.44,0.938,-233.1
+heat_fade_long,skip fromOpen<-6%,train,497,363,3455.7,1105.5,6.95,3.05,17.54,-1.4,1.0,-2663.7
+heat_fade_long,skip fromOpen<-6%,valid,116,103,93.0,2.0,0.8,0.02,6.99,-0.7,0.846,-142.2

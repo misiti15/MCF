@@ -345,7 +345,8 @@ class HeatStrategy(Strategy):
         f["atr_d"] = ctx.atr
         f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
         s = np.asarray(self.mod.score(f), dtype=float)
-        ok = (f["tod"].to_numpy() >= 950) & (f["tod"].to_numpy() <= 1500)
+        lo, hi = self.window or (950, 1500)      # the YAML window binds live AND backtest (no drift)
+        ok = (f["tod"].to_numpy() >= max(950, lo)) & (f["tod"].to_numpy() <= min(1500, hi))
         cands = []
         if self.sides in ("both", "long") and getattr(self.mod, "LONG_AT", None) is not None:
             hit = np.flatnonzero(ok & (s >= self.mod.LONG_AT))
@@ -440,7 +441,8 @@ class LabStrategy(Strategy):
         f["dist_pdh_atr"] = (ctx.prev_high - f["close"]) / ctx.atr
         f["dist_pdl_atr"] = (f["close"] - ctx.prev_low) / ctx.atr
         tod = f["tod"].to_numpy()
-        m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= 950) & (tod <= 1500)
+        lo, hi = self.window or (950, 1500)      # the YAML window binds live AND backtest (no drift)
+        m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= max(950, lo)) & (tod <= min(1500, hi))
         hit = np.flatnonzero(m)
         if not len(hit):
             return []
