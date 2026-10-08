@@ -75,12 +75,14 @@ def vwap(b: pd.DataFrame) -> np.ndarray:
 
 def five(b: pd.DataFrame):
     """5-minute bars aligned to the session, with the 1-minute index of each bar's LAST minute."""
-    g = np.arange(len(b)) // 5
-    o = b["open"].to_numpy()[::5]
+    mos = (b.index.hour * 60 + b.index.minute - 570).to_numpy()
+    g = pd.Series(mos // 5)
+    pos = pd.Series(np.arange(len(b)))
+    o = pd.Series(b["open"].to_numpy()).groupby(g).first().to_numpy()
     h = pd.Series(b["high"].to_numpy()).groupby(g).max().to_numpy()
     l = pd.Series(b["low"].to_numpy()).groupby(g).min().to_numpy()
     c = pd.Series(b["close"].to_numpy()).groupby(g).last().to_numpy()
-    last = np.minimum(np.arange(len(o)) * 5 + 4, len(b) - 1)
+    last = pos.groupby(g).last().to_numpy()
     return o, h, l, c, last
 
 
