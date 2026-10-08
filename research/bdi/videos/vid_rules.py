@@ -8,7 +8,10 @@ ANCH = ("open", "pdhv", "pdh", "pdl", "tdhv")
 
 # ------------------------------------------------------------------ triggers (params p; base values in BASE)
 BASE = {"MP": {"tol": 0.02, "vthr": 1.0}, "VT": {"w": 0.5, "vr": 2.0}, "JD": {"tol": 0.02, "strong": 0.8},
-        "VA": {"pct": 70}, "BLK": {}, "LVN": {"k": 50}, "AVR": {"d": 30}, "AVF": {}}
+        "VA": {"pct": 70}, "BLK": {}, "LVN": {"k": 50}, "AVR": {"d": 30}, "AVF": {},
+        "IC": {}, "ENVF": {"k": 2.0}, "ENVC": {"strong": 0.8, "surge": 1.5}, "SWP": {"dmin": 0.0},
+        "OFP": {"hvn": 0.5, "lvn": 0.3, "dag": 0.3}, "BK": {"tol": 0.02}, "VA30": {"pct": 70}, "PINCH": {}, "PWR": {"d": 30}}
+ANCH2 = ("pwh", "pwl", "gap", "qop")
 VARS = {
     "MP": [dict(touch=t, kmax=k, vol=v) for t in ("e9", "vw", "any") for k in (1, 2, 3) for v in ("any", "light")],
     "VT": [dict(kind=k) for k in ("peak", "vr2")],
@@ -18,11 +21,24 @@ VARS = {
     "LVN": [dict(a=a) for a in (0.15, 0.30)],
     "AVR": [dict(anchor=a, delta=d) for a in ANCH for d in ("any", "green")],
     "AVF": [dict(anchor=a, k=k) for a in ANCH for k in (2.0, 2.5)],
+    "IC": [dict(anchor=a, tol=t, kind=k) for a in ANCH2 for t in (0.1, 0.2, 0.3) for k in ("bounce", "break")],
+    "ENVF": [dict(drop=d) for d in ("1bar", "vr")],
+    "ENVC": [dict(level=lv, surge=sg) for lv in ("sd1", "vw") for sg in ("cum", "bar")],
+    "SWP": [dict(x=x, m=m) for x in (5, 10, 20) for m in (1, 2, 3)],
+    "OFP": [dict(where=w, when=t) for w in ("hvnedge", "lvnedge") for t in ("aggr", "absorb")],
+    "BK": [dict(trend=t) for t in ("e20", "e20vw")],
+    "VA30": [dict(kind=k) for k in ("close", "full")],
+    "PINCH": [dict(p=p) for p in (0.25, 0.5)],
+    "PWR": [dict(anchor=a, delta=d) for a in ("pwh", "pwl") for d in ("any", "green")],
 }
-EXITS = {"MP": list(GEOMS) + ["jd", "e9c1", "vt", "vt9", "tx"], "VT": list(GEOMS) + ["jd", "e9c1", "tx"],
-         "JD": list(GEOMS) + ["jd", "e9c1", "vt9", "tx"], "VA": list(GEOMS) + ["poc", "poc2", "jd", "tx"],
+_X4 = list(GEOMS) + ["jd", "e9c1", "tx"]
+EXITS = {"MP": list(GEOMS) + ["jd", "e9c1", "vt", "vt9", "tx", "c9", "trail9"], "VT": list(GEOMS) + ["jd", "e9c1", "tx"],
+         "JD": list(GEOMS) + ["jd", "e9c1", "vt9", "tx", "c9", "trail9"], "VA": list(GEOMS) + ["poc", "poc2", "jd", "tx"],
          "BLK": list(GEOMS) + ["blk"], "LVN": list(GEOMS) + ["jd", "e9c1", "tx"], "AVR": list(GEOMS) + ["jd", "e9c1", "tx"],
-         "AVF": list(GEOMS) + ["avw", "e9c1"]}
+         "AVF": list(GEOMS) + ["avw", "e9c1"],
+         "IC": _X4, "ENVF": list(GEOMS) + ["avw", "e9c1"], "ENVC": list(GEOMS) + ["jd", "c9", "trail9", "tx"], "SWP": _X4,
+         "OFP": _X4, "BK": list(GEOMS) + ["trail9", "c9", "tx"], "VA30": list(GEOMS) + ["poc2", "poc", "tx"], "PINCH": _X4,
+         "PWR": _X4}
 
 
 def trig(D, fam, s, v, p, ex):
@@ -93,14 +109,85 @@ def trig(D, fam, s, v, p, ex):
             if s < 0:
                 return ok & ((c["h5"] - c[f"av_{a}"]) / sd >= k) & (c["v5"] < c["v_p1"])
             return ok & ((c["l5"] - c[f"av_{a}"]) / sd <= -k) & (c["v5"] < c["v_p1"])
+        if fam == "IC":
+            a = v["anchor"]
+            av, vw = c[f"av_{a}"], c["vw5"]
+            conf = np.abs(vw - av) / vw * 100 <= p.get("tol", v["tol"])
+            lvl = np.maximum(vw, av) if s > 0 else np.minimum(vw, av)
+            if v["kind"] == "bounce":
+                hit = ((c["c_p1"] > lvl) & (c["l5"] <= lvl) & (c["c5"] > lvl)) if s > 0 else \
+                      ((c["c_p1"] < lvl) & (c["h5"] >= lvl) & (c["c5"] < lvl))
+            else:
+                hit = ((c["c_p1"] <= lvl) & (c["c5"] > lvl)) if s > 0 else ((c["c_p1"] >= lvl) & (c["c5"] < lvl))
+            return conf & hit
+        if fam == "ENVF":
+            k = p["k"]
+            drop = (c["v5"] < c["v_p1"]) if v["drop"] == "1bar" else (c["volumeRatio"] < 1)
+            ok = c["sd1"] > 0
+            if s < 0:
+                return ok & (c["h5"] >= c["vw1"] + k * c["sd1"]) & drop
+            return ok & (c["l5"] <= c["vw1"] - k * c["sd1"]) & drop
+        if fam == "ENVC":
+            tol = 0.02 * c["atr_b"]
+            lvl = c["vw1"] + s * c["sd1"] if v["level"] == "sd1" else c["vw1"]
+            surge = (c["rvol"] >= p["surge"]) if v["surge"] == "cum" else (c["volumeRatio"] >= p["surge"])
+            if s > 0:
+                return (c["pct_abv"] >= p["strong"]) & (c["l5"] <= lvl + tol) & (c["c5"] > lvl) & surge
+            return (c["pct_blw"] >= p["strong"]) & (c["h5"] >= lvl - tol) & (c["c5"] < lvl) & surge
+        if fam == "SWP":
+            nm = "L" if s > 0 else "S"
+            x, m = p.get("x", v["x"]), p.get("m", v["m"])
+            return (c[f"sw{nm}_{x}_{m}"] > 0) & (s * c["dlt"] > p["dmin"])
+        if fam == "OFP":
+            if s > 0:
+                dn, air = c["dlo"], c["aDlo"]
+                upper = c["c5"] >= (c["h5"] + c["l5"]) / 2
+            else:
+                dn, air = c["dhi"], c["aUhi"]
+                upper = c["c5"] <= (c["h5"] + c["l5"]) / 2
+            where = ((dn >= p["hvn"]) & (air < p["lvn"])) if v["where"] == "hvnedge" else ((dn < p["lvn"]) & upper)
+            when = (s * c["dlt"] >= p["dag"]) if v["when"] == "aggr" else ((s * c["dlt"] <= 0) & (s * (c["c5"] - c["o5"]) >= 0))
+            return where & when
+        if fam == "BK":
+            tol = p["tol"] * c["atr_b"]
+            if s > 0:
+                m = (c["e9"] > c["e20"]) & (c["l5"] <= c["e9"] + tol) & (c["c5"] >= c["e9"])
+                return m & (c["c5"] > c["vw5"]) if v["trend"] == "e20vw" else m
+            m = (c["e9"] < c["e20"]) & (c["h5"] >= c["e9"] - tol) & (c["c5"] <= c["e9"])
+            return m & (c["c5"] < c["vw5"]) if v["trend"] == "e20vw" else m
+        if fam == "VA30":
+            P = p["pct"]
+            lo, hi = c[f"pval{P}"], c[f"pvah{P}"]
+            opened = (c["day_open"] < lo) if s > 0 else (c["day_open"] > hi)
+            if v["kind"] == "close":
+                ins = (c["c30a"] > lo) & (c["c30a"] < hi) & (c["c30b"] > lo) & (c["c30b"] < hi)
+            else:
+                ins = (c["l30a"] >= lo) & (c["h30a"] <= hi) & (c["l30b"] >= lo) & (c["h30b"] <= hi)
+            ahead = (c["c5"] < hi) if s > 0 else (c["c5"] > lo)
+            return opened & ins & ahead
+        if fam == "PINCH":
+            a1, a2 = c["av_qop"], c["av_gap"]
+            pinch = np.abs(a1 - a2) / c["c5"] * 100 <= p.get("p", v["p"])
+            lvl = np.maximum(a1, a2) if s > 0 else np.minimum(a1, a2)
+            brk = ((c["c_p1"] <= lvl) & (c["c5"] > lvl)) if s > 0 else ((c["c_p1"] >= lvl) & (c["c5"] < lvl))
+            return pinch & brk & (s * c["dlt"] > 0)
+        if fam == "PWR":
+            nm = "L" if s > 0 else "S"
+            m = c[f"rt{nm}_{v['anchor']}_{p['d']}"] > 0
+            if v["delta"] == "green":
+                m &= (s * (c["c5"] - c["o5"]) > 0)
+            return m
     raise KeyError(fam)
 
 
 # ------------------------------------------------------------------ layers
 LAYERS = ["rvol15", "rvol2", "vwap_with", "vwap_against", "e9_with", "m15_with", "rsi5_hi", "rsi5_lo", "flowsell",
-          "flowbuy", "gap_with", "gap_against", "gapper", "orb_with", "dsma20_with", "pdroom"]
+          "flowbuy", "gap_with", "gap_against", "gapper", "orb_with", "dsma20_with", "pdroom", "dcn", "vslope"]
 LBASE = {"rvol15": 1.5, "rvol2": 2.0, "rsi5_hi": 70, "rsi5_lo": 30, "flowsell": -0.25, "flowbuy": 0.25, "gap_with": 1.0,
-         "gap_against": 1.0, "gapper": 2.0, "pdroom": 0.5}
+         "gap_against": 1.0, "gapper": 2.0, "pdroom": 0.5, "dcn": 0.2, "vslope": 0.03}
+
+
+
 def layer(D, name, s, th=None):
     c = D
     t = LBASE.get(name) if th is None else th
@@ -136,6 +223,10 @@ def layer(D, name, s, th=None):
         if name == "pdroom":
             d = c["dist_pdh_atr"] if s > 0 else c["dist_pdl_atr"]
             return (d < 0) | (d >= t)
+        if name == "dcn":
+            return np.abs(c["vw5"] - c["spoc"]) / c["vw5"] * 100 <= t
+        if name == "vslope":
+            return c["vsl"] >= t
     raise KeyError(name)
 
 

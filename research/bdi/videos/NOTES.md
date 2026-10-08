@@ -138,3 +138,91 @@ At p = 0.05, roughly 13,000 configurations would look positive on valid by chanc
 - Duplicate masks (the same trades) are collapsed.
 - Each finalist gets a `type: lab` module (SIDE, GEOM, LAYERS, REQUIRES, mask(df)).
 - Finalists with structural exits are flagged: LabStrategy cannot run those exits today.
+
+## 0b. Volume II amendment (declared 2026-10-08 ~15:25 UTC, still BEFORE any configuration was scored)
+
+The owner added `SOURCE_owner_pdf_vol2.txt` (videos 6-15). Its "Volume II Technical Synthesis Matrix" gets extra weight: each matrix row becomes a named family, tested faithfully (no layers) and layered.
+- The features come from a second pass, `build2.py` / `features2.py`. That pass is causal; the truncation test passed.
+- Section 0 is amended below. Everything not mentioned stays as declared: data, costs, gates and windows.
+
+**Anchors available before 2026-09-16 (no look-ahead):**
+- **pwh / pwl:** the highest-high / lowest-low 1-minute bar of the previous calendar week.
+- **gap:** the open bar of the latest prior session with abs(gap) >= 2%.
+- **qop:** the first session of the day's calendar quarter (2026-07-01).
+  - If the day is itself that session, or the quarter began before the cache, the anchor is the cache start (2026-06-15). This affects only 06-30 and 07-01.
+  - A **year-open** anchor is impossible because the cache starts 2026-06-15; the quarter open stands in for it.
+- **Earnings anchor:** not derivable. There is no earnings calendar in the data, so it was not tested.
+
+**Delta proxy (no footprint data):**
+- dlt = sum over the bar's 1-minute bars of sign(close - previous 1-minute close) x volume, divided by the bar's volume (tick rule, range -1..1).
+- The first minute of the session is compared with the prior session's last close.
+- This is a crude stand-in for bid/ask footprint delta.
+
+**Flat-VWAP filter:**
+- vsl = abs(VWAP_i - VWAP_{i-6}) / ATR, i.e. the VWAP move over the last 30 minutes in daily-ATR units.
+- The "> 30 degrees" rule depends on chart scale and has no unit-free meaning.
+- Threshold 0.03 (neighbours 0.015 / 0.06). This was set from the feature's distribution alone, before any outcome was looked at: about the 70th percentile, median 0.014.
+
+### Matrix families (long described, short = mirror)
+| fam | matrix row / video | trigger | variants |
+|---|---|---|---|
+| IC | Institutional Confluence (SMB #6) | session VWAP within tol% of a multi-day AVWAP (anchor pwh/pwl/gap/qop). Level = the far side of the two lines: max(VWAP, AVWAP) for a long. **bounce:** previous close above the level, low_i <= level, close_i > level. **break:** previous close <= level, close_i > level | anchor 4 x tol {0.1, 0.2, 0.3}% x {bounce, break} = 24 |
+| ENVF | Mean Reversion Envelopes (Wysetrade #7) | short: high_i >= VWAP + 2 SD (session VWAP / volume-weighted SD from 1-minute bars) on dropping volume | drop {1bar: v_i < v_{i-1}; vr: volumeRatio < 1} = 2 |
+| ENVC | Wysetrade continuation | strong trend (>= 80% of closes above VWAP); low_i <= level + 0.02 ATR and close_i > level, level in {+1 SD, VWAP}; surging RVOL {cum: rvol >= 1.5; bar: volumeRatio >= 1.5} | 4 |
+| SWP | Microstructure Sweeps (Conti #8) | the previous close was above VWAP; a bar within the last m bars (incl. i) pierced VWAP by >= x ATR; closes stayed outside until bar i, which closes back above VWAP with dlt > 0 | x {0.05, 0.10, 0.20} x m {1, 2, 3} = 9 |
+| OFP | Order Flow Precision (PAVT #10) | WHERE: **hvnedge** = low in an HVN (density >= 0.5 x POC) with an LVN below (mean density over the next 0.25 ATR < 0.3); **lvnedge** = low probed an LVN (density < 0.3) and the close is in the upper half of the bar. WHEN: **aggr** dlt >= 0.3; **absorb** dlt <= 0 with close >= open | 2 x 2 = 4 |
+| DCN | Dual Confluence Nodes (Mind Math Money #9) | a new LAYER on every family: abs(session VWAP - today's session-profile POC) / VWAP <= 0.2% | (layer) |
+
+### Other Volume II rules
+| fam | source | trigger | variants |
+|---|---|---|---|
+| BK | BKTraders 9-EMA ride (#11) | EMA9 > EMA20; low_i <= EMA9 + 0.02 ATR; close_i >= EMA9 | {trend; trend + close beyond VWAP} = 2 |
+| VA30 | Data Trader 80% rule (#14), as stated | opened outside the prior-day 70% VA; the last two completed 30-minute bars (from 09:30) are inside | {close: both closes inside; full: both ranges inside} = 2 |
+| PINCH | TheOneLanceB anchor pinch (#13) | abs(AVWAP_qop - AVWAP_gap) / close <= p%; close breaks above both (previous close <= the higher one) with dlt > 0 (order-flow direction) | p {0.25, 0.5} = 2 |
+| PWR | Trader Dale prior-week AVWAP (#12) | first retest of the pwh / pwl AVWAP (same rule as AVR: 0.3 ATR departure, first touch holds). The source uses a limit order; here the entry is at the touch bar's close | anchor 2 x delta {any, green} = 4 |
+
+### New exits
+- **c9:** exit at the next open after a 5-minute close beyond EMA9. Hard stop at 2R.
+- **trail9** (BKTraders):
+  - The stop starts 1c beyond the signal candle's extreme.
+  - It trails candle by candle to each later completed 5-minute bar's low (long) or high (short).
+  - Also exits on a 5-minute close beyond EMA9.
+
+| fam | exits | per-side pairs |
+|---|---|---|
+| MP | Vol I exits + c9, trail9 (10) | 180 |
+| JD | Vol I exits + c9, trail9 (9) | 18 |
+| VT, VA, BLK, LVN, AVR, AVF | unchanged | 12 + 21 + 16 + 12 + 60 + 50 = 171 |
+| IC | lab3, jd, e9c1, tx (6) | 144 |
+| ENVF | lab3, avw (target the session VWAP), e9c1 (5) | 10 |
+| ENVC | lab3, jd, c9, trail9, tx (7) | 28 |
+| SWP | lab3, jd, e9c1, tx (6) | 54 |
+| OFP | lab3, jd, e9c1, tx (6) | 24 |
+| BK | lab3, trail9, c9, tx (6) | 12 |
+| VA30 | lab3, poc2 (opposite edge = the rule's target), poc, tx (6) | 12 |
+| PINCH | lab3, jd, e9c1, tx (6) | 12 |
+| PWR | lab3, jd, e9c1, tx (6) | 24 |
+
+Per side: 369 (Vol I families) + 320 (Vol II) = 689. Both sides: **1,378 trigger-exit pairs**.
+
+### Layers (now 18)
+- The 16 layers of section 0, plus:
+  - **dcn:** VWAP-POC within 0.2% (neighbours 0.1 / 0.3)
+  - **vslope:** vsl >= 0.03 (neighbours 0.015 / 0.06)
+- Layer sets: none 1 + single 18 + pairs C(18,2) = 153 minus the 5 dropped pairs = 148, so **167 layer sets**.
+
+### Total declared (supersedes section 0's total)
+1,378 x 167 x 3 = **690,378 configurations**, plus the plateau neighbours. At p = 0.05, roughly 35,000 configurations would come out positive by chance alone.
+
+### Plateau neighbours for the new families
+| family | neighbours |
+|---|---|
+| IC | the adjacent tolerance |
+| ENVF / ENVC | k 1.5 / 2.5 (ENVF); strong 70% / 90%; surge threshold 1.25 / 2.0 |
+| SWP | adjacent x; adjacent m; dlt threshold 0.1 |
+| OFP | density 0.4 / 0.6; LVN 0.2 / 0.4; dlt 0.2 / 0.4 |
+| BK | tolerance 0.0 / 0.05 |
+| VA30 | VA 60 / 80 |
+| PINCH | adjacent p (0.1 / 0.25 / 0.5 / 1.0) |
+| PWR | departure 0.2 / 0.5 |
+| dcn / vslope | as listed above |

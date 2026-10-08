@@ -26,22 +26,33 @@ WIN = {"am": (950, 1130), "pm": (1130, 1500), "all": (950, 1500)}
 TRAIN_END = pd.Timestamp("2026-08-25").date()
 
 
+def _parts(sub):
+    t = ds.dataset(str(DATA / sub), format="parquet").to_table()
+    t = t.sort_by([("symbol", "ascending"), ("date", "ascending"), ("tod", "ascending")])
+    x = t.to_pandas()
+    x["date"] = pd.to_datetime(x["date"]).dt.date
+    return x
+
+
 def frame():
     keys = ["symbol", "date", "tod"]
-    t = ds.dataset(str(DATA / "parts"), format="parquet").to_table()
-    t = t.sort_by([("symbol", "ascending"), ("date", "ascending"), ("tod", "ascending")])
-    parts = t.to_pandas()
-    del t
-    parts["date"] = pd.to_datetime(parts["date"]).dt.date
     lab = pd.concat([load("train", columns=LAB), load("valid", columns=LAB)], ignore_index=True)
-    if "--partial" in sys.argv:                       # smoke test on the symbols built so far
-        lab = lab[lab.symbol.isin(set(parts.symbol))]
+    out = []
+    for sub in ("parts", "parts2"):
+        parts = _parts(sub)
+        if "--partial" in sys.argv:                       # smoke test on the symbols built so far
+            lab = lab[lab.symbol.isin(set(parts.symbol))]
+        out.append(parts)
+    if "--partial" in sys.argv:
+        common = set(lab.symbol)
+        out = [p[p.symbol.isin(common)].reset_index(drop=True) for p in out]
     lab = lab.sort_values(keys).reset_index(drop=True)
-    assert len(lab) == len(parts), (len(lab), len(parts))
-    for k in keys:
-        assert (lab[k].to_numpy() == parts[k].to_numpy()).all(), k
-    df = pd.concat([lab, parts.drop(columns=keys)], axis=1)
-    del parts
+    for parts in out:
+        assert len(lab) == len(parts), (len(lab), len(parts))
+        for k in keys:
+            assert (lab[k].to_numpy() == parts[k].to_numpy()).all(), k
+    df = pd.concat([lab] + [p.drop(columns=keys) for p in out], axis=1)
+    del out
     assert np.allclose(df.close, df.c5, rtol=1e-6)
     return df
 
@@ -77,11 +88,34 @@ def trig_neighbours(fam, v, p):
     elif fam == "AVF":
         steps = {2.0: (1.5, 2.5), 2.5: (2.0, 3.0)}[v["k"]]
         out += [(v, P(k=x)) for x in steps]
+    elif fam == "IC":
+        out += [(v, P(tol=x)) for x in {0.1: (0.2,), 0.2: (0.1, 0.3), 0.3: (0.2,)}[v["tol"]]]
+    elif fam == "ENVF":
+        out += [(v, P(k=1.5)), (v, P(k=2.5))]
+    elif fam == "ENVC":
+        out += [(v, P(strong=0.7)), (v, P(strong=0.9)), (v, P(surge=1.25)), (v, P(surge=2.0))]
+    elif fam == "SWP":
+        xs = (5, 10, 20)
+        i = xs.index(v["x"])
+        out += [(v, P(x=xs[j])) for j in (i - 1, i + 1) if 0 <= j < 3]
+        out += [(v, P(m=m)) for m in (v["m"] - 1, v["m"] + 1) if 1 <= m <= 3]
+        out += [(v, P(dmin=0.1))]
+    elif fam == "OFP":
+        out += [(v, P(hvn=0.4)), (v, P(hvn=0.6)), (v, P(lvn=0.2)), (v, P(lvn=0.4)), (v, P(dag=0.2)), (v, P(dag=0.4))]
+    elif fam == "BK":
+        out += [(v, P(tol=0.0)), (v, P(tol=0.05))]
+    elif fam == "VA30":
+        out += [(v, P(pct=60)), (v, P(pct=80))]
+    elif fam == "PINCH":
+        out += [(v, P(p=x)) for x in {0.25: (0.1, 0.5), 0.5: (0.25, 1.0)}[v["p"]]]
+    elif fam == "PWR":
+        out += [(v, P(d=20)), (v, P(d=50))]
     return out
 
 
 LNEI = {"rvol15": (1.25, 2.0), "rvol2": (1.5, 2.5), "rsi5_hi": (65, 75), "rsi5_lo": (25, 35), "flowsell": (-0.15, -0.35),
-        "flowbuy": (0.15, 0.35), "gap_with": (0.5, 1.5), "gap_against": (0.5, 1.5), "gapper": (1.5, 3.0), "pdroom": (0.25, 0.75)}
+        "flowbuy": (0.15, 0.35), "gap_with": (0.5, 1.5), "gap_against": (0.5, 1.5), "gapper": (1.5, 3.0), "pdroom": (0.25, 0.75),
+        "dcn": (0.1, 0.3), "vslope": (0.015, 0.06)}
 BADPAIR = {frozenset(x) for x in (("vwap_with", "vwap_against"), ("rsi5_hi", "rsi5_lo"), ("flowsell", "flowbuy"),
                                   ("gap_with", "gap_against"), ("rvol15", "rvol2"))}
 COMBOS = [()] + [(a,) for a in LAYERS] + [c for c in itertools.combinations(LAYERS, 2) if frozenset(c) not in BADPAIR]
@@ -112,13 +146,13 @@ class S:
         if ex in GEOMS:
             return self.D[f"r_{sd}_{ex}"] - self.hair
         if ex == "avw":
-            return self.D[f"x_{sd}_avw_{v['anchor']}"]
+            return self.D[f"x_{sd}_avw_{v.get('anchor', 'open')}"]
         if ex == "blk":
             return self.D[f"x_{sd}_blk_{v['L']}_{v['c']}_{(p or {}).get('e', v['e'])}"]
         return self.D[f"x_{sd}_{ex}"]
 
     def baseline(self, s, ex, v, w, valid):
-        bkey = (s, "t1s05" if ex == "blk" else ex, v["anchor"] if ex == "avw" else None, w, valid)
+        bkey = (s, "t1s05" if ex == "blk" else ex, v.get("anchor", "open") if ex == "avw" else None, w, valid)
         if bkey not in self.base:
             r = self.outcome(s, "t1s05" if ex == "blk" else ex, v)
             m = self.W[w] & np.isfinite(r) & (self.valid == valid)

@@ -21,11 +21,22 @@ DESC = {
     "LVN": "Fractal Flow LVN air pocket: close beyond the 6-bar extreme, composite-profile density ahead < {a} x POC",
     "AVR": "Jumpstart AVWAP first retest ({anchor} anchor): >= 0.3 ATR departure, first touch holds{delta}",
     "AVF": "Jumpstart AVWAP fade ({anchor} anchor): {k} SD extension on fading volume, counter-trend",
+    "IC": "SMB institutional confluence: session VWAP within {tol}% of the multi-day {anchor} AVWAP, {kind} at that node",
+    "ENVF": "Wysetrade envelope fade: 2 SD VWAP band touched on dropping volume ({drop}), counter-trend",
+    "ENVC": "Wysetrade continuation: strong trend, dip to the {level} band holds, surging RVOL ({surge})",
+    "SWP": "Conti VWAP liquidity sweep: pierce VWAP by >= {x}% ATR, reclaim within {m} bars with positive delta proxy",
+    "OFP": "PAVT order-flow precision: profile {where} (WHERE) with delta-proxy {when} (WHEN)",
+    "BK": "BKTraders 9-EMA ride: pullback touches EMA9 and holds, EMA9 beyond EMA20 ({trend})",
+    "VA30": "Data Trader 80% rule: opened outside the prior-day value area, two 30-minute bars inside ({kind})",
+    "PINCH": "TheOneLanceB anchor pinch: quarter-open and gap-day AVWAPs within {p}%, breakout with order flow",
+    "PWR": "Trader Dale prior-week AVWAP ({anchor}) first retest{delta}",
 }
 EXIT_TXT = {"t1s1": "lab t1s1 (+1R / -1R)", "t05s1": "lab t05s1 (+0.5R / -1R)", "t1s05": "lab t1s05 (+1R / -0.5R)",
             "jd": "STRUCTURAL jd: exit on a 5-min close through the closer of EMA9/VWAP, 2R hard stop",
             "e9c1": "STRUCTURAL e9c1: exit on a 1-min close through the 1-min EMA9, 2R hard stop",
             "vt": "STRUCTURAL vt: stop beyond the 3-bar extreme, exit at the next volume top", "vt9": "STRUCTURAL vt9: vt + 5-min close through EMA9",
+            "c9": "STRUCTURAL c9: exit on a 5-min close through EMA9, 2R hard stop",
+            "trail9": "STRUCTURAL trail9: candle-by-candle trailing stop (prior 5-min bar extreme) + 5-min close through EMA9",
             "tx": "STRUCTURAL tx: hold to 15:55, 2R hard stop", "poc": "STRUCTURAL poc: target prior-day POC, stop beyond the session extreme",
             "poc2": "STRUCTURAL poc2: target the opposite prior-day VA edge, stop beyond the session extreme",
             "avw": "STRUCTURAL avw: target a touch of the anchored VWAP, 1R stop", "blk": "STRUCTURAL blk: limit at the block POC, stop beyond VAL/VAH, target the breakout extreme"}
@@ -34,7 +45,8 @@ LTXT = {"rvol15": "cumulative RVOL >= 1.5", "rvol2": "cumulative RVOL >= 2", "vw
         "m15_with": "15-minute close beyond its EMA9 and VWAP on the trade side", "rsi5_hi": "RSI(5) >= 70", "rsi5_lo": "RSI(5) <= 30",
         "flowsell": "buyPressure < -0.25 (flow-sell)", "flowbuy": "buyPressure > 0.25 (flow-buy)", "gap_with": "gap >= 1% in the trade direction",
         "gap_against": "gap >= 1% against the trade direction", "gapper": "abs(gap) >= 2%", "orb_with": "close beyond the 15-min opening range",
-        "dsma20_with": "close beyond the daily SMA20 on the trade side", "pdroom": "no prior-day high/low within 0.5 ATR ahead"}
+        "dsma20_with": "close beyond the daily SMA20 on the trade side", "pdroom": "no prior-day high/low within 0.5 ATR ahead",
+        "dcn": "session VWAP within 0.2% of today's volume-profile POC (dual confluence)", "vslope": "VWAP not flat: 30-min VWAP move >= 0.03 ATR"}
 
 TEMPLATE = '''"""{name} - BDI video-digest finalist (2026-10-08), research/bdi/videos.
 {desc}
@@ -43,8 +55,9 @@ Train (06-30..08-25): n {tr_n}, exp {tr_exp:+.4f}R, day-t {tr_t:.2f}; valid (08-
 ex-best-day {va_exbest:+.4f}R. After costs (production haircut / 1c+1bps per side +2c stops). Plateau positive.
 {struct_note}
 LIVE NEEDS: LabStrategy.generate must join features.day_features(ctx.bars, <prior-session 1-minute bars>, ctx.prior5,
-ctx.avg_cum_volume, ctx.atr) and set d_sma20 = ctx.sma20, atr_b = ctx.atr. DayContext does not carry the prior
-session's 1-minute bars today (needed for the prior-day profile and prior-day anchors).
+ctx.avg_cum_volume, ctx.atr) and features2.day_features2(ctx.bars, <1-minute history since the anchors>, <prior-session
+1-minute bars>, ctx.atr, <anchors>, ctx.prev_close), and set d_sma20 = ctx.sma20, atr_b = ctx.atr. DayContext does not
+carry prior-session / multi-day 1-minute bars today (prior-day profile, prior-day and multi-day anchors).
 Research finalist only: NOT live until the lead's locked-holdout scoring and the backlog/ledger process.
 Educational only - not financial advice."""
 import sys
@@ -87,7 +100,7 @@ def describe(fam, v, side):
                  kind="volume = today's peak" if v["kind"] == "peak" else "volumeRatio >= 2")
     if fam == "JD":
         f.update(trend=", >= 80% of closes on that side of VWAP" if v["trend"] == "strong" else "")
-    if fam == "AVR":
+    if fam in ("AVR", "PWR"):
         f.update(delta=", bar closes in the trade direction" if v["delta"] == "green" else "")
     return DESC[fam].format(**f)
 
