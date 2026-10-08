@@ -54,6 +54,10 @@ class PaperRunner:
         self.fired: set[tuple[str, str]] = set()
         self.seen: set[tuple[str, str]] = set()      # signals already journaled today
         self.open_strategy: dict[str, str] = {}
+        # symbol -> time an entry was submitted. A market entry is not a broker position until it fills, so without
+        # this a second setup firing on the same symbol in the same poll passed "already in symbol" (2026-10-08:
+        # EDV x4, GDXJ x3, KMI x3, SHW x2, ARKK x2 stacked).
+        self.pending: dict[str, float] = {}
         self.managed: dict[str, dict] = {}   # symbol -> trade-management state (time stop / breakeven / trail)
         self.bars: dict[str, pd.DataFrame] = {}
         self.last_fetch: pd.Timestamp | None = None
@@ -145,9 +149,13 @@ class PaperRunner:
     def _mcf_symbols(self) -> set[str]:
         return set(self.open_strategy)
 
+    PENDING_GRACE_S = 300
+
     def _sync_open(self):
         held = set(self.broker.positions()) if not self.dry_run else self._mcf_symbols()
-        self.risk.state.open_symbols = held & self._mcf_symbols()
+        now = _time.time()
+        self.pending = {s: t0 for s, t0 in self.pending.items() if s not in held and now - t0 < self.PENDING_GRACE_S}
+        self.risk.state.open_symbols = (held | set(self.pending)) & self._mcf_symbols()
         counts: dict[str, int] = {}
         for sym in self.risk.state.open_symbols:
             st = self.open_strategy.get(sym)
@@ -369,6 +377,7 @@ class PaperRunner:
         except Exception as e:  # broker rejects are journaled, not fatal
             return self._log(sig, "rejected", str(e)[:200], px, now, info, qty)
         self.fired.add(key)
+        self.pending[sig.symbol] = _time.time()
         self.risk.state.trades_today += 1
         self.risk.state.open_symbols.add(sig.symbol)
         self.open_strategy[sig.symbol] = sig.strategy
