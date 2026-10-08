@@ -502,3 +502,62 @@ python research/bdi/videos/gen_modules.py && python research/bdi/videos/finalist
   - 10 failures, including the grid summary
   - 5 untestable ideas
 - Educational only - not financial advice.
+
+---
+
+## 10. Locked holdouts (scored ONCE, 2026-10-08, lead-authorized; look 1, bar: t >= 1.0, exp > 0 and ex-best-day > 0 on BOTH)
+`score_holdouts.py` -> `holdouts.json`.
+
+**What was scored:**
+- 10 rules: VID1-VID8 exactly as committed, plus the 2 extra passers.
+  - X1 = PWR prior-week-low AVWAP retest short, gap_with + dsma20_with, pm, t1s1.
+  - X2 = AVF pdhv +2SD fade short, rvol15 + gap_with, all day, avw.
+- No module, rule or exit was changed after seeing the numbers.
+
+**How:**
+- **Features** were built with the research code (build.one / build2.one) for:
+  - test 2026-09-16..10-05, from data/cache/1Min with timestamps < 2026-10-06 (14 sessions)
+  - q2 2026-04-01..06-30, from data/cache_q2/1Min, which starts 2026-03-10 (62 sessions)
+- **History rules** were the same as in research: 40 prior 5-min bars, plus prior-session and prior-week 1-min bars.
+  - The prior-week anchor existed on every symbol-day; 0 days were excluded.
+  - 554 q2 lab rows had no features (symbol-days with < 60 one-minute bars) and were dropped. Test lost 0 rows.
+- **Costs:**
+  - Lab t1s1 uses the `prod` function from research/owner1008/score_holdouts.py.
+  - tx / avw use the 1-minute simulator: 1c + 1 bps per side, +2c on stops; tx exits at the 15:55 open and pays exit costs.
+
+### Verdict: 0 of 10 pass. Every rule fails at least one holdout.
+| rule | test n / days | test exp / t / ex-best / green | q2 n / days | q2 exp / t / ex-best / green | look-1 |
+|---|---|---|---|---|---|
+| VID1 mp-2 rsi5_hi short am tx | 89 / 14 | -0.025 / -0.12 / -0.146 / 0.43 | 277 / 61 | +0.064 / 0.52 / +0.001 / 0.36 | FAIL |
+| VID2 ic-pwh-break 0.1 gap pm tx | 34 / 11 | -0.207 / -2.60 / -0.258 / 0.27 | 148 / 43 | -0.184 / -1.46 / -0.239 / 0.47 | FAIL |
+| VID3 mp-1 rsi5_hi short am tx | 61 / 14 | +0.063 / 0.24 / -0.075 / 0.50 | 180 / 56 | +0.101 / 0.70 / +0.026 / 0.39 | FAIL |
+| VID4 mp-1 rsi5_lo gap pm tx | 173 / 14 | +0.061 / 0.52 / -0.012 / 0.64 | 1,032 / 62 | -0.090 / -1.32 / -0.111 / 0.44 | FAIL |
+| VID5 ic-pwh-break 0.2 rvol am tx | 118 / 14 | +0.046 / 0.25 / -0.052 / 0.57 | 437 / 62 | -0.145 / -1.43 / -0.186 / 0.44 | FAIL |
+| VID6 vt-vr2 gap sma20 pm tx | 65 / 14 | -0.117 / -1.27 / -0.171 / 0.21 | 274 / 50 | -0.027 / -0.33 / -0.064 / 0.50 | FAIL |
+| VID7 mp-1 rsi5_hi pdroom am tx | 40 / 13 | +0.087 / 0.25 / -0.076 / 0.46 | 97 / 45 | **+0.271 / 1.59 / +0.171 / 0.53** | FAIL (test) |
+| VID8 avr-pdh gap sma20 pm tx | 175 / 13 | -0.051 / -0.49 / -0.127 / 0.38 | 615 / 60 | -0.005 / -0.05 / -0.055 / 0.53 | FAIL |
+| X1 pwr-pwl gap sma20 pm t1s1 | 72 / 12 | **+0.112 / 1.26 / +0.049 / 0.58** | 279 / 48 | -0.015 / -0.18 / -0.052 / 0.50 | FAIL (q2) |
+| X2 avf-pdhv 2SD rvol gap avw | 68 / 13 | +0.144 / 0.79 / +0.008 / 0.62 | 305 / 56 | -0.050 / -0.63 / -0.081 / 0.45 | FAIL |
+
+Win rates are in holdouts.json.
+
+### Market context (why the q2 number is the real check)
+| | test (Sep 16 - Oct 5) | q2 (Apr - Jun) |
+|---|---|---|
+| median open-to-close, all symbol-days | -0.22% | +0.025% |
+| sessions with a negative median | 79% | 48% |
+| random short, tx exit, 09:50-15:00 / pm | -0.040 / -0.008 R | -0.047 / -0.046 R |
+| random short, t1s1 (prod), 09:50-15:00 / pm | -0.086 / -0.075 R | -0.048 / -0.042 R |
+
+**Reading:**
+- The research-window edge was a down-drift effect.
+- Even on test, another down-drift window, the hold-to-close shorts did not repeat: 6 of 8 have negative ex-best-day.
+- On q2, a flat market, the gap-down and IC shorts are clearly negative: VID2, VID4 and VID5 have t from -1.3 to -1.5.
+- VID7, the narrowest version of the micro-pullback short (RSI5 >= 70, AM, prior-day-low room), is the only rule positive on q2 at t >= 1.0. It is noise-level on test (n 40, t 0.25, ex-best-day negative).
+- Its parent VID1, with 3x the trades, is flat on both holdouts. So the VID7 q2 result is most likely selection luck inside a dead family.
+
+**Status:**
+- All 10 are `holdout_failed` (look 1 burned for the bdi-vid lineages).
+- Under rule 18, a rework could take look 2 (t >= 1.5). Of the lineages, only the micro-pullback short with an RSI5 extreme (VID1/3/7) has any holdout support, and it is weak.
+- Nothing goes to the primary account.
+- The Testing account option is a probation-style forward test of VID7 only, labelled as a holdout failure. That is the owner's call. Recommendation: do not deploy.

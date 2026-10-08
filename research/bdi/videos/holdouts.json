@@ -1,0 +1,244 @@
+{
+ "meta": {
+  "test": {
+   "rows": 1078464,
+   "lab_rows_without_features": 0,
+   "sessions": 14,
+   "symbol_days": 17154,
+   "symbol_days_without_prior_week_anchor (excluded for pwh/pwl rules)": 0,
+   "median_open_to_close_pct (all symbol-days)": -0.22,
+   "median_of_daily_median_open_to_close_pct": -0.176,
+   "share_of_sessions_with_negative_median_o2c": 0.786,
+   "baseline_short_tx_random": -0.0395,
+   "baseline_short_t1s1_random": -0.086,
+   "baseline_short_tx_random_pm": -0.0075,
+   "baseline_short_t1s1_random_pm": -0.075
+  },
+  "q2": {
+   "rows": 4725940,
+   "lab_rows_without_features": 554,
+   "sessions": 62,
+   "symbol_days": 75237,
+   "symbol_days_without_prior_week_anchor (excluded for pwh/pwl rules)": 0,
+   "median_open_to_close_pct (all symbol-days)": 0.025,
+   "median_of_daily_median_open_to_close_pct": 0.025,
+   "share_of_sessions_with_negative_median_o2c": 0.484,
+   "baseline_short_tx_random": -0.0473,
+   "baseline_short_t1s1_random": -0.048,
+   "baseline_short_tx_random_pm": -0.0464,
+   "baseline_short_t1s1_random_pm": -0.0417
+  }
+ },
+ "rules": {
+  "VID1-mp-2-vw-any-rsi5_hi-short-am-tx": {
+   "test": {
+    "n": 89,
+    "days": 14,
+    "win_rate": 0.461,
+    "exp_r": -0.0249,
+    "t": -0.12,
+    "ex_best_day": -0.1463,
+    "green_days": 0.429
+   },
+   "q2": {
+    "n": 277,
+    "days": 61,
+    "win_rate": 0.523,
+    "exp_r": 0.0638,
+    "t": 0.52,
+    "ex_best_day": 0.0012,
+    "green_days": 0.361
+   },
+   "passes_look1": false
+  },
+  "VID2-ic-pwh-break-01-e9_with-gap_with-short-pm-tx": {
+   "test": {
+    "n": 34,
+    "days": 11,
+    "win_rate": 0.382,
+    "exp_r": -0.2069,
+    "t": -2.6,
+    "ex_best_day": -0.2584,
+    "green_days": 0.273
+   },
+   "q2": {
+    "n": 148,
+    "days": 43,
+    "win_rate": 0.432,
+    "exp_r": -0.1838,
+    "t": -1.46,
+    "ex_best_day": -0.2391,
+    "green_days": 0.465
+   },
+   "passes_look1": false
+  },
+  "VID3-mp-1-vw-any-rsi5_hi-short-am-tx": {
+   "test": {
+    "n": 61,
+    "days": 14,
+    "win_rate": 0.459,
+    "exp_r": 0.0634,
+    "t": 0.24,
+    "ex_best_day": -0.0745,
+    "green_days": 0.5
+   },
+   "q2": {
+    "n": 180,
+    "days": 56,
+    "win_rate": 0.517,
+    "exp_r": 0.1005,
+    "t": 0.7,
+    "ex_best_day": 0.0263,
+    "green_days": 0.393
+   },
+   "passes_look1": false
+  },
+  "VID4-mp-1-vw-any-rsi5_lo-gap_with-short-pm-tx": {
+   "test": {
+    "n": 173,
+    "days": 14,
+    "win_rate": 0.503,
+    "exp_r": 0.0612,
+    "t": 0.52,
+    "ex_best_day": -0.0118,
+    "green_days": 0.643
+   },
+   "q2": {
+    "n": 1032,
+    "days": 62,
+    "win_rate": 0.463,
+    "exp_r": -0.0896,
+    "t": -1.32,
+    "ex_best_day": -0.1109,
+    "green_days": 0.435
+   },
+   "passes_look1": false
+  },
+  "VID5-ic-pwh-break-02-rvol15-e9_with-short-am-tx": {
+   "test": {
+    "n": 118,
+    "days": 14,
+    "win_rate": 0.475,
+    "exp_r": 0.046,
+    "t": 0.25,
+    "ex_best_day": -0.0522,
+    "green_days": 0.571
+   },
+   "q2": {
+    "n": 437,
+    "days": 62,
+    "win_rate": 0.439,
+    "exp_r": -0.1445,
+    "t": -1.43,
+    "ex_best_day": -0.1864,
+    "green_days": 0.435
+   },
+   "passes_look1": false
+  },
+  "VID6-vt-vr2-gap_with-dsma20_with-short-pm-tx": {
+   "test": {
+    "n": 65,
+    "days": 14,
+    "win_rate": 0.415,
+    "exp_r": -0.1169,
+    "t": -1.27,
+    "ex_best_day": -0.1714,
+    "green_days": 0.214
+   },
+   "q2": {
+    "n": 274,
+    "days": 50,
+    "win_rate": 0.507,
+    "exp_r": -0.0271,
+    "t": -0.33,
+    "ex_best_day": -0.0635,
+    "green_days": 0.5
+   },
+   "passes_look1": false
+  },
+  "VID7-mp-1-vw-any-rsi5_hi-pdroom-short-am-tx": {
+   "test": {
+    "n": 40,
+    "days": 13,
+    "win_rate": 0.425,
+    "exp_r": 0.0872,
+    "t": 0.25,
+    "ex_best_day": -0.0764,
+    "green_days": 0.462
+   },
+   "q2": {
+    "n": 97,
+    "days": 45,
+    "win_rate": 0.557,
+    "exp_r": 0.2711,
+    "t": 1.59,
+    "ex_best_day": 0.1706,
+    "green_days": 0.533
+   },
+   "passes_look1": false
+  },
+  "VID8-avr-pdh-any-gap_with-dsma20_with-short-pm-tx": {
+   "test": {
+    "n": 175,
+    "days": 13,
+    "win_rate": 0.503,
+    "exp_r": -0.0509,
+    "t": -0.49,
+    "ex_best_day": -0.1273,
+    "green_days": 0.385
+   },
+   "q2": {
+    "n": 615,
+    "days": 60,
+    "win_rate": 0.52,
+    "exp_r": -0.005,
+    "t": -0.05,
+    "ex_best_day": -0.0549,
+    "green_days": 0.533
+   },
+   "passes_look1": false
+  },
+  "X1-pwr-pwl-gap_with-dsma20_with-short-pm-t1s1": {
+   "test": {
+    "n": 72,
+    "days": 12,
+    "win_rate": 0.569,
+    "exp_r": 0.112,
+    "t": 1.26,
+    "ex_best_day": 0.049,
+    "green_days": 0.583
+   },
+   "q2": {
+    "n": 279,
+    "days": 48,
+    "win_rate": 0.523,
+    "exp_r": -0.0153,
+    "t": -0.18,
+    "ex_best_day": -0.052,
+    "green_days": 0.5
+   },
+   "passes_look1": false
+  },
+  "X2-avf-pdhv-20-rvol15-gap_with-short-all-avw": {
+   "test": {
+    "n": 68,
+    "days": 13,
+    "win_rate": 0.515,
+    "exp_r": 0.1438,
+    "t": 0.79,
+    "ex_best_day": 0.0082,
+    "green_days": 0.615
+   },
+   "q2": {
+    "n": 305,
+    "days": 56,
+    "win_rate": 0.466,
+    "exp_r": -0.0497,
+    "t": -0.63,
+    "ex_best_day": -0.0807,
+    "green_days": 0.446
+   },
+   "passes_look1": false
+  }
+ }
+}
