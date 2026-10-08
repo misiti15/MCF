@@ -1,13 +1,49 @@
 {
- "sessions": 2,
- "window": "2026-10-06 to 2026-10-07",
+ "sessions": 3,
+ "window": "2026-10-06 to 2026-10-08",
  "setups": [
   {
+   "setup": "NS2-sma50break-overbought-short",
+   "trades": 2,
+   "win_rate": 1.0,
+   "avg_r": 0.773,
+   "pnl": 33.31,
+   "expected_r": 0.021,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "MF1-945-flowsell-vwapup",
+   "trades": 5,
+   "win_rate": 0.4,
+   "avg_r": 0.354,
+   "pnl": -6.21,
+   "expected_r": -0.05,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "NS4-pm-vwap-reclaim-oversold-short",
+   "trades": 2,
+   "win_rate": 0.5,
+   "avg_r": 0.058,
+   "pnl": 8.33,
+   "expected_r": -0.08,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "MF3-open-flowsell-rsi5hi",
+   "trades": 5,
+   "win_rate": 0.6,
+   "avg_r": 0.054,
+   "pnl": 2.46,
+   "expected_r": -0.034,
+   "verdict": "too few trades"
+  },
+  {
    "setup": "heat_fade_long",
-   "trades": 30,
-   "win_rate": 0.433,
-   "avg_r": -0.079,
-   "pnl": -100.75,
+   "trades": 35,
+   "win_rate": 0.429,
+   "avg_r": -0.102,
+   "pnl": -108.78,
    "expected_r": -0.138,
    "verdict": "negative so far"
   },
@@ -21,21 +57,48 @@
    "verdict": "negative so far"
   },
   {
+   "setup": "MF5-flowsell-vwapup-rsi5hi",
+   "trades": 8,
+   "win_rate": 0.375,
+   "avg_r": -0.169,
+   "pnl": -24.11,
+   "expected_r": -0.01,
+   "verdict": "too few trades"
+  },
+  {
    "setup": "orb20_a",
-   "trades": 7,
-   "win_rate": 0.143,
-   "avg_r": -0.411,
-   "pnl": -257.32,
+   "trades": 8,
+   "win_rate": 0.25,
+   "avg_r": -0.187,
+   "pnl": -253.02,
    "expected_r": -0.04,
    "verdict": "too few trades"
   },
   {
-   "setup": "exhaustion_short",
+   "setup": "MF4-h40-open-flowsell",
    "trades": 4,
-   "win_rate": 0.0,
-   "avg_r": -0.617,
-   "pnl": -73.52,
+   "win_rate": 0.25,
+   "avg_r": -0.336,
+   "pnl": -17.04,
+   "expected_r": -0.017,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "exhaustion_short",
+   "trades": 19,
+   "win_rate": 0.211,
+   "avg_r": -0.478,
+   "pnl": -179.2,
    "expected_r": -0.02,
+   "verdict": "below backtest - review"
+  },
+  {
+   "setup": "MF2-open-rsimidhi-flowsell",
+   "trades": 1,
+   "win_rate": 0.0,
+   "avg_r": -1.007,
+   "pnl": -7.99,
+   "expected_r": 0.046,
    "verdict": "too few trades"
   }
  ],
