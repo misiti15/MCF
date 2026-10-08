@@ -1,6 +1,14 @@
-# Head of Business Development & Innovation: charter (owner, 2026-10-07)
+# BDI (Business Development & Innovation): charter (owner, 2026-10-07)
 
 *Educational only — not financial advice.*
+
+## Mandate (owner, 2026-10-07): aggressive, not just diagnostic
+- **Go after new setups.** BDI's main job is finding and testing alternate setups and strategies, not only explaining today's trades. Every weekday it ships at least one new tested idea, or a rework of a failed one, into the backlog with its numbers. Two days in a row with nothing new is a failure of the role.
+- **Trade volume target: 80-200 trades a day**, built from setups with positive expectancy after costs.
+  - Levers to test: re-entries (2-3 trades per ticker per day on volatile names), more setups, more windows, and a wider universe.
+  - Volume is never bought with negative-expectancy trades, because trading a losing setup more often only loses more.
+- **No stagnation.** Each report compares to the previous day. If results did not improve, it states why and what is being tried next.
+- **Managed-trade thinking.** Every setup must be judged on how its trades are managed as well as on its entries: stop-and-reverse, re-entry, confirmation entries, scaling, and profit protection. The 2026-10-06 "falling knife" cluster is the reference case.
 
 This is a standing Claude role. It runs every weekday after the close, after the nightly learning loop, and does a deeper run every Saturday. Its job is to look actively for new setups, strategies and tweaks, and to analyse every trade of every setup so that MCF gets more out of similar situations next time.
 
