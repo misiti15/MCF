@@ -368,6 +368,9 @@ class HeatStrategy(Strategy):
         return out[:1]
 
 
+_LAB_FRAMES: dict = {}
+
+
 class LabStrategy(Strategy):
     """A layered setup found by the setup-lab swarm (research/setups2/candidates/*.py). The module exposes
     SIDE ('long'|'short'), GEOM ('t1s1'|'t05s1'|'t1s05': target/stop in R), and mask(df) over the lab
@@ -432,14 +435,20 @@ class LabStrategy(Strategy):
         d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
         if d5.empty:
             return []
-        hist = d5 if ctx.prior5 is None or ctx.prior5.empty else pd.concat([ctx.prior5, d5])
-        f = heat_frame(hist)
-        f["atr_d"] = ctx.atr
-        f = f.join(extra_features(hist, f)).iloc[-len(d5):].copy()
-        f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
-        # prior-day levels: the 5-minute history only carries the last 40 prior bars
-        f["dist_pdh_atr"] = (ctx.prev_high - f["close"]) / ctx.atr
-        f["dist_pdl_atr"] = (f["close"] - ctx.prev_low) / ctx.atr
+        key = (ctx.symbol, str(ctx.date) if hasattr(ctx, "date") else "", len(bars), bars.index[-1])
+        f = _LAB_FRAMES.get(key)
+        if f is None:   # one feature build per symbol and bar, shared by every lab setup
+            hist = d5 if ctx.prior5 is None or ctx.prior5.empty else pd.concat([ctx.prior5, d5])
+            f = heat_frame(hist)
+            f["atr_d"] = ctx.atr
+            f = f.join(extra_features(hist, f)).iloc[-len(d5):].copy()
+            f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
+            # prior-day levels: the 5-minute history only carries the last 40 prior bars
+            f["dist_pdh_atr"] = (ctx.prev_high - f["close"]) / ctx.atr
+            f["dist_pdl_atr"] = (f["close"] - ctx.prev_low) / ctx.atr
+            if len(_LAB_FRAMES) > 4000:
+                _LAB_FRAMES.clear()
+            _LAB_FRAMES[key] = f
         tod = f["tod"].to_numpy()
         lo, hi = self.window or (950, 1500)      # the YAML window binds live AND backtest (no drift)
         m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= max(950, lo)) & (tod <= min(1500, hi))
