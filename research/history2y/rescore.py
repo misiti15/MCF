@@ -211,7 +211,18 @@ def report(res: pd.DataFrame, reg: pd.DataFrame, trades: pd.DataFrame) -> str:
         L.append(f"| {r.setup} | {r.group} | {r.side}/{r.geom or 'bt'} | {int(r.n)} | {r.per_day} | {r.win_rate} | {f(r.exp_r)} | {r.t} | "
                  f"{r.t_required} | {f(r.up_exp)} ({int(r.up_n)}) | {f(r.flat_exp)} | {f(r.down_exp)} ({int(r.down_n)}) | {r.wf_share_pos} | "
                  f"{f(r.unseen_exp)} ({int(r.unseen_n)}, {r.unseen_t}) | **{r.verdict}** | {r.failed_gates} |")
-    L += ["", "## Per-quarter expectancy (R after costs)", ""]
+    L += ["", "## How to read this",
+          "- A 'rework' verdict that comes from the regime rescue (one of up / down positive with t >= 2) does NOT mean "
+          "the setup works: the session regime is only known at the close. A rework must find a real-time proxy known at "
+          "entry (e.g. the index's move from the open, or a prior-day trend) and is a new lineage step whose "
+          "configurations are counted.",
+          "- Most short setups lose in up sessions and win in down sessions: the train/valid/test edge of 2026-06..10 "
+          "was largely the down-drift regime, as diagnosed on 2026-10-08.",
+          "- t bars are high because the lineages searched 7k-935k configurations; sqrt(2 ln N) is what the best of N "
+          "noise configurations reaches by luck.",
+          "- Survivorship: today's 1,226 names applied to 2024-2025. Point-in-time ADV is applied, but names that "
+          "dropped out of the market are missing.",
+          "", "## Per-quarter expectancy (R after costs)", ""]
     qs = sorted({q for s in sc["per_quarter"] for q in json.loads(s)})
     L.append("| Setup | " + " | ".join(qs) + " |")
     L.append("|---|" + "---|" * len(qs))
