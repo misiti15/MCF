@@ -22,6 +22,8 @@ This is a standing Claude role. It runs every weekday after the close, after the
    - The loss type: never worked, gave back gains, stopped then reversed, late hold, wrong side after a big swing, news or earnings.
 2. **Keep a running pattern tally per setup.** It goes in `research/bdi/patterns.csv`: a pattern seen on 3 or more days becomes a backlog hypothesis.
 3. **Act on the owner's chart reads.** Every ticker and time the owner flags is turned into a testable rule, using only information known at that minute, and tested across all stocks and days.
+   - **Suggestions, not rules (owner, 2026-10-09).** The owner's notes and outside rules of thumb are hypotheses for analysis and testing, never hard-coded "rules". Keep the rule set lean: only what passes the gates goes live.
+   - Progress is measured day over day: each day's report says what was tested and what was learned.
 4. **Look for new ideas.** Sources:
    - the owner's notes
    - the metric map (`research/primitives/primitives/METRIC_MAP.md`)
