@@ -48,3 +48,16 @@ def test_live_lab_frame_has_volume_and_module_runs():
     st.generate(ctx)                  # must not raise
     f = next(v for k, v in _LAB_FRAMES.items() if k[0] == "RW6TEST")
     assert "volume" in f and float(f["volume"].iloc[0]) == 5000.0
+
+
+def test_time_of_day_tracking():
+    from mcf.report.eod import tod_bucket, tod_table
+    from mcf.report.scorecard import build
+
+    ts = pd.to_datetime(["2026-10-09 13:55:00+00:00", "2026-10-09 17:10:00+00:00", "2026-10-09 18:30:00+00:00"])
+    tr = pd.DataFrame({"entry_time": ts, "pnl": [5.0, -3.0, 2.0], "r_multiple": [0.5, -1.0, 0.2], "strategy": "x",
+                       "date": "2026-10-09"})
+    assert tod_bucket(ts[0].tz_convert("America/New_York")) == "09:50-10:30"
+    g = tod_table(tr)
+    assert list(g["bucket"]) == ["09:50-10:30", "13:00-14:00", "14:00-16:00"]
+    assert build(tr)["by_time"][0]["trades"] == 1

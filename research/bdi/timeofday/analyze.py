@@ -47,6 +47,30 @@ def perm_test(tr: pd.DataFrame, rng) -> tuple[float, float]:
     return f0, (1 + cnt) / (NPERM + 1)
 
 
+def block_perm_test(tr: pd.DataFrame, rng) -> tuple[float, float]:
+    """Corrected primary test (NOTES.md 0.5a): within each session, the five bucket labels are relabelled by one random
+    permutation (whole bucket blocks move together), so the one-trade-per-symbol-day-per-bucket structure and the
+    within-day correlation of a symbol's trades are preserved. Same F statistic."""
+    r = tr["r"].to_numpy(float)
+    b = pd.Categorical(tr["set"], categories=BK).codes
+    d = pd.factorize(tr["date"])[0]
+    mu = r.mean()
+
+    def F(lbl):
+        s = np.bincount(lbl, weights=r, minlength=5)
+        n = np.bincount(lbl, minlength=5)
+        m = np.where(n > 0, s / np.maximum(n, 1), mu)
+        return float((n * (m - mu) ** 2).sum())
+
+    f0 = F(b)
+    nd = d.max() + 1
+    cnt = 0
+    for _ in range(NPERM):
+        perms = np.argsort(rng.random((nd, 5)), axis=1)
+        cnt += F(perms[d, b]) >= f0 - 1e-12
+    return f0, (1 + cnt) / (NPERM + 1)
+
+
 def cluster_wald(tr: pd.DataFrame) -> tuple[float, float]:
     """OLS r ~ bucket dummies (B1 base), CR1 session-clustered covariance; Wald chi2 for equal bucket means."""
     present = [k for k in BK if (tr["set"] == k).sum() > 0]
@@ -115,6 +139,7 @@ def main():
             rows.append(row)
         bt = xs[xs["set"].isin(BK)]
         f0, pp = perm_test(bt, rng) if len(bt) else (np.nan, np.nan)
+        fb, pb = block_perm_test(bt, rng) if len(bt) else (np.nan, np.nan)
         W, pw = cluster_wald(bt) if len(bt) else (np.nan, np.nan)
         # out-of-sample bucket choice: best bucket (n >= MIN_N) on one half, scored on the other
         oos = {}
@@ -128,7 +153,7 @@ def main():
                       "oos_exp": per[best][f"{b.lower()}_exp"], "oos_n": per[best][f"{b.lower()}_n"],
                       "oos_full": per["full"][f"{b.lower()}_exp"], "oos_cur": per["current"][f"{b.lower()}_exp"]}
         cur, full = per["current"], per["full"]
-        tests.append({"setup": setup, "side": side, "window": None, "perm_F": round(f0, 3), "perm_p": round(pp, 4),
+        tests.append({"setup": setup, "side": side, "window": None, "perm_F": round(f0, 3), "rowperm_p": round(pp, 4), "perm_p": round(pb, 4),
                       "wald_chi2": round(W, 2) if np.isfinite(W) else None, "wald_p": round(pw, 4) if np.isfinite(pw) else None,
                       "cur_n": cur["n"], "cur_per_day": cur["per_day"], "cur_exp": cur["exp_r"], "cur_t": cur["t"],
                       "full_n": full["n"], "full_per_day": full["per_day"], "full_exp": full["exp_r"], "full_t": full["t"],
@@ -140,6 +165,7 @@ def main():
     res = pd.DataFrame(rows)
     te = pd.DataFrame(tests)
     te["bh_q"] = bh(te["perm_p"].to_numpy()).round(4)
+    te["bh_q_rowperm"] = bh(te["rowperm_p"].to_numpy()).round(4)
     te["bh_q_wald"] = bh(te["wald_p"].fillna(1).to_numpy()).round(4)
 
     def rec(r):
@@ -149,7 +175,7 @@ def main():
             return "keep window" if both else "unclear"
         return "widen to full day"
     te["recommendation"] = te.apply(rec, axis=1)
-    res = res.merge(te[["setup", "perm_p", "wald_p", "bh_q", "recommendation"]], on="setup", how="left")
+    res = res.merge(te[["setup", "rowperm_p", "perm_p", "wald_p", "bh_q", "recommendation"]], on="setup", how="left")
 
     # pooled view: bucket exp minus the setup's full-day exp, equal weight per setup, by side x half / regime
     pooled = []
@@ -195,10 +221,10 @@ def main():
            "oos_pairs": len(o), "oos_share_beats_full": round(float((o["diff"] > 0).mean()), 3),
            "oos_mean_diff": round(float(o["diff"].mean()), 4), "oos_se_diff": round(float(o["diff"].std() / np.sqrt(len(o))), 4),
            "ins_mean_diff": round(float(o["ins_diff"].mean()), 4),
-           "cur_vs_full_h1_share": round(float((te.cur_h1 > te.full_h1).mean()), 3),
-           "cur_vs_full_h2_share": round(float((te.cur_h2 > te.full_h2).mean()), 3),
-           "cur_minus_full_h1_mean": round(float((te.cur_h1 - te.full_h1).mean()), 4),
-           "cur_minus_full_h2_mean": round(float((te.cur_h2 - te.full_h2).mean()), 4),
+           "cur_vs_full_h1_share": round(float((te.cur_h1.astype(float) > te.full_h1.astype(float)).mean()), 3),
+           "cur_vs_full_h2_share": round(float((te.cur_h2.astype(float) > te.full_h2.astype(float)).mean()), 3),
+           "cur_minus_full_h1_mean": round(float((te.cur_h1.astype(float) - te.full_h1.astype(float)).mean()), 4),
+           "cur_minus_full_h2_mean": round(float((te.cur_h2.astype(float) - te.full_h2.astype(float)).mean()), 4),
            "n_bh10": int((te.bh_q <= 0.10).sum()), "n_bh05": int((te.bh_q <= 0.05).sum()),
            "n_raw05": int((te.perm_p <= 0.05).sum()), "recs": te["recommendation"].value_counts().to_dict()}
     o.to_csv(DATA / "oos_pairs.csv", index=False)

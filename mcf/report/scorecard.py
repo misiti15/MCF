@@ -51,7 +51,12 @@ def build(trades: pd.DataFrame, sessions: int = 4) -> dict:
                      "avg_r": round(float(r.mean()), 3), "pnl": round(float(g["pnl"].sum()), 2),
                      "expected_r": None if e is None else round(e, 3), "verdict": verdict})
     rows.sort(key=lambda x: x["avg_r"], reverse=True)
-    return {"sessions": len(days), "window": f"{days[0]} to {days[-1]}", "setups": rows,
+    from .eod import tod_table   # cumulative time-of-day tracking (owner 2026-10-09), all sessions so far
+
+    tod = tod_table(trades)
+    by_time = [{"bucket": x.bucket, "trades": int(x.trades), "win_rate": round(float(x.win), 3),
+                "avg_r": round(float(x.avg_r), 3), "pnl": round(float(x.pnl), 2)} for x in tod.itertuples()]
+    return {"sessions": len(days), "window": f"{days[0]} to {days[-1]}", "setups": rows, "by_time": by_time,
             "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge."}
 
 

@@ -118,6 +118,40 @@ def _quality(tr: pd.DataFrame, bars: dict) -> str:
     return "<h3>Execution and trade quality</h3>" + "".join(parts) if parts else ""
 
 
+TOD_BUCKETS = [(930, 950, "09:30-09:50"), (950, 1030, "09:50-10:30"), (1030, 1130, "10:30-11:30"), (1130, 1300, "11:30-13:00"),
+               (1300, 1400, "13:00-14:00"), (1400, 1600, "14:00-16:00")]
+
+
+def tod_bucket(ts) -> str:
+    """Entry-time bucket (owner 2026-10-09: keep tracking time of day even though setups trade their tested windows)."""
+    hm = ts.hour * 100 + ts.minute
+    return next((lab for lo, hi, lab in TOD_BUCKETS if lo <= hm < hi), "other")
+
+
+def tod_table(tr: pd.DataFrame) -> pd.DataFrame:
+    """Trades, win rate, avg R and P/L per entry-time bucket."""
+    if tr is None or not len(tr):
+        return pd.DataFrame(columns=["bucket", "trades", "win", "avg_r", "pnl"])
+    t = tr.assign(bucket=pd.to_datetime(tr["entry_time"], utc=True).dt.tz_convert("America/New_York").map(tod_bucket))
+    g = t.groupby("bucket").agg(trades=("pnl", "size"), win=("pnl", lambda p: (p > 0).mean()),
+                                avg_r=("r_multiple", "mean"), pnl=("pnl", "sum")).reset_index()
+    order = {lab: i for i, (_, _, lab) in enumerate(TOD_BUCKETS)}
+    return g.sort_values("bucket", key=lambda b: b.map(order).fillna(99))
+
+
+def _time_of_day(tr: pd.DataFrame) -> str:
+    g = tod_table(tr)
+    if not len(g):
+        return ""
+    td = "style='padding:3px 8px;border-bottom:1px solid #e1e0d9;text-align:left'"
+    return ("<h3>By time of day (entry)</h3><table style='border-collapse:collapse;font-size:12px'><tr>" +
+            "".join(f"<th {td}>{h}</th>" for h in ("Entry time", "Trades", "Win", "Avg R", "P/L")) + "</tr>" +
+            "".join(f"<tr><td {td}>{x.bucket}</td><td {td}>{x.trades}</td><td {td}>{x.win:.0%}</td><td {td}>{x.avg_r:+.2f}</td>"
+                    f"<td {td}>${x.pnl:,.2f}</td></tr>" for x in g.itertuples()) +
+            "</table><div style='font-size:11px;color:#52514e'>Tracked to test whether time of day matters live; "
+            "the cumulative view is in the scorecard.</div>")
+
+
 def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None,
           intraday: list | None = None, bars: dict | None = None):
     tr = journal.trades(run_id=run_id)
@@ -158,6 +192,7 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% lost</th><th {td}>P/L</th></tr>
 {rows}</table>
 {_quality(tr, bars or {})}
+{_time_of_day(tr)}
 <h3>By setup</h3>
 <table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>P/L</th></tr>
 {by_setup or '<tr><td colspan=5>No trades.</td></tr>'}</table>
