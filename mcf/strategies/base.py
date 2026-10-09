@@ -42,6 +42,12 @@ class Signal:
     meta: dict[str, Any] = field(default_factory=dict)
 
 
+# Prior-session 5-minute bars carried into each day for indicator warm-up (live priors and the backtester alike).
+# 60 (was 40) so a 5-minute SMA50 exists from the first decision bar: with 40 it was undefined until ~10:20 and
+# SMA50-cross lab setups missed 11-40% of the trades their history scans counted (time-of-day study 2026-10-09).
+PRIOR5_BARS = 60
+
+
 @dataclass
 class DayContext:
     symbol: str

@@ -1,0 +1,34 @@
+# STAGED Testing-account snippet (research/bdi/reddit, 2026-10-09) - NOT live, NOT merged into config/*.
+# BDI Reddit study: 20 Reddit strategies x 2 sides x 16 filter sets x 3-4 exits = 2,528 configurations full-day
+# (09:50-15:00) + 23 neighbours (N = 2,551, t_required 3.96) on the open two-year lab history. NO configuration met the
+# live-probation bar (NOTES.md section 2). These three are the "best few" by the rule fixed in NOTES.md 1.8
+# (amendment A); each FAILS the bar (t 0.03-0.23, regime split, walk-forward < 0.6, ex-best-day < 0).
+# They are staged DISABLED. Recommendation: do not enable - they carry no measurable edge after costs; listed only so
+# the lead/owner can choose to forward-test them under the 4-session scorecard. Enabling is a setup change
+# (ledger + outside 09:30-16:00 ET, RESEARCH_RULES 9-17). NOT scored on the rule-19 locked block.
+# Lab backtest numbers only. Educational only - not financial advice.
+strategies:
+  # R04 gap-and-go short mirror + rvol; n 3895 (9.1/day) exp +0.010R t 0.23; up -0.244 / down +0.213; WF 0.53
+  RD1-gapgo-lodbreak-rvol-short-FD:
+    enabled: false
+    type: lab
+    module: research/bdi/reddit/modules/RD1-gapgo-lodbreak-rvol-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # R05 gap-fill short + rvol + SMA20 slope down; n 380 (0.89/day) exp +0.006R t 0.20; up -0.035 / down +0.027; WF 0.43
+  RD2-gapfill-openloss-rvol-slope-short-FD:
+    enabled: false
+    type: lab
+    module: research/bdi/reddit/modules/RD2-gapfill-openloss-rvol-slope-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # R03 VWAP rubber-band long + SMA20 slope up + in play; n 151 (0.35/day) exp +0.003R t 0.03; up -0.030 / down +0.091; WF 0.50
+  RD3-vwapfade-band1-slope-inplay-long-FD:
+    enabled: false
+    type: lab
+    module: research/bdi/reddit/modules/RD3-vwapfade-band1-slope-inplay-long-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
