@@ -148,3 +148,9 @@ Up/flat counts are scan counts; ST1 regime counts differ by a few trades from th
 ### 2.3 Modules
 `research/bdi/stack1009/modules/ST1..ST8-*.py` (SIDE, GEOM, LAYERS, mask(df); live-frame columns only; VWAP from vwapDistPct, VWAP stretch / OR / PDH / PDL from the *_atr distance columns, prev-bar respects symbol-day boundaries). Backlog: `bdi-st-st1..st8-*` (status testing, lab_module set).
 
+
+## Locked block (rule 19), scored ONCE by the lead 2026-10-09 ~09:00 ET (`score_locked.py`, `locked.json`)
+Bar (look 1): exp > 0 and t >= 1.0 after costs. Passes: **ST3** (+0.257R, t 1.72, n 57, ex-best-day +0.187, up +0.17 /
+down +0.56) and **ST5** (+0.156R, t 1.10, n 21 - small, down sessions -0.23). Fails: ST1 -0.045, ST2 -0.033, ST4 -0.166,
+ST6 +0.113 (t 0.55), ST7 -0.115, ST8 -0.088. RW6G1 (live since 2026-10-09): -0.209R, t -1.11, n 27 (up -0.43 / down +0.60).
+Educational only - not financial advice.
