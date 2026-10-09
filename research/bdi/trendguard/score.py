@@ -29,7 +29,7 @@ from mcf.research import gates as G  # noqa: E402
 DATA = HERE / "data"
 GEOMK = G.GEOMK
 EXITS = ("cur", "E1", "E2")
-NEW_PER_SETUP = 212
+NEW_PER_SETUP = 224        # 75 guard sets x 3 exits - 1 baseline (NOTES 1.7 + amendment A)
 
 # ------------------------------------------------------------------ lineages (NOTES 1.7)
 RESCORE = pd.read_csv(ROOT / "research/history2y/rescore.csv")
@@ -63,11 +63,23 @@ def guard_sets() -> list[str]:
     out = ["none"] + [v for vs in SINGLES.values() for v in vs] + ["C3", "C6", "C12"]
     for fa, fb in itertools.combinations(SINGLES, 2):
         out += [f"{a}+{b}" for a in SINGLES[fa] for b in SINGLES[fb]]
-    assert len(out) == 71, len(out)
+    out += ["Lr05", "Lr10", "Lm60", "Lm120"]          # amendment A (late-entry / chase guard)
+    assert len(out) == 75, len(out)
     return out
 
 
-def block_arrays(F: pd.DataFrame, side: int) -> dict[str, np.ndarray]:
+def day_extremes(F: pd.DataFrame) -> dict[str, np.ndarray]:
+    """Today's high / low so far (5-min bars incl. this one) and the minute (bar end) of the bar that set each."""
+    d = F["dayid"].to_numpy()
+    h, l = F["high"], F["low"]
+    hod, lod = h.groupby(d).cummax(), l.groupby(d).cummin()
+    mins = (F["tod"] // 100) * 60 + F["tod"] % 100
+    th = pd.Series(np.where(h >= hod, mins, np.nan)).groupby(d).ffill()
+    tl = pd.Series(np.where(l <= lod, mins, np.nan)).groupby(d).ffill()
+    return {"hod": hod.to_numpy(), "lod": lod.to_numpy(), "t_hod": th.to_numpy(), "t_lod": tl.to_numpy(), "mins": mins.to_numpy()}
+
+
+def block_arrays(F: pd.DataFrame, side: int, atr: np.ndarray | None = None) -> dict[str, np.ndarray]:
     """side -1 = short (owner's wording), +1 = long (mirror). True = do not enter on this bar."""
     s = -side                      # +1 for short: 'above' tests
     c, vw, sd = F["close"].to_numpy(), F["vwap"].to_numpy(), F["vsd"].to_numpy()
@@ -95,6 +107,13 @@ def block_arrays(F: pd.DataFrame, side: int) -> dict[str, np.ndarray]:
                 out[f"G4a{A}d{D}"] = (adx > A) & (gap > D)
         lvl = F["vah"].to_numpy() if s > 0 else F["val"].to_numpy()
         out["G5"] = s * (c - lvl) > 0
+        # amendment A: late-entry / chase guard
+        X = day_extremes(F)
+        atr = F["atr_d"].to_numpy() if atr is None else atr
+        reb = (c - X["lod"]) / atr if s > 0 else (X["hod"] - c) / atr
+        since = X["mins"] - (X["t_hod"] if s > 0 else X["t_lod"])
+        out["Lr05"], out["Lr10"] = reb > 0.5, reb > 1.0
+        out["Lm60"], out["Lm120"] = since > 60, since > 120
     return out
 
 
@@ -243,11 +262,11 @@ def lab_part(F, reg, wf_months, setups_all, rows, keep_trades, validation):
     arr = {k: F[k].to_numpy(np.float64) for k in ("high", "low", "close", "ema9", "hi6", "lo6")}
     tod, dayid = F["tod"].to_numpy(np.int64), F["dayid"].to_numpy(np.int64)
     dates, syms = F["date"].dt.date.to_numpy(), F["symbol"].astype(str).to_numpy()
-    blocks = {sd: block_arrays(F, sd) for sd in (-1, 1)}
-    confs = {sd: confirm_arrays(F, sd) for sd in (-1, 1)}
     # per-day atr from the frames (R = 0.25 x atr_d); every row of a day gets that day's value
     atr_day = sig.groupby(dayid[sig["row"].to_numpy()])["atr_d"].first()
     atr_row = pd.Series(dayid).map(atr_day).to_numpy(np.float64)
+    blocks = {sd: block_arrays(F, sd, atr_row) for sd in (-1, 1)}
+    confs = {sd: confirm_arrays(F, sd) for sd in (-1, 1)}
     gsets = guard_sets()
     for (setup, side_s, geom), g in sig.groupby(["setup", "side", "geom"], sort=False):
         name = setup if setup not in ("heat_fade_short", "heat_fade_long") else setup

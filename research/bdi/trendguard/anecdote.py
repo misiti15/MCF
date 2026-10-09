@@ -86,6 +86,29 @@ def main():
         out.append(rec)
     df = pd.DataFrame(out)
     df.to_csv(HERE / "anecdote.csv", index=False)
+    # amendment A (P): would the pullback long have fired on 2026-10-08? (adv filter not applied; these names all pass it)
+    import p_setup as P
+    pr = []
+    for sym in ("ACN", "Z", "NLY", "VTRS"):
+        m1 = pd.read_parquet(ROOT / "data/cache/bdi1008" / f"{sym}.parquet")
+        F = FT.features(m1).reset_index(drop=True)
+        F["dayid"] = pd.factorize(F["date"])[0]
+        m = P.p_mask(F, np.full(len(F), 1e12)) & (F["date"] == pd.Timestamp(DAY)).to_numpy()
+        idx = np.flatnonzero(m)
+        rec = {"symbol": sym, "p_fires": bool(len(idx))}
+        if len(idx):
+            e = np.array([idx[0]], np.int64)
+            a = {k: F[k].to_numpy(np.float64) for k in ("high", "low", "close", "ema9", "hi6", "lo6", "atr_d")}
+            rec["p_bar_end"] = int(F.loc[idx[0], "tod"])
+            for geom, (u, dn) in S.GEOMK.items():
+                for mode, ex in ((0, "cur"), (1, "E1")):
+                    R = 0.25 * a["atr_d"][e]
+                    v, w, st, un = S.sim_many(e, 1, u, dn, mode, R, a["atr_d"][e], a["high"], a["low"], a["close"], a["ema9"], a["hi6"], a["lo6"],
+                                              F["tod"].to_numpy(np.int64), F["dayid"].to_numpy(np.int64))
+                    rec[f"{geom}_{ex}"] = round(float(S.prod_cost(v, w, st, un, a["close"][e])[0]), 2)
+        pr.append(rec)
+    pd.DataFrame(pr).to_csv(HERE / "anecdote_p.csv", index=False)
+    print(pd.DataFrame(pr).to_string())
     pd.set_option("display.width", 300, "display.max_columns", 80)
     print(df.to_string())
 
