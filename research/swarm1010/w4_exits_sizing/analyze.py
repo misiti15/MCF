@@ -218,7 +218,8 @@ def book_metrics(name, rule, t, r, w, base_d, reg, days, half, scale_match=True)
            "d_month_pos": round(float((mon > 0).mean()), 3), "up_days": int(up.sum()), "down_days": int(dn.sum())}
     # live-notional view (weights x atr%/price), same risk matching
     wn = t["wnot"].to_numpy() / t["wnot"].mean()
-    dn_v = daily(t, r, w * wn, days) * k
+    kn = float(wn.sum() / (w * wn).sum()) if (scale_match and (w * wn).sum() > 0) else 1.0
+    dn_v = daily(t, r, w * wn, days) * kn
     dn_b = daily(t, t["r"].to_numpy(), wn, days)
     dd = dn_v - dn_b
     out["notional_d_mean"] = round(float(dd.mean()), 4)
