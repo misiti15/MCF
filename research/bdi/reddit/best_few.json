@@ -1,0 +1,324 @@
+[
+ {
+  "cfg": "R04-gap-go|short|rvol|t1s1",
+  "neigh": [
+   {
+    "param": "p=1.0",
+    "n": 7678,
+    "exp": -0.0174
+   },
+   {
+    "param": "p=3.0",
+    "n": 2293,
+    "exp": 0.0448
+   },
+   {
+    "param": "rvol=1.25",
+    "n": 5383,
+    "exp": -0.0043
+   },
+   {
+    "param": "rvol=2.0",
+    "n": 1894,
+    "exp": 0.0321
+   },
+   {
+    "param": "drop rvol",
+    "n": 12059,
+    "exp": -0.0103,
+    "plateau": false
+   }
+  ],
+  "baseline": -0.074,
+  "n": 3895,
+  "per_day": 9.143,
+  "win": 0.5204,
+  "exp": 0.0095,
+  "t": 0.23,
+  "t_required": 3.961,
+  "up": [
+   -0.2438,
+   1031
+  ],
+  "flat": [
+   -0.0816,
+   1089
+  ],
+  "down": [
+   0.2126,
+   1775
+  ],
+  "wf_share": 0.529,
+  "wf_folds": 17,
+  "ex_best_day": -0.0154,
+  "maxday": 0.036,
+  "plateau_mean": 0.0138,
+  "plateau_min": -0.0174,
+  "verdict": "rework",
+  "fails": [
+   "t 0.23 < 3.961",
+   "regime (up and down must both be > 0)",
+   "walk-forward share 0.529 < 0.6"
+  ],
+  "windows": {
+   "am": {
+    "n": 2849,
+    "exp": 0.0054
+   },
+   "mid": {
+    "n": 624,
+    "exp": 0.0589
+   },
+   "pm": {
+    "n": 422,
+    "exp": -0.0351
+   }
+  }
+ },
+ {
+  "cfg": "R05-gap-fill|short|rvol+trend|t05s1",
+  "neigh": [
+   {
+    "param": "p=1.0",
+    "n": 905,
+    "exp": -0.0764
+   },
+   {
+    "param": "p=3.0",
+    "n": 194,
+    "exp": -0.0312
+   },
+   {
+    "param": "rvol=1.25",
+    "n": 567,
+    "exp": -0.0222
+   },
+   {
+    "param": "rvol=2.0",
+    "n": 199,
+    "exp": -0.0337
+   },
+   {
+    "param": "drop rvol",
+    "n": 1775,
+    "exp": -0.0457,
+    "plateau": false
+   },
+   {
+    "param": "drop trend",
+    "n": 1611,
+    "exp": -0.0256,
+    "plateau": false
+   }
+  ],
+  "baseline": -0.0676,
+  "n": 380,
+  "per_day": 0.892,
+  "win": 0.6526,
+  "exp": 0.0063,
+  "t": 0.2,
+  "t_required": 3.961,
+  "up": [
+   -0.0349,
+   95
+  ],
+  "flat": [
+   0.0119,
+   134
+  ],
+  "down": [
+   0.0273,
+   151
+  ],
+  "wf_share": 0.429,
+  "wf_folds": 14,
+  "ex_best_day": -0.0013,
+  "maxday": 0.045,
+  "plateau_mean": -0.0409,
+  "plateau_min": -0.0764,
+  "verdict": "rework",
+  "fails": [
+   "t 0.2 < 3.961",
+   "regime (up and down must both be > 0)",
+   "walk-forward share 0.429 < 0.6"
+  ],
+  "windows": {
+   "am": {
+    "n": 13,
+    "exp": 0.2366
+   },
+   "mid": {
+    "n": 195,
+    "exp": 0.0062
+   },
+   "pm": {
+    "n": 172,
+    "exp": -0.011
+   }
+  }
+ },
+ {
+  "cfg": "R03-vwap-fade|long|trend+inplay|t1s1",
+  "neigh": [
+   {
+    "param": "p=0.75",
+    "n": 363,
+    "exp": 0.005
+   },
+   {
+    "param": "p=1.25",
+    "n": 72,
+    "exp": -0.1089
+   },
+   {
+    "param": "inplay=1.5",
+    "n": 171,
+    "exp": -0.0536
+   },
+   {
+    "param": "inplay=3.0",
+    "n": 121,
+    "exp": -0.0028
+   },
+   {
+    "param": "drop trend",
+    "n": 2039,
+    "exp": -0.0778,
+    "plateau": false
+   },
+   {
+    "param": "drop inplay",
+    "n": 204,
+    "exp": -0.0726,
+    "plateau": false
+   }
+  ],
+  "baseline": -0.0887,
+  "n": 151,
+  "per_day": 0.354,
+  "win": 0.543,
+  "exp": 0.0026,
+  "t": 0.03,
+  "t_required": 3.961,
+  "up": [
+   -0.0304,
+   49
+  ],
+  "flat": [
+   -0.0857,
+   42
+  ],
+  "down": [
+   0.0914,
+   60
+  ],
+  "wf_share": 0.5,
+  "wf_folds": 4,
+  "ex_best_day": -0.0172,
+  "maxday": 0.066,
+  "plateau_mean": -0.0401,
+  "plateau_min": -0.1089,
+  "verdict": "rework",
+  "fails": [
+   "t 0.03 < 3.961",
+   "regime (up and down must both be > 0)",
+   "walk-forward share 0.5 < 0.6"
+  ],
+  "windows": {
+   "am": {
+    "n": 122,
+    "exp": -0.0131
+   },
+   "mid": {
+    "n": 7,
+    "exp": 0.0789
+   },
+   "pm": {
+    "n": 22,
+    "exp": 0.0656
+   }
+  }
+ },
+ {
+  "cfg": "R19-orb-fib|long|vwap+inplay|t1s1",
+  "neigh": [
+   {
+    "param": "p=0.382",
+    "n": 6751,
+    "exp": -0.0246
+   },
+   {
+    "param": "p=0.618",
+    "n": 463,
+    "exp": 0.2379
+   },
+   {
+    "param": "inplay=1.5",
+    "n": 2266,
+    "exp": 0.0181
+   },
+   {
+    "param": "inplay=3.0",
+    "n": 627,
+    "exp": 0.1396
+   },
+   {
+    "param": "drop vwap",
+    "n": 4887,
+    "exp": -0.004,
+    "plateau": false
+   },
+   {
+    "param": "drop inplay",
+    "n": 25538,
+    "exp": -0.0817,
+    "plateau": false
+   }
+  ],
+  "baseline": -0.0869,
+  "n": 1327,
+  "per_day": 3.115,
+  "win": 0.5607,
+  "exp": 0.0722,
+  "t": 1.37,
+  "t_required": 3.961,
+  "up": [
+   0.1696,
+   809
+  ],
+  "flat": [
+   -0.0289,
+   235
+  ],
+  "down": [
+   -0.1223,
+   283
+  ],
+  "wf_share": 0.375,
+  "wf_folds": 16,
+  "ex_best_day": 0.0247,
+  "maxday": 0.254,
+  "plateau_mean": 0.0927,
+  "plateau_min": -0.0246,
+  "verdict": "rework",
+  "fails": [
+   "t 1.37 < 3.961",
+   "regime (up and down must both be > 0)",
+   "walk-forward share 0.375 < 0.6"
+  ],
+  "windows": {
+   "am": {
+    "n": 833,
+    "exp": 0.0093
+   },
+   "mid": {
+    "n": 341,
+    "exp": 0.2251
+   },
+   "pm": {
+    "n": 153,
+    "exp": 0.0737
+   }
+  }
+ }
+]

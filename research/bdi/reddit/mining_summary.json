@@ -1,0 +1,1881 @@
+{
+ "docs_total": 1701685,
+ "docs_by_sub": {
+  "Daytrading": 259403,
+  "RealDayTrading": 19066,
+  "StockMarket": 484171,
+  "Trading": 34648,
+  "ai_trading": 296,
+  "algotrading": 66518,
+  "options": 248507,
+  "pennystocks": 589076
+ },
+ "docs_core_by_year": {
+  "2019": 11413,
+  "2020": 33970,
+  "2021": 66166,
+  "2022": 54754,
+  "2023": 36606,
+  "2024": 77253,
+  "2025": 99473
+ },
+ "items": [
+  {
+   "key": "risk_rules",
+   "label": "Risk rules (max loss, R:R, 1%)",
+   "group": "risk",
+   "docs": 19502,
+   "core_docs": 11211,
+   "logscore": 50488,
+   "score": 554348.0,
+   "rate_per10k_core": {
+    "2019": 156.0,
+    "2020": 213.1,
+    "2021": 281.6,
+    "2022": 297.9,
+    "2023": 309.5,
+    "2024": 329.6,
+    "2025": 315.3
+   },
+   "trend_slope_per_year": 26.38,
+   "trend_rel": 0.68,
+   "by_sub": {
+    "Daytrading": 9063,
+    "pennystocks": 3793,
+    "options": 3784,
+    "Trading": 1051,
+    "algotrading": 851,
+    "StockMarket": 706,
+    "RealDayTrading": 246,
+    "ai_trading": 8
+   },
+   "verdict_sent": {
+    "pos": 754,
+    "neg": 235,
+    "regime": 138,
+    "decay": 5
+   },
+   "neg_share": 0.238
+  },
+  {
+   "key": "news",
+   "label": "News / catalyst",
+   "group": "setup",
+   "docs": 14467,
+   "core_docs": 1995,
+   "logscore": 39208,
+   "score": 477084.0,
+   "rate_per10k_core": {
+    "2019": 23.7,
+    "2020": 65.4,
+    "2021": 76.3,
+    "2022": 46.2,
+    "2023": 38.2,
+    "2024": 43.2,
+    "2025": 51.7
+   },
+   "trend_slope_per_year": 0.06,
+   "trend_rel": 0.74,
+   "by_sub": {
+    "pennystocks": 10199,
+    "Daytrading": 1641,
+    "options": 1255,
+    "StockMarket": 1017,
+    "Trading": 147,
+    "RealDayTrading": 137,
+    "algotrading": 70,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 162,
+    "neg": 95,
+    "regime": 95,
+    "decay": 8
+   },
+   "neg_share": 0.37
+  },
+  {
+   "key": "price_action",
+   "label": "Price action (no indicators)",
+   "group": "style",
+   "docs": 10761,
+   "core_docs": 8382,
+   "logscore": 28859,
+   "score": 347618.0,
+   "rate_per10k_core": {
+    "2019": 82.4,
+    "2020": 145.7,
+    "2021": 158.4,
+    "2022": 303.2,
+    "2023": 301.9,
+    "2024": 237.3,
+    "2025": 215.8
+   },
+   "trend_slope_per_year": 25.96,
+   "trend_rel": 0.9,
+   "by_sub": {
+    "Daytrading": 6524,
+    "options": 980,
+    "pennystocks": 961,
+    "Trading": 767,
+    "RealDayTrading": 745,
+    "StockMarket": 434,
+    "algotrading": 346,
+    "ai_trading": 4
+   },
+   "verdict_sent": {
+    "pos": 461,
+    "neg": 222,
+    "regime": 265,
+    "decay": 2
+   },
+   "neg_share": 0.325
+  },
+  {
+   "key": "scalping",
+   "label": "Scalping",
+   "group": "style",
+   "docs": 9864,
+   "core_docs": 7662,
+   "logscore": 25614,
+   "score": 272941.0,
+   "rate_per10k_core": {
+    "2019": 70.1,
+    "2020": 149.2,
+    "2021": 204.3,
+    "2022": 238.5,
+    "2023": 222.1,
+    "2024": 199.5,
+    "2025": 207.4
+   },
+   "trend_slope_per_year": 18.93,
+   "trend_rel": 0.99,
+   "by_sub": {
+    "Daytrading": 6484,
+    "options": 1234,
+    "pennystocks": 769,
+    "Trading": 489,
+    "algotrading": 364,
+    "RealDayTrading": 325,
+    "StockMarket": 196,
+    "ai_trading": 3
+   },
+   "verdict_sent": {
+    "pos": 585,
+    "neg": 80,
+    "regime": 162,
+    "decay": 1
+   },
+   "neg_share": 0.12
+  },
+  {
+   "key": "breakout",
+   "label": "Breakout (generic)",
+   "group": "setup",
+   "docs": 7021,
+   "core_docs": 4417,
+   "logscore": 19209,
+   "score": 235146.0,
+   "rate_per10k_core": {
+    "2019": 53.4,
+    "2020": 105.4,
+    "2021": 115.3,
+    "2022": 136.6,
+    "2023": 125.4,
+    "2024": 106.1,
+    "2025": 121.4
+   },
+   "trend_slope_per_year": 7.7,
+   "trend_rel": 0.78,
+   "by_sub": {
+    "Daytrading": 3541,
+    "pennystocks": 1706,
+    "options": 482,
+    "StockMarket": 408,
+    "RealDayTrading": 348,
+    "Trading": 321,
+    "algotrading": 207,
+    "ai_trading": 8
+   },
+   "verdict_sent": {
+    "pos": 190,
+    "neg": 41,
+    "regime": 209,
+    "decay": 3
+   },
+   "neg_share": 0.177
+  },
+  {
+   "key": "float_squeeze",
+   "label": "Low float / short squeeze",
+   "group": "setup",
+   "docs": 5839,
+   "core_docs": 1227,
+   "logscore": 15818,
+   "score": 209161.0,
+   "rate_per10k_core": {
+    "2019": 21.9,
+    "2020": 80.1,
+    "2021": 63.9,
+    "2022": 27.8,
+    "2023": 12.6,
+    "2024": 15.4,
+    "2025": 19.1
+   },
+   "trend_slope_per_year": -6.75,
+   "trend_rel": -0.14,
+   "by_sub": {
+    "pennystocks": 3043,
+    "Daytrading": 1018,
+    "StockMarket": 979,
+    "options": 589,
+    "RealDayTrading": 113,
+    "Trading": 64,
+    "algotrading": 32,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 92,
+    "neg": 44,
+    "regime": 35,
+    "decay": 2
+   },
+   "neg_share": 0.324
+  },
+  {
+   "key": "ml_ai",
+   "label": "ML / AI / LLM models",
+   "group": "style",
+   "docs": 5643,
+   "core_docs": 3301,
+   "logscore": 15246,
+   "score": 221700.0,
+   "rate_per10k_core": {
+    "2019": 212.0,
+    "2020": 114.2,
+    "2021": 56.5,
+    "2022": 44.0,
+    "2023": 72.4,
+    "2024": 56.7,
+    "2025": 136.0
+   },
+   "trend_slope_per_year": -11.69,
+   "trend_rel": -0.44,
+   "by_sub": {
+    "algotrading": 1968,
+    "StockMarket": 974,
+    "Daytrading": 912,
+    "pennystocks": 883,
+    "options": 473,
+    "Trading": 367,
+    "RealDayTrading": 54,
+    "ai_trading": 12
+   },
+   "verdict_sent": {
+    "pos": 247,
+    "neg": 199,
+    "regime": 21,
+    "decay": 1
+   },
+   "neg_share": 0.446
+  },
+  {
+   "key": "rsi",
+   "label": "RSI (levels)",
+   "group": "indicator",
+   "docs": 4628,
+   "core_docs": 2846,
+   "logscore": 12480,
+   "score": 138701.0,
+   "rate_per10k_core": {
+    "2019": 90.2,
+    "2020": 82.1,
+    "2021": 91.1,
+    "2022": 68.5,
+    "2023": 64.7,
+    "2024": 54.1,
+    "2025": 83.5
+   },
+   "trend_slope_per_year": -3.66,
+   "trend_rel": -0.08,
+   "by_sub": {
+    "Daytrading": 1878,
+    "options": 789,
+    "pennystocks": 760,
+    "algotrading": 546,
+    "Trading": 294,
+    "StockMarket": 220,
+    "RealDayTrading": 128,
+    "ai_trading": 13
+   },
+   "verdict_sent": {
+    "pos": 211,
+    "neg": 105,
+    "regime": 86,
+    "decay": 4
+   },
+   "neg_share": 0.332
+  },
+  {
+   "key": "first_pullback",
+   "label": "First pullback / dip buy in trend",
+   "group": "setup",
+   "docs": 4575,
+   "core_docs": 777,
+   "logscore": 12443,
+   "score": 223677.0,
+   "rate_per10k_core": {
+    "2019": 7.0,
+    "2020": 20.3,
+    "2021": 28.6,
+    "2022": 20.5,
+    "2023": 15.0,
+    "2024": 20.5,
+    "2025": 18.7
+   },
+   "trend_slope_per_year": 0.78,
+   "trend_rel": 0.91,
+   "by_sub": {
+    "pennystocks": 2078,
+    "StockMarket": 1416,
+    "Daytrading": 601,
+    "options": 304,
+    "RealDayTrading": 76,
+    "Trading": 65,
+    "algotrading": 35
+   },
+   "verdict_sent": {
+    "pos": 46,
+    "neg": 12,
+    "regime": 16,
+    "decay": 4
+   },
+   "neg_share": 0.207
+  },
+  {
+   "key": "zero_dte",
+   "label": "0DTE options",
+   "group": "style",
+   "docs": 4362,
+   "core_docs": 1529,
+   "logscore": 11586,
+   "score": 117975.0,
+   "rate_per10k_core": {
+    "2019": 0.0,
+    "2020": 3.5,
+    "2021": 7.6,
+    "2022": 50.0,
+    "2023": 68.6,
+    "2024": 53.7,
+    "2025": 53.0
+   },
+   "trend_slope_per_year": 11.44,
+   "trend_rel": 2.0,
+   "by_sub": {
+    "options": 2678,
+    "Daytrading": 1348,
+    "StockMarket": 134,
+    "Trading": 89,
+    "algotrading": 67,
+    "RealDayTrading": 25,
+    "pennystocks": 21
+   },
+   "verdict_sent": {
+    "pos": 175,
+    "neg": 41,
+    "regime": 51,
+    "decay": 3
+   },
+   "neg_share": 0.19
+  },
+  {
+   "key": "support_res",
+   "label": "Support / resistance levels",
+   "group": "setup",
+   "docs": 4109,
+   "core_docs": 3554,
+   "logscore": 11438,
+   "score": 137145.0,
+   "rate_per10k_core": {
+    "2019": 49.1,
+    "2020": 75.7,
+    "2021": 70.0,
+    "2022": 142.3,
+    "2023": 119.7,
+    "2024": 99.8,
+    "2025": 79.4
+   },
+   "trend_slope_per_year": 6.75,
+   "trend_rel": 0.47,
+   "by_sub": {
+    "Daytrading": 2484,
+    "RealDayTrading": 652,
+    "Trading": 309,
+    "options": 243,
+    "pennystocks": 160,
+    "StockMarket": 151,
+    "algotrading": 109,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 150,
+    "neg": 43,
+    "regime": 73,
+    "decay": 1
+   },
+   "neg_share": 0.223
+  },
+  {
+   "key": "vwap",
+   "label": "VWAP (any use)",
+   "group": "indicator",
+   "docs": 3533,
+   "core_docs": 3006,
+   "logscore": 9686,
+   "score": 118028.0,
+   "rate_per10k_core": {
+    "2019": 39.4,
+    "2020": 59.8,
+    "2021": 86.8,
+    "2022": 121.8,
+    "2023": 71.6,
+    "2024": 52.0,
+    "2025": 85.8
+   },
+   "trend_slope_per_year": 3.87,
+   "trend_rel": 0.74,
+   "by_sub": {
+    "Daytrading": 2240,
+    "RealDayTrading": 493,
+    "pennystocks": 263,
+    "options": 194,
+    "algotrading": 142,
+    "Trading": 131,
+    "StockMarket": 70
+   },
+   "verdict_sent": {
+    "pos": 98,
+    "neg": 32,
+    "regime": 99,
+    "decay": 2
+   },
+   "neg_share": 0.246
+  },
+  {
+   "key": "volume",
+   "label": "Volume / RVOL",
+   "group": "indicator",
+   "docs": 3422,
+   "core_docs": 1966,
+   "logscore": 9191,
+   "score": 110690.0,
+   "rate_per10k_core": {
+    "2019": 28.9,
+    "2020": 49.5,
+    "2021": 64.1,
+    "2022": 74.7,
+    "2023": 47.5,
+    "2024": 41.2,
+    "2025": 44.2
+   },
+   "trend_slope_per_year": 0.46,
+   "trend_rel": 0.42,
+   "by_sub": {
+    "Daytrading": 1391,
+    "pennystocks": 958,
+    "RealDayTrading": 357,
+    "options": 328,
+    "StockMarket": 169,
+    "algotrading": 128,
+    "Trading": 90,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 53,
+    "neg": 18,
+    "regime": 73,
+    "decay": 0
+   },
+   "neg_share": 0.254
+  },
+  {
+   "key": "macd",
+   "label": "MACD",
+   "group": "indicator",
+   "docs": 2853,
+   "core_docs": 1933,
+   "logscore": 7797,
+   "score": 98641.0,
+   "rate_per10k_core": {
+    "2019": 45.6,
+    "2020": 65.6,
+    "2021": 60.8,
+    "2022": 43.3,
+    "2023": 36.1,
+    "2024": 39.9,
+    "2025": 58.2
+   },
+   "trend_slope_per_year": -1.37,
+   "trend_rel": 0.24,
+   "by_sub": {
+    "Daytrading": 1412,
+    "pennystocks": 428,
+    "options": 354,
+    "algotrading": 306,
+    "Trading": 149,
+    "StockMarket": 115,
+    "RealDayTrading": 66,
+    "ai_trading": 23
+   },
+   "verdict_sent": {
+    "pos": 127,
+    "neg": 81,
+    "regime": 34,
+    "decay": 3
+   },
+   "neg_share": 0.389
+  },
+  {
+   "key": "ict",
+   "label": "ICT / FVG / liquidity sweep / order block",
+   "group": "setup",
+   "docs": 2981,
+   "core_docs": 2825,
+   "logscore": 7628,
+   "score": 84889.0,
+   "rate_per10k_core": {
+    "2019": 1.8,
+    "2020": 3.8,
+    "2021": 2.9,
+    "2022": 20.8,
+    "2023": 86.3,
+    "2024": 111.8,
+    "2025": 150.5
+   },
+   "trend_slope_per_year": 26.63,
+   "trend_rel": 1.95,
+   "by_sub": {
+    "Daytrading": 2199,
+    "Trading": 552,
+    "pennystocks": 76,
+    "algotrading": 59,
+    "options": 44,
+    "StockMarket": 31,
+    "RealDayTrading": 15,
+    "ai_trading": 5
+   },
+   "verdict_sent": {
+    "pos": 293,
+    "neg": 184,
+    "regime": 22,
+    "decay": 2
+   },
+   "neg_share": 0.386
+  },
+  {
+   "key": "candles",
+   "label": "Candlestick patterns",
+   "group": "indicator",
+   "docs": 2163,
+   "core_docs": 1214,
+   "logscore": 6073,
+   "score": 97331.0,
+   "rate_per10k_core": {
+    "2019": 8.8,
+    "2020": 26.8,
+    "2021": 24.2,
+    "2022": 59.0,
+    "2023": 41.0,
+    "2024": 27.3,
+    "2025": 27.0
+   },
+   "trend_slope_per_year": 2.6,
+   "trend_rel": 1.02,
+   "by_sub": {
+    "Daytrading": 907,
+    "StockMarket": 390,
+    "pennystocks": 326,
+    "options": 233,
+    "RealDayTrading": 188,
+    "Trading": 69,
+    "algotrading": 50
+   },
+   "verdict_sent": {
+    "pos": 39,
+    "neg": 28,
+    "regime": 32,
+    "decay": 0
+   },
+   "neg_share": 0.418
+  },
+  {
+   "key": "rel_strength",
+   "label": "Relative strength vs SPY",
+   "group": "setup",
+   "docs": 1798,
+   "core_docs": 1630,
+   "logscore": 5202,
+   "score": 68845.0,
+   "rate_per10k_core": {
+    "2019": 5.3,
+    "2020": 8.5,
+    "2021": 58.9,
+    "2022": 135.1,
+    "2023": 44.5,
+    "2024": 19.7,
+    "2025": 15.1
+   },
+   "trend_slope_per_year": 1.33,
+   "trend_rel": 0.97,
+   "by_sub": {
+    "RealDayTrading": 1283,
+    "Daytrading": 286,
+    "options": 61,
+    "pennystocks": 61,
+    "StockMarket": 46,
+    "Trading": 35,
+    "algotrading": 26
+   },
+   "verdict_sent": {
+    "pos": 73,
+    "neg": 14,
+    "regime": 37,
+    "decay": 1
+   },
+   "neg_share": 0.161
+  },
+  {
+   "key": "sma_200_50",
+   "label": "50/200 SMA",
+   "group": "indicator",
+   "docs": 1772,
+   "core_docs": 895,
+   "logscore": 5019,
+   "score": 63273.0,
+   "rate_per10k_core": {
+    "2019": 13.1,
+    "2020": 40.0,
+    "2021": 28.4,
+    "2022": 39.3,
+    "2023": 26.8,
+    "2024": 14.2,
+    "2025": 13.4
+   },
+   "trend_slope_per_year": -1.88,
+   "trend_rel": 0.02,
+   "by_sub": {
+    "Daytrading": 588,
+    "pennystocks": 390,
+    "options": 266,
+    "StockMarket": 203,
+    "RealDayTrading": 175,
+    "Trading": 69,
+    "algotrading": 63,
+    "ai_trading": 18
+   },
+   "verdict_sent": {
+    "pos": 17,
+    "neg": 8,
+    "regime": 32,
+    "decay": 3
+   },
+   "neg_share": 0.32
+  },
+  {
+   "key": "supply_demand",
+   "label": "Supply / demand zones",
+   "group": "setup",
+   "docs": 1819,
+   "core_docs": 1161,
+   "logscore": 4836,
+   "score": 63557.0,
+   "rate_per10k_core": {
+    "2019": 6.1,
+    "2020": 13.0,
+    "2021": 16.2,
+    "2022": 40.2,
+    "2023": 49.7,
+    "2024": 36.2,
+    "2025": 32.3
+   },
+   "trend_slope_per_year": 5.66,
+   "trend_rel": 1.36,
+   "by_sub": {
+    "Daytrading": 961,
+    "StockMarket": 309,
+    "options": 214,
+    "Trading": 136,
+    "pennystocks": 135,
+    "algotrading": 40,
+    "RealDayTrading": 24
+   },
+   "verdict_sent": {
+    "pos": 80,
+    "neg": 17,
+    "regime": 13,
+    "decay": 0
+   },
+   "neg_share": 0.175
+  },
+  {
+   "key": "reversal",
+   "label": "Reversal / parabolic fade / backside",
+   "group": "setup",
+   "docs": 1760,
+   "core_docs": 773,
+   "logscore": 4815,
+   "score": 57516.0,
+   "rate_per10k_core": {
+    "2019": 9.6,
+    "2020": 18.0,
+    "2021": 21.5,
+    "2022": 29.4,
+    "2023": 26.0,
+    "2024": 15.7,
+    "2025": 18.3
+   },
+   "trend_slope_per_year": 0.92,
+   "trend_rel": 0.62,
+   "by_sub": {
+    "Daytrading": 589,
+    "pennystocks": 576,
+    "StockMarket": 221,
+    "options": 187,
+    "RealDayTrading": 84,
+    "Trading": 65,
+    "algotrading": 35,
+    "ai_trading": 3
+   },
+   "verdict_sent": {
+    "pos": 32,
+    "neg": 17,
+    "regime": 28,
+    "decay": 0
+   },
+   "neg_share": 0.347
+  },
+  {
+   "key": "opening_drive",
+   "label": "Opening drive / first 30-60 min",
+   "group": "time",
+   "docs": 1665,
+   "core_docs": 1072,
+   "logscore": 4610,
+   "score": 67390.0,
+   "rate_per10k_core": {
+    "2019": 19.3,
+    "2020": 28.3,
+    "2021": 38.7,
+    "2022": 40.4,
+    "2023": 20.8,
+    "2024": 19.8,
+    "2025": 24.9
+   },
+   "trend_slope_per_year": -0.64,
+   "trend_rel": 0.26,
+   "by_sub": {
+    "Daytrading": 835,
+    "pennystocks": 266,
+    "options": 224,
+    "RealDayTrading": 151,
+    "StockMarket": 103,
+    "algotrading": 45,
+    "Trading": 41
+   },
+   "verdict_sent": {
+    "pos": 51,
+    "neg": 8,
+    "regime": 42,
+    "decay": 0
+   },
+   "neg_share": 0.136
+  },
+  {
+   "key": "ema_cross",
+   "label": "Moving-average cross (EMA/SMA cross, golden cross)",
+   "group": "indicator",
+   "docs": 1656,
+   "core_docs": 1101,
+   "logscore": 4517,
+   "score": 52636.0,
+   "rate_per10k_core": {
+    "2019": 43.8,
+    "2020": 38.3,
+    "2021": 28.6,
+    "2022": 29.8,
+    "2023": 30.0,
+    "2024": 21.1,
+    "2025": 29.8
+   },
+   "trend_slope_per_year": -2.68,
+   "trend_rel": -0.38,
+   "by_sub": {
+    "Daytrading": 580,
+    "algotrading": 362,
+    "pennystocks": 314,
+    "options": 129,
+    "StockMarket": 109,
+    "Trading": 81,
+    "RealDayTrading": 78,
+    "ai_trading": 3
+   },
+   "verdict_sent": {
+    "pos": 90,
+    "neg": 48,
+    "regime": 21,
+    "decay": 1
+   },
+   "neg_share": 0.348
+  },
+  {
+   "key": "ema_9_20",
+   "label": "9/20/21 EMA",
+   "group": "indicator",
+   "docs": 1531,
+   "core_docs": 1350,
+   "logscore": 4187,
+   "score": 46710.0,
+   "rate_per10k_core": {
+    "2019": 10.5,
+    "2020": 26.2,
+    "2021": 38.4,
+    "2022": 71.8,
+    "2023": 52.2,
+    "2024": 22.0,
+    "2025": 24.2
+   },
+   "trend_slope_per_year": 1.66,
+   "trend_rel": 0.79,
+   "by_sub": {
+    "Daytrading": 1046,
+    "RealDayTrading": 205,
+    "options": 81,
+    "pennystocks": 70,
+    "Trading": 54,
+    "algotrading": 45,
+    "StockMarket": 30
+   },
+   "verdict_sent": {
+    "pos": 37,
+    "neg": 13,
+    "regime": 35,
+    "decay": 0
+   },
+   "neg_share": 0.26
+  },
+  {
+   "key": "fib",
+   "label": "Fibonacci",
+   "group": "indicator",
+   "docs": 1482,
+   "core_docs": 1142,
+   "logscore": 4004,
+   "score": 45111.0,
+   "rate_per10k_core": {
+    "2019": 17.5,
+    "2020": 35.3,
+    "2021": 27.1,
+    "2022": 33.1,
+    "2023": 26.5,
+    "2024": 21.6,
+    "2025": 38.0
+   },
+   "trend_slope_per_year": 1.19,
+   "trend_rel": 0.74,
+   "by_sub": {
+    "Daytrading": 890,
+    "Trading": 135,
+    "options": 134,
+    "pennystocks": 134,
+    "StockMarket": 72,
+    "algotrading": 66,
+    "RealDayTrading": 51
+   },
+   "verdict_sent": {
+    "pos": 97,
+    "neg": 40,
+    "regime": 10,
+    "decay": 0
+   },
+   "neg_share": 0.292
+  },
+  {
+   "key": "momentum",
+   "label": "Momentum trading",
+   "group": "style",
+   "docs": 1448,
+   "core_docs": 1016,
+   "logscore": 3981,
+   "score": 51668.0,
+   "rate_per10k_core": {
+    "2019": 14.9,
+    "2020": 24.4,
+    "2021": 47.9,
+    "2022": 20.5,
+    "2023": 12.3,
+    "2024": 22.7,
+    "2025": 26.8
+   },
+   "trend_slope_per_year": -0.12,
+   "trend_rel": 0.57,
+   "by_sub": {
+    "Daytrading": 683,
+    "pennystocks": 223,
+    "algotrading": 148,
+    "RealDayTrading": 133,
+    "options": 114,
+    "StockMarket": 95,
+    "Trading": 52
+   },
+   "verdict_sent": {
+    "pos": 71,
+    "neg": 22,
+    "regime": 16,
+    "decay": 1
+   },
+   "neg_share": 0.237
+  },
+  {
+   "key": "bbands",
+   "label": "Bollinger bands / squeeze",
+   "group": "indicator",
+   "docs": 1423,
+   "core_docs": 863,
+   "logscore": 3883,
+   "score": 46629.0,
+   "rate_per10k_core": {
+    "2019": 28.9,
+    "2020": 32.4,
+    "2021": 27.8,
+    "2022": 26.7,
+    "2023": 21.3,
+    "2024": 15.9,
+    "2025": 19.0
+   },
+   "trend_slope_per_year": -2.47,
+   "trend_rel": -0.41,
+   "by_sub": {
+    "Daytrading": 517,
+    "algotrading": 233,
+    "pennystocks": 229,
+    "options": 212,
+    "StockMarket": 114,
+    "Trading": 80,
+    "RealDayTrading": 33,
+    "ai_trading": 5
+   },
+   "verdict_sent": {
+    "pos": 52,
+    "neg": 24,
+    "regime": 26,
+    "decay": 1
+   },
+   "neg_share": 0.316
+  },
+  {
+   "key": "rsi_div",
+   "label": "RSI / MACD divergence",
+   "group": "indicator",
+   "docs": 1273,
+   "core_docs": 885,
+   "logscore": 3612,
+   "score": 53229.0,
+   "rate_per10k_core": {
+    "2019": 25.4,
+    "2020": 17.7,
+    "2021": 18.0,
+    "2022": 23.6,
+    "2023": 23.2,
+    "2024": 20.5,
+    "2025": 30.7
+   },
+   "trend_slope_per_year": 0.95,
+   "trend_rel": 0.19,
+   "by_sub": {
+    "Daytrading": 636,
+    "options": 151,
+    "StockMarket": 126,
+    "pennystocks": 93,
+    "algotrading": 91,
+    "Trading": 81,
+    "RealDayTrading": 77,
+    "ai_trading": 18
+   },
+   "verdict_sent": {
+    "pos": 52,
+    "neg": 7,
+    "regime": 20,
+    "decay": 1
+   },
+   "neg_share": 0.119
+  },
+  {
+   "key": "mean_rev",
+   "label": "Mean reversion",
+   "group": "style",
+   "docs": 1320,
+   "core_docs": 1040,
+   "logscore": 3492,
+   "score": 38101.0,
+   "rate_per10k_core": {
+    "2019": 49.9,
+    "2020": 41.2,
+    "2021": 19.8,
+    "2022": 25.6,
+    "2023": 32.0,
+    "2024": 19.3,
+    "2025": 30.8
+   },
+   "trend_slope_per_year": -3.19,
+   "trend_rel": -0.48,
+   "by_sub": {
+    "algotrading": 626,
+    "Daytrading": 330,
+    "options": 220,
+    "Trading": 75,
+    "StockMarket": 46,
+    "pennystocks": 12,
+    "RealDayTrading": 9,
+    "ai_trading": 2
+   },
+   "verdict_sent": {
+    "pos": 114,
+    "neg": 33,
+    "regime": 50,
+    "decay": 3
+   },
+   "neg_share": 0.224
+  },
+  {
+   "key": "vol_profile",
+   "label": "Volume profile / POC / value area",
+   "group": "indicator",
+   "docs": 1349,
+   "core_docs": 1077,
+   "logscore": 3490,
+   "score": 38883.0,
+   "rate_per10k_core": {
+    "2019": 21.9,
+    "2020": 38.9,
+    "2021": 15.7,
+    "2022": 37.1,
+    "2023": 32.8,
+    "2024": 20.1,
+    "2025": 34.0
+   },
+   "trend_slope_per_year": 0.56,
+   "trend_rel": 0.43,
+   "by_sub": {
+    "Daytrading": 865,
+    "pennystocks": 161,
+    "Trading": 101,
+    "algotrading": 65,
+    "options": 60,
+    "StockMarket": 50,
+    "RealDayTrading": 46,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 33,
+    "neg": 10,
+    "regime": 14,
+    "decay": 1
+   },
+   "neg_share": 0.233
+  },
+  {
+   "key": "power_hour",
+   "label": "Power hour / last hour",
+   "group": "time",
+   "docs": 1234,
+   "core_docs": 372,
+   "logscore": 3177,
+   "score": 32021.0,
+   "rate_per10k_core": {
+    "2019": 2.6,
+    "2020": 8.5,
+    "2021": 9.5,
+    "2022": 17.5,
+    "2023": 9.0,
+    "2024": 8.8,
+    "2025": 8.0
+   },
+   "trend_slope_per_year": 0.58,
+   "trend_rel": 1.01,
+   "by_sub": {
+    "pennystocks": 589,
+    "Daytrading": 293,
+    "options": 203,
+    "StockMarket": 70,
+    "RealDayTrading": 34,
+    "Trading": 27,
+    "algotrading": 18
+   },
+   "verdict_sent": {
+    "pos": 21,
+    "neg": 6,
+    "regime": 14,
+    "decay": 0
+   },
+   "neg_share": 0.222
+  },
+  {
+   "key": "atr",
+   "label": "ATR (stops/targets)",
+   "group": "indicator",
+   "docs": 1140,
+   "core_docs": 1033,
+   "logscore": 2994,
+   "score": 30740.0,
+   "rate_per10k_core": {
+    "2019": 19.3,
+    "2020": 23.6,
+    "2021": 23.7,
+    "2022": 34.2,
+    "2023": 30.9,
+    "2024": 24.1,
+    "2025": 29.0
+   },
+   "trend_slope_per_year": 1.33,
+   "trend_rel": 0.4,
+   "by_sub": {
+    "Daytrading": 524,
+    "algotrading": 251,
+    "RealDayTrading": 175,
+    "Trading": 83,
+    "options": 80,
+    "pennystocks": 22,
+    "StockMarket": 4,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 47,
+    "neg": 14,
+    "regime": 36,
+    "decay": 0
+   },
+   "neg_share": 0.23
+  },
+  {
+   "key": "orb",
+   "label": "Opening range breakout",
+   "group": "setup",
+   "docs": 1062,
+   "core_docs": 976,
+   "logscore": 2906,
+   "score": 35414.0,
+   "rate_per10k_core": {
+    "2019": 3.5,
+    "2020": 9.4,
+    "2021": 8.6,
+    "2022": 10.4,
+    "2023": 7.1,
+    "2024": 15.3,
+    "2025": 68.6
+   },
+   "trend_slope_per_year": 7.33,
+   "trend_rel": 1.81,
+   "by_sub": {
+    "Daytrading": 864,
+    "options": 60,
+    "Trading": 54,
+    "algotrading": 47,
+    "pennystocks": 14,
+    "StockMarket": 12,
+    "RealDayTrading": 11
+   },
+   "verdict_sent": {
+    "pos": 97,
+    "neg": 13,
+    "regime": 49,
+    "decay": 0
+   },
+   "neg_share": 0.118
+  },
+  {
+   "key": "hod_break",
+   "label": "HOD / LOD break",
+   "group": "setup",
+   "docs": 914,
+   "core_docs": 728,
+   "logscore": 2579,
+   "score": 33787.0,
+   "rate_per10k_core": {
+    "2019": 7.0,
+    "2020": 19.7,
+    "2021": 23.7,
+    "2022": 39.1,
+    "2023": 19.9,
+    "2024": 15.0,
+    "2025": 9.3
+   },
+   "trend_slope_per_year": -0.22,
+   "trend_rel": 0.29,
+   "by_sub": {
+    "Daytrading": 486,
+    "RealDayTrading": 200,
+    "pennystocks": 96,
+    "options": 54,
+    "StockMarket": 36,
+    "Trading": 24,
+    "algotrading": 18
+   },
+   "verdict_sent": {
+    "pos": 12,
+    "neg": 5,
+    "regime": 25,
+    "decay": 0
+   },
+   "neg_share": 0.294
+  },
+  {
+   "key": "gap_go",
+   "label": "Gap and go",
+   "group": "setup",
+   "docs": 864,
+   "core_docs": 685,
+   "logscore": 2560,
+   "score": 40302.0,
+   "rate_per10k_core": {
+    "2019": 19.3,
+    "2020": 40.9,
+    "2021": 44.1,
+    "2022": 16.4,
+    "2023": 8.5,
+    "2024": 7.1,
+    "2025": 5.6
+   },
+   "trend_slope_per_year": -5.15,
+   "trend_rel": -1.1,
+   "by_sub": {
+    "Daytrading": 583,
+    "pennystocks": 108,
+    "RealDayTrading": 79,
+    "StockMarket": 58,
+    "Trading": 13,
+    "options": 13,
+    "algotrading": 10
+   },
+   "verdict_sent": {
+    "pos": 22,
+    "neg": 6,
+    "regime": 21,
+    "decay": 0
+   },
+   "neg_share": 0.214
+  },
+  {
+   "key": "stoch",
+   "label": "Stochastic",
+   "group": "indicator",
+   "docs": 894,
+   "core_docs": 678,
+   "logscore": 2402,
+   "score": 28533.0,
+   "rate_per10k_core": {
+    "2019": 59.6,
+    "2020": 33.6,
+    "2021": 26.0,
+    "2022": 13.1,
+    "2023": 14.2,
+    "2024": 8.2,
+    "2025": 13.8
+   },
+   "trend_slope_per_year": -7.14,
+   "trend_rel": -1.25,
+   "by_sub": {
+    "algotrading": 329,
+    "Daytrading": 279,
+    "options": 104,
+    "pennystocks": 58,
+    "Trading": 53,
+    "StockMarket": 47,
+    "RealDayTrading": 17,
+    "ai_trading": 7
+   },
+   "verdict_sent": {
+    "pos": 32,
+    "neg": 31,
+    "regime": 12,
+    "decay": 2
+   },
+   "neg_share": 0.492
+  },
+  {
+   "key": "bull_flag",
+   "label": "Bull / bear flag",
+   "group": "setup",
+   "docs": 766,
+   "core_docs": 478,
+   "logscore": 2071,
+   "score": 29112.0,
+   "rate_per10k_core": {
+    "2019": 6.1,
+    "2020": 10.6,
+    "2021": 19.2,
+    "2022": 22.5,
+    "2023": 16.7,
+    "2024": 7.4,
+    "2025": 6.7
+   },
+   "trend_slope_per_year": -0.26,
+   "trend_rel": 0.09,
+   "by_sub": {
+    "Daytrading": 382,
+    "pennystocks": 198,
+    "RealDayTrading": 61,
+    "StockMarket": 48,
+    "options": 42,
+    "Trading": 20,
+    "algotrading": 15
+   },
+   "verdict_sent": {
+    "pos": 20,
+    "neg": 7,
+    "regime": 12,
+    "decay": 0
+   },
+   "neg_share": 0.259
+  },
+  {
+   "key": "trend_follow",
+   "label": "Trend following",
+   "group": "style",
+   "docs": 754,
+   "core_docs": 681,
+   "logscore": 2024,
+   "score": 24217.0,
+   "rate_per10k_core": {
+    "2019": 31.5,
+    "2020": 26.5,
+    "2021": 13.9,
+    "2022": 15.7,
+    "2023": 21.3,
+    "2024": 14.2,
+    "2025": 19.0
+   },
+   "trend_slope_per_year": -1.95,
+   "trend_rel": -0.5,
+   "by_sub": {
+    "algotrading": 334,
+    "Daytrading": 253,
+    "Trading": 85,
+    "options": 42,
+    "StockMarket": 17,
+    "pennystocks": 12,
+    "RealDayTrading": 9,
+    "ai_trading": 2
+   },
+   "verdict_sent": {
+    "pos": 61,
+    "neg": 8,
+    "regime": 29,
+    "decay": 1
+   },
+   "neg_share": 0.116
+  },
+  {
+   "key": "lunch",
+   "label": "Avoid lunch / midday chop",
+   "group": "time",
+   "docs": 610,
+   "core_docs": 405,
+   "logscore": 1850,
+   "score": 21565.0,
+   "rate_per10k_core": {
+    "2019": 2.6,
+    "2020": 2.9,
+    "2021": 2.1,
+    "2022": 38.9,
+    "2023": 29.8,
+    "2024": 3.6,
+    "2025": 2.8
+   },
+   "trend_slope_per_year": 1.06,
+   "trend_rel": 0.07,
+   "by_sub": {
+    "RealDayTrading": 297,
+    "pennystocks": 152,
+    "Daytrading": 96,
+    "options": 31,
+    "StockMarket": 22,
+    "Trading": 7,
+    "algotrading": 5
+   },
+   "verdict_sent": {
+    "pos": 5,
+    "neg": 2,
+    "regime": 567,
+    "decay": 0
+   },
+   "neg_share": 0.286
+  },
+  {
+   "key": "gap_fade",
+   "label": "Gap fade / gap fill",
+   "group": "setup",
+   "docs": 625,
+   "core_docs": 356,
+   "logscore": 1771,
+   "score": 19873.0,
+   "rate_per10k_core": {
+    "2019": 4.4,
+    "2020": 16.5,
+    "2021": 8.5,
+    "2022": 24.7,
+    "2023": 8.2,
+    "2024": 4.5,
+    "2025": 3.9
+   },
+   "trend_slope_per_year": -0.91,
+   "trend_rel": -0.11,
+   "by_sub": {
+    "Daytrading": 271,
+    "pennystocks": 133,
+    "options": 71,
+    "RealDayTrading": 67,
+    "StockMarket": 65,
+    "algotrading": 10,
+    "Trading": 8
+   },
+   "verdict_sent": {
+    "pos": 7,
+    "neg": 2,
+    "regime": 16,
+    "decay": 0
+   },
+   "neg_share": 0.222
+  },
+  {
+   "key": "premarket",
+   "label": "Premarket high/low levels",
+   "group": "setup",
+   "docs": 619,
+   "core_docs": 421,
+   "logscore": 1730,
+   "score": 25637.0,
+   "rate_per10k_core": {
+    "2019": 5.3,
+    "2020": 16.8,
+    "2021": 19.6,
+    "2022": 9.3,
+    "2023": 10.7,
+    "2024": 5.6,
+    "2025": 9.6
+   },
+   "trend_slope_per_year": -0.66,
+   "trend_rel": 0.58,
+   "by_sub": {
+    "Daytrading": 389,
+    "pennystocks": 125,
+    "StockMarket": 52,
+    "options": 21,
+    "Trading": 16,
+    "RealDayTrading": 8,
+    "algotrading": 8
+   },
+   "verdict_sent": {
+    "pos": 7,
+    "neg": 1,
+    "regime": 7,
+    "decay": 0
+   },
+   "neg_share": 0.125
+  },
+  {
+   "key": "pairs",
+   "label": "Pairs / stat arb",
+   "group": "style",
+   "docs": 610,
+   "core_docs": 535,
+   "logscore": 1604,
+   "score": 16507.0,
+   "rate_per10k_core": {
+    "2019": 29.8,
+    "2020": 37.4,
+    "2021": 20.9,
+    "2022": 14.1,
+    "2023": 14.5,
+    "2024": 6.0,
+    "2025": 6.0
+   },
+   "trend_slope_per_year": -5.02,
+   "trend_rel": -1.33,
+   "by_sub": {
+    "algotrading": 483,
+    "options": 64,
+    "Daytrading": 31,
+    "Trading": 13,
+    "RealDayTrading": 8,
+    "StockMarket": 8,
+    "pennystocks": 3
+   },
+   "verdict_sent": {
+    "pos": 47,
+    "neg": 12,
+    "regime": 2,
+    "decay": 3
+   },
+   "neg_share": 0.203
+  },
+  {
+   "key": "pdh_pdl",
+   "label": "Prior-day high/low",
+   "group": "setup",
+   "docs": 447,
+   "core_docs": 391,
+   "logscore": 1298,
+   "score": 20066.0,
+   "rate_per10k_core": {
+    "2019": 1.8,
+    "2020": 22.1,
+    "2021": 7.4,
+    "2022": 12.6,
+    "2023": 6.8,
+    "2024": 7.8,
+    "2025": 11.2
+   },
+   "trend_slope_per_year": -0.04,
+   "trend_rel": 1.46,
+   "by_sub": {
+    "Daytrading": 281,
+    "RealDayTrading": 74,
+    "pennystocks": 22,
+    "Trading": 20,
+    "StockMarket": 17,
+    "algotrading": 16,
+    "options": 16,
+    "ai_trading": 1
+   },
+   "verdict_sent": {
+    "pos": 6,
+    "neg": 1,
+    "regime": 4,
+    "decay": 0
+   },
+   "neg_share": 0.143
+  },
+  {
+   "key": "heikin",
+   "label": "Heikin-Ashi",
+   "group": "indicator",
+   "docs": 331,
+   "core_docs": 297,
+   "logscore": 891,
+   "score": 11757.0,
+   "rate_per10k_core": {
+    "2019": 3.5,
+    "2020": 5.0,
+    "2021": 10.3,
+    "2022": 14.6,
+    "2023": 11.2,
+    "2024": 5.0,
+    "2025": 4.8
+   },
+   "trend_slope_per_year": 0.18,
+   "trend_rel": 0.32,
+   "by_sub": {
+    "Daytrading": 181,
+    "RealDayTrading": 63,
+    "algotrading": 39,
+    "options": 19,
+    "Trading": 14,
+    "StockMarket": 8,
+    "pennystocks": 7
+   },
+   "verdict_sent": {
+    "pos": 17,
+    "neg": 10,
+    "regime": 6,
+    "decay": 0
+   },
+   "neg_share": 0.37
+  },
+  {
+   "key": "adx",
+   "label": "ADX / DMI",
+   "group": "indicator",
+   "docs": 280,
+   "core_docs": 236,
+   "logscore": 776,
+   "score": 8161.0,
+   "rate_per10k_core": {
+    "2019": 7.9,
+    "2020": 6.8,
+    "2021": 4.7,
+    "2022": 7.1,
+    "2023": 11.2,
+    "2024": 2.1,
+    "2025": 7.7
+   },
+   "trend_slope_per_year": -0.12,
+   "trend_rel": -0.02,
+   "by_sub": {
+    "Daytrading": 109,
+    "algotrading": 93,
+    "options": 21,
+    "RealDayTrading": 20,
+    "Trading": 14,
+    "StockMarket": 12,
+    "pennystocks": 11
+   },
+   "verdict_sent": {
+    "pos": 11,
+    "neg": 4,
+    "regime": 14,
+    "decay": 0
+   },
+   "neg_share": 0.267
+  },
+  {
+   "key": "ichimoku",
+   "label": "Ichimoku",
+   "group": "indicator",
+   "docs": 229,
+   "core_docs": 185,
+   "logscore": 629,
+   "score": 8588.0,
+   "rate_per10k_core": {
+    "2019": 0.9,
+    "2020": 6.8,
+    "2021": 6.8,
+    "2022": 8.2,
+    "2023": 4.6,
+    "2024": 3.2,
+    "2025": 2.9
+   },
+   "trend_slope_per_year": -0.11,
+   "trend_rel": 1.08,
+   "by_sub": {
+    "Daytrading": 110,
+    "RealDayTrading": 36,
+    "algotrading": 29,
+    "pennystocks": 23,
+    "options": 12,
+    "Trading": 10,
+    "StockMarket": 9
+   },
+   "verdict_sent": {
+    "pos": 11,
+    "neg": 9,
+    "regime": 1,
+    "decay": 0
+   },
+   "neg_share": 0.45
+  },
+  {
+   "key": "inside_bar",
+   "label": "Inside bar / NR7",
+   "group": "setup",
+   "docs": 203,
+   "core_docs": 178,
+   "logscore": 599,
+   "score": 6565.0,
+   "rate_per10k_core": {
+    "2019": 0.0,
+    "2020": 5.0,
+    "2021": 4.5,
+    "2022": 10.6,
+    "2023": 7.4,
+    "2024": 2.7,
+    "2025": 2.5
+   },
+   "trend_slope_per_year": 0.21,
+   "trend_rel": 2.0,
+   "by_sub": {
+    "Daytrading": 121,
+    "RealDayTrading": 38,
+    "options": 16,
+    "algotrading": 11,
+    "Trading": 8,
+    "StockMarket": 5,
+    "pennystocks": 4
+   },
+   "verdict_sent": {
+    "pos": 2,
+    "neg": 0,
+    "regime": 23,
+    "decay": 0
+   },
+   "neg_share": 0.0
+  },
+  {
+   "key": "vwap_reclaim",
+   "label": "VWAP reclaim / hold",
+   "group": "setup",
+   "docs": 168,
+   "core_docs": 130,
+   "logscore": 506,
+   "score": 10434.0,
+   "rate_per10k_core": {
+    "2019": 0.9,
+    "2020": 2.6,
+    "2021": 5.0,
+    "2022": 3.8,
+    "2023": 2.2,
+    "2024": 1.6,
+    "2025": 4.6
+   },
+   "trend_slope_per_year": 0.22,
+   "trend_rel": 1.36,
+   "by_sub": {
+    "Daytrading": 108,
+    "pennystocks": 25,
+    "RealDayTrading": 13,
+    "options": 9,
+    "Trading": 6,
+    "StockMarket": 4,
+    "algotrading": 3
+   },
+   "verdict_sent": {
+    "pos": 7,
+    "neg": 1,
+    "regime": 3,
+    "decay": 0
+   },
+   "neg_share": 0.125
+  },
+  {
+   "key": "supertrend",
+   "label": "Supertrend",
+   "group": "indicator",
+   "docs": 154,
+   "core_docs": 130,
+   "logscore": 404,
+   "score": 3950.0,
+   "rate_per10k_core": {
+    "2019": 0.9,
+    "2020": 3.2,
+    "2021": 2.6,
+    "2022": 2.9,
+    "2023": 4.1,
+    "2024": 5.7,
+    "2025": 2.6
+   },
+   "trend_slope_per_year": 0.42,
+   "trend_rel": 1.0,
+   "by_sub": {
+    "Daytrading": 83,
+    "algotrading": 32,
+    "options": 17,
+    "Trading": 9,
+    "RealDayTrading": 6,
+    "pennystocks": 5,
+    "StockMarket": 2
+   },
+   "verdict_sent": {
+    "pos": 9,
+    "neg": 1,
+    "regime": 8,
+    "decay": 0
+   },
+   "neg_share": 0.1
+  },
+  {
+   "key": "red_green",
+   "label": "Red-to-green / green-to-red",
+   "group": "setup",
+   "docs": 131,
+   "core_docs": 88,
+   "logscore": 359,
+   "score": 5289.0,
+   "rate_per10k_core": {
+    "2019": 0.9,
+    "2020": 2.6,
+    "2021": 3.5,
+    "2022": 3.3,
+    "2023": 2.5,
+    "2024": 1.0,
+    "2025": 2.0
+   },
+   "trend_slope_per_year": -0.03,
+   "trend_rel": 0.79,
+   "by_sub": {
+    "Daytrading": 72,
+    "pennystocks": 21,
+    "StockMarket": 13,
+    "RealDayTrading": 10,
+    "options": 9,
+    "Trading": 6
+   },
+   "verdict_sent": {
+    "pos": 1,
+    "neg": 1,
+    "regime": 6,
+    "decay": 0
+   },
+   "neg_share": 0.5
+  },
+  {
+   "key": "vwap_fade",
+   "label": "VWAP fade / rejection / reversion",
+   "group": "setup",
+   "docs": 104,
+   "core_docs": 94,
+   "logscore": 297,
+   "score": 2969.0,
+   "rate_per10k_core": {
+    "2019": 2.6,
+    "2020": 2.1,
+    "2021": 3.2,
+    "2022": 4.0,
+    "2023": 2.2,
+    "2024": 1.4,
+    "2025": 2.2
+   },
+   "trend_slope_per_year": -0.13,
+   "trend_rel": -0.17,
+   "by_sub": {
+    "Daytrading": 72,
+    "RealDayTrading": 18,
+    "options": 6,
+    "pennystocks": 4,
+    "Trading": 3,
+    "algotrading": 1
+   },
+   "verdict_sent": {
+    "pos": 4,
+    "neg": 0,
+    "regime": 4,
+    "decay": 0
+   },
+   "neg_share": 0.0
+  },
+  {
+   "key": "abcd",
+   "label": "ABCD pattern",
+   "group": "setup",
+   "docs": 101,
+   "core_docs": 77,
+   "logscore": 285,
+   "score": 5317.0,
+   "rate_per10k_core": {
+    "2019": 0.9,
+    "2020": 3.5,
+    "2021": 3.8,
+    "2022": 1.3,
+    "2023": 1.6,
+    "2024": 1.6,
+    "2025": 1.4
+   },
+   "trend_slope_per_year": -0.16,
+   "trend_rel": 0.47,
+   "by_sub": {
+    "Daytrading": 62,
+    "pennystocks": 13,
+    "RealDayTrading": 7,
+    "options": 6,
+    "StockMarket": 5,
+    "Trading": 5,
+    "algotrading": 3
+   },
+   "verdict_sent": {
+    "pos": 5,
+    "neg": 0,
+    "regime": 1,
+    "decay": 0
+   },
+   "neg_share": 0.0
+  }
+ ]
+}
