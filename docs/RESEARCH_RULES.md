@@ -54,3 +54,15 @@ follows these rules.
       - After 4 looks, the lineage is judged only on forward sessions.
       - A version that passes on look 2 or later goes to paper as **probation**, labelled as a holdout re-look. It is confirmed or retired automatically once it has at least 20 forward sessions and 60 trades.
     - An idea is dropped only after its rework rounds fail. The backlog keeps the full record.
+
+## Multi-year history (owner, 2026-10-08)
+19. **Setups are judged on about two years of history, with a third locked block and regime-aware gates.**
+    - **Why:** three BDI rounds on 2026-10-08 (~790k configurations) produced finalists that passed train (06-30..08-25) and valid (08-26..09-15) and then failed the locked holdouts. The samples were tiny (40 / 14 / 14 sessions), and valid and test were down-drift windows (median stock open-to-close −0.16% / −0.22%) while Apr–Jun was flat, so short setups looked good because of the regime.
+    - **History:** SIP 1-minute bars from 2024-09-16 to 2026-10-07 for the lab universe (`research/lab_symbols.txt`), in `data/cache_hist/1Min` (`research/history2y/download.py`), turned into lab frames by the same pipeline as `research/setups2` (`research/history2y/build_frames.py`). **Survivorship caveat:** the universe is today's list applied to the past, so names that were delisted or fell out of liquidity are missing and today's winners are over-represented.
+    - **New locked block: 2024-11-01 to 2025-02-28** (4 months). It was drawn at random on 2026-10-08, before any setup was scored on the new history: seed `20261008`, a contiguous 4–6 month block inside 2024-10..2026-02 (`research/history2y/draw_locked.py`). Loaders refuse it unless `MCF_HIST_ALLOW_LOCKED=1`, which only the lead sets.
+    - It is scored **once per version**, with the same rising bar per lineage as rule 18 (day-clustered t ≥ 1.0 / 1.5 / 2.0 / 2.5 on looks 1–4). It is never used to tune.
+    - **The older holdouts keep their status but are no longer clean.** Sep 16 – Oct 5 2026 and Apr–Jun 2026 have each been looked at by many lineages (the 2026-10-08 rounds alone scored 28 finalists on them: 10 owner-directed, 8 rework, 10 video). They still count under rule 2, but a pass there is weak evidence; the 2024-11..2025-02 block is now the clean holdout.
+    - **Gates on the history** (`mcf/research/gates.py`, fixed in advance, production cost haircut as in `research/owner1008/scan_fast.py`):
+      - *Regime split:* every session is classed up / flat / down by the universe's median open-to-close return (terciles over the history). Expectancy after costs must be positive in up sessions and in down sessions separately.
+      - *Walk-forward:* rolling folds (3 months of train, the next month as test, step 1 month). The share of test months with positive expectancy is reported and must be at least 60%.
+      - *Try-count-scaled t:* the day-clustered t must reach `max(1.5, sqrt(2·ln N))`, where N is the number of configurations tried in the lineage (the expected maximum of N null t-statistics).
