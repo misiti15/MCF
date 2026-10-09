@@ -1,0 +1,576 @@
+[
+ {
+  "name": "exhaustion_short",
+  "account": "primary",
+  "source": "research/setups2/candidates/volume_flip_1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1300,
+   1500
+  ],
+  "prefilter": "new_high_100m",
+  "module_window": [
+   1300,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/exhaustion_short-FD.py"
+ },
+ {
+  "name": "MF1-945-flowsell-vwapup",
+  "account": "primary",
+  "source": "research/primitives/marcoflow/MF-945-flowsell-vwapup.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1030
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1030
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py"
+ },
+ {
+  "name": "MF2-open-rsimidhi-flowsell",
+  "account": "primary",
+  "source": "research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py"
+ },
+ {
+  "name": "MF3-open-flowsell-rsi5hi",
+  "account": "primary",
+  "source": "research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py"
+ },
+ {
+  "name": "MF4-h40-open-flowsell",
+  "account": "primary",
+  "source": "research/primitives/marcoflow/MF-h40-open-flowsell.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/MF4-h40-open-flowsell-FD.py"
+ },
+ {
+  "name": "MF5-flowsell-vwapup-rsi5hi",
+  "account": "primary",
+  "source": "research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 0,
+  "fd_module": "research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py"
+ },
+ {
+  "name": "NS1-rsidip-rsi5pop-long",
+  "account": "primary",
+  "source": "research/owner1008/NS1-rsidip-rsi5pop-long.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py"
+ },
+ {
+  "name": "NS2-sma50break-overbought-short",
+  "account": "primary",
+  "source": "research/owner1008/NS2-sma50break-overbought-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/NS2-sma50break-overbought-short-FD.py"
+ },
+ {
+  "name": "NS3-failed-vwap-reclaim-short",
+  "account": "primary",
+  "source": "research/owner1008/NS3-failed-vwap-reclaim-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py"
+ },
+ {
+  "name": "NS4-pm-vwap-reclaim-oversold-short",
+  "account": "primary",
+  "source": "research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1130,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1130,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/NS4-pm-vwap-reclaim-oversold-short-FD.py"
+ },
+ {
+  "name": "NS5-sma50-flush-oversold-long",
+  "account": "primary",
+  "source": "research/owner1008/NS5-sma50-flush-oversold-long.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py"
+ },
+ {
+  "name": "RW6G1-ns2-up3-vwap2sd-short",
+  "account": "primary",
+  "source": "research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW6G1-ns2-up3-vwap2sd-short-FD.py"
+ },
+ {
+  "name": "L3-gap-slope-rsi5hi",
+  "account": "testing",
+  "source": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1.py",
+  "min_adv": 0,
+  "yaml_window": [
+   1300,
+   1430
+  ],
+  "prefilter": "gap_le:-2.6573517322540283",
+  "module_window": [
+   1300,
+   1430
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py"
+ },
+ {
+  "name": "L3-gap-slope-lowdist",
+  "account": "testing",
+  "source": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1.py",
+  "min_adv": 0,
+  "yaml_window": [
+   1300,
+   1430
+  ],
+  "prefilter": "gap_le:-2.6573517322540283",
+  "module_window": [
+   1300,
+   1430
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/L3-gap-slope-lowdist-FD.py"
+ },
+ {
+  "name": "L3-gap-slope-fromopen",
+  "account": "testing",
+  "source": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1.py",
+  "min_adv": 0,
+  "yaml_window": [
+   1300,
+   1430
+  ],
+  "prefilter": "gap_le:-2.6573517322540283",
+  "module_window": [
+   1300,
+   1430
+  ],
+  "strict_hi": true,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/L3-gap-slope-fromopen-FD.py"
+ },
+ {
+  "name": "ST1-ordn-long-pm-t05s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST1-ordn-long-pm-t05s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1335,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1335,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py"
+ },
+ {
+  "name": "ST2-slope20up-long-am-t05s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST2-slope20up-long-am-t05s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py"
+ },
+ {
+  "name": "ST3-rsi5up-short-pm-t1s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST3-rsi5up-short-pm-t1s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1335,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1335,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST3-rsi5up-short-pm-t1s1-FD.py"
+ },
+ {
+  "name": "ST4-emadn-long-am-t1s05",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST4-emadn-long-am-t1s05.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py"
+ },
+ {
+  "name": "ST5-pdbrkup-short-mid-t05s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST5-pdbrkup-short-mid-t05s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1135,
+   1330
+  ],
+  "prefilter": null,
+  "module_window": [
+   1135,
+   1330
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST5-pdbrkup-short-mid-t05s1-FD.py"
+ },
+ {
+  "name": "ST6-volspikeup-short-mid-t1s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST6-volspikeup-short-mid-t1s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1135,
+   1330
+  ],
+  "prefilter": null,
+  "module_window": [
+   1135,
+   1330
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py"
+ },
+ {
+  "name": "ST7-rsi50dn-long-pm-t1s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST7-rsi50dn-long-pm-t1s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1335,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1335,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py"
+ },
+ {
+  "name": "ST8-volspikedn-long-pm-t1s1",
+  "account": "testing",
+  "source": "research/bdi/stack1009/modules/ST8-volspikedn-long-pm-t1s1.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   1335,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1335,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/ST8-volspikedn-long-pm-t1s1-FD.py"
+ },
+ {
+  "name": "RW4-ns3-adv150-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW4-ns3-adv150-short.py",
+  "min_adv": 150000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW4-ns3-adv150-short-FD.py"
+ },
+ {
+  "name": "RW5-heat30-flowsell-rsi5pop-gapdn-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py"
+ },
+ {
+  "name": "RW6-ns2-up3-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW6-ns2-up3-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1130
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1130
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW6-ns2-up3-short-FD.py"
+ },
+ {
+  "name": "RW1-gapdn-bounce-flowsell-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW1-gapdn-bounce-flowsell-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py"
+ },
+ {
+  "name": "RW2-exhaustion-noon-adv150-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW2-exhaustion-noon-adv150-short.py",
+  "min_adv": 150000000,
+  "yaml_window": [
+   1200,
+   1500
+  ],
+  "prefilter": null,
+  "module_window": [
+   1200,
+   1500
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py"
+ },
+ {
+  "name": "RW3-gapdn-rsi5pop-flowsell-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW3-gapdn-rsi5pop-flowsell-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1100
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1100
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py"
+ },
+ {
+  "name": "RW7-gapdn-bounce-early-short",
+  "account": "testing",
+  "source": "research/bdi/rework1008/modules/RW7-gapdn-bounce-early-short.py",
+  "min_adv": 95000000,
+  "yaml_window": [
+   950,
+   1030
+  ],
+  "prefilter": null,
+  "module_window": [
+   950,
+   1030
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/RW7-gapdn-bounce-early-short-FD.py"
+ },
+ {
+  "name": "heat_fade_short",
+  "account": "primary",
+  "source": "research/heat/candidates/regime_9.py",
+  "module_window": [
+   950,
+   1030
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/heat_fade_short-FD.py",
+  "min_adv": 125000000,
+  "yaml_window": [
+   950,
+   1030
+  ]
+ },
+ {
+  "name": "heat_fade_long",
+  "account": "primary",
+  "source": "research/heat/candidates/regime_5.py",
+  "module_window": [
+   1105,
+   1330
+  ],
+  "strict_hi": false,
+  "clauses_removed": 1,
+  "fd_module": "research/bdi/fullday/heat_fade_long-FD.py",
+  "min_adv": 125000000,
+  "yaml_window": [
+   1105,
+   1330
+  ]
+ }
+]
