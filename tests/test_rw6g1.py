@@ -36,13 +36,15 @@ def test_guard_fails_safe_without_volume():
 def test_live_lab_frame_has_volume_and_module_runs():
     from mcf.strategies.setups import LabStrategy
 
+    from mcf.strategies.setups import _LAB_FRAMES
+
+    _LAB_FRAMES.clear()
     st = LabStrategy("RW6G1", str(MOD), window=[950, 1130])
     idx = pd.date_range("2026-10-09 09:30", periods=120, freq="1min", tz="America/New_York")
     px = np.linspace(100, 104, 120)
     bars = pd.DataFrame({"open": px, "high": px + 0.05, "low": px - 0.05, "close": px, "volume": 1000.0}, index=idx)
-    ctx = SimpleNamespace(symbol="AAA", date=idx[0].date(), bars=bars, prior5=None, atr=2.0, prev_close=100.0,
+    ctx = SimpleNamespace(symbol="RW6TEST", date=idx[0].date(), bars=bars, prior5=None, atr=2.0, prev_close=100.0,
                           prev_high=101.0, prev_low=99.0, avg_dollar_volume=1e9)
     st.generate(ctx)                  # must not raise
-    from mcf.strategies.setups import _LAB_FRAMES
-    f = next(v for k, v in _LAB_FRAMES.items() if k[0] == "AAA")
+    f = next(v for k, v in _LAB_FRAMES.items() if k[0] == "RW6TEST")
     assert "volume" in f and float(f["volume"].iloc[0]) == 5000.0
