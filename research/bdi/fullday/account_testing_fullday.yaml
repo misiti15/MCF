@@ -1,0 +1,325 @@
+# STAGED Testing-account config (research/bdi/fullday, 2026-10-09) - NOT live. Intended to REPLACE
+# config/account_testing.yaml (overlay on config/default.yaml, loaded when MCF_ACCOUNT=testing) once approved
+# (setup change: ledger + outside 09:30-16:00 ET, RESEARCH_RULES 9-17).
+# Owner decision 2026-10-09: "for any of our setups, I want full day versions first, then we can identify time frames
+# that may be better." Testing account only; the primary account keeps its tested windows. Every lab/heat setup that
+# runs in either account gets a -FD copy (research/bdi/fullday/<NAME>-FD.py) with only the time-of-day clause removed;
+# decision bars 09:50-15:00 via window [950, 1500]. The windowed originals are OFF here so the -FD versions get the
+# trades (one position per symbol across setups). Time of day is tracked per trade in the EOD/scorecard.
+# Verification: research/bdi/fullday/verify.json. Expected trades/day = research/bdi/timeofday/results.csv 'full' rows
+# (open two-year lab history, first qualifying bar per symbol-day; L3: computed in verify.json). Lab history only -
+# most of these setups are negative after costs over the full day (see the 'exp' notes); this is a forward test.
+# Educational only - not financial advice.
+account:
+  slots: 400
+  buying_power_multiple: 3.8
+  max_concurrent_positions: 400
+  max_positions_per_strategy: 150
+  max_daily_loss_r: 60
+  max_trades_per_day: 3000
+strategies:
+  # ---- primary setups inherited from default.yaml: off here (non-lab ones were already off)
+  intraday_momentum: {enabled: false}
+  orb20_a: {enabled: false}
+  heat_fade_short: {enabled: false}   # replaced by heat_fade_short-FD
+  heat_fade_long: {enabled: false}   # replaced by heat_fade_long-FD
+  exhaustion_short: {enabled: false}   # replaced by exhaustion_short-FD
+  MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
+  MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
+  MF3-open-flowsell-rsi5hi: {enabled: false}   # replaced by MF3-open-flowsell-rsi5hi-FD
+  MF4-h40-open-flowsell: {enabled: false}   # replaced by MF4-h40-open-flowsell-FD
+  MF5-flowsell-vwapup-rsi5hi: {enabled: false}   # replaced by MF5-flowsell-vwapup-rsi5hi-FD
+  NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
+  NS2-sma50break-overbought-short: {enabled: false}   # replaced by NS2-sma50break-overbought-short-FD
+  NS3-failed-vwap-reclaim-short: {enabled: false}   # replaced by NS3-failed-vwap-reclaim-short-FD
+  NS4-pm-vwap-reclaim-oversold-short: {enabled: false}   # replaced by NS4-pm-vwap-reclaim-oversold-short-FD
+  NS5-sma50-flush-oversold-long: {enabled: false}   # replaced by NS5-sma50-flush-oversold-long-FD
+  RW6G1-ns2-up3-vwap2sd-short: {enabled: false}   # replaced by RW6G1-ns2-up3-vwap2sd-short-FD
+  # ---- Testing-only windowed setups (previous config/account_testing.yaml): replaced by their -FD versions below.
+  # Listed as off so this file also works if merged on top of the old Testing overlay.
+  L3-gap-slope-rsi5hi: {enabled: false}
+  L3-gap-slope-lowdist: {enabled: false}
+  L3-gap-slope-fromopen: {enabled: false}
+  ST1-ordn-long-pm-t05s1: {enabled: false}
+  ST2-slope20up-long-am-t05s1: {enabled: false}
+  ST3-rsi5up-short-pm-t1s1: {enabled: false}
+  ST4-emadn-long-am-t1s05: {enabled: false}
+  ST5-pdbrkup-short-mid-t05s1: {enabled: false}
+  ST6-volspikeup-short-mid-t1s1: {enabled: false}
+  ST7-rsi50dn-long-pm-t1s1: {enabled: false}
+  ST8-volspikedn-long-pm-t1s1: {enabled: false}
+  RW4-ns3-adv150-short: {enabled: false}
+  RW5-heat30-flowsell-rsi5pop-gapdn-short: {enabled: false}
+  RW6-ns2-up3-short: {enabled: false}
+  RW1-gapdn-bounce-flowsell-short: {enabled: false}
+  RW2-exhaustion-noon-adv150-short: {enabled: false}
+  RW3-gapdn-rsi5pop-flowsell-short: {enabled: false}
+  RW7-gapdn-bounce-early-short: {enabled: false}
+
+  # ---- FULL-DAY versions (all: window [950, 1500], scale_out_r null; min_adv / prefilter as the source)
+  # from exhaustion_short (primary; source window 1300-1500); ~66.8/day full-day [timeofday results.csv full, exp -0.059R]
+  exhaustion_short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/exhaustion_short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    prefilter: new_high_100m
+    # CAUTION: new_high_100m needs 100 one-minute bars of today, so live it blocks every entry before 11:10
+    # (55% of its full-day history trades: 15,682 of 28,458). Kept as instructed; drop it to trade 09:50-11:05.
+    scale_out_r: null
+  # from MF1-945-flowsell-vwapup (primary; source window 950-1030); ~24.74/day full-day [timeofday results.csv full, exp -0.074R]
+  MF1-945-flowsell-vwapup-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from MF2-open-rsimidhi-flowsell (primary; source window 950-1100); ~10.6/day full-day [timeofday results.csv full, exp -0.046R]
+  MF2-open-rsimidhi-flowsell-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from MF3-open-flowsell-rsi5hi (primary; source window 950-1100); ~24.8/day full-day [timeofday results.csv full, exp -0.071R]
+  MF3-open-flowsell-rsi5hi-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from MF4-h40-open-flowsell (primary; source window 950-1100); ~17.07/day full-day [timeofday results.csv full, exp -0.079R]
+  MF4-h40-open-flowsell-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from MF5-flowsell-vwapup-rsi5hi (primary; source window 950-1500); ~16.03/day full-day [timeofday results.csv full, exp -0.052R]
+  MF5-flowsell-vwapup-rsi5hi-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from NS1-rsidip-rsi5pop-long (primary; source window 950-1130); ~5.72/day full-day [timeofday results.csv full, exp -0.068R]
+  NS1-rsidip-rsi5pop-long-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from NS2-sma50break-overbought-short (primary; source window 950-1130); ~19.13/day full-day [timeofday results.csv full, exp -0.054R]
+  NS2-sma50break-overbought-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS2-sma50break-overbought-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from NS3-failed-vwap-reclaim-short (primary; source window 950-1130); ~23.95/day full-day [timeofday results.csv full, exp -0.028R]
+  NS3-failed-vwap-reclaim-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from NS4-pm-vwap-reclaim-oversold-short (primary; source window 1130-1500); ~3.97/day full-day [timeofday results.csv full, exp -0.054R]
+  NS4-pm-vwap-reclaim-oversold-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS4-pm-vwap-reclaim-oversold-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from NS5-sma50-flush-oversold-long (primary; source window 950-1130); ~7.37/day full-day [timeofday results.csv full, exp -0.043R]
+  NS5-sma50-flush-oversold-long-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW6G1-ns2-up3-vwap2sd-short (primary; source window 950-1130); ~4.62/day full-day [timeofday results.csv full, exp -0.011R]
+  RW6G1-ns2-up3-vwap2sd-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW6G1-ns2-up3-vwap2sd-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from L3-gap-slope-rsi5hi (testing; source window 1300-1430); ~13.41/day full-day [verify.json (not in the time-of-day study)]
+  L3-gap-slope-rsi5hi-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py
+    min_adv: 0   # source had none (default 0)
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  # from L3-gap-slope-lowdist (testing; source window 1300-1430); ~9.76/day full-day [verify.json (not in the time-of-day study)]
+  L3-gap-slope-lowdist-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-lowdist-FD.py
+    min_adv: 0   # source had none (default 0)
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  # from L3-gap-slope-fromopen (testing; source window 1300-1430); ~11.44/day full-day [verify.json (not in the time-of-day study)]
+  L3-gap-slope-fromopen-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
+    min_adv: 0   # source had none (default 0)
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  # from ST1-ordn-long-pm-t05s1 (testing; source window 1335-1500); ~3.81/day full-day [timeofday results.csv full, exp -0.053R]
+  ST1-ordn-long-pm-t05s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST2-slope20up-long-am-t05s1 (testing; source window 950-1130); ~25.72/day full-day [timeofday results.csv full, exp -0.015R]
+  ST2-slope20up-long-am-t05s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST3-rsi5up-short-pm-t1s1 (testing; source window 1335-1500); ~1.54/day full-day [timeofday results.csv full, exp +0.017R]
+  ST3-rsi5up-short-pm-t1s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST3-rsi5up-short-pm-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST4-emadn-long-am-t1s05 (testing; source window 950-1130); ~3.05/day full-day [timeofday results.csv full, exp +0.018R]
+  ST4-emadn-long-am-t1s05-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST5-pdbrkup-short-mid-t05s1 (testing; source window 1135-1330); ~1.0/day full-day [timeofday results.csv full, exp -0.035R]
+  ST5-pdbrkup-short-mid-t05s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST5-pdbrkup-short-mid-t05s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST6-volspikeup-short-mid-t1s1 (testing; source window 1135-1330); ~1.42/day full-day [timeofday results.csv full, exp +0.024R]
+  ST6-volspikeup-short-mid-t1s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST7-rsi50dn-long-pm-t1s1 (testing; source window 1335-1500); ~2.43/day full-day [timeofday results.csv full, exp +0.033R]
+  ST7-rsi50dn-long-pm-t1s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from ST8-volspikedn-long-pm-t1s1 (testing; source window 1335-1500); ~1.24/day full-day [timeofday results.csv full, exp +0.041R]
+  ST8-volspikedn-long-pm-t1s1-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST8-volspikedn-long-pm-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW4-ns3-adv150-short (testing; source window 950-1130); ~18.94/day full-day [timeofday results.csv full, exp -0.028R]
+  RW4-ns3-adv150-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW4-ns3-adv150-short-FD.py
+    min_adv: 150000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW5-heat30-flowsell-rsi5pop-gapdn-short (testing; source window 950-1100); ~13.14/day full-day [timeofday results.csv full, exp -0.058R]
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW6-ns2-up3-short (testing; source window 950-1130); ~8.48/day full-day [timeofday results.csv full, exp -0.021R]
+  RW6-ns2-up3-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW6-ns2-up3-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW1-gapdn-bounce-flowsell-short (testing; source window 950-1100); ~17.54/day full-day [timeofday results.csv full, exp -0.046R]
+  RW1-gapdn-bounce-flowsell-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW2-exhaustion-noon-adv150-short (testing; source window 1200-1500); ~52.08/day full-day [timeofday results.csv full, exp -0.056R]
+  RW2-exhaustion-noon-adv150-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
+    min_adv: 150000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW3-gapdn-rsi5pop-flowsell-short (testing; source window 950-1100); ~14.07/day full-day [timeofday results.csv full, exp -0.068R]
+  RW3-gapdn-rsi5pop-flowsell-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from RW7-gapdn-bounce-early-short (testing; source window 950-1030); ~61.42/day full-day [timeofday results.csv full, exp -0.058R]
+  RW7-gapdn-bounce-early-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW7-gapdn-bounce-early-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # from heat_fade_short (primary; source window 950-1030); ~176.38/day full-day [timeofday results.csv full, exp -0.032R]
+  heat_fade_short-FD:
+    enabled: true
+    type: heat
+    formula: research/bdi/fullday/heat_fade_short-FD.py
+    sides: short
+    min_adv: 125000000
+    window: [950, 1500]
+    gate: fo-
+    scale_out_r: null
+  # from heat_fade_long (primary; source window 1105-1330); ~55.18/day full-day [timeofday results.csv full, exp -0.031R]
+  heat_fade_long-FD:
+    enabled: true
+    type: heat
+    formula: research/bdi/fullday/heat_fade_long-FD.py
+    sides: long
+    min_adv: 125000000
+    window: [950, 1500]
+    gate: gap+
+    scale_out_r: null
