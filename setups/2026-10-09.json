@@ -1,0 +1,518 @@
+{
+ "strategies": {
+  "orb": {
+   "enabled": false,
+   "min_atr": 0.5,
+   "range_minutes": 5,
+   "stop_atr_frac": 0.1,
+   "target_r": null,
+   "min_rvol": 1.0
+  },
+  "vwap_reclaim": {
+   "enabled": false,
+   "earliest": "10:00",
+   "latest": "14:30",
+   "lookback_bars": 15,
+   "min_rvol": 1.5,
+   "target_r": 2.0
+  },
+  "gap_and_go": {
+   "enabled": false,
+   "min_gap_pct": 4.0,
+   "range_minutes": 5,
+   "min_rvol": 2.0,
+   "target_r": 2.0,
+   "exit_by": "11:30"
+  },
+  "gap_fade": {
+   "enabled": false,
+   "min_gap_pct": 1.0,
+   "max_gap_pct": 3.0,
+   "range_minutes": 15,
+   "max_rvol": 1.5,
+   "exit_by": "12:00"
+  },
+  "intraday_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA"
+   ],
+   "signal_time": "10:00",
+   "entry_time": "15:30",
+   "min_abs_return_pct": 0.25,
+   "stop_atr_frac": 0.25
+  },
+  "noise_band_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ"
+   ],
+   "band_mult": 1.0,
+   "first_check": "10:00",
+   "last_check": "15:30"
+  },
+  "vwap_reversion": {
+   "enabled": false,
+   "band_std": 2.5,
+   "earliest": "10:00",
+   "latest": "15:00",
+   "max_rvol": 3.0,
+   "stop_std": 1.0
+  },
+  "orb20_a": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "A",
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "orb20_b": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "B",
+   "stop_atr": 0.15,
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "gap_continuation": {
+   "enabled": false,
+   "min_gap_pct": 3.0,
+   "min_rvol": 3.0,
+   "target_r": 2.0,
+   "entry_until": "11:00",
+   "scale_out_r": null
+  },
+  "gap_sma20": {
+   "enabled": false,
+   "mirror": true,
+   "stop_atr": 0.05,
+   "scale_out_r": null
+  },
+  "index_gap_fill": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "stop_gap_mult": 1.5,
+   "scale_out_r": null
+  },
+  "close_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "gate_mult": 0.5,
+   "stop_atr": 0.5,
+   "scale_out_r": null
+  },
+  "eod_reversal": {
+   "enabled": false,
+   "min_drop_pct": 2.0,
+   "min_adv": 20000000,
+   "scale_out_r": null
+  },
+  "vwap_pullback": {
+   "enabled": false,
+   "min_rvol": 2.0,
+   "top_n": 20,
+   "entry_until": "12:00",
+   "scale_out_r": null
+  },
+  "heat_fade_short": {
+   "enabled": false,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_9.py",
+   "sides": "short",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1030
+   ],
+   "gate": "fo-",
+   "scale_out_r": null
+  },
+  "heat_fade_long": {
+   "enabled": false,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_5.py",
+   "sides": "long",
+   "min_adv": 125000000,
+   "window": [
+    1105,
+    1330
+   ],
+   "gate": "gap+",
+   "scale_out_r": null
+  },
+  "exhaustion_short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/setups2/candidates/volume_flip_1.py",
+   "min_adv": 95000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "prefilter": "new_high_100m",
+   "scale_out_r": null
+  },
+  "MF1-945-flowsell-vwapup": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-945-flowsell-vwapup.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1030
+   ],
+   "scale_out_r": null
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF4-h40-open-flowsell": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-h40-open-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS1-rsidip-rsi5pop-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS2-sma50break-overbought-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS2-sma50break-overbought-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS3-failed-vwap-reclaim-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py",
+   "min_adv": 95000000,
+   "window": [
+    1130,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS5-sma50-flush-oversold-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW6G1-ns2-up3-vwap2sd-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "L3-gap-slope-rsi5hi": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1.py",
+   "window": [
+    1300,
+    1430
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "L3-gap-slope-lowdist": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1.py",
+   "window": [
+    1300,
+    1430
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "L3-gap-slope-fromopen": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/layering/finalists/L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1.py",
+   "window": [
+    1300,
+    1430
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "ST1-ordn-long-pm-t05s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST1-ordn-long-pm-t05s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1335,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "ST2-slope20up-long-am-t05s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST2-slope20up-long-am-t05s1.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "ST3-rsi5up-short-pm-t1s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST3-rsi5up-short-pm-t1s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1335,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "ST4-emadn-long-am-t1s05": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST4-emadn-long-am-t1s05.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "ST5-pdbrkup-short-mid-t05s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST5-pdbrkup-short-mid-t05s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1135,
+    1330
+   ],
+   "scale_out_r": null
+  },
+  "ST6-volspikeup-short-mid-t1s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST6-volspikeup-short-mid-t1s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1135,
+    1330
+   ],
+   "scale_out_r": null
+  },
+  "ST7-rsi50dn-long-pm-t1s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST7-rsi50dn-long-pm-t1s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1335,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "ST8-volspikedn-long-pm-t1s1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/stack1009/modules/ST8-volspikedn-long-pm-t1s1.py",
+   "min_adv": 95000000,
+   "window": [
+    1335,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "RW4-ns3-adv150-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW4-ns3-adv150-short.py",
+   "min_adv": 150000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "RW6-ns2-up3-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW6-ns2-up3-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW1-gapdn-bounce-flowsell-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW1-gapdn-bounce-flowsell-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "RW2-exhaustion-noon-adv150-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW2-exhaustion-noon-adv150-short.py",
+   "min_adv": 150000000,
+   "window": [
+    1200,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW3-gapdn-rsi5pop-flowsell-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "RW7-gapdn-bounce-early-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/rework1008/modules/RW7-gapdn-bounce-early-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1030
+   ],
+   "scale_out_r": null
+  }
+ },
+ "exits": {
+  "scale_out_r": 1.0,
+  "scale_out_frac": 0.5
+ },
+ "shorts": {
+  "enabled": true,
+  "require_easy_to_borrow": true
+ },
+ "live": {
+  "no_entry_before": "09:50",
+  "max_spread_bps": 30,
+  "max_spread_risk_frac": 0.25,
+  "max_participation": 0.1,
+  "status_every_min": 2,
+  "start_from": "08:00",
+  "max_job_minutes": 340,
+  "fetch_batch": 400
+ },
+ "universe": {
+  "max_symbols": null,
+  "min_avg_dollar_volume": 5000000,
+  "extended_min_avg_dollar_volume": 1000000,
+  "extended_min_rvol": 3.0,
+  "min_atr_pct": 1.0,
+  "stocks_in_play_top_n": 20,
+  "earnings_blackout_days": 4
+ }
+}
