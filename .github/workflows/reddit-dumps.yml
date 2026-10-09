@@ -1,0 +1,57 @@
+# Research input (owner 2026-10-09): multi-year trading-subreddit posts/comments from Watchful1's per-subreddit
+# Pushshift dumps on Academic Torrents (the live archive APIs refuse datacenter IPs). Downloads ONLY the selected
+# subreddits' files from the torrent, extracts 2019+ (score-filtered) and publishes gzip JSONL to `research-reddit`.
+# Manual run only. Educational only - not financial advice.
+name: reddit-dumps
+
+on:
+  workflow_dispatch:
+    inputs:
+      infohash:
+        description: "Academic Torrents infohash (per-subreddit dump)"
+        default: "3e3f64dee22dc304cdd2546254ca1f8e8ae542b4"
+      subs:
+        description: "Subreddits (space-separated, case-insensitive)"
+        default: "Daytrading algotrading RealDayTrading ai_trading aitradingplaybook Trading StockMarket options pennystocks"
+      since:
+        default: "2019-01-01"
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get -qq update && sudo apt-get -qq install -y aria2 && pip install -q zstandard
+      - name: Fetch the torrent and pick the subreddit files
+        id: pick
+        run: |
+          curl -sSfL -o dump.torrent "https://academictorrents.com/download/${{ inputs.infohash }}.torrent"
+          aria2c --show-files dump.torrent > files.txt
+          idx=""
+          for s in ${{ inputs.subs }}; do
+            for kind in submissions comments; do
+              i=$(awk -v pat="/${s}_${kind}.zst" '/^ *[0-9]+\|/ {split($0,a,"|"); n=a[1]+0} index(tolower($0), tolower(pat)) {print n; exit}' files.txt)
+              if [ -n "$i" ]; then idx="${idx:+$idx,}$i"; echo "found ${s}_${kind}: index $i"; else echo "missing ${s}_${kind}"; fi
+            done
+          done
+          [ -n "$idx" ] || { echo "::error::none of the subreddits are in this dump"; exit 1; }
+          echo "idx=$idx" >> "$GITHUB_OUTPUT"
+      - name: Download only those files
+        run: aria2c --select-file=${{ steps.pick.outputs.idx }} --seed-time=0 --bt-stop-timeout=1800 --max-connection-per-server=8 -d dump dump.torrent
+      - name: Extract
+        run: python scripts/reddit_dump_extract.py --dir dump --subs ${{ inputs.subs }} --since ${{ inputs.since }} --out reddit_data
+      - name: Publish to the research-reddit branch
+        run: |
+          cd reddit_data
+          echo "# Reddit dump extract (Academic Torrents ${{ inputs.infohash }}). Research input only. Educational only - not financial advice." > README.md
+          git init -q && git checkout -q -b research-reddit
+          git add -A
+          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "reddit dump extract since ${{ inputs.since }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" research-reddit
