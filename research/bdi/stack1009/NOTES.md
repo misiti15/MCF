@@ -78,3 +78,73 @@ are LIVE-PROBATION candidates, not "keep".
 Diversity: candidates are chosen best-first by overall t among those meeting the criterion, skipping one whose
 trigger family + side + window equals a chosen one or whose symbol-day overlap with a chosen one exceeds 30%.
 RW6 + G1k2 (trendguard, +0.264R n 424 t 2.39) is listed for comparison (not re-scored here; it needs volume).
+
+### 1.8 Amendment A (2026-10-09 12:20 UTC, after the first scan pass of 7,062 configurations; those count)
+The first pass was dominated by one session: the top stack (band10-dn short am, n 211, "t 8.4") had 156 of its 211
+trades on 2025-04-07 (tariff crash day) - the day-clustered SE understates noise when one session carries most trades.
+Changes, declared before the second pass was scored:
+- Search ranking (not a gate) = min(day-level t in up sessions, in down sessions), where day-level t treats each
+  session's mean R as one observation (equal weight per day); a stack whose busiest session holds > 10% of its trades
+  gets rank -9.
+- Beams keep at most 2 entries per trigger family + side in stage 1 (beam 24) and 3 in stages 2-3 (beam 30) (diversity).
+- Criterion 1.7 gains one stricter gate: the busiest session holds <= 10% of the trades. Day-clustered t (gates.summary)
+  stays the t gate; day-level t is reported too.
+- N for t_required counts both passes plus every finalist re-score and plateau neighbour.
+
+### 1.9 Amendment B (2026-10-09 12:25 UTC, after pass 2 of 7,338 configurations; those count)
+Pass 2 left only 6 stacks meeting the cheap gates (n, up > 0, down > 0, t >= 2, busiest day <= 10%); stage-1 ranking
+is negative everywhere, so a narrow greedy beam is too myopic. Pass 3 (same triggers, filters, windows, exits, gates):
+- Stage 2 is exhaustive: every one of the 144 trigger-side x window combinations x every filter x 3 exits.
+- Stages 3 and 4 keep beams of 100 (at most 8 per trigger family + side).
+- All three passes are counted in N.
+
+### 1.10 Amendment C (2026-10-09 12:32 UTC, after pass 3 of 29,016 configurations; those count)
+Pass 3's survivors all carry a big move from the open (|fromOpen| > 3%), the same shape as the RW6 lead (big movers
+are idiosyncratic, so less tied to the session regime). Pass 4 makes that the base layer: first filter forced to one
+of fo_with 2 / fo_with 3 / fo_against 2 / fo_against 3, then every trigger-side x window x second filter x 3 exits
+(exhaustive), then a beam of 100 (at most 8 per trigger family + side) x third filter x 3 exits. Same gates; counted.
+
+### 1.11 Amendment D (2026-10-09 12:42 UTC, after pass 4 of 54,858 configurations; those count)
+Passes 1-4 give 4 diverse stacks meeting 1.7 (11 passers, 4 after the diversity rule). Pass 5 adds 6 new basic trigger
+families (both cross directions x both sides), searched as pass 3 (stage 1 all, stage 2 exhaustive, stages 3-4 beam
+100, at most 8 per family + side), same filters, windows, exits, gates; counted:
+13. hodlod: up = close makes a new high of day (dist_hod_atr == 0, previous bar below its HOD); dn = new low of day.
+14. rsi50: RSI(14) crosses 50.  15. volspike: volumeRatio crosses up through 2.0 (up = on a bar closing above VWAP,
+dn = below VWAP).  16. fo3: fromOpen crosses +3% (up) / -3% (dn).  17. slope20: SMA20 slope crosses 0.
+18. flow3: flow3 (3-bar signed volume share) crosses +0.5 (up) / -0.5 (dn).
+
+## 2. Results (appended 2026-10-09 ~12:55 UTC; section 1 unchanged except the dated amendments A-D)
+
+*Lab results on the open 2-year history only (backtest, not live, not paper). Educational only - not financial advice.*
+
+### 2.1 Failures first
+
+- **No stack clears the try-count bar.** Configurations evaluated: 120,375 (pass 1 7,062; pass 2 7,338; pass 3 29,016; pass 4 54,858; pass 5 21,951; finalist re-scores and plateau neighbours ~275). t_required = sqrt(2 ln N) = 4.837; the best day-clustered t found is 2.66. With ~120k tries, a best t of ~2.7 is what noise alone would be expected to produce, so these are **live-probation candidates whose edge is unproven**, not 'keep'.
+- Pass 1 was dominated by one session (2025-04-07: 156 of 211 trades of the top stack, 't 8.4'); amendment A added the busiest-day <= 10% gate.
+- Only 23 of 29 stacks that met the cheap gates (n >= 150, up > 0, down > 0, t >= 2, busiest day <= 10%) also met walk-forward >= 0.6, plateau and ex-best-day; all are listed in `finalists.csv` (failures included). 8 survive the diversity rule.
+- Every candidate has a big move from the open (6 of 8: > 3%) as a layer: the regime-robust shape is idiosyncratic big decliners, as with the RW6 lead. The big-move layer alone is negative (baseline column), so the trigger/stack does the work in-sample - or the search found the lucky subsets.
+- Trades/day are small (0.4-1.0); together ~4.8/day before overlap.
+- ST1 module vs scan: 395 vs 403 trades (+0.091R t 2.53 vs +0.094 t 2.66): the scan stored the opening-range level in float32, so an exact-touch prior bar was misclassified; the module (float64, the live code) is the reference. ST2-ST8 reproduce exactly. Every module gives identical masks on a single symbol-day without symbol/date columns (live-frame shape), 840/840 checks.
+- Not done: no locked-block scoring (the lead does it once); RW6+G1k2 not re-scored here (needs volume-weighted VWAP SD, not in the live frame).
+
+### 2.2 Candidate table (module numbers; scan numbers where identical)
+
+| ID | layers | side/exit | window | n | /day | win | exp R | t | t req | up exp (n) | flat exp (n) | down exp (n) | WF + share | plateau mean (min) | ex-best-day | overlap live | max overlap other cands | random-bar baseline | big-move layer alone |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ST1-ordn-long-pm-t05s1 | close crosses below the 09:30-10:00 opening-range low; stock down > 3.0% from the open; volume ratio >= 1.5; close inside the prior-day range | long/t05s1 | 1335-1500 | 395 | 0.93 | 0.6987 | +0.091 | 2.53 | 4.837 | +0.169 (70) | +0.017 (126) | +0.109 (207) | 0.8 | +0.069 (+0.037) | +0.081 | 0.432 | 0.025 | -0.072 | -0.009 (n 31918) |
+| ST2-slope20up-long-am-t05s1 | 5-min SMA20 slope turns positive; stock down > 3.0% from the open; 19-bar buy pressure > 0; close within 0.5 daily ATR of VWAP | long/t05s1 | 950-1130 | 164 | 0.38 | 0.7683 | +0.128 | 2.43 | 4.837 | +0.086 (52) | +0.208 (62) | +0.072 (50) | 0.6 | +0.090 (+0.003) | +0.110 | 0.665 | 0.146 | -0.075 | -0.074 (n 29574) |
+| ST3-rsi5up-short-pm-t1s1 | RSI(5) crosses back above 20; stock down > 3.0% from the open; close above VWAP; gap up > 1.0% | short/t1s1 | 1335-1500 | 358 | 0.84 | 0.5866 | +0.106 | 2.35 | 4.837 | +0.056 (93) | +0.152 (148) | +0.087 (117) | 0.769 | +0.094 (+0.031) | +0.086 | 0.539 | 0.168 | -0.074 | -0.119 (n 31918) |
+| ST4-emadn-long-am-t1s05 | EMA9 crosses below EMA21; stock down > 3.0% from the open; RSI(14) > 50; RSI(5) <= 20 | long/t1s05 | 950-1130 | 168 | 0.39 | 0.4881 | +0.157 | 2.29 | 4.837 | +0.386 (37) | +0.130 (58) | +0.063 (73) | 1.0 | +0.126 (+0.008) | +0.129 | 0.708 | 0.048 | -0.091 | -0.074 (n 29574) |
+| ST5-pdbrkup-short-mid-t05s1 | close crosses above the prior-day high; stock down > 3.0% from the open; close above the 5-min SMA50 | short/t05s1 | 1135-1330 | 162 | 0.38 | 0.7099 | +0.107 | 2.17 | 4.837 | +0.125 (34) | +0.052 (64) | +0.153 (64) | 0.833 | +0.091 (+0.033) | +0.087 | 0.753 | 0.123 | -0.065 | -0.037 (n 32044) |
+| ST6-volspikeup-short-mid-t1s1 | volume ratio crosses above 2.0 on a bar closing above VWAP; stock down > 3.0% from the open; gap up > 1.0% | short/t1s1 | 1135-1330 | 222 | 0.52 | 0.5856 | +0.126 | 2.15 | 4.837 | +0.015 (60) | +0.180 (86) | +0.154 (76) | 0.857 | +0.139 (+0.068) | +0.102 | 0.473 | 0.27 | -0.075 | -0.034 (n 32044) |
+| ST7-rsi50dn-long-pm-t1s1 | RSI(14) crosses below 50; RSI(14) <= 30; stock down > 1.0% from the open; 19-bar buy pressure > 0 | long/t1s1 | 1335-1500 | 166 | 0.39 | 0.5904 | +0.162 | 2.02 | 4.837 | +0.192 (34) | +0.095 (51) | +0.192 (81) | 0.714 | +0.097 (-0.003) | +0.104 | 0.205 | 0.012 | -0.084 | -0.037 (n 117162) |
+| ST8-volspikedn-long-pm-t1s1 | volume ratio crosses above 2.0 on a bar closing below VWAP; stock down > 3.0% from the open; MACD line above 0; 3-bar signed-volume share > 0 | long/t1s1 | 1335-1500 | 408 | 0.96 | 0.5515 | +0.107 | 2.01 | 4.837 | +0.126 (74) | +0.198 (162) | +0.012 (172) | 0.786 | +0.050 (+0.024) | +0.080 | 0.515 | 0.025 | -0.084 | +0.007 (n 31918) |
+| RW6+G1k2 (trendguard, comparison) | NS2 SMA50 break up while RSI >= 60, up > 3% from open; no short while a +2 SD VWAP excursion is unresolved | short/t1s1 | 950-1130 | 424 | 3.97* | - | +0.264 | 2.39 | 4.757 | +0.318 | - | +0.082 | 0.625 | G1k1 -0.02 (no plateau) | - | high (NS2 lineage) | - | - | - |
+
+*RW6+G1k2 numbers from trendguard NOTES (trades/day there is per active session); not computable on the live frame (no volume).
+
+Up/flat counts are scan counts; ST1 regime counts differ by a few trades from the module. Window = bar close ET. All modules: min_adv 95,000,000.
+
+### 2.3 Modules
+`research/bdi/stack1009/modules/ST1..ST8-*.py` (SIDE, GEOM, LAYERS, mask(df); live-frame columns only; VWAP from vwapDistPct, VWAP stretch / OR / PDH / PDL from the *_atr distance columns, prev-bar respects symbol-day boundaries). Backlog: `bdi-st-st1..st8-*` (status testing, lab_module set).
+
