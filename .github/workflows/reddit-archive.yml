@@ -1,0 +1,65 @@
+# Research input (owner 2026-10-09): multi-year Reddit posts/comments from trading subreddits via the public Arctic
+# Shift archive (no Reddit API app needed). Manual run only; one parallel job per subreddit, then one publish job
+# writes gzip JSONL to the `research-reddit` branch. Educational only - not financial advice.
+name: reddit-archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      subs:
+        description: "Subreddits as a JSON list"
+        default: '["Daytrading","algotrading","RealDayTrading","ai_trading","aitradingplaybook","Trading"]'
+      since:
+        description: "Start date (YYYY-MM-DD)"
+        default: "2019-01-01"
+      min_score:
+        description: "Minimum post score kept"
+        default: "5"
+      comment_posts:
+        description: "Top posts per subreddit-year whose comments are pulled"
+        default: "200"
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    strategy:
+      fail-fast: false
+      matrix:
+        sub: ${{ fromJSON(inputs.subs) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q requests
+      - name: Pull archive (${{ matrix.sub }})
+        run: python scripts/reddit_archive.py --subs ${{ matrix.sub }} --since ${{ inputs.since }} --min-score ${{ inputs.min_score }} --comment-posts ${{ inputs.comment_posts }} --out reddit_data
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reddit-${{ matrix.sub }}
+          path: reddit_data
+          retention-days: 7
+
+  publish:
+    needs: pull
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: parts
+          pattern: reddit-*
+      - name: Publish to the research-reddit branch
+        run: |
+          mkdir out && for d in parts/reddit-*; do cp -r "$d"/* out/ 2>/dev/null || true; rm -f out/SUMMARY.json; done
+          for d in parts/reddit-*; do s=${d#parts/reddit-}; [ -f "$d/SUMMARY.json" ] && cp "$d/SUMMARY.json" "out/SUMMARY-$s.json"; done
+          cd out
+          echo "# Reddit archive extract (Arctic Shift). Research input only. Educational only - not financial advice." > README.md
+          git init -q && git checkout -q -b research-reddit
+          git add -A
+          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "reddit archive since ${{ inputs.since }}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" research-reddit
