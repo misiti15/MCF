@@ -32,7 +32,16 @@ jobs:
       - name: Fetch the torrent and pick the subreddit files
         id: pick
         run: |
-          curl -sSfL -o dump.torrent "https://academictorrents.com/download/${{ inputs.infohash }}.torrent"
+          got=""
+          for h in ${{ inputs.infohash }} 1614740ac8c94505e4ecb9d88be8bed7b6afddd4; do
+            if curl -sSfL -o dump.torrent "https://academictorrents.com/download/$h.torrent"; then got=$h; break; fi
+            echo "no .torrent download for $h; trying its magnet link for the metadata"
+            if timeout 900 aria2c --bt-metadata-only=true --bt-save-metadata=true --enable-dht=true \
+                 --bt-tracker="https://academictorrents.com/announce.php,udp://tracker.opentrackr.org:1337/announce" \
+                 "magnet:?xt=urn:btih:$h" && [ -f "$h.torrent" ]; then mv "$h.torrent" dump.torrent; got=$h; break; fi
+          done
+          [ -n "$got" ] || { echo "::error::could not get the torrent metadata"; exit 1; }
+          echo "using torrent $got"
           aria2c --show-files dump.torrent > files.txt
           idx=""
           for s in ${{ inputs.subs }}; do
