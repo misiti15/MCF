@@ -16,23 +16,60 @@ from pathlib import Path
 import requests
 
 API = "https://arctic-shift.photon-reddit.com/api"
+PULLPUSH = "https://api.pullpush.io/reddit/search"   # fallback archive (also Pushshift-style, no account)
 UA = {"User-Agent": "mcf-research/0.1 (educational backtesting research)"}
 POST_FIELDS = ("id", "title", "selftext", "score", "num_comments", "created_utc", "link_flair_text", "author", "permalink")
 COMMENT_FIELDS = ("id", "link_id", "parent_id", "body", "score", "created_utc", "author")
 
 
-def get(path: str, params: dict, tries: int = 6):
+STATS = {"arctic": 0, "pullpush": 0, "failed": 0}
+
+
+def _pullpush(path: str, params: dict):
+    """Same query against PullPush: /posts/search -> /submission/, /comments/search -> /comment/."""
+    kind = "submission" if path.startswith("/posts") else "comment"
+    q = {"subreddit": params.get("subreddit"), "after": params.get("after"), "before": params.get("before"),
+         "size": 100, "sort": "asc" if params.get("sort") == "asc" else "desc",
+         "sort_type": "score" if params.get("sort_type") == "score" else "created_utc", "link_id": params.get("link_id")}
+    r = requests.get(f"{PULLPUSH}/{kind}/", params={k: v for k, v in q.items() if v is not None}, headers=UA, timeout=60)
+    r.raise_for_status()
+    return r.json().get("data") or []
+
+
+DOWN = {"arctic_fails": 0}
+
+
+def get(path: str, params: dict, tries: int = 4):
+    if DOWN["arctic_fails"] >= 5:          # circuit breaker: Arctic Shift is down, go straight to PullPush
+        for i in range(tries):
+            try:
+                STATS["pullpush"] += 1
+                return _pullpush(path, params)
+            except Exception as e:  # noqa: BLE001
+                print(f"  pullpush retry {i + 1}/{tries} after {e}", flush=True)
+                time.sleep(2 ** i)
+        STATS["failed"] += 1
+        return []
     for i in range(tries):
         try:
+            STATS["arctic"] += 1
             r = requests.get(f"{API}{path}", params=params, headers=UA, timeout=60)
             if r.status_code == 429 or r.status_code >= 500:
                 raise RuntimeError(f"HTTP {r.status_code}")
             r.raise_for_status()
+            DOWN["arctic_fails"] = 0
             return r.json().get("data") or []
         except Exception as e:  # noqa: BLE001 - network hiccups: back off and retry
+            DOWN["arctic_fails"] += 1
             wait = 2 ** i
-            print(f"  retry {i + 1}/{tries} after {e} ({wait}s)", flush=True)
+            print(f"  arctic retry {i + 1}/{tries} after {e} ({wait}s)", flush=True)
             time.sleep(wait)
+            try:  # fall back to PullPush before the next Arctic attempt
+                STATS["pullpush"] += 1
+                return _pullpush(path, params)
+            except Exception as e2:  # noqa: BLE001
+                print(f"  pullpush failed too: {e2}", flush=True)
+    STATS["failed"] += 1
     return []
 
 
@@ -45,6 +82,15 @@ def trim(d: dict, fields, maxlen: int = 6000) -> dict:
 
 
 def posts(sub: str, since: int, until: int, min_score: int):
+    """Monthly windows keep each archive query small (the archives time out on whole-subreddit scans)."""
+    month = 31 * 86400
+    lo = since
+    while lo < until:
+        yield from _posts(sub, lo, min(lo + month, until), min_score)
+        lo += month
+
+
+def _posts(sub: str, since: int, until: int, min_score: int):
     after = since
     while after < until:
         batch = get("/posts/search", {"subreddit": sub, "after": after, "before": until, "limit": 100, "sort": "asc"})
@@ -99,7 +145,11 @@ def main():
                     time.sleep(0.3)
             summary[f"{sub}/{yr}"] = {"posts": len(ps), "comments": n_c}
             print(f"{sub} {yr}: {len(ps)} posts (score >= {a.min_score}), {n_c} comments", flush=True)
+    summary["_requests"] = STATS
     (Path(a.out) / "SUMMARY.json").write_text(json.dumps(summary, indent=1))
+    print("requests:", STATS, flush=True)
+    if not any(v.get("posts") for k, v in summary.items() if not k.startswith("_")):
+        raise SystemExit("no posts retrieved from either archive - failing the job so it is not mistaken for success")
 
 
 if __name__ == "__main__":
