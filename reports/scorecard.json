@@ -1,6 +1,6 @@
 {
- "sessions": 3,
- "window": "2026-10-06 to 2026-10-08",
+ "sessions": 4,
+ "window": "2026-10-06 to 2026-10-09",
  "setups": [
   {
    "setup": "NS2-sma50break-overbought-short",
@@ -12,11 +12,29 @@
    "verdict": "too few trades"
   },
   {
+   "setup": "NS1-rsidip-rsi5pop-long",
+   "trades": 3,
+   "win_rate": 1.0,
+   "avg_r": 0.479,
+   "pnl": 25.72,
+   "expected_r": 0.056,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "NS5-sma50-flush-oversold-long",
+   "trades": 4,
+   "win_rate": 0.5,
+   "avg_r": 0.344,
+   "pnl": 29.43,
+   "expected_r": 0.002,
+   "verdict": "too few trades"
+  },
+  {
    "setup": "MF1-945-flowsell-vwapup",
-   "trades": 5,
-   "win_rate": 0.4,
-   "avg_r": 0.354,
-   "pnl": -6.21,
+   "trades": 6,
+   "win_rate": 0.333,
+   "avg_r": 0.117,
+   "pnl": -13.21,
    "expected_r": -0.05,
    "verdict": "too few trades"
   },
@@ -31,66 +49,75 @@
   },
   {
    "setup": "MF3-open-flowsell-rsi5hi",
-   "trades": 5,
-   "win_rate": 0.6,
-   "avg_r": 0.054,
-   "pnl": 2.46,
+   "trades": 8,
+   "win_rate": 0.625,
+   "avg_r": -0.003,
+   "pnl": 5.91,
    "expected_r": -0.034,
    "verdict": "too few trades"
   },
   {
    "setup": "heat_fade_long",
-   "trades": 35,
-   "win_rate": 0.429,
-   "avg_r": -0.102,
-   "pnl": -108.78,
+   "trades": 43,
+   "win_rate": 0.395,
+   "avg_r": -0.112,
+   "pnl": -161.0,
    "expected_r": -0.138,
    "verdict": "negative so far"
   },
   {
-   "setup": "heat_fade_short",
-   "trades": 19,
-   "win_rate": 0.474,
-   "avg_r": -0.129,
-   "pnl": 49.51,
-   "expected_r": -0.015,
-   "verdict": "negative so far"
-  },
-  {
-   "setup": "MF5-flowsell-vwapup-rsi5hi",
-   "trades": 8,
-   "win_rate": 0.375,
-   "avg_r": -0.169,
-   "pnl": -24.11,
-   "expected_r": -0.01,
-   "verdict": "too few trades"
-  },
-  {
    "setup": "orb20_a",
-   "trades": 8,
-   "win_rate": 0.25,
-   "avg_r": -0.187,
-   "pnl": -253.02,
+   "trades": 9,
+   "win_rate": 0.333,
+   "avg_r": -0.149,
+   "pnl": -247.64,
    "expected_r": -0.04,
    "verdict": "too few trades"
   },
   {
-   "setup": "MF4-h40-open-flowsell",
-   "trades": 4,
-   "win_rate": 0.25,
-   "avg_r": -0.336,
-   "pnl": -17.04,
-   "expected_r": -0.017,
+   "setup": "MF5-flowsell-vwapup-rsi5hi",
+   "trades": 13,
+   "win_rate": 0.385,
+   "avg_r": -0.163,
+   "pnl": -32.08,
+   "expected_r": -0.01,
+   "verdict": "below backtest - review"
+  },
+  {
+   "setup": "NS3-failed-vwap-reclaim-short",
+   "trades": 8,
+   "win_rate": 0.375,
+   "avg_r": -0.23,
+   "pnl": -76.25,
+   "expected_r": -0.136,
    "verdict": "too few trades"
   },
   {
    "setup": "exhaustion_short",
-   "trades": 19,
-   "win_rate": 0.211,
-   "avg_r": -0.478,
-   "pnl": -179.2,
+   "trades": 23,
+   "win_rate": 0.348,
+   "avg_r": -0.256,
+   "pnl": -72.33,
    "expected_r": -0.02,
    "verdict": "below backtest - review"
+  },
+  {
+   "setup": "heat_fade_short",
+   "trades": 50,
+   "win_rate": 0.38,
+   "avg_r": -0.28,
+   "pnl": -177.24,
+   "expected_r": -0.015,
+   "verdict": "below backtest - review"
+  },
+  {
+   "setup": "MF4-h40-open-flowsell",
+   "trades": 6,
+   "win_rate": 0.167,
+   "avg_r": -0.416,
+   "pnl": -56.57,
+   "expected_r": -0.017,
+   "verdict": "too few trades"
   },
   {
    "setup": "MF2-open-rsimidhi-flowsell",
@@ -100,6 +127,43 @@
    "pnl": -7.99,
    "expected_r": 0.046,
    "verdict": "too few trades"
+  }
+ ],
+ "by_time": [
+  {
+   "bucket": "09:50-10:30",
+   "trades": 73,
+   "win_rate": 0.37,
+   "avg_r": -0.222,
+   "pnl": -482.28
+  },
+  {
+   "bucket": "10:30-11:30",
+   "trades": 43,
+   "win_rate": 0.395,
+   "avg_r": -0.203,
+   "pnl": -286.14
+  },
+  {
+   "bucket": "11:30-13:00",
+   "trades": 29,
+   "win_rate": 0.414,
+   "avg_r": -0.071,
+   "pnl": 41.01
+  },
+  {
+   "bucket": "13:00-14:00",
+   "trades": 25,
+   "win_rate": 0.44,
+   "avg_r": -0.097,
+   "pnl": -39.49
+  },
+  {
+   "bucket": "14:00-16:00",
+   "trades": 8,
+   "win_rate": 0.5,
+   "avg_r": 0.128,
+   "pnl": 25.29
   }
  ],
  "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge."
