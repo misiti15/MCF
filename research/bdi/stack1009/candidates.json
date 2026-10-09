@@ -1,0 +1,448 @@
+[
+ {
+  "id": "ST1-ordn-long-pm-t05s1",
+  "desc": "Basic stack: close crosses below the 09:30-10:00 opening-range low; stock down > 3.0% from the open; volume ratio >= 1.5; close inside the prior-day range; 13:35-15:00 ET (bar close).",
+  "side": "long",
+  "geom": "t05s1",
+  "lo": 1335,
+  "hi": 1500,
+  "stats": "n 395 (0.93/day), win 0.6987, exp +0.091R, day-clustered t 2.53; up +0.169 / down +0.109; walk-forward + share 0.8 (scan); plateau mean 0.0689 (scan); ex-best-day +0.081. (Scan stored the OR level in float32: 403 trades, +0.094R, t 2.66.)",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "or",
+   "dn",
+   null
+  ],
+  "filters": [
+   [
+    "fo_against",
+    3.0
+   ],
+   [
+    "vol",
+    1.5
+   ],
+   [
+    "pd_inside",
+    null
+   ]
+  ],
+  "layers": [
+   "close crosses below the 09:30-10:00 opening-range low",
+   "stock down > 3.0% from the open",
+   "volume ratio >= 1.5",
+   "close inside the prior-day range",
+   "13:35-15:00 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "or-dn|long|pm|fo_against3.0+vol1.5+pd_inside|t05s1",
+   "n": 403,
+   "per_day": 0.95,
+   "win_rate": 0.6998,
+   "exp": 0.0943,
+   "t": 2.66,
+   "exp_up": 0.1644,
+   "n_up": 70.0,
+   "exp_flat": 0.0168,
+   "n_flat": 126.0,
+   "exp_down": 0.1178,
+   "n_down": 207.0,
+   "wf": 0.8,
+   "plateau_mean": 0.0689,
+   "plateau_min": 0.0375,
+   "ex_best": 0.0846,
+   "overlap_live": 0.432,
+   "overlap_cands": 0.025
+  }
+ },
+ {
+  "id": "ST2-slope20up-long-am-t05s1",
+  "desc": "Basic stack: 5-min SMA20 slope turns positive; stock down > 3.0% from the open; 19-bar buy pressure > 0; close within 0.5 daily ATR of VWAP; 09:50-11:30 ET (bar close).",
+  "side": "long",
+  "geom": "t05s1",
+  "lo": 950,
+  "hi": 1130,
+  "stats": "n 164 (0.38/day), win 0.7683, exp +0.128R, day-clustered t 2.43; up +0.086 (n 52.0) / flat +0.208 (n 62.0) / down +0.072 (n 50.0); walk-forward + share 0.6; plateau mean 0.0899; ex-best-day +0.110.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "slope20",
+   "up",
+   null
+  ],
+  "filters": [
+   [
+    "fo_against",
+    3.0
+   ],
+   [
+    "bp_with",
+    null
+   ],
+   [
+    "stretch_small",
+    0.5
+   ]
+  ],
+  "layers": [
+   "5-min SMA20 slope turns positive",
+   "stock down > 3.0% from the open",
+   "19-bar buy pressure > 0",
+   "close within 0.5 daily ATR of VWAP",
+   "09:50-11:30 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "slope20-up|long|am|fo_against3.0+bp_with+stretch_small0.5|t05s1",
+   "n": 164,
+   "per_day": 0.38,
+   "win_rate": 0.7683,
+   "exp": 0.1281,
+   "t": 2.43,
+   "exp_up": 0.0861,
+   "n_up": 52.0,
+   "exp_flat": 0.2083,
+   "n_flat": 62.0,
+   "exp_down": 0.0725,
+   "n_down": 50.0,
+   "wf": 0.6,
+   "plateau_mean": 0.0899,
+   "plateau_min": 0.0032,
+   "ex_best": 0.1099,
+   "overlap_live": 0.665,
+   "overlap_cands": 0.146
+  }
+ },
+ {
+  "id": "ST3-rsi5up-short-pm-t1s1",
+  "desc": "Basic stack: RSI(5) crosses back above 20; stock down > 3.0% from the open; close above VWAP; gap up > 1.0%; 13:35-15:00 ET (bar close).",
+  "side": "short",
+  "geom": "t1s1",
+  "lo": 1335,
+  "hi": 1500,
+  "stats": "n 358 (0.84/day), win 0.5866, exp +0.106R, day-clustered t 2.35; up +0.056 (n 93.0) / flat +0.152 (n 148.0) / down +0.087 (n 117.0); walk-forward + share 0.769; plateau mean 0.0939; ex-best-day +0.086.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "rsi5",
+   "up",
+   20
+  ],
+  "filters": [
+   [
+    "fo_with",
+    3.0
+   ],
+   [
+    "vwap_against",
+    null
+   ],
+   [
+    "gap_against",
+    1.0
+   ]
+  ],
+  "layers": [
+   "RSI(5) crosses back above 20",
+   "stock down > 3.0% from the open",
+   "close above VWAP",
+   "gap up > 1.0%",
+   "13:35-15:00 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "rsi5-up|short|pm|fo_with3.0+vwap_against+gap_against1.0|t1s1",
+   "n": 358,
+   "per_day": 0.84,
+   "win_rate": 0.5866,
+   "exp": 0.1059,
+   "t": 2.35,
+   "exp_up": 0.0556,
+   "n_up": 93.0,
+   "exp_flat": 0.1524,
+   "n_flat": 148.0,
+   "exp_down": 0.0871,
+   "n_down": 117.0,
+   "wf": 0.769,
+   "plateau_mean": 0.0939,
+   "plateau_min": 0.0313,
+   "ex_best": 0.0865,
+   "overlap_live": 0.539,
+   "overlap_cands": 0.168
+  }
+ },
+ {
+  "id": "ST4-emadn-long-am-t1s05",
+  "desc": "Basic stack: EMA9 crosses below EMA21; stock down > 3.0% from the open; RSI(14) > 50; RSI(5) <= 20; 09:50-11:30 ET (bar close).",
+  "side": "long",
+  "geom": "t1s05",
+  "lo": 950,
+  "hi": 1130,
+  "stats": "n 168 (0.39/day), win 0.4881, exp +0.157R, day-clustered t 2.29; up +0.386 (n 37.0) / flat +0.130 (n 58.0) / down +0.063 (n 73.0); walk-forward + share 1.0; plateau mean 0.1258; ex-best-day +0.129.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "ema",
+   "dn",
+   null
+  ],
+  "filters": [
+   [
+    "fo_against",
+    3.0
+   ],
+   [
+    "rsi50_with",
+    null
+   ],
+   [
+    "rsi5_ext",
+    80
+   ]
+  ],
+  "layers": [
+   "EMA9 crosses below EMA21",
+   "stock down > 3.0% from the open",
+   "RSI(14) > 50",
+   "RSI(5) <= 20",
+   "09:50-11:30 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "ema-dn|long|am|fo_against3.0+rsi50_with+rsi5_ext80|t1s05",
+   "n": 168,
+   "per_day": 0.39,
+   "win_rate": 0.4881,
+   "exp": 0.1572,
+   "t": 2.29,
+   "exp_up": 0.3858,
+   "n_up": 37.0,
+   "exp_flat": 0.1296,
+   "n_flat": 58.0,
+   "exp_down": 0.0633,
+   "n_down": 73.0,
+   "wf": 1.0,
+   "plateau_mean": 0.1258,
+   "plateau_min": 0.0082,
+   "ex_best": 0.129,
+   "overlap_live": 0.708,
+   "overlap_cands": 0.048
+  }
+ },
+ {
+  "id": "ST5-pdbrkup-short-mid-t05s1",
+  "desc": "Basic stack: close crosses above the prior-day high; stock down > 3.0% from the open; close above the 5-min SMA50; 11:35-13:30 ET (bar close).",
+  "side": "short",
+  "geom": "t05s1",
+  "lo": 1135,
+  "hi": 1330,
+  "stats": "n 162 (0.38/day), win 0.7099, exp +0.107R, day-clustered t 2.17; up +0.125 (n 34.0) / flat +0.052 (n 64.0) / down +0.153 (n 64.0); walk-forward + share 0.833; plateau mean 0.0914; ex-best-day +0.087.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "pdbrk",
+   "up",
+   null
+  ],
+  "filters": [
+   [
+    "fo_with",
+    3.0
+   ],
+   [
+    "sma50_against",
+    null
+   ]
+  ],
+  "layers": [
+   "close crosses above the prior-day high",
+   "stock down > 3.0% from the open",
+   "close above the 5-min SMA50",
+   "11:35-13:30 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "pdbrk-up|short|mid|fo_with3.0+sma50_against|t05s1",
+   "n": 162,
+   "per_day": 0.38,
+   "win_rate": 0.7099,
+   "exp": 0.1073,
+   "t": 2.17,
+   "exp_up": 0.125,
+   "n_up": 34.0,
+   "exp_flat": 0.052,
+   "n_flat": 64.0,
+   "exp_down": 0.1531,
+   "n_down": 64.0,
+   "wf": 0.833,
+   "plateau_mean": 0.0914,
+   "plateau_min": 0.0325,
+   "ex_best": 0.0871,
+   "overlap_live": 0.753,
+   "overlap_cands": 0.123
+  }
+ },
+ {
+  "id": "ST6-volspikeup-short-mid-t1s1",
+  "desc": "Basic stack: volume ratio crosses above 2.0 on a bar closing above VWAP; stock down > 3.0% from the open; gap up > 1.0%; 11:35-13:30 ET (bar close).",
+  "side": "short",
+  "geom": "t1s1",
+  "lo": 1135,
+  "hi": 1330,
+  "stats": "n 222 (0.52/day), win 0.5856, exp +0.126R, day-clustered t 2.15; up +0.015 (n 60.0) / flat +0.180 (n 86.0) / down +0.154 (n 76.0); walk-forward + share 0.857; plateau mean 0.1392; ex-best-day +0.102.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "volspike",
+   "up",
+   null
+  ],
+  "filters": [
+   [
+    "fo_with",
+    3.0
+   ],
+   [
+    "gap_against",
+    1.0
+   ]
+  ],
+  "layers": [
+   "volume ratio crosses above 2.0 on a bar closing above VWAP",
+   "stock down > 3.0% from the open",
+   "gap up > 1.0%",
+   "11:35-13:30 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "volspike-up|short|mid|fo_with3.0+gap_against1.0|t1s1",
+   "n": 222,
+   "per_day": 0.52,
+   "win_rate": 0.5856,
+   "exp": 0.1262,
+   "t": 2.15,
+   "exp_up": 0.0147,
+   "n_up": 60.0,
+   "exp_flat": 0.1797,
+   "n_flat": 86.0,
+   "exp_down": 0.1537,
+   "n_down": 76.0,
+   "wf": 0.857,
+   "plateau_mean": 0.1392,
+   "plateau_min": 0.0684,
+   "ex_best": 0.1023,
+   "overlap_live": 0.473,
+   "overlap_cands": 0.27
+  }
+ },
+ {
+  "id": "ST7-rsi50dn-long-pm-t1s1",
+  "desc": "Basic stack: RSI(14) crosses below 50; RSI(14) <= 30; stock down > 1.0% from the open; 19-bar buy pressure > 0; 13:35-15:00 ET (bar close).",
+  "side": "long",
+  "geom": "t1s1",
+  "lo": 1335,
+  "hi": 1500,
+  "stats": "n 166 (0.39/day), win 0.5904, exp +0.162R, day-clustered t 2.02; up +0.192 (n 34.0) / flat +0.095 (n 51.0) / down +0.192 (n 81.0); walk-forward + share 0.714; plateau mean 0.0968; ex-best-day +0.104.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "rsi50",
+   "dn",
+   null
+  ],
+  "filters": [
+   [
+    "rsi_ext",
+    70
+   ],
+   [
+    "fo_against",
+    1.0
+   ],
+   [
+    "bp_with",
+    null
+   ]
+  ],
+  "layers": [
+   "RSI(14) crosses below 50",
+   "RSI(14) <= 30",
+   "stock down > 1.0% from the open",
+   "19-bar buy pressure > 0",
+   "13:35-15:00 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "rsi50-dn|long|pm|rsi_ext70+fo_against1.0+bp_with|t1s1",
+   "n": 166,
+   "per_day": 0.39,
+   "win_rate": 0.5904,
+   "exp": 0.162,
+   "t": 2.02,
+   "exp_up": 0.1923,
+   "n_up": 34.0,
+   "exp_flat": 0.0949,
+   "n_flat": 51.0,
+   "exp_down": 0.1915,
+   "n_down": 81.0,
+   "wf": 0.714,
+   "plateau_mean": 0.0968,
+   "plateau_min": -0.0026,
+   "ex_best": 0.1036,
+   "overlap_live": 0.205,
+   "overlap_cands": 0.012
+  }
+ },
+ {
+  "id": "ST8-volspikedn-long-pm-t1s1",
+  "desc": "Basic stack: volume ratio crosses above 2.0 on a bar closing below VWAP; stock down > 3.0% from the open; MACD line above 0; 3-bar signed-volume share > 0; 13:35-15:00 ET (bar close).",
+  "side": "long",
+  "geom": "t1s1",
+  "lo": 1335,
+  "hi": 1500,
+  "stats": "n 408 (0.96/day), win 0.5515, exp +0.107R, day-clustered t 2.01; up +0.126 (n 74.0) / flat +0.198 (n 162.0) / down +0.012 (n 172.0); walk-forward + share 0.786; plateau mean 0.0497; ex-best-day +0.080.",
+  "treq": 4.837,
+  "ntries": 120500,
+  "trigger": [
+   "volspike",
+   "dn",
+   null
+  ],
+  "filters": [
+   [
+    "fo_against",
+    3.0
+   ],
+   [
+    "macd_with",
+    null
+   ],
+   [
+    "flow3_with",
+    null
+   ]
+  ],
+  "layers": [
+   "volume ratio crosses above 2.0 on a bar closing below VWAP",
+   "stock down > 3.0% from the open",
+   "MACD line above 0",
+   "3-bar signed-volume share > 0",
+   "13:35-15:00 ET (bar close)"
+  ],
+  "row": {
+   "cfg": "volspike-dn|long|pm|fo_against3.0+macd_with+flow3_with|t1s1",
+   "n": 408,
+   "per_day": 0.96,
+   "win_rate": 0.5515,
+   "exp": 0.1066,
+   "t": 2.01,
+   "exp_up": 0.1263,
+   "n_up": 74.0,
+   "exp_flat": 0.1979,
+   "n_flat": 162.0,
+   "exp_down": 0.0121,
+   "n_down": 172.0,
+   "wf": 0.786,
+   "plateau_mean": 0.0497,
+   "plateau_min": 0.0239,
+   "ex_best": 0.0795,
+   "overlap_live": 0.515,
+   "overlap_cands": 0.025
+  }
+ }
+]
