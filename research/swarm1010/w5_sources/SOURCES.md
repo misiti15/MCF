@@ -9,7 +9,7 @@ this container's network policy but reachable from GitHub Actions**, where a sta
 
 Every endpoint below was tested read-only (GET) on 2026-10-09; keys came from env and were never printed or written.
 No setup was scored here (configurations tried: 0). Pulled data lives in `research/swarm1010/w5_sources/data/`
-(parquet only, git-ignored by `research/**/*.parquet`; ~35 MB total).
+(git-ignored by `data/.gitignore`; 26 MB total).
 
 ## 1. Alpaca (our paid SIP plan) - what we use vs what we don't
 
@@ -62,7 +62,7 @@ open internet.
 | `fill_quotes.parquet`, `orders.parquet` | 306 / 501 | Alpaca paper orders + SIP NBBO at submit and at fill | fill-quality audit |
 | `vix_daily.parquet` | 9,194 | CBOE VIX via GitHub mirror | 1990-01-02..2026-09-22, **rule-19 locked block removed** |
 | `vix_daily_lockedblock.parquet` | 84 | same | 2024-11-01..2025-02-28, for the lead's once-only holdout scoring |
-| `news/news_YYYY-MM.parquet` | ~20-25k / month | Alpaca news | 2024-10 and 2025-03..2026-10 (locked block skipped), id, times, headline, symbols, source, author; zstd, ~1.5 MB/month. DATA ONLY |
+| `news/news_YYYY-MM.parquet` | 425,628 total (21 months, ~16-26k / month) | Alpaca news | 2024-10 and 2025-03..2026-10 (locked block skipped; 12 articles created inside it but updated later were dropped), id, times, headline, symbols, source, author; zstd, ~1.5 MB/month. DATA ONLY |
 | FINRA short volume | - | **not pulled: blocked here** | staged in `actions/fetch_public.py` (`--only finra`) |
 
 ## 4. Recommendations, ranked by value / effort

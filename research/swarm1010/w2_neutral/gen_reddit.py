@@ -23,7 +23,8 @@ zb = zipfile.ZipFile(BASE)
 def read_slice(key, a, b):
     f = zb.open(key + ".npy")
     v = np.lib.format.read_magic(f)
-    shape, fortran, dtype = np.lib.format._read_array_header(f, v)
+    rd = np.lib.format.read_array_header_1_0 if v == (1, 0) else np.lib.format.read_array_header_2_0
+    shape, fortran, dtype = rd(f)
     off = f.tell()
     f.seek(off + a * dtype.itemsize)
     return np.frombuffer(f.read((b - a) * dtype.itemsize), dtype=dtype).copy()
@@ -42,9 +43,9 @@ regc = np.select([regd == "up", regd == "down"], [1, -1], 0)
 # SPY series keyed by day*10000+tod (global)
 spy = symbols.index("SPY")
 sr = np.flatnonzero(sym == spy)
-a0, b0 = sr[0], sr[-1] + 1
-assert len(sr) == b0 - a0
-g = {k: read_slice(k, a0, b0) for k in ("z", "fromOpen", "close", "atr_d", "day", "tod")}
+_z = np.load(BASE)
+g = {k: _z[k][sr] for k in ("z", "fromOpen", "close", "atr_d", "day", "tod")}
+del _z
 kspy = g["day"].astype(np.int64) * 10000 + g["tod"].astype(np.int64)
 c_, a_, fo_ = g["close"].astype(float), g["atr_d"].astype(float), g["fromOpen"].astype(float)
 SPY_Z = pd.Series(g["z"].astype(float), index=kspy)
@@ -77,9 +78,11 @@ class ChunkData(E.Data):
         self.fo_atr = (c - self.open_d) / at
 
 
-cuts = np.flatnonzero(np.r_[True, sym[1:] != sym[:-1]])
-assert (np.diff(sym[cuts]) > 0).all(), "rows not grouped by symbol"
-bounds = [cuts[int(i)] for i in np.linspace(0, len(cuts), 13)[:-1]] + [NR]
+sdall = np.load(BASE)["sd"]
+assert (np.diff(sdall) >= 0).all(), "rows not sorted by symbol-day"
+cuts = np.flatnonzero(np.r_[True, sdall[1:] != sdall[:-1]])
+bounds = [int(cuts[int(i)]) for i in np.linspace(0, len(cuts), 13)[:-1]] + [NR]
+del sdall
 del sym
 out = []
 for a, b in zip(bounds[:-1], bounds[1:]):

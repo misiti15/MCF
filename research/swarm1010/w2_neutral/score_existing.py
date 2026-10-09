@@ -61,23 +61,44 @@ for mo in lib.months():
 ATR = pd.concat(atr_parts, ignore_index=True)
 ATR.to_parquet(DATA / "atr.parquet")
 L3 = pd.concat(l3_parts, ignore_index=True)
+ATRA = np.full((len(dates), len(syms)), np.nan, np.float32)
+_a = ATR[ATR["symbol"].isin(si) & ATR["date"].isin(di)]
+ATRA[_a["date"].map(di).to_numpy(), _a["symbol"].map(si).to_numpy()] = _a["atr_d"].to_numpy(np.float32)
+KEEP = ["tod", "r", "setup", "side", "geom", "list", "set"]
+
+
+def lean(x):
+    x = x.copy()
+    x["date"] = pd.to_datetime(x["date"]).dt.date
+    x["s"] = x["symbol"].map(si).fillna(-1).astype(np.int32)
+    x["d"] = x["date"].map(di).fillna(-1).astype(np.int32)
+    x = x[(x["s"] >= 0) & (x["d"] >= 0)]
+    out = x[["s", "d"] + KEEP].copy()
+    out["tod"] = out["tod"].astype(np.int32)
+    out["r"] = out["r"].astype(np.float32)
+    for c in ("setup", "side", "geom", "list", "set"):
+        out[c] = out[c].astype(str).astype("category")
+    return out
+
+
+parts = [lean(tod_tr), lean(L3)]
+del tod_tr, L3
 rd = pd.read_parquet(DATA / "reddit_trades.parquet")
-rd["setup"] = rd["setup"].astype(str)
-rd["geom"], rd["list"], rd["set"] = "t1s1", rd["setup"], "reddit"
-T = pd.concat([tod_tr[["date", "symbol", "tod", "r", "setup", "side", "geom", "list", "set"]],
-               L3[["date", "symbol", "tod", "r", "setup", "side", "geom", "list", "set"]],
-               rd[["date", "symbol", "tod", "r", "setup", "side", "geom", "list", "set"]]], ignore_index=True)
-T["list"] = T["list"].astype("category")
-del tod_tr, rd, L3
+rd["geom"], rd["list"], rd["set"] = "t1s1", rd["setup"].astype(str), "reddit"
+parts.append(lean(rd))
+del rd
+T = pd.concat(parts, ignore_index=True)
+del parts
+for c in ("setup", "side", "geom", "list", "set"):
+    T[c] = T[c].astype(str).astype("category")
 print("trades", len(T), T["list"].nunique(), flush=True)
+assert T["list"].nunique() == 103, T["list"].nunique()
 
 # ---------------------------------------------------------------- exits, hedges
-T = T.merge(ATR[["symbol", "date", "atr_d"]], on=["symbol", "date"], how="left")
-s = T["symbol"].map(si).fillna(-1).astype(np.int64).to_numpy()
-d = T["date"].map(di).fillna(-1).astype(np.int64).to_numpy()
+s = T["s"].to_numpy(np.int64)
+d = T["d"].to_numpy(np.int64)
 b = (((T["tod"].to_numpy() // 100) * 60 + T["tod"].to_numpy() % 100 - 575) // 5).astype(np.int64)
-ok = (s >= 0) & (d >= 0)
-T, s, d, b = T[ok].reset_index(drop=True), s[ok], d[ok], b[ok]
+T["atr_d"] = ATRA[d, s]
 side = np.where(T["side"].to_numpy() == "long", 1.0, -1.0)
 upk = T["geom"].map(lambda g: GEOMK[g][0]).to_numpy(float)
 dnk = T["geom"].map(lambda g: GEOMK[g][1]).to_numpy(float)
@@ -100,14 +121,14 @@ sec = BT["sec"][d, s].astype(int)
 secsym = np.array([si[e] for e in SECTOR] + [spy])           # index -1 -> SPY
 h_sec = np.where(sec >= 0, secsym[np.maximum(sec, 0)], np.where(sec == -1, spy, -1))
 beta_sec = BT["beta_sec"][d, s].astype(float)
-T["beta_spy"], T["beta_sec"], T["hsec"] = beta_spy, beta_sec, np.array(SECTOR + ["SPY"], dtype=object)[np.where(sec >= 0, sec, len(SECTOR))]
-T.loc[sec < -1, "hsec"] = None
+T["beta_spy"], T["beta_sec"], T["hsec"] = beta_spy, beta_sec, sec
 T["h_spy"] = hedge_r(B["C"], side, ent, R, beta_spy, np.full(len(T), spy), d, b, ex)
 T["h_sec"] = hedge_r(B["C"], side, ent, R, beta_sec, h_sec, d, b, ex)
 # market move (SPY) over each trade, in stock-R per unit beta, for the diagnostic
 T["r_spy"] = T["r"] + T["h_spy"]
 T["r_sec"] = T["r"] + T["h_sec"]
-T.to_parquet(DATA / "existing_trades.parquet")
+T["date"] = np.array(dates, dtype=object)[d]
+T.drop(columns=["date"]).to_parquet(DATA / "existing_trades.parquet")
 
 # ---------------------------------------------------------------- scoring
 LIN = [("heat", 19200), ("exhaustion", 855600), ("MF", 8012), ("NS", 7374), ("RW2", 934522), ("RW1", 82068),
