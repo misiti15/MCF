@@ -442,6 +442,7 @@ class LabStrategy(Strategy):
             f = heat_frame(hist)
             f["atr_d"] = ctx.atr
             f = f.join(extra_features(hist, f)).iloc[-len(d5):].copy()
+            f["volume"] = d5["volume"].to_numpy(dtype=float)   # today's 5-min volume (VWAP-band layers)
             f["gap"] = (float(d5["open"].iloc[0]) / ctx.prev_close - 1) * 100
             # prior-day levels: the 5-minute history only carries the last 40 prior bars
             f["dist_pdh_atr"] = (ctx.prev_high - f["close"]) / ctx.atr
