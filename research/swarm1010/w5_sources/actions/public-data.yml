@@ -1,0 +1,40 @@
+# STAGED DRAFT (swarm1010 W5) - the lead copies it to .github/workflows/ if approved. Not active from this folder.
+# Free public data the Claude container's proxy blocks (FINRA, CBOE, Ken French, FRED, Nasdaq calendar), fetched on
+# GitHub Actions and published as zstd parquet to the `research-data` branch (same pattern as reddit-dumps.yml).
+# Manual run only. Educational only - not financial advice.
+name: public-data
+
+on:
+  workflow_dispatch:
+    inputs:
+      since:
+        default: "2024-10-01"
+      only:
+        description: "subset of: cboe ff fred earn finra"
+        default: "cboe ff fred earn finra"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q pandas pyarrow requests
+      - name: Fetch
+        env:
+          SEC_UA: "MCF research ${{ github.repository_owner }}"
+        run: python research/swarm1010/w5_sources/actions/fetch_public.py --out public_data --since ${{ inputs.since }} --only ${{ inputs.only }}
+      - name: Publish to the research-data branch
+        run: |
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          mv public_data /tmp/public_data
+          git fetch origin research-data && git checkout research-data || git checkout --orphan research-data
+          git rm -rq --cached . 2>/dev/null || true; find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r /tmp/public_data/* . && echo "Fetched $(date -u) by public-data.yml. Educational only - not financial advice." > README.md
+          git add -A && git commit -qm "public-data $(date -u +%F)" && git push -q origin research-data
