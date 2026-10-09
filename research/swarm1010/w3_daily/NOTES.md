@@ -298,3 +298,9 @@ positions at `session.flatten_by`** (`flatten_mcf`). Nothing in MCF holds a posi
   to `candidates.csv`.
 - `results.csv`: every configuration x split, regime and year (all numbers in this note). `regimes.json`: the year
   and month classes.
+
+## Locked block (rule 19), scored ONCE by the lead 2026-10-09 (`score_locked.py`, `locked.json`)
+Trades entered 2024-11-01..2025-02-28, same costs. Bar (look 1): exp > 0 and t >= 1.0. **Both fail.**
+- F2_rsi3_5_O_SMA5_L (Connors dip buy): n 331, **-106 bps**/trade, t -1.64, win 54%, excess vs universe -43 bps.
+- F3_rev5_bot_k20_L (weekly reversal basket): n 1,597, **-85 bps**/trade, t -1.08, excess +10 bps.
+SPY was +4.4% over the block, so the losses are not a market-down artefact. Educational only - not financial advice.
