@@ -4,7 +4,7 @@
 
 **Setups scored: 23** of 31 listed (not scored: 8, the 8 BDI video modules, whose structural exit and extra 1-minute features LabStrategy cannot run). Each setup is a fixed rule: nothing was fitted on this history, so the configurations tried on it are the 23 setups themselves; the lineages' own search sizes set each t bar.
 
-Verdicts: keep 0, rework 15, retire 8, not scored 8.
+Verdicts: keep 0, rework 14, retire 9, not scored 8.
 
 ## Data and method
 - History: 2024-10-01 .. 2026-10-07, 426 sessions outside the locked block, 1,226 lab symbols (today's list: survivorship bias - names delisted or no longer liquid are missing). The rule-19 locked block 2024-11-01..2025-02-28 is excluded.
@@ -26,7 +26,6 @@ Verdicts: keep 0, rework 15, retire 8, not scored 8.
 | RW7 bdi-rw-gapdn-bounce-early | backlog RW (lab_module) | short/t1s1 | 1590 | 4.56 | 0.5132 | -0.029 | -0.94 | 4.757 | -0.252 (677) | +0.066 | +0.230 (390) | 0.412 | -0.073 (1091, -1.96) | **rework** | exp<=0; t -0.94 < 4.757; regime (up and down must both be > 0); walk-forward share 0.412 < 0.6 |
 | heat_fade_long | live original | long/t1s1 | 14460 | 33.94 | 0.4924 | -0.046 | -1.16 | 4.441 | +0.076 (2717) | +0.035 | -0.149 (6958) | 0.412 | -0.068 (8518, -1.16) | **rework** | exp<=0; t -1.16 < 4.441; regime (up and down must both be > 0); walk-forward share 0.412 < 0.6 |
 | heat_fade_short | live original | short/t1s1 | 14433 | 33.96 | 0.5226 | +0.017 | 0.68 | 4.441 | -0.199 (4544) | +0.082 | +0.154 (4702) | 0.706 | -0.002 (7742, -0.05) | **rework** | t 0.68 < 4.441; regime (up and down must both be > 0) |
-| orb20_a | live original | nan/nan | 77 | 3.85 | 0.4545 | +0.022 | 0.19 | 2.327 | +0.247 (20) | +0.089 | -0.308 (21) | nan | +0.022 (77, 0.19) | **rework** | t 0.19 < 2.327; regime (up and down must both be > 0); walk-forward share None < 0.6 |
 | MF3-open-flowsell-rsi5hi | live probation | short/t1s1 | 4136 | 9.87 | 0.5017 | -0.074 | -2.5 | 4.24 | -0.290 (1723) | +0.031 | +0.148 (1011) | 0.353 | -0.122 (2694, -3.31) | **rework** | exp<=0; t -2.5 < 4.24; regime (up and down must both be > 0); walk-forward share 0.353 < 0.6 |
 | MF5-flowsell-vwapup-rsi5hi | live probation | short/t1s1 | 6827 | 16.06 | 0.4986 | -0.052 | -2.39 | 4.24 | -0.278 (2743) | +0.054 | +0.163 (1737) | 0.353 | -0.095 (4520, -3.5) | **rework** | exp<=0; t -2.39 < 4.24; regime (up and down must both be > 0); walk-forward share 0.353 < 0.6 |
 | NS1-rsidip-rsi5pop-long | live probation | long/t05s1 | 444 | 2.11 | 0.7027 | +0.034 | 0.87 | 4.22 | +0.097 (194) | -0.018 | -0.009 (115) | 0.5 | -0.014 (217, -0.24) | **rework** | t 0.87 < 4.22; regime (up and down must both be > 0); walk-forward share 0.5 < 0.6 |
@@ -36,7 +35,8 @@ Verdicts: keep 0, rework 15, retire 8, not scored 8.
 | RW2 bdi-rw-exhaustion-noon-adv150 | backlog RW (lab_module) | short/t1s1 | 7797 | 18.3 | 0.5144 | -0.009 | -0.35 | 5.244 | -0.078 (3565) | +0.002 | +0.105 (1958) | 0.235 | -0.046 (4680, -1.52) | **retire** | exp<=0; t -0.35 < 5.244; regime (up and down must both be > 0); walk-forward share 0.235 < 0.6 |
 | RW8 bdi-rw-sma50up-spikefade | backlog RW (lab_module) | short/t1s1 | 459 | 2.15 | 0.4793 | -0.090 | -1.4 | 4.756 | -0.235 (225) | +0.100 | -0.015 (101) | 0.562 | -0.120 (240, -1.22) | **retire** | exp<=0; t -1.4 < 4.756; regime (up and down must both be > 0); walk-forward share 0.562 < 0.6 |
 | exhaustion_short | live original | short/t1s1 | 5973 | 14.36 | 0.5146 | -0.010 | -0.32 | 5.227 | -0.075 (2678) | -0.025 | +0.111 (1626) | 0.294 | -0.058 (3618, -1.79) | **retire** | exp<=0; t -0.32 < 5.227; regime (up and down must both be > 0); walk-forward share 0.294 < 0.6 |
-| intraday_momentum | live original | nan/nan | 57 | 2.85 | 0.3684 | -0.071 | -0.83 | 2.327 | +0.064 (10) | -0.144 | -0.020 (17) | nan | -0.071 (57, -0.83) | **retire** | exp<=0; t -0.83 < 2.327; regime (up and down must both be > 0); walk-forward share None < 0.6 |
+| intraday_momentum | live original | both/bt | 1151 | 2.91 | 0.4448 | -0.067 | -2.7 | 2.327 | -0.068 (401) | -0.022 | -0.111 (373) | 0.294 | -0.092 (740, -2.79) | **retire** | exp<=0; t -2.7 < 2.327; regime (up and down must both be > 0); walk-forward share 0.294 < 0.6 |
+| orb20_a | live original | both/bt | 2827 | 6.68 | 0.4535 | -0.000 | -0.0 | 2.327 | +0.051 (956) | -0.039 | -0.013 (950) | 0.529 | +0.018 (1767, 0.7) | **retire** | exp<=0; t 0.0 < 2.327; regime (up and down must both be > 0); walk-forward share 0.529 < 0.6 |
 | MF1-945-flowsell-vwapup | live probation | short/t1s05 | 2389 | 6.16 | 0.3784 | -0.058 | -2.1 | 4.24 | -0.228 (924) | +0.035 | +0.068 (621) | 0.235 | -0.117 (1518, -3.47) | **retire** | exp<=0; t -2.1 < 4.24; regime (up and down must both be > 0); walk-forward share 0.235 < 0.6 |
 | MF2-open-rsimidhi-flowsell | live probation | short/t1s05 | 610 | 2.52 | 0.3639 | -0.030 | -0.83 | 4.24 | -0.100 (200) | +0.018 | -0.009 (221) | 0.375 | -0.106 (290, -2.1) | **retire** | exp<=0; t -0.83 < 4.24; regime (up and down must both be > 0); walk-forward share 0.375 < 0.6 |
 | MF4-h40-open-flowsell | live probation | short/t05s1 | 3318 | 8.0 | 0.6401 | -0.089 | -3.02 | 4.24 | -0.245 (1266) | -0.012 | +0.030 (981) | 0.294 | -0.151 (1993, -3.63) | **retire** | exp<=0; t -3.02 < 4.24; regime (up and down must both be > 0); walk-forward share 0.294 < 0.6 |
@@ -49,6 +49,12 @@ Verdicts: keep 0, rework 15, retire 8, not scored 8.
 | VID6 | BDI video | short/tx | – | – | – | – | – | – | – | – | – | – | – | not scored | structural exit (GEOM None) and extra 1-minute features: LabStrategy cannot run it |
 | VID7 | BDI video | short/tx | – | – | – | – | – | – | – | – | – | – | – | not scored | structural exit (GEOM None) and extra 1-minute features: LabStrategy cannot run it |
 | VID8 | BDI video | short/tx | – | – | – | – | – | – | – | – | – | – | – | not scored | structural exit (GEOM None) and extra 1-minute features: LabStrategy cannot run it |
+
+## How to read this
+- A 'rework' verdict that comes from the regime rescue (one of up / down positive with t >= 2) does NOT mean the setup works: the session regime is only known at the close. A rework must find a real-time proxy known at entry (e.g. the index's move from the open, or a prior-day trend) and is a new lineage step whose configurations are counted.
+- Most short setups lose in up sessions and win in down sessions: the train/valid/test edge of 2026-06..10 was largely the down-drift regime, as diagnosed on 2026-10-08.
+- t bars are high because the lineages searched 7k-935k configurations; sqrt(2 ln N) is what the best of N noise configurations reaches by luck.
+- Survivorship: today's 1,226 names applied to 2024-2025. Point-in-time ADV is applied, but names that dropped out of the market are missing.
 
 ## Per-quarter expectancy (R after costs)
 
@@ -75,7 +81,7 @@ Verdicts: keep 0, rework 15, retire 8, not scored 8.
 | exhaustion_short | -0.203 (73) | -0.218 (571) | +0.063 (887) | -0.087 (495) | -0.033 (843) | -0.054 (930) | -0.067 (1218) | +0.259 (873) | -0.016 (83) |
 | heat_fade_long | +0.159 (191) | -0.099 (593) | -0.085 (2019) | +0.020 (1430) | -0.109 (2491) | -0.036 (2633) | -0.095 (2570) | +0.038 (2347) | +0.166 (186) |
 | heat_fade_short | +0.158 (391) | +0.083 (466) | -0.072 (2564) | +0.028 (1249) | +0.039 (1693) | +0.008 (1995) | -0.015 (3313) | +0.097 (2594) | +0.061 (168) |
-| intraday_momentum | -0.071 (57) | – | – | – | – | – | – | – | – |
-| orb20_a | +0.022 (77) | – | – | – | – | – | – | – | – |
+| intraday_momentum | -0.071 (57) | -0.069 (62) | -0.129 (198) | -0.044 (135) | -0.076 (165) | -0.070 (179) | -0.083 (163) | +0.011 (177) | -0.054 (15) |
+| orb20_a | +0.022 (77) | +0.113 (145) | -0.018 (427) | +0.013 (397) | +0.069 (406) | -0.061 (454) | -0.044 (426) | +0.017 (452) | -0.123 (43) |
 
 Files: `research/history2y/rescore.csv` (all columns incl. deflated Sharpe and the trailing-on walk-forward variant), trades in `research/history2y/data/` (git-ignored).

@@ -70,7 +70,7 @@ def setups() -> list[dict]:
             out.append({**base, "kind": "heat", "path": ROOT / p["formula"], "min_adv": float(p.get("min_adv", 0)),
                         "window": tuple(p.get("window") or (950, 1500)), "sides": p.get("sides", "both")})
         else:
-            out.append({**base, "kind": "bt"})
+            out.append({**base, "kind": "bt", "side": "both", "geom": "bt"})
     bl = {e.get("lab_module"): e for e in map(json.loads, (ROOT / "research/backlog.jsonl").read_text().splitlines()) if e.get("lab_module")}
     for lm, e in bl.items():
         p = ROOT / lm
