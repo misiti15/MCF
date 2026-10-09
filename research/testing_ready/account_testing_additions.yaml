@@ -1,0 +1,102 @@
+# STAGED for the Testing account (owner 2026-10-09: 'all possible setups worth adding ... saved and ready').
+# Paste under `strategies:` in config/account_testing.yaml (or merge this file in) AFTER market hours, once the
+# Testing account keys exist. Experimental / probation only; 3-session scorecard. Educational only - not financial advice.
+
+  # stack1009; locked block -0.045R t-0.46 n70 (fail)
+  ST1-ordn-long-pm-t05s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST1-ordn-long-pm-t05s1.py
+    min_adv: 95000000
+    window: [1335, 1500]
+    scale_out_r: null
+
+  # stack1009; locked block -0.033R t-0.22 n27 (fail)
+  ST2-slope20up-long-am-t05s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST2-slope20up-long-am-t05s1.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+
+  # stack1009; locked block +0.257R t1.72 n57 (PASS)
+  ST3-rsi5up-short-pm-t1s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST3-rsi5up-short-pm-t1s1.py
+    min_adv: 95000000
+    window: [1335, 1500]
+    scale_out_r: null
+
+  # stack1009; locked block -0.166R t-1.41 n31 (fail)
+  ST4-emadn-long-am-t1s05:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST4-emadn-long-am-t1s05.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+
+  # stack1009; locked block +0.156R t1.1 n21 (PASS)
+  ST5-pdbrkup-short-mid-t05s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST5-pdbrkup-short-mid-t05s1.py
+    min_adv: 95000000
+    window: [1135, 1330]
+    scale_out_r: null
+
+  # stack1009; locked block +0.113R t0.55 n29 (fail)
+  ST6-volspikeup-short-mid-t1s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST6-volspikeup-short-mid-t1s1.py
+    min_adv: 95000000
+    window: [1135, 1330]
+    scale_out_r: null
+
+  # stack1009; locked block -0.115R t-0.66 n21 (fail)
+  ST7-rsi50dn-long-pm-t1s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST7-rsi50dn-long-pm-t1s1.py
+    min_adv: 95000000
+    window: [1335, 1500]
+    scale_out_r: null
+
+  # stack1009; locked block -0.088R t-0.6 n34 (fail)
+  ST8-volspikedn-long-pm-t1s1:
+    enabled: true
+    type: lab
+    module: research/bdi/stack1009/modules/ST8-volspikedn-long-pm-t1s1.py
+    min_adv: 95000000
+    window: [1335, 1500]
+    scale_out_r: null
+
+  # rework1008; 2-yr +0.054R n1216 t1.13 (up -0.11 / down +0.24)
+  RW4-ns3-adv150-short:
+    enabled: true
+    type: lab
+    module: research/bdi/rework1008/modules/RW4-ns3-adv150-short.py
+    min_adv: 150000000
+    window: [950, 1130]
+    scale_out_r: null
+
+  # rework1008; 2-yr -0.013R n1294 (up -0.26 / down +0.27); holdouts +0.30/+0.07
+  RW5-heat30-flowsell-rsi5pop-gapdn-short:
+    enabled: true
+    type: lab
+    module: research/bdi/rework1008/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+
+  # rework1008; 2-yr +0.057R n1461 t0.77 (up +0.03 / down +0.16); parent of RW6G1
+  RW6-ns2-up3-short:
+    enabled: true
+    type: lab
+    module: research/bdi/rework1008/modules/RW6-ns2-up3-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
