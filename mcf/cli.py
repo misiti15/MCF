@@ -259,7 +259,7 @@ def cmd_eod(args, cfg):
     eod.save(rep, Path(args.state_dir) / "reports", day)
     from .report import scorecard
 
-    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 3))
+    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4))
     scorecard.save(card, args.state_dir)
     print(rep["subject"])
     if not args.no_send:

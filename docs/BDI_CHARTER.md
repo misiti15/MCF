@@ -36,7 +36,7 @@ This is a standing Claude role. It runs every weekday after the close, after the
    - every configuration is counted and every finalist is reported, failures included
 6. **Routing.**
    - **Primary account:** only setups and changes that pass the gates. They are merged outside market hours with a ledger entry.
-   - **Testing account:** promising near-misses and experimental ideas, tagged, and judged by the 3-session scorecard.
+   - **Testing account:** promising near-misses and experimental ideas, tagged, and judged by the 4-session scorecard (owner 2026-10-09: 4 sessions before a removal decision).
 7. **Report to the owner.** A short note covering what was learned, what was tested (with counts), what changes tomorrow and what is queued.
 
 ## Every Saturday (deep run)

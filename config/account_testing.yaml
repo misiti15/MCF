@@ -20,7 +20,7 @@ strategies:
   # ---- Experimental: near-misses of the 2026-10-07 primitives/layering swarm (research/primitives/). They passed
   # train/valid and the audit but NOT the locked holdouts (research/primitives/holdout/results.json): all are
   # 13:00-14:30 shorts of gap-down (<= -2.66%) names; each beat a same-window random short on both holdouts.
-  # Forward-tested here only; scorecard every 3 sessions. Backlog ids = the tags.
+  # Forward-tested here only; scorecard every 4 sessions. Backlog ids = the tags.
   L3-gap-slope-rsi5hi:
     enabled: true
     type: lab
@@ -45,7 +45,7 @@ strategies:
 
   # ---- Owner-directed 2026-10-09 (mid-session, Testing account only; primary untouched): every setup with any
   # substance, at a LOWERED bar (positive in at least one regime or on a holdout) so it can be vetted live.
-  # Sources: research/testing_ready/README.md. Experimental; 3-session scorecard.
+  # Sources: research/testing_ready/README.md. Experimental; 4-session scorecard.
   # stack1009; locked block -0.045R t-0.46 n70 (fail)
   ST1-ordn-long-pm-t05s1:
     enabled: true
