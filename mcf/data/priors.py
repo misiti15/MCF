@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 
 from .. import features as F
+from ..strategies.base import PRIOR5_BARS
 from .bars import TZ, normalize, rth
 
 SESSION_MIN = 390
@@ -37,7 +38,7 @@ class Prior:
     avg_volume: float                 # 20d average shares/day
     avg_cum: np.ndarray | None        # len 390
     avg_move: np.ndarray | None       # len 390, index ETFs only
-    tail5: pd.DataFrame | None = None  # prior sessions' last 40 five-minute bars (rule-layer warm-up)
+    tail5: pd.DataFrame | None = None  # prior sessions' last PRIOR5_BARS five-minute bars (warm-up)
     sma20: float = float("nan")        # 20-day SMA of daily closes through the prior session
 
 
@@ -140,6 +141,6 @@ def build_priors(symbols: list[str], day: date, feed: str = "sip", exact_symbols
             cum, move = _profile(exact[s], 1), _move_profile(exact[s])
         else:
             cum, move = (_profile(five[s], 5) if s in five and not five[s].empty else None), None
-        tail = five[s].tail(40) if s in five else None
+        tail = five[s].tail(PRIOR5_BARS) if s in five else None
         out[s] = Prior(avg_cum=cum, avg_move=move, tail5=tail, **d)
     return out

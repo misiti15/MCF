@@ -23,7 +23,7 @@ import pandas as pd
 
 from .. import features as F
 from ..data.bars import daily_from_intraday
-from ..strategies.base import DayContext, Signal, Strategy, t
+from ..strategies.base import PRIOR5_BARS, DayContext, Signal, Strategy, t
 
 
 @dataclass
@@ -236,7 +236,7 @@ class SymbolHistory:
             prev_high=float(self.prev_high[ts]), prev_low=float(self.prev_low[ts]),
             atr=float(a), avg_dollar_volume=float(self.adv.get(ts, np.nan)), avg_cum_volume=acv,
             avg_move=self.avg_move.loc[ts].to_numpy() if ts in self.avg_move.index else None,
-            prior5=self.i5[self.i5.index.date < d].tail(40),
+            prior5=self.i5[self.i5.index.date < d].tail(PRIOR5_BARS),
             sma20=float(self.sma20.get(ts, np.nan)),
         )
 

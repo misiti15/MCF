@@ -61,3 +61,24 @@ def test_time_of_day_tracking():
     g = tod_table(tr)
     assert list(g["bucket"]) == ["09:50-10:30", "13:00-14:00", "14:00-16:00"]
     assert build(tr)["by_time"][0]["trades"] == 1
+
+
+def test_prior5_warmup_makes_sma50_available_at_the_first_decision_bar():
+    """2026-10-09 parity fix: with 40 prior bars the 5-min SMA50 was undefined until ~10:20 live."""
+    from types import SimpleNamespace
+
+    from mcf.strategies.base import PRIOR5_BARS
+    from mcf.strategies.setups import _LAB_FRAMES, LabStrategy
+
+    assert PRIOR5_BARS >= 50
+    _LAB_FRAMES.clear()
+    st = LabStrategy("w", str(MOD), window=[950, 1130])
+    pidx = pd.date_range("2026-10-08 10:45", periods=PRIOR5_BARS, freq="5min", tz="America/New_York")
+    prior5 = pd.DataFrame({"open": 100.0, "high": 100.2, "low": 99.8, "close": 100.0, "volume": 5000.0}, index=pidx)
+    idx = pd.date_range("2026-10-09 09:30", periods=20, freq="1min", tz="America/New_York")   # through the 09:50 bar
+    bars = pd.DataFrame({"open": 100.0, "high": 100.1, "low": 99.9, "close": 100.0, "volume": 1000.0}, index=idx)
+    ctx = SimpleNamespace(symbol="WARM", date=idx[0].date(), bars=bars, prior5=prior5, atr=2.0, prev_close=100.0,
+                          prev_high=101.0, prev_low=99.0, avg_dollar_volume=1e9)
+    st.generate(ctx)
+    f = next(v for k, v in _LAB_FRAMES.items() if k[0] == "WARM")
+    assert np.isfinite(f["sma50_dist_pct"].iloc[0])     # the 09:35 bar already has a 5-min SMA50
