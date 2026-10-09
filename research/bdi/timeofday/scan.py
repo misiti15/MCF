@@ -46,52 +46,77 @@ def masks(s: dict, df: pd.DataFrame, which: str) -> list[tuple[np.ndarray, str]]
         return legs
 
 
-def main():
-    sts = prepare()
-    block = load_block()
-    for s in sts:
+_STS = None
+_BLOCK = None
+
+
+def _init():
+    global _STS, _BLOCK
+    _STS = prepare()
+    _BLOCK = load_block()
+    for s in _STS:
         if s["needs_block"]:
             for w in ("orig", "free"):
                 s[w].vwap_band_block = lambda df, k=2.0: df["_block"].to_numpy(bool)
-    rows, base, t0 = [], [], time.time()
-    for mo in months():
-        df = load_month(mo)
-        ds = df["date"].astype(str)
-        bm = block[block["date"].str.startswith(mo)]
-        key = df["symbol"].astype(str) + "|" + ds + "|" + df["tod"].astype(str)
-        bkey = set(bm["symbol"] + "|" + bm["date"] + "|" + bm["tod"].astype(str))
-        df["_block"] = key.isin(bkey).to_numpy()
-        tod, adv = df["tod"].to_numpy(), df["adv20"].fillna(0).to_numpy()
-        for s in sts:
-            lo, hi = s["window"]
-            ok_adv = adv >= s["min_adv"]
-            cur = (tod >= lo) & (tod <= hi) & ok_adv
-            full = (tod >= FULL[0]) & (tod <= FULL[1]) & ok_adv
-            for (mo_, side), (mf, _) in zip(masks(s, df, "orig"), masks(s, df, "free")):
-                sets = [("current", mo_ & cur), ("full", mf & full)]
-                sets += [(b, mf & full & (tod >= a) & (tod <= z)) for b, (a, z) in BUCKETS.items()]
-                for lab, mk in sets:
-                    tr = G.lab_trades(df, mk, side, s["geom"])
-                    tr["setup"], tr["set"], tr["side"] = s["setup"], lab, side
-                    rows.append(tr)
-        # random-bar baseline, t1s1, adv20 >= 95M, every bar
-        okb = adv >= 95e6
-        for side in ("long", "short"):
-            r = G.prod_r(df[f"r_{side}_t1s1"].to_numpy(float), df[f"win_{side}_t1s1"].to_numpy(float),
-                         df["close"].to_numpy(float), df["atr_d"].to_numpy(float), "t1s1")
-            ok = okb & np.isfinite(r) & (df["atr_d"].to_numpy(float) > 0)
-            for b, (a, z) in BUCKETS.items():
-                sel = ok & (tod >= a) & (tod <= z)
-                g = pd.DataFrame({"date": df["date"].to_numpy()[sel], "r": r[sel]}).groupby("date")["r"].agg(["sum", "size"])
-                g = g.reset_index()
-                g["bucket"], g["side"] = b, side
-                base.append(g)
-        print(f"{mo}: {len(df)} rows ({time.time() - t0:.0f}s)", flush=True)
-        del df
+
+
+def one_month(mo: str) -> str:
+    out = DATA / "scan" / f"{mo}.parquet"
+    if out.exists():
+        return mo + " (cached)"
+    sts, block = _STS, _BLOCK
+    rows, base = [], []
+    df = load_month(mo)
+    ds = df["date"].astype(str)
+    bm = block[block["date"].str.startswith(mo)]
+    key = df["symbol"].astype(str) + "|" + ds + "|" + df["tod"].astype(str)
+    bkey = set(bm["symbol"] + "|" + bm["date"] + "|" + bm["tod"].astype(str))
+    df["_block"] = key.isin(bkey).to_numpy()
+    tod, adv = df["tod"].to_numpy(), df["adv20"].fillna(0).to_numpy()
+    for s in sts:
+        lo, hi = s["window"]
+        ok_adv = adv >= s["min_adv"]
+        cur = (tod >= lo) & (tod <= hi) & ok_adv
+        full = (tod >= FULL[0]) & (tod <= FULL[1]) & ok_adv
+        for (mo_, side), (mf, _) in zip(masks(s, df, "orig"), masks(s, df, "free")):
+            sets = [("current", mo_ & cur), ("full", mf & full)]
+            sets += [(b, mf & full & (tod >= a) & (tod <= z)) for b, (a, z) in BUCKETS.items()]
+            for lab, mk in sets:
+                tr = G.lab_trades(df, mk, side, s["geom"])
+                tr["setup"], tr["set"], tr["side"] = s["setup"], lab, side
+                rows.append(tr)
+    okb = adv >= 95e6
+    for side in ("long", "short"):
+        r = G.prod_r(df[f"r_{side}_t1s1"].to_numpy(float), df[f"win_{side}_t1s1"].to_numpy(float),
+                     df["close"].to_numpy(float), df["atr_d"].to_numpy(float), "t1s1")
+        ok = okb & np.isfinite(r) & (df["atr_d"].to_numpy(float) > 0)
+        for b, (a, z) in BUCKETS.items():
+            sel = ok & (tod >= a) & (tod <= z)
+            g = pd.DataFrame({"date": df["date"].to_numpy()[sel], "r": r[sel]}).groupby("date")["r"].agg(["sum", "size"])
+            g = g.reset_index()
+            g["bucket"], g["side"] = b, side
+            base.append(g)
     x = pd.concat(rows, ignore_index=True)
     x["symbol"] = x["symbol"].astype(str)
+    x["date"] = x["date"].astype(str)
+    bb = pd.concat(base, ignore_index=True)
+    bb["date"] = bb["date"].astype(str)
+    bb.to_parquet(DATA / "scan" / f"base-{mo}.parquet", index=False)
+    x.to_parquet(out, index=False)
+    return mo
+
+
+def main():
+    from multiprocessing import Pool
+    (DATA / "scan").mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    with Pool(4, initializer=_init) as pool:
+        for mo in pool.imap_unordered(one_month, months()):
+            print(f"{mo} ({time.time() - t0:.0f}s)", flush=True)
+    x = pd.concat([pd.read_parquet(p) for p in sorted((DATA / "scan").glob("20*.parquet"))], ignore_index=True)
     x.to_parquet(DATA / "trades.parquet", index=False)
-    pd.concat(base, ignore_index=True).to_parquet(DATA / "baseline.parquet", index=False)
+    b = pd.concat([pd.read_parquet(p) for p in sorted((DATA / "scan").glob("base-*.parquet"))], ignore_index=True)
+    b.to_parquet(DATA / "baseline.parquet", index=False)
 
 
 if __name__ == "__main__":

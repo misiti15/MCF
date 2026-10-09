@@ -1,4 +1,5 @@
-"""Per-setup scorecard over the last N sessions (owner 2026-10-07: every 3 market days, to keep the loop tight).
+"""Per-setup scorecard over the last N sessions (owner 2026-10-09: 4 sessions before a removal
+decision; was 3).
 
 Live (paper) results per setup next to what its backtest expected (config/validation.json, or a setup's own
 expected_r in config/scorecard_expectations.json). Few trades decide nothing on their own: the verdict only flags
@@ -28,7 +29,7 @@ def _expected() -> dict[str, float]:
     return out
 
 
-def build(trades: pd.DataFrame, sessions: int = 3) -> dict:
+def build(trades: pd.DataFrame, sessions: int = 4) -> dict:
     if trades is None or not len(trades):
         return {"sessions": 0, "window": "no trades yet", "setups": []}
     days = sorted(trades["date"].astype(str).unique())[-sessions:]
