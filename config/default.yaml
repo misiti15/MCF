@@ -311,6 +311,25 @@ data:
   feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
 
 live:
+  # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
+  # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
+  setup_order:
+    - intraday_momentum
+    - orb20_a
+    - RW6G1-ns2-up3-vwap2sd-short
+    - NS1-rsidip-rsi5pop-long
+    - MF2-open-rsimidhi-flowsell
+    - NS5-sma50-flush-oversold-long
+    - NS4-pm-vwap-reclaim-oversold-short
+    - NS3-failed-vwap-reclaim-short
+    - MF1-945-flowsell-vwapup
+    - NS2-sma50break-overbought-short
+    - MF4-h40-open-flowsell
+    - MF3-open-flowsell-rsi5hi
+    - exhaustion_short
+    - MF5-flowsell-vwapup-rsi5hi
+    - heat_fade_short
+    - heat_fade_long
   # Paper fills anything the price touches. These checks keep paper results close to what a real
   # order book would give, so paper P/L is evidence and not an upper bound.
   no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are

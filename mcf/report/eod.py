@@ -152,6 +152,35 @@ def _time_of_day(tr: pd.DataFrame) -> str:
             "the cumulative view is in the scorecard.</div>")
 
 
+def spy_adjust(tr: pd.DataFrame, spy: pd.DataFrame | None) -> pd.DataFrame:
+    """Per trade: SPY's move over the holding period, the market's share of the P/L (beta 1), and the R net of SPY
+    including a hedge leg's cost (1c + 1 bps per side). Report only - no hedge is traded (owner 2026-10-10, swarm W2)."""
+    out = tr.copy()
+    out["spy_ret"], out["mkt_pnl"], out["adj_r"] = np.nan, np.nan, np.nan
+    if spy is None or not len(spy) or not len(tr):
+        return out
+    c = spy["close"].sort_index()
+    sp = float(c.iloc[-1])
+
+    def px_at(ts):
+        i = c.index.searchsorted(pd.Timestamp(ts).floor("1min"), side="right") - 1
+        return float(c.iloc[max(i, 0)])
+
+    for k, r in out.iterrows():
+        try:
+            ret = px_at(r["exit_time"]) / px_at(r["entry_time"]) - 1
+        except Exception:
+            continue
+        risk = abs(float(r["entry"]) - float(r["stop"])) if pd.notna(r.get("stop")) else np.nan
+        mkt = float(r["side"]) * ret * float(r["entry"])            # per share, beta 1
+        hedge_cost = 2 * float(r["entry"]) * (0.01 / sp + 1e-4)       # both sides of the SPY leg, per share notional
+        out.at[k, "spy_ret"] = ret
+        out.at[k, "mkt_pnl"] = mkt * float(r.get("shares") or 0)
+        if risk and np.isfinite(risk):
+            out.at[k, "adj_r"] = float(r["r_multiple"]) - mkt / risk - hedge_cost / risk
+    return out
+
+
 def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None,
           intraday: list | None = None, bars: dict | None = None):
     tr = journal.trades(run_id=run_id)
@@ -172,12 +201,18 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
     vs = val.get("setups", {})
     banner = (f"<p style='background:#fff4e5;border-left:4px solid #d97706;padding:8px 10px;font-size:13px'>"
               f"{val['_banner']}</p>") if val.get("_banner") else ""
-    by_setup = ""
+    by_setup, mkt_line = "", ""
     if n:
-        g = tr.groupby("strategy").agg(trades=("pnl", "size"), pnl=("pnl", "sum"), win=("pnl", lambda p: (p > 0).mean()),
-                                       avg_r=("r_multiple", "mean"))
-        by_setup = "".join(f"<tr><td>{k}<br><span style='font-size:11px;color:#b45309'>{vs.get(k, {}).get('note', '')}</span></td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>${v.pnl:,.2f}</td></tr>"
+        adj = spy_adjust(tr, spy)
+        g = adj.groupby("strategy").agg(trades=("pnl", "size"), pnl=("pnl", "sum"), win=("pnl", lambda p: (p > 0).mean()),
+                                        avg_r=("r_multiple", "mean"), adj_r=("adj_r", "mean"))
+        by_setup = "".join(f"<tr><td>{k}<br><span style='font-size:11px;color:#b45309'>{vs.get(k, {}).get('note', '')}</span></td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>{'–' if pd.isna(v.adj_r) else f'{v.adj_r:+.2f}'}</td><td>${v.pnl:,.2f}</td></tr>"
                            for k, v in g.iterrows())
+        if adj["mkt_pnl"].notna().any():
+            m = float(adj["mkt_pnl"].sum())
+            mkt_line = (f"<p style='font-size:13px'>Market direction (SPY, beta 1) accounted for <b>${m:,.2f}</b> of today's "
+                        f"${pnl:,.2f}; the rest (${pnl - m:,.2f}) came from the setups themselves. Avg R net of SPY: "
+                        f"<b>{adj['adj_r'].mean():+.2f}</b> (incl. a hedge leg's cost; report only).</p>")
     findings = "".join(f"<li>{f}</li>" for f in (review or {}).get("findings", [])) or "<li>None today.</li>"
     cid = make_msgid(domain="mcf.local")
     td = "style='padding:4px 8px;border-bottom:1px solid #e1e0d9;text-align:left'"
@@ -194,8 +229,9 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 {_quality(tr, bars or {})}
 {_time_of_day(tr)}
 <h3>By setup</h3>
-<table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>P/L</th></tr>
-{by_setup or '<tr><td colspan=5>No trades.</td></tr>'}</table>
+<table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>Adj R (net of SPY)</th><th {td}>P/L</th></tr>
+{by_setup or '<tr><td colspan=6>No trades.</td></tr>'}</table>
+{mkt_line}
 <h3>Improvement candidates (daily review)</h3><ul>{findings}</ul>
 <p style="font-size:12px;color:#52514e">Every trade is attached as a CSV you can open and edit in Excel or Google Sheets.
 Live page: https://misiti15.github.io/MCF/live/</p></div>"""
