@@ -24,7 +24,11 @@ LOCKED = ("2024-11-01", "2025-02-28")
 
 def get(url, **kw):
     for a in range(5):
-        r = S.get(url, timeout=60, **kw)
+        try:
+            r = S.get(url, timeout=120, **kw)
+        except (requests.Timeout, requests.ConnectionError):
+            if a == 4: raise
+            time.sleep(10 * (a + 1)); continue
         if r.status_code in (429, 500, 502, 503, 504): time.sleep(5 * (a + 1)); continue
         return r
     return r
@@ -91,8 +95,11 @@ def ff(out, since):
 
 def fred(out, since):
     ids = ["DGS10", "DGS2", "T10Y2Y", "DFF", "BAMLH0A0HYM2", "DTWEXBGS"]
-    r = get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": ",".join(ids), "cosd": "2000-01-01"})
-    df = pd.read_csv(io.StringIO(r.text)); df = df.rename(columns={df.columns[0]: "date"}); df["date"] = pd.to_datetime(df["date"])
+    df = None
+    for i in ids:  # one series per request: the combined query timed out (2026-10-10)
+        r = get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": i, "cosd": "2000-01-01"}); r.raise_for_status()
+        x = pd.read_csv(io.StringIO(r.text)); x = x.rename(columns={x.columns[0]: "date"}); x["date"] = pd.to_datetime(x["date"])
+        df = x if df is None else df.merge(x, on="date", how="outer")
     for c in ids: df[c] = pd.to_numeric(df[c], errors="coerce").astype("float32")
     split_locked(df, "date", out, "fred")
 
