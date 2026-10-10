@@ -130,30 +130,5 @@ T["r_sec"] = T["r"] + T["h_sec"]
 T["date"] = np.array(dates, dtype=object)[d]
 T.drop(columns=["date"]).to_parquet(DATA / "existing_trades.parquet")
 
-# ---------------------------------------------------------------- scoring
-LIN = [("heat", 19200), ("exhaustion", 855600), ("MF", 8012), ("NS", 7374), ("RW2", 934522), ("RW1", 82068),
-       ("RW3", 82068), ("RW5", 82068), ("RW7", 82068), ("RW", 81430), ("ST", 120500), ("L3", 11178), ("RDT", 2551)]
-
-
-def lineage_n(nm):
-    for k, n in LIN:
-        if nm.startswith(k):
-            return n
-    return max(n for _, n in LIN)
-
-
-rows = []
-for nm, g in T.groupby("list", observed=True):
-    both = g[np.isfinite(g["r_spy"]) & np.isfinite(g["r_sec"])]
-    treq = round(max(2.0, math.sqrt(2 * math.log(lineage_n(nm) + 206))), 3)
-    for hedge, col in (("none", "r"), ("SPY", "r_spy"), ("SEC", "r_sec")):
-        o = score(pd.DataFrame({"date": both["date"].to_numpy(), "r": both[col].to_numpy(float)}), reg)
-        okb, fails = bar_check(o, treq)
-        rows.append({"part": "existing", "list": nm, "set": g["set"].iloc[0], "side": g["side"].iloc[0],
-                     "geom": g["geom"].iloc[0], "hedge": hedge, "n_all": len(g), "t_req": treq,
-                     "beta_mean": round(float(both["beta_spy" if hedge != "SEC" else "beta_sec"].mean()), 3), **o,
-                     "pass": okb if hedge != "none" else None, "fails": ";".join(fails)})
-res = pd.DataFrame(rows)
-res.to_csv(HERE / "existing_results.csv", index=False)
 (DATA / "parity.json").write_text(json.dumps(par, indent=1))
-print(res[res.hedge != "none"]["pass"].sum(), "pass of", (res.hedge != "none").sum())
+print("trades written; scoring: python score_existing_results.py")
