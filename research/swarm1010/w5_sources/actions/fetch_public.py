@@ -104,6 +104,22 @@ def fred(out, since):
     split_locked(df, "date", out, "fred")
 
 
+def treasury(out, since):
+    """Daily par yield curve from the US Treasury (FRED does not answer GitHub runners, 2026-10-10)."""
+    parts = []
+    for y in range(2000, pd.Timestamp.today().year + 1):
+        r = get(f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/{y}/all",
+                params={"type": "daily_treasury_yield_curve", "field_tdr_date_value": y, "page": "", "_format": "csv"})
+        r.raise_for_status(); parts.append(pd.read_csv(io.StringIO(r.text)))
+        time.sleep(0.5)
+    df = pd.concat(parts, ignore_index=True)
+    df.columns = ["date" if c.lower() == "date" else "y_" + c.strip().lower().replace(" ", "") for c in df.columns]
+    df["date"] = pd.to_datetime(df["date"])
+    for c in df.columns[1:]: df[c] = pd.to_numeric(df[c], errors="coerce").astype("float32")
+    if {"y_10yr", "y_2yr"} <= set(df.columns): df["t10y2y"] = df["y_10yr"] - df["y_2yr"]
+    split_locked(df.sort_values("date").drop_duplicates("date"), "date", out, "treasury_yields")
+
+
 def earn(out, since):
     h = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128 Safari/537.36",
          "Accept": "application/json, text/plain, */*", "Origin": "https://www.nasdaq.com", "Referer": "https://www.nasdaq.com/"}
@@ -123,7 +139,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="public_data"); ap.add_argument("--since", default="2024-10-01")
     ap.add_argument("--universe", default="data/universe.csv")
-    ap.add_argument("--only", nargs="*", default=["cboe", "ff", "fred", "earn", "finra"])
+    ap.add_argument("--only", nargs="*", default=["cboe", "ff", "fred", "treasury", "earn", "finra"])
     a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
     for k in a.only:
         try:
