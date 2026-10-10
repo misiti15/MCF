@@ -140,12 +140,19 @@ def main():
     ap.add_argument("--only", default=None)
     ap.add_argument("--base-only", action="store_true")
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--resume", action="store_true", help="keep the families already in --out, run the rest")
     a = ap.parse_args()
     D = eng.D()
     specs = FM.all_specs()
     if a.only:
         specs = [s for s in specs if any(x in s["name"] for x in a.only.split(","))]
     R = Runner(D)
+    if a.resume and Path(a.out).exists():          # container restart: completed families are kept as written
+        old = pd.read_csv(a.out)
+        R.rows = old.to_dict("records")
+        done = set(old["family"])
+        specs = [s for s in specs if s["name"] not in done]
+        print(f"resume: {len(done)} families kept ({len(old)} configs), {len(specs)} to run", flush=True)
     t0 = time.time()
     for i, sp in enumerate(specs):
         n0 = len(R.rows)
