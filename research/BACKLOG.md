@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 215 · coded: 6 · failed: 113 · configurations tried (all lineages): 21867913
+Total ideas: 266 · coded: 6 · failed: 138 · configurations tried (all lineages): 21893652
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -27,10 +27,15 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | finalist | bdi-rw-ns2-up3 | RW6: NS2 with move-from-open floor 3% (was 2%) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | finalist | bdi-rw-gapdn-bounce-early | RW7: RW1 with lighter selling, 09:50-10:30 | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | finalist | bdi-rw-sma50up-spikefade | RW8: SMA50 up-cross on a >3% up day with RSI14<=30, short | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
+| finalist | sw-w3-connors-rsi3-daily | Daily: Connors long RSI(3)<5 above SMA200, buy next open, exit first close > SMA5 (max 10d) | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| finalist | sw-w3-rev5-k20-daily | Daily: buy bottom-decile 5-day losers at the close, hold 20 sessions | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| finalist | lh-mom-revfilter | Long-hold: 12-1 momentum top-20 excluding the top decile of the 21-day return, weekly rebalance (S6_mom12_1rev_N20_W) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | rework | bdi-rw-nm-flowsell-rsi65-gapdn-volume | RW lineage near-miss: buyPressure<-0.35 & RSI14>65 & gap<0, 09:50-11:00 short (high volume) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | rework | bdi-rw-nm-ns1-plateau | NS1 (rsi_x40dn+up>2%+rsi5>=80 am long t05s1) fails plateau | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | rework | bdi-rw-nm-sma50-flush-long | Oversold SMA50 flush long, 10:30-13:00 (x_sma50_dn & down>1% & RSI14<=30) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | rework | bdi-rw-nm-ns2-early | NS2 09:50-10:30 only (x_sma50_up & up>2% & RSI14>=60) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
+| rework | lh-mom-near | Long-hold: cross-sectional momentum 12-1 / 6-1, top-N equal weight | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| rework | lh-etf-relmom-near | Long-hold: top-3 ETF relative momentum with absolute filter (3/6/12 months), multi-asset and sectors | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | testing | bdi-st-st1-ordn-long-pm-t05s1 | ST1-ordn-long-pm-t05s1: close crosses below the 09:30-10:00 opening-range low; stock down > 3.0% from the open; volume ratio >= 1.5; close inside the prior-day range; 13:35-15:00 ET (bar close) (long, t05s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – |
 | testing | bdi-st-st2-slope20up-long-am-t05s1 | ST2-slope20up-long-am-t05s1: 5-min SMA20 slope turns positive; stock down > 3.0% from the open; 19-bar buy pressure > 0; close within 0.5 daily ATR of VWAP; 09:50-11:30 ET (bar close) (long, t05s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – |
 | testing | bdi-st-st3-rsi5up-short-pm-t1s1 | ST3-rsi5up-short-pm-t1s1: RSI(5) crosses back above 20; stock down > 3.0% from the open; close above VWAP; gap up > 1.0%; 13:35-15:00 ET (bar close) (short, t1s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – |
@@ -106,6 +111,23 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | idea | loop-1009-hfs-small-mfe-scratch | heat_fade_short: early scratch when +0.5R is not reached within N minutes | BDI 2026-10-09 autopsy (research/bdi/daily/2026-10-09/AUTOPSY.md) | – | – | – | – | – |
 | idea | loop-1009-opposite-side-family | Book-wide 'never worked' and 'wrong side after a big swing' reached 3 days | BDI 2026-10-09 autopsy (research/bdi/daily/2026-10-09/AUTOPSY.md) | – | – | – | – | – |
 | idea | loop-1009-spy30-against | Flag: SPY's 30-minute move against the trade at entry | BDI 2026-10-09 autopsy (research/bdi/daily/2026-10-09/AUTOPSY.md) | – | – | – | – | – |
+| idea | sw-w5-cost-tod-multiplier | Cost model: time-of-day spread multiplier from SIP NBBO | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-earnings-history | Historical earnings calendar for blackout parity on the 2-year history | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-vix-regime | CBOE vol indices (VIX level, VIX9D/VIX3M term slope) as pre-declared regime-gate inputs | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-fill-audit | Daily fill-quality audit: live fills vs SIP NBBO at submit and fill | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-finra-shvol | FINRA Reg SHO daily short volume as a crowding feature | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-corp-actions | Alpaca corporate actions: frame-adjustment audit and event-day exclusion | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-news-history | Alpaca news history stored as data (no news rules yet) | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-movers-snapshot | Daily snapshot of Alpaca movers / most-actives to build an in-play history | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-options-flow | OPRA options aggregates per underlying (volume, put/call) from Alpaca | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-tape-orderflow | Tape-based order flow (per-minute signed volume) for the watch list | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w5-factor-macro-edgar | Fama-French factors / industry portfolios, FRED macro, EDGAR Form 4 (attribution and context) | swarm1010 W5 data-source survey (research/swarm1010/w5_sources/SOURCES.md) | – | – | – | – | – |
+| idea | sw-w4-z4-orwidth-sitout | Z4: skip entries when SPY's opening-range width (ATRs) is in its trailing top tercile for that bar time | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| idea | sw-w4-config-order-preemption | Observation: one-position-per-symbol + config order pre-empts some setups almost entirely | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| idea | sw-w1-asymmetry-finding | Finding: indicator variants do not change the up/down asymmetry | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| idea | sw-w1-live-sma100-column | Live frame: add sma100_dist_pct (SMA100 on prior 60 + today's 5-min bars) | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| idea | sw-w2-eod-hedged-line | EOD report: a 'market-adjusted' line per setup (P/L net of beta x SPY over each trade's holding time) | swarm 2026-10-10 W2 market-neutral study (research/swarm1010/w2_neutral/NOTES.md) | – | – | – | – | – |
+| idea | lh-band-diag | Long-hold runner: rebalance band (skip drift trades within 25% of target weight) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – |
@@ -219,9 +241,38 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | failed | bdi-rg-g5-breadth-1000 | Regime gate G5 on 102 trade lists (30 lab setups live window + full day, 40 Reddit base rules, orb20_a, intraday_momentum) | BDI regime study 2026-10-09 (research/bdi/regime1009/NOTES.md) | – | – | – | – | – |
 | failed | bdi-rg-g6-breadth-wf | Regime gate G6 on 102 trade lists (30 lab setups live window + full day, 40 Reddit base rules, orb20_a, intraday_momentum) | BDI regime study 2026-10-09 (research/bdi/regime1009/NOTES.md) | – | – | – | – | – |
 | failed | loop-1009-heat-fade-short-split | heat_fade_short: drop near-open entries or non-gap-up names (T1/T2) | BDI 2026-10-09 autopsy (research/bdi/daily/2026-10-09/AUTOPSY.md) | – | – | – | – | – |
+| failed | sw-w3-overnight-fail | Daily: overnight (MOC->MOO) holds by condition | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| failed | sw-w3-connors-short-fail | Daily: Connors short (below SMA200, RSI2/3 > 90/95), 1-5 day holds | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| failed | sw-w3-mom-gap-near | Daily: momentum / 52-week-high / up-gap drift longs (5-20 days) | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| failed | sw-w3-calendar-near | Daily: turn of month / day of week / index overnight on SPY, QQQ, IWM, EW | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
+| failed | sw-w3-connors-rsi3-daily-locked | sw-w3-connors-rsi3-daily: locked-block result | lead locked-block scoring (swarm W3) | – | – | – | – | – |
+| failed | sw-w3-rev5-k20-daily-locked | sw-w3-rev5-k20-daily: locked-block result | lead locked-block scoring (swarm W3) | – | – | – | – | – |
+| failed | sw-w4-book-exits | Book-wide exits on every live setup at once (ATR5 trail 1/1.5/2, time stop 30/60/90 if MFE<0.25R, structural 30/60-min swing stop, scale-out 1/2 at +1R, breakeven +0.75R, flatten 15:30) | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w4-book-volsize | Volatility sizing / sit-out on the whole book from magnitude signals (SPY ATR%, SPY opening-range width, dispersion) | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w4-book-process | Process rules on the book: per-setup stop after 2/3 losses or -3R/-5R, max 5/10/20 entries per setup per day, book stop -10R/-20R | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w4-hfs-exit-size | heat_fade_short: 11 exits + 3 scratch exits + 8 sizing/sit-out + 7 process rules, current window and full day | Swarm 2026-10-10 W4 (research/swarm1010/w4_exits_sizing/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w1-lab-variants-fail | W1 variants of the lab/heat families (heat, exhaustion, MF, RW, NS, ST, RW8) | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w1-reddit-variants-fail | W1 variants of the 20 Reddit rules x long/short | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w1-trigger-variants-fail | W1 variants of the 18 stack1009 trigger families x up/dn x long/short | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w1-l3-variants-fail | W1 variants of L3 gap/slope shorts (min_adv 0) | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed | sw-w2-hedged-existing | Beta-hedged (SPY / sector ETF) scoring of every existing setup | swarm 2026-10-10 W2 market-neutral study (research/swarm1010/w2_neutral/NOTES.md) | – | – | – | – | – |
+| failed | sw-w2-rv-stock-etf | Intraday relative value: stock vs SPY / sector ETF spread z (fade and momentum) | swarm 2026-10-10 W2 market-neutral study (research/swarm1010/w2_neutral/NOTES.md) | – | – | – | – | – |
+| failed | sw-w2-rv-pairs | Intraday pairs within a sector (top-correlated partner, prior 60 sessions) | swarm 2026-10-10 W2 market-neutral study (research/swarm1010/w2_neutral/NOTES.md) | – | – | – | – | – |
+| failed | lh-lowvol-fail | Long-hold: low volatility top-N (63/252-day vol), monthly/weekly | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-lowbeta-fail | Long-hold: low beta top-N (252-day beta vs SPY) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-52wh-fail | Long-hold: 52-week-high proximity (George-Hwang) top-N | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-resmom-near | Long-hold: residual momentum vs SPY (12-1 / 6-1), top-N | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-etf-trend-near | Long-hold: ETF trend following (Faber 6/10/12-month SMA) on SPY / multi-asset / sectors | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-etf-dualmom-fail | Long-hold: dual momentum (Antonacci GEM) SPY/EFA(/QQQ/IWM) vs BIL, AGG defensive | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-etf-tsmom-rp-near | Long-hold: ETF time-series momentum (3/6/12m, equal / inverse-vol) and risk parity-lite | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-voltarget-near | Long-hold: portfolio volatility targeting (10% / 15%) on SPY, EW universe, momentum, 52wh, low vol | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |
 | retired | t7-noise-band | Faithful noise-area momentum, SPY/QQQ | Zarattini/Aziz/Barbon 2024 | – | – | – | – | – |
 | retired | rw-vf1_rsis7_atr20 | exhaustion_short with RSI7 / ATR20 | rule-18 rework (lengths) | – | – | – | – | – |
 | retired | primitives-map | Layer-1 metric map (12,030 configs) | primitives swarm | – | – | – | – | – |
+| failed_locked | sw-w1-ns3-sma100-vol2-short | NS3 failed VWAP reclaim with SMA100 (for SMA50) + volumeRatio >= 2, full day | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed_locked | sw-w1-st6-sma100above-short | ST6 volume-spike short + close above SMA100, full day | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed_locked | sw-w1-st1-sma100below-long | ST1 OR-low break long + close below SMA100, full day | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |
+| failed_locked | sw-w1-st8-sma100below-long-t05s1 | ST8 volume-spike long + close below SMA100, exit t05s1, full day | Swarm 2026-10-10 W1 indicator-variant sweep (research/swarm1010/w1_variants/NOTES.md, results.csv) | – | – | – | – | – |

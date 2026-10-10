@@ -142,4 +142,123 @@ ranked by train+valid only; no two from the same family/lineage unless no other 
 once on the locked block 2024-11..2025-02 (look 1: active > 0 for Tier A; Sharpe > benchmark for Tier B).
 
 ### 1.9 Amendments (dated)
-(none yet)
+- **2026-10-10, after the first full scoring (gates unchanged, grid unchanged, N stays 105).** Two bug fixes before
+  any number was read: benchmark keys `EW`/`SPY` were renamed to the simulated series `BENCH_EW`/`BH_SPY` (the first
+  run crashed on the lookup), and the rolling covariance got `pairwise=False` explicitly.
+- **2026-10-10, tightening diagnostics added after seeing the gates (they can only remove a candidate, never add
+  one; written before running them; `diag.py`, not counted in N, reported as `diag_*` rows):**
+  1. *Large-cap universe:* the same stock configs on the top 300 eligible names by 20-day median dollar volume at t.
+     Large caps rarely disappear except by takeover, so this universe carries much less survivorship bias.
+  2. *Corporate-action artifact filter:* drop from ranking any name with a daily close-to-close move > +300 % or
+     < -75 % in the last 252 sessions (the file has spin-off / ticker-reuse artifacts such as SN 2023-07-31 x117,
+     NVS 2019-04-09 -82 %).
+  3. *2x costs* and *one-day execution delay* (signal at t, fill at the open of t+2).
+  A recommendation must keep active > 0 in train, valid and valid2 under each of 1-3.
+
+## 2. Results (105 configurations; failures first)
+
+*Educational only - not financial advice. Backtest only (daily bars, MOO fills, costs in). The locked block
+2024-11..2025-02 is in no figure. Annualised; "active" = strategy minus its family benchmark (1.5), arithmetic.*
+
+**Counts.** 105 pre-declared configurations scored (N for every bar). Not counted, reported only: 9 benchmarks,
+54 `cohort2016` reruns (1.7) and 4 x 54 tightening diagnostics (1.9, `diag.csv`). Try-count bar t >= 3.05.
+SR0 for the deflated Sharpe (annualised): 0.93 absolute, 1.47 active.
+
+| family (N) | A_edge | B_risk | near | fail |
+|---|---|---|---|---|
+| S1 momentum 12-1 / 6-1 (12) | 0 | 0 | 12 | 0 |
+| S2 residual momentum (12) | 0 | 0 | 12 | 0 |
+| S3 52-week high (6) | 0 | 0 | 1 | 5 |
+| S4 low volatility (12) | 0 | 0 | 0 | 12 |
+| S5 low beta (6) | 0 | 0 | 0 | 6 |
+| S6 momentum + reversal filter (6) | **1** | 0 | 5 | 0 |
+| L1-L5 long-short (14) | 0 | 0 | 8 | 6 |
+| E1 Faber trend (9) | 0 | 0 | 7 | 2 |
+| E2 dual momentum GEM (4) | 0 | 0 | 1 | 3 |
+| E3 ETF relative momentum (6) | 0 | 0 | 4 | 2 |
+| E4 ETF time-series momentum (6) | 0 | 0 | 6 | 0 |
+| E5 risk parity-lite (2) | 0 | 0 | 1 | 1 |
+| V vol targeting (10) | 0 | 0 | 5 | 5 |
+| **total (105)** | **1** | **0** | **62** | **42** |
+
+### 2.0 Benchmarks and survivorship (read first)
+| series | CAGR train | valid | valid2 | 2017-2026 | note |
+|---|---|---|---|---|---|
+| SPY | 15.2 % | 13.1 % | 19.8 % | 15.1 % | Sharpe 0.83 / 0.83 / 1.13, maxDD -34 % |
+| EW universe (today's list) | 17.8 % | 14.2 % | 26.5 % | 17.7 % | the stock benchmark |
+| EW universe, 2016 cohort only | 16.7 % | 14.8 % | 23.0 % | 17.0 % | |
+| RSP (EW S&P 500, point in time) | 11.6 % | 10.6 % | 13.0 % | 11.4 % | |
+| MTUM / USMV / QUAL | | | | 16.4 / 10.1 / 14.6 % | reference |
+
+- **Survivorship is large: the EW universe beats RSP by 6.3 %/yr** (17.7 vs 11.4 %), and by 13.5 %/yr in valid2. Part
+  of that is universe choice (mid caps, growth names), but most of it is today's list applied backward. Every
+  long-only stock number below is inflated by a comparable amount in absolute terms; the *active* numbers compare
+  against the same biased universe, so they are less affected, but momentum is the style most exposed to this bias
+  (it buys exactly the names that later became today's large, liquid stocks, and misses the ones that crashed out).
+- The 2016-cohort rerun changes little (EW -0.7 %/yr; momentum active stays +10..+66 %/yr), so new listings are not
+  what drives the results. The deaths that are missing cannot be tested with this file.
+
+### 2.1 Failures
+- **Low volatility (S4, 12) and low beta (S5, 6): all fail.** Active vs EW -3..-16 %/yr in train and valid and
+  -12..-24 %/yr in valid2 (a strong-beta tape: low-vol names lagged). Sharpe below the EW universe in every split;
+  drawdowns not smaller (-32..-41 %). USMV/SPLV show the same (valid2 +5.5 % / +0.1 %). Long-short versions (L4, L5)
+  are disasters: -15..-81 %/yr, maxDD -86..-99 %.
+- **52-week-high proximity (S3, 6): 5 fail, 1 near.** Active negative in train and valid in every version; weekly
+  rebalancing churns 32-46x/yr (cost drag 1.8-2.6 %/yr). L3 long-short -0.5..-33 %/yr. Unlike W3's 20-day 52wh
+  trades, nothing here beats the universe.
+- **Dual momentum GEM (E2, 4): 3 fail, 1 near.** Active vs SPY -3..-12 %/yr in train and valid; switches late in
+  2018/2020/2022.
+- **Vol targeting (V, 10): 5 fail, 5 near.** On SPY and the EW universe it lowers return more than risk (Sharpe below
+  base in train). On momentum it cuts max drawdown from -43 % to -15/-21 % and keeps Sharpe ~1.1, but gives up
+  20-30 %/yr; B1 fails in train.
+- **Faber trend (E1), ETF time-series momentum (E4), risk parity-lite (E5), ETF relative momentum (E3): no pass; the
+  Tier-B misses are all on the deflated Sharpe.** Seven configs pass B1 (Sharpe > benchmark in all three splits), B2
+  (shallower drawdown) and B4 (plateau) and fail only B3: E1_faber10_Erisk, E1_faber12_Erisk, E3_relmom3_top3_Erisk,
+  E4_tsmom3_eq/iv, E4_tsmom6_iv, V_S4lv_vt10 (DSR 0.35-0.48 < 0.95). Example E1_faber10_Erisk: CAGR 8.1 / 4.9 / 13.3 %,
+  maxDD -10 % (E_risk EW -26 %, SPY -34 %), Sharpe 1.16 / 0.67 / 1.31. They are risk reducers, not edge, and with
+  105 trials their Sharpe is not distinguishable from luck. All are survivorship-free.
+- **Residual momentum (S2, 12) and long-short momentum (L1/L2, 8): all near.** Positive active in every split
+  (S2 +1..+12 %/yr in train/valid, up to +33 % in valid2; L1 +14..+50 %/yr) but t 0.7-2.2, below 3.05; deflated active Sharpe <= 0.01.
+- **Plain momentum (S1, 12): all near.** Active vs EW +12..+39 %/yr in train and valid and +35..+88 %/yr in valid2,
+  t 2.17-2.91 (just under the bar). Beta 1.3-2.2, vol 35-60 %, maxDD -41..-59 %.
+
+### 2.2 The one Tier-A pass: `S6_mom12_1rev_N20_W`
+Rule: weekly (last trading day of the week, signal at the close, fill at the next open), among eligible stocks
+($5, $20M ADV, 253 bars, not ETF) drop the top decile of the 21-day return, then hold the 20 highest 12-1 month
+returns at equal weight.
+
+| split | CAGR | vol | Sharpe | maxDD | active vs EW | excess vs SPY | beta | turnover | cost drag | hit months / vs EW |
+|---|---|---|---|---|---|---|---|---|---|---|
+| train 2017-20 | 49.1 % | 33 % | 1.37 | -44 % | +26.8 % | +29.6 % | 1.30 | 15.8x | 1.3 % | 69 % / 69 % |
+| valid 2021-24.10 | 39.5 % | 36 % | 1.10 | -27 % | +24.8 % | +26.1 % | 1.41 | 15.7x | 1.3 % | 59 % / 61 % |
+| valid2 2025.03+ | 101.8 % | 56 % | 1.53 | -34 % | +60.9 % | +66.6 % | 2.15 | 16.1x | 1.2 % | 70 % / 65 % |
+
+- Gates: A1 yes; A2 monthly active t 3.25 >= 3.05 (narrow); A3 neighbours' active +24 %/yr; A4 active in SPY-up
+  months +32 %/yr and SPY-down months +29 %/yr (all open months). Calendar years vs EW: 9 of 10 positive (2021: +17 % vs +29 %);
+  2018 +8.5 % (EW -4.9 %), 2022 +49 % (EW -13 %, energy names led the momentum list).
+- Tightening diagnostics (1.9), active train / valid / valid2: top-300 large caps +17 / +10 / +58 %/yr (t 2.03);
+  artifact filter +27 / +25 / +63 %; 2x costs +26 / +24 / +60 %; one-day delay +24 / +27 / +61 %. All positive.
+- **Weak points:** deflated Sharpe of the active return is only 0.12 (N = 105); without the best 3 months the
+  monthly active t is 2.3 / 1.0 / 0.4 (valid2 is carried by a few months, best 2026-04 +34 %); the top 10 names
+  give 21 % of the summed contribution (CVNA, BE, ETSY, SHOP, SEDG, SE, QBTS ...), 485 names held over the sample.
+  The monthly sibling `S6_mom12_1rev_N20_M` (t 2.98, turnover 6.8x) is "near"; the whole momentum cluster is
+  consistent, so the result is not a single lucky cell, but its size is very likely overstated by survivorship.
+
+## 3. Recommendation (rule fixed in 1.8)
+1. **Paper forward test: `S6_mom12_1rev_N20_W`** (only Tier-A pass), after the lead scores it once on the locked
+   block 2024-11..2025-02 (look 1: active vs EW universe > 0; the EW benchmark must be simulated on the same block).
+   Expect 35-55 % vol and -30..-45 % drawdowns; treat the backtest CAGR as an upper bound (survivorship).
+2. No Tier-B pass, so no second recommendation under the pre-declared rule. If the lead wants a survivorship-free
+   **control line**, the closest Tier-B miss is `E1_faber10_Erisk` (or `E3_relmom3_top3_Erisk`); it must be
+   labelled "near, failed B3 (deflated Sharpe)", not a pass.
+3. Locked-block scoring needs the returns inside 2024-11..2025-02, which `study.py` zeroes unconditionally (line
+   `R[locked] = 0.0`); the lead's scorer should rebuild `R_cc/R_co/R_oc` without that line, simulate the finalist and
+   BENCH_EW from the 2024-10-31 targets, and report only 2024-11-01..2025-02-28.
+
+## 4. Files
+- `NOTES.md` (this), `DESIGN.md` (runner spec), `results.csv` (every config, benchmark and cohort rerun x
+  train / valid / valid2 / trval / all / calendar year), `gates.csv` (one row per config, verdict and every gate),
+  `diag.csv` (tightening diagnostics).
+- `study.py` (grid, simulator, stats, gates), `diag.py` (diagnostics), `download_extra.py` (extra ETFs),
+  `runner_core.py` + `tests/test_longhold_core.py` (pure core of the proposed runner).
+- `data/` (git-ignored): `etf_extra.parquet`, `daily_returns.parquet`, `sim_cache.npz` (~13 MB in total).

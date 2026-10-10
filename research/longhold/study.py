@@ -291,11 +291,11 @@ for fam, feats in [("S1", ["mom12_1", "mom6_1"]), ("S2", ["res12_1", "res6_1"]),
     for f in feats:
         for n in (10, 20, 50):
             for reb in ("M", "W"):
-                add(f"{fam}_{f}_N{n}_{reb}", fam, "EW", {"feat": f, "N": n, "reb": reb},
+                add(f"{fam}_{f}_N{n}_{reb}", fam, "BENCH_EW", {"feat": f, "N": n, "reb": reb},
                     lambda f=f, n=n, reb=reb, **kw: stock_targets(f, n, reb, **kw))
 for n in (10, 20, 50):
     for reb in ("M", "W"):
-        add(f"S6_mom12_1rev_N{n}_{reb}", "S6", "EW", {"feat": "mom12_1", "N": n, "reb": reb},
+        add(f"S6_mom12_1rev_N{n}_{reb}", "S6", "BENCH_EW", {"feat": "mom12_1", "N": n, "reb": reb},
             lambda n=n, reb=reb, **kw: stock_targets("mom12_1", n, reb, filt_rev=True, **kw))
 for fam, feats in [("L1", ["mom12_1", "mom6_1"]), ("L2", ["res12_1", "res6_1"]), ("L3", ["h52"]),
                    ("L4", ["lowvol252"]), ("L5", ["lowbeta"])]:
@@ -303,12 +303,12 @@ for fam, feats in [("L1", ["mom12_1", "mom6_1"]), ("L2", ["res12_1", "res6_1"]),
         for n in (20, 50):
             add(f"{fam}_{f}_N{n}_M_LS", fam, "CASH", {"feat": f, "N": n},
                 lambda f=f, n=n: stock_targets(f, n, "M", side="ls"))
-for uni_name, uni, bench in [("SPY", ["SPY"], "SPY"), ("Erisk", E_RISK, "ERISK"), ("Esector", E_SECTOR, "ESECTOR")]:
+for uni_name, uni, bench in [("SPY", ["SPY"], "BH_SPY"), ("Erisk", E_RISK, "ERISK"), ("Esector", E_SECTOR, "ESECTOR")]:
     for k in (6, 10, 12):
         add(f"E1_faber{k}_{uni_name}", "E1", bench, {"uni": uni_name, "k": k}, lambda uni=uni, k=k: etf_targets("faber", uni, k))
 for setname, rs in [("SPY_EFA", ["SPY", "EFA"]), ("SPY_QQQ_IWM_EFA", ["SPY", "QQQ", "IWM", "EFA"])]:
     for k in (6, 12):
-        add(f"E2_gem{k}_{setname}", "E2", "SPY", {"set": setname, "k": k}, lambda rs=rs, k=k: etf_targets("gem", rs, k))
+        add(f"E2_gem{k}_{setname}", "E2", "BH_SPY", {"set": setname, "k": k}, lambda rs=rs, k=k: etf_targets("gem", rs, k))
 for uni_name, uni, bench in [("Erisk", E_RISK, "ERISK"), ("Esector", E_SECTOR, "ESECTOR")]:
     for k in (3, 6, 12):
         add(f"E3_relmom{k}_top3_{uni_name}", "E3", bench, {"uni": uni_name, "k": k},
@@ -327,22 +327,29 @@ assert len(CONFIGS) == N_TOTAL, len(CONFIGS)
 
 # ---------------------------------------------------------------------------------------------- run
 SER: dict[str, tuple] = {}
-print("benchmarks", flush=True)
-SER["BH_SPY"] = simulate(bh_targets(["SPY"]))
-SER["BENCH_EW"] = simulate(ew_universe_targets())
-SER["BENCH_EW_cohort2016"] = simulate(ew_universe_targets(cohort=True))
-SER["ERISK"] = simulate(bh_targets(E_RISK))
-SER["ESECTOR"] = simulate(bh_targets(E_SECTOR))
-for s in ("RSP", "MTUM", "USMV", "QUAL", "BIL", "SPLV"):
-    SER[f"BH_{s}"] = simulate(bh_targets([s]))
-SER["CASH"] = (np.zeros(T), np.zeros(T), np.zeros(T))
-for i, c in enumerate(CONFIGS):
-    if c["family"] == "V":
-        continue
-    SER[c["id"]] = simulate(c["fn"]())
-    if c["family"].startswith("S"):
-        SER[c["id"] + "__cohort2016"] = simulate(c["fn"](cohort=True))
-    print(i, c["id"], flush=True)
+CACHE = HERE / "data" / "sim_cache.npz"     # git-ignored; delete to re-simulate
+if CACHE.exists():
+    z = np.load(CACHE)
+    SER = {k: tuple(z[k]) for k in z.files}
+    print("loaded", len(SER), "simulations from cache", flush=True)
+else:
+    print("benchmarks", flush=True)
+    SER["BH_SPY"] = simulate(bh_targets(["SPY"]))
+    SER["BENCH_EW"] = simulate(ew_universe_targets())
+    SER["BENCH_EW_cohort2016"] = simulate(ew_universe_targets(cohort=True))
+    SER["ERISK"] = simulate(bh_targets(E_RISK))
+    SER["ESECTOR"] = simulate(bh_targets(E_SECTOR))
+    for s in ("RSP", "MTUM", "USMV", "QUAL", "BIL", "SPLV"):
+        SER[f"BH_{s}"] = simulate(bh_targets([s]))
+    SER["CASH"] = (np.zeros(T), np.zeros(T), np.zeros(T))
+    for i, c in enumerate(CONFIGS):
+        if c["family"] == "V":
+            continue
+        SER[c["id"]] = simulate(c["fn"]())
+        if c["family"].startswith("S"):
+            SER[c["id"] + "__cohort2016"] = simulate(c["fn"](cohort=True))
+        print(i, c["id"], flush=True)
+    np.savez(CACHE, **{k: np.vstack(v) for k, v in SER.items()})
 for c in CONFIGS:
     if c["family"] == "V":
         SER[c["id"]] = vol_overlay(*SER[c["bench"]], c["params"]["tg"] / 100)
