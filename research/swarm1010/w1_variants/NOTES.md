@@ -267,3 +267,30 @@ Files: `NOTES.md`, `results.csv` (4,663 configurations, every stat), `summary.cs
 `eng.py`, `families.py`, `run.py`, `l3.py`, `report.py`, `finalists.py`, `controls.py`, `verify.py`, `add_backlog.py`,
 `npzmap.py`. Git-ignored `data/` keeps the raw config tables; the 785 MB extra columns (`data/ext`) were deleted after the run (shared disk) - `python build_extras.py` rebuilds them (~35 min) before re-running run.py / verify.py. Backlog: `sw-w1-*` (4 testing candidates, 4 failures,
 1 finding, 1 live-column idea).
+
+## 3. Locked block (rule 19, look 1) - scored once, 2026-10-10, authorised by the lead
+
+*Lab backtest on the rule-19 locked block 2024-11-01..2025-02-28 (80 sessions: 29 up / 20 flat / 31 down; regime
+cut points from the open history, as lib.regimes). Production costs. Educational only - not financial advice.*
+
+- Script `score_locked.py` (run once with `MCF_HIST_ALLOW_LOCKED=1` set for that script only), output `locked.json`.
+  The 4 modules were run exactly as staged (no edits after the scan or after these numbers). Frames from
+  `research/history2y/data/locked`; `sma100_dist_pct` rebuilt from `data/cache_hist/1Min` with the same live-parity
+  rule (SMA100 on 5-min closes, valid when today's bar count + 60 >= 100; prior-day bars for 2024-11-01 from open
+  October 2024 data). SMA100 missing on 1.5-2.1% of rows after 12:50 (thin / new names). YAML window 09:50-15:00,
+  adv20 >= 95M, first qualifying bar per symbol-day.
+- Bar (look 1): exp > 0 and day-clustered t >= 1.0.
+
+| module | n | /day | win | exp R | t | ex-best-day | up exp (n) | flat exp (n) | down exp (n) | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| W1-NS3-vwapreclaim-sma100-vol2-short | 20 | 0.25 | 0.450 | -0.266 | -1.49 | -0.359 | -0.500 (12) | +0.305 (5) | -0.280 (3) | **failed_locked** |
+| W1-ST6-volspikeup-sma100above-short | 26 | 0.33 | 0.462 | -0.051 | -0.31 | -0.092 | -0.179 (17) | -0.100 (4) | +0.424 (5) | **failed_locked** |
+| W1-ST1-ordn-sma100below-long | 92 | 1.15 | 0.609 | -0.001 | -0.01 | -0.030 | -0.091 (22) | +0.216 (29) | -0.105 (41) | **failed_locked** |
+| W1-ST8-volspikedn-sma100below-long-t05s1 | 33 | 0.41 | 0.545 | -0.031 | -0.27 | -0.082 | +0.142 (12) | -0.057 (9) | -0.184 (12) | **failed_locked** |
+
+**All four fail.** Samples are small (20-92 trades over 80 sessions, about half the open-history rate per day), so the
+test has little power, but none is even positive: the open-history numbers (t 2.1-3.2 against try-count bars of
+4.2-4.8, out of 4,677 configurations) look like selection, as the try-count bar warned. For the shorts the up-session
+losses are back (NS3 -0.50R, ST6 -0.18R in up sessions), i.e. the SMA100 layer did not remove the regime dependence
+out of sample. Recommendation: do not apply `account_testing_w1.yaml`; the live `sma100_dist_pct` column is not needed
+for these. The lineages have used look 1; any rework would face look 2 (t >= 1.5).
