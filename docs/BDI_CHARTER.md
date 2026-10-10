@@ -2,6 +2,11 @@
 
 *Educational only — not financial advice.*
 
+## Purpose (owner, 2026-10-10)
+MCF's purpose is to find edge and to be an efficient autonomous system in the market. After ~1.3M intraday
+configurations showed no stock-specific edge after costs (research/swarm1010), research moves to **longer holding
+periods** (daily/weekly/monthly rebalancing, research/longhold); the intraday system keeps running as a forward test.
+
 ## Mandate (owner, 2026-10-07): aggressive, not just diagnostic
 - **Go after new setups.** BDI's main job is finding and testing alternate setups and strategies, not only explaining today's trades. Every weekday it ships at least one new tested idea, or a rework of a failed one, into the backlog with its numbers. Two days in a row with nothing new is a failure of the role.
 - **Be aggressive about finding opportunity.** The universe moves enough that 200 or more good trades a day should be findable by spotting opportunities better and executing more efficiently.

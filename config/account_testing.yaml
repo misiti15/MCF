@@ -16,6 +16,42 @@ account:
   max_positions_per_strategy: 150
   max_daily_loss_r: 60
   max_trades_per_day: 3000
+live:
+  # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
+  # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
+  setup_order:
+    - ST5-pdbrkup-short-mid-t05s1-FD
+    - ST8-volspikedn-long-pm-t1s1-FD
+    - ST6-volspikeup-short-mid-t1s1-FD
+    - ST3-rsi5up-short-pm-t1s1-FD
+    - ST7-rsi50dn-long-pm-t1s1-FD
+    - ST4-emadn-long-am-t1s05-FD
+    - ST1-ordn-long-pm-t05s1-FD
+    - NS4-pm-vwap-reclaim-oversold-short-FD
+    - RW6G1-ns2-up3-vwap2sd-short-FD
+    - L3-gap-slope-rsi5hi-FD
+    - L3-gap-slope-lowdist-FD
+    - L3-gap-slope-fromopen-FD
+    - NS1-rsidip-rsi5pop-long-FD
+    - NS5-sma50-flush-oversold-long-FD
+    - RW6-ns2-up3-short-FD
+    - MF2-open-rsimidhi-flowsell-FD
+    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+    - RW3-gapdn-rsi5pop-flowsell-short-FD
+    - MF5-flowsell-vwapup-rsi5hi-FD
+    - MF4-h40-open-flowsell-FD
+    - RW1-gapdn-bounce-flowsell-short-FD
+    - RW4-ns3-adv150-short-FD
+    - NS2-sma50break-overbought-short-FD
+    - NS3-failed-vwap-reclaim-short-FD
+    - MF1-945-flowsell-vwapup-FD
+    - MF3-open-flowsell-rsi5hi-FD
+    - ST2-slope20up-long-am-t05s1-FD
+    - RW2-exhaustion-noon-adv150-short-FD
+    - heat_fade_long-FD
+    - RW7-gapdn-bounce-early-short-FD
+    - exhaustion_short-FD
+    - heat_fade_short-FD
 strategies:
   # ---- primary setups inherited from default.yaml: off here (non-lab ones were already off)
   intraday_momentum: {enabled: false}

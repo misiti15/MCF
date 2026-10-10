@@ -42,12 +42,26 @@ FOLD_MIN_N = 10
 TRAIN_MONTHS, TEST_MONTHS = 3, 1
 WF_MIN_SHARE = 0.6
 T_FLOOR = 1.5
+# Entry-side cost multiplier by entry time (bar-close HHMM): quoted NBBO spreads vs the 1c + 1 bps model, measured on
+# our traded names 2026-10-05..09 (research/swarm1010/w5_sources/spread_calibration.md). Provisional: re-measure on
+# 20+ sessions. Owner-approved 2026-10-10 (ledger 2026-10-10-tod-costs). Research scoring only, not live orders.
+TOD_COST = ((935, 3.8), (950, 2.1), (1030, 1.4))
+
+
+def tod_cost_mult(tod) -> np.ndarray:
+    """Multiplier for the entry side's cost at bar-close time tod (HHMM); 1.0 from 10:30."""
+    t = np.asarray(tod, float)
+    m = np.ones_like(t)
+    for edge, mult in reversed(TOD_COST):
+        m = np.where(t < edge, mult, m)
+    return m
 
 
 # ------------------------------------------------------------------------------------------------ costs and trades
-def prod_r(lab_r, win, close, atr_d, geom: str, r_frac: float = 0.25) -> np.ndarray:
+def prod_r(lab_r, win, close, atr_d, geom: str, r_frac: float = 0.25, tod=None) -> np.ndarray:
     """Production R from the lab's R. The lab charges a flat 1c per side; production charges 1c + 1 bps per side
-    (the exit side is free on a target fill, a limit), plus 2c extra on stop fills."""
+    (the exit side is free on a target fill, a limit), plus 2c extra on stop fills. With `tod` (entry bar-close HHMM)
+    the entry side is scaled by tod_cost_mult (wider spreads early in the session)."""
     up, dn = GEOMK[geom]
     R = r_frac * np.asarray(atr_d, float)
     px = np.asarray(close, float)
@@ -55,7 +69,8 @@ def prod_r(lab_r, win, close, atr_d, geom: str, r_frac: float = 0.25) -> np.ndar
     won = np.asarray(win, float) == 1
     gross = lab + 2 * SLIP_PS / R
     stop = (~won) & (gross <= -dn + 1e-6)
-    cost = (SLIP_PS + px * SLIP_BPS) + np.where(won, 0.0, SLIP_PS + px * SLIP_BPS) + np.where(stop, STOP_EXTRA, 0.0)
+    entry_mult = 1.0 if tod is None else tod_cost_mult(tod)
+    cost = (SLIP_PS + px * SLIP_BPS) * entry_mult + np.where(won, 0.0, SLIP_PS + px * SLIP_BPS) + np.where(stop, STOP_EXTRA, 0.0)
     return gross - cost / R
 
 
@@ -69,12 +84,14 @@ def first_per_symbol_day(symbol, date, mask) -> np.ndarray:
     return np.sort(idx[first])
 
 
-def lab_trades(df: pd.DataFrame, mask, side: str, geom: str) -> pd.DataFrame:
-    """One trade per symbol-day (first qualifying bar), production-cost R. Columns: date, symbol, tod, r, win."""
+def lab_trades(df: pd.DataFrame, mask, side: str, geom: str, tod_costs: bool = True) -> pd.DataFrame:
+    """One trade per symbol-day (first qualifying bar), production-cost R with time-of-day entry costs (default
+    since 2026-10-10; tod_costs=False reproduces earlier studies). Columns: date, symbol, tod, r."""
     m = np.asarray(mask, bool) & np.isfinite(df[f"r_{side}_{geom}"].to_numpy(float)) & (df["atr_d"].to_numpy(float) > 0)
     idx = first_per_symbol_day(df["symbol"].to_numpy(), df["date"].to_numpy(), m)
     r = prod_r(df[f"r_{side}_{geom}"].to_numpy(float)[idx], df[f"win_{side}_{geom}"].to_numpy(float)[idx],
-               df["close"].to_numpy(float)[idx], df["atr_d"].to_numpy(float)[idx], geom)
+               df["close"].to_numpy(float)[idx], df["atr_d"].to_numpy(float)[idx], geom,
+               tod=df["tod"].to_numpy(float)[idx] if tod_costs else None)
     return pd.DataFrame({"date": pd.to_datetime(df["date"].to_numpy()[idx]).date, "symbol": df["symbol"].to_numpy()[idx],
                          "tod": df["tod"].to_numpy()[idx], "r": r})
 

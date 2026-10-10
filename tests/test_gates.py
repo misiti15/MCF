@@ -116,3 +116,15 @@ def test_verdict():
     assert G.verdict(bad, reg_bad, {"share_positive": 0.3}, 1000)[0] == "retire"
     reg_rescue = {**reg_bad, "down": {"n": 100, "exp_r": 0.15, "t": 2.5}}
     assert G.verdict(bad, reg_rescue, {"share_positive": 0.3}, 1000)[0] == "rework"
+
+
+def test_time_of_day_entry_costs():
+    import numpy as np
+
+    from mcf.research.gates import prod_r, tod_cost_mult
+
+    assert list(tod_cost_mult([930, 940, 1000, 1100, 1455])) == [3.8, 2.1, 1.4, 1.0, 1.0]
+    a = prod_r([0.5], [1], [50.0], [2.0], "t1s1")
+    b = prod_r([0.5], [1], [50.0], [2.0], "t1s1", tod=[1100])
+    c = prod_r([0.5], [1], [50.0], [2.0], "t1s1", tod=[950])
+    assert np.isclose(a, b).all() and (c < b).all()

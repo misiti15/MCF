@@ -1,0 +1,45 @@
+# *** ALL FOUR FAILED THE LOCKED BLOCK (look 1, 2026-10-10, locked.json / NOTES.md section 3): DO NOT APPLY. ***
+# STAGED Testing-account snippet (swarm 2026-10-10 W1, research/swarm1010/w1_variants/NOTES.md) - NOT live.
+# Merge under `strategies:` of the Testing overlay only after approval (setup change: backlog -> ledger, outside
+# 09:30-16:00 ET, RESEARCH_RULES 9-17) AND the live change below. Live-probation candidates, not "keep": every t is
+# below its try-count bar; none has been scored on the rule-19 locked block (the lead does that once).
+# REQUIRED LIVE CHANGE FIRST: the lab frame needs the column 'sma100_dist_pct' = (close / SMA100(close) - 1) * 100 on
+# 5-min closes, computed on the same history as the other indicators (PRIOR5_BARS = 60 prior bars + today's bars,
+# so it is NaN until today's 40th bar, ~12:50 ET), e.g. one line in mcf.research.setup_lab.extra_features. Without it
+# these modules return no signals (fail-safe). Parity check: verify.json (offline = scan; live-shaped sample 100%).
+# Trades/day = open two-year lab history, first qualifying bar per symbol-day, production costs.
+# NS3-FD (Testing) and W1-NS3 share their trigger; W1-ST6 overlaps W1-NS3 on 25% of symbol-days.
+# Educational only - not financial advice.
+strategies:
+  # NS3 + SMA100 (for SMA50) + volumeRatio >= 2; ~0.50/day, +0.139R, t 2.53, up +0.133 / down +0.174, WF 0.857
+  W1-NS3-vwapreclaim-sma100-vol2-short:
+    enabled: true
+    type: lab
+    module: research/swarm1010/w1_variants/modules/W1-NS3-vwapreclaim-sma100-vol2-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # ST6 + close above SMA100; ~0.56/day, +0.171R, t 3.23, up +0.150 / down +0.175, WF 0.75
+  W1-ST6-volspikeup-sma100above-short:
+    enabled: true
+    type: lab
+    module: research/swarm1010/w1_variants/modules/W1-ST6-volspikeup-sma100above-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # ST1 + close below SMA100; ~1.32/day, +0.073R, t 2.20 (module list, 561 trades), up +0.114 / down +0.089, WF 0.688
+  W1-ST1-ordn-sma100below-long:
+    enabled: true
+    type: lab
+    module: research/swarm1010/w1_variants/modules/W1-ST1-ordn-sma100below-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # ST8 + close below SMA100, exit t05s1; ~0.83/day, +0.078R, t 2.06, up +0.056 / down +0.004 (weakest), WF 0.923
+  W1-ST8-volspikedn-sma100below-long-t05s1:
+    enabled: true
+    type: lab
+    module: research/swarm1010/w1_variants/modules/W1-ST8-volspikedn-sma100below-long-t05s1.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null

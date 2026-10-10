@@ -505,4 +505,10 @@ def build_strategies(cfg: dict) -> list[Strategy]:
         if name == "orb":
             params.setdefault("top_n", top_n)
         out.append(REGISTRY[name](**params))
+    # One position per symbol across setups: when several setups fire on a symbol in the same poll, the first in
+    # this order takes it. live.setup_order lists the narrow (fewest-trades) setups first so a subset setup is not
+    # starved by its superset (swarm W4, 2026-10-10: RW6G1 kept 12 of 424 trades behind NS2). Unlisted setups keep
+    # their config order after the listed ones.
+    order = {n: i for i, n in enumerate(cfg.get("live", {}).get("setup_order") or [])}
+    out.sort(key=lambda st: order.get(st.name, len(order)))
     return out

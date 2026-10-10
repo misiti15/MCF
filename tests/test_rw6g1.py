@@ -82,3 +82,15 @@ def test_prior5_warmup_makes_sma50_available_at_the_first_decision_bar():
     st.generate(ctx)
     f = next(v for k, v in _LAB_FRAMES.items() if k[0] == "WARM")
     assert np.isfinite(f["sma50_dist_pct"].iloc[0])     # the 09:35 bar already has a 5-min SMA50
+
+
+def test_eod_net_of_spy():
+    from mcf.report.eod import spy_adjust
+
+    idx = pd.date_range("2026-10-09 10:00", periods=60, freq="1min", tz="America/New_York")
+    spy = pd.DataFrame({"close": np.linspace(600.0, 606.0, 60)}, index=idx)        # SPY +1% over the hour
+    tr = pd.DataFrame({"entry_time": [idx[0]], "exit_time": [idx[-1]], "entry": [100.0], "stop": [99.0], "side": [1],
+                       "shares": [10], "r_multiple": [1.0], "pnl": [10.0], "strategy": ["x"]})
+    a = spy_adjust(tr, spy).iloc[0]
+    assert abs(a.spy_ret - 0.01) < 1e-9 and abs(a.mkt_pnl - 10.0) < 1e-6      # the whole gain was the market
+    assert a.adj_r < 0.01                                                       # nothing left after the hedge cost

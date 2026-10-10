@@ -181,7 +181,7 @@ def report() -> None:
              "or fails. Costs are always in; holdouts are scored once; failures stay listed.", "",
              f"Total ideas: {len(es)} · coded: {sum(1 for e in es if e.get('module'))} · "
              f"failed: {sum(1 for e in es if e['status'] in ('failed', 'holdout_failed'))} · "
-             f"configurations tried (all lineages): {sum(e.get('configs_tried', 0) for e in es)}", "",
+             f"configurations tried (all lineages): {sum(e.get('configs_tried') or 0 for e in es)}", "",
              "A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, "
              "paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look "
              "(t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is "
