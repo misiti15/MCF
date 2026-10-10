@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 266 · coded: 6 · failed: 138 · configurations tried (all lineages): 21893652
+Total ideas: 267 · coded: 6 · failed: 139 · configurations tried (all lineages): 21893652
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -18,6 +18,7 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | probation | L3-gap-slope-lowdist | L3-gapV1+sma20slopepctD10+distlodatrV19-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
 | probation | L3-gap-slope-fromopen | L3-gapV1+sma20slopepctD10+fromOpenV20-short-W4-t1s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
 | probation | L3-gap-slope-rsi5hi | L3-gapV1+sma20slopepctV20+rsi5hi-short-W4-t05s1 | primitives/escalation/layering swarm 2026-10-07 | – | – | – | – | – |
+| holdout_passed | lh-mom-revfilter | Long-hold: 12-1 momentum top-20 excluding the top decile of the 21-day return, weekly rebalance (S6_mom12_1rev_N20_W) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | finalist | rw-vf2_rsis3_fast10 | volume_flip_2 with RSI3 / SMA10 | rule-18 rework (lengths) | – | – | – | – | – |
 | finalist | bdi-rw-gapdn-bounce-flowsell | RW1: gap-down bounce into heavy selling, short 09:50-11:00 | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | finalist | bdi-rw-exhaustion-noon-adv150 | RW2: exhaustion_short opened to 12:00, ADV>=150M | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
@@ -29,7 +30,6 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | finalist | bdi-rw-sma50up-spikefade | RW8: SMA50 up-cross on a >3% up day with RSI14<=30, short | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | finalist | sw-w3-connors-rsi3-daily | Daily: Connors long RSI(3)<5 above SMA200, buy next open, exit first close > SMA5 (max 10d) | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
 | finalist | sw-w3-rev5-k20-daily | Daily: buy bottom-decile 5-day losers at the close, hold 20 sessions | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – |
-| finalist | lh-mom-revfilter | Long-hold: 12-1 momentum top-20 excluding the top decile of the 21-day return, weekly rebalance (S6_mom12_1rev_N20_W) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | rework | bdi-rw-nm-flowsell-rsi65-gapdn-volume | RW lineage near-miss: buyPressure<-0.35 & RSI14>65 & gap<0, 09:50-11:00 short (high volume) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | rework | bdi-rw-nm-ns1-plateau | NS1 (rsi_x40dn+up>2%+rsi5>=80 am long t05s1) fails plateau | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
 | rework | bdi-rw-nm-sma50-flush-long | Oversold SMA50 flush long, 10:30-13:00 (x_sma50_dn & down>1% & RSI14<=30) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – |
@@ -266,6 +266,7 @@ A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, o
 | failed | lh-etf-dualmom-fail | Long-hold: dual momentum (Antonacci GEM) SPY/EFA(/QQQ/IWM) vs BIL, AGG defensive | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | failed | lh-etf-tsmom-rp-near | Long-hold: ETF time-series momentum (3/6/12m, equal / inverse-vol) and risk parity-lite | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | failed | lh-voltarget-near | Long-hold: portfolio volatility targeting (10% / 15%) on SPY, EW universe, momentum, 52wh, low vol | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
+| failed | lh-etf-faber10-locked-control | Long-hold control: E1_faber10_Erisk on the locked block (information only) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – |

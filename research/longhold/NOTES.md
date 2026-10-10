@@ -262,3 +262,25 @@ returns at equal weight.
 - `study.py` (grid, simulator, stats, gates), `diag.py` (diagnostics), `download_extra.py` (extra ETFs),
   `runner_core.py` + `tests/test_longhold_core.py` (pure core of the proposed runner).
 - `data/` (git-ignored): `etf_extra.parquet`, `daily_returns.parquet`, `sim_cache.npz` (~13 MB in total).
+
+## Locked block (rule 19), scored ONCE 2026-10-10 on the lead's authorisation (`score_locked.py`, `locked.json`)
+*Educational only - not financial advice. Backtest on the held-out block 2024-11-01..2025-02-28 (80 sessions,
+18 weeks); same code, rule and costs as the study, with the portfolio carried in from October 2024; only the line that
+zeroes block returns was removed. No parameter was changed. Bar (look 1): active vs the EW universe > 0.*
+
+| series | block return | annualised equiv. | vol | Sharpe | maxDD | turnover (block) | weekly hit |
+|---|---|---|---|---|---|---|---|
+| **S6_mom12_1rev_N20_W** | **+12.5 %** | +45 % | 49 % | 1.01 | -16.9 % | 5.1x (16x/yr) | 56 % |
+| EW universe | +4.6 % | +15 % | 15 % | 1.01 | -6.8 % | 0.18x | 50 % |
+| SPY | +4.8 % | +16 % | 13 % | 1.19 | -4.5 % | 0 | 50 % |
+| E1_faber10_Erisk (control) | +1.6 % | +5.3 % | 8.6 % | 0.64 | -4.0 % | 0.70x | 56 % |
+| E_risk EW | +2.4 % | +7.8 % | 10 % | 0.80 | | | |
+
+- **S6_mom12_1rev_N20_W passes look 1:** active vs the EW universe **+7.9 %** over the block (arithmetic annualised
+  +34 %/yr), vs SPY +7.7 %; beats the EW universe in 61 % of the 18 weeks. The weekly active t is only **0.58**: a
+  four-month block cannot confirm the edge, it only fails to contradict it. Cost over the block 0.5 %.
+- **Control E1_faber10_Erisk:** +1.6 %, behind its E_risk EW benchmark by 0.8 % and SPY by 3.2 %, with a shallower
+  drawdown (-4.0 %). Information only.
+- Unlike W3's daily dip-buying finalists (both failed this block), the finalist is now through every pre-declared
+  gate and its one locked look. Survivorship still inflates the absolute level. Next step per DESIGN.md: dry run,
+  then a paper forward test on its own account.
