@@ -39,6 +39,7 @@ LOCK_A, LOCK_B = S["LOCK_A"], S["LOCK_B"]
 z = np.load(LH / "data" / "sim_cache.npz")
 SER = {k: tuple(z[k]) for k in ("BH_SPY", "BENCH_EW", "S6_mom12_1rev_N20_M", "S1_mom12_1_N50_W")}
 CACHE_IDS = [k for k in z.files if "__" not in k]
+SER["CASH"] = (np.zeros(len(z["BH_SPY"][0])),) * 3
 S["SER"] = SER
 BENCH_OF = {}
 S["BENCH_OF"] = BENCH_OF

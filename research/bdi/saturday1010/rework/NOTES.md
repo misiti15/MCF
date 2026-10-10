@@ -130,3 +130,160 @@ valid2 is a gate, never a ranking input. If nothing passes, nothing is recommend
   [t+1, t+10], E2 = in [t-3, t+10]. B (MOC entry at t, exit t+k): E1 = in [t, t+k], E2 = in [t-3, t+k]. Configs
   that use FINRA or earnings data only take signals dated 2019-01-02 or later (all splits), and are compared with
   the parent on the same 2019+ sample.
+
+## 2. Results (104 new configurations; failures first)
+
+*Educational only - not financial advice. Backtests on daily bars, costs in, locked block 2024-11..2025-02 in no
+figure. A/B in bps per trade net of costs; C in %/yr active vs the EW universe.*
+
+| lineage | new configs | lineage N / t bar | fail | near (failed a gate) | candidate (all gates) |
+|---|---|---|---|---|---|
+| A Connors dip buy | 51 | 115 / 3.08 | 0 | 38 | 13 |
+| B weekly reversal basket | 35 | 47 / 2.78 | 0 | 26 | 9 |
+| C momentum crash guards | 18 | 123 / 3.10 | 0 | 18 | 0 |
+| **total** | **104** | | **0** | **82** | **22** |
+
+**Read this first.** A and B are re-filters of parents that had *already passed* every one of these train/valid
+gates and then failed the locked block. A filter that keeps a large subset of a passing parent will usually pass the
+same gates too, so "candidate" here mostly means "still passes, and the filter did not break it". It is not evidence
+that the filter fixes what went wrong in the locked block. The useful question is what the filter changes against
+the parent on the same sample (2.3).
+
+### 2.1 Failures and near misses
+- **C momentum crash guards: 18 of 18 fail A2 (try-count t), and none beats its parent.**
+  - Parents: S6_mom12_1rev_N20_M t 2.98, S1_mom12_1_N50_W t 2.91.
+  - Every guard *lowers* the train+valid active t. Best: G6 bear-state 2.88/2.70, G7 vol-scaling 2.85/2.84,
+    G5c 2.79/2.41. Worst: G2 to-BIL 1.18/1.12, G4 VIX-pct 1.63/1.35. Train+valid maxDD barely moves (-38..-41 % vs
+    -41 %); only the to-BIL guard cuts it, to -30/-31 %.
+  - Walk-forward share < 0.6 for 6 of the 9 S6M guards.
+  - No Tier-B pass (DSR 0.41-0.77 < 0.95).
+  - Diagnostic: the own-bar momentum proxy correlates 0.90 with FF `Mom` (2,328 days). FF `Mom` averaged -0.8 %/month
+    in the months when G5b was on and +0.9 % when it was off, so the guard does find weak momentum-factor months.
+    Even so, the top-20/50 long-only portfolio's *active* return in those months was not negative enough for
+    skipping them to pay. The worst FF `Mom` months (2023-01 -13.7 %, 2020-04, 2020-11, 2026-07) are rebounds the
+    guards mostly do not flag in time.
+  - **Verdict: the crash-guard idea is retired for these two parents.** The parent S6_mom12_1rev_N20_W
+    (passed look 1) stays as it is.
+- **A, near (38):**
+  - RSI(3)<10 and RSI(2)<5 bases with any filter: t 0.7-2.6 < 3.08. The filters do not lift the looser bases over
+    the bar.
+  - TR>=1.00/1.05 on b35: per trade +155..+400 bps, but valid1 n 51/23 < 100. Backwardation is rare in 2023-24.
+  - Y1 (curve not inverted): valid1 n 82 < 100, because the curve was inverted for almost all of valid1.
+  - Pairs with E2 fail valid1 t (1.2) and excess (<= 0).
+  - noSMA200: t 2.28. noSMA200+TR95: t 1.48.
+- **A, earnings exclusion (2019+ sample):** it *lowers* the per-trade result.
+  - b35: E1 +77.9 / +49.3 / +68.3 and E2 +77.1 / +45.8 / +72.6 (train19 / valid1 / valid2), against the parent on
+    the same sample at +85.7 / +65.1 / +78.3.
+  - Excess falls from +28 to +16 (E1) and +8 (E2) in valid1.
+  - So dips with earnings in or just before the hold are *better* than average, not worse. The exclusion is dropped.
+- **B, near (26):**
+  - The k10 base and its filters all fail the down-month gate (-13..-78 bps).
+  - The earnings filters fail the down-month gate and lower excess (+1..+2 bps in valid1 vs +22 for the parent).
+  - SPY200 fails the down-month gate.
+  - TR95 alone fails valid1 t (1.35). TR100/105 have too few trades, or negative excess, in valid1.
+
+### 2.2 Candidates (all gates pass)
+Full table: `gates_ab.csv`. Sorted by the train+valid t that 1.8 ranks on (train19+valid1 for the 2019+ filters).
+
+| id | train (or train19) | valid1 (n, t) | valid2 (n) | t tr+v1 / bar | excess v1 | down months | down years | WF |
+|---|---|---|---|---|---|---|---|---|
+| A_b35_VP30 | +83.7 | +85.1 (681, 3.04) | +75.8 (693) | 4.84 / 3.08 | +38.7 | +62.5 | +5.4 | 0.73 |
+| A_b35_TR90 | +96.3 | +68.2 (731, 2.41) | +120.0 (415) | 4.71 | +23.0 | +73.7 | +17.3 | 0.75 |
+| A_b35_TR95 | +106.1 | +62.2 (476, 1.88) | +116.0 (267) | 4.48 | +28.0 | +88.7 | +53.0 | 0.89 |
+| A_b35_SV20 (2019+) | +90.9 | +63.3 (940, 2.88) | +89.3 (746) | 4.33 | +25.8 | +59.9 | -57.1 | 0.81 |
+| A_b35_VP50 | +85.6 | +79.6 (486, 2.76) | +96.8 (514) | 4.22 | +24.7 | +61.4 | +5.1 | 0.77 |
+| A_b35_SV10 / SV33 (2019+) | +85.5 / +87.2 | +62.4 / +64.4 | +79.4 / +103.3 | 4.22 / 4.21 | +25 | +51 / +62 | -58 / -65 | 0.77 / 0.82 |
+| A_b35_VP50+SV20 (2019+) | +109.4 | +81.8 (416, 2.72) | +109.2 (427) | 3.76 | +25.3 | +76.6 | -55.0 | 0.82 |
+| A_b35_SPY200 | +62.1 | +68.2 (1030, 3.59) | +54.7 (806) | 3.74 | +38.0 | +24.2 | -6.5 | 0.73 |
+| A_b35_VP70 | +82.0 | +68.7 (365, 1.97) | +100.0 (365) | 3.64 | +19.8 | +73.8 | +12.1 | 0.60 |
+| A_b35_TR95+SV20 (2019+) | +120.3 | +63.2 (406, 1.80) | +122.0 (219) | 3.58 | +26.1 | +97.8 | +9.3 | 0.86 |
+| A_b35_E1 / E2 (2019+) | +77.9 / +77.1 | +49.3 / +45.8 | +68.3 / +72.6 | 3.52 / 3.35 | +16.0 / +7.5 | +41 / +36 | -83 / -90 | 0.75 |
+| *parent A_b35 (control)* | *+74.0* | *+65.1 (1113, 3.19)* | *+78.3 (898)* | *5.07* | *+28.3* | *+50.7* | *-0.5* | *0.74* |
+| **B_k20_TR95+SV20 (2019+)** | +387.8 | +256.0 (1374, 1.51) | +317.5 (2062) | 4.01 / 2.78 | +114.3 | +170.7 | +165.4 | 0.75 |
+| B_k20_TR90 | +258.2 | +211.8 (4244, 2.34) | +294.5 (4032) | 3.87 | +52.8 | +118.1 | +82.3 | 0.79 |
+| B_k20_VP70 | +250.0 | +426.1 (1769, 3.20) | +285.1 (3766) | 3.63 | +66.8 | +169.1 | +56.4 | 0.67 |
+| B_k20_VP50 | +201.4 | +319.2 (2771, 3.59) | +297.2 (5162) | 3.44 | +67.1 | +100.2 | -0.6 | 0.70 |
+| B_k20_VP50+SV20 (2019+) | +250.2 | +332.6 (2309, 3.83) | +308.4 (4388) | 3.24 | +83.7 | +102.1 | -38.8 | 0.69 |
+| B_k20_SV33 / SV10 / SV20 (2019+) | +191 / +194 / +192 | +187 / +186 / +184 | +262 / +253 / +253 | 3.18 / 3.15 / 3.14 | +18..+23 | +61..+65 | ~0 | 0.65-0.69 |
+| B_k20_VP30 | +178.6 | +259.3 (4000, 2.60) | +294.0 (6930) | 3.15 | +47.1 | +81.5 | +5.5 | 0.69 |
+| *parent B_k20 (control)* | *+164.3* | *+188.7 (8391, 2.19)* | *+245.1 (8196)* | *3.56* | *+21.7* | *+67.5* | *+11.6* | *0.67* |
+
+### 2.3 What the new data adds over the parent (same trades, `checks_ab.py` -> `checks_ab.csv`; nothing new tried)
+- **A (Connors) + VIX filters: market timing, not stock selection.**
+  - The VIX filters raise net bps (VP30 +82.5 vs parent +72.0; TR90 +93.0).
+  - They do not raise the excess over the universe. Trades kept by VP30 have excess +20.9, trades removed +27.6. For
+    TR90, kept +18.1 and removed +23.5.
+  - Buying dips when the VIX is elevated earns more because the *market* rebounds afterwards (beta), not because the
+    dip names do better than other stocks.
+  - **valid2 excess of A_b35_VP30 is -4.6 bps** (the gate only checks train and valid1).
+  - 2022 is still negative (VP30 -47.7, TR90 -24.7 bps/trade), and 2026 YTD is weak (+19.7 / +15.0).
+- **B (reversal basket) + VIX term structure: stock-level improvement.**
+  - TR90 keeps 22,109 of 41,778 trades. Excess of kept trades is **+67.0 bps** against **+15.7** for the removed
+    ones. Net is +255.9 against +128.4.
+  - TR95+SV20 (2019+): kept excess +56.1 against removed +28.8.
+  - This fits the liquidity-provision story: short-term losers rebound more, relative to other stocks, when the VIX
+    curve is flat or inverted.
+  - The SVR filter alone changes almost nothing (excess +18..+23 vs parent +22).
+- **Concentration:**
+  - ex-best-session: A_b35_VP30 +72.0, B_k20_TR95+SV20 +338.6.
+  - Busiest session: 2.5 % (A, 2021-01-27) and 1.1 % (B, 2026-07-30).
+  - At 2x costs: +76.2 / +342.1 bps.
+  - But B_k20_TR95+SV20 enters on only **364 sessions** (2019+), in clusters, and its 20-day holds overlap. The
+    block-clustered t (blocks of 40 sessions) in valid2 is **1.07**, against a day-clustered 2.80
+    (`locked_dryrun.json`). Its effective sample is a few dozen stress episodes.
+- **Survivorship (unchanged from W3):** both are long dip/loser trades on today's survivors, the trade that
+  survivorship flatters most.
+
+## 3. Recommendation (rule 1.8, fixed before scoring)
+One per lineage, ranked by train+valid t among candidates. Both A and B are **look 2** for their lineage (bar: exp > 0
+and day-clustered t >= 1.5 on the block). A pass goes to paper as probation (rule 18).
+1. **A: `A_b35_VP30`** (t 4.84). Close > SMA200 and Wilder RSI(3) < 5 at the close of t, and the VIX close at t at or
+   above its 30th percentile of the last 252 VIX closes. Buy at the next open (MOO), sell at the first close > SMA5,
+   with a 10-session cap.
+   - Rule caveat: what it adds over the failed parent is mainly market timing, and its valid2 excess is negative
+     (2.3). I expect it to behave like the parent on the block.
+2. **B: `B_k20_TR95+SV20`** (t 4.01 on 2019-01..2024-10).
+   - Rule: bottom decile of the 5-day return among ELIG200 at the close of t. The previous session's VIX/VIX3M must
+     be >= 0.95. Skip names whose previous-session 20-day FINRA short-volume ratio is in the day's top 20 %. Signals
+     from 2019 on. Buy MOC at t, sell MOC at t+20.
+   - Under the rule it outranks the full-sample `B_k20_TR90` (t 3.87, valid1 t 2.34, n 22k, WF 0.79). TR95+SV20 has
+     the higher t on a shorter sample, but a valid1 t of only 1.51 and few independent episodes. TR90 is the more
+     robust profile, and it is *not* recommended under the fixed rule. If the lead prefers it, that is a deviation
+     from 1.8 and should be recorded as one.
+3. **C: nothing.** No guard passes, and none beats its parent.
+
+Command (lead, once):
+```
+for f in cboe_vol_indices_lockedblock finra_shvol_2024_lockedblock finra_shvol_2025_lockedblock; do
+  git show origin/research-data:$f.parquet > research/bdi/saturday1010/rework/data/$f.parquet; done
+MCF_HIST_ALLOW_LOCKED=1 python research/bdi/saturday1010/rework/score_locked.py   # -> locked.json
+```
+The dry run (`--dry-run`, open data, valid2 window) reproduces gates_ab.csv exactly: A n 693, +75.8 bps; B n 2,062,
++317.5 bps.
+
+## 4. What a live version would need (on top of W3 NOTES section 3)
+- Everything in W3 section 3: a daily job outside market hours, MOO/MOC orders, positions tagged and kept out of
+  the intraday flatten, multi-day journaling. The intraday runner cannot hold overnight.
+- **A_b35_VP30:** an evening VIX fetch (CBOE daily close, after 16:15 ET) and its 252-day history. The signal is
+  computed after the close, and the MOO order goes in before 09:28.
+- **B_k20_TR95+SV20:**
+  - The MOC entry uses the *previous* session's VIX/VIX3M and FINRA files (both published in the evening), so no
+    intraday data is needed. The stock signal still uses day t's close, so it needs a 15:50 snapshot plus CLS
+    orders, as in W3.
+  - A FINRA daily short-volume download (CNMS file, about 18:00 ET).
+  - In stress weeks it opens hundreds of concurrent positions. A capped top-N or a small equal-weight basket would be
+    a new configuration and needs its own run.
+
+## 5. Files
+- `study_ab.py`: grid A/B, writes `results_ab.csv` and `gates_ab.csv`.
+- `study_c.py`: grid C, writes `results_c.csv`, `gates_c.csv` and `diag_c.json`.
+- `checks_ab.py`: writes `checks_ab.csv`.
+- `score_locked.py`: the lead's one-time scorer. Its dry run writes `locked_dryrun.json`.
+- `data/` (git-ignored, about 82 MB): the research-data files. No `*_lockedblock` file was fetched.
+
+## Lead: one-time locked-block score (2026-10-10, look 2 for both lineages; bar exp > 0 and t >= 1.5)
+| id | n | net bps | t (day) | t (block) | excess bps | sessions | verdict |
+|---|---|---|---|---|---|---|---|
+| A_b35_VP30 | 329 | -103.4 | -1.58 | -1.25 | -37.0 | 53 | FAIL |
+| B_k20_TR95+SV20 | 341 | +271.6 | 0.94 | 0.61 | +203.3 | 11 | FAIL (positive, but 11 entry sessions) |
+Next look on either lineage needs t >= 2.0. Source: locked.json.
