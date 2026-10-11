@@ -155,3 +155,9 @@ the repository is public. Before transcription runs, the owner chooses one of:
 2. Owner-supplied transcripts (e.g. via Gemini), kept in that private repository.
 
 Only derived, paraphrased setup rules (no verbatim transcript text) go into this public repository.
+
+### Owner chose option 1 (2026-10-11): private repository
+- The workflow pushes transcripts, status and index only to the private repo `misiti15/mcf-private`. A different repo can be set with the repository variable `CWT_PRIVATE_REPO`.
+- It authenticates with the secret `CWT_PRIVATE_TOKEN`: a fine-grained token with Contents read/write on that one repo.
+- Shard artifacts contain transcript text. They are kept for 1 day at most and deleted by the publish job right after the push.
+- Without the secret, only `mode=list` runs.
