@@ -102,3 +102,23 @@ At most 2 finalists go to the lead for the locked block (Tier = candidate only).
   over the **16:01-16:54** bars. If there is no 16:55 bar, the AH entry uses the last bar close from 16:50-16:55;
   with none, the event has no AH entry and is dropped from family A (for both entries, so AH and OPEN trade the same
   events). The signal price is the last bar close at or before 16:54 (from 16:30 on); none -> dropped.
+
+## 3. Pre-declaration, part 3 (EPS surprise / revenue; written 2026-10-11 before that data exists)
+Scored once `earnings_yf.parquet` and `sec_revenue_q.parquet` land on `research-data` (never their
+`*_lockedblock` files). Same splits, costs, metric, statistics and gates as 1.4-1.7.
+- **Timing**: Yahoo report hour -> bmo (hour < 9:30: R = d), amc (>= 16:00: R = d+1), unknown/12 AM/intraday ->
+  the 1.2 volume proxy. Event match: Yahoo date within +-3 calendar days of the calendar date; else the Yahoo row
+  is its own event. Surprise_pct is clipped to +-200 %.
+- **E, strictly on EPS** (54): side {L after beat, S after miss} x X {0, 5, 10 %} (beat: surprise >= X; X = 0 means
+  > 0) x entry {OPEN_R = O[R], the first regular open after the release, before the reaction day is seen; CLOSE_R;
+  OPEN_R1 = O[R+1]} x H {1, 5, 20} (exit C[R+H-1] for OPEN_R so H1 is the reaction day itself; else C[R+H]).
+- **EB, EPS and price agree or disagree** (24): {AGREE: beat >= 5 % and REACT >= +4 % (L) / miss <= -5 % and
+  REACT <= -4 % (S); DISAGREE: beat >= 5 % but REACT <= -4 % (L, reversal bet) / miss <= -5 % but REACT >= +4 %
+  (S)} x entry {CLOSE, OPEN} x H.
+- **RV, revenue** (36): revenue matched to the event by fiscal period end within 0-100 days before d.
+  {EPS beat (>= 0) and rev_beat_proxy > 0 (growth accelerated); EPS beat and rev_beat_proxy <= 0; rev_beat_proxy > 0
+  alone} (S mirrored: miss / deceleration) x entry {OPEN_R, CLOSE_R} x H. No consensus revenue exists in free data:
+  the proxy is growth acceleration, not a revenue surprise.
+- **SH, surprise history** (12): previous 3 surprises with the current sign x side x entry {OPEN_R, CLOSE_R} x H.
+- **TR, part-2 rework with true timing** (12): U RUN5down / RUN20down, long, theta 4 %, entry {CLOSE, OPEN} x H.
+- Part 3 N = 138; lineage N = 264 + 138 = **402 -> bar t >= sqrt(2 ln 402) = 3.46**.

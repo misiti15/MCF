@@ -51,7 +51,7 @@ def load_lists():
 def main():
     lists = load_lists()
     l3 = {f.name[:-6]: modinfo(f) for f in FD.glob("L3-*-FD.py")}
-    cols = ["symbol", "date", "tod", "close", "atr_d", "fromOpen", "vwapDistPct", "gap", "sma20_slope_pct", "rsi5",
+    cols = ["symbol", "date", "tod", "close", "atr_d", "fromOpen", "vwapDistPct", "gap", "sma20_slope_pct", "rsi5", "dist_lod_atr",
             "r_short_t05s1", "win_short_t05s1", "r_short_t1s1", "win_short_t1s1", "r_short_t1s05", "win_short_t1s05"]
     parts, ctx, l3p = [], [], []
     keyl = set(lists["symbol"].astype(str) + "|" + lists["date"].astype(str) + "|" + lists["tod"].astype(int).astype(str))

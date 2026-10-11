@@ -158,4 +158,9 @@ unless something passes.
 One `ix-` entry per lineage (failures included) with configs_tried; atomic single-line appends after re-reading the file.
 
 ### 1.9 Amendments
-(none yet)
+- 2026-10-11 (before any scoring; data build only): the dense 5-minute arrays hold 78 bars (bar-close 09:35..16:00,
+  390 minutes / 5); the 16:00 bar is not used as an exit (exits are the 15:55 bar). Integrity check result
+  (`parity.json`): close and fromOpen match the frames on 600,000 sampled rows (share 1.0). The vwapDistPct of SPY /
+  QQQ / sector ETFs for the 46 lab lists is read from the frames directly, so the rebuilt VWAP is used only for the
+  orb20_a / intraday_momentum context (entry minutes outside the frames' 09:50-15:00).
+- 2026-10-11 (before scoring the L3 lists): the L3 masks also read `dist_lod_atr`, added to the loaded columns.
