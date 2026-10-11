@@ -39,7 +39,7 @@ def load_lists():
     tt = pd.read_parquet(ROOT / "research" / "bdi" / "timeofday" / "data" / "trades.parquet")
     cur = tt[(tt["set"] == "current") & tt["setup"].isin(PRIMARY)].copy()
     cur["list"] = cur["setup"] + "-cur"
-    fd_names = {f.name[:-6] for f in FD.glob("*-FD.py")}
+    fd_names = {f.name[:-3] for f in FD.glob("*-FD.py")}
     full = tt[(tt["set"] == "full")].copy()
     full = full[(full["setup"] + "-FD").isin(fd_names)]
     full["list"] = full["setup"] + "-FD"
@@ -51,7 +51,7 @@ def load_lists():
 def main():
     lists = load_lists()
     l3 = {f.name[:-6]: modinfo(f) for f in FD.glob("L3-*-FD.py")}
-    cols = ["symbol", "date", "tod", "close", "atr_d", "fromOpen", "vwapDistPct", "gap", "sma20_slope_pct", "rsi5",
+    cols = ["symbol", "date", "tod", "close", "atr_d", "fromOpen", "vwapDistPct", "gap", "sma20_slope_pct", "rsi5", "dist_lod_atr",
             "r_short_t05s1", "win_short_t05s1", "r_short_t1s1", "win_short_t1s1", "r_short_t1s05", "win_short_t1s05"]
     parts, ctx, l3p = [], [], []
     keyl = set(lists["symbol"].astype(str) + "|" + lists["date"].astype(str) + "|" + lists["tod"].astype(int).astype(str))
@@ -63,7 +63,7 @@ def main():
             pre = df["gap"].to_numpy(float) <= -2.6573517322540283
             t = gates.lab_trades(df, m.mask(df) & pre & (df["tod"].to_numpy() >= 950) & (df["tod"].to_numpy() <= 1500),
                                  m.SIDE, m.GEOM, tod_costs=False)
-            t["list"], t["side"] = nm, m.SIDE
+            t["list"], t["side"] = nm + "-FD", m.SIDE
             l3p.append(t)
         l3k = set().union(*[set(x["symbol"].astype(str) + "|" + x["date"].astype(str) + "|" + x["tod"].astype(int).astype(str))
                             for x in l3p[-len(l3):]])
