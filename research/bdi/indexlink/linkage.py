@@ -57,13 +57,15 @@ def llcorr(a):
 
 ll_all = llcorr(LL.sum(3))                          # [sym, index, lag]
 ll_split = llcorr(LL)                               # [sym, index, lag, split]
+_am = pd.read_csv(ROOT / "research" / "swarm1010" / "w3_daily" / "assets_meta.csv")
+META_ETF = set(_am.loc[_am["is_etf"].astype(str) == "True", "symbol"])
 pitsec = np.load(ROOT / "research" / "swarm1010" / "w2_neutral" / "data" / "betas.npz")["sec"]
 rows = []
 for j, s in enumerate(syms):
     y_d = R[:, j]
     if np.isfinite(y_d).sum() < 60:
         continue
-    row = {"symbol": s, "is_etf": s in W2ETFS, "n_days": int(np.isfinite(y_d).sum()),
+    row = {"symbol": s, "is_etf": (s in W2ETFS) or (s in META_ETF), "n_days": int(np.isfinite(y_d).sum()),
            "adv20_med_musd": round(float(np.nanmedian(adv[:, j])) / 1e6, 1)}
     for ix in ("SPY", "QQQ", "IWM", "DIA", "VXX", "TLT", "GLD"):
         b, c = bc(y_d, R[:, si[ix]])
@@ -184,6 +186,11 @@ for c_i, nm in enumerate(cfgs):
                 "net_train": round(float(net_d[~vv].sum() / n_d[~vv].sum()), 2), "net_valid": round(float(net_d[vv].sum() / n_d[vv].sum()), 2),
                 "up_net": rr["up"], "flat_net": rr["flat"], "down_net": rr["down"],
                 "cost_bps": round(float((g_d.sum() - net_d.sum()) / N), 2)})
+TS = z["TS"]
+stock = np.array([(s not in W2ETFS) and (s not in META_ETF) for s in syms])
+for k, r in enumerate(out):    # robustness: pooled mean over operating companies only (leveraged / other ETFs out)
+    n_, net_, g_ = TS[k, stock, 0].sum(), TS[k, stock, 1].sum(), TS[k, stock, 2].sum()
+    r["stocks_only_trades"], r["stocks_only_gross_bps"], r["stocks_only_net_bps"] = int(n_), round(float(g_ / n_), 2), round(float(net_ / n_), 2)
 pd.DataFrame(out).to_csv(HERE / "leadlag_results.csv", index=False)
 print(pd.DataFrame(out).to_string())
 print(json.dumps({k: v for k, v in summ.items() if not isinstance(v, dict) or "stocks_adv95" in v}, indent=0)[:4000])

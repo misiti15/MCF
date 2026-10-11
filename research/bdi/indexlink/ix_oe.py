@@ -14,7 +14,7 @@ TS = [945, 950, 1000, 1015, 1030, 1100, 1200, 1300, 1400]
 THR = [0.2, 0.4, 0.6]
 HOLDS = ["close", "30", "60"]
 INSTR = ["SPY", "QQQ", "IWM", "DIA", "SECT", "HIBETA", "LINKED"]
-N_OE = 2995
+N_OE = 3205  # 2,995 declared + 210 causal part-C variants (amendment 1.9, 2026-10-11)
 TREQ = max(2.0, gates.t_required(N_OE))
 REG = lib.regimes()
 
@@ -79,7 +79,9 @@ def main():
     spy = ei["SPY"]
     spy_o = E_open[spy]
     pb, R, adv = pit_betas(syms, dates)
-    nonetf = np.array([s not in W2ETFS for s in syms])
+    am = pd.read_csv(ROOT / "research" / "swarm1010" / "w3_daily" / "assets_meta.csv")
+    meta_etf = set(am.loc[am["is_etf"].astype(str) == "True", "symbol"])
+    nonetf = np.array([(s not in W2ETFS) and (s not in meta_etf) for s in syms])   # amendment 1.9: W3 ETF tag too
     # point-in-time baskets (30 names, adv20 >= 95M)
     baskets = {}
     for nm, key in (("HIBETA", "beta_spy"), ("LINKED", "corr_spy")):
@@ -176,27 +178,73 @@ def main():
                                  "control": False, "diag": False,
                                  **stat(rr, dates, {"vs_control_t": welch(rr, L), "control_mean": round(float(np.nanmean(L)), 4)})})
     print("B done", flush=True)
-    # ---------------- C: random entry time (every 5-min bar close 09:50..15:00 equally likely; one average per session)
+    # ---------------- C: random entry time (every 5-min bar close 09:50..15:00)
+    # C (as declared): one equal-weight average per session over the qualifying bars. AMENDMENT 1.9: this weights each
+    # bar by 1 / (number of qualifying bars that session), known only at the close -> look-ahead; kept for the record,
+    # flagged diag. Causal variants: Cpool (every qualifying bar a trade of fixed size, day-clustered), Cfirst (first
+    # qualifying bar per session), Crand (one random bar per session, seed 20261011, same draw for every config).
     Tc = [t for t in range(950, 1505, 5) if t % 100 < 60]
+    rng = np.random.default_rng(20261011)
+    U = rng.integers(0, len(Tc), ND)
+    regd = np.array([REG["regime"].get(d, "") for d in dates])
+
+    def pooled(M, msk, ctrl_vals=None):
+        dd = np.broadcast_to(np.arange(ND)[None, :], M.shape)
+        ok = msk & np.isfinite(M)
+        v, di_ = M[ok], dd[ok]
+        if len(v) < 30:
+            return {"n": int(len(v))}
+        tr = pd.DataFrame({"date": np.asarray(dates, dtype=object)[di_], "symbol": "x", "r": v})
+        sm = gates.summary(tr)
+        rs = gates.regime_split(tr, REG, min_n=1)
+        wf = gates.walk_forward(tr, exclude_months=lib.LOCKED_MONTHS, min_n=5)
+        out = {"n": sm["n"], "sessions": sm["days"], "win": sm["win_rate"], "mean": sm["exp_r"], "median": round(float(np.median(v)), 4),
+               "t": sm["t"], "up": rs["up"].get("exp_r"), "up_n": rs["up"].get("n", 0), "flat": rs["flat"].get("exp_r"),
+               "down": rs["down"].get("exp_r"), "down_n": rs["down"].get("n", 0), "wf": wf["share_positive"],
+               "ex_best_day": sm["ex_best_day"]}
+        if ctrl_vals is not None:
+            se_c = gates.summary(pd.DataFrame({"date": np.asarray(dates, dtype=object)[np.broadcast_to(np.arange(ND)[None, :], M.shape)[np.isfinite(ctrl_vals)]],
+                                               "symbol": "x", "r": ctrl_vals[np.isfinite(ctrl_vals)]}))
+            out["control_mean"] = se_c["exp_r"]
+            out["vs_control_t"] = round((sm["exp_r"] - se_c["exp_r"]) / np.hypot(sm["se"], se_c["se"]), 2)
+        return out
+
+    def firstbar(M, msk):
+        has = msk.any(0)
+        k = np.argmax(msk, 0)
+        return np.where(has, M[k, np.arange(ND)], np.nan)
+
+    def randbar(M, msk):
+        return np.where(msk[U, np.arange(ND)], M[U, np.arange(ND)], np.nan)
+
     for inst in INSTR:
         L = np.vstack([get(inst, T, "close", 1) for T in Tc])        # [bars, ND]
-        S = -L - 2 * 0  # placeholder replaced below
         S = np.vstack([get(inst, T, "close", -1) for T in Tc])
         F = np.vstack([spy_fo[T] for T in Tc])
         ctrlL, ctrlS = np.nanmean(L, 0), np.nanmean(S, 0)
-        rows.append({"part": "C", "T": "random", "inst": inst, "hold": "close", "cond": "all", "action": "uncond_long",
-                     "control": True, "diag": False, **stat(ctrlL, dates)})
-        rows.append({"part": "C", "T": "random", "inst": inst, "hold": "close", "cond": "all", "action": "uncond_short",
-                     "control": True, "diag": False, **stat(ctrlS, dates)})
+        allm = np.ones_like(L, bool)
+        for nm, M, ctrl in (("uncond_long", L, ctrlL), ("uncond_short", S, ctrlS)):
+            base = {"T": "random", "inst": inst, "hold": "close", "cond": "all", "action": nm, "control": True}
+            rows.append({"part": "C", **base, "diag": True, "note": "lookahead_weight", **stat(ctrl, dates)})
+            rows.append({"part": "Cpool", **base, "diag": False, **pooled(M, allm)})
+            rows.append({"part": "Cfirst", **base, "diag": False, **stat(M[0], dates)})
+            rows.append({"part": "Crand", **base, "diag": False, **stat(M[U, np.arange(ND)], dates)})
         for x in (0.2, 0.4):
             for cond, msk, acts in ((f"dip{x}", F <= -x, (("buy_dip", L, ctrlL), ("sell_follow", S, ctrlS))),
                                     (f"rally{x}", F >= x, (("buy_follow", L, ctrlL), ("sell_fade", S, ctrlS)))):
                 for act, M, ctrl in acts:
                     with np.errstate(invalid="ignore"):
                         rr = np.nanmean(np.where(msk, M, np.nan), 0)
-                    rows.append({"part": "C", "T": "random", "inst": inst, "hold": "close", "cond": cond, "action": act,
-                                 "control": False, "diag": False,
+                    base = {"T": "random", "inst": inst, "hold": "close", "cond": cond, "action": act, "control": False}
+                    rows.append({"part": "C", **base, "diag": True, "note": "lookahead_weight",
                                  **stat(rr, dates, {"vs_control_t": welch(rr, ctrl), "control_mean": round(float(np.nanmean(ctrl)), 4)})})
+                    rows.append({"part": "Cpool", **base, "diag": False, **pooled(M, msk, M)})
+                    f, f0 = firstbar(M, msk), M[0]
+                    rows.append({"part": "Cfirst", **base, "diag": False,
+                                 **stat(f, dates, {"vs_control_t": welch(f, f0), "control_mean": round(float(np.nanmean(f0)), 4)})})
+                    rb, r0 = randbar(M, msk), M[U, np.arange(ND)]
+                    rows.append({"part": "Crand", **base, "diag": False,
+                                 **stat(rb, dates, {"vs_control_t": welch(rb, r0), "control_mean": round(float(np.nanmean(r0)), 4)})})
     print("C done", flush=True)
     # ---------------- diagnostics: SPY rest-of-day on move-to-T; entry-delay effect
     diag = {}
@@ -283,7 +331,7 @@ def finalize(out):
     cand = (~out["control"].astype(bool)) & (~out["diag"].astype(bool)) & (out["n"] >= 100) & (out["mean"] > 0) \
         & (out["up"].fillna(-1) > 0) & (out["down"].fillna(-1) > 0) & (out["t"].fillna(0) >= TREQ) \
         & (out["vs_control_t"].fillna(0) >= 2.0) & (out["wf"].fillna(0) >= 0.6) & (out["ex_best_day"].fillna(-1) > 0) \
-        & ((out["part"] == "C") | (out["part"] == "D") | (out["plateau_ok"] == True))  # noqa: E712
+        & ((out["part"].isin(["Cpool", "Cfirst", "Crand", "D"])) | (out["plateau_ok"] == True))  # noqa: E712
     out["candidate"] = cand
     out.to_csv(HERE / "oe_results.csv", index=False)
     print("configs", int(len(out)), "candidates", int(cand.sum()), flush=True)
