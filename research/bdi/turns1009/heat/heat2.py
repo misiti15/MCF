@@ -28,8 +28,43 @@ BASE_F = (COMP + ["candleHeat", "heat", "heat_v2", "dh1", "d3_v0", "max6_v0", "m
           + [c for c in RAWC if c not in ("volumeRatio", "volumeSurge")]
           + ["lvr", "lvs", "mom_atr", "fo_atr", "tod1", "tod2", "tod3", "tod4", "tod5"])
 MKT_F = ["spy_heat", "spy_fo", "spy_mom", "breadth", "rel_fo", "rel_mom"]
-FEATS = BASE_F + MKT_F
-NO_MKT = [FEATS.index(f) for f in BASE_F]
+CTX_F = ["pd_range_atr", "pd_cloc", "pd_ret", "ret5d", "ret12_atr", "ret24_atr", "hi24_atr", "lo24_atr", "hod_tests",
+         "lod_tests"]
+FEATS = BASE_F + (CTX_F if sh.MODE == "P" else []) + MKT_F
+NO_MKT = [i for i, f in enumerate(FEATS) if f not in MKT_F]
+TAG = sh.TAG
+_DAILY = {}
+
+
+def context(df: pd.DataFrame) -> pd.DataFrame:
+    """Amendment A1 context block: previous day and previous hours (causal)."""
+    if "d" not in _DAILY:
+        d = sh.daily_table()
+        _DAILY["d"] = d
+    d = _DAILY["d"]
+    df = df.merge(d, on=["symbol", "date"], how="left")
+    df["pd_range_atr"] = ((df.pH - df.pL) / df.atr_d).astype("float32")
+    df["pd_cloc"] = ((df.pC - df.pL) / (df.pH - df.pL).replace(0, np.nan)).astype("float32")
+    df["pd_ret"] = ((df.pC / df.pO - 1) * 100).astype("float32")
+    df["ret5d"] = ((df.pC / df.pC5 - 1) * 100).astype("float32")
+    gs = df.groupby("symbol", sort=False)
+    df["ret12_atr"] = ((df.close - gs.close.shift(12)) / df.atr_d).astype("float32")
+    df["ret24_atr"] = ((df.close - gs.close.shift(24)) / df.atr_d).astype("float32")
+    hi = gs.high.rolling(24, min_periods=1).max().reset_index(level=0, drop=True)
+    lo = gs.low.rolling(24, min_periods=1).min().reset_index(level=0, drop=True)
+    df["hi24_atr"] = ((hi - df.close) / df.atr_d).astype("float32")
+    df["lo24_atr"] = ((df.close - lo) / df.atr_d).astype("float32")
+    g = df.groupby(["symbol", "date"], sort=False)
+    rmax = g.high.cummax()
+    rmin = g.low.cummin()
+    pmax = rmax.groupby([df.symbol, df.date], sort=False).shift(1)
+    pmin = rmin.groupby([df.symbol, df.date], sort=False).shift(1)
+    tol = 0.025 * df.atr_d
+    th = ((df.high >= pmax - tol) & (df.high <= pmax)).astype("int16")
+    tl = ((df.low <= pmin + tol) & (df.low >= pmin)).astype("int16")
+    df["hod_tests"] = th.groupby([df.symbol, df.date], sort=False).cumsum().astype("float32")
+    df["lod_tests"] = tl.groupby([df.symbol, df.date], sort=False).cumsum().astype("float32")
+    return df.drop(columns=["pH", "pL", "pC", "pO", "pC5"])
 TARGETS = {"A": ["pr_long", "pr_short"], "B": ["bot_c", "top_c"]}   # A: tradeable rows, B: + turn-eligible rows
 MODELS = [(m, side, fs) for m in ("M1", "M2") for side in ("long", "short") for fs in ("full", "nomkt")]
 QS = (0.99, 0.995, 0.998)
@@ -55,6 +90,8 @@ def features(month: str):
     df = df.merge(br, left_on=["date", "tod"], right_index=True, how="left")
     df["rel_fo"] = (df.fromOpen - df.spy_fo).astype("float32")
     df["rel_mom"] = (df.momentum - df.spy_mom).astype("float32")
+    if sh.MODE == "P":
+        df = context(df)
     g = df.groupby(["symbol", "date"], sort=False)
     df["fwd6"] = (g.close.shift(-6) / df.close - 1).astype("float32")
     df["spy_fwd6"] = (df.groupby(["symbol", "date"], sort=False).spy_close.shift(-6) / df.spy_close - 1).astype("float32")
@@ -130,7 +167,7 @@ def main():
                 S[f"sy_{t}"], S[f"xy_{t}"] = y.sum(), v
             acc[(m, key)] = S
             del Zm
-        smp[m] = Z[A][rng.random(A.sum()) < 0.04].astype(np.float32)
+        smp[m] = Z[A][rng.random(A.sum()) < 0.02].astype(np.float32)
         if m <= TRAIN_END:
             f, s = df.fwd6.to_numpy(float), df.spy_fwd6.to_numpy(float)
             ok = A & np.isfinite(f) & np.isfinite(s)
@@ -162,7 +199,7 @@ def main():
         return {k: (Z[:, c] - mu.astype(np.float32)) @ w.astype(np.float32) for k, (c, w, mu, _) in models.items()}
 
     def thresholds(models, mlist):
-        Zs = np.concatenate([smp[m] for m in mlist]).astype(np.float64)
+        Zs = np.concatenate([smp[m] for m in mlist])
         sc = scores(models, Zs)
         return {k: {q: float(np.quantile(v, q)) for q in QS} for k, v in sc.items()}
 
@@ -181,7 +218,7 @@ def main():
         top = np.argsort(-np.abs(wz))[:12]
         wrep["-".join(k)] = [(names[j], round(float(wz[j]), 5)) for j in top]
     json.dump({"weights_std_top12": wrep, "beta_spy": beta, "lo": lo.tolist(), "hi": hi.tolist(), "feats": FEATS},
-              open(RES / "heat2_model.json", "w"), indent=1)
+              open(RES / (TAG + "heat2_model.json"), "w"), indent=1)
     # ---------------- pass 3: score, trade, correlate
     accT, accW = Acc(), Acc()
     corr_rows = []
@@ -216,17 +253,17 @@ def main():
                     accW.add_trades(f"{mod}-{side}-{fs}-q{q}", df, v >= thr[k][q], side)
         print("pass3", m, f"{time.time() - t0:.0f}s", flush=True)
         del df, Z
-    pd.concat(accT.days).to_csv(RES / "heat2_days.csv.gz", index=False)
-    pd.concat(accT.turns).to_csv(RES / "heat2_turns.csv", index=False)
-    pd.concat(accW.days).to_csv(RES / "heat2_wf_days.csv.gz", index=False)
-    pd.DataFrame(corr_rows).to_csv(RES / "heat2_corr.csv", index=False)
+    pd.concat(accT.days).to_csv(RES / (TAG + "heat2_days.csv.gz"), index=False)
+    pd.concat(accT.turns).to_csv(RES / (TAG + "heat2_turns.csv"), index=False)
+    pd.concat(accW.days).to_csv(RES / (TAG + "heat2_wf_days.csv.gz"), index=False)
+    pd.DataFrame(corr_rows).to_csv(RES / (TAG + "heat2_corr.csv"), index=False)
     report()
 
 
 def report():
     reg = regimes()
-    days = pd.read_csv(RES / "heat2_days.csv.gz")
-    wfd = pd.read_csv(RES / "heat2_wf_days.csv.gz")
+    days = pd.read_csv(RES / (TAG + "heat2_days.csv.gz"))
+    wfd = pd.read_csv(RES / (TAG + "heat2_wf_days.csv.gz"))
     for d in (days, wfd):
         d["date"] = pd.to_datetime(d.date).dt.date
         d["split"] = np.where(pd.to_datetime(d.date).dt.strftime("%Y-%m") <= TRAIN_END, "train", "valid")
@@ -248,13 +285,13 @@ def report():
                         "wf_exp_up": s.get("exp_up"), "wf_exp_down": s.get("exp_down")})
         rows.append(rec)
     out = pd.DataFrame(rows).sort_values("valid_exp_r", ascending=False)
-    out.to_csv(RES / "heat2_summary.csv", index=False)
-    c = pd.read_csv(RES / "heat2_corr.csv")
+    out.to_csv(RES / (TAG + "heat2_summary.csv"), index=False)
+    c = pd.read_csv(RES / (TAG + "heat2_corr.csv"))
     c["split"] = np.where(c.month <= TRAIN_END, "train", "valid")
     g = c.groupby(["model", "y", "split"])[["n", "sx", "sy", "sxx", "syy", "sxy"]].sum()
     cor = (g.sxy / g.n - g.sx * g.sy / g.n ** 2) / np.sqrt((g.sxx / g.n - (g.sx / g.n) ** 2) * (g.syy / g.n - (g.sy / g.n) ** 2))
     cor = cor.unstack(["split", "y"]).round(4)
-    cor.to_csv(RES / "heat2_corr_summary.csv")
+    cor.to_csv(RES / (TAG + "heat2_corr_summary.csv"))
     with pd.option_context("display.width", 250, "display.max_rows", 100, "display.max_columns", 40):
         print(out.to_string(index=False))
         print(cor.to_string())

@@ -136,7 +136,13 @@ SIBLING = {"O1 rsi2_5": "O2 rsi2_10", "O2 rsi2_10": "O1 rsi2_5", "O3 rsi5_20": "
            "B4 vwap2sd": "B5 vwap1sd", "B5 vwap1sd": "B4 vwap2sd"}
 
 
-def conditions(b: dict, aux: dict, ctx: dict, beta: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+P_IDS = ["P1 pd_down", "P2 pd_range", "P3 pd_weak_close", "P4 retest_low", "P5 session_pct", "P6 move3h",
+         "P7 pd_extreme_retest"]
+COND_IDS_X = COND_IDS + P_IDS
+NCX = len(COND_IDS_X)
+
+
+def conditions(b: dict, aux: dict, ctx: dict, beta: np.ndarray, extra: bool = False) -> tuple[np.ndarray, np.ndarray]:
     """Boolean [NC, session, bar] for the long reading and the short mirror (NOTES 1.3). b is filled (fill())."""
     O, H, L, C, V = b["O"], b["H"], b["L"], b["C"], b["V"]
     sh = C.shape
@@ -314,7 +320,20 @@ def conditions(b: dict, aux: dict, ctx: dict, beta: np.ndarray) -> tuple[np.ndar
         add((TOD >= 1030) & (TOD < 1200))
         add((TOD >= 1200) & (TOD < 1400))
         add((TOD >= 1400) & (TOD <= 1500))
-    assert len(L_) == NC, len(L_)
+        if extra:                                                  # amendment A2: P1..P7
+            pdo = aux["pdopen"][:, None]
+            pdr = pdh - pdl
+            add(np.broadcast_to(pcl - pdo <= -0.5 * atr, sh), np.broadcast_to(pcl - pdo >= 0.5 * atr, sh))
+            add(np.broadcast_to(pdr >= 1.2 * atr, sh))
+            add(np.broadcast_to(pcl <= pdl + 0.25 * pdr, sh), np.broadcast_to(pcl >= pdh - 0.25 * pdr, sh))
+            lod6 = np.hstack([np.full((D, 6), np.nan), lod[:, :-6]])
+            hod6 = np.hstack([np.full((D, 6), np.nan), hod[:, :-6]])
+            add((np.abs(L - lod6) <= 0.05 * atr) & (C > lod6), (np.abs(H - hod6) <= 0.05 * atr) & (C < hod6))
+            add(C <= dopen * 0.99, C >= dopen * 1.01)
+            c36 = rs(c.shift(36))
+            add(C - c36 <= -atr, C - c36 >= atr)
+            add((np.abs(L - pdl) <= 0.05 * atr) & (C > pdl), (np.abs(H - pdh) <= 0.05 * atr) & (C < pdh))
+    assert len(L_) == (NCX if extra else NC), len(L_)
     return np.stack(L_), np.stack(S_)
 
 
@@ -415,4 +434,25 @@ def prod_lines(ex, C, R, tod_mult, beta, spyC):
                 hcost = 2 * bt * C * (0.01 / spyC + 1e-4) / Rf
             arr[4 + gi] = r - hed - hcost
         out[side] = arr
+    return out
+
+
+def exits_pct(C, H, L, tgt=0.005, stp=0.0035):
+    """Percent geometry from every bar's close (5-min bars, later bars, stop first, timed exit 15:55):
+    {side: (gross bps, won, stopped, exit_idx)}."""
+    out = {}
+    Ci = C[:, :, None]
+    Hj, Lj = H[:, None, :], L[:, None, :]
+    for side, s in (("long", 1), ("short", -1)):
+        t_ = Ci * (1 + s * tgt)
+        s_ = Ci * (1 - s * stp)
+        ht = ((Hj >= t_) if s == 1 else (Lj <= t_)) & LATER[None]
+        hs = ((Lj <= s_) if s == 1 else (Hj >= s_)) & LATER[None]
+        ft, fs = _first(ht), _first(hs)
+        won = ft < fs
+        lost = (fs <= ft) & (fs <= NB - 1)
+        timed = s * (C[:, -1:] / C - 1) * 1e4
+        val = np.where(won, tgt * 1e4, np.where(lost, -stp * 1e4, timed))
+        ex = np.minimum(np.where(won, ft, np.where(lost, fs, NB - 1)), NB - 1)
+        out[side] = (val, won, lost, ex)
     return out

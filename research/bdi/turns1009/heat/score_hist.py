@@ -17,11 +17,14 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 sys.path.insert(0, str(ROOT))
 from mcf.research import gates  # noqa: E402
-from research.history2y.lib import load_month, months, regimes  # noqa: E402
+from research.history2y.lib import daily, load_month, months, regimes  # noqa: E402
 
 COMP = ["volumeHeat", "rsiHeat", "momentumHeat", "priceActionHeat", "trendHeat", "macdHeat", "vwapHeat"]
 COMP_AR = [c + "_ar" for c in COMP + ["candleHeat"]]
 REFS = {"SPY", "QQQ", "IWM", "DIA"}
+import os
+MODE = os.environ.get("HEAT_MODE", "R")   # "R": 1R = 0.25 x daily ATR (section 2); "P": 0.5% of price (amendment A1)
+TAG = "" if MODE == "R" else "P_"
 TRAIN_END = "2025-12"          # months <= this are train, later are valid
 RES = HERE / "results"
 V2DIR = HERE / "data" / "v2"
@@ -34,6 +37,45 @@ def split_of(month: str) -> str:
 
 
 # ----------------------------------------------------------------------------------------------- frame prep
+def daily_table() -> pd.DataFrame:
+    """Previous-day OHLC and the close 5 sessions before, per symbol-date (open history only; a prior day more than
+    7 calendar days back - e.g. across the locked block - is set to NaN)."""
+    d = daily()[["symbol", "date", "open", "high", "low", "close"]].sort_values(["symbol", "date"]).reset_index(drop=True)
+    g = d.groupby("symbol", sort=False)
+    out = pd.DataFrame({"symbol": d.symbol, "date": d.date, "pO": g.open.shift(1), "pH": g.high.shift(1),
+                        "pL": g.low.shift(1), "pC": g.close.shift(1), "pC5": g.close.shift(6)})
+    gap = (pd.to_datetime(d.date) - pd.to_datetime(g.date.shift(1))).dt.days
+    out.loc[gap > 7, ["pO", "pH", "pL", "pC", "pC5"]] = np.nan
+    return out
+
+
+def pct_outcomes(df: pd.DataFrame, pct: float = 0.005) -> dict:
+    """Amendment A1 trade P: +-pct of the entry close, first touch on later 5-minute bars of the same session in the
+    frame (both in one bar = loss), else exit at the session's last frame bar. Gross, in units of pct x close."""
+    c, h, l = (df[k].to_numpy(float) for k in ("close", "high", "low"))
+    key = df.symbol.astype(str).to_numpy() + df.date.astype(str).to_numpy()
+    b = np.flatnonzero(np.r_[True, key[1:] != key[:-1], True])
+    out = {k: np.full(len(df), np.nan) for k in ("r_long", "r_short", "win_long", "win_short")}
+    for a, z in zip(b[:-1], b[1:]):
+        cc, hh, ll = c[a:z], h[a:z], l[a:z]
+        m = z - a
+        rr = pct * cc
+        later = np.triu(np.ones((m, m), bool), 1)
+        for side, nm in ((1, "long"), (-1, "short")):
+            up, dn = cc + side * rr, cc - side * rr
+            hu = ((hh[None, :] >= up[:, None]) if side == 1 else (ll[None, :] <= up[:, None])) & later
+            hd = ((ll[None, :] <= dn[:, None]) if side == 1 else (hh[None, :] >= dn[:, None])) & later
+            big = m + 1
+            fu = np.where(hu.any(1), np.argmax(hu, 1), big)
+            fd = np.where(hd.any(1), np.argmax(hd, 1), big)
+            won = fu < fd
+            lost = (fd <= fu) & (fd < big)
+            out[f"r_{nm}"][a:z] = np.where(won, 1.0, np.where(lost, -1.0, side * (cc[-1] - cc) / rr))
+            out[f"win_{nm}"][a:z] = won.astype(float)
+    return out
+
+
+
 def prep(month: str, extra: list[str] | None = None) -> pd.DataFrame:
     df = load_month(month, FCOLS + [c for c in (extra or []) if c not in FCOLS])
     v2 = ds.dataset(str(V2DIR / f"month={month}"), format="parquet").to_table().to_pandas()
@@ -42,14 +84,20 @@ def prep(month: str, extra: list[str] | None = None) -> pd.DataFrame:
     for c in ["heat_v1", "heat_v2", "candleHeat", *COMP_AR]:
         df[c] = df[c].astype("float32")
     df["trade_ok"] = ~df.symbol.isin(REFS) & np.isfinite(df.r_long_t1s1) & (df.atr_d > 0)
+    if MODE == "P":
+        po = pct_outcomes(df)
     for side in ("long", "short"):
-        df[f"pr_{side}"] = gates.prod_r(df[f"r_{side}_t1s1"], df[f"win_{side}_t1s1"], df["close"], df["atr_d"], "t1s1",
-                                        tod=df["tod"]).astype("float32")
+        if MODE == "P":
+            df[f"pr_{side}"] = gates.prod_r(po[f"r_{side}"], po[f"win_{side}"], df["close"], 0.02 * df["close"], "t1s1",
+                                            tod=df["tod"]).astype("float32")
+        else:
+            df[f"pr_{side}"] = gates.prod_r(df[f"r_{side}_t1s1"], df[f"win_{side}_t1s1"], df["close"], df["atr_d"], "t1s1",
+                                            tod=df["tod"]).astype("float32")
         ok = df.trade_ok
         ctrl = df[ok].groupby(["date", "tod"])[f"pr_{side}"].mean().rename(f"ctrl_{side}")
         df = df.merge(ctrl, left_on=["date", "tod"], right_index=True, how="left")
     g = df.groupby(["symbol", "date"], sort=False)
-    R = 0.25 * df.atr_d
+    R = 0.25 * df.atr_d if MODE == "R" else 0.005 * df.close
     sh = lambda col, k: g[col].shift(k)
     hp = pd.concat([sh("high", k) for k in range(1, 5)], axis=1)
     lp = pd.concat([sh("low", k) for k in range(1, 5)], axis=1)
@@ -222,9 +270,9 @@ def main():
     days = pd.concat(acc.days, ignore_index=True)
     turns = pd.concat(acc.turns, ignore_index=True)
     base = pd.concat(acc.base, ignore_index=True)
-    days.to_csv(RES / "orig_days.csv.gz", index=False)
-    turns.to_csv(RES / "orig_turns.csv", index=False)
-    base.to_csv(RES / "orig_base.csv", index=False)
+    days.to_csv(RES / (TAG + "orig_days.csv.gz"), index=False)
+    turns.to_csv(RES / (TAG + "orig_turns.csv"), index=False)
+    base.to_csv(RES / (TAG + "orig_base.csv"), index=False)
     report(days, turns, base)
 
 
@@ -256,13 +304,13 @@ def report(days, turns, base):
             rec["turn_recall"] = round(tt.called.sum() / b[b.side == side].events.sum(), 4)
         rows.append(rec)
     out = pd.DataFrame(rows).sort_values("all_exp_r")
-    out.to_csv(RES / "orig_summary.csv", index=False)
+    out.to_csv(RES / (TAG + "orig_summary.csv"), index=False)
     ab = base[base.tod == -1].copy()
     ab["split"] = np.where(ab.month <= TRAIN_END, "train", "valid")
     print("all-bar baseline exp (prod R):", ab.groupby(["side", "split"]).apply(lambda x: round(x.hits.sum() / x.n_elig.sum(), 4)).to_dict())
     tb = b.groupby("side")[["n_elig", "hits", "events"]].sum()
     print("turn base rates (turn at i or i-1, eligible bars):", (tb.hits / tb.n_elig).round(4).to_dict(), "events", tb.events.to_dict())
-    print("configs:", n_cfg, "t_required:", gates.t_required(100))
+    print("configs:", n_cfg, "t_required:", gates.t_required(200 if MODE == 'P' else 100))
     cols = ["config", "all_n", "all_exp_r", "all_t", "all_excess", "train_exp_r", "valid_exp_r", "all_exp_up", "all_exp_down",
             "all_wf_share", "all_ex_best_day", "turn_hit", "turn_base", "turn_lift", "turn_recall"]
     with pd.option_context("display.width", 250, "display.max_rows", 200):
@@ -271,6 +319,6 @@ def report(days, turns, base):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "report":
-        report(pd.read_csv(RES / "orig_days.csv.gz"), pd.read_csv(RES / "orig_turns.csv"), pd.read_csv(RES / "orig_base.csv"))
+        report(pd.read_csv(RES / (TAG + "orig_days.csv.gz")), pd.read_csv(RES / (TAG + "orig_turns.csv")), pd.read_csv(RES / (TAG + "orig_base.csv")))
     else:
         main()

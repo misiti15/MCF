@@ -134,3 +134,129 @@ t required = sqrt(2 ln 100) = 3.03.
   return vs with its SPY-residual 30-min return (stock - beta x SPY, beta from train); (c) excess over the same-time
   control.
 - Beats original? Compare valid exp and excess vs the best H-config of heat2-orig on valid.
+
+## 3. The five Oct-9 moments (`case_oct9.py`, SIP 1-minute bars via alpaca-py, 5-minute heat)
+MarcoFlow stopped recording on 2026-10-05 (`/api/observations`: last row 2026-10-05 19:15 UTC), so it has **no Oct-9
+signals**; its `/api/heat-tracker` gives only the end-of-day state, which V2 reproduces (section 1.2). The owner's
+10-minute bar = two 5-minute bars; "at the moment" below = the two bar closes inside the marked 10-minute bar.
+Full 60-minute windows (every bar, every component) are printed by `case_oct9.py`; data in `data/oct9_heat.csv`.
+
+| moment | V2 as-run at the moment | V0 port | what drove it | would MarcoFlow have fired? (|heat| >= 30, sign = direction) |
+|---|---|---|---|---|
+| AAPL 13:40 long launch | -26 / -23 (SELL side) | -21 / +5 | priceAction -15 (price at the top of its 20-bar range), rsi -9, volume -10 (as-run bug); V0 flips to +20 one bar later only because true volume surged (+20) | no; and the lean was the wrong way (short) |
+| AAPL 15:00 short top | -34 / -29 | -12 / -17 | rsi -25 (RSI >= 80) + priceAction -15 outweigh momentum +4, vwap +12, macd +4 | **yes, SHORT at 15:00 (right)**, but the same -25 to -35 reading had been on since 14:30 while price rose 336.4 -> 338.6 |
+| SPCX 10:10 short | -16 / -30 | -3 / -10 | momentum -9, vwap -12, volume -10: it follows the drop after it happened | borderline (-30.0 at the 10:20 close, one bar after the turn); at the ~10:00 high it read +40 / +32 (BUY) at 09:45-09:50 |
+| CAT 10:10 long V-bottom | -11 / -14 | -9 / -11 | every component near 0 | no; blind to the V |
+| TSLA 10:50 short top | -19 / -22 | +3 / -6 | priceAction -15, candle -15 vs macd +10, trend +3 | no |
+
+**False alarms the same day.** V2 had 35 readings with |heat| >= 30 on the four names (09:50-15:55 closes); with
+MarcoFlow's 90-minute dedupe that is **12 signals, 1 at a marked moment (AAPL 15:00)**. Measured 30 minutes later in the
+signal's direction: 4 positive (+46, +27, +10, +3 bps), 7 negative (-10 to -48 bps), 1 flat. V0 (MCF port) had 7 deduped
+signals, none at a marked moment. SPY read <= -30 in 22 bars of a day it drifted up: the -10 volume bias at work.
+
+**Read:** heat caught 1 of 5 moments (the overbought top, via RSI >= 80), late by design on the trend side
+(SPCX), blind on the V-bottom (CAT) and the TSLA top, and leaning the wrong way at the AAPL launch (priceAction scores a
+breakout as "near resistance"). This is hindsight on 5 owner-picked bars, not a test.
+
+## 4. Historical check (`score_hist.py`, results/orig_summary.csv; lineage heat2-orig, N = 100, t bar 3.03)
+
+### Failures first
+- **99 of 100 configurations lose after costs over the open history; 0 reach the t bar.** The one positive config is
+  MarcoFlow's own recorded signals with |heat| 50-60 traded as a *fade short* (n 173, +0.087R, t 0.82, valid-only
+  window, up sessions -0.054R, 2 of its months) - a small-sample, regime-flattered cell, not an edge.
+- **MarcoFlow's own direction (follow the heat sign) loses everywhere.** On its recorded live signals (May 18 - Oct 2
+  2026, entered at the first SIP bar close at/after the record time): |heat| 30-40 follow-long -0.168R (n 2,622,
+  t -4.5), 40-50 -0.185R, 50-60 -0.251R; follow-short -0.044 / -0.045 / -0.068R. Recomputed on two years (H2): -0.086
+  to -0.154R in all 16 cells. Stronger heat is *worse* when followed.
+- The after-cost hurdle is large: a random bar traded t1s1 costs about 0.1R (all-bar baseline: long -0.095R / -0.097R,
+  short -0.113R / -0.064R, train / valid). Any heat rule needs > +0.1R of gross edge to break even.
+
+### Turn anticipation (base rate: a top at bar i or i-1 on 1.76% of eligible bars, a bottom 1.95%)
+| config (side) | signal bars | hit rate | tod-matched base | lift | trades: exp R (excess vs same-time) |
+|---|---|---|---|---|---|
+| H5-v2 agree >= 6 fade (short: >= 6 of 8 as-run components bullish) | 23.5k days | 14.6% | 1.47% | **10.0x** | -0.119 (-0.004) |
+| H1-v2 heat >= 50 fade (short) | 21.4k | 13.6% | 1.44% | **9.4x** | -0.145 (-0.026) |
+| H1-v2 heat >= 30 fade (short) | 167k | 5.6% | 1.56% | 3.6x | -0.110 (-0.013) |
+| H1-v0 heat >= 40 fade (short) | 145k | 4.2% | 1.29% | 3.2x | -0.116 (-0.016) |
+| H1-v2 heat <= -50 fade (long) | 119k | 4.4% | 2.24% | 1.9x | -0.101 (+0.002) |
+| H2 follow (any) | | | | 0.3-1.8x | -0.09 to -0.15 |
+| H3 heat change 15-35 pts / 15 min | | | | 0.9-1.5x | -0.09 to -0.11 |
+| H4 extreme-then-roll | | | | 1.0-2.0x | -0.10 to -0.12 |
+- **Extreme positive heat does flag tops** (lift 9-10x) - largely mechanical: V2 >= 50 needs RSI high and price at
+  the top of its 20-bar range, i.e. the bar *is* a local high. But 86% of those bars are not followed by a 1R drop
+  inside 30 minutes, recall is ~1% of all tops, and the trade loses -0.12 to -0.15R after costs with ~0 excess over
+  same-time controls. Flagging the top bar is not the same as a tradeable edge.
+- Bottoms are much weaker (lift <= 3x), as the CAT V showed.
+
+### Best excess (skill net of the same-time control), still negative after costs
+| config | n | exp R | t | excess | train / valid excess | up / down sessions |
+|---|---|---|---|---|---|---|
+| H5-v0 agree >= 6 fade-long (>= 6 of 7 components bearish -> buy) | 5,700 | -0.079 | -2.49 | +0.044 | +0.025 / +0.062 | +0.095 / -0.215 |
+| H5-v2 agree >= 6 fade-long | 150,618 | -0.074 | -4.36 | +0.028 | +0.021 / +0.034 | +0.165 / -0.259 |
+| H5-v0 agree >= 5 fade-long | 158,487 | -0.082 | -4.82 | +0.020 | +0.011 / +0.028 | +0.164 / -0.274 |
+Component *agreement* (all bearish at once) carries a little reversal skill on the long side (+0.02 to +0.04R over
+same-time controls in both train and valid) but it is far below costs and lives entirely in up sessions - the same
+regime trap as heat_fade_long. Walk-forward positive share for every config <= 0.5 (most 0-0.11). Regime: every
+short config is negative in up sessions, every long config negative in down sessions.
+
+## 5. Amendment A1 (owner clarification via the lead, 2026-10-11; recorded BEFORE the amended scoring)
+The owner's target is the **move after a turn of >= 0.5% price change**; R units stay as the secondary view. Only entries
+at or after 09:50 ET (the frames already start at the 09:50 bar close, so sections 2-4 comply). Context should include the
+previous few hours and the previous day. Owner's five marked moves: AAPL +1.18% (13:49), AAPL -0.71% (15:14), SPCX -1.21%
+(10:13), CAT +1.29% (10:11), TSLA -2.18% (10:51). T1's case study (`../CASES.md`) found heat added nothing at those moments,
+consistent with section 3.
+
+Amended definitions (everything else as section 2):
+- **Turn label P**: as section 2 but with the 1R thresholds replaced by **0.5% of the bar's close** (rise into the extreme
+  >= 0.5% over the prior 4 bars, move away >= 0.5% within the next 6 bars = 30 min).
+- **Trade P**: target 0.5% / stop 0.5% from the signal bar's close, first touch on 5-minute bars (both in one bar = loss),
+  else exit at the last frame bar (15:00 close; the frames stop there, a slightly earlier flat than the lab's 15:55),
+  production costs with time-of-day entry costs (`gates.prod_r` with R = 0.5% of price), reported in R(=0.5%) units.
+- **heat2-orig-P**: the same 100 rules re-scored on turn P / trade P = 100 more configurations; lineage heat2-orig now
+  N = 200, t bar sqrt(2 ln 200) = 3.26.
+- **heat2-confluence-P**: the 24 heat-2.0 configurations re-fitted with P targets (M1: trade-P R, M2: turn-P label) and the
+  context block added: prior-day range/ATR, prior-day close location (closing strength), prior-day open-to-close return,
+  5-day return (trend), prior-day high/low distance (already in), overnight gap (already in), return over the prior 60
+  and 120 minutes and distance to the prior-2-hour high/low in ATR (both cross into the previous day early in the
+  session), counts of earlier tests of the intraday high/low (bars that came within 0.025 ATR of the running extreme
+  without breaking it). Lineage N = 48, t bar sqrt(2 ln 48) = 2.78.
+- **Not available:** premarket high/low/move. The two-year 1-minute cache is regular-session only (09:30-15:59), so
+  premarket features cannot be tested on history; they would need a new download (T1 used them only on Oct 9).
+
+## 6. Heat 2.0, R view (`heat2.py`, lineage heat2-confluence, N = 24, t bar 2.52; results/heat2_*.csv)
+
+### Failures first
+- **All 24 configurations lose after costs on valid (2026-01..10-07) and in the walk-forward.** Best valid:
+  M1-long-nomkt q99.8 -0.027R (n 10,960, t -1.00); best walk-forward (expanding monthly refit, 18 test months):
+  -0.063R with 11% of months positive. No config reaches the t bar, the regime gate (every long config is negative in
+  down sessions, every short config negative in up sessions) or the walk-forward share (max 0.22).
+- **It does not beat the original heat.** On valid the best original cell, H5-v0 agree >= 6 fade-long (n 2,935),
+  is -0.015R / excess +0.062 vs heat 2.0's best -0.027R / excess +0.050. Heat 2.0 trades 4x more at a similar edge.
+- **Out-of-sample predictive power is ~0.** Correlation of the score with the stock's 30-min forward return (direction-
+  signed): M1-long-full +0.015 on train (in-sample) -> -0.003 on valid; with the SPY-residual return (beta 1.10)
+  +0.004 -> +0.002. Part of the in-sample fit was market timing (train corr with SPY's own forward return +0.026, valid
+  -0.016). M2 (turn-label) models: |corr| <= 0.007 everywhere.
+
+### What there is
+- **Same-time excess is small but consistent for M1:** +0.02 to +0.05R over the same-bar average of all stocks, in
+  train, valid and walk-forward (wf excess +0.004 to +0.036), for both full and no-market feature sets - so the little
+  skill there is is stock-specific, not market timing. It is about a third to a half of the ~0.1R cost of a t1s1 trade.
+- Learned weights (standardised, M1-long-full top): macdPct -0.089, dist_round_atr -0.055, emaDiff/trendHeat +0.041,
+  rel_mom +0.037, sma20_dist -0.036, fromOpen +0.026, momentumHeat -0.018. Mixed trend/reversion terms - a "plethora"
+  of factors re-learns the same small, mostly reversion-flavoured effect that the original components carry.
+- RAM note: the fit/threshold step peaked at 2.9 GB once (over the 2.5 GB guide) before the sample was cut to 2% for
+  the amended run.
+
+## 7. Amended A1 results: 0.5% moves (results/P_*.csv)
+
+### 7.1 Original heat, P view (heat2-orig-P, 100 more configs; lineage N = 200, t bar 3.26)
+- **Failures first: 94 of 100 lose after costs; 0 reach the t bar (max t 0.93).** The 6 positive cells are tiny or flat:
+  H5-v0 agree 7 fade-short n 11; DB |heat| 40-50 fade-short n 763 +0.049R (t 0.75, May-Oct 2026 only, walk-forward 0);
+  H5-v2 agree 7 follow-long n 89; H5-v0 agree >= 6 fade-long n 5,700 **+0.006R (t 0.21; train +0.029 / valid -0.015;
+  up +0.055 / down -0.056)**; DB 50-60 fade-short n 173; DB 60+ follow-short n 251 (+0.004).
+- **MarcoFlow's own direction still loses**: recorded signals followed long -0.06 to -0.18R, followed short -0.007 to
+  -0.030R (R = 0.5%), every one negative in up sessions for shorts / down sessions for longs.
+- Baseline (random bar, +-0.5% bracket, production costs): long -0.024 / -0.037R, short -0.022 / -0.016R (train / valid).
+- Turn base rate (>= 0.5% swing at bar i or i-1): tops 5.6%, bottoms 5.8% of eligible bars. Extreme fade signals again
+  sit on tops (H5-v2 agree >= 6 fade-short: hit 24.5% vs 5.2%, lift 4.7x; H1-v2 heat >= 50 fade-short lift 3.9x), but
+  the trades lose (-0.096R and -0.121R) because the first 0.5% after the flagged bar is as likely up as down.
