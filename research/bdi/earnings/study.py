@@ -37,9 +37,11 @@ def trades(ev: pd.DataFrame, side: int, entry: str, H: int, cost_mult=1.0, entry
     """ev rows with R, j. entry 'CLOSE' = C[R], 'OPEN' = O[R+1], 'AH' = entry_px (daily frame, after the close of R).
     Exit C[R+H]. Family A passes R = report day d."""
     R = ev.R.to_numpy(); j = ev.j.to_numpy()
-    xr = R + H
+    xr = R + H - 1 if entry == "OPENR" else R + H         # OPENR (part 3): O[R], H1 = the reaction day itself
     ok = xr < T
-    if entry == "CLOSE":
+    if entry == "OPENR":
+        er, p0 = R, On[R, j]
+    elif entry == "CLOSE":
         er, p0 = R, Cn[R, j]
     elif entry == "OPEN":
         er, p0 = R + 1, On[np.minimum(R + 1, T - 1), j]
@@ -51,7 +53,7 @@ def trades(ev: pd.DataFrame, side: int, entry: str, H: int, cost_mult=1.0, entry
     if side < 0:
         ok &= SHORT_OK[j]
     r = p1 / p0 - 1
-    ewk = "O" if entry == "OPEN" else "C"
+    ewk = "O" if entry in ("OPEN", "OPENR") else "C"
     ew_a = er
     ew = np.array([E.ew_ret(ewk, int(a), int(b), int(a)) if o else np.nan for a, b, o in zip(ew_a, xr_c, ok)])
     # costs per side: entry, exit
