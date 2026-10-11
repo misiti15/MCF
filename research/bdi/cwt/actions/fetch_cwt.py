@@ -616,7 +616,9 @@ def read_transcript(path):
     while i < len(lines) and lines[i].startswith("#"):
         i += 1
     j = i
-    while j < len(lines) and re.match(r"^[A-Za-z][\w-]{1,20}:\s", lines[j]):
+    known = {f.lower() for f in HEADER_FIELDS}
+    while j < len(lines) and re.match(r"^[A-Za-z][\w-]{1,20}:\s", lines[j]) \
+            and lines[j].split(":", 1)[0].strip().lower() in known:   # speaker labels ("Host: ...") are not headers
         k, v = lines[j].split(":", 1)
         meta[k.strip().lower()] = v.strip()
         j += 1
