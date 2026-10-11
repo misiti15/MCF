@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from ..setup_names import name as setup_name
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -47,7 +48,7 @@ def build(trades: pd.DataFrame, sessions: int = 4) -> dict:
             verdict = "positive so far"
         else:
             verdict = "negative so far"
-        rows.append({"setup": s, "trades": int(len(g)), "win_rate": round(float((g["pnl"] > 0).mean()), 3),
+        rows.append({"setup": s, "name": setup_name(s), "trades": int(len(g)), "win_rate": round(float((g["pnl"] > 0).mean()), 3),
                      "avg_r": round(float(r.mean()), 3), "pnl": round(float(g["pnl"].sum()), 2),
                      "expected_r": None if e is None else round(e, 3), "verdict": verdict})
     rows.sort(key=lambda x: x["avg_r"], reverse=True)

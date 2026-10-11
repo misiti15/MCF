@@ -124,6 +124,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const pc = v => v == null ? "–" : (v * 100).toFixed(1) + "%";
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  let NAMES = {};
+  const nm = c => NAMES[c]?.name ? `${NAMES[c].name} <span style="font-size:11px;color:var(--muted)">(${e(c)})</span>` : e(c);
+  fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : {}).then(d => { NAMES = d || {}; window.__mcfTick && window.__mcfTick(); }).catch(() => {});
   const table = (head, rows) => `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
 
   // The GitHub connector returns the file inside one of its content blocks; find the JSON.
@@ -185,18 +188,18 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const vs = (s.validation && s.validation.setups) || {};
     const names = (s.rules && s.rules.strategies) || Object.keys(vs);
     $l("#lv-val").innerHTML = names.length ? table(["Setup", "Status", "Apr–Jun backtest"],
-      names.map(n => { const v = vs[n] || {}; return `<tr><td class="l">${e(n)}</td><td>${e(v.status || "–")}</td><td class="${cls(v.apr_jun_exp_r)}">${v.apr_jun_exp_r == null ? "–" : (v.apr_jun_exp_r > 0 ? "+" : "") + v.apr_jun_exp_r.toFixed(3) + "R (" + v.apr_jun_n + ")"}</td></tr>`; }))
+      names.map(n => { const v = vs[n] || {}; return `<tr><td class="l" title="${e(NAMES[n]?.what || "")}">${nm(n)}</td><td>${e(v.status || "–")}</td><td class="${cls(v.apr_jun_exp_r)}">${v.apr_jun_exp_r == null ? "–" : (v.apr_jun_exp_r > 0 ? "+" : "") + v.apr_jun_exp_r.toFixed(3) + "R (" + v.apr_jun_n + ")"}</td></tr>`; }))
       : `<div class="empty">–</div>`;
     $l("#lv-pos").innerHTML = s.positions?.length ? table(["Symbol", "Setup", "Side", "Qty", "Entry", "Last", "Unrealized"],
-      s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${e(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td></tr>`))
+      s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${nm(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td></tr>`))
       : `<div class="empty">No open positions.</div>`;
     $l("#lv-sig").innerHTML = s.signals?.length ? table(["Time", "Symbol", "Setup", "Side", "Price", "Status", "Reason"],
-      s.signals.map(x => `<tr><td class="l">${e(x.t)}</td><td>${e(x.symbol)}</td><td>${e(x.strategy)}</td><td>${x.side > 0 ? "long" : "short"}</td><td>${x.ref ?? "–"}</td><td><span class="chip ${e(x.status)}">${e(x.status)}</span></td><td style="white-space:normal">${e(x.reason)}</td></tr>`))
+      s.signals.map(x => `<tr><td class="l">${e(x.t)}</td><td>${e(x.symbol)}</td><td>${nm(x.strategy)}</td><td>${x.side > 0 ? "long" : "short"}</td><td>${x.ref ?? "–"}</td><td><span class="chip ${e(x.status)}">${e(x.status)}</span></td><td style="white-space:normal">${e(x.reason)}</td></tr>`))
       : `<div class="empty">No signals yet.</div>`;
     const sk = Object.entries(t.skip_reasons || {});
     $l("#lv-skip").innerHTML = sk.length ? table(["Reason", "Signals"], sk.map(([k, v]) => `<tr><td class="l" style="white-space:normal">${e(k)}</td><td>${v}</td></tr>`)) : `<div class="empty">Nothing skipped yet.</div>`;
     $l("#lv-closed").innerHTML = s.closed?.length ? table(["Symbol", "Setup", "In", "Out", "Exit", "R", "P/L", "Slip"],
-      s.closed.map(c => `<tr><td class="l">${e(c.symbol)}</td><td>${e(c.strategy)}</td><td>${e(c.entry_t)}</td><td>${e(c.exit_t)}</td><td>${e(c.reason)}</td><td>${c.r ?? "–"}</td><td class="${cls(c.pnl)}">${money(c.pnl)}</td><td>${c.slip_bps ?? "–"}</td></tr>`))
+      s.closed.map(c => `<tr><td class="l">${e(c.symbol)}</td><td>${nm(c.strategy)}</td><td>${e(c.entry_t)}</td><td>${e(c.exit_t)}</td><td>${e(c.reason)}</td><td>${c.r ?? "–"}</td><td class="${cls(c.pnl)}">${money(c.pnl)}</td><td>${c.slip_bps ?? "–"}</td></tr>`))
       : `<div class="empty">No closed trades yet.</div>`;
   }
 
@@ -205,7 +208,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const el = $l("#lv-score"); if (!el) return;
     el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}</div>` +
       table(["Setup", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
-        d.setups.map(x => `<tr><td class="l">${e(x.setup)}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
+        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
   }
 
   function renderLab(d) {
@@ -282,6 +285,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     } catch (e) { fail(e && e.code ? e : { code: "upstream_error" }, where); }
   }
   const tick = () => { poll("status.json", render, "status"); poll("discovery/latest.json", renderLab, "lab"); poll("reports/scorecard.json", renderScore, "score"); };
+  window.__mcfTick = tick;
   tick();
   setInterval(tick, 60000);
 })();

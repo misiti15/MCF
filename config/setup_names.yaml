@@ -1,0 +1,68 @@
+# Plain-English display names for setups (owner request 2026-10-11).
+# Code names (the keys) stay the same in config, code, journal and ledger; reports and the dashboard show
+# "Display name (code)". Display only - changing a name never changes which trades are taken.
+# Educational only - not financial advice.
+heat_fade_short:
+  name: Morning Bounce Fade
+  side: short
+  what: "09:50-10:30: a stock trading below its open bounces too far, too fast (heat score); short the bounce."
+heat_fade_long:
+  name: Midday Gap-Up Dip Buy
+  side: long
+  what: "11:05-13:30: a stock that gapped up has pulled back hard (heat score); buy the dip."
+exhaustion_short:
+  name: Afternoon Blow-off Short
+  side: short
+  what: "13:00-15:00: new high, RSI(5) above 90, more than 1% over its 20-bar average, and a bearish RSI divergence; short the exhaustion."
+orb20_a:
+  name: 20-Minute Opening Range Breakout
+  side: both
+  what: "Until 11:30: price breaks out of the first 20 minutes' high or low on above-average volume; trade the break."
+intraday_momentum:
+  name: Index Last-Half-Hour Momentum
+  side: both
+  what: "SPY, QQQ, IWM, DIA: if the first 30 minutes moved at least 0.25%, enter the same direction at 15:30 and exit at the close."
+MF1-945-flowsell-vwapup:
+  name: Early Sellers Above VWAP
+  side: short
+  what: "09:50-10:25: bearish heat and net selling while price is still above VWAP; short."
+MF2-open-rsimidhi-flowsell:
+  name: Early Sellers, Mid-High RSI
+  side: short
+  what: "09:50-11:00: bearish heat, net selling, RSI(14) between 55 and 65; short."
+MF3-open-flowsell-rsi5hi:
+  name: Early Sellers into a Pop
+  side: short
+  what: "09:50-11:00: bearish heat and net selling while RSI(5) is above 70; short."
+MF4-h40-open-flowsell:
+  name: Early Sellers, Strong Heat
+  side: short
+  what: "09:50-11:00: strongly bearish heat (40+) with net selling; short."
+MF5-flowsell-vwapup-rsi5hi:
+  name: Sellers into Strength (all day)
+  side: short
+  what: "09:50-15:00: bearish heat, net selling, price above VWAP and RSI(5) above 70; short."
+NS1-rsidip-rsi5pop-long:
+  name: Big Gainer Dip-and-Pop
+  side: long
+  what: "09:50-11:30: a stock up over 2% dips (RSI(14) under 40) and snaps back (RSI(5) 80+); buy."
+NS2-sma50break-overbought-short:
+  name: Big Gainer Average Reclaim Fade
+  side: short
+  what: "09:50-11:30: a stock up over 2% crosses back above its 50-bar average while overbought (RSI(14) 60+); short."
+NS3-failed-vwap-reclaim-short:
+  name: Big Loser VWAP Reclaim Fade
+  side: short
+  what: "09:50-11:30: a stock down over 2% reclaims VWAP while above its 50-bar average; short the reclaim."
+NS4-pm-vwap-reclaim-oversold-short:
+  name: Afternoon VWAP Reclaim Fade
+  side: short
+  what: "11:30-15:00: a stock up over 2% reclaims VWAP with RSI(14) at 30 or below; short."
+NS5-sma50-flush-oversold-long:
+  name: Big Loser Flush Buy
+  side: long
+  what: "09:50-11:30: a stock down over 2% breaks below its 50-bar average with RSI(14) at 30 or below; buy the flush."
+RW6G1-ns2-up3-vwap2sd-short:
+  name: Big Gainer Fade with VWAP Band Guard
+  side: short
+  what: "09:50-11:30: like Big Gainer Average Reclaim Fade on stocks up over 3%, but never while price holds above the +2 SD VWAP band."
