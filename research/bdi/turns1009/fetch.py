@@ -44,3 +44,12 @@ if __name__ == "__main__":
     U = pd.concat(parts)
     U.to_parquet(OUT / "universe_1009.parquet")
     print("universe", U.symbol.nunique(), len(U))
+
+
+def fetch_universe_1008():
+    """10-08 regular session for the lab universe (the bar cache ends 10-07), so breadth has 20 full prior sessions."""
+    uni = [s.strip() for s in (ROOT / "research" / "lab_symbols.txt").read_text().split() if s.strip()]
+    a1, b1 = datetime(2026, 10, 8, 13, 30, tzinfo=timezone.utc), datetime(2026, 10, 8, 20, 0, tzinfo=timezone.utc)
+    U = pd.concat([get(uni[i:i + 100], a1, b1) for i in range(0, len(uni), 100)])
+    U.to_parquet(OUT / "universe_1008.parquet")
+    print("universe 10-08", U.symbol.nunique(), len(U))
