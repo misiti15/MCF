@@ -1,0 +1,182 @@
+# Chat With Traders transcripts for the CWT setup study (research/bdi/cwt/README.md), 2026-10-11.
+# youtube.com and chatwithtraders.com are blocked by the Claude container's proxy, so this runs on GitHub Actions and
+# publishes plain-text transcripts + index/status files under cwt/ on the `research-data` branch (earlier files kept).
+# Jobs: list (episode list + plan) -> work (matrix of shards; site transcript -> YouTube captions -> faster-whisper
+# on the podcast MP3) -> publish (one job, so shards never race on the branch). Reruns skip episodes already "done".
+# Manual run only. Educational only - not financial advice.
+name: cwt-transcripts
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "list | captions (site + YouTube captions) | whisper (podcast audio) | all (site -> captions -> whisper)"
+        type: choice
+        options: [list, captions, whisper, all]
+        default: list
+      episodes:
+        description: "episode numbers/ranges/keys, e.g. '1-3' or '5,42,300-' or 'x20210301-bonus' (empty = all)"
+        default: ""
+      parallel:
+        description: "matrix size (shards); keep each shard under ~5h of whisper work"
+        default: "16"
+      model:
+        description: "faster-whisper model (int8 on CPU)"
+        type: choice
+        options: [base.en, small.en, tiny.en, medium.en]
+        default: base.en
+      force:
+        description: "redo episodes already marked done"
+        type: boolean
+        default: false
+      feed_url:
+        description: "optional podcast RSS URL to add to the discovered/known feeds"
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  SCRIPT: research/bdi/cwt/actions/fetch_cwt.py
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      shards: ${{ steps.plan.outputs.shards }}
+      todo: ${{ steps.plan.outputs.todo }}
+    steps:
+      # Copyright guard (lead, 2026-10-11): this repository is public, so full transcripts must not be published to
+      # its branches. Only `mode=list` (episode metadata) may run until the owner picks a private destination.
+      - name: Refuse to publish transcripts from a public repository
+        if: inputs.mode != 'list' && github.event.repository.private != true
+        run: |
+          echo "::error::mode=${{ inputs.mode }} would publish copyrighted transcripts to a PUBLIC repository. Run mode=list only, or set a private destination first (see research/bdi/cwt/README.md)."
+          exit 1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: denoland/setup-deno@v2   # yt-dlp needs a JS runtime for YouTube
+        with:
+          deno-version: v2.x
+      - run: pip install -q requests "yt-dlp[default]"
+      - name: Previous status (checkpoint from earlier runs)
+        run: |
+          git fetch -q origin research-data 2>/dev/null && git show origin/research-data:cwt/status.json > prev_status.json 2>/dev/null \
+            || echo '{}' > prev_status.json
+          python -c "import json;d=json.load(open('prev_status.json'));print(len(d),'episodes in previous status;',sum(r.get('status')=='done' for r in d.values()),'done')"
+      - name: Episode list and plan
+        id: plan
+        env:
+          MODE: ${{ inputs.mode }}
+          EPISODES: ${{ inputs.episodes }}
+          PARALLEL: ${{ inputs.parallel }}
+          MODEL: ${{ inputs.model }}
+          FORCE: ${{ inputs.force && '--force' || '' }}
+          FEED_URL: ${{ inputs.feed_url }}
+        run: |
+          python "$SCRIPT" list --out cwt_list --prev-status prev_status.json --mode "$MODE" --episodes "$EPISODES" \
+            --parallel "$PARALLEL" --model "$MODEL" --feed-url "$FEED_URL" $FORCE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cwt-list
+          path: cwt_list
+          retention-days: 7
+
+  work:
+    needs: list
+    if: inputs.mode != 'list' && needs.list.outputs.todo != '0' && needs.list.outputs.todo != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: ${{ fromJSON(needs.list.outputs.shards) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: denoland/setup-deno@v2
+        if: inputs.mode != 'whisper'
+        with:
+          deno-version: v2.x
+      - name: Install
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          pip install -q requests pypdf "yt-dlp[default]" youtube-transcript-api
+          if [ "$MODE" != captions ]; then pip install -q faster-whisper; fi
+      - uses: actions/cache@v4
+        if: inputs.mode != 'captions'
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-${{ inputs.model }}-v1
+      - uses: actions/download-artifact@v4
+        with:
+          name: cwt-list
+          path: cwt_list
+      - name: Transcribe shard ${{ matrix.shard }}
+        timeout-minutes: 340   # step timeout < job timeout, so the upload below still runs
+        env:
+          MODE: ${{ inputs.mode }}
+          MODEL: ${{ inputs.model }}
+        run: |
+          python "$SCRIPT" work --list-dir cwt_list --shard ${{ matrix.shard }} --mode "$MODE" --model "$MODEL" \
+            --out shard_out --time-budget 320
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cwt-shard-${{ matrix.shard }}
+          path: shard_out
+          retention-days: 7
+          if-no-files-found: warn
+
+  publish:
+    needs: [list, work]
+    if: always() && needs.list.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: research-data-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          name: cwt-list
+          path: /tmp/cwt_list
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: cwt-shard-*
+          path: /tmp/cwt_shards
+          merge-multiple: true
+      - name: Merge into research-data/cwt and push
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          cp "$SCRIPT" /tmp/fetch_cwt.py
+          mkdir -p /tmp/cwt_shards
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git checkout -- . ; git clean -fdq
+          git fetch origin research-data && git checkout research-data || {
+            git checkout --orphan research-data; git rm -rq --cached . 2>/dev/null || true
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +; }
+          rc=0
+          python /tmp/fetch_cwt.py merge --dest cwt --shards /tmp/cwt_shards --list-dir /tmp/cwt_list --mode "$MODE" || rc=$?
+          git add -A cwt
+          if git diff --cached --quiet; then echo "nothing new to publish"; else
+            git commit -qm "cwt-transcripts $MODE $(date -u +%F)"
+            pushed=0
+            for i in 1 2 3; do git push -q origin research-data && { pushed=1; break; }; sleep 10; git pull -q --rebase origin research-data; done
+            [ "$pushed" = 1 ] || { echo "::error::push to research-data failed"; exit 1; }
+          fi
+          exit $rc

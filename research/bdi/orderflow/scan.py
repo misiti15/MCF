@@ -182,7 +182,7 @@ def scan_symbol(sym: str, b1: pd.DataFrame, sigs: pd.DataFrame, spy_raw: dict):
             v = F[c].to_numpy()[SAMPLE]
             hi, lo = v >= Q(c, 0.9), v <= Q(c, 0.1)
             lifts.append((sym, d, c, len(v), int(Lb.sum()), int(Sb.sum()), int(hi.sum()), int((hi & Lb).sum()),
-                          int(lo.sum()), int((lo & Sb).sum())))
+                          int(lo.sum()), int((lo & Sb).sum()), int((hi & Sb).sum()), int((lo & Lb).sum())))
         day = Day(raws[d], spy_raw[d], beta[d])
         # flow and price-only signals
         for c in SIG + PSIG:
@@ -222,7 +222,7 @@ def scan_symbol(sym: str, b1: pd.DataFrame, sigs: pd.DataFrame, spy_raw: dict):
                 run_line(day, cand, side, ex, lines, (f"random|-|-|-|{ex}", sym, d, sname))
     OUT.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(ics, columns=["symbol", "date", "feature", "h", "ic", "ic_resid"]).to_parquet(OUT / f"ic_{sym}.parquet", index=False)
-    pd.DataFrame(lifts, columns=["symbol", "date", "feature", "n", "L", "S", "n_hi", "L_hi", "n_lo", "S_lo"]).to_parquet(OUT / f"lift_{sym}.parquet", index=False)
+    pd.DataFrame(lifts, columns=["symbol", "date", "feature", "n", "L", "S", "n_hi", "L_hi", "n_lo", "S_lo", "S_hi", "L_lo"]).to_parquet(OUT / f"lift_{sym}.parquet", index=False)
     pd.DataFrame(lines, columns=["line", "symbol", "date", "side", "n", "sum_r", "sum_r2", "sum_rh", "wins"]).to_parquet(OUT / f"lines_{sym}.parquet", index=False)
     print(sym, round(time.time() - t0, 1), "s", len(lines), "line-days", flush=True)
 
