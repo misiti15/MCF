@@ -29,8 +29,14 @@ Pre-declared gates (never changed to fit a candidate):
                   >= 100 trades is flagged for review.
 
     python -m mcf.research.backlog list
-    python -m mcf.research.backlog run [--id ID]      # train / valid / forward for every coded entry
+    python -m mcf.research.backlog run [--id ID]      # module entries: train / valid / forward (reddit_bt);
+                                                      # lab_module entries: re-test on the 1-minute cache (below)
     python -m mcf.research.backlog holdout ID         # locked-holdout scoring: once per version, <= 4 looks per lineage
+Lab entries (`lab_module`: path to a lab module with SIDE, GEOM, mask(df); optional `lab_window`, `lab_min_adv`,
+`approved`) are scored by mcf/research/backlog_lab.py on data/cache/1Min (open / forward data, 2026-06-15 on) with the
+research pipeline and production + time-of-day costs: n, win rate, exp R, day-clustered t, up / down sessions, and the
+same after the approval date (split "lab_cache"; monitoring only, no status change). `run` exits 1 when runnable
+entries exist and none could be scored.
 Results append to research/backlog_results.jsonl; research/BACKLOG.md is regenerated on every command.
 Educational only — not financial advice.
 """
@@ -40,6 +46,8 @@ import argparse
 import importlib
 import json
 import os
+import sys
+import time
 from datetime import date
 from pathlib import Path
 
@@ -87,38 +95,102 @@ def _passes(m: dict, n_min: int, t_min: float) -> bool:
     return m.get("n", 0) >= n_min and m.get("exp_r", -1) > 0 and (m.get("t_day_clustered") or 0) >= t_min
 
 
-def run(only: str | None = None) -> None:
-    es = entries()
-    for e in es:
-        if (only and e["id"] != only) or e["status"] not in RUNNABLE or not e.get("module"):
+def _run_module(e: dict, es: list[dict]) -> None:
+    """Old research/reddit_bt path: train / valid / forward splits and the status gates (entries with `module`)."""
+    got = {}
+    for split in ("train", "valid", "forward"):
+        m = _score(e, split)
+        if split == "forward" and not m.get("n"):
             continue
-        got = {}
-        for split in ("train", "valid", "forward"):
-            m = _score(e, split)
-            if split == "forward" and not m.get("n"):
-                continue
-            _record(e, split, m)
-            got[split] = m
-            print(e["id"], split, {k: m.get(k) for k in ("n", "win_rate", "exp_r", "t_day_clustered")})
-        if e["status"] in ("coded", "testing", "rework"):
-            ok = got["train"].get("exp_r", -1) > 0 and _passes(got["valid"], GATE["finalist_valid_n"], GATE["finalist_valid_t"])
-            nb = getattr(importlib.import_module(e["module"]), "NEIGHBORS", {}).get(e["variant"], [])
-            if ok and nb:
-                vals = [_score(e, "valid", v).get("exp_r", -1) for v in nb]
-                e["plateau_valid_exp_r"] = round(sum(vals) / len(vals), 4)
-                ok = e["plateau_valid_exp_r"] > 0
-            e["status"] = ("finalist" if holdout_looks(e, es) < MAX_LOOKS else "forward_wait") if ok else "failed"
-        if e["status"] in ("forward_wait", "probation"):
-            f = got.get("forward", {})
-            if f.get("days", 0) >= GATE["forward_sessions"] and f.get("n", 0) >= GATE["forward_n"]:
-                good = _passes(f, GATE["forward_n"], GATE["forward_t"])
-                e["status"] = ("live" if e["status"] == "probation" else "proposed") if good else \
-                    ("retired" if e["status"] == "probation" else "failed")
+        _record(e, split, m)
+        got[split] = m
+        print(e["id"], split, {k: m.get(k) for k in ("n", "win_rate", "exp_r", "t_day_clustered")})
+    if e["status"] in ("coded", "testing", "rework"):
+        ok = got["train"].get("exp_r", -1) > 0 and _passes(got["valid"], GATE["finalist_valid_n"], GATE["finalist_valid_t"])
+        nb = getattr(importlib.import_module(e["module"]), "NEIGHBORS", {}).get(e["variant"], [])
+        if ok and nb:
+            vals = [_score(e, "valid", v).get("exp_r", -1) for v in nb]
+            e["plateau_valid_exp_r"] = round(sum(vals) / len(vals), 4)
+            ok = e["plateau_valid_exp_r"] > 0
+        e["status"] = ("finalist" if holdout_looks(e, es) < MAX_LOOKS else "forward_wait") if ok else "failed"
+    if e["status"] in ("forward_wait", "probation"):
         f = got.get("forward", {})
-        if e["status"] == "live" and f.get("n", 0) >= GATE["forward_review_n"] and f.get("exp_r", 0) < 0:
-            e["notes"] = (e.get("notes", "") + f" | {date.today()}: FLAG forward exp_r {f['exp_r']} over {f['n']} trades").strip(" |")
+        if f.get("days", 0) >= GATE["forward_sessions"] and f.get("n", 0) >= GATE["forward_n"]:
+            good = _passes(f, GATE["forward_n"], GATE["forward_t"])
+            e["status"] = ("live" if e["status"] == "probation" else "proposed") if good else \
+                ("retired" if e["status"] == "probation" else "failed")
+    f = got.get("forward", {})
+    if e["status"] == "live" and f.get("n", 0) >= GATE["forward_review_n"] and f.get("exp_r", 0) < 0:
+        e["notes"] = (e.get("notes", "") + f" | {date.today()}: FLAG forward exp_r {f['exp_r']} over {f['n']} trades").strip(" |")
+
+
+def _summary(lines: list[str]) -> None:
+    """Print, and append to the GitHub job summary when running in Actions."""
+    print("\n".join(lines))
+    p = os.environ.get("GITHUB_STEP_SUMMARY")
+    if p:
+        with open(p, "a") as f:
+            f.write("\n".join(["### Backlog re-test", ""] + [f"- {x}" for x in lines]) + "\n")
+
+
+def run(only: str | None = None, cache: str | Path | None = None, workers: int | None = None) -> int:
+    """Re-test every runnable entry. `module` entries: the old reddit_bt splits and gates. `lab_module` entries:
+    the lab pipeline on the 1-minute cache (mcf/research/backlog_lab.py; split "lab_cache", monitoring only).
+    Prints how many entries were scored / skipped and why. Returns 1 when runnable entries exist but none was scored."""
+    from . import backlog_lab as BL
+
+    t0 = time.time()
+    es = entries()
+    runnable = [e for e in es if e["status"] in RUNNABLE and (not only or e["id"] == only)]
+    scored, skipped, specs = [], {}, []
+    for e in runnable:
+        if e.get("module"):
+            try:
+                _run_module(e, es)
+                scored.append(e["id"])
+            except Exception as ex:                   # noqa: BLE001 - reported, never silent
+                skipped[e["id"]] = f"module scoring failed: {type(ex).__name__}: {ex}"
+        elif e.get("lab_module"):
+            try:
+                specs.append(BL.spec_for(e))
+            except Exception as ex:                   # noqa: BLE001
+                skipped[e["id"]] = f"lab module unusable: {type(ex).__name__}: {ex}"
+        else:
+            skipped[e["id"]] = "no module / lab_module (not coded as a lab setup)"
+    info = {}
+    if specs:
+        res, errors, info = BL.score(specs, cache or BL.CACHE, workers=workers)
+        for s in specs:
+            if s["id"] in res:
+                m = res[s["id"]]
+                _record({"id": s["id"]}, "lab_cache", m)
+                scored.append(s["id"])
+                fw = m.get("forward", {})
+                print(f"{s['id']:<44} n {m.get('n', 0):>5} win {m.get('win_rate')} exp {m.get('exp_r')} t {m.get('t_day_clustered')}"
+                      f" | up {m['up'].get('exp_r')} ({m['up'].get('n')}) down {m['down'].get('exp_r')} ({m['down'].get('n')})"
+                      f" | since {fw.get('since')}: n {fw.get('n', 0)} exp {fw.get('exp_r')} t {fw.get('t_day_clustered')}")
+            elif s["id"] in errors:
+                skipped[s["id"]] = errors[s["id"]]
+            else:
+                skipped[s["id"]] = f"no bars in the cache ({info.get('cache')}: {info.get('symbols', 0)} symbols)"
+        if errors.get("_symbols"):
+            print(f"WARNING: {len(errors['_symbols'])} symbol files failed to load, first: {errors['_symbols'][0]}")
     save(es)
     report()
+    lines = [f"runnable entries: {len(runnable)} · scored: {len(scored)} · skipped: {len(skipped)} · {time.time() - t0:.0f}s"]
+    if info.get("sessions"):
+        lines.append(f"lab cache: {info['symbols']} symbols, {info['sessions']} sessions {info['first']}..{info['last']} "
+                     f"(locked block 2024-11-01..2025-02-28 excluded)")
+    reasons: dict[str, list[str]] = {}
+    for i, why in skipped.items():
+        reasons.setdefault(why, []).append(i)
+    for why, ids in sorted(reasons.items(), key=lambda kv: -len(kv[1])):
+        lines.append(f"skipped {len(ids)}: {why} -> {', '.join(ids[:12])}{' ...' if len(ids) > 12 else ''}")
+    _summary(lines)
+    if runnable and not scored:
+        print("ERROR: runnable backlog entries exist but none was scored", file=sys.stderr)
+        return 1
+    return 0
 
 
 def _root(e: dict, by_id: dict) -> str:
@@ -167,6 +239,21 @@ def holdout(eid: str) -> None:
     report()
 
 
+def _lab_cell(e: dict, last: dict) -> str:
+    r = last.get((e["id"], "lab_cache"))
+    if not r:
+        return "–"
+    m = r["metrics"]
+    f = lambda x: "–" if x is None else f"{x:+.3f}"
+    out = f"{f(m.get('exp_r'))}R n{m.get('n', 0)} t{m.get('t_day_clustered')} ({m.get('sample', '')}; up {f(m.get('up', {}).get('exp_r'))} / dn {f(m.get('down', {}).get('exp_r'))})"
+    fw = m.get("forward")
+    if fw:
+        out += f" · since {fw['since']}: {f(fw.get('exp_r'))}R n{fw.get('n', 0)} t{fw.get('t_day_clustered')}"
+        if e.get("status") == "live" and fw.get("n", 0) >= GATE["forward_review_n"] and (fw.get("exp_r") or 0) < 0:
+            out += " **FLAG**"
+    return out + f" [{r.get('run_date')}]"
+
+
 def report() -> None:
     last: dict[tuple, dict] = {}
     for r in results():
@@ -179,17 +266,22 @@ def report() -> None:
     lines = ["# Strategy backlog", "", "*Educational only — not financial advice. Generated by `python -m mcf.research.backlog`.*", "",
              "Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) "
              "or fails. Costs are always in; holdouts are scored once; failures stay listed.", "",
-             f"Total ideas: {len(es)} · coded: {sum(1 for e in es if e.get('module'))} · "
+             f"Total ideas: {len(es)} · coded: {sum(1 for e in es if e.get('module') or e.get('lab_module'))} · "
              f"failed: {sum(1 for e in es if e['status'] in ('failed', 'holdout_failed'))} · "
              f"configurations tried (all lineages): {sum(e.get('configs_tried') or 0 for e in es)}", "",
              "A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, "
              "paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look "
              "(t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is "
              "confirmed or retired on forward data.", "",
-             "| Status | ID | Idea | Source | Train | Valid | Test (once) | Q2 (once) | Forward |", "|---|---|---|---|---|---|---|---|---|"]
+             "Forward re-test: lab entries scored weekly on the 1-minute research cache (open data since 2026-06-15, production "
+             "+ time-of-day costs): exp R, n, day-clustered t on the whole cache, up / down sessions, and the same after the "
+             "entry's approval date (the true forward sample). FLAG = live with forward exp < 0 over >= "
+             f"{GATE['forward_review_n']} trades.", "",
+             "| Status | ID | Idea | Source | Train | Valid | Test (once) | Q2 (once) | Forward | Forward re-test |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
     for e in es:
         lines.append(f"| {e['status']} | {e['id']} | {e['title']} | {e.get('source', '')} | {cell(e, 'train')} | {cell(e, 'valid')} | "
-                     f"{cell(e, 'test')} | {cell(e, 'q2')} | {cell(e, 'forward')} |")
+                     f"{cell(e, 'test')} | {cell(e, 'q2')} | {cell(e, 'forward')} | {_lab_cell(e, last)} |")
     REPORT.write_text("\n".join(lines) + "\n")
 
 
@@ -198,12 +290,14 @@ if __name__ == "__main__":
     ap.add_argument("cmd", choices=["list", "run", "holdout", "report"])
     ap.add_argument("id", nargs="?")
     ap.add_argument("--id", dest="only")
+    ap.add_argument("--cache", help="research bar cache root (default data/cache; reads <cache>/1Min)")
+    ap.add_argument("--workers", type=int, help="processes for the lab re-test (default min(4, CPUs))")
     a = ap.parse_args()
     if a.cmd == "list":
         for e in entries():
             print(f"{e['status']:<15} {e['id']:<28} {e['title']}")
     elif a.cmd == "run":
-        run(a.only or a.id)
+        sys.exit(run(a.only or a.id, a.cache, a.workers))
     elif a.cmd == "holdout":
         holdout(a.id)
     else:
