@@ -260,3 +260,36 @@ Amended definitions (everything else as section 2):
 - Turn base rate (>= 0.5% swing at bar i or i-1): tops 5.6%, bottoms 5.8% of eligible bars. Extreme fade signals again
   sit on tops (H5-v2 agree >= 6 fade-short: hit 24.5% vs 5.2%, lift 4.7x; H1-v2 heat >= 50 fade-short lift 3.9x), but
   the trades lose (-0.096R and -0.121R) because the first 0.5% after the flagged bar is as likely up as down.
+
+### 7.2 Heat 2.0, P view with the prior-day / prior-hours context block (heat2-confluence-P; lineage N = 48, t bar 2.78)
+- **Failures first: all 24 configurations lose on valid** (best M1-short-nomkt q99.5: -0.024R, n 5,052, t -1.18).
+  Train looked good for M1 (+0.02 to +0.16R in-sample), so the context block mostly added fit, not forecast.
+- **Walk-forward:** 2 of 24 positive overall, both tiny (M1-short-nomkt q99.8 +0.016R, M1-short-full q99.8 +0.009R;
+  positive-month share 0.50 < 0.6). All M2 (turn-probability) models lose badly (-0.13 to -0.23R valid, 0% positive
+  months): a model of "where turns happen" is mostly a model of volatility (atrPct, distance from SMAs), and a fixed
+  +-0.5% bracket on volatile names is a coin flip with costs.
+- **Market-neutral control:** the no-market versions beat the full versions out of sample (valid residual-return
+  correlation +0.008 vs +0.006; full-set models carried market timing that reversed: SPY-return corr train +0.03..+0.05,
+  valid -0.013). Residual-return correlation +0.006 to +0.008 on valid is above the original heat's ~0.000, i.e. the
+  multi-factor score does contain a little stock-specific information - about 1/100 of the variance, far below costs.
+- **Versus the original heat after costs: no improvement.** Best valid original cells: H5-v0 agree >= 6 fade-long
+  -0.015R (n 2,935), DB |heat| 40-50 fade-short +0.049R (n 763); best heat 2.0: -0.024R.
+- Weights that carry the M1 models (standardised): fromOpen / rel_fo (reversion of the day's move relative to SPY),
+  distance to the prior-day high and low (both negative for longs: near either prior-day level is better), prior-day
+  range (+), sma20 distance (-). The owner's "previous day" levels do appear among the top weights.
+
+## 8. Verdict and next steps
+- **What heat is:** a fixed, un-normalised sum of 8 hand-scored indicators that mixes contrarian (RSI, range position)
+  and trend (momentum, EMA, MACD, VWAP) terms, plus a saturated candlestick term and, as run, a broken volume term that
+  biased every reading by -10. Its sign was used as the trade direction.
+- **Historical:** across 200 original-heat configurations (R and 0.5% views) and 48 heat-2.0 configurations, nothing
+  passes; MarcoFlow's follow-the-heat direction is the worst family; extreme heat flags tops 4-10x above base rate but
+  that does not survive costs; component *agreement* fading (all bearish -> buy) has the most consistent small excess
+  (+0.02 to +0.06R over same-time controls) but only in up sessions.
+- **Recommendation:** retire heat (original and 2.0) as an entry trigger; do not port it into live setups. Keep the two
+  reusable pieces: (1) the V2 replication (`heat_lib.py`) for auditing MarcoFlow; (2) the component-agreement /
+  confluence count as a *context feature* for the turn-labelling work (regime-gated: up sessions only), not a setup.
+  The marginal stock-specific information (prior-day H/L distance, day's move vs SPY) is worth passing to the turn
+  swarm as features. Premarket features need a premarket download before they can be tested on history.
+- Configurations tried this study: 100 (heat2-orig) + 100 (heat2-orig-P) + 24 (heat2-confluence) + 24
+  (heat2-confluence-P) = 248. The locked block was never loaded. Educational only - not financial advice.
