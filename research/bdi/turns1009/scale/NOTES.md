@@ -175,4 +175,38 @@ One process, float32 per-symbol arrays, aggregates per (condition, session) only
 deleted at the end.
 
 ### 1.9 Amendments
-(none yet)
+**A1 (2026-10-11, lead's request after T1 `CASES.md`; written while stage A was still running, before any
+configuration of this study was scored).** Adds stage C, the T1 confluence signatures S1-S5, on 1-minute bars.
+- Data: the 1-minute cache `data/cache_hist/1Min` already covers the whole open history (2024-09..2026-10, locked
+  rows dropped on load), so the 1-minute variants run on all 426 open sessions and do not need the shorter
+  `data/cache/1Min` window. Same population and R (0.25 x atr_d) as 1.1. Entries are taken at the close of a
+  1-minute bar, bar close 09:50..15:00. Premarket levels are not available (RTH cache) and are left out.
+- Own-stock percentiles: the quantile over the same stock's previous 20 open sessions (all RTH bars; at least 10
+  sessions), nothing from the current session.
+- **1-minute trigger trig1** (long / short mirror): the 1-minute MACD(12,26,9) histogram crossed from <= 0 to > 0
+  within the last 3 bars (incl. this one), OR bullish engulfing on this bar (up bar, prior down, close >= prior open,
+  open <= prior close), OR hammer (lower wick >= 2 x body, upper wick <= body, range > 0).
+- **S1 stretched + roll** (C3b): last completed 5-minute bar's VWAP z ((close - VWAP) / volume-weighted sd) <= own p10
+  AND its 5-minute RSI14 (simple) <= own p10 (short: both >= p90), AND trig1.
+- **S2 1-minute flush** (C6): ROC10 in ATR ((close - close 10 bars ago) / atr_d) <= own p10 (short >= p90) on this bar
+  AND trig1; longs also need 1-minute RSI2 (simple) <= 10 and close < 1-minute EMA9 on at least one of the last 3 bars.
+- **S3 flush into a level**: S2 AND this bar's low (short: high) within 0.10 x atr_d of at least one of: the session
+  low as of 30 minutes earlier (short: high), the day open, the prior close, the prior-day low (short: high), the
+  nearest multiple of $5. Read against S2 alone: does the level add anything?
+- **S4 market-confirmed**: S2 AND a causally confirmed swing low (short: high) of SPY or the stock's sector ETF (W2
+  sector map; SPY when none) in the last 6 minutes: at minute u the ETF's bar u-1 low is the lowest low of bars
+  u-30..u-1, bar u has a higher low and closes above the highest high of bars u-3..u-1 (mirror for highs).
+- **S5 confluence count**: the number of this study's 59 non-time 5-minute flags (1.3 minus D1-D4) lit for the side on
+  the last completed 5-minute bar >= own p97 AND trig1. (T1 counted ~99 flags; this panel is the one available here.)
+- Exits: **fixed 1R** (t1s1 on 1-minute bars, stop first inside a bar, timed exit at the 15:55 close, `gates.prod_r`
+  with tod costs) and **trail after 1R** (initial stop -1R; once a bar's high reaches +1R the stop ratchets to the
+  highest high since entry - 1R, applied from the next bar; stop first; timed exit 15:55; cost: entry side x tod
+  multiplier + exit side 1c + 1 bps, +2c on stop exits).
+- Taking signals: **all** = every onset with a 15-minute refractory per symbol-side, only when no trade of that
+  symbol-side is open; **first** = first signal per symbol-day.
+- Raw and SPY-hedged (1.5, SPY 1-minute closes).
+- Configurations: 5 signatures x 2 sides x 2 exits x 2 taking rules x {raw, hedged} = **80**. **N = 35,776 + 80 =
+  35,856**; the t bar stays 4.58 (sqrt(2 ln 35,856) = 4.579). Same gates as 1.6; plateau for S-lines = the other
+  taking rule and the other exit of the same signature and side must have mean exp > 0.
+- Per the lead, no configurations are spent on bare level retests, single oscillators, breadth level or heat as a
+  timer beyond what stage A already pre-declared (stage A was fixed before T1 reported and is kept unchanged).
