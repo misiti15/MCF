@@ -1,0 +1,74 @@
+# Earnings surprise + revenue data for the ER earnings study (research/bdi/earnings/NOTES.md), 2026-10-11.
+# Yahoo (yfinance get_earnings_dates) and SEC EDGAR companyfacts are blocked by the Claude container's proxy, so this
+# runs on GitHub Actions and publishes zstd parquet to the `research-data` branch (same pattern as public-data.yml).
+# Earlier files on the branch are kept; rows of symbols that fail this run are carried over from the previous files.
+# Rule-19 locked-block rows (2024-11-01..2025-02-28) go to separate *_lockedblock.parquet files for the lead.
+# Manual run only. Educational only - not financial advice.
+name: earnings-data
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "subset of: yf sec"
+        default: "yf sec"
+      symbols:
+        description: "optional space-separated symbols (empty = research/lab_symbols.txt without ETFs)"
+        default: ""
+      max_symbols:
+        description: "0 = all"
+        default: "0"
+      sleep_yf:
+        description: "seconds between Yahoo requests"
+        default: "1.5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-data-publish
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q "pandas>=2.1" pyarrow requests "yfinance==1.7.0" beautifulsoup4 lxml html5lib
+      - name: Previous files (carry-over for partial runs)
+        run: |
+          mkdir -p prev
+          git fetch -q origin research-data || exit 0
+          for f in earnings_yf earnings_yf_lockedblock sec_facts sec_facts_lockedblock; do
+            git show origin/research-data:$f.parquet > prev/$f.parquet 2>/dev/null || rm -f prev/$f.parquet
+          done
+          ls -la prev
+      - name: Fetch
+        env:
+          SEC_UA: ${{ secrets.SEC_UA || vars.SEC_UA }}
+        run: |
+          [ -n "$SEC_UA" ] || export SEC_UA="MCF research ${{ github.repository }} (no contact set)"
+          python research/bdi/earnings/actions/fetch_earnings.py --out earnings_data --prev prev \
+            --only ${{ inputs.only }} --max-symbols ${{ inputs.max_symbols }} --sleep-yf ${{ inputs.sleep_yf }} \
+            ${{ inputs.symbols != '' && format('--symbols {0}', inputs.symbols) || '' }}
+      - name: Status
+        if: always()
+        run: cat earnings_data/earnings_fetch_status.json 2>/dev/null | head -c 4000 || true
+      - name: Publish to the research-data branch
+        if: always()
+        run: |
+          # Adds or replaces the fetched files only; files from earlier runs (other sources) are kept.
+          [ -d earnings_data ] && ls earnings_data/*.parquet >/dev/null 2>&1 || { echo "nothing fetched"; exit 1; }
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          mv earnings_data /tmp/earnings_data
+          git checkout -- . ; git clean -fdq
+          git fetch origin research-data && git checkout research-data || {
+            git checkout --orphan research-data; git rm -rq --cached . 2>/dev/null || true
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +; }
+          cp -r /tmp/earnings_data/* .
+          echo "Earnings files fetched $(date -u) by earnings-data.yml. Educational only - not financial advice." >> README.md
+          git add -A && git commit -qm "earnings-data $(date -u +%F)" && git push -q origin research-data

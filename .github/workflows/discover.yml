@@ -45,10 +45,29 @@ jobs:
           restore-keys: lab-cache-
       - name: Refresh bars to the last session
         run: python scripts/refresh_lab_data.py
-      - name: Re-test the strategy backlog (train / valid / forward; holdouts stay locked)
+      # Lab entries are re-tested on the 1-minute cache refreshed above (2026-06-15 on; the rule-19 locked block is never
+      # read). Exits non-zero when runnable entries exist but none was scored: the step shows as failed in the job
+      # summary (continue-on-error), and publishing still runs.
+      - name: Re-test the strategy backlog (lab modules on the 1-minute cache; holdouts stay locked)
+        id: backlog
+        continue-on-error: true
+        timeout-minutes: 60
         run: |
-          python -m mcf.research.backlog run || echo "backlog run failed"
-          mkdir -p state/backlog && cp research/backlog.jsonl research/backlog_results.jsonl research/BACKLOG.md state/backlog/ 2>/dev/null || true
+          wc -l < research/backlog_results.jsonl > /tmp/results_before 2>/dev/null || echo 0 > /tmp/results_before
+          python -m mcf.research.backlog run --workers 4
+      - name: Stage backlog results
+        run: |
+          if [ "${{ steps.backlog.outcome }}" != "success" ]; then
+            echo "::error title=Backlog re-test failed::python -m mcf.research.backlog run ended '${{ steps.backlog.outcome }}' - see the step log"
+            printf '### Backlog re-test FAILED (%s)\nSee the "Re-test the strategy backlog" step log; results below may be stale.\n' "${{ steps.backlog.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          mkdir -p state/backlog
+          # Keep every week's rows: append this run's new result lines to a history file on the state branch.
+          n0=$(cat /tmp/results_before 2>/dev/null || echo 0)
+          [ -f research/backlog_results.jsonl ] && tail -n +$((n0 + 1)) research/backlog_results.jsonl >> state/backlog/backlog_results_history.jsonl
+          for f in research/backlog.jsonl research/backlog_results.jsonl research/BACKLOG.md; do
+            [ -f "$f" ] && cp "$f" state/backlog/ || echo "::warning::$f missing"
+          done
       - name: Publish
         run: |
           cd state && git add discovery backlog
