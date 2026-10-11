@@ -19,6 +19,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from ..setup_names import label as setup_label
 
 DISCLAIMER = "Educational only — not financial advice."
 VALIDATION = Path(__file__).resolve().parents[2] / "config" / "validation.json"
@@ -206,7 +207,7 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
         adj = spy_adjust(tr, spy)
         g = adj.groupby("strategy").agg(trades=("pnl", "size"), pnl=("pnl", "sum"), win=("pnl", lambda p: (p > 0).mean()),
                                         avg_r=("r_multiple", "mean"), adj_r=("adj_r", "mean"))
-        by_setup = "".join(f"<tr><td>{k}<br><span style='font-size:11px;color:#b45309'>{vs.get(k, {}).get('note', '')}</span></td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>{'–' if pd.isna(v.adj_r) else f'{v.adj_r:+.2f}'}</td><td>${v.pnl:,.2f}</td></tr>"
+        by_setup = "".join(f"<tr><td>{setup_label(k)}<br><span style='font-size:11px;color:#b45309'>{vs.get(k, {}).get('note', '')}</span></td><td>{v.trades}</td><td>{v.win:.0%}</td><td>{v.avg_r:+.2f}</td><td>{'–' if pd.isna(v.adj_r) else f'{v.adj_r:+.2f}'}</td><td>${v.pnl:,.2f}</td></tr>"
                            for k, v in g.iterrows())
         if adj["mkt_pnl"].notna().any():
             m = float(adj["mkt_pnl"].sum())
