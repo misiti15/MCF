@@ -294,3 +294,9 @@ def test_cmd_work_fallbacks_breaker_and_budget(tmp_path, monkeypatch):
             "--time-budget", "5"])
     st = json.loads((out3 / "status_shard000.json").read_text())
     assert all(r["status"] == "deferred" for r in st.values())
+
+
+def test_owner_file_starting_with_guest_speaker_label_is_not_a_header(tmp_path):
+    (tmp_path / "ep009.txt").write_text("Guest: Thanks for having me.\n\nAaron: Sure.\n")
+    r = C.read_transcript(tmp_path / "ep009.txt")
+    assert r["meta"]["episode"] == 9 and r["text"].startswith("Guest: Thanks")

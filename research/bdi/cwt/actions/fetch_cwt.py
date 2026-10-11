@@ -622,7 +622,7 @@ def read_transcript(path):
         k, v = lines[j].split(":", 1)
         meta[k.strip().lower()] = v.strip()
         j += 1
-    if meta and (j >= len(lines) or not lines[j].strip()):
+    if set(meta) & {"episode", "key", "title", "date", "source"} and (j >= len(lines) or not lines[j].strip()):
         body = "\n".join(lines[j:])
     else:
         meta, body = {}, raw

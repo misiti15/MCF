@@ -168,6 +168,8 @@ jobs:
           git add -A cwt
           if git diff --cached --quiet; then echo "nothing new to publish"; else
             git commit -qm "cwt-transcripts $MODE $(date -u +%F)"
-            for i in 1 2 3; do git push -q origin research-data && break; sleep 10; git pull -q --rebase origin research-data; done
+            pushed=0
+            for i in 1 2 3; do git push -q origin research-data && { pushed=1; break; }; sleep 10; git pull -q --rebase origin research-data; done
+            [ "$pushed" = 1 ] || { echo "::error::push to research-data failed"; exit 1; }
           fi
           exit $rc
