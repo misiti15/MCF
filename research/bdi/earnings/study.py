@@ -102,7 +102,7 @@ print("events", len(EV), EV.split.value_counts().to_dict(), flush=True)
 def cond_mask(ev, fam, cond, side):
     s = side
     re = ev.REACT * s
-    if fam == "B":
+    if fam in ("B", "A"):
         return np.ones(len(ev), bool)
     if fam == "U":
         k, dirn = cond
