@@ -66,3 +66,9 @@ follows these rules.
       - *Regime split:* every session is classed up / flat / down by the universe's median open-to-close return (terciles over the history). Expectancy after costs must be positive in up sessions and in down sessions separately.
       - *Walk-forward:* rolling folds (3 months of train, the next month as test, step 1 month). The share of test months with positive expectancy is reported and must be at least 60%.
       - *Try-count-scaled t:* the day-clustered t must reach `max(1.5, sqrt(2·ln N))`, where N is the number of configurations tried in the lineage (the expected maximum of N null t-statistics).
+
+## Testing account lifecycle (owner, 2026-10-11)
+20. **The Testing account has no cap on the number of setups, and a demoted setup goes back to Testing instead of being dropped.**
+    - Any setup removed from the primary account moves to the Testing account, in the same form it ran in primary. Its full-day version runs there too.
+    - It is retired completely only after **10 further Testing sessions**, counted from the session it moved, and only if it is still below its bar. Retiring is the owner's decision, made after the scorecard over those sessions.
+    - When setups compete for the same symbol, Testing results are reported per setup, together with how many signals each lost to a higher-priority setup. A setup's count is not judged without that context.

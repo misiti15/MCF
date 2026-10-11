@@ -97,45 +97,71 @@ def trades_for(df, mk, side, geom) -> pd.DataFrame:
                          "tod": df["tod"].to_numpy()[idx].astype(int), "r": r, "exit": ex})
 
 
-def scan():
+def _month_group(mo: str, syms: list[str]) -> pd.DataFrame:
+    """One open month of history2y frames for a symbol group (+ late rows). Same guard as lib.load_month."""
+    import gc
+    from lib import DATA as HDATA
+    if mo in LOCKED_MONTHS:
+        raise PermissionError("locked block")
+    f = pads.field("symbol").isin(syms)
+    df = pads.dataset(str(HDATA / "frames" / f"month={mo}"), format="parquet").to_table(filter=f).to_pandas()
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    nxt = str(pd.Period(mo, freq="M") + 1)
+    lt = pads.dataset(str(DATA / "late"), format="parquet").to_table(
+        filter=f & (pads.field("date") >= f"{mo}-01") & (pads.field("date") < f"{nxt}-01")).to_pandas()
+    lt["date"] = pd.to_datetime(lt["date"]).dt.date
+    df = pd.concat([df.drop(columns=["ts"]), lt[[c for c in df.columns if c != "ts"]]], ignore_index=True)
+    gc.collect()
+    return df.sort_values(["symbol", "date", "tod"], kind="mergesort").reset_index(drop=True)
+
+
+def scan(groups: int = 6):
+    import gc
     sts = setups()
     blocks = _blocks()
-    rows, t0 = [], time.time()
+    all_syms = sorted(pd.read_parquet(DATA / "late", columns=["symbol"])["symbol"].astype(str).unique())
+    parts = DATA / "trades_parts"
+    parts.mkdir(exist_ok=True)
+    t0 = time.time()
     for mo in months():
-        df = load_month(mo)
-        lt = _late(mo)
-        lt = lt[[c for c in df.columns]]
-        df = pd.concat([df, lt], ignore_index=True)
-        df = df.sort_values(["symbol", "date", "tod"], kind="mergesort").reset_index(drop=True)
-        tod = df["tod"].to_numpy()
-        adv = df["adv20"].fillna(0).to_numpy()
-        key = df["symbol"].astype(str) + "|" + df["date"].astype(str) + "|" + df["tod"].astype(str)
-        df["_block"] = key.isin(blocks).to_numpy()
-        del key
-        cache = {}
-        for s in sts:
-            m = s["mod"]
-            src = next((x for x in sts if x["account"] == "testing" and x["setup"] == (s["setup"] + "-FD")), None)
-            mk_key = s["setup"] if s["account"] == "testing" else s["setup"] + "-FD"
-            if mk_key not in cache:
-                mm = src["mod"] if src is not None else m
-                if s["guard"]:
-                    mm.vwap_band_block = lambda d, k=2.0: d["_block"].to_numpy(bool)
-                with np.errstate(invalid="ignore"):
-                    if s["kind"] == "heat":
-                        sc = np.asarray(mm.score(df), float)
-                        cache[mk_key] = (sc <= mm.SHORT_AT) if s["side"] == "short" else (sc >= mm.LONG_AT)
-                    else:
-                        cache[mk_key] = np.asarray(mm.mask(df), bool)
-            M = cache[mk_key] & (adv >= s["min_adv"])
-            for nm, hi in (("cur", 1500), ("x1515", 1515), ("x1530", 1530)):
-                tr = trades_for(df, M & (tod >= s["lo"]) & (tod <= hi), s["side"], s["geom"])
-                tr["setup"], tr["account"], tr["set"] = s["setup"], s["account"], nm
-                rows.append(tr)
-        print(f"{mo}: {len(df)} rows ({time.time() - t0:.0f}s)", flush=True)
-        del df, cache
-    x = pd.concat(rows, ignore_index=True)
-    x["symbol"] = x["symbol"].astype(str)
+        out = parts / f"{mo}.parquet"
+        if out.exists():
+            continue
+        rows, nrows = [], 0
+        for gi in range(groups):
+            df = _month_group(mo, all_syms[gi::groups])
+            nrows += len(df)
+            tod = df["tod"].to_numpy()
+            adv = df["adv20"].fillna(0).to_numpy()
+            key = df["symbol"].astype(str) + "|" + df["date"].astype(str) + "|" + df["tod"].astype(str)
+            df["_block"] = key.isin(blocks).to_numpy()
+            del key
+            cache = {}
+            for s in sts:
+                mk_key = s["setup"] if s["account"] == "testing" else s["setup"] + "-FD"
+                if mk_key not in cache:
+                    mm = next(x for x in sts if x["setup"] == mk_key)["mod"]
+                    if s["guard"]:
+                        mm.vwap_band_block = lambda d, k=2.0: d["_block"].to_numpy(bool)
+                    with np.errstate(invalid="ignore"):
+                        if s["kind"] == "heat":
+                            sc = np.asarray(mm.score(df), float)
+                            cache[mk_key] = (sc <= mm.SHORT_AT) if s["side"] == "short" else (sc >= mm.LONG_AT)
+                        else:
+                            cache[mk_key] = np.asarray(mm.mask(df), bool)
+                    gc.collect()
+                M = cache[mk_key] & (adv >= s["min_adv"])
+                for nm, hi in (("cur", 1500), ("x1515", 1515), ("x1530", 1530)):
+                    tr = trades_for(df, M & (tod >= s["lo"]) & (tod <= hi), s["side"], s["geom"])
+                    tr["setup"], tr["account"], tr["set"] = s["setup"], s["account"], nm
+                    rows.append(tr)
+            del df, cache
+            gc.collect()
+        x = pd.concat(rows, ignore_index=True)
+        x["symbol"] = x["symbol"].astype(str)
+        x.to_parquet(out, index=False)
+        print(f"{mo}: {nrows} rows, {len(x)} trades ({time.time() - t0:.0f}s)", flush=True)
+    x = pd.concat([pd.read_parquet(p) for p in sorted(parts.glob("*.parquet"))], ignore_index=True)
     x.to_parquet(TRADES, index=False)
     print("trades", len(x))
 
