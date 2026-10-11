@@ -146,3 +146,12 @@ Guest: Thanks for having me ...
 - Feed coverage: the candidate feed URLs are unverified (could not be reached from the container); discovery via
   iTunes is the primary path, `feed_url` the manual override.
 - Guest names are parsed from titles (best effort); episode numbering of specials/bonus episodes may vary by feed.
+
+## Copyright guard (2026-10-11)
+`misiti15/MCF` is a **public** repository, so its `research-data` branch is public. Full episode transcripts are the show's
+copyrighted content and must not be published there. The workflow therefore refuses every mode except `list` while
+the repository is public. Before transcription runs, the owner chooses one of:
+1. A separate **private** repository for transcripts. The public repo's free runners do the work and push only to the private repo, using a fine-grained token stored as a secret. This needs a small workflow change.
+2. Owner-supplied transcripts (e.g. via Gemini), kept in that private repository.
+
+Only derived, paraphrased setup rules (no verbatim transcript text) go into this public repository.

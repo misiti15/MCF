@@ -47,6 +47,13 @@ jobs:
       shards: ${{ steps.plan.outputs.shards }}
       todo: ${{ steps.plan.outputs.todo }}
     steps:
+      # Copyright guard (lead, 2026-10-11): this repository is public, so full transcripts must not be published to
+      # its branches. Only `mode=list` (episode metadata) may run until the owner picks a private destination.
+      - name: Refuse to publish transcripts from a public repository
+        if: inputs.mode != 'list' && github.event.repository.private != true
+        run: |
+          echo "::error::mode=${{ inputs.mode }} would publish copyrighted transcripts to a PUBLIC repository. Run mode=list only, or set a private destination first (see research/bdi/cwt/README.md)."
+          exit 1
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
