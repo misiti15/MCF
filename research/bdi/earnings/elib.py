@@ -82,6 +82,40 @@ def events(fixed_window: bool = False) -> pd.DataFrame:
     else:
         R = np.where(np.nan_to_num(Vn[d, j]) >= np.nan_to_num(Vn[d + 1, j]), d, d + 1)
     ec["R"] = R
+    return _features(ec, fixed_window)
+
+
+def events_yahoo() -> pd.DataFrame:
+    """Part 3 (NOTES 3 / 3.1): events = Yahoo rows with the true report hour. bmo (hour 4..9.5) -> R = d (first
+    trading day on/after the date); amc (hour >= 16) -> R = first trading day AFTER the date; unknown (0-3 AM,
+    missing) / during market -> the 1.2 volume proxy. Keeps surprise columns and the previous 3 surprises (incl.
+    pre-2019 Yahoo rows; the main file holds no locked-block rows)."""
+    y = pd.read_parquet(DATA / "earnings_yf.parquet")
+    y = y[y.symbol.isin(col) & ~y.symbol.isin(ETF)].copy()
+    y = y.sort_values(["symbol", "date"])
+    y["surprise_pct"] = y["surprise_pct"].clip(-200, 200)
+    g = y.groupby("symbol").surprise_pct
+    for k in (1, 2, 3):
+        y[f"SPREV{k}"] = g.shift(k)
+    y = y[y.date >= "2018-10-01"].copy()
+    y["j"] = y.symbol.map(col)
+    dd = pd.to_datetime(y["date"]).values
+    y["d"] = np.searchsorted(dates.values, dd)                                  # first trading day on/after
+    y["d_after"] = np.searchsorted(dates.values, dd, side="right")              # first trading day after
+    y = y[(y.d >= 30) & (y.d_after + 2 <= T - 1)].copy()
+    h = y.hour_et.to_numpy()
+    timing = np.where((h >= 4) & (h < 9.5), "bmo", np.where(h >= 16, "amc", "proxy"))
+    y["timing"] = timing
+    d = y.d.to_numpy(); j = y.j.to_numpy()
+    proxy = np.where(np.nan_to_num(Vn[d, j]) >= np.nan_to_num(Vn[d + 1, j]), d, d + 1)
+    y["R"] = np.where(timing == "bmo", d, np.where(timing == "amc", y.d_after.to_numpy(), proxy))
+    y = y.sort_values(["j", "R"])
+    y = y[~(y.groupby("j").R.diff() < 10)].copy()
+    return _features(y, False)
+
+
+def _features(ec: pd.DataFrame, fixed_window: bool) -> pd.DataFrame:
+    R = ec.R.to_numpy()
     ec = ec[(R >= 25) & (R + 1 < T)].copy()
     R = ec.R.to_numpy(); j = ec.j.to_numpy(); d = ec.d.to_numpy()
     base = R - 2 if fixed_window else R - 1               # last pre-report close

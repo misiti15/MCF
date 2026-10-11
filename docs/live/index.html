@@ -249,8 +249,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       const next = wk && mins < 570 ? iso(et) : iso(step(et, 1));           // next session to open
       const eff = x => x.effective || iso(step(new Date(x.date + "T12:00:00"), 1));
       const kind = x => x.kind || (Object.keys(x.patch || {}).length || !/report|research|dashboard|workflow|data fetch/i.test(x.title) && /setup|exit|stop|window|account|slot|probation|parity|universe|blackout|sizing/i.test(x.title) ? "trading" : "report / research");
-      const row = x => `<tr><td class="l" style="white-space:normal">${e(x.title)}</td><td>${e(kind(x))}</td><td>${e(eff(x))}${x.mid_session ? " (mid-session)" : ""}</td><td style="white-space:normal">${e(x.approved_by || "")}</td></tr>`;
-      const head = ["Change", "Type", "Effective", "Approved by"];
+      const row = x => `<tr><td class="l" style="white-space:normal"><b>${e(x.plain || x.title)}</b>${x.plain ? `<div style="font-size:11px;color:var(--muted)">${e(x.title)}</div>` : ""}</td><td style="white-space:normal">${e(x.impact || "–")}</td><td>${e(kind(x))}</td><td>${e(eff(x))}${x.mid_session ? " (mid-session)" : ""}</td></tr>`;
+      const head = ["What changes", "What you should see", "Type", "Effective"];
       const nx = es.filter(x => eff(x) > cur).reverse(), mid = es.filter(x => eff(x) === cur && x.mid_session).reverse();
       const recent = es.filter(x => eff(x) <= cur && !(eff(x) === cur && x.mid_session)).slice(-6).reverse();
       $l("#lv-chg-when").textContent = `Next session: ${next} · last or running session: ${cur}`;

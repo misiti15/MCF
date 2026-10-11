@@ -204,6 +204,66 @@ Scored once `earnings_yf.parquet` and `sec_revenue_q.parquet` land on `research-
 - **TR, part-2 rework with true timing** (12): U RUN5down / RUN20down, long, theta 4 %, entry {CLOSE, OPEN} x H.
 - Part 3 N = 138; lineage N = 264 + 138 = **402 -> bar t >= sqrt(2 ln 402) = 3.46**.
 
+### 3.1 Amendments (2026-10-11, after the Yahoo file landed, BEFORE any part-3 scoring)
+Only the schema, session counts and hour histogram of `earnings_yf.parquet` were looked at (no returns).
+- **RV (revenue, 36) is pending data**: SEC was not fetched (needs the SEC_UA secret). Not scored and not counted.
+- **Events = Yahoo rows** (the "own event" clause of §3; Yahoo covers 1,018 of our symbols), 2019+ by R, deduped
+  within 10 sessions. Earlier Yahoo rows (1999-2018) are used only as surprise history. Hours 1-3 AM (411 rows of
+  "1 AM") are treated as unknown, like 12 AM. Unknown / during-market -> the 1.2 volume proxy (720 rows).
+- OPEN_R for amc = O[d+1], for bmo = O[d]; exits as §3.
+- Lead request, added families (counted):
+  - **TRP** (12): P SAME2 / SAME3, long, theta 4 %, entry {CLOSE, OPEN} x H with true timing (the causal re-run of
+    the P near-miss, like TR for U).
+  - **AR** (12): family A with Yahoo amc (report hour 16:xx, so the release precedes the 16:54 signal in most cases)
+    instead of the volume confirmation: side x theta 4 % x entry {AH, OPEN} x H.
+  - **AE** (24): AR events with EPS: {AGREE: AH move and surprise have the same sign (S: AH <= -4 % and surprise < 0;
+    L: AH >= +4 % and surprise > 0); DISAGREE: opposite signs} x side x entry {AH, OPEN} x H.
+- Part 3 counted N = E 54 + EB 24 + SH 12 + TR 12 + TRP 12 + AR 12 + AE 24 = **150**; lineage N = 264 + 150 = 414,
+  **bar t >= sqrt(2 ln 414) = 3.47**. Neighbours: E X 0-5-10; entries OPEN_R-CLOSE_R-OPEN_R1 (adjacent) or
+  CLOSE-OPEN; H one step; TR RUN5<->RUN20 same direction; TRP SAME2<->SAME3; AE none on the condition.
+  Diagnostics (not counted) for candidates and the best row per family: 2x costs, top-300, AH: 2x AH spread.
+
+### 3.2 Results, part 3 (EPS; 150 configurations; failures first)
+*Educational only - not financial advice. Backtest only, costs in, locked block excluded, same metric as part 2.
+Events: 23,563 Yahoo-timed events (bmo 11,822 / amc 11,099 / volume proxy 642); the volume peak sits on the Yahoo
+reaction day for ~80 % of events. Bar t >= 3.47 (lineage N 414). Revenue (RV, 36) pending data, not scored, not
+counted.*
+
+**0 candidates, 47 near, 103 fail.**
+
+| family (N) | cand | near | fail | best row (net ex / trade, t, n) | why it fails |
+|---|---|---|---|---|---|
+| E strictly on EPS (54) | 0 | 8 | 46 | L beat>=10 % OPEN_R H1: +0.04 %, t 0.58 | nothing there; every short row <= +0.03 % |
+| SH surprise history (12) | 0 | 1 | 11 | L 4 beats in a row OPEN_R H1: +0.02 %, t -1.17 | nothing there |
+| EB EPS vs price (24) | 0 | 5 | 19 | L beat & reaction >= 4 % CLOSE H1: +0.09 %, t 2.05 | t; 2x costs +0.03 % |
+| AR after hours, Yahoo amc, no volume filter (12) | 0 | 4 | 8 | L AH >= 4 % AH H20: +0.84 %, t 1.55 | train -0.13 %; **short AH H1: -0.16 %, t 0.78** |
+| AE after hours + EPS (24) | 0 | 11 | 13 | L AH jump & beat AH H20: +0.91 %, t 1.87 | train -0.18 %; short AH drop & miss: -0.87..-1.28 % |
+| TRP previous reactions, true timing (12) | 0 | 8 | 4 | L SAME2 CLOSE H1: +0.17 %, t 2.07 | train -0.07 % |
+| TR pre-report run-up, true timing (12) | 0 | 10 | 2 | L RUN5down OPEN H20: +1.72 %, t 3.45; CLOSE H20: +1.72 %, t 3.39 | **only the t bar (3.47)**; OPEN: down months -0.14 % |
+
+- **EPS alone carries no drift after costs.** Buying any beat (n 18,206) at the first open after the report:
+  +0.03 % (H1), -0.00 % (H5), -0.14 % (H20) vs the universe; shorting misses: -0.02..+0.03 % at OPEN_R and negative
+  at later entries. The size of the beat (0 / 5 / 10 %) does not change that. All-event controls: -0.02..-0.25 %.
+- **EPS and price agreeing** (beat and up >= 4 %) is slightly better than the price reaction alone (+0.09 % next
+  day vs -0.03 % for B L th4 CLOSE H1 in part 2), not significant (t 2.05, 2x costs t 1.35). **Disagreement** (beat but sold off, miss but rallied) loses:
+  the price reaction wins over the EPS number: negative in 10 of 12 rows, down to -1.03 % per trade.
+- **After hours, the lead's row (short after AH drop >= 4 %, cover next close) does NOT replicate without the
+  volume confirmation:** on all Yahoo after-close events it is -0.16 % (t 0.78); with a miss (AE AGREE) -0.87 %.
+  Uncounted post-hoc split (diagnostic only, not a pass): inside the Yahoo-amc sample, drops confirmed by >= 10 %
+  of median volume in 16:01-16:54 give +0.75 % (t 3.04, n 863: this is the part-2 sample, 97 % of it is Yahoo amc);
+  unconfirmed drops (thin AH trading) give -1.97 % (t -3.98, n 437). The edge depends entirely on the volume
+  filter, which was pre-declared in part 2, but the filter's importance was found after the fact here. A thin AH
+  print is not a price you can trade at.
+- Long after an AH jump: AH entry beats the next open for every H (+0.32 / +0.47 / +0.84 % vs -0.05 / +0.07 /
+  +0.39 %), with a beat slightly better (AE AGREE +0.43 / +0.61 / +0.91 %), but train (2019-22) is ~0 or negative.
+- **True timing rescues the run-up row** (it did not depend on the volume proxy; the part-2 fixed window killed it
+  by measuring the run-up and reaction over the wrong days): long after a reaction >= +4 % when the stock fell
+  >= 5 % (vs SPY) in the 5 days before, hold 20 days: +1.72 % per trade, t 3.39 (CLOSE) / 3.45 (OPEN), n 606, train
+  / valid / valid2 +0.9 / +2.8 / +2.2 %, WF 0.83-0.86, 2x costs t 3.35, top-300 +1.91 % (t 2.90, n 220). It misses
+  the bar (3.47) by 0.02-0.08, and the OPEN version has negative down months. **Not a pass; no rounding.** Look count
+  for this lineage: part-2 version and this version each scored once on open data only; no holdout look used.
+- Diagnostics: diag3.csv. Files: `study3.py`, `results3.csv`, `gates3.csv`, `diag3.csv`.
+
 ## 4. Files
 `NOTES.md` (this), `elib.py` (events + features), `study.py` (grid, gates, diagnostics), `ah_fetch.py` (Alpaca 1-min
 AH bars + quotes, data only), `actions/fetch_earnings.py` + `.github/workflows/earnings-data.yml` (Yahoo EPS surprise +
