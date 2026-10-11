@@ -115,10 +115,23 @@ def _month_group(mo: str, syms: list[str]) -> pd.DataFrame:
     return df.sort_values(["symbol", "date", "tod"], kind="mergesort").reset_index(drop=True)
 
 
-def scan(groups: int = 6):
+def _block_flags(df: pd.DataFrame, mo: str, syms: list[str]) -> np.ndarray:
+    """RW6G1 band guard per row: timeofday/data/block (<= 15:00) + cutoff/data/block (15:05..15:30), this month only."""
+    nxt = str(pd.Period(mo, freq="M") + 1)
+    flt = pads.field("symbol").isin(syms) & (pads.field("date") >= f"{mo}-01") & (pads.field("date") < f"{nxt}-01")
+    b = pd.concat([pads.dataset(str(r), format="parquet").to_table(filter=flt).to_pandas()
+                   for r in (ROOT / "research/bdi/timeofday/data/block", DATA / "block")], ignore_index=True)
+    b["_b"] = True
+    b["tod"] = b["tod"].astype(int)
+    k = pd.DataFrame({"symbol": df["symbol"].astype(str).to_numpy(), "date": df["date"].astype(str).to_numpy(),
+                      "tod": df["tod"].astype(int).to_numpy()})
+    out = k.merge(b.drop_duplicates(["symbol", "date", "tod"]), on=["symbol", "date", "tod"], how="left")["_b"]
+    return out.fillna(False).to_numpy(bool)
+
+
+def scan(groups: int = 3):
     import gc
     sts = setups()
-    blocks = _blocks()
     all_syms = sorted(pd.read_parquet(DATA / "late", columns=["symbol"])["symbol"].astype(str).unique())
     parts = DATA / "trades_parts"
     parts.mkdir(exist_ok=True)
@@ -133,9 +146,7 @@ def scan(groups: int = 6):
             nrows += len(df)
             tod = df["tod"].to_numpy()
             adv = df["adv20"].fillna(0).to_numpy()
-            key = df["symbol"].astype(str) + "|" + df["date"].astype(str) + "|" + df["tod"].astype(str)
-            df["_block"] = key.isin(blocks).to_numpy()
-            del key
+            df["_block"] = _block_flags(df, mo, all_syms[gi::groups])
             cache = {}
             for s in sts:
                 mk_key = s["setup"] if s["account"] == "testing" else s["setup"] + "-FD"
