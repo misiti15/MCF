@@ -42,6 +42,9 @@ env:
 jobs:
   list:
     runs-on: ubuntu-latest
+    env:
+      HAS_PRIVATE: ${{ secrets.CWT_PRIVATE_TOKEN != '' }}
+      PRIVATE_REPO: ${{ vars.CWT_PRIVATE_REPO || 'misiti15/mcf-private' }}
     timeout-minutes: 30
     outputs:
       shards: ${{ steps.plan.outputs.shards }}
@@ -50,9 +53,9 @@ jobs:
       # Copyright guard (lead, 2026-10-11): this repository is public, so full transcripts must not be published to
       # its branches. Only `mode=list` (episode metadata) may run until the owner picks a private destination.
       - name: Refuse to publish transcripts from a public repository
-        if: inputs.mode != 'list' && github.event.repository.private != true
+        if: inputs.mode != 'list' && github.event.repository.private != true && env.HAS_PRIVATE != 'true'
         run: |
-          echo "::error::mode=${{ inputs.mode }} would publish copyrighted transcripts to a PUBLIC repository. Run mode=list only, or set a private destination first (see research/bdi/cwt/README.md)."
+          echo "::error::mode=${{ inputs.mode }} would publish copyrighted transcripts to a PUBLIC repository. Add the CWT_PRIVATE_TOKEN secret (private destination ${PRIVATE_REPO}) first - see research/bdi/cwt/README.md."
           exit 1
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -63,9 +66,18 @@ jobs:
           deno-version: v2.x
       - run: pip install -q requests "yt-dlp[default]"
       - name: Previous status (checkpoint from earlier runs)
+        env:
+          TOKEN: ${{ secrets.CWT_PRIVATE_TOKEN }}
         run: |
-          git fetch -q origin research-data 2>/dev/null && git show origin/research-data:cwt/status.json > prev_status.json 2>/dev/null \
-            || echo '{}' > prev_status.json
+          echo '{}' > prev_status.json
+          if [ "$HAS_PRIVATE" = "true" ]; then
+            git clone -q --depth 1 "https://x-access-token:${TOKEN}@github.com/${PRIVATE_REPO}.git" /tmp/priv 2>/dev/null \
+              && [ -f /tmp/priv/cwt/status.json ] && cp /tmp/priv/cwt/status.json prev_status.json || true
+            rm -rf /tmp/priv
+          else
+            git fetch -q origin research-data 2>/dev/null && git show origin/research-data:cwt/status.json > prev_status.json 2>/dev/null \
+              || echo '{}' > prev_status.json
+          fi
           python -c "import json;d=json.load(open('prev_status.json'));print(len(d),'episodes in previous status;',sum(r.get('status')=='done' for r in d.values()),'done')"
       - name: Episode list and plan
         id: plan
@@ -133,13 +145,19 @@ jobs:
         with:
           name: cwt-shard-${{ matrix.shard }}
           path: shard_out
-          retention-days: 7
+          retention-days: 1   # holds transcript text; the publish job deletes it right after pushing to the private repo
           if-no-files-found: warn
 
   publish:
     needs: [list, work]
     if: always() && needs.list.result == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write          # to delete the shard artifacts after publishing
+    env:
+      HAS_PRIVATE: ${{ secrets.CWT_PRIVATE_TOKEN != '' }}
+      PRIVATE_REPO: ${{ vars.CWT_PRIVATE_REPO || 'misiti15/mcf-private' }}
     timeout-minutes: 30
     concurrency:
       group: research-data-publish
@@ -159,7 +177,37 @@ jobs:
           pattern: cwt-shard-*
           path: /tmp/cwt_shards
           merge-multiple: true
-      - name: Merge into research-data/cwt and push
+      - name: Merge transcripts into the PRIVATE repository and push
+        if: env.HAS_PRIVATE == 'true'
+        env:
+          MODE: ${{ inputs.mode }}
+          TOKEN: ${{ secrets.CWT_PRIVATE_TOKEN }}
+        run: |
+          cp "$SCRIPT" /tmp/fetch_cwt.py
+          mkdir -p /tmp/cwt_shards
+          git clone -q "https://x-access-token:${TOKEN}@github.com/${PRIVATE_REPO}.git" /tmp/priv
+          cd /tmp/priv
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          rc=0
+          python /tmp/fetch_cwt.py merge --dest cwt --shards /tmp/cwt_shards --list-dir /tmp/cwt_list --mode "$MODE" || rc=$?
+          git add -A cwt
+          if git diff --cached --quiet; then echo "nothing new to publish"; else
+            git commit -qm "cwt-transcripts $MODE $(date -u +%F)"
+            pushed=0
+            for i in 1 2 3; do git push -q origin HEAD && { pushed=1; break; }; sleep 10; git pull -q --rebase; done
+            [ "$pushed" = 1 ] || { echo "::error::push to the private repository failed"; exit 1; }
+          fi
+          exit $rc
+      - name: Delete shard artifacts (they contain transcript text)
+        if: always() && env.HAS_PRIVATE == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for id in $(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '.artifacts[] | select(.name | startswith("cwt-shard-")) | .id'); do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id" && echo "deleted artifact $id"
+          done
+      - name: Merge episode list into research-data/cwt (metadata only, list mode without a private destination)
+        if: env.HAS_PRIVATE != 'true' && inputs.mode == 'list'
         env:
           MODE: ${{ inputs.mode }}
         run: |

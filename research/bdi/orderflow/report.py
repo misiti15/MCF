@@ -37,15 +37,21 @@ def ic_summary(ic: pd.DataFrame) -> pd.DataFrame:
 def lift_summary(lf: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for f, g in lf.groupby("feature"):
-        d = g.groupby("date")[["n", "L", "S", "n_hi", "L_hi", "n_lo", "S_lo"]].sum()
-        for side, a, b, nf in (("long", "L_hi", "L", "n_hi"), ("short", "S_lo", "S", "n_lo")):
+        d = g.groupby("date")[["n", "L", "S", "n_hi", "L_hi", "n_lo", "S_lo", "S_hi", "L_lo"]].sum()
+        for side, a, b, nf, opp, ob in (("long", "L_hi", "L", "n_hi", "S_hi", "S"), ("short", "S_lo", "S", "n_lo", "L_lo", "L")):
             base = d[b] / d["n"]
             rate = d[a] / d[nf].replace(0, np.nan)
             diff = (rate - base).dropna()
+            # directional (amendment A1): excess same-direction rate minus excess opposite-direction rate
+            dirx = ((d[a] / d[nf].replace(0, np.nan) - base) - (d[opp] / d[nf].replace(0, np.nan) - d[ob] / d["n"])).dropna()
             pb, pr = d[b].sum() / d["n"].sum(), d[a].sum() / max(1, d[nf].sum())
+            po = d[opp].sum() / max(1, d[nf].sum())
             rows.append(dict(feature=f, side=side, base=round(pb, 4), rate_flag=round(pr, 4), lift=round(pr / pb, 2) if pb else None,
+                             opp_base=round(d[ob].sum() / d["n"].sum(), 4), opp_rate_flag=round(po, 4),
                              flagged_share=round(d[nf].sum() / d["n"].sum(), 3),
-                             t_diff=round(diff.mean() / (diff.std(ddof=1) / np.sqrt(len(diff))), 2) if len(diff) > 2 else None))
+                             t_diff=round(diff.mean() / (diff.std(ddof=1) / np.sqrt(len(diff))), 2) if len(diff) > 2 else None,
+                             dir_excess=round(dirx.mean(), 4),
+                             t_dir=round(dirx.mean() / (dirx.std(ddof=1) / np.sqrt(len(dirx))), 2) if len(dirx) > 2 else None))
     return pd.DataFrame(rows)
 
 
