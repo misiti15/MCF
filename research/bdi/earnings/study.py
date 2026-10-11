@@ -187,7 +187,7 @@ def load_ah():
     return a.reset_index()
 
 
-AH = load_ah()
+AH = None if __import__("os").environ.get("ER_SKIP_AH") else load_ah()   # skip until the sample is complete
 EVA = None
 if AH is not None:
     spy_ah = AH[AH.symbol == "SPY"].set_index("day")

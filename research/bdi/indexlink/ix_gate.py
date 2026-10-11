@@ -111,9 +111,61 @@ def main():
         svw[m] = vw[s].reindex(key[m]).to_numpy()
     lists["sec_fo"], lists["sec_vw"] = sfo, svw
     lists["rs"] = lists["fromOpen"] - lists["beta"] * lists["SPY_fo"]
+    lists = pd.concat([lists, bt_lists(BT, syms, dates)], ignore_index=True)
     lists.to_parquet(DATA / "gate_trades.parquet")
     print("trades", len(lists), flush=True)
     score(lists)
+
+
+def bt_lists(BT, syms, dates):
+    """orb20_a / intraday_momentum (production backtester trades) with context from the dense arrays at the last
+    completed 5-minute bar before the entry minute (the frames stop at 15:00)."""
+    from common import bars, etf1m
+    meta, C5, V5, O0, CL = bars()
+    esyms, E = etf1m()
+    si = {s: i for i, s in enumerate(syms)}
+    di = {d: i for i, d in enumerate(dates)}
+    ND = len(dates)
+    vwap, fo5 = {}, {}
+    for e in CTX:
+        k = esyms.index(e)
+        h = np.fmax.reduceat(np.nan_to_num(E["high"][k], nan=-np.inf), np.arange(0, 390, 5), axis=1)
+        lo = np.fmin.reduceat(np.nan_to_num(E["low"][k], nan=np.inf), np.arange(0, 390, 5), axis=1)
+        c = C5[si[e]].astype(float)
+        v = np.nan_to_num(E["volume"][k]).reshape(ND, 78, 5).sum(2)
+        typ = (np.where(np.isfinite(h), h, c) + np.where(np.isfinite(lo), lo, c) + c) / 3
+        vw = np.cumsum(np.nan_to_num(typ) * v, 1) / np.where(np.cumsum(v, 1) > 0, np.cumsum(v, 1), np.nan)
+        vwap[e] = (c - vw) / vw * 100
+        fo5[e] = (c / O0[si[e]][:, None] - 1) * 100
+    b = pd.read_parquet(ROOT / "research" / "history2y" / "data" / "bt_trades.parquet")
+    b["date"] = pd.to_datetime(b["date"]).dt.date
+    b = b[b["date"].isin(di)].reset_index(drop=True)
+    em = b["entry_time"].dt.hour * 60 + b["entry_time"].dt.minute
+    bi = ((em - 575) // 5).to_numpy()
+    d = b["date"].map(di).to_numpy()
+    j = b["symbol"].map(si).to_numpy()
+    out = pd.DataFrame({"list": b["strategy"] + "-cur", "date": b["date"], "symbol": b["symbol"],
+                        "tod": (b["entry_time"].dt.hour * 100 + b["entry_time"].dt.minute).to_numpy(),
+                        "side": np.where(b["side"] == 1, "long", "short")})
+    Rd = (b["entry"] - b["stop"]).abs().to_numpy(float)
+    mult = gates.tod_cost_mult(out["tod"].to_numpy(float))
+    out["r0"] = b["r_multiple"].to_numpy(float)
+    out["r"] = out["r0"] - (mult - 1) * (gates.SLIP_PS + b["entry"].to_numpy(float) * gates.SLIP_BPS) / Rd
+    out["close"], out["atr_d"] = b["entry"].to_numpy(float), np.nan
+    out["fromOpen"] = (C5[j, d, bi] / O0[j, d] - 1) * 100
+    for e in ("SPY", "QQQ"):
+        out[f"{e}_fo"], out[f"{e}_vw"] = fo5[e][d, bi], vwap[e][d, bi]
+    out["beta"] = BT["beta_spy"][d, j]
+    sec = BT["sec"][d, j]
+    out["sec"] = np.where(sec >= 0, np.array(SECTOR)[np.maximum(sec, 0)], np.where(sec == -1, "SPY", ""))
+    sf, sv = np.full(len(out), np.nan), np.full(len(out), np.nan)
+    for e in set(out["sec"]) - {""}:
+        m = out["sec"].to_numpy() == e
+        sf[m], sv[m] = fo5[e][d[m], bi[m]], vwap[e][d[m], bi[m]]
+    out["sec_fo"], out["sec_vw"] = sf, sv
+    out["rs"] = out["fromOpen"] - out["beta"] * out["SPY_fo"]
+    # parity of the rebuilt SPY vwapDistPct with the frames' (bars 09:50..15:00), reported
+    return out
 
 
 def conditions(t):
