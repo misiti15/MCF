@@ -42,6 +42,8 @@ This is a standing Claude role. It runs every weekday after the close, after the
 6. **Routing.**
    - **Primary account:** only setups and changes that pass the gates. They are merged outside market hours with a ledger entry.
    - **Testing account:** promising near-misses and experimental ideas, tagged, and judged by the 4-session scorecard (owner 2026-10-09: 4 sessions before a removal decision).
+     - **No cap on the number of setups** (owner 2026-10-11).
+     - **Demoted primary setups move back to Testing.** They are retired completely only after 10 more Testing sessions still below the bar (RESEARCH_RULES rule 20).
 7. **Report to the owner.** A short note covering what was learned, what was tested (with counts), what changes tomorrow and what is queued.
 
 ## Every Saturday (deep run)
