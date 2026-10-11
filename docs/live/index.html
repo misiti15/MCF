@@ -124,7 +124,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const pc = v => v == null ? "–" : (v * 100).toFixed(1) + "%";
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
-  let NAMES = {};
+  let NAMES = {}, LINK = {};
+  fetch("../live/linkage.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).then(d => { LINK = (d && d.map) || {}; }).catch(() => {});
   const nm = c => NAMES[c]?.name ? `${NAMES[c].name} <span style="font-size:11px;color:var(--muted)">(${e(c)})</span>` : e(c);
   fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : {}).then(d => { NAMES = d || {}; window.__mcfTick && window.__mcfTick(); }).catch(() => {});
   const table = (head, rows) => `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
@@ -190,8 +191,12 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     $l("#lv-val").innerHTML = names.length ? table(["Setup", "Status", "Apr–Jun backtest"],
       names.map(n => { const v = vs[n] || {}; return `<tr><td class="l" title="${e(NAMES[n]?.what || "")}">${nm(n)}</td><td>${e(v.status || "–")}</td><td class="${cls(v.apr_jun_exp_r)}">${v.apr_jun_exp_r == null ? "–" : (v.apr_jun_exp_r > 0 ? "+" : "") + v.apr_jun_exp_r.toFixed(3) + "R (" + v.apr_jun_n + ")"}</td></tr>`; }))
       : `<div class="empty">–</div>`;
-    $l("#lv-pos").innerHTML = s.positions?.length ? table(["Symbol", "Setup", "Side", "Qty", "Entry", "Last", "Unrealized"],
-      s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${nm(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td></tr>`))
+    const lk = p => LINK[p.symbol] || [null, null];
+    const sgn = p => (String(p.side).toLowerCase().startsWith("s") || Number(p.side) < 0 || Number(p.qty) < 0) ? -1 : 1;
+    const bexp = (s.positions || []).reduce((a, p) => a + sgn(p) * Math.abs(Number(p.qty) || 0) * (Number(p.last) || 0) * (lk(p)[1] ?? 1), 0);
+    $l("#lv-pos").innerHTML = s.positions?.length ? table(["Symbol", "Setup", "Side", "Qty", "Entry", "Last", "Unrealized", "Sector ETF", "Beta"],
+      s.positions.map(p => `<tr><td class="l">${e(p.symbol)}</td><td>${nm(p.strategy)}</td><td>${e(p.side)}</td><td>${p.qty}</td><td>${p.entry}</td><td>${p.last}</td><td class="${cls(p.upl)}">${money(p.upl)}</td><td>${e(lk(p)[0] || "–")}</td><td>${lk(p)[1] ?? "–"}</td></tr>`))
+        + `<div class="note">Net market exposure (beta-weighted, SPY-equivalent dollars): <b class="${cls(bexp)}">${money(bexp)}</b>. Context only; it does not change trades.</div>`
       : `<div class="empty">No open positions.</div>`;
     $l("#lv-sig").innerHTML = s.signals?.length ? table(["Time", "Symbol", "Setup", "Side", "Price", "Status", "Reason"],
       s.signals.map(x => `<tr><td class="l">${e(x.t)}</td><td>${e(x.symbol)}</td><td>${nm(x.strategy)}</td><td>${x.side > 0 ? "long" : "short"}</td><td>${x.ref ?? "–"}</td><td><span class="chip ${e(x.status)}">${e(x.status)}</span></td><td style="white-space:normal">${e(x.reason)}</td></tr>`))
