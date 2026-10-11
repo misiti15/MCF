@@ -103,6 +103,87 @@ At most 2 finalists go to the lead for the locked block (Tier = candidate only).
   with none, the event has no AH entry and is dropped from family A (for both entries, so AH and OPEN trade the same
   events). The signal price is the last bar close at or before 16:54 (from 16:30 on); none -> dropped.
 
+## 2. Results, part 2 (204 configurations; failures first)
+
+*Educational only - not financial advice. Backtest only: daily bars (MOC/MOO fills) and a 1-minute after-hours
+sample; costs in (1c + 1 bps per side, 3 %/yr borrow on shorts, AH: + half the quoted spread, floor 10 bps). The
+locked block 2024-11..2025-02 is in no figure. Window 2019-01..2026-10-09. "net ex" = mean net excess per trade vs
+the EW eligible universe over the same window; t = day-clustered (by entry date). Bar t >= 3.34 (N_lineage 264).*
+
+**Counts.** 204 pre-declared configurations scored (B 24, U 48, P 72, G 36, A 24). Not counted: 24 all-event
+controls, 15 diagnostic reruns. **0 candidates, 90 near, 114 fail. Nothing goes to the locked block (1.7).**
+
+| family (N) | candidate | near | fail | best row (net ex / trade, t, n) | why it fails |
+|---|---|---|---|---|---|
+| B reaction only (24) | 0 | 11 | 13 | L th8 CLOSE H20: +0.81 %, t 1.67, n 2,332 | t; train -0.09 %; down months -0.21 % |
+| U pre-report run-up (48) | 0 | 23 | 25 | L th4 RUN5down OPEN H20: +1.84 %, t 2.99, n 605 | t < 3.34; down months -0.38 %; **causal fixed window +0.33 %, t 0.24** |
+| P previous 2-4 reactions (72) | 0 | 30 | 42 | L th4 SAME2 CLOSE H1: +0.18 %, t 2.17, n 1,291 | t; train -0.07 %; fixed window +0.01 % |
+| G gap vs intraday (36) | 0 | 9 | 27 | S th4 GAPFADE CLOSE H1: +0.24 %, t 1.62, n 963 | t; WF 0.56 |
+| A after hours (24) | 0 | 17 | 7 | S th4 AH H1: +0.68 %, t 2.77, n 890 | t < 3.34 only (all other gates pass) |
+
+### 2.1 Failures
+- **Controls first.** Buying every earnings event (no reaction filter) lags the same-window universe after costs:
+  -0.06 / -0.10 / -0.26 % per trade at H1 / 5 / 20 (CLOSE entry), t -1.0..+0.2. Shorting every event also loses
+  (-0.08..-0.11 %, t down to -2.6). There is no earnings-announcement premium to harvest here, net of costs.
+- **Shorting after a negative reaction (B, U, P, G short rows) does not work.** All 12 B short rows are <= +0.00 %
+  per trade; at H20 shorts lose -1.75..-1.90 % raw (the market drifted up) and only break even vs the universe.
+  Short after a negative report when the stock was already falling (RUN5/RUN20 down) is the worst cell in the scan:
+  -0.5..-1.5 % per trade (H5/H20), i.e. negative reactions on already-weak names *bounce*.
+- **Long after a positive reaction (B long)** is flat at H1/H5 (-0.03..+0.16 %) and positive only at H20 for big
+  reactions (th8: +0.81 / +0.89 % per trade, t 1.7 / 1.5), with train (2019-22) negative and SPY-down months
+  negative (-0.2 / -0.6 %). That is the saturday1010 PEAD near-miss again; top-300 removes most of it (+0.61 %,
+  t 0.24).
+- **"Already rising before" (RUN up) adds nothing:** long after a positive reaction on a stock up >= 5 % in 5 days or
+  >= 10 % in 20 days: -0.12..+1.42 % per trade, every H20 cell has a negative train split (RUN20up valid -1.6 %).
+- **Previous reactions (P):** consistent reactors (previous 2/3/4 reactions with the same sign) are not better than
+  all events at H5/H20 (long SAME3 H20 +0.28 %, t 0.84; SAME4 n 286 and train negative). Small positive H1 cells
+  (SAME2 CLOSE H1 +0.18 %, t 2.17) vanish in the causal fixed window (+0.01 %). Big past reactors (BIG3) and past
+  follow-through (FT3) are flat or negative. Short side: every P short row is negative except SAME2 H20 (+0.15 %)
+  and OPP2 H20 (+0.29 / +0.30 %, t 1.8 / 1.7).
+- **Gap vs intraday (G):** a positive reaction made *intraday* without a gap is followed by underperformance
+  (INTRADAY long: -0.20 / -0.25 / -0.97 % at H1/5/20, t to -2.2). Gap-and-go long is flat at H1/H5 and +0.39..0.47 %
+  at H20 (t 0.9). Gap-up-then-fade long is +0.30..0.38 % at H5 (t 0.9-1.2) and flat at H20 (+0.01 / -0.06 %).
+
+### 2.2 After hours (family A, 1-minute sample)
+- Sample: 3,648 events with an after-close report confirmed by 16:01-16:54 volume >= 10 % of the 20-day median
+  (train 1,710, valid 892, valid2 1,046). Quotes existed for 98 % of the traded events; median half-spread at
+  16:55-16:57 is **12-13 bps** (p90 39-48 bps).
+- **Entering at ~16:55 beats waiting for the next open in all 12 matched pairs** (same events, same exit). The price
+  keeps moving in the AH direction between 16:55 and the next open: +0.86 % (long, AH move >= 4 %), +1.10 % (>= 8 %),
+  +0.66 % / +0.93 % for shorts (mean, before costs). At the next open that move is gone: OPEN entries are -0.31..
+  +0.56 % per trade.
+- Best: **short at ~16:55 after an AH drop >= 4 %, cover at the next day's close (A_S_th4_AH_H1)**: +0.68 % net
+  excess per trade, t 2.77, n 890, train / valid / valid2 +0.50 / +0.94 / +0.66 %, SPY-up / down months +0.61 /
+  +0.85 %, WF 0.78, ex-best-day +0.63 %, busiest day 1.3 %. **Fails only the try-count bar (2.77 < 3.34).** 2x all
+  costs: +0.39 % (t 1.77); 2x AH spread: +0.42 % (t 1.88); top-300: +0.74 % (t 2.12). Same at th8: +1.00 %, t 2.51,
+  n 447.
+- Long side: AH jump >= 8 %, H1/H5: +0.71 / +1.12 % (t 1.7 / 2.1), WF 0.8-0.9, but SPY-down months -0.17 % (H1).
+- All AH-confirmed events (control): long at 16:55 -0.49 % (t -3.3), short -0.16 % per trade: the edge is in the
+  direction of the AH move, not in trading AH as such.
+- Caveats: the 16:55 fill is the last trade of a thin market plus half the quoted spread; size beyond a few hundred
+  shares would move the price. Shorting AH needs locate/borrow before 16:55 and an extended-hours LIMIT order (no
+  market orders after hours). The confirmation rule (volume) only finds ~15 % of events; Yahoo's report hour (part 3)
+  would find the rest.
+
+### 2.3 Diagnostics (diag.csv) and honest caveats
+- The best U row (RUN5down, long, +1.84 %, t 2.99) and the best P row **depend on the timing proxy** (1.2), which
+  peeks at V[d+1] for bmo events: in the fully causal fixed window they drop to +0.33 % (t 0.24) and +0.01 %. They
+  are not evidence until re-run with the true report hour (part 3, family TR, pre-declared).
+- B th8 H20: survives 2x costs (+0.74 %, t 1.49) and the fixed window (+0.58 %, t 1.36), not top-300 (t 0.24).
+- Survivorship (today's list), 2019-2026 only (one bear year), H20 trades overlap (day-clustering on entry date only
+  understates the dependence for H20; the t values for H20 are, if anything, optimistic).
+
+### 2.4 Answers to the owner (part 2)
+- Buy after a positive report: next day flat; after a big (>= 8 %) reaction +0.8 % vs the market over 20 days, not
+  significant after 264 tries, and only in small names.
+- Already rising before: no help (worse in train). Falling before + positive report: the best daily row, but it
+  collapses under causal timing.
+- Short after a negative report: loses money in every daily variant; worst when the stock was already falling.
+- Previous 2-4 reactions: no usable pattern.
+- After hours: the clearest effect in the study. The AH move continues to the next open by ~0.7-1.1 %, so acting at
+  ~16:55 instead of the next open turns a flat trade into +0.3..+1.1 % per trade. Not yet significant at the bar.
+- EPS / revenue: not answerable yet (no data); fetcher and pre-declared grid (section 3) are ready.
+
 ## 3. Pre-declaration, part 3 (EPS surprise / revenue; written 2026-10-11 before that data exists)
 Scored once `earnings_yf.parquet` and `sec_revenue_q.parquet` land on `research-data` (never their
 `*_lockedblock` files). Same splits, costs, metric, statistics and gates as 1.4-1.7.
@@ -122,3 +203,11 @@ Scored once `earnings_yf.parquet` and `sec_revenue_q.parquet` land on `research-
 - **SH, surprise history** (12): previous 3 surprises with the current sign x side x entry {OPEN_R, CLOSE_R} x H.
 - **TR, part-2 rework with true timing** (12): U RUN5down / RUN20down, long, theta 4 %, entry {CLOSE, OPEN} x H.
 - Part 3 N = 138; lineage N = 264 + 138 = **402 -> bar t >= sqrt(2 ln 402) = 3.46**.
+
+## 4. Files
+`NOTES.md` (this), `elib.py` (events + features), `study.py` (grid, gates, diagnostics), `ah_fetch.py` (Alpaca 1-min
+AH bars + quotes, data only), `actions/fetch_earnings.py` + `.github/workflows/earnings-data.yml` (Yahoo EPS surprise +
+SEC revenue -> research-data branch), `results.csv` (every config + controls), `gates.csv`, `diag.csv`.
+`data/` (git-ignored, 28 MB): earnings_cal copy, AH sample, trades.parquet.
+Reproduce: `python research/bdi/earnings/ah_fetch.py` (~2 h, resumable) then `python research/bdi/earnings/study.py`
+(~10 min, one process, < 1 GB).
