@@ -48,17 +48,33 @@ live:
     - MF3-open-flowsell-rsi5hi-FD
     - ST2-slope20up-long-am-t05s1-FD
     - RW2-exhaustion-noon-adv150-short-FD
+    - heat_fade_long
     - heat_fade_long-FD
     - RW7-gapdn-bounce-early-short-FD
+    - exhaustion_short
     - exhaustion_short-FD
+    - heat_fade_short
     - heat_fade_short-FD
 strategies:
-  # ---- primary setups inherited from default.yaml: off here (non-lab ones were already off)
-  intraday_momentum: {enabled: false}
-  orb20_a: {enabled: false}
-  heat_fade_short: {enabled: false}   # replaced by heat_fade_short-FD
-  heat_fade_long: {enabled: false}   # replaced by heat_fade_long-FD
-  exhaustion_short: {enabled: false}   # replaced by exhaustion_short-FD
+  # ---- FORMER PRIMARY setups (owner 2026-10-11, RESEARCH_RULES rule 20): demoted from the primary account and run
+  #      here in their primary form (same window and settings, inherited from default.yaml) next to their -FD versions.
+  #      Review for full retirement after 10 Testing sessions; never removed without prompting the owner with a
+  #      description and stats first.
+  intraday_momentum:
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  orb20_a:
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  heat_fade_short:
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  heat_fade_long:
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  exhaustion_short:
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
   MF3-open-flowsell-rsi5hi: {enabled: false}   # replaced by MF3-open-flowsell-rsi5hi-FD

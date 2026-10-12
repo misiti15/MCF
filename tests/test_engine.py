@@ -210,6 +210,7 @@ def test_pinned_symbols_bypass_universe_filters():
     from mcf.backtest.engine import pinned_symbols, universe_ok
 
     cfg = load_config()
+    cfg["strategies"]["intraday_momentum"]["enabled"] = True   # demoted from primary 2026-10-11; still runs in Testing
     assert {"SPY", "QQQ"} <= pinned_symbols(cfg)
     spy = SimpleNamespace(symbol="SPY", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)   # ATR 0.93% < 1%
     other = SimpleNamespace(symbol="XYZ", prev_close=770.0, atr=7.2, avg_dollar_volume=3e10)
