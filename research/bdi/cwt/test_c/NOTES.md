@@ -214,3 +214,12 @@ splits. This agrees with sat1010's crash-guard reworks (18 guards, all lowered S
 `common.py` (data, engine, statistics), `families.py` (C1-C9 daily), `intraday.py` (C2 intraday, C5a 13:55, C7 day 5),
 `s6_overlays.py`, `evaluate.py` -> `gates.csv` / `results.csv`, `diag.py` -> `diag.csv`, `score_locked.py` (lead),
 `raw_s6.csv` / `s6_gates.csv`. `data/` (git-ignored parquet, about 33 MB): trades.
+
+## Lead: one-time locked-block score (2026-10-12)
+| id | look / bar | n | net bps | t (day) | verdict |
+|---|---|---|---|---|---|
+| C1_L_rsi2_5_none_L5_sma5 | 3 / t >= 2.0 | 111 | -104.9 | -0.84 | FAIL |
+| C7_streak3_upclose | 1 / t >= 1.0 | 12 | +5.4 | 0.13 | FAIL |
+
+C1_L_rsi3_15_none_L3_sma5 was not scored (one per lineage), so it remains unseen on the locked block.
+The Connors dip-buy lineage has now failed the locked block three times, with almost the same loss each time (about -105 bps).

@@ -39,7 +39,7 @@ import families as fa  # noqa: E402
 A, B = pd.Timestamp("2024-11-01"), pd.Timestamp("2025-02-28")
 BARS = {"C1_L_rsi2_5_none_L5_sma5": (3, 2.0), "C1_L_rsi3_15_none_L3_sma5": (3, 2.0), "C7_streak3_upclose": (1, 1.0)}
 RUN = {"C1_L_rsi2_5_none_L5_sma5": lambda: fa.c1_long("rsi2_5", "none", 0.05, "sma5"),
-       "C1_L_rsi3_15_none_L3_sma5": lambda: fa.c1_long("rsi3_15", "none", 0.03, "sma5"),
+       # lead 2026-10-12: one per lineage -> C1_L_rsi3_15_none_L3_sma5 NOT scored (kept unseen)
        "C7_streak3_upclose": lambda: fa.c7_streak(3, "upclose")}
 
 
