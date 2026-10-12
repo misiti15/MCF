@@ -255,11 +255,18 @@ def cmd_eod(args, cfg):
             bars = {s: rth(normalize(g.droplevel(0))) for s, g in raw.groupby(level=0)}
     except Exception as e:
         print(f"trade bars unavailable: {e}")
-    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars)
+    playing = None
+    try:   # playing time per setup (owner 2026-10-12): signals, entries, skips, losses to other setups
+        from .report import playing_time
+
+        playing = playing_time.from_journal(j, rid, day, cfg, args.state_dir)
+    except Exception as e:
+        print(f"playing time unavailable: {e}")
+    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing)
     eod.save(rep, Path(args.state_dir) / "reports", day)
     from .report import scorecard
 
-    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4))
+    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4), playing_time=playing)
     scorecard.save(card, args.state_dir)
     print(rep["subject"])
     if not args.no_send:

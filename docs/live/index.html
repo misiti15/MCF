@@ -111,6 +111,10 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   </div>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
+  <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
+  <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"></div>
+    <div class="tablewrap" id="pt-tab"><div class="empty">Appears after the next end-of-day report.</div></div>
+    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
   <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
     <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
   <div class="card lab"><h2>Setup lab — weekly discovery</h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
@@ -276,14 +280,19 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     } catch (_) {}
   }
   ideas();
-  const ACCT = new URLSearchParams(location.search).get("account") === "testing" ? "testing" : "primary";
-  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + (ACCT === "testing" ? "mcf-data-testing" : "mcf-data") + "/";
+  // Accounts: code names stay primary / testing / testing2; "testing" is shown as "Testing 1" (owner 2026-10-12).
+  const ACCOUNTS = { primary: ["Primary", "mcf-data", ""], testing: ["Testing 1", "mcf-data-testing", "?account=testing"],
+                     testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"] };
+  const qa = new URLSearchParams(location.search).get("account");
+  const ACCT = Object.prototype.hasOwnProperty.call(ACCOUNTS, qa) ? qa : "primary";
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + ACCOUNTS[ACCT][1] + "/";
   {
     const sw = document.createElement("div");
     sw.className = "sub";
-    sw.innerHTML = `Account: ${ACCT === "testing" ? '<a href="?">Primary</a> · <b>Testing</b>' : '<b>Primary</b> · <a href="?account=testing">Testing</a>'}`;
+    sw.innerHTML = "Account: " + Object.entries(ACCOUNTS).map(([k, [lab, , q]]) =>
+      k === ACCT ? `<b>${lab}</b>` : `<a href="${q || "?"}">${lab}</a>`).join(" · ");
     $l("#lv-asof").after(sw);
-    if (ACCT === "testing") $l("h2.big").textContent = "MCF Testing account — live paper session";
+    if (ACCT !== "primary") $l("h2.big").textContent = `MCF ${ACCOUNTS[ACCT][0]} account — live paper session`;
   }
   async function poll(path, fn, where) {
     try {
@@ -299,4 +308,138 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 })();
 </script>
 
+<script>
+// Playing time card (self-contained; owner 2026-10-12). Same account switch as the page: ?account=<name>,
+// primary -> mcf-data, any other account -> mcf-data-<name>. Reads reports/scorecard.json -> playing_time.
+(() => {
+  const qa = new URLSearchParams(location.search).get("account") || "primary";
+  const acct = /^[a-z0-9]+$/.test(qa) ? qa : "primary";
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + (acct === "primary" ? "mcf-data" : "mcf-data-" + acct) + "/";
+  const q = s => document.querySelector(s);
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const COL = { silent: "down", starved: "down", "crowded-out": "down", watch: "", slow: "", "quiet - wait": "", ok: "up" };
+  const LBL = { held_by_other: "held by other setup", slots_full: "slots full", setup_cap: "per-setup cap", trades_cap: "trades/day cap",
+    daily_loss: "daily loss cap", window: "window", missed_trigger: "missed trigger", borrow: "borrow", realism: "spread/quote/size",
+    price: "price", rejected: "rejected", other: "other" };
+  function render(pt) {
+    if (!pt || !pt.cumulative) return;
+    const c = pt.cumulative.summary || {}, t = (pt.today || {}).summary || {};
+    const today = Object.fromEntries(((pt.today || {}).setups || []).map(r => [r.setup, r]));
+    const flag = k => (c[k] || []).length ? ` · <b>${k.replace("_", "-")}:</b> ${(c[k] || []).map(e).join(", ")}` : "";
+    q("#pt-sum").innerHTML = `${e(pt.window)} · ${c.sessions} sessions · ${t.setups_live ?? "–"} setups live on ${e(pt.day)} · ` +
+      `${c.signals} signals, ${c.entries} taken, <b>${c.lost_to_other_setups}</b> lost to other setups (${((c.lost_share || 0) * 100).toFixed(1)}%)` +
+      (t.slots ? ` · peak ${t.peak_open_positions} of ${t.slots} slots` : "") + flag("silent") + flag("crowded_out") + flag("starved");
+    const rows = (pt.cumulative.setups || []).filter(r => r.live_today !== false).map(r => {
+      const d = today[r.setup] || {};
+      const lost = Object.entries(r.lost_to || {}).slice(0, 3).map(([k, v]) => `${e(k)} ${v}`).join(", ") || "–";
+      const sk = Object.entries(r.skipped || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k, v]) => `${LBL[k] || e(k)} ${v}`).join(", ") || "–";
+      return `<tr><td class="l">${r.priority ?? "–"}. ${e(r.name)} <span style="font-size:11px;color:var(--muted)">(${e(r.setup)})</span></td>` +
+        `<td>${d.signals ?? 0} / ${d.entries ?? 0}</td><td>${r.sessions}</td><td>${r.signals} / ${r.entries} / ${r.trades}</td>` +
+        `<td>${r.entries_per_day}</td><td>${r.expected_per_day ?? "–"}</td><td>${r.weekly_pace}</td><td>${(r.skipped || {}).held_by_other || 0}</td>` +
+        `<td class="l" style="white-space:normal">${lost}</td><td class="l" style="white-space:normal">${sk}</td>` +
+        `<td class="l ${COL[r.verdict] || ""}" style="white-space:normal" title="${e(r.why)}"><b>${e(r.verdict)}</b><br><span style="font-size:11px;color:var(--ink-2)">${e(r.why)}</span></td></tr>`;
+    });
+    const head = ["Setup (priority)", "Today sig / taken", "Sessions", "Signals / taken / trades", "Taken/day", "Expected/day", "Per week", "Lost to others", "Lost to", "Top skips", "Verdict"];
+    q("#pt-tab").innerHTML = rows.length ? `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`
+      : `<div class="empty">No setups live.</div>`;
+    if (pt.rules) q("#pt-note").textContent = `${pt.rules} ${pt.note || ""}`;
+  }
+  const tick = () => fetch(RAW + "reports/scorecard.json?t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.ok ? r.json() : null).then(d => d && render(d.playing_time)).catch(() => {});
+  tick();
+  setInterval(tick, 300000);
+})();
+</script>
+<!-- Long-hold (S6) card (self-contained; owner 2026-10-12). Shown with ?account=longhold. Reads longhold/status.json
+     and longhold/marks.csv from the mcf-data-longhold branch (written by .github/workflows/longhold.yml). -->
+<style>
+#lh { display: none; gap: 14px; margin: 16px 0 26px; }
+#lh .lg { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+#lh .lg i { display: inline-block; width: 14px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 4px; }
+#lh .alert { padding: 6px 10px; border-radius: 8px; border: 1px solid currentColor; margin: 4px 0; font-size: 13px; }
+#lh .alert.warn { color: var(--bad); } #lh .alert.halt { color: var(--bad); font-weight: 600; }
+</style>
+<section id="lh" aria-live="polite">
+  <div class="bar" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+    <div><h2 class="big" style="font-size:17px;margin:0">Long-hold (S6) — paper account</h2>
+      <div class="sub" id="lh-asof">Waiting for long-hold data…</div></div>
+    <span class="pill" id="lh-mode">–</span>
+  </div>
+  <div class="msg" style="color:var(--ink-2);font-size:13px">Strategy <code>S6_mom12_1rev_N20_W</code>: weekly 12-1 momentum, top-decile 1-month winners dropped, 20 names at 5 %, market-on-open orders.
+    Paper results; the "backtest replay" line is the study's simulator run on the same targets (labelled separately). Educational only — not financial advice.
+    Raw data: <a href="https://github.com/misiti15/MCF/tree/mcf-data-longhold/longhold" target="_blank" rel="noopener">mcf-data-longhold/longhold</a></div>
+  <div id="lh-alerts"></div>
+  <div class="tiles" id="lh-tiles"></div>
+  <div class="grid2">
+    <div class="card"><h2>Return since start</h2><div id="lh-chart"><div class="empty">No marks yet.</div></div>
+      <div class="lg"><span><i style="border-color:var(--s1)"></i>book (paper)</span><span><i style="border-color:var(--muted)"></i>SPY</span>
+        <span><i style="border-color:var(--ink-2);border-top-style:dashed"></i>backtest replay</span><span><i style="border-color:var(--axis);border-top-style:dotted"></i>EW universe</span></div></div>
+    <div class="card"><h2>Holdings</h2><div class="tablewrap" id="lh-pos"><div class="empty">No positions.</div></div></div>
+  </div>
+  <div class="card"><h2>Last sessions</h2><div class="tablewrap" id="lh-days"><div class="empty">–</div></div>
+    <div class="note">Tracking diff. = paper day return minus the backtest replay's. Alerts: drawdown 15 % warns, 25 % stops new orders; tracking, slippage, skipped or missed rebalances and order rejects are flagged above.</div></div>
+</section>
+<script>
+(() => {
+  if (new URLSearchParams(location.search).get("account") !== "longhold") {
+    const sw = document.querySelector("#lv-asof + .sub");
+    if (sw) sw.insertAdjacentHTML("beforeend", ' · <a href="?account=longhold">Long-hold (S6)</a>');
+    return;
+  }
+  const q = s => document.querySelector(s);
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const pc = (v, d = 1) => v == null || v === "" || isNaN(v) ? "–" : (v >= 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+  const money = v => v == null || v === "" || isNaN(v) ? "–" : (v < 0 ? "-$" : "$") + Math.abs(+v).toLocaleString(undefined, {maximumFractionDigits: 0});
+  const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
+  const live = q("#live"); if (live) live.style.display = "none";
+  document.querySelectorAll("section").forEach(s => { if (s.id !== "lh") s.style.display = "none"; });
+  const lh = q("#lh"); lh.style.display = "grid";
+  const sw = document.createElement("div"); sw.className = "sub";
+  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <b>Long-hold (S6)</b>';
+  q("#lh-asof").after(sw);
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data-longhold/longhold/";
+  const get = async (p, json) => { const r = await fetch(RAW + p + "?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) throw r.status; return json ? r.json() : r.text(); };
+  const csv = t => { const [h, ...rows] = t.trim().split(/\r?\n/); const k = h.split(",");
+    return rows.map(r => Object.fromEntries(r.split(",").map((v, i) => [k[i], v === "" ? null : (isNaN(v) ? v : +v)]))); };
+  function chart(m) {
+    if (m.length < 2) return;
+    const cum = col => { let x = 1; return m.map((r, i) => (i && r[col] != null ? (x *= 1 + r[col]) : x) - 1); };
+    const book = m.map(r => r.equity / m[0].equity - 1);
+    const S = [[book, "var(--s1)", ""], [cum("spy_ret"), "var(--muted)", ""], [cum("model_ret"), "var(--ink-2)", "5 4"], [cum("ew_ret"), "var(--axis)", "2 3"]];
+    const all = S.flatMap(s => s[0]); const lo = Math.min(0, ...all), hi = Math.max(0, ...all);
+    const W = 560, H = 180, P = 34, x = i => P + i * (W - P - 6) / (m.length - 1), y = v => 8 + (hi - v) * (H - 30) / ((hi - lo) || 1);
+    const path = a => a.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join("");
+    q("#lh-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative return: book vs SPY, backtest replay and EW universe">
+      <line x1="${P}" x2="${W - 6}" y1="${y(0)}" y2="${y(0)}" stroke="var(--grid)"/>
+      <text x="${P - 4}" y="${y(hi) + 4}" text-anchor="end">${pc(hi)}</text><text x="${P - 4}" y="${y(lo) + 4}" text-anchor="end">${pc(lo)}</text>
+      <text x="${P}" y="${H - 4}">${e(m[0].date)}</text><text x="${W - 6}" y="${H - 4}" text-anchor="end">${e(m[m.length - 1].date)}</text>
+      ${S.map(([a, c, d]) => `<path d="${path(a)}" fill="none" stroke="${c}" stroke-width="${c === "var(--s1)" ? 2 : 1.5}" ${d ? `stroke-dasharray="${d}"` : ""}/>`).join("")}</svg>`;
+  }
+  async function tick() {
+    let st;
+    try { st = await get("status.json", true); } catch (_) { q("#lh-asof").textContent = "No long-hold data yet (the mcf-data-longhold branch appears after the first run)."; return; }
+    q("#lh-asof").textContent = `Last run ${st.last_run || "–"} · next rebalance signal ${st.next_rebalance || "–"} (close), orders at the next open`;
+    const mode = q("#lh-mode"); mode.textContent = st.label || st.mode; mode.className = "pill" + (st.mode === "paper" ? " on" : "");
+    q("#lh-alerts").innerHTML = (st.alerts || []).map(a => `<div class="alert ${e(a.level)}"><b>${e(a.kind)}</b>: ${e(a.msg)}</div>`).join("");
+    const mk = st.mark || {}, ss = st.since_start || {}, lp = st.last_plan || {};
+    const t = [["Equity", money(mk.equity), `cash ${money(mk.cash)}`], ["Day P/L", money(mk.day_pl), pc(mk.day_ret, 2)],
+      ["Since start", pc(ss.return), `${ss.sessions ?? 0} sessions from ${e(ss.start || "–")}`], ["vs SPY", pc(ss.return - ss.spy), `SPY ${pc(ss.spy)}`],
+      ["vs EW universe", pc(ss.return - ss.ew_universe), `EW ${pc(ss.ew_universe)}`], ["vs backtest replay", pc(ss.return - ss.backtest_replay), `20-session diff. ${pc(mk.te_20d, 2)}`],
+      ["Drawdown", pc(mk.drawdown), `max ${pc(ss.max_drawdown)}`], ["Holdings", Object.keys(st.positions || {}).length, `last plan ${e(lp.signal_day || "–")}: ${e(lp.status || "–")}`]];
+    q("#lh-tiles").innerHTML = t.map(([k, v, n]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join("");
+    const pos = Object.entries(st.positions || {});
+    if (pos.length) q("#lh-pos").innerHTML = `<table><thead><tr><th>Symbol</th><th>Qty</th><th>Value</th><th>Weight</th><th>Entry</th><th>Unrealised P/L</th></tr></thead><tbody>` +
+      pos.map(([s, p]) => `<tr><td>${e(s)}</td><td>${p.qty ?? "–"}</td><td>${money(p.market_value)}</td><td>${pc(p.weight)}</td><td>${e(p.entry_day || "–")}</td><td class="${cls(p.unrealized_pl)}">${money(p.unrealized_pl)}</td></tr>`).join("") + "</tbody></table>";
+    try {
+      const m = csv(await get("marks.csv"));
+      chart(m);
+      q("#lh-days").innerHTML = `<table><thead><tr><th>Date</th><th>Equity</th><th>Day</th><th>SPY</th><th>EW univ.</th><th>Replay</th><th>Tracking diff.</th><th>Drawdown</th></tr></thead><tbody>` +
+        m.slice(-10).reverse().map(r => `<tr><td>${e(r.date)}</td><td>${money(r.equity)}</td><td class="${cls(r.day_ret)}">${pc(r.day_ret, 2)}</td><td>${pc(r.spy_ret, 2)}</td><td>${pc(r.ew_ret, 2)}</td><td>${pc(r.model_ret, 2)}</td><td>${pc(r.te, 2)}</td><td>${pc(r.drawdown)}</td></tr>`).join("") + "</tbody></table>";
+    } catch (_) {}
+    if (st.weekly && st.weekly.path) q("#lh-asof").insertAdjacentHTML("beforeend", ` · <a href="https://github.com/misiti15/MCF/blob/mcf-data-longhold/${e(st.weekly.path)}" target="_blank" rel="noopener">weekly report ${e(st.weekly.date)}</a>`);
+  }
+  tick();
+  setInterval(tick, 300000);
+})();
+</script>
 </main></body></html>

@@ -30,9 +30,13 @@ def _expected() -> dict[str, float]:
     return out
 
 
-def build(trades: pd.DataFrame, sessions: int = 4) -> dict:
+def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = None) -> dict:
+    """playing_time: the account's playing-time report (mcf/report/playing_time.py), stored as card['playing_time']."""
     if trades is None or not len(trades):
-        return {"sessions": 0, "window": "no trades yet", "setups": []}
+        out = {"sessions": 0, "window": "no trades yet", "setups": []}
+        if playing_time is not None:
+            out["playing_time"] = playing_time
+        return out
     days = sorted(trades["date"].astype(str).unique())[-sessions:]
     tr = trades[trades["date"].astype(str).isin(days)]
     exp = _expected()
@@ -58,7 +62,8 @@ def build(trades: pd.DataFrame, sessions: int = 4) -> dict:
     by_time = [{"bucket": x.bucket, "trades": int(x.trades), "win_rate": round(float(x.win), 3),
                 "avg_r": round(float(x.avg_r), 3), "pnl": round(float(x.pnl), 2)} for x in tod.itertuples()]
     return {"sessions": len(days), "window": f"{days[0]} to {days[-1]}", "setups": rows, "by_time": by_time,
-            "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge."}
+            "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge.",
+            **({"playing_time": playing_time} if playing_time is not None else {})}
 
 
 def save(card: dict, state_dir: str | Path) -> Path:
