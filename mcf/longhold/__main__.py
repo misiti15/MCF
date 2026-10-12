@@ -42,7 +42,7 @@ def make_runner(args) -> Runner:
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m mcf.longhold", description="Long-hold (S6) paper runner. "
                                  "Educational only - not financial advice.")
-    ap.add_argument("command", choices=["init", "mark", "run", "status", "plan", "report"])
+    ap.add_argument("command", choices=["init", "mark", "run", "status", "plan", "report", "snapshot"])
     ap.add_argument("--state-dir", default="state")
     ap.add_argument("--dry-run", action="store_true", help="never place orders")
     ap.add_argument("--stage", choices=["plan", "submit", "all"], default="all")
@@ -70,6 +70,9 @@ def main(argv=None):
         if sig:
             for s, w in sorted(sig["targets"].items()):
                 print(f"  {s:6} {w:.3f}")
+        return 0
+    if args.command == "snapshot":
+        print(json.dumps(r.snapshot(), default=str))
         return 0
     if args.command == "mark":
         r.mark()

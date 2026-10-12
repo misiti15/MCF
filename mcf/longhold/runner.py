@@ -735,7 +735,22 @@ class Runner:
                     e.pop(o["symbol"], None)
         return e
 
-    def write_status(self, plan: dict | None = None, mark: dict | None = None, positions: dict | None = None):
+    def snapshot(self) -> dict:
+        """Intraday read-only snapshot for the dashboard (owner 2026-10-12: hourly is enough). Reads the account and
+        positions (GET only), writes status.json -> intraday and the holdings table. No orders, no marks.csv row."""
+        equity, cash, pos = self.book()
+        prev = self.broker.account().get("last_equity") if self.live else None
+        snap = {"asof": self.now.isoformat(timespec="seconds"), "equity": round(equity, 2), "cash": round(cash, 2),
+                "last_equity": prev, "day_pl": None if not prev else round(equity - prev, 2),
+                "day_ret": None if not prev else _r(equity / prev - 1), "positions": len(pos),
+                "invested": round(sum(v.get("market_value") or 0 for v in pos.values()), 2)}
+        st = self.write_status(positions=pos, weight_equity=equity)
+        st["intraday"] = snap
+        (self.dir / "status.json").write_text(json.dumps(st, indent=1, default=str))
+        return snap
+
+    def write_status(self, plan: dict | None = None, mark: dict | None = None, positions: dict | None = None,
+                     weight_equity: float | None = None):
         p = self.dir / "status.json"
         st = json.loads(p.read_text()) if p.exists() else {}
         st.update({"strategy": self.strategy, "mode": self.mode,
@@ -753,7 +768,7 @@ class Runner:
             st["mark"] = mark
         if positions is not None:
             ent = self.entries()
-            eq = (mark or {}).get("equity") or 0
+            eq = weight_equity or (mark or {}).get("equity") or 0
             st["positions"] = {s: {"qty": v.get("qty"), "market_value": round(v.get("market_value") or 0, 2),
                                    "weight": round((v.get("market_value") or 0) / eq, 4) if eq else None,
                                    "avg_entry_price": v.get("avg_entry_price"), "price": v.get("current_price"),
