@@ -197,5 +197,71 @@
   "side": "long",
   "what": "09:50-15:00: a 0.75-ATR drop in 30 minutes to a new low of day with a 3x volume bar, then the first bar closing above the prior bar's high; buy.",
   "account": "testing2"
+ },
+ "CWT09-gapdn-bounce-g10-lowerhalf-short": {
+  "name": "Gap-Down Bounce Rejection Short (10% gap)",
+  "side": "short",
+  "what": "10:30-15:00: a stock that gapped down 10%+ (no earnings within 4 days) traded back above VWAP during 09:35-10:30; a bounce bar reaches VWAP or the 09:30-10:00 high and closes in its lower half; short, stop at the 09:30-10:30 high, hold to 15:55.",
+  "account": "testing2"
+ },
+ "CWT09-gapdn-bounce-g5-lowerhalf-short": {
+  "name": "Gap-Down Bounce Rejection Short (5% gap)",
+  "side": "short",
+  "what": "10:30-15:00: a stock that gapped down 5%+ (no earnings within 4 days) traded back above VWAP during 09:35-10:30; a bounce bar reaches VWAP or the 09:30-10:00 high and closes in its lower half; short, stop at the 09:30-10:30 high, hold to 15:55.",
+  "account": "testing2"
+ },
+ "CWT09-gapdn-vwaploss-g10-short": {
+  "name": "Gap-Down VWAP Loss Short (10% gap)",
+  "side": "short",
+  "what": "10:30-15:00: a stock that gapped down 10%+ (no earnings within 4 days) traded back above VWAP during 09:35-10:30; from 10:30 the first close back below VWAP; short, stop at the 09:30-10:30 high, hold to 15:55.",
+  "account": "testing2"
+ },
+ "CWT09-gapdn-vwaploss-g5-short": {
+  "name": "Gap-Down VWAP Loss Short (5% gap)",
+  "side": "short",
+  "what": "10:30-15:00: a stock that gapped down 5%+ (no earnings within 4 days) traded back above VWAP during 09:35-10:30; from 10:30 the first close back below VWAP; short with a half-R stop.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-orl-p05-lowvol-long": {
+  "name": "Failed Opening-Range-Low Break Long (0.05 ATR, low volume) [fill]",
+  "side": "long",
+  "what": "09:50-15:00: price pokes 0.05+ ATR under the 09:30-10:00 low on below-average volume, then closes back above it within 3 bars; buy. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-orl-p10-long": {
+  "name": "Failed Opening-Range-Low Break Long (0.1 ATR) [fill]",
+  "side": "long",
+  "what": "09:50-12:00: price pokes 0.1+ ATR under the 09:30-10:00 low, then closes back above it within 3 bars; buy. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-orl-p05-long": {
+  "name": "Failed Opening-Range-Low Break Long (0.05 ATR) [fill]",
+  "side": "long",
+  "what": "09:50-15:00: price pokes 0.05+ ATR under the 09:30-10:00 low, then closes back above it within 3 bars; buy. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-pdl-p10-lowvol-long": {
+  "name": "Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]",
+  "side": "long",
+  "what": "09:50-15:00: price pokes 0.1+ ATR under yesterday's low on below-average volume, then closes back above it within 3 bars; buy. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-pdh-p05-lowvol-short": {
+  "name": "Failed Prior-Day-High Break Short (0.05 ATR, low volume) [fill]",
+  "side": "short",
+  "what": "09:50-15:00: price pokes 0.05+ ATR over yesterday's high on below-average volume, then closes back under it within 3 bars; short. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-pdl-p05-lowvol-long": {
+  "name": "Failed Prior-Day-Low Break Long (0.05 ATR, low volume) [fill]",
+  "side": "long",
+  "what": "09:50-15:00: price pokes 0.05+ ATR under yesterday's low on below-average volume, then closes back above it within 3 bars; buy. Fill: over the 4-per-family cap.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-pdh-p10-short": {
+  "name": "Failed Prior-Day-High Break Short (0.1 ATR) [fill]",
+  "side": "short",
+  "what": "09:50-12:00: price pokes 0.1+ ATR over yesterday's high, then closes back under it within 3 bars; short. Fill: over the 4-per-family cap.",
+  "account": "testing2"
  }
 }

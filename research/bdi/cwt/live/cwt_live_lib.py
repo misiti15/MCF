@@ -1,7 +1,7 @@
 """Shared signal code for the Testing 2 CWT setups (research/bdi/cwt/live/*.py). Educational only - not financial advice.
 
-Pure-Python/numpy ports of the package B kernels in research/bdi/cwt/test_b/score.py (and of the package A rules in
-research/bdi/cwt/test_a/families.py where noted), written against the LIVE LabStrategy frame
+Pure-Python/numpy ports of the package B kernels in research/bdi/cwt/test_b/score.py (and of the package A rule A7 in
+research/bdi/cwt/test_a/families.py), written against the LIVE LabStrategy frame
 (mcf/strategies/setups.py: heat_frame + extra_features rows for today's completed 5-minute bars, 09:35 onwards).
 
 Every function returns a boolean array: True on the bar where the scored configuration's signal fires. LabStrategy
@@ -274,3 +274,35 @@ def b5(df: pd.DataFrame, m: float, v: float) -> np.ndarray:
                 and vc3[i] >= v:
             fl = True
     return flag
+
+
+# ------------------------------------------------------------------------------------------------ A7 CWT09 gap-down bounce
+def a7(df: pd.DataFrame, gap: float, trig: int) -> np.ndarray:
+    """Bad-news gap-down bounce short (package A, families.a7; outside the earnings blackout = the live blackout).
+    Day: gap <= -gap %. Condition: a 5-minute bar high above VWAP at some bar closing 09:35-10:30.
+    trig 1 (Sidial): a close below VWAP at or after the 10:30 bar.
+    trig 2 (Humbled): a bounce bar reaching VWAP (or, from the 10:05 bar, the 09:30-10:00 high) that closes in the
+    lower half of its range. Decision bars from 10:30 (the YAML window)."""
+    x = arrays(df)
+    tod, c, h, l, vw = x.tod, x.c, x.h, x.l, x.vwap
+    with np.errstate(invalid="ignore"):
+        above = (h > vw) & (tod <= 1030)
+        cond = pd.Series(above).groupby(x.seg).cummax().to_numpy(bool)
+        if trig == 1:
+            m = cond & (tod >= 1030) & (c < vw)
+        else:
+            or30h = pd.Series(np.where(tod <= 1000, h, np.nan)).groupby(x.seg).transform("max").to_numpy(float)
+            reach = (h >= vw) | ((tod >= 1005) & (h >= or30h))
+            lowerhalf = (c - l) < 0.5 * (h - l)
+            m = (cond | (h > vw)) & reach & lowerhalf
+        return m & (x.gap <= -gap)
+
+
+def a7_stop(df: pd.DataFrame, i: int) -> float:
+    """A7 structural stop: the first-hour high (bars closing through 10:30) for signals at or after 10:30, else the
+    session high so far."""
+    tod = df["tod"].to_numpy(np.int64)
+    h = df["high"].to_numpy(float)
+    if tod[i] >= 1030:
+        return float(np.nanmax(h[tod <= 1030]))
+    return float(np.nanmax(h[: i + 1]))

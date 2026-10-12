@@ -10,6 +10,7 @@ C (8) are ranked by open-history expectancy after costs (R = 0.25 x daily ATR). 
   3. it is the best eligible exit/window of its signal (one configuration per signal: two configurations with the
      same entry rule would fire on the same symbol-day and starve each other under one-position-per-symbol),
   4. at most 4 per family (diversity).
+Fewer than 30 qualify, so the rest are FILLS (column `fill`): the next eligible signals by expectancy over the cap.
 Output: ranking.csv (every configuration, its eligibility reason and whether it was chosen).
 
     python research/bdi/cwt/live/rank.py
@@ -68,13 +69,9 @@ def a_rows():
     why = a["family"].map(fam_why).fillna("")
     a7 = a["family"] == "A7"
     why = np.where(a7 & (a["E"] == "earn"), "earnings-day version (live earnings blackout blocks these days)", why)
-    why = np.where(a7 & (a["E"] == "out") & (a["exit"] == "S"),
-                   "structural exit (stop at the first-hour high, hold to 15:55): needs a LabStrategy exit extension",
-                   why)
-    why = np.where(a7 & (a["E"] == "out") & (a["exit"] != "S") & (a["share_pre950"] > 0),
-                   "entries before 09:50 (full-day T2)", why)
-    why = np.where(a7 & (a["E"] == "out") & (a["exit"] != "S") & (a["share_pre950"] == 0),
-                   "package A engine (1-minute next-bar fills, adv >= $1M universe): port not done in drop 1", why)
+    # A7 outside the blackout runs live from 10:30 (structural exit via LabStrategy GEOM "S", added 2026-10-12)
+    why = np.where(a7 & (a["E"] == "out") & (a["share_pre950"] > 0), "entries before 09:50 (full-day T2)", why)
+    why = np.where(a7 & (a["E"] == "out") & (a["share_pre950"] == 0), "", why)
     out["why_not"] = why
     return out
 
@@ -95,7 +92,8 @@ def main():
     r.loc[(r["n"] < 150) & (r["why_not"] == ""), "why_not"] = "n < 150"
     chosen = {(s["pkg"], s["cid"]): s["name"] for s in S}
     r["chosen_as"] = [chosen.get((p, c), "") for p, c in zip(r["pkg"], r["cid"])]
-    r = r.sort_values("exp", ascending=False, na_position="last")
+    r = r.sort_values(["exp", "window"], ascending=[False, False], na_position="last", kind="mergesort")
+    r["fill"] = [bool(next((x.get("fill") for x in S if x["name"] == c), False)) if c else False for c in r["chosen_as"]]
     r.to_csv(HERE / "ranking.csv", index=False)
     e = r[r["eligible"]].drop_duplicates("signal")
     print("configurations ranked:", len(r), "| eligible:", int(r["eligible"].sum()), "| eligible signals:", len(e))

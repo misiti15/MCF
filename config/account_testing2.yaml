@@ -5,20 +5,22 @@
 #
 # READ THIS FIRST: NONE of these setups passed the research gates. Every CWT configuration failed (packages A, B, C:
 # research/bdi/cwt/test_*/NOTES.md); most are NEGATIVE after costs on the open two-year history. This is an
-# owner-directed forward test to collect live data, not a promotion. Selection rule, the full ranking and the count of
-# configurations considered: research/bdi/cwt/live/NOTES.md. Parity of every module with its scored version (trade for
-# trade on the open history): research/bdi/cwt/live/verify.json.
+# owner-directed forward test to collect live data, not a promotion. Only 23 setups qualify under the selection
+# rule (research/bdi/cwt/live/NOTES.md; all 942 configurations ranked in ranking.csv); the rest are FILLS, marked
+# "[fill]" (next best by expectancy, over the 4-per-family cap). Parity of every module with its scored version, trade
+# for trade on the open history: research/bdi/cwt/live/verify.json.
 #
 # All primary and Testing-1 setups are OFF here, so Testing 2 trades only its own batch. Each setup is a LabStrategy
-# module in research/bdi/cwt/live/ (entry at the close of the first qualifying 5-minute bar in its window, R = 0.25 x
-# daily ATR, fixed t1s1/t05s1/t1s05 exit, flat 15:55); min_adv 95M = the scored universe (adv20 >= $95M).
-# Comments per setup: source configuration, open-history n / exp (R after costs) / trades per day.
+# module in research/bdi/cwt/live/ (entry at the close of the first qualifying 5-minute bar in its window; exit t1s1 /
+# t05s1 / t1s05 with R = 0.25 x daily ATR, or the structural exit "S" = the scored chart-level stop, no target; flat
+# 15:55). min_adv = the scored universe (package B adv20 >= $95M, package A >= $1M; the live universe tiers still apply).
+# Comments per setup: source configuration, open-history n / exp (R after costs, R = 0.25 x daily ATR) / trades per day.
 # Educational only - not financial advice.
 account:
   slots: 400
   buying_power_multiple: 3.8
   max_concurrent_positions: 400
-  # Playing time: a per-setup cap well below the slot count, so the busy setups (up to ~150 signals/day) cannot fill
+  # Playing time: a per-setup cap well below the slot count, so the busy setups (up to ~250 signals/day) cannot fill
   # the account and every setup gets entries (Testing 1 uses 150 with fewer busy setups).
   max_positions_per_strategy: 25
   max_daily_loss_r: 60
@@ -29,23 +31,34 @@ live:
   setup_order:
     - CWT04-backside-lh-a25-short   # 0.36/day
     - CWT04-backside-vwaptest-a25-short   # 0.56/day
+    - CWT09-gapdn-vwaploss-g10-short   # 1.29/day
     - CWT05-flush-m075-v5-long   # 1.37/day
+    - CWT09-gapdn-bounce-g10-lowerhalf-short   # 1.38/day
     - CWT04-backside-lh-a15-short   # 2.85/day
     - CWT05-flush-m05-v5-long   # 2.93/day
     - CWT05-flush-m075-v3-long   # 3.31/day
     - CWT12-flag-s1-long   # 3.37/day
     - CWT04-backside-vwaptest-a15-short   # 4.76/day
     - CWT13-vwapstretch-z075-short   # 6.14/day
+    - CWT09-gapdn-vwaploss-g5-short   # 8.60/day
     - CWT05-flush-m05-v3-long   # 8.94/day
+    - CWT09-gapdn-bounce-g5-lowerhalf-short   # 9.12/day
     - CWT13-vwapstretch-z075-long   # 9.23/day
     - CWT13-vwapstretch-z05-short   # 37.95/day
     - CWT12-coil-k6-long   # 39.28/day
     - CWT13-vwapstretch-z05-long   # 42.57/day
     - CWT14-failbrk-pdh-p10-lowvol-short   # 45.73/day
+    - CWT14-failbrk-pdl-p10-lowvol-long   # 47.14/day
+    - CWT14-failbrk-pdh-p10-short   # 71.04/day
     - CWT14-failbrk-orl-p10-lowvol-long   # 74.36/day
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
+    - CWT14-failbrk-orl-p10-long   # 93.87/day
+    - CWT14-failbrk-pdh-p05-lowvol-short   # 103.00/day
+    - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
     - CWT12-coil-k4-long   # 104.47/day
     - CWT14-failbrk-pdl-p05-long   # 156.98/day
+    - CWT14-failbrk-orl-p05-lowvol-long   # 173.74/day
+    - CWT14-failbrk-orl-p05-long   # 246.53/day
 strategies:
   # ---- everything from config/default.yaml OFF (primary setups and the disabled library)
   orb: {enabled: false}
@@ -77,7 +90,7 @@ strategies:
   NS4-pm-vwap-reclaim-oversold-short: {enabled: false}
   NS5-sma50-flush-oversold-long: {enabled: false}
   RW6G1-ns2-up3-vwap2sd-short: {enabled: false}
-  # ---- Testing 2 batch: CWT setups (drop 1, package B; parity-verified)
+  # ---- Testing 2 batch: CWT setups (parity-verified; see research/bdi/cwt/live/verify.json)
   # Backside Lower-High Short (big runner): CWT package B B1-a2.5-trigT2-t1s1-guest (id 27); open history n 152, exp +0.1858R, t 0.90, 0.36/day; verdict rework
   CWT04-backside-lh-a25-short:
     enabled: true
@@ -86,25 +99,7 @@ strategies:
     min_adv: 95000000
     window: [1030, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT2-t1s1-guest", first_session: "2026-10-12"}
-  # Backside VWAP-Test Short (big runner): CWT package B B1-a2.5-trigT1-t1s1-full (id 18); open history n 238, exp -0.1713R, t -1.28, 0.56/day; verdict retire
-  CWT04-backside-vwaptest-a25-short:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py
-    min_adv: 95000000
-    window: [950, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT1-t1s1-full", first_session: "2026-10-12"}
-  # Panic Flush Reversal (deep, 5x volume): CWT package B B5-m0.75-v5-Dnone-t05s1-full (id 276); open history n 584, exp -0.0881R, t -1.94, 1.37/day; verdict retire
-  CWT05-flush-m075-v5-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT05-flush-m075-v5-long.py
-    min_adv: 95000000
-    window: [950, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B5-m0.75-v5-Dnone-t05s1-full", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT2-t1s1-guest", fill: false}
   # Backside Lower-High Short: CWT package B B1-a1.5-trigT2-t1s1-guest (id 11); open history n 1212, exp +0.1418R, t 0.77, 2.85/day; verdict rework
   CWT04-backside-lh-a15-short:
     enabled: true
@@ -113,34 +108,16 @@ strategies:
     min_adv: 95000000
     window: [1030, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT2-t1s1-guest", first_session: "2026-10-12"}
-  # Panic Flush Reversal (5x volume): CWT package B B5-m0.5-v5-Dnone-t05s1-full (id 244); open history n 1247, exp -0.1107R, t -3.28, 2.93/day; verdict retire
-  CWT05-flush-m05-v5-long:
+    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT2-t1s1-guest", fill: false}
+  # Backside VWAP-Test Short (big runner): CWT package B B1-a2.5-trigT1-t1s1-full (id 18); open history n 238, exp -0.1713R, t -1.28, 0.56/day; verdict retire
+  CWT04-backside-vwaptest-a25-short:
     enabled: true
     type: lab
-    module: research/bdi/cwt/live/CWT05-flush-m05-v5-long.py
+    module: research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v5-Dnone-t05s1-full", first_session: "2026-10-12"}
-  # Panic Flush Reversal (deep, 3x volume): CWT package B B5-m0.75-v3-Dnone-t05s1-full (id 260); open history n 1409, exp -0.1539R, t -4.00, 3.31/day; verdict retire
-  CWT05-flush-m075-v3-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT05-flush-m075-v3-long.py
-    min_adv: 95000000
-    window: [950, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B5-m0.75-v3-Dnone-t05s1-full", first_session: "2026-10-12"}
-  # Spike-Pullback Flag Breakout: CWT package B B4-partb-k1-t05s1-full (id 212); open history n 1435, exp -0.0744R, t -2.75, 3.37/day; verdict retire
-  CWT12-flag-s1-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT12-flag-s1-long.py
-    min_adv: 95000000
-    window: [950, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B4-partb-k1-t05s1-full", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT1-t1s1-full", fill: false}
   # Backside VWAP-Test Short: CWT package B B1-a1.5-trigT1-t1s05-full (id 6); open history n 2026, exp -0.1718R, t -3.74, 4.76/day; verdict retire
   CWT04-backside-vwaptest-a15-short:
     enabled: true
@@ -149,25 +126,7 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT1-t1s05-full", first_session: "2026-10-12"}
-  # Stretched Above VWAP Fade (far): CWT package B B2-z0.75-Uall-sideshort-t1s1-guest (id 67); open history n 2614, exp -0.0772R, t -1.73, 6.14/day; verdict retire
-  CWT13-vwapstretch-z075-short:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT13-vwapstretch-z075-short.py
-    min_adv: 95000000
-    window: [1100, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sideshort-t1s1-guest", first_session: "2026-10-12"}
-  # Panic Flush Reversal (3x volume): CWT package B B5-m0.5-v3-Dnone-t05s1-full (id 228); open history n 3807, exp -0.1361R, t -4.84, 8.94/day; verdict retire
-  CWT05-flush-m05-v3-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
-    min_adv: 95000000
-    window: [950, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v3-Dnone-t05s1-full", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT1-t1s05-full", fill: false}
   # Stretched Below VWAP Bounce (far): CWT package B B2-z0.75-Uall-sidelong-t1s1-full (id 74); open history n 3933, exp -0.0460R, t -1.52, 9.23/day; verdict retire
   CWT13-vwapstretch-z075-long:
     enabled: true
@@ -176,25 +135,7 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", first_session: "2026-10-12"}
-  # Stretched Above VWAP Fade: CWT package B B2-z0.5-Uall-sideshort-t1s1-guest (id 35); open history n 16165, exp -0.0689R, t -2.84, 37.95/day; verdict retire
-  CWT13-vwapstretch-z05-short:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT13-vwapstretch-z05-short.py
-    min_adv: 95000000
-    window: [1100, 1500]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sideshort-t1s1-guest", first_session: "2026-10-12"}
-  # Coil Under the High (6 bars): CWT package B B4-parta-k6-t1s05-guest (id 207); open history n 16735, exp -0.0703R, t -4.68, 39.28/day; verdict retire
-  CWT12-coil-k6-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT12-coil-k6-long.py
-    min_adv: 95000000
-    window: [950, 1130]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B4-parta-k6-t1s05-guest", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}
   # Stretched Below VWAP Bounce: CWT package B B2-z0.5-Uall-sidelong-t05s1-guest (id 45); open history n 18135, exp -0.0796R, t -5.12, 42.57/day; verdict retire
   CWT13-vwapstretch-z05-long:
     enabled: true
@@ -203,25 +144,25 @@ strategies:
     min_adv: 95000000
     window: [1100, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sidelong-t05s1-guest", first_session: "2026-10-12"}
-  # Failed Prior-Day-High Break Short (low volume): CWT package B B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full (id 136); open history n 19479, exp -0.0890R, t -9.45, 45.73/day; verdict retire
-  CWT14-failbrk-pdh-p10-lowvol-short:
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sidelong-t05s1-guest", fill: false}
+  # Stretched Above VWAP Fade (far): CWT package B B2-z0.75-Uall-sideshort-t1s1-guest (id 67); open history n 2614, exp -0.0772R, t -1.73, 6.14/day; verdict retire
+  CWT13-vwapstretch-z075-short:
     enabled: true
     type: lab
-    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z075-short.py
     min_adv: 95000000
-    window: [950, 1500]
+    window: [1100, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full", first_session: "2026-10-12"}
-  # Failed Opening-Range-Low Break Long (low volume): CWT package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190); open history n 31676, exp -0.0891R, t -7.82, 74.36/day; verdict retire
-  CWT14-failbrk-orl-p10-lowvol-long:
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sideshort-t1s1-guest", fill: false}
+  # Stretched Above VWAP Fade: CWT package B B2-z0.5-Uall-sideshort-t1s1-guest (id 35); open history n 16165, exp -0.0689R, t -2.84, 37.95/day; verdict retire
+  CWT13-vwapstretch-z05-short:
     enabled: true
     type: lab
-    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z05-short.py
     min_adv: 95000000
-    window: [950, 1500]
+    window: [1100, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sideshort-t1s1-guest", fill: false}
   # Failed Prior-Day-Low Break Long: CWT package B B3-LPD-p0.1-Vany-sidelong-t05s1-full (id 130); open history n 37499, exp -0.0861R, t -8.75, 88.03/day; verdict rework
   CWT14-failbrk-pdl-p10-long:
     enabled: true
@@ -230,16 +171,7 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vany-sidelong-t05s1-full", first_session: "2026-10-12"}
-  # Coil Under the High (4 bars): CWT package B B4-parta-k4-t05s1-guest (id 197); open history n 44505, exp -0.0746R, t -5.91, 104.47/day; verdict rework
-  CWT12-coil-k4-long:
-    enabled: true
-    type: lab
-    module: research/bdi/cwt/live/CWT12-coil-k4-long.py
-    min_adv: 95000000
-    window: [950, 1130]
-    scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B4-parta-k4-t05s1-guest", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vany-sidelong-t05s1-full", fill: false}
   # Failed Prior-Day-Low Break Long (shallow): CWT package B B3-LPD-p0.05-Vany-sidelong-t05s1-full (id 106); open history n 66875, exp -0.0881R, t -10.07, 156.98/day; verdict rework
   CWT14-failbrk-pdl-p05-long:
     enabled: true
@@ -248,4 +180,184 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vany-sidelong-t05s1-full", first_session: "2026-10-12"}
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vany-sidelong-t05s1-full", fill: false}
+  # Failed Prior-Day-High Break Short (low volume): CWT package B B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full (id 136); open history n 19479, exp -0.0890R, t -9.45, 45.73/day; verdict retire
+  CWT14-failbrk-pdh-p10-lowvol-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full", fill: false}
+  # Failed Opening-Range-Low Break Long (low volume): CWT package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190); open history n 31676, exp -0.0891R, t -7.82, 74.36/day; verdict retire
+  CWT14-failbrk-orl-p10-lowvol-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full", fill: false}
+  # Coil Under the High (6 bars): CWT package B B4-parta-k6-t1s05-guest (id 207); open history n 16735, exp -0.0703R, t -4.68, 39.28/day; verdict retire
+  CWT12-coil-k6-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-coil-k6-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B4-parta-k6-t1s05-guest", fill: false}
+  # Coil Under the High (4 bars): CWT package B B4-parta-k4-t05s1-guest (id 197); open history n 44505, exp -0.0746R, t -5.91, 104.47/day; verdict rework
+  CWT12-coil-k4-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-coil-k4-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B4-parta-k4-t05s1-guest", fill: false}
+  # Spike-Pullback Flag Breakout: CWT package B B4-partb-k1-t05s1-full (id 212); open history n 1435, exp -0.0744R, t -2.75, 3.37/day; verdict retire
+  CWT12-flag-s1-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-flag-s1-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B4-partb-k1-t05s1-full", fill: false}
+  # Panic Flush Reversal (deep, 5x volume): CWT package B B5-m0.75-v5-Dnone-t05s1-full (id 276); open history n 584, exp -0.0881R, t -1.94, 1.37/day; verdict retire
+  CWT05-flush-m075-v5-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m075-v5-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.75-v5-Dnone-t05s1-full", fill: false}
+  # Panic Flush Reversal (5x volume): CWT package B B5-m0.5-v5-Dnone-t05s1-full (id 244); open history n 1247, exp -0.1107R, t -3.28, 2.93/day; verdict retire
+  CWT05-flush-m05-v5-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v5-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v5-Dnone-t05s1-full", fill: false}
+  # Panic Flush Reversal (3x volume): CWT package B B5-m0.5-v3-Dnone-t05s1-full (id 228); open history n 3807, exp -0.1361R, t -4.84, 8.94/day; verdict retire
+  CWT05-flush-m05-v3-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v3-Dnone-t05s1-full", fill: false}
+  # Panic Flush Reversal (deep, 3x volume): CWT package B B5-m0.75-v3-Dnone-t05s1-full (id 260); open history n 1409, exp -0.1539R, t -4.00, 3.31/day; verdict retire
+  CWT05-flush-m075-v3-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m075-v3-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.75-v3-Dnone-t05s1-full", fill: false}
+  # Gap-Down Bounce Rejection Short (10% gap): CWT package A A7 gap<=-10 E=out T2 S guest (id 373); open history n 589, exp +0.1409R, t 0.78, 1.38/day; verdict fail; NOTE scored figure includes 22 artifact trades; live-tradable: n 567, exp +0.131R
+  CWT09-gapdn-bounce-g10-lowerhalf-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-bounce-g10-lowerhalf-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T2 S guest", fill: false}
+  # Gap-Down Bounce Rejection Short (5% gap): CWT package A A7 gap<=-5 E=out T2 S guest (id 341); open history n 3885, exp +0.0472R, t 0.40, 9.12/day; verdict fail; NOTE scored figure includes 190 artifact trades; live-tradable: n 3695, exp +0.032R
+  CWT09-gapdn-bounce-g5-lowerhalf-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-bounce-g5-lowerhalf-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T2 S guest", fill: false}
+  # Gap-Down VWAP Loss Short (10% gap): CWT package A A7 gap<=-10 E=out T1 S guest (id 365); open history n 551, exp +0.0405R, t 0.21, 1.29/day; verdict fail
+  CWT09-gapdn-vwaploss-g10-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-vwaploss-g10-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T1 S guest", fill: false}
+  # Gap-Down VWAP Loss Short (5% gap): CWT package A A7 gap<=-5 E=out T1 t1s05 guest (id 339); open history n 3663, exp -0.0311R, t -0.42, 8.60/day; verdict fail
+  CWT09-gapdn-vwaploss-g5-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-vwaploss-g5-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T1 t1s05 guest", fill: false}
+  # Failed Opening-Range-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full (id 166); open history n 74014, exp -0.0905R, t -9.35, 173.74/day; verdict rework
+  CWT14-failbrk-orl-p05-lowvol-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full", fill: true}
+  # Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: CWT package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179); open history n 39989, exp -0.0906R, t -7.05, 93.87/day; verdict retire
+  CWT14-failbrk-orl-p10-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
+    min_adv: 95000000
+    window: [950, 1200]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vany-sidelong-t05s1-guest", fill: true}
+  # Failed Opening-Range-Low Break Long (0.05 ATR) [fill]: CWT package B B3-LOR-p0.05-Vany-sidelong-t05s1-full (id 154); open history n 105023, exp -0.0935R, t -10.05, 246.53/day; verdict rework
+  CWT14-failbrk-orl-p05-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vany-sidelong-t05s1-full", fill: true}
+  # Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]: CWT package B B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full (id 142); open history n 20080, exp -0.0946R, t -8.85, 47.14/day; verdict retire
+  CWT14-failbrk-pdl-p10-lowvol-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full", fill: true}
+  # Failed Prior-Day-High Break Short (0.05 ATR, low volume) [fill]: CWT package B B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full (id 112); open history n 43876, exp -0.0953R, t -11.57, 103.00/day; verdict retire
+  CWT14-failbrk-pdh-p05-lowvol-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full", fill: true}
+  # Failed Prior-Day-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full (id 118); open history n 44026, exp -0.0960R, t -10.03, 103.35/day; verdict rework
+  CWT14-failbrk-pdl-p05-lowvol-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full", fill: true}
+  # Failed Prior-Day-High Break Short (0.1 ATR) [fill]: CWT package B B3-LPD-p0.1-Vany-sideshort-t05s1-guest (id 125); open history n 30261, exp -0.0963R, t -10.13, 71.04/day; verdict retire
+  CWT14-failbrk-pdh-p10-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-short.py
+    min_adv: 95000000
+    window: [950, 1200]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vany-sideshort-t05s1-guest", fill: true}

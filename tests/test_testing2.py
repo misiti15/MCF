@@ -60,3 +60,25 @@ def test_workflows_route_testing2_to_its_own_account():
     assert "mcf-data-testing2" in eod
     # without its keys the job must skip (it would otherwise fall back to the primary account's keys)
     assert '[ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]' in tr
+
+
+def test_structural_exit_uses_the_module_stop_and_no_target():
+    """GEOM "S" (opt-in): stop from the module's stop_price, no target, flat 15:55; t-geometry modules unchanged."""
+    from mcf.strategies.setups import _LAB_FRAMES, LabStrategy
+
+    st = LabStrategy("A7T1", "research/bdi/cwt/live/CWT09-gapdn-vwaploss-g10-short.py", window=[1030, 1500])
+    assert st.structural and st.mod.GEOM == "S"
+    idx = pd.date_range("2026-10-12 09:30", periods=390, freq="1min", tz="America/New_York")
+    # gap down 12%: dips, bounces above VWAP by 10:00 (high 91.5 at ~10:05), fades below VWAP after 10:30
+    px = np.r_[np.linspace(88, 86, 15), np.linspace(86, 91, 20), np.linspace(91, 89.5, 30), np.linspace(89.5, 86, 325)]
+    bars = pd.DataFrame({"open": px, "high": px + 0.05, "low": px - 0.05, "close": px, "volume": 10000.0}, index=idx)
+    _LAB_FRAMES.clear()
+    ctx = SimpleNamespace(symbol="A7TEST", date=idx[0].date(), bars=bars, prior5=None, atr=3.0, prev_close=100.0,
+                          prev_high=101.0, prev_low=99.0, avg_dollar_volume=5e7)
+    sig = st.generate(ctx)
+    assert len(sig) == 1 and sig[0].side == -1 and sig[0].target is None
+    end = bars.index[sig[0].bar_index] + pd.Timedelta(minutes=1)
+    assert end.hour * 100 + end.minute >= 1030
+    assert abs(sig[0].stop - (bars["high"].iloc[:60].max())) < 1e-9          # the 09:30-10:30 high
+    geo = LabStrategy("B2", "research/bdi/cwt/live/CWT13-vwapstretch-z05-short.py")
+    assert not geo.structural and (geo.up, geo.dn) == (1.0, 1.0)

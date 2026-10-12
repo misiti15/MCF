@@ -397,7 +397,11 @@ class LabStrategy(Strategy):
         self.mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.mod)
         self.side = 1 if self.mod.SIDE == "long" else -1
-        self.up, self.dn = self.GEOMS[getattr(self.mod, "GEOM", "t1s1")]
+        geom = getattr(self.mod, "GEOM", "t1s1")
+        # GEOM "S" (structural exit, opt-in): the module's stop_price(f, i) gives the stop at a chart level, there is
+        # no target, and the trade is flat at 15:55 - the "S" exits the CWT packages scored (Testing 2, 2026-10-12).
+        self.structural = geom == "S"
+        self.up, self.dn = (None, None) if self.structural else self.GEOMS[geom]
 
     def eligible(self, ctx):
         if ctx.avg_dollar_volume < self.min_adv:
@@ -462,6 +466,12 @@ class LabStrategy(Strategy):
         if r <= 0:
             return []
         s = self.side
+        if self.structural:
+            stop = float(self.mod.stop_price(f, i))
+            if not np.isfinite(stop) or s * (px - stop) <= 0:
+                return []   # the stop must sit beyond the entry (as scored: such trades were skipped)
+            return [Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=None, exit_by=t("15:55"),
+                           meta={"layers": " + ".join(getattr(self.mod, "LAYERS", [])), "exit": "structural"})]
         return [Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
                        exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})]
 

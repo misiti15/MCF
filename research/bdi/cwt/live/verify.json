@@ -143,6 +143,162 @@
    1500
   ]
  },
+ "CWT09-gapdn-bounce-g10-lowerhalf-short": {
+  "artifact_trades_entered_beyond_stop": 22,
+  "examples_only_module": [],
+  "examples_only_scored": [
+   [
+    "ZSL",
+    "2026-04-08",
+    1040
+   ],
+   [
+    "EQNR",
+    "2026-04-08",
+    1050
+   ],
+   [
+    "KORU",
+    "2025-11-04",
+    1045
+   ],
+   [
+    "TVTX",
+    "2026-01-13",
+    1405
+   ],
+   [
+    "AXTX",
+    "2026-08-03",
+    1045
+   ]
+  ],
+  "exp_matched": 0.1338,
+  "exp_scored": 0.1409,
+  "geom": "S",
+  "live_tradable_exp": 0.1312,
+  "live_tradable_n": 567,
+  "match_share": 0.9576,
+  "matched": 564,
+  "module_n": 567,
+  "note": "every only_scored trade is a package A artifact: short entered with its close already above the structural stop, booked as a gain; live skips these",
+  "only_module": 0,
+  "only_scored": 22,
+  "other_bar": 3,
+  "parity": false,
+  "path": "live LabStrategy.generate on raw 1-minute bars",
+  "per_day": 1.383,
+  "scored_n": 589,
+  "side": "short",
+  "source": "package A A7 gap<=-10 E=out T2 S guest (cid 373)",
+  "stop_mismatch": 0,
+  "window": [
+   1030,
+   1500
+  ]
+ },
+ "CWT09-gapdn-bounce-g5-lowerhalf-short": {
+  "artifact_trades_entered_beyond_stop": 190,
+  "examples_only_module": [],
+  "examples_only_scored": [
+   [
+    "ARWR",
+    "2026-03-26",
+    1050
+   ],
+   [
+    "LULU",
+    "2025-04-04",
+    1120
+   ],
+   [
+    "BNO",
+    "2025-04-04",
+    1120
+   ],
+   [
+    "TTMI",
+    "2026-04-02",
+    1050
+   ],
+   [
+    "IREN",
+    "2026-01-20",
+    1110
+   ]
+  ],
+  "exp_matched": 0.0365,
+  "exp_scored": 0.0472,
+  "geom": "S",
+  "live_tradable_exp": 0.0325,
+  "live_tradable_n": 3695,
+  "match_share": 0.9449,
+  "matched": 3671,
+  "module_n": 3692,
+  "note": "every only_scored trade is a package A artifact: short entered with its close already above the structural stop, booked as a gain; live skips these",
+  "only_module": 0,
+  "only_scored": 193,
+  "other_bar": 21,
+  "parity": false,
+  "path": "live LabStrategy.generate on raw 1-minute bars",
+  "per_day": 9.12,
+  "scored_n": 3885,
+  "side": "short",
+  "source": "package A A7 gap<=-5 E=out T2 S guest (cid 341)",
+  "stop_mismatch": 0,
+  "window": [
+   1030,
+   1500
+  ]
+ },
+ "CWT09-gapdn-vwaploss-g10-short": {
+  "examples_only_module": [],
+  "examples_only_scored": [],
+  "exp_matched": 0.0409,
+  "exp_scored": 0.0405,
+  "geom": "S",
+  "match_share": 0.9982,
+  "matched": 550,
+  "module_n": 551,
+  "only_module": 0,
+  "only_scored": 0,
+  "other_bar": 1,
+  "parity": false,
+  "path": "live LabStrategy.generate on raw 1-minute bars",
+  "per_day": 1.293,
+  "scored_n": 551,
+  "side": "short",
+  "source": "package A A7 gap<=-10 E=out T1 S guest (cid 365)",
+  "stop_mismatch": 0,
+  "window": [
+   1030,
+   1500
+  ]
+ },
+ "CWT09-gapdn-vwaploss-g5-short": {
+  "examples_only_module": [],
+  "examples_only_scored": [],
+  "exp_matched": -0.0309,
+  "exp_scored": -0.0311,
+  "geom": "t1s05",
+  "match_share": 0.9984,
+  "matched": 3657,
+  "module_n": 3663,
+  "only_module": 0,
+  "only_scored": 0,
+  "other_bar": 6,
+  "parity": false,
+  "path": "live LabStrategy.generate on raw 1-minute bars",
+  "per_day": 8.599,
+  "scored_n": 3663,
+  "side": "short",
+  "source": "package A A7 gap<=-5 E=out T1 t1s05 guest (cid 339)",
+  "stop_mismatch": null,
+  "window": [
+   1030,
+   1500
+  ]
+ },
  "CWT12-coil-k4-long": {
   "exp_matched": -0.0746,
   "exp_scored": -0.0746,
@@ -269,6 +425,60 @@
    1500
   ]
  },
+ "CWT14-failbrk-orl-p05-long": {
+  "exp_matched": -0.0935,
+  "exp_scored": -0.0935,
+  "geom": "t05s1",
+  "matched": 105023,
+  "module_n": 105023,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 246.533,
+  "scored_n": 105023,
+  "side": "long",
+  "source": "package B B3-LOR-p0.05-Vany-sidelong-t05s1-full (id 154)",
+  "window": [
+   950,
+   1500
+  ]
+ },
+ "CWT14-failbrk-orl-p05-lowvol-long": {
+  "exp_matched": -0.0905,
+  "exp_scored": -0.0905,
+  "geom": "t05s1",
+  "matched": 74014,
+  "module_n": 74014,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 173.742,
+  "scored_n": 74014,
+  "side": "long",
+  "source": "package B B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full (id 166)",
+  "window": [
+   950,
+   1500
+  ]
+ },
+ "CWT14-failbrk-orl-p10-long": {
+  "exp_matched": -0.0906,
+  "exp_scored": -0.0906,
+  "geom": "t05s1",
+  "matched": 39989,
+  "module_n": 39989,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 93.871,
+  "scored_n": 39989,
+  "side": "long",
+  "source": "package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179)",
+  "window": [
+   950,
+   1200
+  ]
+ },
  "CWT14-failbrk-orl-p10-lowvol-long": {
   "exp_matched": -0.0891,
   "exp_scored": -0.0891,
@@ -282,6 +492,24 @@
   "scored_n": 31676,
   "side": "long",
   "source": "package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190)",
+  "window": [
+   950,
+   1500
+  ]
+ },
+ "CWT14-failbrk-pdh-p05-lowvol-short": {
+  "exp_matched": -0.0953,
+  "exp_scored": -0.0953,
+  "geom": "t05s1",
+  "matched": 43876,
+  "module_n": 43876,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 102.995,
+  "scored_n": 43876,
+  "side": "short",
+  "source": "package B B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full (id 112)",
   "window": [
    950,
    1500
@@ -305,6 +533,24 @@
    1500
   ]
  },
+ "CWT14-failbrk-pdh-p10-short": {
+  "exp_matched": -0.0963,
+  "exp_scored": -0.0963,
+  "geom": "t05s1",
+  "matched": 30261,
+  "module_n": 30261,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 71.035,
+  "scored_n": 30261,
+  "side": "short",
+  "source": "package B B3-LPD-p0.1-Vany-sideshort-t05s1-guest (id 125)",
+  "window": [
+   950,
+   1200
+  ]
+ },
  "CWT14-failbrk-pdl-p05-long": {
   "exp_matched": -0.0881,
   "exp_scored": -0.0881,
@@ -318,6 +564,24 @@
   "scored_n": 66875,
   "side": "long",
   "source": "package B B3-LPD-p0.05-Vany-sidelong-t05s1-full (id 106)",
+  "window": [
+   950,
+   1500
+  ]
+ },
+ "CWT14-failbrk-pdl-p05-lowvol-long": {
+  "exp_matched": -0.096,
+  "exp_scored": -0.096,
+  "geom": "t05s1",
+  "matched": 44026,
+  "module_n": 44026,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 103.347,
+  "scored_n": 44026,
+  "side": "long",
+  "source": "package B B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full (id 118)",
   "window": [
    950,
    1500
@@ -341,9 +605,28 @@
    1500
   ]
  },
+ "CWT14-failbrk-pdl-p10-lowvol-long": {
+  "exp_matched": -0.0946,
+  "exp_scored": -0.0946,
+  "geom": "t05s1",
+  "matched": 20080,
+  "module_n": 20080,
+  "only_module": 0,
+  "only_scored": 0,
+  "parity": true,
+  "per_day": 47.136,
+  "scored_n": 20080,
+  "side": "long",
+  "source": "package B B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full (id 142)",
+  "window": [
+   950,
+   1500
+  ]
+ },
  "_meta": {
+  "a7": "package A setups checked through the live LabStrategy.generate on raw 1-minute bars (verify_a.py); differences are 5-minute bar shifts from 1-minute data gaps and the artifact trades noted",
   "sessions": 426,
-  "updated": "2026-10-12 12:24",
+  "updated": "2026-10-12 12:47",
   "what": "trade-for-trade parity of the live modules with the scored CWT configurations (open two-year history; the locked block is never loaded). Educational only - not financial advice."
  }
 }
