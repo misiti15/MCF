@@ -127,3 +127,12 @@ day; a name with `tradable = false` or a pending corporate action is held, not b
 2. Two weeks dry-run (plans written, no orders), plan vs backtest targets compared.
 3. Paper forward test on the third account. Review after 6 monthly rebalances (monthly strategies give few
    independent observations; judge on tracking vs backtest and drawdown, not on 6 months of return).
+
+## 10. Implementation (2026-10-12)
+Built as `mcf/longhold/` (`signals.py`, `core.py` (moved from `runner_core.py`, re-exported there), `runner.py`,
+`book.py`, `broker.py`, `data.py`, `report.py`, CLI `python -m mcf.longhold run|init|mark|report|plan|status`),
+`config/longhold.yaml`, `.github/workflows/longhold.yml`, tests `tests/test_longhold_runner.py`. Deviations from
+the text above, decided by the lead and owner on 2026-10-12: the account went live on day one with an initial
+**market-on-close** portfolio from the 2026-10-09 signal (`init`), so the two-week dry run was waived. Weekly OPG
+orders are submitted by a 19:10 ET run (Alpaca accepts OPG from 19:00), not by the 18:20 run waiting. The halt
+blocks **all** orders (sells too), so holdings are untouched. Management and research agenda: `MANAGEMENT.md`.

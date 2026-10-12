@@ -10,16 +10,28 @@
 # State: branch mcf-data-longhold (created if missing), files under longhold/. Order ids: mcl-*.
 name: longhold
 
+# Schedule (every run is idempotent; the phase comes from the ET clock inside `python -m mcf.longhold run`):
+#   18:20 ET  evening: reconcile, daily mark, and on the week's last session the plan (committed before any order)
+#   19:10 ET  evening: submit the plan's MOO (OPG) orders - Alpaca accepts OPG from 19:00 ET
+#   08:50 ET  morning backstop: submit any missing OPG order (same deterministic mcl- ids) before 09:28
+#   09:45 ET  recon: fills vs the official open (slippage); an unfilled OPG order is retried once as DAY (-r)
+#   Saturday  weekly report
+# Duplicate UTC lines cover EDT and EST; the off-season line lands an hour away and is harmless.
 on:
   schedule:
-    - cron: "20 22,23 * * 1-5"    # 18:20 ET daily mark (EDT 22:20 UTC, EST 23:20 UTC; the other line lands at 19:20/17:20 ET)
+    - cron: "20 22,23 * * 1-5"    # 18:20 ET (EDT 22:20 UTC / EST 23:20 UTC)
+    - cron: "10 23 * * 1-5"       # 19:10 ET in EDT
+    - cron: "10 0 * * 2-6"        # 19:10 ET in EST (00:10 UTC the next day)
+    - cron: "50 12,13 * * 1-5"    # 08:50 ET
+    - cron: "45 13,14 * * 1-5"    # 09:45 ET
+    - cron: "0 15 * * 6"          # Saturday 10:00/11:00 ET weekly report
   workflow_dispatch:
     inputs:
       command:
-        description: "init = initial portfolio as MOC orders today (empty account only); mark; plan; status"
+        description: "run = scheduled logic for the current ET time; init = initial portfolio as MOC orders today (empty account only); mark; report; plan; status"
         type: choice
-        options: [mark, init, plan, status]
-        default: mark
+        options: [run, init, mark, report, plan, status]
+        default: run
       live:
         description: "Place paper orders on the long-hold account (needs the ALPACA_LONGHOLD_* secrets)"
         type: boolean
@@ -46,7 +58,7 @@ jobs:
       ALPACA_TESTING_API_KEY: ${{ secrets.ALPACA_TESTING_API_KEY }}
       ALPACA_TESTING2_API_KEY: ${{ secrets.ALPACA_TESTING2_API_KEY }}
       ALPACA_DATA_FEED: sip
-      CMD: ${{ inputs.command || 'mark' }}
+      CMD: ${{ inputs.command || (github.event.schedule == '0 15 * * 6' && 'report' || 'run') }}
       PYTHONUNBUFFERED: "1"
     steps:
       - name: Mode
@@ -79,21 +91,21 @@ jobs:
             git -C state remote add origin "$url" && git -C state push -q origin "$STATE_BRANCH"
           fi
 
-      - name: Plan (written and committed before any order)
-        if: env.CMD == 'init'
-        run: python -m mcf.longhold init --stage plan --state-dir state
+      - name: Plan / mark (written and committed before any order)
+        if: env.CMD == 'init' || env.CMD == 'run'
+        run: python -m mcf.longhold "$CMD" --stage plan --state-dir state
 
       - name: Save plan to the state branch
-        if: env.CMD == 'init'
+        if: env.CMD == 'init' || env.CMD == 'run'
         run: |
           cd state && git add -A && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "long-hold plan" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"
 
-      - name: Submit (init MOC orders)
-        if: env.CMD == 'init'
-        run: python -m mcf.longhold init --stage submit --state-dir state
+      - name: Submit (orders only in paper mode) / reconcile
+        if: env.CMD == 'init' || env.CMD == 'run'
+        run: python -m mcf.longhold "$CMD" --stage submit --state-dir state
 
-      - name: Mark / plan / status
-        if: env.CMD != 'init'
+      - name: Mark / report / plan / status
+        if: env.CMD != 'init' && env.CMD != 'run'
         run: python -m mcf.longhold "$CMD" --state-dir state
 
       - name: Save state

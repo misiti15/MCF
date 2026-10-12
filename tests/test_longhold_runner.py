@@ -15,7 +15,7 @@ DATA = Path(__file__).parent / "data"
 
 
 # ---------------------------------------------------------------------------------------------- fakes
-def synth_bars(n_sym=60, end="2026-10-12", n_days=320, seed=7):
+def synth_bars(n_sym=60, end="2026-10-12", n_days=320, seed=7, gapless=False):
     days = pd.bdate_range(end=end, periods=n_days)
     rng = np.random.default_rng(seed)
     rows = []
@@ -23,8 +23,9 @@ def synth_bars(n_sym=60, end="2026-10-12", n_days=320, seed=7):
         s = f"S{i:02d}"
         drift = rng.normal(0.0005, 0.001)
         px = 50 * np.exp(np.cumsum(rng.normal(drift, 0.02, n_days)))
-        for d, p in zip(days, px):
-            rows.append((s, d, p, p * 1.01, p * 0.99, p, 2e6))
+        op = np.r_[px[0], px[:-1]] if gapless else px * np.exp(rng.normal(0, 0.005, n_days))
+        for d, p, o in zip(days, px, op):
+            rows.append((s, d, o, p * 1.01, p * 0.99, p, 2e6))
     spy = 400 * np.exp(np.cumsum(rng.normal(0.0003, 0.01, n_days)))
     rows += [("SPY", d, p, p, p, p, 5e7) for d, p in zip(days, spy)]
     return pd.DataFrame(rows, columns=["symbol", "date", "open", "high", "low", "close", "volume"])
@@ -79,13 +80,13 @@ def calendar_days(end="2026-10-30"):
     return [d.date() for d in pd.bdate_range("2025-01-01", end)]
 
 
-def make(tmp_path, bars=None, broker=None, live=True, now="2026-10-12T14:00", **kw):
+def make(tmp_path, bars=None, broker=None, live=True, now="2026-10-12T14:00", cfg=None, **kw):
     bars = synth_bars() if bars is None else bars
     days = calendar_days()
     broker = broker or FakeBroker(days=days)
     broker.days = days
     syms = sorted(set(bars.symbol) - {"SPY"})
-    cfg = load_config()
+    cfg = cfg or load_config()
     r = Runner(tmp_path, FakeData(bars), broker=broker if live else None, calendar=broker, live=live,
                now=datetime.fromisoformat(now).replace(tzinfo=ET), cfg=cfg, etf=set(), universe=syms, **kw)
     return r, broker
@@ -263,3 +264,113 @@ def test_dry_plan_is_rebuilt_for_live(tmp_path):
     r2, _ = make(tmp_path, broker=b)
     p = r2.init("all")
     assert p["mode"] == "paper" and p["equity"] == 50000.0 and len(b.orders_) == len(p["orders"])
+
+
+# ---------------------------------------------------------------------------------------------- weekly schedule
+def test_end_to_end_dry_book_tracks_backtest_replay(tmp_path):
+    """DESIGN 8.7: three months of weekly rebalances on synthetic bars (no overnight gaps, no costs, large book):
+    the dry-run book's daily return matches the backtest replay (study simulator step) to < 1 bp/day."""
+    bars = synth_bars(end="2026-10-29", n_days=400, gapless=True)
+    cfg = load_config()
+    cfg.update(dry_capital=1e9, cash_buffer=0.0, model_costs=False)
+    cal = FakeBroker(days=calendar_days())
+    days = [d for d in calendar_days() if date(2026, 7, 1) <= d <= date(2026, 10, 29)]
+    for d in days:
+        r, _ = make(tmp_path, bars=bars, broker=cal, live=False, now=f"{d}T18:30", cfg=cfg)
+        r.run()
+    assert cal.submits == 0
+    m = pd.read_csv(tmp_path / "longhold" / "marks.csv")
+    plans = sorted((tmp_path / "longhold" / "plans").glob("*.json"))
+    assert len(plans) >= 12
+    te = m["te"].dropna()
+    assert len(te) >= 55
+    assert te.abs().max() < 1e-4, te.abs().max()
+    assert m["model_turnover"].fillna(0).sum() > 1           # it actually rebalanced
+    assert m["ew_ret"].notna().sum() > 50 and m["spy_ret"].notna().sum() > 50
+
+
+def _held(b, plan):
+    for o in plan["orders"]:
+        b.pos[o["symbol"]] = {"qty": o["qty"], "market_value": o["notional"], "current_price": o["ref_price"]}
+
+
+def test_weekly_evening_and_morning_submit_each_order_once_then_recon_retries_once(tmp_path):
+    bars = synth_bars(end="2026-10-19", n_days=330)
+    b = FakeBroker(days=calendar_days())
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-12T14:00")
+    init = r.init("all")
+    for o in b.orders_:
+        o.update(status="filled", filled_qty=o["qty"], filled_avg_price=100.0)
+    _held(b, init)
+    # Friday 18:30: plan only (OPG window opens 19:00)
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-16T18:30")
+    out = r.run()
+    plan = json.loads((tmp_path / "longhold" / "plans" / "2026-10-16.json").read_text())
+    assert out["plan"] == "planned" and plan["exec_day"] == "2026-10-19" and plan["time_in_force"] == "opg"
+    n0 = len(b.orders_)
+    weekly = [o for o in plan["orders"]]
+    assert weekly, "synthetic ranks should change in a week"
+    sells = [o for o in weekly if o["side"] == "sell"]
+    assert weekly[:len(sells)] == sells                                    # sells first
+    # 19:10 run: submits; the second evening trigger and the morning backstop add nothing
+    for now, phase in (("2026-10-16T19:10", None), ("2026-10-16T20:10", None), ("2026-10-19T08:50", None)):
+        r, _ = make(tmp_path, bars=bars, broker=b, now=now)
+        r.run(phase=phase)
+    new = b.orders_[n0:]
+    assert len(new) == len(weekly) and b.submits == n0 + len(weekly)
+    assert all(o["time_in_force"] == "opg" for o in new)
+    # 09:45 recon: one OPG order expired unfilled -> retried once as DAY with -r; the rest filled at the open
+    opens = bars[bars.date == "2026-10-19"].set_index("symbol")["open"]
+    for o in new[1:]:
+        o.update(status="filled", filled_qty=o["qty"], filled_avg_price=float(opens[o["symbol"]]) * 1.001)
+    new[0].update(status="expired", filled_qty=0)
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-19T09:45")
+    r.run()
+    retry = [o for o in b.orders_ if o["client_order_id"].endswith("-r")]
+    assert len(retry) == 1 and retry[0]["time_in_force"] == "day" and retry[0]["symbol"] == new[0]["symbol"]
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-19T10:45")
+    r.run()
+    assert len([o for o in b.orders_ if o["client_order_id"].endswith("-r")]) == 1
+    f = pd.read_csv(tmp_path / "longhold" / "fills.csv")
+    f = f[f.exec_day == "2026-10-19"]
+    assert len(f) == len(new) - 1
+    buys = f[f.side == "buy"]
+    assert np.allclose(buys["slippage_bps"], 10.0, atol=0.6)               # paid 0.1 % over the official open
+    retry[0].update(status="filled", filled_qty=retry[0]["qty"], filled_avg_price=float(opens[new[0]["symbol"]]))
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-19T11:45")
+    r.run()
+    p = json.loads((tmp_path / "longhold" / "plans" / "2026-10-16.json").read_text())
+    assert p.get("reconciled") and p["slippage_bps_mean"] is not None
+
+
+def test_weekly_data_skip_places_no_orders_and_alerts(tmp_path):
+    bars = synth_bars(end="2026-10-19", n_days=330)
+    stale = bars[~((bars.date == "2026-10-16") & (bars.symbol == "SPY"))]
+    b = FakeBroker(days=calendar_days())
+    r, _ = make(tmp_path, bars=stale, broker=b, now="2026-10-16T19:10")
+    r.run()
+    p = json.loads((tmp_path / "longhold" / "plans" / "2026-10-16.json").read_text())
+    assert p["status"] == "skipped_data" and not b.orders_
+    st = json.loads((tmp_path / "longhold" / "status.json").read_text())
+    assert any(a["kind"] == "rebalance_skipped" for a in st["alerts"])
+
+
+def test_missed_rebalance_and_drawdown_alerts_and_weekly_report(tmp_path):
+    bars = synth_bars(end="2026-10-19", n_days=330)
+    b = FakeBroker(days=calendar_days())
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-12T14:00")
+    _held(b, r.init("all"))
+    d = tmp_path / "longhold"
+    m = pd.DataFrame({"date": ["2026-10-13", "2026-10-14"], "equity": [100000, 82000]})
+    m.to_csv(d / "marks.csv", index=False)
+    # Monday 10-19 at noon: the 10-16 rebalance never ran (no plan)
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-19T12:00")
+    st = r.write_status(mark={"drawdown": -0.18, "te": 0.02, "te_20d": 0.0})
+    kinds = {a["kind"]: a["level"] for a in st["alerts"]}
+    assert kinds.get("missed_rebalance") == "warn" and kinds.get("drawdown") == "warn"
+    assert kinds.get("tracking") == "warn"
+    r, _ = make(tmp_path, bars=bars, broker=b, now="2026-10-24T10:00")
+    out = r.report()
+    html = out.read_text()
+    assert "not financial advice" in html and "Holdings" in html and "weekly" in out.name
+    assert json.loads((d / "status.json").read_text())["weekly"]["path"].startswith("longhold/reports/")
