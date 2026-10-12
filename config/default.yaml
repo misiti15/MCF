@@ -90,7 +90,7 @@ strategies:
     max_rvol: 1.5
     exit_by: "12:00"
   intraday_momentum:
-    enabled: true   # screen 2026-10-06: +0.013R/trade, break-even; paper on for data (index ETFs, cheap)
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5) | was: screen 2026-10-06: +0.013R/trade, break-even; paper on for data (index ETFs, cheap)
     symbols: [SPY, QQQ, IWM, DIA]
     signal_time: "10:00"
     entry_time: "15:30"
@@ -113,7 +113,7 @@ strategies:
   # ---- 2026-10-06 research sweep (research/setups_research.json). Paper-trade only after the screening
   # backtest (research/setup_screen.md); funds only via the promotion gates. Exits as specced (no scale-out).
   orb20_a:
-    enabled: true   # screen 2026-10-06: PASSED (+0.021R, PF 1.11, 443 trades); thin edge, paper only
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5) | was: screen 2026-10-06: PASSED (+0.021R, PF 1.11, 443 trades); thin edge, paper only
     class: orb20
     variant: A                   # stop 0.5 x range, target 0.75 x range (higher win rate)
     min_rvol: 1.5
@@ -167,7 +167,7 @@ strategies:
   # ---- Heat-score study 2026-10-06 (research/heat/HEAT_STUDY.md): MarcoFlow's heat re-weighted as a
   # consistent mean-reversion score; positive on train, valid AND the locked test. Paper only.
   heat_fade_short:
-    enabled: true
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
     type: heat
     formula: research/heat/candidates/regime_9.py
     sides: short
@@ -176,7 +176,7 @@ strategies:
     gate: fo-
     scale_out_r: null
   heat_fade_long:
-    enabled: true
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
     type: heat
     formula: research/heat/candidates/regime_5.py
     sides: long
@@ -187,7 +187,7 @@ strategies:
   # ---- Layered-setup swarm 2026-10-06 (research/setups2/SWARM.md): ~855,600 configurations, 9 finalists,
   # one survived the locked test. Paper only.
   exhaustion_short:
-    enabled: true
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
     type: lab
     module: research/setups2/candidates/volume_flip_1.py   # RSI5 > 90, > 1% above 5-min SMA20, bearish RSI divergence, 13:00-15:00
     min_adv: 95000000            # the study's population: ~1,200 most liquid names

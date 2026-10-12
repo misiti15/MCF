@@ -71,4 +71,6 @@ follows these rules.
 20. **The Testing account has no cap on the number of setups, and a demoted setup goes back to Testing instead of being dropped.**
     - Any setup removed from the primary account moves to the Testing account, in the same form it ran in primary. Its full-day version runs there too.
     - It is retired completely only after **10 further Testing sessions**, counted from the session it moved, and only if it is still below its bar. Retiring is the owner's decision, made after the scorecard over those sessions.
+    - **No setup is ever removed from the Testing account without first prompting the owner.** The prompt gives a plain-English description of the setup, whether it was once in primary, and its stats: Testing sessions and trades, win rate, avg R, P/L, its backtest expectation and its two-year history result. The setup stays until the owner says yes.
+    - Former primary setups carry a `former_primary` marker in config/account_testing.yaml and config/setup_names.yaml, and an "ex-primary" tag on the dashboard.
     - When setups compete for the same symbol, Testing results are reported per setup, together with how many signals each lost to a higher-priority setup. A setup's count is not judged without that context.

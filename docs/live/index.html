@@ -126,7 +126,10 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   let NAMES = {}, LINK = {};
   fetch("../live/linkage.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).then(d => { LINK = (d && d.map) || {}; }).catch(() => {});
-  const nm = c => NAMES[c]?.name ? `${NAMES[c].name} <span style="font-size:11px;color:var(--muted)">(${e(c)})</span>` : e(c);
+  const base = c => String(c || "").replace(/-FD$/, "");
+  const nm = c => { const n = NAMES[c] || NAMES[base(c)] || {}; const fd = c !== base(c) && !NAMES[c] ? " · full day" : "";
+    const ex = n.former_primary ? ` <span class="chip" title="${e(n.former_primary)}">ex-primary</span>` : "";
+    return n.name ? `${e(n.name)}${fd}${ex} <span style="font-size:11px;color:var(--muted)">(${e(c)})</span>` : e(c); };
   fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : {}).then(d => { NAMES = d || {}; window.__mcfTick && window.__mcfTick(); }).catch(() => {});
   const table = (head, rows) => `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
 
