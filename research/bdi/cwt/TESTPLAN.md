@@ -342,3 +342,85 @@ judge the whole round as one lineage (t >= 3.73); the report gives both.
    `earn_day`), then C (daily, cheap).
 3. Append every family to `research/backlog.jsonl` with prefix `cwt-` (failures too) and keep
    `python -m pytest tests/test_backlog.py` passing. The lead scores finalists on the locked block once.
+
+## Amendment 2026-10-12 (package C, worker CWT-C), written before any package C configuration was scored
+
+- **C8 and C9 also run on the longhold book S6** (`S6_mom12_1rev_N20_W`, lead's instruction for this round): the three
+  C8 gates and the four C9 overlays applied to S6 = **+7 configurations; package C total 124** (C8 15, C9 20). S6 is a
+  weekly top-20 weight book, not a trade list, so the overlays are mapped as follows: C8 gate off at the weekly signal
+  -> the whole book goes to cash (0 return) until the next weekly signal with the gate on; C9 exits act on single names
+  between weekly rebalances (a name is sold at the next open after its exit signal, or intraday at the Keltner limit;
+  the freed weight sits in cash until the next weekly rebalance, which rebuilds the normal S6 targets); the C9
+  governor uses **20 weekly rebalances** as its "20 trades" (half exposure, rest in cash, when the S6 equity at the
+  signal close is below the mean of its last 20 weekly closes). S6 lineage for the bar: 123 configurations already
+  spent (longhold 105 + sat1010 crash guards 18) + 7 = 130, t bar sqrt(2 ln 130) = 3.12; S6 has had one locked look,
+  so any S6-overlay version would be look 2 (t >= 1.5) on the locked block.
+- **FOMC dates (C5a)** are typed from the public Federal Reserve calendar from memory, because federalreserve.gov is
+  blocked from this machine (proxy 403). Scheduled statement days only (the unscheduled 2020-03-03 and 2020-03-15
+  actions are excluded, so March 2020 has no event). The list is in `test_c/families.py` and must be checked against
+  federalreserve.gov before any live use.
+- **Implementation choices the plan left open** (fixed now, see `test_c/NOTES.md` section 1) do not change any grid
+  level or count.
+
+## Amendment 2026-10-12 (package A, worker CWT-A), written before any package A configuration was scored
+
+No grid level or count changes (package A stays 566 configurations). Points the plan could not be run exactly as
+written, or left open, fixed now (details in `test_a/NOTES.md` section 1):
+- **Costs are stricter than written, never looser.** The entry-side multiplier is `gates.tod_cost_mult` (3.8x before
+  the 09:35 bar close, 2.1x to 09:50, 1.4x to 10:30; ledger 2026-10-10-tod-costs), which is >= the plan's 2x before
+  09:50; it is also applied to non-target exits filled before 10:30 (ON exit at 09:35, A5 time exits, early stops).
+  A5's entry at the opening auction print pays the plan's 2x (an auction fill has no spread to cross). The 3x
+  extended-tier slippage applies to |gap| >= 20%, price < $5 **and** adv20 < $5M (the config's extended tier).
+- **Universe floor:** point-in-time adv20 >= $1M (the extended tier, `extended_min_avg_dollar_volume`) and price >= $1.
+- **Unit of R:** every exit (structural or lab geometry) is reported in R = 0.25 x daily ATR, so exits are comparable
+  and the gates apply unchanged. The lab geometries use their own +-kR target/stop (the structural stop is not added).
+- **`earn_day` for the 53 rows with unknown report time** is left out (no proxy): too few to matter.
+- **A1 day-3 play:** "push fails" = the first 5-min close below `or5l` (the 09:30-09:35 bar low), decision bars from
+  09:40.
+- **A3:** "first bar trading above the prior-day high" = a buy stop at PDH armed from 09:35 on days that open below
+  PDH and have not traded above it before 09:35 (mirror for the short). The Shapiro stop at the prior close is floored
+  at 0.05 x atr_d below the entry when the prior close is at or within that of PDH (zero-risk otherwise); the S exit's
+  "+2R" uses that structural risk.
+- **A4 (b):** the plan gives no gap threshold for the volume-gated ORB; it uses the same |gap| >= 3% as (a). Its "3R
+  target" uses the structural risk (entry to the OR midpoint).
+- **A7:** T1 fires only at or after 10:30, so its full-day and guest-window versions are identical; both are still
+  counted (8 duplicated configurations). "Price traded above vwap" = a 5-min bar high above vwap (bar closes
+  09:35-10:30, or the trigger bar itself for T2). Stop = the session high so far for triggers before 10:30.
+- **Controls (rule 6):** the same-time control for each trade is the mean outcome of a deterministic ~3% sample of the
+  same day's universe at the same entry bar, side and exit (structural, ON and S2 exits use the hold-to-15:55 control).
+- **Earnings blackout:** E-out = no Yahoo report date within +-4 business days (as `mcf/data/earnings.py`); symbols
+  without Yahoo coverage (~17%) count as outside the blackout, like a live day with no calendar entry.
+
+## Amendment 2026-10-12 (package B, worker CWT-B), written before any package B configuration was scored
+
+No grid level or count changes (package B stays 368 configurations). Points the plan could not run exactly as written,
+or left open, fixed now (details in `test_b/NOTES.md` section 1):
+- **Exits to 15:55.** The lab frames and `stack1009/base.npz` stop at the 15:00 bar, and `reddit/engine.py` `_sexit`
+  goes flat at that 15:00 close, so the plan's "all exits by 15:55" cannot run on them. The 5-min bars 09:30-09:45 and
+  15:00-15:55 (OHLC, session VWAP on 5-min hlc3 as `mcf.features.vwap`) are rebuilt from the 1-minute cache
+  (`data/cache_hist/1Min`, locked-block rows dropped at read) and appended to each symbol-day; every exit (structural S
+  and the lab geometries, re-simulated with the lab's rules: stop-first in a bar, target as a free limit, close of the
+  15:55 bar) runs on these rows. The re-simulated geometries are checked against the frames' `r_*` columns.
+- **Unit of R:** every exit is reported in R = 0.25 x daily ATR (as `_sexit` and package A). The structural S exit
+  uses the family's stop price; the lab geometries use their own +-kR target/stop. Entry = the signal bar's close (the
+  lab / engine convention); a trade whose structural stop is not beyond the entry is skipped.
+- **Costs** = `gates.prod_r` rules with `gates.tod_cost_mult` on the entry side (1.4x before 10:30; no package B
+  entry is before 09:50), x3 slippage (per share, bps and the stop extra) when |gap| >= 20% or price < $5.
+- **Universe:** point-in-time adv20 >= $95M (the lab frames / base.npz floor and the Testing -FD min_adv).
+- **B5 flush** "last 6 bars fell" = close 6 bars ago minus the close >= m x atr_d, and "new session low" = the close
+  below the prior low of the day; the trigger is the first later bar that closes above the prior bar's high (stop: the
+  session low). **B4 (a)** "20-bar mean" = mean range of up to 20 session bars before the coil (>= 6 needed; the
+  frames carry no prior-day bars). **B6** `rvol_tod` at 12:00 = 09:30-12:00 volume / its mean over the prior 20 open
+  sessions (1-minute cache). **B7 (a)** 252-day high and 20-day return come from the 10-year daily file
+  (`w3_daily/daily_2016.parquet`, locked rows dropped; return windows that span the dropped block are NaN).
+  **B3 OR levels** exist only from the 10:05 bar close (the 30-min range ends at 10:00).
+- **Neighbours for the plateau gate:** configurations of the same family, exit and window that differ in one grid
+  level. **Market-neutral control:** each trade minus beta60 x SPY's return over the same bars, SPY leg costs in.
+- **FOMC-week split** (reported only, never used to select): scheduled statement days typed from memory (2024-11-07,
+  2024-12-18, 2025-01-29, 03-19, 05-07, 06-18, 07-30, 09-17, 10-29, 12-10, 2026-01-28, 03-18, 04-29, 06-17, 07-29,
+  09-16); unverified against federalreserve.gov (blocked from this machine).
+- **C8 follow-through state, amended 2026-10-12 before scoring (only its on-share was looked at, no return):** as
+  written ("valid until a close below the rally low") the state never turns off after March 2016 (SPY never closed
+  below the February 2016 rally low again), so the gate would be on 100 % of the time and identical to no gate. The
+  IBD-style state therefore also turns **off on distribution**: 6 or more distribution days (SPY close down >= 0.2 %
+  on volume above the prior day) within the last 25 sessions. Everything else unchanged; the count stays 12 (+3 S6).
