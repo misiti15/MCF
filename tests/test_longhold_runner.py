@@ -256,6 +256,17 @@ def test_mark_writes_equity_and_drawdown(tmp_path):
     assert st["label"] == "paper" and "not financial advice" in st["disclaimer"]
 
 
+def test_intraday_snapshot_is_read_only(tmp_path):
+    pos = {"AAA": {"qty": 10, "market_value": 5000.0, "current_price": 500.0, "unrealized_pl": 12.0}}
+    b = FakeBroker(equity=100500.0, positions=pos)
+    r, b = make(tmp_path, broker=b, now="2026-10-12T11:35")
+    snap = r.snapshot()
+    assert b.submits == 0 and not (tmp_path / "longhold" / "marks.csv").exists()
+    assert snap["equity"] == 100500.0 and snap["positions"] == 1 and snap["invested"] == 5000.0
+    st = json.loads((tmp_path / "longhold" / "status.json").read_text())
+    assert st["intraday"]["equity"] == 100500.0 and st["positions"]["AAA"]["weight"] == round(5000 / 100500, 4)
+
+
 def test_dry_plan_is_rebuilt_for_live(tmp_path):
     cal = FakeBroker(days=calendar_days())
     r, _ = make(tmp_path, broker=cal, live=False)

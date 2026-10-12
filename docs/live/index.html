@@ -59,6 +59,81 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
 End-of-day reports: <a href="report.html">open</a></div></div></header>
+<!-- All accounts at a glance (owner 2026-10-12): one card per paper account, read from each account's state branch.
+     Click a card to open that account below. No Alpaca log-in needed; data refreshes every 2 minutes. -->
+<style>
+#acc-all { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0 4px; }
+#acc-all a.acc { display: block; color: inherit; text-decoration: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 12px; }
+#acc-all a.acc:hover { border-color: var(--s1); }
+#acc-all a.acc.cur { border: 2px solid var(--s1); padding: 9px 11px; }
+#acc-all .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+#acc-all .nm { font-weight: 600; } #acc-all .ty { font-size: 11px; color: var(--muted); }
+#acc-all .eq { font-size: 22px; font-weight: 600; margin: 2px 0; font-variant-numeric: tabular-nums; }
+#acc-all .ln { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+#acc-all .age { font-size: 11px; color: var(--muted); margin-top: 4px; } #acc-all .age.old { color: var(--bad); }
+</style>
+<nav id="acc-all" aria-label="All accounts"></nav>
+<script>
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
+  const A = [
+    { k: "primary", name: "Primary", type: "intraday · promoted setups", br: "mcf-data", q: "?" },
+    { k: "testing", name: "Testing 1", type: "intraday · minor league", br: "mcf-data-testing", q: "?account=testing" },
+    { k: "testing2", name: "Testing 2", type: "intraday · minor league (CWT)", br: "mcf-data-testing2", q: "?account=testing2" },
+    { k: "longhold", name: "Long-hold (S6)", type: "weekly momentum · separate Alpaca profile", br: "mcf-data-longhold", q: "?account=longhold", lh: true },
+  ];
+  const cur = new URLSearchParams(location.search).get("account") || "primary";
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const money = (v, d = 0) => v == null || isNaN(v) ? "–" : (v < 0 ? "-$" : "$") + Math.abs(+v).toLocaleString(undefined, {minimumFractionDigits: d, maximumFractionDigits: d});
+  const sg = v => v == null || isNaN(v) ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const pl = v => `<span class="${sg(v)}">${v > 0 ? "+" : ""}${money(v, 2)}</span>`;
+  const age = iso => { const m = (Date.now() - Date.parse(iso)) / 60000; return isNaN(m) ? null : m; };
+  const ago = m => m == null ? "–" : m < 90 ? `${Math.round(m)} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`;
+  const nav = document.getElementById("acc-all");
+  nav.innerHTML = A.map(a => `<a class="acc${a.k === cur ? " cur" : ""}" href="${a.q}" id="acc-${a.k}"><div class="hd"><span class="nm">${a.name}</span><span class="ty">${a.type}</span></div>
+    <div class="eq">…</div><div class="ln">loading</div></a>`).join("");
+  const put = (a, eq, lines, iso, stale) => {
+    const m = age(iso);
+    document.getElementById("acc-" + a.k).innerHTML = `<div class="hd"><span class="nm">${a.name}</span><span class="ty">${a.type}</span></div>
+      <div class="eq">${eq}</div>${lines.map(l => `<div class="ln">${l}</div>`).join("")}
+      <div class="age${stale(m) ? " old" : ""}">updated ${ago(m)}</div>`;
+  };
+  async function one(a, retry = true) {
+    try {
+      if (a.lh) {
+        const r = await fetch(RAW + a.br + "/longhold/status.json?t=" + Date.now(), { cache: "no-store" });
+        if (!r.ok) throw 0;
+        const s = await r.json(), x = s.intraday || {}, mk = s.mark || {}, lp = s.last_plan || {};
+        const useX = x.asof && (!mk.date || x.asof.slice(0, 10) >= mk.date);
+        const eq = useX ? x.equity : (mk.equity ?? lp.equity), day = useX ? x.day_pl : mk.day_pl;
+        const n = Object.keys(s.positions || {}).length;
+        const pend = !n && lp.status === "submitted" ? ` · ${lp.orders} orders waiting to fill` : "";
+        put(a, money(eq), [`Today ${pl(day)} · ${n} holdings${pend}`,
+          `Since start ${s.since_start ? ((s.since_start.return >= 0 ? "+" : "") + (s.since_start.return * 100).toFixed(1) + "%") : "–"} · next rebalance ${e(s.next_rebalance || "–")}` +
+          ((s.alerts || []).length ? ` · <b class="down">${s.alerts.length} alert(s)</b>` : "")],
+          useX ? x.asof : s.last_run, m => m > 24 * 60 * 3);
+        ok.add(a.k);
+        return;
+      }
+      const r = await fetch(RAW + a.br + "/status.json?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw 0;
+      const s = await r.json(), t = s.today || {}, all = s.since_start || {};
+      put(a, money((s.account || {}).equity), [`Today ${pl(t.pnl)} closed · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
+        `Since start ${pl(all.pnl)} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
+        s.asof, m => s.phase === "trading" && m > 10);
+      ok.add(a.k);
+    } catch (_) {
+      if (retry) setTimeout(() => one(a, false), 5000);       // one quick retry; a failed refresh keeps the last values
+      else if (!ok.has(a.k)) document.getElementById("acc-" + a.k).querySelector(".ln").textContent = "no data yet";
+    }
+  }
+  const ok = new Set();
+  const tick = () => A.forEach(a => one(a));
+  tick();
+  setInterval(tick, 120000);
+})();
+</script>
 <!-- MCF Update: live section. Reads status.json and discovery/latest.json from the repo's mcf-data
      branch through the viewer's GitHub connector (refreshes every minute). Inserted into template.html. -->
 <style>

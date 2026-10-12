@@ -16,6 +16,7 @@ name: longhold
 #   08:50 ET  morning backstop: submit any missing OPG order (same deterministic mcl- ids) before 09:28
 #   09:45 ET  recon: fills vs the official open (slippage); an unfilled OPG order is retried once as DAY (-r)
 #   Saturday  weekly report
+#   hourly    10:35-15:35 ET (EDT): read-only snapshot of equity and holdings for the dashboard (owner 2026-10-12)
 # Duplicate UTC lines cover EDT and EST; the off-season line lands an hour away and is harmless.
 on:
   schedule:
@@ -25,12 +26,13 @@ on:
     - cron: "50 12,13 * * 1-5"    # 08:50 ET
     - cron: "45 13,14 * * 1-5"    # 09:45 ET
     - cron: "0 15 * * 6"          # Saturday 10:00/11:00 ET weekly report
+    - cron: "35 14-19 * * 1-5"    # hourly snapshot, 10:35-15:35 ET (EDT) / 09:35-14:35 ET (EST)
   workflow_dispatch:
     inputs:
       command:
-        description: "run = scheduled logic for the current ET time; init = initial portfolio as MOC orders today (empty account only); mark; report; plan; status"
+        description: "run = scheduled logic for the current ET time; init = initial portfolio as MOC orders today (empty account only); mark; report; plan; status; snapshot = read-only equity/holdings for the dashboard"
         type: choice
-        options: [run, init, mark, report, plan, status]
+        options: [run, init, mark, report, plan, status, snapshot]
         default: run
       live:
         description: "Place paper orders on the long-hold account (needs the ALPACA_LONGHOLD_* secrets)"
@@ -58,7 +60,7 @@ jobs:
       ALPACA_TESTING_API_KEY: ${{ secrets.ALPACA_TESTING_API_KEY }}
       ALPACA_TESTING2_API_KEY: ${{ secrets.ALPACA_TESTING2_API_KEY }}
       ALPACA_DATA_FEED: sip
-      CMD: ${{ inputs.command || (github.event.schedule == '0 15 * * 6' && 'report' || 'run') }}
+      CMD: ${{ inputs.command || (github.event.schedule == '0 15 * * 6' && 'report' || (github.event.schedule == '35 14-19 * * 1-5' && 'snapshot' || 'run')) }}
       PYTHONUNBUFFERED: "1"
     steps:
       - name: Mode
