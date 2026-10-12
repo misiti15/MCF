@@ -96,3 +96,59 @@ add("CWT05-flush-m075-v3-long", "B", 260, "B5-m0.75-v3-Dnone-t05s1-full", "b5(df
     FULL, "Panic Flush Reversal (deep, 3x volume)",
     "09:50-15:00: a 0.75-ATR drop in 30 minutes to a new low of day with a 3x volume bar, then the first bar closing "
     "above the prior bar's high; buy.")
+
+# ================================================================ drop 2 (after the 2026-10-12 close)
+# ---- A7 CWT09 Bad-news gap-down bounce short, outside the earnings blackout (package A). Eligible once LabStrategy
+#      supports the structural exit (GEOM "S": stop at the first-hour high, no target, flat 15:55), added 2026-10-12.
+#      Decision bars from 10:30 (T1 fires only from 10:30; the T2 full-day versions enter before 09:50 and are out).
+A7_WHAT = ("a stock that gapped down {g}%+ (no earnings within 4 days) traded back above VWAP during 09:35-10:30; ")
+add("CWT09-gapdn-bounce-g10-lowerhalf-short", "A", 373, "A7 gap<=-10 E=out T2 S guest", "a7(df, gap=10, trig=2)",
+    "short", "S", (1030, 1500), "Gap-Down Bounce Rejection Short (10% gap)",
+    "10:30-15:00: " + A7_WHAT.format(g=10) + "a bounce bar reaches VWAP or the 09:30-10:00 high and closes in its lower "
+    "half; short, stop at the 09:30-10:30 high, hold to 15:55.")
+add("CWT09-gapdn-bounce-g5-lowerhalf-short", "A", 341, "A7 gap<=-5 E=out T2 S guest", "a7(df, gap=5, trig=2)",
+    "short", "S", (1030, 1500), "Gap-Down Bounce Rejection Short (5% gap)",
+    "10:30-15:00: " + A7_WHAT.format(g=5) + "a bounce bar reaches VWAP or the 09:30-10:00 high and closes in its lower "
+    "half; short, stop at the 09:30-10:30 high, hold to 15:55.")
+add("CWT09-gapdn-vwaploss-g10-short", "A", 365, "A7 gap<=-10 E=out T1 S guest", "a7(df, gap=10, trig=1)",
+    "short", "S", (1030, 1500), "Gap-Down VWAP Loss Short (10% gap)",
+    "10:30-15:00: " + A7_WHAT.format(g=10) + "from 10:30 the first close back below VWAP; short, stop at the "
+    "09:30-10:30 high, hold to 15:55.")
+add("CWT09-gapdn-vwaploss-g5-short", "A", 339, "A7 gap<=-5 E=out T1 t1s05 guest", "a7(df, gap=5, trig=1)",
+    "short", "t1s05", (1030, 1500), "Gap-Down VWAP Loss Short (5% gap)",
+    "10:30-15:00: " + A7_WHAT.format(g=5) + "from 10:30 the first close back below VWAP; short with a half-R stop.")
+for s in S[-4:]:
+    s["stop"] = "a7_stop(f, i)" if s["geom"] == "S" else None
+    s["min_adv"] = 1_000_000          # package A universe: adv20 >= $1M (the live universe tiers still apply)
+
+# ---- FILLS (fewer than 30 qualify under the rule): the next B3 signals by expectancy, over the 4-per-family cap.
+B3D = {"PD": ("yesterday's", "prior-day"), "OR": ("the 09:30-10:00", "opening-range")}
+for cid_, nm, L_, p_, lv, sd, gw in (
+        (166, "CWT14-failbrk-orl-p05-lowvol-long", "OR", 0.05, True, "long", False),
+        (179, "CWT14-failbrk-orl-p10-long", "OR", 0.10, False, "long", True),
+        (154, "CWT14-failbrk-orl-p05-long", "OR", 0.05, False, "long", False),
+        (142, "CWT14-failbrk-pdl-p10-lowvol-long", "PD", 0.10, True, "long", False),
+        (112, "CWT14-failbrk-pdh-p05-lowvol-short", "PD", 0.05, True, "short", False),
+        (118, "CWT14-failbrk-pdl-p05-lowvol-long", "PD", 0.05, True, "long", False),
+        (125, "CWT14-failbrk-pdh-p10-short", "PD", 0.10, False, "short", True)):
+    lvl = ("high" if sd == "short" else "low")
+    cfg_ = f"B3-L{L_}-p{p_:g}-V{'lowvol' if lv else 'any'}-side{sd}-t05s1-{'guest' if gw else 'full'}"
+    win_ = GUEST["B3"] if gw else FULL
+    add(nm, "B", cid_, cfg_, f"b3(df, level='{L_}', p={p_:.2f}, lowvol={lv}, side='{sd}')", sd, "t05s1", win_,
+        f"Failed {'Prior-Day' if L_ == 'PD' else 'Opening-Range'}-{lvl.title()} Break "
+        f"{'Short' if sd == 'short' else 'Long'} ({p_:g} ATR{', low volume' if lv else ''}) [fill]",
+        f"{win_[0] // 100:02d}:{win_[0] % 100:02d}-{win_[1] // 100:02d}:{win_[1] % 100:02d}: price pokes {p_:g}+ ATR "
+        f"{'over' if sd == 'short' else 'under'} {B3D[L_][0]} {lvl}{' on below-average volume' if lv else ''}, then "
+        f"closes back {'under' if sd == 'short' else 'above'} it within 3 bars; {'short' if sd == 'short' else 'buy'}. "
+        "Fill: over the 4-per-family cap.")
+    S[-1]["fill"] = True
+
+# Package A engine artifact found by verify_a.py (2026-10-12): in A7 T2 a short was sometimes entered with its close
+# already above the structural stop (the first-hour high); package A then "stopped" it at the stop price BELOW the
+# entry, booking a gain. Live, LabStrategy skips such signals (the stop must sit beyond the entry). Honest open-history
+# numbers over the trades the live module takes:
+for s in S:
+    if s["cid"] == 373 and s["pkg"] == "A":
+        s["note"] = "scored figure includes 22 artifact trades; live-tradable: n 567, exp +0.131R"
+    if s["cid"] == 341 and s["pkg"] == "A":
+        s["note"] = "scored figure includes 190 artifact trades; live-tradable: n 3695, exp +0.032R"

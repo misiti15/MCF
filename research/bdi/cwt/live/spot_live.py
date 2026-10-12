@@ -119,7 +119,9 @@ def main(k=15, names=None):
                 res["mismatch"].append([sym, day, tod, got])
         out[s["name"]] = res
         print(s["name"], {k2: v for k2, v in res.items() if k2 != "mismatch"}, res["mismatch"][:4], flush=True)
-    json.dump(out, open(HERE / "spot_live.json", "w"), indent=1)
+    prev = json.load(open(HERE / "spot_live.json")) if (HERE / "spot_live.json").exists() else {}
+    prev.update(out)
+    json.dump(prev, open(HERE / "spot_live.json", "w"), indent=1)
 
 
 if __name__ == "__main__":
