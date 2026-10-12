@@ -1,0 +1,102 @@
+# MCF long-hold (S6_mom12_1rev_N20_W) on its own Alpaca paper account. Spec: research/longhold/DESIGN.md.
+# Educational only - not financial advice.
+#
+# Secrets: ALPACA_API_KEY / ALPACA_SECRET_KEY (SIP market data; also the exchange calendar in dry runs).
+#   ALPACA_LONGHOLD_API_KEY / ALPACA_LONGHOLD_SECRET_KEY - the dedicated long-hold paper account (mapped to
+#   ALPACA_TRADE_*). Absent -> dry run (plans and marks, no orders).
+# Repo variable LONGHOLD_LIVE (default unset/'false'): paper orders only when it is 'true' (or a dispatch sets
+#   live=true, or the state branch already carries longhold/LIVE from the first paper submission) AND the long-hold
+#   secrets exist. The runner refuses to start when the long-hold key equals the primary / Testing / Testing-2 key.
+# State: branch mcf-data-longhold (created if missing), files under longhold/. Order ids: mcl-*.
+name: longhold
+
+on:
+  schedule:
+    - cron: "20 22,23 * * 1-5"    # 18:20 ET daily mark (EDT 22:20 UTC, EST 23:20 UTC; the other line lands at 19:20/17:20 ET)
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "init = initial portfolio as MOC orders today (empty account only); mark; plan; status"
+        type: choice
+        options: [mark, init, plan, status]
+        default: mark
+      live:
+        description: "Place paper orders on the long-hold account (needs the ALPACA_LONGHOLD_* secrets)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mcf-longhold
+  cancel-in-progress: false
+
+jobs:
+  longhold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      STATE_BRANCH: mcf-data-longhold
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_TRADE_API_KEY: ${{ secrets.ALPACA_LONGHOLD_API_KEY }}
+      ALPACA_TRADE_SECRET_KEY: ${{ secrets.ALPACA_LONGHOLD_SECRET_KEY }}
+      # key ids only, for the account-separation check (never their secrets)
+      ALPACA_TESTING_API_KEY: ${{ secrets.ALPACA_TESTING_API_KEY }}
+      ALPACA_TESTING2_API_KEY: ${{ secrets.ALPACA_TESTING2_API_KEY }}
+      ALPACA_DATA_FEED: sip
+      CMD: ${{ inputs.command || 'mark' }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Mode
+        run: |
+          live=false
+          if [ -n "$ALPACA_TRADE_API_KEY" ] && { [ "${{ vars.LONGHOLD_LIVE }}" = "true" ] || [ "${{ inputs.live }}" = "true" ]; }; then live=true; fi
+          echo "LONGHOLD_LIVE=$live" >> "$GITHUB_ENV"
+          if [ -z "$ALPACA_API_KEY" ] || [ -z "$ALPACA_SECRET_KEY" ]; then echo "::error::ALPACA_API_KEY / ALPACA_SECRET_KEY missing"; exit 1; fi
+          [ -z "$ALPACA_TRADE_API_KEY" ] && echo "long-hold keys not set: dry run" || true
+          echo "command=$CMD live=$live ($(TZ=America/New_York date '+%F %H:%M') ET)"
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -q -e ".[alpaca]"
+
+      - name: Check out state branch (mcf-data-longhold)
+        run: |
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git clone -q --depth 50 --branch "$STATE_BRANCH" "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan "$STATE_BRANCH"
+            echo "# MCF long-hold (S6) state: plans, marks, fills, status. Written by the longhold workflow. Educational only - not financial advice." > state/README.md
+            git -C state add README.md
+            git -C state -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "init long-hold state branch"
+            git -C state remote add origin "$url" && git -C state push -q origin "$STATE_BRANCH"
+          fi
+
+      - name: Plan (written and committed before any order)
+        if: env.CMD == 'init'
+        run: python -m mcf.longhold init --stage plan --state-dir state
+
+      - name: Save plan to the state branch
+        if: env.CMD == 'init'
+        run: |
+          cd state && git add -A && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "long-hold plan" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"
+
+      - name: Submit (init MOC orders)
+        if: env.CMD == 'init'
+        run: python -m mcf.longhold init --stage submit --state-dir state
+
+      - name: Mark / plan / status
+        if: env.CMD != 'init'
+        run: python -m mcf.longhold "$CMD" --state-dir state
+
+      - name: Save state
+        if: always()
+        run: |
+          cd state && git add -A && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "long-hold $CMD" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"

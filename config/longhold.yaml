@@ -1,0 +1,23 @@
+# Long-hold (S6) runner config: research/longhold/DESIGN.md. Frozen per session like setups (rules 9-11):
+# change only outside 09:30-16:00 ET, with a research/ledger.jsonl entry. Educational only - not financial advice.
+strategy: S6_mom12_1rev_N20_W
+band: 0.0                 # relative rebalance band; 0 = exact parity with the backtest (backlog lh-band-diag first)
+min_notional: 25          # skip orders under $25
+cash_buffer: 0.0025       # weekly MOO buys must fit cash + sell proceeds - 0.25 % of equity (no margin)
+init_cash_buffer: 0.01    # initial MOC buys: 1 % buffer (close price unknown at submit time)
+moc_cutoff_et: "15:45"    # Alpaca MOC cutoff is 15:50 ET; init refuses to submit after 15:45
+opg_window_et: ["19:00", "09:28"]   # Alpaca accepts OPG orders from 19:00 ET the evening before until 09:28
+max_missing_frac: 0.10    # data sanity: > 10 % of yesterday's eligible names without a bar -> skip
+history_days: 600         # calendar days of daily bars fetched for the signal (~410 sessions >= 253 + 21)
+dry_capital: 100000       # starting equity of the dry-run shadow book
+caps:
+  max_weight: 0.12
+  max_gross: 1.0
+  max_names: 60
+  kill_drawdown: 0.25     # drawdown from the high-water mark -> no new orders, alert (holdings kept)
+  max_daily_orders: 150
+alerts:
+  dd_warn: 0.15           # drawdown warning
+  te_day: 0.01            # |paper day return - backtest replay day return| above 1 % -> warn
+  te_20d: 0.03            # |sum of the last 20 daily tracking differences| above 3 % -> warn
+  slippage_bps: 25        # mean |fill - official open| above 25 bps over the last rebalance -> warn
