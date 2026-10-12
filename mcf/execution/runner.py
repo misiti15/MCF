@@ -470,7 +470,8 @@ class PaperRunner:
         trades = reconcile_day(self.broker, self.journal, self.run_id, day, self.cfg)
         self.journal.add_trades(self.run_id, trades)
         if len(trades):
-            self.risk.state.realized_r += float(trades["r_multiple"].sum())
+            today = trades[trades["date"] == str(day)]   # late-recovered trades of earlier sessions don't count today
+            self.risk.state.realized_r += float(today["r_multiple"].sum())
             print(f"reconciled {len(trades)} trades for {day}")
 
     def what_if(self, day):
