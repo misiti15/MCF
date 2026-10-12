@@ -385,3 +385,42 @@ def test_missed_rebalance_and_drawdown_alerts_and_weekly_report(tmp_path):
     html = out.read_text()
     assert "not financial advice" in html and "Holdings" in html and "weekly" in out.name
     assert json.loads((d / "status.json").read_text())["weekly"]["path"].startswith("longhold/reports/")
+
+
+def test_init_topup_completes_short_moc_fills_once(tmp_path):
+    """2026-10-12: Alpaca paper filled 9 of 20 MOC init orders fully. Missing shares are bought with an OPG top-up
+    (evening, -t1), then a DAY top-up at the session if still short (-t2); never more, never twice."""
+    r, b = make(tmp_path)
+    plan = r.init("all")
+    o0, o1, o2 = plan["orders"][:3]
+    for o in b.orders_:                                   # close: most fill, o0 expires empty, o1 fills partly
+        q = 0 if o["client_order_id"] == o0["client_order_id"] else (
+            o["qty"] // 2 if o["client_order_id"] == o1["client_order_id"] else o["qty"])
+        o.update(status="filled" if q == o["qty"] else "expired", filled_qty=q, filled_avg_price=100.0)
+    n = len(b.orders_)
+    r_e, _ = make(tmp_path, broker=b, now="2026-10-12T18:30")   # before 19:00: no OPG yet
+    r_e.topup_init()
+    assert len(b.orders_) == n
+    r_e, _ = make(tmp_path, broker=b, now="2026-10-12T19:10")
+    r_e.run("all", phase="evening")
+    tops = [o for o in b.orders_[n:]]
+    assert {o["client_order_id"] for o in tops} == {o0["client_order_id"] + "-t1", o1["client_order_id"] + "-t1"}
+    assert all(o["time_in_force"] == "opg" for o in tops)
+    assert {o["client_order_id"]: o["qty"] for o in tops}[o1["client_order_id"] + "-t1"] == o1["qty"] - o1["qty"] // 2
+    r_m, _ = make(tmp_path, broker=b, now="2026-10-13T08:50")   # morning backstop: nothing new (pending)
+    r_m.run("all", phase="morning")
+    assert len(b.orders_) == n + 2
+    for o in b.orders_[n:]:                               # open: o0's top-up fills, o1's expires
+        f = o["qty"] if o["client_order_id"].startswith(o0["client_order_id"]) else 0
+        o.update(status="filled" if f else "expired", filled_qty=f, filled_avg_price=101.0)
+    r_r, _ = make(tmp_path, broker=b, now="2026-10-13T09:45")
+    r_r.run("all", phase="recon")
+    last = b.orders_[n + 2:]
+    assert [(o["client_order_id"], o["time_in_force"]) for o in last] == [(o1["client_order_id"] + "-t2", "day")]
+    last[0].update(status="expired", filled_qty=0)
+    for now in ("2026-10-13T10:45", "2026-10-13T19:10", "2026-10-14T08:50"):   # no third attempt, ever
+        rr, _ = make(tmp_path, broker=b, now=now)
+        rr.topup_init()
+    assert len(b.orders_) == n + 3
+    fills = pd.read_csv(tmp_path / "longhold" / "fills.csv")
+    assert (fills["client_order_id"] == o0["client_order_id"] + "-t1").any()
