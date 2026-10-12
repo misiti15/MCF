@@ -162,3 +162,21 @@ def test_runner_logs_which_setup_holds_the_symbol(tmp_path, monkeypatch):
     skip = s[s.strategy == "WIDE"].iloc[0]
     assert skip.status == "skipped" and skip.reason == "already in symbol"
     assert json.loads(skip["info"])["held_by"] == "NARROW"
+
+
+def test_leaderboard_since_start_includes_untraded_live_setups():
+    import pandas as pd
+    from mcf.report import scorecard
+
+    t = pd.DataFrame({"strategy": ["A"] * 4 + ["B"], "date": ["2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-09"],
+                      "pnl": [10.0, -5.0, 8.0, 4.0, -3.0], "r_multiple": [1.0, -0.5, 0.8, 0.4, -0.3],
+                      "entry_time": ["2026-10-06 10:00:00-04:00"] * 5})
+    cfg = {"strategies": {"A": {"enabled": True}, "C": {"enabled": True, "former_primary": {"demoted": "2026-10-11"}},
+                          "B": {"enabled": False}}}
+    lb = {r["setup"]: r for r in scorecard.leaderboard(t, cfg, "testing")}
+    assert lb["A"]["trades"] == 4 and lb["A"]["win_rate"] == 0.75 and lb["A"]["live"] and lb["A"]["account"] == "testing"
+    assert lb["A"]["score"] == round(0.425 * 4 / 24, 4) and lb["A"]["profit_factor"] == round(22 / 5, 2)
+    assert lb["C"]["trades"] == 0 and lb["C"]["score"] is None and lb["C"]["former_primary"]
+    assert not lb["B"]["live"] and lb["B"]["trades"] == 1
+    card = scorecard.build(t, 4, cfg=cfg, account="testing")
+    assert len(card["leaderboard"]) == 3 and "generated" in card
