@@ -187,6 +187,13 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="card"><h2>Setups and their status</h2><div class="tablewrap" id="lv-val"><div class="empty">–</div></div>
       <div class="note">Probation = trading in paper to collect data; it has not passed both locked test periods.</div></div>
   </div>
+  <!-- Demoted from Primary (owner 2026-10-12; rule 20). Script at the end of the page. -->
+  <div class="card" id="dm-card"><h2>Demoted from Primary — how they are doing in Testing 1</h2>
+    <div class="sub" id="dm-sum">Loading…</div>
+    <div class="tablewrap" id="dm-tab"><div class="empty">Loading…</div></div>
+    <div class="note">Rule 20: a demoted setup stays in Testing for at least 10 sessions; it is not removed without asking you first, with its description and stats.
+      <b>Today</b> = closed trades in Testing 1 today (an "open" tag counts positions still held). <b>In Testing</b> = since its first Testing session. <b>In Primary</b> = its whole primary record.
+      The <b>full-day twin</b> is the same rule allowed to trade 09:50–15:00; it runs next to the original in Testing 1. Paper results. Educational only — not financial advice.</div></div>
   <!-- Setup leaderboard (owner 2026-10-12): every setup in every account, ranked since start. Script at the end of the page. -->
   <div class="card" id="lb-card"><h2>Setup leaderboard — all accounts, since start</h2>
     <div class="sub" id="lb-sum">Loading…</div>
@@ -648,6 +655,55 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   mo = new MutationObserver(ms => new Set(ms.map(m => m.target.closest && m.target.closest(".tablewrap")))
     .forEach(w => { if (w && w.id !== "lb-tab" && state.has(w)) apply(w); }));
   document.querySelectorAll(".tablewrap").forEach(w => mo.observe(w, { childList: true, subtree: true }));
+})();
+</script>
+<script>
+// Demoted-from-Primary card (owner 2026-10-12): today (Testing 1 status.json), since demotion (Testing 1 scorecard
+// leaderboard) and the primary record (Primary scorecard leaderboard), for every setup marked former_primary.
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
+  const q = s => document.querySelector(s);
+  if (!q("#dm-card")) return;
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const get = async u => { try { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? r.json() : null; } catch (_) { return null; } };
+  const rec = (n, w, pl, r) => !n ? `<span style="color:var(--muted)">no trades</span>` :
+    `${n} trades · ${Math.round(100 * w / n)}% win · <span class="${cls(pl)}">${money(pl)}</span>${r == null ? "" : ` · ${r > 0 ? "+" : ""}${(+r).toFixed(2)}R avg`}`;
+  async function load() {
+    const [names, st, sc1, sc0] = await Promise.all([get("../live/setup_names.json"), get(RAW + "mcf-data-testing/status.json"),
+      get(RAW + "mcf-data-testing/reports/scorecard.json"), get(RAW + "mcf-data/reports/scorecard.json")]);
+    const dem = Object.entries(names || {}).filter(([, v]) => v && v.former_primary).map(([k, v]) => ({ k, ...v }));
+    if (!dem.length) { q("#dm-tab").innerHTML = `<div class="empty">No demoted setups.</div>`; return; }
+    const lb = (c, k) => ((c && c.leaderboard) || []).find(r => r.setup === k);
+    const closed = (st && st.closed) || [], pos = (st && st.positions) || [];
+    const today = k => { const c = closed.filter(x => x.strategy === k), o = pos.filter(x => x.strategy === k);
+      return { n: c.length, w: c.filter(x => x.pnl > 0).length, pl: c.reduce((a, x) => a + (x.pnl || 0), 0),
+               r: c.length ? c.reduce((a, x) => a + (x.r || 0), 0) / c.length : null, open: o.length }; };
+    const first = "2026-10-12";
+    const sess = ((st && st.history) || []).filter(h => h.date >= first).map(h => h.date);
+    if (st && st.session_date >= first && !sess.includes(st.session_date)) sess.push(st.session_date);
+    let tot = { n: 0, w: 0, pl: 0 };
+    const rows = dem.map(d => {
+      const t = today(d.k), tw = today(d.k + "-FD"), l1 = lb(sc1, d.k), l0 = lb(sc0, d.k);
+      tot.n += t.n; tot.w += t.w; tot.pl += t.pl;
+      const verdict = !t.n && !(l1 && l1.trades) ? "no trades yet" : (l1 && l1.trades >= 20 ? (l1.avg_r > 0 ? "positive" : "negative") : "too few trades");
+      return `<tr><td class="l" style="white-space:normal;min-width:190px"><b>${e(d.name)}</b> <span class="chip">ex-primary</span>
+          <div style="font-size:11px;color:var(--muted)">${e(d.k)} · ${e(d.side || "")} · ${e(d.former_primary)}</div>
+          <div style="font-size:11px;color:var(--ink-2)">${e(d.what || "")}</div></td>
+        <td class="l">${rec(t.n, t.w, t.pl, t.r)}${t.open ? ` <span class="chip">${t.open} open</span>` : ""}</td>
+        <td class="l">${l1 ? rec(l1.trades, Math.round((l1.win_rate || 0) * l1.trades), l1.pnl, l1.avg_r) : rec(t.n, t.w, t.pl, t.r)}</td>
+        <td class="l">${l0 ? rec(l0.trades, Math.round((l0.win_rate || 0) * l0.trades), l0.pnl, l0.avg_r) : rec(0)}</td>
+        <td class="l">${rec(tw.n, tw.w, tw.pl, tw.r)}</td>
+        <td>${sess.length} of 10</td><td class="l">${verdict}</td></tr>`;
+    });
+    q("#dm-tab").innerHTML = `<table><thead><tr><th class="l">Setup</th><th class="l">Today (Testing 1)</th><th class="l">In Testing so far</th>
+      <th class="l">In Primary (before demotion)</th><th class="l">Full-day twin today</th><th>Testing sessions</th><th class="l">So far</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+    q("#dm-sum").innerHTML = `${dem.length} setups demoted ${e((dem[0].former_primary || "").replace(/^demoted to Testing /, ""))} · Testing 1 session ${e(st ? st.session_date : "–")}` +
+      ` (updated ${e(st ? st.asof_et : "–")}) · today together: ${rec(tot.n, tot.w, tot.pl, null)} · review after 10 Testing sessions (${sess.length} so far)`;
+  }
+  load();
+  setInterval(load, 300000);
 })();
 </script>
 </main></body></html>
