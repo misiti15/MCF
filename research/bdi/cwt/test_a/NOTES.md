@@ -47,6 +47,11 @@ the CWT-A amendment at the end of TESTPLAN.md. Code: `engine.py` (data, exits, c
 
 ## 2. Results (scored 2026-10-12; open two-year history, locked block never loaded)
 
+> **Re-checked 2026-10-12 after the stop-side fix (`RECHECK_1012.md`).** 41 configurations (A1 S/ON, A6 S, A7 S) moved
+> slightly worse and 1,640 trades were removed. The verdict is unchanged (566 of 566 fail). The A7 row now reads: 6
+> configurations with exp > 0, best t 0.70 (cid 373: +0.131, n 566). `results.csv` is the post-fix version. The
+> table below is the original scoring.
+
 **Failures first: 566 of 566 configurations fail the live-probation bar. None passes its try-count t bar. No candidate,
 no lab module.** Run: 1,226 symbols, 2,476,458 simulated trades (A1-A4, A6-A9) plus A5 (top-300 names), 831 s in one
 process. All 566 configurations produced trades except 10 A8 `earn_day` / c 0.25 configurations, which had n = 0.

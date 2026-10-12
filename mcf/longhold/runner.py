@@ -409,6 +409,8 @@ class Runner:
             self.write_status()
             return out
         opg_from, opg_to = (time.fromisoformat(x) for x in self.cfg.get("opg_window_et", ["19:00", "09:28"]))
+        if stage in ("submit", "all") and phase in ("morning", "recon"):
+            self.topup_init()
         if phase == "morning" and stage in ("submit", "all"):
             sd = self.last_signal_day(self.today)
             plan = self.load_plan(sd) if sd else None
@@ -421,6 +423,8 @@ class Runner:
             self.reconcile(retry=stage in ("submit", "all"))
         elif phase == "evening":
             self.reconcile(retry=False)
+            if stage in ("submit", "all"):
+                self.topup_init()
             if stage in ("plan", "all"):
                 out["mark"] = self.mark(days)
             if core.rebalance_due(days, self.today, signals.FREQ):
@@ -436,6 +440,67 @@ class Runner:
                 out["plan"] = plan.get("status") if plan else None
         self.write_status()
         return out
+
+    def topup_init(self):
+        """Complete an initial (MOC) portfolio whose closing-auction orders ended short (2026-10-12: Alpaca paper
+        filled 9 of 20 MOC orders fully, 4 partly, 7 not at all). Per order, at most two top-ups of the missing
+        shares: first an OPG order for the next open (submitted 19:00-09:28 ET, id + '-t1'), then, if still short,
+        a DAY market order during the session (09:31-15:30 ET, id + '-t2'). Deterministic ids keep it idempotent;
+        HALT and the drawdown freeze stop it like any other order. Paper only."""
+        if not self.live or self.halted() or self._frozen():
+            return
+        t = self.now.time()
+        for plan in self.plans():
+            if plan.get("kind") != "init" or plan.get("time_in_force") != "cls" or \
+                    plan.get("status") not in ("submitted", "partial"):
+                continue
+            ed = date.fromisoformat(plan["exec_day"])
+            if self.today < ed or (self.today == ed and t < time(16, 5)):
+                continue
+            sd = date.fromisoformat(plan["signal_day"])
+            got = {o["client_order_id"]: o for o in self.broker.orders(f"{core.PREFIX}{self.strategy}-{sd:%Y%m%d}-",
+                                                                       datetime.combine(sd, time(0), ET))}
+            tops = plan.setdefault("topups", {})
+            n_new = 0
+            for o in plan["orders"]:
+                if o["side"] != "buy":
+                    continue
+                cid = o["client_order_id"]
+                ids = [cid] + tops.get(cid, [])
+                if any(i not in got or got[i].get("status") not in self.TERMINAL for i in ids):
+                    continue                                   # still working, or not visible yet
+                short = int(o["qty"] - sum(float(got[i].get("filled_qty") or 0) for i in ids))
+                n = len(ids) - 1
+                if short < 1 or n >= 2:
+                    continue
+                if n == 0 and (t >= time(19, 0) or t < time(9, 28)):
+                    tif = "opg"
+                elif n == 1 and time(9, 31) <= t < time(15, 30):
+                    tif = "day"
+                else:
+                    continue
+                rid = topup_id(cid, n + 1)
+                try:
+                    self.broker.submit(o["symbol"], short, "buy", tif, rid)
+                except Exception as e:
+                    low = str(e).lower()
+                    if not ("duplicate" in low or ("client_order_id" in low and "unique" in low)):
+                        self.event("order_reject", f"top-up {rid}: {str(e)[:200]}", "warn")
+                        continue
+                tops.setdefault(cid, []).append(rid)
+                plan["reconciled"] = None                      # reconcile again to record the top-up fills
+                n_new += 1
+                self.event("topup", f"{cid}: {short} missing shares as {tif.upper()} {rid}", "info")
+            if n_new:
+                self.save_plan(plan)
+
+    def _frozen(self) -> bool:
+        a = [x for x in self.health(self._status_for_health()) if x.get("kind") == "drawdown" and x.get("level") == "halt"]
+        return bool(a)
+
+    def _status_for_health(self) -> dict:
+        p = self.dir / "status.json"
+        return json.loads(p.read_text()) if p.exists() else {}
 
     # ------------------------------------------------------------------ reconciliation
     TERMINAL = {"filled", "canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced", "stopped"}
@@ -465,7 +530,9 @@ class Runner:
             fills, done = [], True
             for o in plan["orders"]:
                 cid = o["client_order_id"]
-                for oid, tif, ref_name in ((cid, plan.get("time_in_force"), ref_field), (retries.get(cid), "day", "open")):
+                tops = (plan.get("topups") or {}).get(cid, [])
+                for oid, tif, ref_name in ((cid, plan.get("time_in_force"), ref_field), (retries.get(cid), "day", "open"),
+                                           *((x, "topup", "open") for x in tops)):
                     if not oid:
                         continue
                     x = got.get(oid)
@@ -483,7 +550,8 @@ class Runner:
                         fills.append({"signal_day": plan["signal_day"], "exec_day": plan["exec_day"],
                                       "client_order_id": oid, "symbol": o["symbol"], "side": o["side"],
                                       "tif": tif, "qty": o["qty"], "filled_qty": fq, "fill_price": fp,
-                                      "ref": ref_field if oid == cid else "day-retry", "ref_price": ref,
+                                      "ref": ref_field if oid == cid else ("topup" if tif == "topup" else "day-retry"),
+                                      "ref_price": ref,
                                       "slippage_bps": None if not ref else round(sign * (fp / ref - 1) * 1e4, 2),
                                       "model_cost_bps": None if not ref else round((0.01 / ref + 0.0001) * 1e4, 2),
                                       "notional": round(fq * fp, 2)})
@@ -502,7 +570,7 @@ class Runner:
                                            "warn")
                             except Exception as e:
                                 self.event("order_reject", f"retry {rid}: {str(e)[:200]}", "warn")
-                        elif rid is None:
+                        elif rid is None and not tops:
                             self.event("unfilled", f"{cid} ended {st}, {fq:g}/{o['qty']} filled, not retried", "warn")
             self._write_fills(fills)
             if done:
@@ -825,6 +893,13 @@ def _ret(x: dict) -> float | None:
 
 def _r(x) -> float | None:
     return None if x is None or (isinstance(x, float) and not math.isfinite(x)) else round(float(x), 6)
+
+
+def topup_id(cid: str, k: int) -> str:
+    suf = f"-t{k}"
+    if len(cid) + len(suf) <= 48:
+        return cid + suf
+    return cid[:36] + "-" + hashlib.sha1(cid.encode()).hexdigest()[:8] + suf
 
 
 def retry_id(cid: str) -> str:
