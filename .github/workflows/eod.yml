@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing]
+        account: [primary, testing, testing2]
     concurrency:
       group: mcf-eod-${{ matrix.account }}
       cancel-in-progress: false
@@ -35,7 +35,7 @@ jobs:
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
       ALPACA_DATA_FEED: sip
       MCF_ACCOUNT: ${{ matrix.account }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || 'mcf-data-testing' }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || 'mcf-data-testing') }}
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
       MCF_EMAIL_TO: ${{ secrets.MCF_EMAIL_TO }}
