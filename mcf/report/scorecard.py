@@ -24,19 +24,29 @@ def _expected() -> dict[str, float]:
         for k, x in json.loads(v.read_text()).get("setups", {}).items():
             if x.get("apr_jun_exp_r") is not None:
                 out[k] = float(x["apr_jun_exp_r"])
+    cwt = ROOT / "research" / "bdi" / "cwt" / "live" / "verify.json"   # Testing 2 (CWT) modules: scored expectancy
+    if cwt.exists():
+        for k, x in json.loads(cwt.read_text()).items():
+            if isinstance(x, dict) and x.get("exp_scored") is not None:
+                out.setdefault(k, float(x["exp_scored"]))
     e = ROOT / "config" / "scorecard_expectations.json"
     if e.exists():
         out.update({k: float(x) for k, x in json.loads(e.read_text()).items()})
     return out
 
 
-def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = None) -> dict:
-    """playing_time: the account's playing-time report (mcf/report/playing_time.py), stored as card['playing_time']."""
+def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = None, cfg: dict | None = None,
+          account: str | None = None) -> dict:
+    """playing_time: the account's playing-time report (mcf/report/playing_time.py), stored as card['playing_time'].
+    cfg/account: adds the since-start leaderboard (all setups enabled in this account, traded or not)."""
+    extra = {}
+    if playing_time is not None:
+        extra["playing_time"] = playing_time
+    if cfg is not None:
+        extra["leaderboard"] = leaderboard(trades, cfg, account or "primary")
+        extra["generated"] = pd.Timestamp.now(tz="America/New_York").strftime("%Y-%m-%d %H:%M ET")
     if trades is None or not len(trades):
-        out = {"sessions": 0, "window": "no trades yet", "setups": []}
-        if playing_time is not None:
-            out["playing_time"] = playing_time
-        return out
+        return {"sessions": 0, "window": "no trades yet", "setups": [], **extra}
     days = sorted(trades["date"].astype(str).unique())[-sessions:]
     tr = trades[trades["date"].astype(str).isin(days)]
     exp = _expected()
@@ -62,8 +72,43 @@ def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = N
     by_time = [{"bucket": x.bucket, "trades": int(x.trades), "win_rate": round(float(x.win), 3),
                 "avg_r": round(float(x.avg_r), 3), "pnl": round(float(x.pnl), 2)} for x in tod.itertuples()]
     return {"sessions": len(days), "window": f"{days[0]} to {days[-1]}", "setups": rows, "by_time": by_time,
-            "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge.",
-            **({"playing_time": playing_time} if playing_time is not None else {})}
+            "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge.", **extra}
+
+
+SHRINK_N = 20   # ranking shrinks avg R toward 0 by n / (n + 20): 5 lucky trades do not outrank 80 steady ones
+
+
+def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str) -> list[dict]:
+    """Since-start results per setup in this account (owner 2026-10-12: rank, win rate, live trades, account),
+    including enabled setups with no trades yet. The dashboard merges the accounts' lists. Report only."""
+    exp = _expected()
+    strat = (cfg or {}).get("strategies", {}) or {}
+    enabled = {k for k, v in strat.items() if isinstance(v, dict) and v.get("enabled")}
+    t = trades if trades is not None and len(trades) else pd.DataFrame(columns=["strategy", "date", "pnl", "r_multiple"])
+    rows = []
+    for s in sorted(enabled | set(t["strategy"].dropna().astype(str))):
+        g = t[t["strategy"] == s]
+        r = g["r_multiple"].astype(float)
+        n = int(len(g))
+        days = sorted(g["date"].astype(str).unique())
+        recent = g[g["date"].astype(str).isin(sorted(t["date"].astype(str).unique())[-4:])]
+        win, loss = g.loc[g["pnl"] > 0, "pnl"].sum(), -g.loc[g["pnl"] < 0, "pnl"].sum()
+        meta = strat.get(s) if isinstance(strat.get(s), dict) else {}
+        avg = float(r.mean()) if n else None
+        rows.append({
+            "setup": s, "name": setup_name(s), "account": account, "live": s in enabled,
+            "former_primary": bool(meta.get("former_primary")),
+            "trades": n, "sessions_traded": len(days), "first": days[0] if days else None, "last": days[-1] if days else None,
+            "win_rate": round(float((g["pnl"] > 0).mean()), 3) if n else None,
+            "avg_r": None if avg is None else round(avg, 3),
+            "total_r": round(float(r.sum()), 2) if n else 0.0,
+            "pnl": round(float(g["pnl"].sum()), 2) if n else 0.0,
+            "profit_factor": round(float(win / loss), 2) if n and loss > 0 else None,
+            "recent_trades": int(len(recent)), "recent_avg_r": round(float(recent["r_multiple"].astype(float).mean()), 3) if len(recent) else None,
+            "expected_r": None if exp.get(s) is None else round(exp[s], 3),
+            "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
+        })
+    return rows
 
 
 def save(card: dict, state_dir: str | Path) -> Path:

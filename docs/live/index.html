@@ -55,6 +55,7 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
   box-shadow: 0 2px 10px rgba(0,0,0,.12); display: none; z-index: 10; white-space: nowrap; }
 .note { color: var(--ink-2); font-size: 12px; margin-top: 8px; }
 .empty { color: var(--muted); padding: 30px; text-align: center; }
+#lb-tab thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
 </style>
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
@@ -184,6 +185,16 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="card"><h2>Setups and their status</h2><div class="tablewrap" id="lv-val"><div class="empty">–</div></div>
       <div class="note">Probation = trading in paper to collect data; it has not passed both locked test periods.</div></div>
   </div>
+  <!-- Setup leaderboard (owner 2026-10-12): every setup in every account, ranked since start. Script at the end of the page. -->
+  <div class="card" id="lb-card"><h2>Setup leaderboard — all accounts, since start</h2>
+    <div class="sub" id="lb-sum">Loading…</div>
+    <div class="controls" style="margin:8px 0" id="lb-ctl"></div>
+    <div class="tablewrap" id="lb-tab" style="max-height:640px;overflow-y:auto"><div class="empty">Loading…</div></div>
+    <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
+      R = the setup's planned risk per trade. <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
+      <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
+      <b>needs trades</b> = fewer than 10. Paper results; few trades prove nothing. Updated by each account's end-of-day report. Educational only — not financial advice.</div></div>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
@@ -192,8 +203,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
   <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
     <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
-  <div class="card lab"><h2>Setup lab — weekly discovery</h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
-    <div class="note">Layered rules found on older data and checked on the newest third. Candidates never trade on their own: one becomes a setup only after a full backtest passes the promotion gates and you approve it.</div></div>
+  <div class="card lab"><h2>Setup lab — weekly discovery <span class="sub" id="lab-when"></span></h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
+    <div class="note">Research candidates, not live setups: re-run every Saturday by the discover workflow (the date above is the last scan). Layered rules found on older data and checked on the newest third. Candidates never trade on their own: one becomes a setup only after a full backtest passes the promotion gates and you approve it.</div></div>
 </section>
 <script>
 (() => {
@@ -515,6 +526,90 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   }
   tick();
   setInterval(tick, 300000);
+})();
+</script>
+<script>
+// Setup leaderboard (owner 2026-10-12). Merges reports/scorecard.json -> leaderboard from each account's state branch,
+// falling back to docs/live/leaderboard.json (snapshot) for an account whose nightly scorecard has no leaderboard yet.
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
+  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"] };
+  const q = s => document.querySelector(s);
+  if (!q("#lb-card")) return;
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f = (v, d = 2, sgn = true) => v == null || isNaN(v) ? "–" : (sgn && v > 0 ? "+" : "") + (+v).toFixed(d);
+  const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  let rows = [], when = {}, sortK = "rank", sortD = 1;
+  const st = { acct: "all", show: "live", min: 0 };
+  function flag(r) {
+    if (!r.trades || r.trades < 10) return ["needs trades", ""];
+    const gap = r.expected_r == null ? null : r.avg_r - r.expected_r;
+    if (r.trades >= 20 && ((gap != null && gap <= -0.15) || r.avg_r < 0)) return ["review", "down"];
+    if (r.trades >= 20 && r.avg_r > 0 && (gap == null || gap >= 0)) return ["promising", "up"];
+    return ["watch", ""];
+  }
+  async function load() {
+    let seed = {};
+    try { const r = await fetch("../live/leaderboard.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) seed = await r.json(); } catch (_) {}
+    const all = [];
+    await Promise.all(Object.entries(ACC).map(async ([k, [lab, br]]) => {
+      let lb = null, pt = {};
+      try {
+        const r = await fetch(RAW + br + "/reports/scorecard.json?t=" + Date.now(), { cache: "no-store" });
+        if (r.ok) { const c = await r.json(); lb = c.leaderboard; when[k] = c.generated || c.window;
+          pt = Object.fromEntries((((c.playing_time || {}).cumulative || {}).setups || []).map(x => [x.setup, x.verdict])); }
+      } catch (_) {}
+      if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
+      (lb || []).forEach(r => all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup] }));
+    }));
+    // a setup traded in more than one account (e.g. demoted from Primary): total live trades across accounts
+    const tot = {};
+    all.forEach(r => { tot[r.setup] = (tot[r.setup] || 0) + (r.trades || 0); });
+    all.forEach(r => { r.all_trades = tot[r.setup]; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r); });
+    const ranked = all.filter(r => r.score != null && r.live).sort((a, b) => b.score - a.score);
+    ranked.forEach((r, i) => { r.rank = i + 1; });
+    rows = all;
+    draw();
+  }
+  const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["trades", "Live trades"], ["sessions_traded", "Sessions"],
+    ["win_rate", "Win rate"], ["avg_r", "Avg R"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
+    ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["pt", "Playing time"], ["flag", "Flag"]];
+  function draw() {
+    let r = rows.filter(x => (st.acct === "all" || x.acct === st.acct) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
+    const key = x => { const v = sortK === "flag" ? x.flag[0] : x[sortK]; return v == null ? (sortD > 0 ? Infinity : -Infinity) : v; };
+    r.sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortD; });
+    const live = rows.filter(x => x.live), traded = live.filter(x => x.trades);
+    const best = rows.filter(x => x.rank).sort((a, b) => a.rank - b.rank)[0];
+    q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
+      (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
+      ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
+    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 13 ? "l" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const td = x => {
+      const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
+        (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
+        (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "");
+      return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
+        <td class="l">${e(x.acctLabel)}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
+        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
+        <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
+        <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
+    };
+    q("#lb-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No setups match.</div>`;
+    q("#lb-tab").querySelectorAll("th").forEach(h => h.onclick = () => { const k = h.dataset.k; sortD = sortK === k ? -sortD : (k === "rank" || k === "name" || k === "acctLabel" ? 1 : -1); sortK = k; draw(); });
+  }
+  q("#lb-ctl").innerHTML = `<select id="lb-acct" aria-label="Account"><option value="all">All accounts</option>${Object.entries(ACC).map(([k, [l]]) => `<option value="${k}">${l}</option>`).join("")}</select>
+    <select id="lb-show" aria-label="Which setups"><option value="live">Live setups</option><option value="all">Include switched-off setups</option></select>
+    <select id="lb-min" aria-label="Minimum trades"><option value="0">Any number of trades</option><option value="1">1+ trades</option><option value="10">10+ trades</option><option value="20">20+ trades</option></select>`;
+  q("#lb-acct").onchange = ev => { st.acct = ev.target.value; draw(); };
+  q("#lb-show").onchange = ev => { st.show = ev.target.value; draw(); };
+  q("#lb-min").onchange = ev => { st.min = +ev.target.value; draw(); };
+  load();
+  setInterval(load, 600000);
+  // Setup lab: say how fresh the weekly scan is
+  fetch(RAW + "mcf-data/discovery/latest.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.generated) q("#lab-when").textContent = `· last scan ${d.generated}, next Saturday`; }).catch(() => {});
 })();
 </script>
 </main></body></html>
