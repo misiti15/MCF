@@ -24,7 +24,7 @@ select { font:inherit; padding:6px 8px; border-radius:8px; border:1px solid var(
 </main>
 <script>
 (() => {
-  const acct = new URLSearchParams(location.search).get("account") === "testing" ? "mcf-data-testing" : "mcf-data";
+  const acct = { testing: "mcf-data-testing", testing2: "mcf-data-testing2" }[new URLSearchParams(location.search).get("account")] || "mcf-data";
   const RAW = `https://raw.githubusercontent.com/misiti15/MCF/${acct}/`;
   const sel = document.getElementById("day"), rep = document.getElementById("rep"), csv = document.getElementById("csv");
   async function show(day) {

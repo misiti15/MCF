@@ -153,6 +153,18 @@ def _time_of_day(tr: pd.DataFrame) -> str:
             "the cumulative view is in the scorecard.</div>")
 
 
+def _playing(rep: dict | None) -> str:
+    """Playing time per setup (owner 2026-10-12; mcf/report/playing_time.py). Report only."""
+    if not rep:
+        return ""
+    from .playing_time import html
+
+    try:
+        return html(rep)
+    except Exception as e:   # a report section must never stop the EOD email
+        return f"<p style='font-size:12px;color:#52514e'>Playing time unavailable ({e.__class__.__name__}).</p>"
+
+
 def spy_adjust(tr: pd.DataFrame, spy: pd.DataFrame | None) -> pd.DataFrame:
     """Per trade: SPY's move over the holding period, the market's share of the P/L (beta 1), and the R net of SPY
     including a hedge leg's cost (1c + 1 bps per side). Report only - no hedge is traded (owner 2026-10-10, swarm W2)."""
@@ -183,7 +195,7 @@ def spy_adjust(tr: pd.DataFrame, spy: pd.DataFrame | None) -> pd.DataFrame:
 
 
 def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None,
-          intraday: list | None = None, bars: dict | None = None):
+          intraday: list | None = None, bars: dict | None = None, playing: dict | None = None):
     tr = journal.trades(run_id=run_id)
     tr = tr[tr["date"].astype(str) == day].copy() if len(tr) else tr
     if len(tr):
@@ -233,6 +245,7 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 <table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>Adj R (net of SPY)</th><th {td}>P/L</th></tr>
 {by_setup or '<tr><td colspan=6>No trades.</td></tr>'}</table>
 {mkt_line}
+{_playing(playing)}
 <h3>Improvement candidates (daily review)</h3><ul>{findings}</ul>
 <p style="font-size:12px;color:#52514e">Every trade is attached as a CSV you can open and edit in Excel or Google Sheets.
 Live page: https://misiti15.github.io/MCF/live/</p></div>"""

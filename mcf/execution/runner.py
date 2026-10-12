@@ -354,7 +354,9 @@ class PaperRunner:
                 return self._log(sig, "skipped", "not shortable/ETB", px, now)
         ok, why = self.risk.check(sig, px)
         if not ok:
-            return self._log(sig, "skipped", why, px, now)
+            # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
+            held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
+            return self._log(sig, "skipped", why, px, now, held)
         ok, why, info = self._realism(sig, ctx, px)
         if not ok:
             return self._log(sig, "skipped", why, px, now, info)

@@ -26,6 +26,7 @@ import pandas as pd
 import yaml
 
 from . import core, signals
+from .book import Book
 from .core import RiskCaps
 
 ET = ZoneInfo("America/New_York")
@@ -216,14 +217,20 @@ class Runner:
             if a.get("trading_blocked"):
                 raise RuntimeError("long-hold account is trading-blocked")
             return a["equity"], a["cash"], self.broker.positions()
-        p = self.dir / "dry_book.json"
-        if p.exists():
-            d = json.loads(p.read_text())
-            pos = {s: {"qty": v["qty"], "market_value": v["qty"] * v["price"], "current_price": v["price"],
-                       "avg_entry_price": v.get("entry", v["price"])} for s, v in d["positions"].items()}
-            return d["cash"] + sum(x["market_value"] for x in pos.values()), d["cash"], pos
-        cap = float(self.cfg.get("dry_capital", 100000))
-        return cap, cap, {}
+        d = self.load_book("dry")
+        if d is None:
+            cap = float(self.cfg.get("dry_capital", 100000))
+            return cap, cap, {}
+        pos = {s: {"qty": v["shares"], "market_value": v["shares"] * v["price"], "current_price": v["price"]}
+               for s, v in d.pos.items()}
+        return d.equity(), d.cash, pos
+
+    def load_book(self, name: str) -> Book | None:
+        p = self.dir / f"{name}_book.json"
+        return Book.from_json(json.loads(p.read_text())) if p.exists() else None
+
+    def save_book(self, name: str, b: Book):
+        (self.dir / f"{name}_book.json").write_text(json.dumps(b.to_json(), indent=1))
 
     # ------------------------------------------------------------------ plan
     def build_plan(self, signal_day: date, exec_day: date, tif: str, kind: str) -> dict:
@@ -371,40 +378,362 @@ class Runner:
         self.write_status(plan=plan)
         return plan
 
-    def mark(self) -> dict | None:
-        """Daily mark (paper or dry-run book): equity, cash, day P/L, vs SPY, drawdown from the high-water mark."""
-        days = self.trading_days(self.today - timedelta(days=10), self.today + timedelta(days=10))
+
+    # ------------------------------------------------------------------ weekly schedule
+    def phase(self) -> str:
+        t = self.now.time()
+        if t < time(9, 28):
+            return "morning"
+        if t < time(16, 30):
+            return "recon"
+        return "evening"
+
+    def next_session(self, d: date, days: list[date]) -> date:
+        later = [x for x in days if x > d]
+        if not later:
+            raise ValueError("calendar must extend past the signal day")
+        return later[0]
+
+    def plans(self) -> list[dict]:
+        return [json.loads(p.read_text()) for p in sorted((self.dir / "plans").glob("*.json"))]
+
+    def run(self, stage: str = "all", phase: str | None = None) -> dict:
+        """One scheduled run (idempotent). morning: submit the pending OPG plan before 09:28. recon: reconcile fills
+        vs the official open, retry an unfilled OPG order once as a DAY order (-r). evening: reconcile, mark, and on
+        the last session of the week build the plan; OPG orders are submitted from 19:00 ET (or by the morning run).
+        stage 'plan' never submits; stage 'submit' never builds (the workflow commits the plan in between)."""
+        phase = phase or self.phase()
+        days = self.trading_days(self.today - timedelta(days=21), self.today + timedelta(days=14))
+        out = {"phase": phase, "today": str(self.today), "trading_day": self.today in days}
+        if self.today not in days:
+            self.write_status()
+            return out
+        opg_from, opg_to = (time.fromisoformat(x) for x in self.cfg.get("opg_window_et", ["19:00", "09:28"]))
+        if phase == "morning" and stage in ("submit", "all"):
+            sd = self.last_signal_day(self.today)
+            plan = self.load_plan(sd) if sd else None
+            if plan and plan.get("exec_day") == str(self.today) and plan.get("time_in_force") == "opg":
+                if self.now.time() < opg_to:
+                    plan = self.submit_plan(plan)
+                    self.save_plan(plan)
+                out["plan"] = plan.get("status")
+        elif phase == "recon":
+            self.reconcile(retry=stage in ("submit", "all"))
+        elif phase == "evening":
+            self.reconcile(retry=False)
+            if stage in ("plan", "all"):
+                out["mark"] = self.mark(days)
+            if core.rebalance_due(days, self.today, signals.FREQ):
+                plan = self.load_plan(self.today)
+                if plan is None and stage in ("plan", "all"):
+                    plan = self.build_plan(self.today, self.next_session(self.today, days), "opg", "weekly")
+                    self.save_plan(plan)
+                    self.event("plan", f"weekly plan {self.today}: {plan['status']}, {len(plan['orders'])} orders "
+                               f"({plan.get('skip_reason') or 'ok'})")
+                if plan and stage in ("submit", "all") and self.now.time() >= opg_from:
+                    plan = self.submit_plan(plan)
+                    self.save_plan(plan)
+                out["plan"] = plan.get("status") if plan else None
+        self.write_status()
+        return out
+
+    # ------------------------------------------------------------------ reconciliation
+    TERMINAL = {"filled", "canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced", "stopped"}
+
+    def reconcile(self, retry: bool = True):
+        """Fills vs the official open (OPG / DAY retry) or official close (MOC) -> fills.csv, slippage in bps
+        (positive = paid more than the auction print). An OPG order that ended unfilled is retried once as a DAY
+        market order with the same id + '-r' during the exec session. Paper only; dry runs have nothing to reconcile."""
+        if not self.live:
+            return
+        for plan in self.plans():
+            if plan.get("status") not in ("submitted", "partial") or plan.get("reconciled"):
+                continue
+            ed = date.fromisoformat(plan["exec_day"])
+            if self.today < ed or (self.today == ed and self.now.time() < time(9, 31)):
+                continue
+            sd = date.fromisoformat(plan["signal_day"])
+            prefix = f"{core.PREFIX}{self.strategy}-{sd:%Y%m%d}-"
+            got = {o["client_order_id"]: o for o in self.broker.orders(prefix, datetime.combine(sd, time(0), ET))}
+            ref_field = "close" if plan.get("time_in_force") == "cls" else "open"
+            refs = {}
+            if not (ref_field == "close" and self.today == ed and self.now.time() < time(16, 5)):
+                b = self.data.bars(sorted({o["symbol"] for o in plan["orders"]}), ed, ed, adjustment="raw")
+                if b is not None and len(b):
+                    refs = {str(r.symbol): float(getattr(r, ref_field)) for r in b.itertuples()}
+            retries = plan.setdefault("retries", {})
+            fills, done = [], True
+            for o in plan["orders"]:
+                cid = o["client_order_id"]
+                for oid, tif, ref_name in ((cid, plan.get("time_in_force"), ref_field), (retries.get(cid), "day", "open")):
+                    if not oid:
+                        continue
+                    x = got.get(oid)
+                    st = (x or {}).get("status")
+                    if x is None or st not in self.TERMINAL:
+                        done = False
+                        continue
+                    fq = float(x.get("filled_qty") or 0)
+                    fp = x.get("filled_avg_price")
+                    if fq > 0 and fp:
+                        ref = refs.get(o["symbol"]) if ref_name == ref_field else None
+                        if ref_name == "open" and ref_field != "open":
+                            ref = None
+                        sign = 1 if o["side"] == "buy" else -1
+                        fills.append({"signal_day": plan["signal_day"], "exec_day": plan["exec_day"],
+                                      "client_order_id": oid, "symbol": o["symbol"], "side": o["side"],
+                                      "tif": tif, "qty": o["qty"], "filled_qty": fq, "fill_price": fp,
+                                      "ref": ref_field if oid == cid else "day-retry", "ref_price": ref,
+                                      "slippage_bps": None if not ref else round(sign * (fp / ref - 1) * 1e4, 2),
+                                      "model_cost_bps": None if not ref else round((0.01 / ref + 0.0001) * 1e4, 2),
+                                      "notional": round(fq * fp, 2)})
+                        if oid == cid and ref is None:
+                            done = False                     # official print not available yet
+                    if oid == cid and fq < float(o["qty"]) and st != "filled":
+                        rid = retries.get(cid)
+                        if (rid is None and retry and plan.get("time_in_force") == "opg" and self.today == ed
+                                and time(9, 31) <= self.now.time() < time(15, 30) and not self.halted()):
+                            rid = retry_id(cid)
+                            try:
+                                self.broker.submit(o["symbol"], int(o["qty"] - fq), o["side"], "day", rid)
+                                retries[cid] = rid
+                                done = False
+                                self.event("retry", f"{cid} ended {st} ({fq:g}/{o['qty']} filled): retried as {rid}",
+                                           "warn")
+                            except Exception as e:
+                                self.event("order_reject", f"retry {rid}: {str(e)[:200]}", "warn")
+                        elif rid is None:
+                            self.event("unfilled", f"{cid} ended {st}, {fq:g}/{o['qty']} filled, not retried", "warn")
+            self._write_fills(fills)
+            if done:
+                plan["reconciled"] = self.now.isoformat(timespec="seconds")
+                sl = [f["slippage_bps"] for f in fills if f["slippage_bps"] is not None]
+                plan["slippage_bps_mean"] = round(float(np.mean(sl)), 2) if sl else None
+                self.event("reconciled", f"{plan['signal_day']}: {len(fills)} fills, mean slippage "
+                           f"{plan['slippage_bps_mean']} bps vs official {ref_field}")
+            self.save_plan(plan)
+
+    def _write_fills(self, rows: list[dict]):
+        if not rows:
+            return
+        p = self.dir / "fills.csv"
+        old = pd.read_csv(p) if p.exists() else pd.DataFrame()
+        new = pd.DataFrame(rows)
+        if len(old):
+            new = pd.concat([old[~old["client_order_id"].isin(new["client_order_id"])], new], ignore_index=True)
+        new.to_csv(p, index=False)
+
+    # ------------------------------------------------------------------ marks
+    def _session_bars(self, symbols: list[str], start: date, end: date, days: list[date]) -> dict:
+        """{day: {sym: {prev_close, open, close}}} for sessions in (start, end], adjusted prices."""
+        b = self.data.bars(sorted(set(symbols)), start, end, adjustment="all")
+        if b is None or b.empty:
+            return {}
+        b = b.copy()
+        b["symbol"] = b["symbol"].astype(str)
+        b["date"] = pd.to_datetime(b["date"]).dt.normalize()
+        idx = pd.DatetimeIndex([pd.Timestamp(d) for d in days if start <= d <= end])
+        C = b.pivot(index="date", columns="symbol", values="close").reindex(idx)
+        O = b.pivot(index="date", columns="symbol", values="open").reindex(idx)
+        P = C.shift(1)
+        out = {}
+        for i, d in enumerate(idx[1:], start=1):
+            if C.iloc[i].notna().sum() == 0:
+                continue
+            out[d.date()] = {s: {"prev_close": P.iat[i, j], "open": O.iat[i, j], "close": C.iat[i, j]}
+                             for j, s in enumerate(C.columns)}
+        return out
+
+    def advance_books(self, days: list[date]) -> dict:
+        """Bring the backtest-replay model (and the dry-run shadow book) up to today. Returns per-day model returns,
+        SPY and EW-universe returns for the sessions processed."""
+        plans = {p["exec_day"]: p for p in self.plans() if p.get("targets") and p.get("status") not in
+                 ("skipped_data", "skipped_risk", "halted")}
+        model, dry = self.load_book("model"), self.load_book("dry")
+        starts = [date.fromisoformat(b.last_day) for b in (model, dry) if b is not None and b.last_day]
+        first_exec = min((date.fromisoformat(d) for d in plans), default=None)
+        past = [d for d in days if d <= self.today]
+        prev_today = [d for d in past if d < self.today][-1]
+        if starts:
+            start = min(starts)
+        elif first_exec is not None and first_exec <= self.today:
+            start = [d for d in past if d < first_exec][-1]
+        else:
+            start = prev_today                                # benchmarks only
+        start = min(start, prev_today)
+        ew = []
+        for p in sorted(self.plans(), key=lambda p: p["signal_day"]):
+            ew = p.get("eligible") or ew
+        syms = {"SPY"} | set(ew)
+        for b in (model, dry):
+            syms |= set(b.pos) if b else set()
+        for p in plans.values():
+            syms |= set(p["targets"]) | {o["symbol"] for o in p.get("orders", [])}
+        bars = self._session_bars(sorted(syms), start, self.today, days)
+        res = {}
+        for d in [d for d in past if d > start]:
+            bd = bars.get(d)
+            spy = (bd or {}).get("SPY") or {}
+            if not bd or not (spy.get("close") == spy.get("close")) or spy.get("close") is None:
+                break                                         # session data not complete yet: stop here
+            plan = plans.get(str(d))
+            at = "close" if plan and plan.get("time_in_force") == "cls" else "open"
+            if model is None and plan is not None:
+                prev = [x for x in past if x < d][-1]
+                model = Book(cash=float(plan.get("equity") or self.cfg.get("dry_capital", 100000)), last_day=str(prev),
+                             costs=bool(self.cfg.get("model_costs", True)))
+            if not self.live and dry is None and plan is not None:
+                prev = [x for x in past if x < d][-1]
+                dry = Book(cash=float(self.cfg.get("dry_capital", 100000)), last_day=str(prev), costs=False)
+            r = {"spy_ret": _ret(spy)}
+            ews = [_ret(bd.get(s) or {}) for s in ew]
+            ews = [x for x in ews if x is not None]
+            r["ew_ret"] = float(np.mean(ews)) if ews else None
+            if model is not None and (model.last_day or "") < str(d):
+                r["model_ret"] = model.step(str(d), bd, targets=plan["targets"] if plan else None, at=at)
+                r["model_equity"] = model.equity()
+                r["model_turnover"] = model.traded / 2 / max(model.equity(), 1e-9)
+                r["model_cost"] = model.cost_paid
+            if dry is not None and (dry.last_day or "") < str(d):
+                dry.step(str(d), bd, orders=plan.get("orders") if plan else None, at=at)
+                r["dry_turnover"] = dry.traded / 2 / max(dry.equity(), 1e-9)
+            res[d] = r
+        if model is not None:
+            self.save_book("model", model)
+        if dry is not None:
+            self.save_book("dry", dry)
+        return res
+
+    def mark(self, days: list[date] | None = None) -> dict | None:
+        """Daily mark: equity, cash, day P/L, vs SPY, vs the EW universe, vs the backtest replay (tracking error),
+        drawdown from the high-water mark, turnover, alerts. Paper account when live, the shadow book in a dry run."""
+        days = days or self.trading_days(self.today - timedelta(days=21), self.today + timedelta(days=14))
         if self.today not in days:
             return None
+        bench = self.advance_books(days)
         equity, cash, pos = self.book()
         m = self.marks()
-        prev_eq = float(m["equity"].iloc[-1]) if len(m) and "equity" in m and str(m["date"].iloc[-1]) != str(self.today) else None
+        if len(m):
+            m = m[m["date"].astype(str) != str(self.today)]
+        prev_eq = float(m["equity"].iloc[-1]) if len(m) else None
         if self.live:
             prev_eq = self.broker.account().get("last_equity", prev_eq)
-        prev_day = [d for d in days if d < self.today][-1]
-        spy = self.data.bars(["SPY"], prev_day, self.today, adjustment="all")
-        spy_ret = None
-        if spy is not None and len(spy) >= 2:
-            spy_ret = float(spy["close"].iloc[-1] / spy["close"].iloc[-2] - 1)
+        b = bench.get(self.today, {})
+        if not b:
+            self.event("data", f"no complete bars for {self.today} yet: benchmarks and the replay not updated", "warn")
+        day_ret = None if not prev_eq else equity / prev_eq - 1
+        model_ret = b.get("model_ret")
+        turnover = b.get("dry_turnover")
+        if self.live:
+            fp = self.dir / "fills.csv"
+            if fp.exists():
+                f = pd.read_csv(fp)
+                f = f[f["exec_day"].astype(str) == str(self.today)]
+                turnover = float(f["notional"].sum()) / 2 / equity if len(f) and equity else 0.0
         row = {"date": str(self.today), "mode": self.mode, "equity": round(equity, 2), "cash": round(cash, 2),
-               "positions": len(pos), "invested": round(sum(p["market_value"] for p in pos.values()), 2),
+               "invested": round(sum(p["market_value"] for p in pos.values()), 2), "positions": len(pos),
                "day_pl": None if prev_eq is None else round(equity - prev_eq, 2),
-               "day_ret": None if not prev_eq else round(equity / prev_eq - 1, 6),
-               "spy_ret": None if spy_ret is None else round(spy_ret, 6)}
-        m = m[m["date"].astype(str) != str(self.today)] if len(m) else m
+               "day_ret": _r(day_ret), "spy_ret": _r(b.get("spy_ret")), "ew_ret": _r(b.get("ew_ret")),
+               "model_equity": None if b.get("model_equity") is None else round(b["model_equity"], 2),
+               "model_ret": _r(model_ret),
+               "te": _r(day_ret - model_ret) if day_ret is not None and model_ret is not None else None,
+               "turnover": _r(turnover), "model_turnover": _r(b.get("model_turnover"))}
         m = pd.concat([m, pd.DataFrame([row])], ignore_index=True)
-        hwm = float(m["equity"].max())
+        hwm = float(pd.to_numeric(m["equity"]).max())
         row["hwm"] = round(hwm, 2)
         row["drawdown"] = round(equity / hwm - 1, 6) if hwm > 0 else 0.0
-        m.loc[m.index[-1], ["hwm", "drawdown"]] = [row["hwm"], row["drawdown"]]
+        te = pd.to_numeric(m.get("te"), errors="coerce").tail(20)
+        row["te_20d"] = _r(float(te.sum())) if te.notna().any() else None
+        for k in ("hwm", "drawdown", "te_20d"):
+            m.loc[m.index[-1], k] = row[k]
         m.to_csv(self.dir / "marks.csv", index=False)
-        warn, halt = self.cfg.get("alerts", {}).get("dd_warn", 0.15), self.caps.kill_drawdown
-        if row["drawdown"] <= -halt:
-            self.event("drawdown", f"drawdown {row['drawdown']:.1%} beyond -{halt:.0%}: new buys halted", "halt")
-        elif row["drawdown"] <= -warn:
-            self.event("drawdown", f"drawdown {row['drawdown']:.1%} beyond -{warn:.0%}", "warn")
         self.write_status(mark=row, positions=pos)
         return row
+
+    # ------------------------------------------------------------------ health + status
+    def health(self, st: dict) -> list[dict]:
+        """Standing alert conditions, re-derived on every run from the state (thresholds: config/longhold.yaml)."""
+        a = self.cfg.get("alerts", {})
+        out = []
+
+        def add(kind, level, msg):
+            out.append({"kind": kind, "level": level, "msg": msg})
+
+        if self.halted():
+            add("kill_switch", "halt", "HALT file present on the state branch: no orders until it is removed")
+        mk = st.get("mark") or {}
+        dd = mk.get("drawdown")
+        if dd is not None and dd <= -self.caps.kill_drawdown:
+            add("drawdown", "halt", f"drawdown {dd:.1%} beyond -{self.caps.kill_drawdown:.0%}: no new orders")
+        elif dd is not None and dd <= -a.get("dd_warn", 0.15):
+            add("drawdown", "warn", f"drawdown {dd:.1%} beyond -{a.get('dd_warn', 0.15):.0%}")
+        if mk.get("te") is not None and abs(mk["te"]) > a.get("te_day", 0.01):
+            add("tracking", "warn", f"tracking difference today {mk['te']:+.2%} vs the backtest replay "
+                f"(limit {a.get('te_day', 0.01):.0%})")
+        if mk.get("te_20d") is not None and abs(mk["te_20d"]) > a.get("te_20d", 0.03):
+            add("tracking", "warn", f"20-session tracking difference {mk['te_20d']:+.2%} (limit {a.get('te_20d', 0.03):.0%})")
+        plans = self.plans()
+        if plans:
+            p = plans[-1]
+            if p.get("status") in ("skipped_data", "skipped_risk", "halted"):
+                add("rebalance_skipped", "warn", f"rebalance {p['signal_day']} {p['status']}: {p.get('skip_reason')}")
+            rej = [k for k, v in (p.get("submissions") or {}).items() if v.get("status") == "rejected"]
+            if rej:
+                add("order_reject", "warn", f"{len(rej)} order(s) rejected for {p['signal_day']}: {', '.join(rej[:5])}")
+            sl = p.get("slippage_bps_mean")
+            if sl is not None and abs(sl) > a.get("slippage_bps", 25):
+                add("slippage", "warn", f"mean slippage {sl:+.1f} bps vs the auction print on {p['exec_day']}")
+        try:
+            missed = self.missed_rebalance()
+        except Exception:
+            missed = None
+        if missed:
+            add("missed_rebalance", "warn", missed)
+        return out
+
+    def missed_rebalance(self) -> str | None:
+        days = self.trading_days(self.today - timedelta(days=21), self.today + timedelta(days=14))
+        sd = self.last_signal_day(self.today + timedelta(days=1))
+        if sd is None:
+            return None
+        if sd == self.today and self.now.time() < time(19, 30):
+            sd = self.last_signal_day(self.today)                 # today's plan is not due yet
+            if sd is None:
+                return None
+        plans = self.plans()
+        if not plans or min(p["signal_day"] for p in plans) > str(sd):
+            return None                                           # book started after that signal
+        p = self.load_plan(sd)
+        if p is None:
+            return f"no plan for the {sd} rebalance"
+        ed = date.fromisoformat(p["exec_day"])
+        if (self.live and p.get("status") == "planned" and p.get("orders")
+                and (self.today > ed or (self.today == ed and self.now.time() >= time(9, 28)))):
+            return f"rebalance {sd}: orders were not submitted before the {ed} open"
+        del days
+        return None
+
+    def next_rebalance(self) -> str | None:
+        days = self.trading_days(self.today, self.today + timedelta(days=14))
+        for d in days[:-1]:
+            if d >= self.today and core.rebalance_due(days, d, signals.FREQ):
+                return str(d)
+        return None
+
+    def entries(self) -> dict[str, str]:
+        """Entry (exec) day per held name, from the plans."""
+        e: dict[str, str] = {}
+        for p in self.plans():
+            if p.get("status") in ("skipped_data", "skipped_risk", "halted") or not p.get("orders"):
+                continue
+            if self.live and not p.get("submissions"):
+                continue
+            for o in p["orders"]:
+                if o["side"] == "buy" and o["symbol"] not in e:
+                    e[o["symbol"]] = p["exec_day"]
+                if o["side"] == "sell" and p["targets"].get(o["symbol"], 0) == 0:
+                    e.pop(o["symbol"], None)
+        return e
 
     def write_status(self, plan: dict | None = None, mark: dict | None = None, positions: dict | None = None):
         p = self.dir / "status.json"
@@ -412,16 +741,78 @@ class Runner:
         st.update({"strategy": self.strategy, "mode": self.mode,
                    "label": "paper" if self.live else "dry-run (no orders)", "disclaimer": DISCLAIMER,
                    "last_run": self.now.isoformat(timespec="seconds"), "halt_file": self.halted()})
+        plans = self.plans()
+        plan = plan or (plans[-1] if plans else None)
         if plan is not None:
             st["last_plan"] = {k: plan.get(k) for k in ("signal_day", "exec_day", "kind", "status", "skip_reason",
-                                                          "time_in_force", "equity")}
+                                                          "time_in_force", "equity", "slippage_bps_mean",
+                                                          "reconciled")}
             st["last_plan"]["orders"] = len(plan.get("orders", []))
             st["last_plan"]["targets"] = sorted(plan.get("targets", {}))
         if mark is not None:
             st["mark"] = mark
         if positions is not None:
-            st["positions"] = {s: {k: v.get(k) for k in ("qty", "market_value", "avg_entry_price", "current_price",
-                                                          "unrealized_pl")} for s, v in positions.items()}
-        st["alerts"] = self.alerts
+            ent = self.entries()
+            eq = (mark or {}).get("equity") or 0
+            st["positions"] = {s: {"qty": v.get("qty"), "market_value": round(v.get("market_value") or 0, 2),
+                                   "weight": round((v.get("market_value") or 0) / eq, 4) if eq else None,
+                                   "avg_entry_price": v.get("avg_entry_price"), "price": v.get("current_price"),
+                                   "unrealized_pl": v.get("unrealized_pl"), "entry_day": ent.get(s)}
+                               for s, v in sorted(positions.items())}
+        m = self.marks()
+        if len(m):
+            eq = pd.to_numeric(m["equity"])
+            st["since_start"] = {"start": str(m["date"].iloc[0]), "sessions": int(len(m)),
+                                 "return": _r(float(eq.iloc[-1] / eq.iloc[0] - 1)),
+                                 "max_drawdown": _r(float((eq / eq.cummax() - 1).min()))}
+            for col, name in (("spy_ret", "spy"), ("ew_ret", "ew_universe"), ("model_ret", "backtest_replay")):
+                if col in m:
+                    r = pd.to_numeric(m[col], errors="coerce").fillna(0.0)
+                    st["since_start"][name] = _r(float((1 + r.iloc[1:]).prod() - 1)) if len(r) > 1 else 0.0
+        st["next_rebalance"] = self._safe(self.next_rebalance)
+        st["alerts_run"] = self.alerts
+        st["alerts"] = self.health(st) + [x for x in self.alerts if x["kind"] in ("order_reject", "data_sanity",
+                                                                                 "unfilled", "retry", "data")]
         p.write_text(json.dumps(st, indent=1, default=str))
         return st
+
+    def _safe(self, fn):
+        try:
+            return fn()
+        except Exception:
+            return None
+
+    # ------------------------------------------------------------------ weekly report
+    def report(self) -> Path:
+        """Weekly report (Saturday): equity vs SPY, the EW universe and the backtest replay; turnover; costs (model
+        cost vs measured auction slippage); holdings; next rebalance; skipped rebalances and kill-switch events."""
+        from .report import weekly_html
+
+        st = self.write_status()
+        out = self.dir / "reports" / f"weekly-{self.today}.html"
+        out.parent.mkdir(exist_ok=True)
+        fills = pd.read_csv(self.dir / "fills.csv") if (self.dir / "fills.csv").exists() else pd.DataFrame()
+        ev = []
+        if (self.dir / "events.jsonl").exists():
+            ev = [json.loads(x) for x in (self.dir / "events.jsonl").read_text().splitlines() if x.strip()]
+        out.write_text(weekly_html(self.marks(), fills, self.plans(), st, ev, self.today))
+        st["weekly"] = {"date": str(self.today), "path": f"longhold/reports/{out.name}"}
+        (self.dir / "status.json").write_text(json.dumps(st, indent=1, default=str))
+        return out
+
+
+def _ret(x: dict) -> float | None:
+    a, b = x.get("prev_close"), x.get("close")
+    if a is None or b is None or not (a == a and b == b) or a <= 0:
+        return None
+    return float(b / a - 1)
+
+
+def _r(x) -> float | None:
+    return None if x is None or (isinstance(x, float) and not math.isfinite(x)) else round(float(x), 6)
+
+
+def retry_id(cid: str) -> str:
+    if len(cid) + 2 <= 48:
+        return cid + "-r"
+    return cid[:37] + "-" + hashlib.sha1(cid.encode()).hexdigest()[:8] + "-r"

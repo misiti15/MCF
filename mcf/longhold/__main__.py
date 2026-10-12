@@ -1,4 +1,4 @@
-"""CLI: python -m mcf.longhold init|mark|run|status|plan [--state-dir state] [--dry-run]
+"""CLI: python -m mcf.longhold run|init|mark|report|status|plan [--state-dir state] [--dry-run] [--stage plan|submit|all]
 
 Live (paper orders) only when LONGHOLD_LIVE=true AND ALPACA_TRADE_API_KEY/SECRET are set (the workflow maps the
 ALPACA_LONGHOLD_* secrets onto them) AND --dry-run is not given. Otherwise dry run: plans and marks, no orders, and
@@ -42,10 +42,11 @@ def make_runner(args) -> Runner:
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="python -m mcf.longhold", description="Long-hold (S6) paper runner. "
                                  "Educational only - not financial advice.")
-    ap.add_argument("command", choices=["init", "mark", "run", "status", "plan"])
+    ap.add_argument("command", choices=["init", "mark", "run", "status", "plan", "report"])
     ap.add_argument("--state-dir", default="state")
     ap.add_argument("--dry-run", action="store_true", help="never place orders")
     ap.add_argument("--stage", choices=["plan", "submit", "all"], default="all")
+    ap.add_argument("--phase", choices=["morning", "recon", "evening"], help="override the clock-derived phase")
     ap.add_argument("--now", help="ET wall clock override, e.g. 2026-10-12T15:00 (testing)")
     args = ap.parse_args(argv)
     if args.command == "status":
@@ -70,8 +71,14 @@ def main(argv=None):
             for s, w in sorted(sig["targets"].items()):
                 print(f"  {s:6} {w:.3f}")
         return 0
-    if args.command in ("mark", "run"):
-        r.mark()                                   # weekly rebalance path: `run` (DROP 2)
+    if args.command == "mark":
+        r.mark()
+        return 0
+    if args.command == "report":
+        print("weekly report:", r.report())
+        return 0
+    if args.command == "run":
+        print(json.dumps(r.run(args.stage, args.phase), default=str))
         return 0
     return 0
 
