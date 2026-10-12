@@ -146,7 +146,15 @@ class IntradayMomentum(Strategy):
         st, et = t(self.signal_time), t(self.entry_time)
         sig_idx = np.flatnonzero(times < st)
         ent_idx = np.flatnonzero(times < et)
-        if len(sig_idx) == 0 or len(ent_idx) == 0 or ent_idx[-1] + 1 >= len(times):
+        if len(sig_idx) == 0 or len(ent_idx) == 0:
+            return []
+        # The decision bar is the last bar before entry_time (15:29); the order fills at the next open (15:30).
+        # Only decide once the session has reached entry_time: a later bar exists (backtest, full day) or the
+        # decision bar is the minute just before entry_time (live, where it is the latest completed bar). Requiring a
+        # later bar here made the signal appear only at the 15:31 poll, which the live runner drops (it acts only on
+        # the latest bar), so the setup never fired live (fix 2026-10-12).
+        last_min = (pd.Timestamp.combine(ctx.date, et) - pd.Timedelta(minutes=1)).time()
+        if ent_idx[-1] + 1 >= len(times) and times[ent_idx[-1]] < last_min:
             return []
         r = (ctx.bars["close"].iloc[sig_idx[-1]] / ctx.prev_close - 1) * 100
         if abs(r) < self.min_abs_return_pct:
