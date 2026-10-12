@@ -188,7 +188,29 @@ class AlpacaBroker:
         return self.client.close_all_positions(cancel_orders=True)
 
     def closed_orders_today(self, after):
+        """Every closed order submitted after `after`, oldest first. Alpaca returns at most 500 per call, newest first
+        by default; one call silently dropped the morning on busy days (Testing 2, 2026-10-12: 45 orders never
+        journaled), so this pages forward by submitted_at until a short page."""
         from alpaca.trading.enums import QueryOrderStatus
         from alpaca.trading.requests import GetOrdersRequest
 
-        return self.client.get_orders(GetOrdersRequest(status=QueryOrderStatus.CLOSED, after=after, nested=True, limit=500))
+        return page_orders(lambda cursor: self.client.get_orders(GetOrdersRequest(
+            status=QueryOrderStatus.CLOSED, after=cursor, nested=True, limit=500, direction="asc")), after)
+
+
+def page_orders(fetch, after, page: int = 500, max_pages: int = 40) -> list:
+    """Page through fetch(cursor) (orders submitted after cursor, oldest first). The cursor steps back 1 ms so
+    orders sharing the last timestamp are not skipped; duplicates are dropped by id."""
+    from datetime import timedelta
+
+    out, seen, cursor = [], set(), after
+    for _ in range(max_pages):
+        got = list(fetch(cursor) or [])
+        new = [o for o in got if str(o.id) not in seen]
+        for o in new:
+            seen.add(str(o.id))
+        out.extend(new)
+        if len(got) < page or not new:
+            break
+        cursor = max(o.submitted_at for o in got) - timedelta(milliseconds=1)
+    return out

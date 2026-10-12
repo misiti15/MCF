@@ -13,10 +13,17 @@ import pandas as pd
 
 def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) -> pd.DataFrame:
     stop_extra = (cfg or {}).get("costs", {}).get("stop_slippage_per_share", 0.02)
-    after = pd.Timestamp(f"{day} 00:00", tz="America/New_York").to_pydatetime()
+    after = pd.Timestamp(f"{day} 00:00", tz="America/New_York")
     orders = journal.open_orders(run_id)
     if orders.empty:
         return pd.DataFrame()
+    # Orders left open in the journal from earlier sessions (e.g. missed by a truncated broker query) are picked up
+    # too: look back to the oldest one, at most 7 days. Each trade is dated by its entry fill, not by `day`.
+    oldest = pd.to_datetime(orders["created_at"], utc=True, errors="coerce").min()
+    if pd.notna(oldest):
+        floor = after - pd.Timedelta(days=7)
+        after = max(floor, min(after, oldest.tz_convert("America/New_York").normalize()))
+    after = after.to_pydatetime()
     by_id = {str(o.id): o for o in broker.closed_orders_today(after)}
     rows = []
     for _, rec in orders.iterrows():
@@ -44,7 +51,7 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         pnl_adj = pnl - (stop_extra * qty if reason == "stop" else 0.0)
         meta = rec.meta + (";touch_fill" if reason == "target" else "")
         rows.append(dict(
-            symbol=rec.symbol, strategy=rec.strategy, side=side, date=str(day),
+            symbol=rec.symbol, strategy=rec.strategy, side=side, date=_et_date(parent.filled_at, day),
             signal_time=rec.created_at, entry_time=parent.filled_at, entry=entry, stop=rec.stop,
             target=rec.target, exit_time=exit_t, exit=exit_px, exit_reason=reason,
             r_multiple=pnl / risk if risk else 0.0, mae_r=None, mfe_r=None, shares=qty, pnl=pnl,
@@ -54,3 +61,10 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         ))
         journal.update_order_status(rec.broker_order_id, "closed")
     return pd.DataFrame(rows)
+
+
+def _et_date(ts, day) -> str:
+    try:
+        return str(pd.Timestamp(ts).tz_convert("America/New_York").date())
+    except (TypeError, ValueError):
+        return str(day)
