@@ -478,7 +478,14 @@ class LabStrategy(Strategy):
             stop = float(self.mod.stop_price(f, i))
             if not np.isfinite(stop) or s * (px - stop) <= 0:
                 return []   # the stop must sit beyond the entry (as scored: such trades were skipped)
-            return [Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=None, exit_by=t("15:55"),
+            # optional target_price(f, i, stop) (opt-in, research/bdi/reddit1012liq): a limit target, e.g. 2.5R of the
+            # structural risk or VWAP; modules without it keep target None (hold to 15:55)
+            target = None
+            if hasattr(self.mod, "target_price"):
+                target = float(self.mod.target_price(f, i, stop))
+                if not np.isfinite(target) or s * (target - px) <= 0:
+                    return []
+            return [Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=target, exit_by=t("15:55"),
                            meta={"layers": " + ".join(getattr(self.mod, "LAYERS", [])), "exit": "structural"})]
         return [Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
                        exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})]

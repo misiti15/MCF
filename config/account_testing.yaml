@@ -20,6 +20,7 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - LIQ-pdl-sweep-open15-vwap-long   # 0.38/day (research/bdi/reddit1012liq, added 2026-10-12)
     - ST5-pdbrkup-short-mid-t05s1-FD
     - ST8-volspikedn-long-pm-t1s1-FD
     - ST6-volspikeup-short-mid-t1s1-FD
@@ -47,6 +48,7 @@ live:
     - MF1-945-flowsell-vwapup-FD
     - MF3-open-flowsell-rsi5hi-FD
     - ST2-slope20up-long-am-t05s1-FD
+    - LIQ-orl-sweep-open15-s25-long   # 31.3/day (research/bdi/reddit1012liq, added 2026-10-12)
     - RW2-exhaustion-noon-adv150-short-FD
     - heat_fade_long
     - heat_fade_long-FD
@@ -374,3 +376,31 @@ strategies:
     window: [950, 1500]
     gate: gap+
     scale_out_r: null
+
+  # ---- Reddit "trade liquidity" study (owner request 2026-10-12; research/bdi/reddit1012liq/NOTES.md). Stop-sweep
+  #      reversal at the opening-range / prior-day low, 15-minute breakdown trigger. Neither passed the research gates
+  #      (0 of 7,680 configurations); both meet the pre-declared lowered Testing bar (b) of PLAN.md section 5.
+  #      Lab history (open two years, costs in, R = 0.25 x daily ATR), parity exact: live/verify.json.
+  # OR-low sweep, structural stop at the sweep low, 2.5R target: n 13,335, exp -0.001R, t -0.01 (train -0.040 /
+  # valid +0.038); up sessions +0.59R, down -0.49R (long beta). ~31.3/day.
+  LIQ-orl-sweep-open15-s25-long:
+    enabled: true
+    type: lab
+    module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing: {added: "2026-10-12", source: "LIQ-OR-long-x0.15-open-k15-a1-S-2.5R-none", bar: "PLAN.md 5(b)"}
+  # PD-low sweep, 0.25-ATR stop, VWAP target (>= 2R), break-even at +1R, 15-minute time stop: n 160, exp +0.088R,
+  # t 0.58; train -0.220 (t -1.79) / valid +0.549 (t 2.34) - the halves disagree. ~0.38/day.
+  LIQ-pdl-sweep-open15-vwap-long:
+    enabled: true
+    type: lab
+    module: research/bdi/reddit1012liq/live/LIQ-pdl-sweep-open15-vwap-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    be_at_r: 1.0
+    time_stop_min: 15
+    time_stop_min_r: 0.25
+    testing: {added: "2026-10-12", source: "LIQ-PD-long-x0.05-open-k15-a1-A-NL-BE+TS", bar: "PLAN.md 5(b)"}
