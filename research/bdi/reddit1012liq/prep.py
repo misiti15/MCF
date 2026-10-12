@@ -102,26 +102,32 @@ def main():
     OUT.mkdir(exist_ok=True)
     (OUT / "bars").mkdir(exist_ok=True)
     t0 = time.time()
-    d = day_table()
-    d = d[(d["adv20"] >= MIN_ADV) & (d["atr_d"] > 0)].reset_index(drop=True)
-    d.to_parquet(OUT / "days.parquet", index=False)
+    if (OUT / "days.parquet").exists():
+        d = pd.read_parquet(OUT / "days.parquet")
+    else:
+        d = day_table()
+        d = d[(d["adv20"] >= MIN_ADV) & (d["atr_d"] > 0)].reset_index(drop=True)
+        d.to_parquet(OUT / "days.parquet", index=False)
     print("days", len(d), d.symbol.nunique(), d[["d5h", "d20h"]].notna().mean().round(3).to_dict(), round(time.time() - t0), flush=True)
     jobs = [(s, set(x["date"])) for s, x in d.groupby("symbol")]
-    parts = []
+    parts = {}
+    nrows = 0
     with Pool(3) as pool:
         for k, b in enumerate(pool.imap_unordered(one, jobs, chunksize=4)):
             if b is not None:
-                parts.append(b)
+                b["symbol"] = b["symbol"].astype(str)
+                mo = pd.to_datetime(b["date"]).dt.strftime("%Y-%m").to_numpy()
+                for m in np.unique(mo):
+                    parts.setdefault(m, []).append(b[mo == m])
+                nrows += len(b)
             if k % 100 == 0:
-                print(k, round(time.time() - t0), flush=True)
-    x = pd.concat(parts, ignore_index=True)
-    x = x.merge(d, on=["symbol", "date"], how="inner")
-    x["month"] = pd.to_datetime(x["date"]).dt.strftime("%Y-%m")
-    x["symbol"] = x["symbol"].astype(str)
-    for m, g in x.groupby("month"):
-        g = g.sort_values(["symbol", "date", "b"]).drop(columns="month").reset_index(drop=True)
+                print(k, nrows, round(time.time() - t0), flush=True)
+    for m in sorted(parts):
+        g = pd.concat(parts.pop(m), ignore_index=True).merge(d, on=["symbol", "date"], how="inner")
+        g = g.sort_values(["symbol", "date", "b"]).reset_index(drop=True)
         g.to_parquet(OUT / "bars" / f"month={m}.parquet", index=False, compression="zstd")
-    print("rows", len(x), "symbol-days", x.groupby(["symbol", "date"]).ngroups, "done", round(time.time() - t0), flush=True)
+        print(m, len(g), flush=True)
+    print("rows", nrows, "done", round(time.time() - t0), flush=True)
 
 
 if __name__ == "__main__":

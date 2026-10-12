@@ -113,8 +113,7 @@ def main():
                 continue
             row |= split_stats(dd[m], r[m]) | full_gates(dd[m], r[m], reg, N)
             row |= {"hedged_exp": round(float(np.nanmean(rh[m])), 4),
-                    "dropped_exp": round(float(r[~m].mean()), 4) if (~m).any() else np.nan,
-                    "base_exp": rows[-1 - FILTERS.index(f)]["all_exp"] if False else None}
+                    "dropped_exp": round(float(r[~m].mean()), 4) if (~m).any() else np.nan}
             rows.append(row)
     A = pd.DataFrame(rows)
     b = A[A["filter"] == "base"].set_index("name")
@@ -130,7 +129,7 @@ def main():
     A["testing_near"] = ok & (A.all_exp > 0) & (A.tr_exp > 0) & (A.va_exp > 0) & (A.all_n >= 150) & (A.regime_pass == True) \
         & (A.wf >= 0.6) & (A.all_t >= 2.0) & (A.hedged_exp > 0)
     A["improves_tr_va"] = ok & (A.tr_exp > A.base_tr_exp) & (A.va_exp > A.base_va_exp)
-    A.drop(columns=["base_exp"], errors="ignore").to_csv(HERE / "results_a.csv", index=False)
+    A.to_csv(HERE / "results_a.csv", index=False)
 
     # ---------------- Study B: crowding cap on the Testing-2 long book
     cfg = yaml.safe_load((ROOT / "config" / "account_testing2.yaml").read_text())
