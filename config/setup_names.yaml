@@ -223,3 +223,14 @@ CWT14-failbrk-pdh-p10-short:
   side: short
   what: "09:50-12:00: price pokes 0.1+ ATR over yesterday's high, then closes back under it within 3 bars; short. Fill: over the 4-per-family cap."
   account: testing2
+# ---- Testing 1, Reddit "trade liquidity" study (owner request 2026-10-12): research/bdi/reddit1012liq/NOTES.md.
+LIQ-orl-sweep-open15-s25-long:
+  name: "Opening-Range Low Sweep Reversal"
+  side: long
+  what: "From 10:05: price runs 0.15+ ATR under the 09:30-10:00 low, then within an hour a 15-minute bar closes above the open of the bar that made the sweep; buy, stop just under the sweep low, target 2.5x the risk, flat 15:55."
+  account: testing
+LIQ-pdl-sweep-open15-vwap-long:
+  name: "Prior-Day Low Sweep Reversal to VWAP"
+  side: long
+  what: "Price runs 0.05+ ATR under yesterday's low, then within an hour a 15-minute bar closes above the open of the bar that made the sweep, with VWAP at least 2R above; buy, 0.25-ATR stop, target VWAP, break-even at +1R, exit if not +0.25R within 15 minutes."
+  account: testing

@@ -261,13 +261,25 @@ def exit_geom(s, d, m0, side, e, geom):
     return r_of(s, d, side, e, [(1.0, px, kind, m)], m0)
 
 
+def stop_ok(side: int, e: float, stop: float) -> bool:
+    """A structural stop must sit beyond the entry: side * (entry - stop) > 0, and finite. Same guard as the live
+    LabStrategy structural branch (mcf/strategies/setups.py). Fix 2026-10-12 (RECHECK_1012.md): before it, a short
+    entered at or above its stop was 'stopped' on the entry minute at the stop price - below the entry - and booked
+    as a gain (mirror for longs). Such entries are now skipped (NaN -> not emitted)."""
+    return bool(np.isfinite(stop) and side * (e - stop) > 0)
+
+
 def exit_struct(s, d, m0, side, e, stop, tgt=np.nan, last=LAST):
+    if not stop_ok(side, e, stop):
+        return np.nan
     px, kind, m = sim(s, d, m0, side, stop, tgt, last)
     return r_of(s, d, side, e, [(1.0, px, kind, m)], m0)
 
 
 def exit_overnight(s, d, m0, side, e, stop):
     """Hold through the close (stop active to 16:00) to the next session's 09:35 (stop active, gap fills at open)."""
+    if not stop_ok(side, e, stop):
+        return np.nan
     px, kind, m = sim(s, d, m0, side, stop, np.nan, NM - 1)
     if kind == 1:
         return r_of(s, d, side, e, [(1.0, px, kind, m)], m0)
@@ -292,6 +304,8 @@ def exit_overnight(s, d, m0, side, e, stop):
 def exit_hold_days(s, d, m0, side, e, stop, ndays=2):
     """S2: stop active intraday on day 0 and the next `ndays` sessions (gap through it fills at the open); else the
     close of day +ndays."""
+    if not stop_ok(side, e, stop):
+        return np.nan
     px, kind, m = sim(s, d, m0, side, stop, np.nan, NM - 1)
     R = 0.25 * s.atr[d]
     if kind == 1:
@@ -315,6 +329,8 @@ def exit_hold_days(s, d, m0, side, e, stop, ndays=2):
 
 def exit_half_2r(s, d, m0, side, e, stop):
     """A3 S: half at +2 x structural risk (limit), rest with the stop moved to entry, else 15:55."""
+    if not stop_ok(side, e, stop):
+        return np.nan
     rs = abs(e - stop)
     tgt = e + side * 2 * rs
     px, kind, m = sim(s, d, m0, side, stop, tgt)
