@@ -19,8 +19,8 @@ def t_req(n):
     return max(1.5, math.sqrt(2 * math.log(n)))
 
 
-raw = pd.concat([pd.read_csv(HERE / f) for f in ("raw_daily.csv", "raw_intraday.csv") if (HERE / f).exists()],
-                ignore_index=True)
+_raws = [HERE / f for f in ("raw_daily.csv", "raw_intraday.csv") if (HERE / f).exists()]   # deleted after merging
+raw = pd.concat([pd.read_csv(p) for p in _raws], ignore_index=True) if _raws else pd.read_csv(HERE / "results.csv")
 raw.to_csv(HERE / "results.csv", index=False)
 cfg = raw[~raw.family.astype(str).str.endswith("_inst") & raw.family.notna()].drop_duplicates("id").set_index("id")
 P = raw.pivot_table(index="id", columns="split", values=["n", "exp_bps", "t", "excess_bps"], aggfunc="first", dropna=False)

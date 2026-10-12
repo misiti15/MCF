@@ -106,3 +106,111 @@ open. It was written before any package C configuration was scored. Results are 
 - **Overlays on S6:** longhold Tier A on the overlaid book (active vs EW > 0 in all three splits; monthly active t on
   train+valid >= 3.12; active > 0 in SPY-up and SPY-down months) **and** an improvement over S6: active higher in all
   three splits, or (Sharpe higher in all three splits and max drawdown on train+valid shallower).
+
+### 1.5 Amendments made while scoring (dated 2026-10-12; no grid level, count or gate changed)
+- **C8 follow-through state** (TESTPLAN amendment, before any return was scored): as written it was on 100 % of the
+  time after March 2016; distribution days were added (on-share 39 %, about 30 on/off cycles).
+- **Bug fix, intraday pieces:** the first intraday run mixed the raw (unadjusted) 1-minute cache with the adjusted
+  daily file, a systematic -2..-4 % error per trade (SPY 2024-09-17: raw 563.10 vs adjusted 548.66). Minute bars are
+  now scaled by adjusted daily close / raw last minute close of the same session (`intraday.adj_day`), and all eight
+  intraday configurations were re-run. Only the corrected numbers are reported.
+- **S6 parity:** the overlay simulator with no overlay reproduces longhold's S6 daily returns to 6e-9 (the reference
+  file is float32), monthly active t on train+valid 3.25 as in longhold.
+- **Cluster block (disclosure, verdicts unchanged):** "2 x median hold" was computed on each split's own trades
+  (median hold 4 in train+valid1 -> blocks of 8 sessions). Using the whole-sample median (3 -> blocks of 6) the C1
+  candidates' t falls to 3.12 and 2.98, under their 3.15 bar; see 2.3.
+
+## 2. Results (124 configurations = 117 + 7 S6 overlays; failures first)
+
+*Educational only - not financial advice. Backtests on daily bars (two-year 1-minute history for 8 configs), costs
+in, locked block 2024-11..2025-02 in no figure. Net bps per trade unless stated. "Excess" = minus the equal-weighted
+eligible universe over the same entry and exit (the random same-side same-window baseline).*
+
+| family (configs) | candidate | near | fail | best by train+valid1 t | why it fails |
+|---|---|---|---|---|---|
+| C2 tight base breakout (20 = 16 daily + 4 intraday) | 0 | 8 | 12 | M10 B20 w8 SMA20: +57 / +56 / -155, t 1.8 | excess vs universe -55..-137 in valid1; down months -74..-164; intraday entry -12..-28 bps (n 431-538), t < 0 |
+| C3 MA pullback (8) | 0 | 8 | 0 | SMA50 MOC 2nd close: +34 / +25 / +48, t 3.4 | all beta: excess -22..-61 in valid1, down months -51..-96, 2022 -55..-110 |
+| C4 new-high + trailing stop (12) | 0 | 10 | 2 | N252 Donchian20: +169 / +97 / +415, t 2.3 | excess negative in valid1 (-65..-286), down months negative, 2022 -219..-615; brackets ~0 |
+| C5 calendar (7) | 0 | 0 | 7 | Jan loser rebound q20: +624 / -57 / +198 (9 events) | FOMC eve: +9 / +8 / -23 (n 55/14/13), 13:55 exit n 14 -3 bps; IWM-SPY year-end 7/1/1 events, -253 in valid2; Jan rebound negative in valid1 and below the universe in valid1/valid2 |
+| C6 event AVWAP (4) | 0 | 4 | 0 | 252-high anchor, AVWAP exit: +66 / +33 / +162, t 2.8 | excess -33..-59 in valid1, down months -32..-69, 2022 -63..-130 |
+| C7 index streaks / day 3 / day 5 (10) | **1** | 4 | 5 | see 2.2 | day-3 short -24 / -22 in valid1/valid2; 3-down + 5-day hold loses -72 in down months; day 5 n 11; streak 4/5 t below bar or n < 20 |
+| C1 oversold limit dip (28) | **2** | 21 | 5 | see 2.2 | shorts (4) fail: +47..+70 in train, -18..-68 in both validations; market-open exits ~0..+30 bps; most longs miss the 3.15 bar or valid1 t 1.5 |
+| C8 regime gates on C1-C4 (12) | 0 | 9 | 3 | spy10 on C3 / C4 "improve" (+2..+25 bps each split) | the gated books still fail excess and down months; FTD and SPY>SMA200 lower C1's valid2 by 30-37 bps; spy200 on C4 is identical to C4 (it already has that filter) |
+| C9 exit / sizing overlays on C1-C4 (16) | 0 | 12 | 4 | none improves | Kidd, two-close SMA20 and Keltner cut the winners: C4 -79..-359 bps per trade, C1 -21..-106; governor mixed (-18..+63); sma20x2 on C3 is identical to C3 |
+| C8 + C9 on S6 (7) | 0 | - | 7 | Keltner: active -3..-9 %/yr vs S6 | no overlay improves S6 (2.4) |
+
+Every configuration with its fails is in `gates.csv`; every split, month class and year is in `results.csv`.
+Configurations tried: 117 daily/two-year + 7 S6 = 124 (lineage bars in 1.4). Expected false passes at a flat
+p = 0.05 would be about 6; the try-count bars are stricter than that.
+
+### 2.1 Up / down markets, walk-forward, plateau (all configs)
+- Down months (SPY bottom tercile) are where the daily long books die: 61 configurations fail the down-month gate and
+  61 fail excess <= 0, i.e. their return is market beta in a bull decade (W3's finding again). 2018 and 2022 are
+  negative for every C2, C3, C4 and C6 configuration.
+- Walk-forward month share >= 0.6 fails in 72 configurations (C2/C4/C6 sit at 0.45-0.6).
+- Plateaus: C1 longs are positive on every neighbour (+20..+116); C2 intraday, C7 day 5 have negative plateaus.
+
+### 2.2 Candidates (every gate of 1.4 passes)
+| id | rule | train | valid1 | valid2 | t tr+v1 / bar | excess tr / v1 / v2 | up / down months | 2018 / 2022 | WF | ex-best day | busiest |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **C1_L_rsi2_5_none_L5_sma5** | close > SMA200, Wilder RSI(2) < 5 -> next day buy limit 5 % below that close (fill min(open, limit)); sell at the first close > SMA5, max 5 sessions | +168 (n 1,318) | +155 (n 342, t 2.02) | +276 (n 565, t 3.62) | 4.13 / 3.15 | +142 / +111 / +183 | +244 / +180 | +57 / +51 | 0.71 | +172 | 3.7 % (2020-02-27) |
+| **C1_L_rsi3_15_none_L3_sma5** | same with RSI(3) < 15 and a 3 % limit | +88 (n 4,492) | +82 (n 1,303, t 1.69) | +208 (n 1,756, t 4.45) | 3.52 / 3.15 | +98 / +58 / +129 | +178 / +83 | +28 / -2 | 0.81 | +105 | 1.8 % |
+| **C7_streak3_upclose** | SPY, QQQ, IWM: buy the close of the 3rd consecutive down close; sell the first up close (cap 20) | +34 (n 247) | +43 (n 71, t 2.96) | +90 (n 64, t 3.43) | 3.20 / 2.15 | n/a (index) | +106 / +25 | -4 / +46 | 0.71 | +42 | 0.8 % |
+
+Tightening diagnostics (`diag.py`, `diag.csv`; not counted, can only remove):
+- 2x costs: C1 rsi2 +161 / +146 / +269 (t 2.96 on whole-sample blocks); C1 rsi3 +81 / +75 / +202; C7 +31 / +40 / +88.
+  Average cost 7-8 bps per trade (C1), 3 bps (C7): costs are not binding.
+- Top-300 names by dollar volume (less survivorship): C1 rsi2 +183 / +149 / +389; C1 rsi3 +87 / +63 / +259.
+  2016 cohort only: +179 / +169 / +252 and +85 / +97 / +190.
+- Fill type: the C1 edge is larger on gap-down fills at the open (+209..+455) than on intraday limit touches
+  (+54..+254); both are positive in every split.
+- C7 per instrument: QQQ +55 / +77 / +83 (t 3.5), SPY +28 / +46 / +88 (t 2.6), IWM +22 / +10 / +100 (t 1.4).
+
+### 2.3 Caveats (read before believing these)
+1. **The C1 candidates are a variant of a lineage that has failed the locked block twice** (W3 Connors MOO, -106 bps,
+   look 1; sat1010 VIX-filtered rework, -103 bps, look 2). A limit 3-5 % below the close is the same "buy the
+   oversold dip in an uptrend" bet, so they would be **look 3: t >= 2.0** there. Their valid1 t is 2.02 / 1.69 and
+   2022 is flat at best.
+2. **Cluster-block fragility (C1):** train+valid1 t over blocks of 1/2/4/6/8/10/20 sessions: rsi2-L5 3.46 / 3.35 /
+   3.27 / 3.12 / 4.13 / 3.76 / 3.98; rsi3-L3 3.70 / 3.30 / 3.12 / 2.98 / 3.52 / 3.34 / 3.09 (monthly clusters 3.76 /
+   3.15). The bar is 3.15, so rsi3-L3 is a pass only under the declared block and is a marginal candidate. C7 is
+   stable: 3.07-3.52 against 2.15.
+3. **Survivorship:** today's liquid list applied back to 2016, no delistings. Buying deep dips is the trade that
+   survivorship flatters most; the top-300 and 2016-cohort checks keep the sign but cannot remove the bias.
+4. **C7 is small and correlated:** 382 trades on three highly correlated ETFs (about 38 a year), 1.7-day average hold;
+   IWM alone is weak (t 1.4). Index streak buying is old public knowledge.
+5. 2x the plan's cost does not change any verdict, but limit fills on the touch are optimistic for queue position
+   (a limit order at the low of the day may not fill); the gap-fill share (10-13 % of trades) carries a larger part of
+   the C1 edge than its count.
+
+### 2.4 Does any overlay improve S6 (`s6_overlays.py`, `s6_gates.csv`)? **No.**
+S6 base (longhold split): active vs EW +26.8 / +24.8 / +60.9 %/yr, Sharpe 1.37 / 1.10 / 1.53, maxDD train+valid -44 %.
+
+| overlay | active train / valid / valid2 (%/yr) | change vs S6 | Sharpe change | maxDD tr+v | t (bar 3.12) |
+|---|---|---|---|---|---|
+| C8 SPY > SMA200 (to cash) | +13.7 / +5.9 / +42.8 | -13 / -19 / -18 | -0.07 / -0.43 / -0.16 | -33 % | 1.12 |
+| C8 SPY > SMA10 | -1.4 / +0.1 / +40.9 | -28 / -25 / -20 | -0.55 / -0.52 / +0.28 | -30 % | -0.09 |
+| C8 follow-through state | +0.3 / +9.3 / +2.4 | -27 / -16 / -58 | -0.24 / -0.05 / -0.38 | -21 % | 0.69 |
+| C9 two closes < SMA20 | +14.6 / -0.4 / +23.1 | -12 / -25 / -38 | +0.32 / -0.46 / -0.08 | -33 % | 0.91 |
+| C9 Kidd 8/21 EMA | +9.8 / -6.0 / +11.2 | -17 / -31 / -50 | +0.20 / -0.68 / -0.35 | -34 % | 0.27 |
+| C9 Keltner 3-ATR target | +22.0 / +21.9 / +52.1 | -5 / -3 / -9 | -0.10 / -0.05 / -0.12 | -44 % | 2.83 |
+| C9 equity-curve governor (20 weeks) | +22.7 / +9.4 / +51.5 | -4 / -15 / -9 | +0.18 / -0.35 / +0.15 | -30 % | 2.04 |
+
+Every overlay lowers the active return in all three splits; the regime gates and the governor make drawdowns
+shallower (-21..-33 % vs -44 %) but at a larger cost in return than they save, and none raises Sharpe in all three
+splits. This agrees with sat1010's crash-guard reworks (18 guards, all lowered S6's t). S6 stays as it is.
+
+## 3. For the lead
+- One-time locked scoring (not run by this worker): `python research/bdi/cwt/test_c/score_locked.py` (dry run with
+  `--dry-run` writes nothing and sees no locked row). It scores trades entered 2024-11-01..2025-02-28 with the same
+  code and costs, and applies look 3 (t >= 2.0) to the two C1 rows and look 1 (t >= 1.0) to C7. Recommendation under
+  "at most one per lineage": **C1_L_rsi2_5_none_L5_sma5** (higher and more stable t than rsi3-L3) and
+  **C7_streak3_upclose**.
+- Live needs: like W3/longhold, a daily job outside market hours (signals after the close, next-day limit/GTC-day buy
+  orders for C1, MOC orders for C7 entries and exits), positions exempt from the 15:55 flatten, its own paper account.
+  Nothing in config/ or mcf/ was changed; no Testing YAML is staged (the intraday runner cannot hold overnight).
+
+## 4. Files
+`common.py` (data, engine, statistics), `families.py` (C1-C9 daily), `intraday.py` (C2 intraday, C5a 13:55, C7 day 5),
+`s6_overlays.py`, `evaluate.py` -> `gates.csv` / `results.csv`, `diag.py` -> `diag.csv`, `score_locked.py` (lead),
+`raw_s6.csv` / `s6_gates.csv`. `data/` (git-ignored parquet, about 33 MB): trades.

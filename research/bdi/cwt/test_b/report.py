@@ -140,5 +140,60 @@ def main():
         print(df.sort_values("t", ascending=False)[cols].head(40).to_string(index=False))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and len(sys.argv) == 1:
     main()
+
+
+FAM_TITLE = {"B1": "CWT04 Backside lower-high short", "B2": "CWT13 Stretched-from-VWAP fade (ATR-gated)",
+             "B3": "CWT14 Failed breakout / stop-run reversal", "B4": "CWT12 Intraday flag / coil breakout",
+             "B5": "CWT05 Panic flush V-reversal long", "B6": "CWT46 Afternoon breakout in a strong mover",
+             "B7": "CWT11 VWAP trend pullback (untested variants)"}
+
+
+def fmt(x, nd=3):
+    if x is None or (isinstance(x, float) and not np.isfinite(x)):
+        return "-"
+    return f"{x:+.{nd}f}" if isinstance(x, float) else str(x)
+
+
+def write_md():
+    d = pd.read_csv(HERE / "results.csv")
+    meta = json.load(open(DATA / "baseline.json"))
+    L = ["# CWT package B - results (all 368 configurations, failures first)", "",
+         "*Educational only - not financial advice. Backtest on the open two-year history (426 sessions, locked block "
+         "2024-11..2025-02 never loaded), production + time-of-day costs, x3 extended tier. Not paper, not live.*", "",
+         f"Lab-geometry re-simulation vs the frames' r_* columns: {meta['parity_mean']:.5f} of sampled rows agree (min month "
+         f"{meta['parity_min']:.5f}); head/tail rows vs frames at shared bars: close/high/VWAP 100% within 0.1%.", "",
+         "## Per family", "",
+         "| family | configs | exp > 0 | best t (n >= 30) | t bar family / lineage (N) | probation bar | verdict |",
+         "|---|---|---|---|---|---|---|"]
+    for f, g in d.groupby("fam"):
+        g30 = g[g.n >= 30]
+        b = g30.sort_values("t", ascending=False).iloc[0] if len(g30) else None
+        best = f"{b['name']} n {int(b['n'])} exp {b['exp']:+.3f} t {b['t']:.2f}" if b is not None else "-"
+        L.append(f"| {f} {FAM_TITLE[f]} | {len(g)} | {int((g.exp > 0).sum())} | {best} | {g.t_req_family.iloc[0]} / "
+                 f"{g.t_req_lineage.iloc[0]} ({int(g.N_lineage.iloc[0])}) | {int(g.probation.sum())} pass | FAILED |")
+    L += ["", "Round-as-one-lineage bar (1,051 configurations): t >= 3.73; package B alone (368): t >= 3.44. "
+          "No configuration reaches either.", "",
+          "## Every configuration", "",
+          "Sorted: retire, then rework (no keep exists), then by t. exp in R (0.25 x daily ATR) after costs; base = random "
+          "same-side same-window bar (one per symbol-day, same exit; S exits vs hold-to-15:55 with a 1R stop); hedged = "
+          "minus beta60 x SPY over the same bars, SPY costs in; maxday = busiest session's share of trades; "
+          "fomc = FOMC-week sessions (reporting only).", "",
+          "| config | n | win | exp | t | up | flat | down | WF+ | plateau | ex-best | maxday | hedged (t) | base | fomc (n) | med tod | verdict |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    d["vo"] = d.verdict.map({"retire": 0, "rework": 1, "keep": 2})
+    for _, r in d.sort_values(["vo", "t"]).iterrows():
+        if not r["n"] or r["n"] < 2:
+            L.append(f"| {r['name']} | {int(r['n'])} | - | - | - | - | - | - | - | - | - | - | - | - | - | - | {r['verdict']} |")
+            continue
+        L.append(f"| {r['name']} | {int(r['n'])} | {r['win_rate']:.3f} | {fmt(r['exp'])} | {r['t']:.2f} | {fmt(r['up_exp'])} | "
+                 f"{fmt(r['flat_exp'])} | {fmt(r['down_exp'])} | {fmt(r['wf_share'], 2) if pd.notna(r['wf_share']) else '-'} | "
+                 f"{fmt(r['plateau_mean'])} | {fmt(r['ex_best_day'])} | {r['maxday_share']:.3f} | {fmt(r['hedged_exp'])} "
+                 f"({r['hedged_t'] if pd.notna(r['hedged_t']) else '-'}) | {fmt(r['base_exp'])} | {fmt(r['fomc_wk_exp'])} "
+                 f"({int(r['fomc_wk_n'])}) | {int(r['tod_med'])} | {r['verdict']} |")
+    (HERE / "RESULTS.md").write_text("\n".join(L) + "\n")
+
+
+if __name__ == "__main__" and len(sys.argv) > 1 and sys.argv[1] == "md":
+    write_md()
