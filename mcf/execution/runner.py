@@ -58,7 +58,14 @@ class PaperRunner:
         # this a second setup firing on the same symbol in the same poll passed "already in symbol" (2026-10-08:
         # EDV x4, GDXJ x3, KMI x3, SHW x2, ARKK x2 stacked).
         self.pending: dict[str, float] = {}
-        self.managed: dict[str, dict] = {}   # symbol -> trade-management state (time stop / breakeven / trail)
+        # trade-management state (time stop / breakeven / trail): keyed by symbol when max_lots_per_symbol is 1, by lot
+        # (symbol, setup) when lots stack, so a stop move or time-stop exit only ever touches that lot's own orders.
+        self.managed: dict = {}
+        # Per-lot stacking (owner 2026-10-13, live.max_lots_per_symbol; 1 = one position per symbol, the old behaviour).
+        # symbol -> setup -> {side, qty, order_id, coid}: every open or pending lot (one setup's own bracket).
+        self.max_lots = self.risk.max_lots
+        self.lots: dict[str, dict[str, dict]] = {}
+        self._fill_px: dict[str, float] = {}   # broker order id -> parent fill price (restart: per-lot entry price)
         # Testing-account flags (owner 2026-10-13, research/bdi/longs1013 Q3 Mf / Ma); both off in config/default.yaml.
         # retry_after_release: a market entry skipped "already in symbol" may take the setup's next FRESH signal on
         # that symbol (latest bar, later than the blocked one) once the holder's position has closed; once per
@@ -84,11 +91,15 @@ class PaperRunner:
             if r.status in ("submitted", "dry_run"):
                 self.fired.add((r.symbol, r.strategy))
                 self.open_strategy[r.symbol] = r.strategy
+                self.lots.setdefault(r.symbol, {})[r.strategy] = {
+                    "side": int(r.side), "qty": int(r.qty or 0), "order_id": r.broker_order_id,
+                    "coid": f"{COID_PREFIX}{r.strategy}-{r.symbol}-{pd.Timestamp(str(today)):%Y%m%d}"}
         self.risk.state.trades_today = int((sig.status == "submitted").sum()) if len(sig) else 0
         if self.retry_after_release:
             self._restore_blocked(sig)
         if not self.dry_run:
             self._restore_from_broker(today)
+            self._restore_lots()
             self._restore_management()
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
@@ -101,13 +112,26 @@ class PaperRunner:
             key = (r.symbol, r.strategy)
             if '"retry_after_release": true' in str(getattr(r, "info", "") or ""):
                 self.blocked[key] = {"bar": int(r.bar_index), "done": True}
-            elif r.status == "skipped" and r.reason == "already in symbol" and r.entry_type == "market":
-                self.blocked.setdefault(key, {"bar": int(r.bar_index), "done": False})
+            elif r.status == "skipped" and r.reason in self._retry_reasons() and r.entry_type == "market":
+                self.blocked.setdefault(key, {"bar": int(r.bar_index), "done": False, "side": int(r.side)})
+
+    def _retry_reasons(self) -> tuple[str, ...]:
+        """Blocks that retry_after_release may lift: the symbol held (one lot per symbol), or with stacked lots only an
+        opposite-side holder or the lot cap."""
+        return ("already in symbol",) if self.max_lots <= 1 else ("opposite side held", "lot cap")
 
     def _retry_ready(self, key: tuple[str, str]) -> bool:
         """A blocked setup may look for one fresh signal once the symbol is no longer held (nor pending) by MCF."""
         b = self.blocked.get(key) if self.retry_after_release else None
-        return bool(b) and not b["done"] and key[0] not in self.risk.state.open_symbols and key[0] not in self.pending
+        if not b or b["done"]:
+            return False
+        if key[0] not in self.risk.state.open_symbols and key[0] not in self.pending:
+            return True
+        if self.max_lots <= 1:
+            return False
+        lots = self.lots.get(key[0]) or {}     # stacked lots: room under the cap and every holder on the blocked side
+        return bool(lots) and len(lots) < self.max_lots and b.get("side") is not None and \
+            all(lot["side"] == b["side"] for lot in lots.values())
 
     def _restore_from_broker(self, today):
         """The broker is the source of truth for what MCF holds: the journal on the state branch can lag a
@@ -122,6 +146,10 @@ class PaperRunner:
             self.journal.signals(self.run_id, str(today)).broker_order_id.dropna())
         added = 0
         for o in orders:
+            if o.filled_avg_price:
+                self._fill_px[str(o.id)] = float(o.filled_avg_price)
+            if (o.client_order_id or "").endswith("-x"):
+                continue   # a lot's own exit order (prefix-setup-symbol-date-x), not an entry
             try:
                 strategy, symbol, _ = o.client_order_id[len(COID_PREFIX):].rsplit("-", 2)
             except ValueError:
@@ -131,9 +159,12 @@ class PaperRunner:
             self.seen.add((symbol, strategy))
             self.fired.add((symbol, strategy))
             self.open_strategy.setdefault(symbol, strategy)
+            side = 1 if str(getattr(o.side, "value", o.side)).lower() == "buy" else -1
+            self.lots.setdefault(symbol, {}).setdefault(strategy, {})
+            self.lots[symbol][strategy].update(side=side, order_id=str(o.id), coid=o.client_order_id,
+                                               qty=int(float(getattr(o, "filled_qty", None) or o.qty or 0)))
             if str(o.id) in known:
                 continue
-            side = 1 if str(getattr(o.side, "value", o.side)).lower() == "buy" else -1
             stop = next((float(l.stop_price) for l in (o.legs or []) if getattr(l, "stop_price", None)), float("nan"))
             tgt = next((float(l.limit_price) for l in (o.legs or []) if getattr(l, "limit_price", None)), None)
             ref = float(o.filled_avg_price) if o.filled_avg_price else float("nan")
@@ -142,6 +173,22 @@ class PaperRunner:
             added += 1
         if added:
             print(f"restored {added} MCF orders from the broker that the journal had not saved yet")
+
+    def _restore_lots(self):
+        """Open lots after a restart = today's entries whose journal order is not closed yet (reconcile closes a lot's
+        order when its exit is paired; a symbol no longer held drops all its lots in _sync_open)."""
+        try:
+            orders = self.journal.open_orders(self.run_id)
+        except Exception as e:
+            print(f"lot restore skipped: {e}")
+            return
+        open_ids = set(orders.broker_order_id.astype(str))
+        for sym in list(self.lots):
+            for strat, lot in list(self.lots[sym].items()):
+                if lot.get("order_id") is None or str(lot["order_id"]) not in open_ids:
+                    self.lots[sym].pop(strat)
+            if not self.lots[sym]:
+                self.lots.pop(sym)
 
     def _restore_management(self):
         """Re-arm time stops / breakeven / trailing for MCF positions still open after a restart."""
@@ -153,6 +200,8 @@ class PaperRunner:
         except Exception as e:
             print(f"management restore skipped: {e}")
             return
+        if self.max_lots > 1:
+            return self._restore_lot_management(by_name, keys, held, orders)
         for sym, strat in self.open_strategy.items():
             st = by_name.get(strat)
             if sym not in held or st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
@@ -170,6 +219,30 @@ class PaperRunner:
         if self.managed:
             print(f"re-armed trade management for {len(self.managed)} open positions")
 
+    def _restore_lot_management(self, by_name, keys, held, orders):
+        """Stacked lots: one management state per lot, entry = that lot's own parent fill (the broker position's
+        average price blends every lot on the symbol)."""
+        for sym, lots in self.lots.items():
+            if sym not in held:
+                continue
+            for strat, lot in lots.items():
+                st = by_name.get(strat)
+                if st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
+                    continue
+                rec = orders[(orders.symbol == sym) & (orders.strategy == strat)].tail(1)
+                if rec.empty:
+                    continue
+                rec = rec.iloc[0]
+                entry = self._fill_px.get(str(rec.broker_order_id)) or float(rec.entry_ref)
+                m = {"side": int(rec.side), "entry": entry, "risk": abs(entry - float(rec.stop)), "stop": float(rec.stop),
+                     "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0, "coid": lot.get("coid"),
+                     **{k: st.params.get(k) for k in keys}}
+                m["trail_after_r"] = m["trail_after_r"] or 1.0
+                m["time_stop_min_r"] = m["time_stop_min_r"] or 0.0
+                self.managed[(sym, strat)] = m
+        if self.managed:
+            print(f"re-armed trade management for {len(self.managed)} open lots")
+
     def _mcf_symbols(self) -> set[str]:
         return set(self.open_strategy)
 
@@ -180,10 +253,20 @@ class PaperRunner:
         now = _time.time()
         self.pending = {s: t0 for s, t0 in self.pending.items() if s not in held and now - t0 < self.PENDING_GRACE_S}
         self.risk.state.open_symbols = (held | set(self.pending)) & self._mcf_symbols()
+        for sym in [s for s in self.lots if s not in self.risk.state.open_symbols]:
+            self.lots.pop(sym)                        # flat and nothing pending: every lot on it is closed
         counts: dict[str, int] = {}
-        for sym in self.risk.state.open_symbols:
-            st = self.open_strategy.get(sym)
-            counts[st] = counts.get(st, 0) + 1
+        if self.max_lots <= 1:
+            for sym in self.risk.state.open_symbols:
+                st = self.open_strategy.get(sym)
+                counts[st] = counts.get(st, 0) + 1
+            self.risk.state.lots = {}
+        else:                                         # slots and per-setup caps count lots
+            self.risk.state.lots = {sym: [(st, lot["side"]) for st, lot in self.lots.get(sym, {}).items()]
+                                    for sym in self.risk.state.open_symbols}
+            for sym, lots in self.risk.state.lots.items():
+                for st in [x for x, _ in lots] or [self.open_strategy.get(sym)]:
+                    counts[st] = counts.get(st, 0) + 1
         self.risk.state.open_by_strategy = counts
 
     # ---------------------------------------------------------------- data
@@ -262,9 +345,11 @@ class PaperRunner:
         if not self.managed or self.dry_run:
             return
         held = set(self.broker.positions())
-        for sym, m in list(self.managed.items()):
-            if sym not in held:
-                self.managed.pop(sym)
+        for key, m in list(self.managed.items()):
+            lot = isinstance(key, tuple)              # (symbol, setup) when lots stack
+            sym = key[0] if lot else key
+            if sym not in held or (lot and key[1] not in self.lots.get(sym, {})):
+                self.managed.pop(key)
                 continue
             b = bars.get(sym)
             if b is None or b.empty or m["risk"] <= 0:
@@ -276,6 +361,9 @@ class PaperRunner:
             m["best"] = max(m["best"], m["side"] * (fav - m["entry"]) / m["risk"])
             mins = (now - m["t0"]).total_seconds() / 60
             if m["time_stop_min"] and mins >= m["time_stop_min"] and m["best"] < m["time_stop_min_r"]:
+                if lot:
+                    self._lot_time_stop(key, m, mins)
+                    continue
                 try:
                     if not self.broker.close_mcf_position(sym, COID_PREFIX):
                         raise RuntimeError("close not confirmed")
@@ -292,11 +380,29 @@ class PaperRunner:
                 new = max(new, tr) if m["side"] == 1 else min(new, tr)
             if m["side"] * (new - m["stop"]) > 0.005:
                 try:
-                    self.broker.move_stop(sym, round(new, 2), COID_PREFIX)
+                    if lot:
+                        self.broker.move_lot_stop(sym, m["coid"], round(new, 2), COID_PREFIX)
+                    else:
+                        self.broker.move_stop(sym, round(new, 2), COID_PREFIX)
                     print(f"STOP {sym} {m['stop']:.2f} -> {new:.2f} (best {m['best']:.2f}R)")
                     m["stop"] = new
                 except Exception as e:
                     print(f"move stop {sym} failed: {e}")
+
+    def _lot_time_stop(self, key, m, mins):
+        """Time stop for ONE lot: cancel its own legs and close exactly its quantity; other lots keep theirs."""
+        sym, strat = key
+        try:
+            ok = self.broker.close_mcf_lot(sym, m["coid"], COID_PREFIX)
+        except Exception as e:
+            print(f"time stop {sym}/{strat} failed: {e}")
+            ok = False
+        if not ok:
+            print(f"time stop {sym}/{strat} not confirmed; retrying next poll")
+            return
+        print(f"TIME STOP {sym}/{strat}: {mins:.0f} min, best {m['best']:.2f}R")
+        self.managed.pop(key, None)
+        self.lots.get(sym, {}).pop(strat, None)
 
     def step(self, now: pd.Timestamp):
         today = now.date()
@@ -403,8 +509,10 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
-            if held and self.retry_after_release and sig.entry_type == "market":
-                self.blocked.setdefault(key, {"bar": int(sig.bar_index), "done": False})
+            if why in ("opposite side held", "lot cap"):
+                held = {"held_by": list(self.lots.get(sig.symbol, {}))}      # every lot holding the symbol
+            if held and why in self._retry_reasons() and self.retry_after_release and sig.entry_type == "market":
+                self.blocked.setdefault(key, {"bar": int(sig.bar_index), "done": False, "side": int(sig.side)})
             return self._log(sig, "skipped", why, px, now, held)
         ok, why, info = self._realism(sig, ctx, px)
         if not ok:
@@ -421,6 +529,8 @@ class PaperRunner:
         if self.dry_run:
             self.fired.add(key)
             self.open_strategy[sig.symbol] = sig.strategy
+            self.lots.setdefault(sig.symbol, {})[sig.strategy] = {"side": sig.side, "qty": qty, "order_id": None,
+                                                                   "coid": coid}
             print(f"DRY {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f} {info}")
             return self._log(sig, "dry_run", "dry run", px, now, info, qty)
         try:
@@ -432,14 +542,20 @@ class PaperRunner:
         self.risk.state.trades_today += 1
         self.risk.state.open_symbols.add(sig.symbol)
         self.open_strategy[sig.symbol] = sig.strategy
+        self.lots.setdefault(sig.symbol, {})[sig.strategy] = {"side": sig.side, "qty": qty, "order_id": str(o.id),
+                                                               "coid": coid}
         self._sync_open()
         self.journal.record_order(self.run_id, sig.symbol, sig.strategy, sig.side, qty, px, sig.stop,
                                   sig.target, str(o.id), "submitted", json.dumps(info, default=str))
         if sig.be_at_r is not None or sig.trail_r is not None or sig.time_stop_min:
-            self.managed[sig.symbol] = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": sig.stop,
-                                        "t0": now, "be_at_r": sig.be_at_r, "trail_r": sig.trail_r,
-                                        "trail_after_r": sig.trail_after_r, "time_stop_min": sig.time_stop_min,
-                                        "time_stop_min_r": sig.time_stop_min_r, "best": 0.0}
+            m = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": sig.stop,
+                 "t0": now, "be_at_r": sig.be_at_r, "trail_r": sig.trail_r,
+                 "trail_after_r": sig.trail_after_r, "time_stop_min": sig.time_stop_min,
+                 "time_stop_min_r": sig.time_stop_min_r, "best": 0.0}
+            if self.max_lots <= 1:
+                self.managed[sig.symbol] = m
+            else:
+                self.managed[(sig.symbol, sig.strategy)] = {**m, "coid": coid}
         self._log(sig, "submitted", "ok", px, now, info, qty, str(o.id))
         print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}")
 
@@ -517,11 +633,52 @@ class PaperRunner:
         from .reconcile import reconcile_day
 
         trades = reconcile_day(self.broker, self.journal, self.run_id, day, self.cfg)
+        self._excursions(trades)
         self.journal.add_trades(self.run_id, trades)
+        self._release_closed_lots()
         if len(trades):
             today = trades[trades["date"] == str(day)]   # late-recovered trades of earlier sessions don't count today
             self.risk.state.realized_r += float(today["r_multiple"].sum())
             print(f"reconciled {len(trades)} trades for {day}")
+
+    def _release_closed_lots(self):
+        """A lot is released once reconcile has paired its exit (journal order closed) or found it never filled."""
+        if not self.lots:
+            return
+        try:
+            open_ids = set(self.journal.open_orders(self.run_id).broker_order_id.astype(str))
+        except Exception as e:
+            print(f"lot release skipped: {e}")
+            return
+        changed = False
+        for sym in list(self.lots):
+            for strat, lot in list(self.lots[sym].items()):
+                if lot.get("order_id") is not None and str(lot["order_id"]) not in open_ids:
+                    self.lots[sym].pop(strat)
+                    changed = True
+            if not self.lots[sym]:
+                self.lots.pop(sym)
+        if changed:
+            self._sync_open()
+
+    def _excursions(self, trades: pd.DataFrame):
+        """MFE / MAE in R for each journaled trade (one row per lot), from the 1-minute bars between its entry and exit."""
+        for i, r in trades.iterrows() if len(trades) else []:
+            try:
+                b = self.bars.get(r["symbol"])
+                risk = abs(float(r["entry"]) - float(r["stop"]))
+                if b is None or b.empty or not risk or np.isnan(risk):
+                    continue
+                t0 = pd.Timestamp(r["entry_time"]).tz_convert(NY).floor("1min")
+                seg = b[(b.index >= t0) & (b.index <= pd.Timestamp(r["exit_time"]).tz_convert(NY))]
+                if seg.empty:
+                    continue
+                side, e = int(r["side"]), float(r["entry"])
+                hi, lo = float(seg["high"].max()), float(seg["low"].min())
+                trades.at[i, "mfe_r"] = side * ((hi if side == 1 else lo) - e) / risk
+                trades.at[i, "mae_r"] = side * ((lo if side == 1 else hi) - e) / risk
+            except Exception:
+                continue
 
     def what_if(self, day):
         """Simulate every signal NOT taken (shadow / skipped) on the full day's bars, with backtest costs,

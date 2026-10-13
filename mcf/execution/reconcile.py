@@ -28,7 +28,11 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
     rows = []
     for _, rec in orders.iterrows():
         parent = by_id.get(rec.broker_order_id)
-        if parent is None or parent.filled_avg_price is None:
+        if parent is None:
+            continue
+        if parent.filled_avg_price is None:
+            if _state(parent) in DEAD and not float(getattr(parent, "filled_qty", 0) or 0):
+                journal.update_order_status(rec.broker_order_id, "expired")   # never filled: not a lot, not a trade
             continue
         entry = float(parent.filled_avg_price)
         qty = int(float(parent.filled_qty))
@@ -37,11 +41,23 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
             if leg.filled_avg_price is not None:
                 exit_px, exit_t = float(leg.filled_avg_price), leg.filled_at
                 reason = "target" if getattr(leg.order_type, "value", leg.order_type) == "limit" else "stop"
+        pcoid = str(getattr(parent, "client_order_id", "") or "")
+        if exit_px is None and pcoid:
+            # a lot-specific exit (time stop with stacked lots): its client id is <parent client id>-x
+            own = next((o for o in by_id.values() if getattr(o, "client_order_id", None) == pcoid + "-x"
+                        and o.filled_avg_price is not None), None)
+            if own is not None:
+                exit_px, exit_t, reason = float(own.filled_avg_price), own.filled_at, "timestop"
         if exit_px is None:
-            # closed by the flatten -> the market close order for this symbol
+            # closed by the flatten -> the market close order for this symbol. With stacked lots, never another lot's
+            # entry (same side) or another lot's own exit (-x): each remaining lot gets the flatten fill, its own qty.
             for o in by_id.values():
+                ocoid = str(getattr(o, "client_order_id", "") or "")
+                oside = _side(o)
                 if (o.symbol == rec.symbol and o.filled_at and o.filled_at > parent.filled_at
-                        and str(o.id) != rec.broker_order_id and o.filled_avg_price is not None):
+                        and str(o.id) != rec.broker_order_id and o.filled_avg_price is not None
+                        and not (oside is not None and oside == _side(parent))
+                        and not (ocoid.endswith("-x") and ocoid != pcoid + "-x")):
                     exit_px, exit_t = float(o.filled_avg_price), o.filled_at
         if exit_px is None:
             continue  # still open
@@ -61,6 +77,18 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         ))
         journal.update_order_status(rec.broker_order_id, "closed")
     return pd.DataFrame(rows)
+
+
+DEAD = {"canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced"}
+
+
+def _state(o) -> str:
+    return str(getattr(getattr(o, "status", ""), "value", getattr(o, "status", ""))).lower()
+
+
+def _side(o):
+    s = getattr(o, "side", None)
+    return None if s is None else str(getattr(s, "value", s)).lower()
 
 
 def _et_date(ts, day) -> str:

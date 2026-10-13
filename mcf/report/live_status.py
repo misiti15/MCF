@@ -54,7 +54,9 @@ def build_status(runner, now, phase: str) -> dict:
         for sym, p in runner.broker.positions().items():
             if sym not in runner.open_strategy:
                 continue  # not MCF's
-            positions.append({"symbol": sym, "strategy": runner.open_strategy.get(sym), "side": str(p.side).split(".")[-1].lower(),
+            lots = getattr(runner, "lots", {}).get(sym) or {}
+            positions.append({"symbol": sym, "strategy": ",".join(lots) if lots else runner.open_strategy.get(sym),
+                              "lots": len(lots) or 1, "side": str(p.side).split(".")[-1].lower(),
                               "qty": _f(p.qty, 0), "entry": _f(p.avg_entry_price), "last": _f(p.current_price),
                               "upl": _f(p.unrealized_pl)})
     counts = sig["status"].value_counts().to_dict() if len(sig) else {}

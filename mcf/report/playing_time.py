@@ -70,7 +70,7 @@ def classify(status: str, reason: str | None) -> str:
         return "window"
     if s == "rejected":
         return "rejected"
-    if r.startswith("already in symbol"):
+    if r.startswith("already in symbol") or r.startswith("opposite side held") or r.startswith("lot cap"):
         return "held_by_other"
     if r.startswith("max concurrent positions"):
         return "slots_full"
@@ -187,6 +187,8 @@ def attribute(sig: pd.DataFrame) -> pd.DataFrame:
         if not h:
             prior = taken[(taken["symbol"] == r["symbol"]) & (taken["day"].astype(str) == str(r["day"])) & (taken["id"] < r["id"])]
             h = prior["strategy"].iloc[-1] if len(prior) else None
+        if isinstance(h, (list, tuple)):          # stacked lots: every setup holding the symbol, comma-joined
+            h = ",".join(str(x) for x in h)
         s.at[i, "held_by"] = h or "unknown"
     return s
 
@@ -257,6 +259,12 @@ def _verdict(n_sig, n_taken, held, sessions, per_day_exp) -> tuple[str, str]:
     return "ok", f"{pace:.1f} entries/week"
 
 
+def _holders(h: pd.Series) -> pd.Series:
+    """held_by values, one per holding setup (stacked lots log several, comma-joined)."""
+    h = h.dropna().astype(str)
+    return h.str.split(",").explode().str.strip() if len(h) else h
+
+
 def _rows(s: pd.DataFrame, tr: pd.DataFrame, sessions_by_setup: dict[str, int], rank: dict[str, int],
           expected: dict[str, dict], wi: pd.DataFrame | None = None) -> list[dict]:
     rows = []
@@ -266,9 +274,10 @@ def _rows(s: pd.DataFrame, tr: pd.DataFrame, sessions_by_setup: dict[str, int], 
         n_sess = max(int(sessions_by_setup.get(st, 0)), 1)
         counts = g["bucket"].value_counts().to_dict() if len(g) else {}
         skipped = {b: int(counts.get(b, 0)) for b in BUCKETS if b != "taken" and counts.get(b)}
-        lost = g[g["bucket"] == "held_by_other"]["held_by"].value_counts().to_dict() if len(g) else {}
+        holders = _holders(g[g["bucket"] == "held_by_other"]["held_by"]) if len(g) else pd.Series(dtype=object)
+        lost = holders.value_counts().to_dict() if len(holders) else {}
         higher = sum(v for k, v in lost.items() if rank.get(k, 999) < rank.get(st, 999))
-        took = int((s["held_by"] == st).sum()) if len(s) else 0
+        took = int((_holders(s["held_by"]) == st).sum()) if len(s) else 0
         n_sig, n_taken = int(len(g)), int(counts.get("taken", 0))
         n_trades = int((tr["strategy"] == st).sum()) if len(tr) else 0
         e = expected.get(st) or {}

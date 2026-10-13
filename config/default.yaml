@@ -347,3 +347,8 @@ live:
   # longs_first_on_ties: setups firing on one symbol in the same poll are tried longs first, then by setup_order.
   retry_after_release: false
   longs_first_on_ties: false
+  # Per-lot stacking (owner 2026-10-13): a lot = one setup's own bracket order on a symbol. 1 = one MCF position per
+  # symbol (a second setup is skipped "already in symbol"). N > 1: up to N setups may each hold a lot on the same symbol,
+  # SAME side only ("opposite side held" / "lot cap" otherwise); every lot keeps its own stop/target legs, trade
+  # management and journal row; slots and max positions count lots. A setup never stacks on itself.
+  max_lots_per_symbol: 3   # per-lot stacking, all accounts (owner 2026-10-13); 1 = one position per symbol
