@@ -1,0 +1,161 @@
+{
+ "date": "2026-10-13",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 18,
+  "win_rate": 0.5,
+  "exp_r": -0.194,
+  "total_r": -3.5,
+  "pnl": -95.39,
+  "stop_exit_share": 0.444,
+  "pnl_adj": -101.67,
+  "slip_bps": 11.4
+ },
+ "yesterday": {
+  "trades": 22,
+  "win_rate": 0.727,
+  "exp_r": 0.37,
+  "total_r": 8.15,
+  "pnl": 117.93,
+  "stop_exit_share": 0.182,
+  "pnl_adj": 115.77,
+  "slip_bps": 1.5
+ },
+ "rolling5": {
+  "exp_r": -0.073,
+  "win_rate": 0.444,
+  "pnl": -124.736,
+  "slip_bps": 1.86,
+  "stop_exit_share": 0.354
+ },
+ "rolling20": {
+  "exp_r": -0.073,
+  "win_rate": 0.444,
+  "pnl": -124.736,
+  "slip_bps": 1.86,
+  "stop_exit_share": 0.354
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": true,
+  "slip_bps": false,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "MF1-945-flowsell-vwapup": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.223,
+   "total_r": -1.22,
+   "pnl": -18.54,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -19.6,
+   "slip_bps": 0.3
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.033,
+   "total_r": -1.03,
+   "pnl": -16.43,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -17.49,
+   "slip_bps": 4.2
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.688,
+   "total_r": 0.69,
+   "pnl": 9.52,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 9.52,
+   "slip_bps": 11.7
+  },
+  "MF4-h40-open-flowsell": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.198,
+   "total_r": 0.2,
+   "pnl": 6.27,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 6.27,
+   "slip_bps": 34.9
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "trades": 5,
+   "win_rate": 0.6,
+   "exp_r": 0.089,
+   "total_r": 0.44,
+   "pnl": 24.28,
+   "stop_exit_share": 0.4,
+   "pnl_adj": 23.92,
+   "slip_bps": 4.8
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.134,
+   "total_r": 0.13,
+   "pnl": 3.9,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 3.9,
+   "slip_bps": 38.4
+  },
+  "NS2-sma50break-overbought-short": {
+   "trades": 7,
+   "win_rate": 0.429,
+   "exp_r": -0.23,
+   "total_r": -1.61,
+   "pnl": -91.8,
+   "stop_exit_share": 0.429,
+   "pnl_adj": -95.18,
+   "slip_bps": 13.0
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.093,
+   "total_r": -1.09,
+   "pnl": -12.59,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -13.01,
+   "slip_bps": 1.1
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "already in symbol",
+   "signals": 2,
+   "whatif_exp_r": -1.056,
+   "whatif_total_r": -2.11,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 5,
+   "whatif_exp_r": -0.546,
+   "whatif_total_r": -2.73,
+   "verdict": "rule saved R today"
+  }
+ ],
+ "signals": {
+  "submitted": 18,
+  "skipped": 7
+ },
+ "health": {
+  "polls": 10,
+  "last_poll_s": 7.8,
+  "symbols_last_bar": 3735,
+  "last_bar": "15:53",
+  "earnings_excluded": 92,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "flatten_failed": []
+ },
+ "findings": [
+  "Entry slippage averaged 11.4 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency."
+ ]
+}
