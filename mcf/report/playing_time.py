@@ -20,6 +20,12 @@ config/validation.json / 62 sessions. These are lab rates on the two-year histor
 per symbol-day, no competition from other setups, lab universe), so live rates run below them for reasons other
 than competition too; the verdict thresholds leave room for that.
 
+Simulated playing time (owner 2026-10-13): the runner's what-if run (PaperRunner.what_if, journal run kind
+'whatif', written at the flatten) replays every signal NOT taken - skipped, shadow, rejected - on the day's bars with
+backtest costs. Per setup it is reported as sim_trades / sim_win_rate / sim_avg_r / sim_total_r (and the part lost
+to another setup: sim_held_trades / sim_held_avg_r). SIMULATED: no fill-realism checks, so optimistic; it is
+never added to the live trades, P/L or win rate.
+
 Earnings blackout removes symbols before any setup scans, so it shows only as an account-level count.
 Educational only - not financial advice.
 """
@@ -185,6 +191,31 @@ def attribute(sig: pd.DataFrame) -> pd.DataFrame:
     return s
 
 
+SIM_NOTE = ("SIMULATED: what-if replays of signals not taken (skipped, blocked, shadow) on the day's bars with backtest "
+            "costs; no fill-realism checks, so optimistic. Never part of live trades, P/L or win rate.")
+
+
+def _whatif(wi: pd.DataFrame | None) -> pd.DataFrame:
+    """What-if trades with `date` (str) and the bucket of the signal they replay (meta 'status=..;why=..')."""
+    if wi is None or not len(wi):
+        return pd.DataFrame(columns=["date", "strategy", "r_multiple", "bucket"])
+    w = wi.copy()
+    w["date"] = w["date"].astype(str)
+    meta = w["meta"].fillna("").astype(str) if "meta" in w else pd.Series("", index=w.index)
+    st = meta.str.extract(r"status=([^;]*)")[0]
+    why = meta.str.extract(r"why=(.*)$")[0]
+    w["bucket"] = [classify(a, b) for a, b in zip(st.fillna(""), why.fillna(""))]
+    return w
+
+
+def _sim(w: pd.DataFrame) -> dict:
+    r = w["r_multiple"].astype(float) if len(w) else pd.Series(dtype=float)
+    h = r[w["bucket"] == "held_by_other"] if len(w) else r
+    return {"sim_trades": int(len(r)), "sim_win_rate": round(float((r > 0).mean()), 3) if len(r) else None,
+            "sim_avg_r": round(float(r.mean()), 3) if len(r) else None, "sim_total_r": round(float(r.sum()), 2),
+            "sim_held_trades": int(len(h)), "sim_held_avg_r": round(float(h.mean()), 3) if len(h) else None}
+
+
 def _peak_open(trades: pd.DataFrame) -> int:
     if trades is None or not len(trades):
         return 0
@@ -227,8 +258,9 @@ def _verdict(n_sig, n_taken, held, sessions, per_day_exp) -> tuple[str, str]:
 
 
 def _rows(s: pd.DataFrame, tr: pd.DataFrame, sessions_by_setup: dict[str, int], rank: dict[str, int],
-          expected: dict[str, dict]) -> list[dict]:
+          expected: dict[str, dict], wi: pd.DataFrame | None = None) -> list[dict]:
     rows = []
+    wi = _whatif(None) if wi is None else wi
     for st in sorted(set(sessions_by_setup) | set(s["strategy"] if len(s) else []), key=lambda n: (rank.get(n, 999), n)):
         g = s[s["strategy"] == st] if len(s) else s
         n_sess = max(int(sessions_by_setup.get(st, 0)), 1)
@@ -250,15 +282,18 @@ def _rows(s: pd.DataFrame, tr: pd.DataFrame, sessions_by_setup: dict[str, int], 
             "skipped": skipped, "lost_to": {k: int(v) for k, v in sorted(lost.items(), key=lambda kv: -kv[1])},
             "lost_to_higher_priority": int(higher), "lost_to_earlier_lower_priority": int(sum(lost.values()) - higher),
             "took_from_others": took, "verdict": verdict, "why": why,
+            **_sim(wi[wi["strategy"] == st]),   # SIMULATED (what-if), separate from signals / entries / trades
         })
     return rows
 
 
 def build(signals: pd.DataFrame, trades: pd.DataFrame | None, day: str, account: str = "primary",
           state_dir=None, cfg: dict | None = None, expected: dict | None = None, slots: int | None = None,
-          earnings_excluded: int | None = None) -> dict:
+          earnings_excluded: int | None = None, whatif: pd.DataFrame | None = None) -> dict:
     """Playing-time report for one account: `today` (session `day`) and `cumulative` (every journaled session).
-    `signals` / `trades` are the account's journal tables for its paper run."""
+    `signals` / `trades` are the account's journal tables for its paper run; `whatif` its what-if run's trades
+    (simulated, reported apart from the live counts)."""
+    wi = _whatif(whatif)
     expected = expected_rates(account) if expected is None else expected
     sig = signals.copy() if signals is not None else pd.DataFrame(columns=["day", "strategy", "status", "reason", "symbol"])
     sig["day"] = sig["day"].astype(str)
@@ -281,8 +316,8 @@ def build(signals: pd.DataFrame, trades: pd.DataFrame | None, day: str, account:
             rank_cum.setdefault(n, len(rank_today) + 1 + i)
     t_today = att[att["day"] == day]
     today_rows = _rows(t_today, tr[tr["date"] == day], {n: 1 for n in active.get(day, [])} |
-                       {n: 1 for n in t_today["strategy"]}, rank_today, expected)
-    cum_rows = _rows(att, tr, sess_cum, rank_cum, expected)
+                       {n: 1 for n in t_today["strategy"]}, rank_today, expected, wi[wi["date"] == day])
+    cum_rows = _rows(att, tr, sess_cum, rank_cum, expected, wi)
     for r in cum_rows:
         r["live_today"] = r["setup"] in rank_today
 
@@ -297,12 +332,14 @@ def build(signals: pd.DataFrame, trades: pd.DataFrame | None, day: str, account:
                 "peak_open_positions": _peak_open(t), **{k.replace("-", "_"): v for k, v in by.items()}}
 
     s_today = summary(t_today, today_rows, 1, tr[tr["date"] == day])
+    s_today.update(_sim(wi[wi["date"] == day]))
     s_today.update(setups_live=len(active.get(day, [])), slots=slots, earnings_excluded=earnings_excluded,
                    setup_source=src.get(day))
     return {
         "account": account, "day": day, "window": f"{days[0]} to {days[-1]}" if days else "no sessions",
         "target_per_week": TARGET_PER_WEEK, "today": {"summary": s_today, "setups": today_rows},
-        "cumulative": {"summary": summary(att, cum_rows, len(days), tr), "setups": cum_rows},
+        "cumulative": {"summary": {**summary(att, cum_rows, len(days), tr), **_sim(wi)}, "setups": cum_rows},
+        "sim_note": SIM_NOTE,
         "rules": (f"silent: no signals when >= {SILENT_MIN_EXPECTED:g} were expected; crowded-out: >= "
                   f"{CROWDED_SHARE:.0%} of signals (and >= 3) skipped because another setup held the symbol; starved: "
                   f"entries/day < {STARVED_RATIO:.0%} of the expected rate (>= 4 expected); slow: on track but below "
@@ -317,6 +354,7 @@ def from_journal(journal, run_id: int, day: str, cfg: dict, state_dir=None) -> d
     """Convenience for the EOD job: read the account's journal and state, then build()."""
     sig = pd.read_sql("SELECT * FROM signals WHERE run_id=? ORDER BY id", journal.db, params=[run_id])
     tr = journal.trades(run_id=run_id)
+    wi = journal.trades(kind="whatif")   # read only: the runner writes it at the flatten
     eb = None
     if state_dir:
         p = Path(state_dir) / "earnings" / f"{day}.json"
@@ -326,7 +364,7 @@ def from_journal(journal, run_id: int, day: str, cfg: dict, state_dir=None) -> d
             except (OSError, ValueError):
                 eb = None
     return build(sig, tr, day, cfg.get("account_name", "primary"), state_dir, cfg,
-                 slots=(cfg.get("account") or {}).get("max_concurrent_positions"), earnings_excluded=eb)
+                 slots=(cfg.get("account") or {}).get("max_concurrent_positions"), earnings_excluded=eb, whatif=wi)
 
 
 # ---------------------------------------------------------------- EOD section
@@ -355,13 +393,15 @@ def html(rep: dict | None) -> str:
         t = today.get(r["setup"], {})
         e = "–" if r["expected_per_day"] is None else f"{r['expected_per_day']:.2f}"
         c = VERDICT_COLOR.get(r["verdict"], "#52514e")
+        sim = (f"{r.get('sim_trades', 0)} / " + ("–" if r.get("sim_avg_r") is None else f"{r['sim_avg_r']:+.2f}R")
+               + ("" if r.get("sim_win_rate") is None else f" / {r['sim_win_rate']:.0%}"))
         rows.append(f"<tr><td {td}>{r['priority']}</td><td {td}>{r['name']}<br><span style='font-size:11px;color:#898781'>{r['setup']}</span></td>"
                     f"<td {td}>{t.get('signals', 0)} / {t.get('entries', 0)}</td><td {td}>{r['sessions']}</td>"
                     f"<td {td}>{r['signals']} / {r['entries']} / {r['trades']}</td><td {td}>{r['entries_per_day']:.2f}</td><td {td}>{e}</td>"
                     f"<td {td}>{r['skipped'].get('held_by_other', 0)}</td><td {td}>{lost(r)}</td>"
-                    f"<td {td}>{skip(r)}</td><td {td}><b style='color:{c}'>{r['verdict']}</b><br><span style='font-size:11px;color:#52514e'>{r['why']}</span></td></tr>")
+                    f"<td {td}>{skip(r)}</td><td {td}><i>{sim}</i></td><td {td}><b style='color:{c}'>{r['verdict']}</b><br><span style='font-size:11px;color:#52514e'>{r['why']}</span></td></tr>")
     head = ("Prio", "Setup", "Today sig / taken", "Sessions", "Signals / taken / trades", "Taken/day", "Expected/day",
-            "Lost to other setups", "Lost to (setup n)", "Top skip reasons", "Verdict")
+            "Lost to other setups", "Lost to (setup n)", "Top skip reasons", "SIMULATED: not-taken n / avg R / win", "Verdict")
     flags = []
     for k, lab in (("silent", "Silent"), ("crowded_out", "Crowded out"), ("starved", "Starved")):
         if cs.get(k):
@@ -373,8 +413,12 @@ def html(rep: dict | None) -> str:
             f"<b>{st['lost_to_other_setups']}</b> lost because another setup held the symbol ({st['lost_share']:.0%}). "
             f"Since {rep['window'].split(' to ')[0]} ({cs['sessions']} sessions): {cs['signals']} signals, {cs['entries']} taken, "
             f"{cs['lost_to_other_setups']} lost to other setups ({cs['lost_share']:.0%}).{slots}{eb}</p>"
+            + (f"<p style='font-size:13px'><i>Simulated playing time (not live): {cs['sim_trades']} what-if trades of signals not "
+               f"taken, avg {cs['sim_avg_r']:+.2f}R, {cs['sim_win_rate']:.0%} winners; of them {cs['sim_held_trades']} lost to "
+               f"another setup" + ("" if cs.get("sim_held_avg_r") is None else f" (avg {cs['sim_held_avg_r']:+.2f}R)") + ".</i></p>"
+               if cs.get("sim_trades") else "")
             + (f"<p style='font-size:13px'>{' · '.join(flags)}</p>" if flags else "")
             + "<table style='border-collapse:collapse;font-size:12px'><tr>" + "".join(f"<th {td}>{h}</th>" for h in head) + "</tr>"
             + ("".join(rows) or f"<tr><td colspan={len(head)}>No setups live.</td></tr>") + "</table>"
             f"<div style='font-size:11px;color:#52514e'>Cumulative over the sessions each setup was live. {rep['rules']} "
-            f"Signals lost to another setup are still simulated in the what-if run. {rep['note']}</div>")
+            f"Signals lost to another setup are still simulated in the what-if run. {rep.get('sim_note', SIM_NOTE)} {rep['note']}</div>")

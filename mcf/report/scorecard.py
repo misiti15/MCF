@@ -36,14 +36,14 @@ def _expected() -> dict[str, float]:
 
 
 def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = None, cfg: dict | None = None,
-          account: str | None = None) -> dict:
+          account: str | None = None, whatif: pd.DataFrame | None = None) -> dict:
     """playing_time: the account's playing-time report (mcf/report/playing_time.py), stored as card['playing_time'].
     cfg/account: adds the since-start leaderboard (all setups enabled in this account, traded or not)."""
     extra = {}
     if playing_time is not None:
         extra["playing_time"] = playing_time
     if cfg is not None:
-        extra["leaderboard"] = leaderboard(trades, cfg, account or "primary")
+        extra["leaderboard"] = leaderboard(trades, cfg, account or "primary", whatif)
         extra["generated"] = pd.Timestamp.now(tz="America/New_York").strftime("%Y-%m-%d %H:%M ET")
     if trades is None or not len(trades):
         return {"sessions": 0, "window": "no trades yet", "setups": [], **extra}
@@ -78,9 +78,12 @@ def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = N
 SHRINK_N = 20   # ranking shrinks avg R toward 0 by n / (n + 20): 5 lucky trades do not outrank 80 steady ones
 
 
-def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str) -> list[dict]:
+def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd.DataFrame | None = None) -> list[dict]:
     """Since-start results per setup in this account (owner 2026-10-12: rank, win rate, live trades, account),
-    including enabled setups with no trades yet. The dashboard merges the accounts' lists. Report only."""
+    including enabled setups with no trades yet. The dashboard merges the accounts' lists. Report only.
+    whatif: the account's what-if run (signals not taken, simulated). Its sim_* fields are SIMULATED playing time
+    (owner 2026-10-13): never part of trades / win_rate / avg_r / P/L / score."""
+    wi = whatif if whatif is not None and len(whatif) else pd.DataFrame(columns=["strategy", "r_multiple"])
     exp = _expected()
     strat = (cfg or {}).get("strategies", {}) or {}
     enabled = {k for k, v in strat.items() if isinstance(v, dict) and v.get("enabled")}
@@ -107,8 +110,16 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str) -> list[di
             "recent_trades": int(len(recent)), "recent_avg_r": round(float(recent["r_multiple"].astype(float).mean()), 3) if len(recent) else None,
             "expected_r": None if exp.get(s) is None else round(exp[s], 3),
             "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
+            **_sim(wi[wi["strategy"] == s]),
         })
     return rows
+
+
+def _sim(w: pd.DataFrame) -> dict:
+    """SIMULATED (what-if) results of a setup's signals not taken; labelled sim_* and kept apart from live results."""
+    r = w["r_multiple"].astype(float)
+    return {"sim_trades": int(len(r)), "sim_win_rate": round(float((r > 0).mean()), 3) if len(r) else None,
+            "sim_avg_r": round(float(r.mean()), 3) if len(r) else None}
 
 
 def save(card: dict, state_dir: str | Path) -> Path:

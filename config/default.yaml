@@ -341,3 +341,9 @@ live:
   start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
   max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
   fetch_batch: 400
+  # Testing-account flags (owner 2026-10-13, research/bdi/longs1013 Q3): OFF here, so Primary is unchanged.
+  # retry_after_release: a market entry skipped "already in symbol" may take its setup's next fresh signal on that
+  # symbol (latest bar) after the holding position closes, once per setup/symbol/day (journal info retry_after_release).
+  # longs_first_on_ties: setups firing on one symbol in the same poll are tried longs first, then by setup_order.
+  retry_after_release: false
+  longs_first_on_ties: false

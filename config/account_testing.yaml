@@ -17,6 +17,9 @@ account:
   max_daily_loss_r: 60
   max_trades_per_day: 3000
 live:
+  # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
+  retry_after_release: true
+  longs_first_on_ties: true
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
