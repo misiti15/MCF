@@ -202,6 +202,7 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
         tr["pct"] = tr["side"] * (tr["exit"] / tr["entry"] - 1) * 100
     losers = tr.sort_values("pct").head(10) if len(tr) else tr
     losers = losers[losers["pct"] < 0] if len(losers) else losers
+    winners = tr[tr["pct"] > 0].sort_values("pct", ascending=False).head(3) if len(tr) else tr   # owner 2026-10-12
     n = len(tr)
     pnl = float(tr["pnl"].sum()) if n else 0.0
     win = float((tr["pnl"] > 0).mean()) if n else float("nan")
@@ -210,6 +211,11 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
         f"<td>{str(r.entry_time)[11:16]}</td><td>{str(r.exit_time)[11:16]}</td><td>{r.entry:.2f}</td><td>{r.exit:.2f}</td>"
         f"<td>{r.exit_reason}</td><td style='color:#d03b3b'>{r.pct:.2f}%</td><td>${r.pnl:,.2f}</td></tr>"
         for r in losers.itertuples()) or "<tr><td colspan=10>No losing trades today.</td></tr>"
+    wrows = "".join(
+        f"<tr><td>{r.symbol}</td><td>{setup_label(r.strategy)}</td><td>{'long' if r.side > 0 else 'short'}</td>"
+        f"<td>{str(r.entry_time)[11:16]}</td><td>{str(r.exit_time)[11:16]}</td><td>{r.entry:.2f}</td><td>{r.exit:.2f}</td>"
+        f"<td>{r.exit_reason}</td><td style='color:#0b8a3e'>+{r.pct:.2f}%</td><td>${r.pnl:,.2f}</td></tr>"
+        for r in winners.itertuples()) or "<tr><td colspan=10>No winning trades today.</td></tr>"
     val = _validation()
     vs = val.get("setups", {})
     banner = (f"<p style='background:#fff4e5;border-left:4px solid #d97706;padding:8px 10px;font-size:13px'>"
@@ -235,6 +241,10 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
 <p style="font-size:15px"><b>{n}</b> trades · win rate <b>{'–' if n == 0 else f'{win:.0%}'}</b> ·
 P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 {banner}<img src="cid:{cid[1:-1]}" alt="SPY and MCF P/L in 15-minute steps" style="max-width:100%">
+<h3>Top 3 winning trades (by % gained)</h3>
+<table style="border-collapse:collapse;font-size:13px">
+<tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% gained</th><th {td}>P/L</th></tr>
+{wrows}</table>
 <h3>Top 10 losing trades (by % lost)</h3>
 <table style="border-collapse:collapse;font-size:13px">
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% lost</th><th {td}>P/L</th></tr>

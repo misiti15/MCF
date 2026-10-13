@@ -424,3 +424,19 @@ def test_init_topup_completes_short_moc_fills_once(tmp_path):
     assert len(b.orders_) == n + 3
     fills = pd.read_csv(tmp_path / "longhold" / "fills.csv")
     assert (fills["client_order_id"] == o0["client_order_id"] + "-t1").any()
+
+
+def test_s6_daily_email_once_per_day(tmp_path, monkeypatch):
+    from mcf.longhold import daily_email
+
+    sent = []
+    monkeypatch.setattr("mcf.report.brief.send_email", lambda s, t, h, to: sent.append((s, to)))
+    monkeypatch.setenv("MCF_SMTP_USER", "u"); monkeypatch.setenv("MCF_SMTP_PASSWORD", "p")
+    d = tmp_path / "longhold"; d.mkdir()
+    (d / "status.json").write_text(json.dumps({"mark": {"equity": 100047.75, "day_ret": 0.0005, "spy_ret": -0.001},
+                                              "positions": {"AAA": {"qty": 3, "market_value": 300, "unrealized_pl": 5}}}))
+    assert daily_email.maybe_send(d, "2026-10-13", "x@example.com")
+    assert not daily_email.maybe_send(d, "2026-10-13", "x@example.com")      # once per day
+    assert len(sent) == 1 and "S6" in sent[0][0] and "+0.05%" in sent[0][0]
+    monkeypatch.delenv("MCF_SMTP_USER")
+    assert not daily_email.maybe_send(d, "2026-10-14", "x@example.com")      # no secrets: skipped quietly

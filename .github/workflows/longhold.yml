@@ -60,6 +60,10 @@ jobs:
       ALPACA_TESTING_API_KEY: ${{ secrets.ALPACA_TESTING_API_KEY }}
       ALPACA_TESTING2_API_KEY: ${{ secrets.ALPACA_TESTING2_API_KEY }}
       ALPACA_DATA_FEED: sip
+      # daily S6 email after the evening mark (owner 2026-10-12); skipped without these secrets
+      MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
+      MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
+      MCF_EMAIL_TO: ${{ secrets.MCF_EMAIL_TO }}
       CMD: ${{ inputs.command || (github.event.schedule == '0 15 * * 6' && 'report' || (github.event.schedule == '35 14-19 * * 1-5' && 'snapshot' || 'run')) }}
       PYTHONUNBUFFERED: "1"
     steps:

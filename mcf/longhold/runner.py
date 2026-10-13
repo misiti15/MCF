@@ -427,6 +427,12 @@ class Runner:
                 self.topup_init()
             if stage in ("plan", "all"):
                 out["mark"] = self.mark(days)
+                if out["mark"] and self.live:
+                    from .daily_email import maybe_send
+                    from ..config import load_config
+
+                    maybe_send(self.dir, str(self.today), os.environ.get("MCF_EMAIL_TO")
+                               or load_config().get("report", {}).get("email_to"))
             if core.rebalance_due(days, self.today, signals.FREQ):
                 plan = self.load_plan(self.today)
                 if plan is None and stage in ("plan", "all"):
