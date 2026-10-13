@@ -386,3 +386,121 @@ def test_playing_time_credits_every_lot_holder():
     assert s.loc[2, "held_by"] == "A,B"
     rows = {r["setup"]: r for r in pt._rows(s, pd.DataFrame(columns=["strategy"]), {"A": 1, "B": 1, "S": 1}, {}, {})}
     assert rows["S"]["lost_to"] == {"A": 1, "B": 1} and rows["A"]["took_from_others"] == 1
+
+
+# ---------------------------------------------------------------- 2026-10-13 autopsy: flatten-path mispairing
+class LeakyAlpaca(FakeAlpaca):
+    """Alpaca can list a bracket's filled stop/target leg as its own top-level closed order (e.g. a leg on another page
+    than its parent, or a moved stop's replacement). Reconcile must never take it for another lot's flatten close."""
+
+    def get_orders(self, req):
+        out = super().get_orders(req)
+        if _v(req.status) == "closed":
+            out += [NS(**{**leg.__dict__, "legs": None, "submitted_at": self.now})
+                    for o in self.orders for leg in o.legs or [] if leg.status == "filled"]
+        return out
+
+    def part_fill(self, coid, px, n):
+        """The lot's target leg fills n shares and keeps working (Alpaca: partially_filled)."""
+        o = self.by_coid(coid)
+        leg = next(l for l in o.legs if l.order_type == "limit")
+        leg.status, leg.filled_qty, leg.filled_avg_price, leg.filled_at = "partially_filled", str(n), str(px), self._t()
+        self._net(o.symbol, -(1 if o.side == "buy" else -1) * n)
+
+
+def _realized(c, sym="XYZ"):
+    """Broker realized P/L on a flat symbol: cash in minus cash out over every fill (parents, legs, closes)."""
+    cash = 0.0
+    for o in c._all():
+        if o.symbol == sym and o.filled_avg_price is not None and float(o.filled_qty):
+            cash += (1 if o.side == "sell" else -1) * float(o.filled_qty) * float(o.filled_avg_price)
+    return cash
+
+
+def test_sibling_stop_fill_never_closes_a_lot_whose_legs_are_working(tmp_path, monkeypatch):
+    r, c = _runner(tmp_path, monkeypatch, client=LeakyAlpaca())
+    q = _three_filled(r, c)
+    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)                      # lot A stops out; B and C keep working legs
+    assert c.pos["XYZ"] == q["B"] + q["C"]
+    r.reconcile(DAY)
+    t = r.journal.trades(run_id=r.run_id)
+    assert list(t.strategy) == ["A"] and t.iloc[0].exit_reason == "stop"
+    assert set(r.lots["XYZ"]) == {"B", "C"} and r.risk.open_lots() == 2     # not released: shares still held
+    assert set(r.journal.open_orders(r.run_id).broker_order_id) == {c.by_coid(f"mcf-{n}-XYZ-20261013").id for n in "BC"}
+    r.reconcile(DAY)                                                # idempotent: still nothing for B / C
+    assert len(r.journal.trades(run_id=r.run_id)) == 1 and set(r.lots["XYZ"]) == {"B", "C"}
+    c.price["XYZ"] = 10.5
+    r.flatten_mcf()
+    r.reconcile(DAY)
+    t = r.journal.trades(run_id=r.run_id).set_index("strategy")
+    assert t.loc["B", "exit_reason"] == t.loc["C", "exit_reason"] == "flatten"
+    assert t.loc["B", "exit"] == t.loc["C", "exit"] == 10.5
+    assert t.loc["B", "pnl"] == pytest.approx((10.5 - 10.02) * q["B"]) and t.loc["C", "pnl"] == pytest.approx((10.5 - 10.04) * q["C"])
+    assert t.pnl.sum() == pytest.approx(_realized(c)) and "XYZ" not in r.lots
+    assert r.journal.open_orders(r.run_id).empty
+
+
+def test_moved_stop_replacement_belongs_to_its_own_lot():
+    """A stop moved by replace becomes a new order (replaces=<old leg id>); its fill is that lot's stop, never a
+    sibling's flatten, and a flatten close is shared out by quantity (never more shares than it closed)."""
+    t = lambda m: datetime(2026, 10, 13, 14, m, tzinfo=timezone.utc)
+    leg = lambda i, st, typ="stop": NS(id=i, filled_avg_price=None, filled_at=None, filled_qty="0", order_type=typ,
+                                       status=st, side="sell", symbol="XYZ", legs=None)
+    a = NS(id="pa", client_order_id="mcf-A-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+           filled_qty="5", filled_at=t(1), status="filled", legs=[leg("la", "replaced"), leg("ta", "canceled", "limit")])
+    a_new = NS(id="la2", replaces="la", client_order_id="uuid-1", symbol="XYZ", side="sell", filled_avg_price="10.2",
+               filled_qty="5", filled_at=t(5), status="filled", order_type="stop", legs=None)
+    b = NS(id="pb", client_order_id="mcf-B-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+           filled_qty="3", filled_at=t(2), status="filled", legs=[leg("lb", "held"), leg("tb", "new", "limit")])
+    c = NS(id="pc", client_order_id="mcf-C-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+           filled_qty="4", filled_at=t(3), status="filled", legs=[leg("lc", "canceled"), leg("tc", "canceled", "limit")])
+    flat = NS(id="f1", client_order_id="uuid-2", symbol="XYZ", side="sell", filled_avg_price="9.9", filled_qty="4",
+              filled_at=t(6), status="filled", order_type="market", legs=None)   # closed C's 4 shares only
+    rows = pd.DataFrame([{"broker_order_id": i, "symbol": "XYZ", "strategy": s, "side": 1, "stop": 9.0, "target": 12.0,
+                          "entry_ref": 10.0, "meta": "", "created_at": "2026-10-13T14:00:00+00:00"}
+                         for i, s in (("pa", "A"), ("pb", "B"), ("pc", "C"))])
+    status = {}
+    j = NS(open_orders=lambda run: rows, update_order_status=lambda oid, st: status.__setitem__(oid, st))
+    tr = reconcile_day(NS(closed_orders_today=lambda after: [a, a_new, b, c, flat]), j, 1, "2026-10-13")
+    tr = tr.set_index("strategy")
+    assert sorted(tr.index) == ["A", "C"] and status == {"pa": "closed", "pc": "closed"}   # B: legs working -> open
+    assert tr.loc["A", "exit_reason"] == "stop" and tr.loc["A", "exit"] == 10.2 and tr.loc["A", "pnl"] == pytest.approx(1.0)
+    assert tr.loc["C", "exit_reason"] == "flatten" and tr.loc["C", "pnl"] == pytest.approx(-0.4)
+
+
+def test_partial_target_then_flatten_books_blended_exit(tmp_path, monkeypatch):
+    r, c = _runner(tmp_path, monkeypatch, client=LeakyAlpaca())
+    q = _three_filled(r, c)
+    n = q["B"] // 2
+    assert 0 < n < q["B"]
+    c.part_fill("mcf-B-XYZ-20261013", 12.0, n)                    # B's target fills n shares, the rest keeps working
+    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)
+    r.reconcile(DAY)
+    assert list(r.journal.trades(run_id=r.run_id).strategy) == ["A"] and set(r.lots["XYZ"]) == {"B", "C"}
+    c.price["XYZ"] = 10.5
+    r.flatten_mcf()                                                # cancels B's working legs, closes the rest
+    assert "XYZ" not in c.pos
+    r.reconcile(DAY)
+    t = r.journal.trades(run_id=r.run_id).set_index("strategy")
+    exp = (12.0 - 10.02) * n + (10.5 - 10.02) * (q["B"] - n)
+    assert t.loc["B", "shares"] == q["B"] and t.loc["B", "pnl"] == pytest.approx(exp)
+    assert t.loc["B", "exit"] == pytest.approx((12.0 * n + 10.5 * (q["B"] - n)) / q["B"])
+    assert "exit_parts=" in t.loc["B", "meta"] and t.loc["C", "pnl"] == pytest.approx((10.5 - 10.04) * q["C"])
+    assert t.pnl.sum() == pytest.approx(_realized(c))
+
+
+def test_partial_target_remainder_by_stop_leg():
+    t = lambda m: datetime(2026, 10, 13, 14, m, tzinfo=timezone.utc)
+    p = NS(id="p", client_order_id="mcf-A-XYZ-20261013", symbol="XYZ", side="sell", filled_avg_price="20",
+           filled_qty="10", filled_at=t(1), status="filled", legs=[
+               NS(id="tp", order_type="limit", status="canceled", filled_qty="4", filled_avg_price="19", filled_at=t(2),
+                  side="buy", symbol="XYZ", legs=None),
+               NS(id="sl", order_type="stop", status="filled", filled_qty="6", filled_avg_price="21", filled_at=t(3),
+                  side="buy", symbol="XYZ", legs=None)])
+    rows = pd.DataFrame([{"broker_order_id": "p", "symbol": "XYZ", "strategy": "A", "side": -1, "stop": 21.0,
+                          "target": 19.0, "entry_ref": 20.0, "meta": "", "created_at": "2026-10-13T14:00:00+00:00"}])
+    j = NS(open_orders=lambda run: rows, update_order_status=lambda oid, st: None)
+    tr = reconcile_day(NS(closed_orders_today=lambda after: [p]), j, 1, "2026-10-13", {"costs": {"stop_slippage_per_share": 0.02}})
+    row = tr.iloc[0]
+    assert row.pnl == pytest.approx(4 * 1 - 6 * 1) and row.exit == pytest.approx((4 * 19 + 6 * 21) / 10)
+    assert row.exit_reason == "stop" and row.pnl_adj == pytest.approx(-2 - 0.12) and row.shares == 10

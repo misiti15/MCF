@@ -642,7 +642,10 @@ class PaperRunner:
             print(f"reconciled {len(trades)} trades for {day}")
 
     def _release_closed_lots(self):
-        """A lot is released once reconcile has paired its exit (journal order closed) or found it never filled."""
+        """A lot is released once reconcile has paired its exit (journal order closed) or found it never filled.
+        Reconcile closes a lot's order only when the lot is flat at the broker: none of its own legs is still working
+        and its whole filled quantity is accounted for by its own fills (legs, moved-stop replacements, -x exit) plus
+        genuine flatten closes - never by a sibling lot's fill (2026-10-13 mispairing)."""
         if not self.lots:
             return
         try:
