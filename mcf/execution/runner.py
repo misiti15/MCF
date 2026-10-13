@@ -59,6 +59,14 @@ class PaperRunner:
         # EDV x4, GDXJ x3, KMI x3, SHW x2, ARKK x2 stacked).
         self.pending: dict[str, float] = {}
         self.managed: dict[str, dict] = {}   # symbol -> trade-management state (time stop / breakeven / trail)
+        # Testing-account flags (owner 2026-10-13, research/bdi/longs1013 Q3 Mf / Ma); both off in config/default.yaml.
+        # retry_after_release: a market entry skipped "already in symbol" may take the setup's next FRESH signal on
+        # that symbol (latest bar, later than the blocked one) once the holder's position has closed; once per
+        # setup/symbol/day. longs_first_on_ties: setups firing on one symbol in the same poll are tried longs first,
+        # then in setup_order.
+        self.retry_after_release = bool(self.live.get("retry_after_release", False))
+        self.longs_first_on_ties = bool(self.live.get("longs_first_on_ties", False))
+        self.blocked: dict[tuple[str, str], dict] = {}   # (symbol, setup) -> {"bar": blocked bar_index, "done": bool}
         self.bars: dict[str, pd.DataFrame] = {}
         self.last_fetch: pd.Timestamp | None = None
         self.health = {"polls": 0, "last_poll_s": None, "symbols_last_bar": 0, "last_bar": None}
@@ -77,6 +85,8 @@ class PaperRunner:
                 self.fired.add((r.symbol, r.strategy))
                 self.open_strategy[r.symbol] = r.strategy
         self.risk.state.trades_today = int((sig.status == "submitted").sum()) if len(sig) else 0
+        if self.retry_after_release:
+            self._restore_blocked(sig)
         if not self.dry_run:
             self._restore_from_broker(today)
             self._restore_management()
@@ -84,6 +94,20 @@ class PaperRunner:
         if len(done):
             self.risk.state.realized_r = float(done.loc[done.date == str(today), "r_multiple"].sum())
         self._sync_open()
+
+    def _restore_blocked(self, sig: pd.DataFrame):
+        """retry_after_release state after a restart: blocked market entries, and which already used their retry."""
+        for r in sig.itertuples():
+            key = (r.symbol, r.strategy)
+            if '"retry_after_release": true' in str(getattr(r, "info", "") or ""):
+                self.blocked[key] = {"bar": int(r.bar_index), "done": True}
+            elif r.status == "skipped" and r.reason == "already in symbol" and r.entry_type == "market":
+                self.blocked.setdefault(key, {"bar": int(r.bar_index), "done": False})
+
+    def _retry_ready(self, key: tuple[str, str]) -> bool:
+        """A blocked setup may look for one fresh signal once the symbol is no longer held (nor pending) by MCF."""
+        b = self.blocked.get(key) if self.retry_after_release else None
+        return bool(b) and not b["done"] and key[0] not in self.risk.state.open_symbols and key[0] not in self.pending
 
     def _restore_from_broker(self, today):
         """The broker is the source of truth for what MCF holds: the journal on the state branch can lag a
@@ -282,11 +306,28 @@ class PaperRunner:
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
+            ties = []   # longs_first_on_ties: (signal, key) entered after every setup on this symbol was scanned
             for strat in self.strategies:
                 key = (ctx.symbol, strat.name)
-                if key in self.seen or not strat.eligible(ctx):
+                retry = False
+                if key in self.seen:
+                    if not self._retry_ready(key):
+                        continue
+                    retry = True
+                if not strat.eligible(ctx):
                     continue
                 for sig in strat.signals(ctx):
+                    if retry:
+                        # only a fresh market signal on the latest bar, later than the blocked one; never a stale price
+                        if sig.entry_type != "market" or sig.bar_index != last or sig.bar_index <= self.blocked[key]["bar"]:
+                            continue
+                        self.blocked[key]["done"] = True
+                        sig.meta = {**sig.meta, "retry_after_release": True}
+                        if self.longs_first_on_ties:
+                            ties.append((sig, key))
+                        else:
+                            self._enter(sig, px, key, ctx, now)
+                        break
                     if sig.entry_type == "market" and sig.bar_index != last:
                         continue
                     if sig.entry_type == "stop":
@@ -304,7 +345,13 @@ class PaperRunner:
                             self._log(sig, "skipped", f"missed: triggered at {seg.index[first]:%H:%M}", px, now)
                             continue
                     self.seen.add(key)
+                    if self.longs_first_on_ties:
+                        ties.append((sig, key))
+                        continue
                     self._enter(sig, px, key, ctx, now)
+            # stable sort: longs before shorts, setup_order (scan order) kept within each side
+            for sig, key in sorted(ties, key=lambda x: x[0].side != 1):
+                self._enter(sig, px, key, ctx, now)
 
     def _quote(self, symbol: str):
         from alpaca.data.enums import DataFeed
@@ -356,6 +403,8 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
+            if held and self.retry_after_release and sig.entry_type == "market":
+                self.blocked.setdefault(key, {"bar": int(sig.bar_index), "done": False})
             return self._log(sig, "skipped", why, px, now, held)
         ok, why, info = self._realism(sig, ctx, px)
         if not ok:

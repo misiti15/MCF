@@ -26,6 +26,9 @@ account:
   max_daily_loss_r: 60
   max_trades_per_day: 3000
 live:
+  # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
+  retry_after_release: true
+  longs_first_on_ties: true
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:

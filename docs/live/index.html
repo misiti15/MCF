@@ -202,6 +202,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
       R = the setup's planned risk per trade. <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
       <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. Paper results; few trades prove nothing. Updated by each account's end-of-day report. Educational only — not financial advice.</div></div>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
@@ -209,7 +210,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
   <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"></div>
     <div class="tablewrap" id="pt-tab"><div class="empty">Appears after the next end-of-day report.</div></div>
-    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
+    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). <b>Simulated</b> columns are what-if replays of signals not taken (no fill-realism checks); they are never part of live results. Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
   <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
     <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
   <div class="card lab"><h2>Setup lab — weekly discovery <span class="sub" id="lab-when"></span></h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
@@ -413,6 +414,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const q = s => document.querySelector(s);
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const COL = { silent: "down", starved: "down", "crowded-out": "down", watch: "", slow: "", "quiet - wait": "", ok: "up" };
+  const fr = v => v == null || isNaN(v) ? "–" : (v > 0 ? "+" : "") + (+v).toFixed(2);
+  const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
   const LBL = { held_by_other: "held by other setup", slots_full: "slots full", setup_cap: "per-setup cap", trades_cap: "trades/day cap",
     daily_loss: "daily loss cap", window: "window", missed_trigger: "missed trigger", borrow: "borrow", realism: "spread/quote/size",
     price: "price", rejected: "rejected", other: "other" };
@@ -423,7 +426,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const flag = k => (c[k] || []).length ? ` · <b>${k.replace("_", "-")}:</b> ${(c[k] || []).map(e).join(", ")}` : "";
     q("#pt-sum").innerHTML = `${e(pt.window)} · ${c.sessions} sessions · ${t.setups_live ?? "–"} setups live on ${e(pt.day)} · ` +
       `${c.signals} signals, ${c.entries} taken, <b>${c.lost_to_other_setups}</b> lost to other setups (${((c.lost_share || 0) * 100).toFixed(1)}%)` +
-      (t.slots ? ` · peak ${t.peak_open_positions} of ${t.slots} slots` : "") + flag("silent") + flag("crowded_out") + flag("starved");
+      (t.slots ? ` · peak ${t.peak_open_positions} of ${t.slots} slots` : "") + flag("silent") + flag("crowded_out") + flag("starved") +
+      (c.sim_trades ? ` · <i>SIMULATED (not live): ${c.sim_trades} what-if trades of signals not taken, avg ${fr(c.sim_avg_r)}R, ${pc(c.sim_win_rate)} winners</i>` : "");
     const rows = (pt.cumulative.setups || []).filter(r => r.live_today !== false).map(r => {
       const d = today[r.setup] || {};
       const lost = Object.entries(r.lost_to || {}).slice(0, 3).map(([k, v]) => `${e(k)} ${v}`).join(", ") || "–";
@@ -432,9 +436,10 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         `<td>${d.signals ?? 0} / ${d.entries ?? 0}</td><td>${r.sessions}</td><td>${r.signals} / ${r.entries} / ${r.trades}</td>` +
         `<td>${r.entries_per_day}</td><td>${r.expected_per_day ?? "–"}</td><td>${r.weekly_pace}</td><td>${(r.skipped || {}).held_by_other || 0}</td>` +
         `<td class="l" style="white-space:normal">${lost}</td><td class="l" style="white-space:normal">${sk}</td>` +
+        `<td title="SIMULATED what-if, not live"><i>${r.sim_trades ?? 0} / ${fr(r.sim_avg_r)}</i></td>` +
         `<td class="l ${COL[r.verdict] || ""}" style="white-space:normal" title="${e(r.why)}"><b>${e(r.verdict)}</b><br><span style="font-size:11px;color:var(--ink-2)">${e(r.why)}</span></td></tr>`;
     });
-    const head = ["Setup (priority)", "Today sig / taken", "Sessions", "Signals / taken / trades", "Taken/day", "Expected/day", "Per week", "Lost to others", "Lost to", "Top skips", "Verdict"];
+    const head = ["Setup (priority)", "Today sig / taken", "Sessions", "Signals / taken / trades", "Taken/day", "Expected/day", "Per week", "Lost to others", "Lost to", "Top skips", "Sim. trades / sim avg R (SIMULATED)", "Verdict"];
     q("#pt-tab").innerHTML = rows.length ? `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "" : "l"}">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table>`
       : `<div class="empty">No setups live.</div>`;
     if (pt.rules) q("#pt-note").textContent = `${pt.rules} ${pt.note || ""}`;
@@ -584,7 +589,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   }
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["trades", "Live trades"], ["sessions_traded", "Sessions"],
     ["win_rate", "Win rate"], ["avg_r", "Avg R"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
-    ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["pt", "Playing time"], ["flag", "Flag"]];
+    ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   function draw() {
     let r = rows.filter(x => (st.acct === "all" || x.acct === st.acct) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
     const key = x => { const v = sortK === "flag" ? x.flag[0] : x[sortK]; return v == null ? (sortD > 0 ? Infinity : -Infinity) : v; };
@@ -594,7 +599,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
       (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
       ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
-    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 13 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 14 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
@@ -603,6 +608,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         <td class="l">${e(x.acctLabel)}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
+        <td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>
         <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
     };
     q("#lb-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No setups match.</div>`;

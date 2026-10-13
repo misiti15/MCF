@@ -267,7 +267,7 @@ def cmd_eod(args, cfg):
     from .report import scorecard
 
     card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4), playing_time=playing,
-                           cfg=cfg, account=cfg.get("account_name", "primary"))
+                           cfg=cfg, account=cfg.get("account_name", "primary"), whatif=j.trades(kind="whatif"))
     scorecard.save(card, args.state_dir)
     print(rep["subject"])
     if not args.no_send:

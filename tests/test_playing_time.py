@@ -180,3 +180,43 @@ def test_leaderboard_since_start_includes_untraded_live_setups():
     assert not lb["B"]["live"] and lb["B"]["trades"] == 1
     card = scorecard.build(t, 4, cfg=cfg, account="testing")
     assert len(card["leaderboard"]) == 3 and "generated" in card
+
+
+def test_simulated_playing_time_kept_apart_from_live(tmp_path):
+    """Owner 2026-10-13: what-if trades of signals not taken are reported per setup as SIMULATED sim_* fields,
+    never mixed into live signals / entries / trades / win rate / P/L."""
+    j, run = _journal(tmp_path)
+    st = _state(tmp_path)
+    wid = j.get_or_create_run("whatif", "MCF what-if (signals not taken)")
+    d1, d2 = "2026-10-08", "2026-10-09"
+    j.add_trades(wid, pd.DataFrame([
+        {"symbol": "AAA", "strategy": "NARROW", "side": -1, "date": d1, "r_multiple": 1.0, "pnl": 0.0,
+         "meta": "status=skipped;why=already in symbol"},
+        {"symbol": "EEE", "strategy": "NARROW", "side": -1, "date": d2, "r_multiple": -0.5, "pnl": 0.0,
+         "meta": "status=skipped;why=already in symbol"},
+        {"symbol": "HHH", "strategy": "WIDE", "side": -1, "date": d2, "r_multiple": 0.3, "pnl": 0.0,
+         "meta": "status=skipped;why=spread 40bps > max"},
+    ]))
+    cfg = {"account_name": "testing", "account": {"max_concurrent_positions": 400},
+           "strategies": {"WIDE": {"enabled": True}, "NARROW": {"enabled": True}, "QUIET": {"enabled": True}},
+           "live": {"setup_order": ["NARROW", "QUIET", "WIDE"]}}
+    rep = pt.from_journal(j, run, d2, cfg, st)
+    cum = {r["setup"]: r for r in rep["cumulative"]["setups"]}
+    n = cum["NARROW"]
+    assert n["entries"] == 1 and n["trades"] == 1 and n["signals"] == 4          # live counts unchanged
+    assert n["sim_trades"] == 2 and n["sim_avg_r"] == 0.25 and n["sim_win_rate"] == 0.5
+    assert n["sim_held_trades"] == 2 and n["sim_held_avg_r"] == 0.25
+    assert cum["WIDE"]["sim_trades"] == 1 and cum["WIDE"]["sim_held_trades"] == 0 and cum["QUIET"]["sim_trades"] == 0
+    assert rep["cumulative"]["summary"]["sim_trades"] == 3 and rep["cumulative"]["summary"]["trades"] == 3
+    today = {r["setup"]: r for r in rep["today"]["setups"]}
+    assert today["NARROW"]["sim_trades"] == 1 and rep["today"]["summary"]["sim_trades"] == 2
+    assert "SIMULATED" in rep["sim_note"] and "SIMULATED" in pt.html(rep)
+    card = scorecard.build(j.trades(run_id=run), 4, playing_time=rep, cfg=cfg, account="testing",
+                           whatif=j.trades(kind="whatif"))
+    lb = {r["setup"]: r for r in card["leaderboard"]}
+    assert lb["NARROW"]["trades"] == 1 and lb["NARROW"]["avg_r"] == 0.2 and lb["NARROW"]["win_rate"] == 1.0
+    assert lb["NARROW"]["sim_trades"] == 2 and lb["NARROW"]["sim_avg_r"] == 0.25 and lb["NARROW"]["sim_win_rate"] == 0.5
+    assert lb["QUIET"]["sim_trades"] == 0 and lb["QUIET"]["sim_avg_r"] is None
+    # no what-if run yet: zeros, not errors
+    rep0 = pt.build(pd.DataFrame(columns=["day", "strategy", "status", "reason", "symbol"]), None, d2, cfg=cfg, expected={})
+    assert rep0["cumulative"]["summary"]["sim_trades"] == 0
