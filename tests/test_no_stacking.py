@@ -29,6 +29,7 @@ class Broker:
 
 def _runner(tmp_path, monkeypatch):
     cfg = load_config()
+    cfg["live"]["max_lots_per_symbol"] = 1   # single-position semantics (stacking: tests/test_lots.py)
     cfg["data"]["journal_path"] = str(tmp_path / "j.db")
     b = Broker()
     r = R.PaperRunner(cfg, [], {}, broker=b)

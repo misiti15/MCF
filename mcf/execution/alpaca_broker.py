@@ -176,6 +176,99 @@ class AlpacaBroker:
                     return
         raise RuntimeError(f"no open MCF stop leg for {symbol}")
 
+    # ---------------------------------------------------------------- per-lot (live.max_lots_per_symbol > 1)
+    # A lot is one setup's bracket on a symbol; its id is the parent's client order id (prefix-setup-symbol-YYYYMMDD).
+    # Positions are netted per symbol at the broker, so a lot is only ever changed through ITS OWN orders: its stop leg
+    # is replaced, or its legs are cancelled and exactly its quantity is closed by an order whose client id is
+    # lot_exit_coid(parent id) (so reconcile pairs the exit to the lot exactly).
+    @staticmethod
+    def lot_exit_coid(parent_coid: str) -> str:
+        return f"{parent_coid}-x"
+
+    def _lot_parent(self, symbol: str, parent_coid: str, prefix: str):
+        for p in self._mcf_parents(prefix, symbol):
+            if p.client_order_id == parent_coid:
+                return p
+        return None
+
+    def move_lot_stop(self, symbol: str, parent_coid: str, stop_price: float, prefix: str) -> None:
+        """Move the open stop leg of ONE lot (the bracket/OTO whose parent client id is parent_coid)."""
+        from alpaca.trading.requests import ReplaceOrderRequest
+
+        p = self._lot_parent(symbol, parent_coid, prefix)
+        for leg in (getattr(p, "legs", None) or []) if p is not None else []:
+            if getattr(leg, "stop_price", None) is not None and self._state(leg) in self.OPEN_STATES:
+                self.client.replace_order_by_id(leg.id, ReplaceOrderRequest(stop_price=stop_price))
+                return
+        raise RuntimeError(f"no open stop leg for lot {parent_coid}")
+
+    def close_mcf_lot(self, symbol: str, parent_coid: str, prefix: str, wait_s: float = 20.0, tries: int = 5,
+                      sleep=None) -> bool:
+        """Close ONE lot: cancel its own legs (never another lot's), wait until they are cancelled, then close exactly
+        the lot's remaining quantity. Returns True when the lot is flat (also when one of its legs filled first or the
+        entry never filled). Other lots on the symbol keep their shares and their resting stop/target legs."""
+        import time as _t
+
+        sleep = sleep or _t.sleep
+        p = self._lot_parent(symbol, parent_coid, prefix)
+        if p is None:
+            raise RuntimeError(f"lot {parent_coid} not found")
+        waited = 0.0
+        if self._state(p) in self.OPEN_STATES:          # entry not (fully) filled yet: cancel it (and its legs)
+            self._cancel([p.id])
+            while waited < wait_s:
+                p = self._lot_parent(symbol, parent_coid, prefix) or p
+                if self._state(p) not in self.OPEN_STATES:
+                    break
+                sleep(0.5)
+                waited += 0.5
+        filled = abs(float(getattr(p, "filled_qty", 0) or 0))
+        if filled <= 0:
+            return True
+        legs = getattr(p, "legs", None) or []
+        if any(self._state(leg) == "filled" for leg in legs):
+            return True                                   # its stop or target already closed it
+        self._cancel([leg.id for leg in legs if self._state(leg) in self.OPEN_STATES])
+        while True:
+            p = self._lot_parent(symbol, parent_coid, prefix) or p
+            legs = getattr(p, "legs", None) or []
+            if any(self._state(leg) == "filled" for leg in legs):
+                return True                               # a leg filled while cancelling: already flat
+            if not any(self._state(leg) in self.OPEN_STATES for leg in legs):
+                break
+            if waited >= wait_s:
+                return False                              # legs still hold the shares; retried next poll
+            sleep(0.5)
+            waited += 0.5
+        qty = filled - sum(abs(float(getattr(leg, "filled_qty", 0) or 0)) for leg in legs)
+        if qty <= 0:
+            return True
+        long = str(getattr(p.side, "value", p.side)).lower() == "buy"
+        coid = self.lot_exit_coid(parent_coid)
+        for k in range(tries):
+            try:
+                self._submit_lot_exit(symbol, qty, long, coid)
+                return True
+            except Exception as e:
+                if "client_order_id" in str(e).lower() and "unique" in str(e).lower():
+                    return True                           # an earlier attempt was accepted
+                print(f"close lot {parent_coid} attempt {k + 1}/{tries} failed: {e}")
+                sleep(1.0 + k)
+        return False
+
+    def _submit_lot_exit(self, symbol: str, qty: float, long: bool, coid: str):
+        from alpaca.trading.enums import OrderSide, TimeInForce
+        from alpaca.trading.requests import LimitOrderRequest, MarketOrderRequest
+
+        side = OrderSide.SELL if long else OrderSide.BUY
+        if self._market_open():
+            return self.client.submit_order(MarketOrderRequest(symbol=symbol, qty=qty, side=side,
+                                                               time_in_force=TimeInForce.DAY, client_order_id=coid))
+        px = float(self.positions()[symbol].current_price)
+        return self.client.submit_order(LimitOrderRequest(
+            symbol=symbol, qty=qty, side=side, limit_price=round(px * (0.995 if long else 1.005), 2),
+            time_in_force=TimeInForce.DAY, extended_hours=True, client_order_id=coid))
+
     def cancel_orders_for_symbol(self, symbol: str, prefix: str) -> None:
         self._cancel(self._open_mcf_ids(symbol, prefix))
 
