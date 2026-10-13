@@ -100,3 +100,9 @@ setups, -FD = 'full', windowed = 'current'):**
   qualifying bars; computed for NS1/NS5 from the frames, primary book).
 Reported per mechanism: extra long trades/day, their lab exp R, short trades displaced/day and their exp R, and the
 implementation size. 2 books x 7 scenarios = 14 replays (entry counts and existing lab R; no new setup is scored).
+
+## Amendments
+**A1 (2026-10-13, before Mf was computed).** Mf (retry after release) is not replayed: the primary longs NS1/NS5 lose
+only 2-4% of signals in the M0 replay, so there is nothing to recover in primary, and an all-bars replay of the
+Testing 1 longs needs columns outside this study's compact frame. Mf is reported with its live mechanics
+(`runner.seen` blocks every retry) and an implementation estimate only. N is unchanged (no configuration scored).
