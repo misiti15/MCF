@@ -232,4 +232,13 @@ stricter standard.
   (`live/verify.json`). Their config entries are proposed in NOTES.md, not written.
 
 ## Amendments
-(none)
+**A1 (2026-10-13, before any configuration was scored; clarification of section 4).**
+- The plateau neighbours are fixed as follows.
+- **Part A:** the other threshold of the same oversold family and the other lookback L. The windows are different
+  trade sets, not neighbours.
+- **Part B:** the one-step depth neighbours inside the same unit (% or ATR), and the adjacent entry:
+  - E945 <-> E950 <-> E955;
+  - each trigger <-> E955.
+- In Part A, frame features (rsi, rsi5, sma20_dist_pct) count only from the 09:50 bar, as in the history frames. The
+  live module masks them before 09:50 for parity.
+- N is unchanged.

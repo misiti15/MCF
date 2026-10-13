@@ -87,7 +87,7 @@ def five(mn):
     miss = ~np.isfinite(C)
     O, H, L, C = (np.where(miss, Cf, x) for x in (O, H, L, C))
     V = np.where(miss, 0.0, V)
-    return O, H, L, C, V, have, mn["open"][:, 0], mn["volume"][:, :15].sum(1) if True else None
+    return O, H, L, C, V, have
 
 
 def work(args):
@@ -96,7 +96,7 @@ def work(args):
     mn = minutes(store, sym)
     if mn is None:
         return sym, None
-    O, H, L, C, V, have, o930, v15 = five(mn)
+    O, H, L, C, V, have = five(mn)
     o0 = agg5(mn["open"], "first")[:, 0]
     # heat_frame VWAP: cumulative 5-minute typical price x volume per session
     typ = (H + L + C) / 3
@@ -230,7 +230,7 @@ def main():
     for e in syms:
         i = syms.index(e)
         mn = {kk: z[kk][i].astype(float) for kk in ("open", "high", "low", "close", "volume")}
-        O, H, L, C, V, have, o930, _ = five(mn)
+        O, H, L, C, V, have = five(mn)
         o0 = agg5(mn["open"], "first")[:, 0]
         mk[f"{e}_C"] = C.astype(np.float32)
         mk[f"{e}_LOD"] = np.fmin.accumulate(L, 1).astype(np.float32)
