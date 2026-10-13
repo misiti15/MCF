@@ -67,7 +67,8 @@ jobs:
         run: git clone -q --depth 20 --branch "$STATE_BRANCH" "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
       - name: Build and email the report
         if: steps.w.outputs.run == 'true'
-        run: python -m mcf.cli eod --state-dir state ${{ inputs.day && format('--day {0}', inputs.day) || '' }}
+        # email only for Primary (owner 2026-10-12); Testing 1/2 reports are still built and saved for the dashboard
+        run: python -m mcf.cli eod --state-dir state ${{ inputs.day && format('--day {0}', inputs.day) || '' }} ${{ matrix.account != 'primary' && '--no-send' || '' }}
       - name: Save the report to the state branch
         if: steps.w.outputs.run == 'true'
         run: |
