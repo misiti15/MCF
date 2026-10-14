@@ -33,6 +33,7 @@ from .alpaca_broker import AlpacaBroker
 from .risk import RiskManager
 
 NY = TZ
+SPLIT_TAPE_SYMBOLS = ("QQQ", "IWM")
 COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mct-" (never touches the other book)
 # Entry client order ids: <prefix><setup>-<symbol>-<YYYYMMDD> (one entry per setup/symbol/day, live.same_setup_reentry
 # false) or <prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM> (HHMM = the signal's decision bar, so every lot of a setup on a
@@ -67,7 +68,14 @@ class PaperRunner:
         self.live = cfg.get("live", {})
         self.strategies = strategies
         self.priors = priors
-        self.watchlist = sorted(priors)
+        # Split-tape short gate (owner 2026-10-14, live.split_tape_short_gate; Testing 1 only): QQQ and IWM bars are
+        # fetched every poll even when they are not in today's universe (they are never traded unless in priors).
+        sg = self.live.get("split_tape_short_gate") or {}
+        self.split_gate = bool(sg.get("enabled", False))
+        self.split_spread = float(sg.get("spread_pct", 0.50))
+        self.split_stale_min = int(sg.get("max_stale_min", 3))
+        self.watchlist = sorted(set(priors) | (set(SPLIT_TAPE_SYMBOLS) if self.split_gate else set()))
+        self._split_cache: tuple | None = None
         self.dry_run = dry_run
         self.broker = broker or AlpacaBroker(paper=True)
         self.dc = data_client
@@ -547,6 +555,40 @@ class PaperRunner:
         base = f"{COID_PREFIX}{sig.strategy}-{sig.symbol}-{now:%Y%m%d}"
         return f"{base}-{self._moment(sig, ctx, now)}" if self.same_setup_reentry else base
 
+    # ---------------------------------------------------------------- split-tape short gate
+    def _split_tape(self, now) -> dict | None:
+        """QQQ and IWM return from today's open (%) on their latest completed 1-minute bars, and the spread QQQ - IWM.
+        None when either is missing or stale (> max_stale_min behind the last completed minute): the gate then does not
+        block, and health carries a warning. Cached per poll minute."""
+        cut = pd.Timestamp(now).floor("1min")
+        if self._split_cache and self._split_cache[0] == cut:
+            return self._split_cache[1]
+        rets, why = {}, None
+        for sym in SPLIT_TAPE_SYMBOLS:
+            b = self.bars.get(sym)
+            b = b[(b.index < cut) & (b.index.date == cut.date())] if b is not None and len(b) else None
+            if b is None or b.empty:
+                why = f"{sym} bars missing"
+                break
+            if b.index[-1] < cut - pd.Timedelta(minutes=1 + self.split_stale_min):
+                why = f"{sym} bars stale (last {b.index[-1]:%H:%M})"
+                break
+            o = float(b["open"].iloc[0])
+            if not o > 0:
+                why = f"{sym} open missing"
+                break
+            rets[sym] = (float(b["close"].iloc[-1]) / o - 1) * 100
+        if why:
+            out = None
+            self.health["split_tape_gate"] = {"warning": f"split-tape short gate not applied: {why}", "at": str(cut)}
+            print(f"WARNING split-tape short gate: {why}; shorts not blocked")
+        else:
+            out = {"qqq_ret": round(rets["QQQ"], 4), "iwm_ret": round(rets["IWM"], 4),
+                   "spread": round(rets["QQQ"] - rets["IWM"], 4)}
+            self.health["split_tape_gate"] = {**out, "blocking": out["spread"] >= self.split_spread, "at": str(cut)}
+        self._split_cache = (cut, out)
+        return out
+
     def _quote(self, symbol: str):
         from alpaca.data.enums import DataFeed
         from alpaca.data.requests import StockLatestQuoteRequest
@@ -597,6 +639,10 @@ class PaperRunner:
             sh = self.cfg.get("shorts", {})
             if not sh.get("enabled", True):
                 return self._log(sig, "skipped", "shorts disabled", px, now)
+            if self.split_gate:
+                gate = self._split_tape(now)
+                if gate is not None and gate["spread"] >= self.split_spread:
+                    return self._log(sig, "skipped", "split-tape short gate", px, now, gate)
             if sh.get("require_easy_to_borrow", True) and not self.broker.can_short(sig.symbol):
                 return self._log(sig, "skipped", "not shortable/ETB", px, now)
         ok, why = self.risk.check(sig, px)

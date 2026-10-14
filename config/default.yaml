@@ -360,3 +360,11 @@ live:
   # Client ids carry the decision-bar time (<prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM>), one per lot.
   # false: one entry per setup/symbol/day (pre-2026-10-14 behaviour, ids without -HHMM).
   same_setup_reentry: true
+  # Split-tape short gate (owner 2026-10-14; research/bdi/bdi1013/NOTES.md Part B, G7 "div0.50"): skip NEW short entries
+  # while QQQ's return from today's open minus IWM's return from today's open is >= spread_pct percentage points, on the
+  # latest completed 1-minute bars at decision time. Longs and open positions unaffected. Skips are journaled
+  # "split-tape short gate" with {qqq_ret, iwm_ret, spread} (what-if simulated). Missing/stale QQQ or IWM bars never
+  # block (health warning). OFF here (Primary, Testing 2); on in config/account_testing.yaml (Testing 1 forward test).
+  split_tape_short_gate:
+    enabled: false
+    spread_pct: 0.50

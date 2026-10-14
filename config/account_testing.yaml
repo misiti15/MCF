@@ -20,6 +20,10 @@ live:
   # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
   retry_after_release: true
   longs_first_on_ties: true
+  # Owner 2026-10-14 (research/bdi/bdi1013/NOTES.md G7, Testing 1 only): skip new shorts while QQQ fo - IWM fo >= 0.50%.
+  split_tape_short_gate:
+    enabled: true
+    spread_pct: 0.50
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
