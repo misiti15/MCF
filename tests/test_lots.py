@@ -184,6 +184,20 @@ def _enter(r, name, side=1, stop=9.0, target=12.0, now=NOW, **kw):
     r._enter(Signal("XYZ", name, side, 10, stop=stop, target=target, **kw), 10.0, ("XYZ", name), CTX, now)
 
 
+def ID(name, hhmm="1000"):
+    """Entry client id of setup `name`'s lot on XYZ (re-entry ids carry the decision-bar time)."""
+    return f"mcf-{name}-XYZ-20261013-{hhmm}"
+
+
+def _setups(r, sym="XYZ"):
+    """Setups holding a lot on sym, in lot order (lots are keyed by entry client id)."""
+    return [lot["strategy"] for lot in r.lots.get(sym, {}).values()]
+
+
+def _managed(r):
+    return {m["strategy"] for m in r.managed.values()}
+
+
 def _skips(r):
     s = r.journal.signals(r.run_id)
     return {x.strategy: (x.reason, json.loads(x.info or "{}").get("held_by")) for x in s.itertuples() if x.status == "skipped"}
@@ -202,7 +216,7 @@ def test_three_lots_same_poll_then_lot_cap_and_opposite_side(tmp_path, monkeypat
         _enter(r, name)
     _enter(r, "S", side=-1, stop=11.0, target=9.0)
     coids = [o.client_order_id for o in c.orders]
-    assert coids == [f"mcf-{n}-XYZ-20261013" for n in "ABC"] and len(set(coids)) == 3
+    assert coids == [f"mcf-{n}-XYZ-20261013-1000" for n in "ABC"] and len(set(coids)) == 3
     assert all(len(o.legs) == 2 for o in c.orders)                # each lot is its own bracket for its own qty
     assert _skips(r) == {"D": ("lot cap", ["A", "B", "C"]), "S": ("opposite side held", ["A", "B", "C"])}
     assert r.risk.open_lots() == 3 and r.risk.state.open_by_strategy == {"A": 1, "B": 1, "C": 1}
@@ -216,7 +230,7 @@ def test_opposite_side_blocked_and_slots_count_lots(tmp_path, monkeypatch):
     _enter(r, "L")                                                  # long into a short lot
     _enter(r, "B", side=-1, stop=11.0, target=9.0)
     _enter(r, "C", side=-1, stop=11.0, target=9.0)                  # 2 lots = 2 slots used
-    assert [o.client_order_id for o in c.orders] == ["mcf-A-XYZ-20261013", "mcf-B-XYZ-20261013"]
+    assert [o.client_order_id for o in c.orders] == ["mcf-A-XYZ-20261013-1000", "mcf-B-XYZ-20261013-1000"]
     sk = _skips(r)
     assert sk["L"] == ("opposite side held", ["A"]) and sk["C"][0] == "max concurrent positions"
 
@@ -225,20 +239,20 @@ def _three_filled(r, c, **mgmt):
     for name, stop in (("A", 9.0), ("B", 9.5), ("C", 8.0)):
         _enter(r, name, stop=stop, target=12.0, **mgmt.get(name, {}))
     for i, name in enumerate("ABC"):
-        c.fill(f"mcf-{name}-XYZ-20261013", 10.0 + 0.02 * i)
-    return {n: int(float(c.by_coid(f"mcf-{n}-XYZ-20261013").qty)) for n in "ABC"}
+        c.fill(f"mcf-{name}-XYZ-20261013-1000", 10.0 + 0.02 * i)
+    return {n: int(float(c.by_coid(f"mcf-{n}-XYZ-20261013-1000").qty)) for n in "ABC"}
 
 
 def test_independent_exits_one_journal_row_per_lot(tmp_path, monkeypatch):
     r, c = _runner(tmp_path, monkeypatch)
     q = _three_filled(r, c)
     assert c.pos["XYZ"] == sum(q.values())                          # netted at the broker
-    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)
-    c.hit("mcf-B-XYZ-20261013", "target", 12.0)
+    c.hit("mcf-A-XYZ-20261013-1000", "stop", 9.0)
+    c.hit("mcf-B-XYZ-20261013-1000", "target", 12.0)
     assert c.pos["XYZ"] == q["C"]
     r.reconcile(DAY)
     t = r.journal.trades(run_id=r.run_id).set_index("strategy")
-    assert set(t.index) == {"A", "B"} and list(r.lots["XYZ"]) == ["C"]   # A and B released, C still open
+    assert set(t.index) == {"A", "B"} and list(_setups(r)) == ["C"]   # A and B released, C still open
     c.price["XYZ"] = 10.5
     r.flatten_mcf()
     assert "XYZ" not in c.pos and r.health["flatten_failed"] == []
@@ -274,29 +288,29 @@ def test_time_stop_and_breakeven_touch_only_their_own_lot(tmp_path, monkeypatch)
     r, c = _runner(tmp_path, monkeypatch)
     # A: wide stop, 30-min time stop; B: tight stop, breakeven at 1R; C: unmanaged
     q = _three_filled(r, c, A={"time_stop_min": 30, "time_stop_min_r": 0.3}, B={"be_at_r": 1.0})
-    assert set(r.managed) == {("XYZ", "A"), ("XYZ", "B")}
+    assert _managed(r) == {"A", "B"}
     c.price["XYZ"] = 10.1
     r.manage(NOW + pd.Timedelta(minutes=35), {"XYZ": _bars(NOW, 36, 10.6)})
-    a, b_, cc = (c.by_coid(f"mcf-{n}-XYZ-20261013") for n in "ABC")
+    a, b_, cc = (c.by_coid(f"mcf-{n}-XYZ-20261013-1000") for n in "ABC")
     # A: risk 1.0, best 0.6R >= 0.3 -> no time stop yet; B: risk 0.5, best 1.2R -> stop to breakeven (10.0)
     assert all(l.status in OPEN for l in a.legs) and all(l.status in OPEN for l in cc.legs)
     b_stop = next(l for l in b_.legs if l.order_type == "stop")
     assert b_stop.stop_price == 10.0 and [x[0] for x in c.replaced] == [b_stop.id]
     # a second session where A never works: time stop closes exactly A's qty and cancels only A's legs
-    r.managed[("XYZ", "A")]["best"] = 0.0
+    r.managed[("XYZ", ID("A"))]["best"] = 0.0
     r.bars = {"XYZ": _bars(NOW, 37, 10.2)}
     r.manage(NOW + pd.Timedelta(minutes=36), r.bars)
     assert all(l.status == "canceled" for l in a.legs)
     assert all(l.status in OPEN for l in b_.legs + cc.legs)
-    ex = c.by_coid("mcf-A-XYZ-20261013-x")
+    ex = c.by_coid("mcf-A-XYZ-20261013-1000-x")
     assert ex.side == "sell" and float(ex.qty) == q["A"] and c.pos["XYZ"] == q["B"] + q["C"]
-    assert ("XYZ", "A") not in r.managed and set(r.lots["XYZ"]) == {"B", "C"}
+    assert ("XYZ", ID("A")) not in r.managed and set(_setups(r)) == {"B", "C"}
     r.reconcile(DAY)
     t = r.journal.trades(run_id=r.run_id)
     assert len(t) == 1 and t.iloc[0].strategy == "A" and t.iloc[0].exit_reason == "timestop"
     assert t.iloc[0].pnl == pytest.approx((10.1 - 10.0) * q["A"]) and pd.notna(t.iloc[0].mfe_r) and t.iloc[0].mfe_r == pytest.approx(0.2)
     # B stopped at breakeven, C flattened: each gets its own exit, never A's lot exit
-    c.hit("mcf-B-XYZ-20261013", "stop", 10.0)
+    c.hit("mcf-B-XYZ-20261013-1000", "stop", 10.0)
     c.price["XYZ"] = 10.3
     r.flatten_mcf()
     r.reconcile(DAY)
@@ -309,7 +323,7 @@ def test_time_stop_and_breakeven_touch_only_their_own_lot(tmp_path, monkeypatch)
 def test_time_stop_skips_a_lot_its_own_stop_already_closed(tmp_path, monkeypatch):
     r, c = _runner(tmp_path, monkeypatch)
     q = _three_filled(r, c, A={"time_stop_min": 30, "time_stop_min_r": 0.3})
-    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)                     # closed at the broker; reconcile not run yet
+    c.hit("mcf-A-XYZ-20261013-1000", "stop", 9.0)                     # closed at the broker; reconcile not run yet
     r.manage(NOW + pd.Timedelta(minutes=35), {"XYZ": _bars(NOW, 36, 10.05)})
     assert not any(o.client_order_id.endswith("-x") for o in c.orders)   # B's and C's shares untouched
     assert c.pos["XYZ"] == q["B"] + q["C"]
@@ -322,18 +336,18 @@ def test_restart_restores_two_open_lots(tmp_path, monkeypatch):
 
     r, c = _runner(tmp_path, monkeypatch)
     q = _three_filled(r, c, A={"be_at_r": 1.0}, B={"time_stop_min": 30, "time_stop_min_r": 0.3})
-    c.hit("mcf-C-XYZ-20261013", "target", 12.0)
+    c.hit("mcf-C-XYZ-20261013-1000", "target", 12.0)
     r.reconcile(DAY)                                              # C closed and journaled before the restart
     r2, _ = _runner(tmp_path, monkeypatch, client=c,
                     strategies=[St("A", be_at_r=1.0), St("B", time_stop_min=30, time_stop_min_r=0.3), St("C")])
     r2.restore(DAY)
-    assert set(r2.lots["XYZ"]) == {"A", "B"} and r2.risk.open_lots() == 2
+    assert set(_setups(r2)) == {"A", "B"} and r2.risk.open_lots() == 2
     assert r2.risk.state.open_by_strategy == {"A": 1, "B": 1}
-    assert set(r2.managed) == {("XYZ", "A"), ("XYZ", "B")}
-    assert r2.managed[("XYZ", "B")]["entry"] == 10.02 and r2.managed[("XYZ", "A")]["coid"] == "mcf-A-XYZ-20261013"
+    assert _managed(r2) == {"A", "B"}
+    assert r2.managed[("XYZ", ID("B"))]["entry"] == 10.02 and r2.managed[("XYZ", ID("A"))]["coid"] == "mcf-A-XYZ-20261013-1000"
     _enter(r2, "D")                                               # third lot fits, fourth hits the cap
     _enter(r2, "E")
-    assert c.orders[-1].client_order_id == "mcf-D-XYZ-20261013" and _skips(r2)["E"][0] == "lot cap"
+    assert c.orders[-1].client_order_id == "mcf-D-XYZ-20261013-1000" and _skips(r2)["E"][0] == "lot cap"
 
 
 def test_retry_after_release_under_lots_waits_for_room(tmp_path, monkeypatch):
@@ -343,10 +357,10 @@ def test_retry_after_release_under_lots_waits_for_room(tmp_path, monkeypatch):
     _enter(r, "B")
     _enter(r, "D")                                                 # lot cap (market entry) -> may retry
     for n in "AB":
-        c.fill(f"mcf-{n}-XYZ-20261013", 10.0)
+        c.fill(f"mcf-{n}-XYZ-20261013-1000", 10.0)
     r._sync_open()
     assert not r._retry_ready(("XYZ", "D"))
-    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)
+    c.hit("mcf-A-XYZ-20261013-1000", "stop", 9.0)
     r.reconcile(DAY)
     assert r._retry_ready(("XYZ", "D"))                            # one long lot left, room for a long lot
 
@@ -354,13 +368,13 @@ def test_retry_after_release_under_lots_waits_for_room(tmp_path, monkeypatch):
 def test_reconcile_pairs_lot_exit_not_another_lots_entry():
     t = lambda m: datetime(2026, 10, 13, 14, m, tzinfo=timezone.utc)
     leg = lambda: NS(filled_avg_price=None, filled_at=None, order_type="stop", status="canceled")
-    a = NS(id="pa", client_order_id="mcf-A-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+    a = NS(id="pa", client_order_id="mcf-A-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price="10",
            filled_qty="5", filled_at=t(1), status="filled", legs=[leg()])
-    b = NS(id="pb", client_order_id="mcf-B-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="11",
+    b = NS(id="pb", client_order_id="mcf-B-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price="11",
            filled_qty="3", filled_at=t(2), status="filled", legs=[leg()])
-    bx = NS(id="xb", client_order_id="mcf-B-XYZ-20261013-x", symbol="XYZ", side="sell", filled_avg_price="12",
+    bx = NS(id="xb", client_order_id="mcf-B-XYZ-20261013-1000-x", symbol="XYZ", side="sell", filled_avg_price="12",
             filled_qty="3", filled_at=t(3), status="filled", legs=None)
-    never = NS(id="pc", client_order_id="mcf-C-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price=None,
+    never = NS(id="pc", client_order_id="mcf-C-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price=None,
                filled_qty="0", filled_at=None, status="canceled", legs=None)
     rows = pd.DataFrame([{"broker_order_id": i, "symbol": "XYZ", "strategy": s, "side": 1, "stop": 9.0, "target": None,
                           "entry_ref": 10.0, "meta": "", "created_at": "2026-10-13T14:00:00+00:00"}
@@ -420,15 +434,15 @@ def _realized(c, sym="XYZ"):
 def test_sibling_stop_fill_never_closes_a_lot_whose_legs_are_working(tmp_path, monkeypatch):
     r, c = _runner(tmp_path, monkeypatch, client=LeakyAlpaca())
     q = _three_filled(r, c)
-    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)                      # lot A stops out; B and C keep working legs
+    c.hit("mcf-A-XYZ-20261013-1000", "stop", 9.0)                      # lot A stops out; B and C keep working legs
     assert c.pos["XYZ"] == q["B"] + q["C"]
     r.reconcile(DAY)
     t = r.journal.trades(run_id=r.run_id)
     assert list(t.strategy) == ["A"] and t.iloc[0].exit_reason == "stop"
-    assert set(r.lots["XYZ"]) == {"B", "C"} and r.risk.open_lots() == 2     # not released: shares still held
-    assert set(r.journal.open_orders(r.run_id).broker_order_id) == {c.by_coid(f"mcf-{n}-XYZ-20261013").id for n in "BC"}
+    assert set(_setups(r)) == {"B", "C"} and r.risk.open_lots() == 2     # not released: shares still held
+    assert set(r.journal.open_orders(r.run_id).broker_order_id) == {c.by_coid(f"mcf-{n}-XYZ-20261013-1000").id for n in "BC"}
     r.reconcile(DAY)                                                # idempotent: still nothing for B / C
-    assert len(r.journal.trades(run_id=r.run_id)) == 1 and set(r.lots["XYZ"]) == {"B", "C"}
+    assert len(r.journal.trades(run_id=r.run_id)) == 1 and set(_setups(r)) == {"B", "C"}
     c.price["XYZ"] = 10.5
     r.flatten_mcf()
     r.reconcile(DAY)
@@ -446,13 +460,13 @@ def test_moved_stop_replacement_belongs_to_its_own_lot():
     t = lambda m: datetime(2026, 10, 13, 14, m, tzinfo=timezone.utc)
     leg = lambda i, st, typ="stop": NS(id=i, filled_avg_price=None, filled_at=None, filled_qty="0", order_type=typ,
                                        status=st, side="sell", symbol="XYZ", legs=None)
-    a = NS(id="pa", client_order_id="mcf-A-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+    a = NS(id="pa", client_order_id="mcf-A-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price="10",
            filled_qty="5", filled_at=t(1), status="filled", legs=[leg("la", "replaced"), leg("ta", "canceled", "limit")])
     a_new = NS(id="la2", replaces="la", client_order_id="uuid-1", symbol="XYZ", side="sell", filled_avg_price="10.2",
                filled_qty="5", filled_at=t(5), status="filled", order_type="stop", legs=None)
-    b = NS(id="pb", client_order_id="mcf-B-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+    b = NS(id="pb", client_order_id="mcf-B-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price="10",
            filled_qty="3", filled_at=t(2), status="filled", legs=[leg("lb", "held"), leg("tb", "new", "limit")])
-    c = NS(id="pc", client_order_id="mcf-C-XYZ-20261013", symbol="XYZ", side="buy", filled_avg_price="10",
+    c = NS(id="pc", client_order_id="mcf-C-XYZ-20261013-1000", symbol="XYZ", side="buy", filled_avg_price="10",
            filled_qty="4", filled_at=t(3), status="filled", legs=[leg("lc", "canceled"), leg("tc", "canceled", "limit")])
     flat = NS(id="f1", client_order_id="uuid-2", symbol="XYZ", side="sell", filled_avg_price="9.9", filled_qty="4",
               filled_at=t(6), status="filled", order_type="market", legs=None)   # closed C's 4 shares only
@@ -473,10 +487,10 @@ def test_partial_target_then_flatten_books_blended_exit(tmp_path, monkeypatch):
     q = _three_filled(r, c)
     n = q["B"] // 2
     assert 0 < n < q["B"]
-    c.part_fill("mcf-B-XYZ-20261013", 12.0, n)                    # B's target fills n shares, the rest keeps working
-    c.hit("mcf-A-XYZ-20261013", "stop", 9.0)
+    c.part_fill("mcf-B-XYZ-20261013-1000", 12.0, n)                    # B's target fills n shares, the rest keeps working
+    c.hit("mcf-A-XYZ-20261013-1000", "stop", 9.0)
     r.reconcile(DAY)
-    assert list(r.journal.trades(run_id=r.run_id).strategy) == ["A"] and set(r.lots["XYZ"]) == {"B", "C"}
+    assert list(r.journal.trades(run_id=r.run_id).strategy) == ["A"] and set(_setups(r)) == {"B", "C"}
     c.price["XYZ"] = 10.5
     r.flatten_mcf()                                                # cancels B's working legs, closes the rest
     assert "XYZ" not in c.pos
@@ -491,7 +505,7 @@ def test_partial_target_then_flatten_books_blended_exit(tmp_path, monkeypatch):
 
 def test_partial_target_remainder_by_stop_leg():
     t = lambda m: datetime(2026, 10, 13, 14, m, tzinfo=timezone.utc)
-    p = NS(id="p", client_order_id="mcf-A-XYZ-20261013", symbol="XYZ", side="sell", filled_avg_price="20",
+    p = NS(id="p", client_order_id="mcf-A-XYZ-20261013-1000", symbol="XYZ", side="sell", filled_avg_price="20",
            filled_qty="10", filled_at=t(1), status="filled", legs=[
                NS(id="tp", order_type="limit", status="canceled", filled_qty="4", filled_avg_price="19", filled_at=t(2),
                   side="buy", symbol="XYZ", legs=None),
