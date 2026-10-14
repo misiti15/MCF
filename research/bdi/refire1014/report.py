@@ -100,7 +100,7 @@ def main():
     res.to_csv(HERE / "results.csv", index=False)
     acct = {}
     for a in ACCOUNTS:
-        sub = res[res["accounts"].str.contains(a + "($|/)", regex=True)]
+        sub = res[res["accounts"].str.contains(a + "(?:$|/)", regex=True)]
         rec = sub[sub["refire"]]
         extra = sum(r[f"cd{int(r['recommend_cd'])}_x_per_day"] for _, r in rec.iterrows())
         acct[a] = {"setups": int(len(sub)), "recommended_on": int(len(rec)),
