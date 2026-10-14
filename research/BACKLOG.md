@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 387 · coded: 80 · failed: 201 · configurations tried (all lineages): 21968689
+Total ideas: 391 · coded: 80 · failed: 203 · configurations tried (all lineages): 21969169
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -188,6 +188,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1013-tight-target-progress-skip | Tight-target market entries (t05 geometries): skip when the live quote has already covered most of the distance to target | nightly-2026-10-13 | – | – | – | – | – | – |
 | idea | nightly-1014-fd-short-late-giveback | Testing 1 short lots still open at 15:00: exit or tighten the stop to break-even / +0.5R at 15:00-15:30 instead of riding to the 15:55 flatten | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1014-t2-cap50-review | Testing 2: per-setup open-lot cap 50 vs 25 vs 35 - re-score with the -60R daily halt simulated | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1014-rw2-extension-floor | RW2-exhaustion-noon-adv150-short: require a deeper extension at entry (fromOpen >= 2.5% or RSI5 >= 90) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1014-st2-wrong-side | ST2-slope20up-long-am: skip when the stock is already >= 3% below its open at the entry bar | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -389,6 +391,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | bdi1013-splitgate-qqq-up-iwm-down | Skip new shorts when QQQ is above its open and VWAP while IWM is below its open (split tape) | BDI 2026-10-13 (research/bdi/bdi1013/NOTES.md) | – | – | – | – | – | – |
 | failed | nightly-1014-cwt14-skip-first-bar | CWT14 fail-break setups (Testing 2): no entry on the 09:50 first decision bar; the first qualifying bar from 09:55 fires instead | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
 | failed | nightly-1014-liq-orl-index-confirm | LIQ-orl-sweep-open15-s25-long (Testing 1): fire only while SPY is up from its open (a) or above its session VWAP (b) at the decision bar | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1014-cwt14-sar | CWT14 stop-and-reverse: when a fail-break trade's bracket stop fills, enter the breakout side (stop-entry at the stop, or market at the stop bar's close), 5 exit geometries | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1014-cwt14-sar-ixalign | CWT14 stop-and-reverse, rework: reverse only when SPY's fromOpen at the stop bar is on the reversal's side (k = 0 / 0.25%) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
