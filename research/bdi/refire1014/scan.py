@@ -263,6 +263,10 @@ def month_hits(month: str, sts: list[dict]) -> tuple[list[pd.DataFrame], dict]:
     return rows, rw6days
 
 
+def _month_job(args):
+    return month_hits(*args)
+
+
 def main():
     SCR.mkdir(parents=True, exist_ok=True)
     sts = account_setups()
@@ -273,13 +277,14 @@ def main():
     print(len(sts), "unique setups", flush=True)
     t0 = time.time()
     rows, rw6 = [], {}
-    for mo in lib.months():
-        assert mo not in lib.LOCKED_MONTHS
-        r, d = month_hits(mo, sts)
-        rows += r
-        for k, v in d.items():
-            rw6.setdefault(k, []).append(v)
-        print(mo, round(time.time() - t0), flush=True)
+    months = lib.months()
+    assert not set(months) & set(lib.LOCKED_MONTHS)
+    with Pool(int(os.environ.get("RF_PROCS", 3))) as p:
+        for mo, (r, d) in zip(months, p.imap(_month_job, [(mo, sts) for mo in months])):
+            rows += r
+            for k, v in d.items():
+                rw6.setdefault(k, []).append(v)
+            print(mo, round(time.time() - t0), flush=True)
     hits = pd.concat(rows, ignore_index=True)
     # RW6G1 guard on rebuilt bars
     jobs = []
