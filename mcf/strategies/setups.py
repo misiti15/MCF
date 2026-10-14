@@ -384,14 +384,27 @@ class LabStrategy(Strategy):
     SIDE ('long'|'short'), GEOM ('t1s1'|'t05s1'|'t1s05': target/stop in R), and mask(df) over the lab
     feature frame (mcf/research/setup_lab.py). Enters at the close of the FIRST complete 5-minute bar
     where mask is true (09:50-15:00 bar closes), R = 0.25 x daily ATR, time exit 15:55 — the outcome
-    model the swarm measured. Configure under `strategies:` with `type: lab`."""
+    model the swarm measured. Configure under `strategies:` with `type: lab`.
+
+    Refire (opt-in, owner 2026-10-14, research/bdi/refire1014): with `refire: true` (per setup, or the live-level
+    default `live.lab_refire`) the setup emits a signal on EVERY qualifying decision bar inside its window, not only
+    the first, except that a signal blocks the next `refire_cooldown` decision bars of this setup on this symbol
+    (default 1: a continuous qualifying run fires every other bar at most). The chain is rebuilt from the day's bars
+    on every call (`refire_select`), so live and backtest pick the same bars; live acts only on the latest bar.
+    Off (the default) keeps the first-qualifying-bar behaviour unchanged."""
 
     name = "lab"
     GEOMS = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5)}
 
     def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0,
-                 window: tuple | list | None = None, prefilter: str | None = None, **params):
-        super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, window=window, prefilter=prefilter, **params)
+                 window: tuple | list | None = None, prefilter: str | None = None, refire: bool = False,
+                 refire_cooldown: int = 1, **params):
+        super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, window=window, prefilter=prefilter,
+                         refire=bool(refire), refire_cooldown=int(refire_cooldown), **params)
+        if self.refire_cooldown < 0:
+            raise ValueError(f"{name}: refire_cooldown must be >= 0")
+        if self.refire:
+            self.max_signals_per_day = 10**6   # every refire signal of the day reaches the caller (live: latest bar only)
         self.name = name
         import importlib.util
         import sys
@@ -468,27 +481,54 @@ class LabStrategy(Strategy):
         hit = np.flatnonzero(m)
         if not len(hit):
             return []
-        i = hit[0]
+        if self.refire:
+            out = []
+            for i in refire_select(hit, self.refire_cooldown, valid=lambda i: self._signal(ctx, bars, d5, f, i) is not None):
+                out.append(self._signal(ctx, bars, d5, f, i))
+                out[-1].meta["refire"] = len(out) > 1      # 2nd+ signal of this setup on this symbol today
+            return out
+        sig = self._signal(ctx, bars, d5, f, hit[0])
+        return [] if sig is None else [sig]
+
+    def _signal(self, ctx, bars, d5, f, i) -> Signal | None:
+        """The signal for decision bar i (index into today's 5-minute bars), or None when it cannot be traded."""
         end = min(bars.index.searchsorted(d5.index[i] + pd.Timedelta(minutes=4)), len(bars) - 1)
         px, r = float(d5["close"].iloc[i]), self.r_atr_frac * ctx.atr
         if r <= 0:
-            return []
+            return None
         s = self.side
         if self.structural:
             stop = float(self.mod.stop_price(f, i))
             if not np.isfinite(stop) or s * (px - stop) <= 0:
-                return []   # the stop must sit beyond the entry (as scored: such trades were skipped)
+                return None   # the stop must sit beyond the entry (as scored: such trades were skipped)
             # optional target_price(f, i, stop) (opt-in, research/bdi/reddit1012liq): a limit target, e.g. 2.5R of the
             # structural risk or VWAP; modules without it keep target None (hold to 15:55)
             target = None
             if hasattr(self.mod, "target_price"):
                 target = float(self.mod.target_price(f, i, stop))
                 if not np.isfinite(target) or s * (target - px) <= 0:
-                    return []
-            return [Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=target, exit_by=t("15:55"),
-                           meta={"layers": " + ".join(getattr(self.mod, "LAYERS", [])), "exit": "structural"})]
-        return [Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
-                       exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})]
+                    return None
+            return Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=target, exit_by=t("15:55"),
+                          meta={"layers": " + ".join(getattr(self.mod, "LAYERS", [])), "exit": "structural"})
+        return Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
+                      exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})
+
+
+def refire_select(hits, cooldown: int = 1, valid=None) -> list[int]:
+    """Refire chain (LabStrategy `refire`): the qualifying decision-bar indices `hits` (ascending, one symbol-day)
+    that emit a signal. The first (valid) hit fires; a later hit fires when more than `cooldown` bars have passed since
+    the previous emitted signal (cooldown 1: bars i and i+1 cannot both fire, i and i+2 can). `valid(i)` (optional)
+    drops untradeable bars before the chain, so they neither fire nor start a cooldown. Shared by the live strategy
+    and the research scan (research/bdi/refire1014) so both pick the same bars."""
+    out: list[int] = []
+    for i in hits:
+        i = int(i)
+        if out and i - out[-1] <= cooldown:
+            continue
+        if valid is not None and not valid(i):
+            continue
+        out.append(i)
+    return out
 
 
 REGISTRY: dict[str, type[Strategy]] = {
@@ -517,6 +557,11 @@ def build_strategies(cfg: dict) -> list[Strategy]:
             out.append(HeatStrategy(name=name, **params))
             continue
         if kind == "lab":
+            # refire (2nd+ signals of a setup per symbol-day): live.lab_refire / live.lab_refire_cooldown are the
+            # account default; a setup's own `refire` / `refire_cooldown` wins (refire: false for once-a-day designs)
+            live = cfg.get("live", {}) or {}
+            params.setdefault("refire", bool(live.get("lab_refire", False)))
+            params.setdefault("refire_cooldown", int(live.get("lab_refire_cooldown", 1)))
             out.append(LabStrategy(name=name, **params))
             continue
         cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
