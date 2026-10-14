@@ -2,6 +2,14 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-14: real-funds planning (applies when real money goes in)
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| S6 crash protection | Insurance that costs 7-21 points a year is too much. | No stops, trend filter or wider book in S6 (study `research/longhold/protect1014/`: 121 configs, 0 pass). Protection is position size: plan for -45% (backtest) to about -60% (2008-type). The -25% halt on new orders stays. |
+| Profit skim | Lock in some cash as profits grow, without draining trading capital. **30% of profits**, not 50%. Real-funded accounts only. | Proposed rule, to finalize before funding: per account, a starting capital and a high-water mark; each month, 30% of new profit above the prior high-water mark moves to cash or T-bills outside trading capital; no sweep in a down month. Where the cash sits (same account or a separate one) is still open. |
+| Taxes | Revisit tax implications before any real-funded account. | **Open item, must be resolved before funding.** Points to take to a CPA: nearly all MCF gains are short-term (held 1 year or less, taxed as ordinary income); wash-sale rule with constant re-trading; trader tax status and the 475(f) mark-to-market election; a reserve (about 30-35% of realized gains) set aside before the skim; whether part goes in an IRA (margin and shorting limits). |
+
 ## 2026-10-06: fourth round (research swarm, heat score, daily improvement)
 
 | Topic | Owner request | What was done |
