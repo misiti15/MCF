@@ -225,6 +225,29 @@ class Runner:
                for s, v in d.pos.items()}
         return d.equity(), d.cash, pos
 
+    def _at_close(self, equity: float, cash: float, pos: dict[str, dict]) -> tuple[float, dict[str, dict]]:
+        """Equity and positions marked at today's official closes (raw daily bars), so a mark taken after the close
+        is on the same footing as the broker's last_equity (its 16:00 equity), which is the day P/L's base.
+        The broker's own equity after hours follows extended-hours prints: 2026-10-13 it read 103,471.81 at 20:47 ET
+        (LQDA 39.00 after hours vs 26.81 close) against 100,385.90 at the close, a +$3,085.91 phantom day.
+        Falls back to the broker's equity (with a warning) when any held name has no bar for today."""
+        if not pos:
+            return equity, pos
+        try:
+            b = self.data.bars(list(pos), self.today - timedelta(days=7), self.today, adjustment="raw")
+        except Exception as e:                                       # data outage: keep the broker's equity
+            self.event("data", f"close mark skipped ({e}); broker equity used", "warn")
+            return equity, pos
+        b = b[pd.to_datetime(b["date"]).dt.date == self.today] if b is not None and len(b) else b
+        close = {} if b is None or not len(b) else {str(s): float(g["close"].iloc[-1]) for s, g in b.groupby("symbol")}
+        missing = sorted(set(pos) - set(close))
+        if missing:
+            self.event("data", f"no close for {len(missing)} held names ({', '.join(missing[:5])}): mark uses the "
+                               "broker's equity", "warn")
+            return equity, pos
+        out = {s: {**p, "market_value": p["qty"] * close[s], "current_price": close[s]} for s, p in pos.items()}
+        return cash + sum(p["market_value"] for p in out.values()), out
+
     def load_book(self, name: str) -> Book | None:
         p = self.dir / f"{name}_book.json"
         return Book.from_json(json.loads(p.read_text())) if p.exists() else None
@@ -686,6 +709,8 @@ class Runner:
             return None
         bench = self.advance_books(days)
         equity, cash, pos = self.book()
+        if self.live:
+            equity, pos = self._at_close(equity, cash, pos)
         m = self.marks()
         if len(m):
             m = m[m["date"].astype(str) != str(self.today)]
