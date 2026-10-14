@@ -51,12 +51,12 @@ SILENT_MIN_EXPECTED = 3.0        # 0 signals when >= 3 were expected (Poisson P(
 MIN_SESSIONS = 3                 # silent / starved need >= 3 live sessions (one session is noise); 'watch' before
 
 BUCKETS = ["taken", "held_by_other", "slots_full", "setup_cap", "trades_cap", "daily_loss", "window",
-           "missed_trigger", "borrow", "realism", "price", "rejected", "other"]
+           "missed_trigger", "borrow", "split_gate", "realism", "price", "rejected", "other"]
 BUCKET_LABEL = {
     "taken": "Taken", "held_by_other": "Symbol held by another setup", "slots_full": "Slots full",
     "setup_cap": "Per-setup cap", "trades_cap": "Trades/day cap", "daily_loss": "Daily loss cap",
     "window": "Outside window (shadow)", "missed_trigger": "Trigger missed between polls",
-    "borrow": "Not shortable / shorts off", "realism": "Spread / quote / size", "price": "Price through stop/target",
+    "borrow": "Not shortable / shorts off", "split_gate": "Split-tape short gate", "realism": "Spread / quote / size", "price": "Price through stop/target",
     "rejected": "Broker rejected", "other": "Other",
 }
 
@@ -84,6 +84,8 @@ def classify(status: str, reason: str | None) -> str:
         return "missed_trigger"
     if "shortable" in r or "shorts disabled" in r:
         return "borrow"
+    if r.startswith("split-tape short gate"):
+        return "split_gate"
     if r.startswith(("spread", "no quote", "no two-sided", "size <")):
         return "realism"
     if r.startswith(("price already", "price below")):
