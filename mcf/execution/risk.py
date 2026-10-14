@@ -24,7 +24,11 @@ class RiskManager:
         self.a = cfg["account"]
         self.min_price = cfg["costs"]["min_price"]
         self.equity = equity
-        self.max_lots = max(1, int((cfg.get("live") or {}).get("max_lots_per_symbol", 1) or 1))
+        live = cfg.get("live") or {}
+        self.max_lots = max(1, int(live.get("max_lots_per_symbol", 1) or 1))
+        # owner 2026-10-14: a setup may add a lot on a symbol it already holds when the signal is new (a later bar);
+        # the runner guarantees "new" (never the same setup/symbol/bar twice). false = one lot per setup per symbol.
+        self.same_setup_reentry = bool(live.get("same_setup_reentry", True))
         self.state = RiskState()
 
     def open_lots(self) -> int:
@@ -61,7 +65,7 @@ class RiskManager:
             if self.max_lots <= 1:
                 return False, "already in symbol"
             lots = s.lots.get(sig.symbol) or []
-            if not lots or any(st == sig.strategy for st, _ in lots):
+            if not lots or (not self.same_setup_reentry and any(st == sig.strategy for st, _ in lots)):
                 return False, "already in symbol"       # holder unknown, or this setup already holds a lot here
             if any(side != sig.side for _, side in lots):
                 return False, "opposite side held"

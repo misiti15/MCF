@@ -277,7 +277,8 @@ def _rows(s: pd.DataFrame, tr: pd.DataFrame, sessions_by_setup: dict[str, int], 
         holders = _holders(g[g["bucket"] == "held_by_other"]["held_by"]) if len(g) else pd.Series(dtype=object)
         lost = holders.value_counts().to_dict() if len(holders) else {}
         higher = sum(v for k, v in lost.items() if rank.get(k, 999) < rank.get(st, 999))
-        took = int((_holders(s["held_by"]) == st).sum()) if len(s) else 0
+        others = s[s["strategy"] != st] if len(s) else s     # its own lots blocking itself (re-entry) take nothing
+        took = int((_holders(others["held_by"]) == st).sum()) if len(others) else 0
         n_sig, n_taken = int(len(g)), int(counts.get("taken", 0))
         n_trades = int((tr["strategy"] == st).sum()) if len(tr) else 0
         e = expected.get(st) or {}

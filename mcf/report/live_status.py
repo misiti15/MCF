@@ -55,7 +55,8 @@ def build_status(runner, now, phase: str) -> dict:
             if sym not in runner.open_strategy:
                 continue  # not MCF's
             lots = getattr(runner, "lots", {}).get(sym) or {}
-            positions.append({"symbol": sym, "strategy": ",".join(lots) if lots else runner.open_strategy.get(sym),
+            setups = list(dict.fromkeys(lot.get("strategy", lid) for lid, lot in lots.items()))   # lots keyed by id
+            positions.append({"symbol": sym, "strategy": ",".join(setups) if lots else runner.open_strategy.get(sym),
                               "lots": len(lots) or 1, "side": str(p.side).split(".")[-1].lower(),
                               "qty": _f(p.qty, 0), "entry": _f(p.avg_entry_price), "last": _f(p.current_price),
                               "upl": _f(p.unrealized_pl)})

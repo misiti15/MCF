@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time as _time
 from datetime import datetime, timedelta, timezone
 
@@ -33,6 +34,30 @@ from .risk import RiskManager
 
 NY = TZ
 COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mct-" (never touches the other book)
+# Entry client order ids: <prefix><setup>-<symbol>-<YYYYMMDD> (one entry per setup/symbol/day, live.same_setup_reentry
+# false) or <prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM> (HHMM = the signal's decision bar, so every lot of a setup on a
+# symbol has its own id). A lot's own exit is <entry id>-x; a flatten close is <prefix>flatten-<symbol>-<YYYYMMDDHHMMSS>.
+_COID_RE = re.compile(r"^(?P<setup>.+)-(?P<symbol>[^-]+)-(?P<day>\d{8})(?:-(?P<hhmm>\d{4}))?$")
+
+
+def parse_coid(coid: str | None, prefix: str | None = None):
+    """(setup, symbol, YYYYMMDD, HHMM or None) of an MCF entry id; None for exits (-x), flatten closes, other ids."""
+    prefix = COID_PREFIX if prefix is None else prefix
+    coid = coid or ""
+    if not coid.startswith(prefix) or coid.endswith("-x"):
+        return None
+    m = _COID_RE.match(coid[len(prefix):])
+    if m is None or m["setup"].startswith("flatten"):
+        return None
+    return m["setup"], m["symbol"], m["day"], m["hhmm"]
+
+
+def _info(raw) -> dict:
+    try:
+        d = json.loads(raw or "{}")
+        return d if isinstance(d, dict) else {}
+    except (TypeError, ValueError):
+        return {}
 
 
 class PaperRunner:
@@ -59,19 +84,28 @@ class PaperRunner:
         # EDV x4, GDXJ x3, KMI x3, SHW x2, ARKK x2 stacked).
         self.pending: dict[str, float] = {}
         # trade-management state (time stop / breakeven / trail): keyed by symbol when max_lots_per_symbol is 1, by lot
-        # (symbol, setup) when lots stack, so a stop move or time-stop exit only ever touches that lot's own orders.
+        # (symbol, lot id) when lots stack, so a stop move or time-stop exit only ever touches that lot's own orders.
         self.managed: dict = {}
         # Per-lot stacking (owner 2026-10-13, live.max_lots_per_symbol; 1 = one position per symbol, the old behaviour).
-        # symbol -> setup -> {side, qty, order_id, coid}: every open or pending lot (one setup's own bracket).
+        # symbol -> lot id (the entry's client order id) -> {strategy, side, qty, order_id, coid}: every open or pending
+        # lot (one bracket). Keyed by client id, not setup: one setup can hold several lots on a symbol (re-entry).
         self.max_lots = self.risk.max_lots
         self.lots: dict[str, dict[str, dict]] = {}
+        # Same-setup re-entry (owner 2026-10-14, live.same_setup_reentry): a setup may enter a symbol again the same day
+        # on a NEW signal - a later decision bar than its previous entry there - never twice for the same bar.
+        # false: a setup/symbol pair is handled once per day (self.seen), the pre-2026-10-14 behaviour.
+        self.same_setup_reentry = self.risk.same_setup_reentry
+        self.moments: set[tuple[str, str, str]] = set()   # (symbol, setup, HHMM decision bar) signals handled today
+        self.last_entry: dict[tuple[str, str], str] = {}  # (symbol, setup) -> HHMM of its latest entry today
+        self.entered: set[str] = set()                    # entry client ids submitted today
         self._fill_px: dict[str, float] = {}   # broker order id -> parent fill price (restart: per-lot entry price)
         # Testing-account flags (owner 2026-10-13, research/bdi/longs1013 Q3 Mf / Ma); both off in config/default.yaml.
         # retry_after_release: a market entry skipped "already in symbol" may take the setup's next FRESH signal on
         # that symbol (latest bar, later than the blocked one) once the holder's position has closed; once per
         # setup/symbol/day. longs_first_on_ties: setups firing on one symbol in the same poll are tried longs first,
         # then in setup_order.
-        self.retry_after_release = bool(self.live.get("retry_after_release", False))
+        # Re-entry supersedes retry_after_release (every later fresh signal is evaluated anyway), so it is off with it.
+        self.retry_after_release = bool(self.live.get("retry_after_release", False)) and not self.same_setup_reentry
         self.longs_first_on_ties = bool(self.live.get("longs_first_on_ties", False))
         self.blocked: dict[tuple[str, str], dict] = {}   # (symbol, setup) -> {"bar": blocked bar_index, "done": bool}
         self.bars: dict[str, pd.DataFrame] = {}
@@ -87,13 +121,28 @@ class PaperRunner:
         self.today = today
         sig = self.journal.signals(self.run_id, str(today))
         for r in sig.itertuples():
-            self.seen.add((r.symbol, r.strategy))
+            key = (r.symbol, r.strategy)
+            self.seen.add(key)
+            info = _info(getattr(r, "info", None))
+            bt = None
+            if self.same_setup_reentry:
+                bt = info.get("bar_time")
+                if not bt:
+                    try:
+                        bt = f"{pd.Timestamp(r.ts).tz_convert(NY):%H%M}"   # rows from before re-entry: decision time
+                    except (TypeError, ValueError):
+                        bt = "2359"                                      # unknown: no re-entry today (safe side)
+                self.moments.add((*key, bt))
             if r.status in ("submitted", "dry_run"):
-                self.fired.add((r.symbol, r.strategy))
+                self.fired.add(key)
                 self.open_strategy[r.symbol] = r.strategy
-                self.lots.setdefault(r.symbol, {})[r.strategy] = {
-                    "side": int(r.side), "qty": int(r.qty or 0), "order_id": r.broker_order_id,
-                    "coid": f"{COID_PREFIX}{r.strategy}-{r.symbol}-{pd.Timestamp(str(today)):%Y%m%d}"}
+                coid = info.get("coid") or f"{COID_PREFIX}{r.strategy}-{r.symbol}-{pd.Timestamp(str(today)):%Y%m%d}"
+                self.lots.setdefault(r.symbol, {})[coid] = {
+                    "strategy": r.strategy, "side": int(r.side), "qty": int(r.qty or 0), "order_id": r.broker_order_id,
+                    "coid": coid}
+                self.entered.add(coid)
+                if bt:
+                    self.last_entry[key] = max(self.last_entry.get(key, ""), bt)
         self.risk.state.trades_today = int((sig.status == "submitted").sum()) if len(sig) else 0
         if self.retry_after_release:
             self._restore_blocked(sig)
@@ -135,7 +184,7 @@ class PaperRunner:
 
     def _restore_from_broker(self, today):
         """The broker is the source of truth for what MCF holds: the journal on the state branch can lag a
-        crashed or cancelled job by a few minutes. Every MCF order id is mcf-<strategy>-<symbol>-<YYYYMMDD>."""
+        crashed or cancelled job by a few minutes. Every MCF entry id is mcf-<strategy>-<symbol>-<YYYYMMDD>[-<HHMM>]."""
         after = pd.Timestamp(f"{today} 00:00", tz=NY).to_pydatetime()
         try:
             orders = self.broker.orders_today_with_prefix(COID_PREFIX, after)
@@ -148,21 +197,26 @@ class PaperRunner:
         for o in orders:
             if o.filled_avg_price:
                 self._fill_px[str(o.id)] = float(o.filled_avg_price)
-            if (o.client_order_id or "").endswith("-x"):
-                continue   # a lot's own exit order (prefix-setup-symbol-date-x), not an entry
-            try:
-                strategy, symbol, _ = o.client_order_id[len(COID_PREFIX):].rsplit("-", 2)
-            except ValueError:
+            parsed = parse_coid(o.client_order_id)   # None: a lot's own exit (-x) or a flatten close, not an entry
+            if parsed is None:
                 continue
-            if symbol != getattr(o, "symbol", symbol) or strategy.startswith("flatten"):
-                continue   # closing orders (prefix-flatten-...) are exits, not entries
+            strategy, symbol, _, hhmm = parsed
+            if symbol != getattr(o, "symbol", symbol):
+                continue
+            coid = o.client_order_id
             self.seen.add((symbol, strategy))
             self.fired.add((symbol, strategy))
             self.open_strategy.setdefault(symbol, strategy)
+            self.entered.add(coid)
+            if hhmm and self.same_setup_reentry:
+                self.moments.add((symbol, strategy, hhmm))
+                self.last_entry[(symbol, strategy)] = max(self.last_entry.get((symbol, strategy), ""), hhmm)
             side = 1 if str(getattr(o.side, "value", o.side)).lower() == "buy" else -1
-            self.lots.setdefault(symbol, {}).setdefault(strategy, {})
-            self.lots[symbol][strategy].update(side=side, order_id=str(o.id), coid=o.client_order_id,
-                                               qty=int(float(getattr(o, "filled_qty", None) or o.qty or 0)))
+            lots = self.lots.setdefault(symbol, {})
+            for k in [k for k, lot in lots.items() if k != coid and str(lot.get("order_id")) == str(o.id)]:
+                lots[coid] = lots.pop(k)                 # the journal's lot for this order: key it by the broker's id
+            lots.setdefault(coid, {}).update(strategy=strategy, side=side, order_id=str(o.id), coid=coid,
+                                             qty=int(float(getattr(o, "filled_qty", None) or o.qty or 0)))
             if str(o.id) in known:
                 continue
             stop = next((float(l.stop_price) for l in (o.legs or []) if getattr(l, "stop_price", None)), float("nan"))
@@ -184,9 +238,9 @@ class PaperRunner:
             return
         open_ids = set(orders.broker_order_id.astype(str))
         for sym in list(self.lots):
-            for strat, lot in list(self.lots[sym].items()):
+            for lot_id, lot in list(self.lots[sym].items()):
                 if lot.get("order_id") is None or str(lot["order_id"]) not in open_ids:
-                    self.lots[sym].pop(strat)
+                    self.lots[sym].pop(lot_id)
             if not self.lots[sym]:
                 self.lots.pop(sym)
 
@@ -222,24 +276,26 @@ class PaperRunner:
     def _restore_lot_management(self, by_name, keys, held, orders):
         """Stacked lots: one management state per lot, entry = that lot's own parent fill (the broker position's
         average price blends every lot on the symbol)."""
+        oids = orders.broker_order_id.astype(str)
         for sym, lots in self.lots.items():
             if sym not in held:
                 continue
-            for strat, lot in lots.items():
+            for lot_id, lot in lots.items():
+                strat = lot.get("strategy")
                 st = by_name.get(strat)
                 if st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
                     continue
-                rec = orders[(orders.symbol == sym) & (orders.strategy == strat)].tail(1)
+                rec = orders[oids == str(lot.get("order_id"))].tail(1)   # this lot's own order, not its setup's last
                 if rec.empty:
                     continue
                 rec = rec.iloc[0]
                 entry = self._fill_px.get(str(rec.broker_order_id)) or float(rec.entry_ref)
                 m = {"side": int(rec.side), "entry": entry, "risk": abs(entry - float(rec.stop)), "stop": float(rec.stop),
-                     "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0, "coid": lot.get("coid"),
-                     **{k: st.params.get(k) for k in keys}}
+                     "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0, "coid": lot.get("coid") or lot_id,
+                     "strategy": strat, **{k: st.params.get(k) for k in keys}}
                 m["trail_after_r"] = m["trail_after_r"] or 1.0
                 m["time_stop_min_r"] = m["time_stop_min_r"] or 0.0
-                self.managed[(sym, strat)] = m
+                self.managed[(sym, lot_id)] = m
         if self.managed:
             print(f"re-armed trade management for {len(self.managed)} open lots")
 
@@ -262,7 +318,8 @@ class PaperRunner:
                 counts[st] = counts.get(st, 0) + 1
             self.risk.state.lots = {}
         else:                                         # slots and per-setup caps count lots
-            self.risk.state.lots = {sym: [(st, lot["side"]) for st, lot in self.lots.get(sym, {}).items()]
+            self.risk.state.lots = {sym: [(lot.get("strategy", lid), lot["side"])
+                                          for lid, lot in self.lots.get(sym, {}).items()]
                                     for sym in self.risk.state.open_symbols}
             for sym, lots in self.risk.state.lots.items():
                 for st in [x for x, _ in lots] or [self.open_strategy.get(sym)]:
@@ -346,7 +403,7 @@ class PaperRunner:
             return
         held = set(self.broker.positions())
         for key, m in list(self.managed.items()):
-            lot = isinstance(key, tuple)              # (symbol, setup) when lots stack
+            lot = isinstance(key, tuple)              # (symbol, lot id) when lots stack
             sym = key[0] if lot else key
             if sym not in held or (lot and key[1] not in self.lots.get(sym, {})):
                 self.managed.pop(key)
@@ -391,7 +448,8 @@ class PaperRunner:
 
     def _lot_time_stop(self, key, m, mins):
         """Time stop for ONE lot: cancel its own legs and close exactly its quantity; other lots keep theirs."""
-        sym, strat = key
+        sym, lot_id = key
+        strat = m.get("strategy", lot_id)
         try:
             ok = self.broker.close_mcf_lot(sym, m["coid"], COID_PREFIX)
         except Exception as e:
@@ -402,7 +460,7 @@ class PaperRunner:
             return
         print(f"TIME STOP {sym}/{strat}: {mins:.0f} min, best {m['best']:.2f}R")
         self.managed.pop(key, None)
-        self.lots.get(sym, {}).pop(strat, None)
+        self.lots.get(sym, {}).pop(lot_id, None)
 
     def step(self, now: pd.Timestamp):
         today = now.date()
@@ -416,7 +474,7 @@ class PaperRunner:
             for strat in self.strategies:
                 key = (ctx.symbol, strat.name)
                 retry = False
-                if key in self.seen:
+                if key in self.seen and not self.same_setup_reentry:   # re-entry: deduped per signal bar below
                     if not self._retry_ready(key):
                         continue
                     retry = True
@@ -436,6 +494,8 @@ class PaperRunner:
                         break
                     if sig.entry_type == "market" and sig.bar_index != last:
                         continue
+                    if self.same_setup_reentry and self._handled(key, sig, ctx, now):
+                        continue   # this bar already handled, or not later than the setup's last entry here
                     if sig.entry_type == "stop":
                         if sig.bar_index >= last or last - sig.bar_index > sig.entry_valid_bars:
                             continue  # same validity window as the backtester's simulate()
@@ -447,10 +507,10 @@ class PaperRunner:
                         if first < len(seg) - 1:
                             # the trigger traded on an earlier bar (e.g. while no job was running):
                             # a late entry would not be the setup the backtest measures
-                            self.seen.add(key)
+                            self._mark(key, sig, ctx, now)
                             self._log(sig, "skipped", f"missed: triggered at {seg.index[first]:%H:%M}", px, now)
                             continue
-                    self.seen.add(key)
+                    self._mark(key, sig, ctx, now)
                     if self.longs_first_on_ties:
                         ties.append((sig, key))
                         continue
@@ -458,6 +518,34 @@ class PaperRunner:
             # stable sort: longs before shorts, setup_order (scan order) kept within each side
             for sig, key in sorted(ties, key=lambda x: x[0].side != 1):
                 self._enter(sig, px, key, ctx, now)
+
+    # ---------------------------------------------------------------- re-entry (live.same_setup_reentry)
+    def _moment(self, sig, ctx, now) -> str:
+        """HHMM (ET) of the signal's decision bar: the 'moment' a setup may use a symbol only once."""
+        m = sig.meta.get("bar_time")
+        if m:
+            return m
+        idx = getattr(getattr(ctx, "bars", None), "index", None)
+        ts = idx[sig.bar_index] if isinstance(idx, pd.DatetimeIndex) and 0 <= sig.bar_index < len(idx) else now
+        ts = pd.Timestamp(ts)
+        m = f"{ts.tz_convert(NY) if ts.tzinfo else ts:%H%M}"
+        sig.meta = {**sig.meta, "bar_time": m}           # journaled with the signal (restart dedupe)
+        return m
+
+    def _handled(self, key, sig, ctx, now) -> bool:
+        """Re-entry: True for a signal bar this setup already handled on the symbol, or one not later than its last
+        entry there (a re-entry needs a new signal, also for stop-entry setups)."""
+        m = self._moment(sig, ctx, now)
+        return (*key, m) in self.moments or (key in self.last_entry and m <= self.last_entry[key])
+
+    def _mark(self, key, sig, ctx, now):
+        self.seen.add(key)
+        if self.same_setup_reentry:
+            self.moments.add((*key, self._moment(sig, ctx, now)))
+
+    def _coid(self, sig, ctx, now) -> str:
+        base = f"{COID_PREFIX}{sig.strategy}-{sig.symbol}-{now:%Y%m%d}"
+        return f"{base}-{self._moment(sig, ctx, now)}" if self.same_setup_reentry else base
 
     def _quote(self, symbol: str):
         from alpaca.data.enums import DataFeed
@@ -496,6 +584,12 @@ class PaperRunner:
                                            for k, v in sig.meta.items()}}, default=str))
 
     def _enter(self, sig, px, key, ctx, now):
+        coid = self._coid(sig, ctx, now)
+        if self.same_setup_reentry:
+            self.moments.add((sig.symbol, sig.strategy, self._moment(sig, ctx, now)))
+            last = self.last_entry.get((sig.symbol, sig.strategy))
+            if coid in self.entered or (last is not None and self._moment(sig, ctx, now) <= last):
+                return self._log(sig, "skipped", "same setup, same moment", px, now)   # never twice for one bar
         if now.time() < self.no_entry_before:
             self._log(sig, "shadow", f"before {self.no_entry_before:%H:%M} (owner rule)", px, now)
             return
@@ -509,8 +603,9 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
-            if why in ("opposite side held", "lot cap"):
-                held = {"held_by": list(self.lots.get(sig.symbol, {}))}      # every lot holding the symbol
+            if why in ("opposite side held", "lot cap"):                   # every setup holding a lot on the symbol
+                held = {"held_by": list(dict.fromkeys(lot.get("strategy", lid)
+                                                      for lid, lot in self.lots.get(sig.symbol, {}).items()))}
             if held and why in self._retry_reasons() and self.retry_after_release and sig.entry_type == "market":
                 self.blocked.setdefault(key, {"bar": int(sig.bar_index), "done": False, "side": int(sig.side)})
             return self._log(sig, "skipped", why, px, now, held)
@@ -525,12 +620,13 @@ class PaperRunner:
             return self._log(sig, "skipped", "size < 1 share after liquidity cap", px, now, info)
         if is_extended(ctx, self.cfg):
             info["tier"] = "extended"
-        coid = f"{COID_PREFIX}{sig.strategy}-{sig.symbol}-{now:%Y%m%d}"
+        info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
         if self.dry_run:
             self.fired.add(key)
             self.open_strategy[sig.symbol] = sig.strategy
-            self.lots.setdefault(sig.symbol, {})[sig.strategy] = {"side": sig.side, "qty": qty, "order_id": None,
-                                                                   "coid": coid}
+            self._entered(sig, coid, ctx, now)
+            self.lots.setdefault(sig.symbol, {})[coid] = {"strategy": sig.strategy, "side": sig.side, "qty": qty,
+                                                          "order_id": None, "coid": coid}
             print(f"DRY {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f} {info}")
             return self._log(sig, "dry_run", "dry run", px, now, info, qty)
         try:
@@ -542,8 +638,9 @@ class PaperRunner:
         self.risk.state.trades_today += 1
         self.risk.state.open_symbols.add(sig.symbol)
         self.open_strategy[sig.symbol] = sig.strategy
-        self.lots.setdefault(sig.symbol, {})[sig.strategy] = {"side": sig.side, "qty": qty, "order_id": str(o.id),
-                                                               "coid": coid}
+        self._entered(sig, coid, ctx, now)
+        self.lots.setdefault(sig.symbol, {})[coid] = {"strategy": sig.strategy, "side": sig.side, "qty": qty,
+                                                      "order_id": str(o.id), "coid": coid}
         self._sync_open()
         self.journal.record_order(self.run_id, sig.symbol, sig.strategy, sig.side, qty, px, sig.stop,
                                   sig.target, str(o.id), "submitted", json.dumps(info, default=str))
@@ -555,9 +652,15 @@ class PaperRunner:
             if self.max_lots <= 1:
                 self.managed[sig.symbol] = m
             else:
-                self.managed[(sig.symbol, sig.strategy)] = {**m, "coid": coid}
+                self.managed[(sig.symbol, coid)] = {**m, "coid": coid, "strategy": sig.strategy}
         self._log(sig, "submitted", "ok", px, now, info, qty, str(o.id))
         print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}")
+
+    def _entered(self, sig, coid, ctx, now):
+        self.entered.add(coid)
+        if self.same_setup_reentry:
+            k = (sig.symbol, sig.strategy)
+            self.last_entry[k] = max(self.last_entry.get(k, ""), self._moment(sig, ctx, now))
 
     # ---------------------------------------------------------------- session
     def run(self, until: pd.Timestamp | None = None, poll_seconds: int = 60):
@@ -655,9 +758,9 @@ class PaperRunner:
             return
         changed = False
         for sym in list(self.lots):
-            for strat, lot in list(self.lots[sym].items()):
+            for lot_id, lot in list(self.lots[sym].items()):
                 if lot.get("order_id") is not None and str(lot["order_id"]) not in open_ids:
-                    self.lots[sym].pop(strat)
+                    self.lots[sym].pop(lot_id)
                     changed = True
             if not self.lots[sym]:
                 self.lots.pop(sym)
