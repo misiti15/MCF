@@ -350,5 +350,13 @@ live:
   # Per-lot stacking (owner 2026-10-13): a lot = one setup's own bracket order on a symbol. 1 = one MCF position per
   # symbol (a second setup is skipped "already in symbol"). N > 1: up to N setups may each hold a lot on the same symbol,
   # SAME side only ("opposite side held" / "lot cap" otherwise); every lot keeps its own stop/target legs, trade
-  # management and journal row; slots and max positions count lots. A setup never stacks on itself.
+  # management and journal row; slots and max positions count lots. A setup stacks on itself only on a new
+  # signal (same_setup_reentry below).
   max_lots_per_symbol: 3   # per-lot stacking, all accounts (owner 2026-10-13); 1 = one position per symbol
+  # Same-setup re-entry (owner 2026-10-14): "the same setup can not be used at the exact same moment in the exact same
+  # ticker, but can be used in the same ticker the same day at a different time - if a setup is great, let it ride."
+  # true: a setup may enter a symbol again on a NEW signal (a later decision bar than its previous entry there), as a
+  # new lot - also while its earlier lot is open (same side only, under max_lots_per_symbol and every other risk check).
+  # Client ids carry the decision-bar time (<prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM>), one per lot.
+  # false: one entry per setup/symbol/day (pre-2026-10-14 behaviour, ids without -HHMM).
+  same_setup_reentry: true
