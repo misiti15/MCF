@@ -18,9 +18,10 @@ def test_page_orders_returns_every_order_across_pages():
     allo = _orders(1234)
     calls = []
 
-    def fetch(cursor):
-        calls.append(cursor)
-        return [o for o in allo if o.submitted_at > cursor][:500]
+    def fetch(until):                                     # newest first, submitted before `until` (None = now)
+        calls.append(until)
+        return sorted((o for o in allo if until is None or o.submitted_at < until),
+                      key=lambda o: o.submitted_at, reverse=True)[:500]
 
     got = page_orders(fetch, T0 - timedelta(seconds=1))
     assert sorted(o.id for o in got) == sorted(o.id for o in allo) and len(calls) >= 3

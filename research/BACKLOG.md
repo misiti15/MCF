@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 377 · coded: 80 · failed: 197 · configurations tried (all lineages): 21966980
+Total ideas: 391 · coded: 80 · failed: 203 · configurations tried (all lineages): 21969169
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -43,6 +43,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | finalist | bdi-rw-sma50up-spikefade | RW8: SMA50 up-cross on a >3% up day with RSI14<=30, short | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
 | finalist | sw-w3-connors-rsi3-daily | Daily: Connors long RSI(3)<5 above SMA200, buy next open, exit first close > SMA5 (max 10d) | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – | – |
 | finalist | sw-w3-rev5-k20-daily | Daily: buy bottom-decile 5-day losers at the close, hold 20 sessions | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – | – |
+| finalist | bdi1013-splitgate-div050-shorts | Skip new shorts while QQQ fromOpen - IWM fromOpen >= 0.50% (large-cap / small-cap divergence gate), Testing 1 short book | BDI 2026-10-13 (research/bdi/bdi1013/NOTES.md), from the 2026-10-13 Testing 1 short losses on a split tape (QQQ +0.56%, IWM -0.46%) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-flowsell-rsi65-gapdn-volume | RW lineage near-miss: buyPressure<-0.35 & RSI14>65 & gap<0, 09:50-11:00 short (high volume) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-ns1-plateau | NS1 (rsi_x40dn+up>2%+rsi5>=80 am long t05s1) fails plateau | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-sma50-flush-long | Oversold SMA50 flush long, 10:30-13:00 (x_sma50_dn & down>1% & RSI14<=30) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
@@ -182,6 +183,13 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1012-mf5-never-worked | MF5 flow-sell VWAP-up RSI5-high short: 'never worked' on 3 sessions | nightly-2026-10-12 | – | – | – | – | – | – |
 | idea | nightly-1012-cwt09-etb-universe | Re-score CWT09 gap-down shorts on the borrowable, non-leveraged universe only | nightly-2026-10-12 | – | – | – | – | – | – |
 | idea | bdi1012-signal-breadth-gate | Intraday day-type gate from the running count of same-side book signals (e.g. CWT14 failed-breakdown longs fired so far today across the universe) | BDI 2026-10-12 (research/bdi/bdi1012/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1013-stack-clone-skip | Per-lot stacking: skip a lot whose bracket is a clone of an open sibling lot (same entry, stop and target) | nightly-2026-10-13 | – | – | – | – | – | – |
+| idea | nightly-1013-no-short-stacking | Per-lot stacking for shorts: allow at most 1 short lot per symbol (keep stacking for longs) | nightly-2026-10-13 | – | – | – | – | – | – |
+| idea | nightly-1013-tight-target-progress-skip | Tight-target market entries (t05 geometries): skip when the live quote has already covered most of the distance to target | nightly-2026-10-13 | – | – | – | – | – | – |
+| idea | nightly-1014-fd-short-late-giveback | Testing 1 short lots still open at 15:00: exit or tighten the stop to break-even / +0.5R at 15:00-15:30 instead of riding to the 15:55 flatten | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1014-t2-cap50-review | Testing 2: per-setup open-lot cap 50 vs 25 vs 35 - re-score with the -60R daily halt simulated | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1014-rw2-extension-floor | RW2-exhaustion-noon-adv150-short: require a deeper extension at entry (fromOpen >= 2.5% or RSI5 >= 90) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1014-st2-wrong-side | ST2-slope20up-long-am: skip when the stock is already >= 3% below its open at the entry bar | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -379,6 +387,12 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | nightly-1012-cwt14-long-index-confirm | CWT14 failed-breakdown longs (ORL/PDL reclaim): skip when SPY/QQQ is at a new session low at the entry bar | nightly-2026-10-12 | – | – | – | – | – | – |
 | failed | nightly-1012-same-side-crowding-cap | Book-level cap on same-side open positions (net long/short count) per account | nightly-2026-10-12 | – | – | – | – | – | – |
 | failed | bdi-reddit1012-liquidity-sweep | Liquidity sweep reversal: HTF level (PD / OR / 60-min swing / 5d / 20d) run by x ATR, 5/15-min breakdown trigger (level reclaim, impulse-bar open, post-sweep range break), stop at the sweep extreme, 2R/2.5R/VWAP target, BE at +1R, 15-min time stop, up to 2 attempts | Owner request 2026-10-12: r/Daytrading 'trade liquidity' post (FX), research/bdi/reddit1012liq/NOTES.md | – | – | – | – | – | – |
+| failed | bdi1013-limit945-dip-entry | 09:45 dip long (down >= 0.75% from open / prior close, capd / qqqmid filters) entered with a passive limit at -0..20 bps or -0.05/0.10 ATR below the 09:45 close, valid 1/3/5/10 min (fill only on a 1-tick trade-through), with or without a market chase | BDI 2026-10-13 (research/bdi/bdi1013/NOTES.md), follow-up of research/bdi/dips1013 | – | – | – | – | – | – |
+| failed | bdi1013-splitgate-qqq-up-iwm-down | Skip new shorts when QQQ is above its open and VWAP while IWM is below its open (split tape) | BDI 2026-10-13 (research/bdi/bdi1013/NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1014-cwt14-skip-first-bar | CWT14 fail-break setups (Testing 2): no entry on the 09:50 first decision bar; the first qualifying bar from 09:55 fires instead | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1014-liq-orl-index-confirm | LIQ-orl-sweep-open15-s25-long (Testing 1): fire only while SPY is up from its open (a) or above its session VWAP (b) at the decision bar | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1014-cwt14-sar | CWT14 stop-and-reverse: when a fail-break trade's bracket stop fills, enter the breakout side (stop-entry at the stop, or market at the stop bar's close), 5 exit geometries | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1014-cwt14-sar-ixalign | CWT14 stop-and-reverse, rework: reverse only when SPY's fromOpen at the stop bar is on the reversal's side (k = 0 / 0.25%) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

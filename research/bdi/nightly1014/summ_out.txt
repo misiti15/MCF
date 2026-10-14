@@ -1,0 +1,208 @@
+===== p
+{'n': 11.0, 'win': 64.0, 'avgR': 0.293, 'pnl': 63.53, 'adj': 60.35, 'stops': 3.0, 'tgt': 7.0, 'flat': 1.0, 'mfe': 0.73, 'mae': 0.59}
+                                      n    win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+NS1-rsidip-rsi5pop-long             1.0    0.0 -1.022 -67.25 -69.01    1.0  0.0   0.0 -0.04  1.04
+MF3-open-flowsell-rsi5hi            1.0    0.0 -1.043 -25.55 -26.25    1.0  0.0   0.0  0.01  1.04
+MF2-open-rsimidhi-flowsell          1.0    0.0 -1.202 -17.07 -17.79    1.0  0.0   0.0  0.03  1.08
+MF5-flowsell-vwapup-rsi5hi          1.0    0.0 -0.392  -4.56  -4.56    0.0  0.0   1.0  0.22  0.60
+NS4-pm-vwap-reclaim-oversold-short  1.0  100.0  1.396  29.60  29.60    0.0  1.0   0.0  1.55  0.35
+NS2-sma50break-overbought-short     2.0  100.0  0.943  48.36  48.36    0.0  2.0   0.0  1.00  0.15
+MF1-945-flowsell-vwapup             1.0  100.0  1.911  48.60  48.60    0.0  1.0   0.0  1.97  0.19
+MF4-h40-open-flowsell               3.0  100.0  0.564  51.40  51.40    0.0  3.0   0.0  0.76  0.64
+side
+       n   win   avgR     pnl     adj  stops  tgt  flat   mfe   mae
+-1  10.0  70.0  0.425  130.78  129.36    2.0  7.0   1.0  0.81  0.55
+1    1.0   0.0 -1.022  -67.25  -69.01    1.0  0.0   0.0 -0.04  1.04
+hour
+      n    win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+9   2.0   50.0  0.434  23.05  22.35    1.0  1.0   0.0  0.99  0.62
+10  5.0   80.0  0.323  49.45  48.73    1.0  4.0   0.0  0.70  0.63
+11  2.0   50.0 -0.131 -34.01 -35.77    1.0  1.0   0.0  0.37  0.59
+12  1.0    0.0 -0.392  -4.56  -4.56    0.0  0.0   1.0  0.22  0.60
+14  1.0  100.0  1.396  29.60  29.60    0.0  1.0   0.0  1.55  0.35
+lot_no
+      n    win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+1  10.0   60.0  0.289  55.83  52.65    3.0  6.0   1.0  0.76  0.56
+2   1.0  100.0  0.338   7.70   7.70    0.0  1.0   0.0  0.45  0.98
+sym_stacked x lot
+           n    win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+False 1  8.0   75.0  0.642  98.45  96.69    1.0  6.0   1.0  0.94  0.43
+True  1  2.0    0.0 -1.122 -42.62 -44.04    2.0  0.0   0.0  0.02  1.06
+      2  1.0  100.0  0.338   7.70   7.70    0.0  1.0   0.0  0.45  0.98
+after_restart
+         n   win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+False  3.0  67.0  0.402  30.75  30.05    1.0  2.0   0.0  0.81  0.74
+True   8.0  62.0  0.252  32.78  30.30    2.0  5.0   1.0  0.70  0.54
+ex_primary
+          n   win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+False  11.0  64.0  0.293  63.53  60.35    3.0  7.0   1.0  0.73  0.59
+exit
+           n    win   avgR     pnl     adj  stops  tgt  flat   mfe   mae
+flatten  1.0    0.0 -0.392   -4.56   -4.56    0.0  0.0   1.0  0.22  0.60
+stop     3.0    0.0 -1.089 -109.87 -113.05    3.0  0.0   0.0  0.00  1.06
+target   7.0  100.0  0.983  177.96  177.96    0.0  7.0   0.0  1.11  0.40
+refire
+          n   win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+False  11.0  64.0  0.293  63.53  60.35    3.0  7.0   1.0  0.73  0.59
+setup_seq (same-setup re-entry)
+      n   win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+1  11.0  64.0  0.293  63.53  60.35    3.0  7.0   1.0  0.73  0.59
+setup_seq x strategy (re-entries)
+none
+winners/losers
+         n    win   avgR     pnl     adj  stops  tgt  flat   mfe   mae
+False  4.0    0.0 -0.915 -114.43 -117.61    3.0  0.0   1.0  0.06  0.94
+True   7.0  100.0  0.983  177.96  177.96    0.0  7.0   0.0  1.11  0.40
+losers never worked (MFE<0.2R): 3 -109.87
+winners giveback (MFE - R): 0.11
+===== t1
+{'n': 317.0, 'win': 51.0, 'avgR': 0.025, 'pnl': 71.27, 'adj': 14.47, 'stops': 106.0, 'tgt': 124.0, 'flat': 87.0, 'mfe': 0.64, 'mae': 0.63}
+                                               n    win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+LIQ-orl-sweep-open15-s25-long               47.0   30.0 -0.416 -250.67 -263.23   31.0   0.0  16.0  0.49  0.89
+ST2-slope20up-long-am-t05s1-FD              17.0   41.0 -0.333 -100.87 -109.57    8.0   8.0   1.0  0.33  0.81
+NS5-sma50-flush-oversold-long-FD             2.0   50.0 -0.412  -60.18  -62.94    1.0   0.0   1.0  0.44  0.80
+ST4-emadn-long-am-t1s05-FD                   4.0    0.0 -1.046  -45.24  -49.38    4.0   0.0   0.0  0.42  1.04
+NS1-rsidip-rsi5pop-long-FD                   1.0    0.0 -1.028  -32.18  -33.04    1.0   0.0   0.0 -0.01  1.04
+exhaustion_short-FD                          6.0   50.0 -0.234  -26.44  -29.50    3.0   1.0   2.0  0.50  0.73
+heat_fade_long                               5.0   20.0 -0.790  -17.33  -17.57    4.0   0.0   1.0  0.41  0.98
+RW2-exhaustion-noon-adv150-short-FD          9.0   44.0 -0.321  -16.22  -16.80    5.0   2.0   2.0  0.52  0.73
+orb20_a                                      1.0    0.0 -0.162  -12.06  -12.06    0.0   0.0   1.0  0.59  0.31
+heat_fade_long-FD                            9.0   33.0 -0.479  -11.93  -12.87    6.0   3.0   0.0  0.37  0.90
+exhaustion_short                             7.0   57.0  0.739  -10.37  -13.41    3.0   2.0   2.0  1.38  0.66
+RW4-ns3-adv150-short-FD                      6.0   17.0 -0.091   -6.06   -6.06    0.0   1.0   5.0  0.56  0.72
+NS3-failed-vwap-reclaim-short-FD             5.0   20.0 -0.053   -4.12   -4.12    0.0   1.0   4.0  0.54  0.71
+MF5-flowsell-vwapup-rsi5hi-FD                1.0    0.0 -0.439   -2.64   -2.64    0.0   0.0   1.0  0.18  0.61
+intraday_momentum                            2.0  100.0  0.126    0.56    0.56    0.0   0.0   2.0  0.55  0.39
+heat_fade_short                              3.0   67.0  0.300    2.48    2.46    1.0   2.0   0.0  0.85  0.49
+heat_fade_short-FD                          46.0   48.0 -0.015    7.95    6.45   11.0  19.0  16.0  0.59  0.55
+RW6G1-ns2-up3-vwap2sd-short-FD               1.0  100.0  0.764    8.18    8.18    0.0   1.0   0.0  0.83  0.27
+L3-gap-slope-fromopen-FD                     5.0   60.0  0.141    8.83    6.23    2.0   2.0   1.0  0.68  0.66
+RW1-gapdn-bounce-flowsell-short-FD          10.0   50.0  0.253   10.90   10.18    2.0   5.0   3.0  0.79  0.52
+NS4-pm-vwap-reclaim-oversold-short-FD        1.0  100.0  1.456   15.20   15.20    0.0   1.0   0.0  1.55  0.18
+MF1-945-flowsell-vwapup-FD                   3.0   33.0 -0.085   16.45   14.95    2.0   1.0   0.0  0.91  0.68
+RW6-ns2-up3-short-FD                         2.0  100.0  0.953   35.57   35.57    0.0   2.0   0.0  1.00  0.51
+MF2-open-rsimidhi-flowsell-FD                7.0   71.0  0.609   42.75   41.57    2.0   4.0   1.0  1.19  0.51
+MF3-open-flowsell-rsi5hi-FD                 10.0   60.0  0.313   51.95   50.97    2.0   5.0   3.0  0.87  0.51
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  13.0   77.0  0.585   64.81   61.41    2.0   9.0   2.0  1.04  0.41
+MF4-h40-open-flowsell-FD                     9.0  100.0  0.538   70.06   70.06    0.0   9.0   0.0  0.64  0.32
+NS2-sma50break-overbought-short-FD           8.0   88.0  0.555   72.17   71.93    1.0   6.0   1.0  0.77  0.43
+RW3-gapdn-rsi5pop-flowsell-short-FD         15.0   73.0  0.356   81.91   79.83    3.0   9.0   3.0  0.69  0.43
+RW7-gapdn-bounce-early-short-FD             62.0   60.0  0.176  177.82  172.12   12.0  31.0  19.0  0.66  0.55
+side
+        n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+-1  232.0  59.0  0.205  589.67  563.07   51.0  113.0  68.0  0.72  0.54
+1    85.0  31.0 -0.465 -518.40 -548.60   55.0   11.0  19.0  0.43  0.89
+hour
+       n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+9   12.0  50.0  0.056    1.06    0.06    5.0   6.0   1.0  0.73  0.58
+10  62.0  39.0 -0.229 -133.31 -146.69   36.0  12.0  14.0  0.59  0.83
+11  50.0  58.0  0.039   51.73   43.63   18.0  26.0   6.0  0.64  0.62
+12  78.0  54.0  0.088   84.33   69.81   23.0  40.0  15.0  0.64  0.60
+13  68.0  63.0  0.178  131.01  115.33   18.0  33.0  17.0  0.73  0.56
+14  39.0  44.0  0.098  -29.48  -33.40    5.0   7.0  27.0  0.64  0.53
+15   8.0  25.0 -0.405  -34.07  -34.27    1.0   0.0   7.0  0.24  0.66
+lot_no
+       n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+1  236.0  49.0 -0.038  -91.73 -133.49   86.0  86.0  64.0  0.60  0.66
+2   57.0  58.0  0.249  127.82  119.38   13.0  28.0  16.0  0.78  0.55
+3   24.0  62.0  0.118   35.17   28.57    7.0  10.0   7.0  0.75  0.56
+sym_stacked x lot
+             n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+False 1  167.0  47.0 -0.093 -144.82 -176.42   65.0  53.0  49.0  0.58  0.69
+True  1   69.0  54.0  0.096   53.09   42.93   21.0  33.0  15.0  0.64  0.59
+      2   57.0  58.0  0.249  127.82  119.38   13.0  28.0  16.0  0.78  0.55
+      3   24.0  62.0  0.118   35.17   28.57    7.0  10.0   7.0  0.75  0.56
+after_restart
+           n   win   avgR    pnl    adj  stops    tgt  flat   mfe   mae
+False   18.0  61.0  0.236  72.58  71.20    6.0   11.0   1.0  0.77  0.65
+True   299.0  51.0  0.013  -1.31 -56.73  100.0  113.0  86.0  0.63  0.63
+ex_primary
+           n   win   avgR     pnl    adj  stops    tgt  flat   mfe   mae
+False  299.0  52.0  0.020  107.99  54.49   98.0  120.0  81.0  0.63  0.63
+True    18.0  50.0  0.123  -36.72 -40.02    8.0    4.0   6.0  0.89  0.68
+exit
+             n   win   avgR      pnl      adj  stops    tgt  flat   mfe   mae
+flatten   87.0  46.0  0.017    10.77    10.77    0.0    0.0  87.0  0.60  0.60
+stop     106.0   0.0 -1.031 -1160.47 -1217.27  106.0    0.0   0.0  0.21  1.06
+target   124.0  99.0  0.934  1220.97  1220.97    0.0  124.0   0.0  1.04  0.29
+refire
+           n   win   avgR    pnl    adj  stops    tgt  flat   mfe   mae
+False  309.0  51.0 -0.001  43.30 -10.90  104.0  120.0  85.0  0.62  0.63
+True     8.0  62.0  1.032  27.97  25.37    2.0    4.0   2.0  1.56  0.55
+setup_seq (same-setup re-entry)
+       n   win   avgR    pnl    adj  stops    tgt  flat   mfe   mae
+1  312.0  52.0  0.010  75.39  21.19  104.0  123.0  85.0  0.62  0.63
+2    5.0  40.0  0.996  -4.12  -6.72    2.0    1.0   2.0  1.76  0.78
+setup_seq x strategy (re-entries)
+                            n    win   avgR    pnl    adj  stops  tgt  flat   mfe   mae
+L3-gap-slope-fromopen-FD  3.0   33.0 -0.419 -16.43 -19.03    2.0  0.0   1.0  0.46  0.97
+RW4-ns3-adv150-short-FD   1.0    0.0 -0.284  -1.96  -1.96    0.0  0.0   1.0  0.67  0.75
+exhaustion_short          1.0  100.0  6.522  14.27  14.27    0.0  1.0   0.0  6.77  0.27
+winners/losers
+           n    win   avgR      pnl      adj  stops    tgt  flat   mfe   mae
+False  154.0    0.0 -0.830 -1353.88 -1410.68  106.0    1.0  47.0  0.25  0.95
+True   163.0  100.0  0.834  1425.15  1425.15    0.0  123.0  40.0  1.01  0.33
+losers never worked (MFE<0.2R): 83 -830.7
+winners giveback (MFE - R): 0.11
+===== t2
+{'n': 353.0, 'win': 48.0, 'avgR': -0.322, 'pnl': -785.74, 'adj': -864.78, 'stops': 183.0, 'tgt': 169.0, 'flat': 1.0, 'mfe': 0.51, 'mae': 0.79}
+                                       n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+CWT14-failbrk-pdl-p05-long          50.0  18.0 -0.810 -297.18 -313.72   41.0   8.0   1.0  0.53  1.09
+CWT14-failbrk-pdl-p10-long          39.0  28.0 -0.655 -172.82 -182.66   28.0  11.0   0.0  0.66  0.99
+CWT14-failbrk-pdl-p05-lowvol-long   21.0  38.0 -0.542 -106.12 -114.20   13.0   8.0   0.0  0.28  0.76
+CWT14-failbrk-orl-p05-lowvol-long   58.0  55.0 -0.220  -70.62  -85.50   26.0  32.0   0.0  0.45  0.76
+CWT14-failbrk-orl-p05-long          67.0  58.0 -0.126  -67.31  -81.07   27.0  40.0   0.0  0.48  0.65
+CWT05-flush-m05-v3-long              3.0  33.0 -0.573  -26.50  -26.92    2.0   1.0   0.0  0.35  0.88
+CWT14-failbrk-pdh-p10-short         21.0  48.0 -0.241  -14.67  -19.63   10.0  11.0   0.0  0.74  0.80
+CWT05-flush-m05-v5-long              1.0   0.0 -1.018  -12.87  -13.09    1.0   0.0   0.0  0.26  1.10
+CWT14-failbrk-pdh-p05-lowvol-short  19.0  58.0 -0.099   -8.34   -9.82    8.0  11.0   0.0  0.49  0.60
+CWT14-failbrk-pdh-p10-lowvol-short   8.0  38.0 -0.456   -7.97   -8.97    5.0   3.0   0.0  0.44  0.79
+CWT14-failbrk-orl-p10-long          32.0  69.0  0.014   -6.90  -10.16   10.0  22.0   0.0  0.55  0.68
+CWT14-failbrk-orl-p10-lowvol-long   19.0  63.0 -0.087   -2.34   -5.02    7.0  12.0   0.0  0.55  0.81
+CWT12-coil-k4-long                   2.0  50.0 -0.266    1.47    1.45    1.0   1.0   0.0  0.50  0.84
+CWT14-failbrk-pdl-p10-lowvol-long   13.0  69.0 -0.007    6.43    4.53    4.0   9.0   0.0  0.43  0.49
+side
+        n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+-1   48.0  50.0 -0.221  -30.98  -38.42   23.0   25.0   0.0  0.59  0.72
+1   305.0  47.0 -0.338 -754.76 -826.36  160.0  144.0   1.0  0.50  0.81
+hour
+        n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+9    85.0  16.0 -0.813 -476.53 -507.23   70.0   14.0   1.0  0.64  1.13
+10  268.0  57.0 -0.167 -309.21 -357.55  113.0  155.0   0.0  0.47  0.69
+lot_no
+       n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+1  190.0  45.0 -0.347 -453.12 -498.68  102.0  87.0   1.0  0.51  0.81
+2  125.0  46.0 -0.352 -331.18 -358.54   67.0  58.0   0.0  0.54  0.82
+3   38.0  63.0 -0.101   -1.44   -7.56   14.0  24.0   0.0  0.45  0.66
+sym_stacked x lot
+             n   win   avgR     pnl     adj  stops   tgt  flat   mfe   mae
+False 1   63.0  43.0 -0.343 -114.05 -130.83   34.0  28.0   1.0  0.49  0.80
+True  1  127.0  46.0 -0.349 -339.07 -367.85   68.0  59.0   0.0  0.52  0.81
+      2  125.0  46.0 -0.352 -331.18 -358.54   67.0  58.0   0.0  0.54  0.82
+      3   38.0  63.0 -0.101   -1.44   -7.56   14.0  24.0   0.0  0.45  0.66
+after_restart
+           n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+False  312.0  51.0 -0.269 -552.90 -617.04  152.0  159.0   1.0  0.54  0.78
+True    41.0  24.0 -0.725 -232.84 -247.74   31.0   10.0   0.0  0.32  0.88
+ex_primary
+           n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+False  353.0  48.0 -0.322 -785.74 -864.78  183.0  169.0   1.0  0.51  0.79
+exit
+             n    win   avgR      pnl      adj  stops    tgt  flat   mfe   mae
+flatten    1.0  100.0  0.345     3.41     3.41    0.0    0.0   1.0  0.45  0.97
+stop     183.0    0.0 -1.064 -1297.87 -1376.91  183.0    0.0   0.0  0.45  1.20
+target   169.0   99.0  0.477   508.72   508.72    0.0  169.0   0.0  0.58  0.35
+refire
+           n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+False  353.0  48.0 -0.322 -785.74 -864.78  183.0  169.0   1.0  0.51  0.79
+setup_seq (same-setup re-entry)
+       n   win   avgR     pnl     adj  stops    tgt  flat   mfe   mae
+1  353.0  48.0 -0.322 -785.74 -864.78  183.0  169.0   1.0  0.51  0.79
+setup_seq x strategy (re-entries)
+none
+winners/losers
+           n    win   avgR      pnl      adj  stops    tgt  flat   mfe   mae
+False  185.0    0.0 -1.053 -1298.13 -1377.17  183.0    2.0   0.0  0.45  1.19
+True   168.0  100.0  0.482   512.39   512.39    0.0  167.0   1.0  0.58  0.36
+losers never worked (MFE<0.2R): 89 -760.34
+winners giveback (MFE - R): 0.09

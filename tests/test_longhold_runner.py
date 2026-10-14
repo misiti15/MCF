@@ -256,6 +256,32 @@ def test_mark_writes_equity_and_drawdown(tmp_path):
     assert st["label"] == "paper" and "not financial advice" in st["disclaimer"]
 
 
+def test_mark_uses_official_closes_not_after_hours_equity(tmp_path):
+    """2026-10-13 (H-5): the 20:47 ET mark took the broker's after-hours equity (103,471.81; LQDA +45% after hours)
+    while the day P/L base is the broker's 16:00 last_equity, a +$3,085.91 phantom day. The mark now prices the held
+    shares at today's official close."""
+    bars = synth_bars()
+    close = float(bars[(bars.symbol == "S00") & (bars.date == pd.Timestamp("2026-10-12"))].close.iloc[0])
+    ah = close * 1.45                                          # after-hours print the broker marks to
+    pos = {"S00": {"qty": 100.0, "market_value": 100 * ah, "current_price": ah}}
+    broker = FakeBroker(equity=5000.0 + 100 * ah, positions=pos)
+    broker.account = lambda: {"equity": 5000.0 + 100 * ah, "cash": 5000.0, "last_equity": 5000.0 + 100 * close,
+                              "trading_blocked": False}
+    r, _ = make(tmp_path, bars=bars, broker=broker, now="2026-10-12T20:47")
+    row = r.mark()
+    assert row["equity"] == round(5000.0 + 100 * close, 2) and row["invested"] == round(100 * close, 2)
+    assert row["day_pl"] == 0.0
+
+
+def test_mark_falls_back_to_broker_equity_without_a_close(tmp_path):
+    pos = {"ZZZ": {"qty": 10.0, "market_value": 1000.0, "current_price": 100.0}}
+    broker = FakeBroker(equity=50000.0, positions=pos)
+    r, _ = make(tmp_path, broker=broker, now="2026-10-12T18:30")
+    row = r.mark()
+    assert row["equity"] == 50000.0
+    assert "no close" in (tmp_path / "longhold" / "events.jsonl").read_text()
+
+
 def test_intraday_snapshot_is_read_only(tmp_path):
     pos = {"AAA": {"qty": 10, "market_value": 5000.0, "current_price": 500.0, "unrealized_pl": 12.0}}
     b = FakeBroker(equity=100500.0, positions=pos)

@@ -135,7 +135,9 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
                        left=qty - sum(q for q, *_ in parts))
 
     # genuine flatten closes: filled, belong to no bracket (not a leg, a replacement, a -x exit, or an entry)
+    # (a bracket/OTO leg returned as its own row, e.g. on a page without its parent, is never a flatten close)
     flat = sorted((o for i, o in by_id.items() if i not in owner and i not in parents and not getattr(o, "legs", None)
+                   and _v(getattr(o, "order_class", None) or "simple") in ("simple", "")
                    and o.filled_avg_price is not None and _f(getattr(o, "filled_qty", None)) > 0 and o.filled_at),
                   key=lambda o: _ts(o.filled_at))
     room = {_oid(o): _f(o.filled_qty) for o in flat}

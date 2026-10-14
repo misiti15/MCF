@@ -72,12 +72,18 @@ class AlpacaBroker:
         a status=OPEN query by prefix misses exactly the orders that hold the position's shares
         (2026-10-07: every 15:55 close was rejected because the take-profit legs were never cancelled)."""
         from alpaca.trading.enums import QueryOrderStatus
-        from alpaca.trading.requests import GetOrdersRequest
 
         after = pd.Timestamp.now(tz="America/New_York").normalize().to_pydatetime()
-        req = GetOrdersRequest(status=QueryOrderStatus.ALL, after=after, nested=True, limit=500,
-                               symbols=[symbol] if symbol else None)
-        return [o for o in self.client.get_orders(req) if (o.client_order_id or "").startswith(prefix)]
+        return [o for o in self._orders(QueryOrderStatus.ALL, after, symbol)
+                if (o.client_order_id or "").startswith(prefix)]
+
+    def _orders(self, status, after, symbol: str | None = None) -> list:
+        """Every order (status filter, submitted after `after`, legs nested), paged - see page_orders."""
+        from alpaca.trading.requests import GetOrdersRequest
+
+        return page_orders(lambda until: self.client.get_orders(GetOrdersRequest(
+            status=status, after=after, until=until, nested=True, limit=500, direction="desc",
+            symbols=[symbol] if symbol else None)), after)
 
     def _open_mcf_ids(self, symbol: str | None, prefix: str) -> list:
         ids = []
@@ -157,10 +163,8 @@ class AlpacaBroker:
     def orders_today_with_prefix(self, prefix: str, after) -> list:
         """All of today's orders (any status, with bracket/OTO legs) whose client_order_id starts with prefix."""
         from alpaca.trading.enums import QueryOrderStatus
-        from alpaca.trading.requests import GetOrdersRequest
 
-        out = self.client.get_orders(GetOrdersRequest(status=QueryOrderStatus.ALL, after=after, nested=True, limit=500))
-        return [o for o in out if (o.client_order_id or "").startswith(prefix)]
+        return [o for o in self._orders(QueryOrderStatus.ALL, after) if (o.client_order_id or "").startswith(prefix)]
 
     def _open_mcf(self, symbol: str, prefix: str):
         return self._mcf_parents(prefix, symbol)
@@ -282,29 +286,38 @@ class AlpacaBroker:
         return self.client.close_all_positions(cancel_orders=True)
 
     def closed_orders_today(self, after):
-        """Every closed order submitted after `after`, oldest first. Alpaca returns at most 500 per call, newest first
-        by default; one call silently dropped the morning on busy days (Testing 2, 2026-10-12: 45 orders never
-        journaled), so this pages forward by submitted_at until a short page."""
+        """Every closed order submitted after `after`, oldest first (legs nested), paged - see page_orders."""
         from alpaca.trading.enums import QueryOrderStatus
-        from alpaca.trading.requests import GetOrdersRequest
 
-        return page_orders(lambda cursor: self.client.get_orders(GetOrdersRequest(
-            status=QueryOrderStatus.CLOSED, after=cursor, nested=True, limit=500, direction="asc")), after)
+        return sorted(self._orders(QueryOrderStatus.CLOSED, after), key=lambda o: o.submitted_at)
 
 
-def page_orders(fetch, after, page: int = 500, max_pages: int = 40) -> list:
-    """Page through fetch(cursor) (orders submitted after cursor, oldest first). The cursor steps back 1 ms so
-    orders sharing the last timestamp are not skipped; duplicates are dropped by id."""
+def page_orders(fetch, after, page: int = 500, max_pages: int = 400) -> list:
+    """Every order from fetch(until) (orders submitted after `after` and before `until`, None = now, NEWEST first).
+
+    Alpaca's `limit` counts the nested bracket legs too, so a full page of 500 rows holds only ~170 entries: the old
+    "stop at a short page" rule stopped after the first page, and an ascending query returned the oldest rows plus
+    an arbitrary part of today (checked against the primary account 2026-10-14: one asc page since 10-06 returned
+    202 of 289 entries and none of 10-12/10-13). Testing 1 on 2026-10-14: 9 filled lots (AMD: 1 of 2 lots of one
+    flatten close) and the 10-12 ghosts were never booked. So: page newest -> oldest with `until` = oldest
+    submitted_at seen + 1 ms (orders sharing that timestamp are fetched again and de-duplicated) and stop when a page
+    brings nothing new or holds fewer than `page` rows counting its nested legs (on the primary account every full
+    page held at least `limit` rows, the last page fewer). A leg whose parent sits on another page can also come back as a top-level row; those
+    copies are dropped (the parent carries it)."""
     from datetime import timedelta
 
-    out, seen, cursor = [], set(), after
+    out: dict[str, object] = {}
+    until = None
     for _ in range(max_pages):
-        got = list(fetch(cursor) or [])
-        new = [o for o in got if str(o.id) not in seen]
+        got = list(fetch(until) or [])
+        new = [o for o in got if str(o.id) not in out]
         for o in new:
-            seen.add(str(o.id))
-        out.extend(new)
-        if len(got) < page or not new:
+            out[str(o.id)] = o
+        rows = {str(o.id) for o in got} | {str(getattr(leg, "id", "")) for o in got
+                                           for leg in (getattr(o, "legs", None) or [])}
+        if not new or len(rows) < page:
             break
-        cursor = max(o.submitted_at for o in got) - timedelta(milliseconds=1)
-    return out
+        oldest = min(o.submitted_at for o in got)
+        until = oldest + timedelta(milliseconds=1)
+    legs = {str(getattr(leg, "id", "")) for o in out.values() for leg in (getattr(o, "legs", None) or [])}
+    return [o for i, o in out.items() if i not in legs]
