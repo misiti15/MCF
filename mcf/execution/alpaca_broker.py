@@ -177,7 +177,8 @@ class AlpacaBroker:
         raise RuntimeError(f"no open MCF stop leg for {symbol}")
 
     # ---------------------------------------------------------------- per-lot (live.max_lots_per_symbol > 1)
-    # A lot is one setup's bracket on a symbol; its id is the parent's client order id (prefix-setup-symbol-YYYYMMDD).
+    # A lot is one bracket on a symbol; its id is the parent's client order id (prefix-setup-symbol-YYYYMMDD[-HHMM]: with
+    # live.same_setup_reentry one setup can hold several lots on a symbol, one per decision bar).
     # Positions are netted per symbol at the broker, so a lot is only ever changed through ITS OWN orders: its stop leg
     # is replaced, or its legs are cancelled and exactly its quantity is closed by an order whose client id is
     # lot_exit_coid(parent id) (so reconcile pairs the exit to the lot exactly).

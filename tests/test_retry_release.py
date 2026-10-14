@@ -54,6 +54,7 @@ def _bars(n):
 def _runner(tmp_path, monkeypatch, strategies, **flags):
     cfg = load_config()
     cfg["live"]["max_lots_per_symbol"] = 1   # retry semantics tested with one lot per symbol
+    cfg["live"]["same_setup_reentry"] = False   # re-entry (2026-10-14) supersedes retry_after_release
     cfg["data"]["journal_path"] = str(tmp_path / "j.db")
     cfg["live"].update(flags)
     b = Broker()
