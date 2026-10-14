@@ -163,11 +163,12 @@ class FakeAlpaca:
                 o.status = "canceled"
 
 
-def _runner(tmp_path, monkeypatch, client=None, lots=3, strategies=(), journal="j.db"):
+def _runner(tmp_path, monkeypatch, client=None, lots=3, strategies=(), journal="j.db", reentry=True):
     monkeypatch.setattr(R._time, "sleep", lambda s: None)
     cfg = load_config()
     cfg["data"]["journal_path"] = str(tmp_path / journal)
     cfg["live"]["max_lots_per_symbol"] = lots
+    cfg["live"]["same_setup_reentry"] = reentry
     client = client or FakeAlpaca()
     b = AlpacaBroker.__new__(AlpacaBroker)
     b.client = client
@@ -518,3 +519,140 @@ def test_partial_target_remainder_by_stop_leg():
     row = tr.iloc[0]
     assert row.pnl == pytest.approx(4 * 1 - 6 * 1) and row.exit == pytest.approx((4 * 19 + 6 * 21) / 10)
     assert row.exit_reason == "stop" and row.pnl_adj == pytest.approx(-2 - 0.12) and row.shares == 10
+
+
+# ---------------------------------------------------------------- same-setup re-entry (owner 2026-10-14)
+class Fires:
+    """A setup that signals a market long on the latest bar when its time (HHMM) is in `at`."""
+
+    def __init__(self, name="A", at=(), **params):
+        self.name, self.at, self.params = name, set(at), params
+
+    def eligible(self, ctx):
+        return True
+
+    def signals(self, ctx):
+        last = len(ctx.bars) - 1
+        if f"{ctx.bars.index[last]:%H%M}" not in self.at:
+            return []
+        return [Signal(ctx.symbol, self.name, 1, last, stop=9.0, target=12.0,
+                       be_at_r=self.params.get("be_at_r"), time_stop_min=self.params.get("time_stop_min"))]
+
+
+def _poll(r, monkeypatch, hhmm):
+    """One runner poll at hh:mm:05 ET: completed 1-minute bars 09:30 .. the previous minute."""
+    now = pd.Timestamp(f"2026-10-13 {hhmm[:2]}:{hhmm[2:]}:05", tz=NY)
+    idx = pd.date_range(pd.Timestamp("2026-10-13 09:30", tz=NY), now.floor("1min") - pd.Timedelta(minutes=1), freq="1min")
+    bars = pd.DataFrame({"open": 10.0, "high": 10.05, "low": 9.95, "close": 10.0, "volume": 1e5}, index=idx)
+    ctx = NS(symbol="XYZ", bars=bars, avg_dollar_volume=5e8)
+    monkeypatch.setattr(r, "fetch", lambda now: {"XYZ": bars})
+    monkeypatch.setattr(r, "_contexts", lambda b, today: [ctx])
+    r.step(now)
+    r._sync_open()
+
+
+def _submitted(r):
+    s = r.journal.signals(r.run_id)
+    return s[s.status == "submitted"]
+
+
+def test_same_setup_two_signals_two_lots_each_with_own_exit(tmp_path, monkeypatch):
+    r, c = _runner(tmp_path, monkeypatch, client=LeakyAlpaca(), strategies=[Fires("A", at={"1005", "1120"})])
+    _poll(r, monkeypatch, "1006")                                   # 10:05 bar -> lot 1
+    _poll(r, monkeypatch, "1006")                                   # same bar again (next poll, same minute) -> nothing
+    assert [o.client_order_id for o in c.orders] == [ID("A", "1005")]
+    c.fill(ID("A", "1005"), 10.0)
+    _poll(r, monkeypatch, "1007")                                   # no signal on the 10:06 bar
+    _poll(r, monkeypatch, "1121")                                   # NEW signal on the 11:20 bar while lot 1 is open
+    _poll(r, monkeypatch, "1121")
+    assert [o.client_order_id for o in c.orders] == [ID("A", "1005"), ID("A", "1120")]
+    assert _setups(r) == ["A", "A"] and set(r.lots["XYZ"]) == {ID("A", "1005"), ID("A", "1120")}
+    assert r.risk.open_lots() == 2 and r.risk.state.open_by_strategy == {"A": 2} and r.risk.state.trades_today == 2
+    sub = _submitted(r)
+    assert len(sub) == 2 and len(r.journal.signals(r.run_id)) == 2           # one journal row per signal bar
+    assert [json.loads(i)["coid"] for i in sub["info"]] == [ID("A", "1005"), ID("A", "1120")]
+    c.fill(ID("A", "1120"), 10.2)
+    q1, q2 = (int(float(c.by_coid(ID("A", h)).qty)) for h in ("1005", "1120"))
+    c.hit(ID("A", "1005"), "stop", 9.0)                             # lot 1 stopped; lot 2 keeps its legs and shares
+    r.reconcile(DAY)
+    t = r.journal.trades(run_id=r.run_id)
+    assert len(t) == 1 and t.iloc[0].exit_reason == "stop" and t.iloc[0].pnl == pytest.approx(-1.0 * q1)
+    assert list(r.lots["XYZ"]) == [ID("A", "1120")] and c.pos["XYZ"] == q2
+    c.price["XYZ"] = 10.7
+    r.flatten_mcf()                                                 # lot 2 flattened
+    r.reconcile(DAY)
+    t = r.journal.trades(run_id=r.run_id).sort_values("entry")
+    assert list(t.exit_reason) == ["stop", "flatten"] and list(t.shares) == [q1, q2]
+    assert t.iloc[1].pnl == pytest.approx((10.7 - 10.2) * q2) and t.pnl.sum() == pytest.approx(_realized(c))
+    assert len(set(t.broker_order_id)) == 2 and r.journal.open_orders(r.run_id).empty and "XYZ" not in r.lots
+
+
+def test_same_setup_fourth_lot_hits_cap_and_opposite_side_still_blocked(tmp_path, monkeypatch):
+    r, c = _runner(tmp_path, monkeypatch)
+    for hhmm in ("1005", "1120", "1200", "1300"):
+        _enter(r, "A", now=pd.Timestamp(f"2026-10-13 {hhmm[:2]}:{hhmm[2:]}:30", tz=NY))
+    _enter(r, "A", side=-1, stop=11.0, target=9.0, now=pd.Timestamp("2026-10-13 13:10:30", tz=NY))
+    assert [o.client_order_id for o in c.orders] == [ID("A", h) for h in ("1005", "1120", "1200")]
+    sk = r.journal.signals(r.run_id).query("status == 'skipped'")
+    assert list(sk.reason) == ["lot cap", "opposite side held"]
+    assert json.loads(sk.iloc[0]["info"])["held_by"] == ["A"]       # holders listed once, not once per lot
+    _enter(r, "A", now=pd.Timestamp("2026-10-13 12:00:30", tz=NY))   # same moment as lot 3: never twice
+    assert len(c.orders) == 3 and r.journal.signals(r.run_id).reason.iloc[-1] == "same setup, same moment"
+
+
+def test_stop_entry_reentry_needs_a_new_signal_bar(tmp_path, monkeypatch):
+    class Breakout(Fires):
+        def signals(self, ctx):          # one stop-entry signal on the 10:00 bar, triggered from 10:01 on
+            i = ctx.bars.index.get_indexer([pd.Timestamp("2026-10-13 10:00", tz=NY)])[0]
+            return [Signal(ctx.symbol, self.name, 1, i, stop=9.0, target=12.0, entry_type="stop", entry_price=10.04)]
+
+    r, c = _runner(tmp_path, monkeypatch, strategies=[Breakout("O")])
+    _poll(r, monkeypatch, "1002")                                    # trigger traded on the 10:01 bar -> enter
+    c.fill(ID("O", "1000"), 10.04)
+    for hhmm in ("1003", "1004", "1010"):                            # same signal still "crossed": no second lot
+        _poll(r, monkeypatch, hhmm)
+    assert [o.client_order_id for o in c.orders] == [ID("O", "1000")] and len(r.journal.signals(r.run_id)) == 1
+
+
+def test_reentry_flag_false_keeps_one_entry_per_setup_symbol_day(tmp_path, monkeypatch):
+    r, c = _runner(tmp_path, monkeypatch, reentry=False, strategies=[Fires("A", at={"1005", "1120"})])
+    _poll(r, monkeypatch, "1006")
+    c.fill("mcf-A-XYZ-20261013", 10.0)
+    _poll(r, monkeypatch, "1121")                                    # later signal: not even evaluated (seen all day)
+    assert [o.client_order_id for o in c.orders] == ["mcf-A-XYZ-20261013"] and len(r.journal.signals(r.run_id)) == 1
+    _enter(r, "A", now=pd.Timestamp("2026-10-13 11:20:30", tz=NY))   # a direct second entry: risk says no
+    assert _skips(r)["A"] == ("already in symbol", "A") and len(c.orders) == 1
+
+
+def test_restart_restores_two_lots_of_one_setup(tmp_path, monkeypatch):
+    st = Fires("A", at={"1005", "1120", "1300"}, be_at_r=1.0)
+    r, c = _runner(tmp_path, monkeypatch, strategies=[st])
+    _poll(r, monkeypatch, "1006")
+    c.fill(ID("A", "1005"), 10.0)
+    _poll(r, monkeypatch, "1121")
+    c.fill(ID("A", "1120"), 10.1)
+    assert set(r.managed) == {("XYZ", ID("A", "1005")), ("XYZ", ID("A", "1120"))}
+    r2, _ = _runner(tmp_path, monkeypatch, client=c, strategies=[st])
+    r2.restore(DAY)
+    assert set(r2.lots["XYZ"]) == {ID("A", "1005"), ID("A", "1120")} and r2.risk.open_lots() == 2
+    assert r2.risk.state.open_by_strategy == {"A": 2}
+    m = r2.managed
+    assert set(m) == {("XYZ", ID("A", "1005")), ("XYZ", ID("A", "1120"))}
+    assert m[("XYZ", ID("A", "1005"))]["entry"] == 10.0 and m[("XYZ", ID("A", "1120"))]["entry"] == 10.1
+    _poll(r2, monkeypatch, "1121")                                   # the 11:20 bar again after restart: not re-entered
+    assert len(c.orders) == 2
+    _poll(r2, monkeypatch, "1301")                                   # a new signal: third lot
+    assert c.orders[-1].client_order_id == ID("A", "1300") and len(r2.lots["XYZ"]) == 3
+    # a lot the journal never saved is restored from the broker under its own id
+    r3, _ = _runner(tmp_path, monkeypatch, client=c, strategies=[st], journal="other.db")
+    r3.restore(DAY)
+    assert set(r3.lots["XYZ"]) == {ID("A", h) for h in ("1005", "1120", "1300")}
+    assert r3.last_entry[("XYZ", "A")] == "1300" and ("XYZ", "A", "1120") in r3.moments
+
+
+def test_parse_coid_old_and_new_ids():
+    assert R.parse_coid("mcf-A-XYZ-20261013") == ("A", "XYZ", "20261013", None)
+    assert R.parse_coid("mcf-MF5-flowsell-vwapup-rsi5hi-BRK.B-20261014-1120") == (
+        "MF5-flowsell-vwapup-rsi5hi", "BRK.B", "20261014", "1120")
+    for coid in ("mcf-A-XYZ-20261014-1120-x", "mcf-flatten-XYZ-20261014155501", "mct-A-XYZ-20261014", "uuid-1", None):
+        assert R.parse_coid(coid) is None
