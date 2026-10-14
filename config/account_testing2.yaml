@@ -22,7 +22,7 @@ account:
   max_concurrent_positions: 400
   # Playing time: a per-setup cap well below the slot count, so the busy setups (up to ~250 signals/day) cannot fill
   # the account and every setup gets entries (Testing 1 uses 150 with fewer busy setups).
-  max_positions_per_strategy: 25
+  max_positions_per_strategy: 50   # owner 2026-10-14 (was 25; it blocked 215 signals on 10-13 once stacking went live)
   max_daily_loss_r: 60
   max_trades_per_day: 3000
 live:
