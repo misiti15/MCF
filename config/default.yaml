@@ -277,6 +277,8 @@ strategies:
   # nearest miss of the trend-guard study (research/bdi/trendguard). Two-year history: n 424, +0.26R after costs, t 2.39
   # (required 4.76), positive in up and down sessions. Not scored on the locked block. Ledger 2026-10-09-owner-rw6g1.
   RW6G1-ns2-up3-vwap2sd-short:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py

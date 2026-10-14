@@ -82,6 +82,8 @@ strategies:
     enabled: true
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   exhaustion_short:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
@@ -138,6 +140,8 @@ strategies:
     scale_out_r: null
   # from MF2-open-rsimidhi-flowsell (primary; source window 950-1100); ~10.6/day full-day [timeofday results.csv full, exp -0.046R]
   MF2-open-rsimidhi-flowsell-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
@@ -170,6 +174,8 @@ strategies:
     scale_out_r: null
   # from NS1-rsidip-rsi5pop-long (primary; source window 950-1130); ~5.72/day full-day [timeofday results.csv full, exp -0.068R]
   NS1-rsidip-rsi5pop-long-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 3
     enabled: true
     type: lab
     module: research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py
@@ -186,6 +192,8 @@ strategies:
     scale_out_r: null
   # from NS3-failed-vwap-reclaim-short (primary; source window 950-1130); ~23.95/day full-day [timeofday results.csv full, exp -0.028R]
   NS3-failed-vwap-reclaim-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
@@ -210,6 +218,8 @@ strategies:
     scale_out_r: null
   # from RW6G1-ns2-up3-vwap2sd-short (primary; source window 950-1130); ~4.62/day full-day [timeofday results.csv full, exp -0.011R]
   RW6G1-ns2-up3-vwap2sd-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/RW6G1-ns2-up3-vwap2sd-short-FD.py
@@ -218,6 +228,8 @@ strategies:
     scale_out_r: null
   # from L3-gap-slope-rsi5hi (testing; source window 1300-1430); ~13.41/day full-day [verify.json (not in the time-of-day study)]
   L3-gap-slope-rsi5hi-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 6
     enabled: true
     type: lab
     module: research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py
@@ -236,6 +248,8 @@ strategies:
     scale_out_r: null
   # from L3-gap-slope-fromopen (testing; source window 1300-1430); ~11.44/day full-day [verify.json (not in the time-of-day study)]
   L3-gap-slope-fromopen-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
@@ -245,6 +259,8 @@ strategies:
     scale_out_r: null
   # from ST1-ordn-long-pm-t05s1 (testing; source window 1335-1500); ~3.81/day full-day [timeofday results.csv full, exp -0.053R]
   ST1-ordn-long-pm-t05s1-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 3
     enabled: true
     type: lab
     module: research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py
@@ -277,6 +293,8 @@ strategies:
     scale_out_r: null
   # from ST5-pdbrkup-short-mid-t05s1 (testing; source window 1135-1330); ~1.0/day full-day [timeofday results.csv full, exp -0.035R]
   ST5-pdbrkup-short-mid-t05s1-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 3
     enabled: true
     type: lab
     module: research/bdi/fullday/ST5-pdbrkup-short-mid-t05s1-FD.py
@@ -285,6 +303,8 @@ strategies:
     scale_out_r: null
   # from ST6-volspikeup-short-mid-t1s1 (testing; source window 1135-1330); ~1.42/day full-day [timeofday results.csv full, exp +0.024R]
   ST6-volspikeup-short-mid-t1s1-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
@@ -309,6 +329,8 @@ strategies:
     scale_out_r: null
   # from RW4-ns3-adv150-short (testing; source window 950-1130); ~18.94/day full-day [timeofday results.csv full, exp -0.028R]
   RW4-ns3-adv150-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/RW4-ns3-adv150-short-FD.py
@@ -317,6 +339,8 @@ strategies:
     scale_out_r: null
   # from RW5-heat30-flowsell-rsi5pop-gapdn-short (testing; source window 950-1100); ~13.14/day full-day [timeofday results.csv full, exp -0.058R]
   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 6
     enabled: true
     type: lab
     module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
@@ -325,6 +349,8 @@ strategies:
     scale_out_r: null
   # from RW6-ns2-up3-short (testing; source window 950-1130); ~8.48/day full-day [timeofday results.csv full, exp -0.021R]
   RW6-ns2-up3-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
     enabled: true
     type: lab
     module: research/bdi/fullday/RW6-ns2-up3-short-FD.py
