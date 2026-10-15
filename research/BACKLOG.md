@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 396 · coded: 80 · failed: 208 · configurations tried (all lineages): 22435269
+Total ideas: 400 · coded: 80 · failed: 212 · configurations tried (all lineages): 22435334
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -398,6 +398,10 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1014-CWT14-failbrk-pdl-p05-long-tune | CWT14-failbrk-pdl-p05-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1014-heat_fade_short-FD-tune | heat_fade_short-FD: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1014-RW7-gapdn-bounce-early-short-FD-tune | RW7-gapdn-bounce-early-short-FD: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
+| failed | opp1014-rw2-opposite-long | RW2 never-worked as an opportunity: go long at the RW2-FD short signal, or reverse long at its t1s1 stop (all stops / never-worked stops) | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
+| failed | opp1014-rw2-continuation-short | RW2 failed-extension continuation: after the RW2 short's stop, short the first VWAP loss or lower low (t1s1 / t2s1 / eod-s1; all or never-worked stops) | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
+| failed | opp1014-st2-skipped-sameday-rebound | ST2 skipped stocks as an opportunity: same-day rebound long on adv >= $95M names down >= 3/4/5/6% from the open (H5 = 5-min high reclaim, VW = VWAP reclaim, MR = H5 + 0.5 ATR below VWAP), 10:30-15:00, t05s1 / t1s1 | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
+| failed | opp1014-st2-skipped-nextday-rebound | ST2 skipped stocks, next day: after a day closing >= 3/4/5/6% below its open, buy the next open or 09:50 and exit same day (EOD or t1s1); gap-fade reference (gap <= -2%) | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
