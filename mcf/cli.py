@@ -221,7 +221,7 @@ def cmd_discover(args, cfg):
 
 
 def cmd_eod(args, cfg):
-    """End-of-day report from the saved journal: chart, top-10 losers, CSV; emailed if SMTP secrets exist."""
+    """End-of-day report from the saved journal: chart, best 3 / worst 5 trades with charts, CSV; emailed if SMTP secrets exist."""
     load_dotenv()
     import json as _json
     from datetime import datetime, timedelta
@@ -245,14 +245,15 @@ def cmd_eod(args, cfg):
     review = _json.loads(rv.read_text()) if rv.exists() else None
     ip = Path(args.state_dir) / "intraday" / f"{day}.jsonl"
     intraday = [_json.loads(l) for l in ip.read_text().splitlines() if l.strip()] if ip.exists() else []
-    bars = {}
+    bars, ext = {}, {}
     try:   # 1-minute bars of the day's traded symbols, for best/worst excursion (MFE/MAE) per trade
         _t = j.trades(run_id=rid)
         syms = sorted(set(_t.loc[_t["date"].astype(str) == day, "symbol"])) if len(_t) else []
         if syms:
             d0 = datetime.fromisoformat(day)
             raw = _bars(_client(), syms, d0, d0 + timedelta(days=1), 1, cfg["data"]["feed"])
-            bars = {s: rth(normalize(g.droplevel(0))) for s, g in raw.groupby(level=0)}
+            ext = {s: normalize(g.droplevel(0)) for s, g in raw.groupby(level=0)}   # incl. pre-market, for trade charts
+            bars = {s: rth(v) for s, v in ext.items()}
     except Exception as e:
         print(f"trade bars unavailable: {e}")
     playing = None
@@ -262,7 +263,8 @@ def cmd_eod(args, cfg):
         playing = playing_time.from_journal(j, rid, day, cfg, args.state_dir)
     except Exception as e:
         print(f"playing time unavailable: {e}")
-    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing)
+    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing,
+                    chart_bars=ext)
     eod.save(rep, Path(args.state_dir) / "reports", day)
     from .report import scorecard
 
@@ -324,7 +326,7 @@ def main(argv=None):
     dc.add_argument("--max-symbols", type=int)
     dc.set_defaults(fn=cmd_discover)
 
-    eo = sub.add_parser("eod", help="end-of-day report (chart, top losers, CSV), emailed if SMTP secrets set")
+    eo = sub.add_parser("eod", help="end-of-day report (chart, best/worst trades with charts, CSV), emailed if SMTP secrets set")
     eo.add_argument("--state-dir", default="state")
     eo.add_argument("--day")
     eo.add_argument("--no-send", action="store_true")

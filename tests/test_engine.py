@@ -310,8 +310,8 @@ def test_eod_report_top_losers_and_chart(tmp_path):
     idx = pd.date_range("2026-10-06 09:30", "2026-10-06 15:59", freq="1min", tz="America/New_York")
     spy = pd.DataFrame({"close": np.linspace(700, 705, len(idx))}, index=idx)
     rep = eod.build(j, rid, "2026-10-06", spy, {"findings": ["x"]})
-    assert rep["png"][:4] == b"\x89PNG" and rep["html"].count("<tr><td>S") == 10
-    assert "S11" in rep["html"] and "S1<" not in rep["html"]   # worst 10 by % lost, best losers dropped
+    assert rep["png"][:4] == b"\x89PNG" and rep["html"].count("<tr><td>S") == 5
+    assert "S11" in rep["html"] and "S6<" not in rep["html"]   # worst 5 by % lost (owner 2026-10-15), best losers dropped
     eod.save(rep, tmp_path / "reports", "2026-10-06")
     assert (tmp_path / "reports" / "2026-10-06.csv").exists()
 

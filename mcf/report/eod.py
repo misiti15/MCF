@@ -1,8 +1,9 @@
 """End-of-day email: deterministic (no AI), sent by the trade workflow after the close.
 
-Contents: day summary, the 10 worst trades by % lost, a 15-minute chart of how the day flowed
+Contents: day summary, the best 3 trades by % gained and the worst 5 by % lost (each with a 3-minute
+candlestick chart, 09:00-16:00 ET, entry/exit marked; mcf/report/trade_charts.py), a 15-minute chart of how the day flowed
 (SPY next to MCF's cumulative realized P/L), and every trade as an editable CSV attachment.
-A copy is saved to the state branch (reports/<date>.html and .csv).
+A copy is saved to the state branch (reports/<date>.html and .csv; trade charts in reports/charts/<date>/).
 Needs repository secrets MCF_SMTP_USER / MCF_SMTP_PASSWORD (Gmail app password); without them the
 report is still written, just not emailed.
 """
@@ -195,14 +196,22 @@ def spy_adjust(tr: pd.DataFrame, spy: pd.DataFrame | None) -> pd.DataFrame:
 
 
 def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict | None = None,
-          intraday: list | None = None, bars: dict | None = None, playing: dict | None = None):
+          intraday: list | None = None, bars: dict | None = None, playing: dict | None = None,
+          chart_bars: dict | None = None):
+    """chart_bars: 1-minute bars per symbol incl. pre-market (for the per-trade charts); defaults to `bars`."""
     tr = journal.trades(run_id=run_id)
     tr = tr[tr["date"].astype(str) == day].copy() if len(tr) else tr
     if len(tr):
         tr["pct"] = tr["side"] * (tr["exit"] / tr["entry"] - 1) * 100
-    losers = tr.sort_values("pct").head(10) if len(tr) else tr
-    losers = losers[losers["pct"] < 0] if len(losers) else losers
-    winners = tr[tr["pct"] > 0].sort_values("pct", ascending=False).head(3) if len(tr) else tr   # owner 2026-10-12
+    from . import trade_charts
+
+    # best 3 by % gained (owner 2026-10-12), worst 5 by % lost (owner 2026-10-15), each with a chart
+    winners, losers = trade_charts.pick(tr)
+    try:
+        charts = trade_charts.build(tr, chart_bars if chart_bars is not None else bars, day)
+    except Exception as e:   # charts must never stop the EOD email
+        print(f"trade charts unavailable: {e}")
+        charts = {"best": [], "worst": []}
     n = len(tr)
     pnl = float(tr["pnl"].sum()) if n else 0.0
     win = float((tr["pnl"] > 0).mean()) if n else float("nan")
@@ -245,10 +254,15 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 <table style="border-collapse:collapse;font-size:13px">
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% gained</th><th {td}>P/L</th></tr>
 {wrows}</table>
-<h3>Top 10 losing trades (by % lost)</h3>
+<h3>Worst 5 trades (by % lost)</h3>
 <table style="border-collapse:collapse;font-size:13px">
 <tr><th {td}>Symbol</th><th {td}>Setup</th><th {td}>Side</th><th {td}>In</th><th {td}>Out</th><th {td}>Entry</th><th {td}>Exit</th><th {td}>Exit reason</th><th {td}>% lost</th><th {td}>P/L</th></tr>
 {rows}</table>
+<h3>Charts: best 3 and worst 5 trades</h3>
+<div style="font-size:12px;color:#52514e">Best = largest % gained, worst = largest % lost (side-adjusted, exit vs entry).
+3-minute bars 09:00-16:00 ET; grey = pre-market, dashed line = 09:30 open; blue = entry, purple = exit, dotted = stop/target.</div>
+{trade_charts.html(charts['best'], 'Best 3 (by % gained)')}
+{trade_charts.html(charts['worst'], 'Worst 5 (by % lost)')}
 {_quality(tr, bars or {})}
 {_time_of_day(tr)}
 <h3>By setup</h3>
@@ -262,13 +276,21 @@ Live page: https://misiti15.github.io/MCF/live/</p></div>"""
     text = f"MCF end of day {day}: {n} trades, P/L ${pnl:,.2f}. {DISCLAIMER}"
     csv = tr.drop(columns=[c for c in ("meta",) if c in tr]).to_csv(index=False) if n else "no trades\n"
     return {"subject": f"MCF EOD {day}: {n} trades, ${pnl:,.0f}", "html": html, "text": text,
-            "png": _chart(spy, tr, day, intraday), "cid": cid, "csv": csv}
+            "png": _chart(spy, tr, day, intraday), "cid": cid, "csv": csv,
+            "charts": [c for c in charts["best"] + charts["worst"] if c["png"]]}
 
 
 def save(rep: dict, out_dir: str | Path, day: str) -> None:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"{day}.html").write_text(rep["html"].replace(f"cid:{rep['cid'][1:-1]}", f"{day}.png"))
+    page = rep["html"].replace(f"cid:{rep['cid'][1:-1]}", f"{day}.png")
+    if rep.get("charts"):
+        cd = out / "charts" / day
+        cd.mkdir(parents=True, exist_ok=True)
+        for c in rep["charts"]:
+            (cd / c["name"]).write_bytes(c["png"])
+            page = page.replace(f"cid:{c['cid'][1:-1]}", f"charts/{day}/{c['name']}")
+    (out / f"{day}.html").write_text(page)
     (out / f"{day}.png").write_bytes(rep["png"])
     (out / f"{day}.csv").write_text(rep["csv"])
 
@@ -283,6 +305,8 @@ def send(rep: dict, to: str, day: str) -> bool:
     msg.set_content(rep["text"])
     msg.add_alternative(rep["html"], subtype="html")
     msg.get_payload()[1].add_related(rep["png"], "image", "png", cid=rep["cid"])
+    for c in rep.get("charts", []):   # per-trade charts, inline (CID)
+        msg.get_payload()[1].add_related(c["png"], "image", "png", cid=c["cid"], filename=c["name"])
     msg.add_attachment(rep["csv"].encode(), maintype="text", subtype="csv", filename=f"mcf-trades-{day}.csv")
     with smtplib.SMTP_SSL(os.environ.get("MCF_SMTP_HOST", "smtp.gmail.com"), int(os.environ.get("MCF_SMTP_PORT", "465")),
                           context=ssl.create_default_context(), timeout=30) as s:
