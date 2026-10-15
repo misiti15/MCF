@@ -219,6 +219,30 @@ strategies:
     min_adv: 95000000
     window: [950, 1100]
     scale_out_r: null
+  # ---- Promoted from Testing 1 (owner 2026-10-15, first Primary session 2026-10-16; ledger 2026-10-15-promote-3fd).
+  #      Live T1 10-12..15: RW5-FD 27 tr 70% +0.43R; RW3-FD 28 tr 64% +0.32R; MF3-FD 21 tr 67% +0.29R.
+  #      Two-year full-day backtests are negative (-0.058 / -0.068 / -0.071R): owner override of rule 19. They keep running in Testing 1.
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  RW3-gapdn-rsi5pop-flowsell-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  MF3-open-flowsell-rsi5hi-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
   MF4-h40-open-flowsell:
     enabled: true
     type: lab
@@ -316,6 +340,9 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
+    - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
+    - MF3-open-flowsell-rsi5hi-FD   # promoted 2026-10-15
     - intraday_momentum
     - orb20_a
     - RW6G1-ns2-up3-vwap2sd-short

@@ -395,7 +395,7 @@ class PaperRunner:
             ctx = DayContext(symbol=sym, date=today, bars=bars, prev_close=p.prev_close, prev_high=p.prev_high,
                              prev_low=p.prev_low, atr=p.atr, avg_dollar_volume=p.adv,
                              avg_cum_volume=p.avg_cum, avg_move=p.avg_move, prior5=getattr(p, "tail5", None),
-                             sma20=getattr(p, "sma20", float("nan")))
+                             sma20=getattr(p, "sma20", float("nan")), peers=today_bars)
             if universe_ok(ctx, self.cfg):
                 ctxs.append(ctx)
         orv = [c.rvol().iloc[min(4, len(c.bars) - 1)] for c in ctxs]
