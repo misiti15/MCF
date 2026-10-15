@@ -64,6 +64,9 @@ class DayContext:
     prior5: pd.DataFrame | None = None        # prior sessions' last 5-minute bars (layer warm-up)
     sma20: float = float("nan")               # 20-day SMA of daily closes through the prior session
     rank_rvol20: int | None = None            # rank by 20-minute (09:30-09:49) relative volume (1 = highest)
+    # today's bars of every symbol in the poll / session (symbol -> 1-minute RTH bars), for setups that read one symbol
+    # and trade another (IndexDipBounce: signal on SPY, trade SSO). None when the caller does not provide them.
+    peers: dict | None = field(default=None, repr=False)
     _cache: dict = field(default_factory=dict, repr=False)
 
     @property

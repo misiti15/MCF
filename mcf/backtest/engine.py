@@ -257,7 +257,13 @@ def is_extended(ctx: DayContext, cfg: dict) -> bool:
 def pinned_symbols(cfg: dict) -> set[str]:
     """Symbols an enabled setup names explicitly (e.g. index ETFs). Always in the universe:
     the universe filters exist to pick names for scanned setups, not to veto a named instrument."""
-    return {s for st in cfg.get("strategies", {}).values() if st.get("enabled") for s in st.get("symbols", [])}
+    out = set()
+    for st in cfg.get("strategies", {}).values():
+        if st.get("enabled"):
+            out.update(st.get("symbols", []))
+            if st.get("signal_symbol"):          # a setup that reads one symbol and trades others needs its bars too
+                out.add(st["signal_symbol"])
+    return out
 
 
 def universe_ok(ctx: DayContext, cfg: dict) -> bool:
@@ -277,8 +283,9 @@ def universe_ok(ctx: DayContext, cfg: dict) -> bool:
 def in_play_filter(ctxs: list, orv: list, cfg: dict) -> tuple[list, list]:
     """Extended-tier names stay only on days they are in play (opening rvol >= extended_min_rvol)."""
     need = cfg["universe"].get("extended_min_rvol", 0.0)
+    pinned = pinned_symbols(cfg)   # a named instrument (e.g. SPUU for the index-dip setups) is never dropped here
     keep = [i for i, c in enumerate(ctxs)
-            if not is_extended(c, cfg) or (not np.isnan(orv[i]) and orv[i] >= need)]
+            if c.symbol in pinned or not is_extended(c, cfg) or (not np.isnan(orv[i]) and orv[i] >= need)]
     return [ctxs[i] for i in keep], [orv[i] for i in keep]
 
 
@@ -320,7 +327,9 @@ class Backtester:
                 orv.append(rv.iloc[min(4, len(rv) - 1)] if len(rv) else np.nan)
             ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
             rank_contexts(ctxs)
+            peers = {s: h.by_day[d] for s, h in hist.items() if d in h.by_day}
             for c in ctxs:
+                c.peers = peers
                 for strat in self.strategies:
                     if not strat.eligible(c):
                         continue

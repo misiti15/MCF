@@ -536,9 +536,11 @@ REGISTRY: dict[str, type[Strategy]] = {
     for c in (OpeningRangeBreakout, NoiseBandMomentum, IntradayMomentum, VWAPReclaim, GapAndGo, GapFade,
               VWAPReversion)
 }
+from .index_dip import IndexDipBounce  # noqa: E402
 from .research_setups import RESEARCH_REGISTRY  # noqa: E402
 
 REGISTRY.update(RESEARCH_REGISTRY)
+REGISTRY[IndexDipBounce.name] = IndexDipBounce
 
 
 def build_strategies(cfg: dict) -> list[Strategy]:
