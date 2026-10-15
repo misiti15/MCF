@@ -82,7 +82,9 @@
       ["Win rate", t.trades ? pc(t.win_rate) : "–", t.trades ? `${t.wins} of ${t.trades}` : "no closed trades"],
       ["P/L today", t.trades ? money(t.pnl) : "–", t.trades ? `adj. ${money(t.pnl_adj)}` : ""],
       ["Signals", t.signals ?? 0, `${by.submitted ?? by.dry_run ?? 0} taken · ${by.skipped ?? 0} skipped · ${by.shadow ?? 0} shadow`],
-      ["Data health", `${(h.symbols_last_bar ?? 0).toLocaleString()}`, `of ${(h.universe ?? 0).toLocaleString()} symbols had a ${h.last_bar ?? "–"} bar · poll ${h.last_poll_s ?? "–"}s`],
+      ["Data health", h.data_stale ? `STALE` : `${(h.symbols_last_bar ?? 0).toLocaleString()}`, h.data_stale
+        ? `no fresh bars since ${String(h.data_stale.last_bar ?? "–").slice(11, 16)} (${h.data_stale.fresh ?? 0} of ${h.data_stale.of ?? 0} fresh) · new entries paused`
+        : `of ${(h.universe ?? 0).toLocaleString()} symbols had a ${h.last_bar ?? "–"} bar · poll ${h.last_poll_s ?? "–"}s${(h.data_outages || []).length ? ` · ${h.data_outages.length} data outage(s) today` : ""}${(h.partial_lots || []).length ? ` · ${h.partial_lots.length} partly closed lot(s)` : ""}`],
     ];
     $l("#lv-tiles").innerHTML = tiles.map(([k, v, n]) => `<div class="tile"><div class="k">${k}</div><div class="v">${e(v)}</div><div class="n">${e(n)}</div></div>`).join("");
 

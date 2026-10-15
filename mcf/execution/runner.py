@@ -118,7 +118,14 @@ class PaperRunner:
         self.blocked: dict[tuple[str, str], dict] = {}   # (symbol, setup) -> {"bar": blocked bar_index, "done": bool}
         self.bars: dict[str, pd.DataFrame] = {}
         self.last_fetch: pd.Timestamp | None = None
-        self.health = {"polls": 0, "last_poll_s": None, "symbols_last_bar": 0, "last_bar": None}
+        self.health = {"polls": 0, "last_poll_s": None, "symbols_last_bar": 0, "last_bar": None,
+                       "data_stale": None, "data_outages": []}
+        # Stale-data guard (2026-10-15: SIP bars missing for all 389 symbols 12:57-14:10 ET, symbols_last_bar 0 for
+        # ~70 polls, no alert). When fewer than data_stale_fresh_frac of the symbols have a bar in the last
+        # data_stale_min minutes during the session, no new entries are evaluated (signals would be computed on old
+        # bars); open lots keep their broker-side brackets and trade management unchanged. One alert per outage.
+        self.stale_min = int(self.live.get("data_stale_min", 5))
+        self.stale_fresh_frac = float(self.live.get("data_stale_fresh_frac", 0.05))
         self.status_path = status_path
         self.on_status = on_status
         self.today = None
@@ -470,10 +477,64 @@ class PaperRunner:
         self.managed.pop(key, None)
         self.lots.get(sym, {}).pop(lot_id, None)
 
+    def _check_data(self, now: pd.Timestamp, bars: dict) -> bool:
+        """True while the market data is stale: during the session (from data_stale_min after the open), fewer than
+        data_stale_fresh_frac of the symbols have a completed bar in the last data_stale_min minutes. Sets
+        health.data_stale, logs a warning, and alerts once per outage; on recovery the outage goes to
+        health.data_outages."""
+        n = max(len(self.watchlist), len(bars))
+        start = pd.Timestamp(f"{now.date()} 09:30", tz=NY) + pd.Timedelta(minutes=self.stale_min)
+        if n == 0 or now < start:
+            return False
+        cut = now.floor("1min") - pd.Timedelta(minutes=self.stale_min)
+        last = [b.index[-1] for b in bars.values() if b is not None and len(b)]
+        fresh = sum(1 for x in last if x >= cut)
+        newest = max(last) if last else None
+        cur = self.health.get("data_stale")
+        if fresh >= max(1.0, self.stale_fresh_frac * n):
+            if cur:
+                mins = round((now - pd.Timestamp(cur["since"])).total_seconds() / 60, 1)
+                self.health["data_outages"] = [*self.health.get("data_outages", []),
+                                               {**cur, "until": str(now), "minutes": mins}]
+                self.health["data_stale"] = None
+                print(f"DATA RESUMED: {fresh} of {n} symbols fresh again after {mins} min (stale since {cur['since']})")
+            return False
+        if cur:
+            cur.update(fresh=fresh, polls=cur.get("polls", 0) + 1,
+                       stale_min=round((now - pd.Timestamp(cur["last_bar"])).total_seconds() / 60, 1)
+                       if cur.get("last_bar") else None)
+        else:
+            cur = {"since": str(now), "last_bar": str(newest) if newest is not None else None, "fresh": fresh,
+                   "of": n, "polls": 1, "threshold_min": self.stale_min,
+                   "stale_min": round((now - newest).total_seconds() / 60, 1) if newest is not None else None}
+            self.health["data_stale"] = cur
+            msg = (f"DATA STALE: {fresh} of {n} symbols have a bar in the last {self.stale_min} min "
+                   f"(newest bar {cur['last_bar'] or 'none'}, now {now:%H:%M:%S} ET). New entries paused; "
+                   "open lots keep their broker-side stops and targets.")
+            print(msg)
+            self._alert(f"MCF {COID_PREFIX.rstrip('-')}: market data stale since {now:%H:%M} ET", msg)
+        return True
+
+    def _alert(self, subject: str, text: str):
+        """Best-effort email alert (same SMTP secrets as the brief / EOD email); never raises, never in a dry run."""
+        if self.dry_run or not (os.environ.get("MCF_SMTP_USER") and os.environ.get("MCF_SMTP_PASSWORD")):
+            return
+        to = os.environ.get("MCF_EMAIL_TO") or (self.cfg.get("report") or {}).get("email_to")
+        if not to:
+            return
+        try:
+            from ..report.brief import DISCLAIMER, send_email
+
+            send_email(subject, f"{text}\n\n{DISCLAIMER}", None, to)
+        except Exception as e:
+            print(f"alert email failed: {type(e).__name__}")
+
     def step(self, now: pd.Timestamp):
         today = now.date()
         bars = self.fetch(now)
         self.manage(now, bars)
+        if self._check_data(now, bars):
+            return                                    # stale data: no new entries (signals would use old bars)
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
@@ -782,6 +843,7 @@ class PaperRunner:
         from .reconcile import reconcile_day
 
         trades = reconcile_day(self.broker, self.journal, self.run_id, day, self.cfg)
+        self._note_residuals(trades.attrs.get("residual") or {})
         self._excursions(trades)
         self.journal.add_trades(self.run_id, trades)
         self._release_closed_lots()
@@ -789,6 +851,19 @@ class PaperRunner:
             today = trades[trades["date"] == str(day)]   # late-recovered trades of earlier sessions don't count today
             self.risk.state.realized_r += float(today["r_multiple"].sum())
             print(f"reconciled {len(trades)} trades for {day}")
+
+    def _note_residuals(self, residual: dict):
+        """Status only: lots still open after a partial exit (e.g. a target leg that filled part of the lot and keeps
+        working for the rest). They hold shares, so they stay open lots (lot cap unchanged); health.partial_lots
+        shows how much of each is left (2026-10-15: SYNA 2 of 7, XRT 1 of 10 held for hours)."""
+        out = []
+        for sym, lots in self.lots.items():
+            for lot in lots.values():
+                r = residual.get(str(lot.get("order_id")))
+                lot["left"] = r["left"] if r else None
+                if r:
+                    out.append({"symbol": sym, "strategy": lot.get("strategy"), "left": r["left"], "qty": r["qty"]})
+        self.health["partial_lots"] = out
 
     def _release_closed_lots(self):
         """A lot is released once reconcile has paired its exit (journal order closed) or found it never filled.
