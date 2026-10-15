@@ -1,38 +1,4 @@
 strategies:
-  IDX1-qqq100-0955-QQQ-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [QQQ]
-    signal_symbol: QQQ
-    dip_pct: 1.0
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
-  IDX1-qqq100-0955-QLD-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [QLD]
-    signal_symbol: QQQ
-    dip_pct: 1.0
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
   IDX1-qqq100-0955-TQQQ-trail:
     enabled: true
     class: index_dip_bounce
@@ -50,36 +16,6 @@ strategies:
     trail_after_r: 1.0
     scale_out_r: null
     testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
-  IDX1-qqq100-0955-QQQ-hold:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [QQQ]
-    signal_symbol: QQQ
-    dip_pct: 1.0
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
-  IDX1-qqq100-0955-QLD-hold:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [QLD]
-    signal_symbol: QQQ
-    dip_pct: 1.0
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
   IDX1-qqq100-0955-TQQQ-hold:
     enabled: true
     class: index_dip_bounce
@@ -95,10 +31,11 @@ strategies:
     target: null
     scale_out_r: null
     testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V1, bar: forward test (owner request); research bar not met}
-  IDX2-spy075-0945-SPY-trail:
+  IDX2-spy075-0945-3x-trail:
     enabled: true
     class: index_dip_bounce
-    symbols: [SPY]
+    trade_candidates: &id001 [SPXL, UPRO]
+    pick: max_dollar_volume
     signal_symbol: SPY
     dip_pct: 0.75
     dip_by: 09:45
@@ -112,78 +49,11 @@ strategies:
     trail_after_r: 1.0
     scale_out_r: null
     testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V2, bar: forward test (owner request); research bar not met}
-  IDX2-spy075-0945-SSO-trail:
+  IDX3-spy075-0955-3x-trail:
     enabled: true
     class: index_dip_bounce
-    symbols: [SSO]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V2, bar: forward test (owner request); research bar not met}
-  IDX2-spy075-0945-SPUU-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPUU]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V2, bar: forward test (owner request); research bar not met}
-  IDX2-spy075-0945-SPXL-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPXL]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V2, bar: forward test (owner request); research bar not met}
-  IDX2-spy075-0945-UPRO-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [UPRO]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V2, bar: forward test (owner request); research bar not met}
-  IDX3-spy075-0955-SPY-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPY]
+    trade_candidates: *id001
+    pick: max_dollar_volume
     signal_symbol: SPY
     dip_pct: 0.75
     dip_by: 09:55
@@ -197,146 +67,11 @@ strategies:
     trail_after_r: 1.0
     scale_out_r: null
     testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V3, bar: forward test (owner request); research bar not met}
-  IDX3-spy075-0955-SSO-trail:
+  IDX5-spy050-0945-3x-trail:
     enabled: true
     class: index_dip_bounce
-    symbols: [SSO]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V3, bar: forward test (owner request); research bar not met}
-  IDX3-spy075-0955-SPUU-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPUU]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V3, bar: forward test (owner request); research bar not met}
-  IDX3-spy075-0955-SPXL-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPXL]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V3, bar: forward test (owner request); research bar not met}
-  IDX3-spy075-0955-UPRO-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [UPRO]
-    signal_symbol: SPY
-    dip_pct: 0.75
-    dip_by: 09:55
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V3, bar: forward test (owner request); research bar not met}
-  IDX5-spy050-0945-SPY-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPY]
-    signal_symbol: SPY
-    dip_pct: 0.5
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V5, bar: forward test (owner request); research bar not met}
-  IDX5-spy050-0945-SSO-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SSO]
-    signal_symbol: SPY
-    dip_pct: 0.5
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V5, bar: forward test (owner request); research bar not met}
-  IDX5-spy050-0945-SPUU-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPUU]
-    signal_symbol: SPY
-    dip_pct: 0.5
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V5, bar: forward test (owner request); research bar not met}
-  IDX5-spy050-0945-SPXL-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [SPXL]
-    signal_symbol: SPY
-    dip_pct: 0.5
-    dip_by: 09:45
-    entry_from: 09:50
-    entry_until: '10:05'
-    trigger: recovery
-    recovery_frac: 0.2
-    stop_buffer_frac: 0.1
-    target: null
-    trail_r: 1.0
-    trail_after_r: 1.0
-    scale_out_r: null
-    testing: {added: '2026-10-16', source: research/bdi/idxdip1015, variant: V5, bar: forward test (owner request); research bar not met}
-  IDX5-spy050-0945-UPRO-trail:
-    enabled: true
-    class: index_dip_bounce
-    symbols: [UPRO]
+    trade_candidates: *id001
+    pick: max_dollar_volume
     signal_symbol: SPY
     dip_pct: 0.5
     dip_by: 09:45

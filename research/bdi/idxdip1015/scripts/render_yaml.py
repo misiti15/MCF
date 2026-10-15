@@ -20,7 +20,9 @@ for n, p in S.items():
         out.append(f"  # ---- Index open-dip bounce {v}: {NOTE[v]} (owner 2026-10-15, research/bdi/idxdip1015). Long only.")
     ex = n.rsplit("-", 1)[1]
     tgt = "trail 1R behind the best once +1R" if ex == "trail" else "no target, no trail"
-    out += [f"  {n}:", "    enabled: true", "    class: index_dip_bounce", f"    symbols: [{p['symbols'][0]}]",
+    inst = ([f"    symbols: [{p['symbols'][0]}]"] if p.get("symbols") else
+            [f"    trade_candidates: [{', '.join(p['trade_candidates'])}]", f"    pick: {p['pick']}"])
+    out += [f"  {n}:", "    enabled: true", "    class: index_dip_bounce", *inst,
             f"    signal_symbol: {p['signal_symbol']}", f"    dip_pct: {p['dip_pct']}", f'    dip_by: "{p["dip_by"]}"',
             '    entry_from: "09:50"', '    entry_until: "10:05"', "    trigger: recovery", "    recovery_frac: 0.20",
             "    stop_buffer_frac: 0.10", "    target: null"]
@@ -30,10 +32,17 @@ for n, p in S.items():
             f'    testing: {{added: "2026-10-16", source: "research/bdi/idxdip1015", variant: {v}, '
             f'bar: "forward test (owner request); research bar not met"}}']
     order.append(f"    - {n}")
-    sym = p["symbols"][0]
-    names += [f"{n}:", f"  name: Index Dip Bounce {v[1:]} {sym}{' (hold)' if ex == 'hold' else ''}", "  side: long",
-              f'  what: "{NOTE[v]}; buy {sym} ({LEV[sym]}) at 09:50-10:05 once the {p["signal_symbol"]} has regained 20% of the '
-              f'drop off its low. Stop just under {sym}\'s morning low; {tgt}; out by 15:55."']
+    if p.get("symbols"):
+        sym = p["symbols"][0]
+        label, buy, lvl = sym, f"{sym} ({LEV[sym]})", f"{sym}'s"
+    else:
+        label = "3x S&P"
+        buy = ("whichever of SPXL / UPRO (3x S&P) has traded more dollars since 09:30 (one trade; the journal shows "
+               "which)")
+        lvl = "the traded ETF's"
+    names += [f"{n}:", f"  name: Index Dip Bounce {v[1:]} {label}{' (hold)' if ex == 'hold' else ''}", "  side: long",
+              f'  what: "{NOTE[v]}; buy {buy} at 09:50-10:05 once the {p["signal_symbol"]} has regained 20% of the '
+              f'drop off its low. Stop just under {lvl} morning low; {tgt}; out by 15:55."']
 (OUT / "proposed_strategies_block.yaml").write_text("\n".join(out) + "\n")
 (OUT / "proposed_setup_order.yaml").write_text("\n".join(order) + "\n")
 (OUT / "proposed_setup_names.yaml").write_text("\n".join(names) + "\n")

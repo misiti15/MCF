@@ -5,6 +5,44 @@ Plan: `PLAN.md` (written before the grid ran). Scripts: `scripts/` (`dipstats.py
 `make_config.py`, `render_yaml.py`, `fetch_spuu.py`). Locked block 2024-11-01..2025-02-28 excluded everywhere.
 Samples: DEV 359 sessions; older holdouts (Apr–Jun 2026, Sep 16–Oct 7 2026) 78 sessions, scored once for the finalists.
 
+## Owner change (2026-10-15): 3x only, one instrument per variant — results
+Owner: each variant trades ONLY the highest-leveraged ETF with the most volume that day. S&P (V2/V3/V5, signal SPY):
+SPXL or UPRO; V1 (signal QQQ): TQQQ (only 3x long QQQ tracker), trail and hold. 5 setups (`PROPOSED_CONFIG.md`).
+Script `scripts/pick3x.py` -> `pick3x_trades.csv`, `pick3x_results.csv`, `pick3x_picks.csv`, `pick3x_counts.json`.
+* **Pick rule (production):** the candidate with the larger dollar volume (sum close x volume) from 09:30 through the
+  trigger bar — today's tape, known at decision time, causal in the backtest (later bars ignored). Ties -> first listed.
+  Why today's rather than the prior session's: it reflects the day's actual liquidity on a stress day, needs no extra
+  priors, and is computed from the same bars live and in the backtest. Robustness: the prior-session rule and a
+  hindsight full-day rule give the same trades on all but 1-2 days and mean R within 0.007R in every rec20 row
+  (today vs full-day pick agree on 26/31 trigger days, prior vs full-day 30/31). SPXL is picked on 85% of DEV trades
+  (22 of 26), UPRO on 4.
+* **Configs:** 252 new (3 S&P variants x 6 triggers x 7 exits x 2 pick rules: today, prior); V1 TQQQ 42 rows re-run,
+  identical to `grid.py` (not new). Lineage 882 + 252 = **1,134; bar t >= 3.75. Not met.** Best t among new rows with
+  n >= 5: 1.12; n >= 8: 1.00. 45% of rows have a positive mean R. Costs in; locked block never loaded.
+* **Chosen rows (rec20, DEV) vs the prior per-instrument results:**
+
+| variant / exit | 3x pick: n / mean R / t | prior: index ETF | prior: SPXL | prior: UPRO | prior: 2x (SSO / QLD) | ex-best-day (3x) | holdout once (3x) |
+|---|---|---|---|---|---|---|---|
+| V1 TRAIL (TQQQ) | 8 / +0.00 / 0.01 | QQQ +0.04 | — | — | QLD +0.07 | -0.60 | 1: +0.06 |
+| V1 HOLD (TQQQ) | 8 / +0.15 / 0.23 | QQQ +0.17 | — | — | QLD +0.13 | -0.34 | 1: +0.76 |
+| V2 TRAIL | 5 / +0.78 / 0.78 | SPY +0.76 | +0.78 | +0.98 | SSO +0.61 | -0.10 | no trade |
+| V3 TRAIL | 7 / +0.47 / 0.64 | SPY +0.44 | +0.47 | +0.61 | SSO +0.34 | -0.17 | 2: +0.20 |
+| V5 TRAIL | 14 / +0.51 / 1.00 | SPY +0.48 | +0.54 | +0.58 | SSO +0.24 | +0.16 | 3: +0.18 |
+
+  The pick is mostly SPXL, so the 3x rows track the SPXL rows; UPRO alone was slightly higher, but choosing UPRO by
+  its backtest R would be selection on 5-14 trades.
+* **Leverage, R and dollars (honest reading).** Sizing is min(risk-based, slot notional). A bigger % dip on a 3x ETF
+  does **not** mean a bigger R: the stop sits under the ETF's own morning low, so the stop distance is ~3x wider in %
+  and risk-based sizing would buy ~1/3 of the shares-value for the same dollar risk — R is unchanged (the table: 3x
+  R ≈ index-ETF R, within noise). In Testing 1 the slot cap binds instead (equity $100k x 3.8 / 400 = **$950** per
+  slot; risk-based would be $250 / stop distance, i.e. tens of thousands of dollars), so every instrument gets ~$870-940
+  of notional. With equal notional, dollar risk and dollar P/L scale with leverage: 3x DEV mean $ risk per trade
+  $12-17 and mean P/L +$13 (V5) / +$24 (V3) / +$34 (V2) / +$20 (V1 trail), vs ~1/3 of that on SPY/QQQ (SPY TRAIL
+  ≈ +$4-11 per trade at $950). Losers scale the same way. So the 3x choice raises $ per trade (still far below the $250
+  risk budget), not edge per unit of risk; read the scorecard in R.
+
+## Per-instrument grid (superseded choice; evidence kept)
+
 ## Failures first
 * **Nothing meets the research bar.** N = 756 configurations in this grid (lineage 882 incl. the 126-config scan);
   bar t >= 3.64 (3.68 lineage). Best t among rows with n >= 8: 1.72; with n >= 5: 2.16. The 18 rows with t >= 3.64 have
@@ -52,7 +90,7 @@ mean R per trade (n), costs in; T1030 = the fixed 10:30 exit baseline.
 * Holdout, scored once (finalists, index ETF; n is too small to mean much): V1 QQQ TRAIL +0.05R / HOLD +0.76R (1 trade);
   V2 no trade; V3 SPY TRAIL +0.14R (2); V5 SPY TRAIL +0.11R (3). Leveraged rows similar (+0.08..+0.27R).
 
-## Choice for Testing 1 (forward paper test; the research bar is NOT met)
+## Choice for Testing 1 — first version, superseded by the 3x-only change above (5 setups)
 * Trigger: 20% recovery of the open-to-low drop off the running low, bar closing 09:50-10:05 (owner's 10% is inside
   the plateau and slightly weaker).
 * Exit: stop at the traded symbol's running low - 10% of its drop; **trail 1R behind the best once +1R; no target;
