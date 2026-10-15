@@ -1219,3 +1219,441 @@ date,account,symbol,setup,side,loss_type,notes
 2026-10-14,testing2,WTW,CWT14-failbrk-orl-p10-lowvol-long,long,stopped_then_reversed,bdi1014 analysis; r -1.36; mfe 0.32; lot 1; sar -1.0821077452667607
 2026-10-14,testing2,WTW,CWT14-failbrk-orl-p10-long,long,stopped_then_reversed,bdi1014 analysis; r -1.36; mfe 0.32; lot 2; sar -1.0821077452667607
 2026-10-14,testing2,XLRE,CWT14-failbrk-orl-p10-lowvol-long,long,stopped_then_reversed,bdi1014 analysis; r -0.97; mfe 0.24; lot 3; sar -1.38866495347935
+2026-10-15,primary,RDDT,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.18; mfe 0.78; lot 1; sar 0.9865880273902046
+2026-10-15,primary,RGTI,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.05; mfe 0.23; lot 1; sar 0.9390613916151023
+2026-10-15,primary,TEM,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.16; lot 1; sar 0.9865819230996863
+2026-10-15,primary,BB,NS2-sma50break-overbought-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.17; lot 1; sar 0.926581348466881
+2026-10-15,primary,ON,NS2-sma50break-overbought-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.44; lot 1; sar -1.070896989583447
+2026-10-15,primary,SHOP,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.04; lot 1; sar 0.9862427171657359
+2026-10-15,primary,RDW,NS2-sma50break-overbought-short,short,never_worked,bdi1015 analysis; r -0.97; mfe 0.06; lot 1; sar 0.9340022803705866
+2026-10-15,primary,NVAX,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.93; mfe 0.10; lot 1; sar -1.1651416662632517
+2026-10-15,primary,LUNR,RW6G1-ns2-up3-vwap2sd-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe -0.04; lot 1; sar 0.9525931684962164
+2026-10-15,primary,LUNR,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe -0.04; lot 2; sar 0.9525931684962164
+2026-10-15,primary,PURR,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.99; mfe -0.02; lot 1; sar 0.5939025619438196
+2026-10-15,primary,QBTS,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.06; mfe 0.03; lot 1; sar 0.9429430664439021
+2026-10-15,primary,ARKK,NS2-sma50break-overbought-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.40; lot 1; sar -1.099032533982754
+2026-10-15,primary,SMR,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.98; mfe 0.16; lot 1; sar 0.9133889560431537
+2026-10-15,primary,WULF,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.97; mfe 0.92; lot 1; sar 0.9501876143241028
+2026-10-15,primary,ARM,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.22; lot 1; sar 0.31680914013237765
+2026-10-15,primary,BMNR,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.59; lot 1; sar 0.9538549196110259
+2026-10-15,primary,LEU,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.13; mfe 0.15; lot 1; sar 0.9897201000142123
+2026-10-15,primary,MU,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.15; lot 1; sar -1.0180280846052325
+2026-10-15,primary,OKLO,NS2-sma50break-overbought-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.24; lot 1; sar 0.9751629913786113
+2026-10-15,primary,ASST,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.49; lot 1; sar 0.961570676377858
+2026-10-15,primary,HOOD,NS2-sma50break-overbought-short,short,never_worked,bdi1015 analysis; r -1.00; mfe 0.09; lot 1; sar 0.9838266040291184
+2026-10-15,primary,MDB,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.06; lot 1; sar 0.12825936701522644
+2026-10-15,primary,MDB,RW6G1-ns2-up3-vwap2sd-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.06; lot 2; sar 0.12825936701522644
+2026-10-15,primary,ONDS,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.23; lot 1; sar 0.8797884532999231
+2026-10-15,primary,PL,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.46; lot 1; sar 0.9499351228517562
+2026-10-15,primary,S,NS2-sma50break-overbought-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.35; lot 1; sar 0.5409966389800976
+2026-10-15,primary,VGK,MF5-flowsell-vwapup-rsi5hi,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.75; lot 1; sar -0.1900990578809496
+2026-10-15,primary,ASTS,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.15; lot 1; sar 0.9856341317524657
+2026-10-15,primary,ETHA,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.18; lot 1; sar 0.38250162679426686
+2026-10-15,primary,CORZ,NS2-sma50break-overbought-short,short,stopped_then_reversed,bdi1015 analysis; r -0.99; mfe 0.19; lot 1; sar 0.9465413272900038
+2026-10-15,primary,FCEL,NS2-sma50break-overbought-short,short,gave_back_gains,bdi1015 analysis; r -0.23; mfe 0.87; lot 1; sar na
+2026-10-15,primary,RBRK,RW6G1-ns2-up3-vwap2sd-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.04; mfe 0.31; lot 1; sar 0.980906388021783
+2026-10-15,primary,RBRK,NS2-sma50break-overbought-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.04; mfe 0.31; lot 2; sar 0.980906388021783
+2026-10-15,primary,STM,NS2-sma50break-overbought-short,short,gave_back_gains,bdi1015 analysis; r -0.39; mfe 1.79; lot 1; sar na
+2026-10-15,primary,BE,NS2-sma50break-overbought-short,short,gave_back_gains,bdi1015 analysis; r -1.03; mfe 1.39; lot 1; sar -0.7044009688471287
+2026-10-15,primary,GFS,NS2-sma50break-overbought-short,short,gave_back_gains,bdi1015 analysis; r -1.21; mfe 0.72; lot 1; sar -1.0947316101159636
+2026-10-15,primary,NXT,NS2-sma50break-overbought-short,short,gave_back_gains,bdi1015 analysis; r -1.00; mfe 1.01; lot 1; sar na
+2026-10-15,testing,AEM,heat_fade_short,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.05; lot 1; sar 0.9851150612334014
+2026-10-15,testing,AEM,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.05; lot 2; sar 0.9851150612334014
+2026-10-15,testing,AGQ,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.30; lot 1; sar 0.6337409541564679
+2026-10-15,testing,AGQ,heat_fade_short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.30; lot 2; sar 0.6337409541564679
+2026-10-15,testing,BLDR,heat_fade_short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.19; mfe 0.21; lot 1; sar 0.9680567438160363
+2026-10-15,testing,BLDR,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.19; mfe 0.21; lot 2; sar 0.9680567438160363
+2026-10-15,testing,GFI,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.03; mfe 0.49; lot 1; sar 0.9647484848484852
+2026-10-15,testing,GLD,heat_fade_short,short,gave_back_gains,bdi1015 analysis; r -1.07; mfe 0.61; lot 1; sar 0.04948107622758615
+2026-10-15,testing,GLD,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.07; mfe 0.61; lot 2; sar 0.04948107622758615
+2026-10-15,testing,GFI,heat_fade_short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.03; mfe 0.45; lot 2; sar 0.9656001635837425
+2026-10-15,testing,KMX,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.05; mfe 1.22; lot 1; sar -1.1413663694714327
+2026-10-15,testing,KMX,heat_fade_short,short,gave_back_gains,bdi1015 analysis; r -1.05; mfe 1.22; lot 2; sar -1.1413663694714327
+2026-10-15,testing,PEP,heat_fade_short,short,stopped_then_reversed,bdi1015 analysis; r -4.78; mfe 10.24; lot 1; sar -6.1802783403021335
+2026-10-15,testing,PEP,heat_fade_short-FD,short,stopped_then_reversed,bdi1015 analysis; r -5.44; mfe 13.45; lot 2; sar -7.662306453919871
+2026-10-15,testing,REGN,heat_fade_short,short,gave_back_gains,bdi1015 analysis; r -1.43; mfe 0.72; lot 1; sar 0.9577909812489334
+2026-10-15,testing,REGN,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.43; mfe 0.72; lot 2; sar 0.9577909812489334
+2026-10-15,testing,TRI,heat_fade_short,short,stopped_then_reversed,bdi1015 analysis; r -1.43; mfe 0.56; lot 1; sar 0.9485126721763106
+2026-10-15,testing,TRI,heat_fade_short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.42; mfe 0.60; lot 2; sar 0.9473761121747958
+2026-10-15,testing,WMB,heat_fade_long-FD,long,stopped_then_reversed,bdi1015 analysis; r -1.12; mfe 0.74; lot 1; sar 0.907427310746509
+2026-10-15,testing,INTU,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.54; lot 1; sar -1.0569957591522154
+2026-10-15,testing,MRNA,heat_fade_short,short,never_worked,bdi1015 analysis; r -1.12; mfe 0.04; lot 1; sar 0.9759352243489745
+2026-10-15,testing,MRNA,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.06; mfe 0.07; lot 2; sar 0.975210363189679
+2026-10-15,testing,SKYD,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.98; mfe 0.43; lot 1; sar -1.2549063082830503
+2026-10-15,testing,ABNB,RW2-exhaustion-noon-adv150-short-FD,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.52; lot 1; sar na
+2026-10-15,testing,BKNG,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.12; lot 1; sar 0.9783528001159164
+2026-10-15,testing,CRH,RW2-exhaustion-noon-adv150-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.02; mfe 0.17; lot 1; sar -1.1052167704839493
+2026-10-15,testing,DASH,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.16; lot 1; sar 0.987945159338249
+2026-10-15,testing,DBX,RW2-exhaustion-noon-adv150-short-FD,short,gave_back_gains,bdi1015 analysis; r -1.05; mfe 0.78; lot 1; sar na
+2026-10-15,testing,DECK,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.21; lot 1; sar 0.9712211848884112
+2026-10-15,testing,HBAN,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.94; mfe 0.33; lot 1; sar -1.545040917728781
+2026-10-15,testing,HD,RW2-exhaustion-noon-adv150-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.03; mfe -0.01; lot 1; sar -1.0618822917345792
+2026-10-15,testing,IOT,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.06; mfe 0.65; lot 1; sar -1.1778043329327972
+2026-10-15,testing,LMT,heat_fade_short,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.01; lot 1; sar -1.0933802912300334
+2026-10-15,testing,LMT,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.01; lot 2; sar -1.0933802912300334
+2026-10-15,testing,ROST,RW2-exhaustion-noon-adv150-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.34; mfe -0.01; lot 1; sar 0.9685989087450061
+2026-10-15,testing,TTD,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.94; mfe 0.63; lot 1; sar na
+2026-10-15,testing,WYNN,RW2-exhaustion-noon-adv150-short-FD,short,gave_back_gains,bdi1015 analysis; r -1.44; mfe 1.00; lot 1; sar 0.9689897568627452
+2026-10-15,testing,TWST,MF4-h40-open-flowsell-FD,short,never_worked,bdi1015 analysis; r -1.00; mfe 0.01; lot 1; sar 0.9951621481364994
+2026-10-15,testing,TWST,MF1-945-flowsell-vwapup-FD,short,never_worked,bdi1015 analysis; r -1.08; mfe 0.01; lot 2; sar -1.02280938881024
+2026-10-15,testing,AAOI,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.03; mfe 0.42; lot 1; sar 0.9923773373426261
+2026-10-15,testing,AAOI,heat_fade_short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.03; mfe 0.42; lot 2; sar 0.9923715251669751
+2026-10-15,testing,BE,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.52; lot 1; sar 0.9930326436752072
+2026-10-15,testing,BE,heat_fade_short,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.51; lot 2; sar 0.9930983699578714
+2026-10-15,testing,GDX,heat_fade_short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.10; lot 1; sar 0.9687207541478137
+2026-10-15,testing,GDX,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.10; lot 2; sar 0.9687207541478137
+2026-10-15,testing,LITE,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.19; lot 1; sar 0.9950912159446204
+2026-10-15,testing,LITE,heat_fade_short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.19; lot 2; sar 0.9950912159446204
+2026-10-15,testing,SPCX,heat_fade_short,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.81; lot 1; sar 0.9805933931827747
+2026-10-15,testing,SPCX,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.87; lot 2; sar 0.9799095152227396
+2026-10-15,testing,BURL,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.30; mfe -0.33; lot 1; sar 0.9722019626230832
+2026-10-15,testing,GDXJ,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.16; lot 1; sar 0.967274190671341
+2026-10-15,testing,GDXJ,heat_fade_short,short,never_worked,bdi1015 analysis; r -1.06; mfe 0.15; lot 2; sar 0.9675307874972698
+2026-10-15,testing,D,LIQ-orl-sweep-open15-s25-long,long,late_hold,bdi1015 analysis; r -0.34; mfe 0.31; lot 1; sar na
+2026-10-15,testing,RRGB,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.49; mfe -0.11; lot 1; sar 0.881817245123512
+2026-10-15,testing,WPM,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.05; mfe -0.05; lot 1; sar 0.5074107779614067
+2026-10-15,testing,AXTI,heat_fade_short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.00; mfe 0.05; lot 1; sar -1.0284204828366652
+2026-10-15,testing,COHR,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.32; lot 1; sar -0.14718586122463062
+2026-10-15,testing,CRCL,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.02; lot 1; sar 0.9807944997801638
+2026-10-15,testing,FTAI,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.13; mfe 0.74; lot 1; sar 0.9846608214319442
+2026-10-15,testing,IONQ,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.16; lot 1; sar 0.9786271631044043
+2026-10-15,testing,MCHP,RW7-gapdn-bounce-early-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.08; lot 1; sar 0.969873091419642
+2026-10-15,testing,MP,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.01; lot 1; sar 0.9794688190307185
+2026-10-15,testing,STX,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.47; lot 1; sar 0.38604902241895017
+2026-10-15,testing,TECK,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.43; lot 1; sar 0.21232920718590176
+2026-10-15,testing,USAR,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.23; lot 1; sar 0.9147862870272272
+2026-10-15,testing,AEM,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.09; mfe 0.30; lot 1; sar 0.9838357247614125
+2026-10-15,testing,B,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.11; lot 1; sar 0.9509205817954327
+2026-10-15,testing,BB,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.17; lot 1; sar 0.926581348466881
+2026-10-15,testing,CRCL,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.95; mfe 0.07; lot 2; sar 0.9851938933502803
+2026-10-15,testing,CPRT,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.83; mfe 0.22; lot 1; sar -0.12422743293688683
+2026-10-15,testing,COMP,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.17; lot 1; sar 0.9072378855092433
+2026-10-15,testing,EBAY,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.01; lot 1; sar 0.9729803227577166
+2026-10-15,testing,EME,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.25; mfe 0.57; lot 1; sar -1.0336962700365324
+2026-10-15,testing,EQX,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -0.97; mfe 0.00; lot 1; sar 0.9100657698945616
+2026-10-15,testing,GEV,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.05; mfe 0.21; lot 1; sar 0.9889172719989869
+2026-10-15,testing,GDXJ,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.10; mfe 0.03; lot 1; sar 0.9793959168575199
+2026-10-15,testing,HCA,heat_fade_long-FD,long,late_hold,bdi1015 analysis; r -0.52; mfe 0.48; lot 1; sar na
+2026-10-15,testing,JBL,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -0.87; mfe 0.55; lot 1; sar na
+2026-10-15,testing,KGC,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.07; lot 1; sar 0.9391683700440526
+2026-10-15,testing,LSCC,LIQ-orl-sweep-open15-s25-long,long,late_hold,bdi1015 analysis; r -0.05; mfe 0.48; lot 1; sar na
+2026-10-15,testing,MOD,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.05; mfe 0.11; lot 1; sar -1.0267201265098769
+2026-10-15,testing,MXL,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.05; mfe 0.79; lot 1; sar 0.9900401479904266
+2026-10-15,testing,NBIS,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.31; lot 1; sar 0.9905558787369659
+2026-10-15,testing,NRG,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.28; lot 1; sar 0.9827089619922369
+2026-10-15,testing,NEM,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.08; mfe -0.03; lot 1; sar 0.9760539413043913
+2026-10-15,testing,ON,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.35; lot 1; sar -1.0667731024719593
+2026-10-15,testing,PWR,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.17; mfe 0.53; lot 1; sar 0.987374659574207
+2026-10-15,testing,RGTI,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.05; mfe 0.12; lot 1; sar 0.9442056186177366
+2026-10-15,testing,RGTI,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.04; mfe 0.07; lot 2; sar 0.9468552165396069
+2026-10-15,testing,RKLB,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.00; mfe 0.95; lot 1; sar 0.9833592506640247
+2026-10-15,testing,SHOP,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe -0.01; lot 1; sar 0.9861730349619484
+2026-10-15,testing,SHOP,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe -0.01; lot 2; sar 0.9861730349619484
+2026-10-15,testing,TEM,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.11; mfe 0.20; lot 1; sar -1.0645076831198312
+2026-10-15,testing,TEM,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.11; mfe 0.20; lot 2; sar -1.0645076831198312
+2026-10-15,testing,VRT,heat_fade_short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.06; mfe 0.96; lot 1; sar -1.0415287624690577
+2026-10-15,testing,BULL,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.00; lot 1; sar 0.41546643697118907
+2026-10-15,testing,CRCL,L3-gap-slope-rsi5hi-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.05; mfe 0.04; lot 2; sar 0.9861659355330508
+2026-10-15,testing,GME,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.13; mfe 0.67; lot 1; sar 0.9463105002283639
+2026-10-15,testing,NVAX,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.93; mfe 0.14; lot 1; sar -1.1717949035604578
+2026-10-15,testing,NVAX,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.93; mfe 0.14; lot 2; sar -1.1717949035604578
+2026-10-15,testing,RDW,NS2-sma50break-overbought-short-FD,short,gave_back_gains,bdi1015 analysis; r -0.96; mfe 0.52; lot 1; sar 0.9052083611206327
+2026-10-15,testing,TOST,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.16; lot 1; sar 0.9490025534392417
+2026-10-15,testing,XYZ,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.22; lot 1; sar 0.9595435243911836
+2026-10-15,testing,CLS,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.08; mfe 0.10; lot 1; sar 0.9926601668721388
+2026-10-15,testing,CRCL,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.11; lot 2; sar 0.9827003215218701
+2026-10-15,testing,IONQ,L3-gap-slope-lowdist-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.08; lot 2; sar 0.9817903937115883
+2026-10-15,testing,IONQ,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.08; lot 3; sar 0.981755882802486
+2026-10-15,testing,INFY,RW2-exhaustion-noon-adv150-short-FD,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.00; lot 1; sar -0.3822525714285727
+2026-10-15,testing,LUNR,RW6G1-ns2-up3-vwap2sd-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.19; lot 1; sar 0.9397510090749019
+2026-10-15,testing,LUNR,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.19; lot 2; sar 0.9397510090749019
+2026-10-15,testing,LUNR,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.19; lot 3; sar 0.9397510090749019
+2026-10-15,testing,MAR,RW2-exhaustion-noon-adv150-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.54; mfe 0.32; lot 1; sar 0.9771086373504639
+2026-10-15,testing,MTZ,heat_fade_short-FD,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.02; lot 1; sar -1.0276502536951246
+2026-10-15,testing,PURR,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.99; mfe 0.25; lot 1; sar 0.932356018595018
+2026-10-15,testing,QBTS,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.08; mfe 0.27; lot 1; sar 0.9243832563510405
+2026-10-15,testing,QBTS,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.10; mfe 0.27; lot 2; sar 0.9243832563510405
+2026-10-15,testing,PURR,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.99; mfe 0.25; lot 2; sar 0.932356018595018
+2026-10-15,testing,USAR,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.96; mfe 0.30; lot 2; sar 0.9035771774808258
+2026-10-15,testing,ARKK,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.45; lot 1; sar -1.1026021008727884
+2026-10-15,testing,ARM,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.32; lot 1; sar 0.34290095542981547
+2026-10-15,testing,ARM,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.32; lot 2; sar 0.34290095542981547
+2026-10-15,testing,BMNR,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.09; mfe 0.53; lot 1; sar 0.9556820310274274
+2026-10-15,testing,BMNR,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.05; mfe 0.53; lot 2; sar 0.9556820310274274
+2026-10-15,testing,HNGE,LIQ-orl-sweep-open15-s25-long,long,late_hold,bdi1015 analysis; r -0.07; mfe 0.27; lot 1; sar na
+2026-10-15,testing,KLAC,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.43; lot 1; sar -0.09295959178439442
+2026-10-15,testing,LEU,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.11; mfe -0.01; lot 1; sar 0.9911880039211576
+2026-10-15,testing,LEU,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.11; mfe -0.01; lot 2; sar 0.9911880039211576
+2026-10-15,testing,MP,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.03; lot 2; sar -1.0776376749229828
+2026-10-15,testing,MP,L3-gap-slope-lowdist-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.03; lot 3; sar -1.0776376749229828
+2026-10-15,testing,MU,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.07; lot 1; sar -1.0167997129600388
+2026-10-15,testing,MU,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.07; lot 2; sar -1.0167997129600388
+2026-10-15,testing,ONON,LIQ-orl-sweep-open15-s25-long,long,late_hold,bdi1015 analysis; r -0.48; mfe 0.42; lot 1; sar na
+2026-10-15,testing,OKLO,NS2-sma50break-overbought-short-FD,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.03; lot 1; sar 0.9790650495544868
+2026-10-15,testing,OKLO,RW6-ns2-up3-short-FD,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.03; lot 2; sar 0.9790968038465836
+2026-10-15,testing,RCL,MF5-flowsell-vwapup-rsi5hi-FD,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.05; lot 1; sar -1.0496903907367257
+2026-10-15,testing,RDDT,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.33; lot 1; sar 0.7764086463208821
+2026-10-15,testing,RCL,MF3-open-flowsell-rsi5hi-FD,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.05; lot 2; sar -1.0496903907367257
+2026-10-15,testing,SMR,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.98; mfe 0.00; lot 1; sar 0.9199345483744723
+2026-10-15,testing,SNPS,RW7-gapdn-bounce-early-short-FD,short,never_worked,bdi1015 analysis; r -1.06; mfe -0.01; lot 1; sar 0.06578579185269258
+2026-10-15,testing,SNPS,RW1-gapdn-bounce-flowsell-short-FD,short,never_worked,bdi1015 analysis; r -1.06; mfe -0.01; lot 2; sar 0.06578579185269258
+2026-10-15,testing,SMR,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.98; mfe 0.00; lot 2; sar 0.9199345483744723
+2026-10-15,testing,TTMI,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.14; mfe 0.23; lot 1; sar 0.9922344932135116
+2026-10-15,testing,VEEV,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.11; lot 1; sar -0.33323482688507083
+2026-10-15,testing,USAR,L3-gap-slope-rsi5hi-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.20; lot 2; sar 0.9260771753513817
+2026-10-15,testing,WULF,RW6-ns2-up3-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.99; mfe 0.46; lot 1; sar 0.9620497955786675
+2026-10-15,testing,WULF,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.99; mfe 0.46; lot 2; sar 0.9620497955786675
+2026-10-15,testing,ASST,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.54; lot 1; sar 0.9603510988450511
+2026-10-15,testing,ASST,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.54; lot 2; sar 0.9603510988450511
+2026-10-15,testing,ASTS,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.16; lot 1; sar 0.9854920252768951
+2026-10-15,testing,ASTS,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.16; lot 2; sar 0.9854451868543794
+2026-10-15,testing,AS,RW2-exhaustion-noon-adv150-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.28; lot 1; sar -1.2534973930152578
+2026-10-15,testing,BULL,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.97; mfe 0.00; lot 2; sar 0.8969573255028321
+2026-10-15,testing,COIN,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.14; lot 1; sar 0.989466847310132
+2026-10-15,testing,CORZ,NS2-sma50break-overbought-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -0.99; mfe 0.04; lot 1; sar 0.9531587183813615
+2026-10-15,testing,CRCL,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.93; lot 1; sar 0.9810610028152102
+2026-10-15,testing,CORZ,RW6-ns2-up3-short-FD,short,stopped_then_reversed,bdi1015 analysis; r -0.99; mfe 0.04; lot 2; sar 0.9531587183813615
+2026-10-15,testing,EL,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.06; lot 1; sar -1.0908067015945182
+2026-10-15,testing,EMR,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.12; mfe 0.24; lot 1; sar 0.9785795564868782
+2026-10-15,testing,ETHA,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.38; lot 1; sar 0.44627562337179894
+2026-10-15,testing,ETHA,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.38; lot 2; sar 0.44627562337179894
+2026-10-15,testing,FIGR,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.61; lot 1; sar 0.9591657286107067
+2026-10-15,testing,FLEX,heat_fade_short-FD,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.56; lot 1; sar 0.648574035597265
+2026-10-15,testing,HOOD,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.24; lot 1; sar 0.9816033156991805
+2026-10-15,testing,LULU,RW2-exhaustion-noon-adv150-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.79; lot 1; sar na
+2026-10-15,testing,MDB,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.06; lot 1; sar 0.12790938724635867
+2026-10-15,testing,MDB,RW6G1-ns2-up3-vwap2sd-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.06; lot 2; sar 0.12790938724635867
+2026-10-15,testing,MDB,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.06; lot 3; sar 0.12790938724635867
+2026-10-15,testing,ONDS,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.23; lot 1; sar 0.8797884532999231
+2026-10-15,testing,ONDS,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.23; lot 2; sar 0.8797884532999231
+2026-10-15,testing,PL,NS2-sma50break-overbought-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.24; lot 1; sar 0.9573996838328773
+2026-10-15,testing,PL,RW6-ns2-up3-short-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.24; lot 2; sar 0.9573996838328773
+2026-10-15,testing,S,NS2-sma50break-overbought-short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.27; lot 1; sar 0.5067377600868352
+2026-10-15,testing,SMCI,heat_fade_short-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.04; mfe 0.17; lot 1; sar 0.6002891336352352
+2026-10-15,testing,USAR,L3-gap-slope-fromopen-FD,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.94; mfe 0.20; lot 2; sar -1.2110602736787541
+2026-10-15,testing,VGK,MF1-945-flowsell-vwapup-FD,short,gave_back_gains,bdi1015 analysis; r -0.98; mfe 0.79; lot 2; sar 0.4238743372506734
+2026-10-15,testing,VGK,MF5-flowsell-vwapup-rsi5hi-FD,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.44; lot 3; sar -0.15611010043586182
+2026-10-15,testing2,CNC,CWT14-failbrk-pdh-p10-short,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.70; lot 1; sar na
+2026-10-15,testing2,FIG,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.09; mfe 0.30; lot 1; sar 0.9469909541819092
+2026-10-15,testing2,FISV,CWT14-failbrk-pdh-p10-short,short,gave_back_gains,bdi1015 analysis; r -0.75; mfe 0.64; lot 1; sar 0.9147428793371294
+2026-10-15,testing2,TEAM,CWT14-failbrk-pdl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.31; mfe -0.10; lot 1; sar -1.0484043051625838
+2026-10-15,testing2,TEAM,CWT14-failbrk-pdl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.19; mfe -0.10; lot 2; sar -1.0484043051625838
+2026-10-15,testing2,ADI,CWT14-failbrk-pdl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.30; mfe 0.25; lot 1; sar 0.9821260714112167
+2026-10-15,testing2,ADI,CWT14-failbrk-pdl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.30; mfe 0.25; lot 2; sar 0.9821580133417409
+2026-10-15,testing2,TGTX,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -1.53; mfe -0.06; lot 1; sar 0.95516101032941
+2026-10-15,testing2,TGTX,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -1.53; mfe -0.06; lot 2; sar 0.95516101032941
+2026-10-15,testing2,XBI,CWT14-failbrk-pdh-p10-short,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.56; lot 1; sar -1.088618586136392
+2026-10-15,testing2,XLY,CWT14-failbrk-pdh-p10-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.04; mfe 0.49; lot 1; sar 0.8768914034179208
+2026-10-15,testing2,XLY,CWT14-failbrk-pdh-p05-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -1.05; mfe 0.58; lot 2; sar 0.8693113249037921
+2026-10-15,testing2,XLY,CWT14-failbrk-pdh-p10-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -1.13; mfe 0.51; lot 3; sar 0.8750800315291688
+2026-10-15,testing2,BNS,CWT14-failbrk-pdh-p10-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.19; mfe 0.24; lot 1; sar 0.9438823157894751
+2026-10-15,testing2,BNS,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.21; mfe 0.24; lot 2; sar 0.9438823157894751
+2026-10-15,testing2,BNS,CWT14-failbrk-pdh-p10-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.20; mfe 0.24; lot 3; sar 0.9438823157894751
+2026-10-15,testing2,CHYM,CWT14-failbrk-pdl-p05-long,long,never_worked,bdi1015 analysis; r -0.05; mfe 0.05; lot 1; sar na
+2026-10-15,testing2,CHYM,CWT14-failbrk-pdl-p05-lowvol-long,long,never_worked,bdi1015 analysis; r -0.05; mfe 0.05; lot 2; sar na
+2026-10-15,testing2,ADBE,CWT12-flag-s1-long,long,stopped_then_reversed,bdi1015 analysis; r -1.00; mfe 0.24; lot 1; sar -1.0480405951639193
+2026-10-15,testing2,HST,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -1.17; mfe 0.00; lot 1; sar 0.7937592877824541
+2026-10-15,testing2,OWL,CWT14-failbrk-pdl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.08; mfe -0.06; lot 1; sar -1.4993354601594076
+2026-10-15,testing2,OWL,CWT14-failbrk-pdl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.08; mfe -0.06; lot 2; sar -1.4993354601594076
+2026-10-15,testing2,D,CWT14-failbrk-orl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.02; mfe 0.17; lot 1; sar -1.3552517766497414
+2026-10-15,testing2,D,CWT14-failbrk-orl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.06; mfe 0.17; lot 2; sar -1.3552517766497414
+2026-10-15,testing2,D,CWT14-failbrk-orl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.02; mfe 0.55; lot 3; sar -1.5292572829924813
+2026-10-15,testing2,MGY,CWT14-failbrk-pdl-p10-lowvol-long,long,never_worked,bdi1015 analysis; r -1.09; mfe 0.14; lot 1; sar -1.307191452991449
+2026-10-15,testing2,MGY,CWT14-failbrk-pdl-p10-long,long,never_worked,bdi1015 analysis; r -1.13; mfe 0.14; lot 2; sar -1.307191452991449
+2026-10-15,testing2,TENB,CWT14-failbrk-pdl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.03; mfe 0.06; lot 1; sar -1.071101083279262
+2026-10-15,testing2,TENB,CWT14-failbrk-pdl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.03; mfe 0.06; lot 2; sar -1.071101083279262
+2026-10-15,testing2,TENB,CWT14-failbrk-pdl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.03; mfe 0.06; lot 3; sar -1.071101083279262
+2026-10-15,testing2,TT,CWT14-failbrk-orl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.07; lot 1; sar na
+2026-10-15,testing2,TT,CWT14-failbrk-orl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.07; lot 2; sar na
+2026-10-15,testing2,TT,CWT14-failbrk-orl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.07; lot 3; sar na
+2026-10-15,testing2,ZS,CWT14-failbrk-pdl-p05-lowvol-long,long,never_worked,bdi1015 analysis; r -1.11; mfe -0.08; lot 1; sar -1.024820756213083
+2026-10-15,testing2,ZS,CWT14-failbrk-pdl-p10-lowvol-long,long,never_worked,bdi1015 analysis; r -1.11; mfe -0.08; lot 2; sar -1.024820756213083
+2026-10-15,testing2,ZS,CWT14-failbrk-pdl-p10-long,long,never_worked,bdi1015 analysis; r -1.11; mfe -0.08; lot 3; sar -1.0248576474734907
+2026-10-15,testing2,AAPL,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.38; lot 1; sar 0.9666569096578562
+2026-10-15,testing2,AAPL,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.38; lot 2; sar 0.9666569096578562
+2026-10-15,testing2,OTIS,CWT14-failbrk-orl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.07; mfe 0.09; lot 1; sar -1.1650984539608669
+2026-10-15,testing2,OTIS,CWT14-failbrk-orl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.07; mfe 0.09; lot 2; sar -1.1650984539608669
+2026-10-15,testing2,SDS,CWT14-failbrk-orl-p05-long,long,never_worked,bdi1015 analysis; r -1.02; mfe 0.14; lot 1; sar 0.9259649858981122
+2026-10-15,testing2,SPXU,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.20; lot 1; sar 0.9288291346264638
+2026-10-15,testing2,SPXU,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.19; lot 2; sar 0.9291075077245092
+2026-10-15,testing2,SPXS,CWT14-failbrk-orl-p10-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.19; lot 1; sar 0.9070460239468117
+2026-10-15,testing2,SPXS,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.19; lot 2; sar 0.9064935714661859
+2026-10-15,testing2,AVUV,CWT14-failbrk-pdh-p10-short,short,stopped_then_reversed,bdi1015 analysis; r -1.02; mfe 0.31; lot 1; sar -1.2063985745293524
+2026-10-15,testing2,CVNA,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.29; lot 1; sar 0.9789460251046024
+2026-10-15,testing2,CVNA,CWT14-failbrk-pdh-p10-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.29; lot 2; sar 0.9789460251046024
+2026-10-15,testing2,CVNA,CWT14-failbrk-pdh-p10-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.29; lot 3; sar 0.9789460251046024
+2026-10-15,testing2,IOT,CWT14-failbrk-pdh-p10-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.04; mfe 0.27; lot 1; sar 0.971395328108467
+2026-10-15,testing2,KEYS,CWT14-failbrk-orl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.18; mfe 0.38; lot 1; sar -1.0374588748790683
+2026-10-15,testing2,KEYS,CWT14-failbrk-orl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.21; mfe 0.38; lot 2; sar -1.0374588748790683
+2026-10-15,testing2,KEYS,CWT14-failbrk-orl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.18; mfe 0.38; lot 3; sar -1.0374588748790683
+2026-10-15,testing2,MGY,CWT14-failbrk-pdl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.96; mfe 0.38; lot 3; sar -1.4308407673860897
+2026-10-15,testing2,NTSK,CWT14-failbrk-pdl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.28; lot 1; sar -1.223088146365817
+2026-10-15,testing2,PATH,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -0.97; mfe 0.06; lot 1; sar 0.9265022249748204
+2026-10-15,testing2,PATH,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -0.97; mfe 0.06; lot 2; sar 0.9265022249748204
+2026-10-15,testing2,PATH,CWT14-failbrk-pdh-p10-lowvol-short,short,never_worked,bdi1015 analysis; r -0.97; mfe 0.06; lot 3; sar 0.9265022249748204
+2026-10-15,testing2,PCG,CWT14-failbrk-orl-p10-long,long,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.62; lot 1; sar na
+2026-10-15,testing2,PCG,CWT14-failbrk-orl-p05-long,long,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.62; lot 2; sar na
+2026-10-15,testing2,V,CWT14-failbrk-pdh-p05-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -0.02; mfe 1.85; lot 1; sar na
+2026-10-15,testing2,V,CWT14-failbrk-pdh-p10-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -0.01; mfe 1.87; lot 2; sar na
+2026-10-15,testing2,V,CWT14-failbrk-pdh-p10-short,short,gave_back_gains,bdi1015 analysis; r -0.01; mfe 1.87; lot 3; sar na
+2026-10-15,testing2,VLO,CWT14-failbrk-orl-p05-lowvol-long,long,never_worked,bdi1015 analysis; r -1.11; mfe 0.07; lot 1; sar 0.9867112195240729
+2026-10-15,testing2,VLO,CWT14-failbrk-orl-p05-long,long,never_worked,bdi1015 analysis; r -1.09; mfe 0.07; lot 2; sar 0.9867112195240729
+2026-10-15,testing2,BUD,CWT12-coil-k4-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.43; lot 1; sar -1.2096501867680474
+2026-10-15,testing2,CRSP,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.13; lot 1; sar 0.9823913058932845
+2026-10-15,testing2,HONA,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -1.14; mfe 0.00; lot 1; sar 0.9814956500046338
+2026-10-15,testing2,HONA,CWT14-failbrk-pdh-p10-lowvol-short,short,never_worked,bdi1015 analysis; r -1.14; mfe 0.00; lot 2; sar 0.9814956500046338
+2026-10-15,testing2,HONA,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -1.14; mfe 0.00; lot 3; sar 0.9814956500046338
+2026-10-15,testing2,HPQ,CWT12-coil-k4-long,long,stopped_then_reversed,bdi1015 analysis; r -0.97; mfe 0.23; lot 1; sar -1.1492695753600246
+2026-10-15,testing2,QURE,CWT14-failbrk-pdh-p10-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.26; lot 1; sar 0.08891707631762517
+2026-10-15,testing2,QURE,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.26; lot 2; sar 0.08891707631762517
+2026-10-15,testing2,QURE,CWT14-failbrk-pdh-p10-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.26; lot 3; sar 0.08891707631762517
+2026-10-15,testing2,SU,CWT14-failbrk-pdh-p05-lowvol-short,short,stopped_then_reversed,bdi1015 analysis; r -1.01; mfe 0.24; lot 1; sar -1.1114821641709733
+2026-10-15,testing2,TXT,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -1.09; mfe -0.01; lot 1; sar -0.2522541448988441
+2026-10-15,testing2,AAOI,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.02; lot 1; sar 0.9936569930069931
+2026-10-15,testing2,AMD,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -1.00; mfe 0.06; lot 1; sar 0.9879231977487779
+2026-10-15,testing2,AMKR,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -0.98; mfe 0.04; lot 1; sar 0.9698825109968732
+2026-10-15,testing2,APLD,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.95; mfe 0.08; lot 1; sar 0.9548020381238649
+2026-10-15,testing2,ASX,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.08; lot 1; sar 0.970086474456668
+2026-10-15,testing2,AXTI,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.04; lot 1; sar -1.0218500000000001
+2026-10-15,testing2,BE,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.05; lot 1; sar 0.9940824909747292
+2026-10-15,testing2,CIFR,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.01; mfe 0.03; lot 1; sar 0.9349003997292491
+2026-10-15,testing2,CIFR,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.01; lot 2; sar 0.9801018181818182
+2026-10-15,testing2,COHR,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.04; lot 1; sar -0.06609922822491565
+2026-10-15,testing2,CORZ,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.00; mfe 0.10; lot 1; sar 0.9434912915347009
+2026-10-15,testing2,CRWV,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.03; mfe 0.11; lot 1; sar 0.9899864197530864
+2026-10-15,testing2,CRWV,CWT09-gapdn-vwaploss-g5-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.33; lot 2; sar 0.9708293262843749
+2026-10-15,testing2,DELL,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -1.05; mfe 0.09; lot 1; sar 0.9886437924929478
+2026-10-15,testing2,EROC,CWT09-gapdn-vwaploss-g5-short,short,gave_back_gains,bdi1015 analysis; r -1.23; mfe 0.59; lot 1; sar 0.9358477507274291
+2026-10-15,testing2,EWC,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.13; mfe 0.43; lot 1; sar 0.8216706212733581
+2026-10-15,testing2,HUT,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.05; mfe 0.07; lot 1; sar -1.0262135922330096
+2026-10-15,testing2,HPE,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.05; lot 1; sar 0.9731711791821737
+2026-10-15,testing2,HUT,CWT09-gapdn-vwaploss-g5-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.15; lot 2; sar 0.981571369993296
+2026-10-15,testing2,IREN,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.92; mfe 0.05; lot 1; sar 0.9608877608272186
+2026-10-15,testing2,LITE,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.04; lot 1; sar 0.9948972595378829
+2026-10-15,testing2,MRVL,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.02; mfe 0.03; lot 1; sar 0.6298364951768466
+2026-10-15,testing2,MXL,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.02; lot 1; sar 0.9910144855085511
+2026-10-15,testing2,NBIS,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.02; lot 1; sar 0.9972743842364531
+2026-10-15,testing2,NBIS,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.95; mfe 0.09; lot 2; sar 0.9889716104619339
+2026-10-15,testing2,OUST,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.12; mfe 0.08; lot 1; sar 0.9738992017561365
+2026-10-15,testing2,RKLB,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.00; mfe 0.00; lot 1; sar -0.07178877468422484
+2026-10-15,testing2,SFM,CWT12-coil-k4-long,long,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe -0.04; lot 1; sar 0.9792656046742364
+2026-10-15,testing2,SKHY,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -0.99; mfe 0.12; lot 1; sar 0.9837152502880603
+2026-10-15,testing2,SOXL,CWT09-gapdn-bounce-g10-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.99; mfe 0.17; lot 1; sar 0.9953660987953687
+2026-10-15,testing2,SOXL,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.13; lot 2; sar 0.9954966638164445
+2026-10-15,testing2,STM,CWT09-gapdn-bounce-g5-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.11; mfe 0.18; lot 1; sar 0.9462878228782289
+2026-10-15,testing2,TER,CWT09-gapdn-vwaploss-g5-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.22; lot 1; sar 0.9865384340157874
+2026-10-15,testing2,TSMX,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.01; lot 1; sar 0.9858341463414632
+2026-10-15,testing2,TTMI,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.06; lot 1; sar 0.6591318087318101
+2026-10-15,testing2,TTMI,CWT09-gapdn-vwaploss-g5-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.18; mfe 0.18; lot 2; sar 0.9868668691510485
+2026-10-15,testing2,UVXY,CWT14-failbrk-orl-p05-long,long,gave_back_gains,bdi1015 analysis; r -1.12; mfe 3.37; lot 1; sar -3.434660693525519
+2026-10-15,testing2,UVXY,CWT14-failbrk-orl-p10-long,long,gave_back_gains,bdi1015 analysis; r -1.12; mfe 3.37; lot 2; sar -3.434660693525519
+2026-10-15,testing2,VRT,CWT09-gapdn-bounce-g5-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.18; lot 1; sar 0.14892169312169676
+2026-10-15,testing2,VRT,CWT09-gapdn-vwaploss-g5-short,short,gave_back_gains,bdi1015 analysis; r -1.11; mfe 0.97; lot 2; sar -1.2001868810593028
+2026-10-15,testing2,VXX,CWT14-failbrk-orl-p10-long,long,gave_back_gains,bdi1015 analysis; r -1.31; mfe 3.27; lot 1; sar -3.8444168224300195
+2026-10-15,testing2,VXX,CWT14-failbrk-orl-p10-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -1.31; mfe 3.27; lot 2; sar -3.8444168224300195
+2026-10-15,testing2,WDC,CWT09-gapdn-bounce-g5-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.22; lot 1; sar 0.9903676057551478
+2026-10-15,testing2,VXX,CWT14-failbrk-orl-p05-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -1.31; mfe 3.27; lot 3; sar -3.8444168224300195
+2026-10-15,testing2,ZSL,CWT14-failbrk-orl-p05-long,long,never_worked,bdi1015 analysis; r -1.00; mfe 0.11; lot 1; sar -1.1445703564265461
+2026-10-15,testing2,AXP,CWT14-failbrk-pdh-p05-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -1.06; mfe 1.59; lot 1; sar -1.1935655834989392
+2026-10-15,testing2,CLX,CWT12-coil-k4-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.23; mfe 0.17; lot 1; sar 0.9680553372586106
+2026-10-15,testing2,CPB,CWT12-flag-s1-long,long,wrong_side_after_big_swing,bdi1015 analysis; r -1.10; mfe 0.24; lot 1; sar 0.9173230674846623
+2026-10-15,testing2,MNST,CWT12-coil-k4-long,long,never_worked,bdi1015 analysis; r -1.08; mfe 0.09; lot 1; sar 0.9456102803738313
+2026-10-15,testing2,MRVL,CWT09-gapdn-vwaploss-g5-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.03; mfe 0.20; lot 2; sar 0.9864037331853971
+2026-10-15,testing2,NI,CWT14-failbrk-orl-p10-lowvol-long,long,never_worked,bdi1015 analysis; r -1.06; mfe 0.00; lot 1; sar 0.5517293267866502
+2026-10-15,testing2,TSCO,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.22; lot 1; sar 0.915894992316729
+2026-10-15,testing2,TSCO,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.22; lot 2; sar 0.915894992316729
+2026-10-15,testing2,UL,CWT12-coil-k4-long,long,never_worked,bdi1015 analysis; r -0.99; mfe 0.10; lot 1; sar 0.9318946080952045
+2026-10-15,testing2,VLO,CWT14-failbrk-orl-p10-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.19; mfe 0.41; lot 3; sar -1.0699196618219227
+2026-10-15,testing2,ZSL,CWT14-failbrk-orl-p05-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -0.98; mfe 1.56; lot 2; sar 0.9213425711638341
+2026-10-15,testing2,CTSH,CWT12-coil-k4-long,long,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe 0.43; lot 1; sar na
+2026-10-15,testing2,NTR,CWT12-coil-k6-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -0.99; mfe 0.19; lot 1; sar -0.31143231218777906
+2026-10-15,testing2,SNY,CWT14-failbrk-orl-p05-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -1.06; mfe 0.66; lot 1; sar 0.9073312027637276
+2026-10-15,testing2,SNY,CWT14-failbrk-orl-p10-long,long,gave_back_gains,bdi1015 analysis; r -1.06; mfe 0.66; lot 2; sar 0.9073312027637276
+2026-10-15,testing2,SNY,CWT14-failbrk-orl-p10-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -1.06; mfe 0.66; lot 3; sar 0.9073312027637276
+2026-10-15,testing2,WEC,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -0.06; mfe 0.00; lot 1; sar na
+2026-10-15,testing2,WEC,CWT14-failbrk-pdh-p10-lowvol-short,short,never_worked,bdi1015 analysis; r -0.06; mfe 0.00; lot 2; sar na
+2026-10-15,testing2,WEC,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -0.09; mfe 0.00; lot 2; sar na
+2026-10-15,testing2,CMG,CWT12-coil-k4-long,long,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.63; lot 1; sar 0.4274430375322723
+2026-10-15,testing2,EIX,CWT14-failbrk-pdh-p10-lowvol-short,short,never_worked,bdi1015 analysis; r -1.09; mfe 0.04; lot 2; sar -0.5958382114345339
+2026-10-15,testing2,EIX,CWT14-failbrk-pdh-p10-short,short,never_worked,bdi1015 analysis; r -1.08; mfe 0.04; lot 3; sar -0.5958382114345339
+2026-10-15,testing2,EROC,CWT09-gapdn-bounce-g5-lowerhalf-short,short,gave_back_gains,bdi1015 analysis; r -1.11; mfe 0.50; lot 2; sar 0.9608571428571426
+2026-10-15,testing2,NVT,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.14; lot 1; sar -0.23401472392638079
+2026-10-15,testing2,TXT,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.16; lot 2; sar -0.4592077701300901
+2026-10-15,testing2,TXT,CWT14-failbrk-pdh-p10-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.16; lot 3; sar -0.4592077701300901
+2026-10-15,testing2,AMD,CWT09-gapdn-bounce-g5-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.24; lot 1; sar 0.9896695201511134
+2026-10-15,testing2,ASX,CWT09-gapdn-bounce-g5-lowerhalf-short,short,gave_back_gains,bdi1015 analysis; r -1.00; mfe 0.54; lot 1; sar -0.34519986864687724
+2026-10-15,testing2,CTSH,CWT12-coil-k6-long,long,gave_back_gains,bdi1015 analysis; r -1.23; mfe 1.19; lot 2; sar -1.217259842071055
+2026-10-15,testing2,EFA,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.09; mfe 0.49; lot 1; sar 0.8947927054478361
+2026-10-15,testing2,EPD,CWT12-coil-k4-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.40; mfe 0.20; lot 1; sar 0.9237874085066248
+2026-10-15,testing2,FORM,CWT09-gapdn-bounce-g5-lowerhalf-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.06; mfe 0.46; lot 1; sar -0.2245126516464481
+2026-10-15,testing2,HPE,CWT09-gapdn-bounce-g5-lowerhalf-short,short,late_hold,bdi1015 analysis; r -0.28; mfe 0.18; lot 1; sar na
+2026-10-15,testing2,IREN,CWT09-gapdn-bounce-g5-lowerhalf-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.02; lot 1; sar 0.6569561643835625
+2026-10-15,testing2,KO,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.04; mfe 0.49; lot 1; sar 0.9183769751812484
+2026-10-15,testing2,KO,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.50; lot 2; sar 0.9176799754496444
+2026-10-15,testing2,NWSA,CWT12-coil-k6-long,long,stopped_then_reversed,bdi1015 analysis; r -1.07; mfe 0.11; lot 2; sar -1.6134601273885316
+2026-10-15,testing2,PENG,CWT09-gapdn-bounce-g5-lowerhalf-short,short,gave_back_gains,bdi1015 analysis; r -0.02; mfe 1.09; lot 1; sar na
+2026-10-15,testing2,SOXS,CWT14-failbrk-orl-p05-long,long,never_worked,bdi1015 analysis; r -0.99; mfe 0.12; lot 1; sar -1.0581018533519164
+2026-10-15,testing2,TER,CWT09-gapdn-bounce-g5-lowerhalf-short,short,never_worked,bdi1015 analysis; r -1.07; mfe 0.04; lot 1; sar -1.0240685840707966
+2026-10-15,testing2,CBOE,CWT12-coil-k4-long,long,never_worked,bdi1015 analysis; r -1.26; mfe 0.01; lot 1; sar -0.35401287347926874
+2026-10-15,testing2,XLP,CWT14-failbrk-orl-p05-long,long,gave_back_gains,bdi1015 analysis; r -1.10; mfe 1.41; lot 1; sar 0.8714723182542697
+2026-10-15,testing2,XLP,CWT14-failbrk-orl-p05-lowvol-long,long,gave_back_gains,bdi1015 analysis; r -1.09; mfe 1.41; lot 2; sar 0.8714723182542697
+2026-10-15,testing2,BURL,CWT13-vwapstretch-z05-short,short,stopped_then_reversed,bdi1015 analysis; r -0.78; mfe 0.01; lot 1; sar -1.0417469536866093
+2026-10-15,testing2,EPD,CWT12-coil-k6-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.08; mfe 0.31; lot 2; sar 0.8782603086429608
+2026-10-15,testing2,GDX,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.05; mfe 0.18; lot 1; sar 0.968809362847742
+2026-10-15,testing2,UPS,CWT12-flag-s1-long,long,never_worked,bdi1015 analysis; r -1.04; mfe 0.12; lot 1; sar 0.9623054390166949
+2026-10-15,testing2,BHP,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.96; lot 1; sar na
+2026-10-15,testing2,CMS,CWT14-failbrk-pdh-p05-lowvol-short,short,never_worked,bdi1015 analysis; r -1.04; mfe 0.03; lot 1; sar -1.1537712230215842
+2026-10-15,testing2,TRMB,CWT12-coil-k4-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.25; lot 1; sar -1.1472075607551702
+2026-10-15,testing2,VEEV,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.11; mfe 0.41; lot 1; sar -1.7077019511081706
+2026-10-15,testing2,FSLR,CWT14-failbrk-pdl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.19; mfe 0.47; lot 1; sar -1.1034735408811278
+2026-10-15,testing2,FSLR,CWT14-failbrk-pdl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.19; mfe 0.47; lot 2; sar -1.1034735408811278
+2026-10-15,testing2,AVTR,CWT14-failbrk-pdh-p10-short,short,gave_back_gains,bdi1015 analysis; r -1.15; mfe 0.57; lot 1; sar 0.8791861126603436
+2026-10-15,testing2,AVTR,CWT14-failbrk-pdh-p10-lowvol-short,short,gave_back_gains,bdi1015 analysis; r -1.15; mfe 0.57; lot 2; sar 0.8791861126603436
+2026-10-15,testing2,CLSK,CWT14-failbrk-pdl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.01; mfe 0.03; lot 1; sar -1.6448785636432555
+2026-10-15,testing2,CLSK,CWT14-failbrk-pdl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.01; mfe 0.02; lot 2; sar -1.6435355378343985
+2026-10-15,testing2,DOCU,CWT12-coil-k4-long,long,gave_back_gains,bdi1015 analysis; r -1.07; mfe 0.56; lot 1; sar 0.9549096583143503
+2026-10-15,testing2,DXCM,CWT14-failbrk-pdh-p05-lowvol-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.07; mfe 0.25; lot 1; sar -1.1308986536107692
+2026-10-15,testing2,GME,CWT12-coil-k4-long,long,stopped_then_reversed,bdi1015 analysis; r -1.00; mfe 0.06; lot 1; sar -1.147586917034712
+2026-10-15,testing2,MU,CWT14-failbrk-pdl-p05-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.01; lot 1; sar -1.0186586569321885
+2026-10-15,testing2,MU,CWT14-failbrk-pdl-p05-long,long,stopped_then_reversed,bdi1015 analysis; r -1.05; mfe 0.01; lot 2; sar -1.0186586569321885
+2026-10-15,testing2,SO,CWT13-vwapstretch-z05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.04; mfe 0.22; lot 1; sar -1.1720775010884676
+2026-10-15,testing2,ARKK,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -0.99; mfe 0.89; lot 1; sar 0.9677971695534404
+2026-10-15,testing2,FIGR,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.05; mfe 0.63; lot 1; sar 0.9609211321918864
+2026-10-15,testing2,FRSH,CWT12-coil-k4-long,long,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.33; lot 1; sar 0.9060298606016145
+2026-10-15,testing2,GME,CWT12-coil-k6-long,long,stopped_then_reversed,bdi1015 analysis; r -1.07; mfe 0.25; lot 2; sar -1.2314757654554616
+2026-10-15,testing2,IBIT,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -0.22; mfe 0.54; lot 1; sar na
+2026-10-15,testing2,NCLH,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -1.02; mfe 0.66; lot 1; sar -0.41954843526064234
+2026-10-15,testing2,RDW,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.04; mfe 0.44; lot 1; sar 0.43628360107106073
+2026-10-15,testing2,TMUS,CWT13-vwapstretch-z05-long,long,never_worked,bdi1015 analysis; r -1.08; mfe 0.07; lot 1; sar 0.9839518567860118
+2026-10-15,testing2,WDAY,CWT12-coil-k4-long,long,wrong_side_after_big_swing,bdi1015 analysis; r -1.07; mfe 0.15; lot 1; sar 0.9820921040918099
+2026-10-15,testing2,XLC,CWT12-coil-k4-long,long,never_worked,bdi1015 analysis; r -1.00; mfe 0.12; lot 1; sar -1.1653585871738408
+2026-10-15,testing2,Z,CWT12-coil-k4-long,long,stopped_then_reversed,bdi1015 analysis; r -1.15; mfe 0.15; lot 1; sar -1.2250601831661576
+2026-10-15,testing2,BOIL,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.15; lot 1; sar -0.38965731239170504
+2026-10-15,testing2,BOIL,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.15; lot 2; sar -0.38965731239170504
+2026-10-15,testing2,COIN,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.45; lot 1; sar 0.9845791090747705
+2026-10-15,testing2,XYZ,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -1.15; mfe 0.57; lot 1; sar 0.97088225085497
+2026-10-15,testing2,ACGL,CWT14-failbrk-orl-p05-lowvol-long,long,never_worked,bdi1015 analysis; r -1.04; mfe 0.02; lot 1; sar -1.1369760366703858
+2026-10-15,testing2,KO,CWT13-vwapstretch-z05-long,long,never_worked,bdi1015 analysis; r -0.99; mfe 0.03; lot 1; sar 0.9381455476563434
+2026-10-15,testing2,PINS,CWT14-failbrk-pdh-p10-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.63; mfe 0.21; lot 1; sar 0.9431069119915105
+2026-10-15,testing2,PINS,CWT14-failbrk-pdh-p10-lowvol-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.63; mfe 0.21; lot 2; sar 0.9431069119915105
+2026-10-15,testing2,SHEL,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.39; lot 1; sar 0.1028405938494429
+2026-10-15,testing2,SHEL,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.00; mfe 0.39; lot 2; sar 0.1028405938494429
+2026-10-15,testing2,BEN,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -1.01; mfe 0.51; lot 1; sar 0.9396583151110597
+2026-10-15,testing2,IVZ,CWT13-vwapstretch-z05-short,short,gave_back_gains,bdi1015 analysis; r -1.04; mfe 0.67; lot 1; sar 0.9327335301880257
+2026-10-15,testing2,MUU,CWT14-failbrk-pdl-p10-long,long,stopped_then_reversed,bdi1015 analysis; r -1.01; mfe 0.13; lot 1; sar -1.0602500750125021
+2026-10-15,testing2,MUU,CWT14-failbrk-pdl-p10-lowvol-long,long,stopped_then_reversed,bdi1015 analysis; r -1.01; mfe 0.13; lot 2; sar -1.0602500750125021
+2026-10-15,testing2,NOW,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.02; mfe 0.38; lot 1; sar -0.08554413015222134
+2026-10-15,testing2,ESTC,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.03; mfe -0.01; lot 1; sar 0.981916444701795
+2026-10-15,testing2,LNG,CWT14-failbrk-pdl-p10-long,long,never_worked,bdi1015 analysis; r -1.08; mfe 0.12; lot 1; sar -0.2259441863670953
+2026-10-15,testing2,MSTR,CWT13-vwapstretch-z05-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.53; lot 1; sar 0.08489183752218434
+2026-10-15,testing2,MSTR,CWT13-vwapstretch-z075-short,short,wrong_side_after_big_swing,bdi1015 analysis; r -1.00; mfe 0.54; lot 2; sar 0.08553361467409047
+2026-10-15,testing2,WMT,CWT13-vwapstretch-z05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.01; mfe 0.16; lot 1; sar 0.4482468013674303
+2026-10-15,testing2,CORZ,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -0.90; mfe 0.11; lot 1; sar 0.9153832719962053
+2026-10-15,testing2,CVX,CWT14-failbrk-orl-p10-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.18; lot 1; sar 0.9685556532193001
+2026-10-15,testing2,CVX,CWT14-failbrk-orl-p05-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.18; lot 2; sar 0.9685556532193001
+2026-10-15,testing2,CVX,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.18; lot 3; sar 0.9685556532193001
+2026-10-15,testing2,LOW,CWT04-backside-vwaptest-a15-short,short,late_hold,bdi1015 analysis; r -0.56; mfe 0.43; lot 1; sar na
+2026-10-15,testing2,WDC,CWT09-gapdn-vwaploss-g5-short,short,never_worked,bdi1015 analysis; r -1.01; mfe 0.06; lot 1; sar 0.9856032563570802
+2026-10-15,testing2,BBY,CWT04-backside-vwaptest-a15-short,short,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.43; mfe 0.45; lot 1; sar 0.9582287449392718
+2026-10-15,testing2,SOXS,CWT14-failbrk-orl-p05-lowvol-long,long,small MFE then failed (0.15-0.5R),bdi1015 analysis; r -1.02; mfe 0.19; lot 1; sar 0.9820271359617219
+2026-10-15,testing2,CSGP,CWT13-vwapstretch-z05-short,short,stopped_then_reversed,bdi1015 analysis; r -1.07; mfe 0.23; lot 1; sar -1.2070211361306555
