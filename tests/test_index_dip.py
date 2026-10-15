@@ -203,3 +203,93 @@ def test_unquoted_yaml_times_are_read_as_clock_times():
     assert raw["a"] == 605
     b = _bars(DIP)
     assert find_trigger(b, 0.75, raw["b"], "09:50", raw["a"]) == find_trigger(b, 0.75, "09:45", "09:50", "10:05")
+
+
+# ---- single-instrument choice (owner 2026-10-15): trade only the 3x candidate with the larger dollar volume so far
+def _vol(b, early, late, cut="09:51"):
+    """Volume `early` on bars starting before `cut` (bar-start time) and `late` after it."""
+    b = b.copy()
+    b["volume"] = np.where(b.index.time < t(cut), early, late)
+    return b
+
+
+def _cands(**kw):
+    p = dict(trade_candidates=["SPXL", "UPRO"], pick="max_dollar_volume", signal_symbol="SPY", dip_pct=0.75,
+             dip_by="09:45", trigger="recovery", recovery_frac=0.10, stop_buffer_frac=0.10, target=None,
+             trail_r=1.0, trail_after_r=1.0)
+    p.update(kw)
+    return IndexDipBounce(**p)
+
+
+def test_pick_trades_only_the_candidate_with_more_dollar_volume_so_far():
+    spy = _bars(DIP)
+    # SPXL: more dollars 09:30-09:50 (the trigger bar starts 09:50); UPRO: far more AFTER the decision -> must not count
+    spxl = _vol(_bars(DIP, lev=3.0, base=150.0), 2e5, 1e3)
+    upro = _vol(_bars(DIP, lev=3.0, base=90.0), 1e5, 1e8)
+    peers = {"SPY": spy, "SPXL": spxl, "UPRO": upro}
+    st = _cands()
+    assert st.eligible(_ctx("SPXL", spxl)) and st.eligible(_ctx("UPRO", upro)) and not st.eligible(_ctx("SPY", spy))
+    (sig,) = st.signals(_ctx("SPXL", spxl, peers))
+    assert st.signals(_ctx("UPRO", upro, peers)) == []
+    assert sig.symbol == "SPXL" and sig.meta["picked"] == "SPXL" and sig.meta["pick"] == "max_dollar_volume"
+    assert sig.meta["dv_SPXL"] > sig.meta["dv_UPRO"] > 0 and sig.meta["candidates"] == "SPXL,UPRO"
+    assert sig.trail_r == 1.0
+    # same geometry as a fixed single-symbol setup on the chosen instrument
+    fixed = _cands(trade_candidates=None, symbols=["SPXL"]).signals(_ctx("SPXL", spxl, peers))[0]
+    assert fixed.bar_index == sig.bar_index and np.isclose(fixed.stop, sig.stop) and "picked" not in fixed.meta
+    # flip the early volume -> UPRO is chosen
+    peers2 = {"SPY": spy, "SPXL": _vol(spxl, 1e5, 1e8), "UPRO": _vol(upro, 3e5, 1e3)}
+    assert st.signals(_ctx("SPXL", peers2["SPXL"], peers2)) == []
+    assert st.signals(_ctx("UPRO", peers2["UPRO"], peers2))[0].meta["picked"] == "UPRO"
+
+
+def test_pick_tie_goes_to_first_listed_and_missing_candidate_counts_zero():
+    spy = _bars(DIP)
+    a, b = _bars(DIP, lev=3.0, base=100.0), _bars(DIP, lev=3.0, base=100.0)
+    st = _cands()
+    assert len(st.signals(_ctx("SPXL", a, {"SPY": spy, "SPXL": a, "UPRO": b}))) == 1
+    assert st.signals(_ctx("UPRO", b, {"SPY": spy, "SPXL": a, "UPRO": b})) == []
+    assert st.signals(_ctx("UPRO", b, {"SPY": spy, "UPRO": b}))[0].symbol == "UPRO"      # SPXL bars absent today
+
+
+def test_pick_rule_validation_and_pinned_candidates():
+    import pytest
+
+    with pytest.raises(ValueError):
+        _cands(pick="max_volume_yesterday")
+    cfg = load_config()
+    cfg["strategies"] = {"IDX": {"enabled": True, "class": "index_dip_bounce", "trade_candidates": ["SPXL", "UPRO"],
+                                 "pick": "max_dollar_volume", "signal_symbol": "SPY"}}
+    assert pinned_symbols(cfg) == {"SPXL", "UPRO", "SPY"}
+    (st,) = build_strategies(cfg)
+    assert st.tradeable() == ["SPXL", "UPRO"]
+
+
+def test_live_runner_trades_only_the_pick(tmp_path, monkeypatch):
+    cfg = load_config()
+    cfg["data"]["journal_path"] = str(tmp_path / "j.db")
+    cfg["strategies"] = {"IDX2-3x": {"enabled": True, "class": "index_dip_bounce", "trade_candidates": ["SPXL", "UPRO"],
+                                     "pick": "max_dollar_volume", "signal_symbol": "SPY", "dip_pct": 0.75,
+                                     "dip_by": "09:45", "trigger": "recovery", "recovery_frac": 0.10, "target": None,
+                                     "trail_r": 1.0, "trail_after_r": 1.0}}
+    strats = build_strategies(cfg)
+    spy = _bars(DIP)
+    spxl = _vol(_bars(DIP, lev=3.0, base=150.0), 1e5, 1e8)
+    upro = _vol(_bars(DIP, lev=3.0, base=90.0), 3e5, 1e3)
+    tape = (("SPY", spy), ("SPXL", spxl), ("UPRO", upro))
+    pri = {s: SimpleNamespace(prev_close=float(b["open"].iloc[0]), prev_high=0.0, prev_low=0.0, atr=1.0, adv=3e10,
+                              avg_cum=None, avg_move=None) for s, b in tape}
+    r = R.PaperRunner(cfg, strats, pri, dry_run=True, broker=_Broker())
+    monkeypatch.setattr(r, "_realism", lambda sig, ctx, px: (True, "ok", {}))
+    seen = []
+    monkeypatch.setattr(r, "_log", lambda sig, status, why, ref, now, *a, **k: seen.append((now, status, sig)))
+    for m in pd.date_range(f"{DAY} 09:35:05", f"{DAY} 10:30:05", freq="1min", tz=TZ):
+        monkeypatch.setattr(r, "fetch", lambda now: {s: b[b.index < now.floor("1min")] for s, b in tape})
+        r.step(m)
+    assert len(seen) == 1
+    now, status, sig = seen[0]
+    assert sig.symbol == "UPRO" and sig.meta["picked"] == "UPRO" and now.strftime("%H:%M") == "09:51"
+    # the backtest on full-day bars (UPRO's late volume is far smaller, SPXL's far larger) makes the same choice
+    full = [s for c, b in (("SPXL", spxl), ("UPRO", upro))
+            for s in strats[0].signals(_ctx(c, b, {"SPY": spy, "SPXL": spxl, "UPRO": upro}))]
+    assert [s.symbol for s in full] == ["UPRO"] and full[0].bar_index == sig.bar_index

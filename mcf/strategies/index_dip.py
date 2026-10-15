@@ -25,6 +25,13 @@ Trade (the TRADED symbol's own bars, so levels and risk scale with its leverage 
 Sizing is the account's risk-based sizing on the traded symbol's own stop distance (RiskManager.size), so a 3x ETF gets
 about a third of the shares-value of the index ETF for the same dollar risk.
 
+Single-instrument choice (owner 2026-10-15): instead of `symbols`, a setup may give `trade_candidates` (e.g.
+[SPXL, UPRO]) with `pick: max_dollar_volume`. At the trigger the setup trades ONLY the candidate with the larger dollar
+volume (sum of close x volume) from 09:30 through the trigger bar, i.e. on today's tape so far (known at decision time;
+ties -> the first listed). The other candidates return no signal that day. The chosen symbol, the rule and every
+candidate's dollar volume go into Signal.meta (journal / backtest trade meta -> scorecard). `symbols` alone (one
+setup per instrument) still works as before.
+
 The index bars come from DayContext.peers (the poll's / session's bars of every symbol); when the traded symbol is the
 signal symbol, its own bars are used. Educational only - not financial advice.
 """
@@ -90,23 +97,48 @@ def find_trigger(idx: pd.DataFrame, dip_pct: float, dip_by, entry_from, entry_un
 
 
 class IndexDipBounce(Strategy):
-    """See the module docstring. Config (`class: index_dip_bounce`): symbols, signal_symbol, dip_pct, dip_by, entry_from,
+    """See the module docstring. Config (`class: index_dip_bounce`): symbols and/or trade_candidates + pick, signal_symbol, dip_pct, dip_by, entry_from,
     entry_until, trigger, recovery_frac, stop_buffer_frac, target ('retrace' | 'vwap' | null), target_frac, exit_by."""
 
     name = "index_dip_bounce"
+    PICK_RULES = ("max_dollar_volume",)
+
+    def __init__(self, **params):
+        super().__init__(**params)
+        rule = params.get("pick", "max_dollar_volume")
+        if params.get("trade_candidates") and rule not in self.PICK_RULES:
+            raise ValueError(f"unknown pick rule {rule!r} (supported: {', '.join(self.PICK_RULES)})")
+
+    def tradeable(self) -> list[str]:
+        """Every symbol this setup may trade: `trade_candidates` (one chosen per day) plus `symbols` (each traded)."""
+        return list(dict.fromkeys([*self.params.get("trade_candidates", []), *self.params.get("symbols", [])]))
 
     def eligible(self, ctx: DayContext) -> bool:
-        return ctx.symbol in set(self.params.get("symbols", []))
+        return ctx.symbol in set(self.tradeable())
 
-    def _index_bars(self, ctx: DayContext) -> pd.DataFrame | None:
-        sym = self.params.get("signal_symbol", ctx.symbol)
+    def _today(self, ctx: DayContext, sym: str) -> pd.DataFrame | None:
         if sym == ctx.symbol:
             return ctx.bars
-        peers = getattr(ctx, "peers", None) or {}
-        b = peers.get(sym)
-        if b is None or len(b) == 0:
+        b = (getattr(ctx, "peers", None) or {}).get(sym)
+        if b is None or len(b) == 0 or not len(ctx.bars):
             return None
-        return b[b.index.normalize() == ctx.bars.index[0].normalize()] if len(ctx.bars) else None
+        return b[b.index.normalize() == ctx.bars.index[0].normalize()]
+
+    def choose(self, ctx: DayContext, ts) -> tuple[str | None, dict]:
+        """The candidate to trade at decision bar `ts` (bar-start time; bars at or before it are complete): the largest
+        dollar volume 09:30..ts on today's tape. Causal - later bars (full-day peers in the backtest) are ignored."""
+        dv = {}
+        for c in self.params.get("trade_candidates", []):
+            b = self._today(ctx, c)
+            seg = None if b is None else b[b.index <= ts]
+            dv[c] = float((seg["close"] * seg["volume"]).sum()) if seg is not None and len(seg) else 0.0
+        if not dv or max(dv.values()) <= 0:
+            return None, dv
+        best = max(dv.values())
+        return next(c for c, v in dv.items() if v == best), dv
+
+    def _index_bars(self, ctx: DayContext) -> pd.DataFrame | None:
+        return self._today(ctx, self.params.get("signal_symbol", ctx.symbol))
 
     def generate(self, ctx: DayContext):
         p = self.params
@@ -121,10 +153,16 @@ class IndexDipBounce(Strategy):
                             float(p.get("recovery_frac", 0.10)))
         if trig is None:
             return []
-        # the traded symbol's last bar at or before the index trigger bar (thin trackers can skip minutes)
-        k = int(bars.index.searchsorted(trig["ts"], side="right")) - 1
         meta = {"signal_symbol": p.get("signal_symbol", ctx.symbol), "idx_drop_pct": round(trig["drop_pct"], 3),
                 "idx_low_time": f"{trig['low_ts']:%H:%M}", "trigger": p.get("trigger", "recovery")}
+        if ctx.symbol not in set(p.get("symbols", [])):           # a trade_candidates setup: only the day's pick trades
+            chosen, dv = self.choose(ctx, trig["ts"])
+            if chosen != ctx.symbol:
+                return []
+            meta.update(picked=chosen, pick=p.get("pick", "max_dollar_volume"),
+                        candidates=",".join(dv), **{f"dv_{c}": round(v) for c, v in dv.items()})
+        # the traded symbol's last bar at or before the index trigger bar (thin trackers can skip minutes)
+        k = int(bars.index.searchsorted(trig["ts"], side="right")) - 1
         sig = self.build_signal(ctx.symbol, bars, k, meta)
         return [] if sig is None else [sig]
 

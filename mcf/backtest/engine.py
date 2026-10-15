@@ -261,6 +261,7 @@ def pinned_symbols(cfg: dict) -> set[str]:
     for st in cfg.get("strategies", {}).values():
         if st.get("enabled"):
             out.update(st.get("symbols", []))
+            out.update(st.get("trade_candidates", []))   # index_dip_bounce: every candidate the day's pick may choose
             if st.get("signal_symbol"):          # a setup that reads one symbol and trades others needs its bars too
                 out.add(st["signal_symbol"])
     return out
