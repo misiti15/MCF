@@ -52,6 +52,7 @@ live:
     - RW4-ns3-adv150-short-FD
     - NS2-sma50break-overbought-short-FD
     - NS3-failed-vwap-reclaim-short-FD
+    - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
     - MF1-945-flowsell-vwapup-FD
     - MF3-open-flowsell-rsi5hi-FD
     - ST2-slope20up-long-am-t05s1-FD
@@ -86,6 +87,9 @@ strategies:
     refire_cooldown: 1
     enabled: true
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  NS3-failed-vwap-reclaim-short:
+    enabled: true
+    former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
   MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
   MF3-open-flowsell-rsi5hi: {enabled: false}   # replaced by MF3-open-flowsell-rsi5hi-FD
@@ -93,7 +97,6 @@ strategies:
   MF5-flowsell-vwapup-rsi5hi: {enabled: false}   # replaced by MF5-flowsell-vwapup-rsi5hi-FD
   NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
   NS2-sma50break-overbought-short: {enabled: false}   # replaced by NS2-sma50break-overbought-short-FD
-  NS3-failed-vwap-reclaim-short: {enabled: false}   # replaced by NS3-failed-vwap-reclaim-short-FD
   NS4-pm-vwap-reclaim-oversold-short: {enabled: false}   # replaced by NS4-pm-vwap-reclaim-oversold-short-FD
   NS5-sma50-flush-oversold-long: {enabled: false}   # replaced by NS5-sma50-flush-oversold-long-FD
   RW6G1-ns2-up3-vwap2sd-short: {enabled: false}   # replaced by RW6G1-ns2-up3-vwap2sd-short-FD

@@ -2,6 +2,18 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-14: evening decisions (demotions, Testing philosophy)
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| NS3 | Demote to Testing 1. | Disabled in Primary; runs in Testing 1 in its primary form next to NS3-FD, `former_primary` marker (ledger 2026-10-14-demote-ns3). |
+| MF4 | Keep in Primary for 8 sessions total, not more. | Re-evaluate after the 2026-10-19 session (keep or demote). |
+| Testing 2 flagged setups and CWT14 | Run two more sessions before any deletion; more data first. | CWT14-pdl-p05-long, CWT13-z05-short, CWT12-coil-k6-long and the CWT14 family reviewed after the 2026-10-16 session; removal only on the owner's word. |
+| Testing caps | A cap should not itself make or lose money; Testing exists to collect data from as many *efficient* executions as possible. | Testing caps stay high. Note: the daily loss limit (in R) fills faster with more trades, so caps and the limit interact. |
+| Win rate | Treat win rate as success to build on, not a discredited metric. | Reports show win rate next to the break-even win rate; research looks for ways to turn high win rates into profit (smaller losses, earlier partial exits) alongside expectancy. |
+| Top-5 tuning goal | Improve execution of the most-used setups for more quality executions and data, not to rank by profit (profit ranking is a real-funds topic). | Daily top-5 run aims at execution quality and win-rate-to-profit conversion. |
+| Failure patterns | Treat recurring loser patterns (RW2 never-worked, ST2 already-down) as possible opportunities (continuation or rebound), not only filters. | Each such pattern is also tested as a setup in the opposite or follow-up direction (same day and next day). |
+
 ## 2026-10-14: real-funds planning (applies when real money goes in)
 
 | Topic | Owner decision | How MCF applies it |
