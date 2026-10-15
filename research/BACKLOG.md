@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 391 · coded: 80 · failed: 203 · configurations tried (all lineages): 21969169
+Total ideas: 396 · coded: 80 · failed: 208 · configurations tried (all lineages): 22435269
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -393,6 +393,11 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | nightly-1014-liq-orl-index-confirm | LIQ-orl-sweep-open15-s25-long (Testing 1): fire only while SPY is up from its open (a) or above its session VWAP (b) at the decision bar | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
 | failed | bdi1014-cwt14-sar | CWT14 stop-and-reverse: when a fail-break trade's bracket stop fills, enter the breakout side (stop-entry at the stop, or market at the stop bar's close), 5 exit geometries | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | failed | bdi1014-cwt14-sar-ixalign | CWT14 stop-and-reverse, rework: reverse only when SPY's fromOpen at the stop bar is on the reversal's side (k = 0 / 0.25%) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| failed | top5-1014-CWT14-failbrk-orl-p05-long-tune | CWT14-failbrk-orl-p05-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
+| failed | top5-1014-CWT14-failbrk-orl-p05-lowvol-long-tune | CWT14-failbrk-orl-p05-lowvol-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
+| failed | top5-1014-CWT14-failbrk-pdl-p05-long-tune | CWT14-failbrk-pdl-p05-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
+| failed | top5-1014-heat_fade_short-FD-tune | heat_fade_short-FD: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
+| failed | top5-1014-RW7-gapdn-bounce-early-short-FD-tune | RW7-gapdn-bounce-early-short-FD: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
