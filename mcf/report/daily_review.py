@@ -82,6 +82,12 @@ def build_review(journal, run_id: int, day: str, health: dict | None = None) -> 
         findings.append(f"{rej} orders were rejected by the broker. Read the reasons in the journal.")
     if health and health.get("last_poll_s") and health["last_poll_s"] > 30:
         findings.append(f"The last data poll took {health['last_poll_s']} s. More than 30 s delays entries.")
+    for o in (health or {}).get("data_outages") or []:
+        findings.append(f"Market data was stale from {str(o.get('since'))[11:16]} to {str(o.get('until'))[11:16]} ET "
+                        f"({o.get('minutes')} min, newest bar {str(o.get('last_bar'))[11:16]}). New entries were paused.")
+    if health and health.get("data_stale"):
+        findings.append(f"Market data was still stale at the end of the session (since "
+                        f"{str(health['data_stale'].get('since'))[11:16]} ET).")
     better = {}
     for k, higher in (("exp_r", True), ("win_rate", True), ("slip_bps", False), ("stop_exit_share", False)):
         if t.get(k) is not None and avg(r5, k) is not None:

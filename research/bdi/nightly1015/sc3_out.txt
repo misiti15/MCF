@@ -1,0 +1,72 @@
+===== p: scorecard 4 sessions, 2026-10-12 to 2026-10-15; trades 99, P/L -775.76
+             n     pnl   avgR
+date                         
+2026-10-08  48 -120.66 -0.134
+2026-10-09  70 -238.87 -0.168
+2026-10-12  22  117.93  0.370
+2026-10-13  18  -95.39 -0.194
+2026-10-14  11   63.53  0.293
+2026-10-15  48 -861.83 -0.563
+{'too few trades': 7, 'positive so far': 3, 'below backtest - review': 1}
+                             setup  trades  win_rate  avg_r     pnl  expected_r                  verdict
+7  NS2-sma50break-overbought-short      52     0.269   -0.5 -825.79       0.021  below backtest - review
+                        setup  trades  win_rate  avg_r    pnl  expected_r
+4       MF4-h40-open-flowsell      10       0.9  0.336  71.01      -0.017
+5  MF5-flowsell-vwapup-rsi5hi      12       0.5  0.090  35.00      -0.010
+3    MF3-open-flowsell-rsi5hi      10       0.7  0.405  23.24      -0.034
+===== t1: scorecard 4 sessions, 2026-10-12 to 2026-10-15; trades 1126, P/L -2204.44
+              n       pnl   avgR
+date                            
+2026-10-09   46   -25.030 -0.023
+2026-10-12  204    32.369  0.090
+2026-10-13  371  -629.030 -0.114
+2026-10-14  326    65.210  0.025
+2026-10-15  225 -1673.020 -0.641
+{'negative so far': 14, 'too few trades': 12, 'positive so far': 10, 'below backtest - review': 1}
+                                  setup  trades  win_rate  avg_r     pnl  expected_r                  verdict
+25                   heat_fade_short-FD     205     0.385 -0.235 -492.38         NaN          negative so far
+32   NS2-sma50break-overbought-short-FD      64     0.312 -0.426 -400.70         NaN          negative so far
+34                 RW6-ns2-up3-short-FD      34     0.206 -0.600 -301.08         NaN          negative so far
+28  RW2-exhaustion-noon-adv150-short-FD     100     0.390 -0.265 -286.98         NaN          negative so far
+36                      heat_fade_short      25     0.160 -0.916 -185.84      -0.015  below backtest - review
+29             L3-gap-slope-fromopen-FD      33     0.303 -0.376 -154.10         NaN          negative so far
+21       ST2-slope20up-long-am-t05s1-FD      47     0.468 -0.190 -139.94         NaN          negative so far
+30                    heat_fade_long-FD      42     0.310 -0.386 -104.89         NaN          negative so far
+22               L3-gap-slope-rsi5hi-FD      18     0.500 -0.201  -74.05         NaN          negative so far
+23                  exhaustion_short-FD      18     0.444 -0.221  -71.09         NaN          negative so far
+20   RW1-gapdn-bounce-flowsell-short-FD      28     0.393 -0.146  -68.10         NaN          negative so far
+26              L3-gap-slope-lowdist-FD      16     0.250 -0.252  -63.83         NaN          negative so far
+                                         setup  trades  win_rate  avg_r     pnl  expected_r
+7          RW3-gapdn-rsi5pop-flowsell-short-FD      28     0.643  0.315  117.08         NaN
+4   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD      27     0.704  0.427   83.30         NaN
+8                  MF3-open-flowsell-rsi5hi-FD      21     0.667  0.286   73.43         NaN
+6                     MF4-h40-open-flowsell-FD      16     0.938  0.328   61.20         NaN
+10               MF2-open-rsimidhi-flowsell-FD      14     0.500  0.160   34.94         NaN
+16                              heat_fade_long      23     0.522  0.008   15.33      -0.138
+11                  MF1-945-flowsell-vwapup-FD      15     0.467  0.154   10.60         NaN
+14               MF5-flowsell-vwapup-rsi5hi-FD      17     0.471  0.031   -1.05         NaN
+===== t2: scorecard 4 sessions, 2026-10-12 to 2026-10-15; trades 1893, P/L -2708.04
+              n       pnl   avgR
+date                            
+2026-10-12  360  -721.318 -0.190
+2026-10-13  647  -103.270  0.020
+2026-10-14  353  -785.740 -0.322
+2026-10-15  533 -1097.710 -0.143
+{'too few trades': 11, 'negative so far': 11, 'positive so far': 3, 'below backtest - review': 3}
+                                    setup  trades  win_rate  avg_r     pnl  expected_r                  verdict
+25  CWT09-gapdn-bounce-g5-lowerhalf-short      40     0.125 -0.661 -700.41       0.047  below backtest - review
+17      CWT14-failbrk-orl-p05-lowvol-long     230     0.557 -0.213 -312.37      -0.090          negative so far
+12             CWT14-failbrk-orl-p05-long     241     0.589 -0.113 -257.18      -0.093          negative so far
+26          CWT09-gapdn-vwaploss-g5-short      28     0.107 -0.690 -219.55      -0.031  below backtest - review
+6       CWT14-failbrk-pdl-p05-lowvol-long     131     0.618 -0.060 -194.94      -0.096          negative so far
+11             CWT14-failbrk-pdl-p05-long     176     0.580 -0.109 -185.85      -0.088          negative so far
+10             CWT14-failbrk-orl-p10-long     126     0.627 -0.109 -180.61      -0.091          negative so far
+19            CWT13-vwapstretch-z05-short      41     0.341 -0.345 -131.89      -0.069  below backtest - review
+13     CWT14-failbrk-pdh-p05-lowvol-short     124     0.565 -0.127 -108.68      -0.095          negative so far
+8              CWT14-failbrk-pdl-p10-long     140     0.636 -0.094 -103.90      -0.086          negative so far
+9             CWT14-failbrk-pdh-p10-short     112     0.616 -0.098  -78.04      -0.096          negative so far
+14     CWT14-failbrk-pdh-p10-lowvol-short      62     0.548 -0.156  -62.32      -0.089          negative so far
+                               setup  trades  win_rate  avg_r    pnl  expected_r
+5                 CWT12-coil-k4-long     143     0.685  0.004  72.05      -0.075
+3  CWT14-failbrk-pdl-p10-lowvol-long      69     0.739  0.071  26.58      -0.095
+4                 CWT12-coil-k6-long      36     0.361  0.038   7.91      -0.070

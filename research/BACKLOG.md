@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 400 · coded: 80 · failed: 212 · configurations tried (all lineages): 22435334
+Total ideas: 408 · coded: 80 · failed: 217 · configurations tried (all lineages): 22435443
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -188,8 +188,11 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1013-tight-target-progress-skip | Tight-target market entries (t05 geometries): skip when the live quote has already covered most of the distance to target | nightly-2026-10-13 | – | – | – | – | – | – |
 | idea | nightly-1014-fd-short-late-giveback | Testing 1 short lots still open at 15:00: exit or tighten the stop to break-even / +0.5R at 15:00-15:30 instead of riding to the 15:55 flatten | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1014-t2-cap50-review | Testing 2: per-setup open-lot cap 50 vs 25 vs 35 - re-score with the -60R daily halt simulated | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
-| idea | bdi1014-rw2-extension-floor | RW2-exhaustion-noon-adv150-short: require a deeper extension at entry (fromOpen >= 2.5% or RSI5 >= 90) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1014-st2-wrong-side | ST2-slope20up-long-am: skip when the stock is already >= 3% below its open at the entry bar | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1015-l3-fromopen-refire-cap | L3-gap-slope-fromopen-FD (Testing 1, refire cd1): cap refires per symbol-day (e.g. 1) or require price back below the prior signal's entry | nightly-2026-10-15 (research/bdi/nightly1015/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1015-idxdip-gapdn-earlylow | Index gap-down + early low bounce: index opens >= 0.3/0.5% below the prior close and prints a low >= 0.10% below the open by 09:45/09:55; 20% recovery of (prior close - low) 09:50-10:05; trail/hold; 3x pick or TQQQ | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1015-idxdip-pc-spy100 | Index dip-bounce, SPY >= 1.0% below the PRIOR CLOSE by 09:45, 3x pick, trail or hold | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1015-idxdip-late-low-trigger | Index dip-bounce rework: require the trigger to follow a new running low printed inside 09:50-10:05 (or entry_from 09:55) | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -393,6 +396,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | nightly-1014-liq-orl-index-confirm | LIQ-orl-sweep-open15-s25-long (Testing 1): fire only while SPY is up from its open (a) or above its session VWAP (b) at the decision bar | nightly-2026-10-14 (research/bdi/nightly1014/NOTES.md) | – | – | – | – | – | – |
 | failed | bdi1014-cwt14-sar | CWT14 stop-and-reverse: when a fail-break trade's bracket stop fills, enter the breakout side (stop-entry at the stop, or market at the stop bar's close), 5 exit geometries | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | failed | bdi1014-cwt14-sar-ixalign | CWT14 stop-and-reverse, rework: reverse only when SPY's fromOpen at the stop bar is on the reversal's side (k = 0 / 0.25%) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1014-rw2-extension-floor | RW2-exhaustion-noon-adv150-short: require a deeper extension at entry (fromOpen >= 2.5% or RSI5 >= 90) | BDI 2026-10-14 (research/bdi/bdi1014/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1014-CWT14-failbrk-orl-p05-long-tune | CWT14-failbrk-orl-p05-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1014-CWT14-failbrk-orl-p05-lowvol-long-tune | CWT14-failbrk-orl-p05-lowvol-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1014-CWT14-failbrk-pdl-p05-long-tune | CWT14-failbrk-pdl-p05-long: small one-knob variations (thresholds +-10-20%, window, exit geometry, VWAP/RSI cut, one extra filter) | BDI top-5 tune 2026-10-14 (research/bdi/top5_1014/NOTES.md) | – | – | – | – | – | – |
@@ -402,6 +406,10 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | opp1014-rw2-continuation-short | RW2 failed-extension continuation: after the RW2 short's stop, short the first VWAP loss or lower low (t1s1 / t2s1 / eod-s1; all or never-worked stops) | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
 | failed | opp1014-st2-skipped-sameday-rebound | ST2 skipped stocks as an opportunity: same-day rebound long on adv >= $95M names down >= 3/4/5/6% from the open (H5 = 5-min high reclaim, VW = VWAP reclaim, MR = H5 + 0.5 ATR below VWAP), 10:30-15:00, t05s1 / t1s1 | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
 | failed | opp1014-st2-skipped-nextday-rebound | ST2 skipped stocks, next day: after a day closing >= 3/4/5/6% below its open, buy the next open or 09:50 and exit same day (EOD or t1s1); gap-fade reference (gap <= -2%) | OPP 2026-10-15 (research/bdi/opp1014/NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1015-short-breadth-cluster-skip | Lab short setups (NS2, NS2-FD, RW6-FD, RW2-FD, CWT09-g5-lowerhalf): skip a decision bar where >= 5 symbols take their first signal of the same setup | nightly-2026-10-15 (research/bdi/nightly1015/NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1015-gapdn-reclaim-short-veto | Lab short setups: no new short while SPY gapped down <= -0.30% and has reclaimed its open (SPY fromOpen > 0) at the decision bar | nightly-2026-10-15 (research/bdi/nightly1015/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1015-idxdip-prior-close | Index dip-bounce with the drop measured from the PRIOR CLOSE (gap included): SPY/QQQ down >= 0.5/0.75/1.0% vs prior close by 09:45/09:55, 20% recovery 09:50-10:05, trail/hold, 3x pick (SPXL/UPRO) or TQQQ | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1015-short-index-up-veto | Lab short setups (NS2, NS2-FD, RW6-FD, RW2-FD, CWT09-g5-lowerhalf): a decision bar does not qualify while SPY fromOpen >= 0.25% / 0.50% | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

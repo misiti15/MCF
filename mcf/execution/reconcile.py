@@ -39,7 +39,7 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
     after = after.to_pydatetime()
     by_id = {str(o.id): o for o in broker.closed_orders_today(after)}
     lots = _lot_exits(by_id, set(orders.broker_order_id.astype(str)))
-    rows = []
+    rows, residual = [], {}
     for _, rec in orders.iterrows():
         parent = by_id.get(rec.broker_order_id)
         if parent is None:
@@ -49,6 +49,8 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
                 journal.update_order_status(rec.broker_order_id, "expired")   # never filled: not a lot, not a trade
             continue
         lot = lots.get(rec.broker_order_id)
+        if lot is not None and not lot["closed"] and lot["parts"]:
+            residual[rec.broker_order_id] = {"left": lot["left"], "qty": lot["qty"]}   # partly closed, rest held
         if lot is None or not lot["closed"]:
             continue  # still open: a leg is working, or part of its quantity has no paired close yet
         entry, qty, parts = lot["entry"], lot["qty"], lot["parts"]
@@ -76,7 +78,9 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
             pnl_adj=pnl_adj,
         ))
         journal.update_order_status(rec.broker_order_id, "closed")
-    return pd.DataFrame(rows)
+    out = pd.DataFrame(rows)
+    out.attrs["residual"] = residual   # parent id -> {left, qty}: lots still open after a partial exit (status only)
+    return out
 
 
 def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
@@ -163,7 +167,10 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
             lot["parts"].append((q, float(o.filled_avg_price), o.filled_at, "flatten"))
         lot["left"] = 0.0
     for lot in lots.values():
-        lot["closed"] = not lot["working"] and lot["left"] <= 1e-9 and bool(lot["parts"])
+        # A lot whose own fills (legs, replacements, -x, flatten share) cover its whole quantity is flat, even if an
+        # OCO sibling leg still reports an open state (e.g. pending_cancel / held a moment after the target filled):
+        # it holds no shares, so it is released now rather than at a later poll or the flatten (2026-10-15 H-4).
+        lot["closed"] = lot["left"] <= 1e-9 and bool(lot["parts"])
     return lots
 
 
