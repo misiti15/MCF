@@ -1,5 +1,5 @@
 """Append the top5_1016 results to research/backlog.jsonl (idempotent by id). Educational only - not financial advice.
-One entry per setup's grid (failed: 0 of 89 meet the Testing bar, every variant has exp <= 0), plus one entry per
+One entry per setup's grid (failed: 0 of 80 meet the Testing bar, every variant has exp <= 0), plus one entry per
 variant that beat its parent at the pre-declared bar (status rework: it beats the parent but is still negative)."""
 import json
 from pathlib import Path
@@ -18,6 +18,10 @@ META = {
     "CWT12-coil-k4-long": ("cwt-b-b4-coil-flag-breakout", "testing2", "cwt12"),
     "RW7-gapdn-bounce-early-short-FD": ("bdi-rw-gapdn-bounce-early", "testing1", "rw7"),
 }
+LIVE = {"E05": "config only: scale_out_r 0.25 + live_scale_out: true (runner.scale_outs, 2026-10-16)",
+        "E06": "config only: scale_out_r 0.35 (coil/CWT14) + live_scale_out: true",
+        "E09": "needs code: LabStrategy has no entry-delay knob (enter at the next 5-minute bar close)",
+        "E10": "new research module (mask & flow3 agrees) + new config entry; no mcf/ change"}
 COMMON = ("open two-year history, locked block never loaded; TRAIN <= 2025-12, VALID 2026-01..03 + 07..09-15; production + "
           "tod costs; 5-minute path simulator with parity to gates.lab_trades (mean |diff| <= 5e-5 R); random control = 5 same-minute "
           "symbols through the same entry/exit mechanics.")
@@ -41,9 +45,9 @@ for s, (parent, acct, fam) in META.items():
     note = (f"top5_1016 (scan_1016.py / report_1016.py, pre-declared in PLAN.md). {len(v)} one-knob execution variants ({knobs}); {COMMON} "
             f"Parent TRAIN+VALID {fmt(p)}. 0 of {len(v)} variants has exp > 0; {int(v.beats_parent.sum())} beat the parent at the setup bar "
             f"{p.bar_setup}; {len(both)} improve on both TRAIN and VALID; best {best.var} ({best.knob}) {best.exp_tv:+.4f}R, d {best.d_tv:+.4f}R, "
-            f"t_improve {best.t_improve} (setup bar {best.bar_setup}, lineage bar {best.bar_lineage}). Testing bar (t >= 3.00 and exp > 0) 0; "
+            f"t_improve {best.t_improve} (setup bar {best.bar_setup}, lineage bar {best.bar_lineage}). Testing bar (t >= 2.96 and exp > 0) 0; "
             f"research bar 0. No holdout scored.")
-    new.append({"id": f"top5-1016-{s}-exec", "title": f"{s}: execution variants (time stop, breakeven, scale-out, tighter stop, limit/delayed entry, flow filter, loser-pattern opposites)",
+    new.append({"id": f"top5-1016-{s}-exec", "title": f"{s}: execution variants (time stop, breakeven, scale-out, smaller stop, wait one bar, flow filter, window, poke depth, hold-to-close/trailing for shorts, re-entry after stop)",
                 "category": "setup", "parent": parent, "tags": [acct, fam, "top5-tune", "bdi"],
                 "hypothesis": "An execution change (exit management or entry timing) converts the live setup's win rate into more R per trade.",
                 "status": "failed", "configs_tried": int(p.lineage_N), "notes": note + E})
@@ -52,6 +56,7 @@ for s, (parent, acct, fam) in META.items():
                     "category": "setup", "parent": parent, "tags": [acct, fam, "top5-tune", "bdi", "beats-parent"],
                     "hypothesis": "This execution change raises the parent's R per trade on TRAIN and on VALID.",
                     "status": "rework", "configs_tried": int(r.lineage_N),
+                    "live_support": LIVE.get(r.var, ""),
                     "notes": (f"top5_1016 beats parent: d {r.d_tv:+.4f}R (TRAIN {r.d_train:+.4f}, VALID {r.d_valid:+.4f}), day-block bootstrap t "
                               f"{r.t_improve} vs setup bar {r.bar_setup} (lineage bar {r.bar_lineage}: {'met' if r.t_improve >= r.bar_lineage else 'not met'}). "
                               f"Variant {fmt(r)}. Still negative after costs, so it fails the Testing bar; status rework = pair it with another "
