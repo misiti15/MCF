@@ -245,7 +245,8 @@ class AlpacaBroker:
                 return False                              # legs still hold the shares; retried next poll
             sleep(0.5)
             waited += 0.5
-        qty = filled - sum(abs(float(getattr(leg, "filled_qty", 0) or 0)) for leg in legs)
+        qty = filled - sum(abs(float(getattr(leg, "filled_qty", 0) or 0)) for leg in legs) - self._scaled_qty(
+            symbol, parent_coid, prefix)
         if qty <= 0:
             return True
         long = str(getattr(p.side, "value", p.side)).lower() == "buy"
@@ -260,6 +261,102 @@ class AlpacaBroker:
                 print(f"close lot {parent_coid} attempt {k + 1}/{tries} failed: {e}")
                 sleep(1.0 + k)
         return False
+
+    # ---------------------------------------------------------------- live scale-out (per setup, opt-in)
+    # A setup with `live_scale_out: true` banks part of a lot at +scale_out_r R and moves the rest to breakeven, the
+    # backtest engine's scale-out (simulate()). The lot stays ONE bracket: its stop/target legs are replaced down to the
+    # remaining quantity (stop -> the lot's own entry fill), then exactly the banked shares are sold by an order whose
+    # client id is lot_scale_coid(parent id), so reconcile pairs it to the lot (one journal row, exit_parts).
+    @staticmethod
+    def lot_scale_coid(parent_coid: str) -> str:
+        return f"{parent_coid}-s"
+
+    @staticmethod
+    def scale_split(qty: float, frac: float) -> int:
+        """Shares to bank: floor(qty x frac), at least 1 and leaving at least 1; 0 (no scale-out) when qty < 2."""
+        import math
+
+        q = int(round(float(qty)))
+        if q < 2:
+            return 0
+        return min(q - 1, max(1, int(math.floor(q * float(frac) + 1e-9))))
+
+    def _scaled_qty(self, symbol: str, parent_coid: str, prefix: str) -> float:
+        """Shares of the lot already sold by its own scale-out order (0 when it has none)."""
+        coid = self.lot_scale_coid(parent_coid)
+        try:
+            return sum(abs(float(getattr(o, "filled_qty", 0) or 0)) for o in self._mcf_parents(prefix, symbol)
+                       if o.client_order_id == coid)
+        except Exception:
+            return 0.0
+
+    def lot_fill(self, symbol: str, parent_coid: str, prefix: str) -> tuple[float, float] | None:
+        """(filled qty, average fill price) of a lot's entry once it is completely filled; None before that."""
+        p = self._lot_parent(symbol, parent_coid, prefix)
+        if p is None or self._state(p) in self.OPEN_STATES or getattr(p, "filled_avg_price", None) is None:
+            return None
+        q = abs(float(getattr(p, "filled_qty", 0) or 0))
+        return (q, float(p.filled_avg_price)) if q > 0 else None
+
+    def scale_out_lot(self, symbol: str, parent_coid: str, frac: float, prefix: str, tries: int = 4,
+                      sleep=None) -> dict:
+        """Bank `frac` of ONE lot and move its stop to breakeven. Idempotent (retried next poll after a failure):
+          1. replace the lot's open stop leg -> qty = remaining, stop = its entry fill (only ever tightened);
+             replace its open target leg -> qty = remaining (same price);
+          2. sell (buy for a short) the banked shares with client id lot_scale_coid(parent id): market in session.
+        Returns {"status": ...}: "scaled" (with qty, left, stop), "already" (its scale order exists), "closed" (a leg
+        filled / no working legs / never filled), "pending" (entry not filled yet), "skip" (qty < 2), "partial" (legs
+        reduced, banked order not accepted yet - retry)."""
+        import time as _t
+
+        from alpaca.trading.requests import ReplaceOrderRequest
+
+        sleep = sleep or _t.sleep
+        orders = self._mcf_parents(prefix, symbol)
+        p = next((o for o in orders if o.client_order_id == parent_coid), None)
+        if p is None:
+            raise RuntimeError(f"lot {parent_coid} not found")
+        coid = self.lot_scale_coid(parent_coid)
+        if any(o.client_order_id == coid for o in orders):
+            return {"status": "already"}
+        if self._state(p) in self.OPEN_STATES:
+            return {"status": "pending"}
+        filled = abs(float(getattr(p, "filled_qty", 0) or 0))
+        if filled <= 0 or getattr(p, "filled_avg_price", None) is None:
+            return {"status": "closed"}
+        legs = getattr(p, "legs", None) or []
+        if any(self._state(leg) == "filled" or abs(float(getattr(leg, "filled_qty", 0) or 0)) > 0 for leg in legs):
+            return {"status": "closed"}                   # its stop or target (partly) closed it first
+        live = [leg for leg in legs if self._state(leg) in self.OPEN_STATES]
+        if not live:
+            return {"status": "closed"}                   # legs cancelled (flatten / time stop in progress)
+        n = self.scale_split(filled, frac)
+        if n <= 0:
+            return {"status": "skip", "qty": filled}
+        rem = int(round(filled)) - n
+        long = str(getattr(p.side, "value", p.side)).lower() == "buy"
+        side = 1 if long else -1
+        be = round(float(p.filled_avg_price), 2)
+        for leg in sorted(live, key=lambda x: getattr(x, "stop_price", None) is None):   # stop leg first
+            kw = {}
+            lq = getattr(leg, "qty", None)
+            if lq is None or abs(abs(float(lq)) - rem) > 1e-9:
+                kw["qty"] = rem
+            sp = getattr(leg, "stop_price", None)
+            if sp is not None and side * (be - float(sp)) > 1e-9:
+                kw["stop_price"] = be
+            if kw:
+                self.client.replace_order_by_id(leg.id, ReplaceOrderRequest(**kw))
+        for k in range(tries):
+            try:
+                self._submit_lot_exit(symbol, n, long, coid)
+                return {"status": "scaled", "qty": n, "left": rem, "stop": be, "entry": float(p.filled_avg_price)}
+            except Exception as e:
+                if "client_order_id" in str(e).lower() and "unique" in str(e).lower():
+                    return {"status": "already"}
+                print(f"scale-out {parent_coid} attempt {k + 1}/{tries} failed: {e}")   # e.g. replace still pending
+                sleep(0.5 + 0.5 * k)
+        return {"status": "partial", "qty": n, "left": rem, "stop": be}
 
     def _submit_lot_exit(self, symbol: str, qty: float, long: bool, coid: str):
         from alpaca.trading.enums import OrderSide, TimeInForce

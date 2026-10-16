@@ -548,6 +548,10 @@ def build_strategies(cfg: dict) -> list[Strategy]:
     top_n = cfg.get("universe", {}).get("stocks_in_play_top_n", 20)
     exits = cfg.get("exits", {})
     for name, params in cfg.get("strategies", {}).items():
+        # live_scale_out (opt-in, 2026-10-16): the live runner scales out only setups that set it AND their own
+        # scale_out_r - never through the exits.scale_out_r default (which only the backtester applies to every setup).
+        if (params or {}).get("live_scale_out") and not (params or {}).get("scale_out_r"):
+            raise ValueError(f"{name}: live_scale_out needs the setup's own scale_out_r")
         params = {**exits, **params}
         if not params.pop("enabled", True):
             continue

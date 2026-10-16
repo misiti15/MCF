@@ -14,6 +14,8 @@ never closes more than N shares of lots. A lot whose legs are still working is o
 symbol (2026-10-13 autopsy: 9 lots were booked closed at a sibling lot's stop fill while their shares were held).
 A lot closed by more than one fill (a partly filled target, the remainder by stop or flatten) gets one row at the
 quantity-weighted exit price, so its P/L is exact; meta records the parts (`exit_parts=target:10@12.0,flatten:8@10.5`).
+A live scale-out (setup flag live_scale_out) is the lot's own `<parent client id>-s` order: part `scaleout`, reason
+`scaled+<remainder exit>` (a stop leg after a scale-out is `breakeven`), as the backtest engine names it.
 """
 
 from __future__ import annotations
@@ -50,7 +52,10 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
             continue
         lot = lots.get(rec.broker_order_id)
         if lot is not None and not lot["closed"] and lot["parts"]:
-            residual[rec.broker_order_id] = {"left": lot["left"], "qty": lot["qty"]}   # partly closed, rest held
+            # partly closed, rest held. An intentional scale-out is not a residual: the lot's reference quantity
+            # becomes what the scale-out left (live.lot_cap_ignore_residual_frac compares `left` with `qty`).
+            scaled = sum(q for q, _, _, why in lot["parts"] if why == "scaleout")
+            residual[rec.broker_order_id] = {"left": lot["left"], "qty": lot["qty"] - scaled, "scaled": scaled}
         if lot is None or not lot["closed"]:
             continue  # still open: a leg is working, or part of its quantity has no paired close yet
         entry, qty, parts = lot["entry"], lot["qty"], lot["parts"]
@@ -59,7 +64,10 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         by_reason: dict[str, float] = {}
         for q, _, _, why in parts:
             by_reason[why] = by_reason.get(why, 0.0) + q
-        reason = max(by_reason, key=by_reason.get)          # the exit that closed most of the lot
+        rest = {k: v for k, v in by_reason.items() if k != "scaleout"}
+        reason = max(rest or by_reason, key=(rest or by_reason).get)   # the exit that closed most of the lot
+        if "scaleout" in by_reason:                          # backtest naming: scaled+<how the remainder exited>
+            reason = "scaled+" + ("breakeven" if reason == "stop" else reason)
         stop_qty = by_reason.get("stop", 0.0)
         side = int(rec.side)
         risk = abs(entry - rec.stop) * qty
@@ -106,7 +114,7 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
             coid = str(getattr(o, "client_order_id", "") or "")
             rep = getattr(o, "replaces", None)
             pid = None
-            if coid.endswith("-x") and coid[:-2] in coid_parent:
+            if coid.endswith(("-x", "-s")) and coid[:-2] in coid_parent:
                 pid = coid_parent[coid[:-2]]
             elif rep is not None and str(rep) in owner:
                 pid = owner[str(rep)]
@@ -130,7 +138,7 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
                 continue
             coid = str(getattr(o, "client_order_id", "") or "")
             fq = _f(getattr(o, "filled_qty", None)) or (qty - sum(q for q, *_ in parts))   # fakes w/o filled_qty
-            why = "timestop" if coid.endswith("-x") else (
+            why = "timestop" if coid.endswith("-x") else "scaleout" if coid.endswith("-s") else (
                 "target" if _v(getattr(o, "order_type", "")) == "limit" else "stop")
             parts.append((fq, float(o.filled_avg_price), o.filled_at, why))
         parts.sort(key=lambda x: _ts(x[2]))
