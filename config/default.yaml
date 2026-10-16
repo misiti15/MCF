@@ -58,6 +58,13 @@ universe:
   min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
   earnings_blackout_days: 4         # owner 2026-10-07: no trades within 4 trading days of earnings (either side)
+  # 2026-10-16: no publicly traded partnerships. Selling a PTP (short sales too) makes the broker withhold
+  # 10% of gross proceeds (IRS 1446(f)): T2 lost -$374.72 (10-14) and -$178.63 (10-15) on ET/EPD this way.
+  # Primary rule: Alpaca asset attributes contain "ptp_*". The denylist applies only when attributes are
+  # unavailable. Commodity pools (USO, UNG, ...) are left off it: T1 sold UNG short on 10-12 with no withholding.
+  exclude_ptp: true
+  ptp_denylist: [ET, EPD, MPLX, PAA, WES, CQP, USAC, SUN, CAPL, BSM, DKL, GEL, NRP, KRP, DMLP, SPH, NGL, GLP,
+                 ENLC, NS, HEP]   # last three were acquired (kept so stale data cannot slip them in)
 
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
@@ -366,6 +373,24 @@ live:
   max_spread_bps: 30             # live SIP quote at decision time
   max_spread_risk_frac: 0.25     # spread must be <= 25% of the stop distance (else the spread eats R)
   max_participation: 0.10        # order <= 10% of the symbol's average 1-minute volume (last 5 bars)
+  # Pre-entry cross-check (owner 2026-10-16, outage plan step 3): skip a new entry ("crosscheck: ..." in the journal)
+  # when the signal's reference price is more than max_dev_pct from the live SIP quote mid, the quote is older than
+  # max_age_s, or the decision bar is older than max_bar_age_min. Set above everything seen in normal operation
+  # (journal 10-06..10-16, 3,380 submitted entries: max |ref - mid| 1.73%, decision bar <= 3.6 min old). 0 disables.
+  quote_crosscheck_max_dev_pct: 2.0
+  quote_crosscheck_max_age_s: 300
+  quote_crosscheck_max_bar_age_min: 10
+  # Outage escalation (owner 2026-10-16, steps 4-5; docs/OPERATIONS.md "Outage plan"). Minutes of CONTINUOUS stale data
+  # (health.data_stale): enter_pause_min = no new entries (= data_stale_min); protect_min = stops of open lots in profit
+  # (broker's last price) move to breakeven; flatten_min = flatten every MCF position (also after flatten_min with the
+  # broker API unreachable). Actions in health.outage_actions; no emails. watchdog_dead_min: the independent watchdog
+  # (.github/workflows/watchdog.yml) treats status.json older than this during the session as a dead trading run.
+  outage:
+    enabled: true
+    enter_pause_min: 5
+    protect_min: 15
+    flatten_min: 30
+    watchdog_dead_min: 15
   status_every_min: 2            # dashboard refresh cadence
   start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
   max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
@@ -382,6 +407,10 @@ live:
   # management and journal row; slots and max positions count lots. A setup stacks on itself only on a new
   # signal (same_setup_reentry below).
   max_lots_per_symbol: 3   # per-lot stacking, all accounts (owner 2026-10-13); 1 = one position per symbol
+  # Owner 2026-10-16 (option B, paper): a lot left with < 25% of its original quantity after a partial target fill no
+  # longer counts toward max_lots_per_symbol (it still counts for opposite-side, slots and per-setup caps). 0 = off.
+  # REVIEW BEFORE REAL FUNDS (docs/DECISIONS.md).
+  lot_cap_ignore_residual_frac: 0.25
   # Same-setup re-entry (owner 2026-10-14): "the same setup can not be used at the exact same moment in the exact same
   # ticker, but can be used in the same ticker the same day at a different time - if a setup is great, let it ride."
   # true: a setup may enter a symbol again on a NEW signal (a later decision bar than its previous entry there), as a

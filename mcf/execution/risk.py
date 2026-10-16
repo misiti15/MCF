@@ -16,6 +16,8 @@ class RiskState:
     # Per-lot stacking (live.max_lots_per_symbol > 1): symbol -> [(setup, side), ...] for each open or pending lot.
     # A lot is one setup's bracket on a symbol. Empty / max_lots 1 = one position per symbol (pre-2026-10-13 behaviour).
     lots: dict[str, list[tuple[str, int]]] = field(default_factory=dict)
+    # symbol -> how many of its lots are residuals (live.lot_cap_ignore_residual_frac): not counted toward the lot cap
+    residual: dict[str, int] = field(default_factory=dict)
     halted: bool = False
 
 
@@ -29,6 +31,9 @@ class RiskManager:
         # owner 2026-10-14: a setup may add a lot on a symbol it already holds when the signal is new (a later bar);
         # the runner guarantees "new" (never the same setup/symbol/bar twice). false = one lot per setup per symbol.
         self.same_setup_reentry = bool(live.get("same_setup_reentry", True))
+        # owner 2026-10-16 (option B, paper): a lot whose remaining quantity after a partial target fill is below this
+        # fraction of its original quantity no longer counts toward max_lots_per_symbol. 0 = every lot counts.
+        self.residual_frac = float(live.get("lot_cap_ignore_residual_frac", 0.0) or 0.0)
         self.state = RiskState()
 
     def open_lots(self) -> int:
@@ -69,7 +74,7 @@ class RiskManager:
                 return False, "already in symbol"       # holder unknown, or this setup already holds a lot here
             if any(side != sig.side for _, side in lots):
                 return False, "opposite side held"
-            if len(lots) >= self.max_lots:
+            if len(lots) - s.residual.get(sig.symbol, 0) >= self.max_lots:
                 return False, "lot cap"
         if sig.side * (ref_price - sig.stop) <= 0:
             return False, "price already through stop"

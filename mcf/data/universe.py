@@ -11,6 +11,12 @@ ETFs that cannot move enough to beat costs), active & tradable, major exchange, 
   extended  20d ADV >= extended_min_avg_dollar_volume  tradable only on days it is in play
             (opening rvol >= extended_min_rvol), at extended_slippage_per_share costs
 `max_symbols` (null = no cap) only trims by ADV if set. Records shortable / easy_to_borrow.
+
+PTPs (`universe.exclude_ptp`, 2026-10-16): publicly traded partnerships are dropped. On every sale of
+a PTP (short sales included) the broker withholds 10% of gross proceeds (IRS §1446(f)); Testing 2's
+-$374.72 on 10-14 and -$178.63 on 10-15 were exactly that (ET/EPD). An asset is a PTP when its Alpaca
+`attributes` contain a "ptp..." entry (ptp_no_exception / ptp_with_exception); when attributes are
+unavailable the static `universe.ptp_denylist` applies. Pinned symbols are not exempt.
 """
 
 from __future__ import annotations
@@ -33,6 +39,14 @@ def _clients():
     return TradingClient(k, s, paper=True), StockHistoricalDataClient(k, s)
 
 
+def is_ptp(attributes, symbol: str = "", denylist=()) -> bool:
+    """True when Alpaca's asset `attributes` flag a publicly traded partnership, or - only when attributes
+    are unavailable (None) - when the symbol is on the static denylist."""
+    if attributes is not None:
+        return any("ptp" in str(getattr(a, "value", a)).lower() for a in attributes)
+    return symbol.upper() in {d.upper() for d in denylist}
+
+
 def candidate_assets(tc) -> pd.DataFrame:
     from alpaca.trading.enums import AssetClass, AssetStatus
     from alpaca.trading.requests import GetAssetsRequest
@@ -46,7 +60,9 @@ def candidate_assets(tc) -> pd.DataFrame:
         if len(sym) == 5 and sym.endswith(BAD_SUFFIX):
             continue
         rows.append({"symbol": sym, "name": a.name, "exchange": ex, "shortable": bool(a.shortable),
-                     "easy_to_borrow": bool(a.easy_to_borrow), "marginable": bool(a.marginable)})
+                     "easy_to_borrow": bool(a.easy_to_borrow), "marginable": bool(a.marginable),
+                     "attributes": None if getattr(a, "attributes", None) is None
+                     else [str(getattr(x, "value", x)) for x in a.attributes]})
     return pd.DataFrame(rows)
 
 
@@ -78,10 +94,20 @@ def daily_stats(dc, symbols: list[str], days: int = 30, batch: int = 200) -> pd.
     return st
 
 
+def drop_ptp(assets: pd.DataFrame, u: dict) -> pd.DataFrame:
+    """Remove publicly traded partnerships (see module doc) when `universe.exclude_ptp` is on (default)."""
+    if assets.empty or not u.get("exclude_ptp", True):
+        return assets
+    deny = u.get("ptp_denylist") or []
+    attrs = assets["attributes"] if "attributes" in assets else pd.Series([None] * len(assets), index=assets.index)
+    ptp = [is_ptp(a if isinstance(a, (list, tuple)) else None, s, deny) for a, s in zip(attrs, assets["symbol"])]
+    return assets[~pd.Series(ptp, index=assets.index)]
+
+
 def build_universe(cfg: dict, out_path: str = "data/universe.csv") -> pd.DataFrame:
     u, c = cfg["universe"], cfg["costs"]
     tc, dc = _clients()
-    assets = candidate_assets(tc)
+    assets = drop_ptp(candidate_assets(tc), u).drop(columns=["attributes"], errors="ignore")
     stats = daily_stats(dc, assets["symbol"].tolist())
     df = assets.merge(stats, on="symbol", how="inner")
     from ..backtest.engine import pinned_symbols
