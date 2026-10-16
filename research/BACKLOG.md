@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 419 · coded: 80 · failed: 222 · configurations tried (all lineages): 23303634
+Total ideas: 426 · coded: 80 · failed: 223 · configurations tried (all lineages): 23303718
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -44,6 +44,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | finalist | sw-w3-connors-rsi3-daily | Daily: Connors long RSI(3)<5 above SMA200, buy next open, exit first close > SMA5 (max 10d) | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – | – |
 | finalist | sw-w3-rev5-k20-daily | Daily: buy bottom-decile 5-day losers at the close, hold 20 sessions | swarm 2026-10-10 W3 daily study (research/swarm1010/w3_daily/NOTES.md) | – | – | – | – | – | – |
 | finalist | bdi1013-splitgate-div050-shorts | Skip new shorts while QQQ fromOpen - IWM fromOpen >= 0.50% (large-cap / small-cap divergence gate), Testing 1 short book | BDI 2026-10-13 (research/bdi/bdi1013/NOTES.md), from the 2026-10-13 Testing 1 short losses on a split tape (QQQ +0.56%, IWM -0.46%) | – | – | – | – | – | – |
+| finalist | bdi1016-dayclass-gate-rw7 | RW7-gapdn-bounce-early-short-FD with the day-class gate K3 k0.50 at 10:00 (no new short from 10:00 on a 5-of-6-vote trend-up day) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
+| finalist | bdi1016-dayclass-gate-cwt14pdh | CWT14-failbrk-pdh-p05-lowvol-short with the day-class gate K1 k0.25 at 10:30 (no new short from 10:30 when SPY, QQQ and IWM are all >= +0.25% from the open) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-flowsell-rsi65-gapdn-volume | RW lineage near-miss: buyPressure<-0.35 & RSI14>65 & gap<0, 09:50-11:00 short (high volume) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-ns1-plateau | NS1 (rsi_x40dn+up>2%+rsi5>=80 am long t05s1) fails plateau | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
 | rework | bdi-rw-nm-sma50-flush-long | Oversold SMA50 flush long, 10:30-13:00 (x_sma50_dn & down>1% & RSI14<=30) | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
@@ -199,6 +201,10 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1015-idxdip-late-low-trigger | Index dip-bounce rework: require the trigger to follow a new running low printed inside 09:50-10:05 (or entry_from 09:55) | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1016-trend-day-long-reversal-veto | Reversal longs (T2 CWT14 failbrk orl/pdl longs, T1 heat_fade_long(-FD), ST1-ordn-long): no new long while SPY is below its open AND below VWAP AND made a new session low in the last 30 min | nightly-2026-10-16 (research/bdi/nightly1016/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1016-primary-one-lot-per-symbol | Primary: at most one open lot per symbol across all setups (skip a new lot while any MCF lot on that symbol is open) | nightly-2026-10-16 (research/bdi/nightly1016/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1016-dayclass-trade-with-trend | Allow-list form of the day class: a long setup trades only on trend-up days and a short setup only on trend-down days (from T); chop days off | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1016-dayclass-late-decision | Day-class gate rework: decision at 11:00 / 12:00 (the 10-16 trend only became clear after 11:00; 10-15 reversal never classifiable by 10:30) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1016-cwt14pdh-reentry-after-stop | CWT14 pdh failed-breakout shorts: one re-entry when price trades back below the entry within 60 min after a stop | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1016-rw7-late-exit | RW7-gapdn-bounce-early-short-FD: per-setup late exit (flat at 14:30 / 15:00 instead of 15:55) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -421,6 +427,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1015-CWT14-failbrk-pdl-p05-long-exec | CWT14-failbrk-pdl-p05-long: execution variants (time stop, breakeven, scale-out, tighter stop, limit/delayed entry, flow filter, loser-pattern opposites) | BDI top-5 execution tune 2026-10-15 (research/bdi/top5_1015/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1015-heat_fade_short-FD-exec | heat_fade_short-FD: execution variants (time stop, breakeven, scale-out, tighter stop, limit/delayed entry, flow filter, loser-pattern opposites) | BDI top-5 execution tune 2026-10-15 (research/bdi/top5_1015/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1015-CWT12-coil-k4-long-exec | CWT12-coil-k4-long: execution variants (time stop, breakeven, scale-out, tighter stop, limit/delayed entry, flow filter, loser-pattern opposites) | BDI top-5 execution tune 2026-10-15 (research/bdi/top5_1015/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1016-dayclass-direction-gate | Early-session day-class direction gate: classify the day at 10:00 / 10:30 (K1 SPY+QQQ+IWM fromOpen all beyond +-k; K2 SPY fromOpen + breadth; K3 5-of-6 votes incl. prior close and SPY 09:30-09:45 OR break) as trend-down / trend-up / chop; from T on block longs on trend-down and shorts on trend-up; chop ungated | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
