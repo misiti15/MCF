@@ -185,7 +185,7 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-long.py
     min_adv: 95000000
     window: [950, 1500]
-    scale_out_r: null
+    scale_out_r: 0.25   # owner 2026-10-16: bank half at +0.25R, rest to breakeven (research/bdi/top5_1015 X06)
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vany-sidelong-t05s1-full", fill: false}
   # Failed Prior-Day-High Break Short (low volume): CWT package B B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full (id 136); open history n 19479, exp -0.0890R, t -9.45, 45.73/day; verdict retire
   CWT14-failbrk-pdh-p10-lowvol-short:
@@ -311,7 +311,7 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
     min_adv: 95000000
     window: [950, 1500]
-    scale_out_r: null
+    scale_out_r: 0.25   # owner 2026-10-16: bank half at +0.25R, rest to breakeven (research/bdi/top5_1015 X06)
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full", fill: true}
   # Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: CWT package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179); open history n 39989, exp -0.0906R, t -7.05, 93.87/day; verdict retire
   CWT14-failbrk-orl-p10-long:
@@ -329,7 +329,7 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py
     min_adv: 95000000
     window: [950, 1500]
-    scale_out_r: null
+    scale_out_r: 0.25   # owner 2026-10-16: bank half at +0.25R, rest to breakeven (research/bdi/top5_1015 X06)
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vany-sidelong-t05s1-full", fill: true}
   # Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]: CWT package B B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full (id 142); open history n 20080, exp -0.0946R, t -8.85, 47.14/day; verdict retire
   CWT14-failbrk-pdl-p10-lowvol-long:
