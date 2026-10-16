@@ -54,16 +54,16 @@ def test_outage_pauses_entries_flags_health_and_alerts_once(tmp_path, monkeypatc
     st = r.health["data_stale"]
     assert st is not None and st["last_bar"].startswith("2026-10-13 12:56") and st["fresh"] == 0 and st["of"] == 3
     assert st["since"].startswith("2026-10-13 13:05") and st["polls"] == 3
-    assert len(alerts) == 1 and len(c.orders) == 1                 # one alert per outage, no entries on stale bars
+    assert len(alerts) == 0 and len(c.orders) == 1                 # no email alert (owner 2026-10-16), no entries on stale bars
     assert r.journal.signals(r.run_id).query("status == 'skipped'").empty   # nothing marked/journaled while stale
     _poll(r, monkeypatch, "14:12", "14:11")                       # data resumes: entries evaluated again
     assert r.health["data_stale"] is None and len(r.health["data_outages"]) == 1
     o = r.health["data_outages"][0]
     assert o["minutes"] == 67.0 and o["until"].startswith("2026-10-13 14:12")
-    assert len(c.orders) == 2 and len(alerts) == 1
+    assert len(c.orders) == 2 and len(alerts) == 0
     for hhmm in ("14:20", "14:25"):                               # a second outage alerts again, once
         _poll(r, monkeypatch, hhmm, "14:11")
-    assert len(alerts) == 2
+    assert len(alerts) == 0
 
 
 def test_no_stale_flag_right_after_open_or_with_most_symbols_fresh(tmp_path, monkeypatch):

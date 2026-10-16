@@ -511,8 +511,7 @@ class PaperRunner:
             msg = (f"DATA STALE: {fresh} of {n} symbols have a bar in the last {self.stale_min} min "
                    f"(newest bar {cur['last_bar'] or 'none'}, now {now:%H:%M:%S} ET). New entries paused; "
                    "open lots keep their broker-side stops and targets.")
-            print(msg)
-            self._alert(f"MCF {COID_PREFIX.rstrip('-')}: market data stale since {now:%H:%M} ET", msg)
+            print(msg)   # no email alert (owner 2026-10-16); health.data_stale + dashboard only
         return True
 
     def _alert(self, subject: str, text: str):
