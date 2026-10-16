@@ -24,6 +24,7 @@ Dated record of what the owner decided and how MCF implements it. Newest first.
 | Watchdog mode (owner 2026-10-16) | The independent watchdog runs in dry mode on paper. | **Before live:** set the repository variable `MCF_WATCHDOG_MODE=act` (watchdog.yml), after reviewing its dry-run job summaries. |
 | Partial-fill lot-cap rule (owner 2026-10-16, option B) | On paper, a lot left with < 25% of its original quantity after a partial target fill no longer counts toward `live.max_lots_per_symbol`. | **Must be reviewed before live funds** (`live.lot_cap_ignore_residual_frac`, ledger 2026-10-16-lot-cap-residual): with real money a residual lot is still real exposure on the symbol. |
 | Taxes | Revisit tax implications before any real-funded account. | **Open item, must be resolved before funding.** Points to take to a CPA: nearly all MCF gains are short-term (held 1 year or less, taxed as ordinary income); wash-sale rule with constant re-trading; trader tax status and the 475(f) mark-to-market election; a reserve (about 30-35% of realized gains) set aside before the skim; whether part goes in an IRA (margin and shorting limits). |
+| PTP withholding | (Found 2026-10-16) Selling a publicly traded partnership (ET, EPD, ...; shorts too) makes the broker withhold 10% of gross proceeds (IRS §1446(f)). | Cash leaves the account but is generally a tax credit recoverable at filing, not a trading loss: **CPA list**. MCF now excludes PTPs from the universe (`universe.exclude_ptp`). |
 
 ## 2026-10-06: fourth round (research swarm, heat score, daily improvement)
 

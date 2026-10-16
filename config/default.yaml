@@ -58,6 +58,13 @@ universe:
   min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
   stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
   earnings_blackout_days: 4         # owner 2026-10-07: no trades within 4 trading days of earnings (either side)
+  # 2026-10-16: no publicly traded partnerships. Selling a PTP (short sales too) makes the broker withhold
+  # 10% of gross proceeds (IRS 1446(f)): T2 lost -$374.72 (10-14) and -$178.63 (10-15) on ET/EPD this way.
+  # Primary rule: Alpaca asset attributes contain "ptp_*". The denylist applies only when attributes are
+  # unavailable. Commodity pools (USO, UNG, ...) are left off it: T1 sold UNG short on 10-12 with no withholding.
+  exclude_ptp: true
+  ptp_denylist: [ET, EPD, MPLX, PAA, WES, CQP, USAC, SUN, CAPL, BSM, DKL, GEL, NRP, KRP, DMLP, SPH, NGL, GLP,
+                 ENLC, NS, HEP]   # last three were acquired (kept so stale data cannot slip them in)
 
 strategies:
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
