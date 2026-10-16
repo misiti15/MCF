@@ -1,0 +1,60 @@
+{
+  "_comment": "Topic tree. 'aliases' feed the free-text matcher. 'soon' = shown in the picker but has no questions yet.",
+  "topics": [
+    {"id": "sports", "name": "Sports", "aliases": ["sport", "athletics"], "kids": [
+      {"id": "baseball", "name": "Baseball", "aliases": ["mlb baseball"], "kids": [
+        {"id": "mlb", "name": "MLB", "aliases": ["major league baseball", "major leagues"], "kids": [
+          {"id": "reds", "name": "Cincinnati Reds", "aliases": ["reds", "cincinnati reds", "redlegs", "cincy reds", "the reds"], "kids": [
+            {"id": "brm", "name": "Big Red Machine (1970-76)", "aliases": ["big red machine", "1975 reds", "1976 reds", "sparky anderson", "johnny bench", "joe morgan"]},
+            {"id": "reds-history", "name": "Red Stockings & early years", "aliases": ["red stockings", "1869 red stockings", "cincinnati red stockings", "crosley field"]},
+            {"id": "reds-90", "name": "1990 champions", "aliases": ["1990 reds", "nasty boys", "wire to wire", "1990 world series"]},
+            {"id": "reds-records", "name": "Records & oddities", "aliases": ["pete rose", "vander meer", "reds records"]}
+          ]},
+          {"id": "yankees", "name": "New York Yankees", "aliases": ["yankees", "yanks", "bronx bombers"], "soon": true},
+          {"id": "cubs", "name": "Chicago Cubs", "aliases": ["cubs", "cubbies"], "soon": true}
+        ]},
+        {"id": "milb", "name": "Minor leagues", "aliases": ["minor league baseball", "milb"], "soon": true}
+      ]},
+      {"id": "jerseys", "name": "Uniforms & jerseys", "aliases": ["jerseys", "uniforms", "sports jerseys", "jersey numbers", "us professional sports jerseys", "pro sports jerseys"], "kids": [
+        {"id": "retired", "name": "Retired numbers", "aliases": ["retired numbers", "retired jerseys", "jersey retirement"]},
+        {"id": "jersey-odd", "name": "Jersey oddities", "aliases": ["weird jerseys", "jersey stories", "jersey oddities"]},
+        {"id": "throwbacks", "name": "Throwbacks & alternates", "aliases": ["throwbacks", "alternate jerseys", "city edition"], "soon": true}
+      ]},
+      {"id": "football", "name": "Football", "aliases": ["nfl", "american football"], "soon": true},
+      {"id": "basketball", "name": "Basketball", "aliases": ["nba", "hoops"], "soon": true},
+      {"id": "hockey", "name": "Hockey", "aliases": ["nhl", "ice hockey"], "soon": true}
+    ]},
+    {"id": "colleges", "name": "Colleges", "aliases": ["college", "universities", "university", "college sports"], "kids": [
+      {"id": "marshall", "name": "Marshall University", "aliases": ["marshall", "marshall university", "thundering herd", "the herd", "huntington wv", "mu"], "kids": [
+        {"id": "herd-fb", "name": "Thundering Herd athletics", "aliases": ["herd football", "marshall football", "thundering herd football", "marshall athletics", "marshall basketball"]},
+        {"id": "crash-1970", "name": "1970 crash & rebuild", "aliases": ["we are marshall", "marshall plane crash", "flight 932", "southern airways 932", "1970 crash"]},
+        {"id": "mu-campus", "name": "Campus & history", "aliases": ["marshall campus", "marshall history", "huntington"]}
+      ]},
+      {"id": "osu", "name": "Ohio State", "aliases": ["ohio state", "buckeyes", "osu"], "soon": true},
+      {"id": "wvu", "name": "West Virginia University", "aliases": ["wvu", "mountaineers", "west virginia university"], "soon": true}
+    ]},
+    {"id": "cars", "name": "Cars", "aliases": ["car", "automobiles", "autos", "car guy", "vehicles"], "kids": [
+      {"id": "exotic", "name": "Exotic & supercars", "aliases": ["exotic cars", "supercars", "hypercars", "exotics", "sports cars"], "kids": [
+        {"id": "ferrari", "name": "Ferrari", "aliases": ["ferrari", "enzo ferrari", "prancing horse"]},
+        {"id": "lambo", "name": "Lamborghini", "aliases": ["lamborghini", "lambo", "lambos"]},
+        {"id": "koenigsegg", "name": "Koenigsegg", "aliases": ["koenigsegg", "konigsegg"]},
+        {"id": "mclaren", "name": "McLaren", "aliases": ["mclaren", "mclaren f1"]},
+        {"id": "bugatti", "name": "Bugatti", "aliases": ["bugatti", "veyron", "chiron"]}
+      ]},
+      {"id": "muscle", "name": "Muscle cars", "aliases": ["muscle cars", "mustang", "camaro", "corvette"], "soon": true},
+      {"id": "f1", "name": "Formula 1", "aliases": ["formula 1", "formula one", "f1 racing"], "soon": true}
+    ]},
+    {"id": "movies", "name": "Movies & TV", "aliases": ["movies", "film", "tv", "television"], "soon": true},
+    {"id": "music", "name": "Music", "aliases": ["songs", "bands"], "soon": true},
+    {"id": "history", "name": "History", "aliases": ["historical"], "soon": true},
+    {"id": "science", "name": "Science", "aliases": ["space", "nature"], "soon": true},
+    {"id": "food", "name": "Food & drink", "aliases": ["food", "cooking", "drinks"], "soon": true}
+  ],
+  "packs": [
+    {"id": "cincy-fan", "name": "Cincinnati sports fan", "blurb": "Reds history, the Big Red Machine, 1990.", "topics": ["reds"]},
+    {"id": "herd-nation", "name": "Herd nation", "blurb": "Marshall athletics, campus and the 1970 story.", "topics": ["marshall"]},
+    {"id": "car-person", "name": "Car person", "blurb": "Ferrari, Lamborghini, Koenigsegg, McLaren, Bugatti.", "topics": ["exotic"]},
+    {"id": "jersey-nerd", "name": "Jersey nerd", "blurb": "Retired numbers and the stories behind them.", "topics": ["jerseys"]},
+    {"id": "the-works", "name": "A little of everything", "blurb": "Every topic in the library.", "topics": ["sports", "colleges", "cars"]}
+  ]
+}
