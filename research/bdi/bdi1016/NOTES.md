@@ -93,7 +93,7 @@ Bars: study max(1.5, sqrt(2 ln 84)) = **2.98**; market-context-gate lineage 2,36
 **How it differs from the earlier failures.** ix-gate (912), bdi-rg-g1..g5 (1,052), splitgate (370), the
 CWT14/LIQ index-confirm and short-index-up vetoes all re-tested one index sign at every entry bar, splitting every
 session in two. Here the class is fixed once at T, needs several features to agree, and has a chop class that gates
-nothing (chop = 78-94% of sessions). The per-bar SPY-vs-VWAP / split-tape / SPY-up rules were not re-run.
+nothing (chop = 69-94% of sessions). The per-bar SPY-vs-VWAP / split-tape / SPY-up rules were not re-run.
 
 ### B1. Failures first
 - **Pooled 6-setup book: 0 of 12.** Delta -0.004..+0.002R on -0.081R (n 277,461).
