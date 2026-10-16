@@ -43,10 +43,11 @@ _COID_RE = re.compile(r"^(?P<setup>.+)-(?P<symbol>[^-]+)-(?P<day>\d{8})(?:-(?P<h
 
 
 def parse_coid(coid: str | None, prefix: str | None = None):
-    """(setup, symbol, YYYYMMDD, HHMM or None) of an MCF entry id; None for exits (-x), flatten closes, other ids."""
+    """(setup, symbol, YYYYMMDD, HHMM or None) of an MCF entry id; None for exits (-x, scale-out -s), flatten closes,
+    other ids."""
     prefix = COID_PREFIX if prefix is None else prefix
     coid = coid or ""
-    if not coid.startswith(prefix) or coid.endswith("-x"):
+    if not coid.startswith(prefix) or coid.endswith(("-x", "-s")):
         return None
     m = _COID_RE.match(coid[len(prefix):])
     if m is None or m["setup"].startswith("flatten"):
@@ -95,6 +96,11 @@ class PaperRunner:
         # trade-management state (time stop / breakeven / trail): keyed by symbol when max_lots_per_symbol is 1, by lot
         # (symbol, lot id) when lots stack, so a stop move or time-stop exit only ever touches that lot's own orders.
         self.managed: dict = {}
+        # Live scale-out (opt-in per setup: `live_scale_out: true` plus the setup's own scale_out_r; 2026-10-16). Keyed by
+        # (symbol, lot id): {side, stop, target, r, frac, t0, entry, risk, strategy, tries}. Mirrors simulate(): bank
+        # scale_out_frac at +scale_out_r R from the entry fill, the rest's stop to breakeven. Setups without the flag
+        # never scale out live, whatever exits.scale_out_r says (that default only applies to backtests).
+        self.scaling: dict[tuple[str, str], dict] = {}
         # Per-lot stacking (owner 2026-10-13, live.max_lots_per_symbol; 1 = one position per symbol, the old behaviour).
         # symbol -> lot id (the entry's client order id) -> {strategy, side, qty, order_id, coid}: every open or pending
         # lot (one bracket). Keyed by client id, not setup: one setup can hold several lots on a symbol (re-entry).
@@ -183,6 +189,7 @@ class PaperRunner:
             self._restore_from_broker(today)
             self._restore_lots()
             self._restore_management()
+            self._restore_scaling()
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
             self.risk.state.realized_r = float(done.loc[done.date == str(today), "r_multiple"].sum())
@@ -487,6 +494,143 @@ class PaperRunner:
                 except Exception as e:
                     print(f"move stop {sym} failed: {e}")
 
+    # ---------------------------------------------------------------- live scale-out (opt-in per setup)
+    def _strategy(self, name):
+        return next((s for s in self.strategies if getattr(s, "name", None) == name), None)
+
+    def _live_scale_out(self, sig) -> bool:
+        st = self._strategy(sig.strategy)
+        return bool((getattr(st, "params", None) or {}).get("live_scale_out")) and bool(sig.scale_out_r)
+
+    @staticmethod
+    def _scale_state(side, stop, target, r, frac, t0, strategy) -> dict:
+        return {"side": int(side), "stop": float(stop), "target": None if target is None else float(target),
+                "r": float(r), "frac": float(frac or 0.5), "t0": t0, "entry": None, "risk": None,
+                "strategy": strategy, "tries": 0}
+
+    SCALE_TRIES = 5
+
+    def scale_outs(self, now: pd.Timestamp, bars: dict):
+        """Live scale-out, bar for bar as simulate() does it. Over the completed 1-minute bars since the entry (same
+        window as manage()), in order: a bar that touches the lot's stop or its target ends it (the stop/target wins a
+        bar that also touches the scale level - the broker leg closes the whole lot); the first bar whose high (long) /
+        low (short) reaches entry + side x scale_out_r x R (entry = the lot's own fill, R = |entry - stop|) triggers:
+        the broker replaces the lot's legs down to the remaining shares, stop -> entry, and sells the banked shares
+        (floor(qty x scale_out_frac); a lot under 2 shares is never scaled). Stop moves of manage() apply as usual."""
+        if not self.scaling or self.dry_run:
+            return
+        for key, s in list(self.scaling.items()):
+            sym, coid = key
+            if coid not in self.lots.get(sym, {}):
+                self.scaling.pop(key)                     # released (closed) lot
+                continue
+            try:
+                if s["entry"] is None:
+                    px = self._fill_px.get(str(self.lots[sym][coid].get("order_id")))
+                    if px is None:
+                        f = self.broker.lot_fill(sym, coid, COID_PREFIX)
+                        if f is None:
+                            continue                      # entry not filled yet
+                        px = f[1]
+                    s["entry"] = float(px)
+                    s["risk"] = s["side"] * (s["entry"] - s["stop"])
+                    if s["risk"] <= 0:
+                        print(f"scale-out {sym}/{s['strategy']}: no risk (entry {s['entry']} stop {s['stop']}); off")
+                        self.scaling.pop(key)
+                        continue
+            except Exception as e:
+                print(f"scale-out {sym}/{s['strategy']}: fill lookup failed: {e}")
+                continue
+            b = bars.get(sym)
+            if b is None or b.empty:
+                continue
+            since = b[b.index >= s["t0"].floor("1min")]
+            m = self.managed.get(key) or (self.managed.get(sym) if self.max_lots <= 1 else None)
+            stop = float(m["stop"]) if m else s["stop"]
+            verdict = self._scale_verdict(since, s, stop)
+            if verdict is None:
+                continue
+            if verdict != "scale":
+                self.scaling.pop(key)                     # the stop or target took the bar first: no scale-out
+                continue
+            self._do_scale(key, s, m)
+
+    @staticmethod
+    def _scale_verdict(since: pd.DataFrame, s: dict, stop: float) -> str | None:
+        side = s["side"]
+        level = s["entry"] + side * s["r"] * s["risk"]
+        for hi, lo in zip(since["high"].to_numpy(), since["low"].to_numpy()):
+            if (lo <= stop) if side == 1 else (hi >= stop):
+                return "stop"
+            if s["target"] is not None and ((hi >= s["target"]) if side == 1 else (lo <= s["target"])):
+                return "target"
+            if side * ((hi if side == 1 else lo) - level) >= 0:
+                return "scale"
+        return None
+
+    def _do_scale(self, key, s, m):
+        sym, coid = key
+        try:
+            res = self.broker.scale_out_lot(sym, coid, s["frac"], COID_PREFIX)
+        except Exception as e:
+            res = {"status": "error", "error": str(e)[:200]}
+        st = res.get("status")
+        if st in ("scaled", "already"):
+            self.scaling.pop(key, None)
+            be = float(res.get("stop") or round(s["entry"], 2))
+            if m is not None:                             # trade management never moves the stop back below breakeven
+                m["stop"] = max(m["stop"], be) if s["side"] == 1 else min(m["stop"], be)
+            lot = self.lots.get(sym, {}).get(coid)
+            if lot is not None and st == "scaled":
+                lot["scaled"] = res.get("qty")
+            if st == "scaled":
+                self.health.setdefault("scale_outs", []).append(
+                    {"symbol": sym, "strategy": s["strategy"], "coid": coid, "qty": res.get("qty"),
+                     "left": res.get("left"), "stop": be, "at": str(self._now)})
+                print(f"SCALE-OUT {sym}/{s['strategy']}: banked {res.get('qty')} at +{s['r']:g}R, "
+                      f"{res.get('left')} left, stop -> {be:.2f}")
+            return
+        if st in ("closed", "skip"):
+            self.scaling.pop(key, None)
+            print(f"scale-out {sym}/{s['strategy']}: {st} {res.get('qty', '')}".rstrip())
+            return
+        if st == "pending":
+            return
+        s["tries"] += 1
+        print(f"scale-out {sym}/{s['strategy']} {st} (try {s['tries']}/{self.SCALE_TRIES}): {res.get('error', '')}")
+        if s["tries"] >= self.SCALE_TRIES:
+            self.scaling.pop(key, None)                   # the lot keeps its bracket (and any reduced legs) unchanged
+            msg = (f"{sym} {s['strategy']} lot {coid}: scale-out not completed after {s['tries']} tries ({st}). "
+                   "The lot keeps its broker-side stop; the 15:55 flatten closes whatever it still holds.")
+            print(f"SCALE-OUT FAILED: {msg}")             # no email (owner 2026-10-16: no mid-session alerts)
+            self.health.setdefault("scale_out_failed", []).append(msg)
+
+    def _restore_scaling(self):
+        """Re-arm live scale-out for open lots of flagged setups after a restart (a lot already scaled is found by its
+        -s order at the broker and simply dropped)."""
+        try:
+            orders = self.journal.open_orders(self.run_id)
+        except Exception as e:
+            print(f"scale-out restore skipped: {e}")
+            return
+        oids = orders.broker_order_id.astype(str)
+        for sym, lots in self.lots.items():
+            for lot_id, lot in lots.items():
+                st = self._strategy(lot.get("strategy"))
+                params = getattr(st, "params", None) or {}
+                if not params.get("live_scale_out") or not params.get("scale_out_r"):
+                    continue
+                rec = orders[oids == str(lot.get("order_id"))].tail(1)
+                if rec.empty:
+                    continue
+                rec = rec.iloc[0]
+                tgt = None if rec.target is None or pd.isna(rec.target) else float(rec.target)
+                self.scaling[(sym, lot.get("coid") or lot_id)] = self._scale_state(
+                    int(rec.side), float(rec.stop), tgt, params["scale_out_r"], params.get("scale_out_frac", 0.5),
+                    pd.Timestamp(rec.created_at).tz_convert(NY), lot.get("strategy"))
+        if self.scaling:
+            print(f"re-armed live scale-out for {len(self.scaling)} open lots")
+
     def _lot_time_stop(self, key, m, mins):
         """Time stop for ONE lot: cancel its own legs and close exactly its quantity; other lots keep theirs."""
         sym, lot_id = key
@@ -640,6 +784,7 @@ class PaperRunner:
         self._now = now
         bars = self.fetch(now)
         self.manage(now, bars)
+        self.scale_outs(now, bars)
         stale = self._check_data(now, bars)
         self._escalate(now, stale)
         if stale:
@@ -901,6 +1046,9 @@ class PaperRunner:
                 self.managed[sig.symbol] = m
             else:
                 self.managed[(sig.symbol, coid)] = {**m, "coid": coid, "strategy": sig.strategy}
+        if self._live_scale_out(sig):
+            self.scaling[(sig.symbol, coid)] = self._scale_state(sig.side, sig.stop, sig.target, sig.scale_out_r,
+                                                                 sig.scale_out_frac, now, sig.strategy)
         self._log(sig, "submitted", "ok", px, now, info, qty, str(o.id))
         print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}")
 
@@ -1013,9 +1161,10 @@ class PaperRunner:
             for lot in lots.values():
                 r = residual.get(str(lot.get("order_id")))
                 lot["left"] = r["left"] if r else None
-                lot["orig_qty"] = r["qty"] if r else None
+                lot["orig_qty"] = r["qty"] if r else None     # after a scale-out: what the scale-out left
                 if r:
-                    out.append({"symbol": sym, "strategy": lot.get("strategy"), "left": r["left"], "qty": r["qty"]})
+                    out.append({"symbol": sym, "strategy": lot.get("strategy"), "left": r["left"], "qty": r["qty"],
+                                **({"scaled_out": r["scaled"]} if r.get("scaled") else {})})
         self.health["partial_lots"] = out
 
     def _release_closed_lots(self):
