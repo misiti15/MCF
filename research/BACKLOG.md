@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 417 · coded: 80 · failed: 222 · configurations tried (all lineages): 23303634
+Total ideas: 419 · coded: 80 · failed: 222 · configurations tried (all lineages): 23303634
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -197,6 +197,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1015-idxdip-gapdn-earlylow | Index gap-down + early low bounce: index opens >= 0.3/0.5% below the prior close and prints a low >= 0.10% below the open by 09:45/09:55; 20% recovery of (prior close - low) 09:50-10:05; trail/hold; 3x pick or TQQQ | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1015-idxdip-pc-spy100 | Index dip-bounce, SPY >= 1.0% below the PRIOR CLOSE by 09:45, 3x pick, trail or hold | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1015-idxdip-late-low-trigger | Index dip-bounce rework: require the trigger to follow a new running low printed inside 09:50-10:05 (or entry_from 09:55) | BDI 2026-10-15 (research/bdi/bdi1015/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1016-trend-day-long-reversal-veto | Reversal longs (T2 CWT14 failbrk orl/pdl longs, T1 heat_fade_long(-FD), ST1-ordn-long): no new long while SPY is below its open AND below VWAP AND made a new session low in the last 30 min | nightly-2026-10-16 (research/bdi/nightly1016/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1016-primary-one-lot-per-symbol | Primary: at most one open lot per symbol across all setups (skip a new lot while any MCF lot on that symbol is open) | nightly-2026-10-16 (research/bdi/nightly1016/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
