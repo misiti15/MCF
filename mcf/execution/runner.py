@@ -30,6 +30,7 @@ from ..data.bars import TZ, normalize, rth
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
 from .alpaca_broker import AlpacaBroker
+from .outage import outage_cfg, protect_open_lots
 from .risk import RiskManager
 
 NY = TZ
@@ -119,13 +120,30 @@ class PaperRunner:
         self.bars: dict[str, pd.DataFrame] = {}
         self.last_fetch: pd.Timestamp | None = None
         self.health = {"polls": 0, "last_poll_s": None, "symbols_last_bar": 0, "last_bar": None,
-                       "data_stale": None, "data_outages": []}
+                       "data_stale": None, "data_outages": [], "outage_actions": []}
         # Stale-data guard (2026-10-15: SIP bars missing for all 389 symbols 12:57-14:10 ET, symbols_last_bar 0 for
         # ~70 polls, no alert). When fewer than data_stale_fresh_frac of the symbols have a bar in the last
         # data_stale_min minutes during the session, no new entries are evaluated (signals would be computed on old
         # bars); open lots keep their broker-side brackets and trade management unchanged. One alert per outage.
-        self.stale_min = int(self.live.get("data_stale_min", 5))
+        # Outage escalation (owner 2026-10-16, live.outage; docs/OPERATIONS.md "Outage plan"): entries pause at
+        # enter_pause_min of stale data (= data_stale_min when that is not set), after protect_min of CONTINUOUS
+        # staleness the stops of open lots in profit move to breakeven, after flatten_min (or flatten_min with the broker
+        # unreachable) every MCF position is flattened. Each step once per outage, logged in health.outage_actions.
+        self.outage = outage_cfg(self.live)
+        self.stale_min = int(self.live.get("data_stale_min", self.outage["enter_pause_min"]))
         self.stale_fresh_frac = float(self.live.get("data_stale_fresh_frac", 0.05))
+        self._esc: dict | None = None                 # current stale-data outage: {"since", "done": set of steps}
+        self._down: dict | None = None                # broker unreachable: {"since", "flattened"}
+        # Pre-entry cross-check (owner 2026-10-16): the signal's reference price must agree with the live quote mid
+        # within quote_crosscheck_max_dev_pct, the quote must be at most quote_crosscheck_max_age_s old and the bar the
+        # signal was computed on at most quote_crosscheck_max_bar_age_min old. 0 / null disables a check. The defaults
+        # (2.0% / 300 s / 10 min) are above everything seen in normal operation (journal 10-06..10-16: max |ref - mid|
+        # 1.73% over 3,380 submitted entries; decision bar <= 3.6 min old; SIP quote age p99.9 68 s for adv >= $95M).
+        self.xc_dev = float(self.live.get("quote_crosscheck_max_dev_pct", 2.0) or 0)
+        self.xc_age = float(self.live.get("quote_crosscheck_max_age_s", 300) or 0)
+        self.xc_bar = float(self.live.get("quote_crosscheck_max_bar_age_min", 10) or 0)
+        self._quote_ts: dict[str, pd.Timestamp] = {}
+        self._now: pd.Timestamp | None = None
         self.status_path = status_path
         self.on_status = on_status
         self.today = None
@@ -336,6 +354,14 @@ class PaperRunner:
             self.risk.state.lots = {sym: [(lot.get("strategy", lid), lot["side"])
                                           for lid, lot in self.lots.get(sym, {}).items()]
                                     for sym in self.risk.state.open_symbols}
+            # live.lot_cap_ignore_residual_frac (owner 2026-10-16, option B): a lot left with < frac of its original
+            # quantity after a partial target fill no longer counts toward max_lots_per_symbol (it still holds shares,
+            # so it still counts for the opposite-side check, slots and per-setup caps).
+            frac = self.risk.residual_frac
+            self.risk.state.residual = {
+                sym: n for sym in self.risk.state.open_symbols
+                if (n := sum(1 for lot in self.lots.get(sym, {}).values() if frac > 0 and lot.get("left") is not None
+                             and lot.get("orig_qty") and 0 < lot["left"] < frac * lot["orig_qty"]))}
             for sym, lots in self.risk.state.lots.items():
                 for st in [x for x, _ in lots] or [self.open_strategy.get(sym)]:
                     counts[st] = counts.get(st, 0) + 1
@@ -514,6 +540,87 @@ class PaperRunner:
             print(msg)   # no email alert (owner 2026-10-16); health.data_stale + dashboard only
         return True
 
+    # ---------------------------------------------------------------- outage escalation (live.outage)
+    def _outage_action(self, now, action: str, minutes: float, **detail):
+        rec = {"at": str(now), "action": action, "minutes": round(float(minutes), 1), **detail}
+        self.health["outage_actions"] = [*self.health.get("outage_actions", []), rec]
+        print(f"OUTAGE {action.upper()} after {rec['minutes']} min: {detail}")   # log only; no email (owner 2026-10-16)
+
+    def _escalate(self, now: pd.Timestamp, stale: bool):
+        """Stale data: pause (already in effect) -> protect (breakeven for lots in profit) after protect_min of
+        continuous staleness -> flatten every MCF position after flatten_min. Nothing happens while data is fresh."""
+        if not stale:
+            self._esc = None
+            return
+        if not self.outage["enabled"]:
+            return
+        since = (self.health.get("data_stale") or {}).get("since") or str(now)
+        if self._esc is None or self._esc["since"] != since:
+            self._esc = {"since": since, "done": set()}
+        done = self._esc["done"]
+        mins = (now - pd.Timestamp(since)).total_seconds() / 60
+        if "pause" not in done:
+            done.add("pause")
+            self._outage_action(now, "pause", mins, reason="data stale", since=since)
+        if mins >= self.outage["protect_min"] and "protect" not in done:
+            done.add("protect")
+            self._protect(now, mins, "data stale")
+        if mins >= self.outage["flatten_min"] and "flatten" not in done:
+            done.add("flatten")
+            self._outage_flatten(now, mins, "data stale")
+
+    def _protect(self, now, mins, reason):
+        if self.dry_run:
+            return self._outage_action(now, "protect", mins, reason=reason, dry_run=True)
+        try:
+            res = protect_open_lots(self.broker, COID_PREFIX)
+        except Exception as e:
+            return self._outage_action(now, "protect", mins, reason=reason, error=str(e)[:200])
+        for mv in res["moved"]:                       # trade management must never move a protected stop back
+            for key, m in self.managed.items():
+                if (m.get("coid") or (key if isinstance(key, str) else None)) in (mv["coid"], mv["symbol"]):
+                    s = m["side"]
+                    m["stop"] = mv["new_stop"] if s * (mv["new_stop"] - m["stop"]) > 0 else m["stop"]
+        self._outage_action(now, "protect", mins, reason=reason,
+                            moved=[f"{x['symbol']} {x['coid']} -> {x['new_stop']}" for x in res["moved"]],
+                            not_in_profit=len([x for x in res["skipped"] if x["why"] == "not in profit"]),
+                            errors=[f"{x['coid']}: {x['error']}" for x in res["errors"]])
+
+    def _outage_flatten(self, now, mins, reason, log_failure: bool = True) -> bool:
+        try:
+            self.flatten_mcf()
+            ok = not self.health.get("flatten_failed")
+            self._outage_action(now, "flatten", mins, reason=reason, left=self.health.get("flatten_failed") or [],
+                                **({"dry_run": True} if self.dry_run else {}))
+            return ok
+        except Exception as e:
+            if log_failure:
+                self._outage_action(now, "flatten_failed", mins, reason=reason, error=str(e)[:200])
+            else:
+                print(f"outage flatten retry failed: {e}")
+            return False
+
+    def _broker_unreachable(self, now: pd.Timestamp, err: Exception):
+        """The broker clock call failed (start of a poll). After flatten_min of continuous failures every MCF position is
+        flattened (retried every poll until it goes through)."""
+        if self._down is None:
+            self._down = {"since": now, "flattened": False, "tries": 0}
+            self._outage_action(now, "broker_unreachable", 0, error=str(err)[:200])
+        mins = (now - self._down["since"]).total_seconds() / 60
+        if self.outage["enabled"] and mins >= self.outage["flatten_min"] and not self._down["flattened"]:
+            self._down["tries"] += 1                  # retried every poll; a failure is logged in health once
+            self._down["flattened"] = self._outage_flatten(now, mins, "broker unreachable",
+                                                           log_failure=self._down["tries"] == 1)
+
+    def _broker_reachable(self, now: pd.Timestamp):
+        """The broker answers again. If a flatten was due (flatten_min reached) but could not go through, finish it now."""
+        if self._down is not None:
+            mins = (now - self._down["since"]).total_seconds() / 60
+            self._outage_action(now, "broker_restored", mins)
+            if self.outage["enabled"] and mins >= self.outage["flatten_min"] and not self._down["flattened"]:
+                self._outage_flatten(now, mins, "broker was unreachable")
+            self._down = None
+
     def _alert(self, subject: str, text: str):
         """Best-effort email alert (same SMTP secrets as the brief / EOD email); never raises, never in a dry run."""
         if self.dry_run or not (os.environ.get("MCF_SMTP_USER") and os.environ.get("MCF_SMTP_PASSWORD")):
@@ -530,9 +637,12 @@ class PaperRunner:
 
     def step(self, now: pd.Timestamp):
         today = now.date()
+        self._now = now
         bars = self.fetch(now)
         self.manage(now, bars)
-        if self._check_data(now, bars):
+        stale = self._check_data(now, bars)
+        self._escalate(now, stale)
+        if stale:
             return                                    # stale data: no new entries (signals would use old bars)
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         for ctx in self.ctxs.values():
@@ -655,6 +765,11 @@ class PaperRunner:
 
         q = self._client().get_stock_latest_quote(
             StockLatestQuoteRequest(symbol_or_symbols=symbol, feed=DataFeed(self.cfg["data"]["feed"])))[symbol]
+        ts = getattr(q, "timestamp", None)
+        if ts is not None:
+            self._quote_ts[symbol] = pd.Timestamp(ts)
+        else:
+            self._quote_ts.pop(symbol, None)
         return float(q.bid_price or 0), float(q.ask_price or 0)
 
     def _realism(self, sig, ctx, px) -> tuple[bool, str, dict]:
@@ -669,6 +784,9 @@ class PaperRunner:
         mid = (bid + ask) / 2
         spread = ask - bid
         info.update(bid=bid, ask=ask, spread_bps=round(spread / mid * 1e4, 1))
+        ok, why = self._crosscheck(sig, ctx, px, mid, info)
+        if not ok:
+            return False, why, info
         if info["spread_bps"] > self.live.get("max_spread_bps", 30):
             return False, f"spread {info['spread_bps']:.0f}bps > max", info
         risk_ps = abs(px - sig.stop)
@@ -677,6 +795,30 @@ class PaperRunner:
         vol = ctx.bars["volume"].tail(5).mean()
         info["cap_qty"] = int(self.live.get("max_participation", 0.10) * vol)
         return True, "ok", info
+
+    @staticmethod
+    def _utcnow() -> pd.Timestamp:
+        return pd.Timestamp.now(tz="UTC")
+
+    def _crosscheck(self, sig, ctx, px, mid, info) -> tuple[bool, str]:
+        """Before any new entry: the bars the signal used are fresh and agree with the broker's live quote (owner
+        2026-10-16, outage plan step 3). Rejections are journaled as skipped with a 'crosscheck:' reason."""
+        dev = abs(px - mid) / mid * 100
+        info["quote_dev_pct"] = round(dev, 3)
+        qts = self._quote_ts.get(sig.symbol)
+        if qts is not None:
+            qts = qts if qts.tzinfo else qts.tz_localize("UTC")
+            info["quote_age_s"] = round(max(0.0, (self._utcnow() - qts).total_seconds()), 1)
+        idx = getattr(getattr(ctx, "bars", None), "index", None)
+        if self._now is not None and isinstance(idx, pd.DatetimeIndex) and len(idx):
+            info["bar_age_min"] = round((self._now - idx[-1]).total_seconds() / 60, 2)
+        if self.xc_dev and dev > self.xc_dev:
+            return False, f"crosscheck: ref {px:.2f} vs quote mid {mid:.2f} ({dev:.2f}% > {self.xc_dev:g}%)"
+        if self.xc_age and info.get("quote_age_s") is not None and info["quote_age_s"] > self.xc_age:
+            return False, f"crosscheck: quote {info['quote_age_s']:.0f}s old > {self.xc_age:g}s"
+        if self.xc_bar and info.get("bar_age_min") is not None and info["bar_age_min"] > self.xc_bar:
+            return False, f"crosscheck: bar {info['bar_age_min']:.1f} min old > {self.xc_bar:g} min"
+        return True, "ok"
 
     def _log(self, sig, status, why, ref, now, info=None, qty=0, order_id=None):
         self.journal.record_signal(
@@ -776,8 +918,19 @@ class PaperRunner:
         self.restore(now.date())
         last_status = None
         while True:
-            clock = self.broker.clock()
+            try:
+                clock = self.broker.clock()
+            except Exception as e:                    # broker API unreachable: escalate (live.outage), keep polling
+                now = pd.Timestamp.now(tz=NY)
+                if until is not None and now >= until:
+                    print(f"slot ends {until:%H:%M} with the broker unreachable: handing over")
+                    break
+                print(f"broker clock failed: {e}")
+                self._broker_unreachable(now, e)
+                _time.sleep(poll_seconds)
+                continue
             now = pd.Timestamp(clock.timestamp).tz_convert(NY)
+            self._broker_reachable(now)
             if until is not None and now >= until:
                 print(f"slot ends {until:%H:%M}: handing over (broker-side stops stay in place)")
                 break
@@ -860,6 +1013,7 @@ class PaperRunner:
             for lot in lots.values():
                 r = residual.get(str(lot.get("order_id")))
                 lot["left"] = r["left"] if r else None
+                lot["orig_qty"] = r["qty"] if r else None
                 if r:
                     out.append({"symbol": sym, "strategy": lot.get("strategy"), "left": r["left"], "qty": r["qty"]})
         self.health["partial_lots"] = out

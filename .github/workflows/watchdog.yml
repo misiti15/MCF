@@ -1,0 +1,81 @@
+# MCF outage watchdog (owner 2026-10-16, outage plan step 5; docs/OPERATIONS.md "Outage plan").
+# Educational only - not financial advice.
+#
+# Independent of the trading run: every ~10 minutes during 09:35-15:55 ET on weekdays, per account, it reads that
+# account's state-branch status.json and the broker account (GET only) and decides whether the trading run is dead
+# (status.json older than live.outage.watchdog_dead_min while MCF positions/orders are open) or stuck on stale data
+# (health.data_stale longer than live.outage.flatten_min). If so it cancels the account's open MCF orders and flattens
+# its MCF positions (order prefix mcf- / mct- / mt2- only; never the long-hold mcl- book or anything else).
+#
+# MODE: "dry" (default) only logs what it would do (job summary). Set the repository variable MCF_WATCHDOG_MODE=act
+# (Settings -> Secrets and variables -> Actions -> Variables), or pick mode "act" on a manual run, to let it act.
+# The owner switches to act before real funds (docs/DECISIONS.md). No emails or alerts.
+# Its concurrency groups (mcf-watchdog-*) differ from trade.yml's (mcf-trade*), so it never queues behind or cancels a
+# trading job, and it writes nothing to the state branches.
+name: watchdog
+
+on:
+  schedule:
+    - cron: "5-55/10 13-20 * * 1-5"   # every 10 min; the ET window (09:35-15:55, EDT and EST) is checked below
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry = log only; act = cancel + flatten MCF orders/positions when triggered"
+        type: choice
+        options: [dry, act]
+        default: dry
+
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    strategy:
+      fail-fast: false
+      matrix:
+        account: [primary, testing, testing2]
+    concurrency:
+      group: mcf-watchdog-${{ matrix.account }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MCF_ACCOUNT: ${{ matrix.account }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || 'mct-') }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || 'mcf-data-testing') }}
+      MCF_WATCHDOG_MODE: ${{ inputs.mode || vars.MCF_WATCHDOG_MODE || 'dry' }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || '') }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || '') }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Window check
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || [ -z "$ALPACA_API_KEY" ]; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0935 ] && [ "$now" -lt 1555 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:35-15:55 ET weekdays: nothing to do"; fi
+
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.run == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        if: steps.window.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+
+      - name: Read status.json from the state branch
+        if: steps.window.outputs.run == 'true'
+        run: |
+          if git fetch -q --depth 1 origin "$STATE_BRANCH" && git show FETCH_HEAD:status.json > status.json 2>/dev/null; then
+            echo "status.json from $STATE_BRANCH"; else rm -f status.json; echo "no status.json on $STATE_BRANCH"; fi
+
+      - name: Watchdog (mode ${{ env.MCF_WATCHDOG_MODE }})
+        if: steps.window.outputs.run == 'true'
+        run: python -m mcf.execution.watchdog --status status.json --mode "$MCF_WATCHDOG_MODE" --out watchdog.json
