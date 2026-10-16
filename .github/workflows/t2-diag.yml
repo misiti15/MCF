@@ -1,0 +1,26 @@
+# Read-only diagnostic of the Testing 2 broker-vs-journal gap (owner approved 2026-10-16).
+# GET-only Alpaca calls (account activities, orders); never places or cancels orders; prints no secrets.
+name: t2-diag
+on:
+  workflow_dispatch:
+    inputs:
+      start: {description: "first day (YYYY-MM-DD)", default: "2026-10-12"}
+      end: {description: "last day (YYYY-MM-DD)", default: "2026-10-15"}
+permissions:
+  contents: read
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    env:
+      ALPACA_TRADE_API_KEY: ${{ secrets.ALPACA_TESTING2_API_KEY }}
+      ALPACA_TRADE_SECRET_KEY: ${{ secrets.ALPACA_TESTING2_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install pandas requests tabulate
+      - run: git fetch -q origin mcf-data-testing2 && git show origin/mcf-data-testing2:journal.db > /tmp/t2.db
+      - run: python research/bdi/t2diag/acts.py /tmp/t2.db "${{ inputs.start }}" "${{ inputs.end }}" | tee report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with: {name: t2-diag-report, path: report.md}
