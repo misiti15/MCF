@@ -600,9 +600,10 @@ class PaperRunner:
         print(f"scale-out {sym}/{s['strategy']} {st} (try {s['tries']}/{self.SCALE_TRIES}): {res.get('error', '')}")
         if s["tries"] >= self.SCALE_TRIES:
             self.scaling.pop(key, None)                   # the lot keeps its bracket (and any reduced legs) unchanged
-            self._alert(f"MCF scale-out failed: {sym}",
-                        f"{sym} {s['strategy']} lot {coid}: scale-out not completed after {s['tries']} tries ({st}). "
-                        "The lot keeps its broker-side stop; the 15:55 flatten closes whatever it still holds.")
+            msg = (f"{sym} {s['strategy']} lot {coid}: scale-out not completed after {s['tries']} tries ({st}). "
+                   "The lot keeps its broker-side stop; the 15:55 flatten closes whatever it still holds.")
+            print(f"SCALE-OUT FAILED: {msg}")             # no email (owner 2026-10-16: no mid-session alerts)
+            self.health.setdefault("scale_out_failed", []).append(msg)
 
     def _restore_scaling(self):
         """Re-arm live scale-out for open lots of flagged setups after a restart (a lot already scaled is found by its
