@@ -74,7 +74,7 @@ a 0.5R stop by regime?**
 - ★ A) Yes, as housekeeping. It makes the gates stricter only.
 - B) No.
 
-**Q13. Commit and test the new `mcf/research/arena/` package, the "training arena" you asked for?**
+**Q13. (Done) The `mcf/research/arena/` package is committed with tests (264 passing). Keep it? ★ A) Yes. B) Remove.**
 - ★ A) Yes, with tests.
 - B) Keep it as research scratch.
 
@@ -95,3 +95,15 @@ a 0.5R stop by regime?**
 - (e) ★ Yes: finalize the 30% profit skim.
 - (f) ★ Yes: use a separate live account and keys.
 - (g) ★ Yes: zero unexplained journal-to-broker P/L gap.
+
+## E. Earlier open items (added by the lead)
+
+**Q16. S6 long-hold: also exclude publicly traded partnerships (10% withholding on every sale)?**
+- ★ A) Yes, after hours (S6 holds none today).
+- B) No.
+
+**Q17. Turn on the early partial sell (half at +0.35R, stop to breakeven) for 4 more Testing 2 setups:
+CWT14-pdh-p05-lowvol-short, CWT14-orl-p10-long, CWT14-orl-p10-lowvol-long, CWT12-coil-k4-long? (+0.013 to
++0.021R vs parent in train and valid; still negative overall; config-only now.)**
+- ★ A) Yes, from the next session.
+- B) No.
