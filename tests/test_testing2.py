@@ -24,7 +24,7 @@ def test_overlay_runs_only_the_cwt_batch(monkeypatch):
     assert cfg["account_name"] == "testing2"
     st = build_strategies(cfg)
     assert st and all(isinstance(s, LabStrategy) for s in st)
-    assert all(s.name.startswith("CWT") for s in st)
+    assert all(s.name.startswith(("CWT", "NM")) for s in st)      # CWT batch + swarm1017 near-misses (owner Q3)
     default = yaml.safe_load((ROOT / "config/default.yaml").read_text())["strategies"]
     assert not any(cfg["strategies"][k].get("enabled") for k in default)      # primary + library all off
     testing1 = yaml.safe_load((ROOT / "config/account_testing.yaml").read_text())["strategies"]

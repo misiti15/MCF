@@ -32,6 +32,11 @@ live:
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - NM-AR-AM-gapdown-capitulation-long   # swarm1017 near-miss
+    - NM-AMS-N1-quiet-morning-short   # swarm1017 near-miss
+    - NM-PM-gapdn-above-pdh-rvol-short   # swarm1017 near-miss
+    - NM1-cwt09-g10-vwaploss-short   # swarm1017 near-miss
+    - NM-HL-T75-pm-long   # swarm1017 near-miss
     - CWT04-backside-lh-a25-short   # 0.36/day
     - CWT04-backside-vwaptest-a25-short   # 0.56/day
     - CWT09-gapdn-vwaploss-g10-short   # 1.29/day
@@ -63,6 +68,47 @@ live:
     - CWT14-failbrk-orl-p05-lowvol-long   # 173.74/day
     - CWT14-failbrk-orl-p05-long   # 246.53/day
 strategies:
+  # ---- swarm1017 near-misses (owner 2026-10-17, Q3): forward observation, NOT candidates; judge on >= 20 sessions / 60 trades
+  NM-AR-AM-gapdown-capitulation-long:
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/AR-AM-gapdown-capitulation.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  NM-AMS-N1-quiet-morning-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/AMS-N1-downtrend-quiet-bounce.py
+    min_adv: 95000000
+    window: [1000, 1100]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  NM-PM-gapdn-above-pdh-rvol-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/NM-PM-S-gapdn-above-pdh-rvol.py
+    min_adv: 95000000          # required: the mask has no adv filter, and the result depends on it
+    window: [1400, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  NM1-cwt09-g10-vwaploss-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/NM1-cwt09-g10-vwaploss-fodn-slopeup-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  NM-HL-T75-pm-long:
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/NM-HL-T75-pm-t05s1-long.py
+    min_adv: 125000000
+    window: [1300, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
   # ---- everything from config/default.yaml OFF (primary setups and the disabled library)
   orb: {enabled: false}
   vwap_reclaim: {enabled: false}
