@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 498 · coded: 85 · failed: 254 · configurations tried (all lineages): 26184450
+Total ideas: 505 · coded: 85 · failed: 261 · configurations tried (all lineages): 26184450
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -500,6 +500,13 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | swarm1017-midshort-abvwap-belowOR | Midday short above VWAP below OR high | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | failed | swarm1017-midshort-macdneg-widerange | Midday short macd<0 above VWAP wide range | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | failed | swarm1017-arena-pm-gapdn-reclaim-fade | PM fade of gap-down names reclaiming PDH (plateau variant) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | bdi-q10-mf-skip-against-any025 | MF family: skip when SPY or QQQ is against the trade by >0.25% from the open | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi-q10-rw-skip-against-any025 | RW family: skip when SPY or QQQ is against by >0.25% | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi-q10-st-breadth035 | ST family: breadth filter | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | exit-mf-be05 | MF family: breakeven stop at +0.5R | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | exit-cwt-trail-notarget | CWT12/14 longs: no target, 1R trailing stop | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | exit-regime-stop05 | 0.5R stop by day class at decision time | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | swarm1017-locked-look1-nearmisses | Locked look 1: RST1, ETF-late-dip-adx, AM gap-down capitulation | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
