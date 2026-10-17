@@ -1,0 +1,96 @@
+== index open->close % per day
+2026-10-06 {'IWM': np.float64(-1.09), 'QQQ': np.float64(-0.12), 'SPY': np.float64(0.13)}
+2026-10-07 {'IWM': np.float64(-0.19), 'QQQ': np.float64(0.52), 'SPY': np.float64(0.18)}
+2026-10-08 {'IWM': np.float64(0.45), 'QQQ': np.float64(-0.85), 'SPY': np.float64(-0.13)}
+2026-10-09 {'IWM': np.float64(0.26), 'QQQ': np.float64(-0.17), 'SPY': np.float64(0.3)}
+2026-10-12 {'IWM': np.float64(-0.22), 'QQQ': np.float64(-0.49), 'SPY': np.float64(-0.09)}
+2026-10-13 {'IWM': np.float64(-0.46), 'QQQ': np.float64(0.56), 'SPY': np.float64(0.09)}
+2026-10-14 {'IWM': np.float64(-0.71), 'QQQ': np.float64(-1.24), 'SPY': np.float64(-0.69)}
+2026-10-15 {'IWM': np.float64(1.34), 'QQQ': np.float64(1.32), 'SPY': np.float64(0.72)}
+2026-10-16 {'IWM': np.float64(-1.84), 'QQQ': np.float64(-2.16), 'SPY': np.float64(-1.29)}
+
+== per account per day (journal) + broker day P/L (closed - pre-open)
+Primary
+               n  win%   avgR  avgR_adj     pnl  pnl_adj  long_pnl  short_pnl  broker
+date                                                                                 
+2026-10-06  44.0  43.2 -0.115    -0.123 -120.05  -127.73   -212.49      92.44 -145.31
+2026-10-07  16.0  25.0 -0.318    -0.323 -262.03  -264.73    -57.97    -204.06 -220.94
+2026-10-08  48.0  39.6 -0.134    -0.165 -120.66  -140.80     -3.73    -116.93  -83.72
+2026-10-09  70.0  41.4 -0.168    -0.180 -238.87  -254.09      8.31    -247.18 -238.84
+2026-10-12  22.0  72.7  0.370     0.357  117.93   115.77     43.03      74.90  117.93
+2026-10-13  18.0  50.0 -0.194    -0.213  -95.39  -101.67      3.90     -99.29  -95.39
+2026-10-14  11.0  63.6  0.293     0.284   63.53    60.35    -67.25     130.78   63.53
+2026-10-15  48.0  20.8 -0.563    -0.607 -861.83  -926.53     21.69    -883.52 -861.83
+2026-10-16  36.0  47.2 -0.109    -0.176    7.17   -14.41    -84.92      92.09    7.17
+Testing 1
+                n  win%   avgR  avgR_adj      pnl  pnl_adj  long_pnl  short_pnl   broker
+date                                                                                    
+2026-10-09   46.0  54.3 -0.023    -0.041   -25.03   -36.15     16.70     -41.73   -24.92
+2026-10-12  204.0  56.9  0.090     0.079    32.37    17.93    -78.23     110.60    18.96
+2026-10-13  371.0  42.6 -0.114    -0.126  -629.03  -677.45    131.17    -760.20  -654.27
+2026-10-14  326.0  51.5  0.025     0.007    65.21     8.41   -524.70     589.91    65.21
+2026-10-15  225.0  21.8 -0.641    -0.694 -1673.02 -1774.36     94.64   -1767.66 -1673.02
+2026-10-16  323.0  47.7 -0.075    -0.097   -19.40   -78.38   -813.51     794.11   -19.40
+Testing 2
+                n  win%   avgR  avgR_adj      pnl  pnl_adj  long_pnl  short_pnl   broker
+date                                                                                    
+2026-10-12  360.0  51.1 -0.190    -0.219  -721.32  -808.84   -808.15      86.83  -663.27
+2026-10-13  647.0  66.9  0.020     0.003  -103.27  -183.19     67.66    -170.93  -106.67
+2026-10-14  353.0  47.6 -0.322    -0.371  -785.74  -864.78   -754.76     -30.98 -1160.46
+2026-10-15  533.0  58.0 -0.143    -0.178 -1097.71 -1192.63    179.05   -1276.76 -1276.34
+2026-10-16  388.0  54.4 -0.248    -0.276  -982.49 -1084.81  -1114.75     132.26  -982.49
+
+== LAST WEEK 10-06..10-09
+          n  win%   avgR  avgR_adj     pnl  pnl_adj  long_pnl  short_pnl  broker  sessions  pnl/session
+acct                                                                                                   
+p     178.0  39.9 -0.159    -0.175 -741.61  -787.35   -265.88    -475.73 -688.81         4      -185.40
+t1     46.0  54.3 -0.023    -0.041  -25.03   -36.15     16.70     -41.73  -24.92         1       -25.03
+
+== THIS WEEK 10-12..10-16
+           n  win%   avgR  avgR_adj      pnl  pnl_adj  long_pnl  short_pnl   broker  sessions  pnl/session
+acct                                                                                                      
+p      135.0  43.7 -0.171    -0.210  -768.59  -866.49    -83.55    -685.04  -768.59         5      -153.72
+t1    1449.0  44.5 -0.127    -0.149 -2223.87 -2503.85  -1190.63   -1033.24 -2262.52         5      -444.77
+t2    2281.0  57.2 -0.150    -0.180 -3690.53 -4134.25  -2430.95   -1259.58 -4189.23         5      -738.11
+
+== PRIOR 3 (10-09,12,13)
+           n  win%   avgR  avgR_adj     pnl  pnl_adj  long_pnl  short_pnl  broker  sessions  pnl/session
+acct                                                                                                    
+p      110.0  49.1 -0.065    -0.078 -216.33  -239.99     55.24    -271.57 -216.30         3       -72.11
+t1     621.0  48.1 -0.040    -0.052 -621.69  -695.67     69.64    -691.33 -660.23         3      -207.23
+t2    1007.0  61.3 -0.055    -0.076 -824.59  -992.03   -740.49     -84.10 -769.94         2      -412.30
+
+== LAST 3 (10-14..16)
+           n  win%   avgR  avgR_adj      pnl  pnl_adj  long_pnl  short_pnl   broker  sessions  pnl/session
+acct                                                                                                      
+p       95.0  35.8 -0.292    -0.340  -791.13  -880.59   -130.48    -660.65  -791.13         3      -263.71
+t1     874.0  42.4 -0.184    -0.212 -1627.21 -1844.33  -1243.57    -383.64 -1627.21         3      -542.40
+t2    1274.0  54.0 -0.224    -0.261 -2865.94 -3142.22  -1690.46   -1175.48 -3419.29         3      -955.31
+
+== Primary per setup last week vs this week
+                                            n_lw  win%_lw  avgR_lw  pnl_lw  n_tw  win%_tw  avgR_tw  pnl_tw
+strategy                                                                                                  
+MF1-945-flowsell-vwapup                      6.0     33.3    0.117  -13.21   6.0     50.0    0.455   47.51
+MF2-open-rsimidhi-flowsell                   1.0      0.0   -1.007   -7.99   3.0      0.0   -1.142  -40.64
+MF3-open-flowsell-rsi5hi                     8.0     62.5   -0.003    5.91  16.0     56.2    0.097    5.94
+MF3-open-flowsell-rsi5hi-FD                  NaN      NaN      NaN     NaN  12.0     50.0   -0.103   51.16
+MF4-h40-open-flowsell                        6.0     16.7   -0.416  -56.57  12.0     83.3    0.219   73.93
+MF5-flowsell-vwapup-rsi5hi                  13.0     38.5   -0.163  -32.08  15.0     46.7   -0.033   24.94
+NS1-rsidip-rsi5pop-long                      3.0    100.0    0.479   25.72   3.0     33.3   -0.656  -80.95
+NS2-sma50break-overbought-short              2.0    100.0    0.773   33.31  52.0     26.9   -0.500 -825.79
+NS3-failed-vwap-reclaim-short                8.0     37.5   -0.230  -76.25   1.0      0.0   -1.093  -12.59
+NS4-pm-vwap-reclaim-oversold-short           2.0     50.0    0.058    8.33   2.0    100.0    1.773   48.32
+NS5-sma50-flush-oversold-long                4.0     50.0    0.344   29.43   5.0     60.0    0.261   -2.60
+RW3-gapdn-rsi5pop-flowsell-short-FD          NaN      NaN      NaN     NaN   3.0    100.0    0.578   33.98
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   NaN      NaN      NaN     NaN   2.0     50.0    0.369    6.48
+RW6G1-ns2-up3-vwap2sd-short                  NaN      NaN      NaN     NaN   3.0      0.0   -1.033  -98.28
+exhaustion_short                            23.0     34.8   -0.256  -72.33   NaN      NaN      NaN     NaN
+heat_fade_long                              43.0     39.5   -0.112 -161.00   NaN      NaN      NaN     NaN
+heat_fade_short                             50.0     38.0   -0.280 -177.24   NaN      NaN      NaN     NaN
+orb20_a                                      9.0     33.3   -0.149 -247.64   NaN      NaN      NaN     NaN
+
+== T1 per setup P3 vs L3 (n>=5 both)
+t1 same-setup 24 improved avgR: 9
+ totals same setups p3 pnl -593.59 l3 pnl -1218.54
+t2 same-setup 17 improved avgR: 2
+ totals same setups p3 pnl -736.32 l3 pnl -2760.49

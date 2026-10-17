@@ -76,7 +76,10 @@ class PaperRunner:
         self.split_gate = bool(sg.get("enabled", False))
         self.split_spread = float(sg.get("spread_pct", 0.50))
         self.split_stale_min = int(sg.get("max_stale_min", 3))
-        self.watchlist = sorted(set(priors) | (set(SPLIT_TAPE_SYMBOLS) if self.split_gate else set()))
+        # Lab context (opt-in `context:` with spy_fo / qqq_fo, 2026-10-17): the index bars are polled like the split-tape
+        # symbols - fetched every poll for the context columns, traded only when they are in priors.
+        ctx_syms = set().union(*(getattr(s, "context_symbols", None) or set() for s in strategies))
+        self.watchlist = sorted(set(priors) | (set(SPLIT_TAPE_SYMBOLS) if self.split_gate else set()) | ctx_syms)
         self._split_cache: tuple | None = None
         self.dry_run = dry_run
         self.broker = broker or AlpacaBroker(paper=True)

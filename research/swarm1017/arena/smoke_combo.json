@@ -1,0 +1,227 @@
+[
+ {
+  "conds": [
+   [
+    "gap_atr",
+    "<=",
+    -0.614
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s1",
+  "window": [
+   1400,
+   1530
+  ],
+  "n_lineage": 20282,
+  "t_required": 4.454,
+  "live_supported": true,
+  "train": {
+   "n": 9704,
+   "days": 233,
+   "win_rate": 0.555,
+   "exp_r": 0.0714,
+   "se": 0.0838,
+   "t": 0.85,
+   "green_days": 0.412,
+   "ex_best_day": 0.0251,
+   "excess": 0.0491,
+   "t_excess": 2.17
+  },
+  "valid": {
+   "n": 9830,
+   "days": 192,
+   "win_rate": 0.4873,
+   "exp_r": -0.0492,
+   "se": 0.0484,
+   "t": -1.02,
+   "green_days": 0.385,
+   "ex_best_day": -0.0634,
+   "excess": 0.0192,
+   "t_excess": 0.67
+  },
+  "all": {
+   "n": 19534,
+   "days": 425,
+   "win_rate": 0.5209,
+   "exp_r": 0.0107,
+   "se": 0.0501,
+   "t": 0.21,
+   "green_days": 0.4,
+   "ex_best_day": -0.0134,
+   "excess": 0.0341,
+   "t_excess": 1.84
+  },
+  "regime": {
+   "up": {
+    "n": 7608,
+    "days": 142,
+    "win_rate": 0.4469,
+    "exp_r": -0.1143,
+    "se": 0.092,
+    "t": -1.24,
+    "green_days": 0.338,
+    "ex_best_day": -0.189
+   },
+   "flat": {
+    "n": 4979,
+    "days": 142,
+    "win_rate": 0.5103,
+    "exp_r": -0.0263,
+    "se": 0.0558,
+    "t": -0.47,
+    "green_days": 0.359,
+    "ex_best_day": -0.0522
+   },
+   "down": {
+    "n": 6947,
+    "days": 141,
+    "win_rate": 0.6096,
+    "exp_r": 0.1742,
+    "se": 0.0802,
+    "t": 2.17,
+    "green_days": 0.504,
+    "ex_best_day": 0.1168
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.353,
+   "n_folds": 17,
+   "trailing_on": {
+    "n_folds": 8,
+    "n": 5926,
+    "exp_r": -0.0083,
+    "share_positive": 0.25
+   }
+  },
+  "per_day": 45.854,
+  "sessions_with_trade": 425,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": false,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": false,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false
+ },
+ {
+  "conds": [
+   [
+    "gap_atr",
+    "<=",
+    -0.614
+   ],
+   [
+    "vwap_atr",
+    "<=",
+    0.0
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s1",
+  "window": [
+   1400,
+   1530
+  ],
+  "n_lineage": 20282,
+  "t_required": 4.454,
+  "live_supported": true,
+  "train": {
+   "n": 5917,
+   "days": 230,
+   "win_rate": 0.5241,
+   "exp_r": 0.0224,
+   "se": 0.0798,
+   "t": 0.28,
+   "green_days": 0.404,
+   "ex_best_day": -0.0213,
+   "excess": 0.0314,
+   "t_excess": 0.94
+  },
+  "valid": {
+   "n": 5772,
+   "days": 192,
+   "win_rate": 0.4955,
+   "exp_r": -0.0324,
+   "se": 0.0458,
+   "t": -0.71,
+   "green_days": 0.349,
+   "ex_best_day": -0.0561,
+   "excess": 0.0233,
+   "t_excess": 0.74
+  },
+  "all": {
+   "n": 11689,
+   "days": 422,
+   "win_rate": 0.51,
+   "exp_r": -0.0046,
+   "se": 0.0472,
+   "t": -0.1,
+   "green_days": 0.379,
+   "ex_best_day": -0.027,
+   "excess": 0.0274,
+   "t_excess": 1.19
+  },
+  "regime": {
+   "up": {
+    "n": 3146,
+    "days": 139,
+    "win_rate": 0.3675,
+    "exp_r": -0.2355,
+    "se": 0.0506,
+    "t": -4.65,
+    "green_days": 0.309,
+    "ex_best_day": -0.2681
+   },
+   "flat": {
+    "n": 3243,
+    "days": 142,
+    "win_rate": 0.4977,
+    "exp_r": -0.0428,
+    "se": 0.065,
+    "t": -0.66,
+    "green_days": 0.345,
+    "ex_best_day": -0.0805
+   },
+   "down": {
+    "n": 5300,
+    "days": 141,
+    "win_rate": 0.6021,
+    "exp_r": 0.1558,
+    "se": 0.0715,
+    "t": 2.18,
+    "green_days": 0.482,
+    "ex_best_day": 0.1198
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.471,
+   "n_folds": 17,
+   "trailing_on": {
+    "n_folds": 9,
+    "n": 4392,
+    "exp_r": -0.0401,
+    "share_positive": 0.444
+   }
+  },
+  "per_day": 27.439,
+  "sessions_with_trade": 422,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": false,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": false,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false
+ }
+]

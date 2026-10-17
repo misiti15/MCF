@@ -1,0 +1,46 @@
+setups 86 with n>=10: 52  positive avgR_adj (n>=10): 10
+with backtest R: 56  live below backtest by >0.1R (n>=10): 18
+
+TOP 15
+                                     setup accts  n  days   win  avg_win  avg_loss  be_win  avgR_adj   bt_R  first_half  second_half  trend    pnl  shrunk
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  p/t1 31     4  67.7     0.96     -0.71    42.7     0.408    NaN       0.305        0.505 better  87.48   0.309
+            ST5-pdbrkup-short-mid-t05s1-FD    t1  1     1 100.0     3.36       NaN     NaN     3.362    NaN         NaN        3.362   n<10   9.44   0.306
+     NS4-pm-vwap-reclaim-oversold-short-FD    t1  2     2 100.0     1.80       NaN     NaN     1.803 -0.080       1.456        2.149   n<10  24.38   0.300
+             MF2-open-rsimidhi-flowsell-FD    t1 19     4  63.2     1.30     -0.93    41.7     0.431  0.046      -0.285        1.075 better  72.81   0.282
+       RW3-gapdn-rsi5pop-flowsell-short-FD  p/t1 34     5  70.6     0.77     -0.59    43.5     0.359    NaN       0.263        0.456 better 166.86   0.278
+               ST7-rsi50dn-long-pm-t1s1-FD    t1  7     3  71.4     1.16     -0.57    33.1     0.661    NaN       1.188        0.265   n<10  51.90   0.272
+        NS4-pm-vwap-reclaim-oversold-short     p  4     3  75.0     1.68     -1.38    45.1     0.914 -0.080       0.056        1.773   n<10  56.63   0.261
+              RW7-gapdn-bounce-early-short    t1  2     1 100.0     1.06       NaN     NaN     1.059    NaN       0.966        1.152   n<10  10.26   0.177
+                  MF4-h40-open-flowsell-FD    t1 20     5  90.0     0.40     -1.06    72.5     0.252 -0.017       0.478        0.026  worse  65.71   0.168
+             NS5-sma50-flush-oversold-long  p/t1 13     4  61.5     0.93     -0.80    46.1     0.237  0.002       0.049        0.399 better  29.11   0.134
+   RW5-heat30-flowsell-rsi5pop-gapdn-short    t1  1     1 100.0     1.27       NaN     NaN     1.271    NaN         NaN        1.271   n<10   8.80   0.116
+                   MF1-945-flowsell-vwapup     p 12     6  41.7     2.00     -0.94    31.9     0.183 -0.050       0.060        0.307 better  28.10   0.100
+          ST6-volspikeup-short-mid-t1s1-FD    t1  2     1 100.0     0.51       NaN     NaN     0.510    NaN       0.018        1.002   n<10  10.13   0.085
+                       L3-gap-slope-rsi5hi    t1  2     1 100.0     0.50       NaN     NaN     0.502    NaN       0.463        0.542   n<10  12.35   0.084
+               MF3-open-flowsell-rsi5hi-FD  p/t1 43     5  60.5     0.78     -0.91    53.7     0.084 -0.034       0.279       -0.102  worse 150.26   0.068
+
+WORST 15
+                                setup accts   n  days  win  avg_win  avg_loss  be_win  avgR_adj   bt_R  first_half  second_half  trend     pnl  shrunk
+        CWT09-gapdn-vwaploss-g5-short    t2  29     3 10.3     2.13     -1.03    32.6    -0.751 -0.031      -1.102       -0.424 better -242.62  -0.559
+                    heat_fade_long-FD    t1  91     5 25.3     0.72     -0.94    56.7    -0.536 -0.138      -0.441       -0.629  worse -345.92  -0.483
+CWT09-gapdn-bounce-g5-lowerhalf-short    t2  41     3 14.6     1.52     -0.93    38.0    -0.587  0.047      -0.558       -0.615   flat -661.43  -0.472
+                 RW6-ns2-up3-short-FD    t1  35     4 22.9     0.80     -0.96    54.7    -0.605    NaN      -0.326       -0.868  worse -319.12  -0.470
+      NS2-sma50break-overbought-short     p  54     5 29.6     0.81     -0.99    54.8    -0.490  0.021      -0.308       -0.672  worse -856.22  -0.414
+            ST1-ordn-long-pm-t05s1-FD    t1  22     3 31.8     0.43     -1.03    70.5    -0.593    NaN      -0.811       -0.375 better -240.59  -0.408
+   NS2-sma50break-overbought-short-FD    t1  65     5 32.3     0.74     -0.96    56.3    -0.443  0.021      -0.128       -0.749  worse -428.34  -0.384
+                      heat_fade_short  p/t1  82     8 35.4     0.82     -1.05    56.1    -0.417 -0.015      -0.288       -0.545  worse -294.64  -0.372
+           MF2-open-rsimidhi-flowsell     p   4     4  0.0      NaN     -1.11     NaN    -1.210  0.046      -1.243       -1.176   n<10  -52.37  -0.346
+          CWT13-vwapstretch-z05-short    t2  41     3 34.1     0.67     -0.87    56.5    -0.371 -0.069      -0.370       -0.371   flat -141.69  -0.298
+           ST4-emadn-long-am-t1s05-FD    t1   7     3 14.3     2.37     -1.13    32.3    -0.724    NaN      -0.138       -1.164   n<10  -88.93  -0.298
+    CWT14-failbrk-orl-p05-lowvol-long    t2 294     5 53.7     0.40     -1.01    71.4    -0.283 -0.090      -0.247       -0.320   flat -633.81  -0.274
+          RW6G1-ns2-up3-vwap2sd-short     p   3     1  0.0      NaN     -1.03     NaN    -1.069    NaN      -1.108       -1.049   n<10 -102.18  -0.247
+                       heat_fade_long  p/t1 111     9 35.1     0.81     -0.84    50.7    -0.266 -0.138      -0.070       -0.460  worse -352.80  -0.244
+             L3-gap-slope-fromopen-FD    t1  41     4 36.6     0.99     -0.94    48.7    -0.275    NaN       0.046       -0.582  worse -161.46  -0.221
+
+better-trending n>=20: ['RW5-heat30-flowsell-rsi5pop-gapdn-short-FD', 'RW3-gapdn-rsi5pop-flowsell-short-FD', 'RW7-gapdn-bounce-early-short-FD', 'NS3-failed-vwap-reclaim-short-FD', 'RW4-ns3-adv150-short-FD', 'RW1-gapdn-bounce-flowsell-short-FD', 'exhaustion_short', 'CWT12-coil-k6-long', 'RW2-exhaustion-noon-adv150-short-FD', 'ST1-ordn-long-pm-t05s1-FD', 'CWT09-gapdn-vwaploss-g5-short']
+worse-trending n>=20: ['MF4-h40-open-flowsell-FD', 'MF3-open-flowsell-rsi5hi-FD', 'LIQ-orl-sweep-open15-s25-long', 'CWT14-failbrk-pdh-p10-short', 'CWT12-coil-k4-long', 'L3-gap-slope-rsi5hi-FD', 'MF5-flowsell-vwapup-rsi5hi-FD', 'CWT13-vwapstretch-z05-long', 'CWT14-failbrk-pdl-p10-long', 'CWT14-failbrk-pdl-p05-long', 'CWT14-failbrk-orl-p10-lowvol-long', 'CWT14-failbrk-pdh-p10-lowvol-short', 'CWT14-failbrk-orl-p10-long', 'exhaustion_short-FD', 'MF1-945-flowsell-vwapup-FD', 'L3-gap-slope-fromopen-FD', 'heat_fade_long', 'heat_fade_short', 'NS2-sma50break-overbought-short-FD', 'NS2-sma50break-overbought-short', 'RW6-ns2-up3-short-FD', 'heat_fade_long-FD']
+
+sign test: share of setups (n>=10) with avgR_adj>0 by account
+p 9 2
+t1 28 7
+t2 17 1

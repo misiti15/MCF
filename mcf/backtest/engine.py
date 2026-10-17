@@ -260,7 +260,10 @@ def pinned_symbols(cfg: dict) -> set[str]:
     out = set()
     for st in cfg.get("strategies", {}).values():
         if st.get("enabled"):
-            out.update(st.get("symbols", []))
+            if st.get("type") != "lab":
+                out.update(st.get("symbols", []))
+            elif st.get("pin_symbols") and isinstance(st.get("symbols"), (list, tuple)):
+                out.update(st["symbols"])        # a lab `symbols` list only restricts unless pin_symbols: true
             out.update(st.get("trade_candidates", []))   # index_dip_bounce: every candidate the day's pick may choose
             if st.get("signal_symbol"):          # a setup that reads one symbol and trades others needs its bars too
                 out.add(st["signal_symbol"])

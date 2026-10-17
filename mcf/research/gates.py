@@ -35,7 +35,7 @@ from statistics import NormalDist
 import numpy as np
 import pandas as pd
 
-GEOMK = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5)}
+GEOMK = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5), "t05s05": (0.5, 0.5)}   # t05s05: LabStrategy 10-17
 SLIP_PS, SLIP_BPS, STOP_EXTRA = 0.01, 1e-4, 0.02
 REGIME_MIN_N = 30
 FOLD_MIN_N = 10
