@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 440 · coded: 80 · failed: 228 · configurations tried (all lineages): 24720639
+Total ideas: 498 · coded: 85 · failed: 254 · configurations tried (all lineages): 26184450
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -69,6 +69,11 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | rework | top5-1016-CWT14-failbrk-orl-p10-lowvol-long-E05-scaleout025 | CWT14-failbrk-orl-p10-lowvol-long with scaleout025 (E05, PLAN.md section 3) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
 | rework | top5-1016-CWT14-failbrk-orl-p10-lowvol-long-E06-scaleout | CWT14-failbrk-orl-p10-lowvol-long with scaleout (E06, PLAN.md section 3) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
 | rework | top5-1016-CWT12-coil-k4-long-E06-scaleout | CWT12-coil-k4-long with scaleout (E06, PLAN.md section 3) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
+| rework | swarm1017-arena-am-long-gapdown-capitulation | AM gap-down capitulation dip-buy (ret12<=-1.61% & gap_atr<=-0.41 & rvol_day<=0.80, long t1s1, 09:50-11:00) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| rework | swarm1017-AMS-N1-quiet-morning-short | AM quiet-open short: sma20_slope<=-0.74 & day_vs_prev_range<=0.41 & buyPressure>=0.31, t05s1, 10:00-11:00 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| rework | swarm1017-arena-pm-gapdn-above-pdh-rvol | PM short: gap down >0.61 ATR now above prior-day high on rvol_day>=0.84, 14:00-15:00, t1s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| rework | rework-cwt-1017-NM1 | CWT09 gap<=-10% VWAP-loss short + fromOpen<0 + sma20_slope>0, 10:30-15:00, t1s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| rework | swarm1017-misc-heatlong-pm-strict | heat_fade_long T75, fromOpen<0, 13:00-15:00, t05s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | testing | bdi-st-st1-ordn-long-pm-t05s1 | ST1-ordn-long-pm-t05s1: close crosses below the 09:30-10:00 opening-range low; stock down > 3.0% from the open; volume ratio >= 1.5; close inside the prior-day range; 13:35-15:00 ET (bar close) (long, t05s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – | – |
 | testing | bdi-st-st2-slope20up-long-am-t05s1 | ST2-slope20up-long-am-t05s1: 5-min SMA20 slope turns positive; stock down > 3.0% from the open; 19-bar buy pressure > 0; close within 0.5 daily ATR of VWAP; 09:50-11:30 ET (bar close) (long, t05s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – | – |
 | testing | bdi-st-st3-rsi5up-short-pm-t1s1 | ST3-rsi5up-short-pm-t1s1: RSI(5) crosses back above 20; stock down > 3.0% from the open; close above VWAP; gap up > 1.0%; 13:35-15:00 ET (bar close) (short, t1s1) | BDI basic-stack study 2026-10-09 (research/bdi/stack1009; owner order: 5 live-test options, basic indicator stacks) | – | – | – | – | – | – |
@@ -214,6 +219,33 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1016-dayclass-late-decision | Day-class gate rework: decision at 11:00 / 12:00 (the 10-16 trend only became clear after 11:00; 10-15 reversal never classifiable by 10:30) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1016-cwt14pdh-reentry-after-stop | CWT14 pdh failed-breakout shorts: one re-entry when price trades back below the entry within 60 min after a stop | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1016-rw7-late-exit | RW7-gapdn-bounce-early-short-FD: per-setup late exit (flat at 14:30 / 15:00 instead of 15:55) | BDI 2026-10-16 (research/bdi/bdi1016/NOTES.md) | – | – | – | – | – | – |
+| idea | swarm1017-trend-against-skip-0.15 | Skip entries against the index at decision time (long while SPY < open -0.15%, short while SPY > open +0.15%), all lab setups | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-cwt14-trail1R-exit | CWT12/CWT14 longs: 1R trailing exit or no target instead of the 0.5R target | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-mf-be-at-0.5R | Primary MF setups: move stop to breakeven at +0.5R (or scale out half at +0.5R) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-stop0.5-regime-check | Tighter 0.5R stop: regime-dependence check | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-mf-retire-review | Owner rule-20 review: MF1-MF5 and -FD negative on 2y history after an exhaustive rework | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-cwt14-retire-review | Owner rule-20 review: all 11 CWT14 Testing 2 parents no better than same-minute random | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-cwt-retire-review | Owner rule-20 review: CWT04/05/09/12/13 Testing 2 setups; CWT09-g5 pair and CWT13-z05-short first | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rw-st-retire-review | Owner rule-20 review: weakest Testing 1 members (RW6-ns2-FD, RW2-FD, exhaustion_short-FD, NS2-FD, heat_fade_long-FD, ST1-FD, L3 FD versions, MF1-FD) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rework-ns-RWN3 | NS3 short only while SPY above open, 09:50-10:30 (needs spy_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-mfr1-fri-long | MF4 signal LONG, Fridays, below SMA50, 09:50-11:00 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rw-RWR1 | RW2 exhaustion short + gap<-1% + SPY>+0.5%, PM, t05s1 (needs spy_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rw-RWR2 | exhaustion LONG Mondays, SMA20 slope<0 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rw-RWR3 | RW4 short only while QQQ > open, 09:50-10:30, refire (needs qqq_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rw-RWR4 | RW6 + QQQ > open + slope<0, AM, t05s1 (needs qqq_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-rst1-l3-spyup-pm-short | L3 short only when SPY > +0.5% from open, 13:35-15:00, t05s1 (needs spy_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-cwt14x-pdl-p05-lowvol-brdlo-fo1-long | CWT14 PDL failed break + breadth<0.4 + fromOpen>1% (needs breadth) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-cwt14x-orl-p10-gapup-heatlo-long | CWT14 ORL p0.10 + gap>0 + heat<=-30, scale-out 0.25R | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | AMS-N2-N3-quiet-morning-short | AM quiet-open short variants N2/N3 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-arena-pm-belowvwap-orh-long | PM long far below VWAP holding OR high | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-etf-late-dip-di | ETF late dip ret3<=-0.80% & di_diff7>=0 & atr_d_pct>=3.6, long t05s1 14:00-15:00 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-etf-late-dip-adx | ETF late dip ret3<=-0.80% & adx7>=63.7, long t05s1 14:00-15:00 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-orh-reclaim-continuation-long | OR-high poke-and-reclaim continuation long 11:30-15:00 with a day-class gate | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-midshort-daygate-trendcont | Midday trend-continuation shorts gated by a decision-time day-class filter | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-gates-concentration | Tooling: add day-equal-weighted t, best-day-removed t, top-3-day share and a per-session cap to gates.summary / combine.evaluate_combo | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-live-code-geoms | Code request: t05s05 and no-target/trailing GEOMs in LabStrategy; per-bar spy_fo / qqq_fo / breadth columns in the live lab frame | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-labstrategy-symbols | Housekeeping: symbols allow-list in LabStrategy.eligible() | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | swarm1017-arena-package | Housekeeping: review and ship mcf/research/arena/ (indicators, combine, screen) with tests | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -442,6 +474,32 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1016-CWT14-failbrk-orl-p10-lowvol-long-exec | CWT14-failbrk-orl-p10-lowvol-long: execution variants (time stop, breakeven, scale-out, smaller stop, wait one bar, flow filter, window, poke depth, hold-to-close/trailing for shorts, re-entry after stop) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1016-CWT12-coil-k4-long-exec | CWT12-coil-k4-long: execution variants (time stop, breakeven, scale-out, smaller stop, wait one bar, flow filter, window, poke depth, hold-to-close/trailing for shorts, re-entry after stop) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1016-RW7-gapdn-bounce-early-short-FD-exec | RW7-gapdn-bounce-early-short-FD: execution variants (time stop, breakeven, scale-out, smaller stop, wait one bar, flow filter, window, poke depth, hold-to-close/trailing for shorts, re-entry after stop) | BDI top-5 execution tune 2026-10-16 (third run) (research/bdi/top5_1016/NOTES.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-mf-family | Weekend rework/search: MF1-MF5 (+FD) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-family | Weekend rework/search: NS1-NS5 + RW6G1 (+FD) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-rw-family | Weekend rework/search: RW1-RW7 FD + exhaustion_short | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-st-family | Weekend rework/search: L3 + ST1-ST8 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-misc-family | Weekend rework/search: heat_fade_short/long, orb20_a, intraday_momentum, LIQ sweeps | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-cwt14-family | Weekend rework/search: CWT14 failed-break (11 Testing 2 parents) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-cwt-family | Weekend rework/search: CWT04/05/09/12/13 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-arena-family | Weekend rework/search: Arena indicator-combination search (am-long, am-short, mid-long, mid-short, pm-both, index-etf) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rw-spygate | Signal-time 'short only when SPY below open' gate for RW1-RW7/exhaustion | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-RWN1 | RW6G1 + RSI14>=65 + VWAP guard k2.5, t05s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-RWN6 | RW6G1 + 5-min atrPct>=0.50, refire cd1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-RWN2 | NS2 + Wednesday + near HOD, t05s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-RWN4 | NS2 short while SPY > +0.5% from open, not Friday (needs spy_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rework-ns-RWN5 | NS3 Mondays, stock weaker than SPY (needs spy_fo) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rst3-st1-window-notmon-refire | ST1 ordn long 13:35-15:00, skip Mondays, refire cd1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-rst2-l3-monday-rsi5dip-long | L3a flipped long, Monday, RSI5<=30 dip | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-misc-heatlong-atrhi-fri | heat_fade_long high ATR, Fridays, midday, t05s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-misc-heatshort-fo1-mon | heat_fade_short fromOpen>1%, Mondays, open, t05s1 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-cwt14x-orl-p20-lowvol-gap2-long | CWT14 ORL failed break p0.20 low-vol |gap|>=2%, scale-out 0.5R | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | rework-cwt-1017-NM2 | CWT05 deep flush traded SHORT as continuation, 11:30-13:00, t05s1 + scale-out 0.25 | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | rework-cwt-1017-B2-friday | CWT13 VWAP-stretch short + Friday | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-arena-mid-long-gapup-pullback | Midday gap-up pullback near PDH, long | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-arena-mid-long-momo-di-turn | Midday DI up-turn after momentum decline, long | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-midshort-abvwap-belowOR | Midday short above VWAP below OR high | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-midshort-macdneg-widerange | Midday short macd<0 above VWAP wide range | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| failed | swarm1017-arena-pm-gapdn-reclaim-fade | PM fade of gap-down names reclaiming PDH (plateau variant) | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

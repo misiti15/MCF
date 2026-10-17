@@ -1,0 +1,1091 @@
+[
+ {
+  "conds": [
+   [
+    "sma20_slope_pct",
+    "<=",
+    -0.7373
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "buyPressure",
+    ">=",
+    0.3115
+   ]
+  ],
+  "side": "short",
+  "geom": "t05s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 195,
+   "days": 62,
+   "win_rate": 0.8154,
+   "exp_r": 0.184,
+   "se": 0.0457,
+   "t": 4.02,
+   "green_days": 0.742,
+   "ex_best_day": 0.1622,
+   "excess": 0.1663,
+   "t_excess": 4.34
+  },
+  "valid": {
+   "n": 206,
+   "days": 87,
+   "win_rate": 0.7427,
+   "exp_r": 0.0815,
+   "se": 0.0423,
+   "t": 1.93,
+   "green_days": 0.667,
+   "ex_best_day": 0.0714,
+   "excess": 0.1942,
+   "t_excess": 4.75
+  },
+  "all": {
+   "n": 401,
+   "days": 149,
+   "win_rate": 0.7781,
+   "exp_r": 0.1314,
+   "se": 0.0331,
+   "t": 3.97,
+   "green_days": 0.698,
+   "ex_best_day": 0.1175,
+   "excess": 0.1807,
+   "t_excess": 6.35
+  },
+  "regime": {
+   "up": {
+    "n": 152,
+    "days": 48,
+    "win_rate": 0.75,
+    "exp_r": 0.093,
+    "se": 0.046,
+    "t": 2.02,
+    "green_days": 0.667,
+    "ex_best_day": 0.0795
+   },
+   "flat": {
+    "n": 85,
+    "days": 46,
+    "win_rate": 0.7294,
+    "exp_r": 0.0344,
+    "se": 0.0787,
+    "t": 0.44,
+    "green_days": 0.63,
+    "ex_best_day": 0.0123
+   },
+   "down": {
+    "n": 164,
+    "days": 55,
+    "win_rate": 0.8293,
+    "exp_r": 0.2172,
+    "se": 0.0465,
+    "t": 4.68,
+    "green_days": 0.782,
+    "ex_best_day": 0.1975
+   },
+   "pass": true
+  },
+  "walk_forward": {
+   "share_positive": 0.833,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 12,
+    "n": 238,
+    "exp_r": 0.1151,
+    "share_positive": 0.833
+   }
+  },
+  "per_day": 0.941,
+  "sessions_with_trade": 149,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": true,
+   "walk_forward>=0.6": true,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N1"
+ },
+ {
+  "conds": [
+   [
+    "sma20_slope_pct",
+    "<=",
+    -0.7373
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "buyPressure",
+    ">=",
+    0.3115
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 195,
+   "days": 62,
+   "win_rate": 0.6667,
+   "exp_r": 0.2802,
+   "se": 0.0912,
+   "t": 3.07,
+   "green_days": 0.613,
+   "ex_best_day": 0.2212,
+   "excess": 0.2038,
+   "t_excess": 3.26
+  },
+  "valid": {
+   "n": 206,
+   "days": 87,
+   "win_rate": 0.5291,
+   "exp_r": -0.0021,
+   "se": 0.0709,
+   "t": -0.03,
+   "green_days": 0.483,
+   "ex_best_day": -0.0245,
+   "excess": 0.1474,
+   "t_excess": 2.13
+  },
+  "all": {
+   "n": 401,
+   "days": 149,
+   "win_rate": 0.596,
+   "exp_r": 0.1352,
+   "se": 0.0654,
+   "t": 2.07,
+   "green_days": 0.537,
+   "ex_best_day": 0.0976,
+   "excess": 0.1748,
+   "t_excess": 3.77
+  },
+  "regime": {
+   "up": {
+    "n": 152,
+    "days": 48,
+    "win_rate": 0.5263,
+    "exp_r": 0.0059,
+    "se": 0.0869,
+    "t": 0.07,
+    "green_days": 0.542,
+    "ex_best_day": -0.0245
+   },
+   "flat": {
+    "n": 85,
+    "days": 46,
+    "win_rate": 0.5529,
+    "exp_r": 0.0142,
+    "se": 0.1002,
+    "t": 0.14,
+    "green_days": 0.435,
+    "ex_best_day": -0.0283
+   },
+   "down": {
+    "n": 164,
+    "days": 55,
+    "win_rate": 0.6829,
+    "exp_r": 0.3177,
+    "se": 0.0991,
+    "t": 3.21,
+    "green_days": 0.618,
+    "ex_best_day": 0.2533
+   },
+   "pass": true
+  },
+  "walk_forward": {
+   "share_positive": 0.5,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 9,
+    "n": 181,
+    "exp_r": 0.0733,
+    "share_positive": 0.556
+   }
+  },
+  "per_day": 0.941,
+  "sessions_with_trade": 149,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": false,
+   "t_train>=bar": false,
+   "regime": true,
+   "walk_forward>=0.6": false,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N1"
+ },
+ {
+  "conds": [
+   [
+    "sma20_slope_pct",
+    "<=",
+    -0.7373
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "buyPressure",
+    ">=",
+    0.3115
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s05",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 195,
+   "days": 62,
+   "win_rate": 0.4718,
+   "exp_r": 0.1302,
+   "se": 0.075,
+   "t": 1.74,
+   "green_days": 0.5,
+   "ex_best_day": 0.083,
+   "excess": 0.113,
+   "t_excess": 1.66
+  },
+  "valid": {
+   "n": 206,
+   "days": 87,
+   "win_rate": 0.3641,
+   "exp_r": -0.0479,
+   "se": 0.0574,
+   "t": -0.84,
+   "green_days": 0.437,
+   "ex_best_day": -0.0704,
+   "excess": 0.0909,
+   "t_excess": 1.66
+  },
+  "all": {
+   "n": 401,
+   "days": 149,
+   "win_rate": 0.4165,
+   "exp_r": 0.0387,
+   "se": 0.0501,
+   "t": 0.77,
+   "green_days": 0.463,
+   "ex_best_day": 0.013,
+   "excess": 0.1016,
+   "t_excess": 2.35
+  },
+  "regime": {
+   "up": {
+    "n": 152,
+    "days": 48,
+    "win_rate": 0.3553,
+    "exp_r": -0.0482,
+    "se": 0.0699,
+    "t": -0.69,
+    "green_days": 0.396,
+    "ex_best_day": -0.0793
+   },
+   "flat": {
+    "n": 85,
+    "days": 46,
+    "win_rate": 0.3765,
+    "exp_r": -0.0517,
+    "se": 0.0738,
+    "t": -0.7,
+    "green_days": 0.435,
+    "ex_best_day": -0.0883
+   },
+   "down": {
+    "n": 164,
+    "days": 55,
+    "win_rate": 0.4939,
+    "exp_r": 0.1661,
+    "se": 0.085,
+    "t": 1.95,
+    "green_days": 0.545,
+    "ex_best_day": 0.113
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.5,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 8,
+    "n": 167,
+    "exp_r": -0.1125,
+    "share_positive": 0.25
+   }
+  },
+  "per_day": 0.941,
+  "sessions_with_trade": 149,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": false,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": false,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N1"
+ },
+ {
+  "conds": [
+   [
+    "vwapDistPct",
+    ">=",
+    0.9177
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "di_diff7",
+    "<=",
+    0.0
+   ]
+  ],
+  "side": "short",
+  "geom": "t05s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 185,
+   "days": 91,
+   "win_rate": 0.7297,
+   "exp_r": 0.0939,
+   "se": 0.0588,
+   "t": 1.6,
+   "green_days": 0.692,
+   "ex_best_day": 0.0712,
+   "excess": 0.1032,
+   "t_excess": 1.5
+  },
+  "valid": {
+   "n": 223,
+   "days": 94,
+   "win_rate": 0.7713,
+   "exp_r": 0.1395,
+   "se": 0.058,
+   "t": 2.4,
+   "green_days": 0.638,
+   "ex_best_day": 0.1075,
+   "excess": 0.2014,
+   "t_excess": 3.74
+  },
+  "all": {
+   "n": 408,
+   "days": 185,
+   "win_rate": 0.7525,
+   "exp_r": 0.1188,
+   "se": 0.042,
+   "t": 2.83,
+   "green_days": 0.665,
+   "ex_best_day": 0.101,
+   "excess": 0.1568,
+   "t_excess": 3.52
+  },
+  "regime": {
+   "up": {
+    "n": 195,
+    "days": 78,
+    "win_rate": 0.7128,
+    "exp_r": 0.0822,
+    "se": 0.0585,
+    "t": 1.4,
+    "green_days": 0.603,
+    "ex_best_day": 0.0598
+   },
+   "flat": {
+    "n": 95,
+    "days": 52,
+    "win_rate": 0.8,
+    "exp_r": 0.1705,
+    "se": 0.0731,
+    "t": 2.33,
+    "green_days": 0.712,
+    "ex_best_day": 0.1287
+   },
+   "down": {
+    "n": 118,
+    "days": 55,
+    "win_rate": 0.7797,
+    "exp_r": 0.1377,
+    "se": 0.09,
+    "t": 1.53,
+    "green_days": 0.709,
+    "ex_best_day": 0.0716
+   },
+   "pass": true
+  },
+  "walk_forward": {
+   "share_positive": 0.615,
+   "n_folds": 13,
+   "trailing_on": {
+    "n_folds": 12,
+    "n": 291,
+    "exp_r": 0.1013,
+    "share_positive": 0.583
+   }
+  },
+  "per_day": 0.958,
+  "sessions_with_trade": 185,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": true,
+   "walk_forward>=0.6": true,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N2"
+ },
+ {
+  "conds": [
+   [
+    "vwapDistPct",
+    ">=",
+    0.9177
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "di_diff7",
+    "<=",
+    0.0
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 185,
+   "days": 91,
+   "win_rate": 0.5568,
+   "exp_r": 0.0518,
+   "se": 0.0805,
+   "t": 0.64,
+   "green_days": 0.571,
+   "ex_best_day": 0.023,
+   "excess": 0.0577,
+   "t_excess": 0.63
+  },
+  "valid": {
+   "n": 223,
+   "days": 94,
+   "win_rate": 0.6143,
+   "exp_r": 0.1721,
+   "se": 0.1006,
+   "t": 1.71,
+   "green_days": 0.521,
+   "ex_best_day": 0.0983,
+   "excess": 0.2302,
+   "t_excess": 2.64
+  },
+  "all": {
+   "n": 408,
+   "days": 185,
+   "win_rate": 0.5882,
+   "exp_r": 0.1175,
+   "se": 0.0679,
+   "t": 1.73,
+   "green_days": 0.546,
+   "ex_best_day": 0.0762,
+   "excess": 0.152,
+   "t_excess": 2.29
+  },
+  "regime": {
+   "up": {
+    "n": 195,
+    "days": 78,
+    "win_rate": 0.4821,
+    "exp_r": -0.0514,
+    "se": 0.0834,
+    "t": -0.62,
+    "green_days": 0.449,
+    "ex_best_day": -0.0839
+   },
+   "flat": {
+    "n": 95,
+    "days": 52,
+    "win_rate": 0.7158,
+    "exp_r": 0.3231,
+    "se": 0.118,
+    "t": 2.74,
+    "green_days": 0.654,
+    "ex_best_day": 0.2479
+   },
+   "down": {
+    "n": 118,
+    "days": 55,
+    "win_rate": 0.661,
+    "exp_r": 0.2312,
+    "se": 0.1458,
+    "t": 1.59,
+    "green_days": 0.582,
+    "ex_best_day": 0.0905
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.692,
+   "n_folds": 13,
+   "trailing_on": {
+    "n_folds": 11,
+    "n": 260,
+    "exp_r": 0.1326,
+    "share_positive": 0.727
+   }
+  },
+  "per_day": 0.958,
+  "sessions_with_trade": 185,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": true,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N2"
+ },
+ {
+  "conds": [
+   [
+    "vwapDistPct",
+    ">=",
+    0.9177
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "di_diff7",
+    "<=",
+    0.0
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s05",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 185,
+   "days": 91,
+   "win_rate": 0.4108,
+   "exp_r": 0.0355,
+   "se": 0.072,
+   "t": 0.49,
+   "green_days": 0.44,
+   "ex_best_day": -0.0063,
+   "excess": 0.0503,
+   "t_excess": 0.66
+  },
+  "valid": {
+   "n": 223,
+   "days": 94,
+   "win_rate": 0.4843,
+   "exp_r": 0.1581,
+   "se": 0.0795,
+   "t": 1.99,
+   "green_days": 0.426,
+   "ex_best_day": 0.0966,
+   "excess": 0.214,
+   "t_excess": 3.62
+  },
+  "all": {
+   "n": 408,
+   "days": 185,
+   "win_rate": 0.451,
+   "exp_r": 0.1025,
+   "se": 0.0564,
+   "t": 1.82,
+   "green_days": 0.432,
+   "ex_best_day": 0.0675,
+   "excess": 0.1398,
+   "t_excess": 2.75
+  },
+  "regime": {
+   "up": {
+    "n": 195,
+    "days": 78,
+    "win_rate": 0.4051,
+    "exp_r": 0.0378,
+    "se": 0.0711,
+    "t": 0.53,
+    "green_days": 0.385,
+    "ex_best_day": -0.0015
+   },
+   "flat": {
+    "n": 95,
+    "days": 52,
+    "win_rate": 0.4947,
+    "exp_r": 0.1641,
+    "se": 0.0933,
+    "t": 1.76,
+    "green_days": 0.481,
+    "ex_best_day": 0.1051
+   },
+   "down": {
+    "n": 118,
+    "days": 55,
+    "win_rate": 0.4915,
+    "exp_r": 0.1599,
+    "se": 0.1318,
+    "t": 1.21,
+    "green_days": 0.455,
+    "ex_best_day": 0.0334
+   },
+   "pass": true
+  },
+  "walk_forward": {
+   "share_positive": 0.615,
+   "n_folds": 13,
+   "trailing_on": {
+    "n_folds": 11,
+    "n": 260,
+    "exp_r": 0.12,
+    "share_positive": 0.636
+   }
+  },
+  "per_day": 0.958,
+  "sessions_with_trade": 185,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": true,
+   "walk_forward>=0.6": true,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N2"
+ },
+ {
+  "conds": [
+   [
+    "rv12",
+    ">=",
+    0.6005
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "from_pc_atr",
+    "<=",
+    -0.3489
+   ]
+  ],
+  "side": "short",
+  "geom": "t05s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 252,
+   "days": 83,
+   "win_rate": 0.7778,
+   "exp_r": 0.1354,
+   "se": 0.1213,
+   "t": 1.12,
+   "green_days": 0.687,
+   "ex_best_day": -0.0129,
+   "excess": 0.0325,
+   "t_excess": 0.45
+  },
+  "valid": {
+   "n": 315,
+   "days": 101,
+   "win_rate": 0.7651,
+   "exp_r": 0.1231,
+   "se": 0.0651,
+   "t": 1.89,
+   "green_days": 0.614,
+   "ex_best_day": 0.0854,
+   "excess": 0.191,
+   "t_excess": 3.41
+  },
+  "all": {
+   "n": 567,
+   "days": 184,
+   "win_rate": 0.7707,
+   "exp_r": 0.1286,
+   "se": 0.0654,
+   "t": 1.97,
+   "green_days": 0.647,
+   "ex_best_day": 0.0746,
+   "excess": 0.1205,
+   "t_excess": 2.46
+  },
+  "regime": {
+   "up": {
+    "n": 219,
+    "days": 73,
+    "win_rate": 0.7489,
+    "exp_r": 0.102,
+    "se": 0.0793,
+    "t": 1.29,
+    "green_days": 0.63,
+    "ex_best_day": 0.0417
+   },
+   "flat": {
+    "n": 124,
+    "days": 55,
+    "win_rate": 0.7823,
+    "exp_r": 0.144,
+    "se": 0.0835,
+    "t": 1.72,
+    "green_days": 0.673,
+    "ex_best_day": 0.0989
+   },
+   "down": {
+    "n": 224,
+    "days": 56,
+    "win_rate": 0.7857,
+    "exp_r": 0.1461,
+    "se": 0.1348,
+    "t": 1.08,
+    "green_days": 0.643,
+    "ex_best_day": -0.0249
+   },
+   "pass": true
+  },
+  "walk_forward": {
+   "share_positive": 0.833,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 12,
+    "n": 380,
+    "exp_r": 0.1331,
+    "share_positive": 0.833
+   }
+  },
+  "per_day": 1.331,
+  "sessions_with_trade": 184,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": true,
+   "walk_forward>=0.6": true,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N3"
+ },
+ {
+  "conds": [
+   [
+    "rv12",
+    ">=",
+    0.6005
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "from_pc_atr",
+    "<=",
+    -0.3489
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s1",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 252,
+   "days": 83,
+   "win_rate": 0.6071,
+   "exp_r": 0.1662,
+   "se": 0.2557,
+   "t": 0.65,
+   "green_days": 0.506,
+   "ex_best_day": -0.1773,
+   "excess": -0.0036,
+   "t_excess": -0.04
+  },
+  "valid": {
+   "n": 315,
+   "days": 101,
+   "win_rate": 0.6159,
+   "exp_r": 0.17,
+   "se": 0.1112,
+   "t": 1.53,
+   "green_days": 0.455,
+   "ex_best_day": 0.0978,
+   "excess": 0.2145,
+   "t_excess": 2.58
+  },
+  "all": {
+   "n": 567,
+   "days": 184,
+   "win_rate": 0.612,
+   "exp_r": 0.1683,
+   "se": 0.1292,
+   "t": 1.3,
+   "green_days": 0.478,
+   "ex_best_day": 0.0459,
+   "excess": 0.1176,
+   "t_excess": 1.75
+  },
+  "regime": {
+   "up": {
+    "n": 219,
+    "days": 73,
+    "win_rate": 0.4932,
+    "exp_r": -0.0957,
+    "se": 0.151,
+    "t": -0.63,
+    "green_days": 0.397,
+    "ex_best_day": -0.2468
+   },
+   "flat": {
+    "n": 124,
+    "days": 55,
+    "win_rate": 0.6774,
+    "exp_r": 0.3013,
+    "se": 0.1383,
+    "t": 2.18,
+    "green_days": 0.564,
+    "ex_best_day": 0.209
+   },
+   "down": {
+    "n": 224,
+    "days": 56,
+    "win_rate": 0.692,
+    "exp_r": 0.3528,
+    "se": 0.2317,
+    "t": 1.52,
+    "green_days": 0.5,
+    "ex_best_day": 0.0416
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.75,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 11,
+    "n": 369,
+    "exp_r": 0.1477,
+    "share_positive": 0.818
+   }
+  },
+  "per_day": 1.331,
+  "sessions_with_trade": 184,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": true,
+   "beats_random_train": false,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N3"
+ },
+ {
+  "conds": [
+   [
+    "rv12",
+    ">=",
+    0.6005
+   ],
+   [
+    "day_vs_prev_range",
+    "<=",
+    0.4091
+   ],
+   [
+    "from_pc_atr",
+    "<=",
+    -0.3489
+   ]
+  ],
+  "side": "short",
+  "geom": "t1s05",
+  "window": [
+   1000,
+   1100
+  ],
+  "n_lineage": 43457,
+  "t_required": 4.622,
+  "live_supported": true,
+  "train": {
+   "n": 252,
+   "days": 83,
+   "win_rate": 0.5079,
+   "exp_r": 0.1992,
+   "se": 0.2048,
+   "t": 0.97,
+   "green_days": 0.422,
+   "ex_best_day": -0.0811,
+   "excess": 0.0086,
+   "t_excess": 0.12
+  },
+  "valid": {
+   "n": 315,
+   "days": 101,
+   "win_rate": 0.4762,
+   "exp_r": 0.1259,
+   "se": 0.1005,
+   "t": 1.25,
+   "green_days": 0.406,
+   "ex_best_day": 0.0544,
+   "excess": 0.1789,
+   "t_excess": 2.47
+  },
+  "all": {
+   "n": 567,
+   "days": 184,
+   "win_rate": 0.4903,
+   "exp_r": 0.1585,
+   "se": 0.1102,
+   "t": 1.44,
+   "green_days": 0.413,
+   "ex_best_day": 0.052,
+   "excess": 0.1032,
+   "t_excess": 1.87
+  },
+  "regime": {
+   "up": {
+    "n": 219,
+    "days": 73,
+    "win_rate": 0.379,
+    "exp_r": -0.0272,
+    "se": 0.1267,
+    "t": -0.21,
+    "green_days": 0.301,
+    "ex_best_day": -0.1593
+   },
+   "flat": {
+    "n": 124,
+    "days": 55,
+    "win_rate": 0.5565,
+    "exp_r": 0.2714,
+    "se": 0.116,
+    "t": 2.34,
+    "green_days": 0.509,
+    "ex_best_day": 0.1894
+   },
+   "down": {
+    "n": 224,
+    "days": 56,
+    "win_rate": 0.5625,
+    "exp_r": 0.2775,
+    "se": 0.2096,
+    "t": 1.32,
+    "green_days": 0.464,
+    "ex_best_day": -0.0151
+   },
+   "pass": false
+  },
+  "walk_forward": {
+   "share_positive": 0.583,
+   "n_folds": 12,
+   "trailing_on": {
+    "n_folds": 8,
+    "n": 247,
+    "exp_r": 0.0542,
+    "share_positive": 0.375
+   }
+  },
+  "per_day": 1.331,
+  "sessions_with_trade": 184,
+  "gates": {
+   "n_total>=200": true,
+   "exp_train>0": true,
+   "exp_valid>0": true,
+   "t_train>=bar": false,
+   "regime": false,
+   "walk_forward>=0.6": false,
+   "beats_random_train": true,
+   "beats_random_valid": true
+  },
+  "quality_pass": false,
+  "seed": "N3"
+ }
+]
