@@ -32,6 +32,13 @@ live:
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - NM-RWN5-ns3-mon-weakrs-short            # 0.69/day
+    - NM-RWR3-ns3-qqqup-early-short           # 0.83/day
+    - NM-RWN3-ns3-spyup-early-short           # 0.91/day
+    - NM-ETF-late-dip-di-long                 # ~1.1/day on 152 of 426 sessions
+    - NM-RWR4-ns2-up3-qqqup-slopedn-short     # 1.5/day
+    - NM-RWR1-exh150-gapdn-spyup-pm-short     # 1.5/day (clustered)
+    - NM-RWN4-ns2-spyup05-notfri-short        # 2.11/day
     - NM-AR-AM-gapdown-capitulation-long   # swarm1017 near-miss
     - NM-AMS-N1-quiet-morning-short   # swarm1017 near-miss
     - NM-PM-gapdn-above-pdh-rvol-short   # swarm1017 near-miss
@@ -68,6 +75,74 @@ live:
     - CWT14-failbrk-orl-p05-lowvol-long   # 173.74/day
     - CWT14-failbrk-orl-p05-long   # 246.53/day
 strategies:
+  # ---- swarm1017 near-misses runnable after Q8 (owner 2026-10-17): forward observation, NOT candidates;
+  #      judge on >= 20 sessions / 60 trades
+  NM-RWN3-ns3-spyup-early-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN3-ns3-spyup-early-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1030]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  NM-RWN4-ns2-spyup05-notfri-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN4-ns2-spyup05-notfri-t05s1-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, day-of-week]
+  NM-RWN5-ns3-mon-weakrs-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN5-ns3-mon-weakrs-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, day-of-week]
+  NM-RWR1-exh150-gapdn-spyup-pm-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-rw/modules/RWR1-exh150-gapdn-spyup-pm-short-t05s1.py
+    context: [spy_fo]
+    min_adv: 150000000
+    window: [1300, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  NM-RWR3-ns3-qqqup-early-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-rw/modules/RWR3-ns3-adv150-qqqup-early-short-refire.py
+    context: [qqq_fo]
+    min_adv: 150000000
+    window: [950, 1030]
+    refire: true
+    refire_cooldown: 1
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  NM-RWR4-ns2-up3-qqqup-slopedn-short:
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-rw/modules/RWR4-ns2-up3-qqqup-slopedn-am-short-t05s1.py
+    context: [qqq_fo]
+    min_adv: 95000000
+    window: [950, 1100]
+    refire: false
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  NM-ETF-late-dip-di-long:
+    enabled: true
+    type: lab
+    module: research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py
+    symbols: module
+    min_adv: 95000000
+    window: [1400, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, etf, fragile]
   # ---- swarm1017 near-misses (owner 2026-10-17, Q3): forward observation, NOT candidates; judge on >= 20 sessions / 60 trades
   NM-AR-AM-gapdown-capitulation-long:
     enabled: true
