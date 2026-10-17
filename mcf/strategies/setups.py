@@ -391,16 +391,32 @@ class LabStrategy(Strategy):
     the first, except that a signal blocks the next `refire_cooldown` decision bars of this setup on this symbol
     (default 1: a continuous qualifying run fires every other bar at most). The chain is rebuilt from the day's bars
     on every call (`refire_select`), so live and backtest pick the same bars; live acts only on the latest bar.
-    Off (the default) keeps the first-qualifying-bar behaviour unchanged."""
+    Off (the default) keeps the first-qualifying-bar behaviour unchanged.
+
+    Opt-in extras (owner 2026-10-17, Q8 = A; each off unless the setup sets it):
+    - `context: true | [spy_fo, qqq_fo, breadth, breadth_open]`: point-in-time market context columns in this setup's
+      copy of the frame (mcf/strategies/lab_context.py). Live they come from the poll (SPY/QQQ are polled for it).
+    - `symbols: [...]` (or `symbols: module` = the module's SYMBOLS): allow-list; the mask is evaluated only on these
+      symbols. It only restricts: unlike `symbols` of other setup types it does not pin the names into the universe
+      unless `pin_symbols: true` (pinning needs a list in the YAML).
+    - GEOM / `geom:` "t05s05" (target 0.5R, stop 0.5R), "hold" (stop 1R, no target, flat 15:55) and "holdtr" (stop 1R,
+      no target, trail 1R behind the best price once +1R - the Signal trail_r / trail_after_r that the runner and the
+      backtester already manage). A YAML `geom:` overrides the module's GEOM."""
 
     name = "lab"
-    GEOMS = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5)}
+    GEOMS = {"t1s1": (1.0, 1.0), "t05s1": (0.5, 1.0), "t1s05": (1.0, 0.5), "t05s05": (0.5, 0.5),
+             "hold": (None, 1.0), "holdtr": (None, 1.0)}
+    TRAIL = {"holdtr": (1.0, 1.0)}   # geom -> (trail_r, trail_after_r)
 
     def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0,
                  window: tuple | list | None = None, prefilter: str | None = None, refire: bool = False,
-                 refire_cooldown: int = 1, **params):
+                 refire_cooldown: int = 1, context=None, symbols=None, geom: str | None = None, **params):
+        from .lab_context import context_symbols, parse_context
+
         super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, window=window, prefilter=prefilter,
                          refire=bool(refire), refire_cooldown=int(refire_cooldown), **params)
+        self.context = parse_context(context)
+        self.context_symbols = context_symbols(self.context)
         if self.refire_cooldown < 0:
             raise ValueError(f"{name}: refire_cooldown must be >= 0")
         if self.refire:
@@ -418,7 +434,25 @@ class LabStrategy(Strategy):
         self.mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.mod)
         self.side = 1 if self.mod.SIDE == "long" else -1
-        geom = getattr(self.mod, "GEOM", "t1s1")
+        if symbols == "module":     # `symbols: module` = the module's own SYMBOLS (long ETF lists stay in one place)
+            if not hasattr(self.mod, "SYMBOLS"):
+                raise ValueError(f"{name}: symbols: module, but the module has no SYMBOLS")
+            symbols = self.mod.SYMBOLS
+        elif isinstance(symbols, str):
+            symbols = [symbols]
+        self.symbols = None if symbols is None else frozenset(str(x) for x in symbols)
+        geom = geom or getattr(self.mod, "GEOM", "t1s1")
+        if geom != "S" and geom not in self.GEOMS:
+            raise ValueError(f"{name}: unknown lab geometry {geom!r}")
+        self.geom = geom
+        if geom in self.TRAIL:
+            # set as setup params so Strategy.signals() applies them and the runner re-arms them after a restart;
+            # an explicit trail_r / trail_after_r in the YAML wins
+            tr, after = self.TRAIL[geom]
+            if self.params.get("trail_r") is None:
+                self.params["trail_r"] = self.trail_r = tr
+            if self.params.get("trail_after_r") is None:
+                self.params["trail_after_r"] = self.trail_after_r = after
         # GEOM "S" (structural exit, opt-in): the module's stop_price(f, i) gives the stop at a chart level, there is
         # no target, and the trade is flat at 15:55 - the "S" exits the CWT packages scored (Testing 2, 2026-10-12).
         self.structural = geom == "S"
@@ -426,6 +460,8 @@ class LabStrategy(Strategy):
 
     def eligible(self, ctx):
         if ctx.avg_dollar_volume < self.min_adv:
+            return False
+        if self.symbols is not None and ctx.symbol not in self.symbols:
             return False
         n = len(ctx.bars)
         if n < 5 or n % 5:
@@ -475,6 +511,10 @@ class LabStrategy(Strategy):
             if len(_LAB_FRAMES) > 4000:
                 _LAB_FRAMES.clear()
             _LAB_FRAMES[key] = f
+        if self.context:   # opt-in market context on this setup's own copy (the shared cached frame stays as is)
+            from .lab_context import add_context
+
+            f = add_context(f, getattr(ctx, "peers", None), self.context)
         tod = f["tod"].to_numpy()
         lo, hi = self.window or (950, 1500)      # the YAML window binds live AND backtest (no drift)
         m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= max(950, lo)) & (tod <= min(1500, hi))
@@ -510,7 +550,8 @@ class LabStrategy(Strategy):
                     return None
             return Signal(ctx.symbol, self.name, s, int(end), stop=stop, target=target, exit_by=t("15:55"),
                           meta={"layers": " + ".join(getattr(self.mod, "LAYERS", [])), "exit": "structural"})
-        return Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r, target=px + s * self.up * r,
+        return Signal(ctx.symbol, self.name, s, int(end), stop=px - s * self.dn * r,
+                      target=None if self.up is None else px + s * self.up * r,   # hold / holdtr: no target
                       exit_by=t("15:55"), meta={"layers": " + ".join(getattr(self.mod, "LAYERS", []))})
 
 

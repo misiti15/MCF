@@ -28,15 +28,32 @@ def months(locked: bool = False) -> list[str]:
     return sorted(p.name.split("=", 1)[1] for p in root.glob("month=*"))
 
 
-def load_month(month: str, columns: list[str] | None = None) -> pd.DataFrame:
-    """One calendar month of frames, sorted by symbol, date, tod. Locked months need MCF_HIST_ALLOW_LOCKED=1."""
+def load_month(month: str, columns: list[str] | None = None, context: bool = False) -> pd.DataFrame:
+    """One calendar month of frames, sorted by symbol, date, tod. Locked months need MCF_HIST_ALLOW_LOCKED=1.
+    context=True joins the lab context columns (spy_fo, qqq_fo, breadth, breadth_open; build_frames.py --context-only)
+    on (date, tod) - the same point-in-time columns LabStrategy `context:` adds live."""
     locked = month in LOCKED_MONTHS
     if locked and not _allow_locked():
         raise PermissionError("the rule-19 locked block (2024-11..2025-02) is scored once per version by the lead")
     p = DATA / ("locked" if locked else "frames") / f"month={month}"
     df = ds.dataset(str(p), format="parquet").to_table(columns=columns).to_pandas()
     df["date"] = pd.to_datetime(df["date"]).dt.date
+    if context:
+        df = df.merge(load_context(month), on=["date", "tod"], how="left")
     return df.sort_values(["symbol", "date", "tod"], kind="mergesort").reset_index(drop=True)
+
+
+def load_context(month: str) -> pd.DataFrame:
+    """The month's lab context table (date, tod, spy_fo, qqq_fo, breadth, breadth_open). Same locked guard."""
+    locked = month in LOCKED_MONTHS
+    if locked and not _allow_locked():
+        raise PermissionError("the rule-19 locked block (2024-11..2025-02) is scored once per version by the lead")
+    p = DATA / ("locked_context" if locked else "context") / f"month={month}.parquet"
+    if not p.exists():
+        raise FileNotFoundError(f"{p} missing: run python research/history2y/build_frames.py --context-only")
+    c = pd.read_parquet(p)
+    c["date"] = pd.to_datetime(c["date"]).dt.date
+    return c
 
 
 def daily(include_locked: bool = False) -> pd.DataFrame:
