@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 505 · coded: 85 · failed: 261 · configurations tried (all lineages): 26184450
+Total ideas: 510 · coded: 85 · failed: 266 · configurations tried (all lineages): 26184450
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -507,6 +507,11 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | exit-cwt-trail-notarget | CWT12/14 longs: no target, 1R trailing stop | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
 | failed | exit-regime-stop05 | 0.5R stop by day class at decision time | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
 | failed | swarm1017-locked-look1-nearmisses | Locked look 1: RST1, ETF-late-dip-adx, AM gap-down capitulation | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | sat1017-rw-c3-hedge-rs | C3 MA pullback: beta hedge / +RS63 rework | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-rw-c7-etf-streak | C7 down-streak buy on 28 equity ETFs (new instruments) | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-rw-resmom-beta756 | Residual momentum with 756-session beta | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-new-overnight-tugofwar | Overnight-minus-intraday return persistence, weekly top decile, 5-20d hold | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-new-highvolume-premium | High-volume return premium (vol >= 2-3x, small move), 5-20d hold | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
