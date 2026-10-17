@@ -204,7 +204,8 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
     min_adv: 95000000
     window: [950, 1500]
-    scale_out_r: null
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full", fill: false}
   # Coil Under the High (6 bars): CWT package B B4-parta-k6-t1s05-guest (id 207); open history n 16735, exp -0.0703R, t -4.68, 39.28/day; verdict retire
   CWT12-coil-k6-long:
@@ -222,7 +223,8 @@ strategies:
     module: research/bdi/cwt/live/CWT12-coil-k4-long.py
     min_adv: 95000000
     window: [950, 1130]
-    scale_out_r: null
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: "B4-parta-k4-t05s1-guest", fill: false}
   # Spike-Pullback Flag Breakout: CWT package B B4-partb-k1-t05s1-full (id 212); open history n 1435, exp -0.0744R, t -2.75, 3.37/day; verdict retire
   CWT12-flag-s1-long:
@@ -322,7 +324,8 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
     min_adv: 95000000
     window: [950, 1200]
-    scale_out_r: null
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vany-sidelong-t05s1-guest", fill: true}
   # Failed Opening-Range-Low Break Long (0.05 ATR) [fill]: CWT package B B3-LOR-p0.05-Vany-sidelong-t05s1-full (id 154); open history n 105023, exp -0.0935R, t -10.05, 246.53/day; verdict rework
   CWT14-failbrk-orl-p05-long:
@@ -350,7 +353,8 @@ strategies:
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
     min_adv: 95000000
     window: [950, 1500]
-    scale_out_r: null
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full", fill: true}
   # Failed Prior-Day-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full (id 118); open history n 44026, exp -0.0960R, t -10.03, 103.35/day; verdict rework
   CWT14-failbrk-pdl-p05-lowvol-long:

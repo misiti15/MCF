@@ -193,12 +193,15 @@ def test_time_stop_after_scale_out_closes_only_what_is_left(tmp_path, monkeypatc
     assert float(c.by_coid(ID("A") + "-x").qty) == 5 and "XYZ" not in c.pos
 
 
-def test_config_flags_exactly_the_three_testing2_setups(monkeypatch):
+def test_config_flags_exactly_the_testing2_setups(monkeypatch):
     monkeypatch.setenv("MCF_ACCOUNT", "testing2")
     cfg = load_config()
     flagged = {n for n, p in cfg["strategies"].items() if (p or {}).get("live_scale_out")}
-    assert flagged == set(SCALED)
+    scaled35 = {"CWT14-failbrk-pdh-p05-lowvol-short", "CWT14-failbrk-orl-p10-long", "CWT14-failbrk-orl-p10-lowvol-long",
+                "CWT12-coil-k4-long"}                        # owner 2026-10-17 (Q17)
+    assert flagged == set(SCALED) | scaled35
     assert all(cfg["strategies"][n]["scale_out_r"] == 0.25 for n in SCALED)
+    assert all(cfg["strategies"][n]["scale_out_r"] == 0.35 for n in scaled35)
     for acct in ("primary", "testing"):
         monkeypatch.setenv("MCF_ACCOUNT", acct)
         assert not any((p or {}).get("live_scale_out") for p in load_config()["strategies"].values())
