@@ -65,12 +65,13 @@ def flat_deadline(r):
 
 
 def simulate(r, be_at=None, trail_after=None, trail_r=None, time_n=None, time_r=0.3, stop_mult=1.0,
-             scale_at=None, scale_be=False, cut_at=None):
+             scale_at=None, scale_be=False, cut_at=None, b=None):
     """Replay one live trade on 1-min SIP bars from the bar after the entry minute. Stop-first inside a bar, gaps through
     stops fill at the open, targets fill at the limit, management moves take effect on the next bar.
     stop_mult k: stop k x farther, size 1/k (same $ risk), target price unchanged. cut_at: force a market exit at that
     time (account-level flatten). Returns (pnl_after_costs, exit_reason, exit_time) or None without bars."""
-    b = bars(r.date, r.symbol)
+    if b is None:
+        b = bars(r.date, r.symbol)
     if b is None or r.R <= 0:
         return None
     s, E, R0 = int(r.side), float(r.entry), float(r.R)

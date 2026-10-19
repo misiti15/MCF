@@ -105,6 +105,14 @@ IND = {
     "bars_since_lod": ("state", "lod", "BarsSinceLOD", "lo hi"),
 }
 INDICATOR_NAMES = tuple(IND)
+# Seed-only indicators (mcf/research/generator/seeds.py, owner 2026-10-19): live frame columns that a weekly Setup lab
+# rule needs for a faithful translation but that random specs never draw (kept out of IND so the random generator and
+# its quantile table are unchanged). They are in the screen panel (generator.data) and computed live like IND.
+SEED_IND = {
+    "fromOpen": ("state", "day", "FromOpen", "lo hi"),
+}
+ALL_IND = {**IND, **SEED_IND}
+PANEL_NAMES = INDICATOR_NAMES + tuple(SEED_IND)
 QUANT_LO = (0.05, 0.10, 0.20, 0.30)
 QUANT_HI = (0.70, 0.80, 0.90, 0.95)
 
@@ -135,7 +143,7 @@ class Spec:
     def roles(self) -> dict:
         r = {"trigger": 0, "state": 0, "context": 0}
         for c in self.conds:
-            r["context" if c[0] in CONTEXT else IND[c[0]][0]] += 1
+            r["context" if c[0] in CONTEXT else ALL_IND[c[0]][0]] += 1
         return r
 
 
@@ -159,6 +167,34 @@ def valid(spec: Spec) -> tuple[bool, str]:
     groups = [IND[c[0]][1] for c in spec.conds if c[0] in IND]
     if len(groups) != len(set(groups)):
         return False, "two conditions from one indicator group"
+    return True, "ok"
+
+
+def valid_seed(spec: Spec) -> tuple[bool, str]:
+    """Rules for specs translated from a Setup lab rule (seeds.py): >= 3 conditions incl. the window, exactly one
+    context filter, >= 1 stock condition (the lab rule's own layers: a lab rule may be state-only, so no trigger is
+    required), indicators the panel and the live frame have, and one indicator group per condition except a range
+    (one `>=`/`>` and one `<=`/`<` on the same indicator, e.g. "gap within 2%")."""
+    r = spec.roles()
+    if spec.n_conditions() < 3:
+        return False, "needs >= 3 conditions incl. the window"
+    if r["context"] != 1 or r["trigger"] + r["state"] < 1:
+        return False, "needs exactly 1 context filter and >= 1 stock condition"
+    if spec.window not in WINDOWS or spec.geom not in GEOMS or spec.side not in SIDES:
+        return False, "bad window/geom/side"
+    by_group: dict = {}
+    for c in spec.conds:
+        if c[0] in CONTEXT:
+            continue
+        if c[0] not in ALL_IND:
+            return False, f"unknown indicator {c[0]}"
+        by_group.setdefault(ALL_IND[c[0]][1], []).append(c)
+    for cs in by_group.values():
+        if len(cs) == 1:
+            continue
+        if len(cs) == 2 and cs[0][0] == cs[1][0] and {_dir(cs[0][1]), _dir(cs[1][1])} == {"lo", "hi"}:
+            continue
+        return False, "two conditions from one indicator group (not a range)"
     return True, "ok"
 
 
@@ -221,16 +257,16 @@ def cond_code(c) -> str:
         if n in ("spy_fo", "qqq_fo") and v == 0:
             return code + ("up" if op in (">", ">=") else "dn")
         return code + ("gt" if op in (">", ">=") else "lt") + _num(v)
-    code = IND[n][2]
+    code = ALL_IND[n][2]
     if op == "==":
-        return code if v == 1 and IND[n][3] == "bin" else code + ("Up" if v > 0 else "Dn")
+        return code if v == 1 and ALL_IND[n][3] == "bin" else code + ("Up" if v > 0 else "Dn")
     return code + ("le" if op in ("<", "<=") else "ge") + _num(v)
 
 
 def setup_name(spec: Spec, date: str, idx: int) -> str:
     d = date.replace("-", "")[2:]
-    trig = [c for c in spec.conds if c[0] in IND and IND[c[0]][0] == "trigger"]
-    state = [c for c in spec.conds if c[0] in IND and IND[c[0]][0] == "state"]
+    trig = [c for c in spec.conds if c[0] in ALL_IND and ALL_IND[c[0]][0] == "trigger"]
+    state = [c for c in spec.conds if c[0] in ALL_IND and ALL_IND[c[0]][0] == "state"]
     ctx = [c for c in spec.conds if c[0] in CONTEXT]
     parts = [cond_code(c) for c in trig + state] + [spec.window] + [cond_code(c) for c in ctx] + [spec.geom, spec.side]
     return f"GEN-{d}-{idx:02d}-" + "-".join(parts)
@@ -238,8 +274,9 @@ def setup_name(spec: Spec, date: str, idx: int) -> str:
 
 def module_slug(spec: Spec, date: str, idx: int) -> str:
     d = date.replace("-", "")[2:]
-    trig = [c for c in spec.conds if c[0] in IND and IND[c[0]][0] == "trigger"][0]
-    lab = IND[trig[0]][2].lower() + ("-" + _dir(trig[1]) if trig[1] != "==" else "")
+    stock = [c for c in spec.conds if c[0] in ALL_IND]
+    trig = ([c for c in stock if ALL_IND[c[0]][0] == "trigger"] or stock)[0]     # seeds may be state-only
+    lab = ALL_IND[trig[0]][2].lower() + ("-" + _dir(trig[1]) if trig[1] != "==" else "")
     return f"GEN-{d}-{idx:02d}-{lab}-{spec.window.lower()}-{spec.side}"
 
 
@@ -253,7 +290,7 @@ def _cond_words(c) -> str:
     desc = INDICATORS[n].desc
     if op == "==":
         return f"{desc} = {v:g}"
-    return f"{desc} {'<=' if op in ('<', '<=') else '>='} {v:g}"
+    return f"{desc} {op} {v:g}"
 
 
 def what(spec: Spec) -> str:
@@ -266,7 +303,8 @@ def what(spec: Spec) -> str:
 
 
 def display_name(spec: Spec) -> str:
-    trig = [c for c in spec.conds if c[0] in IND and IND[c[0]][0] == "trigger"]
+    stock = [c for c in spec.conds if c[0] in ALL_IND]
+    trig = [c for c in stock if ALL_IND[c[0]][0] == "trigger"] or stock          # seeds may be state-only
     ctx = [c for c in spec.conds if c[0] in CONTEXT][0]
     t = ", ".join(cond_code(c) for c in trig)
     return f"Generated: {t} {spec.window} {spec.side} ({cond_code(ctx)}, {spec.geom})"
