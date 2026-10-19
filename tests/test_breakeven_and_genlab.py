@@ -27,3 +27,11 @@ def test_generator_lab_summary_is_brief():
     assert set(d) >= {"generated", "runs", "setups_generated", "live_in_gen", "promoted", "specs_screened"}
     assert all("picked" in r and "median_valid_r" in r for r in d["runs"])
     assert "picks" not in json.dumps(d)         # trends only, no setup list
+
+
+def test_dashboard_hover_glossary_covers_leaderboard_headers():
+    from pathlib import Path
+    html = (Path(__file__).resolve().parents[1] / "docs/live/index.html").read_text()
+    assert "gl-tip" in html
+    for term in ("Break-even win rate", "Confidence (t)", "Avg R", "Playing time", "crowded-out", "Trades/day"):
+        assert f'"{term}":' in html, term

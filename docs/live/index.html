@@ -831,4 +831,112 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   setInterval(load, 600000);
 })();
 </script>
-</main></body></html>
+</main><!-- Hover glossary (owner 2026-10-19): hover (or tap) any column header, tile label, metric name or verdict chip to see a
+     one-line explanation. One dictionary for the whole page; applied after every render. -->
+<style>
+.gl-tip { text-decoration: underline dotted var(--muted); text-underline-offset: 3px; cursor: help; }
+</style>
+<script>
+(() => {
+  const G = {
+    "#": "Rank: average R per trade, shrunk toward 0 when a setup has few trades, so a few lucky trades can't top a long record.",
+    "Rank": "Average R per trade, shrunk toward 0 when a setup has few trades.",
+    "Setup": "The trading rule. Hover the name for what it does.",
+    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2 (Graveyard), Setup Generator.",
+    "Live trades": "Closed paper trades since the setup started in this account.",
+    "Trades": "Closed paper trades.",
+    "Trades today": "Trades closed today in this account.",
+    "Sessions": "Market days the setup traded at least once.",
+    "Trades/day": "Live trades divided by sessions traded. The owner's promotion signal for generated setups (about 20/day).",
+    "Win rate": "Share of trades that made money after costs.",
+    "Break-even win rate": "The win rate this setup needs to make money, given its own average win and loss size. The (+/-) is how far the actual win rate is above or below it.",
+    "Avg R": "Average result per trade in R (R = the planned risk per trade), after costs. The deciding number for promotion and demotion.",
+    "R": "Result in units of the planned risk: +1R = made what was risked, -1R = lost what was risked.",
+    "Confidence (t)": "How sure the Avg R is: about 2 or more = solid, 1-2 = suggestive, under 1 = could be luck. Grows with more, steadier trades.",
+    "Total R": "Sum of R over all trades.",
+    "P/L": "Profit or loss in dollars after costs (paper).",
+    "P/L today": "Today's profit or loss in dollars after costs (paper).",
+    "Adj. P/L": "P/L recomputed with the stops a real book would have had (removes paper fill quirks).",
+    "PF": "Profit factor: dollars won divided by dollars lost. Above 1 = profitable.",
+    "Profit factor": "Dollars won divided by dollars lost. Above 1 = profitable.",
+    "Last 4 avg R": "Average R over the account's last 4 sessions: is it getting better or worse lately?",
+    "Backtest R": "Expected R per trade from the setup's backtest on history, after costs.",
+    "Backtest expected R": "Expected R per trade from the setup's backtest on history, after costs.",
+    "vs backtest": "Live Avg R minus backtest R. Negative = doing worse live than history suggested.",
+    "Sim. trades / sim avg R (SIMULATED)": "What-if replays of signals the setup could not take (slot, symbol or cap blocked). Simulated only; never counted in live stats.",
+    "Playing time": "Does the setup get enough chances to trade? ok, slow, starved (signals blocked), crowded-out (another setup held the symbol), silent (no signals).",
+    "Flag": "review = 20+ trades and negative or well below backtest; promising = 20+ trades, positive, at/above backtest; needs trades = under 10.",
+    "Generated": "Date the Setup Generator created it.",
+    "Screen train R": "Avg R after costs on older history (to end-2025) when generated. A quick screen, not a full test.",
+    "Screen valid R": "Avg R after costs on 2026 history when generated: did it hold up on newer data?",
+    "Screen /day": "Trades per day in that history screen.",
+    "Signals": "Times a setup's rule fired; some are skipped (slots, caps, spread, borrow).",
+    "Data health": "Is live market data arriving on time? Stale data pauses new entries.",
+    "Verdict": "The report's call on this setup (e.g. keep, review, promising, playing-time status).",
+    "Today sig / taken": "Today's signals and how many became trades.",
+    "Signals / taken / trades": "Since start: rule fired / entries placed / trades closed.",
+    "Taken/day": "Entries per session.",
+    "Expected/day": "Entries per day the backtest expected.",
+    "Per week": "Entries per week at the current pace.",
+    "Lost to others": "Signals skipped because another setup already held that symbol.",
+    "Lost to": "Which setups held the symbol instead.",
+    "Top skips": "Most common reasons signals were not taken.",
+    "Green days": "Share of sessions that closed with a profit.",
+    "Stop-loss exits": "Share of trades that ended at the stop.",
+    "Entry slippage vs signal": "How far the fill was from the signal price, in basis points (1 bp = 0.01%).",
+    "Screened": "Candidate setups the generator scored in that run.",
+    "New setups": "Setups added to the Setup Generator account in that run.",
+    "From scan": "New setups that came from the Saturday scan's rules.",
+    "Median screen R": "Middle screen Avg R of that run's new setups.",
+    "Best screen R": "Best screen Avg R among that run's new setups.",
+    "Best t": "Highest confidence (t) among that run's new setups.",
+    "Drawdown": "Drop from the highest equity so far.",
+    "Tracking diff.": "Paper day return minus the backtest replay's.",
+    "Slip": "Fill price vs expected, in basis points.",
+    "Side": "long = profits if price rises; short = profits if price falls.",
+    "ok": "Getting enough trades to be judged.", "slow": "Trading, but below the pace it needs.",
+    "starved": "Signals fire but most are blocked (caps, spread, borrow).", "crowded-out": "Often blocked because another setup already holds the symbol.",
+    "silent": "No signals at all yet.", "watch": "Borderline; check again in a few sessions.", "quiet - wait": "Few signals so far; too early to judge.",
+    "review": "20+ trades and negative or well below its backtest.", "promising": "20+ trades, positive and at/above its backtest.",
+    "needs trades": "Fewer than 10 trades: too early to judge.", "GENERATED": "Machine-generated by the Setup Generator; trades only in the Setup Generator account.",
+    "ex-primary": "Was in the Primary account before being demoted.",
+  };
+  const norm = t => String(t || "").replace(/[▲▼]/g, "").replace(/\s+/g, " ").trim();
+  const keyOf = t => { t = norm(t); if (G[t]) return t; const b = t.split(/[:(]/)[0].trim().replace(/ \d+$/, ""); return G[b] ? b : null; };
+  function apply(root) {
+    root.querySelectorAll("th, .tile .k, .chip, .pill, .genbadge, td.l > b, td.l:first-child").forEach(el => {
+      if (el.dataset.gl) return;
+      const k = keyOf(el.textContent); el.dataset.gl = "1";
+      if (!k) return;
+      const own = el.getAttribute("title");
+      el.setAttribute("title", own && own !== G[k] ? `${G[k]} — ${own}` : G[k]);
+      el.classList.add("gl-tip");
+    });
+  }
+  // touch screens have no hover: first tap on a term shows its explanation, a second tap (within 4 s) does the normal action
+  if (matchMedia("(hover: none)").matches) {
+    const tip = document.createElement("div");
+    tip.style.cssText = "position:fixed;z-index:99;max-width:min(320px,90vw);padding:8px 10px;border-radius:8px;font-size:13px;line-height:1.35;" +
+      "background:var(--surface);color:var(--ink);border:1px solid var(--axis);box-shadow:0 4px 14px rgba(0,0,0,.18);display:none";
+    document.body.appendChild(tip);
+    let last = null, at = 0;
+    document.addEventListener("click", ev => {
+      const el = ev.target.closest(".gl-tip");
+      if (!el) { tip.style.display = "none"; last = null; return; }
+      if (last === el && Date.now() - at < 4000) { tip.style.display = "none"; last = null; return; }
+      ev.stopPropagation(); ev.preventDefault();
+      last = el; at = Date.now();
+      tip.textContent = el.getAttribute("title"); tip.style.display = "block";
+      const r = el.getBoundingClientRect(), w = tip.offsetWidth;
+      tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left)) + "px";
+      tip.style.top = (r.bottom + 6 + tip.offsetHeight > innerHeight ? r.top - tip.offsetHeight - 6 : r.bottom + 6) + "px";
+    }, true);
+    addEventListener("scroll", () => { tip.style.display = "none"; }, { passive: true });
+  }
+  let pend = false;
+  new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; apply(document); }); })
+    .observe(document.body, { childList: true, subtree: true });
+  apply(document);
+})();
+</script>
+</body></html>
