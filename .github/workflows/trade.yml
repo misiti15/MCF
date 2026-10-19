@@ -12,6 +12,9 @@
 # second job per run trades config/account_testing.yaml on that account (orders mct-*, state branch mcf-data-testing).
 # Optional: ALPACA_TESTING2_API_KEY, ALPACA_TESTING2_SECRET_KEY - the "Testing 2" paper account (owner 2026-10-12). When set,
 # a third job trades config/account_testing2.yaml (orders mt2-*, state branch mcf-data-testing2); skipped while unset.
+# Optional: ALPACA_GEN_API_KEY, ALPACA_GEN_SECRET_KEY - the "Setup Generator" paper account (owner 2026-10-19). When set, a
+# fourth job trades config/account_gen.yaml (GEN-* setups from mcf/research/generator; orders mcg-*, state branch
+# mcf-data-gen); skipped while unset. Market data always comes from the primary SIP keys above.
 name: trade
 
 on:
@@ -33,20 +36,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing, testing2]
+        account: [primary, testing, testing2, gen]
     concurrency:
-      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || 'mcf-trade-testing') }}
+      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || (matrix.account == 'gen' && 'mcf-trade-gen' || 'mcf-trade-testing')) }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 355
     env:
       MCF_ACCOUNT: ${{ matrix.account }}
-      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || 'mct-') }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || 'mcf-data-testing') }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || 'mct-')) }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || 'mcf-data-testing')) }}
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || '') }}
-      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || '') }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || '')) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || '')) }}
       ALPACA_DATA_FEED: sip
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
@@ -58,7 +61,7 @@ jobs:
         id: window
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { [ "$MCF_ACCOUNT" = "testing2" ] && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
+          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
           elif [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
           echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
 
@@ -78,7 +81,7 @@ jobs:
         if: steps.window.outputs.run == 'true'
         run: pip install -q -e ".[alpaca]"
 
-      - name: Check out state branch (mcf-data / mcf-data-testing / mcf-data-testing2)
+      - name: Check out state branch (mcf-data / mcf-data-testing / mcf-data-testing2 / mcf-data-gen)
         if: steps.window.outputs.run == 'true'
         run: |
           url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"

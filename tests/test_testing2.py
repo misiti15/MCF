@@ -54,7 +54,8 @@ def test_every_module_runs_in_the_live_lab_strategy(monkeypatch):
 def test_workflows_route_testing2_to_its_own_account():
     tr = (ROOT / ".github/workflows/trade.yml").read_text()
     eod = (ROOT / ".github/workflows/eod.yml").read_text()
-    assert "account: [primary, testing, testing2]" in tr and "account: [primary, testing, testing2]" in eod
+    for wf in (tr, eod):                      # the matrix may grow (Setup Generator "gen", 2026-10-19)
+        assert "account: [primary, testing, testing2" in wf
     for s in ("mt2-", "mcf-data-testing2", "mcf-trade-testing2", "ALPACA_TESTING2_API_KEY", "ALPACA_TESTING2_SECRET_KEY"):
         assert s in tr
     assert "mcf-data-testing2" in eod

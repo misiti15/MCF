@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 505 · coded: 85 · failed: 261 · configurations tried (all lineages): 26184450
+Total ideas: 526 · coded: 85 · failed: 274 · configurations tried (all lineages): 26184450
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -246,6 +246,14 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | swarm1017-live-code-geoms | Code request: t05s05 and no-target/trailing GEOMs in LabStrategy; per-bar spy_fo / qqq_fo / breadth columns in the live lab frame | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | idea | swarm1017-labstrategy-symbols | Housekeeping: symbols allow-list in LabStrategy.eligible() | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
 | idea | swarm1017-arena-package | Housekeeping: review and ship mcf/research/arena/ (indicators, combine, screen) with tests | weekend swarm 2026-10-17 (research/swarm1017/SUMMARY.md) | – | – | – | – | – | – |
+| idea | tf1019-primary-te-thresholds | Same-clock-time lookbacks squash RSI5 and buyPressure on 1-3 min bars; fixed thresholds stop firing. Only worth testing with thresholds set by percentile (matching the 5-min trigger rate), as a new, separately counted family | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf-time-equivalent-frames | Rebuild the timeframe data with lookbacks scaled to the same clock time (scale = 5/m) | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-t2-cwt14-or-level-definition | Check the CWT14 'OR' level: research frames start at the 09:50 bar, so the opening range is about 09:45-10:00 rather than 09:30-10:00; compare with the live implementation | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-t2cwt-S-geom-frames | Add structural-stop (S) outcome to frames_tf so CWT09 bounce g5/g10 and vwaploss g10 can be timeframe-tested | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-t2cwt-pre0950-rows | frames_tf start at the 09:50 bar close; session HOD/LOD state for CWT kernels misses 09:30-09:50 and the coverage differs by timeframe | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-nm-fulluniverse-rerun | Re-run the 12 NM near-misses at 3/5/10/15 min on symbols='all' (160) or the full universe, since core-80 power is too low | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-arena-grid-housekeeping | Housekeeping: make mcf.research.arena.indicators.compute timeframe-aware (STEP/N_SLOTS/first slot per bar size) or refuse non-5-min frames | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| idea | tf1019-recent-replay-harness | Housekeeping: nightly SIP extension of data/cache_hist plus a recent-sessions replay of live Strategy code via mcf.backtest.engine, scored only on a frozen forward window | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -507,6 +515,19 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | exit-cwt-trail-notarget | CWT12/14 longs: no target, 1R trailing stop | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
 | failed | exit-regime-stop05 | 0.5R stop by day class at decision time | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
 | failed | swarm1017-locked-look1-nearmisses | Locked look 1: RST1, ETF-late-dip-adx, AM gap-down capitulation | swarm1017 follow-up 2026-10-17 (research/swarm1017/followup/NOTES.md) | – | – | – | – | – | – |
+| failed | sat1017-rw-c3-hedge-rs | C3 MA pullback: beta hedge / +RS63 rework | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-rw-c7-etf-streak | C7 down-streak buy on 28 equity ETFs (new instruments) | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-rw-resmom-beta756 | Residual momentum with 756-session beta | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-new-overnight-tugofwar | Overnight-minus-intraday return persistence, weekly top decile, 5-20d hold | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | sat1017-new-highvolume-premium | High-volume return premium (vol >= 2-3x, small move), 5-20d hold | BDI Saturday 10-17 (research/bdi/sat1017) | – | – | – | – | – | – |
+| failed | tf1019-primary-no-bar-minutes | Do not add live bar_minutes support for the Primary setups: none of the 108 timeframe versions passes | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t1-rw-st | Timeframe test (1/3/5/10/15m) of RW1-RW7, ST1-ST8, L3-*, exhaustion_short full-day versions | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t1misc-ns-fd-timeframes | NS1-5-FD on 1/3/10/15-min decision bars (as-is and time-equivalent lookbacks) | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t1misc-mf-fd-timeframes | MF1-5-FD on 1/3/10/15-min decision bars (as-is and time-equivalent lookbacks) | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t1misc-heatfade-timeframes | heat_fade_short/long (+FD) on 1/3/10/15-min decision bars (as-is and time-equivalent heat components) | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t2-cwt14-timeframes | CWT14-failbrk (11 Testing-2 setups) on 1/3/5/10/15-min decision bars, as-is and time-equivalent reclaim window | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-t2cwt-result | CWT04/05/09/12/13 Testing-2 setups on 1/3/5/10/15-min bars (as-is + time-equivalent): 0/104 pass | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
+| failed | tf1019-nm-HL-T75-10m-te | NM-HL-T75-pm-long on 10-minute decision bars with time-equivalent heat lookbacks (RSI 7 bars, price-position range 10 bars, momentum shifts 2/5), window 13:00-15:00, t05s1, min_adv 125M | tf1019 timeframe swarm 2026-10-18/19 | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

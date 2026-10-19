@@ -8,6 +8,7 @@
   --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
   --pos: #2a78d6; --neg: #e34948; --s1: #2a78d6;
   --good: #006300; --bad: #d03b3b;
+  --gen: #7c3aed; --gen-bg: rgba(124,58,237,0.07);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -15,6 +16,7 @@
     --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
     --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
     --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+    --gen: #b794f6; --gen-bg: rgba(183,148,246,0.10);
   }
 }
 :root[data-theme="dark"] {
@@ -22,6 +24,7 @@
   --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
   --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
   --pos: #3987e5; --neg: #e66767; --s1: #3987e5; --good: #0ca30c; --bad: #e66767;
+  --gen: #b794f6; --gen-bg: rgba(183,148,246,0.10);
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--page); color: var(--ink);
@@ -58,6 +61,12 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 #lb-tab thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
 th.sorted { color: var(--s1); text-decoration: underline; }
 th[data-sortable] { user-select: none; }
+.card.gen { border: 2px solid var(--gen); background: linear-gradient(var(--gen-bg), var(--gen-bg)), var(--surface); }
+.card.gen h2 { color: var(--gen); }
+.genbadge { display: inline-block; padding: 0 6px; border-radius: 5px; font-size: 10px; font-weight: 700; letter-spacing: .04em;
+  color: #fff; background: var(--gen); vertical-align: middle; }
+#gen-tab thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+#gen-tab th.sorted { color: var(--gen); }
 </style>
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
@@ -84,6 +93,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     { k: "primary", name: "Primary", type: "intraday · promoted setups", br: "mcf-data", q: "?" },
     { k: "testing", name: "Testing 1", type: "intraday · minor league", br: "mcf-data-testing", q: "?account=testing" },
     { k: "testing2", name: "Testing 2", type: "intraday · minor league (CWT)", br: "mcf-data-testing2", q: "?account=testing2" },
+    { k: "gen", name: "Setup Generator", type: "intraday · machine-generated setups", br: "mcf-data-gen", q: "?account=gen" },
     { k: "longhold", name: "Long-hold (S6)", type: "weekly momentum · separate Alpaca profile", br: "mcf-data-longhold", q: "?account=longhold", lh: true },
   ];
   const cur = new URLSearchParams(location.search).get("account") || "primary";
@@ -205,6 +215,16 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. Paper results; few trades prove nothing. Updated by each account's end-of-day report. Educational only — not financial advice.</div></div>
+  <!-- Generated setups leaderboard (owner 2026-10-19): the Setup Generator account's machine-generated GEN-* setups only.
+       Deliberately distinct from the setup leaderboard above (violet accent, GENERATED badge). Script at the end of the page. -->
+  <div class="card gen" id="gen-card"><h2><span class="genbadge">GENERATED</span> Generated setups leaderboard — Setup Generator account</h2>
+    <div class="sub">Setups invented by the BDI Setup Generator (10 new per day) and traded on their own paper account. They are <b>not tested edges</b>:
+      each passed only a quick screen on past data (stats below, negative ones included). No promotion rules — you decide. Never mixed into the leaderboard above.</div>
+    <div class="sub" id="gen-sum" style="margin-top:6px">Loading…</div>
+    <div class="sub" id="gen-sorted" style="margin:6px 0"></div>
+    <div class="tablewrap" id="gen-tab" style="max-height:560px;overflow-y:auto"><div class="empty">Loading…</div></div>
+    <div class="note">Rank = live avg R shrunk by trades ÷ (trades + 20), as above. <b>Screen train / valid R</b> = expectancy after costs on the open history when the setup was generated
+      (train ≤ 2025-12, valid 2026-01 onward; no locked holdout). <b>Screen /day</b> = trades per day in that screen. Paper results; few trades prove nothing. Educational only — not financial advice.</div></div>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
@@ -380,7 +400,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   ideas();
   // Accounts: code names stay primary / testing / testing2; "testing" is shown as "Testing 1" (owner 2026-10-12).
   const ACCOUNTS = { primary: ["Primary", "mcf-data", ""], testing: ["Testing 1", "mcf-data-testing", "?account=testing"],
-                     testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"] };
+                     testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"], gen: ["Setup Generator", "mcf-data-gen", "?account=gen"] };
   const qa = new URLSearchParams(location.search).get("account");
   const ACCT = Object.prototype.hasOwnProperty.call(ACCOUNTS, qa) ? qa : "primary";
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + ACCOUNTS[ACCT][1] + "/";
@@ -497,7 +517,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   document.querySelectorAll("section").forEach(s => { if (s.id !== "lh") s.style.display = "none"; });
   const lh = q("#lh"); lh.style.display = "grid";
   const sw = document.createElement("div"); sw.className = "sub";
-  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <b>Long-hold (S6)</b>';
+  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <a href="?account=gen">Setup Generator</a> · <b>Long-hold (S6)</b>';
   q("#lh-asof").after(sw);
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data-longhold/longhold/";
   const get = async (p, json) => { const r = await fetch(RAW + p + "?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) throw r.status; return json ? r.json() : r.text(); };
@@ -557,6 +577,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const isGen = c => /^GEN-/.test(String(c || ""));
   let rows = [], when = {}, sortK = "rank", sortD = 1;
   const st = { acct: "all", show: "live", min: 0 };
   function flag(r) {
@@ -578,7 +599,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
           pt = Object.fromEntries((((c.playing_time || {}).cumulative || {}).setups || []).map(x => [x.setup, x.verdict])); }
       } catch (_) {}
       if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
-      (lb || []).forEach(r => all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup] }));
+      // generated setups have their own card (owner 2026-10-19): never in this leaderboard
+      (lb || []).filter(r => !isGen(r.setup)).forEach(r => all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup] }));
     }));
     // a setup traded in more than one account (e.g. demoted from Primary): total live trades across accounts
     const tot = {};
@@ -655,13 +677,13 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   }
   document.addEventListener("click", ev => {
     const h = ev.target.closest("th"); if (!h) return;
-    const wrap = h.closest(".tablewrap"); if (!wrap || wrap.id === "lb-tab") return;
+    const wrap = h.closest(".tablewrap"); if (!wrap || wrap.id === "lb-tab" || wrap.id === "gen-tab") return;
     const c = [...h.parentNode.children].indexOf(h), prev = state.get(wrap);
     state.set(wrap, { col: c, dir: prev && prev.col === c ? -prev.dir : (c === 0 ? 1 : -1) });
     apply(wrap);
   });
   mo = new MutationObserver(ms => new Set(ms.map(m => m.target.closest && m.target.closest(".tablewrap")))
-    .forEach(w => { if (w && w.id !== "lb-tab" && state.has(w)) apply(w); }));
+    .forEach(w => { if (w && w.id !== "lb-tab" && w.id !== "gen-tab" && state.has(w)) apply(w); }));
   document.querySelectorAll(".tablewrap").forEach(w => mo.observe(w, { childList: true, subtree: true }));
 })();
 </script>
@@ -712,6 +734,60 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   }
   load();
   setInterval(load, 300000);
+})();
+</script>
+<script>
+// Generated setups leaderboard (owner 2026-10-19): GEN-* setups of the Setup Generator account only. Reads
+// mcf-data-gen/reports/scorecard.json -> leaderboard (live paper results) and docs/live/setup_names.json (every GEN
+// setup, its generation date and screen stats), so a setup is listed from the day it is generated, traded or not.
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
+  const q = s => document.querySelector(s);
+  if (!q("#gen-card")) return;
+  const isGen = c => /^GEN-/.test(String(c || ""));
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f = (v, d = 2) => v == null || isNaN(v) ? "–" : (v > 0 ? "+" : "") + (+v).toFixed(d);
+  const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  let rows = [], sortK = "rank", sortD = 1, when = "";
+  const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"], ["trades", "Live trades"], ["win_rate", "Win rate"],
+    ["avg_r", "Avg R"], ["total_r", "Total R"], ["pnl", "P/L"], ["recent_avg_r", "Last 4 avg R"],
+    ["scr_train", "Screen train R"], ["scr_valid", "Screen valid R"], ["scr_day", "Screen /day"]];
+  async function get(u) { try { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? r.json() : null; } catch (_) { return null; } }
+  async function load() {
+    const [names, sc] = await Promise.all([get("../live/setup_names.json"), get(RAW + "mcf-data-gen/reports/scorecard.json")]);
+    const lb = Object.fromEntries(((sc && sc.leaderboard) || []).filter(r => isGen(r.setup)).map(r => [r.setup, r]));
+    when = sc ? (sc.generated || sc.window || "") : "no end-of-day report yet";
+    const keys = new Set([...Object.keys(names || {}).filter(isGen), ...Object.keys(lb)]);
+    rows = [...keys].map(k => { const n = (names || {})[k] || {}, l = lb[k] || {}, s = n.screen || {};
+      return { setup: k, name: n.name || l.name || k, what: n.what || "", generated: n.generated || "", side: n.side || "",
+               live: l.live !== false, trades: l.trades || 0, win_rate: l.win_rate, avg_r: l.avg_r, total_r: l.total_r, pnl: l.pnl,
+               recent_avg_r: l.recent_avg_r, score: l.score, scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day }; });
+    rows.filter(r => r.score != null).sort((a, b) => b.score - a.score).forEach((r, i) => { r.rank = i + 1; });
+    draw();
+  }
+  function draw() {
+    const key = x => { const v = x[sortK]; return v == null || v === "" ? (sortD > 0 ? Infinity : -Infinity) : v; };
+    const r = rows.slice().sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" && typeof B === "string" ? A.localeCompare(B) : A - B) * sortD; });
+    const traded = rows.filter(x => x.trades);
+    q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}`;
+    const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const td = x => `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:240px" title="${e(x.what)}"><span class="genbadge">GENERATED</span> ${e(x.name)}
+        <div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td><td>${e(x.generated || "–")}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td>
+      <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
+      <td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td class="${cls(x.scr_train)}">${f(x.scr_train, 3)}</td>
+      <td class="${cls(x.scr_valid)}">${f(x.scr_valid, 3)}</td><td>${x.scr_day ?? "–"}</td></tr>`;
+    q("#gen-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No generated setups yet.</div>`;
+    const lab = (COLS.find(c => c[0] === sortK) || [, "#"])[1];
+    q("#gen-sorted").textContent = `Sorted by ${lab} (${sortD > 0 ? "low to high" : "high to low"}) · tap any column header to re-sort, tap again to flip`;
+  }
+  q("#gen-tab").addEventListener("click", ev => {
+    const h = ev.target.closest("th[data-k]"); if (!h) return;
+    const k = h.dataset.k; sortD = sortK === k ? -sortD : (k === "rank" || k === "name" ? 1 : -1); sortK = k; draw();
+  });
+  load();
+  setInterval(load, 600000);
 })();
 </script>
 </main></body></html>
