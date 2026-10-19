@@ -10,6 +10,35 @@ import pandas as pd
 from ..strategies.base import Signal
 
 
+class _RetryGets:
+    """Retry the client's read-only get_* calls on a dropped connection or timeout (2026-10-19: one
+    RemoteDisconnected on get_all_positions ended the gen account's job). Orders, cancels and replaces are never
+    retried here (a retry could duplicate them)."""
+
+    def __init__(self, client, tries: int = 3, sleep=None):
+        import time
+
+        self._c, self._tries, self._sleep = client, tries, sleep or time.sleep
+
+    def __getattr__(self, name):
+        f = getattr(self._c, name)
+        if not (name.startswith("get_") and callable(f)):
+            return f
+
+        def call(*a, **kw):
+            import requests
+
+            for i in range(self._tries):
+                try:
+                    return f(*a, **kw)
+                except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+                    if i == self._tries - 1:
+                        raise
+                    print(f"broker {name}: {e.__class__.__name__}, retry {i + 1}")
+                    self._sleep(1.0 * (i + 1))
+        return call
+
+
 class AlpacaBroker:
     def __init__(self, paper: bool = True):
         from alpaca.trading.client import TradingClient
@@ -17,7 +46,7 @@ class AlpacaBroker:
         # Orders go to ALPACA_TRADE_* when set (the Testing account); market data always uses ALPACA_API_KEY (SIP plan).
         k = os.environ.get("ALPACA_TRADE_API_KEY") or os.environ["ALPACA_API_KEY"]
         sec = os.environ.get("ALPACA_TRADE_SECRET_KEY") or os.environ["ALPACA_SECRET_KEY"]
-        self.client = TradingClient(k, sec, paper=paper)
+        self.client = _RetryGets(TradingClient(k, sec, paper=paper))
 
     def can_short(self, symbol: str) -> bool:
         """Shortable and easy-to-borrow per the broker (cached for the session)."""

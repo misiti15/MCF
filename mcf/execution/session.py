@@ -103,4 +103,8 @@ class Publisher:
         for _ in range(3):
             if self._git("push", "-q", "origin", f"HEAD:{branch}"):
                 return
-            self._git("pull", "-q", "--rebase", "origin", branch)
+            # the rebase re-commits, so it needs the bot identity too (2026-10-19: without it the rebase stopped
+            # half-way and every later push of the day failed); a rebase that still fails is aborted
+            if not self._git("-c", "user.name=mcf-bot", "-c", "user.email=mcf-bot@users.noreply.github.com",
+                             "pull", "-q", "--rebase", "origin", branch):
+                self._git("rebase", "--abort")
