@@ -7,10 +7,11 @@ same side x geometry; excess = r - baseline.
 
 Quality score (fixed before the first run, 2026-10-19; the account is for exploration and the owner set NO promotion
 rules for GEN setups, so this only orders candidates):
-  tier 1 = train AND valid expectancy > 0 AND >= 1 trade/day universe-wide (enough to collect data)
+  tier 1 = train AND valid expectancy > 0 AND 1..40 trades/day universe-wide (enough to collect data, selective
+           enough to be a setup rather than a market-wide regime bet; 80 slots, 16 per setup)
   score  = min(day-clustered t train, t valid) + 0.5 [expectancy > 0 in up AND down sessions]
            + 0.25 [excess over random > 0 on train AND valid] - 1 [< 1 trade/day]
-  ranked by (tier 1, score); a candidate needs >= 30 train and >= 15 valid trades to be ranked.
+  ranked by (tier 1, score); a candidate needs >= 30 train and >= 15 valid trades and <= 100 trades/day to be ranked.
 Overlap: a pick is skipped when its symbol-day trades overlap > 60% (|A and B| / min(|A|, |B|)) with an enabled
 setup of any account (lab modules evaluated on sample months) or with another GEN setup (on the full history).
 Every spec scored is counted (n_tried) and its key goes to the registry. Educational only - not financial advice.
@@ -29,6 +30,7 @@ from .spec import CONTEXT, IND, QUANT_HI, QUANT_LO, WINDOWS, Spec, family_sig, r
 
 ROOT = Path(__file__).resolve().parents[3]
 MIN_TRAIN, MIN_VALID = 30, 15
+MIN_PER_DAY, MAX_PER_DAY_TIER1, MAX_PER_DAY = 1.0, 40.0, 100.0
 OVERLAP_MAX = 0.60
 _P = None          # the Panel, shared with forked workers (copy-on-write)
 
@@ -125,14 +127,16 @@ def evaluate(P, spec: Spec, keep_keys: bool = False) -> dict:
     res["per_day"] = round(len(r) / max(1, P.n_days), 3)
     res["per_day_valid"] = round(int((sp == 1).sum()) / max(1, P.n_days_split[1]), 3)
     tr, va = res["train"], res["valid"]
-    tier1 = bool((tr["exp_r"] or -1) > 0 and (va["exp_r"] or -1) > 0 and res["per_day"] >= 1)
-    if tr["n"] < MIN_TRAIN or va["n"] < MIN_VALID or tr["t"] is None or va["t"] is None:
+    tier1 = bool((tr["exp_r"] or -1) > 0 and (va["exp_r"] or -1) > 0
+                 and MIN_PER_DAY <= res["per_day"] <= MAX_PER_DAY_TIER1)
+    if (tr["n"] < MIN_TRAIN or va["n"] < MIN_VALID or tr["t"] is None or va["t"] is None
+            or res["per_day"] > MAX_PER_DAY):
         score = None
     else:
         score = (min(max(tr["t"], -5), max(va["t"], -5))
                  + 0.5 * bool((res["exp_up"] or -1) > 0 and (res["exp_down"] or -1) > 0)
                  + 0.25 * bool((res["excess_train"] or -1) > 0 and (res["excess_valid"] or -1) > 0)
-                 - 1.0 * (res["per_day"] < 1))
+                 - 1.0 * (res["per_day"] < MIN_PER_DAY))
     res["tier1"] = tier1
     res["score"] = None if score is None else round(float(score), 3)
     if keep_keys:
