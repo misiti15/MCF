@@ -228,9 +228,12 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
-  <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"></div>
-    <div class="tablewrap" id="pt-tab"><div class="empty">Appears after the next end-of-day report.</div></div>
-    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). <b>Simulated</b> columns are what-if replays of signals not taken (no fill-realism checks); they are never part of live results. Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
+  <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"><div class="empty">Appears after the next end-of-day report.</div></div>
+    <div id="pt-flags" style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;font-size:12px"></div>
+    <details><summary style="cursor:pointer;font-size:13px;color:var(--ink-2)">Full playing-time table (diagnostics)</summary>
+    <div class="tablewrap" id="pt-tab" style="max-height:420px;overflow-y:auto"><div class="empty">Appears after the next end-of-day report.</div></div>
+    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). <b>Simulated</b> columns are what-if replays of signals not taken (no fill-realism checks); they are never part of live results. Report only; it does not change which trades are taken. Educational only — not financial advice.</div></details>
+    <div class="note" style="margin-top:4px">Report only; it never changes which trades are taken. Hover a chip for its setups. Educational only — not financial advice.</div></div>
   <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
     <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
   <div class="card lab"><h2>Setup lab — weekly discovery <span class="sub" id="lab-when"></span></h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
@@ -445,11 +448,14 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     if (!pt || !pt.cumulative) return;
     const c = pt.cumulative.summary || {}, t = (pt.today || {}).summary || {};
     const today = Object.fromEntries(((pt.today || {}).setups || []).map(r => [r.setup, r]));
-    const flag = k => (c[k] || []).length ? ` · <b>${k.replace("_", "-")}:</b> ${(c[k] || []).map(e).join(", ")}` : "";
-    q("#pt-sum").innerHTML = `${e(pt.window)} · ${c.sessions} sessions · ${t.setups_live ?? "–"} setups live on ${e(pt.day)} · ` +
-      `${c.signals} signals, ${c.entries} taken, <b>${c.lost_to_other_setups}</b> lost to other setups (${((c.lost_share || 0) * 100).toFixed(1)}%)` +
-      (t.slots ? ` · peak ${t.peak_open_positions} of ${t.slots} slots` : "") + flag("silent") + flag("crowded_out") + flag("starved") +
-      (c.sim_trades ? ` · <i>SIMULATED (not live): ${c.sim_trades} what-if trades of signals not taken, avg ${fr(c.sim_avg_r)}R, ${pc(c.sim_win_rate)} winners</i>` : "");
+    // compact view (owner 2026-10-19): one line + verdict chips; the full table stays one click away for diagnostics
+    q("#pt-sum").innerHTML = `${c.sessions} sessions · ${c.entries} of ${c.signals} signals taken · ` +
+      `${((c.lost_share || 0) * 100).toFixed(0)}% lost to other setups` + (t.slots ? ` · peak ${t.peak_open_positions}/${t.slots} slots` : "");
+    const live = (pt.cumulative.setups || []).filter(r => r.live_today !== false), by = {};
+    live.forEach(r => (by[r.verdict] = by[r.verdict] || []).push(r));
+    q("#pt-flags").innerHTML = Object.entries(by).sort((a, b) => (COL[b[0]] === "down") - (COL[a[0]] === "down") || b[1].length - a[1].length)
+      .map(([v, rs]) => `<span class="pill ${{down: "warn", up: "on"}[COL[v]] || ""}" title="${e(rs.map(r => r.name || r.setup).join(", "))}"><b>${e(v)}</b> ${rs.length}` +
+        (COL[v] === "down" ? `: ${rs.slice(0, 4).map(r => e(r.setup)).join(", ")}${rs.length > 4 ? " …" : ""}` : "") + `</span>`).join("");
     const rows = (pt.cumulative.setups || []).filter(r => r.live_today !== false).map(r => {
       const d = today[r.setup] || {};
       const lost = Object.entries(r.lost_to || {}).slice(0, 3).map(([k, v]) => `${e(k)} ${v}`).join(", ") || "–";
