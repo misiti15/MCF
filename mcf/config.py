@@ -31,7 +31,15 @@ def load_config(path: str | Path | None = None) -> dict[str, Any]:
     for extra in (acct_file, CONFIG_DIR / "local.yaml", Path(path) if path else None):
         if extra and extra.exists():
             with open(extra) as f:
-                cfg = _merge(cfg, yaml.safe_load(f) or {})
+                over = yaml.safe_load(f) or {}
+            cfg = _merge(cfg, over)
+            if extra is acct_file and over.get("strategies_exclusive"):
+                # opt-in (Setup Generator account, 2026-10-19): only the overlay's own setups may run; every setup of
+                # config/default.yaml the overlay does not list is switched off, including ones added there later
+                own = set((over.get("strategies") or {}))
+                for k in list(cfg.get("strategies") or {}):
+                    if k not in own:
+                        cfg["strategies"][k] = {**(cfg["strategies"][k] or {}), "enabled": False}
     cfg["account_name"] = acct
     feed = os.environ.get("ALPACA_DATA_FEED")
     if feed:

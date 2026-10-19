@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing, testing2]
+        account: [primary, testing, testing2, gen]
     concurrency:
       group: mcf-eod-${{ matrix.account }}
       cancel-in-progress: false
@@ -35,7 +35,7 @@ jobs:
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
       ALPACA_DATA_FEED: sip
       MCF_ACCOUNT: ${{ matrix.account }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || 'mcf-data-testing') }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || 'mcf-data-testing')) }}
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
       MCF_EMAIL_TO: ${{ secrets.MCF_EMAIL_TO }}
@@ -67,7 +67,7 @@ jobs:
         run: git clone -q --depth 20 --branch "$STATE_BRANCH" "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
       - name: Build and email the report
         if: steps.w.outputs.run == 'true'
-        # email only for Primary (owner 2026-10-12); Testing 1/2 reports are still built and saved for the dashboard
+        # email only for Primary (owner 2026-10-12; 2026-10-19: no email for the Setup Generator either); Testing 1/2 + gen reports are still built and saved for the dashboard
         run: python -m mcf.cli eod --state-dir state ${{ inputs.day && format('--day {0}', inputs.day) || '' }} ${{ matrix.account != 'primary' && '--no-send' || '' }}
       - name: Save the report to the state branch
         if: steps.w.outputs.run == 'true'

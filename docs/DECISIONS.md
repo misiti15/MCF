@@ -2,6 +2,17 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-19: Setup Generator account; live funds on hold
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| Setup Generator account | A 5th Alpaca **paper** account, "Setup Generator", fed by a BDI Setup Generator that produces **10 new setups per day**. It switches on automatically once the secrets exist; nothing changes for Primary, Testing 1, Testing 2 or the long-hold (S6) account. | `config/account_gen.yaml` (`MCF_ACCOUNT=gen`, orders `mcg-`, state branch `mcf-data-gen`, secrets `ALPACA_GEN_API_KEY` / `ALPACA_GEN_SECRET_KEY`; market data stays on the primary SIP keys). `strategies_exclusive: true`: only GEN-* setups run there. Generator: `python -m mcf.research.generator run --date YYYY-MM-DD --n 10 --apply` (docs/OPERATIONS.md). |
+| Slots | **80 slots**, $100,000 paper. | `slots: 80`, capital per slot = equity × 3.8 ÷ 80 (same rule as every account, equal increments), max 16 positions per setup, `max_daily_loss_r: 60` (as Testing). |
+| Leaderboard | Generated setups get their **own leaderboard**, visually distinct; never mixed with the main setup leaderboard. | Dashboard card "Generated setups leaderboard" (violet accent, GENERATED badge); the main leaderboard drops GEN-* rows. |
+| Promotion | **No promotion rules** for GEN setups. The owner may promote one himself, e.g. after about 20 trades/day for 2 days. | The generator records each setup's screen stats honestly (negative ones too) in `gen.screen`; it never promotes anything. |
+| Emails | EOD emails only for Primary and S6. | The gen EOD report is built and saved (`--no-send`), no email. |
+| Live funds | **On hold** until Primary has **3 positive days in a row**; then a serious conversation before any real money. | No live-funds work until then. |
+
 ## 2026-10-14: evening decisions (demotions, Testing philosophy)
 
 | Topic | Owner decision | How MCF applies it |
