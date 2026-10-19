@@ -98,6 +98,8 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
         win, loss = g.loc[g["pnl"] > 0, "pnl"].sum(), -g.loc[g["pnl"] < 0, "pnl"].sum()
         meta = strat.get(s) if isinstance(strat.get(s), dict) else {}
         avg = float(r.mean()) if n else None
+        aw, al = (float(r[r > 0].mean()) if (r > 0).any() else None), (float(-r[r <= 0].mean()) if (r <= 0).any() else None)
+        sd = float(r.std(ddof=1)) if n > 1 else 0.0
         rows.append({
             "setup": s, "name": setup_name(s), "account": account, "live": s in enabled,
             "former_primary": bool(meta.get("former_primary")),
@@ -107,6 +109,11 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
             "total_r": round(float(r.sum()), 2) if n else 0.0,
             "pnl": round(float(g["pnl"].sum()), 2) if n else 0.0,
             "profit_factor": round(float(win / loss), 2) if n and loss > 0 else None,
+            # owner 2026-10-19: win rate needed to break even at this setup's own average win / loss size (R),
+            # and a t-stat on avg R (how sure: about 2 = solid, under 1 = noise). Ranking stays on score.
+            "avg_win_r": None if aw is None else round(aw, 3), "avg_loss_r": None if al is None else round(al, 3),
+            "breakeven_wr": round(al / (aw + al), 3) if aw and al else None,
+            "t_stat": round(avg / (sd / n ** 0.5), 2) if n > 1 and sd > 0 else None,
             "recent_trades": int(len(recent)), "recent_avg_r": round(float(recent["r_multiple"].astype(float).mean()), 3) if len(recent) else None,
             "expected_r": None if exp.get(s) is None else round(exp[s], 3),
             "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
