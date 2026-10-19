@@ -1,0 +1,85 @@
+{
+ "date": "2026-10-19",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 6,
+  "win_rate": 0.667,
+  "exp_r": 0.022,
+  "total_r": 0.13,
+  "pnl": 39.28,
+  "stop_exit_share": 0.333,
+  "pnl_adj": 21.24,
+  "slip_bps": 18.9
+ },
+ "yesterday": {
+  "trades": 0
+ },
+ "rolling5": {
+  "exp_r": null,
+  "win_rate": null,
+  "pnl": null,
+  "slip_bps": null,
+  "stop_exit_share": null
+ },
+ "rolling20": {
+  "exp_r": null,
+  "win_rate": null,
+  "pnl": null,
+  "slip_bps": null,
+  "stop_exit_share": null
+ },
+ "beat_rolling5": {},
+ "by_setup": {
+  "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": {
+   "trades": 2,
+   "win_rate": 0.5,
+   "exp_r": -0.486,
+   "total_r": -0.97,
+   "pnl": -57.96,
+   "stop_exit_share": 0.5,
+   "pnl_adj": -72.82,
+   "slip_bps": 27.2
+  },
+  "GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short": {
+   "trades": 4,
+   "win_rate": 0.75,
+   "exp_r": 0.276,
+   "total_r": 1.1,
+   "pnl": 97.24,
+   "stop_exit_share": 0.25,
+   "pnl_adj": 94.06,
+   "slip_bps": 14.8
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 1,
+   "whatif_exp_r": 0.441,
+   "whatif_total_r": 0.44,
+   "verdict": "rule cost us R today"
+  }
+ ],
+ "signals": {
+  "submitted": 6,
+  "skipped": 1
+ },
+ "health": {
+  "polls": 76,
+  "last_poll_s": 8.7,
+  "symbols_last_bar": 3475,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 364,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "flatten_failed": []
+ },
+ "findings": [
+  "Entry slippage averaged 18.9 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency."
+ ]
+}
