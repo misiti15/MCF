@@ -73,12 +73,12 @@ def spec_mask_idx(P, spec: Spec) -> np.ndarray:
     ctx = [c for c in spec.conds if c[0] in CONTEXT]
     m = (tod >= lo) & (tod <= hi) & (P.a["adv20"] >= spec.min_adv)
     for c in ctx:
-        m &= _cmp(P.a[c[0]], c[1], c[2])
+        m &= _cmp(P.a[c[0]], c[1], np.float16(c[2]))
     idx = np.flatnonzero(m)
     for c in spec.conds:
         if c[0] in CONTEXT:
             continue
-        idx = idx[_cmp(P.a[c[0]][idx].astype(np.float32), c[1], np.float32(c[2]))]
+        idx = idx[_cmp(P.a[c[0]][idx].astype(np.float32), c[1], np.float32(np.float16(c[2])))]
         if not len(idx):
             break
     return idx
@@ -180,6 +180,8 @@ def generate(qtab: dict, n: int, seed: int, seen_keys: set, avoid_fams: set, log
 def screen(P, specs: list[Spec], workers: int = 4, log=print) -> list[dict]:
     global _P
     _P = P
+    for o in {f"{s.side}_{s.geom}" for s in specs}:      # build the random baselines once, before forking
+        P.control(o, np.empty(0, np.int64))
     t0 = time.time()
     chunks = [specs[i:i + 50] for i in range(0, len(specs), 50)]
     res = []
@@ -247,16 +249,14 @@ def existing_keys(P, months=("2025-06", "2026-03"), log=print, accounts=("primar
                 specs.setdefault(k, v)
     lab = {k: v for k, v in specs.items() if v.get("type") == "lab"}
     skipped = sorted(set(specs) - set(lab))
-    sdmap = pd.Series(np.arange(len(P.sd)), dtype=np.int64)   # placeholder for typing
     key_of = {}
     lib = __import__("mcf.research.arena.data", fromlist=["_lib"])._lib()
     # map (symbol, date) -> panel sd id
-    sym = P.sym_names[P.sym_codes]
-    dates = P.days[P.day]
-    first = np.r_[True, P.sd[1:] != P.sd[:-1]]
-    for s, d, k in zip(sym[first], dates[first], P.sd[first]):
+    first = np.flatnonzero(np.r_[True, P.sd[1:] != P.sd[:-1]])
+    sym = P.sym_names[P.sym_codes[first]]
+    dates = P.days[P.day[first]]
+    for s, d, k in zip(sym, dates, P.sd[first]):
         key_of[(s, d)] = int(k)
-    del sdmap
     out = {k: set() for k in lab}
     for m in months:
         f = lib.load_month(m, context=True)

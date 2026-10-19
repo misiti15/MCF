@@ -4,13 +4,15 @@ Per open month (research/history2y/lib.py; the rule-19 locked block 2024-11..202
 and months() lists only the open frames):
   * universe rows: adv20 >= $20M, bar close 09:50..15:00, live earnings blackout removed (4 trading days either side of
     a report, as config/default.yaml universe.earnings_blackout_days)
-  * the generator's indicators (mcf.research.arena.indicators.compute, float16 to fit memory) + the four lab
+  * the generator's indicators (mcf.research.arena.indicators.compute) + the four lab
     context columns (spy_fo, qqq_fo, breadth, breadth_open; lib.load_month(context=True))
   * production-cost R per side x geometry (RESEARCH_RULES rule 1: 1c + 1 bps x time-of-day multiplier on entry, +2c on
     stop fills, x3 costs on the extended tier |gap| >= 20% or price < $5):
       t05s1 / t1s1 / t1s05 from the frames' lab outcomes (arena.data.outcomes),
       t05s05 / hold / holdtr from a 5-minute path simulation over the frame rows plus the 15:05-15:55 tail rows
       (research/bdi/cwt/test_b/data/headtail.parquet), flat at the 15:55 bar - the LabStrategy exits.
+Indicators, context columns and R are stored as float16 to fit ~30M rows in memory (thresholds are 2-significant-
+figure values; R means are unaffected at the reported precision).
 Train = open months <= 2025-12, valid = 2026-01 onward (arena split). Educational only - not financial advice.
 """
 from __future__ import annotations
@@ -155,14 +157,16 @@ def build_month(month: str, names=INDICATOR_NAMES) -> dict:
             out[f"{s}_{g}"] = sim(ph, pl, pc, pt, dend, f2P, Rv, cm, sd, up, dn, trr, tra)
     tod = df["tod"].to_numpy()
     uni = (tod >= 950) & (tod <= 1500) & ~_blackout(df["symbol"].to_numpy(), df["date"].to_numpy())
-    res = {"symbol": df["symbol"].to_numpy()[uni], "date": np.array(pd.Index(df["date"]).astype(str))[uni],
+    codes, snames = pd.factorize(df["symbol"].to_numpy()[uni])
+    dint = pd.to_datetime(pd.Series(df["date"].to_numpy()[uni]).astype(str)).dt.strftime("%Y%m%d").astype(np.int32)
+    res = {"sym_names": np.asarray(snames, dtype=object), "sym": codes.astype(np.int32), "date": dint.to_numpy(),
            "tod": tod[uni].astype(np.int16), "adv20": df["adv20"].to_numpy(np.float32)[uni]}
     for k in OUTS:
-        res["r_" + k] = np.asarray(out[k], np.float32)[uni]
+        res["r_" + k] = np.asarray(out[k], np.float32)[uni].astype(np.float16)    # memory: ~3 significant digits
     for k in names:
         res[k] = ind[k].to_numpy(np.float32)[uni].astype(np.float16)
     for k in CONTEXT:
-        res[k] = df[k].to_numpy(np.float32)[uni]
+        res[k] = df[k].to_numpy(np.float32)[uni].astype(np.float16)
     return res
 
 
@@ -175,19 +179,24 @@ class Panel:
 
     def __init__(self, parts: list[dict], months: list[str]):
         self.months = months
+        # symbols: month-local codes -> global codes (compact ints; no per-row string objects)
+        allnames = pd.Index(sorted(set().union(*[set(p["sym_names"]) for p in parts])))
+        for p in parts:
+            p["sym"] = allnames.get_indexer(p.pop("sym_names"))[p["sym"]].astype(np.int32)
         cols = list(parts[0].keys())
         self.a = {}
         for k in cols:                      # column by column, freeing the month copies (memory peak ~ 1 panel)
             self.a[k] = np.concatenate([p[k] for p in parts])
             for p in parts:
                 del p[k]
-        sym, date = self.a.pop("symbol"), self.a.pop("date")
+        sym, date = self.a.pop("sym"), self.a.pop("date")
         self.n = len(date)
-        self.sd = pd.MultiIndex.from_arrays([sym, date]).factorize()[0].astype(np.int32)
-        self.sym_codes, self.sym_names = pd.factorize(sym)
-        self.day, self.days = pd.factorize(date)
-        self.day = self.day.astype(np.int32)
-        self.days = np.asarray(self.days)
+        self.sd = pd.factorize(sym.astype(np.int64) * 100_000_000 + date.astype(np.int64))[0].astype(np.int32)
+        self.sym_codes, self.sym_names = sym, np.asarray(allnames, dtype=object)
+        day, days = pd.factorize(date)
+        self.day = day.astype(np.int32)
+        self.days = np.array([f"{d // 10000:04d}-{d // 100 % 100:02d}-{d % 100:02d}" for d in np.asarray(days)], dtype=object)
+        del sym, date
         self.split = np.where(self.days[self.day] <= "2025-12-31", 0, 1).astype(np.int8)    # 0 train, 1 valid
         reg = AD.regimes()
         rmap = {str(k): {"down": 0, "flat": 1, "up": 2}.get(v, -1) for k, v in reg.items()}

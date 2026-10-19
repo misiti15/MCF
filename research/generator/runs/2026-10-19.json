@@ -1,0 +1,3124 @@
+{
+ "date": "2026-10-19",
+ "seed": 20261019,
+ "n_tried": 3000,
+ "n_scored": 1990,
+ "n_tier1": 16,
+ "rejected_before_screen": {
+  "invalid": 274,
+  "seen": 0,
+  "tried_family": 0,
+  "dup": 0
+ },
+ "prior_families_avoided": 11,
+ "overlap_not_checked": [
+  "IDX1-qqq100-0955-TQQQ-hold",
+  "IDX1-qqq100-0955-TQQQ-trail",
+  "IDX2-spy075-0945-3x-trail",
+  "IDX3-spy075-0955-3x-trail",
+  "IDX5-spy050-0945-3x-trail",
+  "NS2-sma50break-overbought-short",
+  "NS3-failed-vwap-reclaim-short",
+  "exhaustion_short",
+  "heat_fade_long",
+  "heat_fade_long-FD",
+  "heat_fade_short",
+  "heat_fade_short-FD",
+  "intraday_momentum",
+  "orb20_a"
+ ],
+ "overlap_sample_months": [
+  "2025-06",
+  "2026-03"
+ ],
+ "picks": [
+  {
+   "name": "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long",
+   "module": "research/generator/modules/GEN-261019-01-vwapx-open-long.py",
+   "spec": {
+    "side": "long",
+    "window": "OPEN",
+    "geom": "t05s05",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "atr_d_pct",
+      ">=",
+      3.6
+     ],
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "from_pc_atr",
+      "<=",
+      -0.68
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "display": "Generated: VWAPxUp OPEN long (BRvwgt0p7, t05s05)",
+   "what": "Buy on the first 5-minute bar closing 09:50-10:30 ET where the share of stocks above their VWAP is above 0.7; VWAP reclaim/loss over 3 bars (frame column) = 1; daily ATR % of price >= 3.6; close - prior close in daily ATRs <= -0.68 (stocks with 20-day average dollar volume >= $95M). Exit target +0.5R / stop 0.5R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "7d1ee3901dcafa66",
+    "train": {
+     "n": 469,
+     "exp_r": 0.1006,
+     "t": 1.63,
+     "win": 0.667,
+     "days": 62
+    },
+    "valid": {
+     "n": 517,
+     "exp_r": 0.0612,
+     "t": 1.16,
+     "win": 0.611,
+     "days": 43
+    },
+    "all": {
+     "n": 986,
+     "exp_r": 0.0799,
+     "t": 1.91,
+     "win": 0.638,
+     "days": 105
+    },
+    "exp_up": 0.1376,
+    "exp_down": -0.135,
+    "exp_flat": -0.0175,
+    "excess_train": 0.0816,
+    "excess_valid": 0.1071,
+    "per_day": 2.315,
+    "per_day_valid": 2.693,
+    "tier1": true,
+    "score": 1.41,
+    "max_overlap": 0.287,
+    "overlap_with": "CWT09-gapdn-bounce-g5-lowerhalf-short",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long",
+   "module": "research/generator/modules/GEN-261019-02-bbpct-lo-pm-long.py",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "bb_pctb12",
+      "<=",
+      0.017
+     ],
+     [
+      "qqq_fo",
+      "<",
+      0.0
+     ],
+     [
+      "sma20_slope_pct",
+      ">=",
+      0.46
+     ]
+    ]
+   },
+   "display": "Generated: BBpctle0p017 PM long (QQQdn, t05s1)",
+   "what": "Buy on the first 5-minute bar closing 13:00-15:00 ET where QQQ's move since its open (%) is below 0; Bollinger %B (12 bars, 2 sd, in-day) <= 0.017; SMA20 slope over 5 bars % (frame column) >= 0.46 (stocks with 20-day average dollar volume >= $150M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "c71baa630a93369d",
+    "train": {
+     "n": 240,
+     "exp_r": 0.0285,
+     "t": 0.49,
+     "win": 0.675,
+     "days": 76
+    },
+    "valid": {
+     "n": 320,
+     "exp_r": 0.0364,
+     "t": 0.65,
+     "win": 0.656,
+     "days": 75
+    },
+    "all": {
+     "n": 560,
+     "exp_r": 0.033,
+     "t": 0.81,
+     "win": 0.664,
+     "days": 151
+    },
+    "exp_up": 0.1577,
+    "exp_down": 0.0116,
+    "exp_flat": 0.0131,
+    "excess_train": 0.172,
+    "excess_valid": 0.1042,
+    "per_day": 1.315,
+    "per_day_valid": 1.667,
+    "tier1": true,
+    "score": 1.24,
+    "max_overlap": 0.447,
+    "overlap_with": "CWT14-failbrk-orl-p05-long",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
+   "module": "research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "fromOpen_atr",
+      "<=",
+      -0.34
+     ],
+     [
+      "ret3_atr",
+      "<=",
+      -0.12
+     ],
+     [
+      "sma20_slope_pct",
+      ">=",
+      0.29
+     ]
+    ]
+   },
+   "display": "Generated: Ret15mATRlem0p12 PM long (BRoplt0p5, t05s1)",
+   "what": "Buy on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their open is below 0.5; 15-min change in daily ATRs <= -0.12; close - open in daily ATRs <= -0.34; SMA20 slope over 5 bars % (frame column) >= 0.29 (stocks with 20-day average dollar volume >= $20M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "ee345e097b08c6e9",
+    "train": {
+     "n": 1238,
+     "exp_r": 0.1081,
+     "t": 0.78,
+     "win": 0.76,
+     "days": 108
+    },
+    "valid": {
+     "n": 753,
+     "exp_r": 0.0635,
+     "t": 1.1,
+     "win": 0.701,
+     "days": 112
+    },
+    "all": {
+     "n": 1991,
+     "exp_r": 0.0913,
+     "t": 0.99,
+     "win": 0.738,
+     "days": 220
+    },
+    "exp_up": -0.1695,
+    "exp_down": 0.1142,
+    "exp_flat": -0.0036,
+    "excess_train": 0.0617,
+    "excess_valid": 0.0799,
+    "per_day": 4.674,
+    "per_day_valid": 3.922,
+    "tier1": true,
+    "score": 1.03,
+    "max_overlap": 0.346,
+    "overlap_with": "CWT14-failbrk-orl-p05-long",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long",
+   "module": "research/generator/modules/GEN-261019-04-emadchg-hi-mid-long.py",
+   "spec": {
+    "side": "long",
+    "window": "MID",
+    "geom": "t1s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.15
+     ],
+     [
+      "rsi",
+      "<=",
+      22.0
+     ]
+    ]
+   },
+   "display": "Generated: EMAdChgge0p15 MID long (BRoplt0p5, t1s1)",
+   "what": "Buy on the first 5-minute bar closing 11:00-13:00 ET where the share of stocks above their open is below 0.5; emaDiff change over 3 bars >= 0.15; RSI(14) (frame column) <= 22 (stocks with 20-day average dollar volume >= $20M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "69186cc84b480af6",
+    "train": {
+     "n": 1002,
+     "exp_r": 0.1353,
+     "t": 1.09,
+     "win": 0.605,
+     "days": 108
+    },
+    "valid": {
+     "n": 1004,
+     "exp_r": 0.0065,
+     "t": 0.08,
+     "win": 0.523,
+     "days": 113
+    },
+    "all": {
+     "n": 2006,
+     "exp_r": 0.0708,
+     "t": 0.89,
+     "win": 0.564,
+     "days": 221
+    },
+    "exp_up": 0.4609,
+    "exp_down": 0.0324,
+    "exp_flat": 0.0718,
+    "excess_train": 0.1389,
+    "excess_valid": 0.06,
+    "per_day": 4.709,
+    "per_day_valid": 5.229,
+    "tier1": true,
+    "score": 0.83,
+    "max_overlap": 0.283,
+    "overlap_with": "ST2-slope20up-long-am-t05s1-FD",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long",
+   "module": "research/generator/modules/GEN-261019-05-rsislope-lo-open-long.py",
+   "spec": {
+    "side": "long",
+    "window": "OPEN",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "dist_pdl_atr",
+      "<=",
+      0.14
+     ],
+     [
+      "emaDiff",
+      "<=",
+      -0.46
+     ],
+     [
+      "rsiSlope",
+      "<=",
+      -9.0
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.5
+     ]
+    ]
+   },
+   "display": "Generated: RSIslopelem9 OPEN long (SPYltm0p5, t1s1)",
+   "what": "Buy on the first 5-minute bar closing 09:50-10:30 ET where SPY's move since its open (%) is below -0.5; RSI(14) change over 3 bars (frame column) <= -9; close - prior-day low in ATRs (frame column) <= 0.14; EMA9 vs EMA21 % (frame column) <= -0.46 (stocks with 20-day average dollar volume >= $150M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "054761c5c37ece32",
+    "train": {
+     "n": 760,
+     "exp_r": 0.0687,
+     "t": 0.5,
+     "win": 0.558,
+     "days": 30
+    },
+    "valid": {
+     "n": 908,
+     "exp_r": 0.1232,
+     "t": 0.85,
+     "win": 0.594,
+     "days": 20
+    },
+    "all": {
+     "n": 1668,
+     "exp_r": 0.0984,
+     "t": 0.98,
+     "win": 0.577,
+     "days": 50
+    },
+    "exp_up": 0.6972,
+    "exp_down": -0.1807,
+    "exp_flat": 0.229,
+    "excess_train": 0.1801,
+    "excess_valid": 0.1094,
+    "per_day": 3.915,
+    "per_day_valid": 4.729,
+    "tier1": true,
+    "score": 0.75,
+    "max_overlap": 0.441,
+    "overlap_with": "CWT14-failbrk-orl-p05-long",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long",
+   "module": "research/generator/modules/GEN-261019-06-vwapx-pm-long.py",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "holdtr",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "emaDiff",
+      ">=",
+      0.29
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "display": "Generated: VWAPxUp PM long (SPYgt0p5, holdtr)",
+   "what": "Buy on the first 5-minute bar closing 13:00-15:00 ET where SPY's move since its open (%) is above 0.5; VWAP reclaim/loss over 3 bars (frame column) = 1; EMA9 vs EMA21 % (frame column) >= 0.29 (stocks with 20-day average dollar volume >= $20M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "7368f86b5542d42c",
+    "train": {
+     "n": 845,
+     "exp_r": 0.1941,
+     "t": 0.75,
+     "win": 0.604,
+     "days": 59
+    },
+    "valid": {
+     "n": 727,
+     "exp_r": 0.1896,
+     "t": 0.94,
+     "win": 0.571,
+     "days": 51
+    },
+    "all": {
+     "n": 1572,
+     "exp_r": 0.192,
+     "t": 1.15,
+     "win": 0.588,
+     "days": 110
+    },
+    "exp_up": 0.2105,
+    "exp_down": -0.287,
+    "exp_flat": -0.0235,
+    "excess_train": -0.0191,
+    "excess_valid": 0.2447,
+    "per_day": 3.69,
+    "per_day_valid": 3.786,
+    "tier1": true,
+    "score": 0.75,
+    "max_overlap": 0.422,
+    "overlap_with": "CWT14-failbrk-orl-p05-long",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long",
+   "module": "research/generator/modules/GEN-261019-07-volratio-hi-late-long.py",
+   "spec": {
+    "side": "long",
+    "window": "LATE",
+    "geom": "t05s1",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ],
+     [
+      "upper_wick",
+      ">=",
+      0.59
+     ],
+     [
+      "volumeRatio",
+      ">=",
+      2.0
+     ]
+    ]
+   },
+   "display": "Generated: VolRatioge2, UpWickge0p59 LATE long (SPYgt0p5, t05s1)",
+   "what": "Buy on the first 5-minute bar closing 14:00-15:00 ET where SPY's move since its open (%) is above 0.5; bar volume / 20-bar mean (frame column) >= 2; upper wick share of the bar (frame column) >= 0.59; today's range so far / prior day's range >= 1.5 (stocks with 20-day average dollar volume >= $50M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "70ec895c21c1c754",
+    "train": {
+     "n": 739,
+     "exp_r": 0.0387,
+     "t": 0.65,
+     "win": 0.656,
+     "days": 58
+    },
+    "valid": {
+     "n": 636,
+     "exp_r": 0.0097,
+     "t": 0.3,
+     "win": 0.616,
+     "days": 45
+    },
+    "all": {
+     "n": 1375,
+     "exp_r": 0.0253,
+     "t": 0.7,
+     "win": 0.638,
+     "days": 103
+    },
+    "exp_up": 0.039,
+    "exp_down": null,
+    "exp_flat": -0.0827,
+    "excess_train": 0.0471,
+    "excess_valid": 0.0264,
+    "per_day": 3.228,
+    "per_day_valid": 3.312,
+    "tier1": true,
+    "score": 0.55,
+    "max_overlap": 0.315,
+    "overlap_with": "CWT14-failbrk-orl-p05-long",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short",
+   "module": "research/generator/modules/GEN-261019-08-newhod-am-short.py",
+   "spec": {
+    "side": "short",
+    "window": "AM",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ],
+     [
+      "new_hod",
+      "==",
+      1.0
+     ],
+     [
+      "slope6_atr",
+      ">=",
+      0.03
+     ],
+     [
+      "spy_fo",
+      "<",
+      0.0
+     ]
+    ]
+   },
+   "display": "Generated: NewHOD AM short (SPYdn, hold)",
+   "what": "Short on the first 5-minute bar closing 09:50-11:00 ET where SPY's move since its open (%) is below 0; bar made a new high of day = 1; least-squares slope of the last 6 closes per bar, in daily ATRs >= 0.03; today's range so far / prior day's range >= 1.5 (stocks with 20-day average dollar volume >= $20M). Exit stop 1R, no target, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "b78b8046cb68427b",
+    "train": {
+     "n": 450,
+     "exp_r": 0.0916,
+     "t": 0.74,
+     "win": 0.404,
+     "days": 92
+    },
+    "valid": {
+     "n": 467,
+     "exp_r": 0.0498,
+     "t": 0.3,
+     "win": 0.418,
+     "days": 91
+    },
+    "all": {
+     "n": 917,
+     "exp_r": 0.0703,
+     "t": 0.67,
+     "win": 0.411,
+     "days": 183
+    },
+    "exp_up": -0.4168,
+    "exp_down": 0.4463,
+    "exp_flat": 0.0274,
+    "excess_train": 0.1596,
+    "excess_valid": 0.1308,
+    "per_day": 2.153,
+    "per_day_valid": 2.432,
+    "tier1": true,
+    "score": 0.55,
+    "max_overlap": 0.155,
+    "overlap_with": "CWT13-vwapstretch-z05-short",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short",
+   "module": "research/generator/modules/GEN-261019-09-emadchg-hi-pm-short.py",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.15
+     ],
+     [
+      "ret_since950_atr",
+      ">=",
+      0.6
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.5
+     ]
+    ]
+   },
+   "display": "Generated: EMAdChgge0p15 PM short (SPYltm0p5, t05s1)",
+   "what": "Short on the first 5-minute bar closing 13:00-15:00 ET where SPY's move since its open (%) is below -0.5; emaDiff change over 3 bars >= 0.15; change since the 09:50 close in daily ATRs >= 0.6 (stocks with 20-day average dollar volume >= $95M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "f84a6d32714130b2",
+    "train": {
+     "n": 471,
+     "exp_r": 0.022,
+     "t": 0.42,
+     "win": 0.703,
+     "days": 55
+    },
+    "valid": {
+     "n": 287,
+     "exp_r": 0.0158,
+     "t": 0.26,
+     "win": 0.676,
+     "days": 39
+    },
+    "all": {
+     "n": 758,
+     "exp_r": 0.0196,
+     "t": 0.49,
+     "win": 0.693,
+     "days": 94
+    },
+    "exp_up": -0.3602,
+    "exp_down": 0.0516,
+    "exp_flat": -0.0296,
+    "excess_train": 0.0376,
+    "excess_valid": 0.1342,
+    "per_day": 1.779,
+    "per_day_valid": 1.495,
+    "tier1": true,
+    "score": 0.51,
+    "max_overlap": 0.314,
+    "overlap_with": "CWT13-vwapstretch-z05-short",
+    "date": "2026-10-19"
+   }
+  },
+  {
+   "name": "GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short",
+   "module": "research/generator/modules/GEN-261019-10-flowshift-hi-pm-short.py",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "flow_shift",
+      ">=",
+      0.42
+     ],
+     [
+      "sma50_dist_pct",
+      ">=",
+      1.7
+     ]
+    ]
+   },
+   "display": "Generated: FlowShiftge0p42 PM short (BRoplt0p5, t1s1)",
+   "what": "Short on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their open is below 0.5; flow3 - flow9prev >= 0.42; close vs 5-min SMA50 % (frame column) >= 1.7 (stocks with 20-day average dollar volume >= $150M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+   "screen": {
+    "key": "39344ee294f6ca69",
+    "train": {
+     "n": 2138,
+     "exp_r": 0.0191,
+     "t": 0.23,
+     "win": 0.536,
+     "days": 135
+    },
+    "valid": {
+     "n": 3156,
+     "exp_r": 0.0311,
+     "t": 1.01,
+     "win": 0.54,
+     "days": 131
+    },
+    "all": {
+     "n": 5294,
+     "exp_r": 0.0263,
+     "t": 0.69,
+     "win": 0.538,
+     "days": 266
+    },
+    "exp_up": -0.3296,
+    "exp_down": 0.1115,
+    "exp_flat": -0.0785,
+    "excess_train": 0.0904,
+    "excess_valid": 0.0829,
+    "per_day": 12.427,
+    "per_day_valid": 16.438,
+    "tier1": true,
+    "score": 0.48,
+    "max_overlap": 0.482,
+    "overlap_with": "f84a6d32714130b2",
+    "date": "2026-10-19"
+   }
+  }
+ ],
+ "top50_finalists": [
+  {
+   "key": "7d1ee3901dcafa66",
+   "spec": {
+    "side": "long",
+    "window": "OPEN",
+    "geom": "t05s05",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "atr_d_pct",
+      ">=",
+      3.6
+     ],
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "from_pc_atr",
+      "<=",
+      -0.68
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 469,
+    "exp_r": 0.1006,
+    "t": 1.63,
+    "win": 0.667,
+    "days": 62
+   },
+   "valid": {
+    "n": 517,
+    "exp_r": 0.0612,
+    "t": 1.16,
+    "win": 0.611,
+    "days": 43
+   },
+   "per_day": 2.315,
+   "exp_up": 0.1376,
+   "exp_down": -0.135,
+   "score": 1.41,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "c71baa630a93369d",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "bb_pctb12",
+      "<=",
+      0.017
+     ],
+     [
+      "qqq_fo",
+      "<",
+      0.0
+     ],
+     [
+      "sma20_slope_pct",
+      ">=",
+      0.46
+     ]
+    ]
+   },
+   "train": {
+    "n": 240,
+    "exp_r": 0.0285,
+    "t": 0.49,
+    "win": 0.675,
+    "days": 76
+   },
+   "valid": {
+    "n": 320,
+    "exp_r": 0.0364,
+    "t": 0.65,
+    "win": 0.656,
+    "days": 75
+   },
+   "per_day": 1.315,
+   "exp_up": 0.1577,
+   "exp_down": 0.0116,
+   "score": 1.24,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "ee345e097b08c6e9",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "fromOpen_atr",
+      "<=",
+      -0.34
+     ],
+     [
+      "ret3_atr",
+      "<=",
+      -0.12
+     ],
+     [
+      "sma20_slope_pct",
+      ">=",
+      0.29
+     ]
+    ]
+   },
+   "train": {
+    "n": 1238,
+    "exp_r": 0.1081,
+    "t": 0.78,
+    "win": 0.76,
+    "days": 108
+   },
+   "valid": {
+    "n": 753,
+    "exp_r": 0.0635,
+    "t": 1.1,
+    "win": 0.701,
+    "days": 112
+   },
+   "per_day": 4.674,
+   "exp_up": -0.1695,
+   "exp_down": 0.1142,
+   "score": 1.03,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "69186cc84b480af6",
+   "spec": {
+    "side": "long",
+    "window": "MID",
+    "geom": "t1s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.15
+     ],
+     [
+      "rsi",
+      "<=",
+      22.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 1002,
+    "exp_r": 0.1353,
+    "t": 1.09,
+    "win": 0.605,
+    "days": 108
+   },
+   "valid": {
+    "n": 1004,
+    "exp_r": 0.0065,
+    "t": 0.08,
+    "win": 0.523,
+    "days": 113
+   },
+   "per_day": 4.709,
+   "exp_up": 0.4609,
+   "exp_down": 0.0324,
+   "score": 0.83,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "054761c5c37ece32",
+   "spec": {
+    "side": "long",
+    "window": "OPEN",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "dist_pdl_atr",
+      "<=",
+      0.14
+     ],
+     [
+      "emaDiff",
+      "<=",
+      -0.46
+     ],
+     [
+      "rsiSlope",
+      "<=",
+      -9.0
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 760,
+    "exp_r": 0.0687,
+    "t": 0.5,
+    "win": 0.558,
+    "days": 30
+   },
+   "valid": {
+    "n": 908,
+    "exp_r": 0.1232,
+    "t": 0.85,
+    "win": 0.594,
+    "days": 20
+   },
+   "per_day": 3.915,
+   "exp_up": 0.6972,
+   "exp_down": -0.1807,
+   "score": 0.75,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "7368f86b5542d42c",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "holdtr",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "emaDiff",
+      ">=",
+      0.29
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 845,
+    "exp_r": 0.1941,
+    "t": 0.75,
+    "win": 0.604,
+    "days": 59
+   },
+   "valid": {
+    "n": 727,
+    "exp_r": 0.1896,
+    "t": 0.94,
+    "win": 0.571,
+    "days": 51
+   },
+   "per_day": 3.69,
+   "exp_up": 0.2105,
+   "exp_down": -0.287,
+   "score": 0.75,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "2d16bbd5cc5e0773",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "t1s05",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "dist_pdl_atr",
+      "<=",
+      -0.32
+     ],
+     [
+      "gap",
+      "<=",
+      -2.0
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 1246,
+    "exp_r": 0.0881,
+    "t": 0.66,
+    "win": 0.475,
+    "days": 95
+   },
+   "valid": {
+    "n": 1043,
+    "exp_r": 0.149,
+    "t": 1.07,
+    "win": 0.489,
+    "days": 51
+   },
+   "per_day": 5.373,
+   "exp_up": 0.273,
+   "exp_down": -0.444,
+   "score": 0.66,
+   "tier1": true,
+   "skipped_overlap": [
+    "7d1ee3901dcafa66",
+    0.647
+   ]
+  },
+  {
+   "key": "70ec895c21c1c754",
+   "spec": {
+    "side": "long",
+    "window": "LATE",
+    "geom": "t05s1",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ],
+     [
+      "upper_wick",
+      ">=",
+      0.59
+     ],
+     [
+      "volumeRatio",
+      ">=",
+      2.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 739,
+    "exp_r": 0.0387,
+    "t": 0.65,
+    "win": 0.656,
+    "days": 58
+   },
+   "valid": {
+    "n": 636,
+    "exp_r": 0.0097,
+    "t": 0.3,
+    "win": 0.616,
+    "days": 45
+   },
+   "per_day": 3.228,
+   "exp_up": 0.039,
+   "exp_down": null,
+   "score": 0.55,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "b78b8046cb68427b",
+   "spec": {
+    "side": "short",
+    "window": "AM",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ],
+     [
+      "new_hod",
+      "==",
+      1.0
+     ],
+     [
+      "slope6_atr",
+      ">=",
+      0.03
+     ],
+     [
+      "spy_fo",
+      "<",
+      0.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 450,
+    "exp_r": 0.0916,
+    "t": 0.74,
+    "win": 0.404,
+    "days": 92
+   },
+   "valid": {
+    "n": 467,
+    "exp_r": 0.0498,
+    "t": 0.3,
+    "win": 0.418,
+    "days": 91
+   },
+   "per_day": 2.153,
+   "exp_up": -0.4168,
+   "exp_down": 0.4463,
+   "score": 0.55,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "f84a6d32714130b2",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.15
+     ],
+     [
+      "ret_since950_atr",
+      ">=",
+      0.6
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 471,
+    "exp_r": 0.022,
+    "t": 0.42,
+    "win": 0.703,
+    "days": 55
+   },
+   "valid": {
+    "n": 287,
+    "exp_r": 0.0158,
+    "t": 0.26,
+    "win": 0.676,
+    "days": 39
+   },
+   "per_day": 1.779,
+   "exp_up": -0.3602,
+   "exp_down": 0.0516,
+   "score": 0.51,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "39344ee294f6ca69",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "flow_shift",
+      ">=",
+      0.42
+     ],
+     [
+      "sma50_dist_pct",
+      ">=",
+      1.7
+     ]
+    ]
+   },
+   "train": {
+    "n": 2138,
+    "exp_r": 0.0191,
+    "t": 0.23,
+    "win": 0.536,
+    "days": 135
+   },
+   "valid": {
+    "n": 3156,
+    "exp_r": 0.0311,
+    "t": 1.01,
+    "win": 0.54,
+    "days": 131
+   },
+   "per_day": 12.427,
+   "exp_up": -0.3296,
+   "exp_down": 0.1115,
+   "score": 0.48,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "b64669417955fcc8",
+   "spec": {
+    "side": "long",
+    "window": "LUNCH",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "adx7",
+      "<=",
+      29.0
+     ],
+     [
+      "flow3",
+      "<=",
+      -1.0
+     ],
+     [
+      "qqq_fo",
+      ">",
+      0.3
+     ],
+     [
+      "sma20_slope_pct",
+      ">=",
+      0.46
+     ]
+    ]
+   },
+   "train": {
+    "n": 329,
+    "exp_r": 0.0176,
+    "t": 0.2,
+    "win": 0.523,
+    "days": 85
+   },
+   "valid": {
+    "n": 582,
+    "exp_r": 0.0768,
+    "t": 1.27,
+    "win": 0.565,
+    "days": 93
+   },
+   "per_day": 2.138,
+   "exp_up": 0.1756,
+   "exp_down": -0.2567,
+   "score": 0.45,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "88851146d6f4edf7",
+   "spec": {
+    "side": "short",
+    "window": "LATE",
+    "geom": "t1s05",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "emaDiff",
+      "<=",
+      -0.46
+     ],
+     [
+      "orb_fail_up",
+      "==",
+      1.0
+     ],
+     [
+      "rsi5",
+      ">=",
+      76.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 283,
+    "exp_r": 0.1133,
+    "t": 1.44,
+    "win": 0.502,
+    "days": 57
+   },
+   "valid": {
+    "n": 181,
+    "exp_r": 0.0099,
+    "t": 0.16,
+    "win": 0.442,
+    "days": 62
+   },
+   "per_day": 1.089,
+   "exp_up": null,
+   "exp_down": 0.146,
+   "score": 0.41,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "cf5f00dfa39ee06b",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "holdtr",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.35
+     ],
+     [
+      "dist_pdl_atr",
+      "<=",
+      -0.042
+     ],
+     [
+      "rsiSlope",
+      ">=",
+      14.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 7699,
+    "exp_r": 0.0157,
+    "t": 0.12,
+    "win": 0.463,
+    "days": 79
+   },
+   "valid": {
+    "n": 5963,
+    "exp_r": 0.184,
+    "t": 1.16,
+    "win": 0.54,
+    "days": 57
+   },
+   "per_day": 32.07,
+   "exp_up": 1.09,
+   "exp_down": -0.0813,
+   "score": 0.37,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "b2fc3c6d9ecda126",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t1s1",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "emaDiff",
+      ">=",
+      0.089
+     ],
+     [
+      "gap",
+      "<=",
+      -2.0
+     ],
+     [
+      "qqq_fo",
+      ">",
+      0.3
+     ],
+     [
+      "rsi2",
+      "<=",
+      0.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 3496,
+    "exp_r": 0.0157,
+    "t": 0.1,
+    "win": 0.528,
+    "days": 103
+   },
+   "valid": {
+    "n": 4294,
+    "exp_r": 0.0263,
+    "t": 0.38,
+    "win": 0.537,
+    "days": 89
+   },
+   "per_day": 18.286,
+   "exp_up": -0.0128,
+   "exp_down": 0.0172,
+   "score": 0.35,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "7248e9def29fb529",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t1s05",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.35
+     ],
+     [
+      "macd_hist",
+      ">=",
+      0.079
+     ],
+     [
+      "or_low_dist_atr",
+      "<=",
+      -0.42
+     ],
+     [
+      "rsi",
+      "<=",
+      36.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 554,
+    "exp_r": 0.0524,
+    "t": 0.99,
+    "win": 0.424,
+    "days": 55
+   },
+   "valid": {
+    "n": 381,
+    "exp_r": 0.0064,
+    "t": 0.05,
+    "win": 0.407,
+    "days": 28
+   },
+   "per_day": 2.195,
+   "exp_up": null,
+   "exp_down": 0.0629,
+   "score": 0.3,
+   "tier1": true,
+   "skipped_overlap": null
+  },
+  {
+   "key": "721bace27cd3463d",
+   "spec": {
+    "side": "long",
+    "window": "OPEN",
+    "geom": "hold",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "atr_d_pct",
+      ">=",
+      7.9
+     ],
+     [
+      "fromOpen_atr",
+      ">=",
+      0.36
+     ],
+     [
+      "macd_hist",
+      ">=",
+      0.043
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.25
+     ]
+    ]
+   },
+   "train": {
+    "n": 154,
+    "exp_r": 0.3059,
+    "t": 1.25,
+    "win": 0.474,
+    "days": 58
+   },
+   "valid": {
+    "n": 246,
+    "exp_r": 0.2318,
+    "t": 1.43,
+    "win": 0.459,
+    "days": 51
+   },
+   "per_day": 0.939,
+   "exp_up": 0.3745,
+   "exp_down": 0.0992,
+   "score": 1.0,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "3a38de7763620fb0",
+   "spec": {
+    "side": "short",
+    "window": "LUNCH",
+    "geom": "t05s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      ">",
+      0.65
+     ],
+     [
+      "new_hod",
+      "==",
+      1.0
+     ],
+     [
+      "ret3_atr",
+      ">=",
+      0.042
+     ],
+     [
+      "rvol_day",
+      "<=",
+      0.48
+     ]
+    ]
+   },
+   "train": {
+    "n": 193,
+    "exp_r": 0.0848,
+    "t": 1.37,
+    "win": 0.715,
+    "days": 63
+   },
+   "valid": {
+    "n": 63,
+    "exp_r": 0.0888,
+    "t": 0.99,
+    "win": 0.746,
+    "days": 27
+   },
+   "per_day": 0.601,
+   "exp_up": 0.0637,
+   "exp_down": 0.3002,
+   "score": 0.74,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "dde07aa0a04bbfdb",
+   "spec": {
+    "side": "long",
+    "window": "LAM",
+    "geom": "holdtr",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "breadth",
+      "<",
+      0.3
+     ],
+     [
+      "flow3",
+      "<=",
+      -0.37
+     ],
+     [
+      "macd_hist",
+      ">=",
+      0.079
+     ],
+     [
+      "sma20_dist_pct",
+      "<=",
+      -0.16
+     ]
+    ]
+   },
+   "train": {
+    "n": 2743,
+    "exp_r": 0.4305,
+    "t": 1.72,
+    "win": 0.578,
+    "days": 89
+   },
+   "valid": {
+    "n": 1489,
+    "exp_r": -0.0037,
+    "t": -0.04,
+    "win": 0.521,
+    "days": 52
+   },
+   "per_day": 9.934,
+   "exp_up": 1.1176,
+   "exp_down": 0.1581,
+   "score": 0.71,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "cd363f7bc20d3a2c",
+   "spec": {
+    "side": "long",
+    "window": "LUNCH",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      ">",
+      0.5
+     ],
+     [
+      "gap",
+      ">=",
+      0.65
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      -1.0
+     ],
+     [
+      "vwap_side_bars",
+      "<=",
+      -7.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 177,
+    "exp_r": 0.1314,
+    "t": 1.57,
+    "win": 0.559,
+    "days": 68
+   },
+   "valid": {
+    "n": 45,
+    "exp_r": 0.2673,
+    "t": 1.33,
+    "win": 0.6,
+    "days": 32
+   },
+   "per_day": 0.521,
+   "exp_up": 0.3524,
+   "exp_down": null,
+   "score": 0.58,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "c0738fdffb6f787c",
+   "spec": {
+    "side": "long",
+    "window": "LUNCH",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "bear_div",
+      "==",
+      1.0
+     ],
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "sma20_slope_pct",
+      "<=",
+      -0.15
+     ]
+    ]
+   },
+   "train": {
+    "n": 200,
+    "exp_r": 0.2121,
+    "t": 1.34,
+    "win": 0.505,
+    "days": 68
+   },
+   "valid": {
+    "n": 145,
+    "exp_r": 0.3326,
+    "t": 1.17,
+    "win": 0.572,
+    "days": 36
+   },
+   "per_day": 0.81,
+   "exp_up": 0.3703,
+   "exp_down": -0.4864,
+   "score": 0.42,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "6403d4fdb1212416",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "hold",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      ">",
+      0.65
+     ],
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.093
+     ]
+    ]
+   },
+   "train": {
+    "n": 22103,
+    "exp_r": 0.0643,
+    "t": 0.58,
+    "win": 0.482,
+    "days": 85
+   },
+   "valid": {
+    "n": 12679,
+    "exp_r": 0.0183,
+    "t": 0.21,
+    "win": 0.472,
+    "days": 37
+   },
+   "per_day": 81.648,
+   "exp_up": 0.1176,
+   "exp_down": -0.9558,
+   "score": 0.21,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "562d14d6cbc74501",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "t1s05",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.35
+     ],
+     [
+      "gap",
+      "<=",
+      -1.2
+     ],
+     [
+      "range_exp",
+      ">=",
+      1.1
+     ],
+     [
+      "rsi",
+      ">=",
+      73.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 1054,
+    "exp_r": 0.0806,
+    "t": 1.11,
+    "win": 0.472,
+    "days": 71
+   },
+   "valid": {
+    "n": 598,
+    "exp_r": -0.0042,
+    "t": -0.07,
+    "win": 0.443,
+    "days": 38
+   },
+   "per_day": 3.878,
+   "exp_up": null,
+   "exp_down": 0.0619,
+   "score": 0.18,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "bc6d0750a74afa63",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "hold",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "dist_pdh_atr",
+      "<=",
+      -0.11
+     ],
+     [
+      "macd_hist",
+      ">=",
+      0.12
+     ],
+     [
+      "qqq_fo",
+      "<",
+      0.0
+     ],
+     [
+      "rsi7",
+      ">=",
+      89.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 574,
+    "exp_r": 0.1479,
+    "t": 0.8,
+    "win": 0.479,
+    "days": 103
+   },
+   "valid": {
+    "n": 646,
+    "exp_r": -0.0073,
+    "t": -0.1,
+    "win": 0.471,
+    "days": 99
+   },
+   "per_day": 2.864,
+   "exp_up": -0.1614,
+   "exp_down": 0.088,
+   "score": 0.15,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "be02a7f4fdde0021",
+   "spec": {
+    "side": "long",
+    "window": "LAM",
+    "geom": "t1s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.093
+     ],
+     [
+      "from_pc_atr",
+      "<=",
+      -0.24
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 6342,
+    "exp_r": -0.0106,
+    "t": -0.11,
+    "win": 0.528,
+    "days": 49
+   },
+   "valid": {
+    "n": 6052,
+    "exp_r": 0.0142,
+    "t": 0.15,
+    "win": 0.534,
+    "days": 41
+   },
+   "per_day": 29.094,
+   "exp_up": 0.1357,
+   "exp_down": -0.5385,
+   "score": 0.14,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "13bed37687c7405b",
+   "spec": {
+    "side": "long",
+    "window": "LUNCH",
+    "geom": "t1s05",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      ">",
+      0.5
+     ],
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.15
+     ],
+     [
+      "ret3_atr",
+      "<=",
+      -0.04
+     ],
+     [
+      "sma20_dist_pct",
+      ">=",
+      0.18
+     ]
+    ]
+   },
+   "train": {
+    "n": 1251,
+    "exp_r": 0.0969,
+    "t": 2.14,
+    "win": 0.456,
+    "days": 132
+   },
+   "valid": {
+    "n": 1616,
+    "exp_r": -0.0083,
+    "t": -0.13,
+    "win": 0.383,
+    "days": 113
+   },
+   "per_day": 6.73,
+   "exp_up": 0.1185,
+   "exp_down": -0.3229,
+   "score": 0.12,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "aa9319afdb562e43",
+   "spec": {
+    "side": "short",
+    "window": "MID",
+    "geom": "t1s1",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "breadth",
+      "<",
+      0.4
+     ],
+     [
+      "gap",
+      "<=",
+      -1.2
+     ],
+     [
+      "new_lod",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 1193,
+    "exp_r": 0.0144,
+    "t": 0.1,
+    "win": 0.51,
+    "days": 96
+   },
+   "valid": {
+    "n": 1195,
+    "exp_r": -0.0148,
+    "t": -0.15,
+    "win": 0.516,
+    "days": 84
+   },
+   "per_day": 5.606,
+   "exp_up": -0.6651,
+   "exp_down": 0.1335,
+   "score": 0.1,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "f67a044c03b992e7",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "t1s05",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "breadth",
+      ">",
+      0.6
+     ],
+     [
+      "compress6_atr",
+      "<=",
+      0.091
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      -1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 427,
+    "exp_r": 0.0767,
+    "t": 0.71,
+    "win": 0.499,
+    "days": 81
+   },
+   "valid": {
+    "n": 108,
+    "exp_r": -0.0198,
+    "t": -0.17,
+    "win": 0.389,
+    "days": 47
+   },
+   "per_day": 1.256,
+   "exp_up": 0.21,
+   "exp_down": -0.3604,
+   "score": 0.08,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "6ad0560818b4b6c4",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "hold",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "bear_div",
+      "==",
+      1.0
+     ],
+     [
+      "dist_pdh_atr",
+      "<=",
+      -0.11
+     ],
+     [
+      "qqq_fo",
+      ">",
+      0.6
+     ]
+    ]
+   },
+   "train": {
+    "n": 3151,
+    "exp_r": 0.0228,
+    "t": 0.2,
+    "win": 0.454,
+    "days": 49
+   },
+   "valid": {
+    "n": 3693,
+    "exp_r": -0.0208,
+    "t": -0.19,
+    "win": 0.421,
+    "days": 46
+   },
+   "per_day": 16.066,
+   "exp_up": 0.2103,
+   "exp_down": -0.7394,
+   "score": 0.06,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "9ff967528801f9a4",
+   "spec": {
+    "side": "long",
+    "window": "MID",
+    "geom": "t05s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "emaDiff",
+      "<=",
+      -0.15
+     ],
+     [
+      "new_hod",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 47,
+    "exp_r": 0.123,
+    "t": 0.8,
+    "win": 0.745,
+    "days": 17
+   },
+   "valid": {
+    "n": 22,
+    "exp_r": 0.2024,
+    "t": 2.09,
+    "win": 0.818,
+    "days": 8
+   },
+   "per_day": 0.162,
+   "exp_up": 0.3087,
+   "exp_down": null,
+   "score": 0.05,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "7516a589e5ae9112",
+   "spec": {
+    "side": "short",
+    "window": "LUNCH",
+    "geom": "t1s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "lower_wick",
+      ">=",
+      0.6
+     ],
+     [
+      "qqq_fo",
+      "<",
+      -0.6
+     ],
+     [
+      "rvol_day",
+      "<=",
+      0.38
+     ],
+     [
+      "z12",
+      "<=",
+      -0.81
+     ]
+    ]
+   },
+   "train": {
+    "n": 47,
+    "exp_r": 0.2039,
+    "t": 0.79,
+    "win": 0.617,
+    "days": 18
+   },
+   "valid": {
+    "n": 26,
+    "exp_r": 0.1893,
+    "t": 1.1,
+    "win": 0.692,
+    "days": 14
+   },
+   "per_day": 0.171,
+   "exp_up": null,
+   "exp_down": 0.4614,
+   "score": 0.04,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "a761ff730c519972",
+   "spec": {
+    "side": "short",
+    "window": "LATE",
+    "geom": "t05s1",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "adx7",
+      "<=",
+      19.0
+     ],
+     [
+      "bars_since_lod",
+      ">=",
+      45.0
+     ],
+     [
+      "rsi2",
+      "<=",
+      0.0
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 378,
+    "exp_r": -0.0155,
+    "t": -0.26,
+    "win": 0.603,
+    "days": 49
+   },
+   "valid": {
+    "n": 318,
+    "exp_r": 0.0181,
+    "t": 0.3,
+    "win": 0.604,
+    "days": 31
+   },
+   "per_day": 1.634,
+   "exp_up": -0.2212,
+   "exp_down": 0.0302,
+   "score": -0.01,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "680b9667a25b3790",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "t05s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "lower_wick",
+      ">=",
+      0.71
+     ],
+     [
+      "spy_fo",
+      "<",
+      -0.25
+     ],
+     [
+      "volumeRatio",
+      ">=",
+      2.0
+     ],
+     [
+      "vwap_atr",
+      "<=",
+      -0.34
+     ]
+    ]
+   },
+   "train": {
+    "n": 419,
+    "exp_r": -0.0206,
+    "t": -0.28,
+    "win": 0.659,
+    "days": 70
+   },
+   "valid": {
+    "n": 303,
+    "exp_r": 0.0709,
+    "t": 0.98,
+    "win": 0.716,
+    "days": 45
+   },
+   "per_day": 1.695,
+   "exp_up": 0.2886,
+   "exp_down": -0.0298,
+   "score": -0.03,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "00dd5eb2c38ed27d",
+   "spec": {
+    "side": "long",
+    "window": "MID",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth",
+      "<",
+      0.3
+     ],
+     [
+      "macd_hist",
+      ">=",
+      0.024
+     ],
+     [
+      "sma20_dist_pct",
+      "<=",
+      -0.3
+     ]
+    ]
+   },
+   "train": {
+    "n": 7346,
+    "exp_r": 0.0463,
+    "t": 0.57,
+    "win": 0.55,
+    "days": 102
+   },
+   "valid": {
+    "n": 4793,
+    "exp_r": -0.0247,
+    "t": -0.29,
+    "win": 0.503,
+    "days": 53
+   },
+   "per_day": 28.495,
+   "exp_up": 0.5589,
+   "exp_down": -0.0991,
+   "score": -0.04,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "3983a812c06e90b7",
+   "spec": {
+    "side": "long",
+    "window": "PM",
+    "geom": "holdtr",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "breadth",
+      "<",
+      0.4
+     ],
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.9
+     ],
+     [
+      "new_lod",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 1327,
+    "exp_r": -0.0249,
+    "t": -0.3,
+    "win": 0.498,
+    "days": 103
+   },
+   "valid": {
+    "n": 732,
+    "exp_r": 0.0482,
+    "t": 0.58,
+    "win": 0.542,
+    "days": 81
+   },
+   "per_day": 4.833,
+   "exp_up": 0.479,
+   "exp_down": -0.0738,
+   "score": -0.05,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "cc47db4d49169243",
+   "spec": {
+    "side": "short",
+    "window": "OPEN",
+    "geom": "t1s1",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "qqq_fo",
+      "<",
+      -0.3
+     ],
+     [
+      "range_exp",
+      ">=",
+      1.9
+     ]
+    ]
+   },
+   "train": {
+    "n": 2351,
+    "exp_r": -0.0225,
+    "t": -0.31,
+    "win": 0.526,
+    "days": 69
+   },
+   "valid": {
+    "n": 2432,
+    "exp_r": 0.0291,
+    "t": 0.44,
+    "win": 0.562,
+    "days": 60
+   },
+   "per_day": 11.228,
+   "exp_up": -0.4167,
+   "exp_down": 0.1711,
+   "score": -0.06,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "73532f537732bcb3",
+   "spec": {
+    "side": "short",
+    "window": "OPEN",
+    "geom": "holdtr",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "emaDiff_chg3",
+      "<=",
+      -0.14
+     ],
+     [
+      "gap",
+      ">=",
+      1.2
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 656,
+    "exp_r": 0.4771,
+    "t": 1.18,
+    "win": 0.637,
+    "days": 21
+   },
+   "valid": {
+    "n": 601,
+    "exp_r": -0.0574,
+    "t": -0.32,
+    "win": 0.484,
+    "days": 17
+   },
+   "per_day": 2.951,
+   "exp_up": -0.1201,
+   "exp_down": 0.9928,
+   "score": -0.07,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "1080a5d8b776ed70",
+   "spec": {
+    "side": "short",
+    "window": "LUNCH",
+    "geom": "t1s05",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "fromOpen_atr",
+      "<=",
+      -0.78
+     ],
+     [
+      "qqq_fo",
+      "<",
+      -0.3
+     ],
+     [
+      "rsi7",
+      "<=",
+      38.0
+     ],
+     [
+      "slope6_atr",
+      ">=",
+      0.011
+     ]
+    ]
+   },
+   "train": {
+    "n": 1207,
+    "exp_r": -0.0164,
+    "t": -0.33,
+    "win": 0.389,
+    "days": 78
+   },
+   "valid": {
+    "n": 868,
+    "exp_r": 0.1138,
+    "t": 1.17,
+    "win": 0.465,
+    "days": 66
+   },
+   "per_day": 4.871,
+   "exp_up": -0.0573,
+   "exp_down": -0.0113,
+   "score": -0.08,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "86036705ab46c099",
+   "spec": {
+    "side": "long",
+    "window": "LAM",
+    "geom": "holdtr",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "compress6_atr",
+      "<=",
+      0.091
+     ],
+     [
+      "dist_pdh_atr",
+      "<=",
+      -0.11
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.5
+     ],
+     [
+      "vwapReclaim",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 78,
+    "exp_r": 0.1219,
+    "t": 1.91,
+    "win": 0.603,
+    "days": 19
+   },
+   "valid": {
+    "n": 45,
+    "exp_r": 0.0873,
+    "t": 0.65,
+    "win": 0.533,
+    "days": 14
+   },
+   "per_day": 0.289,
+   "exp_up": 0.1724,
+   "exp_down": null,
+   "score": -0.1,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "0f76d60db2bb30aa",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "holdtr",
+    "min_adv": 95000000.0,
+    "conds": [
+     [
+      "qqq_fo",
+      ">",
+      0.6
+     ],
+     [
+      "rsi2",
+      ">=",
+      100.0
+     ],
+     [
+      "sma50_dist_pct",
+      "<=",
+      -0.56
+     ]
+    ]
+   },
+   "train": {
+    "n": 5178,
+    "exp_r": 0.0659,
+    "t": 0.26,
+    "win": 0.438,
+    "days": 47
+   },
+   "valid": {
+    "n": 6535,
+    "exp_r": -0.016,
+    "t": -0.12,
+    "win": 0.476,
+    "days": 45
+   },
+   "per_day": 27.495,
+   "exp_up": 0.2299,
+   "exp_down": -0.4736,
+   "score": -0.12,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "4be7b16047fe0c76",
+   "spec": {
+    "side": "short",
+    "window": "LAM",
+    "geom": "holdtr",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ],
+     [
+      "emaDiff_chg3",
+      "<=",
+      -0.029
+     ],
+     [
+      "qqq_fo",
+      "<",
+      -0.3
+     ],
+     [
+      "rsi2",
+      ">=",
+      100.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 3699,
+    "exp_r": -0.0305,
+    "t": -0.39,
+    "win": 0.486,
+    "days": 92
+   },
+   "valid": {
+    "n": 4047,
+    "exp_r": 0.0141,
+    "t": 0.1,
+    "win": 0.486,
+    "days": 84
+   },
+   "per_day": 18.183,
+   "exp_up": -0.3832,
+   "exp_down": 0.0577,
+   "score": -0.14,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "a841a8e2ca88481e",
+   "spec": {
+    "side": "short",
+    "window": "LAM",
+    "geom": "holdtr",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "bar_range_atr",
+      ">=",
+      0.11
+     ],
+     [
+      "emaDiff_chg3",
+      "<=",
+      -0.093
+     ],
+     [
+      "qqq_fo",
+      ">",
+      0.6
+     ]
+    ]
+   },
+   "train": {
+    "n": 5020,
+    "exp_r": -0.0055,
+    "t": -0.04,
+    "win": 0.5,
+    "days": 63
+   },
+   "valid": {
+    "n": 7225,
+    "exp_r": -0.0291,
+    "t": -0.41,
+    "win": 0.476,
+    "days": 62
+   },
+   "per_day": 28.744,
+   "exp_up": -0.202,
+   "exp_down": 0.6713,
+   "score": -0.16,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "54d72768a8ea5a22",
+   "spec": {
+    "side": "short",
+    "window": "LATE",
+    "geom": "t1s1",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "bb_pctb12",
+      ">=",
+      0.98
+     ],
+     [
+      "breadth",
+      "<",
+      0.4
+     ],
+     [
+      "day_vs_prev_range",
+      ">=",
+      1.5
+     ]
+    ]
+   },
+   "train": {
+    "n": 3850,
+    "exp_r": -0.0318,
+    "t": -0.37,
+    "win": 0.491,
+    "days": 105
+   },
+   "valid": {
+    "n": 2629,
+    "exp_r": -0.0203,
+    "t": -0.42,
+    "win": 0.511,
+    "days": 85
+   },
+   "per_day": 15.209,
+   "exp_up": -0.0995,
+   "exp_down": 0.0451,
+   "score": -0.17,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "da2e68c428d22c43",
+   "spec": {
+    "side": "short",
+    "window": "LATE",
+    "geom": "t1s1",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth_open",
+      "<",
+      0.35
+     ],
+     [
+      "ret3_atr",
+      ">=",
+      0.07
+     ]
+    ]
+   },
+   "train": {
+    "n": 21448,
+    "exp_r": -0.0196,
+    "t": -0.44,
+    "win": 0.49,
+    "days": 75
+   },
+   "valid": {
+    "n": 10334,
+    "exp_r": 0.0108,
+    "t": 0.2,
+    "win": 0.517,
+    "days": 37
+   },
+   "per_day": 74.606,
+   "exp_up": null,
+   "exp_down": 0.013,
+   "score": -0.19,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "8a0c55f449112681",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "hold",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "flow_shift",
+      ">=",
+      0.42
+     ],
+     [
+      "fromOpen_atr",
+      "<=",
+      -0.2
+     ]
+    ]
+   },
+   "train": {
+    "n": 6766,
+    "exp_r": -0.0121,
+    "t": -0.19,
+    "win": 0.417,
+    "days": 115
+   },
+   "valid": {
+    "n": 4878,
+    "exp_r": -0.0085,
+    "t": -0.09,
+    "win": 0.406,
+    "days": 56
+   },
+   "per_day": 27.333,
+   "exp_up": 0.2266,
+   "exp_down": -0.4506,
+   "score": -0.19,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "6435e3e5132207fe",
+   "spec": {
+    "side": "long",
+    "window": "AM",
+    "geom": "holdtr",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "from_pc_atr",
+      "<=",
+      -0.96
+     ],
+     [
+      "qqq_fo",
+      "<",
+      0.0
+     ],
+     [
+      "range_exp",
+      ">=",
+      1.3
+     ]
+    ]
+   },
+   "train": {
+    "n": 4678,
+    "exp_r": -0.0366,
+    "t": -0.21,
+    "win": 0.426,
+    "days": 124
+   },
+   "valid": {
+    "n": 3952,
+    "exp_r": 0.06,
+    "t": 0.37,
+    "win": 0.489,
+    "days": 111
+   },
+   "per_day": 20.258,
+   "exp_up": 0.5581,
+   "exp_down": -0.0718,
+   "score": -0.21,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "e031d1f474f9f265",
+   "spec": {
+    "side": "short",
+    "window": "LATE",
+    "geom": "t05s1",
+    "min_adv": 50000000.0,
+    "conds": [
+     [
+      "breadth",
+      ">",
+      0.7
+     ],
+     [
+      "day_vs_prev_range",
+      "<=",
+      0.52
+     ],
+     [
+      "emaDiff_chg3",
+      ">=",
+      0.05
+     ]
+    ]
+   },
+   "train": {
+    "n": 4510,
+    "exp_r": -0.0319,
+    "t": -0.46,
+    "win": 0.571,
+    "days": 83
+   },
+   "valid": {
+    "n": 1746,
+    "exp_r": -0.0064,
+    "t": -0.16,
+    "win": 0.589,
+    "days": 40
+   },
+   "per_day": 14.685,
+   "exp_up": -0.1,
+   "exp_down": 0.1817,
+   "score": -0.21,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "83c4cf5f5cc4e155",
+   "spec": {
+    "side": "short",
+    "window": "PM",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "bars_since_lod",
+      "<=",
+      5.0
+     ],
+     [
+      "breadth_open",
+      "<",
+      0.5
+     ],
+     [
+      "day_vs_prev_range",
+      "<=",
+      0.52
+     ],
+     [
+      "volumeRatio",
+      ">=",
+      1.2
+     ]
+    ]
+   },
+   "train": {
+    "n": 1605,
+    "exp_r": 0.051,
+    "t": 0.32,
+    "win": 0.448,
+    "days": 130
+   },
+   "valid": {
+    "n": 1116,
+    "exp_r": -0.0218,
+    "t": -0.46,
+    "win": 0.487,
+    "days": 128
+   },
+   "per_day": 6.387,
+   "exp_up": -0.4569,
+   "exp_down": 0.1455,
+   "score": -0.21,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "3a78da61ec686ae9",
+   "spec": {
+    "side": "long",
+    "window": "LATE",
+    "geom": "t1s05",
+    "min_adv": 150000000.0,
+    "conds": [
+     [
+      "bb_pctb12",
+      "<=",
+      0.017
+     ],
+     [
+      "breadth_open",
+      ">",
+      0.65
+     ],
+     [
+      "new_lod",
+      "==",
+      1.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 351,
+    "exp_r": -0.0287,
+    "t": -0.46,
+    "win": 0.43,
+    "days": 63
+   },
+   "valid": {
+    "n": 176,
+    "exp_r": 0.0012,
+    "t": 0.02,
+    "win": 0.443,
+    "days": 31
+   },
+   "per_day": 1.237,
+   "exp_up": -0.0437,
+   "exp_down": null,
+   "score": -0.21,
+   "tier1": false,
+   "skipped_overlap": null
+  },
+  {
+   "key": "81c01e10cdc7167e",
+   "spec": {
+    "side": "long",
+    "window": "LUNCH",
+    "geom": "hold",
+    "min_adv": 20000000.0,
+    "conds": [
+     [
+      "orb_fail_dn",
+      "==",
+      1.0
+     ],
+     [
+      "spy_fo",
+      ">",
+      0.25
+     ],
+     [
+      "vwap_cross_n",
+      ">=",
+      6.0
+     ]
+    ]
+   },
+   "train": {
+    "n": 12873,
+    "exp_r": 0.1104,
+    "t": 0.69,
+    "win": 0.491,
+    "days": 111
+   },
+   "valid": {
+    "n": 9779,
+    "exp_r": -0.0275,
+    "t": -0.48,
+    "win": 0.452,
+    "days": 91
+   },
+   "per_day": 53.174,
+   "exp_up": 0.3003,
+   "exp_down": -0.6688,
+   "score": -0.23,
+   "tier1": false,
+   "skipped_overlap": null
+  }
+ ],
+ "applied": true,
+ "runtime_s": 823,
+ "note": "Quick screen, open history only (train <= 2025-12, valid 2026-01..2026-10-07), costs in, first qualifying bar per symbol-day, day-clustered t. No locked holdout; not a tested edge. 3000 configurations scored in this run. Educational only - not financial advice."
+}
