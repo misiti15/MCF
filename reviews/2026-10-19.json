@@ -1,0 +1,183 @@
+{
+ "date": "2026-10-19",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 37,
+  "win_rate": 0.486,
+  "exp_r": -0.127,
+  "total_r": -4.72,
+  "pnl": -49.3,
+  "stop_exit_share": 0.432,
+  "pnl_adj": -63.92,
+  "slip_bps": 1.6
+ },
+ "yesterday": {
+  "trades": 36,
+  "win_rate": 0.472,
+  "exp_r": -0.109,
+  "total_r": -3.94,
+  "pnl": 7.17,
+  "stop_exit_share": 0.472,
+  "pnl_adj": -14.41,
+  "slip_bps": 4.9
+ },
+ "rolling5": {
+  "exp_r": -0.041,
+  "win_rate": 0.509,
+  "pnl": -153.718,
+  "slip_bps": 6.08,
+  "stop_exit_share": 0.424
+ },
+ "rolling20": {
+  "exp_r": -0.104,
+  "win_rate": 0.448,
+  "pnl": -167.8,
+  "slip_bps": 4.244,
+  "stop_exit_share": 0.412
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "MF1-945-flowsell-vwapup": {
+   "trades": 4,
+   "win_rate": 0.25,
+   "exp_r": -0.346,
+   "total_r": -1.38,
+   "pnl": -2.84,
+   "stop_exit_share": 0.75,
+   "pnl_adj": -4.72,
+   "slip_bps": 1.8
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "trades": 5,
+   "win_rate": 0.2,
+   "exp_r": -0.707,
+   "total_r": -3.53,
+   "pnl": -45.17,
+   "stop_exit_share": 0.8,
+   "pnl_adj": -50.23,
+   "slip_bps": 1.9
+  },
+  "MF3-open-flowsell-rsi5hi-FD": {
+   "trades": 13,
+   "win_rate": 0.538,
+   "exp_r": -0.168,
+   "total_r": -2.19,
+   "pnl": -31.91,
+   "stop_exit_share": 0.462,
+   "pnl_adj": -37.91,
+   "slip_bps": -1.5
+  },
+  "MF4-h40-open-flowsell": {
+   "trades": 3,
+   "win_rate": 1.0,
+   "exp_r": 0.448,
+   "total_r": 1.34,
+   "pnl": 32.24,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 32.24,
+   "slip_bps": 2.2
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "trades": 3,
+   "win_rate": 0.667,
+   "exp_r": 0.138,
+   "total_r": 0.42,
+   "pnl": -1.63,
+   "stop_exit_share": 0.333,
+   "pnl_adj": -2.13,
+   "slip_bps": 0.5
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -0.155,
+   "total_r": -0.16,
+   "pnl": -1.35,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -1.35,
+   "slip_bps": 1.5
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -0.057,
+   "total_r": -0.06,
+   "pnl": -1.61,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -1.61,
+   "slip_bps": 12.6
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 5,
+   "win_rate": 0.4,
+   "exp_r": -0.154,
+   "total_r": -0.77,
+   "pnl": -14.43,
+   "stop_exit_share": 0.4,
+   "pnl_adj": -15.61,
+   "slip_bps": 4.7
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.807,
+   "total_r": 1.61,
+   "pnl": 17.4,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 17.4,
+   "slip_bps": 7.4
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "lot cap",
+   "signals": 11,
+   "whatif_exp_r": 0.108,
+   "whatif_total_r": 1.19,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 1,
+   "whatif_exp_r": -1.053,
+   "whatif_total_r": -1.05,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 2,
+   "whatif_exp_r": -0.402,
+   "whatif_total_r": -0.8,
+   "verdict": "rule saved R today"
+  }
+ ],
+ "signals": {
+  "submitted": 37,
+  "skipped": 14
+ },
+ "health": {
+  "polls": 48,
+  "last_poll_s": 7.1,
+  "symbols_last_bar": 3472,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 367,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "flatten_failed": []
+ },
+ "findings": [
+  "'lot cap' (skipped) blocked 11 signals that would have made +1.2R. Track it for 20 sessions before loosening it."
+ ]
+}
