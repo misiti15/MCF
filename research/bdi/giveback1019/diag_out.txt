@@ -1,0 +1,50 @@
+
+===== Primary: 313 trades, 9 sessions, win 42%, avg R (costs in) -0.190, P/L adj -1654
+ exits: {'stop': 139, 'target': 107, 'flatten': 67}; target distance median 0.91R
+ LOSERS 183: MFE median 0.30R; reached >=0.25R 98, >=0.5R 49 (27%), >=1R 11; never worked (MFE<0.2R) 71 (39%) $ -1718; $ of losers that reached 0.5R -806
+ WINNERS 130: MFE median 0.90R, realized median 0.80R, giveback (MFE-realized) median 0.08R, mean 0.13R; time to MFE median 75 min
+ Losers time to MFE median 6 min, hold median 68 min; winners hold median 78 min
+ STOP vs NOISE: stop distance / 1-min ATR(14) median 5.94 (p25 4.24, p75 8.29); stops < 2 ATR1m: 10 trades
+ by stop/ATR1m quartile:                   n    win   avgR     pnl  stop_rate | stop_atr                                             | (1.171, 4.24]    79  0.266 -0.428 -764.53      0.671 | (4.24, 5.941]    78  0.462 -0.185 -467.16      0.487 | (5.941, 8.286]   78  0.423 -0.191 -463.53      0.410 | (8.286, 33.974]  78  0.513  0.047   41.38      0.205
+ STOPPED THEN REVERSED: 139 stops; price came back to entry before 15:55 48 (35%); went on to the original target 16 (12%)
+   (base rate check: the target is 0.91R away; a wider stop only helps if the extra room is not hit first - tested in replay vi)
+ by entry hour:         n    win   avgR     pnl   mfeL | hour                                   | 9      40  0.350 -0.270 -184.86  0.100 | 10    128  0.461 -0.155 -747.58  0.319 | 11     75  0.360 -0.332 -812.93  0.330 | 12     32  0.375 -0.115   68.67  0.278 | 13     26  0.423 -0.123  -51.13  0.349 | 14     12  0.583  0.252   73.99  0.193
+ by side: {-1: {'n': 248, 'win': 0.407, 'avgR': -0.224, 'pnl': -1283.57}, 1: {'n': 65, 'win': 0.446, 'avgR': -0.061, 'pnl': -370.27}}
+ LATENCY signal->fill median 1.5s, p90 3.2s; slippage vs ref median 4.3 bps, mean 4.3 bps (= 0.054R mean)
+ slippage tercile vs outcome: {Interval(-158.752, 0.0, closed='right'): {'n': 105, 'avgR': -0.155}, Interval(0.0, 9.883, closed='right'): {'n': 104, 'avgR': -0.265}, Interval(9.883, 115.068, closed='right'): {'n': 104, 'avgR': -0.15}}
+ winners: realized/MFE share by exit: {'flatten': {'n': 23.0, 'mfe': 0.57, 'real': 0.16}, 'target': {'n': 107.0, 'mfe': 0.96, 'real': 0.89}}
+ flatten exits (time/EOD): {'radj': {'count': 67.0, 'mean': -0.091, 'sum': nan, 'median': nan}, 'pnl_adj': {'count': nan, 'mean': nan, 'sum': -346.47, 'median': nan}, 'mfe': {'count': nan, 'mean': nan, 'sum': nan, 'median': 0.356}}
+
+===== Testing 1: 1495 trades, 6 sessions, win 45%, avg R (costs in) -0.145, P/L adj -2540
+ exits: {'stop': 585, 'flatten': 456, 'target': 454}; target distance median 0.93R
+ LOSERS 825: MFE median 0.22R; reached >=0.25R 376, >=0.5R 200 (24%), >=1R 26; never worked (MFE<0.2R) 376 (46%) $ -4071; $ of losers that reached 0.5R -1410
+ WINNERS 670: MFE median 0.90R, realized median 0.77R, giveback (MFE-realized) median 0.11R, mean 0.18R; time to MFE median 74 min
+ Losers time to MFE median 9 min, hold median 78 min; winners hold median 94 min
+ STOP vs NOISE: stop distance / 1-min ATR(14) median 7.41 (p25 5.13, p75 10.12); stops < 2 ATR1m: 39 trades
+ by stop/ATR1m quartile:                                  n    win   avgR       pnl  stop_rate | stop_atr                                                              | (0.030600000000000002, 5.133]  374  0.342 -0.372 -1271.190      0.636 | (5.133, 7.409]                 374  0.463 -0.145  -643.900      0.441 | (7.409, 10.119]                373  0.477 -0.066  -510.121      0.311 | (10.119, 77.644]               374  0.511  0.001  -114.790      0.176
+ STOPPED THEN REVERSED: 585 stops; price came back to entry before 15:55 178 (30%); went on to the original target 49 (8%)
+   (base rate check: the target is 0.93R away; a wider stop only helps if the extra room is not hit first - tested in replay vi)
+ by entry hour:         n    win   avgR       pnl   mfeL | hour                                     | 9      73  0.301 -0.633  -237.630  0.443 | 10    434  0.422 -0.208 -1114.151  0.203 | 11    302  0.470 -0.141  -730.823  0.201 | 12    309  0.437 -0.129  -372.060  0.264 | 13    181  0.514 -0.028   -26.970  0.216 | 14    177  0.486  0.050   -43.437  0.212 | 15     19  0.474 -0.119   -14.930  0.145
+ by side: {-1: {'n': 1081, 'win': 0.464, 'avgR': -0.104, 'pnl': -1281.79}, 1: {'n': 414, 'win': 0.406, 'avgR': -0.255, 'pnl': -1258.211}}
+ LATENCY signal->fill median 1.2s, p90 2.8s; slippage vs ref median 3.5 bps, mean 3.3 bps (= 0.042R mean)
+ slippage tercile vs outcome: {Interval(-176.622, -1.244, closed='right'): {'n': 499, 'avgR': -0.194}, Interval(-1.244, 8.912, closed='right'): {'n': 498, 'avgR': -0.096}, Interval(8.912, 89.772, closed='right'): {'n': 498, 'avgR': -0.147}}
+ winners: realized/MFE share by exit: {'flatten': {'n': 217.0, 'mfe': 0.69, 'real': 0.32}, 'target': {'n': 453.0, 'mfe': 0.97, 'real': 0.87}}
+ flatten exits (time/EOD): {'radj': {'count': 456.0, 'mean': 0.03, 'sum': nan, 'median': nan}, 'pnl_adj': {'count': nan, 'mean': nan, 'sum': -54.991, 'median': nan}, 'mfe': {'count': nan, 'mean': nan, 'sum': nan, 'median': 0.539}}
+
+===== Testing 2: 2281 trades, 5 sessions, win 57%, avg R (costs in) -0.180, P/L adj -4134
+ exits: {'target': 1279, 'stop': 865, 'flatten': 137}; target distance median 0.46R
+ LOSERS 976: MFE median 0.18R; reached >=0.25R 366, >=0.5R 144 (15%), >=1R 39; never worked (MFE<0.2R) 525 (54%) $ -5515; $ of losers that reached 0.5R -810
+ WINNERS 1305: MFE median 0.51R, realized median 0.41R, giveback (MFE-realized) median 0.08R, mean 0.12R; time to MFE median 15 min
+ Losers time to MFE median 3 min, hold median 40 min; winners hold median 16 min
+ STOP vs NOISE: stop distance / 1-min ATR(14) median 4.96 (p25 3.68, p75 6.86); stops < 2 ATR1m: 99 trades
+ by stop/ATR1m quartile:                    n    win   avgR       pnl  stop_rate | stop_atr                                                | (0.121, 3.677]   571  0.461 -0.314 -1071.380      0.538 | (3.677, 4.956]   571  0.595 -0.156  -847.300      0.387 | (4.956, 6.861]   569  0.636 -0.138 -1140.928      0.318 | (6.861, 70.629]  570  0.596 -0.110 -1074.640      0.274
+ STOPPED THEN REVERSED: 865 stops; price came back to entry before 15:55 320 (37%); went on to the original target 158 (18%)
+   (base rate check: the target is 0.46R away; a wider stop only helps if the extra room is not hit first - tested in replay vi)
+ by entry hour:          n    win   avgR       pnl   mfeL | hour                                      | 9      224  0.491 -0.333  -492.170  0.168 | 10    1569  0.581 -0.190 -3322.048  0.179 | 11     257  0.584 -0.112  -204.850  0.166 | 12      98  0.612 -0.040   -37.040  0.198 | 13      65  0.615  0.005   -24.050  0.113 | 14      66  0.515 -0.049   -44.180  0.235 | 15       2  0.000 -0.604    -9.910  0.364
+ by side: {-1: {'n': 532, 'win': 0.528, 'avgR': -0.212, 'pnl': -1359.84}, 1: {'n': 1749, 'win': 0.585, 'avgR': -0.17, 'pnl': -2774.408}}
+ LATENCY signal->fill median 1.3s, p90 3.0s; slippage vs ref median 2.7 bps, mean 3.9 bps (= 0.063R mean)
+ slippage tercile vs outcome: {Interval(-112.714, -1.902, closed='right'): {'n': 761, 'avgR': -0.264}, Interval(-1.902, 9.05, closed='right'): {'n': 760, 'avgR': -0.106}, Interval(9.05, 120.448, closed='right'): {'n': 760, 'avgR': -0.168}}
+ winners: realized/MFE share by exit: {'flatten': {'n': 34.0, 'mfe': 0.41, 'real': 0.23}, 'stop': {'n': 1.0, 'mfe': 0.71, 'real': 0.32}, 'target': {'n': 1270.0, 'mfe': 0.51, 'real': 0.42}}
+ flatten exits (time/EOD): {'radj': {'count': 137.0, 'mean': -0.212, 'sum': nan, 'median': nan}, 'pnl_adj': {'count': nan, 'mean': nan, 'sum': -191.838, 'median': nan}, 'mfe': {'count': nan, 'mean': nan, 'sum': nan, 'median': 0.312}}
+
+Educational only - not financial advice.
