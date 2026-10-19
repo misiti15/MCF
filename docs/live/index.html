@@ -210,7 +210,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="controls" style="margin:8px 0" id="lb-ctl"></div><div class="sub" id="lb-sorted" style="margin-bottom:6px"></div>
     <div class="tablewrap" id="lb-tab" style="max-height:640px;overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
-      R = the setup's planned risk per trade. <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
+      R = the setup's planned risk per trade. <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
+      green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
+      <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
       <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
@@ -228,13 +230,42 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
-  <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"></div>
-    <div class="tablewrap" id="pt-tab"><div class="empty">Appears after the next end-of-day report.</div></div>
-    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). <b>Simulated</b> columns are what-if replays of signals not taken (no fill-realism checks); they are never part of live results. Report only; it does not change which trades are taken. Educational only — not financial advice.</div></div>
-  <div class="card lab"><h2>Ideas to explore (outside research)</h2><div class="tablewrap" id="lv-ideas"><div class="empty">Ideas list not published yet.</div></div>
-    <div class="note">For brainstorming and the Testing account. Nothing here trades until it passes the backlog gates.</div></div>
-  <div class="card lab"><h2>Setup lab — weekly discovery <span class="sub" id="lab-when"></span></h2><div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
-    <div class="note">Research candidates, not live setups: re-run every Saturday by the discover workflow (the date above is the last scan). Layered rules found on older data and checked on the newest third. Candidates never trade on their own: one becomes a setup only after a full backtest passes the promotion gates and you approve it.</div></div>
+  <div class="card" id="pt-card"><h2>Playing time per setup</h2><div class="sub" id="pt-sum"><div class="empty">Appears after the next end-of-day report.</div></div>
+    <div id="pt-flags" style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;font-size:12px"></div>
+    <details><summary style="cursor:pointer;font-size:13px;color:var(--ink-2)">Full playing-time table (diagnostics)</summary>
+    <div class="tablewrap" id="pt-tab" style="max-height:420px;overflow-y:auto"><div class="empty">Appears after the next end-of-day report.</div></div>
+    <div class="note" id="pt-note">Does every setup get enough signals and entries to be judged? Signals lost because another setup already held the symbol are counted per setup (rule 20). <b>Simulated</b> columns are what-if replays of signals not taken (no fill-realism checks); they are never part of live results. Report only; it does not change which trades are taken. Educational only — not financial advice.</div></details>
+    <div class="note" style="margin-top:4px">Report only; it never changes which trades are taken. Hover a chip for its setups. Educational only — not financial advice.</div></div>
+  <!-- Generator Lab (owner 2026-10-19): replaces "Ideas to explore" + "Setup lab". Brief updates and trends only; the
+       raw lists stay one click away. Reads docs/live/generator_lab.json (written by every generator run). -->
+  <div class="card lab" id="gl-card"><h2>Generator Lab <span class="sub" id="lab-when"></span></h2>
+    <div class="sub" id="gl-sum">Loading…</div>
+    <div class="tablewrap" id="gl-trend" style="margin-top:8px"></div>
+    <details style="margin-top:8px"><summary style="cursor:pointer;font-size:13px;color:var(--ink-2)">Raw lists (weekly scan candidates, outside ideas)</summary>
+    <div class="tablewrap" id="lv-lab"><div class="empty">The first weekly scan runs Saturday.</div></div>
+    <div class="tablewrap" id="lv-ideas" style="margin-top:8px"><div class="empty">Ideas list not published yet.</div></div></details>
+    <div class="note">Pipeline, automatic: the Saturday scan's candidates that held up feed the Setup Generator as seeds; it screens them
+      next to its own random layered setups (3+ conditions, costs in) and the 10 best each day trade in the Setup Generator account.
+      You promote from the Generated leaderboard. Educational only — not financial advice.</div></div>
+<script>
+(() => {
+  const q = s => document.querySelector(s), e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f = (v, d = 3) => v == null ? "–" : (v > 0 ? "+" : "") + (+v).toFixed(d);
+  fetch("../live/generator_lab.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d) return;
+    const runs = d.runs || [], last = runs[runs.length - 1] || {}, prev = runs.slice(-8, -1);
+    const med = a => { const x = a.filter(v => v != null).sort((p, q) => p - q); return x.length ? x[Math.floor(x.length / 2)] : null; };
+    const trend = prev.length ? (last.median_valid_r ?? 0) - (med(prev.map(r => r.median_valid_r)) ?? 0) : null;
+    q("#gl-sum").innerHTML = `<b>${d.setups_generated}</b> setups generated from ${d.specs_screened.toLocaleString()} screened · <b>${d.live_in_gen}</b> trading in the Setup Generator account · ` +
+      `<b>${d.promoted.length}</b> promoted${d.promoted.length ? " (" + d.promoted.map(p => e(p.setup)).join(", ") + ")" : ""} · last run ${e(last.date || "–")}: ${last.picked ?? 0} new` +
+      (last.seeded_from_lab ? `, ${last.seeded_from_lab} from the weekly scan` : "") + `, median screen R ${f(last.median_valid_r)}` +
+      (trend == null ? "" : ` (${trend >= 0 ? "up" : "down"} ${Math.abs(trend).toFixed(3)} vs the prior week)`);
+    const rows = runs.slice(-7).reverse();
+    q("#gl-trend").innerHTML = rows.length ? `<table><thead><tr><th class="l">Run</th><th>Screened</th><th>New setups</th><th>From scan</th><th>Median screen R</th><th>Best screen R</th><th>Best t</th></tr></thead><tbody>` +
+      rows.map(r => `<tr><td class="l">${e(r.date)}</td><td>${(r.tried ?? 0).toLocaleString()}</td><td>${r.picked}</td><td>${r.seeded_from_lab || 0}</td><td>${f(r.median_valid_r)}</td><td>${f(r.best_valid_r)}</td><td>${r.best_t ?? "–"}</td></tr>`).join("") + `</tbody></table>` : "";
+  }).catch(() => {});
+})();
+</script>
 </section>
 <script>
 (() => {
@@ -445,11 +476,14 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     if (!pt || !pt.cumulative) return;
     const c = pt.cumulative.summary || {}, t = (pt.today || {}).summary || {};
     const today = Object.fromEntries(((pt.today || {}).setups || []).map(r => [r.setup, r]));
-    const flag = k => (c[k] || []).length ? ` · <b>${k.replace("_", "-")}:</b> ${(c[k] || []).map(e).join(", ")}` : "";
-    q("#pt-sum").innerHTML = `${e(pt.window)} · ${c.sessions} sessions · ${t.setups_live ?? "–"} setups live on ${e(pt.day)} · ` +
-      `${c.signals} signals, ${c.entries} taken, <b>${c.lost_to_other_setups}</b> lost to other setups (${((c.lost_share || 0) * 100).toFixed(1)}%)` +
-      (t.slots ? ` · peak ${t.peak_open_positions} of ${t.slots} slots` : "") + flag("silent") + flag("crowded_out") + flag("starved") +
-      (c.sim_trades ? ` · <i>SIMULATED (not live): ${c.sim_trades} what-if trades of signals not taken, avg ${fr(c.sim_avg_r)}R, ${pc(c.sim_win_rate)} winners</i>` : "");
+    // compact view (owner 2026-10-19): one line + verdict chips; the full table stays one click away for diagnostics
+    q("#pt-sum").innerHTML = `${c.sessions} sessions · ${c.entries} of ${c.signals} signals taken · ` +
+      `${((c.lost_share || 0) * 100).toFixed(0)}% lost to other setups` + (t.slots ? ` · peak ${t.peak_open_positions}/${t.slots} slots` : "");
+    const live = (pt.cumulative.setups || []).filter(r => r.live_today !== false), by = {};
+    live.forEach(r => (by[r.verdict] = by[r.verdict] || []).push(r));
+    q("#pt-flags").innerHTML = Object.entries(by).sort((a, b) => (COL[b[0]] === "down") - (COL[a[0]] === "down") || b[1].length - a[1].length)
+      .map(([v, rs]) => `<span class="pill ${{down: "warn", up: "on"}[COL[v]] || ""}" title="${e(rs.map(r => r.name || r.setup).join(", "))}"><b>${e(v)}</b> ${rs.length}` +
+        (COL[v] === "down" ? `: ${rs.slice(0, 4).map(r => e(r.setup)).join(", ")}${rs.length > 4 ? " …" : ""}` : "") + `</span>`).join("");
     const rows = (pt.cumulative.setups || []).filter(r => r.live_today !== false).map(r => {
       const d = today[r.setup] || {};
       const lost = Object.entries(r.lost_to || {}).slice(0, 3).map(([k, v]) => `${e(k)} ${v}`).join(", ") || "–";
@@ -605,14 +639,17 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     // a setup traded in more than one account (e.g. demoted from Primary): total live trades across accounts
     const tot = {};
     all.forEach(r => { tot[r.setup] = (tot[r.setup] || 0) + (r.trades || 0); });
-    all.forEach(r => { r.all_trades = tot[r.setup]; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r); });
+    all.forEach(r => { r.all_trades = tot[r.setup]; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r);
+      // break-even win rate (owner 2026-10-19); older scorecards lack it: estimate from win rate and profit factor ($)
+      if (r.breakeven_wr == null && r.win_rate && r.profit_factor) r.breakeven_wr = r.win_rate / (r.win_rate + r.profit_factor * (1 - r.win_rate));
+      r.wr_edge = r.win_rate == null || r.breakeven_wr == null ? null : r.win_rate - r.breakeven_wr; });
     const ranked = all.filter(r => r.score != null && r.live).sort((a, b) => b.score - a.score);
     ranked.forEach((r, i) => { r.rank = i + 1; });
     rows = all;
     draw();
   }
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["trades", "Live trades"], ["sessions_traded", "Sessions"],
-    ["win_rate", "Win rate"], ["avg_r", "Avg R"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
+    ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   function draw() {
     let r = rows.filter(x => (st.acct === "all" || x.acct === st.acct) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
@@ -623,14 +660,15 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
       (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
       ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
-    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 14 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 16 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
         <td class="l">${e(x.acctLabel)}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
-        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
+        <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
+        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
         <td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>
         <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
@@ -751,8 +789,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   let rows = [], sortK = "rank", sortD = 1, when = "";
-  const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"], ["trades", "Live trades"], ["win_rate", "Win rate"],
-    ["avg_r", "Avg R"], ["total_r", "Total R"], ["pnl", "P/L"], ["recent_avg_r", "Last 4 avg R"],
+  const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"], ["trades", "Live trades"], ["per_day", "Trades/day"], ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"],
+    ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["recent_avg_r", "Last 4 avg R"],
     ["scr_train", "Screen train R"], ["scr_valid", "Screen valid R"], ["scr_day", "Screen /day"]];
   async function get(u) { try { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? r.json() : null; } catch (_) { return null; } }
   async function load() {
@@ -763,7 +801,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     rows = [...keys].map(k => { const n = (names || {})[k] || {}, l = lb[k] || {}, s = n.screen || {};
       return { setup: k, name: n.name || l.name || k, what: n.what || "", generated: n.generated || "", side: n.side || "",
                live: l.live !== false, trades: l.trades || 0, win_rate: l.win_rate, avg_r: l.avg_r, total_r: l.total_r, pnl: l.pnl,
-               recent_avg_r: l.recent_avg_r, score: l.score, scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day }; });
+               recent_avg_r: l.recent_avg_r, score: l.score, t_stat: l.t_stat,
+               per_day: l.trades && l.sessions_traded ? +(l.trades / l.sessions_traded).toFixed(1) : null,
+               breakeven_wr: l.breakeven_wr ?? (l.win_rate && l.profit_factor ? l.win_rate / (l.win_rate + l.profit_factor * (1 - l.win_rate)) : null), scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day }; });
     rows.filter(r => r.score != null).sort((a, b) => b.score - a.score).forEach((r, i) => { r.rank = i + 1; });
     draw();
   }
@@ -774,8 +814,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}`;
     const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:240px" title="${e(x.what)}"><span class="genbadge">GENERATED</span> ${e(x.name)}
-        <div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td><td>${e(x.generated || "–")}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td>
-      <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
+        <div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td><td>${e(x.generated || "–")}</td><td>${x.trades}</td><td>${x.per_day ?? "–"}</td><td>${pc(x.win_rate)}</td>
+      <td class="${cls(x.win_rate == null || x.breakeven_wr == null ? null : x.win_rate - x.breakeven_wr)}">${pc(x.breakeven_wr)}</td>
+      <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td>${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
       <td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td class="${cls(x.scr_train)}">${f(x.scr_train, 3)}</td>
       <td class="${cls(x.scr_valid)}">${f(x.scr_valid, 3)}</td><td>${x.scr_day ?? "–"}</td></tr>`;
     q("#gen-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No generated setups yet.</div>`;
@@ -790,4 +831,112 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   setInterval(load, 600000);
 })();
 </script>
-</main></body></html>
+</main><!-- Hover glossary (owner 2026-10-19): hover (or tap) any column header, tile label, metric name or verdict chip to see a
+     one-line explanation. One dictionary for the whole page; applied after every render. -->
+<style>
+.gl-tip { text-decoration: underline dotted var(--muted); text-underline-offset: 3px; cursor: help; }
+</style>
+<script>
+(() => {
+  const G = {
+    "#": "Rank: average R per trade, shrunk toward 0 when a setup has few trades, so a few lucky trades can't top a long record.",
+    "Rank": "Average R per trade, shrunk toward 0 when a setup has few trades.",
+    "Setup": "The trading rule. Hover the name for what it does.",
+    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2 (Graveyard), Setup Generator.",
+    "Live trades": "Closed paper trades since the setup started in this account.",
+    "Trades": "Closed paper trades.",
+    "Trades today": "Trades closed today in this account.",
+    "Sessions": "Market days the setup traded at least once.",
+    "Trades/day": "Live trades divided by sessions traded. The owner's promotion signal for generated setups (about 20/day).",
+    "Win rate": "Share of trades that made money after costs.",
+    "Break-even win rate": "The win rate this setup needs to make money, given its own average win and loss size. The (+/-) is how far the actual win rate is above or below it.",
+    "Avg R": "Average result per trade in R (R = the planned risk per trade), after costs. The deciding number for promotion and demotion.",
+    "R": "Result in units of the planned risk: +1R = made what was risked, -1R = lost what was risked.",
+    "Confidence (t)": "How sure the Avg R is: about 2 or more = solid, 1-2 = suggestive, under 1 = could be luck. Grows with more, steadier trades.",
+    "Total R": "Sum of R over all trades.",
+    "P/L": "Profit or loss in dollars after costs (paper).",
+    "P/L today": "Today's profit or loss in dollars after costs (paper).",
+    "Adj. P/L": "P/L recomputed with the stops a real book would have had (removes paper fill quirks).",
+    "PF": "Profit factor: dollars won divided by dollars lost. Above 1 = profitable.",
+    "Profit factor": "Dollars won divided by dollars lost. Above 1 = profitable.",
+    "Last 4 avg R": "Average R over the account's last 4 sessions: is it getting better or worse lately?",
+    "Backtest R": "Expected R per trade from the setup's backtest on history, after costs.",
+    "Backtest expected R": "Expected R per trade from the setup's backtest on history, after costs.",
+    "vs backtest": "Live Avg R minus backtest R. Negative = doing worse live than history suggested.",
+    "Sim. trades / sim avg R (SIMULATED)": "What-if replays of signals the setup could not take (slot, symbol or cap blocked). Simulated only; never counted in live stats.",
+    "Playing time": "Does the setup get enough chances to trade? ok, slow, starved (signals blocked), crowded-out (another setup held the symbol), silent (no signals).",
+    "Flag": "review = 20+ trades and negative or well below backtest; promising = 20+ trades, positive, at/above backtest; needs trades = under 10.",
+    "Generated": "Date the Setup Generator created it.",
+    "Screen train R": "Avg R after costs on older history (to end-2025) when generated. A quick screen, not a full test.",
+    "Screen valid R": "Avg R after costs on 2026 history when generated: did it hold up on newer data?",
+    "Screen /day": "Trades per day in that history screen.",
+    "Signals": "Times a setup's rule fired; some are skipped (slots, caps, spread, borrow).",
+    "Data health": "Is live market data arriving on time? Stale data pauses new entries.",
+    "Verdict": "The report's call on this setup (e.g. keep, review, promising, playing-time status).",
+    "Today sig / taken": "Today's signals and how many became trades.",
+    "Signals / taken / trades": "Since start: rule fired / entries placed / trades closed.",
+    "Taken/day": "Entries per session.",
+    "Expected/day": "Entries per day the backtest expected.",
+    "Per week": "Entries per week at the current pace.",
+    "Lost to others": "Signals skipped because another setup already held that symbol.",
+    "Lost to": "Which setups held the symbol instead.",
+    "Top skips": "Most common reasons signals were not taken.",
+    "Green days": "Share of sessions that closed with a profit.",
+    "Stop-loss exits": "Share of trades that ended at the stop.",
+    "Entry slippage vs signal": "How far the fill was from the signal price, in basis points (1 bp = 0.01%).",
+    "Screened": "Candidate setups the generator scored in that run.",
+    "New setups": "Setups added to the Setup Generator account in that run.",
+    "From scan": "New setups that came from the Saturday scan's rules.",
+    "Median screen R": "Middle screen Avg R of that run's new setups.",
+    "Best screen R": "Best screen Avg R among that run's new setups.",
+    "Best t": "Highest confidence (t) among that run's new setups.",
+    "Drawdown": "Drop from the highest equity so far.",
+    "Tracking diff.": "Paper day return minus the backtest replay's.",
+    "Slip": "Fill price vs expected, in basis points.",
+    "Side": "long = profits if price rises; short = profits if price falls.",
+    "ok": "Getting enough trades to be judged.", "slow": "Trading, but below the pace it needs.",
+    "starved": "Signals fire but most are blocked (caps, spread, borrow).", "crowded-out": "Often blocked because another setup already holds the symbol.",
+    "silent": "No signals at all yet.", "watch": "Borderline; check again in a few sessions.", "quiet - wait": "Few signals so far; too early to judge.",
+    "review": "20+ trades and negative or well below its backtest.", "promising": "20+ trades, positive and at/above its backtest.",
+    "needs trades": "Fewer than 10 trades: too early to judge.", "GENERATED": "Machine-generated by the Setup Generator; trades only in the Setup Generator account.",
+    "ex-primary": "Was in the Primary account before being demoted.",
+  };
+  const norm = t => String(t || "").replace(/[▲▼]/g, "").replace(/\s+/g, " ").trim();
+  const keyOf = t => { t = norm(t); if (G[t]) return t; const b = t.split(/[:(]/)[0].trim().replace(/ \d+$/, ""); return G[b] ? b : null; };
+  function apply(root) {
+    root.querySelectorAll("th, .tile .k, .chip, .pill, .genbadge, td.l > b, td.l:first-child").forEach(el => {
+      if (el.dataset.gl) return;
+      const k = keyOf(el.textContent); el.dataset.gl = "1";
+      if (!k) return;
+      const own = el.getAttribute("title");
+      el.setAttribute("title", own && own !== G[k] ? `${G[k]} — ${own}` : G[k]);
+      el.classList.add("gl-tip");
+    });
+  }
+  // touch screens have no hover: first tap on a term shows its explanation, a second tap (within 4 s) does the normal action
+  if (matchMedia("(hover: none)").matches) {
+    const tip = document.createElement("div");
+    tip.style.cssText = "position:fixed;z-index:99;max-width:min(320px,90vw);padding:8px 10px;border-radius:8px;font-size:13px;line-height:1.35;" +
+      "background:var(--surface);color:var(--ink);border:1px solid var(--axis);box-shadow:0 4px 14px rgba(0,0,0,.18);display:none";
+    document.body.appendChild(tip);
+    let last = null, at = 0;
+    document.addEventListener("click", ev => {
+      const el = ev.target.closest(".gl-tip");
+      if (!el) { tip.style.display = "none"; last = null; return; }
+      if (last === el && Date.now() - at < 4000) { tip.style.display = "none"; last = null; return; }
+      ev.stopPropagation(); ev.preventDefault();
+      last = el; at = Date.now();
+      tip.textContent = el.getAttribute("title"); tip.style.display = "block";
+      const r = el.getBoundingClientRect(), w = tip.offsetWidth;
+      tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left)) + "px";
+      tip.style.top = (r.bottom + 6 + tip.offsetHeight > innerHeight ? r.top - tip.offsetHeight - 6 : r.bottom + 6) + "px";
+    }, true);
+    addEventListener("scroll", () => { tip.style.display = "none"; }, { passive: true });
+  }
+  let pend = false;
+  new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; apply(document); }); })
+    .observe(document.body, { childList: true, subtree: true });
+  apply(document);
+})();
+</script>
+</body></html>

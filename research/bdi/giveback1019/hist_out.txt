@@ -1,0 +1,56 @@
+entries simulated 42655 of 42655; baseline fidelity: corr(sim BASE, frame production R) 0.970, mean BASE -0.0786 vs frame -0.0689; stop/ATR1m median 7.31, share < 4: 0.15
+bar (N=71) 2.92; regimes column used: regime
+ config   split     n  days  base_exp  var_exp   delta  t_day months_pos   d_up  d_down       verdict
+WIDE125   train 22692   234   -0.1176  -0.1038  0.0138   2.95      10/11 0.0303 -0.0020 not supported
+WIDE125   valid 19963   192   -0.0343  -0.0324  0.0019   0.37       6/10 0.0263 -0.0069 not supported
+WIDE125 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+WIDE150   train 22692   234   -0.1176  -0.0958  0.0219   3.09       9/11 0.0571 -0.0079 not supported
+WIDE150   valid 19963   192   -0.0343  -0.0332  0.0011   0.14       6/10 0.0468 -0.0249 not supported
+WIDE150 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+   TS30   train 22692   234   -0.1176  -0.1117  0.0059   0.40       8/11 0.1239 -0.0942 not supported
+   TS30   valid 19963   192   -0.0343  -0.0440 -0.0097  -0.73       5/10 0.0733 -0.0775 not supported
+   TS30 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+   TS60   train 22692   234   -0.1176  -0.1069  0.0107   0.86       7/11 0.0824 -0.0615 not supported
+   TS60   valid 19963   192   -0.0343  -0.0477 -0.0134  -1.35       3/10 0.0350 -0.0539 not supported
+   TS60 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+  BE050   train 22692   234   -0.1176  -0.1247 -0.0071  -0.87       3/11 0.0404 -0.0601 not supported
+  BE050   valid 19963   192   -0.0343  -0.0548 -0.0205  -3.09       2/10 0.0195 -0.0540 not supported
+  BE050 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+ SO05BE   train 22692   234   -0.1176  -0.1135  0.0041   0.41       7/11 0.0678 -0.0641 not supported
+ SO05BE   valid 19963   192   -0.0343  -0.0520 -0.0176  -2.11       4/10 0.0450 -0.0681 not supported
+ SO05BE forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+ NOISE4   train 22692   234   -0.1176  -0.0944  0.0232   2.69      10/11 0.0493  0.0039 not supported
+ NOISE4   valid 19963   192   -0.0343  -0.0299  0.0044   0.66       5/10 0.0440 -0.0159 not supported
+ NOISE4 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+CUT1100   train 22692   234   -0.1176  -0.0754  0.0422   3.23      10/11 0.1227 -0.0392 not supported
+CUT1100   valid 19963   192   -0.0343  -0.0065  0.0278   2.06       7/10 0.1060 -0.0535 not supported
+CUT1100 forward     0     0       NaN      NaN     NaN    NaN        0/0    NaN     NaN not supported
+
+per setup: baseline exp R and each rule's delta (R/trade)
+                                     setup split    n   BASE  WIDE125  WIDE150   TS30   TS60  BE050  SO05BE  NOISE4  CUT1100
+                   MF1-945-flowsell-vwapup train 1346 -0.301    0.042    0.064  0.015  0.008 -0.030  -0.007   0.219    0.000
+                   MF1-945-flowsell-vwapup valid 1043 -0.001   -0.043   -0.036 -0.029 -0.010 -0.149  -0.164   0.024    0.000
+                MF2-open-rsimidhi-flowsell train  233 -0.194   -0.016    0.018  0.011 -0.038 -0.042  -0.014   0.269    0.000
+                MF2-open-rsimidhi-flowsell valid  377 -0.001    0.002   -0.041 -0.012 -0.073  0.031  -0.009   0.004    0.000
+                  MF3-open-flowsell-rsi5hi train 2382 -0.128    0.013    0.023  0.013  0.017 -0.011   0.004  -0.005    0.000
+                  MF3-open-flowsell-rsi5hi valid 1754 -0.035    0.018    0.012  0.008 -0.004 -0.001  -0.000  -0.009    0.000
+               MF3-open-flowsell-rsi5hi-FD train 5662 -0.100    0.014    0.020  0.005  0.016 -0.008   0.001  -0.000    0.047
+               MF3-open-flowsell-rsi5hi-FD valid 4902 -0.051    0.009    0.009  0.002 -0.008 -0.003   0.004  -0.002    0.039
+                     MF4-h40-open-flowsell train 1675 -0.142    0.010    0.027  0.006  0.007  0.000   0.000   0.043    0.000
+                     MF4-h40-open-flowsell valid 1643 -0.048   -0.003    0.005  0.001  0.004  0.000   0.000   0.018    0.000
+                MF5-flowsell-vwapup-rsi5hi train 3927 -0.099    0.012    0.015 -0.001  0.015 -0.011  -0.000  -0.002    0.032
+                MF5-flowsell-vwapup-rsi5hi valid 2900 -0.007    0.007    0.002 -0.024 -0.032 -0.023  -0.025  -0.004    0.012
+                   NS1-rsidip-rsi5pop-long train  167 -0.009    0.018    0.030 -0.020 -0.037  0.000   0.000   0.008   -0.027
+                   NS1-rsidip-rsi5pop-long valid  277  0.054   -0.026   -0.028 -0.062 -0.033  0.000   0.000   0.004   -0.027
+        NS4-pm-vwap-reclaim-oversold-short train  629 -0.248    0.015    0.034  0.004 -0.010  0.031   0.076   0.158    0.248
+        NS4-pm-vwap-reclaim-oversold-short valid  840 -0.045   -0.002    0.012 -0.056 -0.042 -0.052  -0.045   0.051    0.045
+             NS5-sma50-flush-oversold-long train  665 -0.173   -0.013   -0.014  0.021  0.036  0.027   0.036   0.045    0.092
+             NS5-sma50-flush-oversold-long valid  640  0.096   -0.022   -0.036 -0.014  0.005 -0.046  -0.048  -0.030   -0.004
+       RW3-gapdn-rsi5pop-flowsell-short-FD train 3118 -0.094    0.018    0.031  0.026  0.011 -0.003   0.010  -0.000    0.071
+       RW3-gapdn-rsi5pop-flowsell-short-FD valid 2877 -0.045   -0.001   -0.000 -0.007 -0.009 -0.016  -0.005   0.008    0.044
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD train 2888 -0.053    0.010    0.007 -0.016 -0.001 -0.009  -0.005  -0.004    0.046
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD valid 2710 -0.066    0.007    0.007 -0.008 -0.011 -0.022  -0.015   0.008    0.065
+
+baseline exit reasons: {'target': 16288, 'stop': 15464, 'flatten': 10641, 'eod': 262}
+
+Educational only - not financial advice.

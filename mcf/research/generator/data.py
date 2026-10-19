@@ -4,7 +4,7 @@ Per open month (research/history2y/lib.py; the rule-19 locked block 2024-11..202
 and months() lists only the open frames):
   * universe rows: adv20 >= $20M, bar close 09:50..15:00, live earnings blackout removed (4 trading days either side of
     a report, as config/default.yaml universe.earnings_blackout_days)
-  * the generator's indicators (mcf.research.arena.indicators.compute) + the four lab
+  * the generator's indicators incl. the seed-only ones (spec.PANEL_NAMES; mcf.research.arena.indicators.compute) + the four lab
     context columns (spy_fo, qqq_fo, breadth, breadth_open; lib.load_month(context=True))
   * production-cost R per side x geometry (RESEARCH_RULES rule 1: 1c + 1 bps x time-of-day multiplier on entry, +2c on
     stop fills, x3 costs on the extended tier |gap| >= 20% or price < $5):
@@ -26,7 +26,7 @@ import pandas as pd
 
 from ..arena import data as AD
 from ..arena.indicators import compute
-from .spec import CONTEXT, GEOMS, INDICATOR_NAMES, SIDES
+from .spec import CONTEXT, GEOMS, PANEL_NAMES, SIDES
 
 ROOT = Path(__file__).resolve().parents[3]
 HEADTAIL = ROOT / "research" / "bdi" / "cwt" / "test_b" / "data" / "headtail.parquet"
@@ -114,7 +114,7 @@ def _blackout(sym: np.ndarray, date: np.ndarray) -> np.ndarray:
     return flags[uk.get_indexer(key)]
 
 
-def build_month(month: str, names=INDICATOR_NAMES) -> dict:
+def build_month(month: str, names=PANEL_NAMES) -> dict:
     """Compact arrays for one open month (see module doc)."""
     if month in AD.LOCKED_MONTHS:
         raise PermissionError("locked block")

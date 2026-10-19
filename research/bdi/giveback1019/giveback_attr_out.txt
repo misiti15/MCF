@@ -1,0 +1,129 @@
+acct       date  trades   peak peak_t   trough trough_t    close  giveback  gb_pct  trades_after_peak  open_at_peak  net_exposure_at_peak  gross_at_peak  spy_peak_to_close  qqq_peak_to_close  spy_day
+   p 2026-10-06      44  51.27  11:12  -258.95    15:26  -127.73    179.00   349.0                 18            18                  4595          32413              -0.22              -0.41     0.13
+   p 2026-10-07      16  41.07  10:21  -242.77    14:21  -264.73    305.80   745.0                 10             5                  2076           9345               0.31               0.45     0.18
+   p 2026-10-08      48  29.98  11:16  -179.34    15:25  -140.80    170.78   570.0                 22             9                 -5538          16456              -0.07              -0.82    -0.13
+   p 2026-10-09      70   0.00  09:31  -440.28    10:57  -254.09    254.09     NaN                 70             0                     0              0               0.27              -0.09     0.30
+   p 2026-10-12      22 132.95  14:51   -16.88    11:41   115.77     17.18    13.0                  0             3                 -5219           5219               0.10               0.11    -0.09
+   p 2026-10-13      18  81.47  11:40  -108.92    14:32  -101.67    183.14   225.0                  3            10                -18643          18643               0.24               0.47     0.09
+   p 2026-10-14      11  81.25  11:28   -12.61    10:48    60.35     20.90    26.0                  2             1                  1888           1888              -0.29              -0.77    -0.69
+   p 2026-10-15      48  13.98  09:54  -956.83    15:43  -926.53    940.51  6727.0                 47             1                 -1798           1798               0.87               1.65     0.72
+   p 2026-10-16      36  25.37  10:19  -141.79    11:29   -14.41     39.78   157.0                 24            11                -20637          20637              -1.01              -1.64    -1.29
+  t1 2026-10-09      46   0.15  10:09  -107.99    11:20   -36.15     36.30 24927.0                 45             1                  -944            944               0.29               0.17     0.30
+  t1 2026-10-12     204 145.15  13:46  -156.09    12:08    17.93    127.22    88.0                 40           109                -54090          93714               0.04               0.02    -0.09
+  t1 2026-10-13     371  79.72  11:39  -752.54    15:44  -677.45    757.17   950.0                241           104                  3339          93261               0.25               0.49     0.09
+  t1 2026-10-14     326 274.11  15:06  -313.54    13:04     8.41    265.70    97.0                  2           125                -56387         108824               0.33               0.33    -0.69
+  t1 2026-10-15     225   0.00  09:31 -1777.23    11:16 -1774.36   1774.36     NaN                225             0                     0              0               0.75               1.44     0.72
+  t1 2026-10-16     323   0.00  09:31  -342.25    13:20   -78.38     78.38     NaN                323             0                     0              0              -1.25              -2.12    -1.29
+  t2 2026-10-12     360   5.15  10:09  -917.34    14:53  -808.84    813.99 15791.0                303            27                 10609          24327               0.02              -0.02    -0.09
+  t2 2026-10-13     647 111.36  10:12  -452.74    11:47  -183.19    294.55   265.0                498            94                 66162          86358               0.05              -0.01     0.09
+  t2 2026-10-14     353   0.00  09:31  -881.68    12:25  -864.78    864.78     NaN                353             0                     0              0              -0.67              -1.27    -0.69
+  t2 2026-10-15     533  19.71  10:12 -1213.56    15:43 -1192.63   1212.34  6152.0                439            41                  9638          36913               0.51               0.96     0.72
+  t2 2026-10-16     388   4.34  09:54 -1086.99    15:16 -1084.81   1089.15 25107.0                364            22                   639          19019              -1.06              -1.56    -1.29
+
+== giveback counts (peak >= X and closed red / gave back > 50%)
+Primary   X= 50: days 9, peak>=X 4, of those closed red 2, gave back >50% 2
+Primary   X=100: days 9, peak>=X 1, of those closed red 0, gave back >50% 0
+Primary   X=250: days 9, peak>=X 0, of those closed red 0, gave back >50% 0
+Primary   sum peak 457, sum close -1654, sum giveback 2111, median giveback 179, median peak time 11:12, days peak before 11:00 4
+Testing 1 X= 50: days 6, peak>=X 3, of those closed red 1, gave back >50% 3
+Testing 1 X=100: days 6, peak>=X 2, of those closed red 0, gave back >50% 2
+Testing 1 X=250: days 6, peak>=X 1, of those closed red 0, gave back >50% 1
+Testing 1 sum peak 499, sum close -2540, sum giveback 3039, median giveback 196, median peak time 11:39, days peak before 11:00 3
+Testing 2 X= 50: days 5, peak>=X 1, of those closed red 1, gave back >50% 1
+Testing 2 X=100: days 5, peak>=X 1, of those closed red 1, gave back >50% 1
+Testing 2 X=250: days 5, peak>=X 0, of those closed red 0, gave back >50% 0
+Testing 2 sum peak 141, sum close -4134, sum giveback 4275, median giveback 865, median peak time 10:09, days peak before 11:00 5
+
+== attribution of the peak->close change (sum over days), by category
+--- Primary (total giveback 2111; trade contributions sum -2078)
+                         n  contrib
+cat                                
+a2_open_loser_at_peak   19   -144.7
+a_open_winner_at_peak   39   -587.7
+b_entered_after_peak   196  -1345.9
+ by exit reason: {'flatten': -381.4, 'stop': -3077.6, 'target': 1380.8}
+ late-day flatten exits (>=15:50): -381.4 n 58
+ open winners at peak, how they exited: {'flatten': {'size': 6, 'sum': -124.7}, 'stop': {'size': 21, 'sum': -583.4}, 'target': {'size': 12, 'sum': 120.4}}
+ against SPY's peak->close move: -1978.7 | with: -99.5
+ side: {-1: -1639.7, 1: -438.6}
+ by entry hour: {9: -141.5, 10: -1025.6, 11: -989.3, 12: 63.6, 13: -51.7, 14: 66.2}
+ worst setups: {'NS2-sma50break-overbought-short': -1006.1, 'orb20_a': -233.1, 'heat_fade_long': -229.0, 'heat_fade_short': -187.9, 'RW6G1-ns2-up3-vwap2sd-short': -102.2, 'exhaustion_short': -95.5}
+ best setups: {'RW3-gapdn-rsi5pop-flowsell-short-FD': 34.0, 'MF3-open-flowsell-rsi5hi-FD': 36.1, 'NS4-pm-vwap-reclaim-oversold-short': 56.6}
+ by hold (min): {Interval(0, 15, closed='right'): -554.3, Interval(15, 30, closed='right'): -587.6, Interval(30, 60, closed='right'): -83.6, Interval(60, 120, closed='right'): -329.8, Interval(120, 400, closed='right'): -522.9}
+--- Testing 1 (total giveback 3039; trade contributions sum -3058)
+                         n  contrib
+cat                                
+a2_open_loser_at_peak  143   -183.2
+a_open_winner_at_peak  196   -343.8
+b_entered_after_peak   876  -2531.0
+ by exit reason: {'flatten': -350.5, 'stop': -5403.0, 'target': 2695.5}
+ late-day flatten exits (>=15:50): -314.1 n 446
+ open winners at peak, how they exited: {'flatten': {'size': 137, 'sum': -236.0}, 'stop': {'size': 16, 'sum': -272.2}, 'target': {'size': 43, 'sum': 164.5}}
+ against SPY's peak->close move: -4097.1 | with: 1039.1
+ side: {-1: -2481.5, 1: -576.5}
+ by entry hour: {9: -231.3, 10: -1039.1, 11: -935.9, 12: -567.1, 13: -178.8, 14: -89.5, 15: -16.4}
+ worst setups: {'NS2-sma50break-overbought-short-FD': -531.4, 'RW6-ns2-up3-short-FD': -354.7, 'heat_fade_short-FD': -334.9, 'RW2-exhaustion-noon-adv150-short-FD': -249.7, 'heat_fade_long-FD': -240.6, 'ST1-ordn-long-pm-t05s1-FD': -229.4}
+ best setups: {'NS3-failed-vwap-reclaim-short-FD': 21.1, 'RW2-exhaustion-noon-adv150-short': 22.5, 'LIQ-orl-sweep-open15-s25-long': 119.1}
+ by hold (min): {Interval(0, 15, closed='right'): -974.5, Interval(15, 30, closed='right'): -831.7, Interval(30, 60, closed='right'): -194.1, Interval(60, 120, closed='right'): -390.6, Interval(120, 400, closed='right'): -639.3}
+--- Testing 2 (total giveback 4275; trade contributions sum -4218)
+                          n  contrib
+cat                                 
+a2_open_loser_at_peak   119    -35.1
+a_open_winner_at_peak    65    -55.7
+b_entered_after_peak   1957  -4127.7
+ by exit reason: {'flatten': -142.0, 'stop': -7939.7, 'target': 3863.2}
+ late-day flatten exits (>=15:50): -118.3 n 132
+ open winners at peak, how they exited: {'flatten': {'size': 3, 'sum': -15.8}, 'stop': {'size': 15, 'sum': -146.2}, 'target': {'size': 47, 'sum': 106.3}}
+ against SPY's peak->close move: -3529.3 | with: -689.2
+ side: {-1: -1411.3, 1: -2807.1}
+ by entry hour: {9: -552.8, 10: -3345.6, 11: -204.9, 12: -37.0, 13: -24.0, 14: -44.2, 15: -9.9}
+ worst setups: {'CWT09-gapdn-bounce-g5-lowerhalf-short': -661.4, 'CWT14-failbrk-orl-p05-lowvol-long': -613.7, 'CWT14-failbrk-orl-p05-long': -515.8, 'CWT14-failbrk-pdl-p05-long': -326.8, 'CWT14-failbrk-orl-p10-long': -311.5, 'CWT14-failbrk-pdl-p05-lowvol-long': -274.6}
+ best setups: {'CWT05-flush-m075-v3-long': -6.9, 'CWT13-vwapstretch-z075-long': 2.5, 'CWT04-backside-lh-a15-short': 4.5}
+ by hold (min): {Interval(0, 15, closed='right'): -378.3, Interval(15, 30, closed='right'): -826.5, Interval(30, 60, closed='right'): -1137.8, Interval(60, 120, closed='right'): -751.7, Interval(120, 400, closed='right'): -1118.4}
+
+== per day: index move vs book direction at the peak
+acct       date   peak peak_t    close  giveback  net_exposure_at_peak  gross_at_peak  spy_peak_to_close  qqq_peak_to_close
+   p 2026-10-06  51.27  11:12  -127.73    179.00                  4595          32413              -0.22              -0.41
+   p 2026-10-07  41.07  10:21  -264.73    305.80                  2076           9345               0.31               0.45
+   p 2026-10-08  29.98  11:16  -140.80    170.78                 -5538          16456              -0.07              -0.82
+   p 2026-10-09   0.00  09:31  -254.09    254.09                     0              0               0.27              -0.09
+   p 2026-10-12 132.95  14:51   115.77     17.18                 -5219           5219               0.10               0.11
+   p 2026-10-13  81.47  11:40  -101.67    183.14                -18643          18643               0.24               0.47
+   p 2026-10-14  81.25  11:28    60.35     20.90                  1888           1888              -0.29              -0.77
+   p 2026-10-15  13.98  09:54  -926.53    940.51                 -1798           1798               0.87               1.65
+   p 2026-10-16  25.37  10:19   -14.41     39.78                -20637          20637              -1.01              -1.64
+  t1 2026-10-09   0.15  10:09   -36.15     36.30                  -944            944               0.29               0.17
+  t1 2026-10-12 145.15  13:46    17.93    127.22                -54090          93714               0.04               0.02
+  t1 2026-10-13  79.72  11:39  -677.45    757.17                  3339          93261               0.25               0.49
+  t1 2026-10-14 274.11  15:06     8.41    265.70                -56387         108824               0.33               0.33
+  t1 2026-10-15   0.00  09:31 -1774.36   1774.36                     0              0               0.75               1.44
+  t1 2026-10-16   0.00  09:31   -78.38     78.38                     0              0              -1.25              -2.12
+  t2 2026-10-12   5.15  10:09  -808.84    813.99                 10609          24327               0.02              -0.02
+  t2 2026-10-13 111.36  10:12  -183.19    294.55                 66162          86358               0.05              -0.01
+  t2 2026-10-14   0.00  09:31  -864.78    864.78                     0              0              -0.67              -1.27
+  t2 2026-10-15  19.71  10:12 -1192.63   1212.34                  9638          36913               0.51               0.96
+  t2 2026-10-16   4.34  09:54 -1084.81   1089.15                   639          19019              -1.06              -1.56
+                  total  against   after  openwin  openlos   late
+acct date                                                        
+p    2026-10-06  -186.6   -235.4    54.5   -210.6    -30.5  -85.0
+     2026-10-07  -265.3   -178.5  -168.1    -70.0    -27.2 -202.9
+     2026-10-08  -170.8     -4.4  -127.1    -62.0     18.3   -3.0
+     2026-10-09  -254.1   -259.1  -254.1      0.0      0.0  -15.0
+     2026-10-12   -17.2    -17.2     0.0    -17.3      0.1  -17.2
+     2026-10-13  -183.1   -183.1     0.3   -123.9    -59.5  -33.5
+     2026-10-14   -20.9    -45.9    25.0      0.0    -45.9   -4.6
+     2026-10-15  -940.5   -962.2  -899.5    -41.0      0.0  -16.7
+     2026-10-16   -39.8    -92.8    23.2    -62.9      0.0   -3.6
+t1   2026-10-09   -36.3    -50.0   -40.0      3.7      0.0   25.7
+     2026-10-12  -146.1   -131.7   -98.0    -54.9      6.8  -92.9
+     2026-10-13  -757.2   -920.3  -540.8   -128.3    -88.1  -53.6
+     2026-10-14  -265.7   -279.5     0.6   -164.3   -101.9 -167.1
+     2026-10-15 -1774.4  -1868.7 -1774.4      0.0      0.0   47.2
+     2026-10-16   -78.4   -847.0   -78.4      0.0      0.0  -73.3
+t2   2026-10-12  -757.7     53.7  -710.3    -11.1    -36.2  -81.9
+     2026-10-13  -294.5   -265.5  -171.6    -69.2    -53.7 -125.5
+     2026-10-14  -864.8   -826.4  -864.8      0.0      0.0    3.4
+     2026-10-15 -1212.3  -1281.5 -1271.2     25.4     33.5   35.3
+     2026-10-16 -1089.1  -1209.6 -1109.7     -0.8     21.3   50.4
+
+Educational only - not financial advice.
