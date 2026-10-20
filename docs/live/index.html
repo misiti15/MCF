@@ -648,34 +648,65 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         all.push({ setup: sname, name: (NM[sname] || {}).name || sname, acct: k, acctLabel: lab, live: true, trades: 0, sessions_traded: 0,
                    total_r: 0, pnl: 0, former_primary: false }); });
     }));
-    // Account column = where the setup is assigned NOW (owner 2026-10-20). A record earned in an account the setup has
-    // since left keeps its stats but is labelled with the current account(s) and "stats from <old account>"; an empty
-    // placeholder row (newly assigned, 0 trades) is dropped when the setup already has a record elsewhere.
-    if (asg && asg.setups) {
-      const lbl = k => (ACC[k] || [k])[0], cur = sname => ((asg.setups[sname] || {}).accounts || []).filter(k => ACC[k]);
-      const traded = new Set(all.filter(r => r.trades).map(r => r.setup));
-      for (let i = all.length - 1; i >= 0; i--) {
-        const r = all[i], c = cur(r.setup);
-        if (!c.length) { r.live = false; continue; }                       // switched off everywhere
-        if (c.includes(r.acct)) { if (!r.trades && traded.has(r.setup) && all.some(x => x.setup === r.setup && x !== r && !c.includes(x.acct) && x.trades)) all.splice(i, 1); continue; }
-        r.statsFrom = r.acctLabel; r.acctLabel = c.map(lbl).join(" + "); r.acct = c[0]; r.live = true;
-      }
-    }
+    // ONE row per setup (owner 2026-10-20): its full record from every account it has traded in, merged; the Account
+    // column is where it is assigned NOW. Exact merge from the scorecards' sums (n_win, win/loss R and $, r_sq_sum);
+    // rows from older scorecards without them fall back to weighted estimates (t then shown only for a single record).
+    const lbl = k => (ACC[k] || [k])[0];
+    const cur = sname => (asg && asg.setups && asg.setups[sname] ? (asg.setups[sname].accounts || []).filter(k => ACC[k]) : null);
+    const groups = {};
+    all.forEach(r => (groups[r.setup] = groups[r.setup] || []).push(r));
+    const merged = Object.entries(groups).map(([sname, rs]) => {
+      const tr = rs.filter(r => r.trades);
+      const n = tr.reduce((a, r) => a + r.trades, 0), sum = f => tr.reduce((a, r) => a + (+r[f] || 0), 0);
+      const exact = tr.length && tr.every(r => r.n_win != null && r.r_sq_sum != null && r.win_pnl != null);
+      const wins = exact ? sum("n_win") : tr.reduce((a, r) => a + Math.round((r.win_rate || 0) * r.trades), 0);
+      const totR = sum("total_r"), avg = n ? totR / n : null;
+      const c = cur(sname), best = tr.slice().sort((a, b) => b.trades - a.trades)[0] || rs[0];
+      const acct = c && c.length ? c[0] : best.acct;
+      const m = { ...best, setup: sname, acct, acctLabel: c && c.length ? c.map(lbl).join(" + ") : lbl(best.acct),
+        live: c ? c.length > 0 : rs.some(r => r.live), trades: n, win_rate: n ? wins / n : null, avg_r: avg,
+        total_r: totR, pnl: sum("pnl"), former_primary: rs.some(r => r.former_primary),
+        sessions_traded: tr.reduce((a, r) => a + (r.sessions_traded || 0), 0),
+        pt: (rs.find(r => r.acct === acct) || {}).pt,
+        first: tr.map(r => r.first).filter(Boolean).sort()[0] || best.first, last: tr.map(r => r.last).filter(Boolean).sort().pop() || best.last,
+        expected_r: rs.map(r => r.expected_r).find(v => v != null) ?? null,
+        recent_trades: sum("recent_trades"),
+        sim_trades: tr.reduce((a, r) => a + (r.sim_trades || 0), 0) || rs.reduce((a, r) => a + (r.sim_trades || 0), 0) };
+      const rt = rs.filter(r => r.recent_trades && r.recent_avg_r != null);
+      m.recent_avg_r = rt.length ? rt.reduce((a, r) => a + r.recent_avg_r * r.recent_trades, 0) / rt.reduce((a, r) => a + r.recent_trades, 0) : null;
+      const st = rs.filter(r => r.sim_trades && r.sim_avg_r != null);
+      m.sim_avg_r = st.length ? st.reduce((a, r) => a + r.sim_avg_r * r.sim_trades, 0) / st.reduce((a, r) => a + r.sim_trades, 0) : null;
+      if (tr.length === 1) { const o = tr[0];
+        Object.assign(m, { profit_factor: o.profit_factor, breakeven_wr: o.breakeven_wr, t_stat: o.t_stat, sessions_traded: o.sessions_traded }); }
+      else if (exact) {
+        const nl = n - wins, aw = wins ? sum("win_r_sum") / wins : null, al = nl ? sum("loss_r_sum") / nl : null;
+        m.breakeven_wr = aw && al ? al / (aw + al) : null;
+        m.profit_factor = sum("loss_pnl") > 0 ? +(sum("win_pnl") / sum("loss_pnl")).toFixed(2) : null;
+        const v = n > 1 ? (sum("r_sq_sum") - n * avg * avg) / (n - 1) : 0;
+        m.t_stat = v > 0 ? +(avg / Math.sqrt(v / n)).toFixed(2) : null;
+        const days = new Set(tr.flatMap(r => r.days || [])); if (days.size) m.sessions_traded = days.size;
+      } else {                                  // older scorecards: $ won / lost rebuilt from each record's P/L and PF
+        let w = 0, l = 0, ok = true;
+        tr.forEach(r => { const pf = r.profit_factor, pl = +r.pnl || 0;
+          if (pf == null) { if (pl >= 0) w += pl; else l -= pl; ok = ok && (r.win_rate === 0 || r.win_rate === 1); return; }
+          if (Math.abs(pf - 1) < 1e-6) { ok = false; return; }
+          const loss = pl / (pf - 1); w += pf * loss; l += loss; });
+        m.profit_factor = ok && l > 0 ? +(w / l).toFixed(2) : null; m.breakeven_wr = null; m.t_stat = null; }
+      m.score = n ? avg * n / (n + 20) : null;
+      const other = tr.filter(r => r.acct !== acct || !(c || []).includes(r.acct));
+      m.statsFrom = other.length ? tr.map(r => `${lbl(r.acct)} ${r.trades}`).join(" + ") : null;
+      return m;
+    });
+    all.length = 0; merged.forEach(r => all.push(r));
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
       if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
-      const here = ((a || {}).accounts || []).filter(k => ACC[k]);
-      r.alsoIn = here.filter(k => k !== r.acct).map(k => ACC[k][0]).join(" + ");
-      if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", ");
-        r.copied = (a.from || []).some(x => (a.accounts || []).includes(x)); } });
+      if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since;
+        r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", "); } });
     const lc = asg && asg.last_change;
     if (q("#lb-asg")) q("#lb-asg").innerHTML = asg ? `<b>Assignments current as of ${e(lc ? lc.at : "–")}</b> (last promotion / demotion / move)` +
       (lc && lc.changes ? ": " + lc.changes.map(c => `${e((NM[c.setup] || {}).name || c.setup)} → ${c.to.map(x => (asg.labels || {})[x] || x).join(" + ")}`).join("; ") : "") +
-      `. The Account column always shows where each setup is live now; stats are since start in that account (last night's report).` : "Assignments file not found: Account column may lag behind recent moves.";
-    // a setup traded in more than one account (e.g. demoted from Primary): total live trades across accounts
-    const tot = {};
-    all.forEach(r => { tot[r.setup] = (tot[r.setup] || 0) + (r.trades || 0); });
-    all.forEach(r => { r.all_trades = tot[r.setup]; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r);
-      // break-even win rate (owner 2026-10-19); older scorecards lack it: estimate from win rate and profit factor ($)
+      `. One row per setup: its full record from every account it has traded in; Account = where it is live now.` : "Assignments file not found: Account column may lag behind recent moves.";
+    all.forEach(r => { r.all_trades = r.trades; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r);
       if (r.breakeven_wr == null && r.win_rate && r.profit_factor) r.breakeven_wr = r.win_rate / (r.win_rate + r.profit_factor * (1 - r.win_rate));
       r.wr_edge = r.win_rate == null || r.breakeven_wr == null ? null : r.win_rate - r.breakeven_wr; });
     const ranked = all.filter(r => r.score != null && r.live).sort((a, b) => b.score - a.score);
@@ -700,10 +731,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
-        (x.alsoIn ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="The same setup also runs, with its own separate record, in ${e(x.alsoIn)}">also live in ${e(x.alsoIn)}</span>` : "") +
-        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.copied ? "Added here" : "Moved here"} ${e(x.moved)}${x.movedFrom ? (x.copied ? " as a copy; it still runs in " : " from ") + e(x.movedFrom) : ""}">${x.copied ? "added" : "moved"} ${e(x.moved.slice(5, 10))}${x.movedFrom ? (x.copied ? " (copy, still in " + e(x.movedFrom) + ")" : " from " + e(x.movedFrom)) : ""}</span>` : "");
+        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
-        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="This row's trades were made in ${e(x.statsFrom)} before the setup moved">stats from ${e(x.statsFrom)}</div>` : ""}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
+        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
