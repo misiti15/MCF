@@ -207,6 +207,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   <!-- Setup leaderboard (owner 2026-10-12): every setup in every account, ranked since start. Script at the end of the page. -->
   <div class="card" id="lb-card"><h2>Setup leaderboard — all accounts, since start</h2>
     <div class="sub" id="lb-sum">Loading…</div>
+    <div class="msg" id="lb-asg" style="margin-top:6px;font-size:13px;padding:6px 10px;border:1px solid var(--axis);border-radius:8px"></div>
     <div class="controls" style="margin:8px 0" id="lb-ctl"></div><div class="sub" id="lb-sorted" style="margin-bottom:6px"></div>
     <div class="tablewrap" id="lb-tab" style="max-height:640px;overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
@@ -603,7 +604,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 // falling back to docs/live/leaderboard.json (snapshot) for an account whose nightly scorecard has no leaderboard yet.
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
-  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"] };
+  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2 (Graveyard)", "mcf-data-testing2"] };
   const q = s => document.querySelector(s);
   if (!q("#lb-card")) return;
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -622,8 +623,12 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     return ["watch", ""];
   }
   async function load() {
-    let seed = {};
+    let seed = {}, asg = null;
     try { const r = await fetch("../live/leaderboard.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) seed = await r.json(); } catch (_) {}
+    // live assignments straight from the configs (owner 2026-10-20): a promotion / demotion shows at once
+    try { const r = await fetch("../live/assignments.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) asg = await r.json(); } catch (_) {}
+    let NM = {};
+    try { const r = await fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) NM = await r.json(); } catch (_) {}
     const all = [];
     await Promise.all(Object.entries(ACC).map(async ([k, [lab, br]]) => {
       let lb = null, pt = {};
@@ -634,8 +639,21 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       } catch (_) {}
       if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
       // generated setups have their own card (owner 2026-10-19): never in this leaderboard
-      (lb || []).filter(r => !isGen(r.setup)).forEach(r => all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup] }));
+      const on = asg && asg.accounts && asg.accounts[k] ? new Set(asg.accounts[k]) : null;
+      const seen = new Set();
+      (lb || []).filter(r => !isGen(r.setup)).forEach(r => { seen.add(r.setup);
+        all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup], live: on ? on.has(r.setup) : r.live }); });
+      // newly assigned here (e.g. promoted this morning): no record in this account yet
+      if (on) on.forEach(sname => { if (!seen.has(sname) && !isGen(sname))
+        all.push({ setup: sname, name: (NM[sname] || {}).name || sname, acct: k, acctLabel: lab, live: true, trades: 0, sessions_traded: 0,
+                   total_r: 0, pnl: 0, former_primary: false }); });
     }));
+    all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
+      if (a && a.since && (a.accounts || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", "); } });
+    const lc = asg && asg.last_change;
+    if (q("#lb-asg")) q("#lb-asg").innerHTML = asg ? `<b>Assignments current as of ${e(lc ? lc.at : "–")}</b> (last promotion / demotion / move)` +
+      (lc && lc.changes ? ": " + lc.changes.map(c => `${e((NM[c.setup] || {}).name || c.setup)} → ${c.to.map(x => (asg.labels || {})[x] || x).join(" + ")}`).join("; ") : "") +
+      `. The Account column always shows where each setup is live now; stats are since start in that account (last night's report).` : "Assignments file not found: Account column may lag behind recent moves.";
     // a setup traded in more than one account (e.g. demoted from Primary): total live trades across accounts
     const tot = {};
     all.forEach(r => { tot[r.setup] = (tot[r.setup] || 0) + (r.trades || 0); });
@@ -664,7 +682,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
-        (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "");
+        (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
+        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
         <td class="l">${e(x.acctLabel)}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>

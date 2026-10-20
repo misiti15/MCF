@@ -9,3 +9,4 @@
 - **Research rules (owner): `docs/RESEARCH_RULES.md`** — costs always in, locked holdouts scored once, report every finalist and the number of configurations tried, no setup/exit changes during market hours, every approved change goes in `research/ledger.jsonl` and is re-checked with `python -m mcf.research.ledger check`.
 - **Backlog:** setup/strategy ideas go to `research/backlog.jsonl` (gates in `mcf/research/backlog.py`); only housekeeping ships directly. See RESEARCH_RULES 15-17.
 - Merging: Claude merges its own PRs once tests pass; PRs that touch setups/exits are merged only outside 09:30-16:00 ET (the `setup-freeze` check enforces it).
+- **Setup moves (owner 2026-10-20):** every promotion / demotion / move regenerates `docs/live/assignments.json` (`python -m mcf.report.assignments`) in the same commit, so the dashboard shows the new assignment and its timestamp at once (`tests/test_assignments.py` enforces it).
