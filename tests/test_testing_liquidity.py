@@ -17,7 +17,7 @@ def _testing_strategies(monkeypatch):
 
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
     out = {s.name: s for s in build_strategies(load_config())}
-    monkeypatch.setenv("MCF_ACCOUNT", "testing2")   # LIQ-orl moved to Testing 2 (Graveyard) 2026-10-20 (owner)
+    monkeypatch.setenv("MCF_ACCOUNT", "graveyard")   # LIQ-orl: Testing 2 2026-10-20, Graveyard account 2026-10-21 (owner)
     t2 = {s.name: s for s in build_strategies(load_config())}
     assert "LIQ-orl-sweep-open15-s25-long" not in out
     out["LIQ-orl-sweep-open15-s25-long"] = t2["LIQ-orl-sweep-open15-s25-long"]

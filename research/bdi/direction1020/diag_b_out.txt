@@ -1,0 +1,70 @@
+
+== book primary ==
+Q25 @1000: mean R of entries at/after 1000 by side x call (n)
+               mean                 count             
+d              -1.0     0.0     1.0  -1.0    0.0   1.0
+split side                                            
+train long   0.0051  0.0233 -0.3117   193    266   347
+      short -0.0388 -0.0676 -0.1481  6810  11406  5458
+valid long   0.1813 -0.0023  0.1265   216    381   293
+      short -0.0507 -0.0257 -0.0580  8333  10206  7073
+Q25 @1030: mean R of entries at/after 1030 by side x call (n)
+               mean                 count            
+d              -1.0     0.0     1.0  -1.0   0.0   1.0
+split side                                           
+train long   0.1446 -0.2935 -0.2417   208   207   278
+      short -0.0493 -0.0712 -0.1062  7171  7218  6210
+valid long   0.1774  0.0223  0.0064   270   260   248
+      short -0.0788 -0.0005 -0.0714  8697  7985  5917
+ceiling regime (hindsight)               from 1000 M1 train: delta +0.0602 t 7.61 excess +0.0602 (t 7.61)
+ceiling regime (hindsight)               from 1000 M1 valid: delta +0.0334 t 5.36 excess +0.0334 (t 5.36)
+ceiling regime (hindsight)               from 1000 M2 train: delta +0.0936 t 7.12 excess +0.0602 (t 7.61)
+ceiling regime (hindsight)               from 1000 M2 valid: delta +0.0428 t 5.50 excess +0.0334 (t 5.36)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M1 train: delta +0.0651 t 7.42 excess +0.0651 (t 7.42)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M1 valid: delta +0.0338 t 4.17 excess +0.0338 (t 4.17)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M2 train: delta +0.1026 t 7.16 excess +0.0651 (t 7.42)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M2 valid: delta +0.0522 t 4.68 excess +0.0338 (t 4.17)
+ceiling regime (hindsight)               from 1030 M1 train: delta +0.0508 t 6.99 excess +0.0508 (t 6.99)
+ceiling regime (hindsight)               from 1030 M1 valid: delta +0.0287 t 4.72 excess +0.0287 (t 4.72)
+ceiling regime (hindsight)               from 1030 M2 train: delta +0.0789 t 6.50 excess +0.0508 (t 6.99)
+ceiling regime (hindsight)               from 1030 M2 valid: delta +0.0369 t 5.03 excess +0.0287 (t 4.72)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M1 train: delta +0.0585 t 7.27 excess +0.0585 (t 7.27)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M1 valid: delta +0.0424 t 5.61 excess +0.0424 (t 5.61)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M2 train: delta +0.0898 t 6.70 excess +0.0585 (t 7.27)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M2 valid: delta +0.0615 t 5.50 excess +0.0424 (t 5.61)
+
+== book pooled ==
+Q25 @1000: mean R of entries at/after 1000 by side x call (n)
+               mean                  count              
+d              -1.0     0.0     1.0   -1.0    0.0    1.0
+split side                                              
+train long   0.0007 -0.0212 -0.2072   1235   1922   1440
+      short -0.0616 -0.0641 -0.1200  21865  33696  20207
+valid long   0.0713 -0.0255  0.0074   1865   2295   1881
+      short -0.0061 -0.0318 -0.0538  23927  32552  25132
+Q25 @1030: mean R of entries at/after 1030 by side x call (n)
+               mean                  count              
+d              -1.0     0.0     1.0   -1.0    0.0    1.0
+split side                                              
+train long   0.0603 -0.1601 -0.1605   1451   1362   1316
+      short -0.0578 -0.0598 -0.1065  22863  21814  21311
+valid long   0.0610 -0.0082 -0.0304   2051   1776   1741
+      short -0.0542  0.0013 -0.0467  25540  25143  21658
+ceiling regime (hindsight)               from 1000 M1 train: delta +0.0617 t 7.90 excess +0.0617 (t 7.90)
+ceiling regime (hindsight)               from 1000 M1 valid: delta +0.0386 t 6.82 excess +0.0386 (t 6.82)
+ceiling regime (hindsight)               from 1000 M2 train: delta +0.0951 t 7.50 excess +0.0617 (t 7.90)
+ceiling regime (hindsight)               from 1000 M2 valid: delta +0.0449 t 5.33 excess +0.0386 (t 6.82)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M1 train: delta +0.0730 t 9.05 excess +0.0730 (t 9.05)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M1 valid: delta +0.0403 t 5.66 excess +0.0403 (t 5.66)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M2 train: delta +0.1095 t 7.62 excess +0.0730 (t 9.05)
+ceiling QQQ 1000->close sign (hindsight) from 1000 M2 valid: delta +0.0535 t 5.07 excess +0.0403 (t 5.66)
+ceiling regime (hindsight)               from 1030 M1 train: delta +0.0514 t 7.25 excess +0.0514 (t 7.25)
+ceiling regime (hindsight)               from 1030 M1 valid: delta +0.0342 t 6.33 excess +0.0342 (t 6.33)
+ceiling regime (hindsight)               from 1030 M2 train: delta +0.0794 t 7.18 excess +0.0514 (t 7.25)
+ceiling regime (hindsight)               from 1030 M2 valid: delta +0.0389 t 4.91 excess +0.0342 (t 6.33)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M1 train: delta +0.0625 t 8.41 excess +0.0625 (t 8.41)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M1 valid: delta +0.0459 t 7.05 excess +0.0459 (t 7.05)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M2 train: delta +0.0930 t 7.10 excess +0.0625 (t 8.41)
+ceiling QQQ 1030->close sign (hindsight) from 1030 M2 valid: delta +0.0585 t 5.66 excess +0.0459 (t 7.05)
+
+Educational only - not financial advice.

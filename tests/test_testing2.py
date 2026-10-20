@@ -23,13 +23,13 @@ def test_overlay_runs_only_the_cwt_batch(monkeypatch):
     cfg = _cfg(monkeypatch)
     assert cfg["account_name"] == "testing2"
     st = build_strategies(cfg)
-    # moved from Testing 1 2026-10-20 (owner): Testing 2 becomes the Graveyard
+    # moved from Testing 1 2026-10-20, then on to the separate Graveyard account 2026-10-21 (owner): off here
     grave = {"heat_fade_long", "RW2-exhaustion-noon-adv150-short-FD", "LIQ-orl-sweep-open15-s25-long"}
-    assert st and all(isinstance(s, LabStrategy) for s in st if s.name not in grave)
-    assert all(s.name.startswith(("CWT", "NM")) or s.name in grave for s in st)   # CWT + near-misses + graveyard
-    assert grave <= {s.name for s in st}
+    assert st and all(isinstance(s, LabStrategy) for s in st)
+    assert all(s.name.startswith(("CWT", "NM")) for s in st)                     # CWT + near-misses
+    assert not (grave & {s.name for s in st})
     default = yaml.safe_load((ROOT / "config/default.yaml").read_text())["strategies"]
-    assert not any(cfg["strategies"][k].get("enabled") for k in default if k not in grave)   # primary + library off
+    assert not any(cfg["strategies"][k].get("enabled") for k in default)          # primary + library off
     testing1 = yaml.safe_load((ROOT / "config/account_testing.yaml").read_text())["strategies"]
     assert not ({s.name for s in st} & {k for k, v in testing1.items() if v.get("enabled")})
     order = cfg["live"]["setup_order"]

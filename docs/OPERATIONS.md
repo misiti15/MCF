@@ -37,6 +37,10 @@ Dashboard: https://misiti15.github.io/MCF/live/ (GitHub Pages; reads status.json
   - Runtime about 20-35 minutes on a 4-CPU machine, mostly reading the history frames. Memory about 7 GB. No disk cache.
   - GEN setups are exploration: **no promotion rules** (owner). Stats in each setup's `gen.screen` are reported as found, negative ones included.
 
+## Graveyard account (owner 2026-10-20, from session 2026-10-21)
+- **Account:** separate Alpaca paper account "Graveyard" (`MCF_ACCOUNT=graveyard`): `config/account_graveyard.yaml`, orders `mgy-*`, state branch `mcf-data-graveyard` (created by the first trade job). Secrets **`ALPACA_GRAVEYARD_API_KEY`** and **`ALPACA_GRAVEYARD_SECRET_KEY`**; without them the trade / watchdog jobs for `graveyard` log "graveyard account keys not set: skipped" and never fall back to the primary keys. Market data uses the primary SIP keys. EOD report built for the dashboard, not emailed. Watchdog covers it.
+- **Only its own setups run** (`strategies_exclusive: true`, as the Setup Generator). The lowest performers of Testing 1 / Testing 2 keep paper-trading here with lower caps (200 slots, 25 per setup, same risk per trade, per-setup -2R daily stop, 120R backstop, twin cap, no live scale-out, no split copies). Nothing is deleted (RESEARCH_RULES rule 20). A move here switches the setup off at its source in the same commit and regenerates `docs/live/assignments.json`.
+
 ## Checks (MarcoFlow lesson: count data, don't trust "process alive")
 - The dashboard pill shows "no update for N min" if `status.json` is more than 10 minutes old during trading.
 - The data health tile shows how many symbols printed a bar in the last minute. A quiet afternoon is normally about 3,000–3,400 of ~4,950; thin names don't trade every minute.

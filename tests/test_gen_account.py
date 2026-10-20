@@ -63,7 +63,7 @@ def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
 
 
 def test_other_accounts_unchanged_by_the_loader(monkeypatch):
-    for acct in ("primary", "testing", "testing2"):
+    for acct in ("primary", "testing", "testing2", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
         assert not any(k.startswith("GEN-") for k in cfg["strategies"])
 
@@ -94,7 +94,7 @@ def test_workflows_route_gen_to_its_own_account():
     eod = (ROOT / ".github/workflows/eod.yml").read_text()
     wd = (ROOT / ".github/workflows/watchdog.yml").read_text()
     for wf in (tr, eod, wd):
-        assert "account: [primary, testing, testing2, gen]" in wf
+        assert "account: [primary, testing, testing2, gen" in wf          # the matrix may grow (graveyard, 2026-10-21)
         assert "(matrix.account == 'gen' && 'mcf-data-gen'" in wf
     for wf in (tr, wd):
         assert "(matrix.account == 'gen' && 'mcg-'" in wf
@@ -102,7 +102,7 @@ def test_workflows_route_gen_to_its_own_account():
     assert "mcf-trade-gen" in tr
     # skipped cleanly without its keys (never falls back to the primary keys)
     assert '[ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]' in tr
-    assert '[ "$MCF_ACCOUNT" = "gen" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]' in tr
+    assert '[ "$MCF_ACCOUNT" = "gen" ]' in tr and '} && [ -z "$ALPACA_TRADE_SECRET_KEY" ]' in tr
     # market data stays on the primary SIP keys
     assert "ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}" in tr
     # no EOD email for gen: only primary sends

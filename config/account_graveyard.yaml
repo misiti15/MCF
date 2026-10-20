@@ -1,0 +1,184 @@
+# Graveyard account (owner decision 2026-10-20, effective session 2026-10-21; RESEARCH_RULES rule 20).
+# MCF_ACCOUNT=graveyard overlay on config/default.yaml; orders mgy-*, state branch mcf-data-graveyard, secrets
+# ALPACA_GRAVEYARD_API_KEY / ALPACA_GRAVEYARD_SECRET_KEY (market data: the primary SIP keys). Paper account.
+#
+# READ THIS FIRST: the Graveyard is a separate paper account where the lowest performers of Testing 1 / Testing 2 keep
+# paper-trading with LOWER caps. Nothing is deleted: every setup here keeps its full block (and its former_primary
+# marker, if it had one) and keeps collecting live data. Retiring a setup completely stays the owner's decision
+# (rule 20); routines may only propose it. Testing 2 stays Testing 2.
+#
+# strategies_exclusive: only the setups below run; every setup of config/default.yaml (primary + library) is switched
+# off by the loader (mcf/config.py), including setups added there later. Testing 1/2 and gen setups never load here.
+# Promotion = move (owner 2026-10-20): each setup below is switched off in the account it came from.
+# Caps (owner 2026-10-20): half of Testing 2's slots / positions, same risk per trade (default.yaml 0.25%), per-setup
+# 2R daily stop, 120R account backstop, twin cap on, no live scale-out, no split copies.
+# Selection (2026-10-21 move): the listed setups whose COMBINED live win rate (Primary + Testing 1 + Testing 2 report
+# CSVs, identical signals de-duplicated) is <= 50%; those above 50% stayed (docs/DECISIONS.md, ledger
+# 2026-10-21-graveyard-moves). Educational only - not financial advice.
+strategies_exclusive: true
+account:
+  starting_equity: 100000
+  slots: 200                      # Testing 2: 400
+  buying_power_multiple: 3.8      # as Testing 1/2 (capital per slot = equity x 3.8 / 200)
+  max_concurrent_positions: 200   # Testing 2: 400
+  max_positions_per_strategy: 25  # Testing 2: 50
+  max_daily_loss_r: 120           # catastrophe backstop only (as Testing 1/2)
+  max_setup_daily_loss_r: 2.0     # a setup stops for the day at net -2R realized (as Testing 1/2)
+  max_trades_per_day: 1500        # Testing 2: 3000
+live:
+  block_twin_same_symbol: true    # no second lot on a symbol already held (or pending) by this setup's twin
+  scale_out_max_per_day: 0        # no live scale-out here (no setup sets live_scale_out either)
+  # Same flags these setups ran with in Testing 1 / Testing 2 (owner 2026-10-13, research/bdi/longs1013 Q3).
+  retry_after_release: true
+  longs_first_on_ties: true
+  # One position per symbol across setups: narrowest (fewest expected trades/day) first.
+  setup_order:
+    - ST1-ordn-long-pm-t05s1-FD             # ~3.81/day full-day
+    - RW6-ns2-up3-short-FD                  # ~8.48/day
+    - NS2-sma50break-overbought-short-FD    # ~19.13/day
+    - NS2-sma50break-overbought-short       # former primary (windowed 09:50-11:30)
+    - MF1-945-flowsell-vwapup-FD            # ~24.74/day
+    - ST2-slope20up-long-am-t05s1-FD        # ~25.72/day
+    - heat_fade_long                        # former primary (windowed 11:05-13:30)
+    - LIQ-orl-sweep-open15-s25-long         # ~31.3/day
+    - RW2-exhaustion-noon-adv150-short-FD   # ~52.08/day
+    - heat_fade_long-FD                     # ~55.18/day
+    - heat_fade_short                       # former primary (windowed 09:50-10:30)
+    - heat_fade_short-FD                    # ~176.38/day
+strategies:
+  # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
+  heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: heat
+    formula: research/heat/candidates/regime_5.py
+    sides: long
+    min_adv: 125000000
+    window: [1105, 1330]
+    gate: gap+
+    scale_out_r: null
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+    tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
+  RW2-exhaustion-noon-adv150-short-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
+    min_adv: 150000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
+  LIQ-orl-sweep-open15-s25-long:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing: {added: "2026-10-12", source: "LIQ-OR-long-x0.15-open-k15-a1-S-2.5R-none", bar: "PLAN.md 5(b)"}
+    tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
+
+  # ---- from Testing 1: former primary (windowed, primary form = default.yaml block)
+  heat_fade_short:   # ex-primary "Morning Bounce Fade"
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: heat
+    formula: research/heat/candidates/regime_9.py
+    sides: short
+    min_adv: 125000000
+    window: [950, 1030]
+    gate: fo-
+    scale_out_r: null
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  NS2-sma50break-overbought-short:   # ex-primary "Big Gainer Average Reclaim Fade"
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/owner1008/NS2-sma50break-overbought-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    former_primary: {demoted: "2026-10-16", first_testing_session: "2026-10-16", review_after_sessions: 10}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+
+  # ---- from Testing 1: full-day versions (window [950, 1500], scale_out_r null; blocks as in Testing 1)
+  # from NS2-sma50break-overbought-short (primary; source window 950-1130); ~19.13/day full-day [exp -0.054R]
+  NS2-sma50break-overbought-short-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS2-sma50break-overbought-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from MF1-945-flowsell-vwapup (primary; source window 950-1030); ~24.74/day full-day [exp -0.074R]
+  MF1-945-flowsell-vwapup-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from ST1-ordn-long-pm-t05s1 (testing; source window 1335-1500); ~3.81/day full-day [exp -0.053R]
+  ST1-ordn-long-pm-t05s1-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 3
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from ST2-slope20up-long-am-t05s1 (testing; source window 950-1130); ~25.72/day full-day [exp -0.015R]
+  ST2-slope20up-long-am-t05s1-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from RW6-ns2-up3-short (testing; source window 950-1130); ~8.48/day full-day [exp -0.021R]
+  RW6-ns2-up3-short-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW6-ns2-up3-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from heat_fade_short (primary; source window 950-1030); ~176.38/day full-day [exp -0.032R]
+  heat_fade_short-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: heat
+    formula: research/bdi/fullday/heat_fade_short-FD.py
+    sides: short
+    min_adv: 125000000
+    window: [950, 1500]
+    gate: fo-
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # from heat_fade_long (primary; source window 1105-1330); ~55.18/day full-day [exp -0.031R]
+  heat_fade_long-FD:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: heat
+    formula: research/bdi/fullday/heat_fade_long-FD.py
+    sides: long
+    min_adv: 125000000
+    window: [950, 1500]
+    gate: gap+
+    scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
