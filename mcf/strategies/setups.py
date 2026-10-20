@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from .. import features as F
-from .base import DayContext, Signal, Strategy, t
+from .base import DayContext, Signal, Strategy, parse_ticker_split, t
 
 
 class OpeningRangeBreakout(Strategy):
@@ -584,6 +584,31 @@ REGISTRY.update(RESEARCH_REGISTRY)
 REGISTRY[IndexDipBounce.name] = IndexDipBounce
 
 
+def _build_one(name: str, params: dict, cfg: dict, top_n: int) -> Strategy | None:
+    kind = params.pop("type", None)
+    if kind == "rule":
+        return RuleStrategy(name=name, **params)
+    if kind == "heat":
+        return HeatStrategy(name=name, **params)
+    if kind == "lab":
+        # refire (2nd+ signals of a setup per symbol-day): live.lab_refire / live.lab_refire_cooldown are the
+        # account default; a setup's own `refire` / `refire_cooldown` wins (refire: false for once-a-day designs)
+        live = cfg.get("live", {}) or {}
+        params.setdefault("refire", bool(live.get("lab_refire", False)))
+        params.setdefault("refire_cooldown", int(live.get("lab_refire_cooldown", 1)))
+        return LabStrategy(name=name, **params)
+    cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
+    if cls_name not in REGISTRY:
+        return None
+    if cls_name != name:
+        st = REGISTRY[cls_name](**params)
+        st.name = name
+        return st
+    if name == "orb":
+        params.setdefault("top_n", top_n)
+    return REGISTRY[name](**params)
+
+
 def build_strategies(cfg: dict) -> list[Strategy]:
     out = []
     top_n = cfg.get("universe", {}).get("stocks_in_play_top_n", 20)
@@ -596,32 +621,13 @@ def build_strategies(cfg: dict) -> list[Strategy]:
         params = {**exits, **params}
         if not params.pop("enabled", True):
             continue
-        kind = params.pop("type", None)
-        if kind == "rule":
-            out.append(RuleStrategy(name=name, **params))
+        # split copy (owner 2026-10-20): ticker_split {part, of} -> this copy trades only its half of the tickers
+        split = parse_ticker_split(params.pop("ticker_split", None))
+        st = _build_one(name, params, cfg, top_n)
+        if st is None:
             continue
-        if kind == "heat":
-            out.append(HeatStrategy(name=name, **params))
-            continue
-        if kind == "lab":
-            # refire (2nd+ signals of a setup per symbol-day): live.lab_refire / live.lab_refire_cooldown are the
-            # account default; a setup's own `refire` / `refire_cooldown` wins (refire: false for once-a-day designs)
-            live = cfg.get("live", {}) or {}
-            params.setdefault("refire", bool(live.get("lab_refire", False)))
-            params.setdefault("refire_cooldown", int(live.get("lab_refire_cooldown", 1)))
-            out.append(LabStrategy(name=name, **params))
-            continue
-        cls_name = params.pop("class", name)   # several configs of one setup: orb20_a / orb20_b -> class orb20
-        if cls_name not in REGISTRY:
-            continue
-        if cls_name != name:
-            st = REGISTRY[cls_name](**params)
-            st.name = name
-            out.append(st)
-            continue
-        if name == "orb":
-            params.setdefault("top_n", top_n)
-        out.append(REGISTRY[name](**params))
+        st.ticker_split = split
+        out.append(st)
     # One position per symbol across setups: when several setups fire on a symbol in the same poll, the first in
     # this order takes it. live.setup_order lists the narrow (fewest-trades) setups first so a subset setup is not
     # starved by its superset (swarm W4, 2026-10-10: RW6G1 kept 12 of 424 trades behind NS2). Unlisted setups keep

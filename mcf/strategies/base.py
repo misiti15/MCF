@@ -9,6 +9,7 @@ Keeping one code path is the main defence against backtest/live drift.
 
 from __future__ import annotations
 
+import zlib
 from dataclasses import dataclass, field
 from datetime import date, time
 from typing import Any, ClassVar
@@ -102,9 +103,33 @@ class DayContext:
         return self._cache["times"]
 
 
+def ticker_part(symbol: str, of: int) -> int:
+    """Deterministic, stable partition of the symbol universe (owner 2026-10-20, split copies):
+    zlib.crc32(SYMBOL) % of. Same answer on every machine, every day, every Python version."""
+    return zlib.crc32(str(symbol).upper().encode()) % int(of)
+
+
+def parse_ticker_split(v) -> tuple[int, int] | None:
+    """`ticker_split: {part: 0|1, of: 2}` -> (part, of); None / absent = all tickers."""
+    if not v:
+        return None
+    part, of = int(v["part"]), int(v["of"])
+    if of < 2 or not 0 <= part < of:
+        raise ValueError(f"bad ticker_split {v!r}: need of >= 2 and 0 <= part < of")
+    return part, of
+
+
 class Strategy:
     name: ClassVar[str] = "base"
     max_signals_per_day: int = 1
+    # (part, of) for a split copy (owner 2026-10-20): this copy trades only symbols with ticker_part == part, the other
+    # copy (other testing account) the rest, so the same signal is never traded twice. None = every symbol.
+    ticker_split: tuple[int, int] | None = None
+
+    def trades_symbol(self, symbol: str) -> bool:
+        """False for symbols that belong to the other half of a split copy (ticker_split)."""
+        ts = self.ticker_split
+        return ts is None or ticker_part(symbol, ts[1]) == ts[0]
 
     def __init__(self, **params):
         self.params = params
@@ -117,7 +142,9 @@ class Strategy:
     def signals(self, ctx: DayContext) -> list[Signal]:
         """generate() plus exit settings shared by every setup (from config), capped per day.
         Both the backtester and the live runner call this, never generate() directly."""
-        out = self.generate(ctx)[: self.max_signals_per_day]
+        if not self.trades_symbol(ctx.symbol):
+            return []                       # split copy: the other half of the tickers belongs to the other account
+        out = [s for s in self.generate(ctx) if self.trades_symbol(s.symbol)][: self.max_signals_per_day]
         so = self.params.get("scale_out_r")
         for sig in out:
             if so and sig.scale_out_r is None:
