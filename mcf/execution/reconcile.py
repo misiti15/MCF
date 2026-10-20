@@ -15,10 +15,15 @@ symbol (2026-10-13 autopsy: 9 lots were booked closed at a sibling lot's stop fi
 A lot closed by more than one fill (a partly filled target, the remainder by stop or flatten) gets one row at the
 quantity-weighted exit price, so its P/L is exact; meta records the parts (`exit_parts=target:10@12.0,flatten:8@10.5`).
 A live scale-out (setup flag live_scale_out) is the lot's own `<parent client id>-s` order: part `scaleout`, reason
-`scaled+<remainder exit>` (a stop leg after a scale-out is `breakeven`), as the backtest engine names it.
+`scaled+<remainder exit>` (a stop after a scale-out is `breakeven`), as the backtest engine names it. The remainder is
+protected by the lot's own `<parent client id>-p` order (an OCO: limit target + stop leg, or a plain stop; a moved plain
+stop is `-p<N>` / a replacement): its fills are the lot's `target` / `stop`; `-u` (remainder closed at market because
+the protection was refused) is part `unprotected`.
 """
 
 from __future__ import annotations
+
+import re
 
 import pandas as pd
 
@@ -93,7 +98,9 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
 
 def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
     """parent id -> {entry, qty, parts [(qty, px, time, reason)], closed} for every filled entry (lot) in by_id."""
-    parents = {i: o for i, o in by_id.items() if getattr(o, "legs", None) or i in journal_ids}
+    # a lot's own child orders are never lots themselves (a -p OCO exit has a nested stop leg, like a bracket)
+    parents = {i: o for i, o in by_id.items()
+               if i in journal_ids or (getattr(o, "legs", None) and _child_base(o) is None)}
     owner: dict[str, str] = {}                 # order id -> parent id (its legs, their replacements, its -x exit)
     owned: dict[str, dict[str, object]] = {i: {} for i in parents}
     coid_parent = {str(getattr(p, "client_order_id", "") or ""): i for i, p in parents.items()}
@@ -103,7 +110,7 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
             lid = _oid(leg)
             owner[lid] = i
             owned[i][lid] = leg
-    everything = list(by_id.values()) + [leg for p in parents.values() for leg in getattr(p, "legs", None) or []]
+    everything = list(by_id.values()) + [leg for o in by_id.values() for leg in getattr(o, "legs", None) or []]
     changed = True
     while changed:                             # replacement chains (a moved stop is a new order replacing the leg)
         changed = False
@@ -111,16 +118,20 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
             oid = _oid(o)
             if oid in owner or oid in parents:
                 continue
-            coid = str(getattr(o, "client_order_id", "") or "")
             rep = getattr(o, "replaces", None)
             pid = None
-            if coid.endswith(("-x", "-s")) and coid[:-2] in coid_parent:
-                pid = coid_parent[coid[:-2]]
+            base = _child_base(o)
+            if base is not None and base in coid_parent:
+                pid = coid_parent[base]
             elif rep is not None and str(rep) in owner:
                 pid = owner[str(rep)]
             if pid is not None:
                 owner[oid] = pid
                 owned[pid][oid] = o
+                for leg in getattr(o, "legs", None) or []:   # a -p OCO's stop leg
+                    if _oid(leg) not in owner:
+                        owner[_oid(leg)] = pid
+                        owned[pid][_oid(leg)] = leg
                 changed = True
 
     lots: dict[str, dict] = {}
@@ -138,8 +149,9 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
                 continue
             coid = str(getattr(o, "client_order_id", "") or "")
             fq = _f(getattr(o, "filled_qty", None)) or (qty - sum(q for q, *_ in parts))   # fakes w/o filled_qty
-            why = "timestop" if coid.endswith("-x") else "scaleout" if coid.endswith("-s") else (
-                "target" if _v(getattr(o, "order_type", "")) == "limit" else "stop")
+            why = "timestop" if coid.endswith("-x") else "scaleout" if coid.endswith("-s") else \
+                "unprotected" if coid.endswith("-u") else (
+                    "target" if _v(getattr(o, "order_type", "")) == "limit" else "stop")
             parts.append((fq, float(o.filled_avg_price), o.filled_at, why))
         parts.sort(key=lambda x: _ts(x[2]))
         lots[i] = dict(entry=float(p.filled_avg_price), qty=qty, parts=parts, working=working, ended=ended,
@@ -180,6 +192,15 @@ def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:
         # it holds no shares, so it is released now rather than at a later poll or the flatten (2026-10-15 H-4).
         lot["closed"] = lot["left"] <= 1e-9 and bool(lot["parts"])
     return lots
+
+
+_CHILD = re.compile(r"^(?P<base>.+)-(?:x|s|u|p\d*)$")
+
+
+def _child_base(o) -> str | None:
+    """Parent client id of a lot's own order (-x exit, -s scale-out, -p/-p<N> protection, -u close); else None."""
+    m = _CHILD.match(str(getattr(o, "client_order_id", "") or ""))
+    return m["base"] if m else None
 
 
 DEAD = {"canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced"}
