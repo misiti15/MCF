@@ -51,14 +51,15 @@ def open_lots(broker, prefix: str, after=None) -> list[dict]:
 
     after = after or pd.Timestamp.now(tz=NY).normalize().to_pydatetime()
     out = []
-    for o in broker.orders_today_with_prefix(prefix, after):
+    orders = broker.orders_today_with_prefix(prefix, after)
+    for o in orders:
         if parse_coid(o.client_order_id, prefix) is None:
-            continue                                  # exits (-x), flatten closes
+            continue                                  # a lot's own exits (-x, -s, -p, -u), flatten closes
         filled = float(getattr(o, "filled_qty", 0) or 0)
         if filled <= 0 or not getattr(o, "filled_avg_price", None):
             continue
-        stop = next((leg for leg in (getattr(o, "legs", None) or []) if getattr(leg, "stop_price", None) is not None
-                     and _state(leg) in AlpacaBroker.OPEN_STATES), None)
+        # its bracket stop leg, or after a live scale-out the stop of its protective -p order
+        stop = AlpacaBroker._lot_stop_order([x for x in orders if x.symbol == o.symbol], o, o.client_order_id)
         if stop is None:
             continue                                  # closed by its own legs, or no stop to move
         out.append({"symbol": o.symbol, "coid": o.client_order_id, "side": _side(o), "qty": filled,

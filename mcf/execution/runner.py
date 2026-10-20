@@ -43,11 +43,11 @@ _COID_RE = re.compile(r"^(?P<setup>.+)-(?P<symbol>[^-]+)-(?P<day>\d{8})(?:-(?P<h
 
 
 def parse_coid(coid: str | None, prefix: str | None = None):
-    """(setup, symbol, YYYYMMDD, HHMM or None) of an MCF entry id; None for exits (-x, scale-out -s), flatten closes,
-    other ids."""
+    """(setup, symbol, YYYYMMDD, HHMM or None) of an MCF entry id; None for a lot's own orders (exit -x, scale-out -s,
+    protection -p / -p<N>, unprotected close -u), flatten closes, other ids."""
     prefix = COID_PREFIX if prefix is None else prefix
     coid = coid or ""
-    if not coid.startswith(prefix) or coid.endswith(("-x", "-s")):
+    if not coid.startswith(prefix) or re.search(r"-(x|s|u|p\d*)$", coid):
         return None
     m = _COID_RE.match(coid[len(prefix):])
     if m is None or m["setup"].startswith("flatten"):
@@ -518,8 +518,9 @@ class PaperRunner:
         window as manage()), in order: a bar that touches the lot's stop or its target ends it (the stop/target wins a
         bar that also touches the scale level - the broker leg closes the whole lot); the first bar whose high (long) /
         low (short) reaches entry + side x scale_out_r x R (entry = the lot's own fill, R = |entry - stop|) triggers:
-        the broker replaces the lot's legs down to the remaining shares, stop -> entry, and sells the banked shares
-        (floor(qty x scale_out_frac); a lot under 2 shares is never scaled). Stop moves of manage() apply as usual."""
+        the broker cancels the lot's legs, sells the banked shares (floor(qty x scale_out_frac); a lot under 2 shares is
+        never scaled) and protects the rest with its own OCO / stop at breakeven (AlpacaBroker.scale_out_lot). Stop
+        moves of manage() apply as usual (to the protective stop once scaled)."""
         if not self.scaling or self.dry_run:
             return
         for key, s in list(self.scaling.items()):
@@ -556,7 +557,27 @@ class PaperRunner:
             if verdict != "scale":
                 self.scaling.pop(key)                     # the stop or target took the bar first: no scale-out
                 continue
+            if not s.get("started") and not self._scale_cap_ok(now):
+                self.scaling.pop(key)                     # the lot keeps its bracket unchanged
+                print(f"scale-out {sym}/{s['strategy']}: daily cap live.scale_out_max_per_day reached; lot unchanged")
+                continue
+            s["started"] = True
             self._do_scale(key, s, m)
+
+    def _scale_cap_ok(self, now: pd.Timestamp) -> bool:
+        """live.scale_out_max_per_day (owner SO1 2026-10-19: try the new cancel/bank/protect method on a few paper lots
+        first): counts today's banked (-s) orders at the broker, so the cap survives job restarts. None = no cap."""
+        cap = self.live.get("scale_out_max_per_day")
+        if cap is None:
+            return True
+        try:
+            day0 = now.tz_convert("America/New_York").normalize().to_pydatetime()
+            n = sum(1 for o in self.broker.orders_today_with_prefix(COID_PREFIX, day0)
+                    if (o.client_order_id or "").endswith("-s"))
+        except Exception as e:
+            print(f"scale-out cap check failed ({e}); not scaling")
+            return False
+        return n < int(cap)
 
     @staticmethod
     def _scale_verdict(since: pd.DataFrame, s: dict, stop: float) -> str | None:
@@ -593,6 +614,13 @@ class PaperRunner:
                 print(f"SCALE-OUT {sym}/{s['strategy']}: banked {res.get('qty')} at +{s['r']:g}R, "
                       f"{res.get('left')} left, stop -> {be:.2f}")
             return
+        if st == "closed_unprotected":                   # protection refused: the rest was closed at market
+            self.scaling.pop(key, None)
+            msg = (f"{sym} {s['strategy']} lot {coid}: scale-out banked {res.get('qty')}, but the broker refused the "
+                   f"breakeven protection for the remaining {res.get('left')}; they were closed at market.")
+            print(f"SCALE-OUT UNPROTECTED: {msg}")
+            self.health.setdefault("scale_out_failed", []).append(msg)
+            return
         if st in ("closed", "skip"):
             self.scaling.pop(key, None)
             print(f"scale-out {sym}/{s['strategy']}: {st} {res.get('qty', '')}".rstrip())
@@ -602,7 +630,7 @@ class PaperRunner:
         s["tries"] += 1
         print(f"scale-out {sym}/{s['strategy']} {st} (try {s['tries']}/{self.SCALE_TRIES}): {res.get('error', '')}")
         if s["tries"] >= self.SCALE_TRIES:
-            self.scaling.pop(key, None)                   # the lot keeps its bracket (and any reduced legs) unchanged
+            self.scaling.pop(key, None)                   # the lot keeps its bracket (or its re-placed protection)
             msg = (f"{sym} {s['strategy']} lot {coid}: scale-out not completed after {s['tries']} tries ({st}). "
                    "The lot keeps its broker-side stop; the 15:55 flatten closes whatever it still holds.")
             print(f"SCALE-OUT FAILED: {msg}")             # no email (owner 2026-10-16: no mid-session alerts)
@@ -610,7 +638,7 @@ class PaperRunner:
 
     def _restore_scaling(self):
         """Re-arm live scale-out for open lots of flagged setups after a restart (a lot already scaled is found by its
-        -s order at the broker and simply dropped)."""
+        -s order at the broker and dropped; one banked but not yet protected gets its -p protection then)."""
         try:
             orders = self.journal.open_orders(self.run_id)
         except Exception as e:

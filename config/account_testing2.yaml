@@ -26,6 +26,9 @@ account:
   max_daily_loss_r: 60
   max_trades_per_day: 3000
 live:
+  # Owner SO1 2026-10-19: the fixed live scale-out (cancel legs, bank half, protect the rest) runs on at most 2 lots
+  # per day until its first live scale-outs are checked; other lots keep their normal bracket.
+  scale_out_max_per_day: 2
   # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
   retry_after_release: true
   longs_first_on_ties: true
