@@ -1,0 +1,189 @@
+                                setup      n     win     exp  avg_win  avg_loss  be_win  win_margin  losers_never_worked  mfe_med  mae_med  loser_giveback  losers_mfe_ge_05  winners_mae_le_m075  share_stop  share_flat  late_against_spy_n  late_against_spy_exp  late_with_spy_exp
+0          CWT14-failbrk-orl-p05-long  84333  0.7007 -0.0763   0.2516   -0.8441  0.7704     -0.0697                0.658    0.406   -0.331           0.999             0.001                0.072       0.206       0.030               31514               -0.0705            -0.0758
+1   CWT14-failbrk-orl-p05-lowvol-long  59625  0.7055 -0.0752   0.2498   -0.8538  0.7736     -0.0681                0.663    0.406   -0.331           1.007             0.001                0.071       0.209       0.024               22592               -0.0659            -0.0735
+2          CWT14-failbrk-orl-p10-long  32195  0.7014 -0.0695   0.3414   -1.0345  0.7519     -0.0505                0.641    0.507   -0.401           1.189             0.001                0.087       0.266       0.013               10938               -0.0625            -0.0726
+3  CWT14-failbrk-pdh-p05-lowvol-short  35007  0.6868 -0.0761   0.3394   -0.9872  0.7441     -0.0574                0.628    0.502   -0.405           1.143             0.000                0.079       0.257       0.043               10285               -0.0849            -0.0745
+4          CWT14-failbrk-pdl-p05-long  53326  0.7062 -0.0648   0.2623   -0.8514  0.7644     -0.0582                0.665    0.419   -0.339           1.002             0.001                0.076       0.206       0.026               15676               -0.0687            -0.0722
+
+Educational only - not financial advice. BACKTEST (open two-year history, TRAIN+VALID, production + tod costs).
+Parents only (live config incl. scale-out). code: 1 target, 2 stop, 3 breakeven stop after scale-out, 4 time stop, 6 flatten at 15:55. 'against SPY' = side x SPY fromOpen < 0 at the signal bar.
+
+=== CWT14-failbrk-orl-p05-long  n 84333
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+10:00-10:25  31561 -0.0824      0.6961
+10:30-11:25  26147 -0.0729      0.7133
+11:30-12:55  15004 -0.0791      0.7027
+13:00-13:55   5815 -0.0698      0.6918
+14:00-15:00   5806 -0.0580      0.6731
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY   31514 -0.0705      0.7060
+after 10:30 / with SPY      21258 -0.0758      0.6998
+before 10:30 / against SPY  18157 -0.0764      0.7023
+before 10:30 / with SPY     13404 -0.0906      0.6876
+by session regime:
+       size    mean  <lambda_0>
+down  35445 -0.1456      0.6581
+flat  26718 -0.0578      0.7068
+up    22170  0.0121      0.7615
+losers by MFE reached (R):
+               size   mean
+mfe                       
+(-0.01, 0.1]  10477 -1.093
+(0.1, 0.2]     6123 -1.040
+(0.2, 0.3]     4678 -0.653
+(0.3, 0.5]     3930 -0.110
+(0.5, 5.0]       31 -0.102
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   4270  0.209
+(-0.75, -0.5]   7216  0.215
+(-0.5, -0.25]  14779  0.218
+(-0.25, 0.01]  32828  0.280
+
+=== CWT14-failbrk-orl-p05-lowvol-long  n 59625
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+10:00-10:25  21499 -0.0862      0.6961
+10:30-11:25  22235 -0.0707      0.7180
+11:30-12:55   9793 -0.0764      0.7056
+13:00-13:55   3441 -0.0457      0.7097
+14:00-15:00   2657 -0.0572      0.6714
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY   22592 -0.0659      0.7141
+after 10:30 / with SPY      15534 -0.0735      0.7061
+before 10:30 / against SPY  12363 -0.0822      0.7010
+before 10:30 / with SPY      9136 -0.0917      0.6895
+by session regime:
+       size    mean  <lambda_0>
+down  25193 -0.1438      0.6628
+flat  18544 -0.0619      0.7076
+up    15888  0.0181      0.7707
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  7411 -1.098
+(0.1, 0.2]    4228 -1.053
+(0.2, 0.3]    3208 -0.662
+(0.3, 0.5]    2704 -0.104
+(0.5, 5.0]       9 -0.064
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   3000  0.210
+(-0.75, -0.5]   5211  0.213
+(-0.5, -0.25]  10649  0.216
+(-0.25, 0.01]  23204  0.279
+
+=== CWT14-failbrk-orl-p10-long  n 32195
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+10:00-10:25  13699 -0.0733      0.7016
+10:30-11:25  14886 -0.0672      0.7013
+11:30-12:55   3610 -0.0645      0.7008
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY   10938 -0.0625      0.7044
+after 10:30 / with SPY       7558 -0.0726      0.6966
+before 10:30 / against SPY   7866 -0.0649      0.7073
+before 10:30 / with SPY      5833 -0.0848      0.6938
+by session regime:
+       size    mean  <lambda_0>
+down  13376 -0.1407      0.6552
+flat   9967 -0.0522      0.7115
+up     8852  0.0186      0.7597
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  3966 -1.126
+(0.1, 0.2]    2198 -1.114
+(0.2, 0.3]    1866 -1.084
+(0.3, 0.5]    1575 -0.640
+(0.5, 5.0]       9 -0.119
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   1962  0.309
+(-0.75, -0.5]   3157  0.319
+(-0.5, -0.25]   5701  0.319
+(-0.25, 0.01]  11760  0.364
+
+=== CWT14-failbrk-pdh-p05-lowvol-short  n 35007
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+09:50-09:55   3763 -0.0695      0.6992
+10:00-10:25  12070 -0.0719      0.6998
+10:30-11:25  10209 -0.0744      0.6934
+11:30-12:55   5126 -0.0750      0.6824
+13:00-13:55   2127 -0.0963      0.6493
+14:00-15:00   1712 -0.1086      0.5882
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY   10285 -0.0849      0.6719
+after 10:30 / with SPY       8889 -0.0745      0.6811
+before 10:30 / against SPY   8366 -0.0721      0.7000
+before 10:30 / with SPY      7467 -0.0704      0.6992
+by session regime:
+       size    mean  <lambda_0>
+down  11043 -0.0061      0.7342
+flat  11789 -0.0458      0.7075
+up    12175 -0.1689      0.6237
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  4412 -1.088
+(0.1, 0.2]    2478 -1.038
+(0.2, 0.3]    2336 -1.012
+(0.3, 0.5]    1734 -0.626
+(0.5, 5.0]       5 -0.058
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   1911  0.315
+(-0.75, -0.5]   3289  0.319
+(-0.5, -0.25]   6187  0.314
+(-0.25, 0.01]  12655  0.361
+
+=== CWT14-failbrk-pdl-p05-long  n 53326
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+09:50-09:55  11931 -0.0507      0.7139
+10:00-10:25  13424 -0.0662      0.7079
+10:30-11:25  11977 -0.0781      0.7085
+11:30-12:55   8608 -0.0685      0.7092
+13:00-13:55   3815 -0.0706      0.6886
+14:00-15:00   3571 -0.0477      0.6780
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY   15676 -0.0687      0.7041
+after 10:30 / with SPY      12295 -0.0722      0.6996
+before 10:30 / against SPY  12610 -0.0647      0.7047
+before 10:30 / with SPY     12745 -0.0531      0.7168
+by session regime:
+       size    mean  <lambda_0>
+down  20241 -0.1430      0.6539
+flat  16467 -0.0512      0.7129
+up    16618  0.0168      0.7633
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  6746 -1.094
+(0.1, 0.2]    3679 -1.045
+(0.2, 0.3]    2822 -0.651
+(0.3, 0.5]    2401 -0.115
+(0.5, 5.0]      18 -0.106
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   2849  0.211
+(-0.75, -0.5]   4789  0.222
+(-0.5, -0.25]   9528  0.225
+(-0.25, 0.01]  20494  0.296

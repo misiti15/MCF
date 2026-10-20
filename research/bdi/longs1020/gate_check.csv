@@ -1,0 +1,201 @@
+cfg,part,n_fail,fails
+A-QQQ-abs015-brd-t05s1,A,1,valid t<1.5
+B5-NS1-BRDUP-t05s1,B5,1,n_train<150
+B5-ST2-BRDUP-t05s1,B5,1,n_train<150
+B5-ST2-parent-t05s1,B5-parent,1,n_train<150
+B5-ST4-BRDUP-t1s05,B5,1,n_train<150
+B5-ST4-parent-t1s05,B5-parent,1,n_train<150
+P-IDX5-SPY-t1s1,A-parent,1,n_train<30
+A-QQQ-abs015-brd-time60,A,2,valid <= C_same; valid t<1.5
+A-QQQ-abs030-brd-time60,A,2,valid <= C_same; valid t<1.5
+A-QQQ-rel020-brd-t05s1,A,2,train exp<=0; valid t<1.5
+B5-NS1-BRDUP-holdtr,B5,2,valid t<1.5; n_train<150
+B5-NS1-parent-t05s1,B5-parent,2,train exp<=0; valid t<1.5
+B5-NS5-parent-t1s1,B5-parent,2,train exp<=0; ex-best-day<=0
+B5-ST2-IDXTURN-t05s1,B5,2,train <= parent; n_train<150
+P-IDX5-SPY-holdtr,A-parent,2,valid t<1.5; n_train<30
+P-IDX5-SPY-t05s1,A-parent,2,valid t<1.5; n_train<30
+P-IDX5-SPY-time60,A-parent,2,valid t<1.5; n_train<30
+A-QQQ-abs015-brd-t1s1,A,3,train <= C_same; valid <= C_same; valid t<1.5
+A-QQQ-abs030-brd-t05s1,A,3,train exp<=0; train <= C_same; valid t<1.5
+A2-QQQ-abs015-brd-time60-recovery,A2,3,train <= C_same; valid <= C_same; valid t<1.5
+B5-NS1-IDXTURN-holdtr,B5,3,valid t<1.5; n_train<150; ex-best-day<=0
+B5-NS1-parent-holdtr,B5-parent,3,valid exp<=0; valid t<1.5; ex-best-day<=0
+B5-NS5-BRDUP-t1s1,B5,3,train exp<=0; valid t<1.5; n_train<150
+B5-NS5-parent-holdtr,B5-parent,3,train exp<=0; valid t<1.5; ex-best-day<=0
+B5-ST4-BRDUP-holdtr,B5,3,valid <= parent; valid t<1.5; n_train<150
+B5-ST4-parent-holdtr,B5-parent,3,train exp<=0; valid t<1.5; n_train<150
+A-SPY-abs015-brd-time60,A,4,train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-abs030-brd-holdtr,A,4,train <= C_same; train <= parent; valid <= C_same; valid t<1.5
+A-SPY-abs030-brd-time60,A,4,train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-rel020-brd-holdtr,A,4,train <= C_same; train <= parent; valid <= C_same; valid t<1.5
+A-SPY-rel020-brd-time60,A,4,train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+B4-d015-w1030-holdtr,B,4,train exp<=0; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1100-holdtr,B,4,train exp<=0; valid exp<=0; valid t<1.5; ex-best-day<=0
+B5-NS5-BRDUP-holdtr,B5,4,train exp<=0; valid t<1.5; n_train<150; ex-best-day<=0
+B5-ST2-IDXTURN-holdtr,B5,4,valid exp<=0; valid t<1.5; n_train<150; ex-best-day<=0
+A-QQQ-abs015-brd-holdtr,A,5,train exp<=0; train <= C_same; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-hl-time60,A,5,train exp<=0; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-rec20-t1s1,A,5,train exp<=0; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-rec20-time60,A,5,train exp<=0; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-rec20-time60,A,5,valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-brd-time60,A,5,train exp<=0; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-hl-time60,A,5,train exp<=0; train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-abs030-hl-time60,A,5,train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-brd-t05s1,A,5,train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+B1-d015-rs0-holdtr,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d015-rs0-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d015-rs0-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d030-rs0-holdtr,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d030-rs0-t05s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d030-rs0-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d030-rs0-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B1-d030-rs1-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d030-mid-t05s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-mid-t1s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d060-am-holdtr,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d060-am-t05s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d060-am-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d060-am-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d060-mid-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B2-d060-mid-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B3-rsi30-b05-t05s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b10-t05s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b10-t1s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b05-t05s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b10-t05s1,B,5,train exp<=0; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d015-w1030-t05s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1030-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1030-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1100-t05s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1100-t1s1,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d015-w1100-time60,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B4-d030-w1100-holdtr,B,5,train exp<=0; train <= random; valid exp<=0; valid t<1.5; ex-best-day<=0
+B5-ST2-parent-holdtr,B5-parent,5,train exp<=0; valid exp<=0; valid t<1.5; n_train<150; ex-best-day<=0
+P-IDX1-QQQ-time60,A-parent,5,valid exp<=0; valid <= C_all; valid t<1.5; n_train<30; ex-best-day<=0
+A-QQQ-abs015-hl-t05s1,A,6,train exp<=0; train <= C_same; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-rec20-holdtr,A,6,train exp<=0; train <= parent; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-brd-holdtr,A,6,train exp<=0; train <= C_same; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-brd-t1s1,A,6,train exp<=0; train <= C_same; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-rec20-t05s1,A,6,train exp<=0; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-rec20-t05s1,A,6,train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-rec20-time60,A,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-abs015-vwap-time60,A,6,train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-rec20-t05s1,A,6,train exp<=0; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-abs030-rec20-time60,A,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-rel020-brd-t1s1,A,6,train exp<=0; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5
+A-SPY-rel020-hl-time60,A,6,train exp<=0; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-rec20-holdtr,A,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+A2-SPY-abs015-rec20-t05s1-recovery,A2,6,train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A2-SPY-abs015-rec20-time60-recovery,A2,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+A2-SPY-abs030-rec20-time60-recovery,A2,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+A2-SPY-rel020-rec20-holdtr-recovery,A2,6,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5
+B1-d015-rs0-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d015-rs1-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d015-rs1-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d015-rs1-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d015-rs1-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d030-rs1-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d030-rs1-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B1-d030-rs1-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-am-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-am-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-am-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-am-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-mid-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d030-mid-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d060-mid-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B2-d060-mid-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b05-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b05-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b05-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b10-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi30-b10-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b05-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b05-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b05-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b10-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b10-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B3-rsi40-b10-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1030-holdtr,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1030-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1030-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1030-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1100-t05s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1100-t1s1,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B4-d030-w1100-time60,B,6,train exp<=0; train <= random; valid exp<=0; valid <= random; valid t<1.5; ex-best-day<=0
+B5-NS1-IDXTURN-t05s1,B5,6,train exp<=0; train <= random; train <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+P-IDX1-QQQ-holdtr,A-parent,6,train exp<=0; valid exp<=0; valid <= C_all; valid t<1.5; n_train<30; ex-best-day<=0
+P-IDX1-QQQ-t1s1,A-parent,6,train exp<=0; train <= C_all; valid exp<=0; valid t<1.5; n_train<30; ex-best-day<=0
+A-QQQ-abs015-vwap-t05s1,A,7,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-vwap-time60,A,7,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-hl-time60,A,7,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-rec20-holdtr,A,7,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-rec20-t05s1,A,7,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-rec20-t1s1,A,7,train exp<=0; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-vwap-t05s1,A,7,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-brd-holdtr,A,7,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-hl-time60,A,7,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-rec20-holdtr,A,7,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-rec20-t1s1,A,7,train exp<=0; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-rec20-time60,A,7,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-brd-holdtr,A,7,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-rec20-holdtr,A,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-rec20-t1s1,A,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-rec20-holdtr,A,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-hl-holdtr,A,7,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-rec20-t1s1,A,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-rec20-time60,A,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A2-SPY-abs015-rec20-holdtr-recovery,A2,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A2-SPY-abs030-rec20-holdtr-recovery,A2,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A2-SPY-rel020-rec20-time60-recovery,A2,7,train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+B5-ST4-IDXTURN-t1s05,B5,7,train exp<=0; train <= random; train <= parent; valid <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+P-IDX1-QQQ-t05s1,A-parent,7,train exp<=0; train <= C_all; valid exp<=0; valid <= C_all; valid t<1.5; n_train<30; ex-best-day<=0
+A-QQQ-abs015-hl-holdtr,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-hl-t1s1,A,8,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-rec20-t05s1,A,8,train exp<=0; train <= C_all; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-vwap-holdtr,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs015-vwap-t1s1,A,8,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-vwap-holdtr,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-vwap-t1s1,A,8,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-vwap-time60,A,8,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-brd-t1s1,A,8,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-hl-holdtr,A,8,train exp<=0; train <= C_all; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-hl-t05s1,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-vwap-t1s1,A,8,train exp<=0; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-brd-t05s1,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-hl-holdtr,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-hl-t05s1,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-brd-t05s1,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-hl-holdtr,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-hl-t1s1,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-rec20-t1s1,A,8,train exp<=0; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-vwap-time60,A,8,train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-hl-t05s1,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-hl-t1s1,A,8,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-rec20-t05s1,A,8,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+B5-NS5-IDXTURN-holdtr,B5,8,train exp<=0; train <= random; train <= parent; valid exp<=0; valid <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+B5-NS5-IDXTURN-t1s1,B5,8,train exp<=0; train <= random; train <= parent; valid exp<=0; valid <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+B5-ST2-BRDUP-holdtr,B5,8,train exp<=0; train <= parent; valid exp<=0; valid <= random; valid <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+A-QQQ-abs030-hl-holdtr,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-hl-t05s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-abs030-hl-t1s1,A,9,train exp<=0; train <= C_all; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-hl-t1s1,A,9,train exp<=0; train <= C_all; train <= C_same; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-vwap-holdtr,A,9,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-vwap-t05s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid t<1.5; ex-best-day<=0
+A-QQQ-rel020-vwap-time60,A,9,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-brd-t1s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-hl-t1s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-vwap-t05s1,A,9,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-brd-t1s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-hl-t05s1,A,9,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-vwap-holdtr,A,9,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-vwap-time60,A,9,train exp<=0; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+B5-ST4-IDXTURN-holdtr,B5,9,train exp<=0; train <= random; train <= parent; valid exp<=0; valid <= random; valid <= parent; valid t<1.5; n_train<150; ex-best-day<=0
+A-SPY-abs015-vwap-holdtr,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs015-vwap-t1s1,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-vwap-t05s1,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-abs030-vwap-t1s1,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-vwap-holdtr,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-vwap-t05s1,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
+A-SPY-rel020-vwap-t1s1,A,10,train exp<=0; train <= C_all; train <= C_same; train <= parent; valid exp<=0; valid <= C_all; valid <= C_same; valid <= parent; valid t<1.5; ex-best-day<=0
