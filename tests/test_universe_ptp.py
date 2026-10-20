@@ -20,8 +20,9 @@ class FakeTC:
     def __init__(self, assets):
         self.assets = assets
 
-    def get_all_assets(self, req):
-        return self.assets
+    def get(self, path, params=None):           # raw /assets response (dicts), as TradingClient.get returns it
+        assert path == "/assets"
+        return [vars(a) for a in self.assets]
 
 
 def test_is_ptp_attributes_and_denylist():
@@ -77,3 +78,10 @@ def test_build_universe_excludes_ptp_even_if_pinned(monkeypatch, tmp_path):
     out = U.build_universe(cfg, out_path=str(tmp_path / "u.csv"))
     assert out.symbol.tolist() == ["AAPL"]
     assert "attributes" not in out.columns
+
+
+def test_candidate_assets_survive_unknown_exchange_code():
+    """2026-10-20: Alpaca listed exchange "TXSE"; alpaca-py's strict enum made get_all_assets() raise for all assets."""
+    tc = FakeTC([_asset("AAPL", []), _asset("TXCO", [], exchange="TXSE")])
+    assets = U.candidate_assets(tc)
+    assert assets.symbol.tolist() == ["AAPL"]

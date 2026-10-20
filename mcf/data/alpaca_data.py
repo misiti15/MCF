@@ -64,11 +64,11 @@ def download_to_store(
 def tradable_universe(min_price: float = 5.0) -> list[str]:
     """All active, tradable US equities/ETFs on major exchanges (pre-filter; liquidity filter later)."""
     from alpaca.trading.client import TradingClient
-    from alpaca.trading.enums import AssetClass, AssetStatus
-    from alpaca.trading.requests import GetAssetsRequest
+
+    from .universe import active_assets   # raw /assets: alpaca-py rejects new exchange codes (TXSE, 2026-10-20)
 
     tc = TradingClient(os.environ["ALPACA_API_KEY"], os.environ["ALPACA_SECRET_KEY"], paper=True)
-    assets = tc.get_all_assets(GetAssetsRequest(status=AssetStatus.ACTIVE, asset_class=AssetClass.US_EQUITY))
+    assets = active_assets(tc)
     keep = {"NYSE", "NASDAQ", "ARCA", "AMEX", "BATS"}
     return sorted(
         a.symbol

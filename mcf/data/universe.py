@@ -47,12 +47,23 @@ def is_ptp(attributes, symbol: str = "", denylist=()) -> bool:
     return symbol.upper() in {d.upper() for d in denylist}
 
 
-def candidate_assets(tc) -> pd.DataFrame:
-    from alpaca.trading.enums import AssetClass, AssetStatus
-    from alpaca.trading.requests import GetAssetsRequest
+def active_assets(tc) -> list:
+    """Active US-equity assets as plain objects, read from the raw /assets response. 2026-10-20: Alpaca started
+    listing exchange "TXSE" (Texas Stock Exchange), which alpaca-py 0.44's strict AssetExchange enum rejects, so
+    get_all_assets() raised for the whole list and every session failed at prep. Unknown exchanges are kept as text
+    (and dropped by the EXCHANGES filter)."""
+    from types import SimpleNamespace
 
+    raw = tc.get("/assets", {"status": "active", "asset_class": "us_equity"}) or []
+    return [SimpleNamespace(symbol=a.get("symbol", ""), name=a.get("name"), exchange=a.get("exchange", ""),
+                            tradable=bool(a.get("tradable")), shortable=bool(a.get("shortable")),
+                            easy_to_borrow=bool(a.get("easy_to_borrow")), marginable=bool(a.get("marginable")),
+                            attributes=a.get("attributes")) for a in raw]
+
+
+def candidate_assets(tc) -> pd.DataFrame:
     rows = []
-    for a in tc.get_all_assets(GetAssetsRequest(status=AssetStatus.ACTIVE, asset_class=AssetClass.US_EQUITY)):
+    for a in active_assets(tc):
         ex = str(getattr(a.exchange, "value", a.exchange))
         sym = a.symbol
         if not a.tradable or ex not in EXCHANGES or "." in sym or "/" in sym:
