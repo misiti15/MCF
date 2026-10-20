@@ -27,23 +27,17 @@
    "L3-gap-slope-rsi5hi-FD",
    "LIQ-pdl-sweep-open15-vwap-long",
    "MF1-945-flowsell-vwapup-FD",
-   "MF2-open-rsimidhi-flowsell-FD",
    "MF3-open-flowsell-rsi5hi",
-   "MF3-open-flowsell-rsi5hi-FD",
-   "MF4-h40-open-flowsell-FD",
    "MF5-flowsell-vwapup-rsi5hi",
    "MF5-flowsell-vwapup-rsi5hi-FD",
    "NS1-rsidip-rsi5pop-long-FD",
    "NS2-sma50break-overbought-short",
    "NS2-sma50break-overbought-short-FD",
    "NS3-failed-vwap-reclaim-short",
-   "NS3-failed-vwap-reclaim-short-FD",
    "NS4-pm-vwap-reclaim-oversold-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
    "RW1-gapdn-bounce-flowsell-short-FD",
-   "RW3-gapdn-rsi5pop-flowsell-short-FD",
    "RW4-ns3-adv150-short-FD",
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
    "RW6-ns2-up3-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
@@ -136,7 +130,7 @@
  "labels": {
   "primary": "Primary",
   "testing": "Testing 1",
-  "testing2": "Testing 2 (Graveyard)",
+  "testing2": "Testing 2",
   "gen": "Setup Generator"
  },
  "setups": {
@@ -585,11 +579,11 @@
   },
   "MF2-open-rsimidhi-flowsell-FD": {
    "accounts": [
-    "primary",
-    "testing"
+    "primary"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 16:06 ET",
    "from": [
+    "primary",
     "testing"
    ]
   },
@@ -604,11 +598,13 @@
   },
   "MF3-open-flowsell-rsi5hi-FD": {
    "accounts": [
+    "primary"
+   ],
+   "since": "2026-10-20 16:06 ET",
+   "from": [
     "primary",
     "testing"
-   ],
-   "since": null,
-   "from": null
+   ]
   },
   "MF4-h40-open-flowsell": {
    "accounts": [
@@ -619,11 +615,11 @@
   },
   "MF4-h40-open-flowsell-FD": {
    "accounts": [
-    "primary",
-    "testing"
+    "primary"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 16:06 ET",
    "from": [
+    "primary",
     "testing"
    ]
   },
@@ -764,11 +760,11 @@
   },
   "NS3-failed-vwap-reclaim-short-FD": {
    "accounts": [
-    "primary",
-    "testing"
+    "primary"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 16:06 ET",
    "from": [
+    "primary",
     "testing"
    ]
   },
@@ -818,11 +814,13 @@
   },
   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
    "accounts": [
+    "primary"
+   ],
+   "since": "2026-10-20 16:06 ET",
+   "from": [
     "primary",
     "testing"
-   ],
-   "since": null,
-   "from": null
+   ]
   },
   "RW4-ns3-adv150-short-FD": {
    "accounts": [
@@ -833,11 +831,13 @@
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
    "accounts": [
+    "primary"
+   ],
+   "since": "2026-10-20 16:06 ET",
+   "from": [
     "primary",
     "testing"
-   ],
-   "since": null,
-   "from": null
+   ]
   },
   "RW6-ns2-up3-short-FD": {
    "accounts": [
@@ -983,136 +983,60 @@
   }
  },
  "last_change": {
-  "at": "2026-10-20 08:26 ET",
+  "at": "2026-10-20 16:06 ET",
   "changes": [
    {
     "setup": "MF2-open-rsimidhi-flowsell-FD",
     "from": [
+     "primary",
      "testing"
     ],
     "to": [
+     "primary"
+    ]
+   },
+   {
+    "setup": "MF3-open-flowsell-rsi5hi-FD",
+    "from": [
      "primary",
      "testing"
+    ],
+    "to": [
+     "primary"
     ]
    },
    {
     "setup": "MF4-h40-open-flowsell-FD",
     "from": [
+     "primary",
      "testing"
     ],
     "to": [
-     "primary",
-     "testing"
+     "primary"
     ]
    },
    {
     "setup": "NS3-failed-vwap-reclaim-short-FD",
     "from": [
+     "primary",
      "testing"
     ],
     "to": [
-     "primary",
-     "testing"
+     "primary"
     ]
    },
    {
-    "setup": "MF3-open-flowsell-rsi5hi",
+    "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
     "from": [
-     "primary"
+     "primary",
+     "testing"
     ],
     "to": [
-     "testing"
+     "primary"
     ]
    },
    {
-    "setup": "MF5-flowsell-vwapup-rsi5hi",
-    "from": [
-     "primary"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "LIQ-orl-sweep-open15-s25-long",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testing2"
-    ]
-   },
-   {
-    "setup": "RW2-exhaustion-noon-adv150-short-FD",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testing2"
-    ]
-   },
-   {
-    "setup": "heat_fade_long",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testing2"
-    ]
-   }
-  ]
- },
- "pending": {
-  "approved": "2026-10-20 09:52 ET",
-  "effective": "2026-10-21 (merged after today's close)",
-  "note": "Owner: promotion = move. The Testing 1 copy is switched off tonight; Primary only from 2026-10-21.",
-  "setups": {
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
-    "from": [
-     "primary",
-     "testing"
-    ],
-    "to": [
-     "primary"
-    ]
-   },
-   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
-    "from": [
-     "primary",
-     "testing"
-    ],
-    "to": [
-     "primary"
-    ]
-   },
-   "MF2-open-rsimidhi-flowsell-FD": {
-    "from": [
-     "primary",
-     "testing"
-    ],
-    "to": [
-     "primary"
-    ]
-   },
-   "MF4-h40-open-flowsell-FD": {
-    "from": [
-     "primary",
-     "testing"
-    ],
-    "to": [
-     "primary"
-    ]
-   },
-   "NS3-failed-vwap-reclaim-short-FD": {
-    "from": [
-     "primary",
-     "testing"
-    ],
-    "to": [
-     "primary"
-    ]
-   },
-   "MF3-open-flowsell-rsi5hi-FD": {
+    "setup": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
     "from": [
      "primary",
      "testing"
@@ -1121,6 +1045,6 @@
      "primary"
     ]
    }
-  }
+  ]
  }
 }
