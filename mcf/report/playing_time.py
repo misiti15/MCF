@@ -70,7 +70,8 @@ def classify(status: str, reason: str | None) -> str:
         return "window"
     if s == "rejected":
         return "rejected"
-    if r.startswith("already in symbol") or r.startswith("opposite side held") or r.startswith("lot cap"):
+    if r.startswith("already in symbol") or r.startswith("opposite side held") or r.startswith("lot cap") \
+            or r.startswith("twin held"):
         return "held_by_other"
     if r.startswith("max concurrent positions"):
         return "slots_full"
@@ -78,7 +79,7 @@ def classify(status: str, reason: str | None) -> str:
         return "setup_cap"
     if r.startswith("max trades/day"):
         return "trades_cap"
-    if r.startswith("daily loss limit") or r == "halted":
+    if r.startswith(("daily loss limit", "setup daily loss limit")) or r == "halted":
         return "daily_loss"
     if r.startswith("missed"):
         return "missed_trigger"

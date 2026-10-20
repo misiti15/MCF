@@ -220,7 +220,7 @@ strategies:
     window: [950, 1100]
     scale_out_r: null
   MF3-open-flowsell-rsi5hi:
-    enabled: true
+    enabled: false   # DEMOTED to Testing 1 2026-10-20 (owner 2026-10-19 evening; ledger 2026-10-20-demote-mf3-mf5); MF3-...-FD stays here
     type: lab
     module: research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py
     min_adv: 95000000
@@ -250,6 +250,33 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
+  # ---- Promoted from Testing 1 (owner 2026-10-19 evening, first Primary session 2026-10-20; ledger 2026-10-20-promote-3fd).
+  #      They keep running in Testing 1.
+  MF2-open-rsimidhi-flowsell-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  MF4-h40-open-flowsell-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  NS3-failed-vwap-reclaim-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
   MF4-h40-open-flowsell:
     enabled: true
     type: lab
@@ -258,7 +285,7 @@ strategies:
     window: [950, 1100]
     scale_out_r: null
   MF5-flowsell-vwapup-rsi5hi:
-    enabled: true
+    enabled: false   # DEMOTED to Testing 1 2026-10-20 (owner 2026-10-19 evening; ledger 2026-10-20-demote-mf3-mf5)
     type: lab
     module: research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py
     min_adv: 95000000
@@ -350,6 +377,9 @@ live:
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
     - MF3-open-flowsell-rsi5hi-FD   # promoted 2026-10-15
+    - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
+    - MF4-h40-open-flowsell-FD   # promoted 2026-10-20
+    - NS3-failed-vwap-reclaim-short-FD   # promoted 2026-10-20
     - intraday_momentum
     - orb20_a
     - RW6G1-ns2-up3-vwap2sd-short

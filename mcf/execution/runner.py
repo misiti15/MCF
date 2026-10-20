@@ -195,7 +195,12 @@ class PaperRunner:
             self._restore_scaling()
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
-            self.risk.state.realized_r = float(done.loc[done.date == str(today), "r_multiple"].sum())
+            td = done.loc[done.date == str(today)]
+            self.risk.state.realized_r = float(td["r_multiple"].sum())
+            # per-setup net R today (account.max_setup_daily_loss_r)
+            self.risk.state.realized_r_by_strategy = (
+                {str(k): float(v) for k, v in td.groupby("strategy")["r_multiple"].sum().items()}
+                if "strategy" in td.columns and len(td) else {})
         self._sync_open()
 
     def _restore_blocked(self, sig: pd.DataFrame):
@@ -210,7 +215,7 @@ class PaperRunner:
     def _retry_reasons(self) -> tuple[str, ...]:
         """Blocks that retry_after_release may lift: the symbol held (one lot per symbol), or with stacked lots only an
         opposite-side holder or the lot cap."""
-        return ("already in symbol",) if self.max_lots <= 1 else ("opposite side held", "lot cap")
+        return ("already in symbol", "twin held") if self.max_lots <= 1 else ("opposite side held", "lot cap", "twin held")
 
     def _retry_ready(self, key: tuple[str, str]) -> bool:
         """A blocked setup may look for one fresh signal once the symbol is no longer held (nor pending) by MCF."""
@@ -359,7 +364,11 @@ class PaperRunner:
             for sym in self.risk.state.open_symbols:
                 st = self.open_strategy.get(sym)
                 counts[st] = counts.get(st, 0) + 1
-            self.risk.state.lots = {}
+            # holders only (twin check, live.block_twin_same_symbol); the lot cap / opposite side do not apply here
+            self.risk.state.lots = {sym: ([(lot.get("strategy", lid), lot["side"])
+                                           for lid, lot in self.lots.get(sym, {}).items()]
+                                          or ([(self.open_strategy[sym], 0)] if sym in self.open_strategy else []))
+                                    for sym in self.risk.state.open_symbols}
         else:                                         # slots and per-setup caps count lots
             self.risk.state.lots = {sym: [(lot.get("strategy", lid), lot["side"])
                                           for lid, lot in self.lots.get(sym, {}).items()]
@@ -1027,7 +1036,7 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
-            if why in ("opposite side held", "lot cap"):                   # every setup holding a lot on the symbol
+            if why in ("opposite side held", "lot cap", "twin held"):                   # every setup holding a lot on the symbol
                 held = {"held_by": list(dict.fromkeys(lot.get("strategy", lid)
                                                       for lid, lot in self.lots.get(sig.symbol, {}).items()))}
             if held and why in self._retry_reasons() and self.retry_after_release and sig.entry_type == "market":
@@ -1181,6 +1190,10 @@ class PaperRunner:
         if len(trades):
             today = trades[trades["date"] == str(day)]   # late-recovered trades of earlier sessions don't count today
             self.risk.state.realized_r += float(today["r_multiple"].sum())
+            if "strategy" in today.columns:
+                by = self.risk.state.realized_r_by_strategy
+                for k, v in today.groupby("strategy")["r_multiple"].sum().items():
+                    by[str(k)] = by.get(str(k), 0.0) + float(v)
             print(f"reconciled {len(trades)} trades for {day}")
 
     def _note_residuals(self, residual: dict):

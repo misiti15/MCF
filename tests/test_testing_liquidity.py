@@ -16,7 +16,12 @@ def _testing_strategies(monkeypatch):
     from mcf.strategies.setups import build_strategies
 
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
-    return {s.name: s for s in build_strategies(load_config())}
+    out = {s.name: s for s in build_strategies(load_config())}
+    monkeypatch.setenv("MCF_ACCOUNT", "testing2")   # LIQ-orl moved to Testing 2 (Graveyard) 2026-10-20 (owner)
+    t2 = {s.name: s for s in build_strategies(load_config())}
+    assert "LIQ-orl-sweep-open15-s25-long" not in out
+    out["LIQ-orl-sweep-open15-s25-long"] = t2["LIQ-orl-sweep-open15-s25-long"]
+    return out
 
 
 def test_overlay_enables_both_with_structural_exit_and_management(monkeypatch):

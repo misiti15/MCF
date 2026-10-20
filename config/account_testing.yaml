@@ -14,7 +14,8 @@ account:
   buying_power_multiple: 3.8
   max_concurrent_positions: 400
   max_positions_per_strategy: 150
-  max_daily_loss_r: 60
+  max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
+  max_setup_daily_loss_r: 2.0    # owner 2026-10-19 evening: a setup stops for the day at net -2R realized
   max_trades_per_day: 3000
 live:
   # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
@@ -52,6 +53,7 @@ live:
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
     - RW3-gapdn-rsi5pop-flowsell-short-FD
     - MF5-flowsell-vwapup-rsi5hi-FD
+    - MF5-flowsell-vwapup-rsi5hi   # former primary (demoted 2026-10-20)
     - MF4-h40-open-flowsell-FD
     - RW1-gapdn-bounce-flowsell-short-FD
     - RW4-ns3-adv150-short-FD
@@ -61,16 +63,14 @@ live:
     - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
     - MF1-945-flowsell-vwapup-FD
     - MF3-open-flowsell-rsi5hi-FD
+    - MF3-open-flowsell-rsi5hi   # former primary (demoted 2026-10-20)
     - ST2-slope20up-long-am-t05s1-FD
-    - RW2-exhaustion-noon-adv150-short-FD
-    - heat_fade_long
     - heat_fade_long-FD
     - RW7-gapdn-bounce-early-short-FD
     - exhaustion_short
     - exhaustion_short-FD
     - heat_fade_short
     - heat_fade_short-FD
-    - LIQ-orl-sweep-open15-s25-long   # 31.3/day, broadest: last so it never preempts existing setups (lead 2026-10-12)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -176,7 +176,7 @@ strategies:
     enabled: true
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   heat_fade_long:
-    enabled: true
+    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   exhaustion_short:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
@@ -188,9 +188,13 @@ strategies:
     former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
   MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
-  MF3-open-flowsell-rsi5hi: {enabled: false}   # replaced by MF3-open-flowsell-rsi5hi-FD
+  MF3-open-flowsell-rsi5hi:
+    enabled: true
+    former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   MF4-h40-open-flowsell: {enabled: false}   # replaced by MF4-h40-open-flowsell-FD
-  MF5-flowsell-vwapup-rsi5hi: {enabled: false}   # replaced by MF5-flowsell-vwapup-rsi5hi-FD
+  MF5-flowsell-vwapup-rsi5hi:
+    enabled: true
+    former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
   NS2-sma50break-overbought-short:
     enabled: true
@@ -468,7 +472,7 @@ strategies:
     scale_out_r: null
   # from RW2-exhaustion-noon-adv150-short (testing; source window 1200-1500); ~52.08/day full-day [timeofday results.csv full, exp -0.056R]
   RW2-exhaustion-noon-adv150-short-FD:
-    enabled: true
+    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
     type: lab
     module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
     min_adv: 150000000
@@ -518,7 +522,7 @@ strategies:
   # OR-low sweep, structural stop at the sweep low, 2.5R target: n 13,335, exp -0.001R, t -0.01 (train -0.040 /
   # valid +0.038); up sessions +0.59R, down -0.49R (long beta). ~31.3/day.
   LIQ-orl-sweep-open15-s25-long:
-    enabled: true
+    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
     type: lab
     module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
     min_adv: 95000000
