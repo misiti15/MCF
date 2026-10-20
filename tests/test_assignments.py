@@ -24,3 +24,10 @@ def test_build_stamps_only_real_changes():
     moved["setups"][k]["accounts"] = ["nowhere"]
     new = A.build(moved)
     assert new["last_change"]["changes"][0]["setup"] == k and new["setups"][k]["since"]
+
+
+def test_no_setup_runs_in_two_accounts():
+    """Owner 2026-10-20: promotion = move; no copies of a setup in any account."""
+    from collections import Counter
+    c = Counter(s for a, v in A.current().items() for s in v)
+    assert [k for k, n in c.items() if n > 1] == []

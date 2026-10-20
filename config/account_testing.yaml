@@ -255,7 +255,7 @@ strategies:
     scale_out_r: null
   # from MF3-open-flowsell-rsi5hi (primary; source window 950-1100); ~24.8/day full-day [timeofday results.csv full, exp -0.071R]
   MF3-open-flowsell-rsi5hi-FD:
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
