@@ -2,6 +2,21 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-20 night: Graveyard account (effective 2026-10-21)
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| Graveyard account | A **separate** Alpaca paper account, "Graveyard", where the lowest performers keep paper-trading with **lower caps**; nothing is deleted. **Testing 2 stays Testing 2.** Secrets `ALPACA_GRAVEYARD_API_KEY` / `ALPACA_GRAVEYARD_SECRET_KEY` added by the owner. | `config/account_graveyard.yaml` (`MCF_ACCOUNT=graveyard`, orders `mgy-`, state branch `mcf-data-graveyard`), wired like the Setup Generator: `strategies_exclusive: true` (only its own setups run), trade / EOD / watchdog matrix, job skips cleanly without its secrets, market data on the primary SIP keys, EOD report built but **not emailed**, outage/watchdog prefix allow-list, long-hold key separation, dashboard (account switch, account card, leaderboard, scorecard "Current account"), assignments (ledger 2026-10-21-graveyard-account). |
+| Graveyard caps | Lower than Testing. | 200 slots / 200 positions / 25 per setup / 1,500 trades a day (half of Testing 2), same risk per trade (0.25%), `max_setup_daily_loss_r: 2.0`, `max_daily_loss_r: 120`, `live.block_twin_same_symbol: true`, no live scale-out (`scale_out_max_per_day: 0`, no `live_scale_out` setups), no split copies. |
+| Graveyard moves | **Move** to the Graveyard: from Testing 2 LIQ-orl-sweep-open15-s25-long, RW2-exhaustion-noon-adv150-short-FD, heat_fade_long; from Testing 1 RW6-ns2-up3-short-FD, NS2-sma50break-overbought-short-FD, heat_fade_long-FD, ST1-ordn-long-pm-t05s1-FD, L3-gap-slope-fromopen-FD, L3-gap-slope-lowdist-FD, MF1-945-flowsell-vwapup-FD, heat_fade_short-FD, ST2-slope20up-long-am-t05s1-FD — **except** any whose combined live win rate is above 50%. exhaustion_short-FD stays unless now <= 50%. Ex-primary NS2-sma50break-overbought-short and heat_fade_short move if their combined avg R is negative. | Combined record = every reports/<date>.csv on mcf-data, mcf-data-testing, mcf-data-testing2 (10-06..10-20), identical signals de-duplicated. **Moved (12):** LIQ-orl (127 trades, 43.3% win), RW2-FD (150, 46.0%), heat_fade_long (117, 32.5%), RW6-FD (44, 22.7%), NS2-FD (68, 29.4%), heat_fade_long-FD (125, 31.2%), ST1-FD (24, 33.3%), MF1-FD (40, 32.5%), heat_fade_short-FD (321, 47.4%), ST2-FD (76, 48.7%), NS2-sma50break-overbought-short (59 trades, avg R -0.399), heat_fade_short (134, avg R -0.249). **Stayed in Testing 1:** L3-gap-slope-fromopen-FD (127, 64.6%), L3-gap-slope-lowdist-FD (30, 56.7%), exhaustion_short-FD (35, 51.4%). Full blocks copied enabled, `former_primary` markers kept, "# moved to Graveyard 2026-10-21 (owner)"; switched off at the source with setup_order lists updated (promotion = move); assignments.json regenerated (ledger 2026-10-21-graveyard-moves). Testing 1/2 not redistributed (after the owner's moves). |
+
+## 2026-10-20 evening: MF3 watch + swarm
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| MF3-open-flowsell-rsi5hi-FD (Primary) | **Keep in Primary on watch** — make sure it needs demoting rather than a bad run. | The nightly loop reports its Primary-only record (trades, win vs break-even, avg R, t, last 4) every night; a demotion is suggested only if it stays below break-even. |
+| MF3 family | BDI swarm for a more profitable tweak; new variants go to the testing account with the most room, without conflicts. | research/bdi/mf3swarm1020; candidates placed with mcf/research/allocate.py after the owner's yes. |
+
 ## 2026-10-20: promotion = move
 
 | Topic | Owner decision | How MCF applies it |

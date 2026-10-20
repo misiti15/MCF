@@ -26,23 +26,17 @@
    "L3-gap-slope-lowdist-FD",
    "L3-gap-slope-rsi5hi-FD",
    "LIQ-pdl-sweep-open15-vwap-long",
-   "MF1-945-flowsell-vwapup-FD",
    "MF3-open-flowsell-rsi5hi",
    "MF5-flowsell-vwapup-rsi5hi",
    "MF5-flowsell-vwapup-rsi5hi-FD",
    "NS1-rsidip-rsi5pop-long-FD",
-   "NS2-sma50break-overbought-short",
-   "NS2-sma50break-overbought-short-FD",
    "NS3-failed-vwap-reclaim-short",
    "NS4-pm-vwap-reclaim-oversold-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
    "RW1-gapdn-bounce-flowsell-short-FD",
    "RW4-ns3-adv150-short-FD",
-   "RW6-ns2-up3-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
-   "ST1-ordn-long-pm-t05s1-FD",
-   "ST2-slope20up-long-am-t05s1-FD",
    "ST3-rsi5up-short-pm-t1s1-FD",
    "ST4-emadn-long-am-t1s05-FD",
    "ST5-pdbrkup-short-mid-t05s1-FD",
@@ -51,9 +45,6 @@
    "ST8-volspikedn-long-pm-t1s1-FD",
    "exhaustion_short",
    "exhaustion_short-FD",
-   "heat_fade_long-FD",
-   "heat_fade_short",
-   "heat_fade_short-FD",
    "intraday_momentum",
    "orb20_a"
   ],
@@ -88,7 +79,6 @@
    "CWT14-failbrk-pdl-p05-lowvol-long",
    "CWT14-failbrk-pdl-p10-long",
    "CWT14-failbrk-pdl-p10-lowvol-long",
-   "LIQ-orl-sweep-open15-s25-long",
    "NM-AMS-N1-quiet-morning-short",
    "NM-AR-AM-gapdown-capitulation-long",
    "NM-ETF-late-dip-di-long",
@@ -100,9 +90,7 @@
    "NM-RWR1-exh150-gapdn-spyup-pm-short",
    "NM-RWR3-ns3-qqqup-early-short",
    "NM-RWR4-ns2-up3-qqqup-slopedn-short",
-   "NM1-cwt09-g10-vwaploss-short",
-   "RW2-exhaustion-noon-adv150-short-FD",
-   "heat_fade_long"
+   "NM1-cwt09-g10-vwaploss-short"
   ],
   "gen": [
    "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long",
@@ -125,13 +113,28 @@
    "GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long",
    "GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long",
    "GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short"
+  ],
+  "graveyard": [
+   "LIQ-orl-sweep-open15-s25-long",
+   "MF1-945-flowsell-vwapup-FD",
+   "NS2-sma50break-overbought-short",
+   "NS2-sma50break-overbought-short-FD",
+   "RW2-exhaustion-noon-adv150-short-FD",
+   "RW6-ns2-up3-short-FD",
+   "ST1-ordn-long-pm-t05s1-FD",
+   "ST2-slope20up-long-am-t05s1-FD",
+   "heat_fade_long",
+   "heat_fade_long-FD",
+   "heat_fade_short",
+   "heat_fade_short-FD"
   ]
  },
  "labels": {
   "primary": "Primary",
   "testing": "Testing 1",
   "testing2": "Testing 2",
-  "gen": "Setup Generator"
+  "gen": "Setup Generator",
+  "graveyard": "Graveyard"
  },
  "setups": {
   "CWT04-backside-lh-a15-short": {
@@ -542,11 +545,11 @@
   },
   "LIQ-orl-sweep-open15-s25-long": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 17:45 ET",
    "from": [
-    "testing"
+    "testing2"
    ]
   },
   "LIQ-pdl-sweep-open15-vwap-long": {
@@ -565,10 +568,12 @@
   },
   "MF1-945-flowsell-vwapup-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "MF2-open-rsimidhi-flowsell": {
    "accounts": [
@@ -739,17 +744,21 @@
   },
   "NS2-sma50break-overbought-short": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "NS2-sma50break-overbought-short-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "NS3-failed-vwap-reclaim-short": {
    "accounts": [
@@ -805,11 +814,11 @@
   },
   "RW2-exhaustion-noon-adv150-short-FD": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 17:45 ET",
    "from": [
-    "testing"
+    "testing2"
    ]
   },
   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
@@ -841,10 +850,12 @@
   },
   "RW6-ns2-up3-short-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "RW6G1-ns2-up3-vwap2sd-short": {
    "accounts": [
@@ -869,17 +880,21 @@
   },
   "ST1-ordn-long-pm-t05s1-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "ST2-slope20up-long-am-t05s1-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "ST3-rsi5up-short-pm-t1s1-FD": {
    "accounts": [
@@ -939,33 +954,39 @@
   },
   "heat_fade_long": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": "2026-10-20 08:26 ET",
+   "since": "2026-10-20 17:45 ET",
    "from": [
-    "testing"
+    "testing2"
    ]
   },
   "heat_fade_long-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "heat_fade_short": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "heat_fade_short-FD": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-20 17:45 ET",
+   "from": [
+    "testing"
+   ]
   },
   "intraday_momentum": {
    "accounts": [
@@ -983,66 +1004,114 @@
   }
  },
  "last_change": {
-  "at": "2026-10-20 16:06 ET",
+  "at": "2026-10-20 17:45 ET",
   "changes": [
    {
-    "setup": "MF2-open-rsimidhi-flowsell-FD",
+    "setup": "LIQ-orl-sweep-open15-s25-long",
     "from": [
-     "primary",
-     "testing"
+     "testing2"
     ],
     "to": [
-     "primary"
+     "graveyard"
     ]
    },
    {
-    "setup": "MF3-open-flowsell-rsi5hi-FD",
+    "setup": "MF1-945-flowsell-vwapup-FD",
     "from": [
-     "primary",
      "testing"
     ],
     "to": [
-     "primary"
+     "graveyard"
     ]
    },
    {
-    "setup": "MF4-h40-open-flowsell-FD",
+    "setup": "NS2-sma50break-overbought-short",
     "from": [
-     "primary",
      "testing"
     ],
     "to": [
-     "primary"
+     "graveyard"
     ]
    },
    {
-    "setup": "NS3-failed-vwap-reclaim-short-FD",
+    "setup": "NS2-sma50break-overbought-short-FD",
     "from": [
-     "primary",
      "testing"
     ],
     "to": [
-     "primary"
+     "graveyard"
     ]
    },
    {
-    "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+    "setup": "RW2-exhaustion-noon-adv150-short-FD",
     "from": [
-     "primary",
-     "testing"
+     "testing2"
     ],
     "to": [
-     "primary"
+     "graveyard"
     ]
    },
    {
-    "setup": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+    "setup": "RW6-ns2-up3-short-FD",
     "from": [
-     "primary",
      "testing"
     ],
     "to": [
-     "primary"
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "ST1-ordn-long-pm-t05s1-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "ST2-slope20up-long-am-t05s1-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "heat_fade_long",
+    "from": [
+     "testing2"
+    ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "heat_fade_long-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "heat_fade_short",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "heat_fade_short-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "graveyard"
     ]
    }
   ]

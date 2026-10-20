@@ -94,6 +94,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     { k: "testing", name: "Testing 1", type: "intraday · minor league", br: "mcf-data-testing", q: "?account=testing" },
     { k: "testing2", name: "Testing 2", type: "intraday · minor league (CWT)", br: "mcf-data-testing2", q: "?account=testing2" },
     { k: "gen", name: "Setup Generator", type: "intraday · machine-generated setups", br: "mcf-data-gen", q: "?account=gen" },
+    { k: "graveyard", name: "Graveyard", type: "intraday · lowest performers, lower caps", br: "mcf-data-graveyard", q: "?account=graveyard" },
     { k: "longhold", name: "Long-hold (S6)", type: "weekly momentum · separate Alpaca profile", br: "mcf-data-longhold", q: "?account=longhold", lh: true },
   ];
   const cur = new URLSearchParams(location.search).get("account") || "primary";
@@ -440,7 +441,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   ideas();
   // Accounts: code names stay primary / testing / testing2; "testing" is shown as "Testing 1" (owner 2026-10-12).
   const ACCOUNTS = { primary: ["Primary", "mcf-data", ""], testing: ["Testing 1", "mcf-data-testing", "?account=testing"],
-                     testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"], gen: ["Setup Generator", "mcf-data-gen", "?account=gen"] };
+                     testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"], gen: ["Setup Generator", "mcf-data-gen", "?account=gen"],
+                     graveyard: ["Graveyard", "mcf-data-graveyard", "?account=graveyard"] };
   const qa = new URLSearchParams(location.search).get("account");
   const ACCT = Object.prototype.hasOwnProperty.call(ACCOUNTS, qa) ? qa : "primary";
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + ACCOUNTS[ACCT][1] + "/";
@@ -560,7 +562,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   document.querySelectorAll("section").forEach(s => { if (s.id !== "lh") s.style.display = "none"; });
   const lh = q("#lh"); lh.style.display = "grid";
   const sw = document.createElement("div"); sw.className = "sub";
-  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <a href="?account=gen">Setup Generator</a> · <b>Long-hold (S6)</b>';
+  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <a href="?account=gen">Setup Generator</a> · <a href="?account=graveyard">Graveyard</a> · <b>Long-hold (S6)</b>';
   q("#lh-asof").after(sw);
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data-longhold/longhold/";
   const get = async (p, json) => { const r = await fetch(RAW + p + "?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) throw r.status; return json ? r.json() : r.text(); };
@@ -612,7 +614,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 // falling back to docs/live/leaderboard.json (snapshot) for an account whose nightly scorecard has no leaderboard yet.
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
-  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"] };
+  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"],
+                graveyard: ["Graveyard", "mcf-data-graveyard"] };
   const q = s => document.querySelector(s);
   if (!q("#lb-card")) return;
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));

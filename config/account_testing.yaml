@@ -40,7 +40,6 @@ live:
     - ST3-rsi5up-short-pm-t1s1-FD
     - ST7-rsi50dn-long-pm-t1s1-FD
     - ST4-emadn-long-am-t1s05-FD
-    - ST1-ordn-long-pm-t05s1-FD
     - NS4-pm-vwap-reclaim-oversold-short-FD
     - RW6G1-ns2-up3-vwap2sd-short-FD
     - L3-gap-slope-rsi5hi-FD
@@ -48,7 +47,6 @@ live:
     - L3-gap-slope-fromopen-FD
     - NS1-rsidip-rsi5pop-long-FD
     - NS5-sma50-flush-oversold-long-FD
-    - RW6-ns2-up3-short-FD
     - MF2-open-rsimidhi-flowsell-FD
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
     - RW3-gapdn-rsi5pop-flowsell-short-FD
@@ -57,20 +55,13 @@ live:
     - MF4-h40-open-flowsell-FD
     - RW1-gapdn-bounce-flowsell-short-FD
     - RW4-ns3-adv150-short-FD
-    - NS2-sma50break-overbought-short-FD
-    - NS2-sma50break-overbought-short   # former primary (demoted 2026-10-16)
     - NS3-failed-vwap-reclaim-short-FD
     - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
-    - MF1-945-flowsell-vwapup-FD
     - MF3-open-flowsell-rsi5hi-FD
     - MF3-open-flowsell-rsi5hi   # former primary (demoted 2026-10-20)
-    - ST2-slope20up-long-am-t05s1-FD
-    - heat_fade_long-FD
     - RW7-gapdn-bounce-early-short-FD
     - exhaustion_short
     - exhaustion_short-FD
-    - heat_fade_short
-    - heat_fade_short-FD
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -173,10 +164,10 @@ strategies:
     enabled: true
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   heat_fade_short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   heat_fade_long:
-    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
+    enabled: false   # moved to Testing 2 2026-10-20, then to the Graveyard account 2026-10-21 (owner)
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   exhaustion_short:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
@@ -197,7 +188,7 @@ strategies:
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
   NS2-sma50break-overbought-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     former_primary: {demoted: "2026-10-16", first_testing_session: "2026-10-16", review_after_sessions: 10}
   NS4-pm-vwap-reclaim-oversold-short: {enabled: false}   # replaced by NS4-pm-vwap-reclaim-oversold-short-FD
   NS5-sma50-flush-oversold-long: {enabled: false}   # replaced by NS5-sma50-flush-oversold-long-FD
@@ -237,7 +228,7 @@ strategies:
     scale_out_r: null
   # from MF1-945-flowsell-vwapup (primary; source window 950-1030); ~24.74/day full-day [timeofday results.csv full, exp -0.074R]
   MF1-945-flowsell-vwapup-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py
     min_adv: 95000000
@@ -289,7 +280,7 @@ strategies:
     scale_out_r: null
   # from NS2-sma50break-overbought-short (primary; source window 950-1130); ~19.13/day full-day [timeofday results.csv full, exp -0.054R]
   NS2-sma50break-overbought-short-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/NS2-sma50break-overbought-short-FD.py
     min_adv: 95000000
@@ -366,7 +357,7 @@ strategies:
   ST1-ordn-long-pm-t05s1-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 3
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py
     min_adv: 95000000
@@ -374,7 +365,7 @@ strategies:
     scale_out_r: null
   # from ST2-slope20up-long-am-t05s1 (testing; source window 950-1130); ~25.72/day full-day [timeofday results.csv full, exp -0.015R]
   ST2-slope20up-long-am-t05s1-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py
     min_adv: 95000000
@@ -456,7 +447,7 @@ strategies:
   RW6-ns2-up3-short-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/RW6-ns2-up3-short-FD.py
     min_adv: 95000000
@@ -472,7 +463,7 @@ strategies:
     scale_out_r: null
   # from RW2-exhaustion-noon-adv150-short (testing; source window 1200-1500); ~52.08/day full-day [timeofday results.csv full, exp -0.056R]
   RW2-exhaustion-noon-adv150-short-FD:
-    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
+    enabled: false   # moved to Testing 2 2026-10-20, then to the Graveyard account 2026-10-21 (owner)
     type: lab
     module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
     min_adv: 150000000
@@ -496,7 +487,7 @@ strategies:
     scale_out_r: null
   # from heat_fade_short (primary; source window 950-1030); ~176.38/day full-day [timeofday results.csv full, exp -0.032R]
   heat_fade_short-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: heat
     formula: research/bdi/fullday/heat_fade_short-FD.py
     sides: short
@@ -506,7 +497,7 @@ strategies:
     scale_out_r: null
   # from heat_fade_long (primary; source window 1105-1330); ~55.18/day full-day [timeofday results.csv full, exp -0.031R]
   heat_fade_long-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner)
     type: heat
     formula: research/bdi/fullday/heat_fade_long-FD.py
     sides: long
@@ -522,7 +513,7 @@ strategies:
   # OR-low sweep, structural stop at the sweep low, 2.5R target: n 13,335, exp -0.001R, t -0.01 (train -0.040 /
   # valid +0.038); up sessions +0.59R, down -0.49R (long beta). ~31.3/day.
   LIQ-orl-sweep-open15-s25-long:
-    enabled: false   # moved to Testing 2 (Graveyard) 2026-10-20 (owner)
+    enabled: false   # moved to Testing 2 2026-10-20, then to the Graveyard account 2026-10-21 (owner)
     type: lab
     module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
     min_adv: 95000000

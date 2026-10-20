@@ -8,7 +8,7 @@ decides:
   * data_stale - the run reports health.data_stale for longer than live.outage.flatten_min (the run should already have
                  flattened itself; this is the backstop)
 Either one -> cancel this account's open MCF orders and flatten its MCF positions through the same broker code as the
-runner's flatten (prefix mcf- / mct- / mt2- / mcg- only; the long-hold mcl- book and anything else are never touched).
+runner's flatten (prefix mcf- / mct- / mt2- / mcg- / mgy- only; the long-hold mcl- book and anything else are never touched).
 
 mode "dry" (the default) only logs what it would do; "act" does it. No emails or alerts. Educational only - not
 financial advice."""
