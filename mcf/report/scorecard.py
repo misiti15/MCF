@@ -114,6 +114,10 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
             "avg_win_r": None if aw is None else round(aw, 3), "avg_loss_r": None if al is None else round(al, 3),
             "breakeven_wr": round(al / (aw + al), 3) if aw and al else None,
             "t_stat": round(avg / (sd / n ** 0.5), 2) if n > 1 and sd > 0 else None,
+            # exact sums so the dashboard can merge one setup's records from several accounts (owner 2026-10-20)
+            "n_win": int((r > 0).sum()), "win_r_sum": round(float(r[r > 0].sum()), 4),
+            "loss_r_sum": round(float(-r[r <= 0].sum()), 4), "r_sq_sum": round(float((r ** 2).sum()), 4),
+            "win_pnl": round(float(win), 2), "loss_pnl": round(float(loss), 2), "days": days,
             "recent_trades": int(len(recent)), "recent_avg_r": round(float(recent["r_multiple"].astype(float).mean()), 3) if len(recent) else None,
             "expected_r": None if exp.get(s) is None else round(exp[s], 3),
             "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
