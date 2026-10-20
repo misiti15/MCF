@@ -2,6 +2,14 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-19 evening: owner replies to the nightly brief
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| MF4-h40-open-flowsell (P1) | **Keep in Primary** after its 8 sessions. | No change; stays in Primary. |
+| Promotion/demotion rule (R1) | **No firm rule.** Nightly *suggestions* for promotions and demotions, owner decides each. | The nightly loop adds promotion/demotion suggestions (with win rate, break-even win rate, avg R, t, last-4) as DECISION items; nothing moves without the owner's yes. |
+| Live scale-out fix (SO1) | **Yes.** Fix the Testing 2 partial exit: cancel the lot's stop+target, sell half, place a new stop (breakeven) + target on the rest; test on paper first. | Built after hours; merged before 09:00 ET only with tests; first live day watched lot by lot. |
+
 ## 2026-10-19: Setup Generator account; live funds on hold
 
 | Topic | Owner decision | How MCF applies it |
