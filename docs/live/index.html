@@ -365,12 +365,20 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       : `<div class="empty">No closed trades yet.</div>`;
   }
 
+  // current account of each setup (owner 2026-10-20): from the live assignments, not the account this scorecard is for
+  let ASG = null;
+  fetch("../live/assignments.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null)
+    .then(d => { ASG = d; if (window.__lastScore) renderScore(window.__lastScore); }).catch(() => {});
+  const curAcct = sid => { const a = ASG && ASG.setups && ASG.setups[sid]; if (!a) return "–";
+    const L = ASG.labels || {}; const acc = (a.accounts || []).filter(k => k !== "gen" || /^GEN-/.test(sid));
+    return acc.length ? acc.map(k => L[k] || k).join(" + ") + (a.split ? " (split tickers)" : "") : "switched off"; };
   function renderScore(d) {
     if (!d?.setups) return;
+    window.__lastScore = d;
     const el = $l("#lv-score"); if (!el) return;
     el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}</div>` +
-      table(["Setup", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
-        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
+      table(["Setup", "Current account", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
+        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td class="l">${e(curAcct(x.setup))}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
   }
 
   function renderLab(d) {
@@ -919,6 +927,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     "#": "Rank: average R per trade, shrunk toward 0 when a setup has few trades, so a few lucky trades can't top a long record.",
     "Rank": "Average R per trade, shrunk toward 0 when a setup has few trades.",
     "Setup": "The trading rule. Hover the name for what it does.",
+    "Current account": "Where this setup is live now (from the live assignments); the scorecard itself covers the account you are viewing.",
     "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2, Graveyard, Setup Generator. \"Testing 1 + Testing 2 (split tickers)\" = split copies.",
     "Live trades": "Closed paper trades since the setup started in this account.",
     "Trades": "Closed paper trades.",
