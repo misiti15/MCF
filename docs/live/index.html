@@ -648,8 +648,22 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         all.push({ setup: sname, name: (NM[sname] || {}).name || sname, acct: k, acctLabel: lab, live: true, trades: 0, sessions_traded: 0,
                    total_r: 0, pnl: 0, former_primary: false }); });
     }));
+    // Account column = where the setup is assigned NOW (owner 2026-10-20). A record earned in an account the setup has
+    // since left keeps its stats but is labelled with the current account(s) and "stats from <old account>"; an empty
+    // placeholder row (newly assigned, 0 trades) is dropped when the setup already has a record elsewhere.
+    if (asg && asg.setups) {
+      const lbl = k => (ACC[k] || [k])[0], cur = sname => ((asg.setups[sname] || {}).accounts || []).filter(k => ACC[k]);
+      const traded = new Set(all.filter(r => r.trades).map(r => r.setup));
+      for (let i = all.length - 1; i >= 0; i--) {
+        const r = all[i], c = cur(r.setup);
+        if (!c.length) { r.live = false; continue; }                       // switched off everywhere
+        if (c.includes(r.acct)) { if (!r.trades && traded.has(r.setup) && all.some(x => x.setup === r.setup && x !== r && !c.includes(x.acct) && x.trades)) all.splice(i, 1); continue; }
+        r.statsFrom = r.acctLabel; r.acctLabel = c.map(lbl).join(" + "); r.acct = c[0]; r.live = true;
+      }
+    }
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
-      if (a && a.since && (a.accounts || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", "); } });
+      if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
+      if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", "); } });
     const lc = asg && asg.last_change;
     if (q("#lb-asg")) q("#lb-asg").innerHTML = asg ? `<b>Assignments current as of ${e(lc ? lc.at : "–")}</b> (last promotion / demotion / move)` +
       (lc && lc.changes ? ": " + lc.changes.map(c => `${e((NM[c.setup] || {}).name || c.setup)} → ${c.to.map(x => (asg.labels || {})[x] || x).join(" + ")}`).join("; ") : "") +
@@ -685,7 +699,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
-        <td class="l">${e(x.acctLabel)}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
+        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="This row's trades were made in ${e(x.statsFrom)} before the setup moved">stats from ${e(x.statsFrom)}</div>` : ""}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
