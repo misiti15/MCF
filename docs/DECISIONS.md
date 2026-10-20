@@ -2,6 +2,12 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-20: promotion = move
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| Promoted setups' Testing 1 copies | **A promotion is a move**: a promoted setup runs only in Primary. | RW5-FD, RW3-FD, MF2-FD, MF4-FD, NS3-FD switched off in Testing 1 from 2026-10-21; their Testing 1 records stay on the leaderboard ("stats from Testing 1"). Future promotions switch the Testing copy off in the same change and regenerate docs/live/assignments.json. |
+
 ## 2026-10-19 evening: owner replies to the nightly brief
 
 | Topic | Owner decision | How MCF applies it |
