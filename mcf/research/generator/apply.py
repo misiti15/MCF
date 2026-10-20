@@ -44,7 +44,8 @@ HEADER = """\
 BASE = {
     "strategies_exclusive": True,
     "account": {"starting_equity": 100000, "slots": 80, "buying_power_multiple": 3.8, "max_concurrent_positions": 80,
-                "max_positions_per_strategy": 16, "max_daily_loss_r": 60, "max_trades_per_day": 1000},
+                "max_positions_per_strategy": 16, "max_daily_loss_r": 120, "max_setup_daily_loss_r": 2.0,
+                "max_trades_per_day": 1000},
     "live": {"lab_refire": False, "setup_order": []},
     "strategies": {},
 }

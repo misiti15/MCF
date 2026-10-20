@@ -19,6 +19,14 @@ class RiskState:
     # symbol -> how many of its lots are residuals (live.lot_cap_ignore_residual_frac): not counted toward the lot cap
     residual: dict[str, int] = field(default_factory=dict)
     halted: bool = False
+    # setup -> net realized R today (account.max_setup_daily_loss_r, owner 2026-10-19 evening)
+    realized_r_by_strategy: dict[str, float] = field(default_factory=dict)
+
+
+def twin_key(name: str | None) -> str:
+    """A setup and its full-day copy are twins: same name once a trailing '-FD' is stripped."""
+    n = str(name or "")
+    return n[:-3] if n.endswith("-FD") else n
 
 
 class RiskManager:
@@ -34,6 +42,11 @@ class RiskManager:
         # owner 2026-10-16 (option B, paper): a lot whose remaining quantity after a partial target fill is below this
         # fraction of its original quantity no longer counts toward max_lots_per_symbol. 0 = every lot counts.
         self.residual_frac = float(live.get("lot_cap_ignore_residual_frac", 0.0) or 0.0)
+        # owner 2026-10-19 evening: no second lot on a symbol already held (or pending) by this setup's twin
+        self.block_twin = bool(live.get("block_twin_same_symbol", True))
+        # owner 2026-10-19 evening: a setup takes no new entries today once its net realized R <= -limit (absent = off)
+        lim = self.a.get("max_setup_daily_loss_r")
+        self.setup_loss_limit = float(lim) if lim else None
         self.state = RiskState()
 
     def open_lots(self) -> int:
@@ -60,6 +73,9 @@ class RiskManager:
         if s.realized_r <= -self.a["max_daily_loss_r"]:
             s.halted = True
             return False, "daily loss limit"
+        if self.setup_loss_limit is not None and \
+                s.realized_r_by_strategy.get(sig.strategy, 0.0) <= -self.setup_loss_limit:
+            return False, "setup daily loss limit"
         if s.trades_today >= self.a["max_trades_per_day"]:
             return False, "max trades/day"
         if (len(s.open_symbols) if self.max_lots <= 1 else self.open_lots()) >= self.a["max_concurrent_positions"]:
@@ -67,6 +83,10 @@ class RiskManager:
         if s.open_by_strategy.get(sig.strategy, 0) >= self.a.get("max_positions_per_strategy", 10**9):
             return False, "max positions for this setup"
         if sig.symbol in s.open_symbols:
+            lots = s.lots.get(sig.symbol) or []
+            if self.block_twin and any(st != sig.strategy and twin_key(st) == twin_key(sig.strategy)
+                                       and (self.max_lots <= 1 or side == sig.side) for st, side in lots):
+                return False, "twin held"
             if self.max_lots <= 1:
                 return False, "already in symbol"
             lots = s.lots.get(sig.symbol) or []
