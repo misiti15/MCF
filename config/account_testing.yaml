@@ -247,7 +247,7 @@ strategies:
   MF2-open-rsimidhi-flowsell-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
     min_adv: 95000000
@@ -255,7 +255,7 @@ strategies:
     scale_out_r: null
   # from MF3-open-flowsell-rsi5hi (primary; source window 950-1100); ~24.8/day full-day [timeofday results.csv full, exp -0.071R]
   MF3-open-flowsell-rsi5hi-FD:
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
@@ -263,7 +263,7 @@ strategies:
     scale_out_r: null
   # from MF4-h40-open-flowsell (primary; source window 950-1100); ~17.07/day full-day [timeofday results.csv full, exp -0.079R]
   MF4-h40-open-flowsell-FD:
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
     min_adv: 95000000
@@ -299,7 +299,7 @@ strategies:
   NS3-failed-vwap-reclaim-short-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
     min_adv: 95000000
@@ -446,7 +446,7 @@ strategies:
   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 6
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
     min_adv: 95000000
@@ -480,7 +480,7 @@ strategies:
     scale_out_r: null
   # from RW3-gapdn-rsi5pop-flowsell-short (testing; source window 950-1100); ~14.07/day full-day [timeofday results.csv full, exp -0.068R]
   RW3-gapdn-rsi5pop-flowsell-short-FD:
-    enabled: true
+    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
     type: lab
     module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
     min_adv: 95000000

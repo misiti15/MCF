@@ -18,11 +18,16 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "live" / "assignments.json"
-ACCOUNTS = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2 (Graveyard)", "gen": "Setup Generator"}
+ACCOUNTS = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator"}
+if (ROOT / "config" / "account_graveyard.yaml").exists():      # the Graveyard account, once it exists
+    ACCOUNTS["graveyard"] = "Graveyard"
+# Split copies (owner 2026-10-20, "Goals for copies"): the only accounts where one setup may run twice, each copy on
+# its own half of the tickers (ticker_split). Never Primary, Graveyard or the Setup Generator.
+SPLIT_ACCOUNTS = ("testing", "testing2")
 
 
-def current() -> dict[str, list[str]]:
-    """account -> sorted enabled setups, exactly as the live runner loads them (default.yaml + account overlay)."""
+def _strategies() -> dict[str, dict]:
+    """account -> its merged `strategies` block, exactly as the live runner loads it (default.yaml + account overlay)."""
     from ..config import load_config
 
     old = os.environ.get("MCF_ACCOUNT")
@@ -30,8 +35,7 @@ def current() -> dict[str, list[str]]:
     try:
         for a in ACCOUNTS:
             os.environ["MCF_ACCOUNT"] = a
-            st = load_config().get("strategies") or {}
-            out[a] = sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("enabled"))
+            out[a] = load_config().get("strategies") or {}
     finally:
         if old is None:
             os.environ.pop("MCF_ACCOUNT", None)
@@ -40,10 +44,30 @@ def current() -> dict[str, list[str]]:
     return out
 
 
+def current(strategies: dict | None = None) -> dict[str, list[str]]:
+    """account -> sorted enabled setups, exactly as the live runner loads them (default.yaml + account overlay)."""
+    strategies = strategies if strategies is not None else _strategies()
+    return {a: sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("enabled")) for a, st in strategies.items()}
+
+
+def splits(strategies: dict | None = None) -> dict[str, dict[str, dict]]:
+    """setup -> {account: {part, of}} for enabled split copies (ticker_split, owner 2026-10-20 'Goals for copies')."""
+    strategies = strategies if strategies is not None else _strategies()
+    out: dict[str, dict[str, dict]] = {}
+    for a, st in strategies.items():
+        for k, v in st.items():
+            if isinstance(v, dict) and v.get("enabled") and v.get("ticker_split"):
+                ts = v["ticker_split"]
+                out.setdefault(k, {})[a] = {"part": int(ts["part"]), "of": int(ts["of"])}
+    return out
+
+
 def build(prev: dict | None = None, now: datetime | None = None) -> dict:
     now = now or datetime.now(ZoneInfo("America/New_York"))
     stamp = now.strftime("%Y-%m-%d %H:%M ET")
-    acc = current()
+    strat = _strategies()
+    acc = current(strat)
+    split = splits(strat)
     prev = prev or {}
     pset = {k: set(v.get("accounts", [])) for k, v in (prev.get("setups") or {}).items()}
     setups, changes = {}, []
@@ -58,6 +82,9 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
             setups[name] = {"accounts": here, "since": since, "from": sorted(before) if before else old.get("from")}
         else:
             setups[name] = {"accounts": here, "since": old.get("since"), "from": old.get("from")}
+        if name in split:
+            # split copies: one setup in both testing accounts, each on its own half of the tickers (stats combined)
+            setups[name]["split"] = split[name]
     last = prev.get("last_change")
     if changes:
         last = {"at": stamp, "changes": changes}

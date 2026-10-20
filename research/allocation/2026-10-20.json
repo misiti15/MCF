@@ -1,0 +1,826 @@
+{
+ "generated": "2026-10-20 15:08 ET",
+ "scorecards": {
+  "testing": "2026-10-19",
+  "testing2": "2026-10-19"
+ },
+ "params": {
+  "n_split": 6,
+  "min_lost": 1.0,
+  "weights": {
+   "balance": 0.5,
+   "conflict": 5.0,
+   "fd": 1000.0,
+   "move": 8.0
+  }
+ },
+ "before": {
+  "setups": {
+   "testing": 39,
+   "testing2": 45
+  },
+  "signals_per_day": {
+   "testing": 622.2,
+   "testing2": 1036.8
+  },
+  "imbalance": 414.6,
+  "same_account_conflict_per_day": 212.6,
+  "fd_pairs_together": 4,
+  "moves": 0,
+  "new_split_copies": 0
+ },
+ "after": {
+  "setups": {
+   "testing": 39,
+   "testing2": 51
+  },
+  "signals_per_day": {
+   "testing": 828.7,
+   "testing2": 830.2
+  },
+  "imbalance": 1.5,
+  "same_account_conflict_per_day": 80.2,
+  "fd_pairs_together": 0,
+  "moves": 10,
+  "new_split_copies": 6
+ },
+ "rows": [
+  {
+   "setup": "CWT04-backside-lh-a15-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.5,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT04-backside-lh-a25-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "silent",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT04-backside-vwaptest-a15-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 1.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT04-backside-vwaptest-a25-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "silent",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT05-flush-m05-v3-long",
+   "current": "testing2",
+   "proposed": "testing",
+   "signals_per_day": 4.67,
+   "verdict": "slow",
+   "crowd_lost_per_day": 2.67,
+   "reason": "moved: apart from CWT05-flush-m075-v3-long (0.7 lost signals/day between them)"
+  },
+  {
+   "setup": "CWT05-flush-m05-v5-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 1.33,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.5,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT05-flush-m075-v3-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 2.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.5,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT05-flush-m075-v5-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.83,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT09-gapdn-bounce-g10-lowerhalf-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 7.33,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT09-gapdn-bounce-g5-lowerhalf-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 29.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT09-gapdn-vwaploss-g10-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 4.5,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT09-gapdn-vwaploss-g5-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 25.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 1.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT12-coil-k4-long",
+   "current": "testing2",
+   "proposed": "testing",
+   "signals_per_day": 43.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 10.67,
+   "reason": "moved: apart from CWT12-coil-k6-long (3.0 lost signals/day between them)"
+  },
+  {
+   "setup": "CWT12-coil-k6-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 15.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 4.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT12-flag-s1-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 1.83,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT13-vwapstretch-z05-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 30.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 25.5,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT13-vwapstretch-z05-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 15.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 4.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT13-vwapstretch-z075-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 6.33,
+   "verdict": "slow",
+   "crowd_lost_per_day": 4.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT13-vwapstretch-z075-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 2.33,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-orl-p05-long",
+   "current": "testing2",
+   "proposed": "testing",
+   "signals_per_day": 164.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 80.5,
+   "reason": "moved: apart from CWT14-failbrk-orl-p05-lowvol-long (22.8 lost signals/day between them)"
+  },
+  {
+   "setup": "CWT14-failbrk-orl-p05-lowvol-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 117.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 40.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-orl-p10-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 69.83,
+   "verdict": "ok",
+   "crowd_lost_per_day": 24.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-orl-p10-lowvol-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 52.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 12.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-pdh-p05-lowvol-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 52.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 11.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-pdh-p10-lowvol-short",
+   "current": "testing2",
+   "proposed": "testing",
+   "signals_per_day": 25.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 2.83,
+   "reason": "moved: apart from CWT14-failbrk-pdh-p05-lowvol-short (3.8 lost signals/day between them)"
+  },
+  {
+   "setup": "CWT14-failbrk-pdh-p10-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 46.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 5.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-pdl-p05-long",
+   "current": "testing2",
+   "proposed": "testing",
+   "signals_per_day": 82.83,
+   "verdict": "ok",
+   "crowd_lost_per_day": 28.83,
+   "reason": "moved: apart from CWT14-failbrk-pdl-p05-lowvol-long (12.7 lost signals/day between them)"
+  },
+  {
+   "setup": "CWT14-failbrk-pdl-p05-lowvol-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 50.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 11.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-pdl-p10-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 45.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 7.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 23.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 3.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "IDX1-qqq100-0955-TQQQ-hold",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "IDX1-qqq100-0955-TQQQ-trail",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "IDX2-spy075-0945-3x-trail",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "IDX3-spy075-0955-3x-trail",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "IDX5-spy050-0945-3x-trail",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "L3-gap-slope-fromopen-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 169.67,
+   "verdict": "ok",
+   "crowd_lost_per_day": 86.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "L3-gap-slope-lowdist-FD",
+   "current": "testing",
+   "proposed": "testing2",
+   "signals_per_day": 22.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 13.0,
+   "reason": "moved: apart from L3-gap-slope-fromopen-FD (1.5 lost signals/day between them)"
+  },
+  {
+   "setup": "L3-gap-slope-rsi5hi-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 45.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 21.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "LIQ-orl-sweep-open15-s25-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 32.6,
+   "verdict": "ok",
+   "crowd_lost_per_day": 1.4,
+   "reason": "stays"
+  },
+  {
+   "setup": "LIQ-pdl-sweep-open15-vwap-long",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.2,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "MF1-945-flowsell-vwapup-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 13.67,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 5.0,
+   "reason": "split copy: crowded-out, 5.0 signals/day lost to crowding"
+  },
+  {
+   "setup": "MF3-open-flowsell-rsi5hi",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 9.19,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "MF5-flowsell-vwapup-rsi5hi",
+   "current": "testing",
+   "proposed": "testing2",
+   "signals_per_day": 15.47,
+   "verdict": "ok",
+   "crowd_lost_per_day": 2.0,
+   "reason": "moved: apart from MF3-open-flowsell-rsi5hi (2.0 lost signals/day between them)"
+  },
+  {
+   "setup": "MF5-flowsell-vwapup-rsi5hi-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 7.83,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 2.0,
+   "reason": "split copy: crowded-out, 2.0 signals/day lost to crowding"
+  },
+  {
+   "setup": "NM-AMS-N1-quiet-morning-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-AR-AM-gapdown-capitulation-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-ETF-late-dip-di-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 1.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-HL-T75-pm-long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 6.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-PM-gapdn-above-pdh-rvol-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWN3-ns3-spyup-early-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 3.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWN4-ns2-spyup05-notfri-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWN5-ns3-mon-weakrs-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 6.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWR1-exh150-gapdn-spyup-pm-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWR3-ns3-qqqup-early-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 3.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM-RWR4-ns2-up3-qqqup-slopedn-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NM1-cwt09-g10-vwaploss-short",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "quiet - wait",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NS1-rsidip-rsi5pop-long-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 2.5,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "NS2-sma50break-overbought-short",
+   "current": "testing",
+   "proposed": "testing2",
+   "signals_per_day": 0.0,
+   "verdict": "silent",
+   "crowd_lost_per_day": 0.0,
+   "reason": "moved: keeps it apart from NS2-sma50break-overbought-short-FD"
+  },
+  {
+   "setup": "NS2-sma50break-overbought-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 19.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 3.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "NS3-failed-vwap-reclaim-short",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 10.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 1.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NS4-pm-vwap-reclaim-oversold-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 1.83,
+   "verdict": "starved",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "NS5-sma50-flush-oversold-long-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 6.33,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 2.17,
+   "reason": "split copy: crowded-out, 2.2 signals/day lost to crowding"
+  },
+  {
+   "setup": "RW1-gapdn-bounce-flowsell-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 8.83,
+   "verdict": "ok",
+   "crowd_lost_per_day": 1.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "RW2-exhaustion-noon-adv150-short-FD",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 40.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 8.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "RW4-ns3-adv150-short-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 16.33,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 6.0,
+   "reason": "split copy: crowded-out, 6.0 signals/day lost to crowding"
+  },
+  {
+   "setup": "RW6-ns2-up3-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 13.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 3.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "RW6G1-ns2-up3-vwap2sd-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 2.83,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "RW7-gapdn-bounce-early-short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 42.0,
+   "verdict": "ok",
+   "crowd_lost_per_day": 6.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST1-ordn-long-pm-t05s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 4.83,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST2-slope20up-long-am-t05s1-FD",
+   "current": "testing",
+   "proposed": "testing2",
+   "signals_per_day": 19.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 5.67,
+   "reason": "moved: apart from heat_fade_short-FD (2.5 lost signals/day between them)"
+  },
+  {
+   "setup": "ST3-rsi5up-short-pm-t1s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 1.17,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 0.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST4-emadn-long-am-t1s05-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 3.0,
+   "verdict": "crowded-out",
+   "crowd_lost_per_day": 1.0,
+   "reason": "split copy: crowded-out, 1.0 signals/day lost to crowding"
+  },
+  {
+   "setup": "ST5-pdbrkup-short-mid-t05s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 0.33,
+   "verdict": "starved",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST6-volspikeup-short-mid-t1s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 1.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 2.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.33,
+   "reason": "stays"
+  },
+  {
+   "setup": "ST8-volspikedn-long-pm-t1s1-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 1.0,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "exhaustion_short",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 5.0,
+   "verdict": "starved",
+   "crowd_lost_per_day": 0.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "exhaustion_short-FD",
+   "current": "testing",
+   "proposed": "both",
+   "signals_per_day": 20.5,
+   "verdict": "starved",
+   "crowd_lost_per_day": 10.83,
+   "reason": "split copy: starved, 10.8 signals/day lost to crowding"
+  },
+  {
+   "setup": "heat_fade_long",
+   "current": "testing2",
+   "proposed": "testing2",
+   "signals_per_day": 22.17,
+   "verdict": "ok",
+   "crowd_lost_per_day": 3.67,
+   "reason": "stays"
+  },
+  {
+   "setup": "heat_fade_long-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 37.33,
+   "verdict": "ok",
+   "crowd_lost_per_day": 4.5,
+   "reason": "stays"
+  },
+  {
+   "setup": "heat_fade_short",
+   "current": "testing",
+   "proposed": "testing2",
+   "signals_per_day": 23.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 0.0,
+   "reason": "moved: keeps it apart from heat_fade_short-FD"
+  },
+  {
+   "setup": "heat_fade_short-FD",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 91.5,
+   "verdict": "ok",
+   "crowd_lost_per_day": 12.83,
+   "reason": "stays"
+  },
+  {
+   "setup": "intraday_momentum",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 1.33,
+   "verdict": "slow",
+   "crowd_lost_per_day": 0.17,
+   "reason": "stays"
+  },
+  {
+   "setup": "orb20_a",
+   "current": "testing",
+   "proposed": "testing",
+   "signals_per_day": 3.5,
+   "verdict": "starved",
+   "crowd_lost_per_day": 0.0,
+   "reason": "stays"
+  }
+ ],
+ "moves": [
+  "CWT05-flush-m05-v3-long",
+  "CWT12-coil-k4-long",
+  "CWT14-failbrk-orl-p05-long",
+  "CWT14-failbrk-pdh-p10-lowvol-short",
+  "CWT14-failbrk-pdl-p05-long",
+  "L3-gap-slope-lowdist-FD",
+  "MF5-flowsell-vwapup-rsi5hi",
+  "NS2-sma50break-overbought-short",
+  "ST2-slope20up-long-am-t05s1-FD",
+  "heat_fade_short"
+ ],
+ "split_copies": [
+  "MF1-945-flowsell-vwapup-FD",
+  "MF5-flowsell-vwapup-rsi5hi-FD",
+  "NS5-sma50-flush-oversold-long-FD",
+  "RW4-ns3-adv150-short-FD",
+  "ST4-emadn-long-am-t1s05-FD",
+  "exhaustion_short-FD"
+ ],
+ "note": "Educational only - not financial advice."
+}

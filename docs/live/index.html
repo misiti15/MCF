@@ -604,7 +604,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 // falling back to docs/live/leaderboard.json (snapshot) for an account whose nightly scorecard has no leaderboard yet.
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
-  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2 (Graveyard)", "mcf-data-testing2"] };
+  const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"] };
   const q = s => document.querySelector(s);
   if (!q("#lb-card")) return;
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -664,7 +664,11 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       const pend = asg && asg.pending && asg.pending.setups ? asg.pending.setups[sname] : null;
       const c = pend ? pend.to.filter(k => ACC[k]) : cur(sname), best = tr.slice().sort((a, b) => b.trades - a.trades)[0] || rs[0];
       const acct = c && c.length ? c[0] : best.acct;
-      const m = { ...best, setup: sname, acct, acctLabel: c && c.length ? c.map(lbl).join(" + ") : lbl(best.acct),
+      // split copies (owner 2026-10-20): one setup in both testing accounts, each on its own half of the tickers;
+      // same setup name, so its rows from both accounts merge here into ONE combined record
+      const split = asg && asg.setups && asg.setups[sname] && asg.setups[sname].split && c && c.length > 1 ? asg.setups[sname].split : null;
+      const m = { ...best, setup: sname, acct, accts: c && c.length ? c : [best.acct], split,
+        acctLabel: c && c.length ? c.map(lbl).join(" + ") + (split ? " (split tickers)" : "") : lbl(best.acct),
         live: c ? c.length > 0 : rs.some(r => r.live), trades: n, win_rate: n ? wins / n : null, avg_r: avg,
         total_r: totR, pnl: sum("pnl"), former_primary: rs.some(r => r.former_primary),
         sessions_traded: tr.reduce((a, r) => a + (r.sessions_traded || 0), 0),
@@ -722,7 +726,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   function draw() {
-    let r = rows.filter(x => (st.acct === "all" || x.acct === st.acct) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
+    let r = rows.filter(x => (st.acct === "all" || (x.accts || [x.acct]).includes(st.acct)) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
     const key = x => { const v = sortK === "flag" ? x.flag[0] : x[sortK]; return v == null ? (sortD > 0 ? Infinity : -Infinity) : v; };
     r.sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortD; });
     const live = rows.filter(x => x.live), traded = live.filter(x => x.trades);
@@ -733,6 +737,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 16 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
+        (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
@@ -914,7 +919,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     "#": "Rank: average R per trade, shrunk toward 0 when a setup has few trades, so a few lucky trades can't top a long record.",
     "Rank": "Average R per trade, shrunk toward 0 when a setup has few trades.",
     "Setup": "The trading rule. Hover the name for what it does.",
-    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2 (Graveyard), Setup Generator.",
+    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2, Graveyard, Setup Generator. \"Testing 1 + Testing 2 (split tickers)\" = split copies.",
     "Live trades": "Closed paper trades since the setup started in this account.",
     "Trades": "Closed paper trades.",
     "Trades today": "Trades closed today in this account.",
@@ -972,6 +977,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     "review": "20+ trades and negative or well below its backtest.", "promising": "20+ trades, positive and at/above its backtest.",
     "needs trades": "Fewer than 10 trades: too early to judge.", "GENERATED": "Machine-generated by the Setup Generator; trades only in the Setup Generator account.",
     "ex-primary": "Was in the Primary account before being demoted.",
+    "split copies": "The setup runs in both testing accounts, each on its own half of the tickers, so no signal is traded twice; stats are combined.",
   };
   const norm = t => String(t || "").replace(/[▲▼]/g, "").replace(/\s+/g, " ").trim();
   const keyOf = t => { t = norm(t); if (G[t]) return t; const b = t.split(/[:(]/)[0].trim().replace(/ \d+$/, ""); return G[b] ? b : null; };

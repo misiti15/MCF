@@ -835,6 +835,8 @@ class PaperRunner:
             px = float(ctx.bars["close"].iloc[-1])
             ties = []   # longs_first_on_ties: (signal, key) entered after every setup on this symbol was scanned
             for strat in self.strategies:
+                if getattr(strat, "ticker_split", None) and not strat.trades_symbol(ctx.symbol):
+                    continue   # split copy (ticker_split): the other testing account trades this half; never journaled
                 key = (ctx.symbol, strat.name)
                 retry = False
                 if key in self.seen and not self.same_setup_reentry:   # re-entry: deduped per signal bar below
