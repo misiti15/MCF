@@ -2,6 +2,13 @@
 
 Dated record of what the owner decided and how MCF implements it. Newest first.
 
+## 2026-10-20 evening: MF3 watch + swarm
+
+| Topic | Owner decision | How MCF applies it |
+|---|---|---|
+| MF3-open-flowsell-rsi5hi-FD (Primary) | **Keep in Primary on watch** — make sure it needs demoting rather than a bad run. | The nightly loop reports its Primary-only record (trades, win vs break-even, avg R, t, last 4) every night; a demotion is suggested only if it stays below break-even. |
+| MF3 family | BDI swarm for a more profitable tweak; new variants go to the testing account with the most room, without conflicts. | research/bdi/mf3swarm1020; candidates placed with mcf/research/allocate.py after the owner's yes. |
+
 ## 2026-10-20: promotion = move
 
 | Topic | Owner decision | How MCF applies it |
