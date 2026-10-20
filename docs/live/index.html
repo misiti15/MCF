@@ -663,7 +663,10 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     }
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
       if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
-      if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", "); } });
+      const here = ((a || {}).accounts || []).filter(k => ACC[k]);
+      r.alsoIn = here.filter(k => k !== r.acct).map(k => ACC[k][0]).join(" + ");
+      if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since; r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", ");
+        r.copied = (a.from || []).some(x => (a.accounts || []).includes(x)); } });
     const lc = asg && asg.last_change;
     if (q("#lb-asg")) q("#lb-asg").innerHTML = asg ? `<b>Assignments current as of ${e(lc ? lc.at : "–")}</b> (last promotion / demotion / move)` +
       (lc && lc.changes ? ": " + lc.changes.map(c => `${e((NM[c.setup] || {}).name || c.setup)} → ${c.to.map(x => (asg.labels || {})[x] || x).join(" + ")}`).join("; ") : "") +
@@ -697,7 +700,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
-        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
+        (x.alsoIn ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="The same setup also runs, with its own separate record, in ${e(x.alsoIn)}">also live in ${e(x.alsoIn)}</span>` : "") +
+        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.copied ? "Added here" : "Moved here"} ${e(x.moved)}${x.movedFrom ? (x.copied ? " as a copy; it still runs in " : " from ") + e(x.movedFrom) : ""}">${x.copied ? "added" : "moved"} ${e(x.moved.slice(5, 10))}${x.movedFrom ? (x.copied ? " (copy, still in " + e(x.movedFrom) + ")" : " from " + e(x.movedFrom)) : ""}</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
         <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="This row's trades were made in ${e(x.statsFrom)} before the setup moved">stats from ${e(x.statsFrom)}</div>` : ""}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
