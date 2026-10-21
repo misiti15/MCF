@@ -1,0 +1,190 @@
+{
+ "date": "2026-10-21",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 46,
+  "win_rate": 0.304,
+  "exp_r": -0.301,
+  "total_r": -13.85,
+  "pnl": -592.95,
+  "stop_exit_share": 0.326,
+  "pnl_adj": -626.57,
+  "slip_bps": 10.2
+ },
+ "yesterday": {
+  "trades": 70,
+  "win_rate": 0.543,
+  "exp_r": -0.03,
+  "total_r": -2.1,
+  "pnl": -29.61,
+  "stop_exit_share": 0.271,
+  "pnl_adj": -46.13,
+  "slip_bps": 2.5
+ },
+ "rolling5": {
+  "exp_r": -0.107,
+  "win_rate": 0.469,
+  "pnl": -174.008,
+  "slip_bps": 4.32,
+  "stop_exit_share": 0.44
+ },
+ "rolling20": {
+  "exp_r": -0.1,
+  "win_rate": 0.46,
+  "pnl": -144.465,
+  "slip_bps": 3.845,
+  "stop_exit_share": 0.401
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": false,
+  "stop_exit_share": true
+ },
+ "by_setup": {
+  "CWT14-failbrk-pdl-p10-lowvol-long": {
+   "trades": 6,
+   "win_rate": 1.0,
+   "exp_r": 0.514,
+   "total_r": 3.09,
+   "pnl": 33.35,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 33.35,
+   "slip_bps": 0.0
+  },
+  "L3-gap-slope-fromopen-FD": {
+   "trades": 5,
+   "win_rate": 0.0,
+   "exp_r": -1.083,
+   "total_r": -5.42,
+   "pnl": -162.33,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -176.93,
+   "slip_bps": 9.7
+  },
+  "MF1-945-flowsell-vwapup": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.429,
+   "total_r": 0.43,
+   "pnl": 2.46,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 2.46,
+   "slip_bps": 15.9
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.005,
+   "total_r": -1.0,
+   "pnl": -6.58,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -6.8,
+   "slip_bps": 0.0
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.652,
+   "total_r": 0.65,
+   "pnl": 11.75,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 11.75,
+   "slip_bps": -7.6
+  },
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "trades": 26,
+   "win_rate": 0.115,
+   "exp_r": -0.436,
+   "total_r": -11.33,
+   "pnl": -464.98,
+   "stop_exit_share": 0.269,
+   "pnl_adj": -481.78,
+   "slip_bps": 14.9
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 2,
+   "win_rate": 0.0,
+   "exp_r": -0.709,
+   "total_r": -1.42,
+   "pnl": -23.64,
+   "stop_exit_share": 0.5,
+   "pnl_adj": -24.68,
+   "slip_bps": -5.1
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 4,
+   "win_rate": 0.75,
+   "exp_r": 0.289,
+   "total_r": 1.16,
+   "pnl": 17.02,
+   "stop_exit_share": 0.25,
+   "pnl_adj": 16.06,
+   "slip_bps": 8.3
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "lot cap",
+   "signals": 2,
+   "whatif_exp_r": -1.068,
+   "whatif_total_r": -2.14,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 49,
+   "whatif_exp_r": 0.252,
+   "whatif_total_r": 12.35,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 12,
+   "whatif_exp_r": -0.305,
+   "whatif_total_r": -3.66,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 5,
+   "whatif_exp_r": 0.285,
+   "whatif_total_r": 1.43,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "twin held",
+   "signals": 1,
+   "whatif_exp_r": 0.451,
+   "whatif_total_r": 0.45,
+   "verdict": "rule cost us R today"
+  }
+ ],
+ "signals": {
+  "skipped": 69,
+  "submitted": 46
+ },
+ "health": {
+  "polls": 48,
+  "last_poll_s": 8.2,
+  "symbols_last_bar": 3281,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 552,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "flatten_failed": []
+ },
+ "findings": [
+  "Entry slippage averaged 10.2 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency.",
+  "'not shortable/ETB' (skipped) blocked 49 signals that would have made +12.3R. Track it for 20 sessions before loosening it."
+ ]
+}
