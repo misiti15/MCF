@@ -182,8 +182,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div class="tablewrap" id="lv-chg"><div class="empty">Loading the change ledger…</div></div>
     <div class="note">From <code>research/ledger.jsonl</code> on the trading branch, re-read every 5 minutes. A change counts for the session that follows its merge; owner-directed mid-session changes count for the day they landed. Weekends are skipped, market holidays are not.</div></div>
   <div class="grid2">
-    <div class="card"><h2>MCF Update vs MarcoFlow</h2><div class="tablewrap" id="lv-cmp"><div class="empty">No MCF trades yet.</div></div>
-      <div class="note">Win = trade closed with P/L &gt; 0 for both systems. MarcoFlow = its paper record, clean window 8/28–10/2. "Adj. P/L" adds the extra stop slippage a real order book charges.</div></div>
+    <div class="card"><h2 id="lv-cmp-h">MCF Primary vs MarcoFlow</h2><div class="tablewrap" id="lv-cmp"><div class="empty">No MCF trades yet.</div></div>
+      <div class="note">The MCF columns are <b>this account only</b> (<span id="lv-cmp-acct">Primary</span>), not all of MCF. Win = trade closed with P/L &gt; 0 for both systems. MarcoFlow = its paper record, clean window 8/28–10/2. "Adj. P/L" adds the extra stop slippage a real order book charges.</div></div>
     <div class="card"><h2>Open MCF positions</h2><div class="tablewrap" id="lv-pos"><div class="empty">No open positions.</div></div></div>
   </div>
   <div class="grid2">
@@ -327,7 +327,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 
     const m = s.marcoflow || {}, all = s.since_start || {};
     const row = (k, a, b, c) => `<tr><td class="l">${k}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`;
-    $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>MCF today</th><th>MCF since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
+    $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>${ACCOUNTS[ACCT][0]} today</th><th>${ACCOUNTS[ACCT][0]} since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
       row("Trades", t.trades ?? 0, all.trades ?? 0, `${m.trades ?? "–"} (${m.trades_per_day ?? "–"}/day)`),
       row("Win rate", pc(t.win_rate), pc(all.win_rate), pc(m.win_rate)),
       row("P/L", `<span class="${cls(t.pnl)}">${money(t.pnl)}</span>`, `<span class="${cls(all.pnl)}">${money(all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
@@ -454,6 +454,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       k === ACCT ? `<b>${lab}</b>` : `<a href="${q || "?"}">${lab}</a>`).join(" · ");
     $l("#lv-asof").after(sw);
     if (ACCT !== "primary") $l("h2.big").textContent = `MCF ${ACCOUNTS[ACCT][0]} account — live paper session`;
+    // owner 2026-10-21: the comparison is this account's record only, so name the account in the card
+    $l("#lv-cmp-h").textContent = `MCF ${ACCOUNTS[ACCT][0]} vs MarcoFlow`;
+    $l("#lv-cmp-acct").textContent = ACCOUNTS[ACCT][0];
   }
   async function poll(path, fn, where) {
     try {
