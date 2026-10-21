@@ -181,6 +181,8 @@ def cmd_live(args, cfg):
             paths.append("intraday")
         except Exception as e:
             print(f"intraday log failed: {e}")
+        if runner.poll_log_dir:
+            paths.append("polls")   # live.log_poll_inputs: new gzip chunks only (each chunk is written once)
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
 
     eb = None
@@ -192,11 +194,13 @@ def cmd_live(args, cfg):
     print(f"{slot}: {len(priors)} symbols, until {until or 'close'}, dry_run={args.dry_run}")
     runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
                          on_status=on_status)
+    if cfg.get("live", {}).get("log_poll_inputs", True):
+        runner.poll_log_dir = os.path.join(args.state_dir, "polls")
     if eb is not None:
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
                              earnings_complete=eb["complete"])
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls"]
     end = pd.Timestamp.now(tz=NY)
     if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
         from .report.daily_review import write_review
