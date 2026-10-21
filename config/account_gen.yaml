@@ -37,20 +37,30 @@ live:
   - GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short
   - GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long
   - GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short
+  - GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long
   - GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p6-hold-short
+  - GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short
   - GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short
+  - GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short
   - GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long
   - GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short
+  - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short
   - GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long
+  - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short
+  - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long
   - GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long
   - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long
   - GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long
   - GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long
+  - GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long
+  - GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short
   - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long
   - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long
   - GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long
   - GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short
+  - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short
   - GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long
+  - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short
   - GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long
   - GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long
   - GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long
@@ -2015,4 +2025,674 @@ strategies:
         score: 0.32
         max_overlap: 0.267
         overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-01-orbfailup-am-long.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: long
+        window: AM
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - - atr_d_pct
+          - '>='
+          - 7.9
+        - - eff6
+          - '>='
+          - 0.55
+        - - orb_fail_up
+          - ==
+          - 1.0
+        - - spy_fo
+          - <
+          - 0.0
+      key: c93db205e5e1a2b0
+      screen:
+        train:
+          n: 780
+          exp_r: 0.3093
+          t: 0.95
+          win: 0.458
+          days: 119
+        valid:
+          n: 891
+          exp_r: 0.2008
+          t: 1.14
+          win: 0.488
+          days: 110
+        all:
+          n: 1671
+          exp_r: 0.2514
+          t: 1.41
+          win: 0.474
+          days: 229
+        per_day: 3.923
+        per_day_valid: 4.641
+        exp_up: 1.2239
+        exp_down: -0.2842
+        exp_flat: -0.1476
+        excess_train: 0.0111
+        excess_valid: 0.1969
+        tier1: true
+        score: 1.2
+        max_overlap: 0.193
+        overlap_with: exhaustion_short-FD
+        n_tried_in_run: 3000
+  GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-02-orbfailup-late-long.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: long
+        window: LATE
+        geom: t05s1
+        min_adv: 150000000.0
+        conds:
+        - - adx7
+          - '>='
+          - 57.0
+        - - breadth
+          - '>'
+          - 0.7
+        - - emaDiff_chg3
+          - <=
+          - -0.094
+        - - orb_fail_up
+          - ==
+          - 1.0
+      key: 82043cb030bdfef9
+      screen:
+        train:
+          n: 867
+          exp_r: 0.0041
+          t: 0.1
+          win: 0.616
+          days: 75
+        valid:
+          n: 482
+          exp_r: 0.0628
+          t: 1.32
+          win: 0.641
+          days: 37
+        all:
+          n: 1349
+          exp_r: 0.0251
+          t: 0.79
+          win: 0.625
+          days: 112
+        per_day: 3.167
+        per_day_valid: 2.51
+        exp_up: 0.0347
+        exp_down: 0.1427
+        exp_flat: -0.1189
+        excess_train: 0.0378
+        excess_valid: 0.0825
+        tier1: true
+        score: 0.85
+        max_overlap: 0.406
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3000
+  GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-03-newhod-late-short.py
+    context:
+    - qqq_fo
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: LATE
+        geom: t05s1
+        min_adv: 95000000.0
+        conds:
+        - - new_hod
+          - ==
+          - 1.0
+        - - qqq_fo
+          - <
+          - 0.0
+        - - ret3_atr
+          - '>='
+          - 0.12
+        - - sma20_dist_pct
+          - '>='
+          - 0.59
+      key: 677ae06b0e2ce5de
+      screen:
+        train:
+          n: 642
+          exp_r: 0.0399
+          t: 0.48
+          win: 0.682
+          days: 90
+        valid:
+          n: 681
+          exp_r: 0.0174
+          t: 0.55
+          win: 0.675
+          days: 96
+        all:
+          n: 1323
+          exp_r: 0.0283
+          t: 0.64
+          win: 0.679
+          days: 186
+        per_day: 3.106
+        per_day_valid: 3.547
+        exp_up: -0.048
+        exp_down: 0.0446
+        exp_flat: 0.0665
+        excess_train: 0.0749
+        excess_valid: 0.0478
+        tier1: true
+        score: 0.73
+        max_overlap: 0.58
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-04-rsi2-lo-open-short.py
+    context:
+    - breadth
+    min_adv: 20000000
+    window:
+    - 950
+    - 1030
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: OPEN
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth
+          - <
+          - 0.5
+        - - eff6
+          - '>='
+          - 0.83
+        - - rsi2
+          - <=
+          - 0.0
+        - - sma20_dist_pct
+          - '>='
+          - 0.59
+      key: 787a058bd729465c
+      screen:
+        train:
+          n: 447
+          exp_r: 0.0824
+          t: 0.39
+          win: 0.591
+          days: 102
+        valid:
+          n: 458
+          exp_r: 0.0164
+          t: 0.17
+          win: 0.544
+          days: 93
+        all:
+          n: 905
+          exp_r: 0.049
+          t: 0.41
+          win: 0.567
+          days: 195
+        per_day: 2.124
+        per_day_valid: 2.385
+        exp_up: -0.5432
+        exp_down: 0.1878
+        exp_flat: 0.1378
+        excess_train: 0.0454
+        excess_valid: 0.0615
+        tier1: true
+        score: 0.42
+        max_overlap: 0.3
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-05-macdh-hi-pm-short.py
+    context:
+    - breadth_open
+    min_adv: 150000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: PM
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.35
+        - - macd_hist
+          - '>='
+          - 0.079
+        - - or_high_dist_atr
+          - <=
+          - -0.38
+        - - upper_wick
+          - '>='
+          - 0.71
+      key: 3af9f5cc6ecbcec2
+      screen:
+        train:
+          n: 1823
+          exp_r: 0.0397
+          t: 0.21
+          win: 0.503
+          days: 69
+        valid:
+          n: 1001
+          exp_r: 0.0145
+          t: 0.16
+          win: 0.522
+          days: 35
+        all:
+          n: 2824
+          exp_r: 0.0308
+          t: 0.25
+          win: 0.51
+          days: 104
+        per_day: 6.629
+        per_day_valid: 5.214
+        exp_up: null
+        exp_down: 0.0448
+        exp_flat: -0.3938
+        excess_train: 0.0658
+        excess_valid: 0.0714
+        tier1: true
+        score: 0.41
+        max_overlap: 0.455
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-06-newlod-pm-long.py
+    context:
+    - spy_fo
+    min_adv: 95000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: long
+        window: PM
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - - buyPressure
+          - <=
+          - -0.49
+        - - new_lod
+          - ==
+          - 1.0
+        - - orb_fail_up
+          - ==
+          - 1.0
+        - - spy_fo
+          - <
+          - -0.5
+      key: 52eedd9f9a1c507f
+      screen:
+        train:
+          n: 521
+          exp_r: 0.1361
+          t: 1.81
+          win: 0.608
+          days: 50
+        valid:
+          n: 243
+          exp_r: 0.0157
+          t: 0.12
+          win: 0.523
+          days: 33
+        all:
+          n: 764
+          exp_r: 0.0978
+          t: 1.5
+          win: 0.581
+          days: 83
+        per_day: 1.793
+        per_day_valid: 1.266
+        exp_up: null
+        exp_down: 0.0095
+        exp_flat: 0.4737
+        excess_train: 0.105
+        excess_valid: 0.105
+        tier1: true
+        score: 0.37
+        max_overlap: 0.415
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-07-z12-lo-am-short.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - atr_d_pct
+          - '>='
+          - 3.6
+        - - breadth_open
+          - '>'
+          - 0.5
+        - - flow_shift
+          - <=
+          - -0.96
+        - - z12
+          - <=
+          - -1.9
+      key: 8b3511f59fe2c427
+      screen:
+        train:
+          n: 1175
+          exp_r: 0.0315
+          t: 0.41
+          win: 0.543
+          days: 135
+        valid:
+          n: 1456
+          exp_r: 0.0105
+          t: 0.12
+          win: 0.536
+          days: 102
+        all:
+          n: 2631
+          exp_r: 0.0199
+          t: 0.34
+          win: 0.539
+          days: 237
+        per_day: 6.176
+        per_day_valid: 7.583
+        exp_up: -0.2794
+        exp_down: 0.4525
+        exp_flat: 0.1385
+        excess_train: 0.0612
+        excess_valid: -0.0137
+        tier1: true
+        score: 0.12
+        max_overlap: 0.206
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3000
+  GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-08-emadchg-lo-am-short.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: holdtr
+        min_adv: 20000000.0
+        conds:
+        - - emaDiff_chg3
+          - <=
+          - -0.094
+        - - flow3
+          - '>='
+          - 1.0
+        - - rvol_day
+          - <=
+          - 0.59
+        - - spy_fo
+          - '>'
+          - 0.25
+      key: d281c0d6151dc0ff
+      screen:
+        train:
+          n: 471
+          exp_r: 0.0615
+          t: 0.26
+          win: 0.461
+          days: 67
+        valid:
+          n: 570
+          exp_r: 0.01
+          t: 0.1
+          win: 0.537
+          days: 67
+        all:
+          n: 1041
+          exp_r: 0.0333
+          t: 0.27
+          win: 0.502
+          days: 134
+        per_day: 2.444
+        per_day_valid: 2.969
+        exp_up: -0.3304
+        exp_down: 1.0265
+        exp_flat: 0.1054
+        excess_train: 0.0319
+        excess_valid: -0.0042
+        tier1: true
+        score: 0.1
+        max_overlap: 0.186
+        overlap_with: CWT14-failbrk-pdh-p05-lowvol-short
+        n_tried_in_run: 3000
+  GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-09-ret15matr-lo-am-short.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: hold
+        min_adv: 150000000.0
+        conds:
+        - - adx7
+          - '>='
+          - 64.0
+        - - bar_range_atr
+          - '>='
+          - 0.11
+        - - breadth
+          - <
+          - 0.3
+        - - ret3_atr
+          - <=
+          - -0.16
+      key: 0c571882f734450a
+      screen:
+        train:
+          n: 1190
+          exp_r: 0.0212
+          t: 0.08
+          win: 0.344
+          days: 47
+        valid:
+          n: 673
+          exp_r: 0.2195
+          t: 0.68
+          win: 0.499
+          days: 20
+        all:
+          n: 1863
+          exp_r: 0.0928
+          t: 0.46
+          win: 0.4
+          days: 67
+        per_day: 4.373
+        per_day_valid: 3.505
+        exp_up: -1.0394
+        exp_down: 0.2375
+        exp_flat: -0.2017
+        excess_train: -0.0521
+        excess_valid: 0.0794
+        tier1: true
+        score: 0.08
+        max_overlap: 0.392
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3000
+  GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-10-emadchg-hi-pm-short.py
+    context:
+    - breadth_open
+    min_adv: 95000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: PM
+        geom: holdtr
+        min_adv: 95000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.5
+        - - dist_pdl_atr
+          - <=
+          - 0.14
+        - - emaDiff_chg3
+          - '>='
+          - 0.15
+        - - or_low_dist_atr
+          - '>='
+          - 0.41
+      key: b5b585a760cc5a44
+      screen:
+        train:
+          n: 464
+          exp_r: 0.0055
+          t: 0.05
+          win: 0.519
+          days: 85
+        valid:
+          n: 491
+          exp_r: 0.0092
+          t: 0.15
+          win: 0.515
+          days: 102
+        all:
+          n: 955
+          exp_r: 0.0074
+          t: 0.11
+          win: 0.517
+          days: 187
+        per_day: 2.242
+        per_day_valid: 2.557
+        exp_up: -0.9191
+        exp_down: 0.0842
+        exp_flat: -0.1
+        excess_train: -0.0092
+        excess_valid: 0.0447
+        tier1: true
+        score: 0.05
+        max_overlap: 0.389
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
