@@ -9,14 +9,18 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 
 | ID | Item | Owner of the work | Monitored by | Due | Status |
 |---|---|---|---|---|---|
-| LL-1.5 | Per-setup daily stop: switch -2R to -1.5R? Replay (research/bdi/ll1020) said keep -2R; -1.5R was +41R better over 7 days but not significant. Re-score 1.5 vs 2 on each new session. | nightly loop (step 6c) | nightly FYI line, 10-21..10-23 | brief 2026-10-23 → DECISION | monitoring 0/3 sessions |
+| LL-1.5 | Per-setup daily stop: switch -2R to -1.5R? Replay (research/bdi/ll1020) said keep -2R; -1.5R was +41R better over 7 days but not significant. Re-score 1.5 vs 2 on each new session. | nightly loop (step 6c) | nightly FYI line, 10-21..10-23 | brief 2026-10-23 → DECISION | monitoring 1/3 sessions (10-21: −1.5R −0.43R vs −2R; 7-day base +40.56R) |
 | LL-OPEN | Add an open-risk bound (realized + open lots at -1R <= -3R) on top of the -2R stop; fixes the 10-14 -32.8R overshoot. Needs a replay with slot effects first. | BDI | backlog idea | Saturday deep run 2026-10-24 | idea |
 | SO-CAP | Lift the live scale-out cap (Testing 2: 2/day). Scale-out worked live on BITO and COIN. | owner | — | when owner decides | waiting on owner |
 | N2 | Demote RW6G1-ns2-up3-vwap2sd-short from Primary to Testing 1 | owner | nightly suggestions | owner reviewing | waiting on owner |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | owner | nightly suggestions | owner reviewing | waiting on owner |
+| G1 | Add the 6 up-tape gated short variants (-g1: MF4-FD, RW5-FD, MF3-FD, RW7-FD, RW3-FD, RW1-FD) to a testing account (research/bdi/gates1021) | owner | nightly suggestions | brief 2026-10-21 | waiting on owner |
+| N5 | Demote Big Loser VWAP Reclaim Fade (all day) (NS3-failed-vwap-reclaim-short-FD) from Primary to Testing 2 | owner | nightly suggestions | brief 2026-10-21 | waiting on owner |
+| N6 | Move the 3 Failed Prior-Day-High Break Shorts (CWT14-failbrk-pdh-p05-lowvol-short, -pdh-p10-short in T1; -pdh-p10-lowvol-short in T2) to the Graveyard | owner | nightly suggestions | brief 2026-10-21 | waiting on owner |
+| SO-ALLOC | If the 2/day scale-out cap stays: which signals get the 2 scale-outs (first-come spent both by 09:54 on 10-21). Backlog nightly-1021-scaleout-cap-allocation | BDI | backlog idea | with SO-CAP | idea |
+| TWIN-GRP | First live check of the twin_group blocks (LD-NS1 / LD-ST2 / LD-SPXL, Testing 2): no LD signal yet | nightly loop | step 1 | first LD signal day | pending |
 | OBS-LD | 8 long near-misses (LD1-LD8, marked *) + M1 observation in Testing 2 from 2026-10-21 | nightly loop | leaderboard | first review 2026-11-04 (10 sessions) | live |
 | PROMO-1021 | Promoted to Primary 2026-10-21: L3-gap-slope-fromopen-FD, CWT14-failbrk-pdl-p10-lowvol-long (backtest negative: watch) — Primary-only record | nightly loop | nightly suggestions | first review 2026-10-27 (5 sessions) | live |
-| GY-1 | Graveyard account first session: confirm the job starts and trades | nightly loop | step 1 | 2026-10-21 | pending |
 | LF-DECAY | Rolling 1/3/6/12-month decay monitor for top setups: 1-month decline → flag; 3- or 6-month decline (size decides) → demotion suggestion. For live funding. Draft in docs/ROADMAP.md Phase 5. | Claude | — | before live funding (needs ~1 month of records to start) | planned |
 | UI-DATE | Dashboard "date started" column | Claude | — | deferred | deferred |
 | UI-LABEL | Setup labeling-system proposal | Claude | — | deferred | deferred |
@@ -34,5 +38,6 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | L1 | LD1 / LD2 longs | 2026-10-20 | yes — with LD3-LD8, Testing 2, observation |
 | MOVES-1020 | Owner moves 2026-10-20 evening (2 promotions, MF3-FD demotion, CWT09-g5 + 4 CWT14 orl to Graveyard) + Testing 1/2 reallocation | 2026-10-20 | applied for 2026-10-21 (ledger 2026-10-21-*) |
 | LL-2R | Per-setup daily stop ruling | 2026-10-20 | keep -2R (research/bdi/ll1020/NOTES.md); 1.5R re-check = LL-1.5 |
+| GY-1 | Graveyard account first session | 2026-10-21 | clean: 50 polls, 347 trades (mgy- orders), flat, EOD + scorecard pushed, journal = report = status (research/bdi/nightly1021/NOTES.md) |
 
 Educational only — not financial advice.

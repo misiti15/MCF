@@ -1,0 +1,288 @@
+{
+ "spy_o2c_so_far": {
+  "2026-10-20": 0.41,
+  "2026-10-21": 0.401
+ },
+ "asof_status": "2026-10-21 14:36 ET",
+ "ctx_1000_1400": {
+  "1000": {
+   "breadth": 0.472,
+   "spy_fo": -0.069,
+   "qqq_fo": 0.046,
+   "iwm_fo": 0.043,
+   "d2": -0.073
+  },
+  "1030": {
+   "breadth": 0.412,
+   "spy_fo": -0.235,
+   "qqq_fo": -0.054,
+   "iwm_fo": -0.09,
+   "d2": 0.039
+  },
+  "1100": {
+   "breadth": 0.481,
+   "spy_fo": -0.035,
+   "qqq_fo": 0.162,
+   "iwm_fo": -0.022,
+   "d2": -0.136
+  },
+  "1130": {
+   "breadth": 0.568,
+   "spy_fo": 0.105,
+   "qqq_fo": 0.353,
+   "iwm_fo": 0.033,
+   "d2": 0.133
+  },
+  "1200": {
+   "breadth": 0.597,
+   "spy_fo": 0.193,
+   "qqq_fo": 0.557,
+   "iwm_fo": 0.002,
+   "d2": -0.001
+  },
+  "1300": {
+   "breadth": 0.627,
+   "spy_fo": 0.292,
+   "qqq_fo": 0.649,
+   "iwm_fo": 0.043,
+   "d2": -0.004
+  },
+  "1400": {
+   "breadth": 0.598,
+   "spy_fo": 0.342,
+   "qqq_fo": 0.586,
+   "iwm_fo": 0.074,
+   "d2": 0.003
+  }
+ },
+ "replay": {
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "A0 as live": {
+    "lots_blocked": 0,
+    "lots_kept": 25,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -481.7,
+    "blocked_usd_incl_open": 0.0
+   },
+   "A1 first signal per symbol-day": {
+    "lots_blocked": 10,
+    "lots_kept": 15,
+    "kept_closed_R": -5.2,
+    "kept_usd_incl_open": -324.5,
+    "blocked_usd_incl_open": -157.1
+   },
+   "g1 no re-entry after a stop": {
+    "lots_blocked": 0,
+    "lots_kept": 25,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -481.7,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g2 one lot at a time": {
+    "lots_blocked": 10,
+    "lots_kept": 15,
+    "kept_closed_R": -5.2,
+    "kept_usd_incl_open": -324.5,
+    "blocked_usd_incl_open": -157.1
+   },
+   "g3 spy>=0.25 & breadth rising": {
+    "lots_blocked": 5,
+    "lots_kept": 20,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -394.2,
+    "blocked_usd_incl_open": -87.4
+   },
+   "g3 spy>=0.50 & breadth rising": {
+    "lots_blocked": 0,
+    "lots_kept": 25,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -481.7,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g4 qqq>=0.25": {
+    "lots_blocked": 13,
+    "lots_kept": 12,
+    "kept_closed_R": -3.2,
+    "kept_usd_incl_open": -276.6,
+    "blocked_usd_incl_open": -205.1
+   },
+   "g4 qqq>=0.50": {
+    "lots_blocked": 11,
+    "lots_kept": 14,
+    "kept_closed_R": -4.19,
+    "kept_usd_incl_open": -338.0,
+    "blocked_usd_incl_open": -143.6
+   },
+   "g5 peers>=1%": {
+    "lots_blocked": 0,
+    "lots_kept": 25,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -481.7,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g5 peers>=2%": {
+    "lots_blocked": 0,
+    "lots_kept": 25,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -481.7,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g6 <=11:30": {
+    "lots_blocked": 11,
+    "lots_kept": 14,
+    "kept_closed_R": -4.19,
+    "kept_usd_incl_open": -338.0,
+    "blocked_usd_incl_open": -143.6
+   },
+   "g6 <=13:00": {
+    "lots_blocked": 5,
+    "lots_kept": 20,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -456.7,
+    "blocked_usd_incl_open": -24.9
+   },
+   "g6 >=10:30": {
+    "lots_blocked": 7,
+    "lots_kept": 18,
+    "kept_closed_R": -5.06,
+    "kept_usd_incl_open": -383.7,
+    "blocked_usd_incl_open": -98.0
+   },
+   "g7 open lots>=5": {
+    "lots_blocked": 19,
+    "lots_kept": 6,
+    "kept_closed_R": -1.13,
+    "kept_usd_incl_open": -86.5,
+    "blocked_usd_incl_open": -395.2
+   },
+   "g7 open lots>=10": {
+    "lots_blocked": 14,
+    "lots_kept": 11,
+    "kept_closed_R": -3.2,
+    "kept_usd_incl_open": -245.2,
+    "blocked_usd_incl_open": -236.5
+   },
+   "g8 -2R daily stop": {
+    "lots_blocked": 4,
+    "lots_kept": 21,
+    "kept_closed_R": -6.19,
+    "kept_usd_incl_open": -494.3,
+    "blocked_usd_incl_open": 12.6
+   }
+  },
+  "L3-gap-slope-fromopen-FD": {
+   "A0 as live": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "A1 first signal per symbol-day": {
+    "lots_blocked": 3,
+    "lots_kept": 2,
+    "kept_closed_R": -2.25,
+    "kept_usd_incl_open": -76.6,
+    "blocked_usd_incl_open": -100.3
+   },
+   "g1 no re-entry after a stop": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g2 one lot at a time": {
+    "lots_blocked": 3,
+    "lots_kept": 2,
+    "kept_closed_R": -2.25,
+    "kept_usd_incl_open": -76.6,
+    "blocked_usd_incl_open": -100.3
+   },
+   "g3 spy>=0.25 & breadth rising": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g3 spy>=0.50 & breadth rising": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g4 qqq>=0.25": {
+    "lots_blocked": 3,
+    "lots_kept": 2,
+    "kept_closed_R": -2.19,
+    "kept_usd_incl_open": -38.3,
+    "blocked_usd_incl_open": -138.6
+   },
+   "g4 qqq>=0.50": {
+    "lots_blocked": 2,
+    "lots_kept": 3,
+    "kept_closed_R": -3.2,
+    "kept_usd_incl_open": -58.1,
+    "blocked_usd_incl_open": -118.8
+   },
+   "g5 peers>=1%": {
+    "lots_blocked": 3,
+    "lots_kept": 2,
+    "kept_closed_R": -2.22,
+    "kept_usd_incl_open": -118.8,
+    "blocked_usd_incl_open": -58.1
+   },
+   "g5 peers>=2%": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g6 <=11:30": {
+    "lots_blocked": 2,
+    "lots_kept": 3,
+    "kept_closed_R": -3.2,
+    "kept_usd_incl_open": -58.1,
+    "blocked_usd_incl_open": -118.8
+   },
+   "g6 <=13:00": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g6 >=10:30": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g7 open lots>=5": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g7 open lots>=10": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   },
+   "g8 -2R daily stop": {
+    "lots_blocked": 0,
+    "lots_kept": 5,
+    "kept_closed_R": -5.42,
+    "kept_usd_incl_open": -176.9,
+    "blocked_usd_incl_open": 0.0
+   }
+  }
+ }
+}

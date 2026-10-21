@@ -770,5 +770,115 @@
   "name": "Gap-Down Recovery Fade (all day)",
   "side": "short",
   "what": "09:50-15:00: a stock that gapped down 2.7%+ has rallied more than 3.5% from its open with its 20-bar average turning up; short the rally."
+ },
+ "GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long": {
+  "name": "Generated: ORBfailUp AM long (SPYdn, hold)",
+  "side": "long",
+  "what": "Buy on the first 5-minute bar closing 09:50-11:00 ET where SPY's move since its open (%) is below 0; closed above the OR high earlier today, now back below = 1; daily ATR % of price >= 7.9; efficiency ratio over 6 bars (net move / path) >= 0.55 (stocks with 20-day average dollar volume >= $20M). Exit stop 1R, no target, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.3093,
+   "valid_exp_r": 0.2008,
+   "per_day": 3.923
+  }
+ },
+ "GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long": {
+  "name": "Generated: ORBfailUp, EMAdChglem0p094 LATE long (BRvwgt0p7, t05s1)",
+  "side": "long",
+  "what": "Buy on the first 5-minute bar closing 14:00-15:00 ET where the share of stocks above their VWAP is above 0.7; closed above the OR high earlier today, now back below = 1; emaDiff change over 3 bars <= -0.094; ADX(7), in-day >= 57 (stocks with 20-day average dollar volume >= $150M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0041,
+   "valid_exp_r": 0.0628,
+   "per_day": 3.167
+  }
+ },
+ "GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short": {
+  "name": "Generated: NewHOD, Ret15mATRge0p12 LATE short (QQQdn, t05s1)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 14:00-15:00 ET where QQQ's move since its open (%) is below 0; bar made a new high of day = 1; 15-min change in daily ATRs >= 0.12; close vs 5-min SMA20 % (frame column) >= 0.59 (stocks with 20-day average dollar volume >= $95M). Exit target +0.5R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0399,
+   "valid_exp_r": 0.0174,
+   "per_day": 3.106
+  }
+ },
+ "GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short": {
+  "name": "Generated: RSI2le0 OPEN short (BRvwlt0p5, t1s1)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 09:50-10:30 ET where the share of stocks above their VWAP is below 0.5; RSI(2) on in-day 5-min closes <= 0; efficiency ratio over 6 bars (net move / path) >= 0.83; close vs 5-min SMA20 % (frame column) >= 0.59 (stocks with 20-day average dollar volume >= $20M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0824,
+   "valid_exp_r": 0.0164,
+   "per_day": 2.124
+  }
+ },
+ "GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short": {
+  "name": "Generated: MACDhge0p079, UpWickge0p71 PM short (BRoplt0p35, holdtr)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their open is below 0.35; macdPct minus its in-day EMA9 (histogram) >= 0.079; upper wick share of the bar (frame column) >= 0.71; close - opening-range high (09:30-09:50) in daily ATRs <= -0.38 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0397,
+   "valid_exp_r": 0.0145,
+   "per_day": 6.629
+  }
+ },
+ "GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long": {
+  "name": "Generated: NewLOD, ORBfailUp PM long (SPYltm0p5, t1s1)",
+  "side": "long",
+  "what": "Buy on the first 5-minute bar closing 13:00-15:00 ET where SPY's move since its open (%) is below -0.5; bar made a new low of day = 1; closed above the OR high earlier today, now back below = 1; signed volume share, 19 bars (frame column) <= -0.49 (stocks with 20-day average dollar volume >= $95M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.1361,
+   "valid_exp_r": 0.0157,
+   "per_day": 1.793
+  }
+ },
+ "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short": {
+  "name": "Generated: Z12lem1p9, FlowShiftlem0p96 AM short (BRopgt0p5, t1s1)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 09:50-11:00 ET where the share of stocks above their open is above 0.5; z-score of close vs its in-day 12-bar mean/std <= -1.9; flow3 - flow9prev <= -0.96; daily ATR % of price >= 3.6 (stocks with 20-day average dollar volume >= $20M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0315,
+   "valid_exp_r": 0.0105,
+   "per_day": 6.176
+  }
+ },
+ "GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short": {
+  "name": "Generated: EMAdChglem0p094, Flow3ge1 AM short (SPYgt0p25, holdtr)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 09:50-11:00 ET where SPY's move since its open (%) is above 0.25; emaDiff change over 3 bars <= -0.094; signed volume share, 3 bars (frame column) >= 1; mean volumeRatio since 09:50 (rvol proxy) <= 0.59 (stocks with 20-day average dollar volume >= $20M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0615,
+   "valid_exp_r": 0.01,
+   "per_day": 2.444
+  }
+ },
+ "GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short": {
+  "name": "Generated: Ret15mATRlem0p16, BarRngATRge0p11 AM short (BRvwlt0p3, hold)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 09:50-11:00 ET where the share of stocks above their VWAP is below 0.3; 15-min change in daily ATRs <= -0.16; bar high-low in daily ATRs >= 0.11; ADX(7), in-day >= 64 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0212,
+   "valid_exp_r": 0.2195,
+   "per_day": 4.373
+  }
+ },
+ "GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short": {
+  "name": "Generated: EMAdChgge0p15 PM short (BRoplt0p5, holdtr)",
+  "side": "short",
+  "what": "Short on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their open is below 0.5; emaDiff change over 3 bars >= 0.15; close - opening-range low in daily ATRs >= 0.41; close - prior-day low in ATRs (frame column) <= 0.14 (stocks with 20-day average dollar volume >= $95M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge.",
+  "generated": "2026-10-22",
+  "screen": {
+   "train_exp_r": 0.0055,
+   "valid_exp_r": 0.0092,
+   "per_day": 2.242
+  }
  }
 }
