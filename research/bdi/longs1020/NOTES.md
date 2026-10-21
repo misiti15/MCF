@@ -139,4 +139,34 @@ LD2-qqq-dip015-breadthturn-tqqq-t05s1-long: {name: "Shallow Nasdaq Dip, Breadth 
   - `results_A.csv`, `results_B.csv`, `gate_check.csv`, `trades_A.csv.gz`, `dipdays.csv`, `predictors_rows_*.csv`, `nearmiss.json`, `backlog_proposals.jsonl`
   - The scratch data is outside the repo (about 100 MB, well under 1.5 GB).
 
+## Testing 2 (owner 2026-10-20, observation only)
+- The owner asked for the best long setups in Testing 2 as observation. The selection rule: positive on BOTH train and
+  valid, with an exit the live LabStrategy supports (t1s1 / t05s1 / t1s05 / t05s05 / hold / holdtr). That gives **8
+  distinct signals, LD1-LD8** (`modules/`). Each is still a near-miss and none is a candidate.
+- **Parity:** `verify_modules.json`, `scripts/verify_modules.py`, all open months.
+  - On a live-shaped frame (09:35-09:45 index context rows added), the module reproduces the scan exactly for
+    LD1-LD5, LD7 and LD8.
+  - LD6 matches 99 of 104, plus 3 extra signals. The cause: SPY's ATR% is estimated as SPXL ATR% / 2.93, because the
+    SPXL frame has no SPY ATR. With the scan's exact SPY ATR% it matches 104/104.
+  - Offline frames start at 09:50, so the index running low misses 09:35-09:45: LD2 137/159, LD3 66/73, LD7 128/177.
+- **Live LabStrategy on real 1-minute bars** (`verify_live.json`, `scripts/verify_live.py`):
+  - Setup: the 9 Testing 2 setups built from config/account_testing2.yaml, full-day backtester contexts, peers = 1,224
+    lab symbols (live breadth / spy_fo / qqq_fo), 5 sessions in June 2026.
+  - **No false signals.** Every signal the live path gave sits on the same bar as the research scan: LD1 1/1, LD2 5/5,
+    LD3 13/19, LD4 3/6, LD5 3/4, LD6 1/5, LD7 3/4, LD8 1/5, M1 24/55.
+  - The misses are symbol-days with missing 1-minute bars. A full-day context is evaluated only when it has exactly 390
+    bars (`LabStrategy.eligible`); SPXL had 378 on 2026-06-03.
+  - The live context table on 2026-06-03 equals the frames' spy_fo / breadth to the third decimal.
+- **Live caveat (pre-existing, every lab setup):** live, `eligible()` evaluates a symbol only when its bar count is a
+  multiple of 5, and the runner takes only a signal on the latest bar.
+  - At the research signal bars, the SPXL / TQQQ minute counts were complete every time (LD2 159/159, LD6 104/104,
+    LD8 70/70).
+  - For the stock setups, 20-24% of research signals fall on a bar where the stock's minute count is off: NS1-BRDUP
+    104/134, ST2-IDXTURN 59/73, ST4-BRDUP 21/21, ST2-BRDUP 24/31, NS1-IDXTURN 140/177. Live is expected to miss those.
+  - Not changed here: the rule affects every lab setup in every account.
+- **twin_group (Testing 2):** setups in the same group never hold the same symbol.
+  - LD-ST2 = LD3 + LD5
+  - LD-NS1 = LD1 + LD7
+  - LD-SPXL = LD6 + LD8
+
 Educational only — not financial advice.

@@ -67,6 +67,25 @@ universe:
                  ENLC, NS, HEP]   # last three were acquired (kept so stale data cannot slip them in)
 
 strategies:
+  # ---- Promoted owner 2026-10-20 evening (first Primary session 2026-10-21); promotion = move.
+  L3-gap-slope-fromopen-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
+    min_adv: 0   # source had none (default 0)
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  CWT14-failbrk-pdl-p10-lowvol-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    from_testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full", fill: true}
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
   orb:
     enabled: false   # screen 2026-10-06: -0.33R/trade over 63 sessions (pre-09:50 entries -0.59R); paper off
@@ -244,7 +263,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   MF3-open-flowsell-rsi5hi-FD:
-    enabled: true
+    enabled: false   # demoted to Testing 1 2026-10-21 (owner 2026-10-20 evening)
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
@@ -374,9 +393,9 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - L3-gap-slope-fromopen-FD   # promoted 2026-10-21
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
-    - MF3-open-flowsell-rsi5hi-FD   # promoted 2026-10-15
     - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
     - MF4-h40-open-flowsell-FD   # promoted 2026-10-20
     - NS3-failed-vwap-reclaim-short-FD   # promoted 2026-10-20
@@ -396,6 +415,7 @@ live:
     - MF5-flowsell-vwapup-rsi5hi
     - heat_fade_short
     - heat_fade_long
+    - CWT14-failbrk-pdl-p10-lowvol-long   # promoted 2026-10-21 (~47/day: broadest, so last)
   # Paper fills anything the price touches. These checks keep paper results close to what a real
   # order book would give, so paper P/L is evidence and not an upper bound.
   no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are

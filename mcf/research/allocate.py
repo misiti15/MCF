@@ -111,6 +111,7 @@ class Problem:
     def __init__(self, stats: dict, current: dict[str, str], fixed_symbols: set[str]):
         self.names = sorted(stats)
         self.stats, self.current, self.fixed = stats, current, fixed_symbols
+        self.pinned: set[str] = set()   # --pin: never moved or split
         self.w: dict[tuple[str, str], float] = {}
         for a in self.names:
             for b, v in stats[a]["lost_to_per_day"].items():
@@ -158,7 +159,7 @@ class Problem:
         asg = {s: self.current.get(s, "testing") for s in self.names}
         for s in self.split_candidates(n_split, min_lost):
             asg[s] = "both"
-        free = [s for s in self.names if asg[s] != "both"]
+        free = [s for s in self.names if asg[s] != "both" and s not in self.pinned]
         best = self.cost(asg)
         flip = {"testing": "testing2", "testing2": "testing"}
         for _ in range(max_iter):
@@ -202,7 +203,8 @@ class Problem:
 
 
 # ------------------------------------------------------------------------------------------------ report
-def propose(n_split: int = 6, min_lost: float = 1.0, fetch: bool = True, cards: dict | None = None) -> dict:
+def propose(n_split: int = 6, min_lost: float = 1.0, fetch: bool = True, cards: dict | None = None,
+            pin: tuple | list = ()) -> dict:
     from ..report import assignments as A
 
     strat = A._strategies()
@@ -215,7 +217,9 @@ def propose(n_split: int = 6, min_lost: float = 1.0, fetch: bool = True, cards: 
     stats = setup_stats(sorted(current), current, cards)
     fixed = {n for n in current for a in TESTING
              if (strat[a].get(n) or {}).get("enabled") and ((strat[a][n].get("symbols") or strat[a][n].get("trade_candidates")))}
+    fixed |= set(pin) & set(current)   # --pin: no split copy ...
     prob = Problem(stats, current, fixed)
+    prob.pinned = set(pin) & set(current)   # ... and no move (e.g. a related setup runs in the other account)
     asg = prob.solve(n_split, min_lost)
     p0, p1 = prob.parts({s: current[s] for s in prob.names}), prob.parts(asg)
     rows = [{"setup": n, "current": current[n], "proposed": asg[n], "signals_per_day": stats[n]["load"],
@@ -423,6 +427,8 @@ def main(argv=None) -> int:
     ap.add_argument("--apply", action="store_true", help="edit the testing configs and regenerate assignments.json")
     ap.add_argument("--n-split", type=int, default=6, help="max setups proposed as split-ticker copies (default 6)")
     ap.add_argument("--min-lost", type=float, default=1.0, help="min crowding loss (signals/day) for a split copy")
+    ap.add_argument("--pin", action="append", default=[], metavar="SETUP",
+                    help="keep this setup where it is: no move, no split copy (repeatable)")
     ap.add_argument("--no-fetch", action="store_true", help="use the local origin/mcf-data-* refs as they are")
     ap.add_argument("--force", action="store_true", help="allow --apply during market hours (do not)")
     a = ap.parse_args(argv)
@@ -430,7 +436,7 @@ def main(argv=None) -> int:
     if a.apply and not a.force and now.weekday() < 5 and (9, 30) <= (now.hour, now.minute) < (16, 0):
         print("refusing --apply during market hours (RESEARCH_RULES 9); run after the close")
         return 2
-    d = propose(a.n_split, a.min_lost, fetch=not a.no_fetch)
+    d = propose(a.n_split, a.min_lost, fetch=not a.no_fetch, pin=a.pin)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     day = now.strftime("%Y-%m-%d")
     (OUT_DIR / f"{day}.md").write_text(markdown(d))

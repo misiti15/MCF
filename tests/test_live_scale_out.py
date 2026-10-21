@@ -281,9 +281,13 @@ def test_config_flags_exactly_the_testing2_setups(monkeypatch):
     assert flagged == set(SCALED) | scaled35
     assert all(cfg["strategies"][n]["scale_out_r"] == 0.25 for n in SCALED)
     assert all(cfg["strategies"][n]["scale_out_r"] == 0.35 for n in scaled35)
-    for acct in ("primary", "testing"):
-        monkeypatch.setenv("MCF_ACCOUNT", acct)
-        assert not any((p or {}).get("live_scale_out") for p in load_config()["strategies"].values())
+    monkeypatch.setenv("MCF_ACCOUNT", "primary")
+    assert not any((p or {}).get("live_scale_out") for p in load_config()["strategies"].values())
+    # 2026-10-21 reallocation: setups that scale out live may run in Testing 1 too, under the same 2/day cap
+    monkeypatch.setenv("MCF_ACCOUNT", "testing")
+    t1 = load_config()
+    if any((p or {}).get("live_scale_out") and (p or {}).get("enabled") for p in t1["strategies"].values()):
+        assert t1["live"]["scale_out_max_per_day"] == 2
     with pytest.raises(ValueError, match="own scale_out_r"):
         build_strategies({"exits": {"scale_out_r": 1.0}, "strategies": {"x": {"live_scale_out": True}}})
 

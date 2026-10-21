@@ -119,3 +119,43 @@ def test_runner_restore_groups_realized_by_setup(tmp_path, monkeypatch):
     monkeypatch.setattr(r.journal, "trades", lambda **k: done)
     r.restore(today)
     assert r.risk.state.realized_r_by_strategy == {"A": -2.0, "B": 0.5}
+
+
+def test_twin_group_blocks_same_group_only():
+    """Owner 2026-10-20: setups with the same `twin_group:` never hold the same symbol in one account."""
+    from mcf.execution.risk import twin_groups
+
+    cfg = {"strategies": {"LD3": {"twin_group": "LD-ST2"}, "LD5": {"twin_group": "LD-ST2"},
+                          "LD1": {"twin_group": "LD-NS1"}, "plain": {"enabled": True}, "off": {"enabled": False}}}
+    g = twin_groups(cfg)
+    assert g == {"LD3": "LD-ST2", "LD5": "LD-ST2", "LD1": "LD-NS1"}
+    assert twin_key("LD3", g) == twin_key("LD5", g) != twin_key("LD1", g)
+    assert twin_key("heat_fade_short-FD", g) == "heat_fade_short"            # no group: the old '-FD' rule
+    rm = _rm(3)
+    rm.twin_groups = g
+    _hold(rm, "XYZ", ("LD3", 1))
+    assert rm.check(_sig("LD5", side=1), 54.0) == (False, "twin held")
+    assert rm.check(_sig("LD1", side=1), 54.0) == (True, "ok")               # other group
+    assert rm.check(_sig("LD5", side=1, sym="ABC"), 54.0) == (True, "ok")    # other symbol
+    rm1 = _rm(1)
+    rm1.twin_groups = g
+    _hold(rm1, "XYZ", ("LD5", 0))
+    assert rm1.check(_sig("LD3", side=1), 54.0) == (False, "twin held")
+
+
+def test_twin_groups_wired_from_testing2_config(monkeypatch):
+    from mcf.config import load_config
+
+    monkeypatch.setenv("MCF_ACCOUNT", "testing2")
+    rm = RiskManager(load_config(), 100000)
+    groups: dict[str, set] = {}
+    for k, v in rm.twin_groups.items():
+        groups.setdefault(v, set()).add(k)
+    assert groups == {
+        "LD-ST2": {"LD3-st2-idxturn-t05s1-long", "LD5-st2-breadthup-t05s1-long"},
+        "LD-NS1": {"LD1-ns1-breadthup-t05s1-long", "LD7-ns1-idxturn-holdtr-long"},
+        "LD-SPXL": {"LD6-spy-dip020atr-breadthturn-spxl-holdtr-long", "LD8-spy-dip030-breadthturn-spxl-holdtr-long"},
+    }
+    _hold(rm, "SPXL", ("LD6-spy-dip020atr-breadthturn-spxl-holdtr-long", 1))
+    assert rm.check(Signal("SPXL", "LD8-spy-dip030-breadthturn-spxl-holdtr-long", 1, 10, stop=53.0), 54.0) \
+        == (False, "twin held")

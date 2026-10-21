@@ -720,5 +720,55 @@
    "valid_exp_r": 0.0644,
    "per_day": 0.228
   }
+ },
+ "LD1-ns1-breadthup-t05s1-long": {
+  "name": "* Oversold Pop with Breadth Turning Up (near-miss)",
+  "side": "long",
+  "what": "09:50-11:30: the Big Gainer Dip-and-Pop long (NS1) taken only when market breadth is rising (>= 5 points above two bars earlier). Target 0.5R, stop 1R. Observation only."
+ },
+ "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long": {
+  "name": "* Shallow Nasdaq Dip, Breadth Turn (TQQQ) (near-miss)",
+  "side": "long",
+  "what": "09:50-10:30: QQQ has dipped >= 0.15% below its open, then market breadth turns up 10 points off its low and QQQ ticks up; buy TQQQ once. Target 0.5R, stop 1R. Observation only."
+ },
+ "LD3-st2-idxturn-t05s1-long": {
+  "name": "* Oversold Slope Turn after an SPY Dip-Turn (near-miss)",
+  "side": "long",
+  "what": "09:50-11:30: a stock > 3% below its open whose 20-bar average turns up near VWAP (ST2), taken only after SPY dipped >= 0.15% and has turned up 0.10 points off its low. Target 0.5R, stop 1R. Observation only."
+ },
+ "LD4-st4-breadthup-t1s05-long": {
+  "name": "* Oversold EMA Cross-Down with Breadth Turning Up (near-miss)",
+  "side": "long",
+  "what": "09:50-11:30: a stock > 3% below its open, EMA9 crossing below EMA21 with RSI(5) <= 20 (ST4), taken only when market breadth is rising. Target 1R, stop 0.5R. Observation only."
+ },
+ "LD5-st2-breadthup-t05s1-long": {
+  "name": "* Oversold Slope Turn with Breadth Turning Up (near-miss)",
+  "side": "long",
+  "what": "09:50-11:30: a stock > 3% below its open whose 20-bar average turns up near VWAP (ST2), taken only when market breadth is rising. Target 0.5R, stop 1R. Observation only."
+ },
+ "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long": {
+  "name": "* SPY Dip of 0.2 ATR, Breadth Turn (SPXL, trailing) (near-miss)",
+  "side": "long",
+  "what": "09:50-10:30: SPY has dipped >= 0.2 x its daily range below its open, then breadth turns up 10 points off its low and SPY ticks up; buy SPXL once. Stop 1R, trail 1R once +1R, out by 15:55. Observation only."
+ },
+ "LD7-ns1-idxturn-holdtr-long": {
+  "name": "* Oversold Pop after an SPY Dip-Turn (trailing) (near-miss)",
+  "side": "long",
+  "what": "09:50-11:30: the Big Gainer Dip-and-Pop long (NS1) taken only after SPY dipped >= 0.15% and has turned up 0.10 points off its low. Stop 1R, trail 1R once +1R, out by 15:55. Observation only."
+ },
+ "LD8-spy-dip030-breadthturn-spxl-holdtr-long": {
+  "name": "* SPY Dip of 0.30%, Breadth Turn (SPXL, trailing) (near-miss)",
+  "side": "long",
+  "what": "09:50-10:30: SPY has dipped >= 0.30% below its open, then breadth turns up 10 points off its low and SPY ticks up; buy SPXL once. Stop 1R, trail 1R once +1R, out by 15:55. Observation only."
+ },
+ "NM-MF3-qqqdn-gapdn-FD": {
+  "name": "Early Sellers into a Pop (index down, no gap up) (near-miss)",
+  "side": "short",
+  "what": "09:50-15:00: the MF3 short (bearish heat, flow selling, RSI(5) > 70) taken only while QQQ is below its open and the stock did not gap up. Target 1R, stop 1R. Observation only."
+ },
+ "L3-gap-slope-fromopen-FD": {
+  "name": "Gap-Down Recovery Fade (all day)",
+  "side": "short",
+  "what": "09:50-15:00: a stock that gapped down 2.7%+ has rallied more than 3.5% from its open with its 20-bar average turning up; short the rally."
  }
 }
