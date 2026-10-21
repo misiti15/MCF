@@ -1,0 +1,117 @@
+{
+ "date": "2026-10-21",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 13,
+  "win_rate": 0.769,
+  "exp_r": 0.373,
+  "total_r": 4.85,
+  "pnl": 419.85,
+  "stop_exit_share": 0.077,
+  "pnl_adj": 419.61,
+  "slip_bps": 10.3
+ },
+ "yesterday": {
+  "trades": 6,
+  "win_rate": 0.333,
+  "exp_r": -0.084,
+  "total_r": -0.5,
+  "pnl": -72.23,
+  "stop_exit_share": 0.167,
+  "pnl_adj": -74.63,
+  "slip_bps": 25.4
+ },
+ "rolling5": {
+  "exp_r": -0.031,
+  "win_rate": 0.5,
+  "pnl": -16.475,
+  "slip_bps": 22.15,
+  "stop_exit_share": 0.25
+ },
+ "rolling20": {
+  "exp_r": -0.031,
+  "win_rate": 0.5,
+  "pnl": -16.475,
+  "slip_bps": 22.15,
+  "stop_exit_share": 0.25
+ },
+ "beat_rolling5": {
+  "exp_r": true,
+  "win_rate": true,
+  "slip_bps": true,
+  "stop_exit_share": true
+ },
+ "by_setup": {
+  "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.218,
+   "total_r": 0.22,
+   "pnl": 14.75,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 14.75,
+   "slip_bps": 30.0
+  },
+  "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long": {
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.794,
+   "total_r": 1.59,
+   "pnl": 177.99,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 177.99,
+   "slip_bps": 19.3
+  },
+  "GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short": {
+   "trades": 7,
+   "win_rate": 0.857,
+   "exp_r": 0.415,
+   "total_r": 2.91,
+   "pnl": 267.26,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 267.26,
+   "slip_bps": 3.4
+  },
+  "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long": {
+   "trades": 3,
+   "win_rate": 0.333,
+   "exp_r": 0.047,
+   "total_r": 0.14,
+   "pnl": -40.15,
+   "stop_exit_share": 0.333,
+   "pnl_adj": -40.39,
+   "slip_bps": 13.7
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 3,
+   "whatif_exp_r": 0.373,
+   "whatif_total_r": 1.12,
+   "verdict": "rule cost us R today"
+  }
+ ],
+ "signals": {
+  "submitted": 13,
+  "skipped": 3
+ },
+ "health": {
+  "polls": 47,
+  "last_poll_s": 7.0,
+  "symbols_last_bar": 3282,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 552,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "flatten_failed": []
+ },
+ "findings": [
+  "Entry slippage averaged 10.3 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency."
+ ]
+}
