@@ -1,1 +1,240 @@
-{"2025-04": {"module": 21, "scan": 21, "both": 21}, "2026-06": {"module": 5, "scan": 5, "both": 5}}
+{
+ "_note": "Two frame shapes per module:\n- \"offline\": the lab frames as stored (they start at the 09:50 bar).\n- \"live_shape\": the same frames plus the 09:35 / 09:40 / 09:45 rows a live frame has, carrying only the SPY / QQQ\n  context (spy_fo / qqq_fo from the scan's own 5-minute SPY / QQQ bars, idx5.parquet); every stock feature and breadth\n  is NaN there (the scan had no breadth before 09:50 either). This is the shape the scan's index running low used\n  (\"since 09:35\"), so it is the exact-reproduction check.\nStock modules (LD1, LD3, LD4, LD5, LD7): first bar per symbol-day where mask & finite r_long_t1s1, adv20 >= $95M, vs\nb_trades.parquet. ETF modules (LD2 TQQQ, LD6 / LD8 SPXL): module signals on the ETF's rows vs trades_A.csv.gz.\nLD6 also runs with the scan's exact SPY ATR% (SPY atr_d / SPY 09:50 close) in place of the SPXL-based estimate, to\nseparate the estimate's effect from the logic.",
+ "months": [
+  "2024-10",
+  "2025-03",
+  "2025-04",
+  "2025-05",
+  "2025-06",
+  "2025-07",
+  "2025-08",
+  "2025-09",
+  "2025-10",
+  "2025-11",
+  "2025-12",
+  "2026-01",
+  "2026-02",
+  "2026-03",
+  "2026-04",
+  "2026-05",
+  "2026-06",
+  "2026-07",
+  "2026-08",
+  "2026-09",
+  "2026-10"
+ ],
+ "spxl_spy_atr_ratio": {
+  "median": 2.9342,
+  "p05": 2.7222,
+  "p95": 3.1701,
+  "train_median": 2.9183
+ },
+ "LD1": {
+  "module": "LD1-ns1-breadthup-t05s1-long",
+  "scan_cfg": "B5-NS1-BRDUP",
+  "scan": 134,
+  "offline": {
+   "module": 134,
+   "both": 134,
+   "module_only": [],
+   "scan_only": []
+  },
+  "live_shape": {
+   "module": 134,
+   "both": 134,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD3": {
+  "module": "LD3-st2-idxturn-t05s1-long",
+  "scan_cfg": "B5-ST2-IDXTURN",
+  "scan": 73,
+  "offline": {
+   "module": 66,
+   "both": 66,
+   "module_only": [],
+   "scan_only": [
+    "('AAOI', datetime.date(2026, 3, 4), 1035)",
+    "('ALAB', datetime.date(2025, 7, 14), 1130)",
+    "('BBWI', datetime.date(2026, 3, 4), 1050)",
+    "('CIFR', datetime.date(2026, 7, 14), 1120)",
+    "('HUT', datetime.date(2026, 7, 14), 1055)",
+    "('INOD', datetime.date(2026, 6, 8), 955)",
+    "('MARA', datetime.date(2026, 7, 14), 1045)"
+   ]
+  },
+  "live_shape": {
+   "module": 73,
+   "both": 73,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD4": {
+  "module": "LD4-st4-breadthup-t1s05-long",
+  "scan_cfg": "B5-ST4-BRDUP",
+  "scan": 21,
+  "offline": {
+   "module": 21,
+   "both": 21,
+   "module_only": [],
+   "scan_only": []
+  },
+  "live_shape": {
+   "module": 21,
+   "both": 21,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD5": {
+  "module": "LD5-st2-breadthup-t05s1-long",
+  "scan_cfg": "B5-ST2-BRDUP",
+  "scan": 31,
+  "offline": {
+   "module": 31,
+   "both": 31,
+   "module_only": [],
+   "scan_only": []
+  },
+  "live_shape": {
+   "module": 31,
+   "both": 31,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD7": {
+  "module": "LD7-ns1-idxturn-holdtr-long",
+  "scan_cfg": "B5-NS1-IDXTURN",
+  "scan": 177,
+  "offline": {
+   "module": 128,
+   "both": 128,
+   "module_only": [],
+   "scan_only": [
+    "('AEM', datetime.date(2026, 4, 2), 1005)",
+    "('AG', datetime.date(2026, 2, 24), 1015)",
+    "('AG', datetime.date(2026, 4, 2), 1005)",
+    "('AGI', datetime.date(2026, 4, 2), 1005)",
+    "('AGQ', datetime.date(2026, 2, 24), 1030)",
+    "('ALAB', datetime.date(2025, 5, 22), 1120)",
+    "('AMDL', datetime.date(2025, 9, 2), 1000)",
+    "('APLD', datetime.date(2025, 10, 30), 1005)",
+    "('APLD', datetime.date(2025, 7, 14), 1100)",
+    "('APTV', datetime.date(2025, 10, 30), 1020)"
+   ]
+  },
+  "live_shape": {
+   "module": 177,
+   "both": 177,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD2": {
+  "module": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+  "scan_cfg": "A-QQQ-abs015-brd-t05s1",
+  "instrument": "TQQQ",
+  "scan": 159,
+  "offline": {
+   "module": 137,
+   "both": 137,
+   "module_only": [],
+   "scan_only": [
+    "('2025-03-06', 1005)",
+    "('2025-03-27', 955)",
+    "('2025-04-07', 955)",
+    "('2025-05-22', 955)",
+    "('2025-06-09', 1025)",
+    "('2025-06-18', 1015)",
+    "('2025-07-11', 1000)",
+    "('2025-07-14', 1020)",
+    "('2025-09-11', 955)",
+    "('2025-09-18', 1000)"
+   ]
+  },
+  "live_shape": {
+   "module": 159,
+   "both": 159,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD6": {
+  "module": "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long",
+  "scan_cfg": "A-SPY-rel020-brd-holdtr",
+  "instrument": "SPXL",
+  "scan": 104,
+  "offline": {
+   "module": 90,
+   "both": 87,
+   "module_only": [
+    "('2025-07-10', 1010)",
+    "('2025-10-28', 1005)",
+    "('2026-07-16', 1005)"
+   ],
+   "scan_only": [
+    "('2024-10-29', 955)",
+    "('2024-10-30', 955)",
+    "('2025-03-06', 1005)",
+    "('2025-03-11', 1010)",
+    "('2025-04-04', 1000)",
+    "('2025-04-07', 955)",
+    "('2025-07-14', 1020)",
+    "('2025-09-02', 955)",
+    "('2025-09-18', 1000)",
+    "('2025-11-14', 1020)"
+   ]
+  },
+  "live_shape": {
+   "module": 102,
+   "both": 99,
+   "module_only": [
+    "('2025-07-10', 1010)",
+    "('2025-10-28', 1005)",
+    "('2026-07-16', 1005)"
+   ],
+   "scan_only": [
+    "('2025-03-06', 1005)",
+    "('2025-03-11', 1010)",
+    "('2026-01-15', 1010)",
+    "('2026-02-13', 1005)",
+    "('2026-09-15', 955)"
+   ]
+  },
+  "live_shape_exact_spy_atr": {
+   "module": 104,
+   "both": 104,
+   "module_only": [],
+   "scan_only": []
+  }
+ },
+ "LD8": {
+  "module": "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
+  "scan_cfg": "A-SPY-abs030-brd-holdtr",
+  "instrument": "SPXL",
+  "scan": 70,
+  "offline": {
+   "module": 66,
+   "both": 65,
+   "module_only": [
+    "('2026-05-15', 1015)"
+   ],
+   "scan_only": [
+    "('2025-03-06', 1005)",
+    "('2025-03-27', 955)",
+    "('2025-04-07', 955)",
+    "('2026-05-15', 955)",
+    "('2026-07-01', 955)"
+   ]
+  },
+  "live_shape": {
+   "module": 70,
+   "both": 70,
+   "module_only": [],
+   "scan_only": []
+  }
+ }
+}

@@ -43,8 +43,12 @@ live:
     - LIQ-orl-sweep-open15-s25-long         # ~31.3/day
     - RW2-exhaustion-noon-adv150-short-FD   # ~52.08/day
     - heat_fade_long-FD                     # ~55.18/day
+    - CWT14-failbrk-orl-p10-lowvol-long     # ~74.36/day (moved from Testing 2 2026-10-21)
+    - CWT14-failbrk-orl-p10-long            # ~93.87/day (moved from Testing 2 2026-10-21)
     - heat_fade_short                       # former primary (windowed 09:50-10:30)
+    - CWT14-failbrk-orl-p05-lowvol-long     # ~173.74/day (moved from Testing 2 2026-10-21)
     - heat_fade_short-FD                    # ~176.38/day
+    - CWT14-failbrk-orl-p05-long            # ~246.53/day (moved from Testing 2 2026-10-21)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -78,6 +82,54 @@ strategies:
     scale_out_r: null
     testing: {added: "2026-10-12", source: "LIQ-OR-long-x0.15-open-k15-a1-S-2.5R-none", bar: "PLAN.md 5(b)"}
     tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
+  # Failed Opening-Range-Low Break Long (low volume): CWT package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190); open history n 31676, exp -0.0891R, t -7.82, 74.36/day; verdict retire
+  CWT14-failbrk-orl-p10-lowvol-long:
+    # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.139R/trade)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: false   # Graveyard runs no live scale-out (owner 2026-10-20 caps); was true in Testing 2
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full", fill: false}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: CWT package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179); open history n 39989, exp -0.0906R, t -7.05, 93.87/day; verdict retire
+  CWT14-failbrk-orl-p10-long:
+    # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.155R/trade)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
+    min_adv: 95000000
+    window: [950, 1200]
+    scale_out_r: 0.35   # owner 2026-10-17 (Q17): bank half at +0.35R, rest to breakeven (research/bdi/top5_1016)
+    live_scale_out: false   # Graveyard runs no live scale-out (owner 2026-10-20 caps); was true in Testing 2
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vany-sidelong-t05s1-guest", fill: true}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # Failed Opening-Range-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full (id 166); open history n 74014, exp -0.0905R, t -9.35, 173.74/day; verdict rework
+  CWT14-failbrk-orl-p05-lowvol-long:
+    # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.233R/trade)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.25   # owner 2026-10-16: bank half at +0.25R, rest to breakeven (research/bdi/top5_1015 X06)
+    live_scale_out: false   # Graveyard runs no live scale-out (owner 2026-10-20 caps); was true in Testing 2
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full", fill: true}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  # Failed Opening-Range-Low Break Long (0.05 ATR) [fill]: CWT package B B3-LOR-p0.05-Vany-sidelong-t05s1-full (id 154); open history n 105023, exp -0.0935R, t -10.05, 246.53/day; verdict rework
+  CWT14-failbrk-orl-p05-long:
+    # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.141R/trade)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.25   # owner 2026-10-16: bank half at +0.25R, rest to breakeven (research/bdi/top5_1015 X06)
+    live_scale_out: false   # Graveyard runs no live scale-out (owner 2026-10-20 caps); was true in Testing 2
+    testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vany-sidelong-t05s1-full", fill: true}
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
 
   # ---- from Testing 1: former primary (windowed, primary form = default.yaml block)
   heat_fade_short:   # ex-primary "Morning Bounce Fade"

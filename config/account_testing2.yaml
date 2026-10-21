@@ -36,6 +36,14 @@ live:
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - LD4-st4-breadthup-t1s05-long            # 0.05/day (longs1020 near-miss, owner 2026-10-20)
+    - LD5-st2-breadthup-t05s1-long            # 0.07/day (twin_group LD-ST2)
+    - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # 0.16/day (twin_group LD-SPXL)
+    - LD3-st2-idxturn-t05s1-long              # 0.17/day (twin_group LD-ST2)
+    - LD6-spy-dip020atr-breadthturn-spxl-holdtr-long   # 0.24/day (twin_group LD-SPXL)
+    - LD1-ns1-breadthup-t05s1-long            # 0.31/day (twin_group LD-NS1)
+    - LD2-qqq-dip015-breadthturn-tqqq-t05s1-long   # 0.37/day
+    - LD7-ns1-idxturn-holdtr-long             # 0.42/day (twin_group LD-NS1)
     - NM-RWN5-ns3-mon-weakrs-short            # 0.69/day
     - NM-RWR3-ns3-qqqup-early-short           # 0.83/day
     - NM-RWN3-ns3-spyup-early-short           # 0.91/day
@@ -58,6 +66,7 @@ live:
     - CWT05-flush-m075-v3-long   # 3.31/day
     - CWT12-flag-s1-long   # 3.37/day
     - CWT04-backside-vwaptest-a15-short   # 4.76/day
+    - NM-MF3-qqqdn-gapdn-FD   # ~4.9/day (mf3swarm1020 near-miss M1, owner 2026-10-20)
     - CWT13-vwapstretch-z075-short   # 6.14/day
     - CWT09-gapdn-vwaploss-g5-short   # 8.60/day
     - CWT05-flush-m05-v3-long   # 8.94/day
@@ -69,15 +78,11 @@ live:
     - CWT14-failbrk-pdh-p10-lowvol-short   # 45.73/day
     - CWT14-failbrk-pdl-p10-lowvol-long   # 47.14/day
     - CWT14-failbrk-pdh-p10-short   # 71.04/day
-    - CWT14-failbrk-orl-p10-lowvol-long   # 74.36/day
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
-    - CWT14-failbrk-orl-p10-long   # 93.87/day
     - CWT14-failbrk-pdh-p05-lowvol-short   # 103.00/day
     - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
     - CWT12-coil-k4-long   # 104.47/day
     - CWT14-failbrk-pdl-p05-long   # 156.98/day
-    - CWT14-failbrk-orl-p05-lowvol-long   # 173.74/day
-    - CWT14-failbrk-orl-p05-long   # 246.53/day
 strategies:
   # ---- swarm1017 near-misses runnable after Q8 (owner 2026-10-17): forward observation, NOT candidates;
   #      judge on >= 20 sessions / 60 trades
@@ -188,6 +193,124 @@ strategies:
     window: [1300, 1500]
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  # ---- longs1020 near-misses (owner 2026-10-20, L1 extended to the 8 long signals positive on train AND valid with a
+  #      live-supported exit; research/bdi/longs1020/NOTES.md). Observation only: NONE passed the candidate rule or the
+  #      multiple-testing bar (study 3.26, lineages 4.91 / 5.00). Parity with the scan: research/bdi/longs1020/
+  #      verify_modules.json. twin_group (owner copy policy): setups of one group never hold the same symbol here.
+  #      Judge on >= 20 sessions / 60 trades. Open-history figures: n, exp R after costs, day-clustered t (train / valid).
+  # owner 2026-10-20: observation only (near-miss), Testing 2. B5-NS1-BRDUP-t05s1: train 61 +0.081R t0.71 / valid 73 +0.108R t1.52; 0.31/day; down +0.02R
+  LD1-ns1-breadthup-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD1-ns1-breadthup-t05s1-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-NS1
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. A-QQQ-abs015-brd-t05s1 (TQQQ): train 92 +0.030R t0.42 / valid 67 +0.079R t0.96; 0.37/day; down -0.06R
+  LD2-qqq-dip015-breadthturn-tqqq-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD2-qqq-dip015-breadthturn-tqqq-t05s1-long.py
+    symbols: [TQQQ]
+    pin_symbols: true          # keep TQQQ in the universe (a lab symbols list only restricts)
+    context: [qqq_fo, breadth]
+    min_adv: 0                 # Part A scored the ETF with no adv filter
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. B5-ST2-IDXTURN-t05s1: train 23 +0.035R t0.27 / valid 50 +0.268R t3.44; 0.17/day; down -0.04R; valid in 2026Q2
+  LD3-st2-idxturn-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD3-st2-idxturn-t05s1-long.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-ST2
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. B5-ST4-BRDUP-t1s05: train 5 +0.345R t1.02 / valid 16 +0.403R t2.09; 0.05/day; down -0.18R (n 4); tiny n
+  LD4-st4-breadthup-t1s05-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD4-st4-breadthup-t1s05-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. B5-ST2-BRDUP-t05s1: train 10 +0.072R t0.33 / valid 21 +0.194R t1.57; 0.07/day; down +0.19R (n 8); tiny n
+  LD5-st2-breadthup-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD5-st2-breadthup-t05s1-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-ST2
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. A-SPY-rel020-brd-holdtr (SPXL): train 54 +0.058R t0.31 / valid 50 +0.169R t0.89; 0.24/day; down -0.29R
+  LD6-spy-dip020atr-breadthturn-spxl-holdtr-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD6-spy-dip020atr-breadthturn-spxl-holdtr-long.py
+    symbols: [SPXL]
+    pin_symbols: true          # keep SPXL in the universe (a lab symbols list only restricts)
+    context: [spy_fo, breadth]
+    min_adv: 0                 # Part A scored the ETF with no adv filter
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-SPXL
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. B5-NS1-IDXTURN-holdtr: train 78 +0.578R t0.89 / valid 99 +0.010R t0.06; 0.42/day; down -0.29R
+  LD7-ns1-idxturn-holdtr-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD7-ns1-idxturn-holdtr-long.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-NS1
+    tags: [observation, longs1020]
+  # owner 2026-10-20: observation only (near-miss), Testing 2. A-SPY-abs030-brd-holdtr (SPXL): train 39 +0.045R t0.20 / valid 31 +0.121R t0.48; 0.16/day; down -0.43R
+  LD8-spy-dip030-breadthturn-spxl-holdtr-long:
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD8-spy-dip030-breadthturn-spxl-holdtr-long.py
+    symbols: [SPXL]
+    pin_symbols: true          # keep SPXL in the universe (a lab symbols list only restricts)
+    context: [spy_fo, breadth]
+    min_adv: 0                 # Part A scored the ETF with no adv filter
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-SPXL
+    tags: [observation, longs1020]
+  # ---- mf3swarm1020 near-miss M1 (owner 2026-10-20 "M1 yes"; research/bdi/mf3swarm1020/NOTES.md section 3).
+  # owner 2026-10-20: observation only (near-miss), Testing 2. MF3-FD + qqq_fo < 0 + gap <= 0: train 991 -0.010R t-0.27 / valid 1,108 -0.010R t-0.20; ~4.9/day;
+  # up sessions -0.26R / down +0.09R; fails the regime gate and walk-forward (0.47). Not a candidate (exp not > 0).
+  NM-MF3-qqqdn-gapdn-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/mf3swarm1020/modules/NM-MF3-qqqdn-gapdn-FD.py
+    context: [qqq_fo]
+    min_adv: 95000000
+    window: [950, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [observation, mf3swarm1020]
   # ---- everything from config/default.yaml OFF (primary setups and the disabled library)
   orb: {enabled: false}
   vwap_reclaim: {enabled: false}
@@ -356,7 +479,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full", fill: false}
   # Failed Opening-Range-Low Break Long (low volume): CWT package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190); open history n 31676, exp -0.0891R, t -7.82, 74.36/day; verdict retire
   CWT14-failbrk-orl-p10-lowvol-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 orl longs, live -0.139R/trade)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
     min_adv: 95000000
@@ -466,7 +589,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T1 t1s05 guest", fill: false}
   # Failed Opening-Range-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full (id 166); open history n 74014, exp -0.0905R, t -9.35, 173.74/day; verdict rework
   CWT14-failbrk-orl-p05-lowvol-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 orl longs, live -0.233R/trade)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
     min_adv: 95000000
@@ -476,7 +599,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full", fill: true}
   # Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: CWT package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179); open history n 39989, exp -0.0906R, t -7.05, 93.87/day; verdict retire
   CWT14-failbrk-orl-p10-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 orl longs, live -0.155R/trade)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
     min_adv: 95000000
@@ -486,7 +609,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.1-Vany-sidelong-t05s1-guest", fill: true}
   # Failed Opening-Range-Low Break Long (0.05 ATR) [fill]: CWT package B B3-LOR-p0.05-Vany-sidelong-t05s1-full (id 154); open history n 105023, exp -0.0935R, t -10.05, 246.53/day; verdict rework
   CWT14-failbrk-orl-p05-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 orl longs, live -0.141R/trade)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py
     min_adv: 95000000

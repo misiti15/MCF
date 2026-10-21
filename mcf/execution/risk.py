@@ -23,10 +23,20 @@ class RiskState:
     realized_r_by_strategy: dict[str, float] = field(default_factory=dict)
 
 
-def twin_key(name: str | None) -> str:
-    """A setup and its full-day copy are twins: same name once a trailing '-FD' is stripped."""
+def twin_key(name: str | None, groups: dict[str, str] | None = None) -> str:
+    """A setup and its full-day copy are twins: same name once a trailing '-FD' is stripped. A setup with a
+    `twin_group:` (owner 2026-10-20: overlapping filtered copies of one signal, e.g. two ST2 filters) uses that group
+    instead, so two setups of one group never hold the same symbol in one account."""
     n = str(name or "")
+    if groups and n in groups:
+        return "group:" + groups[n]
     return n[:-3] if n.endswith("-FD") else n
+
+
+def twin_groups(cfg: dict) -> dict[str, str]:
+    """setup -> twin_group for every setup block that sets one (config `strategies:`)."""
+    return {str(k): str(v["twin_group"]) for k, v in (cfg.get("strategies") or {}).items()
+            if isinstance(v, dict) and v.get("twin_group")}
 
 
 class RiskManager:
@@ -44,6 +54,7 @@ class RiskManager:
         self.residual_frac = float(live.get("lot_cap_ignore_residual_frac", 0.0) or 0.0)
         # owner 2026-10-19 evening: no second lot on a symbol already held (or pending) by this setup's twin
         self.block_twin = bool(live.get("block_twin_same_symbol", True))
+        self.twin_groups = twin_groups(cfg)      # optional per-setup `twin_group:` (owner 2026-10-20)
         # owner 2026-10-19 evening: a setup takes no new entries today once its net realized R <= -limit (absent = off)
         lim = self.a.get("max_setup_daily_loss_r")
         self.setup_loss_limit = float(lim) if lim else None
@@ -84,7 +95,8 @@ class RiskManager:
             return False, "max positions for this setup"
         if sig.symbol in s.open_symbols:
             lots = s.lots.get(sig.symbol) or []
-            if self.block_twin and any(st != sig.strategy and twin_key(st) == twin_key(sig.strategy)
+            tk = twin_key(sig.strategy, self.twin_groups)
+            if self.block_twin and any(st != sig.strategy and twin_key(st, self.twin_groups) == tk
                                        and (self.max_lots <= 1 or side == sig.side) for st, side in lots):
                 return False, "twin held"
             if self.max_lots <= 1:

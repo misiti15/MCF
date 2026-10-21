@@ -30,3 +30,13 @@ def test_label_falls_back_to_code():
     assert label("no-such-setup") == "no-such-setup"
     assert name("heat_fade_short") != "heat_fade_short"
     assert label("heat_fade_short").endswith("(heat_fade_short)")
+
+
+def test_longs1020_setups_starred_with_legend():
+    """Owner 2026-10-20: the 8 longs1020 setups (LD1-LD8, not M1) carry a "* " name prefix, explained on the dashboard."""
+    names = yaml.safe_load((ROOT / "config/setup_names.yaml").read_text())
+    ld = {k: v for k, v in names.items() if k.startswith("LD")}
+    assert len(ld) == 8 and all(v["name"].startswith("* ") for v in ld.values())
+    assert not names["NM-MF3-qqqdn-gapdn-FD"]["name"].startswith("*")
+    assert "* = long setup from the 2026-10-20 longs research, near-miss, observation only" in \
+        (ROOT / "docs/live/index.html").read_text()

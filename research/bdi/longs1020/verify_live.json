@@ -1,0 +1,118 @@
+{
+ "_note": "Live-shaped check: the 9 Testing 2 setups (LD1-LD8 + M1) built by build_strategies from config/account_testing2.yaml\nrun through the live LabStrategy on real 1-minute bars (SymbolHistory contexts as the backtester builds them, peers =\nthe lab universe's bars that day, so breadth / spy_fo / qqq_fo come from mcf.strategies.lab_context exactly as live),\nover open-history sessions of one month (L20_DAYS: a subset). Signals are compared with the research scans (b_trades / trades_A for LD*, the module\nmask on the lab frames for M1). Not exact by design: the live frame is rebuilt from 1-minute bars with PRIOR5_BARS of\nwarm-up, while the lab frames used full history. Locked block never read (common.load_1min filters it at read).\nEducational only - not financial advice.",
+ "month": "2026-06",
+ "days": [
+  "2026-06-03",
+  "2026-06-05",
+  "2026-06-08",
+  "2026-06-25",
+  "2026-06-29"
+ ],
+ "peers_symbols": 1224,
+ "LD4-st4-breadthup-t1s05-long": {
+  "live_signals": 3,
+  "research_signals": 6,
+  "same_bar": 3,
+  "same_symbol_day": 3,
+  "live_only": [],
+  "research_only": [
+   "('AXTX', '2026-06-25', 1125)",
+   "('SITM', '2026-06-25', 1130)",
+   "('TECL', '2026-06-25', 1005)"
+  ]
+ },
+ "LD5-st2-breadthup-t05s1-long": {
+  "live_signals": 3,
+  "research_signals": 4,
+  "same_bar": 3,
+  "same_symbol_day": 3,
+  "live_only": [],
+  "research_only": [
+   "('SITM', '2026-06-03', 1005)"
+  ]
+ },
+ "LD8-spy-dip030-breadthturn-spxl-holdtr-long": {
+  "live_signals": 1,
+  "research_signals": 5,
+  "same_bar": 1,
+  "same_symbol_day": 1,
+  "live_only": [],
+  "research_only": [
+   "('SPXL', '2026-06-03', 1005)",
+   "('SPXL', '2026-06-08', 1010)",
+   "('SPXL', '2026-06-25', 1005)",
+   "('SPXL', '2026-06-29', 1025)"
+  ]
+ },
+ "LD3-st2-idxturn-t05s1-long": {
+  "live_signals": 13,
+  "research_signals": 19,
+  "same_bar": 13,
+  "same_symbol_day": 13,
+  "live_only": [],
+  "research_only": [
+   "('AMBA', '2026-06-25', 1035)",
+   "('HUT', '2026-06-25', 1025)",
+   "('INOD', '2026-06-08', 955)",
+   "('MULL', '2026-06-03', 1025)",
+   "('SITM', '2026-06-03', 1005)",
+   "('SITM', '2026-06-25', 1045)"
+  ]
+ },
+ "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long": {
+  "live_signals": 1,
+  "research_signals": 5,
+  "same_bar": 1,
+  "same_symbol_day": 1,
+  "live_only": [],
+  "research_only": [
+   "('SPXL', '2026-06-03', 1005)",
+   "('SPXL', '2026-06-08', 1010)",
+   "('SPXL', '2026-06-25', 1005)",
+   "('SPXL', '2026-06-29', 1025)"
+  ]
+ },
+ "LD1-ns1-breadthup-t05s1-long": {
+  "live_signals": 1,
+  "research_signals": 1,
+  "same_bar": 1,
+  "same_symbol_day": 1,
+  "live_only": [],
+  "research_only": []
+ },
+ "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long": {
+  "live_signals": 5,
+  "research_signals": 5,
+  "same_bar": 5,
+  "same_symbol_day": 5,
+  "live_only": [],
+  "research_only": []
+ },
+ "LD7-ns1-idxturn-holdtr-long": {
+  "live_signals": 3,
+  "research_signals": 4,
+  "same_bar": 3,
+  "same_symbol_day": 3,
+  "live_only": [],
+  "research_only": [
+   "('SEI', '2026-06-29', 1045)"
+  ]
+ },
+ "NM-MF3-qqqdn-gapdn-FD": {
+  "live_signals": 24,
+  "research_signals": 55,
+  "same_bar": 24,
+  "same_symbol_day": 24,
+  "live_only": [],
+  "research_only": [
+   "('ABVX', '2026-06-25', np.int64(1310))",
+   "('AKAM', '2026-06-05', np.int64(1340))",
+   "('AXTX', '2026-06-03', np.int64(1350))",
+   "('CHTR', '2026-06-03', np.int64(1245))",
+   "('CMS', '2026-06-25', np.int64(1330))",
+   "('CYTK', '2026-06-25', np.int64(1050))",
+   "('DAVE', '2026-06-03', np.int64(1205))",
+   "('EME', '2026-06-05', np.int64(1055))"
+  ]
+ }
+}
