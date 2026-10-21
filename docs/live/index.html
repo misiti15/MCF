@@ -59,6 +59,21 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 .note { color: var(--ink-2); font-size: 12px; margin-top: 8px; }
 .empty { color: var(--muted); padding: 30px; text-align: center; }
 #lb-tab thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+/* column-group bands (owner 2026-10-21): Last session · Live · Replay */
+:root { --band-last: rgba(42,120,214,0.07); --band-replay: rgba(180,83,9,0.08); --band-last-ink: #1f5fae; --band-replay-ink: #9a4a07; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band-last: rgba(57,135,229,0.12); --band-replay: rgba(245,158,11,0.12); --band-last-ink: #8fbaf0; --band-replay-ink: #f5b754; } }
+:root[data-theme="dark"] { --band-last: rgba(57,135,229,0.12); --band-replay: rgba(245,158,11,0.12); --band-last-ink: #8fbaf0; --band-replay-ink: #f5b754; }
+#lb-tab thead tr.band th { height: 24px; padding: 2px 8px; font-size: 11px; font-weight: 600; text-align: center; cursor: default; letter-spacing: .02em; }
+#lb-tab thead tr.cols th { top: 24px; }
+#lb-tab thead tr.cols th.bd-last, #lb-tab thead tr.cols th.bd-replay { white-space: normal; min-width: 64px; max-width: 92px; line-height: 1.2; }
+#lb-tab th.bd-last, #lb-tab td.bd-last { background: var(--band-last); }
+#lb-tab thead tr.band th.bd-last { color: var(--band-last-ink); background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
+#lb-tab thead tr.cols th.bd-last { background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
+#lb-tab th.bd-replay, #lb-tab td.bd-replay { background: var(--band-replay); }
+#lb-tab thead tr.band th.bd-replay, #lb-tab thead tr.cols th.bd-replay { color: var(--band-replay-ink); background: linear-gradient(var(--band-replay), var(--band-replay)), var(--surface); }
+#lb-tab thead tr.band th.bd-live { color: var(--ink-2); border-bottom: 2px solid var(--axis); }
+#lb-tab thead tr.band th.bd-last { border-bottom: 2px solid var(--s1); }
+#lb-tab thead tr.band th.bd-replay { border-bottom: 2px solid #d97706; }
 th.sorted { color: var(--s1); text-decoration: underline; }
 th[data-sortable] { user-select: none; }
 .card.gen { border: 2px solid var(--gen); background: linear-gradient(var(--gen-bg), var(--gen-bg)), var(--surface); }
@@ -71,6 +86,37 @@ th[data-sortable] { user-select: none; }
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
 End-of-day reports: <a href="report.html">open</a></div></div></header>
+<script>
+// Shared helpers (owner 2026-10-21): one cached fetch per URL per page load, a quote-aware CSV reader and a per-setup
+// summary of one account's session from reports/<date>.csv. Used by the "Last session" columns, the scorecard and the
+// setup drill-down. Paper results. Educational only — not financial advice.
+window.MCF = window.MCF || {};
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", memo = {};
+  const get = (url, text) => memo[url] || (memo[url] = fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.ok ? (text ? r.text() : r.json()) : null).catch(() => null));
+  const csv = t => {
+    const out = [], rows = []; let row = [], cur = "", q = false;
+    for (let i = 0; i < t.length; i++) { const c = t[i];
+      if (q) { if (c === '"' && t[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+      else if (c === '"') q = true; else if (c === ",") { row.push(cur); cur = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && t[i + 1] === "\n") i++; row.push(cur); rows.push(row); row = []; cur = ""; }
+      else cur += c; }
+    if (cur !== "" || row.length) { row.push(cur); rows.push(row); }
+    const h = rows.shift() || [];
+    rows.filter(r => r.length > 1).forEach(r => out.push(Object.fromEntries(h.map((k, i) => [k, r[i]]))));
+    return out;
+  };
+  // {setup: {trades, wins, r (total R), pnl}} for one account branch and session date; null when the report is missing
+  const daySummary = (branch, date) => !date ? Promise.resolve(null) :
+    get(RAW + branch + "/reports/" + date + ".csv", true).then(t => { if (!t) return null; const by = {};
+      csv(t).forEach(x => { const k = x.strategy; if (!k) return; const b = by[k] = by[k] || { trades: 0, wins: 0, r: 0, pnl: 0 };
+        b.trades++; b.r += +x.r_multiple || 0; b.pnl += +x.pnl || 0; if (+x.pnl > 0) b.wins++; });
+      return by; });
+  Object.assign(window.MCF, { RAW, get, csv, daySummary,
+    BRANCH: { primary: "mcf-data", testing: "mcf-data-testing", testing2: "mcf-data-testing2", gen: "mcf-data-gen", graveyard: "mcf-data-graveyard" } });
+})();
+</script>
 <!-- All accounts at a glance (owner 2026-10-12): one card per paper account, read from each account's state branch.
      Click a card to open that account below. No Alpaca log-in needed; data refreshes every 2 minutes. -->
 <style>
@@ -378,9 +424,19 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     if (!d?.setups) return;
     window.__lastScore = d;
     const el = $l("#lv-score"); if (!el) return;
-    el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}</div>` +
-      table(["Setup", "Current account", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
-        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td class="l">${e(curAcct(x.setup))}</td><td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
+    // last session of this account (owner 2026-10-21): scorecard last_session when present, else reports/<date>.csv
+    const day = String(d.window || "").split(" to ")[1] || null, lbk = d.leaderboard || [];
+    let ls = null;
+    if (lbk.length && lbk.every(x => x.last_session)) ls = Object.fromEntries(lbk.filter(x => x.last_session.trades).map(x => [x.setup, x.last_session]));
+    else if (day) { window.__lsScore = window.__lsScore || {};
+      if (window.__lsScore[ACCT + day] === undefined) { window.__lsScore[ACCT + day] = null;
+        window.MCF.daySummary(ACCOUNTS[ACCT][1], day).then(by => { window.__lsScore[ACCT + day] = by || {}; if (window.__lastScore) renderScore(window.__lastScore); }); }
+      ls = window.__lsScore[ACCT + day]; }
+    const lsC = sid => { const v = ls && ls[sid]; const r = v ? +v.r : null, p = v ? +v.pnl : null;
+      return v && v.trades ? `<td>${v.trades}</td><td class="${cls(r)}">${(r > 0 ? "+" : "") + r.toFixed(2)}</td><td class="${cls(p)}">${money(p)}</td>` : `<td>—</td><td>—</td><td>—</td>`; };
+    el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}${day ? ` · last session = ${e(day)}` : ""}</div>` +
+      table(["Setup", "Current account", "Last-session trades", "Last-session R", "Last-session P/L", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
+        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td class="l">${e(curAcct(x.setup))}</td>${lsC(x.setup)}<td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
   }
 
   function renderLab(d) {
@@ -628,8 +684,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   const isGen = c => /^GEN-/.test(String(c || ""));
-  let rows = [], when = {}, sortK = "rank", sortD = 1;
+  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null;
   const st = { acct: "all", show: "live", min: 0 };
+  const dayOf = {}, lbOf = {};   // per account: latest completed session date, raw leaderboard rows
   function flag(r) {
     if (!r.trades || r.trades < 10) return ["needs trades", ""];
     const gap = r.expected_r == null ? null : r.avg_r - r.expected_r;
@@ -650,9 +707,11 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       try {
         const r = await fetch(RAW + br + "/reports/scorecard.json?t=" + Date.now(), { cache: "no-store" });
         if (r.ok) { const c = await r.json(); lb = c.leaderboard; when[k] = c.generated || c.window;
+          dayOf[k] = [String(c.window || "").split(" to ")[1], ...(lb || []).map(x => x.last)].filter(v => /^\d{4}-/.test(v || "")).sort().pop() || null;
           pt = Object.fromEntries((((c.playing_time || {}).cumulative || {}).setups || []).map(x => [x.setup, x.verdict])); }
       } catch (_) {}
       if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
+      lbOf[k] = lb || [];
       // generated setups have their own card (owner 2026-10-19): never in this leaderboard
       const on = asg && asg.accounts && asg.accounts[k] ? new Set(asg.accounts[k]) : null;
       const seen = new Set();
@@ -719,6 +778,19 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       return m;
     });
     all.length = 0; merged.forEach(r => all.push(r));
+    // Last session (owner 2026-10-21): the most recent completed session across the accounts; each setup's trades, R
+    // and P/L that day from every account it traded in (copies merged). From the scorecard's last_session when the
+    // EOD report carries it, else from that account's reports/<date>.csv.
+    LS = Object.values(dayOf).filter(Boolean).sort().pop() || null;
+    const lsBy = {};
+    await Promise.all(Object.keys(ACC).filter(k => LS && dayOf[k] === LS).map(async k => {
+      const rs = lbOf[k] || [], has = rs.length && rs.every(x => x.last_session && x.last_session.date);
+      const by = has ? Object.fromEntries(rs.filter(x => x.last_session.trades).map(x => [x.setup, { trades: x.last_session.trades, r: x.last_session.r, pnl: x.last_session.pnl }]))
+        : await window.MCF.daySummary(ACC[k][1], LS);
+      Object.entries(by || {}).forEach(([sname, v]) => { const b = lsBy[sname] = lsBy[sname] || { trades: 0, r: 0, pnl: 0 };
+        b.trades += v.trades; b.r += +v.r || 0; b.pnl += +v.pnl || 0; });
+    }));
+    all.forEach(r => { const v = lsBy[r.setup]; r.ls_trades = v ? v.trades : null; r.ls_r = v ? +v.r.toFixed(3) : null; r.ls_pnl = v ? +v.pnl.toFixed(2) : null; });
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
       if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
       if (a && a.since && (a.accounts || []).includes(r.acct) && !(a.from || []).includes(r.acct)) { r.moved = a.since;
@@ -737,9 +809,20 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     rows = all;
     draw();
   }
-  const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["trades", "Live trades"], ["sessions_traded", "Sessions"],
+  const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"],
+    ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
+    ["trades", "Live trades"], ["sessions_traded", "Sessions"],
     ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
+  // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
+  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", win_rate: "live", breakeven_wr: "live",
+    avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live" };
+  const LEFT = new Set(["name", "acctLabel", "pt", "flag"]);
+  const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
+      if (p && p.b === b) p.n++; else out.push({ b, n: 1 }); });
+    const T = { last: [`Last session (${LS || "–"})`, ' id="lb-last-band"', "Most recent completed session, all accounts the setup traded in that day"],
+      live: ["Live — since start", "", "Live paper results since the setup started, all accounts merged"] };
+    return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
   function draw() {
     let r = rows.filter(x => (st.acct === "all" || (x.accts || [x.acct]).includes(st.acct)) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
     const key = x => { const v = sortK === "flag" ? x.flag[0] : x[sortK]; return v == null ? (sortD > 0 ? Infinity : -Infinity) : v; };
@@ -749,7 +832,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
       (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
       ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
-    const th = COLS.map(([k, h], i) => `<th class="${i === 1 || i === 2 || i >= 16 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const th = COLS.map(([k, h]) => `<th class="${LEFT.has(k) ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
@@ -758,14 +841,16 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
       return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
-        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td><td>${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
+        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
+        <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
+        <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
         <td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>
         <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
     };
-    q("#lb-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No setups match.</div>`;
+    q("#lb-tab").innerHTML = r.length ? `<table><thead>${bandRow()}<tr class="cols">${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No setups match.</div>`;
     const lab = (COLS.find(c => c[0] === sortK) || [, "#"])[1];
     q("#lb-sorted").textContent = `Sorted by ${lab} (${sortD > 0 ? "low to high" : "high to low"}) · tap any column header to re-sort, tap again to flip`;
   }
@@ -994,6 +1079,11 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     "needs trades": "Fewer than 10 trades: too early to judge.", "GENERATED": "Machine-generated by the Setup Generator; trades only in the Setup Generator account.",
     "ex-primary": "Was in the Primary account before being demoted.",
     "*": "* = long setup from the 2026-10-20 longs research, near-miss, observation only.",
+    "Last session": "The most recent completed market session. Columns under this band are that one day only, all accounts the setup traded in combined.",
+    "Last-session trades": "Trades the setup closed in the most recent completed session, all accounts combined. — = it did not trade that day.",
+    "Last-session R": "Sum of R over the setup's trades in the most recent completed session (all accounts). Green = made money in R terms, red = lost.",
+    "Last-session P/L": "Dollar profit or loss after costs of the setup's trades in the most recent completed session (paper, all accounts).",
+    "Live — since start": "Live paper results since the setup started, its records from every account merged into one.",
     "split copies": "The setup runs in both testing accounts, each on its own half of the tickers, so no signal is traded twice; stats are combined.",
   };
   const norm = t => String(t || "").replace(/[▲▼]/g, "").replace(/\s+/g, " ").trim();

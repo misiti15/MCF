@@ -20,6 +20,8 @@ IDS = [
     "lh", "lh-alerts", "lh-asof", "lh-chart", "lh-days", "lh-mode", "lh-pos", "lh-tiles", "live", "lv-asof", "lv-chg",
     "lv-chg-when", "lv-closed", "lv-cmp", "lv-cmp-acct", "lv-cmp-h", "lv-days", "lv-ideas", "lv-lab", "lv-msg", "lv-phase",
     "lv-pos", "lv-score", "lv-sig", "lv-skip", "lv-tiles", "lv-val", "pt-card", "pt-flags", "pt-note", "pt-sum", "pt-tab",
+    # added 2026-10-21 (UI-DASH 1: last session)
+    "lb-last-band",
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -40,6 +42,8 @@ COLS = Counter({
     '["gap", "vs backtest"]': 1, '["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"]': 1, '["pt", "Playing time"]': 1,
     '["flag", "Flag"]': 1, '["generated", "Generated"]': 1, '["per_day", "Trades/day"]': 1,
     '["scr_train", "Screen train R"]': 1, '["scr_valid", "Screen valid R"]': 1, '["scr_day", "Screen /day"]': 1,
+    # added 2026-10-21 (UI-DASH 1: last session)
+    '["ls_trades", "Last-session trades"]': 1, '["ls_r", "Last-session R"]': 1, '["ls_pnl", "Last-session P/L"]': 1,
 })
 
 # headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
@@ -54,6 +58,8 @@ TABLE_HEADERS = [
     "Best screen R", "Best t", "Today (Testing 1)", "In Testing so far", "In Primary (before demotion)",
     "Full-day twin today", "Testing sessions", "So far", "Value", "Weight", "Unrealised P/L", "Equity", "Day", "SPY",
     "EW univ.", "Replay", "Tracking diff.", "Drawdown",
+    # added 2026-10-21 (UI-DASH 1: scorecard last session)
+    "Last-session trades", "Last-session R", "Last-session P/L",
 ]
 STATIC_TH = [
     "Best screen R", "Best t", "Date", "Day", "Drawdown", "EW univ.", "Entry", "Equity", "From scan", "Full-day twin today",
@@ -78,6 +84,8 @@ SOURCES = [
     "mcf-data-testing/reports/scorecard.json", "mcf-data-testing/status.json", "mcf-data/discovery/latest.json",
     "mcf-data/reports/scorecard.json", "reports/scorecard.json", "status.json",
     "mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-gen", "mcf-data-graveyard", "mcf-data-longhold",
+    # added 2026-10-21 (UI-DASH 1: per-account session reports)
+    '"/reports/" + date + ".csv"',
 ]
 
 
@@ -134,3 +142,8 @@ def test_data_sources_kept():
 
 def test_disclaimer_kept():
     assert HTML.count("Educational only — not financial advice") >= 5
+
+
+def test_glossary_covers_new_columns():
+    for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L"):
+        assert f'"{term}":' in HTML, term
