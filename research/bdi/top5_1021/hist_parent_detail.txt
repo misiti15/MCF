@@ -1,0 +1,145 @@
+                                setup      n     win     exp  avg_win  avg_loss  be_win  win_margin  losers_never_worked  mfe_med  mae_med  loser_giveback  losers_mfe_ge_05  winners_mae_le_m075  share_stop  share_flat  late_against_spy_n  late_against_spy_exp  late_with_spy_exp
+0                  CWT12-coil-k4-long  34840  0.6989 -0.0599   0.3340   -0.9740  0.7447     -0.0458                0.633    0.500   -0.364           1.132             0.000                0.069       0.249       0.048                8680               -0.0782            -0.0517
+1                  CWT12-coil-k6-long  13027  0.3572 -0.0683   0.8630   -0.5857  0.4043     -0.0471                0.469    0.478   -0.527           0.877             0.218                0.000       0.618       0.088                3650               -0.0937            -0.0584
+2  CWT14-failbrk-pdh-p10-lowvol-short  15579  0.6445 -0.0862   0.4502   -1.0587  0.7017     -0.0571                0.549    0.544   -0.514           1.251             0.000                0.093       0.320       0.043                4161               -0.0930            -0.0825
+3   CWT14-failbrk-pdl-p10-lowvol-long  16031  0.6412 -0.0947   0.4506   -1.0692  0.7035     -0.0623                0.544    0.539   -0.530           1.262             0.000                0.098       0.327       0.039                4808               -0.0841            -0.1013
+
+Educational only - not financial advice. BACKTEST (open two-year history, TRAIN+VALID, production + tod costs).
+Parents only (live config; coil-k4 incl. its 0.35R scale-out). Units: R = 0.25 x daily ATR (coil-k6's stop is 0.5 of that). code: 1 target, 2 stop, 3 breakeven stop after scale-out, 4 time stop, 6 flatten at 15:55. 'against SPY' = side x SPY fromOpen < 0 at the signal bar.
+
+=== CWT12-coil-k4-long  n 34840
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+10:00-10:25   5571 -0.0617      0.7035
+10:30-11:25  27057 -0.0607      0.6982
+11:30-12:55   2212 -0.0460      0.6953
+by time x index direction:
+                             size    mean  <lambda_0>
+after 10:30 / against SPY    8680 -0.0782      0.6833
+after 10:30 / with SPY      20589 -0.0517      0.7042
+before 10:30 / against SPY   1893 -0.0473      0.7142
+before 10:30 / with SPY      3678 -0.0692      0.6979
+by session regime:
+       size    mean  <lambda_0>
+down   8124 -0.1776      0.6193
+flat  11759 -0.1187      0.6577
+up    14957  0.0502      0.7744
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  3989 -1.071
+(0.1, 0.2]    2655 -1.016
+(0.2, 0.3]    2309 -0.969
+(0.3, 0.5]    1538 -0.657
+(0.5, 5.0]       1 -0.051
+winners by MAE (R):
+                size   mean
+mae                        
+(-5.0, -0.75]   1676  0.310
+(-0.75, -0.5]   2932  0.320
+(-0.5, -0.25]   6016  0.317
+(-0.25, 0.01]  13724  0.347
+
+=== CWT12-coil-k6-long  n 13027
+by entry time:
+              size    mean  <lambda_0>
+tod                                   
+10:30-11:25  12200 -0.0675      0.3579
+11:30-12:55    827 -0.0795      0.3470
+by time x index direction:
+                           size    mean  <lambda_0>
+after 10:30 / against SPY  3650 -0.0937      0.3405
+after 10:30 / with SPY     9377 -0.0584      0.3637
+by session regime:
+      size    mean  <lambda_0>
+down  2956 -0.2477      0.2334
+flat  4357 -0.1146      0.3271
+up    5714  0.0599      0.4442
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  2511 -0.600
+(0.1, 0.2]    1417 -0.600
+(0.2, 0.3]    1115 -0.593
+(0.3, 0.5]    1505 -0.584
+(0.5, 5.0]    1826 -0.552
+winners by MAE (R):
+               size   mean
+mae                       
+(-0.5, -0.25]  1834  0.806
+(-0.25, 0.01]  2819  0.900
+
+=== CWT14-failbrk-pdh-p10-lowvol-short  n 15579
+by entry time:
+             size    mean  <lambda_0>
+tod                                  
+09:50-09:55  1455 -0.0896      0.6550
+10:00-10:25  6096 -0.0831      0.6593
+10:30-11:25  4841 -0.0878      0.6400
+11:30-12:55  1898 -0.0489      0.6586
+13:00-13:55   712 -0.1626      0.5674
+14:00-15:00   577 -0.1254      0.5494
+by time x index direction:
+                            size    mean  <lambda_0>
+after 10:30 / against SPY   4161 -0.0930      0.6258
+after 10:30 / with SPY      3867 -0.0825      0.6374
+before 10:30 / against SPY  3913 -0.0963      0.6491
+before 10:30 / with SPY     3638 -0.0715      0.6685
+by session regime:
+      size    mean  <lambda_0>
+down  5061  0.0095      0.7103
+flat  5057 -0.0463      0.6664
+up    5461 -0.2118      0.5633
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  2002 -1.107
+(0.1, 0.2]    1039 -1.068
+(0.2, 0.3]     918 -1.052
+(0.3, 0.5]    1577 -0.997
+(0.5, 5.0]       2 -0.028
+winners by MAE (R):
+               size   mean
+mae                       
+(-5.0, -0.75]   935  0.441
+(-0.75, -0.5]  1531  0.448
+(-0.5, -0.25]  2515  0.449
+(-0.25, 0.01]  5060  0.453
+
+=== CWT14-failbrk-pdl-p10-lowvol-long  n 16031
+by entry time:
+             size    mean  <lambda_0>
+tod                                  
+09:50-09:55  1341 -0.0711      0.6689
+10:00-10:25  5820 -0.1043      0.6462
+10:30-11:25  5266 -0.1044      0.6324
+11:30-12:55  2174 -0.0748      0.6509
+13:00-13:55   843 -0.0594      0.6251
+14:00-15:00   587 -0.0916      0.5945
+by time x index direction:
+                            size    mean  <lambda_0>
+after 10:30 / against SPY   4808 -0.0841      0.6433
+after 10:30 / with SPY      4062 -0.1013      0.6224
+before 10:30 / against SPY  3556 -0.1093      0.6417
+before 10:30 / with SPY     3605 -0.0870      0.6591
+by session regime:
+      size    mean  <lambda_0>
+down  5951 -0.2027      0.5735
+flat  4817 -0.0898      0.6438
+up    5263  0.0229      0.7154
+losers by MFE reached (R):
+              size   mean
+mfe                      
+(-0.01, 0.1]  2084 -1.111
+(0.1, 0.2]    1044 -1.088
+(0.2, 0.3]     983 -1.060
+(0.3, 0.5]    1639 -1.011
+(0.5, 5.0]       2 -0.043
+winners by MAE (R):
+               size   mean
+mae                       
+(-5.0, -0.75]  1009  0.441
+(-0.75, -0.5]  1550  0.447
+(-0.5, -0.25]  2487  0.450
+(-0.25, 0.01]  5233  0.454
