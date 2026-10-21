@@ -1,0 +1,136 @@
+"""Guard for docs/live/index.html (owner 2026-10-21: "NOTHING is to be removed from it").
+
+Pins every card title, element id, leaderboard column, table header, tile label and data source the live dashboard
+had on 2026-10-21. New work may ADD to these lists; a test failure here means something was removed or renamed —
+put it back (or ask the owner) instead of editing the list. Educational only — not financial advice.
+"""
+from __future__ import annotations
+
+import re
+from collections import Counter
+from html.parser import HTMLParser
+from pathlib import Path
+
+HTML = (Path(__file__).resolve().parents[1] / "docs/live/index.html").read_text()
+
+# every element id (cards, tables, controls)
+IDS = [
+    "acc-all", "dm-card", "dm-sum", "dm-tab", "gen-card", "gen-sorted", "gen-sum", "gen-tab", "gl-card", "gl-sum",
+    "gl-trend", "lab-when", "lb-acct", "lb-asg", "lb-card", "lb-ctl", "lb-min", "lb-show", "lb-sorted", "lb-sum", "lb-tab",
+    "lh", "lh-alerts", "lh-asof", "lh-chart", "lh-days", "lh-mode", "lh-pos", "lh-tiles", "live", "lv-asof", "lv-chg",
+    "lv-chg-when", "lv-closed", "lv-cmp", "lv-cmp-acct", "lv-cmp-h", "lv-days", "lv-ideas", "lv-lab", "lv-msg", "lv-phase",
+    "lv-pos", "lv-score", "lv-sig", "lv-skip", "lv-tiles", "lv-val", "pt-card", "pt-flags", "pt-note", "pt-sum", "pt-tab",
+]
+
+# card / section titles (h2 text; a title may gain extra words, never lose these)
+TITLES = [
+    "MCF Update — live paper session", "Changes for the next session", "MCF Primary vs MarcoFlow", "Open MCF positions",
+    "Signals today", "Why signals were skipped", "Closed MCF trades today", "Day by day", "Setups and their status",
+    "Demoted from Primary — how they are doing in Testing 1", "Setup leaderboard — all accounts, since start",
+    "Generated setups leaderboard — Setup Generator account", "Scorecard (last 4 sessions)", "Playing time per setup",
+    "Generator Lab", "Long-hold (S6) — paper account", "Return since start", "Holdings", "Last sessions",
+]
+
+# leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
+COLS = Counter({
+    '["rank", "#"]': 2, '["name", "Setup"]': 2, '["acctLabel", "Account"]': 1, '["trades", "Live trades"]': 2,
+    '["sessions_traded", "Sessions"]': 1, '["win_rate", "Win rate"]': 2, '["breakeven_wr", "Break-even win rate"]': 2,
+    '["avg_r", "Avg R"]': 2, '["t_stat", "Confidence (t)"]': 2, '["total_r", "Total R"]': 2, '["pnl", "P/L"]': 2,
+    '["profit_factor", "PF"]': 1, '["recent_avg_r", "Last 4 avg R"]': 2, '["expected_r", "Backtest R"]': 1,
+    '["gap", "vs backtest"]': 1, '["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"]': 1, '["pt", "Playing time"]': 1,
+    '["flag", "Flag"]': 1, '["generated", "Generated"]': 1, '["per_day", "Trades/day"]': 1,
+    '["scr_train", "Screen train R"]': 1, '["scr_valid", "Screen valid R"]': 1, '["scr_day", "Screen /day"]': 1,
+})
+
+# headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
+TABLE_HEADERS = [
+    "Date", "Trades", "Win rate", "P/L", "Adj. P/L", "Avg R", "PF", "Change", "Setup", "Status", "Apr–Jun backtest",
+    "Symbol", "Side", "Qty", "Entry", "Last", "Unrealized", "Sector ETF", "Beta", "Time", "Price", "Reason", "Signals",
+    "In", "Out", "Exit", "R", "Slip", "Current account", "Backtest expected R", "Verdict", "Rule", "Held up",
+    "Found: n / success / exp R", "Checked: n / success / exp R", "Idea", "In one line", "Why look at it",
+    "What changes", "What you should see", "Type", "Effective", "Setup (priority)", "Today sig / taken", "Sessions",
+    "Signals / taken / trades", "Taken/day", "Expected/day", "Per week", "Lost to others", "Lost to", "Top skips",
+    "Sim. trades / sim avg R (SIMULATED)", "Metric", "Run", "Screened", "New setups", "From scan", "Median screen R",
+    "Best screen R", "Best t", "Today (Testing 1)", "In Testing so far", "In Primary (before demotion)",
+    "Full-day twin today", "Testing sessions", "So far", "Value", "Weight", "Unrealised P/L", "Equity", "Day", "SPY",
+    "EW univ.", "Replay", "Tracking diff.", "Drawdown",
+]
+STATIC_TH = [
+    "Best screen R", "Best t", "Date", "Day", "Drawdown", "EW univ.", "Entry", "Equity", "From scan", "Full-day twin today",
+    "In Primary (before demotion)", "In Testing so far", "Median screen R", "Metric", "New setups", "Qty", "Replay",
+    "Run", "SPY", "Screened", "Setup", "So far", "Symbol", "Testing sessions", "Today (Testing 1)", "Tracking diff.",
+    "Unrealised P/L", "Value", "Weight",
+]
+
+TILES = ["Trades today", "Win rate", "P/L today", "Signals", "Data health", "Equity", "Day P/L", "Since start", "vs SPY",
+         "vs EW universe", "vs backtest replay", "Drawdown", "Holdings"]
+
+ACCOUNT_CARDS = ['"primary", name: "Primary"', '"testing", name: "Testing 1"', '"testing2", name: "Testing 2"',
+                 '"gen", name: "Setup Generator"', '"graveyard", name: "Graveyard"', '"longhold", name: "Long-hold (S6)"']
+
+# every data source the page reads
+SOURCES = [
+    "../live/assignments.json", "../live/generator_lab.json", "../live/ideas.json", "../live/leaderboard.json",
+    "../live/linkage.json", "../live/setup_names.json", "https://raw.githubusercontent.com/misiti15/MCF/",
+    "https://raw.githubusercontent.com/misiti15/MCF/claude/intraday-trading-system-witis4/research/ledger.jsonl",
+    "https://raw.githubusercontent.com/misiti15/MCF/mcf-data-longhold/longhold/", "/longhold/status.json",
+    "/reports/scorecard.json", "/status.json", "discovery/latest.json", "marks.csv", "mcf-data-gen/reports/scorecard.json",
+    "mcf-data-testing/reports/scorecard.json", "mcf-data-testing/status.json", "mcf-data/discovery/latest.json",
+    "mcf-data/reports/scorecard.json", "reports/scorecard.json", "status.json",
+    "mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-gen", "mcf-data-graveyard", "mcf-data-longhold",
+]
+
+
+class _H2(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.depth, self.cur, self.titles = 0, "", []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "h2":
+            self.depth += 1
+            self.cur = ""
+
+    def handle_endtag(self, tag):
+        if tag == "h2" and self.depth:
+            self.depth -= 1
+            self.titles.append(re.sub(r"\s+", " ", self.cur).strip())
+
+    def handle_data(self, data):
+        if self.depth:
+            self.cur += data
+
+
+def test_ids_kept():
+    have = set(re.findall(r'\bid="([^"$]+)"', HTML))
+    assert not [i for i in IDS if i not in have]
+
+
+def test_card_titles_kept():
+    p = _H2()
+    p.feed(HTML)
+    missing = [t for t in TITLES if not any(t in h for h in p.titles)]
+    assert not missing
+
+
+def test_leaderboard_columns_kept():
+    missing = {c: n for c, n in COLS.items() if HTML.count(c) < n}
+    assert not missing
+
+
+def test_table_headers_kept():
+    assert not [h for h in TABLE_HEADERS if f'"{h}"' not in HTML and f">{h}</th>" not in HTML]
+    assert not [h for h in STATIC_TH if f">{h}</th>" not in HTML]
+
+
+def test_tiles_and_account_cards_kept():
+    assert not [t for t in TILES if f'"{t}"' not in HTML]
+    assert not [a for a in ACCOUNT_CARDS if a not in HTML]
+
+
+def test_data_sources_kept():
+    assert not [s for s in SOURCES if s not in HTML]
+
+
+def test_disclaimer_kept():
+    assert HTML.count("Educational only — not financial advice") >= 5
