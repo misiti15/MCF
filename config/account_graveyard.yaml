@@ -49,6 +49,7 @@ live:
     - CWT14-failbrk-orl-p05-lowvol-long     # ~173.74/day (moved from Testing 2 2026-10-21)
     - heat_fade_short-FD                    # ~176.38/day
     - CWT14-failbrk-orl-p05-long            # ~246.53/day (moved from Testing 2 2026-10-21)
+    - CWT09-gapdn-bounce-g5-lowerhalf-short   # moved 2026-10-21
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -233,4 +234,14 @@ strategies:
     window: [950, 1500]
     gate: gap+
     scale_out_r: null
+    tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  CWT09-gapdn-bounce-g5-lowerhalf-short:
+    # moved to Graveyard 2026-10-21 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-bounce-g5-lowerhalf-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T2 S guest", fill: false}
     tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]

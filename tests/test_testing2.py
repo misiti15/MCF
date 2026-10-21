@@ -26,12 +26,17 @@ def test_overlay_runs_only_the_cwt_batch(monkeypatch):
     # moved from Testing 1 2026-10-20, then on to the separate Graveyard account 2026-10-21 (owner): off here
     grave = {"heat_fade_long", "RW2-exhaustion-noon-adv150-short-FD", "LIQ-orl-sweep-open15-s25-long"}
     assert st and all(isinstance(s, LabStrategy) for s in st)
-    assert all(s.name.startswith(("CWT", "NM", "LD")) for s in st)               # CWT + near-misses (LD: longs1020)
+    # CWT batch + near-misses (LD: longs1020) + testing setups placed here by the Testing 1/2 allocator (2026-10-21)
+    placed = {k for k, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("enabled")
+              and not k.startswith(("CWT", "NM", "LD"))}
+    assert placed <= {s.name for s in st}
     assert not (grave & {s.name for s in st})
     default = yaml.safe_load((ROOT / "config/default.yaml").read_text())["strategies"]
-    assert not any(cfg["strategies"][k].get("enabled") for k in default)          # primary + library off
+    primary = {k for k, v in default.items() if isinstance(v, dict) and v.get("enabled")}
+    assert not any(cfg["strategies"][k].get("enabled") for k in primary)          # Primary's setups are off here
     testing1 = yaml.safe_load((ROOT / "config/account_testing.yaml").read_text())["strategies"]
-    assert not ({s.name for s in st} & {k for k, v in testing1.items() if v.get("enabled")})
+    both = {s.name for s in st} & {k for k, v in testing1.items() if v.get("enabled")}
+    assert all(cfg["strategies"][k].get("ticker_split") for k in both)           # only split-ticker copies run in both
     order = cfg["live"]["setup_order"]
     assert sorted(order) == sorted(s.name for s in st)                          # every setup has a priority
 

@@ -15,8 +15,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | N2 | Demote RW6G1-ns2-up3-vwap2sd-short from Primary to Testing 1 | owner | nightly suggestions | owner reviewing | waiting on owner |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | owner | nightly suggestions | owner reviewing | waiting on owner |
 | OBS-LD | 8 long near-misses (LD1-LD8, marked *) + M1 observation in Testing 2 from 2026-10-21 | nightly loop | leaderboard | first review 2026-11-04 (10 sessions) | live |
-| PROMO-1021 | Promoted to Primary 2026-10-21: L3-gap-slope-fromopen-FD, CWT14-failbrk-pdl-p10-lowvol-long — Primary-only record | nightly loop | nightly suggestions | first review 2026-10-27 (5 sessions) | live |
-| DEMO-MF3FD | MF3-open-flowsell-rsi5hi-FD demoted from Primary 2026-10-21 (watch list ended) | nightly loop | leaderboard | — | done once moved |
+| PROMO-1021 | Promoted to Primary 2026-10-21: L3-gap-slope-fromopen-FD, CWT14-failbrk-pdl-p10-lowvol-long (backtest negative: watch) — Primary-only record | nightly loop | nightly suggestions | first review 2026-10-27 (5 sessions) | live |
 | GY-1 | Graveyard account first session: confirm the job starts and trades | nightly loop | step 1 | 2026-10-21 | pending |
 | UI-DATE | Dashboard "date started" column | Claude | — | deferred | deferred |
 | UI-LABEL | Setup labeling-system proposal | Claude | — | deferred | deferred |
@@ -32,6 +31,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | N4 | CWT14-failbrk-orl longs | 2026-10-20 | all four moved to the Graveyard (owner) |
 | M1 | Early Sellers into a Pop (index down, no gap up) | 2026-10-20 | yes — Testing 2, observation |
 | L1 | LD1 / LD2 longs | 2026-10-20 | yes — with LD3-LD8, Testing 2, observation |
+| MOVES-1020 | Owner moves 2026-10-20 evening (2 promotions, MF3-FD demotion, CWT09-g5 + 4 CWT14 orl to Graveyard) + Testing 1/2 reallocation | 2026-10-20 | applied for 2026-10-21 (ledger 2026-10-21-*) |
 | LL-2R | Per-setup daily stop ruling | 2026-10-20 | keep -2R (research/bdi/ll1020/NOTES.md); 1.5R re-check = LL-1.5 |
 
 Educational only — not financial advice.

@@ -18,6 +18,9 @@ account:
   max_setup_daily_loss_r: 2.0    # owner 2026-10-19 evening: a setup stops for the day at net -2R realized
   max_trades_per_day: 3000
 live:
+  # 2026-10-21 reallocation moved two live-scale-out setups here (CWT14-failbrk-pdh-p05-lowvol-short,
+  # CWT14-failbrk-pdl-p05-long); same cap as Testing 2 (owner SO1 2026-10-19: at most 2 scale-outs per day).
+  scale_out_max_per_day: 2
   # Owner 2026-10-13 (research/bdi/longs1013 Q3 Mf + Ma; off in config/default.yaml / Primary).
   retry_after_release: true
   longs_first_on_ties: true
@@ -42,18 +45,16 @@ live:
     - ST4-emadn-long-am-t1s05-FD
     - NS4-pm-vwap-reclaim-oversold-short-FD
     - RW6G1-ns2-up3-vwap2sd-short-FD
-    - L3-gap-slope-rsi5hi-FD
+    - CWT05-flush-m05-v3-long   # 4.00/day (allocator)
+    - CWT12-coil-k6-long   # 13.43/day (allocator)
     - L3-gap-slope-lowdist-FD
-    - L3-gap-slope-fromopen-FD
     - NS1-rsidip-rsi5pop-long-FD
     - NS5-sma50-flush-oversold-long-FD
     - MF2-open-rsimidhi-flowsell-FD
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
     - RW3-gapdn-rsi5pop-flowsell-short-FD
-    - MF5-flowsell-vwapup-rsi5hi-FD
     - MF5-flowsell-vwapup-rsi5hi   # former primary (demoted 2026-10-20)
     - MF4-h40-open-flowsell-FD
-    - RW1-gapdn-bounce-flowsell-short-FD
     - RW4-ns3-adv150-short-FD
     - NS3-failed-vwap-reclaim-short-FD
     - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
@@ -62,6 +63,9 @@ live:
     - RW7-gapdn-bounce-early-short-FD
     - exhaustion_short
     - exhaustion_short-FD
+    - CWT14-failbrk-pdh-p10-short   # 42.71/day (allocator)
+    - CWT14-failbrk-pdh-p05-lowvol-short   # 48.14/day (allocator)
+    - CWT14-failbrk-pdl-p05-long   # 79.86/day (allocator)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -178,12 +182,14 @@ strategies:
     enabled: true
     former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
   MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
+  CWT14-failbrk-pdl-p10-lowvol-long: {enabled: false}   # Primary only (promoted 2026-10-21)
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
   MF3-open-flowsell-rsi5hi:
     enabled: true
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   MF4-h40-open-flowsell: {enabled: false}   # replaced by MF4-h40-open-flowsell-FD
   MF5-flowsell-vwapup-rsi5hi:
+    ticker_split: {part: 0, of: 2}   # split copy (allocator)
     enabled: true
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
@@ -217,6 +223,7 @@ strategies:
   # ---- FULL-DAY versions (all: window [950, 1500], scale_out_r null; min_adv / prefilter as the source)
   # from exhaustion_short (primary; source window 1300-1500); ~66.8/day full-day [timeofday results.csv full, exp -0.059R]
   exhaustion_short-FD:
+    ticker_split: {part: 0, of: 2}   # split copy (allocator)
     enabled: true
     type: lab
     module: research/bdi/fullday/exhaustion_short-FD.py
@@ -246,7 +253,7 @@ strategies:
     scale_out_r: null
   # from MF3-open-flowsell-rsi5hi (primary; source window 950-1100); ~24.8/day full-day [timeofday results.csv full, exp -0.071R]
   MF3-open-flowsell-rsi5hi-FD:
-    enabled: false           # owner 2026-10-20: promotion = move; runs in Primary only from 2026-10-21
+    enabled: true            # demoted from Primary 2026-10-21 (owner 2026-10-20 evening); runs in Testing 1 only
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
@@ -262,7 +269,7 @@ strategies:
     scale_out_r: null
   # from MF5-flowsell-vwapup-rsi5hi (primary; source window 950-1500); ~16.03/day full-day [timeofday results.csv full, exp -0.052R]
   MF5-flowsell-vwapup-rsi5hi-FD:
-    enabled: true
+    enabled: false   # allocator 2026-10-20: runs in Testing 2
     type: lab
     module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
     min_adv: 95000000
@@ -306,6 +313,7 @@ strategies:
     scale_out_r: null
   # from NS5-sma50-flush-oversold-long (primary; source window 950-1130); ~7.37/day full-day [timeofday results.csv full, exp -0.043R]
   NS5-sma50-flush-oversold-long-FD:
+    ticker_split: {part: 0, of: 2}   # split copy (allocator)
     enabled: true
     type: lab
     module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py
@@ -326,7 +334,7 @@ strategies:
   L3-gap-slope-rsi5hi-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 6
-    enabled: true
+    enabled: false   # allocator 2026-10-20: runs in Testing 2
     type: lab
     module: research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py
     min_adv: 0   # source had none (default 0)
@@ -346,7 +354,7 @@ strategies:
   L3-gap-slope-fromopen-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # promoted to Primary 2026-10-21 (owner 2026-10-20 evening); promotion = move
     type: lab
     module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
     min_adv: 0   # source had none (default 0)
@@ -425,6 +433,7 @@ strategies:
     scale_out_r: null
   # from RW4-ns3-adv150-short (testing; source window 950-1130); ~18.94/day full-day [timeofday results.csv full, exp -0.028R]
   RW4-ns3-adv150-short-FD:
+    ticker_split: {part: 0, of: 2}   # split copy (allocator)
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
     enabled: true
@@ -455,7 +464,7 @@ strategies:
     scale_out_r: null
   # from RW1-gapdn-bounce-flowsell-short (testing; source window 950-1100); ~17.54/day full-day [timeofday results.csv full, exp -0.046R]
   RW1-gapdn-bounce-flowsell-short-FD:
-    enabled: true
+    enabled: false   # allocator 2026-10-20: runs in Testing 2
     type: lab
     module: research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py
     min_adv: 95000000
@@ -533,3 +542,50 @@ strategies:
     time_stop_min: 15
     time_stop_min_r: 0.25
     testing: {added: "2026-10-12", source: "LIQ-PD-long-x0.05-open-k15-a1-A-NL-BE+TS", bar: "PLAN.md 5(b)"}
+  # ---- CWT05-flush-m05-v3-long: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
+  CWT05-flush-m05-v3-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B5-m0.5-v3-Dnone-t05s1-full, fill: false}
+  # ---- CWT12-coil-k6-long: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
+  CWT12-coil-k6-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-coil-k6-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B4-parta-k6-t1s05-guest, fill: false}
+  # ---- CWT14-failbrk-pdh-p05-lowvol-short: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
+  CWT14-failbrk-pdh-p05-lowvol-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.35
+    live_scale_out: true
+    testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full, fill: true}
+  # ---- CWT14-failbrk-pdh-p10-short: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
+  CWT14-failbrk-pdh-p10-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-short.py
+    min_adv: 95000000
+    window: [950, 1200]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.1-Vany-sideshort-t05s1-guest, fill: true}
+  # ---- CWT14-failbrk-pdl-p05-long: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
+  CWT14-failbrk-pdl-p05-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.25
+    live_scale_out: true
+    testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vany-sidelong-t05s1-full, fill: false}
