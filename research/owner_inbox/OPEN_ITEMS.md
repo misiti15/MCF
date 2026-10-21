@@ -17,6 +17,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | OBS-LD | 8 long near-misses (LD1-LD8, marked *) + M1 observation in Testing 2 from 2026-10-21 | nightly loop | leaderboard | first review 2026-11-04 (10 sessions) | live |
 | PROMO-1021 | Promoted to Primary 2026-10-21: L3-gap-slope-fromopen-FD, CWT14-failbrk-pdl-p10-lowvol-long (backtest negative: watch) — Primary-only record | nightly loop | nightly suggestions | first review 2026-10-27 (5 sessions) | live |
 | GY-1 | Graveyard account first session: confirm the job starts and trades | nightly loop | step 1 | 2026-10-21 | pending |
+| LF-DECAY | Rolling 1/3/6/12-month decay monitor for top setups: 1-month decline → flag; 3- or 6-month decline (size decides) → demotion suggestion. For live funding. Draft in docs/ROADMAP.md Phase 5. | Claude | — | before live funding (needs ~1 month of records to start) | planned |
 | UI-DATE | Dashboard "date started" column | Claude | — | deferred | deferred |
 | UI-LABEL | Setup labeling-system proposal | Claude | — | deferred | deferred |
 | HK-LEDGER | Ledger check speed-up (replay only entries with a patch) | Claude | — | housekeeping | queued |
