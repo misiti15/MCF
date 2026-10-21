@@ -46,3 +46,15 @@
 - [ ] Options guidance: 0DTE/weekly overlays on top of equity signals (Alpaca options API)
 - [ ] Live execution: Alpaca live (same code, `paper=False`). Optional long-only mirror on the
       Robinhood Agentic MCP (official; no shorts, no paper, no brackets as of 2026-10). Never use unofficial wrappers.
+
+## Phase 5: Live funding safeguards (owner 2026-10-21, for later)
+- **Rolling decay monitor for "top" setups** (every setup trading with live funds): per setup, rolling 1-month, 3-month,
+  6-month and 12-month stats (trades, win rate vs break-even, avg R after costs, t, P/L), each compared with the setup's
+  own longer window and its backtest, so slow lulls show up before they are obvious.
+- Draft rule (numbers to be tuned on paper history before live use):
+  - 1-month window declines (e.g. avg R below the 6-month avg R by more than one standard error, or below break-even):
+    **flag** (owner inbox FYI, watch list).
+  - 3-month window still below break-even, or 6-month avg R down materially from the 12-month (size of the change
+    decides which window): **demotion suggestion** to the owner (owner decides; promotion = move).
+- Shown as a dashboard card and one line in the nightly brief; tracked in research/owner_inbox/OPEN_ITEMS.md (LF-DECAY).
+
