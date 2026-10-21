@@ -1,0 +1,66 @@
+== 2026-10-21: 696 trades with bars (of 696), losers 324
+
+== sum of R after costs by account (what-ifs on 1-min SIP; orig = sanity check vs live)
+           live  orig  be05   t05    t1  trail   hold   sar  reent   opp
+account                                                                 
+generator   4.8   4.8   3.7   3.8   4.6    3.6    1.5   3.8    6.0  -4.6
+graveyard -31.5 -29.7 -24.3 -24.6 -64.9  -39.0 -110.8 -46.2  -34.0  50.1
+primary   -14.8 -13.9  -9.7  -2.3 -11.4   -9.0  -16.7 -17.3  -12.9   9.5
+testing   -54.4 -46.7 -43.7 -45.1 -49.3  -42.0  -78.2 -49.4  -58.6  36.6
+testing2   -1.1   0.7  -2.9  -5.2  -5.6   -1.3  -12.8  -3.6    0.5   2.6
+
+== day-clustering impossible (1 day); per-trade mean and se, all accounts
+       live   orig   be05    t05     t1  trail   hold    sar  reent    opp
+mean -0.139 -0.122 -0.111 -0.105 -0.182 -0.126 -0.312 -0.162 -0.142  0.135
+se    0.030  0.029  0.027  0.027  0.033  0.032  0.034  0.036  0.031  0.032
+
+== loss types by account (count / $)
+                                       size                                          sum                                   
+account                           generator graveyard primary testing testing2 generator graveyard primary testing testing2
+loss_type                                                                                                                  
+gave_back_gains                           1        20       8      17        6      -5.0    -223.0   -78.0   -90.0    -14.0
+late_hold                                 1        23       7      13        3     -10.0    -288.0  -122.0   -78.0    -22.0
+never_worked                              1        36       2      22       11     -67.0    -610.0   -61.0  -201.0    -69.0
+small MFE then failed (0.15-0.5R)         0        46       2      26        2       0.0    -815.0  -101.0  -260.0    -14.0
+stopped_then_reversed                     0        10       2      17        4       0.0    -155.0   -21.0   -88.0    -29.0
+wrong_side_after_big_swing                0         9      11      12       12       0.0    -251.0  -379.0  -181.0   -187.0
+
+== opposite side 1R/1R: hindsight check (does a rule known at entry pick out the trades whose opposite won?)
+-- flag_spy
+            n  opp_win  opp_R  live_R
+flag_spy                             
+False     511    0.609  0.166  -0.236
+True      185    0.557  0.051   0.128
+   side 1:             n  opp_R  live_R | flag_spy                     | False     279  0.012  -0.120 | True      146  0.085   0.155
+   side -1:             n  opp_R  live_R | flag_spy                     | False     232  0.351  -0.376 | True       39 -0.078   0.028
+-- flag_fo
+           n  opp_win  opp_R  live_R
+flag_fo                             
+False    525    0.590  0.122  -0.122
+True     171    0.608  0.177  -0.193
+   side 1:            n  opp_R  live_R | flag_fo                     | False    307  0.006   0.011 | True     118  0.117  -0.121
+   side -1:            n  opp_R  live_R | flag_fo                     | False    218  0.284  -0.310 | True      53  0.311  -0.352
+
+== by setup (sum R after costs), 12 worst and 6 best by live
+                                                                    n  accts   live   be05    t05     t1  trail   hold    sar  reent    opp  never  mfe_med  tmfe_med
+setup                                                                                                                                                                
+heat_fade_short-FD                                                 25     gy -19.11 -18.36 -16.53 -19.88 -17.71 -19.88 -25.36 -18.98  19.30      9     0.20      35.0
+CWT14-failbrk-pdh-p05-lowvol-short                                 44     t1 -18.99 -15.27 -18.93 -19.91 -22.87 -23.18 -13.61 -17.67  17.68     17     0.24      11.5
+CWT14-failbrk-pdh-p10-short                                        42     t1 -15.45 -14.06 -13.86 -12.31  -8.44 -11.71 -14.26 -13.58   9.88     11     0.35       6.0
+NS3-failed-vwap-reclaim-short-FD                                   26      p -11.75  -9.74  -5.75 -11.28  -8.12  -9.99 -15.00 -12.71  10.46      5     0.34      28.5
+LIQ-orl-sweep-open15-s25-long                                      17     gy  -9.19  -8.37  -6.92  -8.34  -7.82  -8.79 -10.85  -9.80   7.71      6     0.31      71.0
+heat_fade_short                                                    20     gy  -7.91  -4.66  -1.45  -6.73  -4.81  -7.21  -6.61  -7.50   6.61      1     0.49      20.0
+RW4-ns3-adv150-short-FD                                            21  t1+t2  -7.74  -6.62  -3.61  -7.30  -5.14  -6.00  -8.66  -7.64   6.82      3     0.31      25.0
+CWT12-coil-k6-long                                                 31     t1  -6.73  -0.50  -1.67  -1.17  -0.83 -12.65  -8.15 -12.33  -3.17      3     1.09      41.0
+RW2-exhaustion-noon-adv150-short-FD                                 8     gy  -6.55  -5.63  -5.49  -6.49  -5.49  -6.54  -7.45  -7.64   5.51      2     0.32       2.0
+L3-gap-slope-fromopen-FD                                            5      p  -5.75  -3.33  -2.33  -5.33  -3.12  -5.33  -4.15  -5.33   4.67      1     0.37      13.0
+NS3-failed-vwap-reclaim-short                                       9     t1  -5.64  -5.37  -3.87  -5.38  -5.02  -5.38  -6.66  -6.48   4.87      0     0.31      18.0
+CWT14-failbrk-orl-p10-lowvol-long                                  45     gy  -3.00  -1.05  -0.88  -8.36  -4.19 -18.21  -5.50  -0.71   6.16      9     0.46      17.0
+CWT14-failbrk-pdl-p10-long                                          9     t2   2.12   2.12   1.40   2.27   2.21   2.61   2.01   1.07  -2.47      2     0.65      16.0
+CWT12-coil-k4-long                                                 17     t2   2.60   2.34   1.12   1.83   1.63  -4.89   2.69   4.39  -2.12      3     0.33      23.0
+GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short   7    gen   2.91   2.72   3.28   3.03   2.81   1.03   2.89   2.89  -3.03      0     0.72     112.0
+CWT14-failbrk-pdl-p10-lowvol-long                                   6      p   3.09   2.02   3.00   4.00   1.68   2.32   3.11   3.11  -4.00      0     0.49       6.5
+CWT14-failbrk-orl-p05-long                                         79     gy   3.95   5.00   5.44  -0.70   0.94 -15.95   7.73   4.51  -2.08      9     0.42      26.0
+MF1-945-flowsell-vwapup-FD                                          6     gy   7.77   3.90   3.00   4.00   3.97   0.36   7.72   7.72  -4.00      0     1.77      78.0
+
+Educational only - not financial advice.
