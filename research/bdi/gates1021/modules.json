@@ -1,0 +1,51 @@
+[
+ {
+  "name": "MF4-h40-open-flowsell-FD-g1",
+  "parent": "MF4-h40-open-flowsell-FD",
+  "parent_module": "research/bdi/fullday/MF4-h40-open-flowsell-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.1192R -> gated -0.1081R, valid parent -0.0506R -> gated -0.0385R; blocked 12.7% / 13.5% of trades (train/valid); pooled gate-delta day-clustered t 4.80. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "NS3-failed-vwap-reclaim-short-FD-g1",
+  "parent": "NS3-failed-vwap-reclaim-short-FD",
+  "parent_module": "research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: NEAR-MISS (not a candidate; pooled t below the bar 3.63) (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0044R -> gated +0.0244R, valid parent -0.0157R -> gated -0.0061R; blocked 13.7% / 16.2% of trades (train/valid); pooled gate-delta day-clustered t 2.98. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "RW3-gapdn-rsi5pop-flowsell-short-FD-g1",
+  "parent": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+  "parent_module": "research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0948R -> gated -0.0728R, valid parent -0.0448R -> gated -0.0219R; blocked 11.4% / 11.8% of trades (train/valid); pooled gate-delta day-clustered t 4.09. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-g1",
+  "parent": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+  "parent_module": "research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0539R -> gated -0.0110R, valid parent -0.0658R -> gated -0.0318R; blocked 13.7% / 15.7% of trades (train/valid); pooled gate-delta day-clustered t 4.78. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "MF3-open-flowsell-rsi5hi-FD-g1",
+  "parent": "MF3-open-flowsell-rsi5hi-FD",
+  "parent_module": "research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0987R -> gated -0.0714R, valid parent -0.0508R -> gated -0.0381R; blocked 15.4% / 16.5% of trades (train/valid); pooled gate-delta day-clustered t 4.62. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "RW7-gapdn-bounce-early-short-FD-g1",
+  "parent": "RW7-gapdn-bounce-early-short-FD",
+  "parent_module": "research/bdi/fullday/RW7-gapdn-bounce-early-short-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0826R -> gated -0.0532R, valid parent -0.0395R -> gated -0.0254R; blocked 11.0% / 12.3% of trades (train/valid); pooled gate-delta day-clustered t 4.12. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ },
+ {
+  "name": "RW1-gapdn-bounce-flowsell-short-FD-g1",
+  "parent": "RW1-gapdn-bounce-flowsell-short-FD",
+  "parent_module": "research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py",
+  "gate": "U7 prior day SPY>=+0.5% & spy_fo>=+0.25",
+  "doc": "Status: FINALIST (gates1021, N 718, bar 3.63). Open 2-year history, production costs: train parent -0.0728R -> gated -0.0447R, valid parent -0.0259R -> gated -0.0085R; blocked 10.9% / 11.3% of trades (train/valid); pooled gate-delta day-clustered t 3.95. The gated setup is still NEGATIVE after costs; the gate only removes its worst market state. Run with the parent's YAML block (window, min_adv, refire) plus context: [spy_fo]."
+ }
+]
