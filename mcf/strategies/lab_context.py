@@ -127,9 +127,10 @@ def context_table(peers: dict | None, cols) -> pd.DataFrame:
     cols = tuple(cols)
     if not peers:
         return pd.DataFrame(columns=list(cols))
-    last = max((b.index[-1] for b in peers.values() if b is not None and len(b)), default=None)
-    first = min((b.index[0] for b in peers.values() if b is not None and len(b)), default=None)
-    key = (len(peers), first, last, sum(len(b) for b in peers.values() if b is not None))
+    key = _peers_key(peers)
+    tk = (key, "table", cols)
+    if tk in _CACHE:
+        return _CACHE[tk]
     out = {}
     for c in cols:
         k = (key, "breadth" if c in BREADTH_COLS else c)
@@ -144,7 +145,28 @@ def context_table(peers: dict | None, cols) -> pd.DataFrame:
                 _CACHE[k] = _index_fo(peers.get(INDEX_COLS[c]))
         v = _CACHE[k]
         out[c] = v[c] if isinstance(v, pd.DataFrame) else v
-    return pd.DataFrame(out)
+    tab = pd.DataFrame(out)
+    _CACHE[tk] = tab
+    return tab
+
+
+def _peers_key(peers: dict) -> tuple:
+    """The cache key of a poll's peers: (symbol count, first bar, latest bar, total bars). Computing it walks every
+    peer (~70 ms for ~4,000 symbols), and add_context runs once per context setup and eligible symbol, so the key is
+    memoised per peers object (OPS-POLL 2026-10-22: this walk was most of a Gen / Testing 2 poll). The memo is reused
+    only for the same dict object holding the same frame objects (identity of every value, ~0.1 ms to compare), so a
+    new poll, or a dict whose frames were replaced, gets a fresh key."""
+    ids = tuple(map(id, peers.values()))
+    m = _CACHE.get("_peers")
+    if m is not None and m[0] is peers and m[1] == ids:
+        return m[2]
+    last = max((b.index[-1] for b in peers.values() if b is not None and len(b)), default=None)
+    first = min((b.index[0] for b in peers.values() if b is not None and len(b)), default=None)
+    key = (len(peers), first, last, sum(len(b) for b in peers.values() if b is not None))
+    if len(_CACHE) > 64:
+        _CACHE.clear()
+    _CACHE["_peers"] = (peers, ids, key)
+    return key
 
 
 def add_context(f: pd.DataFrame, peers: dict | None, cols) -> pd.DataFrame:

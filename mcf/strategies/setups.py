@@ -377,6 +377,10 @@ class HeatStrategy(Strategy):
 
 
 _LAB_FRAMES: dict = {}
+# [bars object, its completed 5-minute bars]: the last resample LabStrategy.generate did. Reused only for the very same
+# bars object (the runner scans every setup of one symbol with one ctx.bars per poll), so a new poll or revised bars
+# always resample afresh. OPS-POLL 2026-10-22: the per-setup resample was ~20% of a Gen poll.
+_LAB_D5: list = [None, None]
 
 
 class LabStrategy(Strategy):
@@ -491,9 +495,13 @@ class LabStrategy(Strategy):
         from ..research.setup_lab import extra_features
 
         bars = ctx.bars
-        d5 = resample(bars, "5min")
-        last_end = bars.index[-1] + pd.Timedelta(minutes=1)
-        d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
+        if _LAB_D5[0] is bars:   # same bars object (one poll, one symbol): every lab setup shares one resample
+            d5 = _LAB_D5[1]
+        else:
+            d5 = resample(bars, "5min")
+            last_end = bars.index[-1] + pd.Timedelta(minutes=1)
+            d5 = d5[d5.index + pd.Timedelta(minutes=5) <= last_end]
+            _LAB_D5[:] = [bars, d5]
         if d5.empty:
             return []
         key = (ctx.symbol, str(ctx.date) if hasattr(ctx, "date") else "", len(bars), bars.index[-1])
