@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 590 · coded: 85 · failed: 293 · configurations tried (all lineages): 32796092
+Total ideas: 593 · coded: 85 · failed: 295 · configurations tried (all lineages): 32796128
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -299,6 +299,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1021-cwt12k6-breakeven | CWT12-coil-k6-long: stop to breakeven at +0.5R (or 1R trail after +0.5R) instead of the plain t1s05 bracket | BDI 2026-10-21 (research/bdi/bdi1021/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1021-hfl-fd-hold-no-target | heat_fade_long-FD: drop the target and hold to 15:55 with the original stop (or one re-entry after a stop) | BDI 2026-10-21 (research/bdi/bdi1021/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1022-setup-stop-latch | Per-setup -2R daily stop that latches for the day (no re-arm when a later winner lifts realized R back above -2R), vs the live re-arming check | nightly-2026-10-22 (research/bdi/nightly1022/NOTES.md, rearm_out.txt, latch_out.txt) | – | – | – | – | – | – |
+| idea | bdi1022-short-cluster-profit-lock | Cluster profit lock: when >= 5 open lots of correlated sibling shorts (same family, same polls) are together >= +X R open, move all their stops to breakeven (or 0.5R trail) | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md; nightly1022 give-back) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -592,6 +593,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1021-CWT14-failbrk-pdl-p10-lowvol-long-exec | CWT14-failbrk-pdl-p10-lowvol-long: execution variants (scale-out toggle/levels, time stop, stop x0.85/1.25/1.5 at same $, wait one bar, window, SPY-direction filter, re-entry cooldown, thresholds +-20%, coil-k6 breakeven) | BDI top-5 execution tune 2026-10-21 (sixth run) (research/bdi/top5_1021/NOTES.md) | – | – | – | – | – | – |
 | failed | swing1022-15m-swing-break-retest-idx | Reddit 15m swing high/low break-and-retest / 3rd rejection to the next POI, SPY+QQQ and SPXL+TQQQ | BDI swing1022 2026-10-22 (research/bdi/swing1022/NOTES.md) | – | – | – | – | – | – |
 | failed | swing1022-15m-swing-break-retest-stk | Reddit 15m swing high/low break-and-retest / 3rd rejection, liquid stocks (adv20 >= $95M) | BDI swing1022 2026-10-22 (research/bdi/swing1022/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1022-gapdn-family-time-window | Gap-down short family (RW3/RW5/MF2/MF4 -FD) restricted to one entry window (09:50-11, 11-12, 12-13, 13-15, 11:30-12:30) | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md, PLAN.md, results.csv) | – | – | – | – | – | – |
+| failed | bdi1022-longs-qqq-weak-block | Long setups: no new long while QQQ is already <= -0.5% / -0.75% from its open at entry | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md, PLAN.md, results.csv) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
