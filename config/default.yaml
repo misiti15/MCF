@@ -290,7 +290,7 @@ strategies:
   NS3-failed-vwap-reclaim-short-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # demoted to Testing 2 2026-10-22 (owner N5/R3); promotion = move
     type: lab
     module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
     min_adv: 95000000
@@ -398,7 +398,6 @@ live:
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
     - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
     - MF4-h40-open-flowsell-FD   # promoted 2026-10-20
-    - NS3-failed-vwap-reclaim-short-FD   # promoted 2026-10-20
     - intraday_momentum
     - orb20_a
     - RW6G1-ns2-up3-vwap2sd-short
