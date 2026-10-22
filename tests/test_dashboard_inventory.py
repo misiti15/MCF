@@ -24,6 +24,7 @@ IDS = [
     "lb-last-band",
     # added 2026-10-21 (UI-DASH 2: replay band, pipeline card)
     "lb-replay-band", "pipe-card", "pipe-sum", "pipe-tab",
+    "sd-panel", "sd-back",   # added 2026-10-21 (UI-DRILL)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -155,3 +156,11 @@ def test_glossary_covers_new_columns():
     for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L", "Replay", "Replay trades",
                  "Replay sessions", "Replay win rate", "Replay avg R", "Replay t", "Replay total R", "Stage"):
         assert f'"{term}":' in HTML, term
+
+
+def test_setup_drilldown_panel():
+    """UI-DRILL (owner 2026-10-21): side panel opened from any setup, Esc / outside click closes, Prev / Next and arrow
+    keys follow the table order, #setup=<code> deep link, bottom sheet on phones."""
+    for needle in ('id="sd-panel"', '"Escape"', '"ArrowLeft"', '"ArrowRight"', "#setup=", "history.pushState",
+                   "hashchange", "max-width: 640px", "Previous session", "Record — live · replay · backtest", "Daily R since start"):
+        assert needle in HTML, needle

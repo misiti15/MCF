@@ -443,7 +443,7 @@ window.MCF = window.MCF || {};
       return v && v.trades ? `<td>${v.trades}</td><td class="${cls(r)}">${(r > 0 ? "+" : "") + r.toFixed(2)}</td><td class="${cls(p)}">${money(p)}</td>` : `<td>—</td><td>—</td><td>—</td>`; };
     el.innerHTML = `<div class="note" style="margin:0 0 8px">${e(d.window)} · ${d.sessions} sessions · ${e(d.note || "")}${day ? ` · last session = ${e(day)}` : ""}</div>` +
       table(["Setup", "Current account", "Last-session trades", "Last-session R", "Last-session P/L", "Trades", "Win rate", "Avg R", "P/L", "Backtest expected R", "Verdict"],
-        d.setups.map(x => `<tr><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td class="l">${e(curAcct(x.setup))}</td>${lsC(x.setup)}<td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
+        d.setups.map(x => `<tr data-setup="${e(x.setup)}"><td class="l" title="${e(NAMES[x.setup]?.what || "")}">${nm(x.setup)}</td><td class="l">${e(curAcct(x.setup))}</td>${lsC(x.setup)}<td>${x.trades}</td><td>${pc(x.win_rate)}</td><td class="${cls(x.avg_r)}">${x.avg_r ?? "–"}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td><td>${x.expected_r ?? "–"}</td><td>${e(x.verdict)}</td></tr>`));
   }
 
   function renderLab(d) {
@@ -860,7 +860,7 @@ window.MCF = window.MCF || {};
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
-      return `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
+      return `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
         <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
         <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
         <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
@@ -1051,7 +1051,7 @@ window.MCF = window.MCF || {};
     const traded = rows.filter(x => x.trades);
     q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}`;
     const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
-    const td = x => `<tr><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:240px" title="${e(x.what)}"><span class="genbadge">GENERATED</span> ${e(x.name)}
+    const td = x => `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:240px" title="${e(x.what)}"><span class="genbadge">GENERATED</span> ${e(x.name)}
         <div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td><td>${e(x.generated || "–")}</td><td>${x.trades}</td><td>${x.per_day ?? "–"}</td><td>${pc(x.win_rate)}</td>
       <td class="${cls(x.win_rate == null || x.breakeven_wr == null ? null : x.win_rate - x.breakeven_wr)}">${pc(x.breakeven_wr)}</td>
       <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td>${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
@@ -1195,6 +1195,252 @@ window.MCF = window.MCF || {};
   new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; apply(document); }); })
     .observe(document.body, { childList: true, subtree: true });
   apply(document);
+})();
+</script>
+<!-- Setup drill-down (owner 2026-10-21): click a setup anywhere (leaderboard / scorecard / pipeline row, a setup name in any
+     table) to open its side panel without a reload: name + code, current account + since, today and the previous session,
+     its record (live · replay · backtest) and a daily R / cumulative R timeline with account-move markers.
+     Esc or a click outside closes; Prev / Next and the arrow keys step through the table's current order;
+     #setup=<code> deep-links it (Back closes). Phone: full-width bottom sheet. Paper results. -->
+<style>
+#sd-back { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 40; display: none; }
+#sd-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100vw); z-index: 41; background: var(--page);
+  border-left: 1px solid var(--border); box-shadow: -8px 0 24px rgba(0,0,0,.15); overflow-y: auto; padding: 14px 16px 28px;
+  transform: translateX(105%); transition: transform .16s ease-out; visibility: hidden; }
+#sd-panel.open { transform: none; visibility: visible; }
+#sd-back.open { display: block; }
+@media (max-width: 640px) {
+  #sd-panel { top: auto; left: 0; width: 100vw; max-height: 86vh; border-left: 0; border-top: 1px solid var(--border);
+    border-radius: 14px 14px 0 0; transform: translateY(105%); box-shadow: 0 -8px 24px rgba(0,0,0,.18); }
+  #sd-panel.open { transform: none; }
+}
+#sd-panel .sd-top { display: flex; gap: 6px; align-items: center; justify-content: space-between; position: sticky; top: -14px;
+  background: var(--page); padding: 6px 0 8px; margin-top: -6px; z-index: 1; }
+#sd-panel button { font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); cursor: pointer; }
+#sd-panel button:disabled { opacity: .4; cursor: default; }
+#sd-panel h3 { font-size: 17px; margin: 4px 0 0; line-height: 1.3; }
+#sd-panel .code { font-size: 12px; color: var(--muted); word-break: break-all; }
+#sd-panel .what { font-size: 13px; color: var(--ink-2); margin: 6px 0; }
+#sd-panel .sect { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-top: 10px; }
+#sd-panel .sect h4 { margin: 0 0 6px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+#sd-panel table { font-size: 13px; }
+#sd-panel td, #sd-panel th { padding: 5px 6px; }
+#sd-panel th { cursor: default; }
+#sd-panel .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#sd-panel .two > div { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+#sd-panel .two .k { font-size: 12px; color: var(--ink-2); } #sd-panel .two .v { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+#sd-panel .two .n { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+#sd-panel .lg { font-size: 11px; color: var(--muted); margin-top: 4px; }
+#sd-panel a { color: var(--s1); }
+.sd-row { cursor: pointer; }
+.sd-row:hover td { background: rgba(127,127,127,.06); }
+.sd-row.sd-cur td { box-shadow: inset 0 1px 0 var(--s1), inset 0 -1px 0 var(--s1); }
+</style>
+<div id="sd-back" aria-hidden="true"></div>
+<aside id="sd-panel" role="dialog" aria-modal="false" aria-label="Setup details" tabindex="-1"></aside>
+<script>
+(() => {
+  const M = window.MCF, RAW = M.RAW, BR = M.BRANCH, q = s => document.querySelector(s);
+  const panel = q("#sd-panel"), back = q("#sd-back");
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f = (v, d = 2, sg = true) => v == null || v === "" || isNaN(v) ? "—" : (sg && v > 0 ? "+" : "") + (+v).toFixed(d);
+  const pc = v => v == null || isNaN(v) ? "—" : Math.round(v * 100) + "%";
+  const money = v => v == null || isNaN(v) ? "—" : (v < 0 ? "-$" : "$") + Math.abs(+v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard" };
+  const ROWTABLES = ["lb-tab", "lv-score", "gen-tab", "pipe-tab", "pt-tab", "dm-tab", "lv-val"];
+  // status.json changes every minute: short-lived cache; the rest (EOD files) once per page load via MCF.get
+  const fresh = {}, live = (k, p) => { const u = RAW + BR[k] + "/" + p, c = fresh[u];
+    if (c && Date.now() - c.at < 60000) return c.p;
+    const pr = fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+    fresh[u] = { at: Date.now(), p: pr }; return pr; };
+  let NAMES = {}, ASG = null, KNOWN = new Set(), cur = null, list = [], src = null, pushed = false, seq = 0;
+  const base = c => String(c || "").replace(/-FD$/, "");
+  const nameOf = c => { const n = NAMES[c] || NAMES[base(c)] || {}; return n.name ? n.name + (c !== base(c) && !NAMES[c] ? " · full day" : "") : c; };
+  Promise.all([M.get("../live/setup_names.json"), M.get("../live/assignments.json")]).then(([n, a]) => {
+    NAMES = n || {}; ASG = a;
+    Object.keys(NAMES).forEach(k => KNOWN.add(k)); Object.keys((a && a.setups) || {}).forEach(k => KNOWN.add(k));
+    fromHash();
+  });
+  document.addEventListener("mcf:leaderboard", () => ((M.lb || {}).rows || []).forEach(r => KNOWN.add(r.setup)));
+
+  // which setup is a row / cell about?
+  const codeIn = el => { if (!el) return null;
+    const d = el.closest("[data-setup]"); if (d) return d.dataset.setup;
+    const toks = (el.textContent || "").match(/[A-Za-z0-9_][A-Za-z0-9_.\-]*[A-Za-z0-9_]/g) || [];
+    return toks.filter(t => KNOWN.has(t)).sort((a, b) => b.length - a.length)[0] || null; };
+  const rowsOf = wrap => [...wrap.querySelectorAll("tbody tr")].map(tr => codeIn(tr)).filter(Boolean)
+    .filter((c, i, a) => a.indexOf(c) === i);
+  const mark = () => document.querySelectorAll(ROWTABLES.map(id => `#${id} tbody tr`).join(",")).forEach(tr => {
+    tr.classList.add("sd-row"); tr.classList.toggle("sd-cur", !!cur && codeIn(tr) === cur); });
+  let mp = false;
+  new MutationObserver(() => { if (mp) return; mp = true; requestAnimationFrame(() => { mp = false; mark(); }); })
+    .observe(q("main"), { childList: true, subtree: true });
+
+  document.addEventListener("click", ev => {
+    if (panel.contains(ev.target)) return;
+    if (ev.target === back) { close(); return; }
+    if (ev.target.closest("a, button, select, input, summary, th, .gl-tip")) return;
+    const td = ev.target.closest("td"); if (!td) return;
+    const wrap = td.closest(".tablewrap"); if (!wrap) return;
+    const rowTable = ROWTABLES.includes(wrap.id);
+    const code = rowTable ? codeIn(td.parentNode) : codeIn(td);
+    if (!code) return;
+    src = wrap; list = rowsOf(wrap);
+    open(code, true);
+  });
+  document.addEventListener("keydown", ev => {
+    if (!cur) return;
+    if (ev.target.closest && ev.target.closest("input, select, textarea")) return;
+    if (ev.key === "Escape") { close(); ev.preventDefault(); }
+    else if (ev.key === "ArrowLeft") { step(-1); ev.preventDefault(); }
+    else if (ev.key === "ArrowRight") { step(1); ev.preventDefault(); }
+  });
+  function step(d) {
+    if (src && document.contains(src)) list = rowsOf(src);   // follow the table's current sort
+    const i = list.indexOf(cur); if (i < 0 || !list[i + d]) return;
+    open(list[i + d], false);
+    const tr = src && [...src.querySelectorAll("tbody tr")].find(r => codeIn(r) === cur);
+    if (tr) tr.scrollIntoView({ block: "nearest" });
+  }
+  function fromHash() {
+    const m = /^#setup=(.+)$/.exec(location.hash);
+    if (m) { const c = decodeURIComponent(m[1]); if (c !== cur) open(c, null); }
+    else if (cur) hide();
+  }
+  addEventListener("hashchange", fromHash);
+  function open(code, push) {
+    const h = "#setup=" + encodeURIComponent(code);
+    if (push !== null && location.hash !== h) {
+      if (push && !cur) { history.pushState({ sd: 1 }, "", h); pushed = true; } else history.replaceState(history.state, "", h);
+    }
+    cur = code; panel.classList.add("open"); back.classList.add("open"); mark();
+    render(code);
+  }
+  function hide() { cur = null; panel.classList.remove("open"); back.classList.remove("open"); mark(); }
+  function close() {
+    if (!cur) return;
+    if (pushed && history.state && history.state.sd) { pushed = false; history.back(); }
+    else { history.replaceState(null, "", location.pathname + location.search); hide(); }
+  }
+
+  // ---- data ----
+  const ACCTS = Object.keys(BR);
+  const scorecards = () => Promise.all(ACCTS.map(k => M.get(RAW + BR[k] + "/reports/scorecard.json").then(c => [k, c])));
+  async function dayAt(code, which) {
+    const st = await Promise.all(ACCTS.map(k => live(k, "status.json").then(s => [k, s])));
+    const ref = st.map(x => x[1]).filter(Boolean).map(s => s.session_date).filter(Boolean).sort().pop();
+    if (which === "today") {
+      let n = 0, w = 0, r = 0, p = 0, open = 0, in_ = [];
+      st.forEach(([k, s]) => { if (!s || s.session_date !== ref) return;
+        const c = (s.closed || []).filter(x => x.strategy === code), o = (s.positions || []).filter(x => x.strategy === code);
+        if (c.length || o.length) in_.push(LBL[k]);
+        n += c.length; w += c.filter(x => x.pnl > 0).length; r += c.reduce((a, x) => a + (+x.r || 0), 0); p += c.reduce((a, x) => a + (+x.pnl || 0), 0); open += o.length; });
+      return { date: ref, n, w, r, p, open, in_, phase: (st.find(x => x[1] && x[1].session_date === ref) || [])[1]?.phase };
+    }
+    const hist = st.flatMap(([, s]) => ((s && s.history) || []).map(h => h.date)).filter(d => d < ref).sort();
+    const y = hist.pop() || null; if (!y) return { date: null };
+    let n = 0, w = 0, r = 0, p = 0, in_ = [];
+    (await Promise.all(ACCTS.map(k => M.daySummary(BR[k], y).then(by => [k, by])))).forEach(([k, by]) => {
+      const v = by && by[code]; if (!v) return; in_.push(LBL[k]); n += v.trades; w += v.wins; r += v.r; p += v.pnl; });
+    return { date: y, n, w, r, p, open: null, in_ };
+  }
+  async function series(code, cards) {
+    const byDay = {};
+    await Promise.all(cards.map(async ([k, c]) => {
+      const row = ((c && c.leaderboard) || []).find(x => x.setup === code); if (!row) return;
+      let daily = row.daily;
+      if (!daily) daily = (await Promise.all((row.days || []).map(d => M.daySummary(BR[k], d).then(by => { const v = by && by[code];
+        return v ? [d, v.trades, v.r, v.pnl] : null; })))).filter(Boolean);
+      daily.forEach(([d, n, r, p]) => { const b = byDay[d] = byDay[d] || { n: 0, r: 0, p: 0, acc: [] }; b.n += n; b.r += +r || 0; b.p += +p || 0; b.acc.push(k); });
+    }));
+    return Object.keys(byDay).sort().map(d => ({ d, ...byDay[d] }));
+  }
+  function spark(s, marks) {
+    if (!s.length) return `<div class="empty" style="padding:14px">No live trades yet.</div>`;
+    const W = 420, H = 130, P = 30, cum = []; let c = 0; s.forEach(x => cum.push(c += x.r));
+    const vals = [0, ...cum, ...s.map(x => x.r)], lo = Math.min(...vals), hi = Math.max(...vals);
+    const bw = Math.max(2, Math.min(18, (W - P - 8) / s.length - 2));
+    const x = i => P + 4 + (s.length === 1 ? (W - P - 8) / 2 : i * (W - P - 8 - bw) / (s.length - 1)) ;
+    const y = v => 8 + (hi - v) * (H - 30) / ((hi - lo) || 1);
+    const bars = s.map((d, i) => `<rect x="${(x(i)).toFixed(1)}" y="${Math.min(y(0), y(d.r)).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, Math.abs(y(d.r) - y(0))).toFixed(1)}" fill="${d.r >= 0 ? "var(--good)" : "var(--bad)"}" opacity=".55"><title>${e(d.d)}: ${d.n} trades, ${f(d.r)}R, ${money(d.p)} (${e(d.acc.map(k => LBL[k]).join(" + "))})</title></rect>`).join("");
+    const line = cum.map((v, i) => (i ? "L" : "M") + (x(i) + bw / 2).toFixed(1) + " " + y(v).toFixed(1)).join("");
+    const seen = new Set();
+    const mk = marks.map(m => { const i = s.findIndex(d => m.after ? d.d > m.d : d.d >= m.d); if (i <= 0 || seen.has(i)) return ""; seen.add(i);
+      const xx = x(i) - 1; return `<line x1="${xx}" x2="${xx}" y1="4" y2="${H - 22}" stroke="var(--s1)" stroke-dasharray="3 3"/><text x="${xx > W * .6 ? xx - 3 : xx + 3}" y="12" text-anchor="${xx > W * .6 ? "end" : "start"}" style="fill:var(--s1)">${e(m.t)}</text>`; }).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily R bars and cumulative R line since start">
+      <line x1="${P}" x2="${W - 4}" y1="${y(0)}" y2="${y(0)}" stroke="var(--axis)"/>
+      <text x="${P - 4}" y="${y(hi) + 4}" text-anchor="end">${f(hi, 1)}</text><text x="${P - 4}" y="${y(lo) + 4}" text-anchor="end">${f(lo, 1)}</text>
+      ${bars}<path d="${line}" fill="none" stroke="var(--s1)" stroke-width="2"/>${mk}
+      <text x="${P}" y="${H - 6}">${e(s[0].d)}</text><text x="${W - 4}" y="${H - 6}" text-anchor="end">${e(s[s.length - 1].d)} · cum ${f(c, 1)}R</text></svg>
+      <div class="lg">Bars = R each session (hover for trades, P/L, account) · line = cumulative R · dashed = moved between accounts.</div>`;
+  }
+  // the leaderboard's merged row when it has loaded, else the same merge from the scorecards' exact sums
+  function merge(rs) {
+    if (!rs.length) return null; if (rs.length === 1) return rs[0];
+    const sum = k => rs.reduce((a, r) => a + (+r[k] || 0), 0), n = sum("trades"), w = sum("n_win"), avg = n ? sum("total_r") / n : null;
+    const v = n > 1 ? (sum("r_sq_sum") - n * avg * avg) / (n - 1) : 0, aw = w ? sum("win_r_sum") / w : null, al = n - w ? sum("loss_r_sum") / (n - w) : null;
+    return { trades: n, sessions_traded: new Set(rs.flatMap(r => r.days || [])).size || null, win_rate: n ? w / n : null, avg_r: avg,
+      t_stat: v > 0 ? avg / Math.sqrt(v / n) : null, breakeven_wr: aw && al ? al / (aw + al) : null, total_r: sum("total_r"), pnl: sum("pnl"),
+      expected_r: rs.map(r => r.expected_r).find(x => x != null) ?? null, first: rs.map(r => r.first).filter(Boolean).sort()[0], last: rs.map(r => r.last).filter(Boolean).sort().pop() };
+  }
+  document.addEventListener("mcf:leaderboard", () => { if (cur) render(cur); });
+  const dayBox = (lab, d) => !d || !d.date ? `<div><div class="k">${lab}</div><div class="v">—</div><div class="n">no session</div></div>` :
+    `<div><div class="k">${lab} · ${e(d.date)}</div><div class="v ${d.n ? cls(d.p) : ""}">${d.n ? money(d.p) : "—"}</div>
+     <div class="n">${d.n ? `${d.n} trades · ${pc(d.w / d.n)} win · <span class="${cls(d.r)}">${f(d.r)}R</span>` : "no closed trades"}${d.open ? ` · <b>${d.open} open</b>` : ""}</div>
+     ${d.in_ && d.in_.length ? `<div class="n" style="color:var(--muted)">${e(d.in_.join(" + "))}</div>` : ""}</div>`;
+
+  async function render(code) {
+    const my = ++seq;
+    const a = ASG && ASG.setups ? ASG.setups[code] : null, n = NAMES[code] || NAMES[base(code)] || {};
+    const accs = a ? (a.accounts || []).map(k => (ASG.labels || {})[k] || LBL[k] || k) : [];
+    const i = list.indexOf(cur);
+    panel.innerHTML = `<div class="sd-top"><div style="display:flex;gap:6px"><button id="sd-prev" title="Previous setup in the table (←)" ${i > 0 ? "" : "disabled"}>‹ Prev</button>
+        <button id="sd-next" title="Next setup in the table (→)" ${i >= 0 && i < list.length - 1 ? "" : "disabled"}>Next ›</button></div>
+        <div style="display:flex;gap:6px;align-items:center"><a id="sd-link" href="#setup=${encodeURIComponent(code)}" title="Link to this setup (opens this panel)">More / link</a><button id="sd-close" title="Close (Esc)">✕</button></div></div>
+      <h3>${e(nameOf(code))}</h3><div class="code">${e(code)}${n.side ? " · " + e(n.side) : ""}${i >= 0 ? ` · ${i + 1} of ${list.length} in this table` : ""}</div>
+      ${n.what ? `<div class="what">${e(n.what)}</div>` : ""}
+      <div class="sect"><h4>Account</h4><div>${accs.length ? `<b>${e(accs.join(" + "))}</b>${a.split ? " (split tickers)" : ""}` : (a ? "switched off" : "not in the live assignments")}
+        ${a && a.since ? ` · since ${e(a.since)}${a.from && a.from.length ? " (from " + e(a.from.map(k => (ASG.labels || {})[k] || k).join(", ")) + ")" : ""}` : ""}</div>
+        ${n.former_primary ? `<div class="n" style="font-size:12px;color:var(--ink-2)">${e(n.former_primary)}</div>` : ""}</div>
+      <div class="two" style="margin-top:10px" id="sd-days"><div><div class="k">Today</div><div class="v">…</div></div><div><div class="k">Previous session</div><div class="v">…</div></div></div>
+      <div class="sect"><h4>Record — live · replay · backtest</h4><div class="tablewrap" id="sd-rec"><div class="empty" style="padding:10px">Loading…</div></div></div>
+      <div class="sect"><h4>Daily R since start</h4><div id="sd-spark"><div class="empty" style="padding:10px">Loading…</div></div></div>
+      <div class="note">Paper results; few trades prove nothing. Educational only — not financial advice.</div>`;
+    q("#sd-prev").onclick = () => step(-1); q("#sd-next").onclick = () => step(1); q("#sd-close").onclick = close;
+    q("#sd-link").onclick = ev => { ev.preventDefault(); history.replaceState(history.state, "", "#setup=" + encodeURIComponent(code));
+      try { navigator.clipboard && navigator.clipboard.writeText(location.href); q("#sd-link").textContent = "Link copied"; } catch (_) {} };
+    const [today, prev, cards, RP, PIPE] = await Promise.all([dayAt(code, "today"), dayAt(code, "prev"), scorecards(),
+      M.get("../live/replay.json"), M.get("../live/pipeline.json")]);
+    if (my !== seq) return;
+    q("#sd-days").innerHTML = dayBox(today.phase && today.phase !== "closed" ? "Today" : "Today (closed)", today) + dayBox("Previous session", prev);
+    const lbRow = ((M.lb || {}).rows || []).find(r => r.setup === code);
+    const recs = cards.map(([k, c]) => [k, ((c && c.leaderboard) || []).find(x => x.setup === code)]).filter(x => x[1] && x[1].trades);
+    const L = lbRow || merge(recs.map(x => x[1]));
+    const rp = RP && RP.setups ? RP.setups[code] : null, pb = PIPE && PIPE.setups && PIPE.setups[code] ? PIPE.setups[code].backtest : null;
+    const bt = pb || (L && L.expected_r != null ? { avg_r: L.expected_r } : null);
+    const row = (k, a, b, c) => `<tr><td class="l">${k}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`;
+    q("#sd-rec").innerHTML = `<table><thead><tr><th class="l"></th><th>Live</th><th>Replay</th><th>Backtest</th></tr></thead><tbody>` + [
+      row("Trades", L ? L.trades ?? 0 : 0, rp ? rp.trades ?? "—" : "—", bt ? bt.trades ?? "—" : "—"),
+      row("Sessions", L ? L.sessions_traded ?? "—" : "—", rp ? rp.sessions ?? "—" : "—", "—"),
+      row("Win rate", pc(L && L.win_rate), pc(rp && rp.win_rate), pc(bt && bt.win)),
+      row("Break-even win rate", pc(L && L.breakeven_wr), "—", pc(bt && bt.be_win)),
+      row("Avg R", `<span class="${cls(L && L.avg_r)}">${f(L && L.avg_r)}</span>`, `<span class="${cls(rp && rp.avg_r)}">${f(rp && rp.avg_r)}</span>`, `<span class="${cls(bt && bt.avg_r)}">${f(bt && bt.avg_r)}</span>`),
+      row("Confidence (t)", f(L && L.t_stat, 1, false), f(rp && (rp.t ?? rp.t_stat), 1, false), f(bt && bt.t, 1, false)),
+      row("Total R", `<span class="${cls(L && L.total_r)}">${f(L && L.total_r, 1)}</span>`, f(rp && rp.total_r, 1), "—"),
+      row("P/L", `<span class="${cls(L && L.pnl)}">${money(L && L.pnl)}</span>`, "—", "—"),
+    ].join("") + `</tbody></table>` + (recs.length > 1 ? `<div class="lg">Live = ${recs.map(([k, r]) => `${LBL[k]} ${r.trades}`).join(" + ")} trades, merged.</div>` : "") +
+      (L && L.first ? `<div class="lg">Live since ${e(L.first)} · last trade ${e(L.last || "–")}</div>` : "");
+    const s = await series(code, cards);
+    if (my !== seq) return;
+    const marks = [];
+    recs.map(([k, r]) => [k, r.first]).filter(x => x[1]).sort((p, q2) => p[1] < q2[1] ? -1 : 1).slice(1)
+      .forEach(([k, d]) => marks.push({ d, t: "→ " + LBL[k] }));
+    // a move stamped after the close takes effect the next session
+    if (a && a.since) marks.push({ d: a.since.slice(0, 10), after: (a.since.slice(11, 13) || "00") >= "16", t: "→ " + (accs.join(" + ") || "off") });
+    q("#sd-spark").innerHTML = spark(s, marks);
+  }
 })();
 </script>
 </body></html>
