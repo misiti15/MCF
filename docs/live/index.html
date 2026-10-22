@@ -94,7 +94,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 #qnav::-webkit-scrollbar { display: none; }
 #qnav a { flex: none; font-size: 13px; padding: 4px 11px; border-radius: 999px; color: var(--ink-2); text-decoration: none; border: 1px solid transparent; }
 #qnav a:hover, #qnav a.on { color: var(--ink); border-color: var(--border); background: var(--surface); }
-#acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #gl-card, #lh { scroll-margin-top: 52px; }
+#acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #gl-card, #lh, #dec-card { scroll-margin-top: 52px; }
 #glance { margin: 12px 0 4px; padding: 10px 12px; }
 #glance h2 { font-size: 13px; margin: 0 0 6px; color: var(--ink-2); }
 #glance .gx { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px; }
@@ -113,13 +113,59 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 .card.collapsed { padding-bottom: 6px; }
 #lb-asg.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
 </style>
-<nav id="qnav" aria-label="Sections"><a href="#live">Today</a><a href="#lb-card">Setups</a><a href="#pipe-card">Research</a><a href="#acc-all">Accounts</a><a href="#chg-card">System</a></nav>
+<nav id="qnav" aria-label="Sections"><a href="#dec-card">Decisions</a><a href="#live">Today</a><a href="#lb-card">Setups</a><a href="#pipe-card">Research</a><a href="#acc-all">Accounts</a><a href="#chg-card">System</a></nav>
 <div class="card" id="glance" role="region" aria-label="At a glance" aria-live="polite"><h2>At a glance</h2>
   <div class="gx"><div><div class="gk">Today's P/L by account</div><div class="gn" id="gl-pl">loading…</div></div>
     <div><div class="gk">Primary green-day streak</div><div class="gv" id="gl-streak">…</div><div class="gn" id="gl-streak-n"></div></div>
-    <div><div class="gk">Open decisions for you</div><div class="gv" id="gl-dec">…</div><div class="gn" id="gl-dec-n"></div></div>
+    <div><div class="gk">Open decisions for you</div><div class="gv" id="gl-dec">…</div><div class="gn" id="gl-dec-n"></div><div class="gn"><a href="#dec-card">Your decisions ↓</a></div></div>
     <div><div class="gk">Alerts</div><div class="gv" id="gl-alerts">…</div><div class="gn" id="gl-alerts-n"></div></div></div>
 </div>
+<!-- Your decisions (owner 2026-10-22: "with all the tasks and new ideas it is very challenging to understand where to look to make
+     the most informed decision"): every OPEN owner decision in one place - code, what it does, the recommendation, 2-3 key
+     numbers and the research note. Source: docs/live/decisions.json (hand-maintained; the nightly brief refreshes it). -->
+<style>
+#dec-card { margin: 8px 0 4px; }
+#dec-list { display: grid; gap: 8px; }
+.dec { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--page); min-width: 0; }
+.dec .dh { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: baseline; }
+.dec .dc { font: 600 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 0 7px; border-radius: 6px; border: 1px solid var(--axis); color: var(--ink); }
+.dec .dt { font-weight: 600; overflow-wrap: anywhere; }
+.dec .rec { margin-left: auto; font-size: 12px; font-weight: 600; padding: 0 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.dec .rec.yes { color: var(--good); } .dec .rec.no { color: var(--bad); } .dec .rec.opt { color: var(--ink-2); }
+.dec .dw { color: var(--ink-2); font-size: 13px; margin-top: 3px; overflow-wrap: anywhere; }
+.dec ul { margin: 5px 0 0; padding-left: 18px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.dec .dy { font-size: 12px; color: var(--muted); margin-top: 4px; overflow-wrap: anywhere; }
+.dec .dy a { color: var(--s1); }
+#dec-done summary { cursor: pointer; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+#dec-done .dec { opacity: .8; margin-top: 6px; }
+</style>
+<div class="card" id="dec-card" role="region" aria-label="Your decisions"><h2>Your decisions <span id="dec-n" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
+  <div class="why">Every open decision waiting on you: what it does, my recommendation and the key numbers. Backtests and paper results only.</div>
+  <div id="dec-list"><div class="empty" style="padding:10px">Loading…</div></div>
+  <details id="dec-done"><summary>Answered</summary><div id="dec-done-list"></div></details>
+  <div class="note">Source: docs/live/decisions.json · reply in chat with the code, e.g. "R1 yes". Educational only — not financial advice.</div>
+</div>
+<script>
+(() => {
+  const q = s => document.querySelector(s), NOTE = "https://github.com/misiti15/MCF/blob/claude/intraday-trading-system-witis4/";
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const rc = r => /^yes/i.test(r) ? "yes" : /^no/i.test(r) ? "no" : "opt";
+  const one = d => `<div class="dec" data-code="${e(d.code)}"><div class="dh"><span class="dc">${e(d.code)}</span><span class="dt">${e(d.title)}</span>
+      <span class="rec ${rc(d.recommend)}" title="My recommendation">${d.status === "answered" ? "Answered: " + e(d.answered || "") : "Recommend: " + e(d.recommend)}</span></div>
+    <div class="dw">${e(d.what)}</div>
+    ${(d.numbers || []).length ? `<ul>${d.numbers.map(n => `<li>${e(n)}</li>`).join("")}</ul>` : ""}
+    <div class="dy">${e(d.why || "")}${d.link ? ` · <a href="${/^https?:/.test(d.link) ? e(d.link) : NOTE + e(d.link)}" target="_blank" rel="noopener">research note</a>` : ""}</div></div>`;
+  fetch("../live/decisions.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null).then(list => {
+    if (!Array.isArray(list)) { q("#dec-list").innerHTML = `<div class="empty" style="padding:10px">decisions.json not found.</div>`; return; }
+    const open = list.filter(d => d.status === "open"), done = list.filter(d => d.status !== "open");
+    q("#dec-list").innerHTML = open.length ? open.map(one).join("") : `<div class="empty" style="padding:10px">No open decisions.</div>`;
+    q("#dec-n").textContent = `${open.length} open`;
+    q("#dec-done summary").textContent = `Answered (${done.length})`;
+    q("#dec-done-list").innerHTML = done.map(one).join("");
+    if (!done.length) q("#dec-done").hidden = true;
+  });
+})();
+</script>
 <script>
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);
@@ -954,7 +1000,7 @@ window.MCF = window.MCF || {};
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
-        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="Moved here ${e(x.moved)}${x.movedFrom ? " from " + e(x.movedFrom) : ""}">moved ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
+        (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.movedFrom ? "Moved here " + e(x.moved) + " from " + e(x.movedFrom) : "New setup, added " + e(x.moved)}">${x.movedFrom ? "moved" : "new"} ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
       return `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
         <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
         <td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>

@@ -27,6 +27,7 @@ IDS = [
     "sd-panel", "sd-back",   # added 2026-10-21 (UI-DRILL)
     "glance", "qnav", "chg-card", "gl-pl", "gl-streak", "gl-dec", "gl-alerts",   # added 2026-10-21 (UI-DASH 4)
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
+    "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -38,6 +39,7 @@ TITLES = [
     "Generator Lab", "Long-hold (S6) — paper account", "Return since start", "Holdings", "Last sessions",
     "New setup pipeline",   # added 2026-10-21
     "At a glance",          # added 2026-10-21
+    "Your decisions",       # added 2026-10-22
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -100,6 +102,7 @@ SOURCES = [
     "../live/replay.json", "../live/pipeline.json",   # added 2026-10-21 (UI-DASH 2)
     "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md",   # added 2026-10-21 (UI-DASH 4)
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
+    "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
 ]
 
 

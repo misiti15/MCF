@@ -1,0 +1,77 @@
+[
+ {
+  "code": "R1",
+  "title": "Withdraw G1 (the 6 \"up-market gate\" short variants)",
+  "what": "Do not add the six short setups that would trade only on up-market days; the gate behind them was built on a data bug.",
+  "recommend": "Yes",
+  "numbers": [
+   "corrected gate t 0.04-2.17 (was 3.95-4.80)",
+   "bar 3.78 (gate lineage): 0 of 6 pass",
+   "6 variants: MF4-FD, RW5-FD, MF3-FD, RW7-FD, RW3-FD, RW1-FD"
+  ],
+  "why": "Answered yes 2026-10-22 ~11:30 ET: G1 withdrawn; the six -g1 gated variants are never added (the gate used SPY's same-day move as \"yesterday\").",
+  "link": "research/bdi/regime1022/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-10-22"
+ },
+ {
+  "code": "R2",
+  "title": "No new daily stop for Primary",
+  "what": "Keep the current -20R account stop for Primary and the -2R per-setup stop in the testing accounts; add no new protection rule.",
+  "recommend": "Yes",
+  "numbers": [
+   "44 protection rules tested on 2 years",
+   "0 beat trading less at random while keeping >= 80% of trades",
+   "Optional R2 B1b (max 2 open lots per stock per setup): worst days only 7% better"
+  ],
+  "why": "Answered yes 2026-10-22 ~11:30 ET: no new daily stop; the -20R account stop and the -2R per-setup stop in the testing accounts stay; the B1b cap is not adopted.",
+  "link": "research/bdi/regime1022/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-10-22"
+ },
+ {
+  "code": "S1",
+  "title": "Add RSI Collapse Dip Buy, Nasdaq-below-VWAP only (all day) to Testing 1",
+  "what": "A new Testing 1 setup: the RSI Collapse Dip Buy taken only while QQQ is at or below its VWAP; the original keeps running.",
+  "recommend": "Yes",
+  "numbers": [
+   "2-yr train +0.092R (183) / valid +0.141R (351)",
+   "t 2.27 vs bar 4.97",
+   "worst day -7.3R (parent -26.1R)"
+  ],
+  "why": "Answered yes 2026-10-22: added for the 2026-10-23 session with the new qqq_vwap context column.",
+  "link": "research/bdi/st7_1022/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-10-22"
+ },
+ {
+  "code": "V1",
+  "title": "Add Big Loser VWAP Reclaim Fade, Morning, Wide Stop to Testing 2",
+  "what": "A new Testing 2 setup: the NS3 fade in the morning only, with a stop twice as wide at the same dollar risk.",
+  "recommend": "Yes",
+  "numbers": [
+   "2-yr train +0.044R (868) / valid +0.058R (1,402)",
+   "t 2.15 vs bars 3.02 / 4.90",
+   "worst day -21.9R (NS3-FD -105R)"
+  ],
+  "why": "Answered yes 2026-10-22: added before NS3-FD for 2026-10-23; twin group NS3-T2 keeps them off the same stock.",
+  "link": "research/bdi/ns3var1022/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-10-22"
+ },
+ {
+  "code": "P0",
+  "title": "Move Failed Prior-Day-High Break Short (0.1 ATR) to the Graveyard",
+  "what": "Testing 1 stops trading CWT14-failbrk-pdh-p10-short; the Graveyard trades it with lower caps; its record moves with it.",
+  "recommend": "Yes",
+  "numbers": [
+   "live 209 paper trades -0.105R (before 10-22)",
+   "2-yr backtest -0.088R/trade",
+   "rework: 0 of 47 variants pass"
+  ],
+  "why": "Answered yes 2026-10-22: in the Graveyard from 2026-10-23; 10-22 trades stay in Testing 1 and show in its merged row.",
+  "link": "research/bdi/pdh1022/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-10-22"
+ }
+]
