@@ -149,7 +149,9 @@ def main():
     setups = pd.read_csv(HERE / "setups_used.csv")
     corr = corr_lookup()
     rows, md, day_rows = [], ["# Part B - protection rules (2-year backtest books; costs in)\n"], []
-    for acct in ACCT:
+    import sys
+    only = sys.argv[1] if len(sys.argv) > 1 else None
+    for acct in ([only] if only else ACCT):
         cfg = g21c.account_cfg(acct)
         A, L = cfg["account"], cfg.get("live") or {}
         caps = {"max_daily_loss_r": A.get("max_daily_loss_r"), "max_setup_daily_loss_r": A.get("max_setup_daily_loss_r"),
@@ -168,13 +170,32 @@ def main():
             day_rows.append(pd.DataFrame({"book": acct, "variant": vname, "date": dr.index, "R": dr.values}))
         print(acct, "done", flush=True)
     res = pd.DataFrame(rows)
+    if only:
+        res.to_csv(SCR / f"part_b_{only}.csv", index=False)
+        pd.concat(day_rows).to_csv(SCR / f"part_b_days_{only}.csv", index=False)
+        return
     res.to_csv(HERE / "part_b.csv", index=False)
     pd.concat(day_rows).to_csv(HERE / "part_b_days.csv", index=False)
     cols = ["variant", "train_total_R", "valid_total_R", "train_kept_pct", "valid_kept_pct", "train_vs_random_thin_R",
             "valid_vs_random_thin_R", "all_worst_day", "all_worst5pct_mean", "all_parent_worst5pct_days_mean",
             "all_days_le_m10"]
     for acct in ACCT:
-        md.append(f"\n## {acct}\n\n" + res[res["book"] == acct][cols].to_markdown(index=False) + "\n")
+        md.append(f"\n## {acct}\n\n" + res[res["book"] == acct][cols].to_string(index=False) + "\n")
+    (HERE / "part_b_out.md").write_text("".join(md))
+    print("".join(md))
+
+
+def merge():
+    res = pd.concat([pd.read_csv(SCR / f"part_b_{a}.csv") for a in ACCT], ignore_index=True)
+    days = pd.concat([pd.read_csv(SCR / f"part_b_days_{a}.csv") for a in ACCT], ignore_index=True)
+    res.to_csv(HERE / "part_b.csv", index=False)
+    days.to_csv(HERE / "part_b_days.csv", index=False)
+    cols = ["variant", "train_total_R", "valid_total_R", "train_kept_pct", "valid_kept_pct", "train_vs_random_thin_R",
+            "valid_vs_random_thin_R", "all_worst_day", "all_worst5pct_mean", "all_parent_worst5pct_days_mean",
+            "all_days_le_m10"]
+    md = ["# Part B - protection rules (2-year backtest books; costs in)\n"]
+    for acct in ACCT:
+        md.append(f"\n## {acct}\n\n" + res[res["book"] == acct][cols].to_string(index=False) + "\n")
     (HERE / "part_b_out.md").write_text("".join(md))
     print("".join(md))
 
@@ -211,5 +232,7 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "live":
         live_replay()
+    elif len(sys.argv) > 1 and sys.argv[1] == "merge":
+        merge()
     else:
         main()
