@@ -125,8 +125,9 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
     fast = None
     with _patched(clock):
         spreads = store.load_spreads() if spreads is None else spreads
-        r = R.PaperRunner(cfg, strategies, priors, broker=broker,
-                          data_client=SimDataClient(clock, market, spread_bps, spreads or None))
+        quotes = SimDataClient(clock, market, spread_bps, spreads or None)
+        client.half_spread_bps = lambda sym, k: quotes._bps(sym, k) / 2
+        r = R.PaperRunner(cfg, strategies, priors, broker=broker, data_client=quotes)
         r._utcnow = lambda: clock.now.tz_convert("UTC")
         feed = ReplayFeed(r, bars)
         r.fetch = feed.fetch

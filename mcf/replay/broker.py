@@ -13,8 +13,9 @@ Fill model (each poll the runner sees completed bars only; orders act on the bar
               (the touch-fill the paper broker gives). `"touch"`: high >= limit fills (Alpaca paper behaviour).
   costs       `fills="costs"` (default): production costs from config costs (mcf.backtest.engine.Costs: slippage per
               share + bps on entries and non-limit exits, stop_slippage_per_share extra on stop fills, extended-tier
-              names extended_slippage_per_share). `fills="paper"`: raw prices (what Alpaca paper fills), for comparing
-              with the live paper journals.
+              names extended_slippage_per_share). `fills="paper"`: what Alpaca paper does - market orders and triggered
+              stops fill across half the quoted spread (the quote model's spread for that symbol and minute), limits
+              at the limit; for comparing with the live paper journals.
 No network; nothing here can reach a broker. Educational only - not financial advice."""
 
 from __future__ import annotations
@@ -126,6 +127,9 @@ class SimTradingClient:
         self.pos: dict[str, float] = {}
         self.avg: dict[str, float] = {}
         self.done_min = -1                 # bars up to this minute have been applied to working orders
+        # paper fills cross the spread: Alpaca paper fills a market order (and a triggered stop) at the NBBO ask / bid.
+        # half_spread_bps(symbol, minute) -> bps, set by the harness from the quote model (fills="paper" only).
+        self.half_spread_bps = None
         self.touches: list[dict] = []      # limit touched but not traded through (limit_fill="through")
         self.fill_log: list[dict] = []
         self._ids = itertools.count(1)
@@ -161,10 +165,15 @@ class SimTradingClient:
         """Fill price after costs for an order of side `side` (+1 buy, -1 sell). kind: market | stop | limit."""
         if kind == "limit":
             return float(px)
+        if self.fills == "paper" and self.half_spread_bps is not None:
+            k = getattr(self, "_k", None)
+            hs = self.half_spread_bps(sym, k) if k is not None else 0.0
+            return float(px * (1 + side * hs / 1e4))
         extra = self.stop_extra if kind == "stop" else 0.0
         return float(px * (1 + side * self.bps / 1e4) + side * (self._slip_ps(sym) + extra))
 
     def _fill(self, o, px: float, k: int, kind: str):
+        self._k = k
         side = self._side_sign(o)
         q = abs(float(o.qty)) - abs(float(o.filled_qty or 0))
         fp = round(self._cost(px, o.symbol, side, kind), 6)
