@@ -77,7 +77,9 @@ class FastSession:
     def __init__(self, runner, day_bars: dict[str, pd.DataFrame], today):
         self.r, self.bars, self.today = runner, day_bars, today
         self.lab = [s for s in runner.strategies if isinstance(s, S.LabStrategy)]
-        self.other = [s for s in runner.strategies if not isinstance(s, S.LabStrategy)]
+        self.heat = [s for s in runner.strategies if isinstance(s, S.HeatStrategy)]
+        self.other = [s for s in runner.strategies if not isinstance(s, (S.LabStrategy, S.HeatStrategy))]
+        self.hscore: dict[tuple[str, str], tuple | None] = {}
         self.frames: dict[str, pd.DataFrame | None] = {}
         self.ends: dict[str, np.ndarray] = {}
         self.ctx_full: dict[str, DayContext] = {}
@@ -86,6 +88,7 @@ class FastSession:
         self.mask_hits = self.mask_misses = 0
         self.dropped = self.kept = 0
         self.rv: dict = {}
+        self.gen_skipped = 0
         self.tod: dict[str, np.ndarray] = {}
 
     # ---------------------------------------------------------------- whole-session frames (built by the real code)
@@ -121,7 +124,7 @@ class FastSession:
                     mod = st.mod
                     st.mod = getattr(mod, "_mod", mod)          # the real module: generate builds and caches the frame
                     try:
-                        st.generate(ctx)
+                        type(st).generate(st, ctx)
                     except Exception:
                         pass
                     finally:
@@ -182,7 +185,12 @@ class FastSession:
         sym = ctx.symbol
         n = len(ctx.bars)
         if n < 5 or n % 5:
-            return False                                         # every lab setup's eligible() needs n % 5 == 0
+            return False                                         # every lab / heat eligible() needs n % 5 == 0
+        for st in self.heat:
+            if getattr(st, "ticker_split", None) and not st.trades_symbol(sym):
+                continue
+            if self.heat_hit(st, ctx) and st.eligible(ctx):
+                return True
         f = self.frame(sym)
         if f is None:
             return any(st.eligible(ctx) for st in self.lab)      # unknown here: let the real code decide
@@ -205,6 +213,61 @@ class FastSession:
                 return True
         return False
 
+    # ---------------------------------------------------------------- heat setups (score per 5-minute bar: causal)
+    def heat_full(self, st, sym):
+        """(score array, tod array, bucket ends) of a heat setup over the whole session, from its real generate()."""
+        k = (st.name, sym)
+        if k not in self.hscore:
+            self.hscore[k] = None
+            ctx = self._ctx(sym)
+            if ctx is not None:
+                got = {}
+                mod = st.mod
+                real = getattr(mod, "_mod", mod)
+
+                class _Cap:
+                    def __getattr__(self, a):
+                        return getattr(real, a)
+
+                    def score(self, f):
+                        got["f"], got["s"] = f, np.asarray(real.score(f), dtype=float)
+                        return got["s"]
+
+                st.mod = _Cap()
+                try:
+                    type(st).generate(st, ctx)
+                except Exception:
+                    pass
+                finally:
+                    st.mod = mod
+                if "s" in got:
+                    from ..data.bars import resample
+
+                    d5 = resample(ctx.bars, "5min")
+                    end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
+                    d5 = d5[d5.index + pd.Timedelta(minutes=5) <= end]
+                    if len(d5) == len(got["s"]):
+                        self.hscore[k] = (got["s"], got["f"]["tod"].to_numpy(),
+                                          (d5.index + pd.Timedelta(minutes=5)).as_unit("ns").asi8)
+        return self.hscore[k]
+
+    def heat_hit(self, st, ctx) -> bool:
+        """True when the heat setup's score crosses a threshold on the latest completed 5-minute bar (or unknown)."""
+        h = self.heat_full(st, ctx.symbol)
+        if h is None:
+            return True                                          # unknown: let the real code decide
+        sc, tod, ends = h
+        j = int(np.searchsorted(ends, ctx.bars.index[-1].value + 60_000_000_000, side="right"))
+        if j == 0:
+            return False
+        lo, hi = st.window or (950, 1500)
+        if not max(950, lo) <= tod[j - 1] <= min(1500, hi):
+            return False
+        v = sc[j - 1]
+        la, sa = getattr(st.mod, "LONG_AT", None), getattr(st.mod, "SHORT_AT", None)
+        return bool((st.sides in ("both", "long") and la is not None and v >= la) or
+                    (st.sides in ("both", "short") and sa is not None and v <= sa))
+
     # ---------------------------------------------------------------- rvol (cumulative volume / profile: causal)
     def on_slice(self, sym: str, k: int, df, old=None):
         """The feed hands out bars[:k] of `sym`: register it so DayContext.rvol() serves the session rvol's prefix."""
@@ -224,8 +287,12 @@ class FastSession:
         """Patch the module-level hooks and wrap this runner's lab modules and _contexts (one process, one session)."""
         from ..backtest import engine
 
+        from ..research import heat as H
+
         self._saved = (S._LAB_FRAMES, engine.pinned_symbols)
+        self._heat_saved = H.heat_frame
         S._LAB_FRAMES = FrameProvider(self)
+        H.heat_frame = _memo_heat_frame
         orig_pinned = self._saved[1]
         memo: dict = {}
 
@@ -238,6 +305,7 @@ class FastSession:
         engine.pinned_symbols = pinned
         for st in self.lab:
             st.mod = MaskModule(st.mod, st.name, self)
+            st.generate = self._gen_wrap(st, st.generate)       # instance attribute; uninstall() removes it
         orig_ctx = self.r._contexts
 
         def contexts(today_bars, today):
@@ -253,14 +321,34 @@ class FastSession:
         DayContext.rvol = _fast_rvol
         return self
 
+    def _gen_wrap(self, st, real):
+        """generate() of a lab setup that skips the build when its whole-session mask has no hit on the latest
+        decision bar: the runner only acts on signals of the latest bar, so the result would be ignored anyway."""
+        def gen(ctx):
+            f = self.frame(ctx.symbol)
+            m = self.full_mask(st.name, ctx.symbol) if f is not None else None
+            if f is not None and m is not None and len(ctx.bars):
+                j = int(np.searchsorted(self.ends[ctx.symbol], ctx.bars.index[-1].value + 60_000_000_000,
+                                        side="right"))
+                if j == 0 or (len(m) >= j and not m[j - 1]):
+                    self.gen_skipped += 1
+                    return []
+            return real(ctx)
+        return gen
+
     def uninstall(self):
         from ..backtest import engine
 
+        from ..research import heat as H
+
         S._LAB_FRAMES, engine.pinned_symbols = self._saved
+        H.heat_frame = self._heat_saved
+        _HEAT_MEMO.clear()
         DayContext.rvol = _ORIG_RVOL
         _RVOL.clear()
         for st in self.lab:
             st.mod = getattr(st.mod, "_mod", st.mod)
+            st.__dict__.pop("generate", None)
 
     # ---------------------------------------------------------------- fidelity check
     def check(self, samples: int = 24, seed: int = 0) -> dict:
@@ -296,7 +384,7 @@ class FastSession:
                 mod = st.mod
                 st.mod = getattr(mod, "_mod", mod)
                 try:
-                    st.generate(ctx)
+                    type(st).generate(st, ctx)
                 except Exception:
                     pass
                 finally:
@@ -328,6 +416,44 @@ class FastSession:
                         out["mask_diff"] += 1
                         if len(out["examples"]) < 5:
                             out["examples"].append({"symbol": sym, "rows": len(g), "setup": st2.name})
+            out["heat_samples"] = out["heat_diff"] = 0
+            for st in self.heat:
+                for _ in range(max(1, samples // 4)):
+                    keys = [k for k, v in self.hscore.items() if k[0] == st.name and v is not None]
+                    if not keys:
+                        break
+                    sym = keys[int(rng.integers(len(keys)))][1]
+                    sc, tod, ends = self.hscore[(st.name, sym)]
+                    j = int(rng.integers(1, len(sc) + 1))
+                    b = self.bars[sym]
+                    last = pd.Timestamp(ends[j - 1], tz="UTC").tz_convert(b.index.tz) - pd.Timedelta(minutes=1)
+                    c = self._ctx(sym)
+                    tb = b[b.index <= last]
+                    ctx = DayContext(symbol=sym, date=c.date, bars=tb, prev_close=c.prev_close, prev_high=c.prev_high,
+                                     prev_low=c.prev_low, atr=c.atr, avg_dollar_volume=c.avg_dollar_volume,
+                                     avg_cum_volume=c.avg_cum_volume, prior5=c.prior5)
+                    got = {}
+                    real = st.mod
+
+                    class _Cap:
+                        def __getattr__(self, a):
+                            return getattr(real, a)
+
+                        def score(self, f):
+                            got["s"] = np.asarray(real.score(f), dtype=float)
+                            return got["s"]
+
+                    st.mod = _Cap()
+                    try:
+                        st.generate(ctx)
+                    except Exception:
+                        pass
+                    finally:
+                        st.mod = real
+                    if "s" in got:
+                        out["heat_samples"] += 1
+                        if not np.allclose(got["s"], sc[: len(got["s"])], equal_nan=True):
+                            out["heat_diff"] += 1
         finally:
             S._LAB_FRAMES = saved
         return out
@@ -350,3 +476,27 @@ def _fast_rvol(self):
         else:
             return _ORIG_RVOL(self)
     return self._cache["rvol"]
+
+
+_HEAT_MEMO: dict = {}
+
+
+def _memo_heat_frame(d5):
+    """mcf.research.heat.heat_frame memoised on the input bars' content (the lab frame and every heat setup of a
+    symbol-session build it from the same warm-up + session bars). Returns a copy: callers add columns."""
+    from ..research import heat as H
+
+    try:
+        key = (len(d5), d5.index[0].value, d5.index[-1].value, float(d5["close"].to_numpy().sum()),
+               float(d5["volume"].to_numpy().sum()), float(d5["high"].to_numpy().sum()))
+    except Exception:
+        return _REAL_HEAT(d5)
+    f = _HEAT_MEMO.get(key)
+    if f is None:
+        if len(_HEAT_MEMO) > 3000:
+            _HEAT_MEMO.clear()
+        f = _HEAT_MEMO[key] = _REAL_HEAT(d5)
+    return f.copy()
+
+
+from ..research.heat import heat_frame as _REAL_HEAT  # noqa: E402

@@ -54,6 +54,9 @@ def _cfg(tmp_path, side="long"):
     cfg = harness.account_config("primary")
     cfg = harness.add_setup(cfg, "RPLTEST", str(mod), alone=True, block={"min_adv": 0, "refire": True})
     cfg["live"]["no_entry_before"] = "09:50"
+    # a heat setup too (its own fast path: whole-session score prefixes)
+    cfg["strategies"]["HEATTEST"] = {"enabled": True, "type": "heat", "formula": "research/heat/candidates/regime_9.py",
+                                     "sides": "short", "min_adv": 0, "window": [950, 1100], "scale_out_r": None}
     return cfg
 
 
