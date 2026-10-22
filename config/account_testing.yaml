@@ -64,7 +64,6 @@ live:
     - exhaustion_short
     - exhaustion_short-FD
     - CWT14-failbrk-pdh-p10-short   # 42.71/day (allocator)
-    - CWT14-failbrk-pdh-p05-lowvol-short   # 48.14/day (allocator)
     - CWT14-failbrk-pdl-p05-long   # 79.86/day (allocator)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
@@ -562,7 +561,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: B4-parta-k6-t1s05-guest, fill: false}
   # ---- CWT14-failbrk-pdh-p05-lowvol-short: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   CWT14-failbrk-pdh-p05-lowvol-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-22 (owner 2026-10-22 (N6))
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
     min_adv: 95000000

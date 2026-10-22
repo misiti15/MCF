@@ -19,7 +19,6 @@
   "testing": [
    "CWT05-flush-m05-v3-long",
    "CWT12-coil-k6-long",
-   "CWT14-failbrk-pdh-p05-lowvol-short",
    "CWT14-failbrk-pdh-p10-short",
    "CWT14-failbrk-pdl-p05-long",
    "IDX1-qqq100-0955-TQQQ-hold",
@@ -67,7 +66,6 @@
    "CWT13-vwapstretch-z05-short",
    "CWT13-vwapstretch-z075-long",
    "CWT13-vwapstretch-z075-short",
-   "CWT14-failbrk-pdh-p10-lowvol-short",
    "CWT14-failbrk-pdl-p05-lowvol-long",
    "CWT14-failbrk-pdl-p10-long",
    "L3-gap-slope-rsi5hi-FD",
@@ -148,6 +146,8 @@
    "CWT14-failbrk-orl-p05-lowvol-long",
    "CWT14-failbrk-orl-p10-long",
    "CWT14-failbrk-orl-p10-lowvol-long",
+   "CWT14-failbrk-pdh-p05-lowvol-short",
+   "CWT14-failbrk-pdh-p10-lowvol-short",
    "LIQ-orl-sweep-open15-s25-long",
    "MF1-945-flowsell-vwapup-FD",
    "NS2-sma50break-overbought-short",
@@ -347,19 +347,21 @@
   },
   "CWT14-failbrk-pdh-p05-lowvol-short": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-22 07:49 ET",
    "from": [
-    "testing2"
+    "testing"
    ]
   },
   "CWT14-failbrk-pdh-p10-lowvol-short": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-22 07:49 ET",
+   "from": [
+    "testing2"
+   ]
   },
   "CWT14-failbrk-pdh-p10-short": {
    "accounts": [
@@ -1318,15 +1320,24 @@
   }
  },
  "last_change": {
-  "at": "2026-10-22 07:43 ET",
+  "at": "2026-10-22 07:49 ET",
   "changes": [
    {
-    "setup": "NS3-failed-vwap-reclaim-short-FD",
+    "setup": "CWT14-failbrk-pdh-p05-lowvol-short",
     "from": [
-     "primary"
+     "testing"
     ],
     "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "CWT14-failbrk-pdh-p10-lowvol-short",
+    "from": [
      "testing2"
+    ],
+    "to": [
+     "graveyard"
     ]
    }
   ]
