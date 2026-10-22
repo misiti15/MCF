@@ -73,5 +73,50 @@
   "link": "research/bdi/pdh1022/NOTES.md",
   "status": "answered",
   "answered": "yes, 2026-10-22"
+ },
+ {
+  "code": "L3-1",
+  "title": "Demote Gap-Down Recovery Fade (all day) from Primary to Testing 1",
+  "what": "L3-gap-slope-fromopen-FD stops trading in Primary and runs again in Testing 1 with the same settings (promotion = move); replaces its 10-27 review.",
+  "recommend": "Yes \u2014 demote",
+  "numbers": [
+   "Primary paper 23 trades -0.31R, -$192.05",
+   "all accounts +0.12R (151), but -0.22R (71) without 10-20",
+   "2-yr -0.031R/trade; 0 of 22 variants pass"
+  ],
+  "why": "The live gain is one day (10-20, +33.6R); two years and the 27-session replay (-0.20R) lose, and no variant fixes it. Reply L3-1 demote / keep / variant.",
+  "link": "research/bdi/l3_1022/NOTES.md",
+  "status": "answered",
+  "answered": "2026-10-22: yes \u2014 demoted to Testing 1 for 2026-10-23"
+ },
+ {
+  "code": "LL-LATCH",
+  "title": "Per-setup -2R stop stays off for the day once hit",
+  "what": "In the testing accounts a setup that loses 2R stops for the rest of the day; today it switches back on if a later winner lifts it above -2R.",
+  "recommend": "Yes",
+  "numbers": [
+   "since 10-20: 13 re-arms, 55 more trades, -31.2R after costs",
+   "10-22 Graveyard RW2-exhaustion-noon-adv150-short-FD: -19.5R after re-arming",
+   "9-session replay +38.2R vs today's rule, 6 days better / 2 worse, t 1.12"
+  ],
+  "why": "Your rule says a setup stops for the day at -2R; the code only blocks while it is below -2R. Small risk-code change after hours with tests + ledger. Reply LL-LATCH yes / no.",
+  "link": "research/bdi/nightly1022/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "D1",
+  "title": "Move Stretched Above VWAP Fade to the Graveyard",
+  "what": "CWT13-vwapstretch-z05-short stops trading in Testing 2 and runs in the Graveyard (promotion = move); its record moves with it.",
+  "recommend": "Yes",
+  "numbers": [
+   "61 paper trades, 33% win vs 55% needed, -0.40R/trade, t_day -2.06",
+   "-$177.25; last 4 sessions -0.47R (20)",
+   "2-yr backtest -0.069R/trade"
+  ],
+  "why": "Loses live and in the backtest; on 10-22 it won 1 of 8 and the 27 blocked signals would have lost another -24.7R. Reply D1 yes / no.",
+  "link": "research/bdi/nightly1022/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
