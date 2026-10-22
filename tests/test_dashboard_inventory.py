@@ -22,6 +22,8 @@ IDS = [
     "lv-pos", "lv-score", "lv-sig", "lv-skip", "lv-tiles", "lv-val", "pt-card", "pt-flags", "pt-note", "pt-sum", "pt-tab",
     # added 2026-10-21 (UI-DASH 1: last session)
     "lb-last-band",
+    # added 2026-10-21 (UI-DASH 2: replay band, pipeline card)
+    "lb-replay-band", "pipe-card", "pipe-sum", "pipe-tab",
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -31,6 +33,7 @@ TITLES = [
     "Demoted from Primary — how they are doing in Testing 1", "Setup leaderboard — all accounts, since start",
     "Generated setups leaderboard — Setup Generator account", "Scorecard (last 4 sessions)", "Playing time per setup",
     "Generator Lab", "Long-hold (S6) — paper account", "Return since start", "Holdings", "Last sessions",
+    "New setup pipeline",   # added 2026-10-21
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -44,6 +47,9 @@ COLS = Counter({
     '["scr_train", "Screen train R"]': 1, '["scr_valid", "Screen valid R"]': 1, '["scr_day", "Screen /day"]': 1,
     # added 2026-10-21 (UI-DASH 1: last session)
     '["ls_trades", "Last-session trades"]': 1, '["ls_r", "Last-session R"]': 1, '["ls_pnl", "Last-session P/L"]': 1,
+    # added 2026-10-21 (UI-DASH 2: replay band)
+    '["rp_trades", "Replay trades"]': 1, '["rp_sessions", "Replay sessions"]': 1, '["rp_win_rate", "Replay win rate"]': 1,
+    '["rp_avg_r", "Replay avg R"]': 1, '["rp_t", "Replay t"]': 1, '["rp_total_r", "Replay total R"]': 1,
 })
 
 # headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
@@ -86,6 +92,7 @@ SOURCES = [
     "mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-gen", "mcf-data-graveyard", "mcf-data-longhold",
     # added 2026-10-21 (UI-DASH 1: per-account session reports)
     '"/reports/" + date + ".csv"',
+    "../live/replay.json", "../live/pipeline.json",   # added 2026-10-21 (UI-DASH 2)
 ]
 
 
@@ -145,5 +152,6 @@ def test_disclaimer_kept():
 
 
 def test_glossary_covers_new_columns():
-    for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L"):
+    for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L", "Replay", "Replay trades",
+                 "Replay sessions", "Replay win rate", "Replay avg R", "Replay t", "Replay total R", "Stage"):
         assert f'"{term}":' in HTML, term

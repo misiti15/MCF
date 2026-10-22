@@ -276,6 +276,13 @@ window.MCF = window.MCF || {};
     <div class="tablewrap" id="gen-tab" style="max-height:560px;overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = live avg R shrunk by trades ÷ (trades + 20), as above. <b>Screen train / valid R</b> = expectancy after costs on the open history when the setup was generated
       (train ≤ 2025-12, valid 2026-01 onward; no locked holdout). <b>Screen /day</b> = trades per day in that screen. Paper results; few trades prove nothing. Educational only — not financial advice.</div></div>
+  <!-- New setup pipeline (owner 2026-10-21): every new setup's Backtest · Replay · Live side by side. Reads
+       docs/live/pipeline.json {generated, setups: {setup: {stage, backtest: {trades, win, be_win, avg_r, t}, replay: {...}, live: {...}}}}. -->
+  <div class="card" id="pipe-card"><h2>New setup pipeline</h2>
+    <div class="sub" id="pipe-sum">Backtest · Replay · Live side by side for each new setup on its way to a paper account.</div>
+    <div class="tablewrap" id="pipe-tab" style="margin-top:8px"><div class="empty">Loading…</div></div>
+    <div class="note">Backtest = research backtester on history (costs in). Replay = the live execution engine replayed over past sessions. Live = paper trades since start
+      (taken from the leaderboard when the pipeline file has none). "—" = no result yet. Paper and simulated results; few trades prove nothing. Educational only — not financial advice.</div></div>
   <div class="card"><h2>Scorecard (last 4 sessions)</h2><div class="tablewrap" id="lv-score"><div class="empty">The first full scorecard appears after 4 market days.</div></div>
     <div class="note">Live (paper) results per setup over the last 4 sessions next to what its backtest expected. Too few trades to judge anything on its own; it flags setups to review.</div></div>
   <!-- Playing time (owner 2026-10-12): self-contained card + script at the end of the page; reads reports/scorecard.json -> playing_time. -->
@@ -684,7 +691,7 @@ window.MCF = window.MCF || {};
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   const isGen = c => /^GEN-/.test(String(c || ""));
-  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null;
+  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null;
   const st = { acct: "all", show: "live", min: 0 };
   const dayOf = {}, lbOf = {};   // per account: latest completed session date, raw leaderboard rows
   function flag(r) {
@@ -701,6 +708,9 @@ window.MCF = window.MCF || {};
     try { const r = await fetch("../live/assignments.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) asg = await r.json(); } catch (_) {}
     let NM = {};
     try { const r = await fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) NM = await r.json(); } catch (_) {}
+    // replay results (owner 2026-10-21): docs/live/replay.json {generated, window?, setups: {setup: {trades, sessions,
+    // win_rate, avg_r, t, total_r, date?}}}, written by the replay engine; columns show "—" until it has data
+    try { const r = await fetch("../live/replay.json?t=" + Date.now(), { cache: "no-store" }); RP = r.ok ? await r.json() : null; } catch (_) { RP = null; }
     const all = [];
     await Promise.all(Object.entries(ACC).map(async ([k, [lab, br]]) => {
       let lb = null, pt = {};
@@ -790,6 +800,10 @@ window.MCF = window.MCF || {};
       Object.entries(by || {}).forEach(([sname, v]) => { const b = lsBy[sname] = lsBy[sname] || { trades: 0, r: 0, pnl: 0 };
         b.trades += v.trades; b.r += +v.r || 0; b.pnl += +v.pnl || 0; });
     }));
+    const rps = (RP && RP.setups) || {};
+    all.forEach(r => { const v = rps[r.setup] || null; r.replay = v;
+      r.rp_trades = v ? v.trades ?? null : null; r.rp_sessions = v ? v.sessions ?? null : null; r.rp_win_rate = v ? v.win_rate ?? null : null;
+      r.rp_avg_r = v ? v.avg_r ?? null : null; r.rp_t = v ? (v.t ?? v.t_stat ?? null) : null; r.rp_total_r = v ? v.total_r ?? null : null; });
     all.forEach(r => { const v = lsBy[r.setup]; r.ls_trades = v ? v.trades : null; r.ls_r = v ? +v.r.toFixed(3) : null; r.ls_pnl = v ? +v.pnl.toFixed(2) : null; });
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
       if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
@@ -807,21 +821,27 @@ window.MCF = window.MCF || {};
     const ranked = all.filter(r => r.score != null && r.live).sort((a, b) => b.score - a.score);
     ranked.forEach((r, i) => { r.rank = i + 1; });
     rows = all;
+    window.MCF.lb = { rows: all, LS, RP, dayOf };
+    document.dispatchEvent(new CustomEvent("mcf:leaderboard"));
     draw();
   }
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
     ["trades", "Live trades"], ["sessions_traded", "Sessions"],
     ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
+    ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
   const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", win_rate: "live", breakeven_wr: "live",
-    avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live" };
+    avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
+    rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
   const LEFT = new Set(["name", "acctLabel", "pt", "flag"]);
   const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
       if (p && p.b === b) p.n++; else out.push({ b, n: 1 }); });
     const T = { last: [`Last session (${LS || "–"})`, ' id="lb-last-band"', "Most recent completed session, all accounts the setup traded in that day"],
-      live: ["Live — since start", "", "Live paper results since the setup started, all accounts merged"] };
+      live: ["Live — since start", "", "Live paper results since the setup started, all accounts merged"],
+      replay: [`Replay${RP && RP.generated ? " (" + String(RP.generated).slice(0, 10) + ")" : " (no data yet)"}`, ' id="lb-replay-band"',
+        RP && RP.generated ? `Replay of the setup's rules over past sessions with the live execution engine, generated ${RP.generated}${RP.window ? ", " + RP.window : ""}. Not live trades.` : "Replay results appear here once the replay engine writes docs/live/replay.json. Not live trades."] };
     return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
   function draw() {
     let r = rows.filter(x => (st.acct === "all" || (x.accts || [x.acct]).includes(st.acct)) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
@@ -846,7 +866,9 @@ window.MCF = window.MCF || {};
         <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
-        <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
+        <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td>
+        <td class="bd-replay">${x.rp_trades ?? "—"}</td><td class="bd-replay">${x.rp_sessions ?? "—"}</td><td class="bd-replay">${x.rp_win_rate == null ? "—" : pc(x.rp_win_rate)}</td>
+        <td class="bd-replay ${cls(x.rp_avg_r)}">${x.rp_avg_r == null ? "—" : f(x.rp_avg_r)}</td><td class="bd-replay">${x.rp_t == null ? "—" : f(x.rp_t, 1, false)}</td><td class="bd-replay ${cls(x.rp_total_r)}">${x.rp_total_r == null ? "—" : f(x.rp_total_r, 1)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
         <td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>
         <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
     };
@@ -871,6 +893,45 @@ window.MCF = window.MCF || {};
     .then(d => { if (d && d.generated) q("#lab-when").textContent = `· last scan ${d.generated}, next Saturday`; }).catch(() => {});
 })();
 </script>
+<script>
+// New setup pipeline card (owner 2026-10-21). Self-contained; reads docs/live/pipeline.json and, for live figures the file
+// does not carry, the merged leaderboard rows (window.MCF.lb).
+(() => {
+  const q = s => document.querySelector(s);
+  if (!q("#pipe-card")) return;
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f = (v, d = 2, sg = true) => v == null || v === "" || isNaN(v) ? "—" : (sg && v > 0 ? "+" : "") + (+v).toFixed(d);
+  const pc = v => v == null || isNaN(v) ? "—" : Math.round(v * 100) + "%";
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  let P = null;
+  function draw() {
+    if (!P) return;
+    const S = P.setups || (P.generated === undefined ? P : {}), keys = Object.keys(S);
+    const lb = Object.fromEntries(((window.MCF.lb || {}).rows || []).map(r => [r.setup, r]));
+    q("#pipe-sum").innerHTML = keys.length ? `${keys.length} setup(s) in the pipeline${P.generated ? " · updated " + e(P.generated) : ""}` :
+      "Backtest · Replay · Live side by side for each new setup on its way to a paper account.";
+    if (!keys.length) { q("#pipe-tab").innerHTML = `<div class="empty">No new setups in the pipeline right now. A setup appears here when it enters backtest, and stays until it has a live record.</div>`; return; }
+    const stage = x => { const l = lb[x] || {}; return x && l.trades ? { trades: l.trades, win: l.win_rate, be_win: l.breakeven_wr, avg_r: l.avg_r, t: l.t_stat } : null; };
+    const cells = (o, b) => !o ? `<td class="${b}">—</td><td class="${b}">—</td><td class="${b}">—</td><td class="${b}">—</td><td class="${b}">—</td>` :
+      `<td class="${b}">${o.trades ?? "—"}</td><td class="${b}">${pc(o.win)}</td><td class="${b}">${pc(o.be_win)}</td><td class="${b} ${cls(o.avg_r)}">${f(o.avg_r)}</td><td class="${b}">${f(o.t, 1, false)}</td>`;
+    const sub = ["Trades", "Win", "BE win", "Avg R", "t"];
+    q("#pipe-tab").innerHTML = `<table><thead><tr class="band"><th colspan="2"></th><th colspan="5" class="pb">Backtest</th><th colspan="5" class="pr">Replay</th><th colspan="5" class="pl">Live</th></tr>
+      <tr><th class="l">Setup</th><th class="l">Stage</th>${["pb", "pr", "pl"].map(b => sub.map(h => `<th class="${b}">${h}</th>`).join("")).join("")}</tr></thead><tbody>` +
+      keys.map(k => { const x = S[k] || {}, nm = (lb[k] || {}).name;
+        return `<tr><td class="l" data-setup="${e(k)}">${nm && nm !== k ? e(nm) + `<div style="font-size:11px;color:var(--muted)">${e(k)}</div>` : e(k)}</td><td class="l">${e(x.stage || "–")}</td>` +
+          cells(x.backtest, "pb") + cells(x.replay, "pr") + cells(x.live || stage(k), "pl") + `</tr>`; }).join("") + `</tbody></table>`;
+  }
+  fetch("../live/pipeline.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+    .then(d => { P = d || {}; draw(); });
+  document.addEventListener("mcf:leaderboard", draw);
+})();
+</script>
+<style>
+#pipe-tab tr.band th { text-align: center; font-size: 11px; cursor: default; }
+#pipe-tab .pr { background: var(--band-replay); } #pipe-tab .pl { background: var(--band-last); }
+#pipe-tab th.pb { border-bottom: 2px solid var(--axis); } #pipe-tab tr.band th.pr { border-bottom: 2px solid #d97706; color: var(--band-replay-ink); }
+#pipe-tab tr.band th.pl { border-bottom: 2px solid var(--s1); color: var(--band-last-ink); }
+</style>
 <script>
 // Click-to-sort for every other table on the page (owner 2026-10-12). Numbers are read from the cell text
 // ($, %, +, R, commas ignored); "–" sorts last. The chosen sort is re-applied when a table refreshes.
@@ -1083,6 +1144,18 @@ window.MCF = window.MCF || {};
     "Last-session trades": "Trades the setup closed in the most recent completed session, all accounts combined. — = it did not trade that day.",
     "Last-session R": "Sum of R over the setup's trades in the most recent completed session (all accounts). Green = made money in R terms, red = lost.",
     "Last-session P/L": "Dollar profit or loss after costs of the setup's trades in the most recent completed session (paper, all accounts).",
+    "Replay": "Re-running the rules over past sessions with a simulator (for setups: the live execution engine with its fills, caps and slots). Simulated history, never counted as live trades.",
+    "Replay trades": "Trades in the replay (simulated history with the live engine). Not live.",
+    "Replay sessions": "Sessions covered by the replay in which the setup traded.",
+    "Replay win rate": "Share of replay trades that made money after costs.",
+    "Replay avg R": "Average R per trade in the replay, after costs. Compare with live Avg R: a big gap means live trading differs from the replay.",
+    "Replay t": "Confidence (t) of the replay avg R: about 2 or more = solid, under 1 = could be luck.",
+    "Replay total R": "Sum of R over the replay trades.",
+    "Stage": "Where a new setup is in the pipeline: backtest → replay → live (paper).",
+    "Backtest": "Results on history with the research backtester, after costs.",
+    "Live": "Live paper trades since the setup started.",
+    "BE win": "Break-even win rate: the win rate needed to make money at this setup's average win and loss size.",
+    "t": "Confidence (t) of avg R: about 2 or more = solid, under 1 = could be luck.",
     "Live — since start": "Live paper results since the setup started, its records from every account merged into one.",
     "split copies": "The setup runs in both testing accounts, each on its own half of the tickers, so no signal is traded twice; stats are combined.",
   };
