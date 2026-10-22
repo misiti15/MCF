@@ -211,12 +211,18 @@ def main():
     res = {}
     for acct in a.accounts.split(","):
         days = sorted(p.parent.name for p in (run / acct).glob("*/stats.json"))
-        jobs = [{"day": d, "account": acct, "as_live": not a.current, "universe": a.universe} for d in days]
-        with Pool(a.jobs) as pool:
-            parts = [x for x in pool.map(backtest_day, jobs) if len(x)]
-        A = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(
-            columns=["day", "strategy", "r", "gate_ok", "lab"])
-        A.to_csv(run / f"{acct}-backtest.csv.gz", index=False)
+        cached = run / f"{acct}-backtest.csv.gz"
+        A = pd.read_csv(cached) if cached.exists() else None      # resume: A is the slow part
+        if A is not None:
+            A["day"] = A["day"].astype(str)
+        if A is None or set(days) - set(A.day):
+            jobs = [{"day": d, "account": acct, "as_live": not a.current, "universe": a.universe} for d in days
+                    if A is None or d not in set(A.day)]
+            with Pool(a.jobs) as pool:
+                parts = [x for x in pool.map(backtest_day, jobs) if len(x)]
+            A = pd.concat(([A] if A is not None else []) + parts, ignore_index=True) if parts or A is not None \
+                else pd.DataFrame(columns=["day", "strategy", "r", "gate_ok", "lab"])
+            A.to_csv(cached, index=False)
         try:
             _, live = live_journal(acct)
         except Exception:

@@ -41,14 +41,18 @@ def test_export_writes_replay_and_pipeline(tmp_path):
     out = tmp_path / "docs"
     p1, p2 = export.export(runs, out, live=live, enabled={"A": ["testing2"], "B": ["testing2"]},
                            expected={"NEW": 0.05, "OLD": 0.1}, universe={"X"})
+    from test_replay_pipeline_stubs import check_pipeline, check_replay
+
     rep = json.loads(p1.read_text())
+    check_replay(rep)
+    check_pipeline(json.loads(p2.read_text()))
     assert set(rep["setups"]) == {"A", "B", "NEW"} and "generated" in rep
     a = rep["setups"]["A"]
     assert {"date", "sessions", "trades", "win_rate", "avg_r", "t", "total_r"} <= set(a)
     assert a["sessions"] == 2 and a["trades"] == 2 and a["date"] == "2026-10-15"
     assert rep["system_agreement"]["testing2"]["replay_trades"] == 3
-    pipe = json.loads(p2.read_text())
+    pipe = json.loads(p2.read_text())["setups"]
     assert pipe["A"]["stage"] == "live" and pipe["NEW"]["stage"] == "replay" and pipe["OLD"]["stage"] == "backtest"
-    assert pipe["NEW"]["backtest"] == {"expected_r": 0.05} and pipe["NEW"]["replay"]["trades"] == 2
+    assert pipe["NEW"]["backtest"]["avg_r"] == 0.05 and pipe["NEW"]["replay"]["trades"] == 2
     assert pipe["A"]["live"]["trades"] == 2 and pipe["A"]["agreement"]["testing2"]["live_trades"] == 2
-    assert all(not k.startswith("_") for k in pipe)
+    assert rep["meta"]["NEW"]["run"] == "new-setup"

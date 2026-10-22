@@ -1,9 +1,11 @@
 """Dashboard data from replays (another page renders it): docs/live/replay.json and docs/live/pipeline.json.
 
-replay.json   {"generated", "note", "system_agreement": {account: replay vs live on shared sessions}, "setups": {setup: {date, from, sessions, trades, win_rate, avg_r, t, total_r,
-               account, fills, run}}} - the latest replay run of each setup (costs in, trade-through limits unless the
+replay.json   {"generated": "YYYY-MM-DD HH:MM ET", "window", "note", "setups": {setup: {trades, sessions, win_rate, avg_r, t,
+               total_r, date}}, "meta": {setup: {from, account, fills, run, ...}}, "system_agreement": {...}}
+               - per setup the research-rule run with the most sessions (costs in, trade-through limits unless the
                run says otherwise). `t` is the day-clustered t of R (sessions are the clusters).
-pipeline.json {setup: {stage: backtest|replay|live, backtest: {...}, replay: {...}, live: {...}, agreement: {...}}}
+pipeline.json {"generated", "setups": {setup: {stage: backtest|replay|live, backtest|replay|live: {trades, win, be_win,
+               avg_r, t} | null, accounts, agreement, drift}}} - the dashboard schema (tests/test_replay_pipeline_stubs)
                stage: live when the setup is enabled in an account's config today, replay when it has replay results,
                else backtest. live = the paper journals (trades run 1) of the data branches; agreement = replay vs live
                on the sessions both cover (drift flagged when |avg R difference| > 0.25 R with >= 10 trades each).
@@ -159,11 +161,32 @@ def _universe() -> set | None:
         return None
 
 
+REPLAY_KEYS = ("trades", "sessions", "win_rate", "avg_r", "t", "total_r", "date")
+STAGE_KEYS = ("trades", "win", "be_win", "avg_r", "t")
+
+
+def stage_stats(t: pd.DataFrame | None, r_col: str = "r_multiple") -> dict | None:
+    """The dashboard's stage block {trades, win, be_win, avg_r, t}: be_win = the win rate at which this payoff
+    (average win vs average loss) breaks even, |avg loss| / (avg win + |avg loss|)."""
+    if t is None or not len(t):
+        return None
+    st = setup_stats(t, r_col)
+    r = t[r_col].astype(float)
+    w, lo = r[r > 0], r[r <= 0]
+    be = None
+    if len(w) and len(lo) and (w.mean() - lo.mean()) > 0:
+        be = round(float(-lo.mean() / (w.mean() - lo.mean())), 3)
+    return {"trades": st["trades"], "win": st["win_rate"], "be_win": be, "avg_r": st["avg_r"], "t": st["t"]}
+
+
 def export(runs: Path, out_dir: Path, live: pd.DataFrame | None = None, enabled: dict | None = None,
            expected: dict | None = None, universe: set | None = None) -> list[Path]:
+    """Write docs/live/replay.json and docs/live/pipeline.json in the dashboard's schema
+    (tests/test_replay_pipeline_stubs.py); run details sit beside it (replay.json `meta`, pipeline setup keys)."""
     from .__main__ import load_run
 
-    gen = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    now = pd.Timestamp.now(tz="America/New_York")
+    gen = f"{now:%Y-%m-%d %H:%M} ET"
     rep = replay_setups(runs)
     live = live_trades() if live is None else live
     enabled = enabled_setups() if enabled is None else enabled
@@ -182,26 +205,40 @@ def export(runs: Path, out_dir: Path, live: pd.DataFrame | None = None, enabled:
     if len(rtr) and len(live):
         for acct, g in rtr.groupby("account"):
             agree[acct] = agreement(g, live[live.account == acct], universe if universe is not None else _universe())
+    # replay trades per setup (the run rep[n] came from), for the pipeline's stage block
+    by_run: dict = {}
+    for meta, acct_dir in _runs(runs):
+        by_run[(meta.get("label"), meta.get("account"))] = acct_dir
     names = sorted(set(rep) | set(enabled) | (set(live.strategy) if len(live) else set()) | set(expected))
     pipe = {}
     for n in names:
         lv = live[live.strategy == n] if len(live) else live
-        st_live = setup_stats(lv) if len(lv) else None
-        if st_live:
-            st_live["accounts"] = sorted(set(lv.account))
-            st_live["from"], st_live["date"] = str(lv.date.min()), str(lv.date.max())
         stage = "live" if n in enabled else ("replay" if n in rep else "backtest")
         ag = {a: v[n] for a, v in agree.items() if n in v}
+        rp = None
+        if n in rep:
+            tr, _ = load_run(by_run[(rep[n]["run"], rep[n]["account"])])
+            rp = stage_stats(tr[tr.strategy == n])
         pipe[n] = {"stage": stage, "accounts": enabled.get(n, []),
-                   "backtest": None if n not in expected else {"expected_r": round(float(expected[n]), 3)},
-                   "replay": rep.get(n), "live": st_live, "agreement": ag or None,
-                   "drift": any(v.get("drift") for v in ag.values())}
+                   "backtest": None if n not in expected else
+                   {"trades": None, "win": None, "be_win": None, "avg_r": round(float(expected[n]), 3), "t": None},
+                   "replay": rp, "live": stage_stats(lv) if len(lv) else None,
+                   "agreement": ag or None, "drift": any(v.get("drift") for v in ag.values())}
     out_dir.mkdir(parents=True, exist_ok=True)
     p1, p2 = out_dir / "replay.json", out_dir / "pipeline.json"
     note = ("Replays of recorded sessions through the live runner (mcf/replay): production costs, trade-through limit "
             "fills, the lab universe. Replay results are not live results. Educational only - not financial advice.")
     sysag = {a: v.get("_system") for a, v in agree.items()}
-    p1.write_text(json.dumps({"generated": gen, "note": note, "system_agreement": sysag, "setups": rep}, indent=1,
-                             default=str))
-    p2.write_text(json.dumps(pipe, indent=1, default=str))
+    froms = [v["from"] for v in rep.values()]
+    tos = [v["date"] for v in rep.values()]
+    out = {"generated": gen, "window": f"{min(froms)} to {max(tos)}" if rep else None, "note": note,
+           "setups": {n: {k: v.get(k) for k in REPLAY_KEYS} for n, v in rep.items()},
+           "meta": {n: {k: v.get(k) for k in ("from", "account", "fills", "limit_fill", "run", "as_live")}
+                    for n, v in rep.items()},
+           "system_agreement": sysag}
+    p1.write_text(json.dumps(out, indent=1, default=str))
+    p2.write_text(json.dumps({"generated": gen, "note": "backtest -> replay (~50 sessions) -> testing account -> "
+                              "primary; replay vs live agreement per setup and system-wide (drift when |avg R gap| > "
+                              f"{DRIFT_R} R with >= {DRIFT_MIN_TRADES} trades each). Educational only - not financial "
+                              "advice.", "system_agreement": sysag, "setups": pipe}, indent=1, default=str))
     return [p1, p2]
