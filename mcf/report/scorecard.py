@@ -88,6 +88,7 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
     strat = (cfg or {}).get("strategies", {}) or {}
     enabled = {k for k, v in strat.items() if isinstance(v, dict) and v.get("enabled")}
     t = trades if trades is not None and len(trades) else pd.DataFrame(columns=["strategy", "date", "pnl", "r_multiple"])
+    last_day = max(t["date"].astype(str)) if len(t) else None   # the account's most recent completed session
     rows = []
     for s in sorted(enabled | set(t["strategy"].dropna().astype(str))):
         g = t[t["strategy"] == s]
@@ -122,8 +123,23 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
             "expected_r": None if exp.get(s) is None else round(exp[s], 3),
             "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
             **_sim(wi[wi["strategy"] == s]),
+            **_daily(g, last_day),
         })
     return rows
+
+
+def _daily(g: pd.DataFrame, last_day: str | None) -> dict:
+    """Compact per-session record of one setup (owner 2026-10-21, dashboard "Last session" columns and drill-down):
+    daily = [[date, trades, total R, P/L], ...] for every session it traded; last_session = the account's latest
+    session {date, trades, r (total R), pnl}, trades 0 and r / pnl None when the setup did not trade that day."""
+    daily = []
+    if len(g):
+        d = g.assign(_d=g["date"].astype(str), _r=g["r_multiple"].astype(float), _p=g["pnl"].astype(float))
+        for day, x in d.groupby("_d", sort=True):
+            daily.append([day, int(len(x)), round(float(x["_r"].sum()), 3), round(float(x["_p"].sum()), 2)])
+    hit = next((x for x in daily if x[0] == last_day), None)
+    last = {"date": last_day, "trades": hit[1] if hit else 0, "r": hit[2] if hit else None, "pnl": hit[3] if hit else None}
+    return {"daily": daily, "last_session": last}
 
 
 def _sim(w: pd.DataFrame) -> dict:
