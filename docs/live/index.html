@@ -82,6 +82,34 @@ th[data-sortable] { user-select: none; }
   color: #fff; background: var(--gen); vertical-align: middle; }
 #gen-tab thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
 #gen-tab th.sorted { color: var(--gen); }
+/* Last-session band in the Generated card (owner 2026-10-22), same look as the setup leaderboard */
+#gen-tab thead tr.band th { height: 24px; padding: 2px 8px; font-size: 11px; font-weight: 600; text-align: center; cursor: default; letter-spacing: .02em; }
+#gen-tab thead tr.cols th { top: 24px; }
+#gen-tab th.bd-last, #gen-tab td.bd-last { background: var(--band-last); }
+#gen-tab thead tr.band th.bd-last { color: var(--band-last-ink); border-bottom: 2px solid var(--s1); background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
+#gen-tab thead tr.cols th.bd-last { background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
+#gen-tab thead tr.band th.bd-live { color: var(--ink-2); border-bottom: 2px solid var(--axis); }
+/* Tighter leaderboard columns (owner 2026-10-22): smaller padding, 2-line headers, narrow name column with ellipsis
+   (full name on hover), sticky # + Setup columns. Body text stays 12.5px; the table wrapper scrolls, never the page. */
+#lb-tab th, #lb-tab td, #gen-tab th, #gen-tab td { padding: 4px 5px; font-size: 12.5px; }
+#lb-tab thead tr.cols th, #gen-tab thead tr.cols th { white-space: normal; font-size: 11.5px; line-height: 1.2; min-width: 38px; max-width: 74px;
+  vertical-align: bottom; overflow-wrap: normal; hyphens: manual; }
+#lb-tab thead tr.cols th.bd-last, #lb-tab thead tr.cols th.bd-replay { min-width: 46px; max-width: 74px; }
+#lb-tab thead tr.cols th:nth-child(2), #gen-tab thead tr.cols th:nth-child(2) { max-width: none; }
+#lb-tab tr > :first-child, #gen-tab tr > :first-child { position: sticky; left: 0; width: 26px; min-width: 26px; max-width: 26px; z-index: 1; background: var(--surface); }
+#lb-tab tbody tr > :nth-child(2), #gen-tab tbody tr > :nth-child(2) { position: sticky; left: 26px; z-index: 1; background: var(--surface);
+  box-shadow: 1px 0 0 var(--grid); }
+#lb-tab thead tr.cols th:nth-child(2), #gen-tab thead tr.cols th:nth-child(2) { position: sticky; left: 26px; z-index: 3; box-shadow: 1px 0 0 var(--grid); }
+#lb-tab thead tr.cols th:first-child, #gen-tab thead tr.cols th:first-child { z-index: 3; }
+#lb-tab thead tr.band th:first-child, #gen-tab thead tr.band th:first-child { position: sticky; left: 0; z-index: 3; width: auto; max-width: none; }
+td.nmc { white-space: normal; width: 190px; min-width: 190px; max-width: 190px; }
+td.nmc .nm, td.nmc .sid { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td.nmc .sid { font-size: 11px; color: var(--muted); }
+td.nmc .chip { font-size: 10.5px; }
+#gen-tab td.nmc .nm .genbadge { font-size: 9px; padding: 0 4px; }
+#gen-tab td.nmc { width: 230px; min-width: 230px; max-width: 230px; }
+#lb-tab tbody td:nth-child(3) { white-space: normal; min-width: 90px; max-width: 150px; }
+@media (max-width: 600px) { td.nmc, #gen-tab td.nmc { width: 128px; min-width: 128px; max-width: 128px; } #gen-tab td.nmc .nm .genbadge { display: none; } }
 </style>
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
@@ -825,7 +853,7 @@ window.MCF = window.MCF || {};
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const f = (v, d = 2, sgn = true) => v == null || isNaN(v) ? "–" : (sgn && v > 0 ? "+" : "") + (+v).toFixed(d);
   const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
-  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + (Math.abs(v) >= 10000 ? (Math.abs(v) / 1000).toFixed(1) + "k" : Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0}));   // compact $ (owner 2026-10-22)
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   const isGen = c => /^GEN-/.test(String(c || ""));
   let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null, RG = null;
@@ -1001,7 +1029,7 @@ window.MCF = window.MCF || {};
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.movedFrom ? "Moved here " + e(x.moved) + " from " + e(x.movedFrom) : "New setup, added " + e(x.moved)}">${x.movedFrom ? "moved" : "new"} ${e(x.moved.slice(5, 10))}${x.movedFrom ? " from " + e(x.movedFrom) : ""}</span>` : "");
-      return `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:200px">${e(x.name)}${chips}<div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td>
+      return `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l nmc" title="${e(x.name)} · ${e(x.setup)}"><span class="nm">${e(x.name)}</span>${chips}<span class="sid">${e(x.setup)}</span></td>
         <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
         <td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>
         <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
@@ -1164,14 +1192,24 @@ window.MCF = window.MCF || {};
   if (!q("#gen-card")) return;
   const isGen = c => /^GEN-/.test(String(c || ""));
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const f = (v, d = 2) => v == null || isNaN(v) ? "–" : (v > 0 ? "+" : "") + (+v).toFixed(d);
+  const f = (v, d = 2, sgn = true) => v == null || isNaN(v) ? "–" : (sgn && v > 0 ? "+" : "") + (+v).toFixed(d);
   const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
-  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0});
+  const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + (Math.abs(v) >= 10000 ? (Math.abs(v) / 1000).toFixed(1) + "k" : Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0}));   // compact $ (owner 2026-10-22)
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
-  let rows = [], sortK = "rank", sortD = 1, when = "";
-  const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"], ["trades", "Live trades"], ["per_day", "Trades/day"], ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"],
+  let rows = [], sortK = "rank", sortD = 1, when = "", LS = null;
+  const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"],
+    ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],   // owner 2026-10-22
+    ["trades", "Live trades"], ["per_day", "Trades/day"], ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"],
     ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["recent_avg_r", "Last 4 avg R"],
     ["scr_train", "Screen train R"], ["scr_valid", "Screen valid R"], ["scr_day", "Screen /day"]];
+  // header bands (owner 2026-10-22): Last session · Live, same as the setup leaderboard
+  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", per_day: "live", win_rate: "live", breakeven_wr: "live",
+    avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", recent_avg_r: "live" };
+  const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
+      if (p && p.b === b) p.n++; else out.push({ b, n: 1 }); });
+    const T = { last: [`Last session (${LS || "–"})`, ' id="gen-last-band"', "Most recent completed session of the Setup Generator account"],
+      live: ["Live — since start", "", "Live paper results since the setup started trading"] };
+    return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
   async function get(u) { try { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? r.json() : null; } catch (_) { return null; } }
   async function load() {
     const [names, sc] = await Promise.all([get("../live/setup_names.json"), get(RAW + "mcf-data-gen/reports/scorecard.json")]);
@@ -1185,6 +1223,14 @@ window.MCF = window.MCF || {};
                per_day: l.trades && l.sessions_traded ? +(l.trades / l.sessions_traded).toFixed(1) : null,
                breakeven_wr: l.breakeven_wr ?? (l.win_rate && l.profit_factor ? l.win_rate / (l.win_rate + l.profit_factor * (1 - l.win_rate)) : null), scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day }; });
     rows.filter(r => r.score != null).sort((a, b) => b.score - a.score).forEach((r, i) => { r.rank = i + 1; });
+    // Last session (owner 2026-10-22): same code path as the setup leaderboard — the scorecard's last_session when the
+    // EOD report carries it, else mcf-data-gen/reports/<date>.csv via window.MCF.daySummary.
+    const lbr = ((sc && sc.leaderboard) || []);
+    LS = sc ? [String(sc.window || "").split(" to ")[1], ...lbr.map(x => x.last)].filter(v => /^\d{4}-/.test(v || "")).sort().pop() || null : null;
+    const has = lbr.length && lbr.every(x => x.last_session && x.last_session.date);
+    const by = !LS ? null : has ? Object.fromEntries(lbr.filter(x => x.last_session.trades).map(x => [x.setup, { trades: x.last_session.trades, r: x.last_session.r, pnl: x.last_session.pnl }]))
+      : (window.MCF && window.MCF.daySummary ? await window.MCF.daySummary((window.MCF.BRANCH || {}).gen || "mcf-data-gen", LS) : null);
+    rows.forEach(r => { const v = (by || {})[r.setup]; r.ls_trades = v ? v.trades : null; r.ls_r = v ? +(+v.r || 0).toFixed(3) : null; r.ls_pnl = v ? +(+v.pnl || 0).toFixed(2) : null; });
     draw();
   }
   function draw() {
@@ -1192,14 +1238,16 @@ window.MCF = window.MCF || {};
     const r = rows.slice().sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" && typeof B === "string" ? A.localeCompare(B) : A - B) * sortD; });
     const traded = rows.filter(x => x.trades);
     q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}`;
-    const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
-    const td = x => `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l" style="white-space:normal;min-width:240px" title="${e(x.what)}"><span class="genbadge">GENERATED</span> ${e(x.name)}
-        <div style="font-size:11px;color:var(--muted)">${e(x.setup)}</div></td><td>${e(x.generated || "–")}</td><td>${x.trades}</td><td>${x.per_day ?? "–"}</td><td>${pc(x.win_rate)}</td>
+    const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const td = x => `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l nmc" title="${e(x.name)} · ${e(x.setup)}${x.what ? "\n" + e(x.what) : ""}"><span class="nm"><span class="genbadge">GENERATED</span> ${e(x.name)}</span>
+        <span class="sid">${e(x.setup)}</span></td><td>${e(x.generated || "–")}</td>
+      <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
+      <td class="bd-live">${x.trades}</td><td>${x.per_day ?? "–"}</td><td>${pc(x.win_rate)}</td>
       <td class="${cls(x.win_rate == null || x.breakeven_wr == null ? null : x.win_rate - x.breakeven_wr)}">${pc(x.breakeven_wr)}</td>
       <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td>${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
       <td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td class="${cls(x.scr_train)}">${f(x.scr_train, 3)}</td>
       <td class="${cls(x.scr_valid)}">${f(x.scr_valid, 3)}</td><td>${x.scr_day ?? "–"}</td></tr>`;
-    q("#gen-tab").innerHTML = r.length ? `<table><thead><tr>${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No generated setups yet.</div>`;
+    q("#gen-tab").innerHTML = r.length ? `<table><thead>${bandRow()}<tr class="cols">${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No generated setups yet.</div>`;
     const lab = (COLS.find(c => c[0] === sortK) || [, "#"])[1];
     q("#gen-sorted").textContent = `Sorted by ${lab} (${sortD > 0 ? "low to high" : "high to low"}) · tap any column header to re-sort, tap again to flip`;
   }
