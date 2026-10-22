@@ -40,11 +40,12 @@ def main():
             verdict = f"gate {gg['gate']} qualifies"
         elif c["class"] == "all-weather":
             verdict = "keep as-is; never gate (all-weather)"
-        elif c["class"] == "regime specialist":
-            verdict = "keep as-is; no gate qualifies"
+        elif c["train_avg_r"] > 0 and c["valid_avg_r"] > 0:
+            verdict = "keep as-is; profitable in both periods, no gate"
+        elif c["train_avg_r"] < 0 and c["valid_avg_r"] < 0:
+            verdict = "no gate qualifies; loses net on 2 years in both periods"
         else:
-            verdict = "no gate qualifies; 2-year as-run loses" if (c["train_avg_r"] < 0 and c["valid_avg_r"] < 0) \
-                else "no gate qualifies"
+            verdict = "no gate qualifies; mixed (one period positive)"
         rows.append({"setup": setup, "name": disp, "accounts": accts, "class": c["class"], "best": c["best"],
                      "worst": c["worst"], "n": int(c["n"]), "avg_r": round(c["avg_r"], 3),
                      "train_avg_r": round(c["train_avg_r"], 3), "valid_avg_r": round(c["valid_avg_r"], 3),
