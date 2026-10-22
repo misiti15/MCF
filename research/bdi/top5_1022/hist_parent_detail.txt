@@ -1,0 +1,150 @@
+Educational only - not financial advice. BACKTEST parents (open history, TRAIN+VALID, costs in).
+=== MF3-open-flowsell-rsi5hi-FD  n 8626  exp -0.0820  win 0.481
+losers 4476: never reached +0.2R 1702, reached +0.5R 1248; med MFE 0.66 med MAE -0.62
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   945 -0.118       0.503
+10:00-10:30   885 -0.072       0.507
+10:30-11:30  2347 -0.061       0.498
+11:30-13:00  2105 -0.089       0.465
+13:00-14:00  1296 -0.072       0.478
+14:00-16:00  1048 -0.102       0.437
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    2668  0.077
+      True     2994 -0.252
+valid False    1720  0.011
+      True     1244 -0.141
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     2997  0.950
+2     2829 -1.148
+6     2800 -0.110
+
+=== RW7-gapdn-bounce-early-short-FD  n 20710  exp -0.0620  win 0.487
+losers 10626: never reached +0.2R 4127, reached +0.5R 2667; med MFE 0.64 med MAE -0.60
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   460 -0.054       0.515
+10:00-10:30   865 -0.030       0.517
+10:30-11:30  5538 -0.031       0.507
+11:30-13:00  7567 -0.060       0.492
+13:00-14:00  3583 -0.110       0.461
+14:00-16:00  2697 -0.077       0.452
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    6916  0.082
+      True     6048 -0.263
+valid False    4625  0.083
+      True     3121 -0.206
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     6933  0.962
+2     6644 -1.121
+6     7133 -0.070
+
+=== RW4-ns3-adv150-short-FD  n 10569  exp +0.0053  win 0.513
+losers 5151: never reached +0.2R 2116, reached +0.5R 1073; med MFE 0.55 med MAE -0.51
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   107  0.042       0.551
+10:00-10:30   408  0.204       0.632
+10:30-11:30   720  0.061       0.549
+11:30-13:00  1142  0.015       0.505
+13:00-14:00  3176 -0.051       0.480
+14:00-16:00  5016  0.014       0.520
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    3655  0.107
+      True     1839 -0.186
+valid False    3054 -0.005
+      True     2021  0.011
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     2961  0.975
+2     2447 -1.085
+6     5161 -0.034
+
+=== exhaustion_short-FD  n 21793  exp -0.0707  win 0.493
+losers 11045: never reached +0.2R 3985, reached +0.5R 3287; med MFE 0.76 med MAE -0.76
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00  2467 -0.084       0.493
+10:00-10:30  4134 -0.127       0.478
+10:30-11:30  7600 -0.079       0.484
+11:30-13:00  4170 -0.047       0.502
+13:00-14:00  1745 -0.024       0.524
+14:00-16:00  1677  0.016       0.516
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    5006  0.065
+      True     7754 -0.211
+valid False    4262  0.074
+      True     4771 -0.115
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     8706  0.965
+2     8828 -1.108
+6     4259 -0.037
+
+=== MF5-flowsell-vwapup-rsi5hi-FD  n 5664  exp -0.0667  win 0.492
+losers 2878: never reached +0.2R 1074, reached +0.5R 831; med MFE 0.72 med MAE -0.65
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   740 -0.052       0.530
+10:00-10:30   850 -0.080       0.505
+10:30-11:30  2166 -0.062       0.497
+11:30-13:00   975 -0.074       0.470
+13:00-14:00   548 -0.026       0.495
+14:00-16:00   385 -0.127       0.416
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1550  0.130
+      True     2377 -0.243
+valid False     899  0.073
+      True      838 -0.080
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     2149  0.946
+2     1918 -1.155
+6     1597 -0.122
+
+=== RW1-gapdn-bounce-flowsell-short-FD  n 5802  exp -0.0480  win 0.492
+losers 2946: never reached +0.2R 1125, reached +0.5R 764; med MFE 0.66 med MAE -0.60
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   146  0.044       0.548
+10:00-10:30   295 -0.097       0.505
+10:30-11:30  2043 -0.012       0.514
+11:30-13:00  1744 -0.066       0.487
+13:00-14:00   867 -0.092       0.465
+14:00-16:00   707 -0.051       0.458
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1862  0.098
+      True     1758 -0.249
+valid False    1343  0.102
+      True      839 -0.189
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1995  0.963
+2     1883 -1.112
+6     1924 -0.055
