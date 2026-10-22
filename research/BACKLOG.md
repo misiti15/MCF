@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 587 · coded: 85 · failed: 291 · configurations tried (all lineages): 32795707
+Total ideas: 590 · coded: 85 · failed: 293 · configurations tried (all lineages): 32796092
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -298,6 +298,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1021-scaleout-cap-allocation | Live scale-out daily cap (2/day): first-come allocation vs reserving the scale-outs (not before 10:00, or per setup, or highest-ranked signal) | nightly-2026-10-21 (research/bdi/nightly1021/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1021-cwt12k6-breakeven | CWT12-coil-k6-long: stop to breakeven at +0.5R (or 1R trail after +0.5R) instead of the plain t1s05 bracket | BDI 2026-10-21 (research/bdi/bdi1021/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1021-hfl-fd-hold-no-target | heat_fade_long-FD: drop the target and hold to 15:55 with the original stop (or one re-entry after a stop) | BDI 2026-10-21 (research/bdi/bdi1021/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1022-setup-stop-latch | Per-setup -2R daily stop that latches for the day (no re-arm when a later winner lifts realized R back above -2R), vs the live re-arming check | nightly-2026-10-22 (research/bdi/nightly1022/NOTES.md, rearm_out.txt, latch_out.txt) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -589,6 +590,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1021-CWT12-coil-k6-long-exec | CWT12-coil-k6-long: execution variants (scale-out toggle/levels, time stop, stop x0.85/1.25/1.5 at same $, wait one bar, window, SPY-direction filter, re-entry cooldown, thresholds +-20%, coil-k6 breakeven) | BDI top-5 execution tune 2026-10-21 (sixth run) (research/bdi/top5_1021/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1021-CWT14-failbrk-pdh-p10-lowvol-short-exec | CWT14-failbrk-pdh-p10-lowvol-short: execution variants (scale-out toggle/levels, time stop, stop x0.85/1.25/1.5 at same $, wait one bar, window, SPY-direction filter, re-entry cooldown, thresholds +-20%, coil-k6 breakeven) | BDI top-5 execution tune 2026-10-21 (sixth run) (research/bdi/top5_1021/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1021-CWT14-failbrk-pdl-p10-lowvol-long-exec | CWT14-failbrk-pdl-p10-lowvol-long: execution variants (scale-out toggle/levels, time stop, stop x0.85/1.25/1.5 at same $, wait one bar, window, SPY-direction filter, re-entry cooldown, thresholds +-20%, coil-k6 breakeven) | BDI top-5 execution tune 2026-10-21 (sixth run) (research/bdi/top5_1021/NOTES.md) | – | – | – | – | – | – |
+| failed | swing1022-15m-swing-break-retest-idx | Reddit 15m swing high/low break-and-retest / 3rd rejection to the next POI, SPY+QQQ and SPXL+TQQQ | BDI swing1022 2026-10-22 (research/bdi/swing1022/NOTES.md) | – | – | – | – | – | – |
+| failed | swing1022-15m-swing-break-retest-stk | Reddit 15m swing high/low break-and-retest / 3rd rejection, liquid stocks (adv20 >= $95M) | BDI swing1022 2026-10-22 (research/bdi/swing1022/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

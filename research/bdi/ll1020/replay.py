@@ -1,4 +1,4 @@
-"""Replay 16 per-setup daily loss-limit rules (pre-declared in NOTES.md) on the live paper trades of 2026-10-12..10-21 (10-21 + Graveyard added by nightly1021).
+"""Replay 16 per-setup daily loss-limit rules (pre-declared in NOTES.md) on the live paper trades of 2026-10-12..10-22 (10-21 + Graveyard added by nightly1021, 10-22 by nightly1022).
 Candidates = journal run-1 trades per account (+ from 2026-10-20 on the signals the -2R limit blocked, priced by the
 journal's what-if run 2 less the production cost model, as nightly1020/caps.py). Trips on journal r_multiple
 (as runner.py does), scores net R after costs. Writes candidates.csv, setup_days.csv, replay_out.md.
@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np, pandas as pd
 
 S = Path(sys.argv[1]); OUT = Path(__file__).resolve().parent; TZ = "America/New_York"
-DAYS = ["2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-19", "2026-10-20", "2026-10-21"]  # 10-21 added by nightly1021 (LL-1.5 monitor)
+DAYS = ["2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22"]  # 10-21 added by nightly1021, 10-22 by nightly1022 (LL-1.5 monitor)
 ACCTS = ["t1", "t2", "gen", "p", "gy"]; LIM = ["t1", "t2", "gen", "gy"]   # gy = Graveyard (from 2026-10-21)
 ts = lambda s: pd.to_datetime(s, utc=True, format="mixed").dt.tz_convert(TZ)
 

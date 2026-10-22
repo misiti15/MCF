@@ -88,5 +88,35 @@
   "link": "research/bdi/l3_1022/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "LL-LATCH",
+  "title": "Per-setup -2R stop stays off for the day once hit",
+  "what": "In the testing accounts a setup that loses 2R stops for the rest of the day; today it switches back on if a later winner lifts it above -2R.",
+  "recommend": "Yes",
+  "numbers": [
+   "since 10-20: 13 re-arms, 55 more trades, -31.2R after costs",
+   "10-22 Graveyard RW2-exhaustion-noon-adv150-short-FD: -19.5R after re-arming",
+   "9-session replay +38.2R vs today's rule, 6 days better / 2 worse, t 1.12"
+  ],
+  "why": "Your rule says a setup stops for the day at -2R; the code only blocks while it is below -2R. Small risk-code change after hours with tests + ledger. Reply LL-LATCH yes / no.",
+  "link": "research/bdi/nightly1022/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "D1",
+  "title": "Move Stretched Above VWAP Fade to the Graveyard",
+  "what": "CWT13-vwapstretch-z05-short stops trading in Testing 2 and runs in the Graveyard (promotion = move); its record moves with it.",
+  "recommend": "Yes",
+  "numbers": [
+   "61 paper trades, 33% win vs 55% needed, -0.40R/trade, t_day -2.06",
+   "-$177.25; last 4 sessions -0.47R (20)",
+   "2-yr backtest -0.069R/trade"
+  ],
+  "why": "Loses live and in the backtest; on 10-22 it won 1 of 8 and the 27 blocked signals would have lost another -24.7R. Reply D1 yes / no.",
+  "link": "research/bdi/nightly1022/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
