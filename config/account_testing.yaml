@@ -31,6 +31,7 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - RW6G1-ns2-up3-vwap2sd-short   # demoted from Primary 2026-10-22 (windowed: narrower than its -FD)
     - IDX1-qqq100-0955-TQQQ-trail
     - IDX1-qqq100-0955-TQQQ-hold
     - IDX2-spy075-0945-3x-trail
@@ -64,7 +65,6 @@ live:
     - exhaustion_short
     - exhaustion_short-FD
     - CWT14-failbrk-pdh-p10-short   # 42.71/day (allocator)
-    - CWT14-failbrk-pdh-p05-lowvol-short   # 48.14/day (allocator)
     - CWT14-failbrk-pdl-p05-long   # 79.86/day (allocator)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
@@ -198,7 +198,15 @@ strategies:
     former_primary: {demoted: "2026-10-16", first_testing_session: "2026-10-16", review_after_sessions: 10}
   NS4-pm-vwap-reclaim-oversold-short: {enabled: false}   # replaced by NS4-pm-vwap-reclaim-oversold-short-FD
   NS5-sma50-flush-oversold-long: {enabled: false}   # replaced by NS5-sma50-flush-oversold-long-FD
-  RW6G1-ns2-up3-vwap2sd-short: {enabled: false}   # replaced by RW6G1-ns2-up3-vwap2sd-short-FD
+  RW6G1-ns2-up3-vwap2sd-short:   # demoted from Primary 2026-10-22 (owner N2); runs beside its all-day variant -FD (twin cap: never both on one symbol)
+    refire: true
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
   # ---- Testing-only windowed setups (previous config/account_testing.yaml): replaced by their -FD versions below.
   # Listed as off so this file also works if merged on top of the old Testing overlay.
   L3-gap-slope-rsi5hi: {enabled: false}
@@ -562,7 +570,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: B4-parta-k6-t1s05-guest, fill: false}
   # ---- CWT14-failbrk-pdh-p05-lowvol-short: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   CWT14-failbrk-pdh-p05-lowvol-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-22 (owner 2026-10-22 (N6))
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
     min_adv: 95000000

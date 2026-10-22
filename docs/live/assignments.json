@@ -13,13 +13,11 @@
    "NS4-pm-vwap-reclaim-oversold-short",
    "NS5-sma50-flush-oversold-long",
    "RW3-gapdn-rsi5pop-flowsell-short-FD",
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
-   "RW6G1-ns2-up3-vwap2sd-short"
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"
   ],
   "testing": [
    "CWT05-flush-m05-v3-long",
    "CWT12-coil-k6-long",
-   "CWT14-failbrk-pdh-p05-lowvol-short",
    "CWT14-failbrk-pdh-p10-short",
    "CWT14-failbrk-pdl-p05-long",
    "IDX1-qqq100-0955-TQQQ-hold",
@@ -37,6 +35,7 @@
    "NS4-pm-vwap-reclaim-oversold-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
    "RW4-ns3-adv150-short-FD",
+   "RW6G1-ns2-up3-vwap2sd-short",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
    "ST3-rsi5up-short-pm-t1s1-FD",
@@ -67,7 +66,6 @@
    "CWT13-vwapstretch-z05-short",
    "CWT13-vwapstretch-z075-long",
    "CWT13-vwapstretch-z075-short",
-   "CWT14-failbrk-pdh-p10-lowvol-short",
    "CWT14-failbrk-pdl-p05-lowvol-long",
    "CWT14-failbrk-pdl-p10-long",
    "L3-gap-slope-rsi5hi-FD",
@@ -148,6 +146,8 @@
    "CWT14-failbrk-orl-p05-lowvol-long",
    "CWT14-failbrk-orl-p10-long",
    "CWT14-failbrk-orl-p10-lowvol-long",
+   "CWT14-failbrk-pdh-p05-lowvol-short",
+   "CWT14-failbrk-pdh-p10-lowvol-short",
    "LIQ-orl-sweep-open15-s25-long",
    "MF1-945-flowsell-vwapup-FD",
    "NS2-sma50break-overbought-short",
@@ -347,19 +347,21 @@
   },
   "CWT14-failbrk-pdh-p05-lowvol-short": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-22 07:49 ET",
    "from": [
-    "testing2"
+    "testing"
    ]
   },
   "CWT14-failbrk-pdh-p10-lowvol-short": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-22 07:49 ET",
+   "from": [
+    "testing2"
+   ]
   },
   "CWT14-failbrk-pdh-p10-short": {
    "accounts": [
@@ -1160,10 +1162,12 @@
   },
   "RW6G1-ns2-up3-vwap2sd-short": {
    "accounts": [
-    "primary"
+    "testing"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-22 07:53 ET",
+   "from": [
+    "primary"
+   ]
   },
   "RW6G1-ns2-up3-vwap2sd-short-FD": {
    "accounts": [
@@ -1318,15 +1322,15 @@
   }
  },
  "last_change": {
-  "at": "2026-10-22 07:43 ET",
+  "at": "2026-10-22 07:53 ET",
   "changes": [
    {
-    "setup": "NS3-failed-vwap-reclaim-short-FD",
+    "setup": "RW6G1-ns2-up3-vwap2sd-short",
     "from": [
      "primary"
     ],
     "to": [
-     "testing2"
+     "testing"
     ]
    }
   ]

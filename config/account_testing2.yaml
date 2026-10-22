@@ -79,7 +79,6 @@ live:
     - CWT13-vwapstretch-z075-long   # 9.23/day
     - CWT13-vwapstretch-z05-short   # 37.95/day
     - CWT13-vwapstretch-z05-long   # 42.57/day
-    - CWT14-failbrk-pdh-p10-lowvol-short   # 45.73/day
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
     - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
@@ -489,7 +488,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vany-sidelong-t05s1-full", fill: false}
   # Failed Prior-Day-High Break Short (low volume): CWT package B B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full (id 136); open history n 19479, exp -0.0890R, t -9.45, 45.73/day; verdict retire
   CWT14-failbrk-pdh-p10-lowvol-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-22 (owner 2026-10-22 (N6))
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
     min_adv: 95000000

@@ -50,6 +50,8 @@ live:
     - heat_fade_short-FD                    # ~176.38/day
     - CWT14-failbrk-orl-p05-long            # ~246.53/day (moved from Testing 2 2026-10-21)
     - CWT09-gapdn-bounce-g5-lowerhalf-short   # moved 2026-10-21
+    - CWT14-failbrk-pdh-p05-lowvol-short   # moved 2026-10-22
+    - CWT14-failbrk-pdh-p10-lowvol-short   # moved 2026-10-22
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -245,3 +247,24 @@ strategies:
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T2 S guest", fill: false}
     tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
+  CWT14-failbrk-pdh-p05-lowvol-short:
+    # moved to Graveyard 2026-10-22 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.35
+    live_scale_out: false
+    testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full, fill: true}
+    tags: [graveyard, "moved to Graveyard 2026-10-22 (owner)"]
+  CWT14-failbrk-pdh-p10-lowvol-short:
+    # moved to Graveyard 2026-10-22 (owner)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full", fill: false}
+    tags: [graveyard, "moved to Graveyard 2026-10-22 (owner)"]

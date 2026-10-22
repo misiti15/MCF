@@ -10,8 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 MOVED_T2 = {"LIQ-orl-sweep-open15-s25-long", "RW2-exhaustion-noon-adv150-short-FD", "heat_fade_long",
             "CWT14-failbrk-orl-p10-lowvol-long", "CWT14-failbrk-orl-p10-long", "CWT14-failbrk-orl-p05-lowvol-long",
             "CWT14-failbrk-orl-p05-long",   # the 4 CWT14 orl longs moved 2026-10-21 (owner 2026-10-20 N4)
-            "CWT09-gapdn-bounce-g5-lowerhalf-short"}   # owner 2026-10-20 evening
-MOVED_T1 = {"RW6-ns2-up3-short-FD", "NS2-sma50break-overbought-short-FD", "heat_fade_long-FD", "ST1-ordn-long-pm-t05s1-FD",
+            "CWT09-gapdn-bounce-g5-lowerhalf-short",   # owner 2026-10-20 evening
+            "CWT14-failbrk-pdh-p10-lowvol-short"}   # owner 2026-10-22 (N6)
+MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
+            "RW6-ns2-up3-short-FD", "NS2-sma50break-overbought-short-FD", "heat_fade_long-FD", "ST1-ordn-long-pm-t05s1-FD",
             "MF1-945-flowsell-vwapup-FD", "heat_fade_short-FD", "ST2-slope20up-long-am-t05s1-FD",
             "NS2-sma50break-overbought-short", "heat_fade_short"}
 # combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1
