@@ -306,6 +306,8 @@ class FastSession:
         for st in self.lab:
             st.mod = MaskModule(st.mod, st.name, self)
             st.generate = self._gen_wrap(st, st.generate)       # instance attribute; uninstall() removes it
+        for st in self.heat:
+            st.generate = self._heat_wrap(st, st.generate)
         orig_ctx = self.r._contexts
 
         def contexts(today_bars, today):
@@ -336,6 +338,16 @@ class FastSession:
             return real(ctx)
         return gen
 
+    def _heat_wrap(self, st, real):
+        """generate() of a heat setup: skipped when its whole-session score does not cross a threshold on the latest
+        completed 5-minute bar (the runner ignores signals of earlier bars)."""
+        def gen(ctx):
+            if len(ctx.bars) and not self.heat_hit(st, ctx):
+                self.gen_skipped += 1
+                return []
+            return real(ctx)
+        return gen
+
     def uninstall(self):
         from ..backtest import engine
 
@@ -348,6 +360,8 @@ class FastSession:
         _RVOL.clear()
         for st in self.lab:
             st.mod = getattr(st.mod, "_mod", st.mod)
+            st.__dict__.pop("generate", None)
+        for st in self.heat:
             st.__dict__.pop("generate", None)
 
     # ---------------------------------------------------------------- fidelity check
@@ -449,7 +463,7 @@ class FastSession:
 
                     st.mod = _Cap()
                     try:
-                        st.generate(ctx)
+                        type(st).generate(st, ctx)
                     except Exception:
                         pass
                     finally:
