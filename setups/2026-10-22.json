@@ -1,0 +1,813 @@
+{
+ "strategies": {
+  "L3-gap-slope-fromopen-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/L3-gap-slope-fromopen-FD.py",
+   "min_adv": 0,
+   "window": [
+    950,
+    1500
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "CWT14-failbrk-pdl-p10-lowvol-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "from_testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full",
+    "fill": true
+   }
+  },
+  "orb": {
+   "enabled": false,
+   "min_atr": 0.5,
+   "range_minutes": 5,
+   "stop_atr_frac": 0.1,
+   "target_r": null,
+   "min_rvol": 1.0
+  },
+  "vwap_reclaim": {
+   "enabled": false,
+   "earliest": "10:00",
+   "latest": "14:30",
+   "lookback_bars": 15,
+   "min_rvol": 1.5,
+   "target_r": 2.0
+  },
+  "gap_and_go": {
+   "enabled": false,
+   "min_gap_pct": 4.0,
+   "range_minutes": 5,
+   "min_rvol": 2.0,
+   "target_r": 2.0,
+   "exit_by": "11:30"
+  },
+  "gap_fade": {
+   "enabled": false,
+   "min_gap_pct": 1.0,
+   "max_gap_pct": 3.0,
+   "range_minutes": 15,
+   "max_rvol": 1.5,
+   "exit_by": "12:00"
+  },
+  "intraday_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA"
+   ],
+   "signal_time": "10:00",
+   "entry_time": "15:30",
+   "min_abs_return_pct": 0.25,
+   "stop_atr_frac": 0.25
+  },
+  "noise_band_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ"
+   ],
+   "band_mult": 1.0,
+   "first_check": "10:00",
+   "last_check": "15:30"
+  },
+  "vwap_reversion": {
+   "enabled": false,
+   "band_std": 2.5,
+   "earliest": "10:00",
+   "latest": "15:00",
+   "max_rvol": 3.0,
+   "stop_std": 1.0
+  },
+  "orb20_a": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "A",
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "orb20_b": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "B",
+   "stop_atr": 0.15,
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "gap_continuation": {
+   "enabled": false,
+   "min_gap_pct": 3.0,
+   "min_rvol": 3.0,
+   "target_r": 2.0,
+   "entry_until": "11:00",
+   "scale_out_r": null
+  },
+  "gap_sma20": {
+   "enabled": false,
+   "mirror": true,
+   "stop_atr": 0.05,
+   "scale_out_r": null
+  },
+  "index_gap_fill": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "stop_gap_mult": 1.5,
+   "scale_out_r": null
+  },
+  "close_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "gate_mult": 0.5,
+   "stop_atr": 0.5,
+   "scale_out_r": null
+  },
+  "eod_reversal": {
+   "enabled": false,
+   "min_drop_pct": 2.0,
+   "min_adv": 20000000,
+   "scale_out_r": null
+  },
+  "vwap_pullback": {
+   "enabled": false,
+   "min_rvol": 2.0,
+   "top_n": 20,
+   "entry_until": "12:00",
+   "scale_out_r": null
+  },
+  "heat_fade_short": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_9.py",
+   "sides": "short",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1030
+   ],
+   "gate": "fo-",
+   "scale_out_r": null,
+   "former_primary": {
+    "demoted": "2026-10-11",
+    "first_testing_session": "2026-10-12",
+    "review_after_sessions": 10
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "heat_fade_long": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_5.py",
+   "sides": "long",
+   "min_adv": 125000000,
+   "window": [
+    1105,
+    1330
+   ],
+   "gate": "gap+",
+   "scale_out_r": null,
+   "former_primary": {
+    "demoted": "2026-10-11",
+    "first_testing_session": "2026-10-12",
+    "review_after_sessions": 10
+   },
+   "tags": [
+    "graveyard",
+    "moved from Testing 1 2026-10-20 (owner)",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "exhaustion_short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/setups2/candidates/volume_flip_1.py",
+   "min_adv": 95000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "prefilter": "new_high_100m",
+   "scale_out_r": null
+  },
+  "MF1-945-flowsell-vwapup": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-945-flowsell-vwapup.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1030
+   ],
+   "scale_out_r": null
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF3-open-flowsell-rsi5hi-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF4-h40-open-flowsell-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF4-h40-open-flowsell": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-h40-open-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS1-rsidip-rsi5pop-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS2-sma50break-overbought-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/owner1008/NS2-sma50break-overbought-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null,
+   "former_primary": {
+    "demoted": "2026-10-16",
+    "first_testing_session": "2026-10-16",
+    "review_after_sessions": 10
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS3-failed-vwap-reclaim-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py",
+   "min_adv": 95000000,
+   "window": [
+    1130,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS5-sma50-flush-oversold-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW6G1-ns2-up3-vwap2sd-short": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW2-exhaustion-noon-adv150-short-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py",
+   "min_adv": 150000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved from Testing 1 2026-10-20 (owner)",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "LIQ-orl-sweep-open15-s25-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing": {
+    "added": "2026-10-12",
+    "source": "LIQ-OR-long-x0.15-open-k15-a1-S-2.5R-none",
+    "bar": "PLAN.md 5(b)"
+   },
+   "tags": [
+    "graveyard",
+    "moved from Testing 1 2026-10-20 (owner)",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT14-failbrk-orl-p10-lowvol-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": 0.35,
+   "live_scale_out": false,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full",
+    "fill": false
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT14-failbrk-orl-p10-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1200
+   ],
+   "scale_out_r": 0.35,
+   "live_scale_out": false,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LOR-p0.1-Vany-sidelong-t05s1-guest",
+    "fill": true
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT14-failbrk-orl-p05-lowvol-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": 0.25,
+   "live_scale_out": false,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full",
+    "fill": true
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT14-failbrk-orl-p05-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": 0.25,
+   "live_scale_out": false,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LOR-p0.05-Vany-sidelong-t05s1-full",
+    "fill": true
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "NS2-sma50break-overbought-short-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/NS2-sma50break-overbought-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "MF1-945-flowsell-vwapup-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "ST1-ordn-long-pm-t05s1-FD": {
+   "refire": true,
+   "refire_cooldown": 3,
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/ST1-ordn-long-pm-t05s1-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "ST2-slope20up-long-am-t05s1-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "RW6-ns2-up3-short-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW6-ns2-up3-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "heat_fade_short-FD": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/bdi/fullday/heat_fade_short-FD.py",
+   "sides": "short",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1500
+   ],
+   "gate": "fo-",
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "heat_fade_long-FD": {
+   "enabled": true,
+   "type": "heat",
+   "formula": "research/bdi/fullday/heat_fade_long-FD.py",
+   "sides": "long",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1500
+   ],
+   "gate": "gap+",
+   "scale_out_r": null,
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT09-gapdn-bounce-g5-lowerhalf-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT09-gapdn-bounce-g5-lowerhalf-short.py",
+   "min_adv": 1000000,
+   "window": [
+    1030,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "A7 gap<=-5 E=out T2 S guest",
+    "fill": false
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-21 (owner)"
+   ]
+  },
+  "CWT14-failbrk-pdh-p05-lowvol-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": 0.35,
+   "live_scale_out": false,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full",
+    "fill": true
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-22 (owner)"
+   ]
+  },
+  "CWT14-failbrk-pdh-p10-lowvol-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full",
+    "fill": false
+   },
+   "tags": [
+    "graveyard",
+    "moved to Graveyard 2026-10-22 (owner)"
+   ]
+  }
+ },
+ "exits": {
+  "scale_out_r": 1.0,
+  "scale_out_frac": 0.5
+ },
+ "shorts": {
+  "enabled": true,
+  "require_easy_to_borrow": true
+ },
+ "live": {
+  "setup_order": [
+   "ST1-ordn-long-pm-t05s1-FD",
+   "RW6-ns2-up3-short-FD",
+   "NS2-sma50break-overbought-short-FD",
+   "NS2-sma50break-overbought-short",
+   "MF1-945-flowsell-vwapup-FD",
+   "ST2-slope20up-long-am-t05s1-FD",
+   "heat_fade_long",
+   "LIQ-orl-sweep-open15-s25-long",
+   "RW2-exhaustion-noon-adv150-short-FD",
+   "heat_fade_long-FD",
+   "CWT14-failbrk-orl-p10-lowvol-long",
+   "CWT14-failbrk-orl-p10-long",
+   "heat_fade_short",
+   "CWT14-failbrk-orl-p05-lowvol-long",
+   "heat_fade_short-FD",
+   "CWT14-failbrk-orl-p05-long",
+   "CWT09-gapdn-bounce-g5-lowerhalf-short",
+   "CWT14-failbrk-pdh-p05-lowvol-short",
+   "CWT14-failbrk-pdh-p10-lowvol-short"
+  ],
+  "no_entry_before": "09:50",
+  "max_spread_bps": 30,
+  "max_spread_risk_frac": 0.25,
+  "max_participation": 0.1,
+  "quote_crosscheck_max_dev_pct": 2.0,
+  "quote_crosscheck_max_age_s": 300,
+  "quote_crosscheck_max_bar_age_min": 10,
+  "outage": {
+   "enabled": true,
+   "enter_pause_min": 5,
+   "protect_min": 15,
+   "flatten_min": 30,
+   "watchdog_dead_min": 15
+  },
+  "status_every_min": 2,
+  "log_poll_inputs": true,
+  "poll_log_flush_min": 10,
+  "start_from": "08:00",
+  "max_job_minutes": 340,
+  "fetch_batch": 400,
+  "retry_after_release": true,
+  "longs_first_on_ties": true,
+  "max_lots_per_symbol": 3,
+  "lot_cap_ignore_residual_frac": 0.25,
+  "same_setup_reentry": true,
+  "split_tape_short_gate": {
+   "enabled": false,
+   "spread_pct": 0.5
+  },
+  "block_twin_same_symbol": true,
+  "scale_out_max_per_day": 0
+ },
+ "universe": {
+  "max_symbols": null,
+  "min_avg_dollar_volume": 5000000,
+  "extended_min_avg_dollar_volume": 1000000,
+  "extended_min_rvol": 3.0,
+  "min_atr_pct": 1.0,
+  "stocks_in_play_top_n": 20,
+  "earnings_blackout_days": 4,
+  "exclude_ptp": true,
+  "ptp_denylist": [
+   "ET",
+   "EPD",
+   "MPLX",
+   "PAA",
+   "WES",
+   "CQP",
+   "USAC",
+   "SUN",
+   "CAPL",
+   "BSM",
+   "DKL",
+   "GEL",
+   "NRP",
+   "KRP",
+   "DMLP",
+   "SPH",
+   "NGL",
+   "GLP",
+   "ENLC",
+   "NS",
+   "HEP"
+  ]
+ }
+}
