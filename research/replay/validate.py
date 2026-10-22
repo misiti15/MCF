@@ -103,8 +103,10 @@ def compare(account: str, run: Path) -> dict:
     replayed = set().union(*[set(x.get("setups") or []) for x in stats]) if stats else set()
     for x in (ls, rs):
         x["min"] = [_bar_min(i, t) for i, t in zip(x["info"], x["ts"])]
-    for x in (lt, rt):
-        x["min"] = [_trade_min(m) for m in x["meta"]]
+    for x, sg in ((lt, ls), (rt, rs)):         # a trade's decision bar: its entry signal's (by order id), else its coid
+        by_oid = {(d, str(o)): m for d, o, m in zip(sg["day"], sg["broker_order_id"], sg["min"])
+                  if o is not None and not pd.isna(o)}            # replay order ids restart every session: key by day
+        x["min"] = [by_oid.get((d, str(o)), _trade_min(m)) for d, o, m in zip(x["day"], x["broker_order_id"], x["meta"])]
     lab = set(store.symbols())
     out = {"account": account, "sessions": days, "replayed_setups": len(replayed)}
     # ---- signals
@@ -167,6 +169,15 @@ def compare(account: str, run: Path) -> dict:
                      "live_avg_r": round(float(lt.r_multiple.mean()), 3) if len(lt) else None,
                      "replay_avg_r": round(float(rt.r_multiple.mean()), 3) if len(rt) else None,
                      "live_trades": len(lt), "replay_trades": len(rt)}
+    lu = lt[lt.symbol.isin(lab)]
+    out["system_in_universe"] = {"live_trades": len(lu), "live_total_r": round(float(lu.r_multiple.sum()), 2),
+                                 "live_avg_r": round(float(lu.r_multiple.mean()), 3) if len(lu) else None,
+                                 "replay_trades": len(rt), "replay_total_r": round(float(rt.r_multiple.sum()), 2),
+                                 "replay_avg_r": round(float(rt.r_multiple.mean()), 3) if len(rt) else None}
+    lsu = ls[ls.symbol.isin(lab)]
+    out["signals"]["live_in_universe"] = len(lsu)
+    out["signals"]["live_submitted_in_universe"] = int((lsu.status == "submitted").sum())
+    out["signals"]["replay_submitted"] = int((rs.status == "submitted").sum()) if len(rs) else 0
     out["sec_per_session"] = round(float(np.mean([x.get("seconds", 0) for x in stats])), 1) if stats else None
     out["fast_check"] = {k: int(sum((x.get("fast_check") or {}).get(k, 0) for x in stats))
                          for k in ("samples", "frame_diff", "mask_diff", "rvol_diff")}
@@ -188,6 +199,7 @@ def main():
         print(" signals", {k: v for k, v in r["signals"].items() if not isinstance(v, dict)})
         print(" trades ", {k: v for k, v in r["trades"].items() if not isinstance(v, dict)})
         print(" system ", r["system"])
+        print(" in-universe", r["system_in_universe"])
     print("Educational only - not financial advice.")
 
 

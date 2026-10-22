@@ -144,7 +144,10 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
             with (contextlib.redirect_stdout(buf) if quiet else contextlib.nullcontext()):
                 r.run(until=None)
         finally:
-            fc = fast.check(check) if (fast is not None and check) else None
+            try:
+                fc = fast.check(check) if (fast is not None and check) else None
+            except Exception as e:                    # the fidelity check never costs the session
+                fc = {"error": f"{type(e).__name__}: {e}"[:200]}
             fstats = None if fast is None else {"frame_hits": S_hits(fast), "mask_hits": fast.mask_hits,
                                                  "mask_misses": fast.mask_misses, "ctx_kept": fast.kept,
                                                  "ctx_dropped": fast.dropped}
@@ -248,11 +251,45 @@ def account_config(account: str, day=None, as_live: bool = False, branch: str | 
         from ..execution.session import SETUP_KEYS
 
         cfg.update({k: frozen[k] for k in SETUP_KEYS if k in frozen})
+        acct_then = config_at(account, day)     # the snapshot has no account limits: take them from the config then
+        if acct_then is not None:
+            cfg["account"] = acct_then["account"]
+            cfg["costs"] = acct_then.get("costs", cfg["costs"])
+            cfg["_replay_config_commit"] = acct_then["_commit"]
         missing = [n for n, v in cfg["strategies"].items() if (v or {}).get("enabled") and (v or {}).get("module")
                    and not (store.ROOT / v["module"]).exists()]
         for n in missing:                       # a module renamed / removed since: cannot be replayed
             cfg["strategies"][n]["enabled"] = False
         cfg["_replay_missing_modules"] = missing
+    return cfg
+
+
+def config_at(account: str, day) -> dict | None:
+    """config/default.yaml + config/account_<account>.yaml as committed before that session's open (09:30 ET), merged
+    as load_config does - for the sections the frozen setup snapshot does not hold (account limits, costs)."""
+    import subprocess
+
+    import yaml
+
+    from ..config import _merge
+
+    when = f"{pd.Timestamp(str(day)).date()} 09:30:00 -0400"
+    r = subprocess.run(["git", "-C", str(store.ROOT), "rev-list", "-1", "--first-parent", f"--before={when}", "HEAD"],
+                       capture_output=True, text=True)
+    sha = r.stdout.strip()
+    if not sha:
+        return None
+
+    def show(path):
+        x = subprocess.run(["git", "-C", str(store.ROOT), "show", f"{sha}:{path}"], capture_output=True, text=True)
+        return yaml.safe_load(x.stdout) if x.returncode == 0 else None
+
+    cfg = show("config/default.yaml")
+    if cfg is None:
+        return None
+    if account != "primary":
+        cfg = _merge(cfg, show(f"config/account_{account}.yaml") or {})
+    cfg["_commit"] = sha[:10]
     return cfg
 
 

@@ -350,6 +350,32 @@ class SimTradingClient:
         if bar is not None and k < 390:
             self._fill(o, float(bar[0]), k, "market")
 
+    def _check_bracket(self, req, sym, side):
+        """Alpaca's bracket rule (code 42210000): against the latest trade (base price; here the open of the current
+        minute's bar, else the last close) a buy's take-profit must be >= base + 0.01 and its stop <= base - 0.01 (a sell
+        mirrored). Live rejected 173 entries this way 10-12..10-21 when price ran past the levels before submission."""
+        k = max(self.mkt.minute(self.clock.now), self.done_min + 1)
+        bar = self.mkt.bar(sym, k)
+        base = float(bar[0]) if bar is not None else self.mkt.last_close(sym, k)
+        if base is None:
+            return
+        tp = getattr(getattr(req, "take_profit", None), "limit_price", None)
+        sl = getattr(getattr(req, "stop_loss", None), "stop_price", None)
+        b = round(base, 2)
+        msg = None
+        if side == "buy":
+            if tp is not None and float(tp) < b + 0.01 - 1e-9:
+                msg = "take_profit.limit_price must be >= base_price + 0.01"
+            elif sl is not None and float(sl) > b - 0.01 + 1e-9:
+                msg = "stop_loss.stop_price must be <= base_price - 0.01"
+        else:
+            if tp is not None and float(tp) > b - 0.01 + 1e-9:
+                msg = "take_profit.limit_price must be <= base_price - 0.01"
+            elif sl is not None and float(sl) < b + 0.01 - 1e-9:
+                msg = "stop_loss.stop_price must be >= base_price + 0.01"
+        if msg:
+            raise RuntimeError(f'{{"base_price":"{b}","code":42210000,"message":"{msg}"}}')
+
     def close_position(self, sym):
         q = self.pos.get(sym)
         if not q:
@@ -379,6 +405,8 @@ class SimTradingClient:
         if qty <= 0:
             raise RuntimeError("qty must be > 0")
         opening = oc in ("bracket", "oto")                       # MCF entries are brackets / OTO; the rest are exits
+        if opening:
+            self._check_bracket(req, sym, side)
         o = self._new(client_order_id=coid, symbol=sym, side=side, qty=str(qty), order_type=t, order_class=oc,
                       stop_price=getattr(req, "stop_price", None), limit_price=getattr(req, "limit_price", None),
                       extended_hours=bool(getattr(req, "extended_hours", False)),

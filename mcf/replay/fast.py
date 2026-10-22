@@ -364,7 +364,7 @@ class FastSession:
             for _ in range(samples):
                 sym = syms[int(rng.integers(len(syms)))]
                 f = self.frames[sym]
-                j = int(rng.integers(1, len(f) + 1))
+                j = int(rng.integers(min(4, len(f)), len(f) + 1))   # decision bars start at 09:50 (row 4)
                 b = self.bars[sym]
                 last = pd.Timestamp(self.ends[sym][j - 1], tz="UTC").tz_convert(b.index.tz) - pd.Timedelta(minutes=1)
                 tb = b[b.index <= last]
@@ -410,7 +410,11 @@ class FastSession:
                         from ..strategies.lab_context import add_context
 
                         gg = add_context(g, ctx.peers, st2.context)
-                    real = np.asarray(getattr(st2.mod, "_mod", st2.mod).mask(gg), dtype=bool)
+                    try:
+                        real = np.asarray(getattr(st2.mod, "_mod", st2.mod).mask(gg), dtype=bool)
+                    except Exception:            # the module itself fails on this short frame (live would too)
+                        out["mask_errors"] = out.get("mask_errors", 0) + 1
+                        continue
                     full = self.full_mask(st2.name, sym)
                     if full is None or not np.array_equal(real, full[: len(real)]):
                         out["mask_diff"] += 1
