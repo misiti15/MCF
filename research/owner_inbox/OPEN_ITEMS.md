@@ -15,7 +15,6 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | N2 | Demote RW6G1-ns2-up3-vwap2sd-short from Primary to Testing 1 | owner | nightly suggestions | owner reviewing | waiting on owner |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | owner | nightly suggestions | owner reviewing | waiting on owner |
 | G1 | Add the 6 up-tape gated short variants (-g1: MF4-FD, RW5-FD, MF3-FD, RW7-FD, RW3-FD, RW1-FD) to a testing account (research/bdi/gates1021) | owner | nightly suggestions | brief 2026-10-21 | waiting on owner; **regime1022 recommends withdrawing (R1): lookahead bug in prior-day SPY, corrected t 0.04-2.17** |
-| N5 | Demote Big Loser VWAP Reclaim Fade (all day) (NS3-failed-vwap-reclaim-short-FD) from Primary to Testing 2 | owner | nightly suggestions | brief 2026-10-21 | waiting on owner; regime1022 R3 supports it (no gate qualifies; Bear edge 2025-only) |
 | N6 | Move the 3 Failed Prior-Day-High Break Shorts (CWT14-failbrk-pdh-p05-lowvol-short, -pdh-p10-short in T1; -pdh-p10-lowvol-short in T2) to the Graveyard | owner | nightly suggestions | brief 2026-10-21 | waiting on owner |
 | SO-ALLOC | If the 2/day scale-out cap stays: which signals get the 2 scale-outs (first-come spent both by 09:54 on 10-21). Backlog nightly-1021-scaleout-cap-allocation | BDI | backlog idea | with SO-CAP | idea |
 | TWIN-GRP | First live check of the twin_group blocks (LD-NS1 / LD-ST2 / LD-SPXL, Testing 2): no LD signal yet | nightly loop | step 1 | first LD signal day | pending |
@@ -24,8 +23,9 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | LF-DECAY | Rolling 1/3/6/12-month decay monitor for top setups: 1-month decline → flag; 3- or 6-month decline (size decides) → demotion suggestion. For live funding. Draft in docs/ROADMAP.md Phase 5. | Claude | — | before live funding (needs ~1 month of records to start) | planned |
 | UI-DASH | Dashboard upgrades (owner 2026-10-21): inventory guard test, leaderboard "Last session" columns, Replay columns + New setup pipeline card, At-a-glance strip / quick-nav / collapsible cards | Claude | tests/test_dashboard_inventory.py | 2026-10-22 08:00 ET | shipped 2026-10-22 (branch claude/charming-mccarthy-i3rhhr): guard test, Last session, Replay columns + pipeline card (replay.json / pipeline.json are stubs until the replay engine fills them), At a glance / quick-nav / collapsible cards |
 | UI-DRILL | Setup drill-down side panel (click any setup: today / yesterday / record / daily R timeline, Prev/Next, #setup= deep link) | Claude | tests/test_dashboard_inventory.py | 2026-10-22 08:00 ET | shipped 2026-10-22 (branch claude/charming-mccarthy-i3rhhr); replay / backtest columns fill once replay.json / pipeline.json have data |
-| R1-R3 | regime1022 decisions: R1 withdraw G1 (lookahead), R2 no new daily stop (alt. B1b insurance), R3 demote NS3-FD (= N5) | owner | nightly suggestions | brief 2026-10-22 | waiting on owner |
+| R1-R3 | regime1022 decisions: R1 withdraw G1 (lookahead), R2 no new daily stop (alt. B1b insurance), R3 demote NS3-FD (= N5) | owner | nightly suggestions | brief 2026-10-22 | R3 answered (= N5, demoted 2026-10-22); R1/R2 waiting on owner |
 | UI-REGIME | Leaderboard "Best conditions" column + drill-down by-condition table (docs/live/regimes.json, regime1022) | Claude | tests/test_regimes_json.py, tests/test_dashboard_inventory.py | 2026-10-22 | shipped 2026-10-22 (branch claude/charming-mccarthy-i3rhhr); refresh regimes.json when setups move (scripts/make_regimes_json.py) |
+| NS3-VAR | Thorough variant study of Big Loser VWAP Reclaim Fade (all day) to work in more market conditions (owner 2026-10-22) | BDI | research/bdi/ns3var1022 | brief 2026-10-22 | running |
 | UI-DATE | Dashboard "date started" column | Claude | — | deferred | deferred |
 | UI-LABEL | Setup labeling-system proposal | Claude | — | deferred | deferred |
 | HK-LEDGER | Ledger check speed-up (replay only entries with a patch) | Claude | — | housekeeping | queued |
@@ -42,6 +42,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | M1 | Early Sellers into a Pop (index down, no gap up) | 2026-10-20 | yes — Testing 2, observation |
 | L1 | LD1 / LD2 longs | 2026-10-20 | yes — with LD3-LD8, Testing 2, observation |
 | MOVES-1020 | Owner moves 2026-10-20 evening (2 promotions, MF3-FD demotion, CWT09-g5 + 4 CWT14 orl to Graveyard) + Testing 1/2 reallocation | 2026-10-20 | applied for 2026-10-21 (ledger 2026-10-21-*) |
+| N5 / R3 | Demote NS3-failed-vwap-reclaim-short-FD | 2026-10-22 | demoted Primary -> Testing 2 before the 10-22 open (owner); variant research NS3-VAR requested |
 | LL-2R | Per-setup daily stop ruling | 2026-10-20 | keep -2R (research/bdi/ll1020/NOTES.md); 1.5R re-check = LL-1.5 |
 | GY-1 | Graveyard account first session | 2026-10-21 | clean: 50 polls, 347 trades (mgy- orders), flat, EOD + scorecard pushed, journal = report = status (research/bdi/nightly1021/NOTES.md) |
 

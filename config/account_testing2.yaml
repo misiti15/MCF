@@ -36,6 +36,7 @@ live:
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - NS3-failed-vwap-reclaim-short-FD        # ~24/day (demoted from Primary 2026-10-22)
     - LD4-st4-breadthup-t1s05-long            # 0.05/day (longs1020 near-miss, owner 2026-10-20)
     - LD5-st2-breadthup-t05s1-long            # 0.07/day (twin_group LD-ST2)
     - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # 0.16/day (twin_group LD-SPXL)
@@ -338,7 +339,15 @@ strategies:
   MF3-open-flowsell-rsi5hi-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-15)
   MF2-open-rsimidhi-flowsell-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-20)
   MF4-h40-open-flowsell-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-20)
-  NS3-failed-vwap-reclaim-short-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-20)
+  NS3-failed-vwap-reclaim-short-FD:   # demoted from Primary 2026-10-22 (owner N5/R3); Testing 2 keeps it apart from NS3 in Testing 1
+    refire: true
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
   MF4-h40-open-flowsell: {enabled: false}
   # ---- MF5-flowsell-vwapup-rsi5hi: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi:
