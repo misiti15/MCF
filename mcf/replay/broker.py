@@ -179,8 +179,10 @@ class SimTradingClient:
         fp = round(self._cost(px, o.symbol, side, kind), 6)
         o.filled_qty, o.filled_avg_price, o.status = str(abs(float(o.qty))), str(fp), "filled"
         o._fill_min = k
-        t = self.clock.now if self.mkt.minute(self.clock.now) == k else self.mkt.bar_time(k) + pd.Timedelta(seconds=1)
-        o.filled_at = t.tz_convert("UTC").to_pydatetime()
+        # stamps strictly after every earlier event of this poll (a flatten fill must come after the cancels before it:
+        # reconcile pairs a flatten close to a lot only when it filled after the lot's legs were cancelled)
+        o.filled_at = self._now_utc() if self.mkt.minute(self.clock.now) == k else \
+            (self.mkt.bar_time(k) + pd.Timedelta(seconds=1)).tz_convert("UTC").to_pydatetime()
         cur = self.pos.get(o.symbol, 0.0)
         new = cur + side * q
         if cur == 0 or np.sign(cur) == side:                       # opening / adding: average entry price

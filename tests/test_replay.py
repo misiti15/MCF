@@ -156,3 +156,19 @@ def test_broker_stop_gap_and_shares_held():
     stop = next(leg for leg in o.legs if leg.order_type == "stop")
     assert stop.status == "filled"
     assert abs(float(stop.filled_avg_price) - (9.50 * (1 - 1e-4) - 0.03)) < 1e-9   # open, minus slippage + stop extra
+
+
+def test_lots_held_to_the_flatten_are_reconciled(tmp_path):
+    """Every lot open at 15:55 is closed by the flatten and booked as a trade (fill stamps after the cancels)."""
+    bars, priors = _session()
+    for p in priors.values():
+        p.atr = p.prev_close * 2.0                                # stop 50% away: nothing stops out
+    mod = tmp_path / "replay_test_hold.py"
+    mod.write_text(MODULE.format(side="long").replace('GEOM = "t1s1"', 'GEOM = "hold"'))
+    cfg = harness.account_config("primary")
+    cfg = harness.add_setup(cfg, "RPLHOLD", str(mod), alone=True, block={"min_adv": 0, "refire": True})
+    res = harness.run_session(cfg, DAY, bars, priors, spreads={}, shortable={s: (True, True) for s in bars},
+                              check=0, log=lambda m: None)
+    sub = res["signals"][res["signals"].status == "submitted"]
+    assert len(sub) >= 4 and len(res["trades"]) == len(sub)
+    assert set(res["trades"].exit_reason) == {"flatten"}
