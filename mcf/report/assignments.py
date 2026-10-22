@@ -3,6 +3,8 @@ from the configs, with the time of the last promotion / demotion / move. The lea
 `live` flags of last night's scorecards, so a move shows at once.
 
     python -m mcf.report.assignments            # rewrite docs/live/assignments.json (keeps earlier 'since' times)
+    python -m mcf.report.assignments --at "2026-10-22 16:00"   # stamp the change at the time it takes effect (ET),
+                                                 # e.g. a move prepared in market hours and merged after the close
 
 tests/test_assignments.py fails when docs/live/assignments.json does not match the configs, so every config change
 that moves a setup must regenerate it in the same commit. Educational only - not financial advice.
@@ -93,9 +95,9 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
             "accounts": acc, "labels": ACCOUNTS, "setups": setups, "last_change": last}
 
 
-def write(seed: dict | None = None) -> dict:
+def write(seed: dict | None = None, now: datetime | None = None) -> dict:
     prev = json.loads(OUT.read_text()) if OUT.exists() else None
-    d = build(prev)
+    d = build(prev, now)
     if seed:
         d.update(seed.get("top", {}))
         for k, v in (seed.get("setups") or {}).items():
@@ -105,6 +107,13 @@ def write(seed: dict | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    d = write()
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--at", help="effective time 'YYYY-MM-DD HH:MM' (ET) for the stamp; default now. A move stamped at "
+                                 "or after 16:00 shows on the dashboard as taking effect the next session.")
+    a = ap.parse_args()
+    at = datetime.strptime(a.at, "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/New_York")) if a.at else None
+    d = write(now=at)
     print(json.dumps(d.get("last_change"), indent=1))
     sys.exit(0)

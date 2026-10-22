@@ -394,7 +394,7 @@ class LabStrategy(Strategy):
     Off (the default) keeps the first-qualifying-bar behaviour unchanged.
 
     Opt-in extras (owner 2026-10-17, Q8 = A; each off unless the setup sets it):
-    - `context: true | [spy_fo, qqq_fo, breadth, breadth_open]`: point-in-time market context columns in this setup's
+    - `context: true | [spy_fo, qqq_fo, breadth, breadth_open, qqq_vwap]`: point-in-time market context columns in this setup's
       copy of the frame (mcf/strategies/lab_context.py). Live they come from the poll (SPY/QQQ are polled for it).
     - `symbols: [...]` (or `symbols: module` = the module's SYMBOLS): allow-list; the mask is evaluated only on these
       symbols. It only restricts: unlike `symbols` of other setup types it does not pin the names into the universe

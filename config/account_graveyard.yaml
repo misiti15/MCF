@@ -52,6 +52,7 @@ live:
     - CWT09-gapdn-bounce-g5-lowerhalf-short   # moved 2026-10-21
     - CWT14-failbrk-pdh-p05-lowvol-short   # moved 2026-10-22
     - CWT14-failbrk-pdh-p10-lowvol-short   # moved 2026-10-22
+    - CWT14-failbrk-pdh-p10-short          # ~42.71/day (moved from Testing 1 2026-10-22, P0; from session 2026-10-23)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -267,4 +268,16 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sideshort-t05s1-full", fill: false}
+    tags: [graveyard, "moved to Graveyard 2026-10-22 (owner)"]
+  CWT14-failbrk-pdh-p10-short:
+    # moved to Graveyard 2026-10-22 (owner P0, ~11:10 ET; effective session 2026-10-23 - its 10-22 trades stay in
+    # Testing 1, the dashboard merges both records into one row under Graveyard). Rework pdh1022: 0 of 47 variants pass.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-short.py
+    min_adv: 95000000
+    window: [950, 1200]
+    scale_out_r: null
+    live_scale_out: false
+    testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.1-Vany-sideshort-t05s1-guest, fill: true}
     tags: [graveyard, "moved to Graveyard 2026-10-22 (owner)"]

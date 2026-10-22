@@ -30,7 +30,7 @@ def months(locked: bool = False) -> list[str]:
 
 def load_month(month: str, columns: list[str] | None = None, context: bool = False) -> pd.DataFrame:
     """One calendar month of frames, sorted by symbol, date, tod. Locked months need MCF_HIST_ALLOW_LOCKED=1.
-    context=True joins the lab context columns (spy_fo, qqq_fo, breadth, breadth_open; build_frames.py --context-only)
+    context=True joins the lab context columns (spy_fo, qqq_fo, breadth, breadth_open, qqq_vwap; build_frames.py --context-only)
     on (date, tod) - the same point-in-time columns LabStrategy `context:` adds live."""
     locked = month in LOCKED_MONTHS
     if locked and not _allow_locked():
@@ -44,7 +44,7 @@ def load_month(month: str, columns: list[str] | None = None, context: bool = Fal
 
 
 def load_context(month: str) -> pd.DataFrame:
-    """The month's lab context table (date, tod, spy_fo, qqq_fo, breadth, breadth_open). Same locked guard."""
+    """The month's lab context table (date, tod, spy_fo, qqq_fo, breadth, breadth_open; qqq_vwap once rebuilt after 2026-10-22). Same locked guard."""
     locked = month in LOCKED_MONTHS
     if locked and not _allow_locked():
         raise PermissionError("the rule-19 locked block (2024-11..2025-02) is scored once per version by the lead")

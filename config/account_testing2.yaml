@@ -36,7 +36,8 @@ live:
   # One position per symbol across setups: narrowest (fewest open-history trades/day) first, so subsets are not
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
-    - NS3-failed-vwap-reclaim-short-FD        # ~24/day (demoted from Primary 2026-10-22)
+    - NS3V1-am-widestop-short                 # ~5.3/day (ns3var1022 V1, owner 2026-10-22; twin_group NS3-T2)
+    - NS3-failed-vwap-reclaim-short-FD        # ~24/day (demoted from Primary 2026-10-22; twin_group NS3-T2)
     - LD4-st4-breadthup-t1s05-long            # 0.05/day (longs1020 near-miss, owner 2026-10-20)
     - LD5-st2-breadthup-t05s1-long            # 0.07/day (twin_group LD-ST2)
     - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # 0.16/day (twin_group LD-SPXL)
@@ -347,6 +348,28 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
+    twin_group: NS3-T2   # owner 2026-10-22 (V1): never on the same symbol as NS3V1-am-widestop-short here
+  # ---- ns3var1022 V1 (owner 2026-10-22 ~11:10 ET "V1 yes"; research/bdi/ns3var1022/NOTES.md): a NEW setup. Same NS3
+  #      signal family as NS3-FD (and NS3 in Testing 1), morning window 09:50-11:30, refire cooldown 1, stop twice as
+  #      wide at the same $ risk with the target at NS3's 1R price (r_atr_frac 0.5 + GEOM t05s1 = stop 0.5 ATR, target
+  #      0.25 ATR). Ordered before NS3-FD; twin_group NS3-T2 = one symbol is held by only ONE of NS3V1 / NS3-FD at a time
+  #      (each still adds its own refire lots on a symbol it holds). NS3 (Testing 1) is a different account: unaffected.
+  # owner 2026-10-22: observation (post-hoc near-miss; t 2.15 vs study 3.02 / lineage 4.90). 2-year open history as run
+  # (refire + 3 lots): train 868 +0.044R / valid 1,402 +0.058R; ~5.3/day; Bull -0.037 / Bear +0.200 / Choppy +0.092 /
+  # Quiet -0.014. Module parity 2,297/2,297 (research/bdi/ns3var1022/verify_module.json).
+  NS3V1-am-widestop-short:
+    enabled: true
+    type: lab
+    module: research/bdi/ns3var1022/modules/NS3V1-am-widestop-short.py
+    r_atr_frac: 0.5
+    geom: t05s1
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: true
+    refire_cooldown: 1
+    scale_out_r: null
+    twin_group: NS3-T2
+    tags: [observation, ns3var1022]
   MF4-h40-open-flowsell: {enabled: false}
   # ---- MF5-flowsell-vwapup-rsi5hi: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi:
