@@ -1,0 +1,1396 @@
+{
+ "generated": "2026-10-22",
+ "labels": [
+  "Bull",
+  "Bear",
+  "Choppy",
+  "Quiet"
+ ],
+ "definitions": {
+  "Bull": "SPY closed at least +0.5% above its open",
+  "Bear": "SPY closed at least -0.5% below its open",
+  "Choppy": "SPY open-to-close within +-0.5%, but the day's high-low range was at or above its 20-day median",
+  "Quiet": "SPY open-to-close within +-0.5% and a high-low range below its 20-day median"
+ },
+ "note": "Hindsight label of each session from SPY's regular session; per-setup avg R after costs on the open two-year history (2024-10..2026-10-07, locked block excluded), refire chain + lot cap 3. research/bdi/regime1022. Educational only - not financial advice.",
+ "setups": {
+  "L3-gap-slope-fromopen-FD": {
+   "best": "Bear",
+   "worst": "Choppy",
+   "by_regime": {
+    "Bull": {
+     "trades": 12229,
+     "avg_r": -0.051
+    },
+    "Bear": {
+     "trades": 3505,
+     "avg_r": 0.078
+    },
+    "Choppy": {
+     "trades": 3834,
+     "avg_r": -0.066
+    },
+    "Quiet": {
+     "trades": 5466,
+     "avg_r": -0.027
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.03,
+   "trades": 25124,
+   "source": "2-year as-run backtest"
+  },
+  "L3-gap-slope-lowdist-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1782,
+     "avg_r": -0.327
+    },
+    "Bear": {
+     "trades": 824,
+     "avg_r": 0.195
+    },
+    "Choppy": {
+     "trades": 691,
+     "avg_r": -0.134
+    },
+    "Quiet": {
+     "trades": 846,
+     "avg_r": -0.027
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.129,
+   "trades": 4156,
+   "source": "2-year as-run backtest"
+  },
+  "L3-gap-slope-rsi5hi-FD": {
+   "best": "Bear",
+   "worst": "Choppy",
+   "by_regime": {
+    "Bull": {
+     "trades": 3854,
+     "avg_r": -0.076
+    },
+    "Bear": {
+     "trades": 1619,
+     "avg_r": 0.077
+    },
+    "Choppy": {
+     "trades": 2059,
+     "avg_r": -0.143
+    },
+    "Quiet": {
+     "trades": 2424,
+     "avg_r": 0.025
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.041,
+   "trades": 9985,
+   "source": "2-year as-run backtest"
+  },
+  "LD1-ns1-breadthup-t05s1-long": {
+   "best": "Bull",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 56,
+     "avg_r": 0.181
+    },
+    "Bear": {
+     "trades": 22,
+     "avg_r": -0.076
+    },
+    "Choppy": {
+     "trades": 22,
+     "avg_r": 0.049
+    },
+    "Quiet": {
+     "trades": 32,
+     "avg_r": 0.119
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.095,
+   "trades": 134,
+   "source": "2-year as-run backtest"
+  },
+  "MF1-945-flowsell-vwapup": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 546,
+     "avg_r": -0.277
+    },
+    "Bear": {
+     "trades": 383,
+     "avg_r": 0.047
+    },
+    "Choppy": {
+     "trades": 375,
+     "avg_r": -0.057
+    },
+    "Quiet": {
+     "trades": 1073,
+     "avg_r": -0.028
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.078,
+   "trades": 2389,
+   "source": "2-year as-run backtest"
+  },
+  "MF1-945-flowsell-vwapup-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 2545,
+     "avg_r": -0.248
+    },
+    "Bear": {
+     "trades": 1386,
+     "avg_r": 0.087
+    },
+    "Choppy": {
+     "trades": 1777,
+     "avg_r": -0.048
+    },
+    "Quiet": {
+     "trades": 4756,
+     "avg_r": -0.049
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.079,
+   "trades": 10540,
+   "source": "2-year as-run backtest"
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "best": "Choppy",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 105,
+     "avg_r": -0.142
+    },
+    "Bear": {
+     "trades": 129,
+     "avg_r": -0.052
+    },
+    "Choppy": {
+     "trades": 136,
+     "avg_r": 0.1
+    },
+    "Quiet": {
+     "trades": 238,
+     "avg_r": -0.049
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.034,
+   "trades": 610,
+   "source": "2-year as-run backtest"
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 613,
+     "avg_r": -0.159
+    },
+    "Bear": {
+     "trades": 1760,
+     "avg_r": 0.079
+    },
+    "Choppy": {
+     "trades": 1034,
+     "avg_r": -0.092
+    },
+    "Quiet": {
+     "trades": 1797,
+     "avg_r": -0.094
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.043,
+   "trades": 5223,
+   "source": "2-year as-run backtest"
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 912,
+     "avg_r": -0.383
+    },
+    "Bear": {
+     "trades": 579,
+     "avg_r": 0.164
+    },
+    "Choppy": {
+     "trades": 693,
+     "avg_r": -0.004
+    },
+    "Quiet": {
+     "trades": 1929,
+     "avg_r": -0.046
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.086,
+   "trades": 4136,
+   "source": "2-year as-run backtest"
+  },
+  "MF3-open-flowsell-rsi5hi-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 2079,
+     "avg_r": -0.342
+    },
+    "Bear": {
+     "trades": 2054,
+     "avg_r": 0.104
+    },
+    "Choppy": {
+     "trades": 1841,
+     "avg_r": -0.069
+    },
+    "Quiet": {
+     "trades": 4523,
+     "avg_r": -0.04
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.076,
+   "trades": 10564,
+   "source": "2-year as-run backtest"
+  },
+  "MF4-h40-open-flowsell": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 716,
+     "avg_r": -0.344
+    },
+    "Bear": {
+     "trades": 596,
+     "avg_r": 0.033
+    },
+    "Choppy": {
+     "trades": 627,
+     "avg_r": -0.02
+    },
+    "Quiet": {
+     "trades": 1367,
+     "avg_r": -0.066
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.099,
+   "trades": 3318,
+   "source": "2-year as-run backtest"
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1380,
+     "avg_r": -0.302
+    },
+    "Bear": {
+     "trades": 1697,
+     "avg_r": 0.017
+    },
+    "Choppy": {
+     "trades": 1365,
+     "avg_r": -0.048
+    },
+    "Quiet": {
+     "trades": 2798,
+     "avg_r": -0.058
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.085,
+   "trades": 7273,
+   "source": "2-year as-run backtest"
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1625,
+     "avg_r": -0.345
+    },
+    "Bear": {
+     "trades": 910,
+     "avg_r": 0.171
+    },
+    "Choppy": {
+     "trades": 1129,
+     "avg_r": -0.003
+    },
+    "Quiet": {
+     "trades": 3116,
+     "avg_r": 0.005
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.057,
+   "trades": 6827,
+   "source": "2-year as-run backtest"
+  },
+  "MF5-flowsell-vwapup-rsi5hi-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1625,
+     "avg_r": -0.345
+    },
+    "Bear": {
+     "trades": 910,
+     "avg_r": 0.171
+    },
+    "Choppy": {
+     "trades": 1129,
+     "avg_r": -0.003
+    },
+    "Quiet": {
+     "trades": 3116,
+     "avg_r": 0.005
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.057,
+   "trades": 6827,
+   "source": "2-year as-run backtest"
+  },
+  "NM-AMS-N1-quiet-morning-short": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 81,
+     "avg_r": 0.065
+    },
+    "Bear": {
+     "trades": 101,
+     "avg_r": 0.239
+    },
+    "Choppy": {
+     "trades": 97,
+     "avg_r": 0.134
+    },
+    "Quiet": {
+     "trades": 120,
+     "avg_r": 0.078
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.131,
+   "trades": 401,
+   "source": "2-year as-run backtest"
+  },
+  "NM-AR-AM-gapdown-capitulation-long": {
+   "best": "Bull",
+   "worst": "Choppy",
+   "by_regime": {
+    "Bull": {
+     "trades": 219,
+     "avg_r": 0.495
+    },
+    "Bear": {
+     "trades": 655,
+     "avg_r": 0.326
+    },
+    "Choppy": {
+     "trades": 264,
+     "avg_r": -0.022
+    },
+    "Quiet": {
+     "trades": 448,
+     "avg_r": 0.218
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.262,
+   "trades": 1588,
+   "source": "2-year as-run backtest"
+  },
+  "NM-HL-T75-pm-long": {
+   "best": "Choppy",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 270,
+     "avg_r": 0.072
+    },
+    "Bear": {
+     "trades": 717,
+     "avg_r": 0.009
+    },
+    "Choppy": {
+     "trades": 374,
+     "avg_r": 0.139
+    },
+    "Quiet": {
+     "trades": 496,
+     "avg_r": 0.007
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.044,
+   "trades": 1860,
+   "source": "2-year as-run backtest"
+  },
+  "NM-MF3-qqqdn-gapdn-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 80,
+     "avg_r": -0.499
+    },
+    "Bear": {
+     "trades": 770,
+     "avg_r": 0.134
+    },
+    "Choppy": {
+     "trades": 522,
+     "avg_r": -0.126
+    },
+    "Quiet": {
+     "trades": 721,
+     "avg_r": -0.028
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.01,
+   "trades": 2099,
+   "source": "2-year as-run backtest"
+  },
+  "NM-PM-gapdn-above-pdh-rvol-short": {
+   "best": "Bull",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 241,
+     "avg_r": 0.318
+    },
+    "Bear": {
+     "trades": 78,
+     "avg_r": 0.271
+    },
+    "Choppy": {
+     "trades": 35,
+     "avg_r": 0.11
+    },
+    "Quiet": {
+     "trades": 91,
+     "avg_r": 0.042
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.239,
+   "trades": 447,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWN3-ns3-spyup-early-short": {
+   "best": "Bear",
+   "worst": "Choppy",
+   "by_regime": {
+    "Bull": {
+     "trades": 108,
+     "avg_r": 0.179
+    },
+    "Bear": {
+     "trades": 50,
+     "avg_r": 0.566
+    },
+    "Choppy": {
+     "trades": 55,
+     "avg_r": 0.051
+    },
+    "Quiet": {
+     "trades": 175,
+     "avg_r": 0.065
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.159,
+   "trades": 388,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWN4-ns2-spyup05-notfri-short": {
+   "best": "Quiet",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 781,
+     "avg_r": 0.085
+    },
+    "Bear": {
+     "trades": 21,
+     "avg_r": 0.404
+    },
+    "Choppy": {
+     "trades": 27,
+     "avg_r": 0.417
+    },
+    "Quiet": {
+     "trades": 70,
+     "avg_r": 0.219
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.113,
+   "trades": 899,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWN5-ns3-mon-weakrs-short": {
+   "best": "Bear",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 78,
+     "avg_r": 0.156
+    },
+    "Bear": {
+     "trades": 84,
+     "avg_r": 0.526
+    },
+    "Choppy": {
+     "trades": 26,
+     "avg_r": 0.197
+    },
+    "Quiet": {
+     "trades": 107,
+     "avg_r": -0.034
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.196,
+   "trades": 295,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWR1-exh150-gapdn-spyup-pm-short": {
+   "best": "Quiet",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 470,
+     "avg_r": 0.084
+    },
+    "Bear": {
+     "trades": 0,
+     "avg_r": null
+    },
+    "Choppy": {
+     "trades": 97,
+     "avg_r": 0.234
+    },
+    "Quiet": {
+     "trades": 87,
+     "avg_r": 0.421
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.151,
+   "trades": 654,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWR3-ns3-qqqup-early-short": {
+   "best": "Bear",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 98,
+     "avg_r": 0.242
+    },
+    "Bear": {
+     "trades": 49,
+     "avg_r": 0.65
+    },
+    "Choppy": {
+     "trades": 49,
+     "avg_r": 0.198
+    },
+    "Quiet": {
+     "trades": 158,
+     "avg_r": 0.055
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.205,
+   "trades": 355,
+   "source": "2-year as-run backtest"
+  },
+  "NM-RWR4-ns2-up3-qqqup-slopedn-short": {
+   "best": "Choppy",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 457,
+     "avg_r": 0.1
+    },
+    "Bear": {
+     "trades": 12,
+     "avg_r": -0.053
+    },
+    "Choppy": {
+     "trades": 56,
+     "avg_r": 0.23
+    },
+    "Quiet": {
+     "trades": 120,
+     "avg_r": 0.131
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.114,
+   "trades": 645,
+   "source": "2-year as-run backtest"
+  },
+  "NM1-cwt09-g10-vwaploss-short": {
+   "best": "Choppy",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 54,
+     "avg_r": -0.081
+    },
+    "Bear": {
+     "trades": 93,
+     "avg_r": 0.127
+    },
+    "Choppy": {
+     "trades": 71,
+     "avg_r": 0.169
+    },
+    "Quiet": {
+     "trades": 127,
+     "avg_r": -0.023
+    }
+   },
+   "class": "loser",
+   "avg_r": 0.051,
+   "trades": 346,
+   "source": "2-year as-run backtest"
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 136,
+     "avg_r": 0.137
+    },
+    "Bear": {
+     "trades": 68,
+     "avg_r": -0.112
+    },
+    "Choppy": {
+     "trades": 83,
+     "avg_r": -0.063
+    },
+    "Quiet": {
+     "trades": 153,
+     "avg_r": 0.049
+    }
+   },
+   "class": "loser",
+   "avg_r": 0.031,
+   "trades": 444,
+   "source": "2-year as-run backtest"
+  },
+  "NS1-rsidip-rsi5pop-long-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 777,
+     "avg_r": 0.09
+    },
+    "Bear": {
+     "trades": 342,
+     "avg_r": -0.282
+    },
+    "Choppy": {
+     "trades": 380,
+     "avg_r": -0.161
+    },
+    "Quiet": {
+     "trades": 976,
+     "avg_r": -0.09
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.07,
+   "trades": 2490,
+   "source": "2-year as-run backtest"
+  },
+  "NS2-sma50break-overbought-short": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1354,
+     "avg_r": -0.037
+    },
+    "Bear": {
+     "trades": 410,
+     "avg_r": 0.067
+    },
+    "Choppy": {
+     "trades": 404,
+     "avg_r": 0.067
+    },
+    "Quiet": {
+     "trades": 945,
+     "avg_r": -0.001
+    }
+   },
+   "class": "loser",
+   "avg_r": 0.001,
+   "trades": 3124,
+   "source": "2-year as-run backtest"
+  },
+  "NS2-sma50break-overbought-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 2749,
+     "avg_r": -0.154
+    },
+    "Bear": {
+     "trades": 1166,
+     "avg_r": 0.075
+    },
+    "Choppy": {
+     "trades": 1439,
+     "avg_r": -0.028
+    },
+    "Quiet": {
+     "trades": 2757,
+     "avg_r": -0.035
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.059,
+   "trades": 8151,
+   "source": "2-year as-run backtest"
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 309,
+     "avg_r": -0.127
+    },
+    "Bear": {
+     "trades": 400,
+     "avg_r": 0.289
+    },
+    "Choppy": {
+     "trades": 211,
+     "avg_r": 0.067
+    },
+    "Quiet": {
+     "trades": 584,
+     "avg_r": -0.03
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.046,
+   "trades": 1510,
+   "source": "2-year as-run backtest"
+  },
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 2511,
+     "avg_r": -0.154
+    },
+    "Bear": {
+     "trades": 5584,
+     "avg_r": 0.067
+    },
+    "Choppy": {
+     "trades": 2806,
+     "avg_r": -0.067
+    },
+    "Quiet": {
+     "trades": 6013,
+     "avg_r": -0.008
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.015,
+   "trades": 16955,
+   "source": "2-year as-run backtest"
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 441,
+     "avg_r": -0.174
+    },
+    "Bear": {
+     "trades": 200,
+     "avg_r": 0.068
+    },
+    "Choppy": {
+     "trades": 213,
+     "avg_r": -0.006
+    },
+    "Quiet": {
+     "trades": 608,
+     "avg_r": -0.057
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.069,
+   "trades": 1469,
+   "source": "2-year as-run backtest"
+  },
+  "NS4-pm-vwap-reclaim-oversold-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 472,
+     "avg_r": -0.164
+    },
+    "Bear": {
+     "trades": 247,
+     "avg_r": 0.07
+    },
+    "Choppy": {
+     "trades": 267,
+     "avg_r": -0.015
+    },
+    "Quiet": {
+     "trades": 698,
+     "avg_r": -0.05
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.06,
+   "trades": 1692,
+   "source": "2-year as-run backtest"
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 189,
+     "avg_r": 0.257
+    },
+    "Bear": {
+     "trades": 516,
+     "avg_r": -0.308
+    },
+    "Choppy": {
+     "trades": 170,
+     "avg_r": -0.003
+    },
+    "Quiet": {
+     "trades": 424,
+     "avg_r": 0.137
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.042,
+   "trades": 1305,
+   "source": "2-year as-run backtest"
+  },
+  "NS5-sma50-flush-oversold-long-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 453,
+     "avg_r": 0.063
+    },
+    "Bear": {
+     "trades": 1047,
+     "avg_r": -0.201
+    },
+    "Choppy": {
+     "trades": 506,
+     "avg_r": 0.059
+    },
+    "Quiet": {
+     "trades": 1122,
+     "avg_r": 0.011
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.045,
+   "trades": 3139,
+   "source": "2-year as-run backtest"
+  },
+  "RW1-gapdn-bounce-flowsell-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1319,
+     "avg_r": -0.324
+    },
+    "Bear": {
+     "trades": 1683,
+     "avg_r": 0.181
+    },
+    "Choppy": {
+     "trades": 1535,
+     "avg_r": -0.094
+    },
+    "Quiet": {
+     "trades": 2870,
+     "avg_r": -0.029
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.049,
+   "trades": 7474,
+   "source": "2-year as-run backtest"
+  },
+  "RW2-exhaustion-noon-adv150-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 7132,
+     "avg_r": -0.224
+    },
+    "Bear": {
+     "trades": 3305,
+     "avg_r": 0.138
+    },
+    "Choppy": {
+     "trades": 3832,
+     "avg_r": 0.012
+    },
+    "Quiet": {
+     "trades": 7803,
+     "avg_r": -0.034
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.062,
+   "trades": 22187,
+   "source": "2-year as-run backtest"
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1109,
+     "avg_r": -0.31
+    },
+    "Bear": {
+     "trades": 1254,
+     "avg_r": 0.125
+    },
+    "Choppy": {
+     "trades": 1208,
+     "avg_r": -0.058
+    },
+    "Quiet": {
+     "trades": 2366,
+     "avg_r": -0.071
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.071,
+   "trades": 5995,
+   "source": "2-year as-run backtest"
+  },
+  "RW4-ns3-adv150-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1998,
+     "avg_r": -0.142
+    },
+    "Bear": {
+     "trades": 4539,
+     "avg_r": 0.064
+    },
+    "Choppy": {
+     "trades": 2265,
+     "avg_r": -0.058
+    },
+    "Quiet": {
+     "trades": 4677,
+     "avg_r": -0.003
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.011,
+   "trades": 13511,
+   "source": "2-year as-run backtest"
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 1156,
+     "avg_r": -0.323
+    },
+    "Bear": {
+     "trades": 1031,
+     "avg_r": 0.178
+    },
+    "Choppy": {
+     "trades": 1078,
+     "avg_r": -0.044
+    },
+    "Quiet": {
+     "trades": 2274,
+     "avg_r": -0.041
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.06,
+   "trades": 5598,
+   "source": "2-year as-run backtest"
+  },
+  "RW6-ns2-up3-short-FD": {
+   "best": "Bear",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 1705,
+     "avg_r": -0.029
+    },
+    "Bear": {
+     "trades": 629,
+     "avg_r": 0.096
+    },
+    "Choppy": {
+     "trades": 696,
+     "avg_r": 0.021
+    },
+    "Quiet": {
+     "trades": 1433,
+     "avg_r": -0.065
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.016,
+   "trades": 4480,
+   "source": "2-year as-run backtest"
+  },
+  "RW7-gapdn-bounce-early-short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 4509,
+     "avg_r": -0.335
+    },
+    "Bear": {
+     "trades": 6119,
+     "avg_r": 0.194
+    },
+    "Choppy": {
+     "trades": 5207,
+     "avg_r": -0.139
+    },
+    "Quiet": {
+     "trades": 10080,
+     "avg_r": -0.051
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.061,
+   "trades": 26164,
+   "source": "2-year as-run backtest"
+  },
+  "ST1-ordn-long-pm-t05s1-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 294,
+     "avg_r": 0.015
+    },
+    "Bear": {
+     "trades": 520,
+     "avg_r": -0.178
+    },
+    "Choppy": {
+     "trades": 354,
+     "avg_r": 0.004
+    },
+    "Quiet": {
+     "trades": 553,
+     "avg_r": -0.025
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.058,
+   "trades": 1726,
+   "source": "2-year as-run backtest"
+  },
+  "ST2-slope20up-long-am-t05s1-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 1297,
+     "avg_r": 0.074
+    },
+    "Bear": {
+     "trades": 3948,
+     "avg_r": -0.06
+    },
+    "Choppy": {
+     "trades": 2091,
+     "avg_r": 0.019
+    },
+    "Quiet": {
+     "trades": 3602,
+     "avg_r": -0.03
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.019,
+   "trades": 10956,
+   "source": "2-year as-run backtest"
+  },
+  "ST3-rsi5up-short-pm-t1s1-FD": {
+   "best": "Choppy",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 137,
+     "avg_r": -0.154
+    },
+    "Bear": {
+     "trades": 151,
+     "avg_r": 0.068
+    },
+    "Choppy": {
+     "trades": 97,
+     "avg_r": 0.076
+    },
+    "Quiet": {
+     "trades": 270,
+     "avg_r": 0.031
+    }
+   },
+   "class": "loser",
+   "avg_r": 0.007,
+   "trades": 657,
+   "source": "2-year as-run backtest"
+  },
+  "ST4-emadn-long-am-t1s05-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 145,
+     "avg_r": 0.149
+    },
+    "Bear": {
+     "trades": 471,
+     "avg_r": -0.042
+    },
+    "Choppy": {
+     "trades": 263,
+     "avg_r": 0.02
+    },
+    "Quiet": {
+     "trades": 418,
+     "avg_r": 0.033
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.017,
+   "trades": 1300,
+   "source": "2-year as-run backtest"
+  },
+  "ST5-pdbrkup-short-mid-t05s1-FD": {
+   "best": "Quiet",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 152,
+     "avg_r": -0.052
+    },
+    "Bear": {
+     "trades": 180,
+     "avg_r": -0.11
+    },
+    "Choppy": {
+     "trades": 159,
+     "avg_r": -0.021
+    },
+    "Quiet": {
+     "trades": 276,
+     "avg_r": 0.03
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.029,
+   "trades": 768,
+   "source": "2-year as-run backtest"
+  },
+  "ST6-volspikeup-short-mid-t1s1-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 147,
+     "avg_r": -0.038
+    },
+    "Bear": {
+     "trades": 190,
+     "avg_r": 0.054
+    },
+    "Choppy": {
+     "trades": 129,
+     "avg_r": 0.004
+    },
+    "Quiet": {
+     "trades": 310,
+     "avg_r": 0.018
+    }
+   },
+   "class": "loser",
+   "avg_r": 0.015,
+   "trades": 777,
+   "source": "2-year as-run backtest"
+  },
+  "ST7-rsi50dn-long-pm-t1s1-FD": {
+   "best": "Bull",
+   "worst": "Bear",
+   "by_regime": {
+    "Bull": {
+     "trades": 153,
+     "avg_r": 0.226
+    },
+    "Bear": {
+     "trades": 246,
+     "avg_r": -0.177
+    },
+    "Choppy": {
+     "trades": 172,
+     "avg_r": 0.126
+    },
+    "Quiet": {
+     "trades": 457,
+     "avg_r": 0.021
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": 0.024,
+   "trades": 1035,
+   "source": "2-year as-run backtest"
+  },
+  "ST8-volspikedn-long-pm-t1s1-FD": {
+   "best": "Bear",
+   "worst": "Quiet",
+   "by_regime": {
+    "Bull": {
+     "trades": 61,
+     "avg_r": 0.049
+    },
+    "Bear": {
+     "trades": 192,
+     "avg_r": 0.066
+    },
+    "Choppy": {
+     "trades": 91,
+     "avg_r": 0.04
+    },
+    "Quiet": {
+     "trades": 183,
+     "avg_r": -0.01
+    }
+   },
+   "class": "all-weather",
+   "avg_r": 0.034,
+   "trades": 528,
+   "source": "2-year as-run backtest"
+  },
+  "exhaustion_short": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 2432,
+     "avg_r": -0.091
+    },
+    "Bear": {
+     "trades": 1302,
+     "avg_r": 0.095
+    },
+    "Choppy": {
+     "trades": 1574,
+     "avg_r": -0.015
+    },
+    "Quiet": {
+     "trades": 2091,
+     "avg_r": 0.033
+    }
+   },
+   "class": "loser",
+   "avg_r": -0.007,
+   "trades": 7406,
+   "source": "2-year as-run backtest"
+  },
+  "exhaustion_short-FD": {
+   "best": "Bear",
+   "worst": "Bull",
+   "by_regime": {
+    "Bull": {
+     "trades": 9032,
+     "avg_r": -0.227
+    },
+    "Bear": {
+     "trades": 4248,
+     "avg_r": 0.129
+    },
+    "Choppy": {
+     "trades": 4920,
+     "avg_r": 0.013
+    },
+    "Quiet": {
+     "trades": 10091,
+     "avg_r": -0.044
+    }
+   },
+   "class": "regime specialist",
+   "avg_r": -0.067,
+   "trades": 28458,
+   "source": "2-year as-run backtest"
+  }
+ }
+}
