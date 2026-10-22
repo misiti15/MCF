@@ -156,6 +156,15 @@ class PaperRunner:
         self.status_path = status_path
         self.on_status = on_status
         self.today = None
+        # Poll input log (owner 2026-10-21, live.log_poll_inputs, default on): what each poll actually received - per
+        # symbol the latest bar time and bar count (only the exceptions are listed), poll wall time, data-stale flag -
+        # so a replay can be checked against (and later driven by) the real inputs. Set by `mcf live` (state
+        # polls/<date>/<HHMMSS>.jsonl.gz chunks, each written once and pushed with the status). Never raises.
+        self.poll_log_dir: str | None = None
+        self.poll_log_flush_min = float(self.live.get("poll_log_flush_min", 10))
+        self._poll_buf: list[str] = []
+        self._poll_buf_since: float | None = None
+        self._poll_log_ms = 0.0
 
     # ---------------------------------------------------------------- state
     def restore(self, today):
@@ -826,6 +835,8 @@ class PaperRunner:
         self.manage(now, bars)
         self.scale_outs(now, bars)
         stale = self._check_data(now, bars)
+        if self.poll_log_dir:
+            self._log_poll(now, bars, stale)
         self._escalate(now, stale)
         if stale:
             return                                    # stale data: no new entries (signals would use old bars)
@@ -1283,7 +1294,50 @@ class PaperRunner:
             self.journal.add_trades(wid, pd.DataFrame(rows))
             print(f"what-if: simulated {len(rows)} signals not taken")
 
+    # ---------------------------------------------------------------- poll input log (live.log_poll_inputs)
+    def _log_poll(self, now: pd.Timestamp, bars: dict, stale: bool):
+        """Buffer one compact record of this poll's inputs (see poll_record). Errors are printed, never raised."""
+        t0 = _time.perf_counter()
+        try:
+            rec = poll_record(now, bars, self.watchlist, self.health, stale, self._poll_log_ms)
+            if self._poll_buf_since is None:
+                self._poll_buf_since = _time.time()
+            self._poll_buf.append(json.dumps(rec, separators=(",", ":")))
+        except Exception as e:
+            print(f"poll log failed: {type(e).__name__}: {e}")
+        self._poll_log_ms = round((_time.perf_counter() - t0) * 1000, 2)
+
+    def flush_poll_log(self, now: pd.Timestamp | None = None, force: bool = False) -> str | None:
+        """Write the buffered poll records as one new gzip chunk <poll_log_dir>/<date>/<HHMMSS>.jsonl.gz (each chunk is
+        written once, so the state branch grows by the compressed size only). Flushed every poll_log_flush_min minutes
+        and at handover / close. Returns the chunk path or None. Never raises."""
+        if not self.poll_log_dir or not self._poll_buf:
+            return None
+        if not force and self._poll_buf_since is not None and \
+                _time.time() - self._poll_buf_since < self.poll_log_flush_min * 60:
+            return None
+        try:
+            import gzip
+
+            now = pd.Timestamp(now if now is not None else self._now or pd.Timestamp.now(tz=NY))
+            d = os.path.join(self.poll_log_dir, str(now.date()))
+            os.makedirs(d, exist_ok=True)
+            path = os.path.join(d, f"{now:%H%M%S}.jsonl.gz")
+            k = 1
+            while os.path.exists(path):                       # never rewrite a chunk that may be pushed already
+                path = os.path.join(d, f"{now:%H%M%S}-{k}.jsonl.gz")
+                k += 1
+            with gzip.open(path + ".tmp", "wt", compresslevel=9) as f:
+                f.write("\n".join(self._poll_buf) + "\n")
+            os.replace(path + ".tmp", path)
+            self._poll_buf, self._poll_buf_since = [], None
+            return path
+        except Exception as e:
+            print(f"poll log flush failed: {type(e).__name__}: {e}")
+            return None
+
     def write_status(self, now, phase):
+        self.flush_poll_log(now, force=phase in ("closed", "handover"))
         if not (self.status_path or self.on_status):
             return
         from ..report.live_status import build_status
@@ -1296,3 +1350,51 @@ class PaperRunner:
             os.replace(tmp, self.status_path)
         if self.on_status:
             self.on_status(st)
+
+
+def poll_record(now: pd.Timestamp, bars: dict, watchlist, health: dict, stale: bool, log_ms: float = 0.0) -> dict:
+    """One poll's inputs, compactly (live.log_poll_inputs). Keys:
+      t      poll time (ET, HH:MM:SS); ms = the fetch's wall time (ms); lms = the previous record's logging time (ms)
+      n      watchlist size; got = symbols with at least one completed bar; fresh = symbols whose latest completed bar is
+             the last completed minute (lm, HH:MM); exp = minutes 09:30..lm (a symbol trading every minute has exp bars)
+      late   {"HHMM": [symbols]} symbols whose latest bar is older than lm, by that bar's minute
+      miss   {"k": [symbols]} symbols holding exp - k bars (k > 0: minutes without a bar; only k != 0 listed)
+      none   watchlist symbols without any bar (at most 50 listed; none_n = the count)
+      stale  the runner's data-stale verdict this poll
+    Everything a replay needs to rebuild each symbol's bar count (lab setups only evaluate when count % 5 == 0) and the
+    data gaps the live runner saw."""
+    cut = pd.Timestamp(now).floor("1min")
+    lm = cut - pd.Timedelta(minutes=1)
+    open_ = pd.Timestamp(f"{cut.date()} 09:30", tz=cut.tz)
+    exp = max(0, int((lm - open_).total_seconds() // 60) + 1)
+    late: dict[str, list] = {}
+    miss: dict[str, list] = {}
+    got = fresh = 0
+    for s, b in bars.items():
+        n = len(b) if b is not None else 0
+        if not n:
+            continue
+        got += 1
+        last = b.index[-1]
+        if last >= lm:
+            fresh += 1
+        else:
+            late.setdefault(f"{last:%H%M}", []).append(s)
+        if n != exp:
+            miss.setdefault(str(exp - n), []).append(s)
+    none = sorted(set(watchlist) - {s for s, b in bars.items() if b is not None and len(b)})
+    return {"t": f"{pd.Timestamp(now):%H:%M:%S}", "ms": round(float(health.get("last_poll_s") or 0) * 1000),
+            "lms": log_ms, "n": len(watchlist), "got": got, "fresh": fresh, "lm": f"{lm:%H:%M}", "exp": exp,
+            "late": late, "miss": miss, "none_n": len(none), "none": none[:50], "stale": bool(stale)}
+
+
+def read_poll_log(poll_dir: str, day: str) -> list[dict]:
+    """Every poll record of `day` from its chunks (<poll_dir>/<day>/*.jsonl.gz), in poll order."""
+    import glob
+    import gzip
+
+    out = []
+    for p in sorted(glob.glob(os.path.join(poll_dir, str(day), "*.jsonl.gz"))):
+        with gzip.open(p, "rt") as f:
+            out += [json.loads(line) for line in f if line.strip()]
+    return sorted(out, key=lambda r: r["t"])

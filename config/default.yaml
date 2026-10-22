@@ -442,6 +442,9 @@ live:
     flatten_min: 30
     watchdog_dead_min: 15
   status_every_min: 2            # dashboard refresh cadence
+  log_poll_inputs: true          # owner 2026-10-21: each poll's inputs (latest bar / bar count per symbol, exceptions
+                                 # only; poll wall time; stale flag) -> state polls/<date>/<HHMMSS>.jsonl.gz chunks
+  poll_log_flush_min: 10         # a new chunk every 10 min and at handover/close (each chunk written + pushed once)
   start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
   max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
   fetch_batch: 400
