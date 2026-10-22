@@ -86,6 +86,94 @@ th[data-sortable] { user-select: none; }
 </head><body><main>
 <header><div><h1>MCF Live</h1><div class="sub">Live paper session. Educational only — not financial advice.
 End-of-day reports: <a href="report.html">open</a></div></div></header>
+<!-- At a glance + quick nav (owner 2026-10-21): today's P/L per account, Primary green-day streak, open owner decisions
+     (research/owner_inbox/OPEN_ITEMS.md on the trading branch) and alerts (stale data, flatten failed, ...). Self-contained. -->
+<style>
+#qnav { position: sticky; top: 0; z-index: 30; display: flex; gap: 4px; overflow-x: auto; margin: 10px -16px 0; padding: 6px 16px;
+  background: color-mix(in srgb, var(--page) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border); scrollbar-width: none; }
+#qnav::-webkit-scrollbar { display: none; }
+#qnav a { flex: none; font-size: 13px; padding: 4px 11px; border-radius: 999px; color: var(--ink-2); text-decoration: none; border: 1px solid transparent; }
+#qnav a:hover, #qnav a.on { color: var(--ink); border-color: var(--border); background: var(--surface); }
+#acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #gl-card, #lh { scroll-margin-top: 52px; }
+#glance { margin: 12px 0 4px; padding: 10px 12px; }
+#glance h2 { font-size: 13px; margin: 0 0 6px; color: var(--ink-2); }
+#glance .gx { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px; }
+@media (max-width: 480px) { #qnav a { padding: 4px 8px; font-size: 12px; } #glance .gv { font-size: 16px; } }
+#glance .gk { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+#glance .gv { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+#glance .gn { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.5; }
+#glance .gn a { color: inherit; }
+#glance .al { color: var(--bad); }
+/* card headers (owner 2026-10-21): one-line "what this tells you" + collapse toggle remembered per viewer */
+.card > h2:first-child { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.card .why { font-size: 12px; color: var(--muted); margin: -6px 0 8px; }
+.card .ctog { margin-left: auto; font: inherit; font-size: 12px; color: var(--muted); background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 0 7px; cursor: pointer; line-height: 1.6; }
+.card.collapsed > :not(h2):not(.why) { display: none !important; }
+.card.collapsed { padding-bottom: 6px; }
+#lb-asg.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+</style>
+<nav id="qnav" aria-label="Sections"><a href="#live">Today</a><a href="#lb-card">Setups</a><a href="#pipe-card">Research</a><a href="#acc-all">Accounts</a><a href="#chg-card">System</a></nav>
+<div class="card" id="glance" role="region" aria-label="At a glance" aria-live="polite"><h2>At a glance</h2>
+  <div class="gx"><div><div class="gk">Today's P/L by account</div><div class="gn" id="gl-pl">loading…</div></div>
+    <div><div class="gk">Primary green-day streak</div><div class="gv" id="gl-streak">…</div><div class="gn" id="gl-streak-n"></div></div>
+    <div><div class="gk">Open decisions for you</div><div class="gv" id="gl-dec">…</div><div class="gn" id="gl-dec-n"></div></div>
+    <div><div class="gk">Alerts</div><div class="gv" id="gl-alerts">…</div><div class="gn" id="gl-alerts-n"></div></div></div>
+</div>
+<script>
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);
+  const INBOX = RAW + "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md";
+  const A = [["primary", "Primary", "mcf-data", "?"], ["testing", "Testing 1", "mcf-data-testing", "?account=testing"], ["testing2", "Testing 2", "mcf-data-testing2", "?account=testing2"],
+    ["gen", "Setup Generator", "mcf-data-gen", "?account=gen"], ["graveyard", "Graveyard", "mcf-data-graveyard", "?account=graveyard"]];
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const money = v => v == null || isNaN(v) ? "–" : (v < 0 ? "-$" : "+$") + Math.abs(+v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  const get = (u, text) => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? (text ? r.text() : r.json()) : null).catch(() => null);
+  async function tick() {
+    const st = await Promise.all(A.map(a => get(RAW + a[2] + "/status.json"))), lh = await get(RAW + "mcf-data-longhold/longhold/status.json");
+    q("#gl-pl").innerHTML = A.map((a, i) => { const s = st[i], t = (s && s.today) || {};
+      return `<a href="${a[3]}">${a[1]}</a> <span class="${cls(t.pnl)}">${s ? (t.trades ? money(t.pnl) : "–") : "no data"}</span>${t.open_positions ? ` · ${t.open_positions} open` : ""}`; }).join("<br>") +
+      (lh ? `<br><a href="?account=longhold">Long-hold</a> <span class="${cls((lh.intraday || lh.mark || {}).day_pl)}">${money((lh.intraday || lh.mark || {}).day_pl)}</span>` : "");
+    // positive-day streak: consecutive sessions with P/L > 0, newest first
+    const h = ((st[0] && st[0].history) || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
+    let n = 0; for (let i = h.length - 1; i >= 0 && h[i].pnl > 0; i--) n++;
+    const last = h[h.length - 1];
+    q("#gl-streak").innerHTML = h.length ? `<span class="${n ? "up" : ""}">${n} session${n === 1 ? "" : "s"}</span>` : "–";
+    q("#gl-streak-n").textContent = last ? `last session ${last.date}: ${money(last.pnl)} · ${h.filter(x => x.pnl > 0).length} of ${h.length} green` : "";
+    // alerts from every account's status
+    const al = [];
+    st.forEach((s, i) => { if (!s) { al.push(`${A[i][1]}: no status`); return; }
+      const hl = s.health || {}, age = (Date.now() - Date.parse(s.asof)) / 60000;
+      if (s.phase === "trading" && age > 10) al.push(`${A[i][1]}: no update for ${Math.round(age)} min`);
+      if (hl.data_stale) al.push(`${A[i][1]}: stale market data`);
+      if ((hl.flatten_failed || []).length) al.push(`${A[i][1]}: flatten failed (${hl.flatten_failed.length})`);
+      if ((hl.scale_out_failed || []).length) al.push(`${A[i][1]}: scale-out failed (${hl.scale_out_failed.length})`);
+      if (hl.split_tape_gate && hl.split_tape_gate.warning) al.push(`${A[i][1]}: ${hl.split_tape_gate.warning}`); });
+    ((lh && lh.alerts) || []).forEach(x => al.push(`Long-hold: ${x.kind}`));
+    q("#gl-alerts").innerHTML = al.length ? `<span class="al">${al.length}</span>` : `<span class="up">none</span>`;
+    q("#gl-alerts-n").innerHTML = al.length ? al.slice(0, 4).map(e).join("<br>") + (al.length > 4 ? `<br>+${al.length - 4} more` : "") : "data fresh, no failed flattens";
+  }
+  async function inbox() {
+    const t = await get(INBOX, true); if (!t) { q("#gl-dec").textContent = "–"; return; }
+    const open = (t.split(/^## Closed/m)[0].split(/^## Open/m)[1] || "").split("\n").filter(l => /^\|\s*[A-Z][\w.-]*\s*\|/.test(l) && !/^\|\s*ID\s*\|/.test(l))
+      .map(l => l.split("|").slice(1, -1).map(c => c.trim())).map(c => ({ id: c[0], item: c[1], owner: c[2], due: c[4], status: c[5] || "" }));
+    const dec = open.filter(x => /waiting on owner|decision/i.test(x.status + " " + x.due) || /^owner$/i.test(x.owner));
+    q("#gl-dec").innerHTML = `<a href="https://github.com/misiti15/MCF/blob/claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md" target="_blank" rel="noopener" style="color:inherit">${dec.length}</a>`;
+    q("#gl-dec-n").innerHTML = `${e(dec.slice(0, 6).map(x => x.id).join(", "))}${dec.length > 6 ? " …" : ""}<br>${open.length} open items tracked`;
+    q("#gl-dec").title = dec.map(x => `${x.id}: ${x.item}`).join("\n");
+  }
+  tick(); inbox();
+  setInterval(tick, 120000); setInterval(inbox, 600000);
+  // quick nav: highlight the section in view
+  const links = [...document.querySelectorAll("#qnav a")];
+  addEventListener("scroll", () => { let on = null, best = -Infinity;   // the section whose top passed most recently
+    links.forEach(a => { const t = document.querySelector(a.getAttribute("href")), y = t && t.offsetParent !== null ? t.getBoundingClientRect().top : null;
+      if (y != null && y < 120 && y > best) { best = y; on = a; } });
+    links.forEach(a => a.classList.toggle("on", a === on)); }, { passive: true });
+})();
+</script>
+
 <script>
 // Shared helpers (owner 2026-10-21): one cached fetch per URL per page load, a quote-aware CSV reader and a per-setup
 // summary of one account's session from reports/<date>.csv. Used by the "Last session" columns, the scorecard and the
@@ -224,7 +312,7 @@ window.MCF = window.MCF || {};
   <div class="msg" id="lv-msg">Live data comes from the <code>mcf-data</code> branch of misiti15/MCF and refreshes every minute (GitHub may cache it for up to 5 minutes).
     Raw file: <a href="https://github.com/misiti15/MCF/blob/mcf-data/status.json" target="_blank" rel="noopener">status.json</a></div>
   <div class="tiles" id="lv-tiles"></div>
-  <div class="card"><h2>Changes for the next session</h2><div class="sub" id="lv-chg-when"></div>
+  <div class="card" id="chg-card"><h2>Changes for the next session</h2><div class="sub" id="lv-chg-when"></div>
     <div class="tablewrap" id="lv-chg"><div class="empty">Loading the change ledger…</div></div>
     <div class="note">From <code>research/ledger.jsonl</code> on the trading branch, re-read every 5 minutes. A change counts for the session that follows its merge; owner-directed mid-session changes count for the day they landed. Weekends are skipped, market holidays are not.</div></div>
   <div class="grid2">
@@ -1067,6 +1155,49 @@ window.MCF = window.MCF || {};
   });
   load();
   setInterval(load, 600000);
+})();
+</script>
+<script>
+// Card headers (owner 2026-10-21): one line on what each card tells you, and a Hide / Show toggle on every card whose
+// state is remembered per viewer (browser storage; the page works the same without it). Nothing is removed.
+(() => {
+  const WHY = [
+    ["Changes for the next session", "What changes in trading from the next session, and what you should see."],
+    ["vs MarcoFlow", "Is this account doing better or worse than the old system's paper record?"],
+    ["Open MCF positions", "What this account holds right now and how it is doing."],
+    ["Signals today", "Every signal today and whether it was traded, skipped or shadowed."],
+    ["Why signals were skipped", "Which rules blocked signals today, and today's closed trades."],
+    ["Day by day", "One line per session: is this account trending up or down?"],
+    ["Setups and their status", "Which setups this account runs and what their backtest expected."],
+    ["Demoted from Primary", "How the setups moved out of Primary are doing in Testing 1."],
+    ["Setup leaderboard", "Which setups earn their place, all accounts merged. Click a row for its details."],
+    ["Generated setups leaderboard", "How the machine-generated setups are doing live. Click a row for details."],
+    ["New setup pipeline", "Where each new setup stands: backtest, replay, live."],
+    ["Scorecard", "This account's last 4 sessions per setup next to the backtest. Click a row for details."],
+    ["Playing time", "Does every setup get enough chances to trade?"],
+    ["Generator Lab", "Is the Setup Generator finding better setups over time?"],
+    ["Return since start", "Long-hold book vs SPY, the backtest replay and the equal-weight universe."],
+    ["Holdings", "What the long-hold book owns now."],
+    ["Last sessions", "Long-hold day by day, with tracking against the backtest replay."],
+  ];
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem("mcf.cards") || "{}") || {}; } catch (_) { saved = {}; }
+  const save = () => { try { localStorage.setItem("mcf.cards", JSON.stringify(saved)); } catch (_) {} };
+  document.querySelectorAll("main .card").forEach(card => {
+    const h = card.querySelector(":scope > h2:first-child"); if (!h || card.id === "glance") return;
+    const title = h.textContent.replace(/\s+/g, " ").trim(), key = card.id || title.slice(0, 40);
+    const w = WHY.find(([k]) => title.includes(k));
+    if (w && !card.querySelector(":scope > .why")) h.insertAdjacentHTML("afterend", `<div class="why">${w[1]}</div>`);
+    const b = document.createElement("button"); b.className = "ctog"; b.type = "button";
+    const set = c => { card.classList.toggle("collapsed", c); b.textContent = c ? "Show" : "Hide"; b.setAttribute("aria-expanded", String(!c));
+      b.title = c ? "Show this card" : "Hide this card (remembered in this browser)"; };
+    set(!!saved[key]);
+    b.onclick = ev => { ev.stopPropagation(); const c = !card.classList.contains("collapsed"); set(c); if (c) saved[key] = 1; else delete saved[key]; save(); };
+    h.appendChild(b);
+  });
+  // assignments banner: two lines until clicked (less noise; the full text stays one click away)
+  const asg = document.getElementById("lb-asg");
+  if (asg) { asg.classList.add("clamp"); asg.title = "Click to show or hide the full list"; asg.addEventListener("click", () => asg.classList.toggle("clamp")); }
 })();
 </script>
 </main><!-- Hover glossary (owner 2026-10-19): hover (or tap) any column header, tile label, metric name or verdict chip to see a

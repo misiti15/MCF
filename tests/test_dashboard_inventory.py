@@ -25,6 +25,7 @@ IDS = [
     # added 2026-10-21 (UI-DASH 2: replay band, pipeline card)
     "lb-replay-band", "pipe-card", "pipe-sum", "pipe-tab",
     "sd-panel", "sd-back",   # added 2026-10-21 (UI-DRILL)
+    "glance", "qnav", "chg-card", "gl-pl", "gl-streak", "gl-dec", "gl-alerts",   # added 2026-10-21 (UI-DASH 4)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -35,6 +36,7 @@ TITLES = [
     "Generated setups leaderboard — Setup Generator account", "Scorecard (last 4 sessions)", "Playing time per setup",
     "Generator Lab", "Long-hold (S6) — paper account", "Return since start", "Holdings", "Last sessions",
     "New setup pipeline",   # added 2026-10-21
+    "At a glance",          # added 2026-10-21
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -94,6 +96,7 @@ SOURCES = [
     # added 2026-10-21 (UI-DASH 1: per-account session reports)
     '"/reports/" + date + ".csv"',
     "../live/replay.json", "../live/pipeline.json",   # added 2026-10-21 (UI-DASH 2)
+    "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md",   # added 2026-10-21 (UI-DASH 4)
 ]
 
 
@@ -164,3 +167,16 @@ def test_setup_drilldown_panel():
     for needle in ('id="sd-panel"', '"Escape"', '"ArrowLeft"', '"ArrowRight"', "#setup=", "history.pushState",
                    "hashchange", "max-width: 640px", "Previous session", "Record — live · replay · backtest", "Daily R since start"):
         assert needle in HTML, needle
+
+
+def test_usability_strip_nav_and_collapse():
+    """UI-DASH 4 (owner 2026-10-21): at-a-glance strip, section quick-nav, collapsible cards remembered per viewer
+    (browser storage always inside try/catch), a one-line "what this tells you" per card."""
+    for a in ('href="#live">Today', 'href="#lb-card">Setups', 'href="#pipe-card">Research', 'href="#acc-all">Accounts',
+              'href="#chg-card">System'):
+        assert a in HTML, a
+    assert "flatten_failed" in HTML and "data_stale" in HTML
+    assert 'try { saved = JSON.parse(localStorage.getItem("mcf.cards")' in HTML
+    assert 'try { localStorage.setItem("mcf.cards"' in HTML
+    assert HTML.count("localStorage") == 2
+    assert 'class="why"' in HTML and ".card.collapsed" in HTML
