@@ -26,6 +26,7 @@ IDS = [
     "lb-replay-band", "pipe-card", "pipe-sum", "pipe-tab",
     "sd-panel", "sd-back",   # added 2026-10-21 (UI-DRILL)
     "glance", "qnav", "chg-card", "gl-pl", "gl-streak", "gl-dec", "gl-alerts",   # added 2026-10-21 (UI-DASH 4)
+    "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -53,6 +54,7 @@ COLS = Counter({
     # added 2026-10-21 (UI-DASH 2: replay band)
     '["rp_trades", "Replay trades"]': 1, '["rp_sessions", "Replay sessions"]': 1, '["rp_win_rate", "Replay win rate"]': 1,
     '["rp_avg_r", "Replay avg R"]': 1, '["rp_t", "Replay t"]': 1, '["rp_total_r", "Replay total R"]': 1,
+    '["best_reg", "Best conditions"]': 1,   # added 2026-10-22 (regime1022: market conditions)
 })
 
 # headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
@@ -97,6 +99,7 @@ SOURCES = [
     '"/reports/" + date + ".csv"',
     "../live/replay.json", "../live/pipeline.json",   # added 2026-10-21 (UI-DASH 2)
     "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md",   # added 2026-10-21 (UI-DASH 4)
+    "../live/regimes.json",   # added 2026-10-22 (regime1022)
 ]
 
 
@@ -157,7 +160,8 @@ def test_disclaimer_kept():
 
 def test_glossary_covers_new_columns():
     for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L", "Replay", "Replay trades",
-                 "Replay sessions", "Replay win rate", "Replay avg R", "Replay t", "Replay total R", "Stage"):
+                 "Replay sessions", "Replay win rate", "Replay avg R", "Replay t", "Replay total R", "Stage",
+                 "Best conditions", "Bull", "Bear", "Choppy", "Quiet"):
         assert f'"{term}":' in HTML, term
 
 
