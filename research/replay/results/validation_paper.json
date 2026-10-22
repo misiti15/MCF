@@ -2,6 +2,9 @@
  "primary": {
   "account": "primary",
   "sessions": [
+   "2026-10-07",
+   "2026-10-08",
+   "2026-10-09",
    "2026-10-12",
    "2026-10-13",
    "2026-10-14",
@@ -11,60 +14,63 @@
    "2026-10-20",
    "2026-10-21"
   ],
-  "replayed_setups": 19,
+  "replayed_setups": 24,
   "signals": {
-   "live": 482,
-   "replay": 422,
-   "matched": 421,
+   "live": 685,
+   "replay": 645,
+   "matched": 598,
    "match_rate_live": 0.873,
-   "match_rate_replay": 0.998,
+   "match_rate_replay": 0.927,
    "live_only_by_cause": {
-    "symbol not in replay universe": 60,
-    "other": 1
+    "symbol not in replay universe": 75,
+    "other": 12
    },
-   "live_only_in_universe": 1,
-   "replay_only": 1,
-   "replay_only_symbol_in_live_universe_but_no_live_signal": 1,
+   "live_only_in_universe": 12,
+   "replay_only": 47,
+   "replay_only_symbol_in_live_universe_but_no_live_signal": 47,
    "live_only_other_by_status": {
-    "skipped": 1
+    "submitted": 8,
+    "skipped": 4
    },
-   "status_agree": 0.86,
+   "status_agree": 0.848,
    "status_disagreements": {
-    "skipped: spread #bps > max  ->  submitted: ok": 12,
-    "submitted: ok  ->  skipped: spread #bps > max": 10,
+    "submitted: ok  ->  skipped: spread #bps > max": 17,
+    "skipped: spread #bps > max  ->  submitted: ok": 15,
+    "submitted: ok  ->  skipped: spread is #% of stop distance": 12,
+    "skipped: spread is #% of stop distance  ->  submitted: ok": 11,
     "submitted: ok  ->  skipped: twin held": 10,
-    "submitted: ok  ->  skipped: spread is #% of stop distance": 8,
+    "submitted: ok  ->  skipped: already in symbol": 9,
     "skipped: lot cap  ->  submitted: ok": 7,
-    "skipped: spread is #% of stop distance  ->  submitted: ok": 5,
-    "submitted: ok  ->  skipped: not shortable/ETB": 3,
-    "skipped: already in symbol  ->  submitted: ok": 2,
-    "skipped: not shortable/ETB  ->  submitted: ok": 2
+    "submitted: ok  ->  skipped: not shortable/ETB": 4,
+    "skipped: not shortable/ETB  ->  submitted: ok": 3,
+    "skipped: already in symbol  ->  submitted: ok": 3
    },
-   "live_in_universe": 422,
-   "live_submitted_in_universe": 271,
-   "replay_submitted": 268
+   "live_in_universe": 610,
+   "live_submitted_in_universe": 398,
+   "replay_submitted": 414
   },
   "trades": {
-   "live": 288,
-   "replay": 268,
-   "matched": 240,
-   "match_rate_live": 0.833,
-   "match_rate_replay": 0.896,
-   "entry_diff_bps_median": -0.05,
-   "entry_diff_bps_mean_abs": 9.33,
-   "exit_diff_bps_median": -0.65,
-   "exit_diff_bps_mean_abs": 6.36,
-   "r_diff_mean": -0.024,
-   "r_diff_median": -0.014,
-   "r_diff_mean_abs": 0.124,
-   "same_exit_reason": 0.996,
-   "matched_live_r": -29.42,
-   "matched_replay_r": -35.15,
+   "live": 422,
+   "replay": 414,
+   "matched": 338,
+   "match_rate_live": 0.801,
+   "match_rate_replay": 0.816,
+   "entry_diff_bps_median": -0.19,
+   "entry_diff_bps_mean_abs": 9.53,
+   "exit_diff_bps_median": -0.8,
+   "exit_diff_bps_mean_abs": 6.87,
+   "r_diff_mean": -0.006,
+   "r_diff_median": -0.015,
+   "r_diff_mean_abs": 0.128,
+   "same_exit_reason": 0.991,
+   "matched_live_r": -49.65,
+   "matched_replay_r": -51.85,
    "exit_reasons": {
-    "stop -> stop": 93,
-    "target -> target": 80,
-    "flatten -> flatten": 66,
-    "stop -> target": 1
+    "stop -> stop": 134,
+    "target -> target": 107,
+    "flatten -> flatten": 94,
+    "stop -> target": 2,
+    "flatten -> target": 1
    }
   },
   "per_setup": [
@@ -88,18 +94,18 @@
    },
    {
     "setup": "MF1-945-flowsell-vwapup",
-    "live_trades": 18,
-    "live_avg_r": -0.091,
-    "live_total_r": -1.64,
-    "replay_trades": 17,
-    "replay_avg_r": 0.005,
-    "replay_total_r": 0.09
+    "live_trades": 24,
+    "live_avg_r": -0.039,
+    "live_total_r": -0.94,
+    "replay_trades": 23,
+    "replay_avg_r": 0.221,
+    "replay_total_r": 5.09
    },
    {
     "setup": "MF2-open-rsimidhi-flowsell",
-    "live_trades": 3,
-    "live_avg_r": -1.142,
-    "live_total_r": -3.43,
+    "live_trades": 4,
+    "live_avg_r": -1.108,
+    "live_total_r": -4.43,
     "replay_trades": 3,
     "replay_avg_r": -1.111,
     "replay_total_r": -3.33
@@ -115,12 +121,12 @@
    },
    {
     "setup": "MF3-open-flowsell-rsi5hi",
-    "live_trades": 21,
-    "live_avg_r": -0.095,
-    "live_total_r": -1.98,
-    "replay_trades": 12,
-    "replay_avg_r": 0.088,
-    "replay_total_r": 1.06
+    "live_trades": 29,
+    "live_avg_r": -0.069,
+    "live_total_r": -2.01,
+    "replay_trades": 20,
+    "replay_avg_r": 0.074,
+    "replay_total_r": 1.48
    },
    {
     "setup": "MF3-open-flowsell-rsi5hi-FD",
@@ -133,12 +139,12 @@
    },
    {
     "setup": "MF4-h40-open-flowsell",
-    "live_trades": 15,
-    "live_avg_r": 0.265,
-    "live_total_r": 3.97,
-    "replay_trades": 15,
-    "replay_avg_r": 0.241,
-    "replay_total_r": 3.62
+    "live_trades": 21,
+    "live_avg_r": 0.07,
+    "live_total_r": 1.48,
+    "replay_trades": 18,
+    "replay_avg_r": 0.105,
+    "replay_total_r": 1.89
    },
    {
     "setup": "MF4-h40-open-flowsell-FD",
@@ -151,39 +157,39 @@
    },
    {
     "setup": "MF5-flowsell-vwapup-rsi5hi",
-    "live_trades": 18,
-    "live_avg_r": -0.004,
-    "live_total_r": -0.07,
-    "replay_trades": 28,
-    "replay_avg_r": -0.285,
-    "replay_total_r": -7.99
+    "live_trades": 31,
+    "live_avg_r": -0.071,
+    "live_total_r": -2.2,
+    "replay_trades": 36,
+    "replay_avg_r": -0.32,
+    "replay_total_r": -11.53
    },
    {
     "setup": "NS1-rsidip-rsi5pop-long",
-    "live_trades": 5,
-    "live_avg_r": -0.24,
-    "live_total_r": -1.2,
-    "replay_trades": 5,
-    "replay_avg_r": -0.207,
-    "replay_total_r": -1.03
+    "live_trades": 8,
+    "live_avg_r": 0.03,
+    "live_total_r": 0.24,
+    "replay_trades": 8,
+    "replay_avg_r": 0.05,
+    "replay_total_r": 0.4
    },
    {
     "setup": "NS2-sma50break-overbought-short",
-    "live_trades": 52,
-    "live_avg_r": -0.5,
-    "live_total_r": -26.01,
-    "replay_trades": 47,
-    "replay_avg_r": -0.464,
-    "replay_total_r": -21.8
+    "live_trades": 54,
+    "live_avg_r": -0.453,
+    "live_total_r": -24.46,
+    "replay_trades": 48,
+    "replay_avg_r": -0.435,
+    "replay_total_r": -20.88
    },
    {
     "setup": "NS3-failed-vwap-reclaim-short",
-    "live_trades": 1,
-    "live_avg_r": -1.093,
-    "live_total_r": -1.09,
-    "replay_trades": 1,
-    "replay_avg_r": -1.021,
-    "replay_total_r": -1.02
+    "live_trades": 9,
+    "live_avg_r": -0.326,
+    "live_total_r": -2.94,
+    "replay_trades": 11,
+    "replay_avg_r": -0.377,
+    "replay_total_r": -4.15
    },
    {
     "setup": "NS3-failed-vwap-reclaim-short-FD",
@@ -196,21 +202,21 @@
    },
    {
     "setup": "NS4-pm-vwap-reclaim-oversold-short",
-    "live_trades": 14,
-    "live_avg_r": 0.295,
-    "live_total_r": 4.13,
-    "replay_trades": 12,
-    "replay_avg_r": 0.271,
-    "replay_total_r": 3.26
+    "live_trades": 16,
+    "live_avg_r": 0.265,
+    "live_total_r": 4.25,
+    "replay_trades": 13,
+    "replay_avg_r": 0.397,
+    "replay_total_r": 5.16
    },
    {
     "setup": "NS5-sma50-flush-oversold-long",
-    "live_trades": 9,
-    "live_avg_r": -0.118,
-    "live_total_r": -1.06,
-    "replay_trades": 8,
-    "replay_avg_r": -0.331,
-    "replay_total_r": -2.65
+    "live_trades": 13,
+    "live_avg_r": 0.024,
+    "live_total_r": 0.32,
+    "replay_trades": 13,
+    "replay_avg_r": -0.086,
+    "replay_total_r": -1.12
    },
    {
     "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
@@ -238,27 +244,72 @@
     "replay_trades": 2,
     "replay_avg_r": -1.178,
     "replay_total_r": -2.36
+   },
+   {
+    "setup": "exhaustion_short",
+    "live_trades": 22,
+    "live_avg_r": -0.221,
+    "live_total_r": -4.86,
+    "replay_trades": 21,
+    "replay_avg_r": -0.157,
+    "replay_total_r": -3.29
+   },
+   {
+    "setup": "heat_fade_long",
+    "live_trades": 17,
+    "live_avg_r": -0.163,
+    "live_total_r": -2.77,
+    "replay_trades": 17,
+    "replay_avg_r": -0.313,
+    "replay_total_r": -5.32
+   },
+   {
+    "setup": "heat_fade_short",
+    "live_trades": 35,
+    "live_avg_r": -0.401,
+    "live_total_r": -14.03,
+    "replay_trades": 34,
+    "replay_avg_r": -0.392,
+    "replay_total_r": -13.34
+   },
+   {
+    "setup": "intraday_momentum",
+    "live_trades": 0,
+    "live_avg_r": null,
+    "live_total_r": 0.0,
+    "replay_trades": 10,
+    "replay_avg_r": -0.128,
+    "replay_total_r": -1.28
+   },
+   {
+    "setup": "orb20_a",
+    "live_trades": 7,
+    "live_avg_r": 0.097,
+    "live_total_r": 0.68,
+    "replay_trades": 19,
+    "replay_avg_r": 0.075,
+    "replay_total_r": 1.43
    }
   ],
   "system": {
-   "live_total_r": -43.75,
-   "replay_total_r": -47.61,
-   "live_avg_r": -0.152,
-   "replay_avg_r": -0.178,
-   "live_trades": 288,
-   "replay_trades": 268
+   "live_total_r": -67.05,
+   "replay_total_r": -66.61,
+   "live_avg_r": -0.159,
+   "replay_avg_r": -0.161,
+   "live_trades": 422,
+   "replay_trades": 414
   },
   "system_in_universe": {
-   "live_trades": 271,
-   "live_total_r": -43.02,
-   "live_avg_r": -0.159,
-   "replay_trades": 268,
-   "replay_total_r": -47.61,
-   "replay_avg_r": -0.178
+   "live_trades": 398,
+   "live_total_r": -64.36,
+   "live_avg_r": -0.162,
+   "replay_trades": 414,
+   "replay_total_r": -66.61,
+   "replay_avg_r": -0.161
   },
-  "sec_per_session": 200.7,
+  "sec_per_session": 224.8,
   "fast_check": {
-   "samples": 192,
+   "samples": 264,
    "frame_diff": 0,
    "mask_diff": 0,
    "rvol_diff": 0
