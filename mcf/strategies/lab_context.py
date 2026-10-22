@@ -8,13 +8,16 @@ that bar's close:
   qqq_fo        the same for QQQ
   breadth       share of the universe whose 5-minute close is above its own session VWAP at that bar
   breadth_open  share of the universe whose 5-minute close is above its own open of the day at that bar
+  qqq_vwap      QQQ's 5-minute close vs its own session VWAP, in % ((close - vwap) / vwap x 100; VWAP of the 5-minute
+                typical price (h+l+c)/3 weighted by volume since 09:30) - the QQQ frame `vwapDistPct` at the same bar
+                (owner 2026-10-22 S1, research/bdi/st7_1022: ST7Q fires only while qqq_vwap <= 0)
 
 These are the frame definitions the swarm1017 near-misses were scored with: spy_fo / qqq_fo are the SPY / QQQ frame
-`fromOpen` at the same (date, tod); breadth is the mean of `vwapDistPct > 0` (breadth_open: `fromOpen > 0`) over the
+`fromOpen` at the same (date, tod); qqq_vwap is the QQQ frame `vwapDistPct` at the same (date, tod); breadth is the mean of `vwapDistPct > 0` (breadth_open: `fromOpen > 0`) over the
 symbols that have a frame row at that (date, tod) - mcf.research.heat.heat_frame on RTH 5-minute bars.
 
 Universe: live, every symbol the runner polls (DayContext.peers = the poll's bars; SPY / QQQ are added to the poll
-when a setup asks for spy_fo / qqq_fo); in the backtester, every symbol of the session (Backtester peers); in the
+when a setup asks for spy_fo / qqq_fo / qqq_vwap); in the backtester, every symbol of the session (Backtester peers); in the
 2-year history, the lab universe (`context_from_frames` over the frames, research/history2y/build_frames.py --context).
 
 Point-in-time: a bar's values use only 1-minute bars inside that or earlier 5-minute bars, so the full-day backtest
@@ -30,7 +33,8 @@ import pandas as pd
 
 INDEX_COLS = {"spy_fo": "SPY", "qqq_fo": "QQQ"}
 BREADTH_COLS = ("breadth", "breadth_open")
-CONTEXT_COLS = (*INDEX_COLS, *BREADTH_COLS)
+INDEX_VWAP_COLS = {"qqq_vwap": "QQQ"}   # owner 2026-10-22 (S1): index close vs its session VWAP, %
+CONTEXT_COLS = (*INDEX_COLS, *BREADTH_COLS, *INDEX_VWAP_COLS)
 
 _CACHE: dict = {}
 
@@ -50,7 +54,8 @@ def parse_context(spec) -> tuple[str, ...]:
 
 def context_symbols(cols) -> set[str]:
     """Index symbols the runner must poll for these columns."""
-    return {INDEX_COLS[c] for c in cols if c in INDEX_COLS}
+    idx = {**INDEX_COLS, **INDEX_VWAP_COLS}
+    return {idx[c] for c in cols if c in idx}
 
 
 def _bucket_frame(peers: dict) -> pd.DataFrame:
@@ -101,6 +106,20 @@ def _index_fo(bars: pd.DataFrame | None) -> pd.Series:
     return (d5["close"] / o - 1) * 100
 
 
+def _index_vwap(bars: pd.DataFrame | None) -> pd.Series:
+    """Index 5-minute close vs its session VWAP in %, exactly as mcf.research.heat.heat_frame builds `vwapDistPct`."""
+    if bars is None or len(bars) == 0:
+        return pd.Series(dtype=float)
+    from ..data.bars import resample
+
+    d5 = resample(bars, "5min")
+    day = pd.Series(d5.index.date, index=d5.index)
+    c, v = d5["close"], d5["volume"]
+    typ = (d5["high"] + d5["low"] + c) / 3
+    vw = (typ * v).groupby(day).cumsum() / v.groupby(day).cumsum().replace(0, np.nan)
+    return (c - vw) / vw * 100
+
+
 def context_table(peers: dict | None, cols) -> pd.DataFrame:
     """Context columns per 5-minute bar start (index), from today's 1-minute bars of every peer. Cached per poll /
     session: the key is the peers' identity-free state (symbol count and latest bar), so every lab setup and symbol of
@@ -117,7 +136,12 @@ def context_table(peers: dict | None, cols) -> pd.DataFrame:
         if k not in _CACHE:
             if len(_CACHE) > 64:
                 _CACHE.clear()
-            _CACHE[k] = _breadth(peers) if c in BREADTH_COLS else _index_fo(peers.get(INDEX_COLS[c]))
+            if c in BREADTH_COLS:
+                _CACHE[k] = _breadth(peers)
+            elif c in INDEX_VWAP_COLS:
+                _CACHE[k] = _index_vwap(peers.get(INDEX_VWAP_COLS[c]))
+            else:
+                _CACHE[k] = _index_fo(peers.get(INDEX_COLS[c]))
         v = _CACHE[k]
         out[c] = v[c] if isinstance(v, pd.DataFrame) else v
     return pd.DataFrame(out)
@@ -145,8 +169,8 @@ def context_from_frames(df: pd.DataFrame) -> pd.DataFrame:
     t = base.assign(breadth=np.where(np.isfinite(vd), (vd > 0).astype(float), np.nan),
                     breadth_open=np.where(np.isfinite(fo), (fo > 0).astype(float), np.nan))
     out = t.groupby(["date", "tod"])[list(BREADTH_COLS)].mean()
-    for c, s in INDEX_COLS.items():
+    for c, s, x in [*((c, s, fo) for c, s in INDEX_COLS.items()), *((c, s, vd) for c, s in INDEX_VWAP_COLS.items())]:
         m = sym == s
-        ser = pd.Series(fo[m], index=pd.MultiIndex.from_arrays([base["date"][m], base["tod"][m]]))
+        ser = pd.Series(x[m], index=pd.MultiIndex.from_arrays([base["date"][m], base["tod"][m]]))
         out[c] = ser[~ser.index.duplicated()].reindex(out.index)
     return out[list(CONTEXT_COLS)].reset_index()

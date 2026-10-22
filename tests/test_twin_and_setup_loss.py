@@ -155,7 +155,12 @@ def test_twin_groups_wired_from_testing2_config(monkeypatch):
         "LD-ST2": {"LD3-st2-idxturn-t05s1-long", "LD5-st2-breadthup-t05s1-long"},
         "LD-NS1": {"LD1-ns1-breadthup-t05s1-long", "LD7-ns1-idxturn-holdtr-long"},
         "LD-SPXL": {"LD6-spy-dip020atr-breadthturn-spxl-holdtr-long", "LD8-spy-dip030-breadthturn-spxl-holdtr-long"},
+        "NS3-T2": {"NS3V1-am-widestop-short", "NS3-failed-vwap-reclaim-short-FD"},   # owner 2026-10-22 (V1)
     }
     _hold(rm, "SPXL", ("LD6-spy-dip020atr-breadthturn-spxl-holdtr-long", 1))
     assert rm.check(Signal("SPXL", "LD8-spy-dip030-breadthturn-spxl-holdtr-long", 1, 10, stop=53.0), 54.0) \
         == (False, "twin held")
+    # owner 2026-10-22 (V1): NS3V1 and NS3-FD never hold the same symbol in Testing 2; each may add its own refire lot
+    _hold(rm, "XYZ", ("NS3V1-am-widestop-short", -1))
+    assert rm.check(Signal("XYZ", "NS3-failed-vwap-reclaim-short-FD", -1, 10, stop=55.0), 54.0) == (False, "twin held")
+    assert rm.check(Signal("XYZ", "NS3V1-am-widestop-short", -1, 12, stop=55.0), 54.0)[0]

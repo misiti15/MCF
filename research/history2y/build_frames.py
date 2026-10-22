@@ -11,7 +11,7 @@ Read them only through research/history2y/lib.py (refuses the locked block witho
 Lab context (opt-in, 2026-10-17, Q8): `--context` builds, after the frames, one point-in-time table per month
   research/history2y/data/context/month=YYYY-MM.parquet        (locked months: data/locked_context/, and only with
                                                                 MCF_HIST_ALLOW_LOCKED=1, like the frames themselves)
-with date, tod, spy_fo, qqq_fo, breadth, breadth_open (mcf.strategies.lab_context.context_from_frames over the lab
+with date, tod, spy_fo, qqq_fo, breadth, breadth_open, qqq_vwap (mcf.strategies.lab_context.context_from_frames over the lab
 universe = every frame row at that date and bar close; the same definitions LabStrategy `context:` uses live).
 lib.load_month(month, context=True) joins it on (date, tod).
 
@@ -94,7 +94,7 @@ def build_context(months: list[str] | None = None) -> int:
     sys.path.insert(0, str(ROOT / "research" / "history2y"))
     import lib  # noqa: E402
 
-    from mcf.strategies.lab_context import context_from_frames
+    from mcf.strategies.lab_context import CONTEXT_COLS, context_from_frames
 
     todo = months if months is not None else lib.months() + (lib.months(locked=True) if lib._allow_locked() else [])
     n = 0
@@ -102,7 +102,7 @@ def build_context(months: list[str] | None = None) -> int:
         df = lib.load_month(m, columns=["symbol", "date", "tod", "fromOpen", "vwapDistPct"])
         out = context_from_frames(df)
         out["date"] = out["date"].astype(str)
-        for c in ("spy_fo", "qqq_fo", "breadth", "breadth_open"):
+        for c in CONTEXT_COLS:   # spy_fo, qqq_fo, breadth, breadth_open, qqq_vwap (2026-10-22)
             out[c] = out[c].astype("float32")
         root = DATA / ("locked_context" if m in lib.LOCKED_MONTHS else "context")
         root.mkdir(parents=True, exist_ok=True)

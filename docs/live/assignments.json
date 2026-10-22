@@ -18,7 +18,6 @@
   "testing": [
    "CWT05-flush-m05-v3-long",
    "CWT12-coil-k6-long",
-   "CWT14-failbrk-pdh-p10-short",
    "CWT14-failbrk-pdl-p05-long",
    "IDX1-qqq100-0955-TQQQ-hold",
    "IDX1-qqq100-0955-TQQQ-trail",
@@ -43,6 +42,7 @@
    "ST5-pdbrkup-short-mid-t05s1-FD",
    "ST6-volspikeup-short-mid-t1s1-FD",
    "ST7-rsi50dn-long-pm-t1s1-FD",
+   "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
    "ST8-volspikedn-long-pm-t1s1-FD",
    "exhaustion_short",
    "exhaustion_short-FD",
@@ -93,6 +93,7 @@
    "NM-RWR4-ns2-up3-qqqup-slopedn-short",
    "NM1-cwt09-g10-vwaploss-short",
    "NS3-failed-vwap-reclaim-short-FD",
+   "NS3V1-am-widestop-short",
    "NS5-sma50-flush-oversold-long-FD",
    "RW1-gapdn-bounce-flowsell-short-FD",
    "RW4-ns3-adv150-short-FD",
@@ -148,6 +149,7 @@
    "CWT14-failbrk-orl-p10-lowvol-long",
    "CWT14-failbrk-pdh-p05-lowvol-short",
    "CWT14-failbrk-pdh-p10-lowvol-short",
+   "CWT14-failbrk-pdh-p10-short",
    "LIQ-orl-sweep-open15-s25-long",
    "MF1-945-flowsell-vwapup-FD",
    "NS2-sma50break-overbought-short",
@@ -365,11 +367,11 @@
   },
   "CWT14-failbrk-pdh-p10-short": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-22 16:00 ET",
    "from": [
-    "testing2"
+    "testing"
    ]
   },
   "CWT14-failbrk-pdl-p05-long": {
@@ -1052,6 +1054,13 @@
     "primary"
    ]
   },
+  "NS3V1-am-widestop-short": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-10-22 16:00 ET",
+   "from": null
+  },
   "NS4-pm-vwap-reclaim-oversold-short": {
    "accounts": [
     "primary"
@@ -1236,6 +1245,13 @@
    "since": null,
    "from": null
   },
+  "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD": {
+   "accounts": [
+    "testing"
+   ],
+   "since": "2026-10-22 16:00 ET",
+   "from": null
+  },
   "ST8-volspikedn-long-pm-t1s1-FD": {
    "accounts": [
     "testing"
@@ -1322,13 +1338,27 @@
   }
  },
  "last_change": {
-  "at": "2026-10-22 07:53 ET",
+  "at": "2026-10-22 16:00 ET",
   "changes": [
    {
-    "setup": "RW6G1-ns2-up3-vwap2sd-short",
+    "setup": "CWT14-failbrk-pdh-p10-short",
     "from": [
-     "primary"
+     "testing"
     ],
+    "to": [
+     "graveyard"
+    ]
+   },
+   {
+    "setup": "NS3V1-am-widestop-short",
+    "from": [],
+    "to": [
+     "testing2"
+    ]
+   },
+   {
+    "setup": "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
+    "from": [],
     "to": [
      "testing"
     ]
