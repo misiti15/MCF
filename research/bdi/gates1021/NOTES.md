@@ -1,3 +1,5 @@
+> **CORRECTION 2026-10-22 (research/bdi/regime1022):** the "prior-session SPY" input used here was the day's own close-to-close move (lookahead), not the prior day. Re-scored with the real prior day, all six U7 finalists fail (t 0.04-2.17 vs bar 3.63) and the "stable up-prior-day" finding disappears. Decision G1 is withdrawn (R1). The findings below that rely on U7 or prior-day SPY are void.
+
 # gates1021: why NS3-FD and L3-FD lost on 2026-10-21, and a direction check-gate layer (owner request 2026-10-21)
 
 *Educational only - not financial advice. Unless a line says "paper" or "live", the numbers are backtests on the
