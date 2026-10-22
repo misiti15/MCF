@@ -169,7 +169,9 @@ class SimTradingClient:
         q = abs(float(o.qty)) - abs(float(o.filled_qty or 0))
         fp = round(self._cost(px, o.symbol, side, kind), 6)
         o.filled_qty, o.filled_avg_price, o.status = str(abs(float(o.qty))), str(fp), "filled"
-        o.filled_at = (self.mkt.bar_time(k) + pd.Timedelta(seconds=1)).tz_convert("UTC").to_pydatetime()
+        o._fill_min = k
+        t = self.clock.now if self.mkt.minute(self.clock.now) == k else self.mkt.bar_time(k) + pd.Timedelta(seconds=1)
+        o.filled_at = t.tz_convert("UTC").to_pydatetime()
         cur = self.pos.get(o.symbol, 0.0)
         new = cur + side * q
         if cur == 0 or np.sign(cur) == side:                       # opening / adding: average entry price
@@ -247,8 +249,7 @@ class SimTradingClient:
                 if bar is None:
                     continue
                 par = o._parent
-                entry_bar = par is not None and par.filled_at is not None and \
-                    self.mkt.minute(pd.Timestamp(par.filled_at).tz_convert(NY)) == k
+                entry_bar = par is not None and getattr(par, "_fill_min", None) == k
                 self._try(o, k, bar, entry_bar)
             self.done_min = k
 
@@ -417,10 +418,25 @@ class SimTradingClient:
 
 class SimDataClient:
     """StockHistoricalDataClient stand-in for the runner's quote checks: the latest quote is the last completed bar's
-    close +- half a spread (spread = max(1 cent, spread_bps of the price)), stamped one second before the poll."""
+    close +- half a spread, stamped one second before the poll. The spread is drawn (deterministically per symbol and
+    minute) from the spreads the live runner journaled for that symbol (data/replay/spreads.json, store.build_spreads;
+    median ~9 bps, a quarter above 18 bps), else max(1 cent, spread_bps of the price)."""
 
-    def __init__(self, clock: SimClock, market: SimMarket, spread_bps: float = 2.0):
+    def __init__(self, clock: SimClock, market: SimMarket, spread_bps: float = 2.0, spreads: dict | None = None):
         self.clock, self.mkt, self.spread_bps = clock, market, float(spread_bps)
+        self.spreads = spreads or None    # symbol -> live spreads (bps) to sample from; "_all" for other symbols
+
+    def _bps(self, sym: str, k: int) -> float:
+        """Spread for this symbol and minute: a deterministic draw from the symbol's live spreads (else all symbols'),
+        or the fixed spread_bps without a table."""
+        if not self.spreads:
+            return self.spread_bps
+        pool = self.spreads.get(sym) or self.spreads.get("_all")
+        if not pool:
+            return self.spread_bps
+        import zlib
+
+        return float(pool[zlib.crc32(f"{sym}|{self.mkt.day}|{k}".encode()) % len(pool)])
 
     def get_stock_latest_quote(self, req):
         syms = req.symbol_or_symbols
@@ -431,7 +447,7 @@ class SimDataClient:
             px = self.mkt.last_close(s, k)
             if px is None:
                 raise KeyError(s)
-            half = max(0.005, px * self.spread_bps / 2e4)
+            half = max(0.005, px * self._bps(s, k) / 2e4)
             out[s] = NS(bid_price=round(px - half, 4), ask_price=round(px + half, 4),
                         timestamp=(self.clock.now - timedelta(seconds=1)).tz_convert("UTC").to_pydatetime())
         return out

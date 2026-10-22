@@ -29,6 +29,9 @@ from ..strategies import setups as S
 from ..strategies.base import DayContext
 
 
+_SHARED: dict = {}     # (session, symbol) -> (frame, bucket ends, priors object): reused by the next account
+
+
 class FrameProvider(dict):
     """Stands in for setups._LAB_FRAMES: (symbol, date, n bars, last bar) -> frame of the completed 5-minute bars."""
 
@@ -82,6 +85,8 @@ class FastSession:
         self._pref: dict[tuple[str, int], pd.DataFrame] = {}
         self.mask_hits = self.mask_misses = 0
         self.dropped = self.kept = 0
+        self.rv: dict = {}
+        self.tod: dict[str, np.ndarray] = {}
 
     # ---------------------------------------------------------------- whole-session frames (built by the real code)
     def _ctx(self, sym) -> DayContext | None:
@@ -95,6 +100,10 @@ class FastSession:
         return self.ctx_full[sym]
 
     def frame(self, sym) -> pd.DataFrame | None:
+        g = _SHARED.get((str(self.today), sym))
+        if sym not in self.frames and g is not None and self.r.priors.get(sym) is g[2]:
+            self.frames[sym], self.ends[sym] = g[0], g[1]       # built for another account of this session
+            self.tod[sym] = g[0]["tod"].to_numpy()
         if sym not in self.frames:
             self.frames[sym] = None
             ctx = self._ctx(sym)
@@ -123,6 +132,10 @@ class FastSession:
                 if f is not None and len(f) == len(d5):
                     self.frames[sym] = f
                     self.ends[sym] = (d5.index + pd.Timedelta(minutes=5)).as_unit("ns").asi8
+                    self.tod[sym] = f["tod"].to_numpy()
+                    if len(_SHARED) > 6000:
+                        _SHARED.clear()
+                    _SHARED[(str(self.today), sym)] = (f, self.ends[sym], self.r.priors.get(sym))
         return self.frames[sym]
 
     def prefix_frame(self, sym, last_bar) -> pd.DataFrame | None:
@@ -167,25 +180,45 @@ class FastSession:
             if st.eligible(ctx):
                 return True
         sym = ctx.symbol
-        f = None
+        n = len(ctx.bars)
+        if n < 5 or n % 5:
+            return False                                         # every lab setup's eligible() needs n % 5 == 0
+        f = self.frame(sym)
+        if f is None:
+            return any(st.eligible(ctx) for st in self.lab)      # unknown here: let the real code decide
+        j = int(np.searchsorted(self.ends[sym], ctx.bars.index[-1].value + 60_000_000_000, side="right"))
+        if j == 0:
+            return False                                         # no completed 5-minute bar: generate() returns []
+        tod = self.tod[sym][j - 1]
         for st in self.lab:
             if getattr(st, "ticker_split", None) and not st.trades_symbol(sym):
                 continue
-            if not st.eligible(ctx):
-                continue
-            if f is None:
-                f = self.prefix_frame(sym, ctx.bars.index[-1])
-                if f is None:
-                    return True                                  # unknown here: let the real code decide
-            m = self.full_mask(st.name, sym)
-            j = len(f)
-            if m is None or len(m) < j:
-                return True
-            tod = int(f["tod"].iloc[j - 1])
             lo, hi = st.window or (950, 1500)
-            if m[j - 1] and max(950, lo) <= tod <= min(1500, hi):
+            if not max(950, lo) <= tod <= min(1500, hi):
+                continue
+            m = self.full_mask(st.name, sym)
+            if m is None or len(m) < j:
+                if st.eligible(ctx):
+                    return True
+                continue
+            if m[j - 1] and st.eligible(ctx):                    # a hit on the latest decision bar, and eligible
                 return True
         return False
+
+    # ---------------------------------------------------------------- rvol (cumulative volume / profile: causal)
+    def on_slice(self, sym: str, k: int, df, old=None):
+        """The feed hands out bars[:k] of `sym`: register it so DayContext.rvol() serves the session rvol's prefix."""
+        if old is not None:
+            _RVOL.pop(id(old), None)
+        full = self._rvol_full(sym)
+        if full is not None:
+            _RVOL[id(df)] = (df, full, k)
+
+    def _rvol_full(self, sym):
+        if sym not in self.rv:
+            ctx = self._ctx(sym)
+            self.rv[sym] = None if ctx is None else _ORIG_RVOL(ctx)
+        return self.rv[sym]
 
     def install(self):
         """Patch the module-level hooks and wrap this runner's lab modules and _contexts (one process, one session)."""
@@ -215,12 +248,17 @@ class FastSession:
             return keep
 
         self.r._contexts = contexts
+        _RVOL.clear()
+        _RVOL_FULL_OK[0] = not self.other
+        DayContext.rvol = _fast_rvol
         return self
 
     def uninstall(self):
         from ..backtest import engine
 
         S._LAB_FRAMES, engine.pinned_symbols = self._saved
+        DayContext.rvol = _ORIG_RVOL
+        _RVOL.clear()
         for st in self.lab:
             st.mod = getattr(st.mod, "_mod", st.mod)
 
@@ -230,7 +268,7 @@ class FastSession:
         compare them, and every lab setup's mask on them, with the served prefixes."""
         rng = np.random.default_rng(seed)
         syms = [s for s in self.frames if self.frames[s] is not None]
-        out = {"samples": 0, "frame_diff": 0, "mask_diff": 0, "examples": []}
+        out = {"samples": 0, "frame_diff": 0, "mask_diff": 0, "rvol_diff": 0, "examples": []}
         if not syms or not self.lab:
             return out
         saved = S._LAB_FRAMES
@@ -247,6 +285,12 @@ class FastSession:
                                  prev_low=c.prev_low, atr=c.atr, avg_dollar_volume=c.avg_dollar_volume,
                                  avg_cum_volume=c.avg_cum_volume, avg_move=c.avg_move, prior5=c.prior5, sma20=c.sma20,
                                  peers={s: x[x.index <= last] for s, x in self.bars.items()})
+                full_rv = self._rvol_full(sym)
+                if full_rv is not None and len(tb):
+                    a_rv = _ORIG_RVOL(ctx).to_numpy(float)
+                    if not np.allclose(a_rv, full_rv.iloc[: len(tb)].to_numpy(float), rtol=1e-12, equal_nan=True):
+                        out["rvol_diff"] += 1
+                    ctx._cache.pop("rvol", None)
                 S._LAB_FRAMES = {}
                 st = self.lab[0]
                 mod = st.mod
@@ -287,3 +331,22 @@ class FastSession:
         finally:
             S._LAB_FRAMES = saved
         return out
+
+
+_ORIG_RVOL = DayContext.rvol
+_RVOL: dict = {}      # id(bars prefix) -> (prefix, session rvol, k)
+_RVOL_FULL_OK = [False]
+
+
+def _fast_rvol(self):
+    """DayContext.rvol during a fast replay: the session series' first k values when the bars are a registered prefix
+    (cumulative volume / average cumulative volume at the same minute is causal), else the real method."""
+    if "rvol" not in self._cache:
+        e = _RVOL.get(id(self.bars))
+        if e is not None and e[0] is self.bars:
+            # only lab setups (they never read rvol) and the runner's ranking (rvol at bars 4 and 19, len > 19)
+            # read it, so past bar 19 the session series answers identically without a slice
+            self._cache["rvol"] = e[1] if (e[2] > 19 and _RVOL_FULL_OK[0]) else e[1].iloc[: e[2]]
+        else:
+            return _ORIG_RVOL(self)
+    return self._cache["rvol"]

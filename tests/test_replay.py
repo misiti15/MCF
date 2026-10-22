@@ -68,8 +68,8 @@ def test_synthetic_session_end_to_end_fast_equals_exact(tmp_path, side):
     bars, priors = _session()
     cfg = _cfg(tmp_path, side)
     shortable = {s: (True, True) for s in bars}
-    fast = harness.run_session(cfg, DAY, bars, priors, shortable=shortable, check=8, log=lambda m: None)
-    exact = harness.run_session(cfg, DAY, bars, priors, shortable=shortable, exact=True, log=lambda m: None)
+    fast = harness.run_session(cfg, DAY, bars, priors, spreads={}, shortable=shortable, check=8, log=lambda m: None)
+    exact = harness.run_session(cfg, DAY, bars, priors, spreads={}, shortable=shortable, exact=True, log=lambda m: None)
     sig, tr = fast["signals"], fast["trades"]
     assert len(sig) >= 6, sig                                    # 3 decision bars x 4 symbols (CCC may miss a bar)
     assert set(sig.status) <= {"submitted", "skipped", "shadow"}
@@ -78,7 +78,7 @@ def test_synthetic_session_end_to_end_fast_equals_exact(tmp_path, side):
     assert set(tr.exit_reason) <= {"stop", "target", "flatten", "trail", "timestop"}
     assert _key(fast) == _key(exact)                            # the fast path changes speed, not decisions
     chk = fast["stats"]["fast_check"]
-    assert chk["samples"] > 0 and chk["frame_diff"] == 0 and chk["mask_diff"] == 0
+    assert chk["samples"] > 0 and chk["frame_diff"] == chk["mask_diff"] == chk["rvol_diff"] == 0
     # entries at the open of the bar after the decision bar, with costs against us
     t0 = tr.iloc[0]
     k = int((pd.Timestamp(t0.entry_time).tz_convert(NY) - pd.Timestamp(f"{DAY} 09:30", tz=NY)).total_seconds() // 60)
@@ -93,8 +93,8 @@ def test_deterministic(tmp_path):
     bars, priors = _session()
     cfg = _cfg(tmp_path)
     sh = {s: (True, True) for s in bars}
-    a = harness.run_session(cfg, DAY, bars, priors, shortable=sh, check=0, log=lambda m: None)
-    b = harness.run_session(cfg, DAY, bars, priors, shortable=sh, check=0, log=lambda m: None)
+    a = harness.run_session(cfg, DAY, bars, priors, spreads={}, shortable=sh, check=0, log=lambda m: None)
+    b = harness.run_session(cfg, DAY, bars, priors, spreads={}, shortable=sh, check=0, log=lambda m: None)
     assert _key(a) == _key(b)
 
 

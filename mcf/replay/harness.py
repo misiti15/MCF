@@ -42,6 +42,7 @@ class ReplayFeed:
         self.bars = {s: b for s, b in day_bars.items() if s in set(runner.watchlist) and len(b)}
         self.ns = {s: b.index.as_unit("ns").asi8 for s, b in self.bars.items()}
         self.cache: dict[str, tuple[int, pd.DataFrame]] = {}
+        self.on_slice = None              # fast path: rvol registry
 
     def fetch(self, now: pd.Timestamp):
         cut = now.floor("1min")
@@ -53,8 +54,11 @@ class ReplayFeed:
                 continue
             old = self.cache.get(s)
             if old is None or old[0] != k:
-                old = (k, b.iloc[:k])
-                self.cache[s] = old
+                new = (k, b.iloc[:k])
+                self.cache[s] = new
+                if self.on_slice is not None:
+                    self.on_slice(s, k, new[1], None if old is None else old[1])
+                old = new
             out[s] = old[1]
         last_min = cut - pd.Timedelta(minutes=1)
         r = self.r
@@ -97,7 +101,7 @@ def shortable_flags() -> dict:
 
 def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, fills: str = "costs",
                 limit_fill: str = "through", exact: bool = False, check: int = 24, equity: float | None = None,
-                spread_bps: float = 2.0, shortable: dict | None = None, out_dir: str | Path | None = None,
+                spread_bps: float = 2.0, spreads: dict | None = None, shortable: dict | None = None, out_dir: str | Path | None = None,
                 log=print) -> dict:
     """Replay `day` for the account config `cfg` (already merged; strategies enabled as wanted). Returns a dict with
     signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given."""
@@ -120,7 +124,9 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
     strategies = build_strategies(cfg)
     fast = None
     with _patched(clock):
-        r = R.PaperRunner(cfg, strategies, priors, broker=broker, data_client=SimDataClient(clock, market, spread_bps))
+        spreads = store.load_spreads() if spreads is None else spreads
+        r = R.PaperRunner(cfg, strategies, priors, broker=broker,
+                          data_client=SimDataClient(clock, market, spread_bps, spreads or None))
         r._utcnow = lambda: clock.now.tz_convert("UTC")
         feed = ReplayFeed(r, bars)
         r.fetch = feed.fetch
@@ -128,6 +134,7 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
             from .fast import FastSession
 
             fast = FastSession(r, feed.bars, day).install()
+            feed.on_slice = fast.on_slice
         quiet = os.environ.get("MCF_REPLAY_VERBOSE") != "1"
         import contextlib
         import io

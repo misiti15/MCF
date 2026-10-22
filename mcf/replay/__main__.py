@@ -37,8 +37,13 @@ def parse_dates(spec: str) -> list:
     return [d for d in out if d in have]
 
 
+def _day(job: dict) -> list[dict]:
+    """One session for one or more accounts in one worker (the accounts share the session's feature frames)."""
+    return [_one({**job, "account": a}) for a in job["account"].split(",")]
+
+
 def _one(job: dict) -> dict:
-    """One session (a worker process): config -> inputs -> replay -> files."""
+    """One session and account: config -> inputs -> replay -> files."""
     from . import harness
 
     d = pd.Timestamp(job["day"]).date()
@@ -86,7 +91,8 @@ def cmd_run(a):
 
     days = parse_dates(a.dates)
     store.check_dates(days)
-    label = a.label or (f"{a.account}-{a.setup}" if a.setup else a.account) + ("-live" if a.as_live else "")
+    label = a.label or (f"{a.account.replace(',', '+')}-{a.setup}" if a.setup else a.account.replace(",", "+")) + \
+        ("-live" if a.as_live else "")
     out = Path(a.out or RUNS / label)
     jobs = [dict(day=str(d), account=a.account, as_live=a.as_live, setup=a.setup, module=a.module, alone=a.alone,
                  block=a.block, universe=a.universe, fills=a.fills, limit_fill=a.limit_fill, exact=a.exact,
@@ -95,25 +101,32 @@ def cmd_run(a):
     stats = []
     if a.jobs > 1:
         with get_context("fork").Pool(a.jobs, maxtasksperchild=4) as pool:
-            for st in pool.imap_unordered(_one, jobs):
-                stats.append(st)
-                print(_line(st), flush=True)
+            for sts in pool.imap_unordered(_day, jobs):
+                for st in sts:
+                    stats.append(st)
+                    print(_line(st), flush=True)
     else:
         for j in jobs:
-            stats.append(_one(j))
-            print(_line(stats[-1]), flush=True)
-    summ = aggregate(out / a.account)
-    summ.to_csv(out / f"{a.account}-summary.csv", index=False)
-    run = {"label": label, "account": a.account, "dates": [str(d) for d in days], "fills": a.fills,
-           "limit_fill": a.limit_fill, "as_live": a.as_live, "setup": a.setup, "module": a.module,
-           "wall_s": round(time.time() - t0, 1), "jobs": a.jobs,
-           "errors": [s for s in stats if "error" in s],
-           "sec_per_session": round(sum(s.get("seconds", 0) for s in stats) / max(1, len(stats)), 1),
-           "note": "Educational only - not financial advice."}
-    (out / f"{a.account}-run.json").write_text(json.dumps(run, indent=1, default=str))
-    print(summ.to_string(index=False))
-    print(f"{len(stats)} sessions, {run['sec_per_session']}s per session, wall {run['wall_s']}s; errors: "
-          f"{len(run['errors'])}")
+            for st in _day(j):
+                stats.append(st)
+                print(_line(st), flush=True)
+    for acct in a.account.split(","):
+        mine = [s for s in stats if s.get("account") == acct]
+        summ = aggregate(out / acct)
+        summ.to_csv(out / f"{acct}-summary.csv", index=False)
+        run = {"label": label, "account": acct, "dates": [str(d) for d in days], "fills": a.fills,
+               "limit_fill": a.limit_fill, "as_live": a.as_live, "setup": a.setup, "module": a.module,
+               "wall_s": round(time.time() - t0, 1), "jobs": a.jobs,
+               "errors": [s for s in mine if "error" in s],
+               "sec_per_session": round(sum(s.get("seconds", 0) for s in mine) / max(1, len(mine)), 1),
+               "fast_check": {k: sum((s.get("fast_check") or {}).get(k, 0) for s in mine)
+                              for k in ("samples", "frame_diff", "mask_diff", "rvol_diff")},
+               "note": "Educational only - not financial advice."}
+        (out / f"{acct}-run.json").write_text(json.dumps(run, indent=1, default=str))
+        print(f"== {acct}")
+        print(summ.to_string(index=False))
+        print(f"{len(mine)} sessions, {run['sec_per_session']}s per session, wall {run['wall_s']}s; errors: "
+              f"{len(run['errors'])}; fast-path check {run['fast_check']}")
     print("Educational only - not financial advice.")
 
 

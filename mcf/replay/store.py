@@ -397,6 +397,46 @@ def frozen_setups(d, branch: str = "origin/mcf-data") -> dict | None:
         return None
 
 
+def build_spreads(branches=("origin/mcf-data", "origin/mcf-data-testing", "origin/mcf-data-testing2",
+                             "origin/mcf-data-graveyard", "origin/mcf-data-gen")) -> Path:
+    """The live SIP quote spreads the runner journaled at decision time (signals.info spread_bps, every account) ->
+    data/replay/spreads.json {symbol: [bps, ...], "_all": [...]}: the replay's quote model samples from them."""
+    import json
+    import sqlite3
+    import subprocess
+    import tempfile
+
+    by: dict[str, list] = {}
+    for br in branches:
+        r = subprocess.run(["git", "-C", str(ROOT), "show", f"{br}:journal.db"], capture_output=True)
+        if r.returncode or not r.stdout:
+            continue
+        with tempfile.NamedTemporaryFile(suffix=".db") as f:
+            f.write(r.stdout)
+            f.flush()
+            con = sqlite3.connect(f.name)
+            rows = con.execute("SELECT symbol, info FROM signals WHERE info LIKE '%spread_bps%'").fetchall()
+            con.close()
+        for sym, info in rows:
+            try:
+                v = float(json.loads(info)["spread_bps"])
+            except (ValueError, KeyError, TypeError):
+                continue
+            by.setdefault(sym, []).append(v)
+    by["_all"] = sorted(v for k, x in by.items() for v in x)
+    p = STORE / "spreads.json"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(by))
+    return p
+
+
+def load_spreads() -> dict | None:
+    import json
+
+    p = STORE / "spreads.json"
+    return json.loads(p.read_text()) if p.exists() else None
+
+
 def main(argv=None):
     import argparse
 
