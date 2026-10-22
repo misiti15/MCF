@@ -71,7 +71,7 @@ strategies:
   L3-gap-slope-fromopen-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # demoted to Testing 1 2026-10-22 (owner L3-1); promotion = move
     type: lab
     module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
     min_adv: 0   # source had none (default 0)
@@ -393,7 +393,6 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
-    - L3-gap-slope-fromopen-FD   # promoted 2026-10-21
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
     - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
