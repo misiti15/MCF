@@ -24,7 +24,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | R1-R3 | regime1022 decisions: R1 withdraw G1 (lookahead), R2 no new daily stop (alt. B1b insurance), R3 demote NS3-FD (= N5) | owner | nightly suggestions | brief 2026-10-22 | R3 answered (= N5, demoted 2026-10-22); R1/R2 waiting on owner |
 | UI-REGIME | Leaderboard "Best conditions" column + drill-down by-condition table (docs/live/regimes.json, regime1022) | Claude | tests/test_regimes_json.py, tests/test_dashboard_inventory.py | 2026-10-22 | shipped 2026-10-22 (branch claude/charming-mccarthy-i3rhhr); refresh regimes.json when setups move (scripts/make_regimes_json.py) |
 | NS3-VAR | Thorough variant study of Big Loser VWAP Reclaim Fade (all day) to work in more market conditions (owner 2026-10-22) | BDI | research/bdi/ns3var1022 | brief 2026-10-22 | running |
-| CWT14-PDH-RW | Rework CWT14-failbrk-pdh-p10-short (Testing 1) with variants for something slightly more viable (owner 2026-10-22) | BDI | research/bdi/pdh1022 | brief 2026-10-22 | running |
+| CWT14-PDH-RW | Rework CWT14-failbrk-pdh-p10-short (Testing 1) with variants for something slightly more viable (owner 2026-10-22) | BDI | research/bdi/pdh1022 | brief 2026-10-22 | done 2026-10-22: 0 of 47 reworks pass the Testing bar or the merit rule (all negative in train and valid; best -0.038R vs parent -0.088R); no new setup; FYI in the 10-22 inbox. Suggest Graveyard at its rule-20 review |
 | UI-DATE | Dashboard "date started" column | Claude | — | deferred | deferred |
 | UI-LABEL | Setup labeling-system proposal | Claude | — | deferred | deferred |
 | HK-LEDGER | Ledger check speed-up (replay only entries with a patch) | Claude | — | housekeeping | queued |
