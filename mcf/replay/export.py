@@ -64,10 +64,13 @@ def replay_setups(runs: Path) -> dict:
             st.update(date=str(g.session.max()), **{"from": str(g.session.min())}, account=meta.get("account"),
                       fills=meta.get("fills"), limit_fill=meta.get("limit_fill"), run=meta.get("label"),
                       as_live=meta.get("as_live"), _mtime=mtime)
-            if n not in best or (mtime, st["sessions"]) > (best[n]["_mtime"], best[n]["sessions"]):
+            # the research-rule run (costs, trade-through) with the most sessions, then the newest
+            st["_rank"] = (meta.get("fills") == "costs" and meta.get("limit_fill") == "through", st["sessions"], mtime)
+            if n not in best or st["_rank"] > best[n]["_rank"]:
                 best[n] = st
     for v in best.values():
         v.pop("_mtime", None)
+        v.pop("_rank", None)
     return best
 
 
@@ -120,7 +123,7 @@ def backtest_expectations() -> dict[str, float]:
         return {}
 
 
-def agreement(replay_tr: pd.DataFrame, live: pd.DataFrame) -> dict:
+def agreement(replay_tr: pd.DataFrame, live: pd.DataFrame, universe: set | None = None) -> dict:
     """Replay vs live on the sessions both have: per setup and system-wide avg R, and a drift flag."""
     out = {}
     if not len(replay_tr) or not len(live):
@@ -128,6 +131,8 @@ def agreement(replay_tr: pd.DataFrame, live: pd.DataFrame) -> dict:
     days = set(replay_tr.session.astype(str)) & set(live.date.astype(str))
     a = replay_tr[replay_tr.session.astype(str).isin(days)]
     b = live[live.date.astype(str).isin(days)]
+    if universe is not None and "symbol" in b:
+        b = b[b.symbol.isin(universe)]           # only what the replay can see (its universe)
     for n in sorted(set(a.strategy) | set(b.strategy)):
         x, y = a[a.strategy == n], b[b.strategy == n]
         out[n] = _agree(x, y, len(days))
@@ -145,8 +150,17 @@ def _agree(x, y, days) -> dict:
     return d
 
 
+def _universe() -> set | None:
+    try:
+        from . import store
+
+        return set(store.symbols())
+    except Exception:
+        return None
+
+
 def export(runs: Path, out_dir: Path, live: pd.DataFrame | None = None, enabled: dict | None = None,
-           expected: dict | None = None) -> list[Path]:
+           expected: dict | None = None, universe: set | None = None) -> list[Path]:
     from .__main__ import load_run
 
     gen = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -155,16 +169,19 @@ def export(runs: Path, out_dir: Path, live: pd.DataFrame | None = None, enabled:
     enabled = enabled_setups() if enabled is None else enabled
     expected = backtest_expectations() if expected is None else expected
     rtr = []
-    for meta, acct_dir in _runs(runs):
-        if meta.get("as_live") and not meta.get("setup"):
-            tr, _ = load_run(acct_dir)
-            if len(tr):
-                rtr.append(tr.assign(account=meta.get("account")))
+    live_runs = [(m, d) for m, d in _runs(runs) if m.get("as_live") and not m.get("setup")]
+    for acct in sorted({m.get("account") for m, _ in live_runs}):
+        mine = [(m, d) for m, d in live_runs if m.get("account") == acct]
+        # replay vs live like for like: the paper-fill replay of the sessions as they were configured, if there is one
+        m, d = sorted(mine, key=lambda x: (x[0].get("fills") == "paper", x[1].stat().st_mtime))[-1]
+        tr, _ = load_run(d)
+        if len(tr):
+            rtr.append(tr.assign(account=acct))
     rtr = pd.concat(rtr, ignore_index=True) if rtr else pd.DataFrame()
     agree: dict = {}
     if len(rtr) and len(live):
         for acct, g in rtr.groupby("account"):
-            agree[acct] = agreement(g, live[live.account == acct])
+            agree[acct] = agreement(g, live[live.account == acct], universe if universe is not None else _universe())
     names = sorted(set(rep) | set(enabled) | (set(live.strategy) if len(live) else set()) | set(expected))
     pipe = {}
     for n in names:

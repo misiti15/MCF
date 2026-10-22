@@ -40,7 +40,7 @@ def test_export_writes_replay_and_pipeline(tmp_path):
                          "r_multiple": [0.9, -0.6, -1.0], "account": "testing2", "symbol": "X"})
     out = tmp_path / "docs"
     p1, p2 = export.export(runs, out, live=live, enabled={"A": ["testing2"], "B": ["testing2"]},
-                           expected={"NEW": 0.05, "OLD": 0.1})
+                           expected={"NEW": 0.05, "OLD": 0.1}, universe={"X"})
     rep = json.loads(p1.read_text())
     assert set(rep["setups"]) == {"A", "B", "NEW"} and "generated" in rep
     a = rep["setups"]["A"]
