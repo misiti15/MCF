@@ -231,7 +231,7 @@ reproduces that (matched-trade entry diff median ~0 bps).
 **(d) Regime.** The validation sessions were wide-range days: median open-to-close of the lab universe −0.29%, +0.75%,
 +0.22%, −0.13%, −0.10%, −0.32%, +1.28%, −1.02%, −0.51%, +1.06%, −0.13% (10-07..10-21; rule-19 cut points −0.23 / +0.21),
 i.e. 4 up, 4 down, 3 flat, with four ±1% days. The
-broad replay below compares the same setups across regimes and against the weeks before live trading began.
+broad replay (section 3) compares the same setups across regimes and against the weeks before live trading began.
 
 **Net:** backtest A → live E per signal/trade: Primary −0.090 → −0.159, Testing 1 −0.132 → −0.100, Testing 2
 −0.097 → −0.121. For Primary, the gate accounts for −0.055 of the −0.069 R gap, blocks for −0.04 more on the taken set,
@@ -242,7 +242,32 @@ the decomposition (which step costs what) is the robust part.
 
 ## 3. Broad replay (today's setups, 2026-09-01..2026-10-21, costs in)
 
-Primary and Testing 1 over 36 sessions: running at the time of writing; results are added below when complete.
+Today's Primary and Testing 1 setups (current configs, lab universe, production costs, trade-through limits) replayed
+over **36 sessions, 2026-09-01..2026-10-21** (`python -m mcf.replay run --account primary,testing --dates
+2026-09-01..2026-10-21 --jobs 3 --label broad`; `research/replay/broad.py` → results/broad.json). Testing 2 was left
+out (its current config replays at ~18 min per session; see Speed). This window contains the Sep 16 – Oct 5 holdout,
+which is no longer clean (rule 19); nothing here was tuned on it. Regimes by rule-19 cut points on the lab universe's
+median open-to-close: 16 down, 10 flat, 10 up sessions; before 10-06: 12 down / 6 flat / 6 up, the live weeks
+10-06..10-21: 4 / 4 / 4.
+
+| account | sessions | trades | avg R | day-clustered t | total R | touch-fill total R | up | flat | down | before 10-06 avg R | live weeks avg R | live weeks expected from regime mix |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| primary | 36 | 3517 | -0.026 | -0.64 | -92.7 | -37.4 | -0.085 (1120) | -0.035 (964) | 0.025 (1433) | 0.012 | -0.107 | 0.003 |
+| testing | 36 | 7303 | -0.074 | -4.43 | -537.3 | -441.0 | -0.080 (2130) | -0.072 (1828) | -0.070 (3345) | -0.059 | -0.102 | -0.064 |
+
+
+**(d) Regime.** Primary's book (mostly shorts) made +0.025 R/trade on down days and lost −0.085 on up days; Testing 1
+is flat across regimes (−0.07 to −0.08). The same setups earned +0.012 R/trade (Primary) and −0.059 (Testing 1) on the
+24 sessions before live trading began and −0.107 / −0.102 in the 12 live-week sessions. Re-weighting the earlier
+sessions' per-regime results to the live weeks' regime mix predicts +0.003 / −0.064 — so the regime *mix* (more up and
+flat days than September) explains only ~0.01–0.04 R of the 0.12 / 0.04 R drop; the rest is the live weeks being worse
+within each regime label (wide ±1% days the terciles do not separate) — a forward-weakness signal to watch, not a fill
+or code artefact (the replay shows it with the same execution as before). Touch fills would add +55 R (Primary, 0.016
+R/trade over 3,517 trades) and +96 R (Testing 1, 0.013) over these 36 sessions. Top setups by day-clustered t on this
+window (rule 3: 36 sessions, two accounts' current setups, no tuning — evidence, not a pass): Primary
+NS1-rsidip-rsi5pop-long +0.29 R (35 trades, t 2.8), RW5-heat30-flowsell-rsi5pop-gapdn-short-FD +0.14 (203, t 1.6),
+MF1-945-flowsell-vwapup +0.36 (84, t 1.6); Testing 1 MF5-flowsell-vwapup-rsi5hi +0.24 (88, t 2.3),
+ST7-rsi50dn-long-pm-t1s1-FD +0.27 (74, t 1.6). Whole books: Primary −0.026 R/trade (t −0.6), Testing 1 −0.074 (t −4.4).
 
 ## 4. Speed
 
