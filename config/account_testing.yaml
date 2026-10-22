@@ -431,9 +431,10 @@ strategies:
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
+    twin_group: ST7-T1   # owner copy policy: ST7Q fires on a subset of these signals - one setup per symbol at a time
   # ---- st7_1022 S1 (owner 2026-10-22 ~11:10 ET "S1 yes"; research/bdi/st7_1022/NOTES.md): a NEW setup next to its parent
-  #      ST7-rsi50dn-long-pm-t1s1-FD, which keeps running unchanged (both may hold a lot on the same symbol: max 3 lots,
-  #      different setups). Same mask + QQQ at or below its own session VWAP at the bar (context qqq_vwap <= 0).
+  #      ST7-rsi50dn-long-pm-t1s1-FD, which keeps running unchanged (twin_group ST7-T1: never both on the same symbol;
+  #      ST7Q is ahead in setup_order, so it takes the QQQ-below signals). Same mask + QQQ at or below its own session VWAP at the bar (context qqq_vwap <= 0).
   # owner 2026-10-22: observation (near-miss merit rule only; post-diagnosis rule, t 2.27 vs lineage bar 4.97). 2-year
   # open history, first signal per symbol-day: train 183 +0.092R / valid 351 +0.141R; ~1.25/day; Bull +0.654 / Bear
   # +0.059 / Choppy +0.188 / Quiet +0.091. Module = scan on 534/534 signals (research/bdi/st7_1022/verify.json).
@@ -447,6 +448,7 @@ strategies:
     refire: false
     scale_out_r: null
     tags: [observation, st7_1022]
+    twin_group: ST7-T1   # with its parent ST7-rsi50dn-long-pm-t1s1-FD (same signal never held twice; ST7Q is first in setup_order)
   # from ST8-volspikedn-long-pm-t1s1 (testing; source window 1335-1500); ~1.24/day full-day [timeofday results.csv full, exp +0.041R]
   ST8-volspikedn-long-pm-t1s1-FD:
     enabled: true
