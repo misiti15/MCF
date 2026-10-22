@@ -27,6 +27,7 @@ DECISIONS; the rest are counted in one line ("Tracking: N open, next due ..."). 
 | HK-LEDGER | Ledger check speed-up (replay only entries with a patch) | Claude | — | housekeeping | queued |
 | HK-1 | Testing 2 bracket rejects | Claude | — | housekeeping | queued |
 | HK-2 | Hard-to-borrow skip noise | Claude | — | housekeeping | queued |
+| REPLAY | Live-test new setups on recorded sessions through the real live runner (mcf/replay, branch claude/replay-build). Pipeline: backtest -> replay (~50 recorded sessions through PaperRunner + simulated broker, costs in, trade-through limits) -> testing account -> primary. Replay vs live agreement tracked per setup and system-wide (docs/live/pipeline.json `agreement`, `drift` when |avg R gap| > 0.25R with >= 10 trades each). Validation numbers: research/replay/VALIDATION.md. Live poll inputs logged from the next session (live.log_poll_inputs) so replays can be checked against what live actually received. | Claude | nightly export (python -m mcf.replay export) | merge after the close (touches the live runner: poll log only) | shipped on branch, awaiting merge |
 
 ## Closed
 
