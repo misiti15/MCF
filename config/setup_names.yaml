@@ -639,3 +639,53 @@ GEN-POD1022-03-wt-bull-flag-bailout-S-long:
   side: long
   what: "10:00-14:30: a 1-3 bar pole of at least one daily ATR on heavy volume to a new day high, a 2-6 bar quiet flag holding EMA9 and VWAP, then a close above the flag high. Stop under the flag, target the pole height, stop to break-even at +0.5R, out after 10 minutes if it has not moved up. From the 2026-10-22 podcast mining (Warrior Trading); positive after costs in train and valid but 81% of its R came on one day (2025-04-09). Observation only."
   generated: "2026-10-23"
+GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short:
+  name: "Generated: UpWickge0p59 AM short (BRopgt0p5, holdtr)"
+  side: short
+  what: "Short on the first 5-minute bar closing 09:50-11:00 ET where the share of stocks above their open is above 0.5; upper wick share of the bar (frame column) >= 0.59; change since the 09:50 close in daily ATRs <= -0.61 (stocks with 20-day average dollar volume >= $95M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long:
+  name: "Generated: VolRatioge2 LATE long (BRoplt0p35, t1s1)"
+  side: long
+  what: "Buy on the first 5-minute bar closing 14:00-15:00 ET where the share of stocks above their open is below 0.35; bar volume / 20-bar mean (frame column) >= 2; close vs 5-min SMA20 % (frame column) <= -0.58; bars since the last new low of day (from 09:50) <= 1 (stocks with 20-day average dollar volume >= $95M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short:
+  name: "Generated: NewLOD, Flow3lem0p37 LUNCH short (BRopgt0p5, holdtr)"
+  side: short
+  what: "Short on the first 5-minute bar closing 11:30-14:00 ET where the share of stocks above their open is above 0.5; bar made a new low of day = 1; signed volume share, 3 bars (frame column) <= -0.37; close - open in daily ATRs <= -0.78 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short:
+  name: "Generated: ORBfailDn, Ret15mlem0p55 OPEN short (BRvwgt0p5, holdtr)"
+  side: short
+  what: "Short on the first 5-minute bar closing 09:50-10:30 ET where the share of stocks above their VWAP is above 0.5; closed below the OR low earlier today, now back above = 1; 3-bar (15 min) return % <= -0.55; close vs 5-min SMA50 % (frame column) <= -0.3 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short:
+  name: "Generated: Ret15mATRge0p042 OPEN short (BRopgt0p5, hold)"
+  side: short
+  what: "Short on the first 5-minute bar closing 09:50-10:30 ET where the share of stocks above their open is above 0.5; 15-min change in daily ATRs >= 0.042; close - prior close in daily ATRs >= 0.28; close - opening-range high (09:30-09:50) in daily ATRs <= -0.38 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long:
+  name: "Generated: NewLOD LATE long (SPYltm0p25, t1s1)"
+  side: long
+  what: "Buy on the first 5-minute bar closing 14:00-15:00 ET where SPY's move since its open (%) is below -0.25; bar made a new low of day = 1; SMA20 slope over 5 bars % (frame column) <= -0.28 (stocks with 20-day average dollar volume >= $150M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short:
+  name: "Generated: Flow3ge0p56, BBpctge0p98 PM short (BRvwlt0p3, holdtr)"
+  side: short
+  what: "Short on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their VWAP is below 0.3; signed volume share, 3 bars (frame column) >= 0.56; Bollinger %B (12 bars, 2 sd, in-day) >= 0.98; ADX(7), in-day <= 34 (stocks with 20-day average dollar volume >= $150M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short:
+  name: "Generated: RSIslopege19, Ret5mge0p063 OPEN short (SPYup, holdtr)"
+  side: short
+  what: "Short on the first 5-minute bar closing 09:50-10:30 ET where SPY's move since its open (%) is above 0; RSI(14) change over 3 bars (frame column) >= 19; 1-bar (5 min) return % >= 0.063; today's range so far / prior day's range >= 1.2 (stocks with 20-day average dollar volume >= $50M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long:
+  name: "Generated: BBpctle0p3 LATE long (BRvwgt0p6, t05s05)"
+  side: long
+  what: "Buy on the first 5-minute bar closing 14:00-15:00 ET where the share of stocks above their VWAP is above 0.6; Bollinger %B (12 bars, 2 sd, in-day) <= 0.3; SMA20 slope over 5 bars % (frame column) >= 0.46; close - prior close in daily ATRs >= 0.45 (stocks with 20-day average dollar volume >= $150M). Exit target +0.5R / stop 0.5R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"
+GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long:
+  name: "Generated: ORBfailDn, EMAdChglem0p051 PM long (BRopgt0p65, t1s1)"
+  side: long
+  what: "Buy on the first 5-minute bar closing 13:00-15:00 ET where the share of stocks above their open is above 0.65; closed below the OR low earlier today, now back above = 1; emaDiff change over 3 bars <= -0.051 (stocks with 20-day average dollar volume >= $50M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
+  generated: "2026-10-26"

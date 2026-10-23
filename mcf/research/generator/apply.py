@@ -39,6 +39,8 @@ HEADER = """\
 # rule as every account, so each slot is an equal increment (~$4,750 at $100k x 3.8 / 80).
 # This file is maintained by `python -m mcf.research.generator run --apply` (setup_order rebuilt each run:
 # narrowest = fewest screened trades/day first). Hand edits to entries are kept; comments below this header are not.
+# max_setup_daily_loss_r: null = owner 2026-10-22 ST-A: the per-setup -2R daily stop is off (was 2.0) so testing runs
+# as Primary + backtests; the 120R account backstop stays.
 """
 
 BASE = {
