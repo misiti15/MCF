@@ -11,3 +11,4 @@
 - Merging: Claude merges its own PRs once tests pass; PRs that touch setups/exits are merged only outside 09:30-16:00 ET (the `setup-freeze` check enforces it).
 - **Setup moves (owner 2026-10-20):** every promotion / demotion / move regenerates `docs/live/assignments.json` (`python -m mcf.report.assignments`) in the same commit, so the dashboard shows the new assignment and its timestamp at once (`tests/test_assignments.py` enforces it).
 - **Promotion = move (owner 2026-10-20):** a promoted setup is switched off in the account it came from in the same change; it never runs as a copy in two accounts unless the owner asks.
+- **Testing 1 = Testing 2 (owner 2026-10-23):** the two testing accounts carry equal weight for promotion; two accounts exist only to give more setups exposure. Never treat Testing 2 as a lower tier.
