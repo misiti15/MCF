@@ -109,6 +109,13 @@ td.nmc .chip { font-size: 10.5px; }
 #gen-tab td.nmc .nm .genbadge { font-size: 9px; padding: 0 4px; }
 #gen-tab td.nmc { width: 230px; min-width: 230px; max-width: 230px; }
 #lb-tab tbody td:nth-child(3) { white-space: normal; min-width: 90px; max-width: 150px; }
+/* Owner 2026-10-23: at least 10 setups with their stats through Break-even win rate in one view. Each row is two lines
+   (name + chips on one line, id below), the name column a bit wider, the table as tall as the window. */
+#lb-tab td, #gen-tab td { padding-top: 3px; padding-bottom: 3px; }
+td.nmc { width: 230px; min-width: 230px; max-width: 230px; }
+#gen-tab td.nmc { width: 250px; min-width: 250px; max-width: 250px; }
+#lb-tab tbody td:nth-child(3) { white-space: nowrap; min-width: 90px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+#lb-tab tbody td:nth-child(3) > div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 600px) { td.nmc, #gen-tab td.nmc { width: 128px; min-width: 128px; max-width: 128px; } #gen-tab td.nmc .nm .genbadge { display: none; } }
 </style>
 </head><body><main>
@@ -421,7 +428,7 @@ window.MCF = window.MCF || {};
     <div class="sub" id="lb-sum">Loading…</div>
     <div class="msg" id="lb-asg" style="margin-top:6px;font-size:13px;padding:6px 10px;border:1px solid var(--axis);border-radius:8px"></div>
     <div class="controls" style="margin:8px 0" id="lb-ctl"></div><div class="sub" id="lb-sorted" style="margin-bottom:6px"></div>
-    <div class="tablewrap" id="lb-tab" style="max-height:640px;overflow-y:auto"><div class="empty">Loading…</div></div>
+    <div class="tablewrap" id="lb-tab" style="max-height:max(480px, calc(100vh - 110px));overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
       R = the setup's planned risk per trade. <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
@@ -438,7 +445,7 @@ window.MCF = window.MCF || {};
       each passed only a quick screen on past data (stats below, negative ones included). No promotion rules — you decide. Never mixed into the leaderboard above.</div>
     <div class="sub" id="gen-sum" style="margin-top:6px">Loading…</div>
     <div class="sub" id="gen-sorted" style="margin:6px 0"></div>
-    <div class="tablewrap" id="gen-tab" style="max-height:560px;overflow-y:auto"><div class="empty">Loading…</div></div>
+    <div class="tablewrap" id="gen-tab" style="max-height:max(480px, calc(100vh - 110px));overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = live avg R shrunk by trades ÷ (trades + 20), as above. <b>Screen train / valid R</b> = expectancy after costs on the open history when the setup was generated
       (train ≤ 2025-12, valid 2026-01 onward; no locked holdout). <b>Screen /day</b> = trades per day in that screen. Paper results; few trades prove nothing. Educational only — not financial advice.</div></div>
   <!-- New setup pipeline (owner 2026-10-21): every new setup's Backtest · Replay · Live side by side. Reads
