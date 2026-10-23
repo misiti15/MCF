@@ -164,3 +164,40 @@ def test_twin_groups_wired_from_testing2_config(monkeypatch):
     _hold(rm, "XYZ", ("NS3V1-am-widestop-short", -1))
     assert rm.check(Signal("XYZ", "NS3-failed-vwap-reclaim-short-FD", -1, 10, stop=55.0), 54.0) == (False, "twin held")
     assert rm.check(Signal("XYZ", "NS3V1-am-widestop-short", -1, 12, stop=55.0), 54.0)[0]
+
+
+def test_setup_loss_latches_for_the_day():
+    """Owner 2026-10-22 LL-LATCH: once a setup reaches -2R it stays stopped, even after a later winner lifts it."""
+    rm = _rm(3, setup_limit=2.0)
+    rm.state.realized_r_by_strategy = {"A": -2.0}
+    assert rm.check(_sig("A"), 54.0) == (False, "setup daily loss limit")
+    rm.state.realized_r_by_strategy["A"] += 1.5          # an open lot closes a winner: net -0.5R
+    assert rm.check(_sig("A"), 54.0) == (False, "setup daily loss limit")
+    assert rm.check(_sig("B"), 54.0) == (True, "ok")
+
+
+def test_setup_loss_latch_running_low():
+    """A running low at the limit latches even when no signal was checked while the setup sat there."""
+    rm = _rm(3, setup_limit=2.0)
+    rm.latch_setup_losses({"A": -2.3})
+    rm.state.realized_r_by_strategy = {"A": +0.4}
+    assert rm.check(_sig("A"), 54.0) == (False, "setup daily loss limit")
+    rm2 = _rm(3)                                          # limit absent: never latches
+    rm2.latch_setup_losses({"A": -9.0})
+    assert rm2.check(_sig("A"), 54.0) == (True, "ok")
+
+
+def test_runner_restore_latches_running_low(tmp_path, monkeypatch):
+    """LL-LATCH after a restart: A went -1, -1.5 (low -2.5R) then +2 (net -0.5R): still stopped; B never touched."""
+    from tests.test_no_stacking import _runner
+    r, _ = _runner(tmp_path, monkeypatch)
+    r.dry_run = True
+    r.risk.setup_loss_limit = 2.0
+    today = pd.Timestamp.now(tz="America/New_York").date()
+    done = pd.DataFrame({"date": [str(today)] * 4, "strategy": ["A", "A", "A", "B"],
+                         "exit_time": ["2026-01-01 10:30", "2026-01-01 10:00", "2026-01-01 11:00", "2026-01-01 10:05"],
+                         "r_multiple": [-1.5, -1.0, 2.0, -1.9]})
+    monkeypatch.setattr(r.journal, "trades", lambda **k: done)
+    r.restore(today)
+    assert r.risk.state.realized_r_by_strategy == {"A": -0.5, "B": -1.9}
+    assert r.risk.state.setup_stopped == {"A"}

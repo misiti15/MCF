@@ -78,7 +78,6 @@ live:
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT09-gapdn-vwaploss-g5-short   # 8.60/day
     - CWT13-vwapstretch-z075-long   # 9.23/day
-    - CWT13-vwapstretch-z05-short   # 37.95/day
     - CWT13-vwapstretch-z05-long   # 42.57/day
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
@@ -483,7 +482,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sideshort-t1s1-guest", fill: false}
   # Stretched Above VWAP Fade: CWT package B B2-z0.5-Uall-sideshort-t1s1-guest (id 35); open history n 16165, exp -0.0689R, t -2.84, 37.95/day; verdict retire
   CWT13-vwapstretch-z05-short:
-    enabled: true
+    # moved to Graveyard 2026-10-22 evening (owner D1; effective session 2026-10-23, its trades so far stay here)
+    enabled: false
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z05-short.py
     min_adv: 95000000
