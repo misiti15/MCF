@@ -37,8 +37,12 @@ def build(root: Path = ROOT) -> dict:
                      "positive_both": sum(1 for x in picks if ((x["screen"].get("train") or {}).get("exp_r") or -1) > 0
                                           and ((x["screen"].get("valid") or {}).get("exp_r") or -1) > 0)})
     gen = yaml.safe_load((root / "config" / "account_gen.yaml").read_text()) or {}
-    live = sorted(k for k, v in (gen.get("strategies") or {}).items()
-                  if k.startswith("GEN-") and isinstance(v, dict) and v.get("enabled"))
+    on = {k: v for k, v in (gen.get("strategies") or {}).items()
+          if k.startswith("GEN-") and isinstance(v, dict) and v.get("enabled")}
+    # hand-added observation setups (owner 2026-10-23, pod1022: tag `observation`) run in the Gen account but were not
+    # produced by the generator, so they are counted apart from the generated ones
+    obs = sorted(k for k, v in on.items() if "observation" in (v.get("tags") or []))
+    live = sorted(k for k in on if k not in obs)
     promoted = {}
     for acct, f in CONFIGS.items():
         cfg = yaml.safe_load((root / "config" / f).read_text()) or {}
@@ -48,7 +52,7 @@ def build(root: Path = ROOT) -> dict:
     reg = root / "research" / "generator" / "registry.jsonl"
     n_reg = sum(1 for _ in reg.open()) if reg.exists() else 0
     return {"generated": runs[-1]["date"] if runs else None, "runs": runs[-30:], "specs_screened": n_reg,
-            "setups_generated": sum(r["picked"] for r in runs), "live_in_gen": len(live),
+            "setups_generated": sum(r["picked"] for r in runs), "live_in_gen": len(live), "observation_in_gen": len(obs),
             "promoted": [{"setup": k, "accounts": v} for k, v in sorted(promoted.items())],
             "note": "Quick screen on the open history, costs in; not a tested edge. Educational only - not financial advice."}
 

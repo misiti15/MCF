@@ -27,6 +27,7 @@ live:
   lab_refire: false
   setup_order:
   - GEN-261021-10-MACDhge0p079-VWAPbarslem7-OPEN-QQQup-t1s05-long
+  - GEN-POD1022-02-breadth-thrust-index-etf-holdtr-long
   - GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
   - GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long
   - GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p29-LAM-SPYltm0p25-t1s05-short
@@ -43,6 +44,7 @@ live:
   - GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short
   - GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short
   - GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long
+  - GEN-POD1022-03-wt-bull-flag-bailout-S-long
   - GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long
   - GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p6-hold-short
   - GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short
@@ -63,6 +65,7 @@ live:
   - GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short
   - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long
   - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long
+  - GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long
   - GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long
   - GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short
   - GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short
@@ -3367,3 +3370,167 @@ strategies:
         max_overlap: 0.288
         overlap_with: exhaustion_short-FD
         n_tried_in_run: 3000
+  GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long:
+    enabled: true
+    type: lab
+    module: research/bdi/pod1022/live/pod-thrasher-intraday-breadth-thrust-stocks-long-live.py
+    context:
+    - breadth
+    - spy_fo
+    min_adv: 500000000
+    window:
+    - 1015
+    - 1400
+    geom: holdtr
+    refire: false
+    scale_out_r: null
+    tags:
+    - observation
+    - pod1022
+    gen:
+      date: '2026-10-23'
+      source: 'pod1022 podcast/educator mining (research/bdi/pod1022), owner 2026-10-23: observation setup, not generated'
+      research_module: research/bdi/pod1022/modules/pod-thrasher-intraday-breadth-thrust-stocks-long.py
+      screen:
+        train:
+          n: 1273
+          exp_r: 0.102
+          t: 0.635
+          win: 0.57
+          days: 16
+        valid:
+          n: 841
+          exp_r: 0.2872
+          t: 1.189
+          win: 0.597
+          days: 7
+        all:
+          n: 2114
+          exp_r: 0.1757
+          t: 1.269
+          win: 0.58
+          days: 23
+        per_day: 4.962
+        per_day_valid: 4.38
+        excess_train: 0.0303
+        excess_valid: 0.0649
+        best_day: '2026-06-11'
+        best_day_share: 0.327
+        avg_r_ex_best_day: 0.128
+        max_overlap_config: 0.381
+        overlap_with: account_graveyard:CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 452
+        merit_bar: failed (best-day share high; not significant on valid) - observation only
+  GEN-POD1022-02-breadth-thrust-index-etf-holdtr-long:
+    enabled: true
+    type: lab
+    module: research/bdi/pod1022/live/pod-breadth-thrust-midday-index-long-live.py
+    symbols:
+    - SPY
+    - QQQ
+    - IWM
+    - DIA
+    pin_symbols: true
+    context:
+    - breadth
+    - qqq_vwap
+    - spy_fo
+    min_adv: 0
+    window:
+    - 1000
+    - 1400
+    geom: holdtr
+    refire: false
+    scale_out_r: null
+    tags:
+    - observation
+    - pod1022
+    gen:
+      date: '2026-10-23'
+      source: 'pod1022 podcast/educator mining (research/bdi/pod1022), owner 2026-10-23: observation setup, not generated'
+      research_module: research/bdi/pod1022/modules/pod-breadth-thrust-midday-index-long.py
+      screen:
+        train:
+          n: 120
+          exp_r: 0.0587
+          t: 0.292
+          win: 0.517
+          days: 30
+        valid:
+          n: 48
+          exp_r: 0.398
+          t: 1.525
+          win: 0.708
+          days: 12
+        all:
+          n: 168
+          exp_r: 0.1556
+          t: 0.952
+          win: 0.571
+          days: 42
+        per_day: 0.394
+        per_day_valid: 0.25
+        excess_train: 0.0
+        excess_valid: 0.0
+        best_day: '2025-04-30'
+        best_day_share: 0.367
+        avg_r_ex_best_day: 0.1009
+        max_overlap_config: 0.53
+        overlap_with: account_graveyard:CWT14-failbrk-orl-p05-long
+        note: 'excess vs random 0 by construction: every index ETF enters on the same bar, so the same-minute control is the
+          trade itself'
+        n_tried_in_run: 452
+        merit_bar: failed (best-day share high; not significant on valid) - observation only
+  GEN-POD1022-03-wt-bull-flag-bailout-S-long:
+    enabled: true
+    type: lab
+    module: research/bdi/pod1022/live/pod-wt-bull-flag-breakout-or-bailout-long-live.py
+    min_adv: 20000000
+    window:
+    - 1000
+    - 1430
+    geom: S
+    be_at_r: 0.5
+    time_stop_min: 10
+    time_stop_min_r: 0.01
+    refire: false
+    scale_out_r: null
+    tags:
+    - observation
+    - pod1022
+    gen:
+      date: '2026-10-23'
+      source: 'pod1022 podcast/educator mining (research/bdi/pod1022), owner 2026-10-23: observation setup, not generated'
+      research_module: research/bdi/pod1022/modules/pod-wt-bull-flag-breakout-or-bailout-long.py
+      screen:
+        train:
+          n: 756
+          exp_r: 0.1412
+          t: 5.875
+          win: 0.384
+          days: 63
+        valid:
+          n: 40
+          exp_r: 0.0758
+          t: 0.4
+          win: 0.35
+          days: 33
+        all:
+          n: 796
+          exp_r: 0.1379
+          t: 5.265
+          win: 0.382
+          days: 96
+        per_day: 1.869
+        per_day_valid: 0.208
+        excess_train: 0.0946
+        excess_valid: 0.2644
+        best_day: '2025-04-09'
+        best_day_share: 0.814
+        avg_r_ex_best_day: 0.0848
+        max_overlap_config: 0.429
+        overlap_with: account_gen:GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
+        exit_note: live exit = runner be_at_r 0.5 + 10-min time stop unless +0.01R (scored with BAILOUT_REF_R 0.01); the research
+          exit (bailout vs the entry bar high) scored train 0.1076 / valid 0.1125 R on the same entries
+        n_tried_in_run: 452
+        merit_bar: failed (best-day share high; not significant on valid) - observation only

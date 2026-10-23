@@ -7,6 +7,9 @@
 `docs/live/generator_lab.json`. No live behaviour changes. The ledger gets one research entry recording the batch and its
 counts (no config patch).
 
+**Update 2026-10-23 (owner decision ~08:00 ET): 3 of the 8 positive-in-both ideas were added to the Setup Generator
+account as OBSERVATION setups** (they did not pass the merit bar; nothing above is changed). See the addendum below.
+
 ## Counts
 - Module files written: **464** (`modules/pod-*.py`, plus shared helpers `_*.py`). Each is a LabStrategy-format module;
   long/short halves, pre-declared second configs, exit-geometry twins and controls are separate files.
@@ -559,3 +562,63 @@ avgR is per trade after costs; excess = avgR minus the same-minute random-entry 
 | 450 | pod-smb-2day-avwap-first-touch-quiet-long | long | 8 / 6 | +1.381 | +0.667 | +1.022 | +0.706 | too few | r2_3.jsonl |
 | 451 | pod-bbt-1to10-index-megacap-close-reversal-long | long | 2 / 0 | +1.095 |  | +1.086 |  | too few | r2_2.jsonl |
 | 452 | pod-of3-dalton-neutral-day-center-revert-short | short | 1 / 2 | +2.857 | +0.395 | +1.242 | +0.649 | too few | r2_10.jsonl |
+
+
+## Addendum 2026-10-23: observation setups added to the Setup Generator (owner)
+
+The owner asked for the ideas that were positive after costs in BOTH train and valid, one version per idea, as
+observation setups in `config/account_gen.yaml`, effective Monday 2026-10-26. **None passed the merit bar**: best-day
+share is high on all of them and none is significant on valid; configurations tried in the batch: **452**. Costs in, the
+locked block 2024-11-01..2025-02-28 never read.
+
+### Added (3)
+| id | live module | side / geom | train n, avgR, t | valid n, avgR, t | per session | excess vs random tr / va | best day (share of R) |
+|---|---|---|---|---|---|---|---|
+| GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long | live/pod-thrasher-intraday-breadth-thrust-stocks-long-live.py | long / holdtr | 1273, +0.102, 0.64 | 841, +0.287, 1.19 | 4.96 | +0.030 / +0.065 | 2026-06-11 (33%); only 23 active days |
+| GEN-POD1022-02-breadth-thrust-index-etf-holdtr-long | live/pod-breadth-thrust-midday-index-long-live.py | long / holdtr (SPY QQQ IWM DIA) | 120, +0.059, 0.29 | 48, +0.398, 1.53 | 0.39 | 0 / 0 (by construction) | 2025-04-30 (37%) |
+| GEN-POD1022-03-wt-bull-flag-bailout-S-long | live/pod-wt-bull-flag-breakout-or-bailout-long-live.py | long / S + BE 0.5R + 10-min time stop | 756, +0.141, 5.88 | 40, +0.076, 0.40 | 1.87 (0.21 in valid) | +0.095 / +0.264 | 2025-04-09 (81%) |
+
+**Live adaptations** (new files in `live/`; the research modules are unchanged):
+- All three: the live LabStrategy frame is one symbol-day without `symbol` / `date` columns and starts at 09:35; the
+  research modules raise KeyError there. The live copies add those columns and ignore bars before 09:50 (as the
+  history frames do). The breadth modules also return early when breadth never reached both <= 0.30 and the fire
+  threshold (same output, ~5x faster). On the history frames these changes are no-ops: re-scored with
+  `score_batch.py`, the live copies give **identical** results to the research modules (same trades, same R).
+- WT bull flag exit: the live engine has no `S+ts2` geometry. The entry runs as `geom: S` with the runner's existing
+  management `be_at_r: 0.5`, `time_stop_min: 10`, `time_stop_min_r: 0.01`. The runner measures the bailout from the
+  entry price, not from the entry bar's high, so the live module sets `BAILOUT_REF_R = 0.01` (new scorer option) and
+  was re-scored that way: **train +0.141R / valid +0.076R** (research exit: +0.108R / +0.113R) on the same 796 entries;
+  best-day share 0.81 (was 0.73). This is a stated exit difference, not the identical setup.
+- Universe: the scores use the lab universe (adv20 floor, no ATR% filter); live, the account universe also drops names
+  with daily ATR < 1% of price. Breadth live is over the polled universe, in the history over the lab universe.
+
+Re-score rows: `live/rescore.jsonl` (originals, live copies, and `pod-wt-flag-live-refentry` = the final WT live module;
+the `...-long-live` WT row there predates `BAILOUT_REF_R`, i.e. it is the research exit on the live entry code).
+The index module's live symbol fallback was added after that re-score; it only acts on the live placeholder symbol.
+
+**Live-path parity** (`live/parity_live.py` -> `live/parity.json`; real 1-minute bars through
+`LabStrategy.generate` with the YAML params, history context for the date; seed 20261023): thrasher 40/40 scored
+signals on the same bar and 34/34 non-signal symbol-days silent; index ETFs 40/40 and 40/40; WT flag 39/39 and 37/37
+(**100%** each). The first run found two harness / module issues, both fixed before this result: the index module's
+symbol allow-list saw the live placeholder symbol (0/40), and LabStrategy.eligible's 390-bar gate rejected cache days
+with missing minutes (the check now applies only its universe part).
+
+**Gen poll time** (`research/ops/pollspeed1022_profile.py 2026-10-16 gen new 10:00,11:00`, replay lab universe ~1,060
+contexts, same machine, before / after the three entries): 10:00 poll 127.2 s -> 134.8 s (+7.6 s), 11:00 poll
+119.7 s -> 133.6 s (+13.9 s); setup masks +8.7 s / +8.8 s. Per call on a cached frame ~3-4 ms per symbol (WT ~3.6 ms on
+the adv >= $20M names, thrasher ~2.9 ms on adv >= $500M names, index ETFs 4 symbols); the adv >= $20M frames are already
+built every decision bar by existing GEN setups. Live polls ~3x more symbols, so expect roughly +20-40 s on a
+5-minute-bar poll: still well under 5 minutes, but worth checking on the first session's poll log.
+
+### Not added (5) and why
+- **pod-aziz-zarattini-index-first-candle-direction-orb-10r-long**: needs the 20-session median opening-range width
+  (`orw_med20`) from prior sessions' 09:30-10:00 bars; the live frame / priors do not carry it (new live data plumbing).
+- **pod-bbt-vwap-reversal-no-new-5m-low-to-vwap-long**: needs day relative volume (cumulative volume vs its 20-session
+  same-time mean); the live mask cannot see `DayContext.avg_cum_volume` (and that is a 14-session baseline) - plumbing.
+- **pod-smb-20d-high-time-acceptance-long**: needs the 20-day daily high (research daily table; live priors keep only
+  D-1) and SPY's VWAP distance from other symbols' rows (no `spy_vwap` context column exists).
+- **pod-raschke-adx-gapper-short**: daily ADX(14) / DI from the research daily table; not available live.
+- **pod-cwt4-gogolak-1000bar-sma-dip-vixrise-etf-long**: VIX daily closes, a 1000-bar (about 13-session) 5-minute SMA
+  and SPY's daily SMA200; none available live.
+The WT variants a1/a2/a3/ungated are the same idea (one version per idea: the plain breakout-or-bailout was taken).
+Educational only - not financial advice.
