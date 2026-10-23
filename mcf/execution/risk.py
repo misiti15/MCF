@@ -21,6 +21,9 @@ class RiskState:
     halted: bool = False
     # setup -> net realized R today (account.max_setup_daily_loss_r, owner 2026-10-19 evening)
     realized_r_by_strategy: dict[str, float] = field(default_factory=dict)
+    # setups that reached the limit today: stopped for the rest of the day, even if a later winner lifts their net R
+    # back above it (owner 2026-10-22 LL-LATCH; before, the stop re-armed)
+    setup_stopped: set[str] = field(default_factory=set)
 
 
 def twin_key(name: str | None, groups: dict[str, str] | None = None) -> str:
@@ -60,6 +63,15 @@ class RiskManager:
         self.setup_loss_limit = float(lim) if lim else None
         self.state = RiskState()
 
+    def latch_setup_losses(self, by: dict[str, float] | None = None):
+        """Stop for the day every setup whose net realized R today is at or below -max_setup_daily_loss_r (`by`: a
+        running total to check, e.g. after each restored trade; default the current totals). Latched: never undone."""
+        if self.setup_loss_limit is None:
+            return
+        for k, v in (self.state.realized_r_by_strategy if by is None else by).items():
+            if v <= -self.setup_loss_limit:
+                self.state.setup_stopped.add(k)
+
     def open_lots(self) -> int:
         """Slots in use: every lot counts (a symbol held without lot detail counts as one)."""
         s = self.state
@@ -84,9 +96,10 @@ class RiskManager:
         if s.realized_r <= -self.a["max_daily_loss_r"]:
             s.halted = True
             return False, "daily loss limit"
-        if self.setup_loss_limit is not None and \
-                s.realized_r_by_strategy.get(sig.strategy, 0.0) <= -self.setup_loss_limit:
-            return False, "setup daily loss limit"
+        if self.setup_loss_limit is not None:
+            self.latch_setup_losses()
+            if sig.strategy in s.setup_stopped:
+                return False, "setup daily loss limit"
         if s.trades_today >= self.a["max_trades_per_day"]:
             return False, "max trades/day"
         if (len(s.open_symbols) if self.max_lots <= 1 else self.open_lots()) >= self.a["max_concurrent_positions"]:

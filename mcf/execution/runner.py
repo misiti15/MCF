@@ -210,6 +210,12 @@ class PaperRunner:
             self.risk.state.realized_r_by_strategy = (
                 {str(k): float(v) for k, v in td.groupby("strategy")["r_multiple"].sum().items()}
                 if "strategy" in td.columns and len(td) else {})
+            # LL-LATCH after a restart: a setup that touched the limit at any point today (running net R in exit order)
+            # stays stopped, even if it has since recovered
+            if "strategy" in td.columns and len(td):
+                order = td.sort_values("exit_time", kind="stable") if "exit_time" in td.columns else td
+                low = order.groupby("strategy")["r_multiple"].cumsum().groupby(order["strategy"]).min()
+                self.risk.latch_setup_losses({str(k): float(v) for k, v in low.items()})
         self._sync_open()
 
     def _restore_blocked(self, sig: pd.DataFrame):
@@ -1205,8 +1211,10 @@ class PaperRunner:
             self.risk.state.realized_r += float(today["r_multiple"].sum())
             if "strategy" in today.columns:
                 by = self.risk.state.realized_r_by_strategy
-                for k, v in today.groupby("strategy")["r_multiple"].sum().items():
+                order = today.sort_values("exit_time", kind="stable") if "exit_time" in today.columns else today
+                for k, v in zip(order["strategy"], order["r_multiple"]):   # trade by trade, in exit order:
                     by[str(k)] = by.get(str(k), 0.0) + float(v)
+                    self.risk.latch_setup_losses({str(k): by[str(k)]})   # LL-LATCH: touching the limit latches
             print(f"reconciled {len(trades)} trades for {day}")
 
     def _note_residuals(self, residual: dict):
