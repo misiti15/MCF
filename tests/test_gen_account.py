@@ -84,7 +84,8 @@ def test_every_gen_module_runs_in_the_live_lab_strategy(monkeypatch):
                               prev_close=100.0, prev_high=100.8, prev_low=99.2, avg_dollar_volume=5e8,
                               peers={"GENTEST": bars.iloc[:n], "SPY": spy.iloc[:n], "QQQ": spy.iloc[:n]})
         for s in st:
-            assert s.context, s.name                       # every GEN setup has a market-context filter
+            # every generated setup has a market-context filter (hand-added observation setups may not, pod1022)
+            assert s.context or "observation" in (getattr(s, "tags", None) or []), s.name
             for sig in s.generate(ctx):
                 assert sig.side == s.side and sig.stop != sig.target
 
@@ -122,8 +123,13 @@ def test_gen_setups_have_generated_display_names():
     names = yaml.safe_load((ROOT / "config/setup_names.yaml").read_text())
     st = yaml.safe_load((ROOT / "config/account_gen.yaml").read_text())["strategies"]
     for k, v in st.items():
-        assert k.startswith("GEN-") and re.match(r"^GEN-\d{6}-\d{2}-", k)
-        assert names[k]["name"].startswith("Generated: ") and names[k]["what"]
+        if "observation" in (v.get("tags") or []):
+            # hand-added observation setups (owner 2026-10-23, pod1022): own id range and a plain display name
+            assert re.match(r"^GEN-POD\d{4}-\d{2}-", k) and v["gen"].get("source")
+            assert not names[k]["name"].startswith("Generated: ") and names[k]["what"]
+        else:
+            assert k.startswith("GEN-") and re.match(r"^GEN-\d{6}-\d{2}-", k)
+            assert names[k]["name"].startswith("Generated: ") and names[k]["what"]
         sc = v["gen"]["screen"]
         assert {"train", "valid", "per_day"} <= set(sc)              # screen stats recorded, negative or not
     others = set()

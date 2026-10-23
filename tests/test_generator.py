@@ -149,6 +149,8 @@ def test_seeded_gen_setups_are_complete():
     keys = set()
     for k, v in st.items():
         g = v["gen"]
+        if "observation" in (v.get("tags") or []):
+            continue        # hand-added observation setups (pod1022, owner 2026-10-23): not generator specs
         s = Spec(g["spec"]["side"], g["spec"]["window"], g["spec"]["geom"], g["spec"]["min_adv"],
                  [tuple(c) for c in g["spec"]["conds"]])
         assert valid(s)[0] and s.key() == g["key"] and s.key() not in keys

@@ -1000,5 +1000,38 @@
    "valid_exp_r": 0.003,
    "per_day": 1.169
   }
+ },
+ "GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long": {
+  "name": "Podcast: Breadth Thrust, Strong Large Caps (observation)",
+  "side": "long",
+  "what": "10:15-14:00, first bar of the day where market breadth jumps from <= 30% (any of the 9 bars before) to >= 70% above VWAP and SPY is up >= 0.5 points off its 10-bar low: buy large caps ($500M+/day) above their VWAP and at least as strong as SPY since the open. Stop 1R, 1R trail once +1R, flat 15:55. From the 2026-10-22 podcast mining (Thrasher breadth thrust); positive after costs in train and valid but concentrated on a few days. Observation only.",
+  "generated": "2026-10-23",
+  "screen": {
+   "train_exp_r": 0.102,
+   "valid_exp_r": 0.2872,
+   "per_day": 4.962
+  }
+ },
+ "GEN-POD1022-02-breadth-thrust-index-etf-holdtr-long": {
+  "name": "Podcast: Breadth Thrust, Index ETFs (observation)",
+  "side": "long",
+  "what": "10:00-14:00, first bar of the day where market breadth rises from a washed-out <= 30% (previous 6 bars) to >= 60% above VWAP, QQQ is above its VWAP and SPY is 0.3 points off its day low: buy SPY, QQQ, IWM and DIA. Stop 1R, 1R trail once +1R, flat 15:55. From the 2026-10-22 podcast mining (Zweig breadth thrust, intraday); positive after costs in train and valid but not significant. Observation only.",
+  "generated": "2026-10-23",
+  "screen": {
+   "train_exp_r": 0.0587,
+   "valid_exp_r": 0.398,
+   "per_day": 0.394
+  }
+ },
+ "GEN-POD1022-03-wt-bull-flag-bailout-S-long": {
+  "name": "Podcast: Bull Flag Breakout or Bailout (observation)",
+  "side": "long",
+  "what": "10:00-14:30: a 1-3 bar pole of at least one daily ATR on heavy volume to a new day high, a 2-6 bar quiet flag holding EMA9 and VWAP, then a close above the flag high. Stop under the flag, target the pole height, stop to break-even at +0.5R, out after 10 minutes if it has not moved up. From the 2026-10-22 podcast mining (Warrior Trading); positive after costs in train and valid but 81% of its R came on one day (2025-04-09). Observation only.",
+  "generated": "2026-10-23",
+  "screen": {
+   "train_exp_r": 0.1412,
+   "valid_exp_r": 0.0758,
+   "per_day": 1.869
+  }
  }
 }

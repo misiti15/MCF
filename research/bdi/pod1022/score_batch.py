@@ -183,11 +183,13 @@ def sim_s(h, l, c, tod, dend, ent, stop0, tgt0, cm, side):
 
 
 @numba.njit(cache=True)
-def sim_s_bail(h, l, c, tod, dend, ent, stop0, tgt0, cm, side, nbail, be_r):
+def sim_s_bail(h, l, c, tod, dend, ent, stop0, tgt0, cm, side, nbail, be_r, ref_r):
     """GEOM 'S+ts2': sim_s plus Ross Cameron's 'breakout or bailout'. If none of the next nbail path bars makes a new
     extreme beyond the entry bar's (high for a long, low for a short), exit at the close of bar entry + nbail (stop and
     target are still checked first inside those bars). be_r > 0: once the trade has been +be_r R (bar high / low), the
-    stop moves to the entry price from the NEXT bar on. A break-even exit is costed as a stop fill."""
+    stop moves to the entry price from the NEXT bar on. A break-even exit is costed as a stop fill.
+    ref_r (module BAILOUT_REF_R, 2026-10-23; NaN = off): the 'new extreme' reference is entry + ref_r x R instead of the
+    entry bar's high / low - the form the live runner's time stop can carry (time_stop_min / time_stop_min_r)."""
     n = len(ent)
     r = np.full(n, np.nan, np.float64)
     for q in range(n):
@@ -202,6 +204,8 @@ def sim_s_bail(h, l, c, tod, dend, ent, stop0, tgt0, cm, side, nbail, be_r):
         if not (R > 0) or end <= i:
             continue
         ref = h[i] if side == 1 else l[i]
+        if ref_r == ref_r:
+            ref = e + side * ref_r * R
         ec = (0.01 + e * 1e-4) * GD._mult(tod[i])
         x = 0.0
         cd = 0
@@ -487,7 +491,8 @@ def _score_month(M: Month, mod: Mod) -> None:
         ph, pl, pc, pt, dend, f2P = M.path()
         if mod.geom == "S+ts2":
             r = sim_s_bail(ph, pl, pc, pt, dend, f2P[idx], stop, tgt, M.tier[idx], mod.sgn,
-                           int(getattr(mod.m, "BAILOUT_BARS", 2)), float(getattr(mod.m, "BE_AT_R", 0.0)))
+                           int(getattr(mod.m, "BAILOUT_BARS", 2)), float(getattr(mod.m, "BE_AT_R", 0.0)),
+                           float(getattr(mod.m, "BAILOUT_REF_R", np.nan)))
         elif mod.geom == "S+x":
             xe = np.full(len(idx_l), -1, np.int64)
             if hasattr(mod.m, "exit_index"):
