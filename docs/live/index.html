@@ -1693,7 +1693,7 @@ window.MCF = window.MCF || {};
 <!-- On deck / demotion watch (owner 2026-10-23): in the setup panel, a two-step click (pick the target, then Confirm)
      marks a setup "on deck" for promotion (Setup Generator / Graveyard -> Testing 1 or 2; Testing 1 / 2 -> Primary) or on
      "demotion watch" (Primary -> Testing 1 / 2 / Graveyard; Testing 1 / 2 -> Graveyard). Confirm opens a pre-filled GitHub
-     issue in this repo (tap Submit there); the open issues are the list. No limit. Nothing moves until the owner approves
+     issue in this repo (tap Submit there); the owner's open issues are the list (others' issues are ignored: the repo is public). No limit. Nothing moves until the owner approves
      the final move with Claude; closing the issue (Remove) takes the mark off. Leaderboard rows carry a chip. -->
 <style>
 .wchip { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .02em; padding: 1px 6px; border-radius: 999px; margin-left: 6px;
@@ -1705,7 +1705,7 @@ window.MCF = window.MCF || {};
 </style>
 <script>
 (() => {
-  const REPO = "misiti15/MCF", API = "https://api.github.com/repos/" + REPO + "/issues?state=open&per_page=100";
+  const REPO = "misiti15/MCF", OWNER = "misiti15", API = "https://api.github.com/repos/" + REPO + "/issues?state=open&per_page=100";
   const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard" };
   const TAG = { up: "ON-DECK", dn: "DEMOTE-WATCH" };
   const RX = /^\[MCF (ON-DECK|DEMOTE-WATCH)\] (\S+) -> (primary|testing2|testing|graveyard)\b/;
@@ -1720,10 +1720,10 @@ window.MCF = window.MCF || {};
     try { const c = JSON.parse(sessionStorage.getItem("mcf.watch") || "null"); if (!force && c && Date.now() - c.at < 120000) raw = c.d; } catch (_) {}
     if (!raw) {
       try { const r = await fetch(API, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } }); raw = r.ok ? await r.json() : []; } catch (_) { raw = []; }
-      try { sessionStorage.setItem("mcf.watch", JSON.stringify({ at: Date.now(), d: raw.map(i => ({ title: i.title, created_at: i.created_at, html_url: i.html_url, pr: !!i.pull_request })) })); } catch (_) {}
+      try { sessionStorage.setItem("mcf.watch", JSON.stringify({ at: Date.now(), d: raw.map(i => ({ title: i.title, created_at: i.created_at, html_url: i.html_url, pr: !!i.pull_request, by: (i.user || {}).login || i.by })) })); } catch (_) {}
     }
     W = {};
-    raw.filter(i => !i.pr && !i.pull_request).forEach(i => { const m = RX.exec(i.title || ""); if (!m) return;
+    raw.filter(i => !i.pr && !i.pull_request && ((i.user || {}).login || i.by) === OWNER).forEach(i => { const m = RX.exec(i.title || ""); if (!m) return;
       (W[m[2]] = W[m[2]] || []).push({ kind: m[1] === "ON-DECK" ? "up" : "dn", to: m[3], since: String(i.created_at || "").slice(0, 10), url: i.html_url }); });
     window.MCF = window.MCF || {}; window.MCF.watch = W; decorate(); if (last) panel(last);
   }
