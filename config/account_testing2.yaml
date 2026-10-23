@@ -24,7 +24,7 @@ account:
   # the account and every setup gets entries (Testing 1 uses 150 with fewer busy setups).
   max_positions_per_strategy: 50   # owner 2026-10-14 (was 25; it blocked 215 signals on 10-13 once stacking went live)
   max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
-  max_setup_daily_loss_r: 2.0    # owner 2026-10-19 evening: a setup stops for the day at net -2R realized
+  max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
 live:
   # Owner SO1 2026-10-19: the fixed live scale-out (cancel legs, bank half, protect the rest) runs on at most 2 lots

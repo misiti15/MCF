@@ -98,10 +98,14 @@ def test_setup_loss_off_when_absent():
 def test_accounts_config(monkeypatch):
     assert "max_setup_daily_loss_r" not in load_config()["account"]
     assert load_config()["account"]["max_daily_loss_r"] == 20
+    # owner 2026-10-22 ST-A: per-setup stop off in Testing 1/2 + Gen (as Primary and the backtests); Graveyard keeps it
     for acct in ("testing", "testing2", "gen"):
         monkeypatch.setenv("MCF_ACCOUNT", acct)
-        a = load_config()["account"]
-        assert a["max_setup_daily_loss_r"] == 2.0 and a["max_daily_loss_r"] == 120
+        cfg = load_config()
+        assert not cfg["account"].get("max_setup_daily_loss_r") and cfg["account"]["max_daily_loss_r"] == 120
+        assert RiskManager(cfg, 100000).setup_loss_limit is None
+    monkeypatch.setenv("MCF_ACCOUNT", "graveyard")
+    assert load_config()["account"]["max_setup_daily_loss_r"] == 2.0
 
 
 def test_playing_time_buckets():
