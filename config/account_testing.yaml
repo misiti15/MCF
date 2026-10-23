@@ -15,7 +15,7 @@ account:
   max_concurrent_positions: 400
   max_positions_per_strategy: 150
   max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
-  max_setup_daily_loss_r: 2.0    # owner 2026-10-19 evening: a setup stops for the day at net -2R realized
+  max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
 live:
   # 2026-10-21 reallocation moved two live-scale-out setups here (CWT14-failbrk-pdh-p05-lowvol-short,

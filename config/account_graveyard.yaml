@@ -23,7 +23,7 @@ account:
   max_concurrent_positions: 200   # Testing 2: 400
   max_positions_per_strategy: 25  # Testing 2: 50
   max_daily_loss_r: 120           # catastrophe backstop only (as Testing 1/2)
-  max_setup_daily_loss_r: 2.0     # a setup stops for the day at net -2R realized (as Testing 1/2)
+  max_setup_daily_loss_r: 2.0     # a setup stops for the day at net -2R realized (kept: ST-A 2026-10-22 covered Testing 1/2 + Gen only)
   max_trades_per_day: 1500        # Testing 2: 3000
 live:
   block_twin_same_symbol: true    # no second lot on a symbol already held (or pending) by this setup's twin
