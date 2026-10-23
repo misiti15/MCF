@@ -1,0 +1,125 @@
+Educational only - not financial advice. BACKTEST parents (open history, TRAIN+VALID, costs in).
+=== CWT14-failbrk-pdl-p05-lowvol-long  n 35238  exp -0.0950  win 0.634
+losers 12899: never reached +0.2R 6898, reached +0.5R 38; med MFE 0.53 med MAE -0.51
+by entry time:
+              size   mean  <lambda_0>
+tb                                   
+09:50-10:00   5524 -0.105       0.646
+10:00-10:30  10413 -0.094       0.650
+10:30-11:30   9853 -0.100       0.631
+11:30-13:00   5574 -0.090       0.627
+13:00-14:00   2294 -0.062       0.616
+14:00-16:00   1580 -0.100       0.555
+by split / SPY session:
+                size   mean
+sp    spy_o2c              
+train False    11609 -0.185
+      True     10312  0.006
+valid False     7685 -0.153
+      True      5632 -0.015
+by exit code (1 tgt, 2 stop, 6 flat):
+       size   mean
+code              
+1     21938  0.454
+2     11124 -1.135
+6      2176 -0.310
+
+=== L3-gap-slope-fromopen-FD  n 33873  exp -0.0166  win 0.541
+losers 15562: never reached +0.2R 6433, reached +0.5R 4248; med MFE 0.81 med MAE -0.63
+by entry time:
+              size   mean  <lambda_0>
+tb                                   
+09:50-10:00    522 -0.083       0.506
+10:00-10:30   1860 -0.228       0.441
+10:30-11:30   5943 -0.123       0.488
+11:30-13:00  12360 -0.046       0.532
+13:00-14:00   6701  0.054       0.574
+14:00-16:00   6487  0.130       0.602
+by split / SPY session:
+                size   mean
+sp    spy_o2c              
+train False     6455  0.003
+      True     14590 -0.035
+valid False     4040  0.150
+      True      8788 -0.078
+by exit code (1 tgt, 2 stop, 6 flat):
+       size   mean
+code              
+1     14231  0.950
+2     11622 -1.194
+6      8020 -0.026
+
+=== CWT14-failbrk-pdl-p10-long  n 29836  exp -0.0880  win 0.645
+losers 10587: never reached +0.2R 5799, reached +0.5R 47; med MFE 0.54 med MAE -0.51
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00  9368 -0.080       0.662
+10:00-10:30  7028 -0.100       0.651
+10:30-11:30  6193 -0.108       0.632
+11:30-13:00  3876 -0.081       0.640
+13:00-14:00  1731 -0.058       0.630
+14:00-16:00  1640 -0.057       0.609
+by split / SPY session:
+                size   mean
+sp    spy_o2c              
+train False    10015 -0.164
+      True      8812  0.003
+valid False     6405 -0.137
+      True      4604 -0.027
+by exit code (1 tgt, 2 stop, 6 flat):
+       size   mean
+code              
+1     19042  0.452
+2      9506 -1.140
+6      1288 -0.305
+
+=== RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  n 4499  exp -0.0626  win 0.486
+losers 2311: never reached +0.2R 895, reached +0.5R 593; med MFE 0.63 med MAE -0.59
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   118 -0.139       0.475
+10:00-10:30   114 -0.019       0.509
+10:30-11:30  1184 -0.035       0.509
+11:30-13:00  1574 -0.058       0.492
+13:00-14:00   874 -0.087       0.468
+14:00-16:00   635 -0.084       0.454
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1329  0.132
+      True     1559 -0.212
+valid False     872  0.060
+      True      739 -0.241
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1473  0.957
+2     1375 -1.135
+6     1651 -0.079
+
+=== RW3-gapdn-rsi5pop-flowsell-short-FD  n 4800  exp -0.0758  win 0.480
+losers 2498: never reached +0.2R 917, reached +0.5R 703; med MFE 0.65 med MAE -0.63
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   185  0.002       0.546
+10:00-10:30   282 -0.031       0.521
+10:30-11:30  1402 -0.084       0.476
+11:30-13:00  1590 -0.101       0.464
+13:00-14:00   766 -0.042       0.497
+14:00-16:00   575 -0.077       0.464
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1528  0.046
+      True     1590 -0.230
+valid False    1031  0.059
+      True      651 -0.199
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1636  0.960
+2     1589 -1.126
+6     1575 -0.093
