@@ -132,5 +132,33 @@
   "link": "research/bdi/nightly1022/NOTES.md",
   "status": "answered",
   "answered": "2026-10-22: ST-A+P — testing stops off from 2026-10-23; Primary study queued, no Primary change"
+ },
+ {
+  "code": "MF1-D",
+  "title": "Demote Early Sellers Above VWAP (MF1-945-flowsell-vwapup) from Primary to Testing 1",
+  "what": "Move the 09:50-10:25 short 'Early Sellers Above VWAP' out of Primary into Testing 1 (a move: switched off in Primary). It was P4 on 10-19 ('not yet, re-check at 40 trades') when it was +0.13R; since then it is -0.19R over 25 trades.",
+  "recommend": "Yes - demote to Testing 1 (after the close; nothing is removed)",
+  "numbers": [
+   "25 Primary trades in 10 sessions: 32% win vs 35% needed, -0.19R after costs, -$44.45 (t_day -0.80)",
+   "Last 4 sessions (10-20..10-23): 9 trades, -0.54R each; 2-year backtest -0.050R/trade"
+  ],
+  "why": "Live and 2-year history now agree it loses; it was kept on 10-19 only because 16 trades were slightly positive.",
+  "link": "research/bdi/nightly1023/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "D2",
+  "title": "Move Gap-Down VWAP Loss Short (5% gap) (CWT09-gapdn-vwaploss-g5-short) from Testing 2 to the Graveyard",
+  "what": "Move this Testing 2 short to the Graveyard (a move: switched off in Testing 2, keeps paper-trading there).",
+  "recommend": "Yes - move to the Graveyard",
+  "numbers": [
+   "33 paper trades in 6 sessions: 15% win vs 40% needed, -0.70R/trade after costs, -$235.57 (t_day -1.69)",
+   "2-year backtest -0.031R/trade"
+  ],
+  "why": "The worst per-trade record among Testing setups with 15+ trades; never raised before.",
+  "link": "research/bdi/nightly1023/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]

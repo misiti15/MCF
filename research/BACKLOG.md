@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 617 · coded: 85 · failed: 301 · configurations tried (all lineages): 32796488
+Total ideas: 619 · coded: 85 · failed: 301 · configurations tried (all lineages): 32796488
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -318,6 +318,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1021-hfl-fd-hold-no-target | heat_fade_long-FD: drop the target and hold to 15:55 with the original stop (or one re-entry after a stop) | BDI 2026-10-21 (research/bdi/bdi1021/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1022-setup-stop-latch | Per-setup -2R daily stop that latches for the day (no re-arm when a later winner lifts realized R back above -2R), vs the live re-arming check | nightly-2026-10-22 (research/bdi/nightly1022/NOTES.md, rearm_out.txt, latch_out.txt) | – | – | – | – | – | – |
 | idea | bdi1022-short-cluster-profit-lock | Cluster profit lock: when >= 5 open lots of correlated sibling shorts (same family, same polls) are together >= +X R open, move all their stops to breakeven (or 0.5R trail) | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md; nightly1022 give-back) | – | – | – | – | – | – |
+| idea | st-a-1022-primary-setup-stop | Primary: per-setup daily loss stop (-2R, latched) vs none (Primary today has only the -20R account stop) | owner ST-A+P 2026-10-22 evening (research only; no Primary change without a separate owner decision) | – | – | – | – | – | – |
+| idea | nightly-1023-wide-stop-pct-risk | Slot-capped sizing makes $ risk scale with stop % of price: test skipping or down-sizing wide-stop-% entries (top quartile, stop >= ~1.7% of price) | nightly-2026-10-23 (research/bdi/nightly1023/NOTES.md, risk-quartile split) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |

@@ -1,0 +1,61 @@
+
+===== p: skipped 16; what-if rows 16; mean cost 0.065R/trade (production model)
+-- 'twin held': 3 skipped signals; 3 priced in the what-if run
+   (~$-34 at the account's median $risk 13.44)
+   what-if: n 3, win 0%, sum gross -2.23R, sum net -2.52R, avg net -0.840R
+                            n  win   sumR   avgR
+strategy                                        
+MF4-h40-open-flowsell       2    0 -1.328 -0.664
+MF2-open-rsimidhi-flowsell  1    0 -1.193 -1.193
+   held_by: {'MF4-h40-open-flowsell-FD': 2, 'MF2-open-rsimidhi-flowsell-FD': 1}
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== t1: skipped 71; what-if rows 70; mean cost 0.055R/trade (production model)
+-- 'twin held': 0 skipped signals; 0 priced in the what-if run
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== t2: skipped 72; what-if rows 73; mean cost 0.049R/trade (production model)
+-- 'twin held': 3 skipped signals; 3 priced in the what-if run
+   (~$+13 at the account's median $risk 8.34)
+   what-if: n 3, win 67%, sum gross +1.77R, sum net +1.60R, avg net +0.533R
+                            n  win  sumR   avgR
+strategy                                       
+MF5-flowsell-vwapup-rsi5hi  3   67   1.6  0.533
+   held_by: {'MF5-flowsell-vwapup-rsi5hi-FD': 3}
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== gy: skipped 306; what-if rows 307; mean cost 0.066R/trade (production model)
+-- 'twin held': 9 skipped signals; 9 priced in the what-if run
+   (~$-39 at the account's median $risk 13.61)
+   what-if: n 9, win 33%, sum gross -2.66R, sum net -2.84R, avg net -0.316R
+                                 n  win   sumR   avgR
+strategy                                             
+heat_fade_short-FD               6   17 -3.743 -0.624
+NS2-sma50break-overbought-short  3   67  0.898  0.299
+   held_by: {'heat_fade_short': 6, 'NS2-sma50break-overbought-short-FD': 3}
+-- 'setup daily loss limit': 186 skipped signals; 185 priced in the what-if run
+   (~$-127 at the account's median $risk 13.61)
+   what-if: n 185, win 66%, sum gross +3.41R, sum net -9.34R, avg net -0.050R
+                                      n  win   sumR   avgR
+strategy                                                  
+CWT14-failbrk-orl-p05-lowvol-long    64   67 -6.388 -0.100
+CWT14-failbrk-pdh-p05-lowvol-short   13   38 -5.884 -0.453
+CWT14-failbrk-orl-p05-long           83   70 -3.698 -0.045
+RW2-exhaustion-noon-adv150-short-FD   8   75  2.423  0.303
+heat_fade_short-FD                   17   59  4.204  0.247
+   CWT14-failbrk-orl-p05-long: realized at trip -5.19R(j) over 7; open at trip 21 lots -> -2.52R; entered after 0; max same-poll cluster 15
+   CWT14-failbrk-orl-p05-long: tripped first 10:20, live 28 trades -7.96R ($-128.45); blocked 83 signals; what-if -3.70R net over 83
+   CWT14-failbrk-orl-p05-lowvol-long: realized at trip -4.19R(j) over 6; open at trip 22 lots -> -0.37R; entered after 0; max same-poll cluster 18
+   CWT14-failbrk-orl-p05-lowvol-long: tripped first 10:20, live 28 trades -4.78R ($-63.29); blocked 65 signals; what-if -6.39R net over 64
+   CWT14-failbrk-pdh-p05-lowvol-short: realized at trip -2.98R(j) over 11; open at trip 0 lots -> +0.00R; entered after 0; max same-poll cluster 4
+   CWT14-failbrk-pdh-p05-lowvol-short: tripped first 11:00, live 11 trades -3.30R ($-66.37); blocked 13 signals; what-if -5.88R net over 13
+   RW2-exhaustion-noon-adv150-short-FD: realized at trip -2.07R(j) over 2; open at trip 13 lots -> -5.56R; entered after 0; max same-poll cluster 4
+   RW2-exhaustion-noon-adv150-short-FD: tripped first 11:30, live 15 trades -7.68R ($-247.30); blocked 8 signals; what-if +2.42R net over 8
+   heat_fade_short-FD: realized at trip -2.03R(j) over 2; open at trip 18 lots -> +3.27R; entered after 0; max same-poll cluster 4
+   heat_fade_short-FD: tripped first 12:17, live 20 trades +1.20R ($+9.21); blocked 17 signals; what-if +4.20R net over 17
+
+===== gen: skipped 8; what-if rows 8; mean cost 0.079R/trade (production model)
+-- 'twin held': 0 skipped signals; 0 priced in the what-if run
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+Educational only - not financial advice.
