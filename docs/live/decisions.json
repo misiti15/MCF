@@ -160,5 +160,20 @@
   "link": "research/bdi/nightly1023/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "ST-P",
+  "title": "Add a per-setup daily stop to Primary",
+  "what": "A Primary setup takes no new trades for the rest of the day once it is down 2R (latched), as the Graveyard does today; the -20R account stop stays.",
+  "recommend": "Yes, at -2R (-3R is the gentler alternative)",
+  "numbers": [
+   "2-yr avg R -0.035 -> -0.025 (2026); better in up and down days, 17 of 21 months",
+   "blocks 11.6% of trades (avg -0.13R); worst day -71R -> -46R",
+   "t 3.32 vs bar 3.79; live 14 sessions +19.4R"
+  ],
+  "why": "Primary has no per-setup stop. On two years it trims losing setup-days without touching exits; the best 20 days give up 26.5R of 753R (-3R version: 2.4R). Below the try-count bar, and Primary stays negative after costs.",
+  "link": "research/bdi/saturday1024/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
