@@ -1,0 +1,14 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Both are machine-generated, not tested edges: they win on up days and lose on down days.",
+ "setups": [
+  {"setup": "GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long",
+   "title": "Morning Momentum Pop",
+   "lines": [["When", "9:50–11:00 AM"], ["Market", "70%+ of stocks trading above VWAP (broad up morning)"],
+             ["Stock", "Volatile (daily range ≥ 4.4% of price), ≥ $50M traded a day"],
+             ["Trigger", "RSI(14) jumps 19+ points in 15 min and the 5-min bar has a long lower wick (≥ ⅓ of the bar)"],
+             ["Action", "Buy"], ["Exit", "Stop 1 unit below; no target, hold to 3:55 PM"]]},
+  {"setup": "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long",
+   "title": "Midday Failed-Breakdown Reclaim",
+   "lines": [["When", "11:30 AM–2:00 PM"], ["Market", "SPY up 0.25%+ since the open"], ["Stock", "≥ $150M traded a day"],
+             ["Trigger", "Broke below its opening-range low, now back above it; crossed VWAP 4+ times; still ≥ 0.31% below its 20-bar average"],
+             ["Action", "Buy"], ["Exit", "Stop 1 unit below; once up 1 unit, trail 1 unit behind; else close 3:55 PM"]]}
+ ]}
