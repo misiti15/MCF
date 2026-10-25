@@ -433,7 +433,7 @@ window.MCF = window.MCF || {};
       R = the setup's planned risk per trade. <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
       <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
-      <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. <b>*</b> = long setup from the 2026-10-20 longs research, near-miss, observation only.
@@ -1003,12 +1003,12 @@ window.MCF = window.MCF || {};
   }
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["best_reg", "Best conditions"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
-    ["trades", "Live trades"], ["sessions_traded", "Sessions"],
+    ["trades", "Live trades"], ["sessions_traded", "Sessions"], ["per_session", "Trades/session"],   // owner 2026-10-25
     ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
     ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
-  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", win_rate: "live", breakeven_wr: "live",
+  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
     avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
     rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
   const LEFT = new Set(["name", "acctLabel", "best_reg", "pt", "flag"]);
@@ -1020,6 +1020,8 @@ window.MCF = window.MCF || {};
         RP && RP.generated ? `Replay of the setup's rules over past sessions with the live execution engine, generated ${RP.generated}${RP.window ? ", " + RP.window : ""}. Not live trades.` : "Replay results appear here once the replay engine writes docs/live/replay.json. Not live trades."] };
     return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
   function draw() {
+    // owner 2026-10-25: average trades per session it traded (how active a setup is; a few busy days don't hide)
+    rows.forEach(x => { x.per_session = x.trades && x.sessions_traded ? +(x.trades / x.sessions_traded).toFixed(1) : null; });
     let r = rows.filter(x => (st.acct === "all" || (x.accts || [x.acct]).includes(st.acct)) && (st.show === "all" || x.live) && (x.trades || 0) >= st.min);
     const key = x => { const v = sortK === "flag" ? x.flag[0] : x[sortK]; return v == null ? (sortD > 0 ? Infinity : -Infinity) : v; };
     r.sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" ? A.localeCompare(B) : A - B) * sortD; });
@@ -1040,7 +1042,7 @@ window.MCF = window.MCF || {};
         <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
         <td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>
         <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
-        <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td>${pc(x.win_rate)}</td>
+        <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td title="Average live trades per session it traded">${x.per_session ?? "–"}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
         <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td>
@@ -1326,6 +1328,7 @@ window.MCF = window.MCF || {};
     "Trades": "Closed paper trades.",
     "Trades today": "Trades closed today in this account.",
     "Sessions": "Market days the setup traded at least once.",
+    "Trades/session": "Average live trades per session it traded (live trades ÷ sessions traded): how active the setup is, so a couple of very busy days don't hide.",
     "Trades/day": "Live trades divided by sessions traded. The owner's promotion signal for generated setups (about 20/day).",
     "Win rate": "Share of trades that made money after costs.",
     "Break-even win rate": "The win rate this setup needs to make money, given its own average win and loss size. The (+/-) is how far the actual win rate is above or below it.",
