@@ -148,7 +148,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
                          acct=" + ".join({"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator",
                                           "graveyard": "Graveyard"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
-                         ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / len(r.get("days") or [1])),
+                         ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
                          win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), t=r.get("t_stat"),
                          total_r=r.get("total_r"), pnl=r.get("pnl"), pf=r.get("profit_factor"),
                          last4=r.get("recent_avg_r") if len(rs) == 1 and r.get("recent_avg_r") is not None else _last4(r, last4),
@@ -198,9 +198,9 @@ h1{font-size:22px;margin:0 0 2px} .sub{color:#666;font-size:13px;margin-bottom:1
 .ts td.k{width:84px;font-weight:600;color:#555;white-space:nowrap}
 .side{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;border:1px solid currentColor;margin-left:6px;vertical-align:2px}
 .lb{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
-.lb th{font-size:11px;color:#555;text-align:right;padding:5px 5px;border-bottom:1px solid #ddd;vertical-align:bottom;line-height:1.2}
-.lb td{padding:5px 5px;text-align:right;border-bottom:1px solid #eee;white-space:nowrap}
-.lb .l{text-align:left} .lb .nm{max-width:270px;overflow:hidden;text-overflow:ellipsis} .lb .nm div{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis}
+.lb th{font-size:11px;color:#555;text-align:right;padding:5px 4px;max-width:66px;white-space:normal;border-bottom:1px solid #ddd;vertical-align:bottom;line-height:1.2}
+.lb td{padding:5px 4px;text-align:right;border-bottom:1px solid #eee;white-space:nowrap}
+.lb .l{text-align:left} .lb th.l{max-width:none} .lb .nm{max-width:250px;overflow:hidden;text-overflow:ellipsis} .lb .nm div{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis}
 .lb .ls{background:#eef3fb} .chip{display:inline-block;font-size:10.5px;padding:0 6px;border-radius:6px;border:1px solid #ccc;color:#444}
 .chip.Bear{color:#b91c1c;border-color:#b91c1c} .chip.Bull{color:#15803d;border-color:#15803d} .chip.Choppy{color:#b45309;border-color:#b45309}
 .gen{border-color:#c4b5fd;background:#faf8ff} .gb{display:inline-block;font-size:9.5px;font-weight:700;color:#fff;background:#7c3aed;border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:1px}
@@ -283,7 +283,7 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
                 "Break-even win rate", "Avg R", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
     else:
         head = ["#", "Setup", "Account", "Best conditions", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades",
-                "Sessions", "Win rate", "Break-even win rate", "Avg R", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
+                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
     ls_cols = {"Last-session trades", "Last-session R", "Last-session P/L"}
     th = "".join(f'<th class="{"l" if h in ("Setup", "Account", "Best conditions") else ""}{" ls" if h in ls_cols else ""}">{h}</th>' for h in head)
     trs = []
@@ -296,13 +296,13 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
         common = (f'<td>{_pc(x["win"])}</td><td class="{_cls(edge)}">{be}</td><td class="{_cls(x["avg_r"])}">{_f(x["avg_r"])}</td>'
                   f'<td>{_f(x["t"], 1, False)}</td><td class="{_cls(x["total_r"])}">{_f(x["total_r"], 1)}</td><td class="{_cls(x["pnl"])}">{_money(x["pnl"])}</td>')
         if gen:
-            trs.append(f'<tr><td>{x["rank"]}</td>{nm}{ls}<td>{x["trades"]}</td><td>{x["per_day"]:.1f}</td>{common}'
+            trs.append(f'<tr><td>{x["rank"]}</td>{nm}{ls}<td>{x["trades"]}</td><td>{_f(x["per_day"], 1, False)}</td>{common}'
                        f'<td class="{_cls(x["last4"])}">{_f(x["last4"])}</td><td class="{_cls(x["screen"][0])}">{_f(x["screen"][0], 3)}</td>'
                        f'<td class="{_cls(x["screen"][1])}">{_f(x["screen"][1], 3)}</td></tr>')
         else:
             best = f'<span class="chip {_e(x["best"])}">{_e(x["best"])}</span>' if x["best"] else "—"
             trs.append(f'<tr><td>{x["rank"]}</td>{nm}<td class="l">{_e(x["acct"])}</td><td class="l">{best}</td>{ls}'
-                       f'<td>{x["trades"]}</td><td>{x["sessions"] or "—"}</td>{common}<td>{_f(x["pf"], 2, False)}</td>'
+                       f'<td>{x["trades"]}</td><td>{x["sessions"] or "—"}</td><td>{_f(x["per_day"], 1, False)}</td>{common}<td>{_f(x["pf"], 2, False)}</td>'
                        f'<td class="{_cls(x["last4"])}">{_f(x["last4"])}</td></tr>')
     title = "Generated setups — top 10 (Setup Generator account)" if gen else "Setup leaderboard — top 10, all accounts, since start"
     sub = ("Machine-generated setups on their own paper account; not tested edges. Ranked by avg R per trade, shrunk by trades ÷ (trades + 20)."
