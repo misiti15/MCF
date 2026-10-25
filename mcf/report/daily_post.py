@@ -1,14 +1,18 @@
 """Daily message-board post images (owner 2026-10-24).
 
-Three PNGs per session, built from the same data the dashboard reads (each data branch's status.json and
-reports/scorecard.json, docs/live/assignments.json / setup_names.json / regimes.json):
+Five PNGs + the post text per session, built from the same data the dashboard reads (each data branch's status.json
+and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regimes.json). Day-trading accounts only
+(the long-hold S6 account is left out, owner 2026-10-25):
 
-  1-accounts.png      EOD balance, today's P/L and since-start P/L per account, Primary green-day streak, and the
-                      day's top two setups explained in plain words (the words come from --top2 JSON, written by
-                      Claude each night; without it the setup's own one-line description is used)
-  2-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and
-                      rank as the dashboard
-  3-generator.png     generated setups leaderboard (Setup Generator account), top 10
+  1-today.png         EOD balance, today's and since-start P/L per account, the owner's milestones (M1: Primary 3 green
+                      days in a row; M2: 8 green of the last 10), cumulative P/L chart since start, last-5-sessions table
+  2-top2.png          the day's top two setups explained in plain words (words from --top2 JSON, written by Claude each
+                      night; without it the setup's own one-line description is used)
+  3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
+                      the dashboard
+  4-generator.png     generated setups leaderboard (Setup Generator account), top 10
+  5-facts.png         quick facts (same every day, live counts): stack, setups, life cycle, what the stats mean
+  post.txt            the short post text (owner's template)
 
     python -m mcf.report.daily_post --date 2026-10-23 [--top2 research/posts/2026-10-23.json] [--out docs/posts]
 
@@ -27,8 +31,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "Testing 1", "mcf-data-testing", "testing"),
             ("testing2", "Testing 2", "mcf-data-testing2", "testing"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
-            ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers"),
-            ("longhold", "Long-hold (S6)", "mcf-data-longhold", "weekly momentum")]
+            ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers")]   # day-trading only (no S6)
+MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
 LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard")
 CHROME = ["/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell", "/opt/pw-browsers/chromium"]
 
@@ -55,15 +59,6 @@ def fetch():
 def accounts(date: str) -> list[dict]:
     out = []
     for k, name, br, kind in ACCOUNTS:
-        if k == "longhold":
-            s = _show(br, "longhold/status.json") or {}
-            x, mk, lp = s.get("intraday") or {}, s.get("mark") or {}, s.get("last_plan") or {}
-            use_x = x.get("asof") and (not mk.get("date") or x["asof"][:10] >= mk["date"])
-            ss = s.get("since_start") or {}
-            out.append(dict(k=k, name=name, kind=kind, equity=(x.get("equity") if use_x else mk.get("equity", lp.get("equity"))),
-                            today=(x.get("day_pl") if use_x else mk.get("day_pl")), trades=None,
-                            holdings=len(s.get("positions") or {}), since_pct=ss.get("return")))
-            continue
         s = _show(br, "status.json") or {}
         t, ss = s.get("today") or {}, s.get("since_start") or {}
         if s.get("session_date") != date:
@@ -71,6 +66,24 @@ def accounts(date: str) -> list[dict]:
         out.append(dict(k=k, name=name, kind=kind, equity=(s.get("account") or {}).get("equity"), today=t.get("pnl"),
                         trades=t.get("trades"), since=ss.get("pnl"), history=s.get("history") or []))
     return out
+
+
+def _sessions(primary: dict, date: str) -> list[dict]:
+    return [x for x in primary.get("history", []) if x.get("date", "") <= date and x.get("trades")]
+
+
+def milestones(primary: dict, date: str) -> dict:
+    """M1 (3 green in a row) and M2 (8 green of the last 10) on Primary's daily P/L (paper fills, as the balance)."""
+    h = _sessions(primary, date)
+    run = streak(primary, date)[0]
+    best, cur = 0, 0
+    for x in h:
+        cur = cur + 1 if (x.get("pnl") or 0) > 0 else 0
+        best = max(best, cur)
+    last10 = h[-10:]
+    g10 = sum((x.get("pnl") or 0) > 0 for x in last10)
+    return dict(run=run, best_run=best, m1=best >= 3, g10=g10, n10=len(last10), m2=len(last10) == 10 and g10 >= 8,
+                dots=[(x["date"], (x.get("pnl") or 0) > 0) for x in last10])
 
 
 def streak(primary: dict, date: str) -> tuple[int, int, int]:
@@ -178,6 +191,28 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
     return out
 
 
+def facts(accts: list[dict]) -> dict:
+    """Live counts for the quick-facts card."""
+    asg = (_local("docs/live/assignments.json") or {}).get("setups", {})
+    live = [k for k, v in asg.items() if v.get("accounts")]
+    gen = [k for k in live if "gen" in asg[k]["accounts"]]
+    lab = _local("docs/live/generator_lab.json") or {}
+    rejected = 0
+    p = ROOT / "research" / "backlog.jsonl"
+    if p.exists():
+        st = [json.loads(l).get("status") for l in p.read_text().splitlines() if l.strip()]
+        rejected = sum(x in ("failed", "holdout_failed", "failed_locked", "rework") for x in st)
+    rejected += max(0, (lab.get("specs_screened") or 0) - (lab.get("setups_generated") or 0))
+    slip, n = 0.0, 0
+    for k, _, br, _ in ACCOUNTS:
+        ss = (_show(br, "status.json") or {}).get("since_start") or {}
+        if ss.get("avg_entry_slip_bps") is not None and ss.get("trades"):
+            slip += ss["avg_entry_slip_bps"] * ss["trades"]; n += ss["trades"]
+    pr = next(a for a in accts if a["k"] == "primary")
+    return dict(live=len(live) - len(gen), gen=len(gen), rejected=rejected, slip=(slip / n if n else None), trades=n,
+                sessions=len(_sessions(pr, "9999")), start=(pr.get("history") or [{}])[0].get("date"))
+
+
 # ---------------------------------------------------------------- render
 CSS = """
 *{box-sizing:border-box} body{margin:0;background:#f7f7f5;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1b1b1b}
@@ -205,6 +240,18 @@ h1{font-size:22px;margin:0 0 2px} .sub{color:#666;font-size:13px;margin-bottom:1
 .chip.Bear{color:#b91c1c;border-color:#b91c1c} .chip.Bull{color:#15803d;border-color:#15803d} .chip.Choppy{color:#b45309;border-color:#b45309}
 .gen{border-color:#c4b5fd;background:#faf8ff} .gb{display:inline-block;font-size:9.5px;font-weight:700;color:#fff;background:#7c3aed;border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:1px}
 .foot{font-size:9px;color:#999;text-align:center;padding:4px 0 8px}
+.accts5{grid-template-columns:repeat(5,1fr)}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+.ms{display:grid;grid-template-columns:1fr 1fr;gap:12px} .m{border:1px solid #e3e3e0;border-radius:10px;padding:10px 12px}
+.m .t{font-weight:650;font-size:13.5px} .m .v{font-size:22px;font-weight:700;margin:2px 0;font-variant-numeric:tabular-nums}
+.m .d{font-size:11.5px;color:#666} .dots{display:flex;gap:4px;margin-top:6px} .dot{width:16px;height:16px;border-radius:50%;background:#e5e5e2}
+.dot.g{background:#16a34a} .dot.r{background:#dc2626} .done{color:#15803d;font-size:11px;font-weight:700;margin-left:6px}
+.t5{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums} .t5 th{font-size:11px;color:#555;text-align:right;padding:4px;border-bottom:1px solid #ddd}
+.t5 td{padding:4px;text-align:right;border-bottom:1px solid #eee} .t5 .l{text-align:left}
+.leg{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:#444;margin-top:4px} .leg i{display:inline-block;width:12px;height:3px;margin-right:4px;vertical-align:3px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:12px} .fb{border:1px solid #e3e3e0;border-radius:10px;padding:10px 13px}
+.fb h3{font-size:13.5px;margin:0 0 6px} .fb table{width:100%;border-collapse:collapse;font-size:12.5px} .fb td{padding:3px 4px;vertical-align:top;border-top:1px solid #f0f0ee}
+.fb td.k{width:118px;font-weight:600;color:#555} pre.tree{font-size:12px;line-height:1.45;margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;color:#222}
 """
 
 
@@ -241,24 +288,87 @@ def page(body: str, title: str, sub: str) -> str:
             f'<h1>{_e(title)}</h1><div class="sub">{_e(sub)}</div>{body}{FOOT}</div></body></html>')
 
 
-def html_accounts(date: str, accts: list[dict], top: list[dict], words: dict) -> str:
+COLORS = {"primary": "#2563eb", "testing": "#0d9488", "testing2": "#d97706", "gen": "#7c3aed", "graveyard": "#6b7280"}
+
+
+def _chart(accts: list[dict], date: str) -> str:
+    """Cumulative P/L per account since its first session (SVG lines) + the total."""
+    days = sorted({x["date"] for a in accts for x in a.get("history") or [] if x.get("date", "") <= date})
+    if not days:
+        return '<div class="sub">No history yet.</div>'
+    W, H, P = 600, 210, 64
+    series = {}
+    for a in accts:
+        by = {x["date"]: (x.get("pnl") or 0) for x in a.get("history") or []}
+        c, pts, started = 0.0, [], False
+        for d in days:
+            if d in by:
+                started = True
+                c += by[d]
+            pts.append(c if started else None)
+        series[a["k"]] = pts
+    tot = [sum(series[k][i] or 0 for k in series) for i in range(len(days))]
+    vals = [v for p in series.values() for v in p if v is not None] + tot + [0]
+    lo, hi = min(vals), max(vals)
+    x = lambda i: P + i * (W - P - 10) / max(1, len(days) - 1)
+    y = lambda v: 10 + (hi - v) * (H - 34) / ((hi - lo) or 1)
+    def path(p):
+        out, pen = [], False
+        for i, v in enumerate(p):
+            if v is None:
+                pen = False
+                continue
+            out.append(("L" if pen else "M") + f"{x(i):.1f} {y(v):.1f}")
+            pen = True
+        return "".join(out)
+    lines = "".join(f'<path d="{path(series[k])}" fill="none" stroke="{COLORS[k]}" stroke-width="2"/>' for k in series)
+    lines += f'<path d="{path(tot)}" fill="none" stroke="#111" stroke-width="2.6" stroke-dasharray="5 3"/>'
+    ticks = "".join(f'<text x="{P - 6}" y="{y(v) + 4:.1f}" text-anchor="end" font-size="10" fill="#666">{_money(v, False).replace(".00", "") if abs(v) >= 1 else "$0"}</text>'
+                    f'<line x1="{P}" x2="{W - 10}" y1="{y(v):.1f}" y2="{y(v):.1f}" stroke="#eee"/>' for v in (hi, 0, lo))
+    xl = f'<text x="{P}" y="{H - 6}" font-size="10" fill="#666">{days[0][5:]}</text><text x="{W - 10}" y="{H - 6}" font-size="10" fill="#666" text-anchor="end">{days[-1][5:]}</text>'
+    leg = "".join(f'<span><i style="background:{COLORS[a["k"]]}"></i>{_e(a["name"])}</span>' for a in accts) + '<span><i style="background:#111"></i>All 5 (dashed)</span>'
+    return f'<svg viewBox="0 0 {W} {H}" width="100%">{ticks}{lines}{xl}</svg><div class="leg">{leg}</div>'
+
+
+def _last5(accts: list[dict], date: str) -> str:
+    days = sorted({x["date"] for a in accts for x in a.get("history") or [] if x.get("date", "") <= date and x.get("trades")})[-5:]
+    rows = []
+    for d in reversed(days):
+        hs = [x for a in accts for x in a.get("history") or [] if x.get("date") == d]
+        pnl, tr = sum(x.get("pnl") or 0 for x in hs), sum(x.get("trades") or 0 for x in hs)
+        r = sum((x.get("avg_r") or 0) * (x.get("trades") or 0) for x in hs) / tr if tr else None
+        pr = next((x for x in accts[0].get("history") or [] if x.get("date") == d), {})
+        rows.append(f'<tr><td class="l">{d[5:]}</td><td class="{_cls(pnl)}">{_money(pnl)}</td><td class="{_cls(pr.get("pnl"))}">{_money(pr.get("pnl"))}</td>'
+                    f'<td>{tr}</td><td class="{_cls(r)}">{_f(r)}</td></tr>')
+    return ('<table class="t5"><thead><tr><th class="l">Session</th><th>All 5 P/L</th><th>Primary P/L</th><th>Trades</th><th>Avg R</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table>')
+
+
+def html_today(date: str, accts: list[dict]) -> str:
     cards = []
     for a in accts:
-        if a["k"] == "longhold":
-            l1 = f'Today <span class="{_cls(a["today"])}">{_money(a["today"])}</span> · {a["holdings"]} holdings'
-            sp = a.get("since_pct")
-            l2 = f'Since start <span class="{_cls(sp)}">{"—" if sp is None else f"{sp * 100:+.1f}%"}</span>'
-        else:
-            l1 = f'Today <span class="{_cls(a["today"])}">{_money(a["today"])}</span> · {a["trades"] if a["trades"] is not None else "—"} trades'
-            l2 = f'Since start <span class="{_cls(a.get("since"))}">{_money(a.get("since"))}</span>'
+        l1 = f'Today <span class="{_cls(a["today"])}">{_money(a["today"])}</span> · {a["trades"] if a["trades"] is not None else "—"} trades'
+        l2 = f'Since start <span class="{_cls(a.get("since"))}">{_money(a.get("since"))}</span>'
         cards.append(f'<div class="acc"><div class="n">{_e(a["name"])}</div><div class="ty">{_e(a["kind"])}</div>'
                      f'<div class="eq">{_money(a["equity"], sign=False)}</div><div class="ln">{l1}</div><div class="ln">{l2}</div></div>')
-    pr = next(a for a in accts if a["k"] == "primary")
-    run, green, n = streak(pr, date)
-    intraday = sum((a["today"] or 0) for a in accts if a["k"] != "longhold")
-    strip = (f'<div class="strip"><div>Intraday accounts today: <b class="{_cls(intraday)}">{_money(intraday)}</b></div>'
-             f'<div>Primary green-day streak: <b>{run}</b> ({green} of {n} sessions green)</div>'
-             f'<div>Start: $100,000 per account (paper)</div></div>')
+    today = sum((a["today"] or 0) for a in accts)
+    since = sum((a.get("since") or 0) for a in accts)
+    strip = (f'<div class="strip"><div>All 5 today: <b class="{_cls(today)}">{_money(today)}</b></div>'
+             f'<div>All 5 since start: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
+    m = milestones(accts[0], date)
+    dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
+    ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
+          f'<div class="v">{min(m["run"], 3)} / 3</div><div class="d">Current streak {m["run"]} · best so far {m["best_run"]}</div></div>'
+          f'<div class="m"><div class="t">M2 · {MILESTONES[1][1]}{"<span class=done>REACHED</span>" if m["m2"] else ""}</div>'
+          f'<div class="v">{m["g10"]} / {m["n10"]}</div><div class="d">Need 8 of 10 · green / red, oldest → newest</div><div class="dots">{dots}</div></div></div>')
+    return page(f'<div class="card"><h2>Accounts — end of day</h2><div class="accts accts5">{"".join(cards)}</div>{strip}</div>'
+                f'<div class="card"><h2>Milestones</h2>{ms}</div>'
+                f'<div class="two"><div class="card"><h2>Progress — cumulative P/L since start</h2>{_chart(accts, date)}</div>'
+                f'<div class="card"><h2>Last 5 sessions</h2>{_last5(accts, date)}</div></div>',
+                f"MCF daily — {date}", "AI/algo day-trading system on paper money · end-of-day summary")
+
+
+def html_top2(date: str, top: list[dict], words: dict) -> str:
     tops = []
     for i, t in enumerate(top, 1):
         w = words.get(t["setup"]) or {}
@@ -271,10 +381,50 @@ def html_accounts(date: str, accts: list[dict], top: list[dict], words: dict) ->
                     f'<b class="{_cls(t["pnl"])}">{_money(t["pnl"])}</b> · {_e(" + ".join(sorted(set(t["accts"]))))}</div>'
                     f'<table>{rows}</table><div class="id" style="margin-top:6px">{_e(t["setup"])}</div></div>')
     note = words.get("_note") or "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET."
-    return page(f'<div class="card"><h2>Accounts — end of day</h2><div class="accts">{"".join(cards)}</div>{strip}</div>'
-                f'<div class="card"><h2>Top 2 setups today — in plain words</h2><div class="top2">{"".join(tops)}</div>'
+    return page(f'<div class="card"><h2>Top 2 setups today — in plain words</h2><div class="top2">{"".join(tops)}</div>'
                 f'<div class="sub" style="margin:8px 0 0">{_e(note)} Not a recommendation; for research only.</div></div>',
-                f"MCF daily — {date}", "AI/algo day-trading system on paper money · end-of-day summary")
+                f"MCF daily — {date} · Top 2 setups", "The two setups that made the most today, explained so you can research them yourself")
+
+
+def html_facts(date: str, fx: dict) -> str:
+    row = lambda k, v: f'<tr><td class="k">{_e(k)}</td><td>{v}</td></tr>'
+    stack = "".join([row("AI", "Claude (Opus 5.5) builds, tests and runs it"), row("Code", "Python (pandas / NumPy) · dashboard in HTML/JS"),
+                     row("Broker / data", "Alpaca API · paper trading · SIP market data (all US exchanges)"),
+                     row("Market", "US stocks and ETFs · intraday only (9:50 AM–3:55 PM ET) · long and short · nothing held overnight"),
+                     row("Backtests", "2 years of 1-minute bars, train / validation split, a locked holdout never peeked at, costs in")])
+    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, Testing 1, Testing 2, Graveyard'),
+                     row("Generated live", f'<b>{fx["gen"]}</b> in the Setup Generator account'),
+                     row("Rejected so far", f'<b>~{fx["rejected"]:,}</b> setups failed backtests (plus many more variations)'),
+                     row("Built from", "basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs and lows, ATR"),
+                     row("Setup Generator", "a bot that invents 10 new setups a night from those indicators and trades them on its own paper account"),
+                     row("Track record", f'{fx["sessions"]} sessions since {fx["start"] or "—"} · {fx["trades"]:,} paper trades')])
+    stats = "".join([row("Avg R", "average result per trade in units of the risk taken; costs, fees and slippage are already in. +0.5R = earns half its risk per trade"),
+                     row("Break-even win rate", "the win rate a setup needs just to not lose money, given its own average win and loss size"),
+                     row("Confidence (t)", "how sure it isn't luck: 2+ solid, under 1 could be luck"),
+                     row("Trades/session", "average trades per session it traded: how active it is"),
+                     row("Slippage", f'entries fill on average <b>{_f(fx["slip"], 1, False)} bps</b> worse than the signal price (measured on paper fills)')])
+    tree = ("Idea / Setup Generator\n └─ 2-year backtest (costs in)\n     └─ Replay on real sessions\n         └─ Testing 1 / Testing 2 / Setup Generator (paper)\n"
+            "             └─ Primary (paper)\n                 └─ Live money (after milestones)\nLosers move down: Primary → Testing → Graveyard (never deleted)")
+    ms = "".join(row(k, v) for k, v in MILESTONES)
+    return page(f'<div class="facts"><div class="fb"><h3>Stack</h3><table>{stack}</table></div><div class="fb"><h3>Setups</h3><table>{scale}</table></div>'
+                f'<div class="fb"><h3>Life cycle of a setup</h3><pre class="tree">{_e(tree)}</pre></div>'
+                f'<div class="fb"><h3>What the stats mean</h3><table>{stats}</table></div>'
+                f'<div class="fb" style="grid-column:1 / -1"><h3>Milestones before real money</h3><table>{ms}</table></div></div>',
+                f"MCF — quick facts", f"Same every day; counts as of {date}")
+
+
+def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int) -> str:
+    m = milestones(accts[0], date)
+    today = sum((a["today"] or 0) for a in accts)
+    since = sum((a.get("since") or 0) for a in accts)
+    pr = accts[0]
+    best = top[0] if top else None
+    bn = ((words.get(best["setup"]) or {}).get("title") or best["name"]) if best else "—"
+    return (f"Day {day_n} – AI algo day-trading (paper)\n"
+            f"Today: {_money(today).replace('.00', '')} across 5 day-trading accounts · Primary {_money(pr['today'])}\n"
+            f"Since start: {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
+            f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
+            "(Quick facts + charts in pics) · Not financial advice\n")
 
 
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
@@ -336,6 +486,7 @@ def main(argv=None):
     ap.add_argument("--top2", help="JSON with plain-words descriptions of the day's top setups")
     ap.add_argument("--out", default="docs/posts")
     ap.add_argument("--no-fetch", action="store_true")
+    ap.add_argument("--day", type=int, help="day number for the post title (default: Primary sessions so far)")
     a = ap.parse_args(argv)
     if not a.no_fetch:
         fetch()
@@ -347,9 +498,12 @@ def main(argv=None):
             words["_note"] = j["note"]
     top = top_of_day(a.date)
     out = ROOT / a.out / a.date
-    render({"1-accounts": html_accounts(a.date, accounts(a.date), top, words),
-            "2-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
-            "3-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
+    acc = accounts(a.date)
+    render({"1-today": html_today(a.date, acc), "2-top2": html_top2(a.date, top, words),
+            "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
+            "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True),
+            "5-facts": html_facts(a.date, facts(acc))}, out)
+    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date))))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
 
