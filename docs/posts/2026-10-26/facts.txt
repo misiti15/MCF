@@ -1,0 +1,21 @@
+Quick facts (as of 2026-10-26)
+- Sessions traded: 15 (since 2026-10-06) · paper trades: 7,887
+- Setups live: 108 + 63 machine-generated
+- Setups rejected by backtests so far: ~18,508
+- Entry slippage: ~4.1 bps vs the signal price (measured, paper fills)
+- Today, 5 day-trading accounts: +$175.02 · since start: -$7,893.58
+- Primary: today +$39.83 · since start -$790.47 · green days 5 of 15
+- Milestones: M1 (3 green in a row) 1/3 · M2 (8 of last 10 green) 4/10
+
+Quick answers
+- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.
+- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).
+- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
+- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
+- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.
+- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.
+- Break-even win rate? The win rate a setup needs just to not lose money.
+- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.
+- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).
+Not financial advice.

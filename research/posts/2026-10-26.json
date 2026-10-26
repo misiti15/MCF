@@ -1,0 +1,13 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Both are shorts in Testing 1 (not Primary); results depend on the market's direction - not proven edges.",
+ "setups": [
+  {"setup": "L3-gap-slope-fromopen-FD",
+   "title": "Gap-Down Recovery Fade",
+   "lines": [["When", "9:50 AM–3:00 PM"], ["Market", "Any"], ["Stock", "Gapped down 2.66%+ at the open (any volume)"],
+             ["Trigger", "Has since rallied more than 3.46% above its open, and its 20-bar average is sloping up (> 0.37%)"],
+             ["Action", "Short the rally"], ["Exit", "Target 1 unit, stop 1 unit"]]},
+  {"setup": "exhaustion_short",
+   "title": "Afternoon Blow-off Short",
+   "lines": [["When", "1:00–3:00 PM"], ["Market", "Any"], ["Stock", "≥ $95M traded a day, at a new 100-minute high"],
+             ["Trigger", "RSI(5) above 90, price more than 1% above its 20-bar average, and RSI(14) 5+ points below its recent peak while price makes a 20-bar high (bearish divergence)"],
+             ["Action", "Short"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}
