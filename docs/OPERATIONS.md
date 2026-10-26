@@ -69,7 +69,13 @@ No emails or alerts at any step; everything is logged in `status.json` (`health.
    `mcf-`/`mct-`/`mt2-` only; never `mcl-` or anything else). **Default mode `dry`**: it only writes what it would do to
    the job summary. To arm it set the repository variable `MCF_WATCHDOG_MODE=act` (or run it manually with mode `act`).
    It has its own concurrency group and never writes to the state branches.
-6. **Fire drills:** `python -m mcf.execution.drill --scenario stale_data|broker_down|run_dead|all` runs each scenario
+6. **Session guard** (owner 2026-10-26, after GitHub fired no scheduled run that day): `.github/workflows/session-guard.yml`
+   + `mcf/execution/session_guard.py`. On a market day 08:40-15:30 ET, every account with keys must have a queued or
+   running trade.yml job; if one does not (no run, crashed job, 6-hour limit with no standby behind it) it dispatches
+   trade.yml (max 6 guard dispatches a day). Two independent ways in: its own cron (every 10 min) and the Claude
+   scheduled task "MCF session guard" (weekdays 08:47 ET then hourly), which dispatches the guard - or trade.yml directly -
+   even when GitHub cron is down. A duplicate trade run only queues behind the live job.
+7. **Fire drills:** `python -m mcf.execution.drill --scenario stale_data|broker_down|run_dead|all` runs each scenario
    against a fake broker and a synthetic clock and checks the order pause -> protect -> flatten and the watchdog
    decisions. The drills also run in `pytest` (`tests/test_outage.py`).
 
