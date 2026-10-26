@@ -426,7 +426,7 @@ def html_facts(date: str, fx: dict) -> str:
                 f"MCF — quick facts", f"Same every day; counts as of {date}")
 
 
-def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int) -> str:
+def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "") -> str:
     m = milestones(accts[0], date)
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
@@ -437,7 +437,8 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
             f"Today: {_money(today).replace('.00', '')} across 5 day-trading accounts · Primary {_money(pr['today'])}\n"
             f"Since start: {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
             f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
-            "(Quick facts + charts in pics) · Not financial advice\n")
+            + (f"Changes before today's open: {changes.strip()}\n" if changes.strip() else "")
+            + "(Quick facts + charts in pics) · Not financial advice\n")
 
 
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
@@ -500,6 +501,7 @@ def main(argv=None):
     ap.add_argument("--top2", help="JSON with plain-words descriptions of the day's top setups")
     ap.add_argument("--out", default="docs/posts")
     ap.add_argument("--no-fetch", action="store_true")
+    ap.add_argument("--changes", help="one short line: what changed before today's open (owner 2026-10-26)")
     ap.add_argument("--day", type=int, help="day number for the post title (default: Primary sessions so far)")
     a = ap.parse_args(argv)
     if not a.no_fetch:
@@ -517,7 +519,7 @@ def main(argv=None):
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
             "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True),
             "5-facts": html_facts(a.date, facts(acc))}, out)
-    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date))))
+    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or ""))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
 
