@@ -86,6 +86,15 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
     from_testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full", fill: true}
+  CWT13-vwapstretch-z05-long:
+    # Stretched Below VWAP Bounce: promoted from Testing 2 2026-10-25 (owner); promotion = move (off in Testing 2)
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z05-long.py
+    min_adv: 95000000
+    window: [1100, 1500]
+    scale_out_r: null
+    from_testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sidelong-t05s1-guest", fill: false}
   # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
   orb:
     enabled: false   # screen 2026-10-06: -0.33R/trade over 63 sessions (pre-09:50 entries -0.59R); paper off
@@ -411,6 +420,7 @@ live:
     - MF5-flowsell-vwapup-rsi5hi
     - heat_fade_short
     - heat_fade_long
+    - CWT13-vwapstretch-z05-long   # promoted 2026-10-25 (~42.6/day)
     - CWT14-failbrk-pdl-p10-lowvol-long   # promoted 2026-10-21 (~47/day: broadest, so last)
   # Paper fills anything the price touches. These checks keep paper results close to what a real
   # order book would give, so paper P/L is evidence and not an upper bound.
