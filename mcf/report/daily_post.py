@@ -254,6 +254,101 @@ def green_streaks(date: str, accts: list[dict], min_run: int = 3) -> dict:
     return dict(current=cur, record=[x for x in rec if x["run"] == top], sessions=len(sessions))
 
 
+def _journal(branch: str):
+    """The account's journal.db (sqlite) from its data branch, or None."""
+    import sqlite3
+    import tempfile
+    try:
+        raw = subprocess.run(["git", "-C", str(ROOT), "show", f"origin/{branch}:journal.db"], capture_output=True, check=True).stdout
+    except Exception:
+        return None
+    f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+    f.write(raw)
+    f.close()
+    return sqlite3.connect(f.name)
+
+
+# sessions that were cut short for every account (no signal on these days may be the outage, not the setup)
+PARTIAL_DAYS = {"2026-10-26": "late start: accounts from 10:39 ET, Gen from 12:02 ET"}
+
+
+def why_missed(setup: str, day: str, cache: dict) -> str:
+    """Why a setup has no trade on a session (owner 2026-10-26: a blocked setup must be found, not assumed quiet):
+    'not active' (not enabled in any account's frozen setups that day), 'no signal' (active, never fired) or
+    'blocked: <reason> xN' (it fired but every signal was skipped)."""
+    active, reasons = [], {}
+    for k, label, br, _ in ACCOUNTS:
+        fz = cache.setdefault(("setups", br, day), _show(br, f"setups/{day}.json"))
+        if not ((fz or {}).get("strategies", {}).get(setup) or {}).get("enabled"):
+            continue
+        active.append(label)
+        db = cache.setdefault(("db", br), _journal(br))
+        if db is None:
+            continue
+        for st, rs, n in db.execute("SELECT status, reason, COUNT(*) FROM signals WHERE strategy=? AND day=? GROUP BY 1, 2",
+                                    (setup, day)):
+            reasons[(st, rs or "")] = reasons.get((st, rs or ""), 0) + n
+    if not active:
+        return "not active"
+    if not reasons:
+        return "no signal" + (f" ({PARTIAL_DAYS[day]})" if day in PARTIAL_DAYS else "")
+    if any(st == "submitted" for st, _ in reasons):
+        return "submitted, no fill"
+    (_, rs), n = max(reasons.items(), key=lambda kv: kv[1])
+    tot = sum(reasons.values())
+    return f"blocked: {rs.split(' (')[0]} x{n}" + (f" (+{tot - n} other)" if tot > n else "")
+
+
+def traded_streaks(date: str, accts: list[dict], min_run: int = 3) -> list[dict]:
+    """Setups green on each of their last N trading days (N >= min_run) where at least one market session in that
+    span had no trade - with the reason for every missed session (why_missed)."""
+    sessions = sorted({x["date"] for a in accts for x in a.get("full_history") or a.get("history") or []
+                       if x.get("date", "") <= date and x.get("trades")})
+    names = _local("docs/live/setup_names.json") or {}
+    by: dict[str, list] = {}
+    for k, _, br, _ in ACCOUNTS:
+        for r in (_show(br, "reports/scorecard.json") or {}).get("leaderboard") or []:
+            by.setdefault(r["setup"], []).append(r)
+    out, cache = [], {}
+    for s, rows in by.items():
+        d = {x[0]: x for x in _merge(rows).get("daily") or [] if x[1]}
+        traded = [x for x in sessions if x in d]
+        run = 0
+        for x in reversed(traded):
+            if d[x][3] <= 0:
+                break
+            run += 1
+        if run < min_run:
+            continue
+        span = traded[-run:]
+        missed = [x for x in sessions if span[0] < x <= sessions[-1] and x not in d]
+        if not missed:
+            continue                       # already in the consecutive-session list
+        out.append(dict(setup=s, name=(names.get(s) or {}).get("name") or s, run=run, pnl=sum(d[x][3] for x in span),
+                        missed=[(x, why_missed(s, x, cache)) for x in missed]))
+    out.sort(key=lambda x: (-x["run"], -x["pnl"]))
+    return out
+
+
+INTENDED = ("not shortable", "spread", "twin held", "lot cap", "already in symbol", "max positions", "split-tape",
+            "halted", "setup daily loss", "daily loss")     # owner rules (blocked_audit.md); anything else = look into it
+
+
+def _traded_lines(ts: list[dict], limit: int = 6) -> list[str]:
+    out = ["Green every day they traded (sessions with no trade explained)"]
+    if not ts:
+        return out + ["- None at 3+ trading days in a row"]
+    for x in ts[:limit]:
+        why = "; ".join(f"{d[5:]} {w}" for d, w in x["missed"][-3:])
+        more = f" (+{len(x['missed']) - 3} earlier)" if len(x["missed"]) > 3 else ""
+        out.append(f"- {x['name']}: {x['run']} trading days in a row ({_money(x['pnl'])}) · no trade: {why}{more}")
+    odd = [(x["name"], d, w) for x in ts for d, w in x["missed"]
+           if w.startswith("blocked") and not any(k in w for k in INTENDED)]
+    out.append("- Unintended blocks: " + ("; ".join(f"{n} {d[5:]} {w}" for n, d, w in odd) if odd else
+                                          "none - every block was an owner rule (borrow, spread, twin, caps)"))
+    return out
+
+
 def _streak_lines(gs: dict, limit: int = 6) -> list[str]:
     out = ["Green-day streaks (setups green every session in a row, all accounts)"]
     if gs["current"]:
@@ -515,6 +610,8 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None, gs: dict | 
                   f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
     if gs:
         lines += [""] + _streak_lines(gs)
+        if gs.get("traded") is not None:
+            lines += [""] + _traded_lines(gs["traded"])
     ans = ["Quick answers",
            "- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.",
            "- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).",
@@ -543,7 +640,9 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
             f"Since Day 1 (10/23): {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
             f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
             + (("Green-day streaks: " + (" · ".join(f"{x['name']} {x['run']}" for x in gs["current"][:3]) or "none at 3+")
-                + (f" · record {gs['record'][0]['run']} in a row" if gs.get("record") else "") + "\n") if gs is not None else "")
+                + (f" · record {gs['record'][0]['run']} in a row" if gs.get("record") else "") + "\n"
+                + ("Green every day traded: " + " · ".join(f"{x['name']} {x['run']}" for x in gs["traded"][:3]) + "\n"
+                   if gs.get("traded") else "")) if gs is not None else "")
             + (f"Changes before today's open: {changes.strip()}\n" if changes.strip() else "")
             + "(Quick facts + charts in pics) · Not financial advice\n")
 
@@ -626,6 +725,7 @@ def main(argv=None):
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
             "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
     gs = green_streaks(a.date, acc)
+    gs["traded"] = traded_streaks(a.date, acc)       # owner 2026-10-26: green streaks that skip a session, explained
     (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc, gs))   # owner 2026-10-26: quick facts as text, 4 images max
     (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or "", gs))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
