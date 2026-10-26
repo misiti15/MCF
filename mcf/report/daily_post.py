@@ -121,6 +121,18 @@ def _merge(rows: list[dict]) -> dict:
                 daily=[[d, *v] for d, v in sorted(daily.items())], recent_avg_r=None)
 
 
+def best_day(r: dict) -> tuple:
+    """(avg R without the single best session, best session date, its share of total R) - owner 2026-10-25."""
+    by: dict = {}
+    for d, c, rr, _ in r.get("daily") or []:
+        a = by.setdefault(d, [0, 0.0]); a[0] += c; a[1] += rr
+    if len(by) < 2:
+        return None, None, None
+    d, (bn, br) = max(by.items(), key=lambda kv: kv[1][1])
+    n, tot = r.get("trades") or 0, r.get("total_r") or 0.0
+    return ((tot - br) / (n - bn) if n - bn > 0 else None), d, (br / tot if tot > 0 and br > 0 else None)
+
+
 def _last4(r: dict, sessions: list[str]):
     d = [x for x in r.get("daily") or [] if x[0] in sessions]
     n = sum(x[1] for x in d)
@@ -162,7 +174,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
                                           "graveyard": "Graveyard"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
-                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), t=r.get("t_stat"),
+                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), t=r.get("t_stat"),
                          total_r=r.get("total_r"), pnl=r.get("pnl"), pf=r.get("profit_factor"),
                          last4=r.get("recent_avg_r") if len(rs) == 1 and r.get("recent_avg_r") is not None else _last4(r, last4),
                          screen=((nm.get("screen") or {}).get("train_exp_r"), (nm.get("screen") or {}).get("valid_exp_r")),
@@ -232,10 +244,10 @@ h1{font-size:22px;margin:0 0 2px} .sub{color:#666;font-size:13px;margin-bottom:1
 .ts table{width:100%;border-collapse:collapse;font-size:12.5px} .ts td{padding:3px 4px;vertical-align:top;border-top:1px solid #f0f0ee}
 .ts td.k{width:84px;font-weight:600;color:#555;white-space:nowrap}
 .side{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;border:1px solid currentColor;margin-left:6px;vertical-align:2px}
-.lb{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+.lb{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 .lb th{font-size:11px;color:#555;text-align:right;padding:5px 4px;max-width:66px;white-space:normal;border-bottom:1px solid #ddd;vertical-align:bottom;line-height:1.2}
 .lb td{padding:5px 4px;text-align:right;border-bottom:1px solid #eee;white-space:nowrap}
-.lb .l{text-align:left} .lb th.l{max-width:none} .lb .nm{max-width:250px;overflow:hidden;text-overflow:ellipsis} .lb .nm div{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis}
+.lb .l{text-align:left} .lb th.l{max-width:none} .lb .nm{max-width:215px;overflow:hidden;text-overflow:ellipsis} .lb .nm div{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis}
 .lb .ls{background:#eef3fb} .chip{display:inline-block;font-size:10.5px;padding:0 6px;border-radius:6px;border:1px solid #ccc;color:#444}
 .chip.Bear{color:#b91c1c;border-color:#b91c1c} .chip.Bull{color:#15803d;border-color:#15803d} .chip.Choppy{color:#b45309;border-color:#b45309}
 .gen{border-color:#c4b5fd;background:#faf8ff} .gb{display:inline-block;font-size:9.5px;font-weight:700;color:#fff;background:#7c3aed;border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:1px}
@@ -280,6 +292,7 @@ def _cls(v) -> str:
     return "" if v is None else ("up" if v > 0 else "down" if v < 0 else "")
 
 
+ONE_DAY = ' <span class="chip" style="font-size:9.5px;padding:0 4px">1 day</span>'
 FOOT = '<div class="foot">Paper trading results · Educational only — not financial advice.</div>'
 
 
@@ -430,10 +443,10 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
     if gen:
         head = ["#", "Setup", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades", "Trades/day", "Win rate",
-                "Break-even win rate", "Avg R", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
+                "Break-even win rate", "Avg R", "Avg R w/o best day", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
     else:
         head = ["#", "Setup", "Account", "Best conditions", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades",
-                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
+                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Avg R w/o best day", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
     ls_cols = {"Last-session trades", "Last-session R", "Last-session P/L"}
     th = "".join(f'<th class="{"l" if h in ("Setup", "Account", "Best conditions") else ""}{" ls" if h in ls_cols else ""}">{h}</th>' for h in head)
     trs = []
@@ -444,6 +457,7 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
         ls = (f'<td class="ls">{x["ls_n"] or "—"}</td><td class="ls {_cls(x["ls_r"]) if x["ls_n"] else ""}">{_f(x["ls_r"]) if x["ls_n"] else "—"}</td>'
               f'<td class="ls {_cls(x["ls_pnl"]) if x["ls_n"] else ""}">{_money(x["ls_pnl"]) if x["ls_n"] else "—"}</td>')
         common = (f'<td>{_pc(x["win"])}</td><td class="{_cls(edge)}">{be}</td><td class="{_cls(x["avg_r"])}">{_f(x["avg_r"])}</td>'
+                  f'<td class="{_cls(x["exbest"][0])}">{_f(x["exbest"][0])}{ONE_DAY if (x["exbest"][2] or 0) >= 0.5 else ""}</td>'
                   f'<td>{_f(x["t"], 1, False)}</td><td class="{_cls(x["total_r"])}">{_f(x["total_r"], 1)}</td><td class="{_cls(x["pnl"])}">{_money(x["pnl"])}</td>')
         if gen:
             trs.append(f'<tr><td>{x["rank"]}</td>{nm}{ls}<td>{x["trades"]}</td><td>{_f(x["per_day"], 1, False)}</td>{common}'

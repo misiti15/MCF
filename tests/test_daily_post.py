@@ -17,3 +17,11 @@ def test_streak_counts_green_days_to_date():
     h = [dict(date="d1", trades=3, pnl=5), dict(date="d2", trades=3, pnl=-1), dict(date="d3", trades=2, pnl=4), dict(date="d4", trades=1, pnl=2)]
     assert streak({"history": h}, "d4") == (2, 3, 4)
     assert streak({"history": h}, "d2") == (0, 1, 2)
+
+
+def test_best_day_metric():
+    from mcf.report.daily_post import best_day
+    r = dict(trades=12, total_r=2.24, daily=[["d1", 4, 4.06, 0], ["d2", 2, 0.13, 0], ["d3", 5, -2.45, 0], ["d4", 1, 0.5, 0]])
+    ex, d, share = best_day(r)
+    assert d == "d1" and abs(ex - (2.24 - 4.06) / 8) < 1e-9 and share > 1     # the best day is bigger than the whole record
+    assert best_day(dict(trades=3, total_r=1.0, daily=[["d1", 3, 1.0, 0]])) == (None, None, None)

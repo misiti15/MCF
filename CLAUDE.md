@@ -12,3 +12,4 @@
 - **Setup moves (owner 2026-10-20):** every promotion / demotion / move regenerates `docs/live/assignments.json` (`python -m mcf.report.assignments`) in the same commit, so the dashboard shows the new assignment and its timestamp at once (`tests/test_assignments.py` enforces it).
 - **Promotion = move (owner 2026-10-20):** a promoted setup is switched off in the account it came from in the same change; it never runs as a copy in two accounts unless the owner asks.
 - **Testing 1 = Testing 2 (owner 2026-10-23):** the two testing accounts carry equal weight for promotion; two accounts exist only to give more setups exposure. Never treat Testing 2 as a lower tier.
+- **One-big-day check (owner 2026-10-25):** every promotion / demotion / review shows the setup's avg R *without its best session* and that session's share of total R (dashboard column "Avg R w/o best day", `1 day` tag at ≥ 50%). A record carried by 1-2 big days must be called out.
