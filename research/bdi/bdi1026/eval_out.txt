@@ -1,0 +1,47 @@
+bdi1026 burst-skip: lineage N 1323, bar 3.79; locked block not read; no holdout scored
+
+== CWT12-coil-k4-long: parent n 44505, exp -0.0613R (train -0.0573 / valid -0.0650); bars with n_bar>=10: 1615
+          n           exp            ctrl        
+split train valid   train   valid   train   valid
+n_bar                                            
+1       358   222 -0.0110 -0.0565 -0.0577 -0.0458
+2-4    2844  2119 -0.0623 -0.0564 -0.0727 -0.0604
+5-9    7008  6234 -0.0436 -0.0656 -0.0533 -0.0697
+10-14  5177  5318 -0.0642 -0.0650 -0.0681 -0.0622
+15+    6210  9015 -0.0675 -0.0668 -0.0701 -0.0721
+               n            exp        
+split      train  valid   train   valid
+qqq_at_hi                              
+False      17804  17714 -0.0625 -0.0715
+True        3793   5194 -0.0332 -0.0427
+
+== CWT12-coil-k6-long: parent n 16735, exp -0.0697R (train -0.0737 / valid -0.0661); bars with n_bar>=10: 290
+          n           exp            ctrl        
+split train valid   train   valid   train   valid
+n_bar                                            
+1       603   424 -0.0567 -0.0231 -0.0669 -0.0871
+2-4    2874  2525 -0.0653 -0.0567 -0.0975 -0.0857
+5-9    2866  3405 -0.0632 -0.0772 -0.0850 -0.0980
+10-14   958  1309 -0.1349 -0.0979 -0.1457 -0.0856
+15+     597  1174 -0.0841 -0.0345 -0.1047 -0.0324
+              n           exp        
+split     train valid   train   valid
+qqq_at_hi                            
+False      6464  6754 -0.0757 -0.0810
+True       1434  2083 -0.0647 -0.0181
+
+             setup config  kept  train_n  train_exp  train_ctrl  train_delta  valid_n  valid_exp  valid_ctrl  valid_delta  up_exp  flat_exp  down_exp  delta_all  t_all  exp_wo_best_day best_day_share  pass  kept_better  near_miss  gates
+CWT12-coil-k4-long     A5 0.125     3202    -0.0566     -0.0710       0.0489     2341    -0.0564     -0.0590       0.0592  0.0935   -0.0621   -0.1485     0.0542   5.58          -0.0582           None False         True       True 011001
+CWT12-coil-k4-long    A10 0.422    10210    -0.0477     -0.0589       0.0348     8575    -0.0631     -0.0668       0.0414  0.0603   -0.0652   -0.1595     0.0382   4.72          -0.0560           None False         True       True 011001
+CWT12-coil-k4-long    A15 0.658    15387    -0.0532     -0.0620       0.0194    13893    -0.0638     -0.0651       0.0263  0.0473   -0.0792   -0.1653     0.0229   3.60          -0.0596           None False         True       True 011010
+CWT12-coil-k4-long     B3 0.353     8256    -0.0544     -0.0635       0.0365     7468    -0.0614     -0.0684       0.0450  0.0563   -0.0781   -0.1693     0.0409   5.31          -0.0588           None False         True       True 011001
+CWT12-coil-k4-long      C 0.798    17804    -0.0625     -0.0675       0.0058    17714    -0.0715     -0.0741       0.0097  0.0538   -0.1080   -0.1697     0.0078   1.60          -0.0685           None False        False      False 011010
+CWT12-coil-k4-long      D 0.810    18098    -0.0619     -0.0675       0.0055    17950    -0.0712     -0.0740       0.0092  0.0538   -0.1072   -0.1704     0.0074   1.54          -0.0680           None False        False      False 011010
+CWT12-coil-k6-long     A5 0.384     3477    -0.0638     -0.0922       0.0456     2949    -0.0519     -0.0859       0.0488  0.0824   -0.0665   -0.2065     0.0473   3.85          -0.0615           None False         True       True 011001
+CWT12-coil-k6-long    A10 0.759     6343    -0.0635     -0.0889       0.0227     6354    -0.0655     -0.0924       0.0191  0.0636   -0.0899   -0.2190     0.0208   2.42          -0.0668           None False         True       True 011010
+CWT12-coil-k6-long    A15 0.894     7301    -0.0729     -0.0964       0.0064     7663    -0.0710     -0.0912       0.0046  0.0510   -0.1051   -0.2288     0.0054   0.99          -0.0752           None False        False      False 011010
+CWT12-coil-k6-long     B3 0.583     4926    -0.0659     -0.0946       0.0326     4835    -0.0600     -0.0879       0.0333  0.0694   -0.0871   -0.2203     0.0330   3.69          -0.0655           None False         True       True 011010
+CWT12-coil-k6-long      C 0.790     6464    -0.0757     -0.0945       0.0117     6754    -0.0810     -0.0935       0.0043  0.0555   -0.0970   -0.2333     0.0078   0.97          -0.0814           None False        False      False 011010
+CWT12-coil-k6-long      D 0.842     6923    -0.0745     -0.0937       0.0084     7173    -0.0736     -0.0942       0.0064  0.0543   -0.0919   -0.2346     0.0073   1.01          -0.0769           None False        False      False 011010
+
+Educational only - not financial advice.

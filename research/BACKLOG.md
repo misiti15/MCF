@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 654 · coded: 85 · failed: 315 · configurations tried (all lineages): 32796971
+Total ideas: 655 · coded: 85 · failed: 317 · configurations tried (all lineages): 32796991
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -339,7 +339,6 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1022-setup-stop-latch | Per-setup -2R daily stop that latches for the day (no re-arm when a later winner lifts realized R back above -2R), vs the live re-arming check | nightly-2026-10-22 (research/bdi/nightly1022/NOTES.md, rearm_out.txt, latch_out.txt) | – | – | – | – | – | – |
 | idea | bdi1022-short-cluster-profit-lock | Cluster profit lock: when >= 5 open lots of correlated sibling shorts (same family, same polls) are together >= +X R open, move all their stops to breakeven (or 0.5R trail) | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md; nightly1022 give-back) | – | – | – | – | – | – |
 | idea | sat1024-pm-drift-continuation | Afternoon drift continuation: at 14:30-15:00 enter in the direction of a stock's day move when it is >= +X ATR from the open and on the right side of VWAP, hold to 15:55 | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
-| idea | nightly-1026-coil-breadth-burst-skip | Coil Under the High longs (CWT12-coil-k4 / k6): skip a decision bar where the setup fires on >= 10 symbols at once (market-wide burst = one index bet) | nightly-2026-10-26 (research/bdi/nightly1026/NOTES.md, cluster split) | – | – | – | – | – | – |
 | idea | nightly-1026-country-gap-basket-cap | Gap-down shorts (CWT09 family): treat gap-downs that share one country / region ETF gap as one bet (cap 1-2 entries, or skip when the country ETF itself gapped down >= X%) | nightly-2026-10-26 (research/bdi/nightly1026/NOTES.md, CWT09 trade list) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
@@ -656,6 +655,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | sat1024-rw-post-peak-side-brake | Post-peak same-side brake: once the book's realized R has peaked >= X (P 3R, T 10R) and given back 50% / 33%, the side that lost since the peak takes no new entries | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
 | failed | sat1024-one-lot-per-symbol-2y | One open lot per symbol across all setups (max_lots_per_symbol 1) on the two-year book | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
 | failed | sat1024-late-profit-lock | Late profit lock: from 15:00 / 14:30, an open trade >= +0.5R at a 1-min close gets its stop raised to entry +0.25R | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
+| failed | nightly-1026-coil-breadth-burst-skip | Coil Under the High longs (CWT12-coil-k4 / k6): skip a decision bar where the setup fires on >= 10 symbols at once (market-wide burst = one index bet) | nightly-2026-10-26 (research/bdi/nightly1026/NOTES.md, cluster split) | – | – | – | – | – | – |
+| failed | bdi1026-coil-burst-fade-short | Coil Burst Fade (short): short the Coil Under the High (4 bars) signal when it fires on >= 1/5/10/15 symbols in the same bar (1R/1R or 0.5R target) | BDI 2026-10-26 (research/bdi/bdi1026/NOTES.md; live 10-26 opposite side of coil-k4 +32.4R on 52 trades) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
