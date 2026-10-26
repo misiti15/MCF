@@ -3,6 +3,7 @@
     python -m mcf.research.generator run --date YYYY-MM-DD --n 10 [--apply] [--specs 3000] [--seed S] [--workers 4]
                                          [--no-seeds] [--discovery PATH]
     python -m mcf.research.generator summary      # rebuild docs/live/generator_lab.json (Generator Lab card)
+    python -m mcf.research.generator expected     # GX5 backfill: expected live trades/day per GEN setup
 
 Without --apply: a dry-run report (research/generator/runs/<date>.json is NOT written; summary printed).
 With --apply: writes research/generator/modules/GEN-YYMMDD-NN-<slug>.py, appends the setups to config/account_gen.yaml
@@ -40,7 +41,20 @@ def main(argv=None):
     r.add_argument("--no-seeds", action="store_true", help="do not add the weekly Setup lab rules (seeds.py)")
     r.add_argument("--discovery", default=None, help="discovery latest.json path (default: origin/mcf-data via git)")
     sub.add_parser("summary", help="rebuild docs/live/generator_lab.json (Generator Lab card)")
+    x = sub.add_parser("expected", help="GX5 backfill: expected live trades/day of every GEN setup "
+                                        "(research/generator/expected_live.json), then rebuild the summary")
+    x.add_argument("--workers", type=int, default=3)
     a = ap.parse_args(argv)
+    if a.cmd == "expected":
+        from .expect import backfill
+        from .summary import write
+        rep = backfill(workers=a.workers)
+        write()
+        for k, v in rep["setups"].items():
+            print(f"{k}: screen {v['per_day']}/day, median day (last 60) {v['per_day_median60']}, "
+                  f"expected live {v['expected_live_per_day']}/day")
+        print("Educational only - not financial advice.")
+        return 0
     if a.cmd == "summary":
         from .summary import write
         d = write()
@@ -59,7 +73,8 @@ def main(argv=None):
         tr, va = p["screen"]["train"], p["screen"]["valid"]
         tag = " [seed]" if p["screen"].get("seed") else ""
         print(f"{p['name']}{tag}: train {tr['n']} trades {tr['exp_r']}R t {tr['t']} | valid {va['n']} {va['exp_r']}R t {va['t']}"
-              f" | {p['screen']['per_day']}/day | score {p['screen']['score']}")
+              f" | {p['screen']['per_day']}/day (expected live {p['screen'].get('expected_live_per_day')}/day)"
+              f" | score {p['screen']['score']}")
     print(f"runtime {time.time() - t0:.0f}s. Educational only - not financial advice.")
     return 0
 
