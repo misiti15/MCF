@@ -7,7 +7,7 @@ import pandas as pd
 
 from mcf.research.generator import screen as S
 from mcf.research.generator.spec import (CONTEXT, IND, WINDOWS, Spec, display_name, module_slug, random_spec,
-                                         setup_name, valid)
+                                         setup_name, valid, valid_seed)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -153,7 +153,10 @@ def test_seeded_gen_setups_are_complete():
             continue        # hand-added observation setups (pod1022, owner 2026-10-23): not generator specs
         s = Spec(g["spec"]["side"], g["spec"]["window"], g["spec"]["geom"], g["spec"]["min_adv"],
                  [tuple(c) for c in g["spec"]["conds"]])
-        assert valid(s)[0] and s.key() == g["key"] and s.key() not in keys
+        # specs translated from a weekly-scan rule (gen.seed) follow the seed rules: a lab rule may be state-only,
+        # so no trigger is required (spec.valid_seed, mcf/research/generator/seeds.py)
+        ok = valid_seed(s)[0] if g.get("seed") else valid(s)[0]
+        assert ok and s.key() == g["key"] and s.key() not in keys
         keys.add(s.key())
         assert (ROOT / v["module"]).exists() and list(WINDOWS[s.window]) == v["window"]
         assert v["context"] and set(v["context"]) <= set(CONTEXT)

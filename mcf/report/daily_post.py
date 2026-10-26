@@ -218,6 +218,58 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
     return out
 
 
+def green_streaks(date: str, accts: list[dict], min_run: int = 3) -> dict:
+    """Owner 2026-10-26: per setup (all 5 accounts merged), green days = sessions with P/L > 0 after paper fills.
+    current: setups green on each of the last N market sessions (N >= min_run, a day not traded breaks the streak);
+    record: the longest such run any setup has had. Market sessions = days any account traded (all history)."""
+    sessions = sorted({x["date"] for a in accts for x in a.get("full_history") or a.get("history") or []
+                       if x.get("date", "") <= date and x.get("trades")})
+    names = _local("docs/live/setup_names.json") or {}
+    by: dict[str, list] = {}
+    for k, _, br, _ in ACCOUNTS:
+        for r in (_show(br, "reports/scorecard.json") or {}).get("leaderboard") or []:
+            by.setdefault(r["setup"], []).append(r)
+    cur, rec = [], []
+    for s, rows in by.items():
+        d = {x[0]: x for x in _merge(rows).get("daily") or []}
+        green = [bool(x in d and d[x][1] and d[x][3] > 0) for x in sessions]
+        run = 0
+        for g in reversed(green):
+            if not g:
+                break
+            run += 1
+        best, c, end = 0, 0, None
+        for i, g in enumerate(green):
+            c = c + 1 if g else 0
+            if c > best:
+                best, end = c, i
+        nm = (names.get(s) or {}).get("name") or s
+        if run >= min_run:
+            cur.append(dict(setup=s, name=nm, run=run, pnl=sum(d[x][3] for x in sessions[-run:])))
+        if best:
+            rec.append(dict(setup=s, name=nm, run=best, start=sessions[end - best + 1], end=sessions[end]))
+    cur.sort(key=lambda x: (-x["run"], -x["pnl"]))
+    rec.sort(key=lambda x: (x["run"], x["end"]), reverse=True)
+    top = rec[0]["run"] if rec else 0
+    return dict(current=cur, record=[x for x in rec if x["run"] == top], sessions=len(sessions))
+
+
+def _streak_lines(gs: dict, limit: int = 6) -> list[str]:
+    out = ["Green-day streaks (setups green every session in a row, all accounts)"]
+    if gs["current"]:
+        out += [f"- {x['name']}: {x['run']} in a row ({_money(x['pnl'])})" for x in gs["current"][:limit]]
+        if len(gs["current"]) > limit:
+            out.append(f"- +{len(gs['current']) - limit} more")
+    else:
+        out.append("- None at 3+ sessions in a row")
+    if gs["record"]:
+        r = gs["record"]
+        out.append(f"Green-day record: {r[0]['run']} sessions in a row - " +
+                   "; ".join(f"{x['name']} ({x['start'][5:]}..{x['end'][5:]})" for x in r[:3]) +
+                   (f" (+{len(r) - 3} tied)" if len(r) > 3 else ""))
+    return out
+
+
 def facts(accts: list[dict]) -> dict:
     """Live counts for the quick-facts card."""
     asg = (_local("docs/live/assignments.json") or {}).get("setups", {})
@@ -443,7 +495,7 @@ def html_facts(date: str, fx: dict) -> str:
                 f"MCF — quick facts", f"Same every day; counts as of {date}")
 
 
-def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
+def facts_text(date: str, fx: dict, accts: list[dict] | None = None, gs: dict | None = None) -> str:
     """Owner 2026-10-26: two text blocks - 'Quick facts' (numbers only) and 'Quick answers' (the common questions)."""
     sl = _f(fx["slip"], 1, False)
     lines = [f"Quick facts (as of {date})",
@@ -461,6 +513,8 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
         lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since Day 1 (10/23): {_money(since)}",
                   f"- Primary: today {_money(pr['today'])} · since Day 1 {_money(pr.get('since'))} · green days {g} of {len(h)}",
                   f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
+    if gs:
+        lines += [""] + _streak_lines(gs)
     ans = ["Quick answers",
            "- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.",
            "- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).",
@@ -476,7 +530,8 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
     return "\n".join(lines) + "\n\n" + "\n".join(ans) + "\n"
 
 
-def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "") -> str:
+def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "",
+              gs: dict | None = None) -> str:
     m = milestones(accts[0], date)
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
@@ -487,6 +542,8 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
             f"Today: {_money(today).replace('.00', '')} across 5 day-trading accounts · Primary {_money(pr['today'])}\n"
             f"Since Day 1 (10/23): {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
             f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
+            + (("Green-day streaks: " + (" · ".join(f"{x['name']} {x['run']}" for x in gs["current"][:3]) or "none at 3+")
+                + (f" · record {gs['record'][0]['run']} in a row" if gs.get("record") else "") + "\n") if gs is not None else "")
             + (f"Changes before today's open: {changes.strip()}\n" if changes.strip() else "")
             + "(Quick facts + charts in pics) · Not financial advice\n")
 
@@ -568,8 +625,9 @@ def main(argv=None):
     render({"1-today": html_today(a.date, acc), "2-top2": html_top2(a.date, top, words),
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
             "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
-    (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc))   # owner 2026-10-26: quick facts as text, 4 images max
-    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or ""))
+    gs = green_streaks(a.date, acc)
+    (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc, gs))   # owner 2026-10-26: quick facts as text, 4 images max
+    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or "", gs))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
 
