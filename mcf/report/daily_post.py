@@ -11,7 +11,7 @@ and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regi
   3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
                       the dashboard
   4-generator.png     generated setups leaderboard (Setup Generator account), top 10
-  facts.txt           quick facts as paste-ready text (live counts) - owner 2026-10-26: 4 images max, facts in text
+  facts.txt           'Quick facts' (numbers) + 'Quick answers' (common questions), paste-ready text - owner 2026-10-26
   post.txt            the short post text (owner's template) incl. the "changes before today's open" line
 
     python -m mcf.report.daily_post --date 2026-10-23 [--top2 research/posts/2026-10-23.json] [--out docs/posts]
@@ -426,23 +426,37 @@ def html_facts(date: str, fx: dict) -> str:
                 f"MCF — quick facts", f"Same every day; counts as of {date}")
 
 
-def facts_text(date: str, fx: dict) -> str:
-    """Quick facts as short paste-ready text (owner 2026-10-26: text, not an image)."""
+def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
+    """Owner 2026-10-26: two text blocks - 'Quick facts' (numbers only) and 'Quick answers' (the common questions)."""
     sl = _f(fx["slip"], 1, False)
-    return (f"Quick facts (as of {date})\n"
-            "- AI: Claude (Opus 5.5) builds, tests and runs it · Code: Python\n"
-            "- Broker/data: Alpaca API, paper trading, SIP data (all US exchanges)\n"
-            "- Market: US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight\n"
-            f"- Setups: {fx['live']} live + {fx['gen']} machine-generated · ~{fx['rejected']:,} rejected by backtests so far\n"
-            "- Built from basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR\n"
-            "- Setup Generator: a bot that invents 10 new setups a night and trades them on its own paper account\n"
-            "- Life cycle: idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> live $ after milestones; losers move down to the Graveyard, never deleted\n"
-            "- Avg R: average result per trade in units of risk taken, after costs, fees and slippage\n"
-            "- Break-even win rate: the win rate a setup needs just to not lose money\n"
-            "- Avg R w/o best day: same, with its single best session removed (spots records carried by one big day)\n"
-            f"- Slippage: entries fill ~{sl} bps worse than the signal price (measured on {fx['trades']:,} paper fills)\n"
-            "- Milestones: M1 = 3 green days in a row (Primary) · M2 = 8 green of the last 10\n"
-            "Not financial advice.\n")
+    lines = [f"Quick facts (as of {date})",
+             f"- Sessions traded: {fx['sessions']} (since {fx['start'] or '—'}) · paper trades: {fx['trades']:,}",
+             f"- Setups live: {fx['live']} + {fx['gen']} machine-generated",
+             f"- Setups rejected by backtests so far: ~{fx['rejected']:,}",
+             f"- Entry slippage: ~{sl} bps vs the signal price (measured, paper fills)"]
+    if accts:
+        pr = accts[0]
+        m = milestones(pr, date)
+        h = _sessions(pr, date)
+        g = sum((x.get("pnl") or 0) > 0 for x in h)
+        today = sum((a["today"] or 0) for a in accts)
+        since = sum((a.get("since") or 0) for a in accts)
+        lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since start: {_money(since)}",
+                  f"- Primary: today {_money(pr['today'])} · since start {_money(pr.get('since'))} · green days {g} of {len(h)}",
+                  f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
+    ans = ["Quick answers",
+           "- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.",
+           "- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).",
+           "- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.",
+           "- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.",
+           "- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.",
+           "- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.",
+           "- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.",
+           "- Break-even win rate? The win rate a setup needs just to not lose money.",
+           "- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.",
+           "- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).",
+           "Not financial advice."]
+    return "\n".join(lines) + "\n\n" + "\n".join(ans) + "\n"
 
 
 def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "") -> str:
@@ -537,7 +551,7 @@ def main(argv=None):
     render({"1-today": html_today(a.date, acc), "2-top2": html_top2(a.date, top, words),
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
             "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
-    (out / "facts.txt").write_text(facts_text(a.date, facts(acc)))   # owner 2026-10-26: quick facts as text, 4 images max
+    (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc))   # owner 2026-10-26: quick facts as text, 4 images max
     (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or ""))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
