@@ -19,17 +19,17 @@ def _cfg(monkeypatch, acct="gen"):
     return load_config()
 
 
-def test_config_loads_with_80_equal_slots(monkeypatch):
+def test_config_loads_with_200_equal_slots(monkeypatch):   # owner GX2 2026-10-26 (was 80)
     from mcf.backtest.engine import slot_notional
 
     cfg = _cfg(monkeypatch)
     a = cfg["account"]
     assert cfg["account_name"] == "gen"
-    assert a["slots"] == 80 and a["max_concurrent_positions"] == 80
+    assert a["slots"] == 200 and a["max_concurrent_positions"] == 200 and a["max_positions_per_strategy"] == 48
     testing = yaml.safe_load((ROOT / "config/account_testing.yaml").read_text())["account"]
     assert a["max_daily_loss_r"] == testing["max_daily_loss_r"]
     assert a["buying_power_multiple"] == testing["buying_power_multiple"]       # same multiple logic as Testing
-    assert abs(slot_notional({**a, "equity": 100000}) - 100000 * a["buying_power_multiple"] / 80) < 1e-6
+    assert abs(slot_notional({**a, "equity": 100000}) - 100000 * a["buying_power_multiple"] / 200) < 1e-6
 
 
 def test_only_gen_setups_run(monkeypatch):
