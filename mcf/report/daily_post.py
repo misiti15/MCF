@@ -5,7 +5,7 @@ and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regi
 (the long-hold S6 account is left out, owner 2026-10-25):
 
   1-today.png         EOD balance, today's and since-start P/L per account, the owner's milestones (M1: Primary 3 green
-                      days in a row; M2: 8 green of the last 10), cumulative P/L chart since start, last-5-sessions table
+                      days in a row; M2: 8 green of the last 10), cumulative P/L chart, last-5-sessions table - all from Day 1 (DAY1)
   2-top2.png          the day's top two setups explained in plain words (words from --top2 JSON, written by Claude each
                       night; without it the setup's own one-line description is used)
   3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
@@ -33,6 +33,7 @@ ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "
             ("testing2", "Testing 2", "mcf-data-testing2", "testing"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
             ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers")]   # day-trading only (no S6)
 MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
+DAY1 = "2026-10-23"   # owner 2026-10-26: the post's stats (P/L, milestones, chart, last sessions) start at Day 1
 LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard")
 CHROME = ["/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell", "/opt/pw-browsers/chromium"]
 
@@ -56,15 +57,19 @@ def fetch():
 
 
 # ---------------------------------------------------------------- data
-def accounts(date: str) -> list[dict]:
+def accounts(date: str, since: str = DAY1) -> list[dict]:
+    """Per account: balance (actual), today's P/L, and P/L + history from `since` (Day 1) on; full_history keeps all."""
     out = []
     for k, name, br, kind in ACCOUNTS:
         s = _show(br, "status.json") or {}
         t, ss = s.get("today") or {}, s.get("since_start") or {}
         if s.get("session_date") != date:
             t = next((h for h in s.get("history") or [] if h.get("date") == date), {})
+        full = s.get("history") or []
+        hist = [h for h in full if since <= h.get("date", "") <= date]
         out.append(dict(k=k, name=name, kind=kind, equity=(s.get("account") or {}).get("equity"), today=t.get("pnl"),
-                        trades=t.get("trades"), since=ss.get("pnl"), history=s.get("history") or []))
+                        trades=t.get("trades"), since=sum((h.get("pnl") or 0) for h in hist),
+                        history=hist, full_history=full))
     return out
 
 
@@ -232,7 +237,8 @@ def facts(accts: list[dict]) -> dict:
             slip += ss["avg_entry_slip_bps"] * ss["trades"]; n += ss["trades"]
     pr = next(a for a in accts if a["k"] == "primary")
     return dict(live=len(live) - len(gen), gen=len(gen), rejected=rejected, slip=(slip / n if n else None), trades=n,
-                sessions=len(_sessions(pr, "9999")), start=(pr.get("history") or [{}])[0].get("date"))
+                sessions=len([x for x in pr.get("full_history") or [] if x.get("trades")]),
+                start=(pr.get("full_history") or [{}])[0].get("date"))
 
 
 # ---------------------------------------------------------------- render
@@ -329,8 +335,9 @@ def _chart(accts: list[dict], date: str) -> str:
                 started = True
                 c += by[d]
             pts.append(c if started else None)
-        series[a["k"]] = pts
-    tot = [sum(series[k][i] or 0 for k in series) for i in range(len(days))]
+        series[a["k"]] = [0.0 if pts and pts[0] is not None else None] + pts   # every line starts at $0 (Day 1 open)
+    days = ["start"] + days
+    tot =[sum(series[k][i] or 0 for k in series) for i in range(len(days))]
     vals = [v for p in series.values() for v in p if v is not None] + tot + [0]
     lo, hi = min(vals), max(vals)
     x = lambda i: P + i * (W - P - 10) / max(1, len(days) - 1)
@@ -348,7 +355,7 @@ def _chart(accts: list[dict], date: str) -> str:
     lines += f'<path d="{path(tot)}" fill="none" stroke="#111" stroke-width="2.6" stroke-dasharray="5 3"/>'
     ticks = "".join(f'<text x="{P - 6}" y="{y(v) + 4:.1f}" text-anchor="end" font-size="10" fill="#666">{_money(v, False).replace(".00", "") if abs(v) >= 1 else "$0"}</text>'
                     f'<line x1="{P}" x2="{W - 10}" y1="{y(v):.1f}" y2="{y(v):.1f}" stroke="#eee"/>' for v in (hi, 0, lo))
-    xl = f'<text x="{P}" y="{H - 6}" font-size="10" fill="#666">{days[0][5:]}</text><text x="{W - 10}" y="{H - 6}" font-size="10" fill="#666" text-anchor="end">{days[-1][5:]}</text>'
+    xl = f'<text x="{P}" y="{H - 6}" font-size="10" fill="#666">{days[1][5:]} open</text><text x="{W - 10}" y="{H - 6}" font-size="10" fill="#666" text-anchor="end">{days[-1][5:]}</text>'
     leg = "".join(f'<span><i style="background:{COLORS[a["k"]]}"></i>{_e(a["name"])}</span>' for a in accts) + '<span><i style="background:#111"></i>All 5 (dashed)</span>'
     return f'<svg viewBox="0 0 {W} {H}" width="100%">{ticks}{lines}{xl}</svg><div class="leg">{leg}</div>'
 
@@ -371,13 +378,13 @@ def html_today(date: str, accts: list[dict]) -> str:
     cards = []
     for a in accts:
         l1 = f'Today <span class="{_cls(a["today"])}">{_money(a["today"])}</span> · {a["trades"] if a["trades"] is not None else "—"} trades'
-        l2 = f'Since start <span class="{_cls(a.get("since"))}">{_money(a.get("since"))}</span>'
+        l2 = f'Since Day 1 <span class="{_cls(a.get("since"))}">{_money(a.get("since"))}</span>'
         cards.append(f'<div class="acc"><div class="n">{_e(a["name"])}</div><div class="ty">{_e(a["kind"])}</div>'
                      f'<div class="eq">{_money(a["equity"], sign=False)}</div><div class="ln">{l1}</div><div class="ln">{l2}</div></div>')
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
     strip = (f'<div class="strip"><div>All 5 today: <b class="{_cls(today)}">{_money(today)}</b></div>'
-             f'<div>All 5 since start: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
+             f'<div>All 5 since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
     m = milestones(accts[0], date)
     dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
     ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
@@ -386,7 +393,7 @@ def html_today(date: str, accts: list[dict]) -> str:
           f'<div class="v">{m["g10"]} / {m["n10"]}</div><div class="d">Need 8 of 10 · green / red, oldest → newest</div><div class="dots">{dots}</div></div></div>')
     return page(f'<div class="card"><h2>Accounts — end of day</h2><div class="accts accts5">{"".join(cards)}</div>{strip}</div>'
                 f'<div class="card"><h2>Milestones</h2>{ms}</div>'
-                f'<div class="two"><div class="card"><h2>Progress — cumulative P/L since start</h2>{_chart(accts, date)}</div>'
+                f'<div class="two"><div class="card"><h2>Progress — cumulative P/L since Day 1 (10/23)</h2>{_chart(accts, date)}</div>'
                 f'<div class="card"><h2>Last 5 sessions</h2>{_last5(accts, date)}</div></div>',
                 f"MCF daily — {date}", "AI/algo day-trading system on paper money · end-of-day summary")
 
@@ -451,8 +458,8 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
         g = sum((x.get("pnl") or 0) > 0 for x in h)
         today = sum((a["today"] or 0) for a in accts)
         since = sum((a.get("since") or 0) for a in accts)
-        lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since start: {_money(since)}",
-                  f"- Primary: today {_money(pr['today'])} · since start {_money(pr.get('since'))} · green days {g} of {len(h)}",
+        lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since Day 1 (10/23): {_money(since)}",
+                  f"- Primary: today {_money(pr['today'])} · since Day 1 {_money(pr.get('since'))} · green days {g} of {len(h)}",
                   f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
     ans = ["Quick answers",
            "- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.",
@@ -478,7 +485,7 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
     bn = ((words.get(best["setup"]) or {}).get("title") or best["name"]) if best else "—"
     return (f"Day {day_n} – AI algo day-trading (paper)\n"
             f"Today: {_money(today).replace('.00', '')} across 5 day-trading accounts · Primary {_money(pr['today'])}\n"
-            f"Since start: {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
+            f"Since Day 1 (10/23): {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
             f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
             + (f"Changes before today's open: {changes.strip()}\n" if changes.strip() else "")
             + "(Quick facts + charts in pics) · Not financial advice\n")
