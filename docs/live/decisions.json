@@ -218,5 +218,20 @@
   "link": "research/bdi/nightly1026/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "EXP",
+  "title": "Open a 6th paper account for more trades?",
+  "what": "Owner choice: keep 5 accounts (wait), add a Testing 3 account, or add a second Setup Generator account. A new account needs a new Alpaca paper account and its keys as repo secrets.",
+  "recommend": "No - wait; caps and account count are not the bottleneck, rarely-firing setups are",
+  "numbers": [
+   "~780 trades/day now, ~1,040 expected with GX1 from 10-27",
+   "caps blocked 0 signals outside the Graveyard; peak open positions well under limits (Primary 82/160)",
+   "Testing 3 would add ~20-40 trades/day, mostly to setups with 30+ trades; Gen uses ~23 of 200 slots"
+  ],
+  "why": "85 setups have 0-2 live trades and 67 never signalled, so more accounts would mostly add trades to busy setups.",
+  "link": "research/ops/exposure1026.md",
+  "status": "open",
+  "answered": null
  }
 ]
