@@ -367,7 +367,7 @@ def test_st7q_and_ns3v1_configured(monkeypatch):
     b = t1["strategies"]["ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD"]
     assert b["enabled"] and b["context"] == ["qqq_vwap"] and b["module"] == ST7Q and b["window"] == [950, 1500]
     assert b["min_adv"] == 95000000 and b["refire"] is False and b["scale_out_r"] is None
-    assert t1["strategies"]["ST7-rsi50dn-long-pm-t1s1-FD"]["enabled"]
+    assert not t1["strategies"]["ST7-rsi50dn-long-pm-t1s1-FD"]["enabled"]   # parent promoted to Primary 2026-10-25 (owner)
     o1 = t1["live"]["setup_order"]
     assert o1.index("ST8-volspikedn-long-pm-t1s1-FD") < o1.index("ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD") \
         < o1.index("ST6-volspikeup-short-mid-t1s1-FD")

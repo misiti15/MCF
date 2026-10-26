@@ -12,7 +12,8 @@
    "NS4-pm-vwap-reclaim-oversold-short",
    "NS5-sma50-flush-oversold-long",
    "RW3-gapdn-rsi5pop-flowsell-short-FD",
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+   "ST7-rsi50dn-long-pm-t1s1-FD"
   ],
   "testing": [
    "CWT05-flush-m05-v3-long",
@@ -42,7 +43,6 @@
    "ST4-emadn-long-am-t1s05-FD",
    "ST5-pdbrkup-short-mid-t05s1-FD",
    "ST6-volspikeup-short-mid-t1s1-FD",
-   "ST7-rsi50dn-long-pm-t1s1-FD",
    "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
    "ST8-volspikedn-long-pm-t1s1-FD",
    "exhaustion_short",
@@ -1432,10 +1432,13 @@
   },
   "ST7-rsi50dn-long-pm-t1s1-FD": {
    "accounts": [
-    "testing"
+    "primary"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-25 21:30 ET",
+   "from": [
+    "primary",
+    "testing2"
+   ]
   },
   "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD": {
    "accounts": [
@@ -1530,11 +1533,12 @@
   }
  },
  "last_change": {
-  "at": "2026-10-25 21:20 ET",
+  "at": "2026-10-25 21:30 ET",
   "changes": [
    {
-    "setup": "CWT13-vwapstretch-z05-long",
+    "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
     "from": [
+     "primary",
      "testing2"
     ],
     "to": [

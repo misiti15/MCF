@@ -282,6 +282,10 @@ NS3V1-am-widestop-short:
   name: "Big Loser VWAP Reclaim Fade, Morning, Wide Stop"
   side: short
   what: "09:50-11:30: a stock down over 2% reclaims VWAP while above its 50-bar average; short the reclaim (re-fires on later reclaims). Stop 0.5 x daily ATR above entry (twice NS3's, half the shares at the same $ risk), target at NS3's price 0.25 ATR below, flat 15:55. Never on the same symbol as the all-day version in Testing 2 (twin group). Observation only."
+ST7-rsi50dn-long-pm-t1s1-FD:
+  name: "RSI Collapse Dip Buy (all day)"
+  side: long
+  what: "09:50-15:00: RSI(14) on 5-minute bars collapses from 50+ to 30 or less in one bar while the stock is more than 1% below its open and buyers still lead the last 19 bars. Buy; target 1R, stop 1R (R = 0.25 x daily ATR), flat 15:55."
 ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD:
   name: "RSI Collapse Dip Buy, Nasdaq-below-VWAP only (all day)"
   side: long

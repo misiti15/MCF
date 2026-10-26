@@ -433,7 +433,7 @@ window.MCF = window.MCF || {};
       R = the setup's planned risk per trade. <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
       <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
-      <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Avg R w/o best day</b> = avg R with its single best session removed; the <b>1 day</b> tag = half or more of its total R came from one session (owner 2026-10-25: a record carried by 1-2 big days). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. <b>*</b> = long setup from the 2026-10-20 longs research, near-miss, observation only.
@@ -957,6 +957,8 @@ window.MCF = window.MCF || {};
           const loss = pl / (pf - 1); w += pf * loss; l += loss; });
         m.profit_factor = ok && l > 0 ? +(w / l).toFixed(2) : null; m.breakeven_wr = null; m.t_stat = null; }
       m.score = n ? avg * n / (n + 20) : null;
+      // owner 2026-10-25: is the record carried by 1-2 big days? avg R without its single best session + that day's share of total R
+      Object.assign(m, bestDay(tr.flatMap(r => r.daily || []), n, totR));
       if (pend) m.pending = `Testing 1 copy switches off tonight; Primary only from ${(asg.pending.effective || "").slice(0, 10)}`;
       const other = tr.filter(r => r.acct !== acct || !(c || []).includes(r.acct));
       m.statsFrom = other.length ? tr.map(r => `${lbl(r.acct)} ${r.trades}`).join(" + ") : null;
@@ -1001,15 +1003,22 @@ window.MCF = window.MCF || {};
     document.dispatchEvent(new CustomEvent("mcf:leaderboard"));
     draw();
   }
+  const bestDay = (daily, n, totR) => {   // daily: [[date, trades, R, P/L], ...] across accounts
+    const by = {}; daily.forEach(([d, c, r]) => { const a = by[d] || (by[d] = [0, 0]); a[0] += c; a[1] += r; });
+    const ds = Object.entries(by); if (ds.length < 2) return { exbest_r: null, best_share: null, best_day: ds[0] ? ds[0][0] : null };
+    const [bd, [bn, br]] = ds.sort((a, b) => b[1][1] - a[1][1])[0];
+    return { exbest_r: n - bn > 0 ? +((totR - br) / (n - bn)).toFixed(3) : null, best_day: bd, best_r: br,
+      best_share: totR > 0 && br > 0 ? Math.min(9.99, br / totR) : null };
+  };
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["best_reg", "Best conditions"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
     ["trades", "Live trades"], ["sessions_traded", "Sessions"], ["per_session", "Trades/session"],   // owner 2026-10-25
-    ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
+    ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["exbest_r", "Avg R w/o best day"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
     ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
   const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
-    avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
+    avg_r: "live", exbest_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
     rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
   const LEFT = new Set(["name", "acctLabel", "best_reg", "pt", "flag"]);
   const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
@@ -1044,7 +1053,7 @@ window.MCF = window.MCF || {};
         <td class="bd-last">${x.ls_trades || "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
         <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td title="Average live trades per session it traded">${x.per_session ?? "–"}</td><td>${pc(x.win_rate)}</td>
         <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
-        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
+        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.exbest_r)}" title="${x.best_day ? `Best session ${e(x.best_day)}: ${f(x.best_r, 1)}R` + (x.best_share != null ? ` = ${Math.round(x.best_share * 100)}% of total R` : "") : "One session only"}">${f(x.exbest_r)}${x.best_share != null && x.best_share >= 0.5 ? ' <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="Half or more of its total R came from one session">1 day</span>' : ""}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
         <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td>
         <td class="bd-replay">${x.rp_trades ?? "—"}</td><td class="bd-replay">${x.rp_sessions ?? "—"}</td><td class="bd-replay">${x.rp_win_rate == null ? "—" : pc(x.rp_win_rate)}</td>
         <td class="bd-replay ${cls(x.rp_avg_r)}">${x.rp_avg_r == null ? "—" : f(x.rp_avg_r)}</td><td class="bd-replay">${x.rp_t == null ? "—" : f(x.rp_t, 1, false)}</td><td class="bd-replay ${cls(x.rp_total_r)}">${x.rp_total_r == null ? "—" : f(x.rp_total_r, 1)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
@@ -1328,6 +1337,7 @@ window.MCF = window.MCF || {};
     "Trades": "Closed paper trades.",
     "Trades today": "Trades closed today in this account.",
     "Sessions": "Market days the setup traded at least once.",
+    "Avg R w/o best day": "Average R per trade with the setup's single best session left out. If this is much lower than Avg R (or negative), one big day is carrying the record. Hover a cell for the best day and its share of total R.",
     "Trades/session": "Average live trades per session it traded (live trades ÷ sessions traded): how active the setup is, so a couple of very busy days don't hide.",
     "Trades/day": "Live trades divided by sessions traded. The owner's promotion signal for generated setups (about 20/day).",
     "Win rate": "Share of trades that made money after costs.",

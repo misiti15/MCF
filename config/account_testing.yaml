@@ -45,7 +45,6 @@ live:
     - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # ~1.25/day (st7_1022 S1, owner 2026-10-22; 534 trades / 426 sessions)
     - ST6-volspikeup-short-mid-t1s1-FD
     - ST3-rsi5up-short-pm-t1s1-FD
-    - ST7-rsi50dn-long-pm-t1s1-FD
     - ST4-emadn-long-am-t1s05-FD
     - NS4-pm-vwap-reclaim-oversold-short-FD
     - RW6G1-ns2-up3-vwap2sd-short-FD
@@ -430,7 +429,7 @@ strategies:
     scale_out_r: null
   # from ST7-rsi50dn-long-pm-t1s1 (testing; source window 1335-1500); ~2.43/day full-day [timeofday results.csv full, exp +0.033R]
   ST7-rsi50dn-long-pm-t1s1-FD:
-    enabled: true
+    enabled: false   # promoted to Primary 2026-10-25 (owner); promotion = move. Its Testing 1 record stays here.
     type: lab
     module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
     min_adv: 95000000
