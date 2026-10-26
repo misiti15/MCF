@@ -196,6 +196,16 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
                 continue
             a = agg.setdefault(r["setup"], dict(setup=r["setup"], trades=0, r=0.0, pnl=0.0, accts=[]))
             a["trades"] += d[1]; a["r"] += d[2]; a["pnl"] += d[3]; a["accts"].append(label)
+    if not agg:      # EOD scorecards not built yet: today's closed trades from each account's live status.json
+        for k, label, br, _ in ACCOUNTS[:5]:
+            st = _show(br, "status.json") or {}
+            if st.get("session_date") != date:
+                continue
+            for c in st.get("closed") or []:
+                a = agg.setdefault(c["strategy"], dict(setup=c["strategy"], trades=0, r=0.0, pnl=0.0, accts=[]))
+                a["trades"] += 1; a["r"] += c.get("r") or 0.0; a["pnl"] += c.get("pnl") or 0.0
+                if label not in a["accts"]:
+                    a["accts"].append(label)
     out = sorted(agg.values(), key=lambda x: -x["pnl"])[:n]
     for x in out:
         nm = names.get(x["setup"]) or {}
