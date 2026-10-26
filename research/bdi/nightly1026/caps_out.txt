@@ -1,0 +1,67 @@
+
+===== p: skipped 6; what-if rows 6; mean cost 0.254R/trade (production model)
+-- 'twin held': 1 skipped signals; 1 priced in the what-if run
+   (~$+26 at the account's median $risk 15.00)
+   what-if: n 1, win 100%, sum gross +1.78R, sum net +1.71R, avg net +1.708R
+                            n  win   sumR   avgR
+strategy                                        
+MF2-open-rsimidhi-flowsell  1  100  1.708  1.708
+   held_by: {'MF2-open-rsimidhi-flowsell-FD': 1}
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== t1: skipped 169; what-if rows 169; mean cost 0.055R/trade (production model)
+-- 'twin held': 3 skipped signals; 3 priced in the what-if run
+   (~$+18 at the account's median $risk 11.04)
+   what-if: n 3, win 100%, sum gross +1.84R, sum net +1.66R, avg net +0.553R
+                     n  win  sumR   avgR
+strategy                                
+exhaustion_short-FD  3  100  1.66  0.553
+   held_by: {'exhaustion_short': 3}
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== t2: skipped 31; what-if rows 31; mean cost 0.126R/trade (production model)
+-- 'twin held': 0 skipped signals; 0 priced in the what-if run
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+===== gy: skipped 120; what-if rows 120; mean cost 0.065R/trade (production model)
+-- 'twin held': 13 skipped signals; 13 priced in the what-if run
+   (~$-88 at the account's median $risk 16.70)
+   what-if: n 13, win 38%, sum gross -4.54R, sum net -5.25R, avg net -0.404R
+                                 n  win   sumR   avgR
+strategy                                             
+heat_fade_long-FD                5   20 -3.511 -0.702
+NS2-sma50break-overbought-short  6   50 -1.447 -0.241
+heat_fade_long                   2   50 -0.295 -0.148
+   held_by: {'RW6-ns2-up3-short-FD / NS2-sma50break-overbought-short-FD': 5, 'heat_fade_long': 5, 'heat_fade_long-FD': 2, 'NS2-sma50break-overbought-short-FD': 1}
+-- 'setup daily loss limit': 41 skipped signals; 41 priced in the what-if run
+   (~$+133 at the account's median $risk 16.70)
+   what-if: n 41, win 76%, sum gross +11.09R, sum net +7.98R, avg net +0.195R
+                                        n  win   sumR   avgR
+strategy                                                    
+CWT14-failbrk-orl-p05-long              8   50 -3.694 -0.462
+CWT14-failbrk-orl-p05-lowvol-long       5   60 -1.781 -0.356
+heat_fade_long-FD                       1    0 -0.333 -0.333
+CWT09-gapdn-bounce-g5-lowerhalf-short   1  100  0.036  0.036
+RW2-exhaustion-noon-adv150-short-FD     8   62  0.389  0.049
+RW6-ns2-up3-short-FD                    7  100  5.034  0.719
+NS2-sma50break-overbought-short-FD     11  100  8.330  0.757
+   NS2-sma50break-overbought-short-FD: realized at trip -2.02R(j) over 2; open at trip 4 lots -> +1.54R; entered after 0; max same-poll cluster 4
+   NS2-sma50break-overbought-short-FD: tripped first 11:10, live 6 trades -0.52R ($-28.32); blocked 11 signals; what-if +8.33R net over 11
+   RW6-ns2-up3-short-FD: realized at trip -2.02R(j) over 2; open at trip 3 lots -> +1.21R; entered after 0; max same-poll cluster 3
+   RW6-ns2-up3-short-FD: tripped first 11:10, live 5 trades -0.85R ($-40.12); blocked 7 signals; what-if +5.03R net over 7
+   RW2-exhaustion-noon-adv150-short-FD: realized at trip -4.16R(j) over 4; open at trip 24 lots -> -4.96R; entered after 0; max same-poll cluster 16
+   RW2-exhaustion-noon-adv150-short-FD: tripped first 11:30, live 28 trades -9.13R ($-394.22); blocked 8 signals; what-if +0.39R net over 8
+   CWT09-gapdn-bounce-g5-lowerhalf-short: realized at trip -3.21R(j) over 3; open at trip 5 lots -> +0.22R; entered after 0; max same-poll cluster 4
+   CWT09-gapdn-bounce-g5-lowerhalf-short: tripped first 13:05, live 8 trades -3.16R ($-184.63); blocked 1 signals; what-if +0.04R net over 1
+   CWT14-failbrk-orl-p05-long: realized at trip -2.78R(j) over 13; open at trip 15 lots -> -2.00R; entered after 0; max same-poll cluster 7
+   CWT14-failbrk-orl-p05-long: tripped first 13:55, live 28 trades -5.18R ($-56.63); blocked 8 signals; what-if -3.69R net over 8
+   CWT14-failbrk-orl-p05-lowvol-long: realized at trip -2.79R(j) over 16; open at trip 15 lots -> -0.83R; entered after 0; max same-poll cluster 7
+   CWT14-failbrk-orl-p05-lowvol-long: tripped first 13:55, live 31 trades -4.04R ($+4.50); blocked 5 signals; what-if -1.78R net over 5
+   heat_fade_long-FD: realized at trip -2.06R(j) over 2; open at trip 0 lots -> +0.00R; entered after 0; max same-poll cluster 1
+   heat_fade_long-FD: tripped first 14:30, live 2 trades -2.10R ($-30.74); blocked 1 signals; what-if -0.33R net over 1
+
+===== gen: skipped 4; what-if rows 4; mean cost 0.030R/trade (production model)
+-- 'twin held': 0 skipped signals; 0 priced in the what-if run
+-- 'setup daily loss limit': 0 skipped signals; 0 priced in the what-if run
+
+Educational only - not financial advice.

@@ -52,8 +52,24 @@ class AlpacaBroker:
         """Shortable and easy-to-borrow per the broker (cached for the session)."""
         cache = self.__dict__.setdefault("_short_cache", {})
         if symbol not in cache:
-            a = self.client.get_asset(symbol)
-            cache[symbol] = bool(a.shortable and a.easy_to_borrow)
+            try:
+                a = self.client.get_asset(symbol)
+                cache[symbol] = bool(a.shortable and a.easy_to_borrow)
+            except Exception as e:
+                # 2026-10-23 10:47 ET: an asset listed on "TXSE" made alpaca-py's strict Asset model raise a pydantic
+                # ValidationError and ended Primary's job (4-min handover gap). Read the raw /assets/<symbol> JSON
+                # instead (same fields, no enum); if that fails too, treat the name as not shortable (no short).
+                import requests
+
+                if isinstance(e, (requests.exceptions.ConnectionError, requests.exceptions.Timeout)):
+                    raise
+                try:
+                    raw = self.client.get(f"/assets/{symbol}") or {}
+                    cache[symbol] = bool(raw.get("shortable") and raw.get("easy_to_borrow"))
+                except Exception as e2:
+                    print(f"::warning::can_short {symbol}: {type(e).__name__}, raw /assets failed "
+                          f"({type(e2).__name__}); treated as not shortable", flush=True)
+                    cache[symbol] = False
         return cache[symbol]
 
     def equity(self) -> float:
