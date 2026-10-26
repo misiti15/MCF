@@ -1,6 +1,6 @@
 """Daily message-board post images (owner 2026-10-24).
 
-Five PNGs + the post text per session, built from the same data the dashboard reads (each data branch's status.json
+Four PNGs + the post text and quick-facts text per session, built from the same data the dashboard reads (each data branch's status.json
 and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regimes.json). Day-trading accounts only
 (the long-hold S6 account is left out, owner 2026-10-25):
 
@@ -11,8 +11,8 @@ and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regi
   3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
                       the dashboard
   4-generator.png     generated setups leaderboard (Setup Generator account), top 10
-  5-facts.png         quick facts (same every day, live counts): stack, setups, life cycle, what the stats mean
-  post.txt            the short post text (owner's template)
+  facts.txt           quick facts as paste-ready text (live counts) - owner 2026-10-26: 4 images max, facts in text
+  post.txt            the short post text (owner's template) incl. the "changes before today's open" line
 
     python -m mcf.report.daily_post --date 2026-10-23 [--top2 research/posts/2026-10-23.json] [--out docs/posts]
 
@@ -426,6 +426,25 @@ def html_facts(date: str, fx: dict) -> str:
                 f"MCF — quick facts", f"Same every day; counts as of {date}")
 
 
+def facts_text(date: str, fx: dict) -> str:
+    """Quick facts as short paste-ready text (owner 2026-10-26: text, not an image)."""
+    sl = _f(fx["slip"], 1, False)
+    return (f"Quick facts (as of {date})\n"
+            "- AI: Claude (Opus 5.5) builds, tests and runs it · Code: Python\n"
+            "- Broker/data: Alpaca API, paper trading, SIP data (all US exchanges)\n"
+            "- Market: US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight\n"
+            f"- Setups: {fx['live']} live + {fx['gen']} machine-generated · ~{fx['rejected']:,} rejected by backtests so far\n"
+            "- Built from basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR\n"
+            "- Setup Generator: a bot that invents 10 new setups a night and trades them on its own paper account\n"
+            "- Life cycle: idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> live $ after milestones; losers move down to the Graveyard, never deleted\n"
+            "- Avg R: average result per trade in units of risk taken, after costs, fees and slippage\n"
+            "- Break-even win rate: the win rate a setup needs just to not lose money\n"
+            "- Avg R w/o best day: same, with its single best session removed (spots records carried by one big day)\n"
+            f"- Slippage: entries fill ~{sl} bps worse than the signal price (measured on {fx['trades']:,} paper fills)\n"
+            "- Milestones: M1 = 3 green days in a row (Primary) · M2 = 8 green of the last 10\n"
+            "Not financial advice.\n")
+
+
 def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "") -> str:
     m = milestones(accts[0], date)
     today = sum((a["today"] or 0) for a in accts)
@@ -517,8 +536,8 @@ def main(argv=None):
     acc = accounts(a.date)
     render({"1-today": html_today(a.date, acc), "2-top2": html_top2(a.date, top, words),
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
-            "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True),
-            "5-facts": html_facts(a.date, facts(acc))}, out)
+            "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
+    (out / "facts.txt").write_text(facts_text(a.date, facts(acc)))   # owner 2026-10-26: quick facts as text, 4 images max
     (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or ""))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
