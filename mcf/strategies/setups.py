@@ -666,8 +666,12 @@ def _build_one(name: str, params: dict, cfg: dict, top_n: int) -> Strategy | Non
     return REGISTRY[name](**params)
 
 
+LOAD_FAILURES: list[tuple[str, str]] = []   # (setup, error) of the last build_strategies call
+
+
 def build_strategies(cfg: dict) -> list[Strategy]:
     out = []
+    LOAD_FAILURES.clear()
     top_n = cfg.get("universe", {}).get("stocks_in_play_top_n", 20)
     exits = cfg.get("exits", {})
     for name, params in cfg.get("strategies", {}).items():
@@ -680,7 +684,14 @@ def build_strategies(cfg: dict) -> list[Strategy]:
             continue
         # split copy (owner 2026-10-20): ticker_split {part, of} -> this copy trades only its half of the tickers
         split = parse_ticker_split(params.pop("ticker_split", None))
-        st = _build_one(name, params, cfg, top_n)
+        try:
+            st = _build_one(name, params, cfg, top_n)
+        except (ImportError, FileNotFoundError, SyntaxError) as e:
+            # one setup whose module cannot load must not take the whole account down (2026-10-26: Gen crashed all
+            # day on a missing numba import) - skip it, say so in the job log, keep it in LOAD_FAILURES
+            LOAD_FAILURES.append((name, f"{type(e).__name__}: {e}"))
+            print(f"::warning::setup {name} skipped - module failed to load: {type(e).__name__}: {e}", flush=True)
+            continue
         if st is None:
             continue
         st.ticker_split = split
