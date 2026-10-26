@@ -35,8 +35,9 @@ HEADER = """\
 #
 # strategies_exclusive: only the GEN-* setups below run; every setup of config/default.yaml (primary + library) is
 # switched off by the loader (mcf/config.py), including setups added there later. Testing 1/2 setups never load here.
-# 80 slots: capital per slot = equity x buying_power_multiple / slots (mcf/backtest/engine.slot_notional), the same
-# rule as every account, so each slot is an equal increment (~$4,750 at $100k x 3.8 / 80).
+# 200 slots (owner GX2 2026-10-26, was 80): capital per slot = equity x buying_power_multiple / slots
+# (mcf/backtest/engine.slot_notional), the same rule as every account, so each slot is an equal increment (~$1,900 at
+# $100k x 3.8 / 200); up to 48 open positions per setup (was 16).
 # This file is maintained by `python -m mcf.research.generator run --apply` (setup_order rebuilt each run:
 # narrowest = fewest screened trades/day first). Hand edits to entries are kept; comments below this header are not.
 # max_setup_daily_loss_r: null = owner 2026-10-22 ST-A: the per-setup -2R daily stop is off (was 2.0) so testing runs
@@ -45,8 +46,8 @@ HEADER = """\
 
 BASE = {
     "strategies_exclusive": True,
-    "account": {"starting_equity": 100000, "slots": 80, "buying_power_multiple": 3.8, "max_concurrent_positions": 80,
-                "max_positions_per_strategy": 16, "max_daily_loss_r": 120, "max_setup_daily_loss_r": None,
+    "account": {"starting_equity": 100000, "slots": 200, "buying_power_multiple": 3.8, "max_concurrent_positions": 200,
+                "max_positions_per_strategy": 48, "max_daily_loss_r": 120, "max_setup_daily_loss_r": None,
                 "max_trades_per_day": 1000},
     "live": {"lab_refire": False, "setup_order": []},
     "strategies": {},
