@@ -1,0 +1,894 @@
+{
+ "note": "GX1 clock gate evidence 2026-10-26. A = replays 10-19..23 as live, live universe, production costs (--fills costs --limit-fill through), old gate vs new gate (research/ops/gx1clockgate1026_compare.py). B = validation replays 10-21..23, paper fills / touch limits (VALIDATION.md method), research/replay/validate.py vs the live journals. Replays are replays, not live results. Educational only - not financial advice.",
+ "A_old_vs_new": {
+  "primary": {
+   "days": [
+    {
+     "day": "2026-10-19",
+     "sig_old": 46,
+     "sig_new": 66,
+     "sub_old": 32,
+     "sub_new": 51,
+     "trades_old": 32,
+     "trades_new": 51,
+     "R_old": -4.2,
+     "R_new": -11.88
+    },
+    {
+     "day": "2026-10-20",
+     "sig_old": 77,
+     "sig_new": 145,
+     "sub_old": 72,
+     "sub_new": 125,
+     "trades_old": 72,
+     "trades_new": 125,
+     "R_old": -11.27,
+     "R_new": -8.53
+    },
+    {
+     "day": "2026-10-21",
+     "sig_old": 83,
+     "sig_new": 125,
+     "sub_old": 57,
+     "sub_new": 88,
+     "trades_old": 57,
+     "trades_new": 88,
+     "R_old": -8.43,
+     "R_new": -3.74
+    },
+    {
+     "day": "2026-10-22",
+     "sig_old": 162,
+     "sig_new": 233,
+     "sub_old": 126,
+     "sub_new": 186,
+     "trades_old": 126,
+     "trades_new": 186,
+     "R_old": 58.77,
+     "R_new": 53.55
+    },
+    {
+     "day": "2026-10-23",
+     "sig_old": 40,
+     "sig_new": 60,
+     "sub_old": 32,
+     "sub_new": 52,
+     "trades_old": 32,
+     "trades_new": 52,
+     "R_old": 8.42,
+     "R_new": 11.57
+    }
+   ],
+   "signals_added": 202,
+   "signals_lost": 0,
+   "trades_added": {
+    "n": 180,
+    "avg_r": -0.002,
+    "total_r": -0.38,
+    "se": 0.065
+   },
+   "trades_added_wo_best_day": {
+    "n": 152,
+    "avg_r": -0.036,
+    "total_r": -5.42,
+    "se": 0.07
+   },
+   "best_day": "2026-10-21",
+   "best_day_share": -13.09,
+   "trades_lost": {
+    "n": 1,
+    "avg_r": 0.549,
+    "total_r": 0.55,
+    "se": null
+   },
+   "all_old": {
+    "n": 319,
+    "avg_r": 0.136,
+    "total_r": 43.29,
+    "se": 0.053
+   },
+   "all_new": {
+    "n": 502,
+    "avg_r": 0.082,
+    "total_r": 40.98,
+    "se": 0.041
+   }
+  },
+  "testing": {
+   "days": [
+    {
+     "day": "2026-10-19",
+     "sig_old": 695,
+     "sig_new": 844,
+     "sub_old": 401,
+     "sub_new": 509,
+     "trades_old": 401,
+     "trades_new": 509,
+     "R_old": -4.19,
+     "R_new": 2.45
+    },
+    {
+     "day": "2026-10-20",
+     "sig_old": 573,
+     "sig_new": 795,
+     "sub_old": 271,
+     "sub_new": 357,
+     "trades_old": 271,
+     "trades_new": 357,
+     "R_old": 33.94,
+     "R_new": 48.45
+    },
+    {
+     "day": "2026-10-21",
+     "sig_old": 339,
+     "sig_new": 552,
+     "sub_old": 240,
+     "sub_new": 375,
+     "trades_old": 240,
+     "trades_new": 375,
+     "R_old": -36.25,
+     "R_new": -24.55
+    },
+    {
+     "day": "2026-10-22",
+     "sig_old": 352,
+     "sig_new": 525,
+     "sub_old": 159,
+     "sub_new": 223,
+     "trades_old": 159,
+     "trades_new": 223,
+     "R_old": -22.32,
+     "R_new": -22.78
+    },
+    {
+     "day": "2026-10-23",
+     "sig_old": 165,
+     "sig_new": 258,
+     "sub_old": 139,
+     "sub_new": 220,
+     "trades_old": 139,
+     "trades_new": 220,
+     "R_old": 10.23,
+     "R_new": 14.91
+    }
+   ],
+   "signals_added": 805,
+   "signals_lost": 0,
+   "trades_added": {
+    "n": 490,
+    "avg_r": 0.065,
+    "total_r": 31.61,
+    "se": 0.039
+   },
+   "trades_added_wo_best_day": {
+    "n": 406,
+    "avg_r": 0.041,
+    "total_r": 16.77,
+    "se": 0.044
+   },
+   "best_day": "2026-10-20",
+   "best_day_share": 0.47,
+   "trades_lost": {
+    "n": 24,
+    "avg_r": -0.309,
+    "total_r": -7.41,
+    "se": 0.177
+   },
+   "all_old": {
+    "n": 1210,
+    "avg_r": -0.015,
+    "total_r": -18.59,
+    "se": 0.024
+   },
+   "all_new": {
+    "n": 1684,
+    "avg_r": 0.011,
+    "total_r": 18.48,
+    "se": 0.021
+   }
+  },
+  "testing2": {
+   "days": [
+    {
+     "day": "2026-10-19",
+     "sig_old": 1025,
+     "sig_new": 1679,
+     "sub_old": 813,
+     "sub_new": 1241,
+     "trades_old": 813,
+     "trades_new": 1241,
+     "R_old": 13.77,
+     "R_new": 10.3
+    },
+    {
+     "day": "2026-10-20",
+     "sig_old": 879,
+     "sig_new": 1408,
+     "sub_old": 624,
+     "sub_new": 925,
+     "trades_old": 624,
+     "trades_new": 925,
+     "R_old": 34.6,
+     "R_new": 44.97
+    },
+    {
+     "day": "2026-10-21",
+     "sig_old": 242,
+     "sig_new": 405,
+     "sub_old": 201,
+     "sub_new": 299,
+     "trades_old": 201,
+     "trades_new": 299,
+     "R_old": -5.45,
+     "R_new": -14.76
+    },
+    {
+     "day": "2026-10-22",
+     "sig_old": 437,
+     "sig_new": 696,
+     "sub_old": 211,
+     "sub_new": 316,
+     "trades_old": 211,
+     "trades_new": 316,
+     "R_old": -3.82,
+     "R_new": -7.26
+    },
+    {
+     "day": "2026-10-23",
+     "sig_old": 182,
+     "sig_new": 287,
+     "sub_old": 163,
+     "sub_new": 260,
+     "trades_old": 163,
+     "trades_new": 260,
+     "R_old": 21.22,
+     "R_new": 33.84
+    }
+   ],
+   "signals_added": 1701,
+   "signals_lost": 0,
+   "trades_added": {
+    "n": 1155,
+    "avg_r": 0.016,
+    "total_r": 18.75,
+    "se": 0.022
+   },
+   "trades_added_wo_best_day": {
+    "n": 1058,
+    "avg_r": 0.006,
+    "total_r": 6.24,
+    "se": 0.024
+   },
+   "best_day": "2026-10-23",
+   "best_day_share": 0.67,
+   "trades_lost": {
+    "n": 123,
+    "avg_r": 0.109,
+    "total_r": 13.46,
+    "se": 0.054
+   },
+   "all_old": {
+    "n": 2012,
+    "avg_r": 0.03,
+    "total_r": 60.32,
+    "se": 0.017
+   },
+   "all_new": {
+    "n": 3041,
+    "avg_r": 0.022,
+    "total_r": 67.09,
+    "se": 0.014
+   }
+  },
+  "graveyard": {
+   "days": [
+    {
+     "day": "2026-10-21",
+     "sig_old": 693,
+     "sig_new": 1052,
+     "sub_old": 344,
+     "sub_new": 430,
+     "trades_old": 344,
+     "trades_new": 430,
+     "R_old": -31.18,
+     "R_new": -48.09
+    },
+    {
+     "day": "2026-10-22",
+     "sig_old": 676,
+     "sig_new": 982,
+     "sub_old": 280,
+     "sub_new": 299,
+     "trades_old": 280,
+     "trades_new": 299,
+     "R_old": -41.33,
+     "R_new": -74.74
+    },
+    {
+     "day": "2026-10-23",
+     "sig_old": 549,
+     "sig_new": 810,
+     "sub_old": 250,
+     "sub_new": 323,
+     "trades_old": 250,
+     "trades_new": 323,
+     "R_old": -24.29,
+     "R_new": -22.58
+    }
+   ],
+   "signals_added": 925,
+   "signals_lost": 0,
+   "trades_added": {
+    "n": 366,
+    "avg_r": -0.184,
+    "total_r": -67.41,
+    "se": 0.043
+   },
+   "trades_added_wo_best_day": {
+    "n": 263,
+    "avg_r": -0.233,
+    "total_r": -61.37,
+    "se": 0.052
+   },
+   "best_day": "2026-10-23",
+   "best_day_share": 0.09,
+   "trades_lost": {
+    "n": 188,
+    "avg_r": -0.1,
+    "total_r": -18.8,
+    "se": 0.054
+   },
+   "all_old": {
+    "n": 874,
+    "avg_r": -0.111,
+    "total_r": -96.8,
+    "se": 0.028
+   },
+   "all_new": {
+    "n": 1052,
+    "avg_r": -0.138,
+    "total_r": -145.42,
+    "se": 0.026
+   }
+  },
+  "gen": {
+   "days": [
+    {
+     "day": "2026-10-19",
+     "sig_old": 10,
+     "sig_new": 17,
+     "sub_old": 7,
+     "sub_new": 13,
+     "trades_old": 7,
+     "trades_new": 13,
+     "R_old": 0.93,
+     "R_new": 2.61
+    },
+    {
+     "day": "2026-10-20",
+     "sig_old": 68,
+     "sig_new": 88,
+     "sub_old": 22,
+     "sub_new": 25,
+     "trades_old": 22,
+     "trades_new": 25,
+     "R_old": -6.09,
+     "R_new": -0.57
+    },
+    {
+     "day": "2026-10-21",
+     "sig_old": 37,
+     "sig_new": 47,
+     "sub_old": 21,
+     "sub_new": 24,
+     "trades_old": 21,
+     "trades_new": 24,
+     "R_old": 6.47,
+     "R_new": 2.42
+    },
+    {
+     "day": "2026-10-22",
+     "sig_old": 153,
+     "sig_new": 221,
+     "sub_old": 66,
+     "sub_new": 86,
+     "trades_old": 66,
+     "trades_new": 86,
+     "R_old": -27.28,
+     "R_new": -25.12
+    },
+    {
+     "day": "2026-10-23",
+     "sig_old": 20,
+     "sig_new": 24,
+     "sub_old": 19,
+     "sub_new": 22,
+     "trades_old": 19,
+     "trades_new": 22,
+     "R_old": -0.37,
+     "R_new": -1.44
+    }
+   ],
+   "signals_added": 109,
+   "signals_lost": 0,
+   "trades_added": {
+    "n": 51,
+    "avg_r": -0.018,
+    "total_r": -0.91,
+    "se": 0.115
+   },
+   "trades_added_wo_best_day": {
+    "n": 45,
+    "avg_r": -0.058,
+    "total_r": -2.59,
+    "se": 0.127
+   },
+   "best_day": "2026-10-19",
+   "best_day_share": -1.85,
+   "trades_lost": {
+    "n": 16,
+    "avg_r": -0.321,
+    "total_r": -5.14,
+    "se": 0.223
+   },
+   "all_old": {
+    "n": 135,
+    "avg_r": -0.195,
+    "total_r": -26.33,
+    "se": 0.079
+   },
+   "all_new": {
+    "n": 170,
+    "avg_r": -0.13,
+    "total_r": -22.1,
+    "se": 0.069
+   }
+  }
+ },
+ "B_validation": {
+  "old_gate": {
+   "primary": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 359,
+     "replay": 285,
+     "matched": 284,
+     "match_rate_live": 0.791,
+     "match_rate_replay": 0.996,
+     "live_only_in_universe": 0,
+     "replay_only": 1,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 1,
+     "status_agree": 0.838,
+     "live_in_universe": 284,
+     "live_submitted_in_universe": 179,
+     "replay_submitted": 215
+    },
+    "trades": {
+     "live": 204,
+     "replay": 215,
+     "matched": 174,
+     "match_rate_live": 0.853,
+     "match_rate_replay": 0.809,
+     "entry_diff_bps_median": -3.53,
+     "entry_diff_bps_mean_abs": 10.63,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 6.03,
+     "r_diff_mean": 0.042,
+     "r_diff_median": 0.038,
+     "r_diff_mean_abs": 0.148,
+     "same_exit_reason": 0.989,
+     "matched_live_r": 58.14,
+     "matched_replay_r": 65.46
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "testing": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 927,
+     "replay": 856,
+     "matched": 836,
+     "match_rate_live": 0.902,
+     "match_rate_replay": 0.977,
+     "live_only_in_universe": 1,
+     "replay_only": 20,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 20,
+     "status_agree": 0.83,
+     "live_in_universe": 837,
+     "live_submitted_in_universe": 411,
+     "replay_submitted": 549
+    },
+    "trades": {
+     "live": 443,
+     "replay": 549,
+     "matched": 400,
+     "match_rate_live": 0.903,
+     "match_rate_replay": 0.729,
+     "entry_diff_bps_median": -2.74,
+     "entry_diff_bps_mean_abs": 10.63,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 8.13,
+     "r_diff_mean": 0.082,
+     "r_diff_median": 0.035,
+     "r_diff_mean_abs": 0.172,
+     "same_exit_reason": 0.945,
+     "matched_live_r": -52.51,
+     "matched_replay_r": -19.59
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "testing2": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 628,
+     "replay": 861,
+     "matched": 534,
+     "match_rate_live": 0.85,
+     "match_rate_replay": 0.62,
+     "live_only_in_universe": 0,
+     "replay_only": 327,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 327,
+     "status_agree": 0.742,
+     "live_in_universe": 534,
+     "live_submitted_in_universe": 353,
+     "replay_submitted": 598
+    },
+    "trades": {
+     "live": 376,
+     "replay": 598,
+     "matched": 289,
+     "match_rate_live": 0.769,
+     "match_rate_replay": 0.483,
+     "entry_diff_bps_median": -2.53,
+     "entry_diff_bps_mean_abs": 13.7,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 5.63,
+     "r_diff_mean": 0.05,
+     "r_diff_median": 0.031,
+     "r_diff_mean_abs": 0.18,
+     "same_exit_reason": 0.952,
+     "matched_live_r": 23.49,
+     "matched_replay_r": 37.9
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "graveyard": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 2008,
+     "replay": 1918,
+     "matched": 1907,
+     "match_rate_live": 0.95,
+     "match_rate_replay": 0.994,
+     "live_only_in_universe": 2,
+     "replay_only": 11,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 11,
+     "status_agree": 0.808,
+     "live_in_universe": 1909,
+     "live_submitted_in_universe": 866,
+     "replay_submitted": 912
+    },
+    "trades": {
+     "live": 902,
+     "replay": 912,
+     "matched": 705,
+     "match_rate_live": 0.782,
+     "match_rate_replay": 0.773,
+     "entry_diff_bps_median": -1.43,
+     "entry_diff_bps_mean_abs": 10.6,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 5.89,
+     "r_diff_mean": 0.049,
+     "r_diff_median": 0.029,
+     "r_diff_mean_abs": 0.137,
+     "same_exit_reason": 0.99,
+     "matched_live_r": -87.89,
+     "matched_replay_r": -53.42
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "gen": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 82,
+     "replay": 210,
+     "matched": 28,
+     "match_rate_live": 0.341,
+     "match_rate_replay": 0.133,
+     "live_only_in_universe": 29,
+     "replay_only": 182,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 182,
+     "status_agree": 0.821,
+     "live_in_universe": 57,
+     "live_submitted_in_universe": 50,
+     "replay_submitted": 106
+    },
+    "trades": {
+     "live": 68,
+     "replay": 106,
+     "matched": 20,
+     "match_rate_live": 0.294,
+     "match_rate_replay": 0.189,
+     "entry_diff_bps_median": -7.18,
+     "entry_diff_bps_mean_abs": 23.3,
+     "exit_diff_bps_median": -2.71,
+     "exit_diff_bps_mean_abs": 11.29,
+     "r_diff_mean": 0.05,
+     "r_diff_median": 0.034,
+     "r_diff_mean_abs": 0.076,
+     "same_exit_reason": 1.0,
+     "matched_live_r": 0.63,
+     "matched_replay_r": 1.63
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   }
+  },
+  "new_gate": {
+   "primary": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 359,
+     "replay": 418,
+     "matched": 284,
+     "match_rate_live": 0.791,
+     "match_rate_replay": 0.679,
+     "live_only_in_universe": 0,
+     "replay_only": 134,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 134,
+     "status_agree": 0.838,
+     "live_in_universe": 284,
+     "live_submitted_in_universe": 179,
+     "replay_submitted": 326
+    },
+    "trades": {
+     "live": 204,
+     "replay": 326,
+     "matched": 174,
+     "match_rate_live": 0.853,
+     "match_rate_replay": 0.534,
+     "entry_diff_bps_median": -3.53,
+     "entry_diff_bps_mean_abs": 10.63,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 6.03,
+     "r_diff_mean": 0.042,
+     "r_diff_median": 0.038,
+     "r_diff_mean_abs": 0.148,
+     "same_exit_reason": 0.989,
+     "matched_live_r": 58.14,
+     "matched_replay_r": 65.46
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "testing": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 927,
+     "replay": 1335,
+     "matched": 836,
+     "match_rate_live": 0.902,
+     "match_rate_replay": 0.626,
+     "live_only_in_universe": 1,
+     "replay_only": 499,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 499,
+     "status_agree": 0.81,
+     "live_in_universe": 837,
+     "live_submitted_in_universe": 411,
+     "replay_submitted": 877
+    },
+    "trades": {
+     "live": 443,
+     "replay": 877,
+     "matched": 395,
+     "match_rate_live": 0.892,
+     "match_rate_replay": 0.45,
+     "entry_diff_bps_median": -2.8,
+     "entry_diff_bps_mean_abs": 10.69,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 8.15,
+     "r_diff_mean": 0.081,
+     "r_diff_median": 0.035,
+     "r_diff_mean_abs": 0.172,
+     "same_exit_reason": 0.944,
+     "matched_live_r": -49.7,
+     "matched_replay_r": -17.57
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "testing2": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 628,
+     "replay": 1388,
+     "matched": 534,
+     "match_rate_live": 0.85,
+     "match_rate_replay": 0.385,
+     "live_only_in_universe": 0,
+     "replay_only": 854,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 854,
+     "status_agree": 0.745,
+     "live_in_universe": 534,
+     "live_submitted_in_universe": 353,
+     "replay_submitted": 893
+    },
+    "trades": {
+     "live": 376,
+     "replay": 893,
+     "matched": 288,
+     "match_rate_live": 0.766,
+     "match_rate_replay": 0.323,
+     "entry_diff_bps_median": -2.49,
+     "entry_diff_bps_mean_abs": 13.6,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 5.13,
+     "r_diff_mean": 0.047,
+     "r_diff_median": 0.031,
+     "r_diff_mean_abs": 0.178,
+     "same_exit_reason": 0.958,
+     "matched_live_r": 21.64,
+     "matched_replay_r": 35.04
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "graveyard": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 2008,
+     "replay": 2844,
+     "matched": 1907,
+     "match_rate_live": 0.95,
+     "match_rate_replay": 0.671,
+     "live_only_in_universe": 2,
+     "replay_only": 937,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 937,
+     "status_agree": 0.748,
+     "live_in_universe": 1909,
+     "live_submitted_in_universe": 866,
+     "replay_submitted": 1103
+    },
+    "trades": {
+     "live": 902,
+     "replay": 1103,
+     "matched": 567,
+     "match_rate_live": 0.629,
+     "match_rate_replay": 0.514,
+     "entry_diff_bps_median": -1.73,
+     "entry_diff_bps_mean_abs": 10.94,
+     "exit_diff_bps_median": 0.0,
+     "exit_diff_bps_mean_abs": 5.65,
+     "r_diff_mean": 0.047,
+     "r_diff_median": 0.031,
+     "r_diff_mean_abs": 0.133,
+     "same_exit_reason": 0.995,
+     "matched_live_r": -74.08,
+     "matched_replay_r": -47.54
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   },
+   "gen": {
+    "sessions": [
+     "2026-10-21",
+     "2026-10-22",
+     "2026-10-23"
+    ],
+    "signals": {
+     "live": 82,
+     "replay": 292,
+     "matched": 28,
+     "match_rate_live": 0.341,
+     "match_rate_replay": 0.096,
+     "live_only_in_universe": 29,
+     "replay_only": 264,
+     "replay_only_symbol_in_live_universe_but_no_live_signal": 264,
+     "status_agree": 0.786,
+     "live_in_universe": 57,
+     "live_submitted_in_universe": 50,
+     "replay_submitted": 132
+    },
+    "trades": {
+     "live": 68,
+     "replay": 132,
+     "matched": 19,
+     "match_rate_live": 0.279,
+     "match_rate_replay": 0.144,
+     "entry_diff_bps_median": -3.77,
+     "entry_diff_bps_mean_abs": 23.92,
+     "exit_diff_bps_median": -3.24,
+     "exit_diff_bps_mean_abs": 11.83,
+     "r_diff_mean": 0.048,
+     "r_diff_median": 0.029,
+     "r_diff_mean_abs": 0.076,
+     "same_exit_reason": 1.0,
+     "matched_live_r": 0.02,
+     "matched_replay_r": 0.93
+    },
+    "fast_check": {
+     "samples": 72,
+     "frame_diff": 0,
+     "mask_diff": 0,
+     "rvol_diff": 0
+    }
+   }
+  }
+ }
+}

@@ -58,6 +58,7 @@ COLS = Counter({
     '["rp_trades", "Replay trades"]': 1, '["rp_sessions", "Replay sessions"]': 1, '["rp_win_rate", "Replay win rate"]': 1,
     '["rp_avg_r", "Replay avg R"]': 1, '["rp_t", "Replay t"]': 1, '["rp_total_r", "Replay total R"]': 1,
     '["best_reg", "Best conditions"]': 1,   # added 2026-10-22 (regime1022: market conditions)
+    '["exp_live", "Expected live /day"]': 1,   # added 2026-10-26 (GX5: realistic live expectation)
 })
 
 # headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
@@ -165,7 +166,7 @@ def test_disclaimer_kept():
 def test_glossary_covers_new_columns():
     for term in ("Last session", "Last-session trades", "Last-session R", "Last-session P/L", "Replay", "Replay trades",
                  "Replay sessions", "Replay win rate", "Replay avg R", "Replay t", "Replay total R", "Stage",
-                 "Best conditions", "Bull", "Bear", "Choppy", "Quiet"):
+                 "Best conditions", "Bull", "Bear", "Choppy", "Quiet", "Expected live /day"):
         assert f'"{term}":' in HTML, term
 
 
