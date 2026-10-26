@@ -144,8 +144,8 @@
   ],
   "why": "Live and 2-year history now agree it loses; it was kept on 10-19 only because 16 trades were slightly positive.",
   "link": "research/bdi/nightly1023/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-10-25: yes — demoted to Testing 1 for 2026-10-26"
  },
  {
   "code": "D2",
@@ -158,8 +158,8 @@
   ],
   "why": "The worst per-trade record among Testing setups with 15+ trades; never raised before.",
   "link": "research/bdi/nightly1023/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-10-25: yes — moved to the Graveyard for 2026-10-26"
  },
  {
   "code": "ST-P",
@@ -171,9 +171,23 @@
    "blocks 11.6% of trades (avg -0.13R); worst day -71R -> -46R",
    "t 3.32 vs bar 3.79; live 14 sessions +19.4R"
   ],
-  "why": "Primary has no per-setup stop. On two years it trims losing setup-days without touching exits; the best 20 days give up 26.5R of 753R (-3R version: 2.4R). Below the try-count bar, and Primary stays negative after costs.",
+  "why": "Primary has no per-setup stop. On two years it trims losing setup-days without touching exits; the best 20 days give up 26.5R of 753R (-3R version: 2.4R). Below the try-count bar, and Primary stays negative after costs. Owner 2026-10-25: revisit later.",
   "link": "research/bdi/saturday1024/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "PROMO-Z05L",
+  "title": "Promote Stretched Below VWAP Bounce to Primary",
+  "what": "CWT13-vwapstretch-z05-long moves from Testing 2 to Primary (promotion = move).",
+  "recommend": "Optional — owner's call; backtest is negative",
+  "numbers": [
+   "Testing 2: 53 trades, 66% win vs 59% needed, +0.10R, t 0.79",
+   "2-year history -0.080R/trade (n 18,135)"
+  ],
+  "why": "Owner instruction 2026-10-25.",
+  "link": "docs/live/assignments.json",
+  "status": "answered",
+  "answered": "2026-10-25: owner — promoted to Primary for 2026-10-26"
  }
 ]

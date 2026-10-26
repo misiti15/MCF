@@ -15,9 +15,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 
 | ID | Item | Owner of the work | Monitored by | Due | Status |
 |---|---|---|---|---|---|
-| ST-P | Primary per-setup daily stop (backlog st-a-1022-primary-setup-stop, owner ST-A+P): latched per-setup stop none vs 1.5 / 2 / 3R. No Primary change without the owner | owner | nightly FYI | brief 2026-10-24 (Saturday) | **DECISION ST-P raised 2026-10-24** (research/bdi/saturday1024): 2-year backtest done — S2 avg R -0.035 -> -0.025 valid, better in train/valid and up/down, 17 of 21 months, +374R, blocks 11.6% (avg -0.13R), best-20-day give-up 26.5R of 753R (3R: 2.4R), t 3.32 vs bar 3.79; live replay 14 sessions latch 2R +19.37R. Reply ST-P 2R / 3R / no |
-| MF1-D | Demote Early Sellers Above VWAP (MF1-945-flowsell-vwapup) Primary -> Testing 1 (re-raise of P4, numbers changed: 25 trades -0.19R, last 4 sessions -0.54R) | owner | nightly suggestions | brief 2026-10-23 | DECISION open |
-| D2 | Move Gap-Down VWAP Loss Short (5% gap) (CWT09-gapdn-vwaploss-g5-short) Testing 2 -> Graveyard (33 trades, 15% win vs 40%, -0.70R) | owner | nightly suggestions | brief 2026-10-23 | DECISION open |
+| ST-P | Primary per-setup daily stop (backlog st-a-1022-primary-setup-stop, owner ST-A+P): latched per-setup stop none vs 1.5 / 2 / 3R. No Primary change without the owner | owner | nightly FYI | brief 2026-10-24 (Saturday) | **DECISION ST-P raised 2026-10-24** (research/bdi/saturday1024): 2-year backtest done — S2 avg R -0.035 -> -0.025 valid, better in train/valid and up/down, 17 of 21 months, +374R, blocks 11.6% (avg -0.13R), best-20-day give-up 26.5R of 753R (3R: 2.4R), t 3.32 vs bar 3.79; live replay 14 sessions latch 2R +19.37R. Reply ST-P 2R / 3R / no · owner 2026-10-25: revisit later |
 | SO-CAP | Lift the live scale-out cap (Testing 2: 2/day). Scale-out worked live on BITO and COIN. | owner | — | when owner decides | waiting on owner |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | owner | nightly suggestions | owner reviewing | waiting on owner |
 | SO-ALLOC | If the 2/day scale-out cap stays: which signals get the 2 scale-outs (first-come spent both by 09:54 on 10-21). Backlog nightly-1021-scaleout-cap-allocation | BDI | backlog idea | with SO-CAP | idea |
@@ -38,6 +36,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 | HK-1 | Testing 2 bracket rejects | Claude | — | housekeeping | queued |
 | HK-2 | Hard-to-borrow skip noise | Claude | — | housekeeping | queued |
 | REPLAY | Live-test new setups on recorded sessions through the real live runner (mcf/replay, branch claude/replay-build). Pipeline: backtest -> replay (~50 recorded sessions through PaperRunner + simulated broker, costs in, trade-through limits) -> testing account -> primary. Replay vs live agreement tracked per setup and system-wide (docs/live/pipeline.json `agreement`, `drift` when |avg R gap| > 0.25R with >= 10 trades each). Validation numbers: research/replay/VALIDATION.md. Live poll inputs logged from the next session (live.log_poll_inputs; first day 2026-10-22 landed on all 5 data branches, 15.4 MB/day) so replays can be checked against what live actually received. Shipped: poll log, harness + CLI, validation (signals 98-99.9% matched; matched-trade R gap ~0), gap decomposition (5-bar gate drops 30-41% of lab signals), docs/live replay.json + pipeline.json. Open: Testing 2 replay speed (~18 min/session with today's config), 5-bar gate fix as a backlog idea, nightly export wiring. | Claude | nightly export (python -m mcf.replay export) | merge after the close (touches the live runner: poll log only) | shipped on branch claude/replay-build, awaiting merge |
+| PROMO-Z05L | Primary watch: Stretched Below VWAP Bounce (CWT13-vwapstretch-z05-long), promoted 2026-10-25 by owner (2-yr backtest -0.080R) | nightly loop | nightly FYI | first review after 10 Primary sessions (2026-11-06) | live |
 
 ## Closed
 
@@ -48,6 +47,8 @@ and every decision the owner answers is set to `answered` with the date and the 
 | N1 | Demote MF3-open-flowsell-rsi5hi-FD | 2026-10-20 | kept on watch, then demoted by owner 2026-10-20 evening |
 | N4 | CWT14-failbrk-orl longs | 2026-10-20 | all four moved to the Graveyard (owner) |
 | M1 | Early Sellers into a Pop (index down, no gap up) | 2026-10-20 | yes — Testing 2, observation |
+| MF1-D | MF1-945-flowsell-vwapup Primary → Testing 1 | 2026-10-25 | yes — demoted for 2026-10-26 (ledger 2026-10-25-mf1-demote-testing1) |
+| D2 | CWT09-gapdn-vwaploss-g5-short Testing 2 → Graveyard | 2026-10-25 | yes — moved for 2026-10-26 |
 | LL-LATCH | Per-setup -2R stop latches for the day | 2026-10-22 evening | yes — risk.py setup_stopped, from 2026-10-23 (ledger 2026-10-22-setup-stop-latch) |
 | D1 | CWT13-vwapstretch-z05-short Testing 2 → Graveyard | 2026-10-22 evening | yes — moved, from 2026-10-23 |
 | L1 | LD1 / LD2 longs | 2026-10-20 | yes — with LD3-LD8, Testing 2, observation |
