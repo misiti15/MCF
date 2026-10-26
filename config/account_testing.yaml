@@ -31,6 +31,7 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    - MF1-945-flowsell-vwapup   # demoted from Primary 2026-10-25 (narrow 09:50-10:30 window)
     - L3-gap-slope-fromopen-FD   # demoted from Primary 2026-10-22
     - RW6G1-ns2-up3-vwap2sd-short   # demoted from Primary 2026-10-22 (windowed: narrower than its -FD)
     - IDX1-qqq100-0955-TQQQ-trail
@@ -182,7 +183,9 @@ strategies:
   NS3-failed-vwap-reclaim-short:
     enabled: true
     former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
-  MF1-945-flowsell-vwapup: {enabled: false}   # replaced by MF1-945-flowsell-vwapup-FD
+  MF1-945-flowsell-vwapup:   # demoted from Primary 2026-10-25 (owner MF1-D); its -FD twin runs in the Graveyard
+    enabled: true
+    former_primary: {demoted: "2026-10-25", first_testing_session: "2026-10-26", review_after_sessions: 10}
   CWT14-failbrk-pdl-p10-lowvol-long: {enabled: false}   # Primary only (promoted 2026-10-21)
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
   MF3-open-flowsell-rsi5hi:

@@ -3,7 +3,6 @@
  "accounts": {
   "primary": [
    "CWT14-failbrk-pdl-p10-lowvol-long",
-   "MF1-945-flowsell-vwapup",
    "MF2-open-rsimidhi-flowsell",
    "MF2-open-rsimidhi-flowsell-FD",
    "MF4-h40-open-flowsell",
@@ -26,6 +25,7 @@
    "L3-gap-slope-fromopen-FD",
    "L3-gap-slope-lowdist-FD",
    "LIQ-pdl-sweep-open15-vwap-long",
+   "MF1-945-flowsell-vwapup",
    "MF3-open-flowsell-rsi5hi",
    "MF3-open-flowsell-rsi5hi-FD",
    "MF5-flowsell-vwapup-rsi5hi",
@@ -59,7 +59,6 @@
    "CWT05-flush-m075-v5-long",
    "CWT09-gapdn-bounce-g10-lowerhalf-short",
    "CWT09-gapdn-vwaploss-g10-short",
-   "CWT09-gapdn-vwaploss-g5-short",
    "CWT12-coil-k4-long",
    "CWT12-flag-s1-long",
    "CWT13-vwapstretch-z05-long",
@@ -165,6 +164,7 @@
   ],
   "graveyard": [
    "CWT09-gapdn-bounce-g5-lowerhalf-short",
+   "CWT09-gapdn-vwaploss-g5-short",
    "CWT13-vwapstretch-z05-short",
    "CWT14-failbrk-orl-p05-long",
    "CWT14-failbrk-orl-p05-lowvol-long",
@@ -278,10 +278,12 @@
   },
   "CWT09-gapdn-vwaploss-g5-short": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-25 21:05 ET",
+   "from": [
+    "testing2"
+   ]
   },
   "CWT12-coil-k4-long": {
    "accounts": [
@@ -1006,10 +1008,12 @@
   },
   "MF1-945-flowsell-vwapup": {
    "accounts": [
-    "primary"
+    "testing"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-25 21:05 ET",
+   "from": [
+    "primary"
+   ]
   },
   "MF1-945-flowsell-vwapup-FD": {
    "accounts": [
@@ -1524,76 +1528,24 @@
   }
  },
  "last_change": {
-  "at": "2026-10-23 18:51 ET",
+  "at": "2026-10-25 21:05 ET",
   "changes": [
    {
-    "setup": "GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short",
-    "from": [],
+    "setup": "CWT09-gapdn-vwaploss-g5-short",
+    "from": [
+     "testing2"
+    ],
     "to": [
-     "gen"
+     "graveyard"
     ]
    },
    {
-    "setup": "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long",
-    "from": [],
+    "setup": "MF1-945-flowsell-vwapup",
+    "from": [
+     "primary"
+    ],
     "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long",
-    "from": [],
-    "to": [
-     "gen"
+     "testing"
     ]
    }
   ]

@@ -15,9 +15,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 
 | ID | Item | Owner of the work | Monitored by | Due | Status |
 |---|---|---|---|---|---|
-| ST-P | Primary per-setup daily stop (backlog st-a-1022-primary-setup-stop, owner ST-A+P): latched per-setup stop none vs 1.5 / 2 / 3R. No Primary change without the owner | owner | nightly FYI | brief 2026-10-24 (Saturday) | **DECISION ST-P raised 2026-10-24** (research/bdi/saturday1024): 2-year backtest done — S2 avg R -0.035 -> -0.025 valid, better in train/valid and up/down, 17 of 21 months, +374R, blocks 11.6% (avg -0.13R), best-20-day give-up 26.5R of 753R (3R: 2.4R), t 3.32 vs bar 3.79; live replay 14 sessions latch 2R +19.37R. Reply ST-P 2R / 3R / no |
-| MF1-D | Demote Early Sellers Above VWAP (MF1-945-flowsell-vwapup) Primary -> Testing 1 (re-raise of P4, numbers changed: 25 trades -0.19R, last 4 sessions -0.54R) | owner | nightly suggestions | brief 2026-10-23 | DECISION open |
-| D2 | Move Gap-Down VWAP Loss Short (5% gap) (CWT09-gapdn-vwaploss-g5-short) Testing 2 -> Graveyard (33 trades, 15% win vs 40%, -0.70R) | owner | nightly suggestions | brief 2026-10-23 | DECISION open |
+| ST-P | Primary per-setup daily stop (backlog st-a-1022-primary-setup-stop, owner ST-A+P): latched per-setup stop none vs 1.5 / 2 / 3R. No Primary change without the owner | owner | nightly FYI | brief 2026-10-24 (Saturday) | **DECISION ST-P raised 2026-10-24** (research/bdi/saturday1024): 2-year backtest done — S2 avg R -0.035 -> -0.025 valid, better in train/valid and up/down, 17 of 21 months, +374R, blocks 11.6% (avg -0.13R), best-20-day give-up 26.5R of 753R (3R: 2.4R), t 3.32 vs bar 3.79; live replay 14 sessions latch 2R +19.37R. Reply ST-P 2R / 3R / no · owner 2026-10-25: revisit later |
 | SO-CAP | Lift the live scale-out cap (Testing 2: 2/day). Scale-out worked live on BITO and COIN. | owner | — | when owner decides | waiting on owner |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | owner | nightly suggestions | owner reviewing | waiting on owner |
 | SO-ALLOC | If the 2/day scale-out cap stays: which signals get the 2 scale-outs (first-come spent both by 09:54 on 10-21). Backlog nightly-1021-scaleout-cap-allocation | BDI | backlog idea | with SO-CAP | idea |
@@ -48,6 +46,8 @@ and every decision the owner answers is set to `answered` with the date and the 
 | N1 | Demote MF3-open-flowsell-rsi5hi-FD | 2026-10-20 | kept on watch, then demoted by owner 2026-10-20 evening |
 | N4 | CWT14-failbrk-orl longs | 2026-10-20 | all four moved to the Graveyard (owner) |
 | M1 | Early Sellers into a Pop (index down, no gap up) | 2026-10-20 | yes — Testing 2, observation |
+| MF1-D | MF1-945-flowsell-vwapup Primary → Testing 1 | 2026-10-25 | yes — demoted for 2026-10-26 (ledger 2026-10-25-mf1-demote-testing1) |
+| D2 | CWT09-gapdn-vwaploss-g5-short Testing 2 → Graveyard | 2026-10-25 | yes — moved for 2026-10-26 |
 | LL-LATCH | Per-setup -2R stop latches for the day | 2026-10-22 evening | yes — risk.py setup_stopped, from 2026-10-23 (ledger 2026-10-22-setup-stop-latch) |
 | D1 | CWT13-vwapstretch-z05-short Testing 2 → Graveyard | 2026-10-22 evening | yes — moved, from 2026-10-23 |
 | L1 | LD1 / LD2 longs | 2026-10-20 | yes — with LD3-LD8, Testing 2, observation |

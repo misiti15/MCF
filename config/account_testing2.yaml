@@ -76,7 +76,6 @@ live:
     - RW4-ns3-adv150-short-FD   # 14.71/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
-    - CWT09-gapdn-vwaploss-g5-short   # 8.60/day
     - CWT13-vwapstretch-z075-long   # 9.23/day
     - CWT13-vwapstretch-z05-long   # 42.57/day
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
@@ -621,7 +620,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T1 S guest", fill: false}
   # Gap-Down VWAP Loss Short (5% gap): CWT package A A7 gap<=-5 E=out T1 t1s05 guest (id 339); open history n 3663, exp -0.0311R, t -0.42, 8.60/day; verdict fail
   CWT09-gapdn-vwaploss-g5-short:
-    enabled: true
+    # moved to Graveyard 2026-10-25 (owner D2; effective session 2026-10-26, its trades so far stay here)
+    enabled: false
     type: lab
     module: research/bdi/cwt/live/CWT09-gapdn-vwaploss-g5-short.py
     min_adv: 1000000
