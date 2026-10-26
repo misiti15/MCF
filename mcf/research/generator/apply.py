@@ -9,7 +9,6 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from . import expect as E
 from . import screen as S
 from .spec import CONTEXT, GEOMS, WINDOWS, Spec, display_name, module_slug, setup_name, what
 
@@ -185,8 +184,7 @@ def run(date: str, n: int = 10, apply: bool = False, n_specs: int = 3000, seed: 
     sd_first = np.r_[True, P.sd[1:] != P.sd[:-1]]
     months_mask = np.zeros(int(P.sd.max()) + 1, bool)
     months_mask[P.sd[sd_first]] = np.isin(P.days[P.day[sd_first]], list(sample_days))
-    prior_eval = {k: S.evaluate(P, s, keep_keys=True) for k, s in prior.items()}
-    prior_keys = {k: v["_keys"] for k, v in prior_eval.items()}
+    prior_keys = {k: S.evaluate(P, s, keep_keys=True)["_keys"] for k, s in prior.items()}
     picks = S.pick(P, by_key, ranked, n, existing, prior_keys, months_mask=months_mask, log=log)
     out = []
     for i, p in enumerate(picks, start=1 + sum(1 for k in prior if k.startswith(f"GEN-{date.replace('-', '')[2:]}-"))):
@@ -198,7 +196,6 @@ def run(date: str, n: int = 10, apply: bool = False, n_specs: int = 3000, seed: 
             stats["overlap_with"] = None
         if p["key"] in seed_meta:
             stats["seed"] = seed_meta[p["key"]]
-        stats["expected_live_per_day"] = E.expected_live_per_day(stats.get("per_day_median60"))   # GX5
         out.append({"name": nm, "module": f"research/generator/modules/{module_slug(s, date, i)}.py", "spec": s.canon(),
                     "display": display_name(s), "what": what(s), "screen": stats})
     finalists = []
@@ -217,10 +214,6 @@ def run(date: str, n: int = 10, apply: bool = False, n_specs: int = 3000, seed: 
            "n_tier1": int(sum(r["tier1"] for r in ranked)), "rejected_before_screen": rej,
            "prior_families_avoided": len(avoid), "overlap_not_checked": not_checked,
            "overlap_sample_months": list(SAMPLE_MONTHS), "seeds": seed_info, "picks": out, "top50_finalists": finalists,
-           # GX5 (owner 2026-10-26): every GEN setup's realistic live trades/day, refreshed on the full panel each run
-           "expected_live": {**{k: E.entry(v) for k, v in sorted(prior_eval.items())},
-                             **{x["name"]: E.entry(x["screen"]) for x in out}},
-           "expected_live_basis": E.basis(),
            "applied": bool(apply), "runtime_s": round(time.time() - t0),
            "note": "Quick screen, open history only (train <= 2025-12, valid 2026-01..2026-10-07), costs in, "
                    "first qualifying bar per symbol-day, day-clustered t. No locked holdout; not a tested edge. "
@@ -247,8 +240,7 @@ def _apply(date: str, rep: dict, specs: list, acct: dict) -> None:
             "tags": ["generated", f"gen-{date}"],
             "gen": {"date": date, "spec": s.canon(), "key": s.key(),
                     "screen": {"train": sc["train"], "valid": sc["valid"], "all": sc["all"], "per_day": sc["per_day"],
-                               "per_day_valid": sc["per_day_valid"], "per_day_median60": sc.get("per_day_median60"),
-                               "expected_live_per_day": sc.get("expected_live_per_day"), "exp_up": sc["exp_up"],
+                               "per_day_valid": sc["per_day_valid"], "exp_up": sc["exp_up"],
                                "exp_down": sc["exp_down"], "exp_flat": sc["exp_flat"],
                                "excess_train": sc["excess_train"], "excess_valid": sc["excess_valid"],
                                "tier1": sc["tier1"], "score": sc["score"], "max_overlap": sc["max_overlap"],
@@ -258,7 +250,7 @@ def _apply(date: str, rep: dict, specs: list, acct: dict) -> None:
             acct["strategies"][p["name"]]["gen"]["seed"] = sc["seed"]
         entry = {"name": p["display"], "side": s.side, "what": p["what"], "generated": date,
                  "screen": {"train_exp_r": sc["train"]["exp_r"], "valid_exp_r": sc["valid"]["exp_r"],
-                            "per_day": sc["per_day"], "expected_live_per_day": sc.get("expected_live_per_day")}}
+                            "per_day": sc["per_day"]}}
         names_j[p["name"]] = entry
         names_y += (f"{p['name']}:\n  name: {json.dumps(p['display'])}\n  side: {s.side}\n"
                     f"  what: {json.dumps(p['what'])}\n  generated: \"{date}\"\n")

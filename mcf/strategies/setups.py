@@ -376,47 +376,6 @@ class HeatStrategy(Strategy):
         return out[:1]
 
 
-_FIVE = pd.Timedelta(minutes=5)
-_MIN = 60_000_000_000
-_LAB_BKT: list = [None, []]   # [bars index object, its decision buckets]: the last lab_decision_buckets answer
-
-
-def lab_decision_buckets(index) -> list:
-    """GX1 clock gate (owner 2026-10-26, research/ops/genexposure1025.md): the 5-minute clock buckets (start times, oldest
-    first) that the LATEST 1-minute bar of `index` decides. A bucket's decision bar is its first bar at or after the
-    bucket's 4th minute (LabStrategy._signal's `end`; the buckets are resample(bars, '5min')'s, as in the screen and every
-    backtest). So the latest bar decides
-      - its own bucket when it is that bucket's 4th minute (the bucket has just completed), and
-      - the previous bar's bucket when that bucket had no 4th-minute bar and the latest bar lies at or after it
-        (a missing minute: the bucket completes with the next bar that arrives).
-    Usually one bucket, at most two (both with the same decision bar). Empty: the latest bar completes no bucket, i.e.
-    nothing new to evaluate. Only completed buckets are ever returned (no lookahead), and only the latest bar's (no
-    catch-up of older buckets). Replaces the old `len(bars) % 5 == 0` test, which skipped every decision bar of a symbol
-    that had missed a minute earlier in the day."""
-    if _LAB_BKT[0] is index:     # one bars object per symbol and poll: every lab setup shares the answer
-        return _LAB_BKT[1]
-    n = len(index)
-    out = []
-    if n:
-        v = index.as_unit("ns").asi8   # UTC ns; ET is a whole number of hours off UTC, so 5-minute buckets agree
-        last = int(v[-1]) // _MIN
-        if n >= 2:
-            prev = int(v[-2]) // _MIN
-            ps = prev - prev % 5
-            if prev % 5 != 4 and last >= ps + 4:
-                out.append(ps)
-        if last % 5 == 4 and (not out or out[-1] != last - 4):
-            out.append(last - 4)
-        out = [pd.Timestamp(m * _MIN, tz="UTC").tz_convert(index.tz) if index.tz is not None
-               else pd.Timestamp(m * _MIN) for m in out]
-    _LAB_BKT[:] = [index, out]
-    return out
-
-
-def _hhmm(ts) -> int:
-    return ts.hour * 100 + ts.minute
-
-
 _LAB_FRAMES: dict = {}
 # [bars object, its completed 5-minute bars]: the last resample LabStrategy.generate did. Reused only for the very same
 # bars object (the runner scans every setup of one symbol with one ctx.bars per poll), so a new poll or revised bars
@@ -509,15 +468,14 @@ class LabStrategy(Strategy):
         if self.symbols is not None and ctx.symbol not in self.symbols:
             return False
         n = len(ctx.bars)
+        if n < 5 or n % 5:
+            return False   # live: evaluate once per completed 5-minute bar
         if n == 390:
             return True    # full-day context (backtest): the mask's own time layers apply
-        # live: evaluate when the latest bar completes a 5-minute clock bucket (GX1 clock gate, owner 2026-10-26; was
-        # len(bars) % 5 == 0). The runner evaluates each bucket once per setup and symbol (PaperRunner.lab_bucket).
-        buckets = lab_decision_buckets(ctx.bars.index)
-        if not buckets:
-            return False
+        end = ctx.bars.index[-1] + pd.Timedelta(minutes=1)
+        hhmm = end.hour * 100 + end.minute
         lo, hi = self.window or (950, 1500)
-        if not any(lo <= _hhmm(b + _FIVE) <= hi for b in buckets):   # bucket close HHMM inside the window
+        if not lo <= hhmm <= hi:
             return False
         if self.prefilter and self.prefilter.startswith(("gap_le:", "gap_ge:")):
             # gap is fixed at the open: skip the feature build for names that cannot qualify
@@ -530,13 +488,6 @@ class LabStrategy(Strategy):
             h = ctx.bars["high"].to_numpy()
             return len(h) >= 100 and h[-5:].max() >= h[-100:].max()
         return True
-
-    @staticmethod
-    def decision_bucket(ctx):
-        """The latest completed 5-minute bucket the latest bar decides (its start), or None: the key under which the
-        runner evaluates this setup on this symbol once per bucket (GX1)."""
-        b = lab_decision_buckets(ctx.bars.index)
-        return b[-1] if b else None
 
     def generate(self, ctx: DayContext):
         from ..data.bars import resample

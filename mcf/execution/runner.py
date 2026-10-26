@@ -91,11 +91,6 @@ class PaperRunner:
         self.no_entry_before = t(self.live.get("no_entry_before", "09:30"))
         self.fired: set[tuple[str, str]] = set()
         self.seen: set[tuple[str, str]] = set()      # signals already journaled today
-        # GX1 clock gate (owner 2026-10-26): symbol -> (start of its latest decided 5-minute bucket, the lab setups that
-        # evaluated it), so each completed bucket is evaluated once per setup and symbol (a symbol without a new bar keeps
-        # its latest bucket for several polls). After a restart the journal dedupe (seen / moments) keeps a fired bucket
-        # from firing again.
-        self.lab_bucket: dict[str, tuple[pd.Timestamp, set]] = {}
         self.open_strategy: dict[str, str] = {}
         # symbol -> time an entry was submitted. A market entry is not a broker position until it fills, so without
         # this a second setup firing on the same symbol in the same poll passed "already in symbol" (2026-10-08:
@@ -867,8 +862,6 @@ class PaperRunner:
                     retry = True
                 if not strat.eligible(ctx):
                     continue
-                if self._bucket_done(strat, key, ctx):
-                    continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
                 for sig in strat.signals(ctx):
                     if retry:
                         # only a fresh market signal on the latest bar, later than the blocked one; never a stale price
@@ -907,23 +900,6 @@ class PaperRunner:
             # stable sort: longs before shorts, setup_order (scan order) kept within each side
             for sig, key in sorted(ties, key=lambda x: x[0].side != 1):
                 self._enter(sig, px, key, ctx, now)
-
-    def _bucket_done(self, strat, key, ctx) -> bool:
-        """GX1: True when this lab setup already evaluated the bucket the latest bar decides on this symbol; otherwise
-        records it as evaluated now. Setups without decision_bucket (non-lab) are never held back."""
-        db = getattr(strat, "decision_bucket", None)
-        if db is None:
-            return False
-        b = db(ctx)
-        if b is None:
-            return False
-        cur = self.lab_bucket.get(key[0])
-        if cur is None or cur[0] != b:
-            cur = self.lab_bucket[key[0]] = (b, set())
-        if key[1] in cur[1]:
-            return True
-        cur[1].add(key[1])
-        return False
 
     # ---------------------------------------------------------------- re-entry (live.same_setup_reentry)
     def _moment(self, sig, ctx, now) -> str:
@@ -1393,7 +1369,7 @@ def poll_record(now: pd.Timestamp, bars: dict, watchlist, health: dict, stale: b
       miss   {"k": [symbols]} symbols holding exp - k bars (k > 0: minutes without a bar; only k != 0 listed)
       none   watchlist symbols without any bar (at most 50 listed; none_n = the count)
       stale  the runner's data-stale verdict this poll
-    Everything a replay needs to rebuild each symbol's bar count (lab setups evaluate when a 5-minute bucket completes) and the
+    Everything a replay needs to rebuild each symbol's bar count (lab setups only evaluate when count % 5 == 0) and the
     data gaps the live runner saw."""
     cut = pd.Timestamp(now).floor("1min")
     lm = cut - pd.Timedelta(minutes=1)

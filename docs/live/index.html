@@ -447,9 +447,7 @@ window.MCF = window.MCF || {};
     <div class="sub" id="gen-sorted" style="margin:6px 0"></div>
     <div class="tablewrap" id="gen-tab" style="max-height:max(480px, calc(100vh - 110px));overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = live avg R shrunk by trades ÷ (trades + 20), as above. <b>Screen train / valid R</b> = expectancy after costs on the open history when the setup was generated
-      (train ≤ 2025-12, valid 2026-01 onward; no locked holdout). <b>Screen /day</b> = trades per day in that screen (a 2-year mean). <b>Expected live /day</b> = what live can realistically show:
-      the screen's median day over its last 60 sessions × 0.97 (5-minute clock gate) × 1.4 (names outside the screened universe) × 0.81 (spread / borrow skips),
-      factors measured on 2026-10-19..23 (research/ops/genexposure1025.md); account caps not applied. Paper results; few trades prove nothing. Educational only — not financial advice.</div></div>
+      (train ≤ 2025-12, valid 2026-01 onward; no locked holdout). <b>Screen /day</b> = trades per day in that screen. Paper results; few trades prove nothing. Educational only — not financial advice.</div></div>
   <!-- New setup pipeline (owner 2026-10-21): every new setup's Backtest · Replay · Live side by side. Reads
        docs/live/pipeline.json {generated, setups: {setup: {stage, backtest: {trades, win, be_win, avg_r, t}, replay: {...}, live: {...}}}}. -->
   <div class="card" id="pipe-card"><h2>New setup pipeline</h2>
@@ -1216,13 +1214,12 @@ window.MCF = window.MCF || {};
   const pc = v => v == null ? "–" : Math.round(v * 100) + "%";
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + (Math.abs(v) >= 10000 ? (Math.abs(v) / 1000).toFixed(1) + "k" : Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0}));   // compact $ (owner 2026-10-22)
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
-  let rows = [], sortK = "rank", sortD = 1, when = "", LS = null, EXPTOT = null;
+  let rows = [], sortK = "rank", sortD = 1, when = "", LS = null;
   const COLS = [["rank", "#"], ["name", "Setup"], ["generated", "Generated"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],   // owner 2026-10-22
     ["trades", "Live trades"], ["per_day", "Trades/day"], ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"],
     ["avg_r", "Avg R"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["recent_avg_r", "Last 4 avg R"],
-    ["scr_train", "Screen train R"], ["scr_valid", "Screen valid R"], ["scr_day", "Screen /day"],
-    ["exp_live", "Expected live /day"]];   // GX5 (owner 2026-10-26): realistic live expectation next to the screen /day
+    ["scr_train", "Screen train R"], ["scr_valid", "Screen valid R"], ["scr_day", "Screen /day"]];
   // header bands (owner 2026-10-22): Last session · Live, same as the setup leaderboard
   const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", per_day: "live", win_rate: "live", breakeven_wr: "live",
     avg_r: "live", t_stat: "live", total_r: "live", pnl: "live", recent_avg_r: "live" };
@@ -1233,10 +1230,7 @@ window.MCF = window.MCF || {};
     return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
   async function get(u) { try { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }); return r.ok ? r.json() : null; } catch (_) { return null; } }
   async function load() {
-    const [names, sc, gl] = await Promise.all([get("../live/setup_names.json"), get(RAW + "mcf-data-gen/reports/scorecard.json"),
-      get("../live/generator_lab.json")]);
-    const EXP = ((gl && gl.expected_live) || {}).setups || {};   // GX5: expected live trades/day per GEN setup
-    EXPTOT = gl && gl.expected_live ? [gl.expected_live.live_screen_per_day_total, gl.expected_live.live_expected_per_day_total] : null;
+    const [names, sc] = await Promise.all([get("../live/setup_names.json"), get(RAW + "mcf-data-gen/reports/scorecard.json")]);
     const lb = Object.fromEntries(((sc && sc.leaderboard) || []).filter(r => isGen(r.setup)).map(r => [r.setup, r]));
     when = sc ? (sc.generated || sc.window || "") : "no end-of-day report yet";
     const keys = new Set([...Object.keys(names || {}).filter(isGen), ...Object.keys(lb)]);
@@ -1245,9 +1239,7 @@ window.MCF = window.MCF || {};
                live: l.live !== false, trades: l.trades || 0, win_rate: l.win_rate, avg_r: l.avg_r, total_r: l.total_r, pnl: l.pnl,
                recent_avg_r: l.recent_avg_r, score: l.score, t_stat: l.t_stat,
                per_day: l.trades && l.sessions_traded ? +(l.trades / l.sessions_traded).toFixed(1) : null,
-               breakeven_wr: l.breakeven_wr ?? (l.win_rate && l.profit_factor ? l.win_rate / (l.win_rate + l.profit_factor * (1 - l.win_rate)) : null), scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day,
-               exp_live: (EXP[k] || {}).expected_live_per_day ?? s.expected_live_per_day ?? null,
-               exp_med: (EXP[k] || {}).per_day_median60 ?? null, exp_mean: (EXP[k] || {}).expected_live_mean_basis ?? null }; });
+               breakeven_wr: l.breakeven_wr ?? (l.win_rate && l.profit_factor ? l.win_rate / (l.win_rate + l.profit_factor * (1 - l.win_rate)) : null), scr_train: s.train_exp_r, scr_valid: s.valid_exp_r, scr_day: s.per_day }; });
     rows.filter(r => r.score != null).sort((a, b) => b.score - a.score).forEach((r, i) => { r.rank = i + 1; });
     // Last session (owner 2026-10-22): same code path as the setup leaderboard — the scorecard's last_session when the
     // EOD report carries it, else mcf-data-gen/reports/<date>.csv via window.MCF.daySummary.
@@ -1263,8 +1255,7 @@ window.MCF = window.MCF || {};
     const key = x => { const v = x[sortK]; return v == null || v === "" ? (sortD > 0 ? Infinity : -Infinity) : v; };
     const r = rows.slice().sort((a, b) => { const A = key(a), B = key(b); return (typeof A === "string" && typeof B === "string" ? A.localeCompare(B) : A - B) * sortD; });
     const traded = rows.filter(x => x.trades);
-    q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}` +
-      (EXPTOT && EXPTOT[1] != null ? ` · live setups: screen ${EXPTOT[0] ?? "–"}/day, expected live ~${EXPTOT[1]}/day (median day of their total, before caps)` : "");
+    q("#gen-sum").innerHTML = `${rows.length} generated setups · ${traded.length} with live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all · data: ${e(when)}`;
     const th = COLS.map(([k, h], i) => `<th class="${i === 1 ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l nmc" title="${e(x.name)} · ${e(x.setup)}${x.what ? "\n" + e(x.what) : ""}"><span class="nm"><span class="genbadge">GENERATED</span> ${e(x.name)}</span>
         <span class="sid">${e(x.setup)}</span></td><td>${e(x.generated || "–")}</td>
@@ -1273,8 +1264,7 @@ window.MCF = window.MCF || {};
       <td class="${cls(x.win_rate == null || x.breakeven_wr == null ? null : x.win_rate - x.breakeven_wr)}">${pc(x.breakeven_wr)}</td>
       <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td>${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
       <td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td><td class="${cls(x.scr_train)}">${f(x.scr_train, 3)}</td>
-      <td class="${cls(x.scr_valid)}">${f(x.scr_valid, 3)}</td><td>${x.scr_day ?? "–"}</td>
-      <td title="${x.exp_med == null ? "" : "Screen median day, last 60 sessions: " + x.exp_med + " (0 = fires on fewer than half of the days). Same factors on the last-60 mean: " + (x.exp_mean ?? "–") + "/day"}">${x.exp_live ?? "–"}</td></tr>`;
+      <td class="${cls(x.scr_valid)}">${f(x.scr_valid, 3)}</td><td>${x.scr_day ?? "–"}</td></tr>`;
     q("#gen-tab").innerHTML = r.length ? `<table><thead>${bandRow()}<tr class="cols">${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No generated setups yet.</div>`;
     const lab = (COLS.find(c => c[0] === sortK) || [, "#"])[1];
     q("#gen-sorted").textContent = `Sorted by ${lab} (${sortD > 0 ? "low to high" : "high to low"}) · tap any column header to re-sort, tap again to flip`;
@@ -1377,7 +1367,6 @@ window.MCF = window.MCF || {};
     "Screen train R": "Avg R after costs on older history (to end-2025) when generated. A quick screen, not a full test.",
     "Screen valid R": "Avg R after costs on 2026 history when generated: did it hold up on newer data?",
     "Screen /day": "Trades per day in that history screen.",
-    "Expected live /day": "Realistic live trades per day: the screen's median day over its last 60 sessions x 0.97 (5-minute clock gate) x 1.4 (names outside the screened universe) x 0.81 (spread / borrow skips). Factors measured 2026-10-19..23 (research/ops/genexposure1025.md); caps not applied.",
     "Signals": "Times a setup's rule fired; some are skipped (slots, caps, spread, borrow).",
     "Data health": "Is live market data arriving on time? Stale data pauses new entries.",
     "Verdict": "The report's call on this setup (e.g. keep, review, promising, playing-time status).",

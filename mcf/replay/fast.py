@@ -12,8 +12,7 @@ it), and serves prefixes of it:
   masks    each lab setup's module is wrapped; mask(frame prefix) returns the whole-session mask's prefix.
   gate     after the runner's own _contexts() (universe, in-play filter, ranking - unchanged), a symbol is dropped from
            the poll's loop only when no setup can act on it this poll: every lab setup either is not eligible
-           (its own eligible(): a completed 5-minute clock bucket, window, ADV, ...) or its mask has no hit on the
-           buckets the latest bar decides
+           (its own eligible(): 5-minute bar count, window, ADV, ...) or its mask has no hit on the latest decision bar
            (the runner acts only on signals of the latest bar), and no other setup type is eligible.
   pinned   engine.pinned_symbols(cfg) memoised per config object (it walks every setup on every call).
 
@@ -185,38 +184,32 @@ class FastSession:
                 return True
         sym = ctx.symbol
         n = len(ctx.bars)
-        if n >= 5 and n % 5 == 0:                                # heat eligible() needs n % 5 == 0
-            for st in self.heat:
-                if getattr(st, "ticker_split", None) and not st.trades_symbol(sym):
-                    continue
-                if self.heat_hit(st, ctx) and st.eligible(ctx):
-                    return True
-        # lab eligible(): the latest bar must decide a completed 5-minute clock bucket (GX1 clock gate, the same
-        # function as live); one bucket, or two when the previous bar's bucket had no 4th-minute bar
-        k = len(S.lab_decision_buckets(ctx.bars.index)) if n != 390 else 1
-        if not k or not self.lab:
-            return False
+        if n < 5 or n % 5:
+            return False                                         # every lab / heat eligible() needs n % 5 == 0
+        for st in self.heat:
+            if getattr(st, "ticker_split", None) and not st.trades_symbol(sym):
+                continue
+            if self.heat_hit(st, ctx) and st.eligible(ctx):
+                return True
         f = self.frame(sym)
         if f is None:
             return any(st.eligible(ctx) for st in self.lab)      # unknown here: let the real code decide
         j = int(np.searchsorted(self.ends[sym], ctx.bars.index[-1].value + 60_000_000_000, side="right"))
         if j == 0:
             return False                                         # no completed 5-minute bar: generate() returns []
-        rows = range(max(0, j - k), j)                           # the decided buckets are the latest completed ones
-        tods = [self.tod[sym][r] for r in rows]
+        tod = self.tod[sym][j - 1]
         for st in self.lab:
             if getattr(st, "ticker_split", None) and not st.trades_symbol(sym):
                 continue
             lo, hi = st.window or (950, 1500)
-            ok = [r for r, tod in zip(rows, tods) if max(950, lo) <= tod <= min(1500, hi)]
-            if not ok:
+            if not max(950, lo) <= tod <= min(1500, hi):
                 continue
             m = self.full_mask(st.name, sym)
             if m is None or len(m) < j:
                 if st.eligible(ctx):
                     return True
                 continue
-            if any(m[r] for r in ok) and st.eligible(ctx):       # a hit on a bucket the latest bar decides, and eligible
+            if m[j - 1] and st.eligible(ctx):                    # a hit on the latest decision bar, and eligible
                 return True
         return False
 
@@ -331,16 +324,15 @@ class FastSession:
         return self
 
     def _gen_wrap(self, st, real):
-        """generate() of a lab setup that skips the build when its whole-session mask has no hit on a bucket the latest
-        bar decides: the runner only acts on signals of the latest bar, so the result would be ignored anyway."""
+        """generate() of a lab setup that skips the build when its whole-session mask has no hit on the latest
+        decision bar: the runner only acts on signals of the latest bar, so the result would be ignored anyway."""
         def gen(ctx):
             f = self.frame(ctx.symbol)
             m = self.full_mask(st.name, ctx.symbol) if f is not None else None
             if f is not None and m is not None and len(ctx.bars):
                 j = int(np.searchsorted(self.ends[ctx.symbol], ctx.bars.index[-1].value + 60_000_000_000,
                                         side="right"))
-                k = max(1, len(S.lab_decision_buckets(ctx.bars.index)))   # buckets the latest bar decides (GX1)
-                if j == 0 or (len(m) >= j and not m[max(0, j - k):j].any()):
+                if j == 0 or (len(m) >= j and not m[j - 1]):
                     self.gen_skipped += 1
                     return []
             return real(ctx)

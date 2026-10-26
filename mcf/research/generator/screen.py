@@ -26,7 +26,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .expect import recent_stats
 from .spec import CONTEXT, IND, QUANT_HI, QUANT_LO, WINDOWS, Spec, family_sig, random_spec, valid
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -127,7 +126,6 @@ def evaluate(P, spec: Spec, keep_keys: bool = False) -> dict:
         res[lab] = round(float(x[sel].mean()), 4) if sel.sum() else None
     res["per_day"] = round(len(r) / max(1, P.n_days), 3)
     res["per_day_valid"] = round(int((sp == 1).sum()) / max(1, P.n_days_split[1]), 3)
-    res.update(recent_stats(P, day))   # GX5: median day over the last 60 sessions (expected live trades/day)
     tr, va = res["train"], res["valid"]
     tier1 = bool((tr["exp_r"] or -1) > 0 and (va["exp_r"] or -1) > 0
                  and MIN_PER_DAY <= res["per_day"] <= MAX_PER_DAY_TIER1)
