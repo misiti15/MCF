@@ -1,0 +1,60 @@
+# Session guard (owner 2026-10-26). Educational only - not financial advice.
+#
+# On 2026-10-26 GitHub fired no scheduled run at all and the session was started by hand at 10:30 ET. This workflow checks
+# that every account has a queued or running trade.yml job on a market day between 08:40 and 15:30 ET, and dispatches
+# trade.yml when one does not (mcf/execution/session_guard.py; at most 6 guard dispatches a day).
+#
+# Two ways in, so one scheduler failing is not enough to miss a session:
+#   * its own cron lines (every 10 min, offset from trade.yml's and watchdog.yml's minutes)
+#   * workflow_dispatch from an outside caller - the Claude scheduled task "MCF session guard" (weekdays, pre-open and
+#     hourly), which works even when GitHub's cron does not fire. That task also dispatches trade.yml itself if this
+#     workflow cannot run.
+# A duplicate trade run is harmless: each account's job waits behind the live one in its concurrency group.
+name: session-guard
+
+on:
+  schedule:
+    - cron: "3-53/10 12-20 * * 1-5"   # 08:43.. ET (EDT); the ET window and market day are checked in the script
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "act = dispatch trade.yml when a session is missing; dry = report only"
+        type: choice
+        options: [act, dry]
+        default: act
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: mcf-session-guard
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      HAS_TESTING: ${{ secrets.ALPACA_TESTING_API_KEY != '' }}
+      HAS_TESTING2: ${{ secrets.ALPACA_TESTING2_API_KEY != '' && secrets.ALPACA_TESTING2_SECRET_KEY != '' }}
+      HAS_GEN: ${{ secrets.ALPACA_GEN_API_KEY != '' && secrets.ALPACA_GEN_SECRET_KEY != '' }}
+      HAS_GRAVEYARD: ${{ secrets.ALPACA_GRAVEYARD_API_KEY != '' && secrets.ALPACA_GRAVEYARD_SECRET_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q pandas
+      - name: Guard (dispatch trade.yml if a session is missing)
+        run: |
+          accts=primary
+          [ "$HAS_TESTING" = "true" ] && accts="$accts,testing"
+          [ "$HAS_TESTING2" = "true" ] && accts="$accts,testing2"
+          [ "$HAS_GEN" = "true" ] && accts="$accts,gen"
+          [ "$HAS_GRAVEYARD" = "true" ] && accts="$accts,graveyard"
+          python -m mcf.execution.session_guard --accounts "$accts" --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.mode || 'act' }}"

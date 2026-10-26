@@ -1,6 +1,6 @@
 """Daily message-board post images (owner 2026-10-24).
 
-Five PNGs + the post text per session, built from the same data the dashboard reads (each data branch's status.json
+Four PNGs + the post text and quick-facts text per session, built from the same data the dashboard reads (each data branch's status.json
 and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regimes.json). Day-trading accounts only
 (the long-hold S6 account is left out, owner 2026-10-25):
 
@@ -11,8 +11,8 @@ and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regi
   3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
                       the dashboard
   4-generator.png     generated setups leaderboard (Setup Generator account), top 10
-  5-facts.png         quick facts (same every day, live counts): stack, setups, life cycle, what the stats mean
-  post.txt            the short post text (owner's template)
+  facts.txt           'Quick facts' (numbers) + 'Quick answers' (common questions), paste-ready text - owner 2026-10-26
+  post.txt            the short post text (owner's template) incl. the "changes before today's open" line
 
     python -m mcf.report.daily_post --date 2026-10-23 [--top2 research/posts/2026-10-23.json] [--out docs/posts]
 
@@ -426,7 +426,40 @@ def html_facts(date: str, fx: dict) -> str:
                 f"MCF — quick facts", f"Same every day; counts as of {date}")
 
 
-def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int) -> str:
+def facts_text(date: str, fx: dict, accts: list[dict] | None = None) -> str:
+    """Owner 2026-10-26: two text blocks - 'Quick facts' (numbers only) and 'Quick answers' (the common questions)."""
+    sl = _f(fx["slip"], 1, False)
+    lines = [f"Quick facts (as of {date})",
+             f"- Sessions traded: {fx['sessions']} (since {fx['start'] or '—'}) · paper trades: {fx['trades']:,}",
+             f"- Setups live: {fx['live']} + {fx['gen']} machine-generated",
+             f"- Setups rejected by backtests so far: ~{fx['rejected']:,}",
+             f"- Entry slippage: ~{sl} bps vs the signal price (measured, paper fills)"]
+    if accts:
+        pr = accts[0]
+        m = milestones(pr, date)
+        h = _sessions(pr, date)
+        g = sum((x.get("pnl") or 0) > 0 for x in h)
+        today = sum((a["today"] or 0) for a in accts)
+        since = sum((a.get("since") or 0) for a in accts)
+        lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since start: {_money(since)}",
+                  f"- Primary: today {_money(pr['today'])} · since start {_money(pr.get('since'))} · green days {g} of {len(h)}",
+                  f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
+    ans = ["Quick answers",
+           "- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.",
+           "- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).",
+           "- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.",
+           "- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.",
+           "- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.",
+           "- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.",
+           "- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.",
+           "- Break-even win rate? The win rate a setup needs just to not lose money.",
+           "- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.",
+           "- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).",
+           "Not financial advice."]
+    return "\n".join(lines) + "\n\n" + "\n".join(ans) + "\n"
+
+
+def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n: int, changes: str = "") -> str:
     m = milestones(accts[0], date)
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
@@ -437,7 +470,8 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
             f"Today: {_money(today).replace('.00', '')} across 5 day-trading accounts · Primary {_money(pr['today'])}\n"
             f"Since start: {_money(since)} · Best setup today: {bn} ({_money(best['pnl']) if best else '—'})\n"
             f"Milestones: M1 3 green in a row {min(m['run'], 3)}/3{' ✅' if m['m1'] else ''} · M2 8 of last 10 green {m['g10']}/{m['n10']}{' ✅' if m['m2'] else ''}\n"
-            "(Quick facts + charts in pics) · Not financial advice\n")
+            + (f"Changes before today's open: {changes.strip()}\n" if changes.strip() else "")
+            + "(Quick facts + charts in pics) · Not financial advice\n")
 
 
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
@@ -500,6 +534,7 @@ def main(argv=None):
     ap.add_argument("--top2", help="JSON with plain-words descriptions of the day's top setups")
     ap.add_argument("--out", default="docs/posts")
     ap.add_argument("--no-fetch", action="store_true")
+    ap.add_argument("--changes", help="one short line: what changed before today's open (owner 2026-10-26)")
     ap.add_argument("--day", type=int, help="day number for the post title (default: Primary sessions so far)")
     a = ap.parse_args(argv)
     if not a.no_fetch:
@@ -515,9 +550,9 @@ def main(argv=None):
     acc = accounts(a.date)
     render({"1-today": html_today(a.date, acc), "2-top2": html_top2(a.date, top, words),
             "3-leaderboard": html_lb(a.date, leaderboard(a.date), gen=False),
-            "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True),
-            "5-facts": html_facts(a.date, facts(acc))}, out)
-    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date))))
+            "4-generator": html_lb(a.date, leaderboard(a.date, gen=True), gen=True)}, out)
+    (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc))   # owner 2026-10-26: quick facts as text, 4 images max
+    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or ""))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
 
