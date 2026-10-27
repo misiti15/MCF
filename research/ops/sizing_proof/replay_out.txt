@@ -1,0 +1,57 @@
+live: 8853 paper trades all accounts; Primary 704 trades, 16 sessions 2026-10-06..2026-10-27, 24 setups; N configs 12, bar 2.23
+two-year: 30203 backtest trades, 8 setups, 426 sessions 2024-10-01..2026-10-07
+
+V1 two-year by setup (flat R / tiered R / mean multiplier):
+                                                                                name       n  flat_R  tiered_R  mean_mult  share_1.5
+setup                                                                                                                               
+MF2-open-rsimidhi-flowsell-FD                  Early Sellers, Mid-High RSI (all day)  5235.0 -227.48   -114.12       0.51        0.0
+MF4-h40-open-flowsell                                     Early Sellers, Strong Heat  3318.0 -328.21   -164.11       0.50        0.0
+MF4-h40-open-flowsell-FD                        Early Sellers, Strong Heat (all day)  7273.0 -617.51   -308.75       0.50        0.0
+NS1-rsidip-rsi5pop-long                                       Big Gainer Dip-and-Pop   444.0   13.59      8.42       0.51        0.0
+NS5-sma50-flush-oversold-long                                    Big Loser Flush Buy  1305.0  -55.37    -28.33       0.50        0.0
+RW3-gapdn-rsi5pop-flowsell-short-FD         Gap-Down Pop Fade, Heavy Selling (all da  5995.0 -424.37   -212.18       0.50        0.0
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD               Gap-Down Pop Fade (all day)  5598.0 -334.03   -167.01       0.50        0.0
+ST7-rsi50dn-long-pm-t1s1-FD                           RSI Collapse Dip Buy (all day)  1035.0   24.38     15.84       0.52        0.0
+
+V1 two-year by half-year: flat R / tiered R / matched R
+           n    flat  tiered  mult  matched
+hy                                         
+2024H2   966  -37.80  -18.30  0.51   -19.02
+2025H1  5245 -775.29 -389.27  0.51  -390.03
+2025H2  8548 -518.17 -259.09  0.50  -260.68
+2026H1  9944 -591.79 -295.90  0.50  -297.72
+2026H2  5500  -25.95   -7.70  0.51   -13.05
+
+== results (R = sum of multiplier x R after costs; usd = live pnl_adj x multiplier, two-year R x $15.88)
+                                             0                   1                 2                  3                   4                       5                   6                   7                   8                   9                   10                      11
+replay                             live Primary        live Primary      live Primary       live Primary        live Primary            live Primary  two-year 8 Primary  two-year 8 Primary  two-year 8 Primary  two-year 8 Primary  two-year 8 Primary      two-year 8 Primary
+config                        V1 T-main+drift20  V2 T-main no drift  V3 drift last-30  V4 no 1.5x +drift  V5 live-only proof  V6 backtest-only proof   V1 T-main+drift20  V2 T-main no drift    V3 drift last-30   V4 no 1.5x +drift  V5 live-only proof  V6 backtest-only proof
+n                                           704                 704               704                704                 704                     704               30203               30203               30203               30203               30203                   30203
+mean_mult                                 0.528               0.528             0.528              0.528               0.629                   0.513               0.503               0.504               0.504               0.503               0.503                   0.503
+share_0.5                                 0.943               0.943             0.943              0.943               0.781                   0.974               0.994               0.993               0.993               0.994               0.994                   0.994
+share_1.5                                   0.0                 0.0               0.0                0.0               0.038                     0.0                 0.0                 0.0                 0.0                 0.0                 0.0                     0.0
+flat_R                                  -17.635             -17.635           -17.635            -17.635             -17.635                 -17.635           -1949.003           -1949.003           -1949.003           -1949.003           -1949.003               -1949.003
+tiered_R                                 -9.762              -9.762            -9.762             -9.762              22.763                 -10.058            -970.251             -975.45             -973.58            -970.251            -970.251                -970.251
+matched_R                                -9.319              -9.319            -9.319             -9.319             -11.085                  -9.043            -980.503            -981.568            -981.406            -980.503            -980.503                -980.503
+flat_usd                                -992.02             -992.02           -992.02            -992.02             -992.02                 -992.02          -30950.172          -30950.172          -30950.172          -30950.172          -30950.172              -30950.172
+tiered_usd                             -492.985            -492.985          -492.985           -492.985              216.17                 -545.84          -15407.591          -15490.146          -15460.454          -15407.591          -15407.591              -15407.591
+flat_R_per_risk                          -0.025              -0.025            -0.025             -0.025              -0.025                  -0.025              -0.065              -0.065              -0.065              -0.065              -0.065                  -0.065
+tiered_R_per_risk                        -0.026              -0.026            -0.026             -0.026               0.051                  -0.028              -0.064              -0.064              -0.064              -0.064              -0.064                  -0.064
+flat_maxDD_R                            -78.921             -78.921           -78.921            -78.921             -78.921                 -78.921           -2162.744           -2162.744           -2162.744           -2162.744           -2162.744               -2162.744
+tiered_maxDD_R                           -39.46              -39.46            -39.46             -39.46              -38.93                 -40.918           -1082.396           -1087.595           -1085.725           -1082.396           -1082.396               -1082.396
+flat_worst_day_R                        -29.116             -29.116           -29.116            -29.116             -29.116                 -29.116            -167.138            -167.138            -167.138            -167.138            -167.138                -167.138
+tiered_worst_day_R                      -14.558             -14.558           -14.558            -14.558             -14.558                 -14.558             -83.569             -83.569             -83.569             -83.569             -83.569                 -83.569
+flat_maxDD_usd                         -2262.73            -2262.73          -2262.73           -2262.73            -2262.73                -2262.73          -34344.372          -34344.372          -34344.372          -34344.372          -34344.372              -34344.372
+tiered_maxDD_usd                      -1131.365           -1131.365         -1131.365          -1131.365           -1138.015               -1186.825          -17188.451          -17271.006          -17241.314          -17188.451          -17188.451              -17188.451
+flat_worst_day_usd                      -926.53             -926.53           -926.53            -926.53             -926.53                 -926.53           -2654.154           -2654.154           -2654.154           -2654.154           -2654.154               -2654.154
+tiered_worst_day_usd                   -463.265            -463.265          -463.265           -463.265            -463.265                -463.265           -1327.077           -1327.077           -1327.077           -1327.077           -1327.077               -1327.077
+flat_R_wo_best_day                      -83.404             -83.404           -83.404            -83.404             -83.404                 -83.404            -2020.56            -2020.56            -2020.56            -2020.56            -2020.56                -2020.56
+tiered_R_wo_best_day                    -42.647             -42.647           -42.647            -42.647             -32.105                 -42.943            -1006.03           -1011.228           -1009.359            -1006.03            -1006.03                -1006.03
+delta_vs_flat_R                           7.873               7.873             7.873              7.873              40.398                   7.577             978.752             973.553             975.423             978.752             978.752                 978.752
+t_vs_flat                                 0.198               0.198             0.198              0.198               1.885                   0.192               4.614                 4.6               4.607               4.614               4.614                   4.614
+delta_vs_flat_wo_best_day                -6.685              -6.685            -6.685             -6.685               25.84                  -6.981             895.183             889.984             891.854             895.183             895.183                 895.183
+delta_vs_matched_R                       -0.444              -0.444            -0.444             -0.444              33.848                  -1.015              10.252               6.118               7.826              10.252              10.252                  10.252
+t_vs_matched                             -0.185              -0.185            -0.185             -0.185               2.385                   -0.73               1.129               0.598               0.777               1.129               1.129                   1.129
+delta_vs_matched_wo_best_day             -1.271              -1.271            -1.271             -1.271              20.319                  -1.446               4.805               0.673               2.381               4.805               4.805                   4.805
+
+Educational only - not financial advice.

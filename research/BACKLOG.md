@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 705 · coded: 85 · failed: 330 · configurations tried (all lineages): 32797728
+Total ideas: 707 · coded: 85 · failed: 332 · configurations tried (all lineages): 32798046
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -707,6 +707,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1027-L3-gap-slope-lowdist-FD-exec | L3-gap-slope-lowdist-FD: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, three window rows, SPY-sign and SPY 0.5% filters, clock exit, limit entry 0.1R) | BDI top-5 execution tune 2026-10-27 (tenth run) (research/bdi/top5_1027/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1027-NM-AR-AM-gapdown-capitulation-long-exec | NM-AR-AM-gapdown-capitulation-long: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, three window rows, SPY-sign and SPY 0.5% filters, clock exit, limit entry 0.1R) | BDI top-5 execution tune 2026-10-27 (tenth run) (research/bdi/top5_1027/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1027-exhaustion_short-exec | exhaustion_short: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, three window rows, SPY-sign and SPY 0.5% filters, clock exit, limit entry 0.1R) | BDI top-5 execution tune 2026-10-27 (tenth run) (research/bdi/top5_1027/NOTES.md) | – | – | – | – | – | – |
+| failed | sz-proof-1027-primary-size-tiers | Primary sizing by proof: 0.5x new / 1.0x proven / 1.5x strongly proven per setup + automatic drift step-down (last-20 vs long-run), up only at the weekly review | Owner 2026-10-27 SZ-PROOF (research/ops/sizing_proof.md) | – | – | – | – | – | – |
+| failed | late-cut-1027-per-setup-entry-cutoff | Per-setup late-entry cutoff or half size (13:30 / 14:00 / 14:30) only where a setup's late entries are clearly worse than its own earlier ones and the cut does not lower its total R | Owner 2026-10-27 LATE-CUT (research/ops/late_entry1027.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

@@ -1,0 +1,35 @@
+NS1-rsidip-rsi5pop-long-FD cut 1330: late-early -0.025 t -0.74 | train -0.019 t -0.42 | valid -0.028 t -0.59
+NS1-rsidip-rsi5pop-long-FD cut 1400: late-early +0.033 t +0.94 | train +0.061 t +1.35 | valid +0.013 t +0.26
+NS1-rsidip-rsi5pop-long-FD cut 1430: late-early +0.046 t +1.11 | train +0.092 t +1.83 | valid +0.009 t +0.13
+MF5-flowsell-vwapup-rsi5hi-FD cut 1330: late-early -0.037 t -0.94 | train -0.014 t -0.26 | valid -0.071 t -1.34
+MF5-flowsell-vwapup-rsi5hi-FD cut 1400: late-early -0.062 t -1.51 | train -0.033 t -0.57 | valid -0.106 t -1.84
+MF5-flowsell-vwapup-rsi5hi-FD cut 1430: late-early -0.085 t -1.49 | train -0.047 t -0.66 | valid -0.137 t -1.48
+MF4-h40-open-flowsell-FD cut 1330: late-early -0.020 t -0.62 | train +0.034 t +0.78 | valid -0.075 t -1.60
+MF4-h40-open-flowsell-FD cut 1400: late-early -0.025 t -0.76 | train +0.019 t +0.44 | valid -0.069 t -1.42
+MF4-h40-open-flowsell-FD cut 1430: late-early -0.017 t -0.40 | train +0.001 t +0.02 | valid -0.030 t -0.44
+ST4-emadn-long-am-t1s05-FD cut 1330: late-early -0.167 t -3.44 | train -0.077 t -1.08 | valid -0.206 t -3.29
+ST4-emadn-long-am-t1s05-FD cut 1400: late-early -0.138 t -2.95 | train -0.034 t -0.49 | valid -0.197 t -3.23
+ST4-emadn-long-am-t1s05-FD cut 1430: late-early -0.023 t -0.43 | train +0.028 t +0.33 | valid -0.049 t -0.68
+RW7-gapdn-bounce-early-short-FD cut 1330: late-early -0.019 t -0.58 | train -0.003 t -0.07 | valid -0.036 t -0.71
+RW7-gapdn-bounce-early-short-FD cut 1400: late-early -0.005 t -0.14 | train +0.001 t +0.02 | valid -0.010 t -0.20
+RW7-gapdn-bounce-early-short-FD cut 1430: late-early +0.036 t +0.96 | train +0.077 t +1.36 | valid -0.006 t -0.12
+MF3-open-flowsell-rsi5hi-FD cut 1330: late-early -0.020 t -0.66 | train +0.024 t +0.54 | valid -0.070 t -1.69
+MF3-open-flowsell-rsi5hi-FD cut 1400: late-early -0.017 t -0.51 | train +0.031 t +0.66 | valid -0.069 t -1.48
+MF3-open-flowsell-rsi5hi-FD cut 1430: late-early -0.001 t -0.03 | train +0.066 t +1.30 | valid -0.075 t -1.09
+NS4-pm-vwap-reclaim-oversold-short-FD cut 1330: late-early -0.048 t -0.89 | train -0.039 t -0.43 | valid -0.045 t -0.81
+NS4-pm-vwap-reclaim-oversold-short-FD cut 1400: late-early -0.047 t -0.78 | train -0.085 t -0.87 | valid -0.007 t -0.14
+NS4-pm-vwap-reclaim-oversold-short-FD cut 1430: late-early -0.071 t -0.91 | train -0.107 t -0.91 | valid -0.022 t -0.37
+
+NS1-rsidip-rsi5pop-long-FD by entry bucket (n / avg R / sum R):
+              size         mean            sum        
+split        train valid  train  valid   train   valid
+b                                                     
+(0, 1059]       87   106 -0.072  0.070  -6.226   7.389
+(1059, 1159]   164   305  0.022 -0.024   3.554  -7.376
+(1159, 1259]   207   373 -0.092 -0.064 -19.025 -23.763
+(1259, 1330]   155   202 -0.127 -0.159 -19.730 -32.182
+(1330, 1400]   156   170 -0.175 -0.140 -27.371 -23.839
+(1400, 1430]    92   159 -0.081 -0.054  -7.410  -8.517
+(1430, 1500]   147   167  0.004 -0.058   0.572  -9.723
+total 2490 trades -173.6R; skip after 13:30 -> -97.4R; win late 0.558 vs early 0.627
+Educational only - not financial advice.

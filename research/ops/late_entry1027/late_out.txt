@@ -1,0 +1,190 @@
+trades 244874, setups 50, sessions 426, N configs 306, bar 3.38
+
+== per-setup x cutoff (skip / half share conditions; N = 306 )
+passing rows: 1
+  c1 met: 93 of 150
+  c2 met: 17 of 150
+  c3 met: 36 of 150
+  c4 met: 4 of 150
+  c5 met: 53 of 150
+
+-- rows meeting 1-3 (late worse than early in train AND valid, late sum < 0 in both): 15
+                                setup             acct  cut     n   avgR  late_n  late_avg  late_avg_train  late_avg_valid  early_avg_train  early_avg_valid  late_sum  t_improve   c5  passes
+           NS1-rsidip-rsi5pop-long-FD          testing 1330  2490 -0.070     891    -0.086          -0.087          -0.085           -0.068           -0.057   -76.288      3.385 True    True
+        MF5-flowsell-vwapup-rsi5hi-FD         testing2 1400  6827 -0.057     482    -0.115          -0.127          -0.103           -0.094            0.003   -55.585      3.017 True   False
+           MF5-flowsell-vwapup-rsi5hi testing+testing2 1400  6827 -0.057     482    -0.115          -0.127          -0.103           -0.094            0.003   -55.585      3.017 True   False
+        MF5-flowsell-vwapup-rsi5hi-FD         testing2 1330  6827 -0.057     763    -0.090          -0.109          -0.069           -0.094            0.003   -68.783      2.650 True   False
+           MF5-flowsell-vwapup-rsi5hi testing+testing2 1330  6827 -0.057     763    -0.090          -0.109          -0.069           -0.094            0.003   -68.783      2.650 True   False
+           MF5-flowsell-vwapup-rsi5hi testing+testing2 1430  6827 -0.057     210    -0.140          -0.141          -0.138           -0.094           -0.001   -29.310      2.473 True   False
+        MF5-flowsell-vwapup-rsi5hi-FD         testing2 1430  6827 -0.057     210    -0.140          -0.141          -0.138           -0.094           -0.001   -29.310      2.473 True   False
+      RW7-gapdn-bounce-early-short-FD          testing 1330 26164 -0.061    5493    -0.076          -0.085          -0.068           -0.082           -0.032  -418.534      2.365 True   False
+           ST4-emadn-long-am-t1s05-FD          testing 1330  1300  0.017     629    -0.069          -0.076          -0.063            0.002            0.143   -43.354      2.108 True   False
+           ST4-emadn-long-am-t1s05-FD          testing 1400  1300  0.017     457    -0.072          -0.063          -0.080           -0.029            0.116   -32.973      1.973 True   False
+NS4-pm-vwap-reclaim-oversold-short-FD          testing 1330  1692 -0.060     777    -0.086          -0.125          -0.051           -0.087           -0.006   -66.512      1.621 True   False
+NS4-pm-vwap-reclaim-oversold-short-FD          testing 1400  1692 -0.060     546    -0.092          -0.161          -0.031           -0.076           -0.023   -50.023      1.339 True   False
+   NS4-pm-vwap-reclaim-oversold-short         testing2 1400  1469 -0.069     548    -0.091          -0.161          -0.029           -0.105           -0.022   -49.669      1.329 True   False
+NS4-pm-vwap-reclaim-oversold-short-FD          testing 1430  1692 -0.060     314    -0.117          -0.190          -0.044           -0.082           -0.022   -36.859      1.181 True   False
+   NS4-pm-vwap-reclaim-oversold-short         testing2 1430  1469 -0.069     315    -0.114          -0.190          -0.038           -0.107           -0.021   -35.880      1.149 True   False
+
+-- 14:00 cutoff, every setup
+                                     setup             acct     n   avgR  late_n  late_avg  early_avg  late_avg_train  late_avg_valid  late_sum  late_flat_share  t_improve
+                MF5-flowsell-vwapup-rsi5hi testing+testing2  6827 -0.057     482    -0.115     -0.053          -0.127          -0.103   -55.585            0.728      3.017
+             MF5-flowsell-vwapup-rsi5hi-FD         testing2  6827 -0.057     482    -0.115     -0.053          -0.127          -0.103   -55.585            0.728      3.017
+                  MF4-h40-open-flowsell-FD          primary  7273 -0.085     635    -0.107     -0.083          -0.102          -0.114   -68.178            0.427      3.772
+     NS4-pm-vwap-reclaim-oversold-short-FD          testing  1692 -0.060     546    -0.092     -0.044          -0.161          -0.031   -50.023            0.335      1.339
+               MF3-open-flowsell-rsi5hi-FD          testing 10564 -0.076    1272    -0.091     -0.074          -0.071          -0.111  -116.124            0.676      2.943
+        NS4-pm-vwap-reclaim-oversold-short         testing2  1469 -0.069     548    -0.091     -0.055          -0.161          -0.029   -49.669            0.334      1.329
+       RW3-gapdn-rsi5pop-flowsell-short-FD          primary  5995 -0.071     719    -0.080     -0.070          -0.088          -0.071   -57.187            0.684      2.364
+                ST4-emadn-long-am-t1s05-FD          testing  1300  0.017     457    -0.072      0.065          -0.063          -0.080   -32.973            0.357      1.973
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD          primary  5598 -0.060     783    -0.069     -0.058          -0.109          -0.030   -54.320            0.655      1.967
+           RW7-gapdn-bounce-early-short-FD          testing 26164 -0.061    3290    -0.065     -0.060          -0.082          -0.048  -213.505            0.651      2.122
+             MF2-open-rsimidhi-flowsell-FD          primary  5235 -0.043     891    -0.063     -0.039           0.008          -0.127   -56.381            0.386      1.761
+                NS1-rsidip-rsi5pop-long-FD          testing  2490 -0.070     565    -0.044     -0.077          -0.029          -0.056   -25.078            0.411      1.545
+        RW1-gapdn-bounce-flowsell-short-FD         testing2  7474 -0.049     869    -0.039     -0.050          -0.021          -0.058   -33.891            0.675      1.087
+          NS5-sma50-flush-oversold-long-FD testing+testing2  3139 -0.046     722    -0.015     -0.055          -0.061           0.013   -10.732            0.615      0.284
+                     NM-MF3-qqqdn-gapdn-FD         testing2  2099 -0.010     323    -0.011     -0.010          -0.002          -0.020    -3.535            0.632      0.203
+          ST6-volspikeup-short-mid-t1s1-FD          testing   783  0.017     364    -0.006      0.036          -0.179           0.061    -2.151            0.602      0.110
+          NS3-failed-vwap-reclaim-short-FD         testing2 17762 -0.011    8172    -0.006     -0.016           0.044          -0.036   -45.297            0.608      0.141
+                   RW4-ns3-adv150-short-FD testing+testing2 14177 -0.007    6522    -0.005     -0.009           0.059          -0.044   -31.134            0.617      0.116
+                       exhaustion_short-FD testing+testing2 28458 -0.067    2156    -0.003     -0.072          -0.011           0.004    -6.756            0.480      0.054
+                          exhaustion_short          testing  7419 -0.007    3429     0.011     -0.023          -0.019           0.041    39.145            0.458     -0.217
+            ST5-pdbrkup-short-mid-t05s1-FD          testing   774 -0.028      82     0.019     -0.034          -0.007           0.035     1.538            0.354     -0.245
+                    L3-gap-slope-rsi5hi-FD         testing2 10006 -0.040    1476     0.051     -0.056           0.029           0.082    75.270            0.174     -0.812
+                         NM-HL-T75-pm-long         testing2  1860  0.044     606     0.058      0.038           0.088           0.038    35.177            0.276     -1.618
+                   L3-gap-slope-lowdist-FD          testing  4156 -0.129     479     0.073     -0.155           0.139          -0.045    34.921            0.336     -0.557
+            ST8-volspikedn-long-pm-t1s1-FD          testing   528  0.034     343     0.100     -0.089           0.077           0.110    34.350            0.621     -1.661
+               ST3-rsi5up-short-pm-t1s1-FD          testing   657  0.007     174     0.111     -0.030           0.202           0.071    19.369            0.667     -1.899
+                  L3-gap-slope-fromopen-FD          testing 40834 -0.017    7709     0.132     -0.052           0.142           0.116  1020.596            0.381     -0.891
+       NM-RWR1-exh150-gapdn-spyup-pm-short         testing2   654  0.151     263     0.140      0.159           0.114           0.194    36.888            0.202     -1.731
+          NM-PM-gapdn-above-pdh-rvol-short         testing2   447  0.239     218     0.148      0.327           0.187           0.104    32.188            0.353     -1.871
+               ST7-rsi50dn-long-pm-t1s1-FD          primary  1035  0.024     114     0.149      0.008          -0.064           0.303    16.941            0.632     -1.270
+              NM1-cwt09-g10-vwaploss-short         testing2   346  0.051      56     0.243      0.014           0.134           0.318    13.594            0.429     -1.151
+              LD1-ns1-breadthup-t05s1-long         testing2   134  0.095       0       NaN      0.095             NaN             NaN     0.000              NaN        NaN
+                LD3-st2-idxturn-t05s1-long         testing2    66  0.211       0       NaN      0.211             NaN             NaN     0.000              NaN        NaN
+              LD4-st4-breadthup-t1s05-long         testing2    21  0.389       0       NaN      0.389             NaN             NaN     0.000              NaN        NaN
+              LD5-st2-breadthup-t05s1-long         testing2    31  0.154       0       NaN      0.154             NaN             NaN     0.000              NaN        NaN
+                   MF1-945-flowsell-vwapup          testing  2389 -0.078       0       NaN     -0.078             NaN             NaN     0.000              NaN        NaN
+                MF2-open-rsimidhi-flowsell         testing2   610 -0.034       0       NaN     -0.034             NaN             NaN     0.000              NaN        NaN
+                  MF3-open-flowsell-rsi5hi          testing  4136 -0.086       0       NaN     -0.086             NaN             NaN     0.000              NaN        NaN
+                     MF4-h40-open-flowsell          primary  3318 -0.099       0       NaN     -0.099             NaN             NaN     0.000              NaN        NaN
+             NM-AMS-N1-quiet-morning-short         testing2   401  0.131       0       NaN      0.131             NaN             NaN     0.000              NaN        NaN
+        NM-AR-AM-gapdown-capitulation-long         testing2  1588  0.262       0       NaN      0.262             NaN             NaN     0.000              NaN        NaN
+             NM-RWN3-ns3-spyup-early-short         testing2   388  0.159       0       NaN      0.159             NaN             NaN     0.000              NaN        NaN
+          NM-RWN4-ns2-spyup05-notfri-short         testing2   899  0.113       0       NaN      0.113             NaN             NaN     0.000              NaN        NaN
+              NM-RWN5-ns3-mon-weakrs-short         testing2   295  0.196       0       NaN      0.196             NaN             NaN     0.000              NaN        NaN
+             NM-RWR3-ns3-qqqup-early-short         testing2   355  0.205       0       NaN      0.205             NaN             NaN     0.000              NaN        NaN
+       NM-RWR4-ns2-up3-qqqup-slopedn-short         testing2   645  0.114       0       NaN      0.114             NaN             NaN     0.000              NaN        NaN
+                   NS1-rsidip-rsi5pop-long          primary   444  0.031       0       NaN      0.031             NaN             NaN     0.000              NaN        NaN
+             NS3-failed-vwap-reclaim-short          testing  1510  0.046       0       NaN      0.046             NaN             NaN     0.000              NaN        NaN
+                   NS3V1-am-widestop-short         testing2  2297  0.009       0       NaN      0.009             NaN             NaN     0.000              NaN        NaN
+             NS5-sma50-flush-oversold-long          primary  1305 -0.042       0       NaN     -0.042             NaN             NaN     0.000              NaN        NaN
+
+-- pooled all 51 setups by entry hour (information; NOT a basis for any cutoff)
+           size           mean        
+split     train  valid   train   valid
+hb                                    
+09:50-11  34995  34434 -0.0881 -0.0052
+11-12     21212  24733 -0.0970 -0.0373
+12-13     17884  19668 -0.0566 -0.0503
+13-14     19963  22945 -0.0863  0.0075
+14-15     23789  25251  0.0332 -0.0070
+
+-- pooled exit mix by entry hour (two-year, 51 setups)
+              n  target   stop  flat1555   avgR
+hb                                             
+09:50-11  69429   0.486  0.409     0.105 -0.047
+11-12     45945   0.430  0.388     0.182 -0.065
+12-13     37552   0.378  0.342     0.280 -0.053
+13-14     42908   0.331  0.287     0.382 -0.036
+14-15     49040   0.285  0.209     0.506  0.012
+
+-- minutes from entry to target (target hits only; within-day), per setup
+                                            med_min_to_target  p80_min_to_target
+setup                                                                           
+L3-gap-slope-fromopen-FD                                 35.0               80.0
+L3-gap-slope-lowdist-FD                                  50.0               95.0
+L3-gap-slope-rsi5hi-FD                                   20.0               55.0
+LD1-ns1-breadthup-t05s1-long                             15.0               79.0
+LD3-st2-idxturn-t05s1-long                               15.0               62.0
+LD4-st4-breadthup-t1s05-long                             10.0               50.0
+LD5-st2-breadthup-t05s1-long                             40.0               61.0
+MF1-945-flowsell-vwapup                                  35.0               80.0
+MF2-open-rsimidhi-flowsell                               35.0              100.0
+MF2-open-rsimidhi-flowsell-FD                            45.0               90.0
+MF3-open-flowsell-rsi5hi                                 55.0              125.0
+MF3-open-flowsell-rsi5hi-FD                              55.0              120.0
+MF4-h40-open-flowsell                                    20.0               60.0
+MF4-h40-open-flowsell-FD                                 25.0               65.0
+MF5-flowsell-vwapup-rsi5hi                               60.0              125.0
+MF5-flowsell-vwapup-rsi5hi-FD                            60.0              125.0
+NM-AMS-N1-quiet-morning-short                            15.0               50.0
+NM-AR-AM-gapdown-capitulation-long                       35.0               80.0
+NM-HL-T75-pm-long                                        15.0               35.0
+NM-MF3-qqqdn-gapdn-FD                                    60.0              120.0
+NM-PM-gapdn-above-pdh-rvol-short                         30.0               40.0
+NM-RWN3-ns3-spyup-early-short                            35.0              110.0
+NM-RWN4-ns2-spyup05-notfri-short                         10.0               35.0
+NM-RWN5-ns3-mon-weakrs-short                             48.0              111.0
+NM-RWR1-exh150-gapdn-spyup-pm-short                      25.0               50.0
+NM-RWR3-ns3-qqqup-early-short                            40.0              105.0
+NM-RWR4-ns2-up3-qqqup-slopedn-short                       5.0               25.0
+NM1-cwt09-g10-vwaploss-short                             45.0               89.0
+NS1-rsidip-rsi5pop-long                                  20.0               65.0
+NS1-rsidip-rsi5pop-long-FD                               30.0               70.0
+NS3-failed-vwap-reclaim-short                            40.0              110.0
+NS3-failed-vwap-reclaim-short-FD                         40.0               85.0
+NS3V1-am-widestop-short                                  15.0               55.0
+NS4-pm-vwap-reclaim-oversold-short                       50.0               95.0
+NS4-pm-vwap-reclaim-oversold-short-FD                    45.0               95.0
+NS5-sma50-flush-oversold-long                            45.0              120.0
+NS5-sma50-flush-oversold-long-FD                         45.0              110.0
+RW1-gapdn-bounce-flowsell-short-FD                       65.0              125.0
+RW3-gapdn-rsi5pop-flowsell-short-FD                      60.0              120.0
+RW4-ns3-adv150-short-FD                                  40.0               85.0
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD               65.0              120.0
+RW7-gapdn-bounce-early-short-FD                          65.0              120.0
+ST3-rsi5up-short-pm-t1s1-FD                              35.0               90.0
+ST4-emadn-long-am-t1s05-FD                               40.0               85.0
+ST5-pdbrkup-short-mid-t05s1-FD                           15.0               45.0
+ST6-volspikeup-short-mid-t1s1-FD                         30.0               65.0
+ST7-rsi50dn-long-pm-t1s1-FD                              45.0              120.0
+ST8-volspikedn-long-pm-t1s1-FD                           40.0               60.0
+exhaustion_short                                         35.0               65.0
+exhaustion_short-FD                                      45.0              100.0
+
+live Primary entries >= 14:00 (all): n 66, flatten 44, avg R after costs +0.012, journal r_multiple +0.031; earlier entries avg R -0.029 (n 638)
+
+live Primary entries >= 14:00 (through 10-26): n 56, flatten 37, avg R after costs -0.026, journal r_multiple -0.007; earlier entries avg R -0.038 (n 590)
+
+-- live paper (P/T1/T2) by setup: entries before vs from 14:00 (information)
+                                            early_size  late_size  early_mean  late_mean
+strategy                                                                                
+RW7-gapdn-bounce-early-short-FD                  214.0       50.0      -0.058      0.023
+NS3-failed-vwap-reclaim-short-FD                  66.0       32.0      -0.026     -0.098
+RW4-ns3-adv150-short-FD                           55.0       27.0      -0.044     -0.216
+MF3-open-flowsell-rsi5hi-FD                      105.0       19.0      -0.252      0.122
+exhaustion_short                                  49.0       17.0      -0.085      0.214
+L3-gap-slope-fromopen-FD                         187.0       13.0       0.158     -0.123
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD        79.0       13.0       0.435      0.051
+NS4-pm-vwap-reclaim-oversold-short                 8.0       12.0       0.313     -0.166
+MF2-open-rsimidhi-flowsell-FD                     47.0       12.0       0.751      0.872
+NS4-pm-vwap-reclaim-oversold-short-FD              9.0        9.0       1.145     -0.300
+RW3-gapdn-rsi5pop-flowsell-short-FD               75.0        8.0       0.471      0.195
+RW1-gapdn-bounce-flowsell-short-FD                61.0        8.0       0.013      0.175
+exhaustion_short-FD                               93.0        6.0      -0.051     -0.109
+MF4-h40-open-flowsell-FD                          57.0        6.0       0.097      0.318
+ST8-volspikedn-long-pm-t1s1-FD                     3.0        5.0       0.120     -0.102
+NS1-rsidip-rsi5pop-long-FD                        26.0        5.0      -0.104     -0.106
+L3-gap-slope-rsi5hi-FD                            56.0        4.0       0.176     -0.611
+ST6-volspikeup-short-mid-t1s1-FD                   NaN        4.0         NaN      0.626
+NS5-sma50-flush-oversold-long-FD                  28.0        4.0      -0.395     -0.867
+MF5-flowsell-vwapup-rsi5hi                        53.0        3.0      -0.204     -0.243
+ST7-rsi50dn-long-pm-t1s1-FD                       14.0        2.0       0.161      0.464
+MF5-flowsell-vwapup-rsi5hi-FD                     63.0        2.0      -0.283     -0.584
+L3-gap-slope-lowdist-FD                           47.0        1.0       0.052      0.720
+NM-PM-gapdn-above-pdh-rvol-short                   NaN        1.0         NaN      0.064
+NM-MF3-qqqdn-gapdn-FD                             17.0        1.0       0.744     -0.925
+ST4-emadn-long-am-t1s05-FD                        12.0        1.0      -0.504     -0.546
+ST3-rsi5up-short-pm-t1s1-FD                        NaN        1.0         NaN      0.574
+
+Educational only - not financial advice.
