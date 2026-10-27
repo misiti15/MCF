@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 680 · coded: 85 · failed: 322 · configurations tried (all lineages): 32797419
+Total ideas: 682 · coded: 85 · failed: 322 · configurations tried (all lineages): 32797419
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -360,6 +360,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1022-short-cluster-profit-lock | Cluster profit lock: when >= 5 open lots of correlated sibling shorts (same family, same polls) are together >= +X R open, move all their stops to breakeven (or 0.5R trail) | BDI bdi1022 2026-10-22 (research/bdi/bdi1022/NOTES.md; nightly1022 give-back) | – | – | – | – | – | – |
 | idea | sat1024-pm-drift-continuation | Afternoon drift continuation: at 14:30-15:00 enter in the direction of a stock's day move when it is >= +X ATR from the open and on the right side of VWAP, hold to 15:55 | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
 | idea | nightly-1026-country-gap-basket-cap | Gap-down shorts (CWT09 family): treat gap-downs that share one country / region ETF gap as one bet (cap 1-2 entries, or skip when the country ETF itself gapped down >= X%) | nightly-2026-10-26 (research/bdi/nightly1026/NOTES.md, CWT09 trade list) | – | – | – | – | – | – |
+| idea | nightly-1027-flatten-1545 | Day-trade flatten at 15:45 instead of 15:55 (all setups, or longs only): close every lot still open at 15:45 | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, flat1545.py / flat1545_out.txt) | – | – | – | – | – | – |
+| idea | nightly-1027-pdl-long-index-low-age | Failed prior-day-low break longs (CWT14 pdl family): skip entries while QQQ set its low of day in the last 15 minutes (wait for an index higher low) | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, patterns.py / patterns_out.txt section B) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |

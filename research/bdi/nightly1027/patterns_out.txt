@@ -1,0 +1,30 @@
+== A) longs on inverse ETFs vs other longs (all accounts, 10-06..10-27)
+inverse ETF longs: n 94, win 57%, avgR -0.113, sumR -10.6, $-207, days 12
+other longs:       n 4773, win 57%, avgR -0.125, sumR -595.7, $-6020, days 16
+inverse longs by date: {'2026-10-12': {'size': 6, 'sum': -2.47}, '2026-10-13': {'size': 10, 'sum': 4.73}, '2026-10-14': {'size': 1, 'sum': 0.17}, '2026-10-15': {'size': 18, 'sum': -2.51}, '2026-10-16': {'size': 9, 'sum': 2.16}, '2026-10-19': {'size': 2, 'sum': 0.57}, '2026-10-20': {'size': 5, 'sum': -0.21}, '2026-10-21': {'size': 10, 'sum': 0.19}, '2026-10-22': {'size': 7, 'sum': 2.52}, '2026-10-23': {'size': 11, 'sum': -3.64}, '2026-10-26': {'size': 2, 'sum': -2.35}, '2026-10-27': {'size': 13, 'sum': -9.77}}
+inverse longs by symbol: {'KOLD': {'size': 4, 'sum': 4.63}, 'SDOW': {'size': 4, 'sum': -0.2}, 'QID': {'size': 4, 'sum': -4.11}, 'RWM': {'size': 5, 'sum': 0.91}, 'ZSL': {'size': 5, 'sum': -2.83}, 'SCO': {'size': 6, 'sum': -5.3}, 'SQQQ': {'size': 7, 'sum': -0.32}, 'TZA': {'size': 13, 'sum': -1.93}, 'LABD': {'size': 13, 'sum': -4.46}, 'SOXS': {'size': 21, 'sum': 6.5}}
+inverse longs by setup: {'CWT12-coil-k4-long': {'size': 4, 'sum': 1.72}, 'heat_fade_long-FD': {'size': 4, 'sum': 4.49}, 'NM-ETF-late-dip-di-long': {'size': 4, 'sum': 2.17}, 'CWT12-coil-k6-long': {'size': 4, 'sum': -0.6}, 'CWT14-failbrk-orl-p10-long': {'size': 7, 'sum': -0.78}, 'ST2-slope20up-long-am-t05s1-FD': {'size': 7, 'sum': -2.26}, 'CWT14-failbrk-pdl-p10-long': {'size': 7, 'sum': -2.52}, 'CWT14-failbrk-orl-p05-lowvol-long': {'size': 9, 'sum': -6.09}, 'CWT14-failbrk-pdl-p05-long': {'size': 12, 'sum': -0.61}, 'CWT14-failbrk-orl-p05-long': {'size': 15, 'sum': -5.29}}
+inverse longs, QQQ up day: n 69, win 49%, avgR -0.197, sumR -13.6, $-309, days 7
+inverse longs, QQQ down day: n 25, win 80%, avgR +0.119, sumR +3.0, $+102, days 5
+other longs, QQQ up day: n 2868, win 65%, avgR +0.008, sumR +22.8, $+2389, days 8
+other longs, QQQ down day: n 1905, win 45%, avgR -0.325, sumR -618.5, $-8410, days 8
+
+== B) failed-PDL-break longs (CWT14 pdl family), by minutes since QQQ set its low of day (at entry)
+QQQ low 0-15 min ago: n 472, win 56%, avgR -0.214, sumR -100.9, $-811, days 10
+QQQ low 15-60 min ago: n 503, win 69%, avgR -0.002, sumR -1.1, $-152, days 11
+QQQ low 60-999 min ago: n 395, win 64%, avgR +0.005, sumR +1.9, $+183, days 10
+  <15 min by date: {'2026-10-12': {'size': 20, 'sum': -6.59}, '2026-10-14': {'size': 109, 'sum': -77.34}, '2026-10-15': {'size': 45, 'sum': 8.45}, '2026-10-16': {'size': 34, 'sum': -13.77}, '2026-10-19': {'size': 39, 'sum': -17.82}, '2026-10-20': {'size': 41, 'sum': 20.99}, '2026-10-21': {'size': 5, 'sum': 0.83}, '2026-10-22': {'size': 59, 'sum': -24.57}, '2026-10-23': {'size': 42, 'sum': 0.72}, '2026-10-27': {'size': 78, 'sum': 8.17}}
+  >=15 min by date: {'2026-10-12': {'size': 49, 'sum': -5.74}, '2026-10-13': {'size': 186, 'sum': 25.35}, '2026-10-14': {'size': 14, 'sum': -8.07}, '2026-10-15': {'size': 93, 'sum': 15.41}, '2026-10-16': {'size': 17, 'sum': -4.07}, '2026-10-19': {'size': 63, 'sum': -4.97}, '2026-10-20': {'size': 41, 'sum': 26.94}, '2026-10-21': {'size': 62, 'sum': 5.02}, '2026-10-22': {'size': 14, 'sum': -0.9}, '2026-10-23': {'size': 129, 'sum': 15.38}, '2026-10-26': {'size': 57, 'sum': -17.81}, '2026-10-27': {'size': 173, 'sum': -45.68}}
+  CWT14-failbrk-pdl-p05-long: <15 n 204, win 55%, avgR -0.211, sumR -43.0, $-325, days 10 | >=15 n 337, win 66%, avgR -0.016, sumR -5.3, $+44, days 12
+  CWT14-failbrk-pdl-p05-lowvol-long: <15 n 102, win 46%, avgR -0.388, sumR -39.6, $-303, days 8 | >=15 n 245, win 65%, avgR -0.021, sumR -5.2, $-111, days 11
+  CWT14-failbrk-pdl-p10-long: <15 n 118, win 62%, avgR -0.150, sumR -17.7, $-65, days 10 | >=15 n 192, win 69%, avgR +0.029, sumR +5.6, $+74, days 12
+  CWT14-failbrk-pdl-p10-lowvol-long: <15 n 48, win 67%, avgR -0.014, sumR -0.6, $-118, days 7 | >=15 n 124, win 71%, avgR +0.046, sumR +5.7, $+23, days 12
+
+== C) shorts entered before 10:00 vs later
+before 10:00: n 453, win 53%, avgR -0.171, sumR -77.5, $-451, days 15
+10:00 or later: n 3533, win 49%, avgR -0.097, sumR -342.8, $-4026, days 16
+before 10:00, QQQ up day: n 182, win 46%, avgR -0.374, sumR -68.0, $-810, days 7
+before 10:00, QQQ down day: n 271, win 58%, avgR -0.035, sumR -9.5, $+359, days 8
+before 10:00 by date: {'2026-10-06': {'size': 10, 'sum': -5.5}, '2026-10-07': {'size': 1, 'sum': -1.3}, '2026-10-08': {'size': 4, 'sum': 0.6}, '2026-10-09': {'size': 17, 'sum': -4.5}, '2026-10-12': {'size': 28, 'sum': -3.2}, '2026-10-13': {'size': 36, 'sum': 14.4}, '2026-10-14': {'size': 28, 'sum': -2.1}, '2026-10-15': {'size': 39, 'sum': -41.4}, '2026-10-16': {'size': 28, 'sum': 8.7}, '2026-10-19': {'size': 116, 'sum': 3.8}, '2026-10-20': {'size': 30, 'sum': -6.3}, '2026-10-21': {'size': 30, 'sum': -6.6}, '2026-10-22': {'size': 40, 'sum': -7.4}, '2026-10-23': {'size': 4, 'sum': 1.5}, '2026-10-27': {'size': 42, 'sum': -28.3}}
+
+Educational only - not financial advice.
