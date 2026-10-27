@@ -148,7 +148,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 .card.collapsed { padding-bottom: 6px; }
 #lb-asg.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
 </style>
-<nav id="qnav" aria-label="Sections"><a href="#dec-card">Decisions</a><a href="#live">Today</a><a href="#lb-card">Setups</a><a href="#pipe-card">Research</a><a href="#acc-all">Accounts</a><a href="#chg-card">System</a></nav>
+<nav id="qnav" aria-label="Sections"><a href="#dec-card">Decisions</a><a href="#eod-card">End of day</a><a href="#live">Today</a><a href="#lb-card">Setups</a><a href="#pipe-card">Research</a><a href="#acc-all">Accounts</a><a href="#chg-card">System</a></nav>
 <div class="card" id="glance" role="region" aria-label="At a glance" aria-live="polite"><h2>At a glance</h2>
   <div class="gx"><div><div class="gk">Today's P/L by account</div><div class="gn" id="gl-pl">loading…</div></div>
     <div><div class="gk">Primary green-day streak</div><div class="gv" id="gl-streak">…</div><div class="gn" id="gl-streak-n"></div></div>
@@ -199,6 +199,73 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     q("#dec-done-list").innerHTML = done.map(one).join("");
     if (!done.length) q("#dec-done").hidden = true;
   });
+})();
+</script>
+<!-- End of day (owner 2026-10-27: "the decisions on the dashboard at EOD ... the location where all of my quick stats go,
+     only at the end of the day"): built in the browser from each account's EOD scorecard (reports/scorecard.json) and
+     status.json history, so it shows the last CLOSED session only (no intraday numbers). Setup Generator included,
+     long-hold S6 excluded. Sections: trades per day by account (last 5 sessions), green-day and red-day streaks per setup
+     (all accounts merged; a session the setup did not trade breaks the streak), and setups green / red on every day they
+     traded (no-trade days skipped). The owner adds more stats here over time. -->
+<style>
+#eod-card .eg { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+#eod-card .eb { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--page); min-width: 0; }
+#eod-card h3 { font-size: 13px; margin: 0 0 6px; }
+#eod-card table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+#eod-card td, #eod-card th { padding: 2px 4px; text-align: right; white-space: nowrap; } #eod-card td.l, #eod-card th.l { text-align: left; white-space: normal; }
+#eod-card .sl { font-size: 13px; margin: 2px 0; overflow-wrap: anywhere; } #eod-card .sl b.up { color: var(--good); } #eod-card .sl b.down { color: var(--bad); }
+#eod-card .sid { font-size: 11px; color: var(--muted); }
+</style>
+<div class="card" id="eod-card" role="region" aria-label="End of day"><h2>End of day <span id="eod-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
+  <div class="why">Quick stats from the last closed session (EOD reports). Paper results, after Alpaca paper fills.</div>
+  <div class="eg" id="eod-grid"><div class="empty" style="padding:10px">Loading…</div></div>
+  <div class="note">Streaks: green / red = the setup's P/L that session, all accounts merged. Educational only — not financial advice.</div>
+</div>
+<script>
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);
+  const A = [["primary", "Primary", "mcf-data"], ["testing", "Testing 1", "mcf-data-testing"], ["testing2", "Testing 2", "mcf-data-testing2"],
+    ["gen", "Generator", "mcf-data-gen"], ["graveyard", "Graveyard", "mcf-data-graveyard"]];
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const money = v => (v < 0 ? "-$" : "+$") + Math.abs(+v).toLocaleString(undefined, { maximumFractionDigits: 0 });
+  const get = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+  async function run() {
+    const [st, sc, names] = await Promise.all([Promise.all(A.map(a => get(RAW + a[2] + "/status.json"))),
+      Promise.all(A.map(a => get(RAW + a[2] + "/reports/scorecard.json"))), get("../live/setup_names.json")]);
+    const nm = id => ((names || {})[id] || {}).name || id;
+    // closed sessions = dates the EOD scorecards cover (today's intraday numbers stay out until the report lands)
+    const daily = {};   // setup -> date -> [trades, pnl]
+    let lastClosed = "";
+    sc.forEach(d => ((d || {}).leaderboard || []).forEach(r => (r.daily || []).forEach(([dt, n, , p]) => {
+      const m = (daily[r.setup] = daily[r.setup] || {}), x = (m[dt] = m[dt] || [0, 0]); x[0] += n; x[1] += p; if (dt > lastClosed) lastClosed = dt; })));
+    if (!lastClosed) { q("#eod-grid").innerHTML = `<div class="empty" style="padding:10px">No EOD reports yet.</div>`; return; }
+    q("#eod-asof").textContent = "· last close " + lastClosed;
+    const sess = [...new Set(st.flatMap(s => ((s || {}).history || []).filter(h => h.trades && h.date <= lastClosed).map(h => h.date)))].sort();
+    // trades per day by account
+    const last5 = sess.slice(-5).reverse();
+    const cnt = (i, d) => { const h = (((st[i] || {}).history) || []).find(x => x.date === d); return h ? (h.trades || 0) : 0; };
+    let t = `<table><tr><th class="l">Session</th>${A.map(a => `<th>${e(a[1])}</th>`).join("")}<th>Total</th></tr>`;
+    last5.forEach(d => { const c = A.map((_, i) => cnt(i, d)); t += `<tr><td class="l">${d.slice(5)}</td>${c.map(v => `<td>${v}</td>`).join("")}<td><b>${c.reduce((a, b) => a + b, 0)}</b></td></tr>`; });
+    t += "</table>";
+    // streaks
+    const consec = [], traded = [];
+    Object.entries(daily).forEach(([s, m]) => {
+      for (const sign of [1, -1]) {
+        let run = 0, pnl = 0; for (let i = sess.length - 1; i >= 0; i--) { const x = m[sess[i]]; if (!x || !x[0] || Math.sign(x[1]) !== sign) break; run++; pnl += x[1]; }
+        if (run >= 3) consec.push({ s, sign, run, pnl });
+        const td = sess.filter(d => m[d] && m[d][0]); let r2 = 0, p2 = 0; for (let i = td.length - 1; i >= 0; i--) { const x = m[td[i]]; if (Math.sign(x[1]) !== sign) break; r2++; p2 += x[1]; }
+        const missed = r2 ? sess.filter(d => d > td[td.length - r2] && !(m[d] && m[d][0])).length : 0;
+        if (r2 >= 3 && missed) traded.push({ s, sign, run: r2, pnl: p2, missed });
+      }
+    });
+    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · ${money(x.pnl)}${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
+    const block = (title, list, sign) => { const l = list.filter(x => x.sign === sign).sort((a, b) => b.run - a.run || Math.abs(b.pnl) - Math.abs(a.pnl));
+      return `<div class="eb"><h3>${title} (${l.length})</h3>${l.length ? l.slice(0, 12).map(line).join("") + (l.length > 12 ? `<div class="sid">+${l.length - 12} more</div>` : "") : `<div class="sid">None at 3+ in a row.</div>`}</div>`; };
+    q("#eod-grid").innerHTML = `<div class="eb"><h3>Trades per day by account</h3>${t}</div>` +
+      block("Green-day streaks (sessions in a row)", consec, 1) + block("Red-day streaks (sessions in a row)", consec, -1) +
+      block("Green every day traded (skipped days)", traded, 1) + block("Red every day traded (skipped days)", traded, -1);
+  }
+  run();
 })();
 </script>
 <script>
