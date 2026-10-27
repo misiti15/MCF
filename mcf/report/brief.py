@@ -90,7 +90,20 @@ def build_brief(journal: Journal, day: str | None = None, kind: str = "paper", d
     return subject, "\n".join(text), html_body
 
 
+def emails_paused() -> bool:
+    """Owner 2026-10-27: 'hold off on all notification emails' - report.email_enabled: false in config/default.yaml
+    stops every MCF email (EOD report, brief, long-hold daily); the reports are still built and saved."""
+    try:
+        from ..config import load_config
+        return load_config().get("report", {}).get("email_enabled", True) is False
+    except Exception:
+        return False
+
+
 def send_email(subject: str, text: str, html_body: str | None, to: str) -> None:
+    if emails_paused():
+        print(f"email paused (report.email_enabled: false): not sent - {subject}")
+        return
     user = os.environ.get("MCF_SMTP_USER")
     pwd = os.environ.get("MCF_SMTP_PASSWORD")
     if not user or not pwd:

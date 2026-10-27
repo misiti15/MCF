@@ -126,6 +126,8 @@ def test_send_attaches_charts(monkeypatch, tmp_path):
     monkeypatch.setenv("MCF_SMTP_USER", "u@example.com")
     monkeypatch.setenv("MCF_SMTP_PASSWORD", "x")
     monkeypatch.setattr(eod.smtplib, "SMTP_SSL", FakeSMTP)
+    from mcf.report import brief
+    monkeypatch.setattr(brief, "emails_paused", lambda: False)   # emails are on hold in config (owner 2026-10-27)
     assert eod.send(rep, "to@example.com", DAY)
     cids = {p["Content-ID"] for p in sent["m"].walk() if p.get_content_maintype() == "image"}
     assert rep["charts"][0]["cid"] in cids and rep["cid"] in cids

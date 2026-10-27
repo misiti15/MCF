@@ -296,6 +296,10 @@ def save(rep: dict, out_dir: str | Path, day: str) -> None:
 
 
 def send(rep: dict, to: str, day: str) -> bool:
+    from .brief import emails_paused
+    if emails_paused():                    # owner 2026-10-27: all notification emails on hold
+        print("EOD email paused (report.email_enabled: false); report saved")
+        return False
     user, pwd = os.environ.get("MCF_SMTP_USER"), os.environ.get("MCF_SMTP_PASSWORD")
     if not user or not pwd:
         print("EOD email not sent: add MCF_SMTP_USER and MCF_SMTP_PASSWORD repository secrets")
