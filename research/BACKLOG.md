@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 682 · coded: 85 · failed: 322 · configurations tried (all lineages): 32797419
+Total ideas: 686 · coded: 85 · failed: 325 · configurations tried (all lineages): 32797443
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -361,7 +361,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | sat1024-pm-drift-continuation | Afternoon drift continuation: at 14:30-15:00 enter in the direction of a stock's day move when it is >= +X ATR from the open and on the right side of VWAP, hold to 15:55 | BDI Saturday deep run 2026-10-24 (research/bdi/saturday1024/PLAN.md, book_sim.py, book_sim.csv) | – | – | – | – | – | – |
 | idea | nightly-1026-country-gap-basket-cap | Gap-down shorts (CWT09 family): treat gap-downs that share one country / region ETF gap as one bet (cap 1-2 entries, or skip when the country ETF itself gapped down >= X%) | nightly-2026-10-26 (research/bdi/nightly1026/NOTES.md, CWT09 trade list) | – | – | – | – | – | – |
 | idea | nightly-1027-flatten-1545 | Day-trade flatten at 15:45 instead of 15:55 (all setups, or longs only): close every lot still open at 15:45 | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, flat1545.py / flat1545_out.txt) | – | – | – | – | – | – |
-| idea | nightly-1027-pdl-long-index-low-age | Failed prior-day-low break longs (CWT14 pdl family): skip entries while QQQ set its low of day in the last 15 minutes (wait for an index higher low) | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, patterns.py / patterns_out.txt section B) | – | – | – | – | – | – |
+| idea | bdi1027-spread-bps-skip-replay | Replay every 'spread bps > max' and 'spread % of stop' skip since 10-06 (all accounts) with the quoted spread charged, before touching either guard | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
+| idea | bdi1027-graveyard-cap-replay | Graveyard caps: replay the signals blocked by 'max positions for this setup' and the per-setup -2R stop across every Graveyard session (from 10-21) | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -684,6 +685,9 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1026-MF2-open-rsimidhi-flowsell-FD-exec | MF2-open-rsimidhi-flowsell-FD: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, windows, skip 10:00-10:29, SPY-up filter, clock exit 14:00, limit entry 0.1R) | BDI top-5 execution tune 2026-10-26 (ninth run) (research/bdi/top5_1026/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1026-MF4-h40-open-flowsell-FD-exec | MF4-h40-open-flowsell-FD: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, windows, skip 10:00-10:29, SPY-up filter, clock exit 14:00, limit entry 0.1R) | BDI top-5 execution tune 2026-10-26 (ninth run) (research/bdi/top5_1026/NOTES.md) | – | – | – | – | – | – |
 | failed | top5-1026-NS3-failed-vwap-reclaim-short-FD-exec | NS3-failed-vwap-reclaim-short-FD: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, windows, skip 10:00-10:29, SPY-up filter, clock exit 14:00, limit entry 0.1R) | BDI top-5 execution tune 2026-10-26 (ninth run) (research/bdi/top5_1026/NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1027-pdl-long-index-low-age | Failed prior-day-low break longs (CWT14 pdl family): skip entries while QQQ set its low of day in the last 15 minutes (wait for an index higher low) | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, patterns.py / patterns_out.txt section B) | – | – | – | – | – | – |
+| failed | bdi1027-index-reclaim-leaders-long | Leaders on the Index Reclaim (long): after QQQ dips >= 0.2/0.4% and reclaims its open (first bar 10:00-13:00), buy stocks above VWAP that are >= 0.5/1.0 pt ahead of QQQ from the open | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
+| failed | bdi1027-pdl-long-burst-skip | Failed prior-day-low break longs (CWT14 pdl-p10 / pdl-p05-lowvol): skip bars where the setup fires on >= 5 / >= 10 symbols at once | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
