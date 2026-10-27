@@ -79,7 +79,8 @@ strategies:
     prefilter: "gap_le:-2.6573517322540283"
     scale_out_r: null
   CWT14-failbrk-pdl-p10-lowvol-long:
-    enabled: true
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
     min_adv: 95000000
@@ -251,7 +252,8 @@ strategies:
     window: [950, 1030]
     scale_out_r: null
   MF2-open-rsimidhi-flowsell:
-    enabled: true
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
     type: lab
     module: research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py
     min_adv: 95000000
@@ -355,7 +357,8 @@ strategies:
     window: [950, 1130]
     scale_out_r: null
   NS4-pm-vwap-reclaim-oversold-short:
-    enabled: true
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
     type: lab
     module: research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py
     min_adv: 95000000
@@ -421,9 +424,7 @@ live:
     - intraday_momentum
     - orb20_a
     - NS1-rsidip-rsi5pop-long
-    - MF2-open-rsimidhi-flowsell
     - NS5-sma50-flush-oversold-long
-    - NS4-pm-vwap-reclaim-oversold-short
     - NS3-failed-vwap-reclaim-short
     - NS2-sma50break-overbought-short
     - MF4-h40-open-flowsell
@@ -432,7 +433,6 @@ live:
     - MF5-flowsell-vwapup-rsi5hi
     - heat_fade_short
     - heat_fade_long
-    - CWT14-failbrk-pdl-p10-lowvol-long   # promoted 2026-10-21 (~47/day: broadest, so last)
   # Paper fills anything the price touches. These checks keep paper results close to what a real
   # order book would give, so paper P/L is evidence and not an upper bound.
   no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are
