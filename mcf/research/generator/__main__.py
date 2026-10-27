@@ -1,6 +1,6 @@
 """Setup Generator CLI (owner 2026-10-19). Educational only - not financial advice.
 
-    python -m mcf.research.generator run --date YYYY-MM-DD --n 10 [--apply] [--specs 3000] [--seed S] [--workers 4]
+    python -m mcf.research.generator run --date YYYY-MM-DD --n 10 [--extra-long 5] [--apply] [--specs 3000] [--seed S] [--workers 4]
                                          [--no-seeds] [--discovery PATH]
     python -m mcf.research.generator summary      # rebuild docs/live/generator_lab.json (Generator Lab card)
     python -m mcf.research.generator expected     # GX5 backfill: expected live trades/day per GEN setup
@@ -33,6 +33,7 @@ def main(argv=None):
     r = sub.add_parser("run")
     r.add_argument("--date", required=True)
     r.add_argument("--n", type=int, default=10)
+    r.add_argument("--extra-long", type=int, default=5, help="long setups picked on top of --n (owner 2026-10-27)")
     r.add_argument("--apply", action="store_true")
     r.add_argument("--specs", type=int, default=3000, help="random specs to screen")
     r.add_argument("--seed", type=int, default=None, help="default: the date as YYYYMMDD")
@@ -62,7 +63,7 @@ def main(argv=None):
         return 0
     t0 = time.time()
     rep = run(a.date, n=a.n, apply=a.apply, n_specs=a.specs, seed=a.seed, workers=a.workers,
-              screen_workers=a.screen_workers, seeds=not a.no_seeds, discovery=a.discovery)
+              screen_workers=a.screen_workers, seeds=not a.no_seeds, discovery=a.discovery, extra_long=a.extra_long)
     print(json.dumps({k: rep[k] for k in ("date", "n_tried", "n_scored", "n_tier1", "applied")}, indent=1))
     if rep.get("seeds"):
         sd = rep["seeds"]
