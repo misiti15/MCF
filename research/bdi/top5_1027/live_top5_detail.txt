@@ -1,0 +1,180 @@
+Educational only - not financial advice. Live paper trades, 5 sessions 2026-10-21, 2026-10-22, 2026-10-23, 2026-10-26, 2026-10-27.
+
+=== CWT12-coil-k4-long  (live paper, 176 trades)
+by date:
+            size   mean  <lambda_0>     sum
+date                                       
+2026-10-21    17  0.161       0.824   2.739
+2026-10-22     3  0.158       0.667   0.473
+2026-10-23    31  0.240       0.871   7.454
+2026-10-26    52 -0.541       0.308 -28.131
+2026-10-27    73  0.098       0.753   7.140
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+10:00-10:30    23  0.323       0.957
+10:30-11:30   137 -0.095       0.613
+11:30-13:00    16 -0.297       0.500
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]    33 -0.928
+(0.1, 0.2]      11 -0.783
+(0.2, 0.3]       8 -0.850
+(0.3, 0.5]       7 -0.887
+(0.5, 5.0]       3 -0.768
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]    66  0.397
+(0.25, 0.5]      31  0.385
+(0.5, 0.75]      10  0.353
+(0.75, 5.0]       5  0.394
+by exit reason:
+                  size   mean
+exit_reason                  
+flatten             14 -0.080
+scaled+breakeven     4 -0.149
+scaled+target        6  0.492
+stop                50 -1.038
+target             102  0.395
+
+=== CWT14-failbrk-pdl-p10-lowvol-long  (live paper, 78 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-21     6  0.514       1.000  3.085
+2026-10-22    18 -0.233       0.556 -4.201
+2026-10-23    14  0.254       0.857  3.555
+2026-10-26     6 -0.107       0.500 -0.644
+2026-10-27    34 -0.013       0.618 -0.448
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+09:50-10:00     4  0.272       0.750
+10:00-10:30    30  0.056       0.700
+10:30-11:30    28 -0.027       0.679
+11:30-13:00     9  0.114       0.778
+13:00-14:00     3  0.004       0.333
+14:00-16:00     4 -0.425       0.250
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]    11 -0.952
+(0.1, 0.2]       3 -1.013
+(0.2, 0.3]       6 -0.909
+(0.3, 0.5]       4 -0.781
+(0.5, 5.0]       2 -1.032
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]    22  0.424
+(0.25, 0.5]      19  0.538
+(0.5, 0.75]       6  0.542
+(0.75, 5.0]       5  0.537
+by exit reason:
+             size   mean
+exit_reason             
+flatten         4 -0.389
+stop           22 -1.027
+target         52  0.490
+
+=== NM-AR-AM-gapdown-capitulation-long  (live paper, 25 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-21     3 -0.956       0.000 -2.869
+2026-10-22    22 -0.433       0.318 -9.529
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+10:30-11:30    25 -0.496        0.28
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     6 -0.998
+(0.1, 0.2]       5 -1.012
+(0.2, 0.3]       2 -1.023
+(0.3, 0.5]       4 -1.026
+winners by MAE (R):
+             size   mean
+mae_r                   
+(0.25, 0.5]     3  0.786
+(0.5, 0.75]     3  1.010
+by exit reason:
+             size   mean
+exit_reason             
+stop           18 -1.009
+target          7  0.822
+
+=== exhaustion_short  (live paper, 25 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-22     1 -0.345       0.000 -0.345
+2026-10-23     1  0.709       1.000  0.709
+2026-10-26    17  0.574       0.941  9.762
+2026-10-27     6 -0.863       0.000 -5.179
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+13:00-14:00    22  0.321       0.773
+14:00-16:00     3 -0.708       0.000
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     2 -1.049
+(0.1, 0.2]       2 -1.067
+(0.2, 0.3]       1 -0.518
+(0.3, 0.5]       1 -0.430
+(0.5, 5.0]       2 -0.677
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]    12  0.711
+(0.25, 0.5]       2  0.697
+(0.5, 0.75]       2  0.513
+(0.75, 5.0]       1  0.532
+by exit reason:
+             size   mean
+exit_reason             
+flatten        10  0.135
+stop            5 -1.048
+target         10  0.884
+
+=== L3-gap-slope-lowdist-FD  (live paper, 18 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-21     2 -1.003       0.000 -2.005
+2026-10-22     1 -1.027       0.000 -1.027
+2026-10-23     3 -0.589       0.333 -1.766
+2026-10-26    10  0.316       0.700  3.163
+2026-10-27     2 -1.019       0.000 -2.038
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+10:00-10:30     1  0.408       1.000
+10:30-11:30     8  0.190       0.625
+11:30-13:00     8 -0.574       0.250
+13:00-14:00     1 -1.013       0.000
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     2 -1.006
+(0.1, 0.2]       5 -1.032
+(0.2, 0.3]       1 -1.063
+(0.3, 0.5]       2 -1.023
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]     2  0.819
+(0.25, 0.5]       2  0.761
+(0.5, 0.75]       2  0.764
+(0.75, 5.0]       2  0.960
+by exit reason:
+             size   mean
+exit_reason             
+flatten         2  0.424
+stop           10 -1.028
+target          6  0.960
