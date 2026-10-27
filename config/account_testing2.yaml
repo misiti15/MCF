@@ -77,6 +77,7 @@ live:
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
+    - CWT13-vwapstretch-z05-long   # 42.57/day (back from Primary 2026-10-26)
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
     - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
@@ -463,7 +464,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}
   # Stretched Below VWAP Bounce: CWT package B B2-z0.5-Uall-sidelong-t05s1-guest (id 45); open history n 18135, exp -0.0796R, t -5.12, 42.57/day; verdict retire
   CWT13-vwapstretch-z05-long:
-    enabled: false   # promoted to Primary 2026-10-25 (owner); promotion = move. Its Testing 2 record stays here.
+    enabled: true   # back from Primary 2026-10-26 (owner Z05, effective 2026-10-27); promoted 2026-10-25, 1 Primary session
+    former_primary: {demoted: "2026-10-26", first_testing_session: "2026-10-27", review_after_sessions: 10}
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z05-long.py
     min_adv: 95000000
