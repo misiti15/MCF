@@ -152,7 +152,7 @@ def spec_from_cfg(v: dict) -> Spec | None:
 
 # ------------------------------------------------------------------------------------------------ run
 def run(date: str, n: int = 10, apply: bool = False, n_specs: int = 3000, seed: int | None = None, workers: int = 3,
-        screen_workers: int = 4, log=print, panel=None, seeds: bool = True, discovery=None) -> dict:
+        screen_workers: int = 4, log=print, panel=None, seeds: bool = True, discovery=None, min_long: int = 5) -> dict:
     """seeds: add the weekly Setup lab scan's replicated rules (seeds.py) to the pool; discovery: a path to a
     discovery latest.json, or a loaded dict (default: origin/mcf-data:discovery/latest.json, fail soft)."""
     from . import data as D
@@ -187,7 +187,7 @@ def run(date: str, n: int = 10, apply: bool = False, n_specs: int = 3000, seed: 
     months_mask[P.sd[sd_first]] = np.isin(P.days[P.day[sd_first]], list(sample_days))
     prior_eval = {k: S.evaluate(P, s, keep_keys=True) for k, s in prior.items()}
     prior_keys = {k: v["_keys"] for k, v in prior_eval.items()}
-    picks = S.pick(P, by_key, ranked, n, existing, prior_keys, months_mask=months_mask, log=log)
+    picks = S.pick(P, by_key, ranked, n, existing, prior_keys, months_mask=months_mask, log=log, min_long=min_long)
     out = []
     for i, p in enumerate(picks, start=1 + sum(1 for k in prior if k.startswith(f"GEN-{date.replace('-', '')[2:]}-"))):
         s = by_key[p["key"]]

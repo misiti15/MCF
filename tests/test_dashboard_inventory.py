@@ -187,7 +187,9 @@ def test_usability_strip_nav_and_collapse():
     assert "flatten_failed" in HTML and "data_stale" in HTML
     assert 'try { saved = JSON.parse(localStorage.getItem("mcf.cards")' in HTML
     assert 'try { localStorage.setItem("mcf.cards"' in HTML
-    assert HTML.count("localStorage") == 2
+    # + the monitor marks (owner 2026-10-27): this-browser marks until Claude adds them to docs/live/monitor.json
+    assert 'try { return JSON.parse(localStorage.getItem(KEY)' in HTML and 'try { localStorage.setItem(KEY' in HTML
+    assert HTML.count("localStorage") == 4
     assert 'class="why"' in HTML and ".card.collapsed" in HTML
 
 
