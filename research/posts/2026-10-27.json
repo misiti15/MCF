@@ -1,0 +1,14 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: #1 is machine-generated (about flat on two years, wins on up days), #2 did not pass its backtest and is on watch in Testing 2.",
+ "setups": [
+  {"setup": "GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long",
+   "title": "Midday Failed-Breakout Dip Buy (gap-up stocks)",
+   "lines": [["When", "11:00 AM–1:00 PM"], ["Market", "More than half of all stocks trading above their open"],
+             ["Stock", "Gapped up 1.2%+ at the open, ≥ $150M traded a day"],
+             ["Trigger", "Broke above its opening-range high earlier today and is now back below it"],
+             ["Action", "Buy"], ["Exit", "Stop 1 unit below; no target, hold to 3:55 PM"]]},
+  {"setup": "CWT12-coil-k4-long",
+   "title": "Coil Under the High (4 bars)",
+   "lines": [["When", "9:50–11:30 AM"], ["Market", "Any"], ["Stock", "≥ $95M traded a day"],
+             ["Trigger", "The high of the day has been tested 3+ times and the last 4 five-minute bars are tight (about half the usual range) just under it"],
+             ["Action", "Buy the coil"], ["Exit", "Target ½ unit (half banked at +0.35 unit, rest to breakeven), stop 1 unit"]]}
+ ]}

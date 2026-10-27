@@ -1,0 +1,36 @@
+Quick facts (as of 2026-10-27)
+- Sessions traded: 16 (since 2026-10-06) · paper trades: 8,853
+- Setups live: 108 + 73 machine-generated
+- Setups rejected by backtests so far: ~21,607
+- Entry slippage: ~4.1 bps vs the signal price (measured, paper fills)
+- Today, 5 day-trading accounts: -$735.25 · since Day 1 (10/23): +$113.65
+- Primary: today +$99.57 · since Day 1 +$58.60 · green days 2 of 3
+- Milestones: M1 (3 green in a row) 2/3 · M2 (8 of last 10 green) 2/3
+
+Green-day streaks (setups green every session in a row, all accounts)
+- Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: 3 in a row (+$182.57)
+- Stretched Above VWAP Fade: 3 in a row (+$143.91)
+- Failed Opening-Range-Low Break Long (low volume): 3 in a row (+$112.45)
+Green-day record: 5 sessions in a row - Coil Under the High (4 bars) (10-19..10-23); Early Sellers, Strong Heat (all day) (10-16..10-22); Gap-Down Pop Fade, Heavy Selling (all day) (10-12..10-16)
+
+Green every day they traded (sessions with no trade explained)
+- Early Sellers, Strong Heat: 5 trading days in a row (+$106.17) · no trade: 10-23 blocked: twin held x2 (+1 other); 10-26 no signal (late start: accounts from 10:39 ET, Gen from 12:02 ET); 10-27 blocked: twin held x2 (+4 earlier)
+- Panic Flush Reversal (deep, 3x volume): 4 trading days in a row (+$9.29) · no trade: 10-21 no signal; 10-22 no signal; 10-27 blocked: spread is 48% of stop distance x1 (+2 earlier)
+- Gap-Down Pop Fade, Heavy Selling (all day): 3 trading days in a row (+$651.13) · no trade: 10-26 no signal (late start: accounts from 10:39 ET, Gen from 12:02 ET)
+- Generated: FlowShiftge0p42 PM short (BRoplt0p5, t1s1): 3 trading days in a row (+$396.27) · no trade: 10-22 no signal; 10-26 no signal (late start: accounts from 10:39 ET, Gen from 12:02 ET); 10-27 no signal (+1 earlier)
+- Big Gainer Average Reclaim Fade: 3 trading days in a row (+$89.00) · no trade: 10-21 blocked: twin held x1; 10-23 blocked: twin held x3 (+1 other); 10-27 no signal
+- ST6-volspikeup-short-mid-t1s1-FD: 3 trading days in a row (+$31.70) · no trade: 10-23 no signal; 10-26 no signal (late start: accounts from 10:39 ET, Gen from 12:02 ET); 10-27 no signal (+5 earlier)
+- Unintended blocks: none - every block was an owner rule (borrow, spread, twin, caps)
+
+Quick answers
+- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.
+- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).
+- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
+- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
+- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.
+- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.
+- Break-even win rate? The win rate a setup needs just to not lose money.
+- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.
+- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).
+Not financial advice.
