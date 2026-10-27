@@ -49,7 +49,6 @@ live:
     - NS4-pm-vwap-reclaim-oversold-short-FD
     - RW6G1-ns2-up3-vwap2sd-short-FD
     - CWT05-flush-m05-v3-long   # 4.00/day (allocator)
-    - CWT12-coil-k6-long   # 13.43/day (allocator)
     - L3-gap-slope-lowdist-FD
     - NS1-rsidip-rsi5pop-long-FD
     - NS5-sma50-flush-oversold-long-FD
@@ -583,7 +582,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: B5-m0.5-v3-Dnone-t05s1-full, fill: false}
   # ---- CWT12-coil-k6-long: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   CWT12-coil-k6-long:
-    enabled: true
+    # moved to Graveyard 2026-10-26 (owner D3; effective session 2026-10-27, its trades so far stay here)
+    enabled: false
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k6-long.py
     min_adv: 95000000
