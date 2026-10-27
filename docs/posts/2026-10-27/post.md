@@ -1,6 +1,6 @@
 **Day 3 in the books!**
 
-***GitHub missed the scheduled start again this morning, but the new watchdog caught it and started the session on time.
+GitHub missed the scheduled start again this morning, but the new watchdog caught it and started the session on time.
 
 **Changes before today:**
 
