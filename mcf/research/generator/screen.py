@@ -296,21 +296,20 @@ def rank(results: list[dict]) -> list[dict]:
 
 
 def pick(P, specs_by_key: dict, ranked: list[dict], n: int, existing: dict, prior_gen: dict, months_mask=None,
-         log=print, extra_long: int = 0) -> list[dict]:
+         log=print, min_long: int = 0) -> list[dict]:
     """Greedy best-first with the overlap rule. existing keys are on sample months only: compare there.
-    extra_long (owner 2026-10-27: 'produce 5 LONG setups daily'): after the n regular picks, the best remaining LONG
-    specs are added until extra_long more are picked (same ranking, tier and overlap rules)."""
-    picks = _pick_pass(P, specs_by_key, ranked, n, existing, prior_gen, months_mask, [])
-    if extra_long:
-        done = {p["name_tmp"] for p in picks}
-        longs = [r for r in ranked if r["key"] not in done and specs_by_key[r["key"]].side == "long"]
-        before = len(picks)
-        _pick_pass(P, specs_by_key, longs, before + extra_long, existing, prior_gen, months_mask, picks)
-        for p in picks[before:]:
-            p["extra_long"] = True
-        if len(picks) - before < extra_long:
-            log(f"only {len(picks) - before} extra long picks qualified (wanted {extra_long})")
-    return picks
+    min_long (owner 2026-10-27: '10 total setups daily, 5 or more being LONGs'): the best long specs are taken first
+    until min_long longs are picked, then the rest of the n fill best-first from everything (same tier, ranking and
+    overlap rules for both passes)."""
+    picks = []
+    if min_long:
+        longs = [r for r in ranked if specs_by_key[r["key"]].side == "long"]
+        _pick_pass(P, specs_by_key, longs, min(min_long, n), existing, prior_gen, months_mask, picks)
+        if len(picks) < min(min_long, n):
+            log(f"only {len(picks)} long picks qualified (wanted {min_long})")
+    done = {p["name_tmp"] for p in picks}
+    return _pick_pass(P, specs_by_key, [r for r in ranked if r["key"] not in done], n, existing, prior_gen,
+                      months_mask, picks)
 
 
 def _pick_pass(P, specs_by_key, ranked, n, existing, prior_gen, months_mask, picks):

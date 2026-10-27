@@ -162,8 +162,8 @@ def test_seeded_gen_setups_are_complete():
         assert v["context"] and set(v["context"]) <= set(CONTEXT)
 
 
-def test_pick_extra_long(monkeypatch):
-    """Owner 2026-10-27: 10 regular picks + 5 extra LONG picks (best remaining longs)."""
+def test_pick_min_long(monkeypatch):
+    """Owner 2026-10-27: 10 picks a night, at least 5 of them long (best longs first, then best-first)."""
     from types import SimpleNamespace
 
     import numpy as np
@@ -172,11 +172,11 @@ def test_pick_extra_long(monkeypatch):
 
     monkeypatch.setattr(S, "evaluate", lambda P, s, keep_keys=False: {"_keys": np.array([hash(s.key) % 10**9])})
     monkeypatch.setattr(S, "overlap", lambda a, b: 0.0)
-    sides = ["short"] * 8 + ["long"] * 4 + ["short"] * 3 + ["long"] * 6
+    sides = ["short"] * 8 + ["long"] * 6
     specs = {f"k{i}": SimpleNamespace(key=f"k{i}", side=sd) for i, sd in enumerate(sides)}
-    ranked = [{"key": f"k{i}"} for i in range(len(sides))]
-    picks = S.pick(None, specs, ranked, 10, {}, {}, extra_long=5)
+    ranked = [{"key": f"k{i}"} for i in range(len(sides))]          # the 8 shorts rank above every long
+    picks = S.pick(None, specs, ranked, 10, {}, {}, min_long=5)
     names = [p["name_tmp"] for p in picks]
-    assert len(picks) == 15 and names[:10] == [f"k{i}" for i in range(10)]
-    assert names[10:] == ["k10", "k11", "k15", "k16", "k17"] and all(p.get("extra_long") for p in picks[10:])
-    assert len(S.pick(None, specs, ranked, 10, {}, {})) == 10                     # off = old behaviour
+    assert len(picks) == 10 and sum(specs[k].side == "long" for k in names) == 5
+    assert names[:5] == ["k8", "k9", "k10", "k11", "k12"] and names[5:] == ["k0", "k1", "k2", "k3", "k4"]
+    assert S.pick(None, specs, ranked, 10, {}, {})[0]["name_tmp"] == "k0"          # off = old behaviour
