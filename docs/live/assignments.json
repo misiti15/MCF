@@ -2,13 +2,10 @@
  "note": "Live setup assignments from the configs; updated with every promotion / demotion / move. Educational only - not financial advice.",
  "accounts": {
   "primary": [
-   "CWT14-failbrk-pdl-p10-lowvol-long",
-   "MF2-open-rsimidhi-flowsell",
    "MF2-open-rsimidhi-flowsell-FD",
    "MF4-h40-open-flowsell",
    "MF4-h40-open-flowsell-FD",
    "NS1-rsidip-rsi5pop-long",
-   "NS4-pm-vwap-reclaim-oversold-short",
    "NS5-sma50-flush-oversold-long",
    "RW3-gapdn-rsi5pop-flowsell-short-FD",
    "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
@@ -65,6 +62,7 @@
    "CWT13-vwapstretch-z075-short",
    "CWT14-failbrk-pdl-p05-lowvol-long",
    "CWT14-failbrk-pdl-p10-long",
+   "CWT14-failbrk-pdl-p10-lowvol-long",
    "L3-gap-slope-rsi5hi-FD",
    "LD1-ns1-breadthup-t05s1-long",
    "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
@@ -74,6 +72,7 @@
    "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long",
    "LD7-ns1-idxturn-holdtr-long",
    "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
+   "MF2-open-rsimidhi-flowsell",
    "MF5-flowsell-vwapup-rsi5hi",
    "MF5-flowsell-vwapup-rsi5hi-FD",
    "NM-AMS-N1-quiet-morning-short",
@@ -91,6 +90,7 @@
    "NM1-cwt09-g10-vwaploss-short",
    "NS3-failed-vwap-reclaim-short-FD",
    "NS3V1-am-widestop-short",
+   "NS4-pm-vwap-reclaim-oversold-short",
    "NS5-sma50-flush-oversold-long-FD",
    "RW1-gapdn-bounce-flowsell-short-FD",
    "RW4-ns3-adv150-short-FD",
@@ -438,11 +438,11 @@
   },
   "CWT14-failbrk-pdl-p10-lowvol-long": {
    "accounts": [
-    "primary"
-   ],
-   "since": "2026-10-20 22:31 ET",
-   "from": [
     "testing2"
+   ],
+   "since": "2026-10-27 16:42 ET",
+   "from": [
+    "primary"
    ]
   },
   "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long": {
@@ -1108,10 +1108,12 @@
   },
   "MF2-open-rsimidhi-flowsell": {
    "accounts": [
-    "primary"
+    "testing2"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-27 16:42 ET",
+   "from": [
+    "primary"
+   ]
   },
   "MF2-open-rsimidhi-flowsell-FD": {
    "accounts": [
@@ -1335,10 +1337,12 @@
   },
   "NS4-pm-vwap-reclaim-oversold-short": {
    "accounts": [
-    "primary"
+    "testing2"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-27 16:42 ET",
+   "from": [
+    "primary"
+   ]
   },
   "NS4-pm-vwap-reclaim-oversold-short-FD": {
    "accounts": [
@@ -1613,10 +1617,28 @@
   }
  },
  "last_change": {
-  "at": "2026-10-26 23:00 ET",
+  "at": "2026-10-27 16:42 ET",
   "changes": [
    {
-    "setup": "CWT13-vwapstretch-z05-long",
+    "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
+    "from": [
+     "primary"
+    ],
+    "to": [
+     "testing2"
+    ]
+   },
+   {
+    "setup": "MF2-open-rsimidhi-flowsell",
+    "from": [
+     "primary"
+    ],
+    "to": [
+     "testing2"
+    ]
+   },
+   {
+    "setup": "NS4-pm-vwap-reclaim-oversold-short",
     "from": [
      "primary"
     ],

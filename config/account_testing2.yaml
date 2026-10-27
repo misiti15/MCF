@@ -78,6 +78,9 @@ live:
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
     - CWT13-vwapstretch-z05-long   # 42.57/day (back from Primary 2026-10-26)
+    - MF2-open-rsimidhi-flowsell   # back from Primary 2026-10-27
+    - NS4-pm-vwap-reclaim-oversold-short   # back from Primary 2026-10-27
+    - CWT14-failbrk-pdl-p10-lowvol-long   # back from Primary 2026-10-27
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
     - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
@@ -330,7 +333,9 @@ strategies:
   exhaustion_short: {enabled: false}
   MF1-945-flowsell-vwapup: {enabled: false}
   ST7-rsi50dn-long-pm-t1s1-FD: {enabled: false}   # Primary only (promoted 2026-10-25)
-  MF2-open-rsimidhi-flowsell: {enabled: false}
+  MF2-open-rsimidhi-flowsell:   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
+    enabled: true
+    former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
   MF3-open-flowsell-rsi5hi: {enabled: false}
   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-15)
   RW3-gapdn-rsi5pop-flowsell-short-FD: {enabled: false}   # Primary/Testing 1 only (promoted 2026-10-15)
@@ -383,7 +388,9 @@ strategies:
   NS1-rsidip-rsi5pop-long: {enabled: false}
   NS2-sma50break-overbought-short: {enabled: false}
   NS3-failed-vwap-reclaim-short: {enabled: false}
-  NS4-pm-vwap-reclaim-oversold-short: {enabled: false}
+  NS4-pm-vwap-reclaim-oversold-short:   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
+    enabled: true
+    former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
   NS5-sma50-flush-oversold-long: {enabled: false}
   RW6G1-ns2-up3-vwap2sd-short: {enabled: false}
   # ---- moved from Testing 1 2026-10-20 (owner); moved on to the separate Graveyard account 2026-10-21 (owner 2026-10-20:
@@ -662,7 +669,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vany-sidelong-t05s1-full", fill: true}
   # Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]: CWT package B B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full (id 142); open history n 20080, exp -0.0946R, t -8.85, 47.14/day; verdict retire
   CWT14-failbrk-pdl-p10-lowvol-long:
-    enabled: false   # promoted to Primary 2026-10-21 (owner 2026-10-20 evening); promotion = move
+    enabled: true   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
+    former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
     min_adv: 95000000
