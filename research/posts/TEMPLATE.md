@@ -1,7 +1,9 @@
 <!-- Owner's daily message-board post format (owner 2026-10-27). One text style throughout (no code blocks / boxes);
      **bold** only where shown; a blank line between sections. The 16:15 ET routine fills the {…} parts; the owner
      edits before posting. "Things I am still wanting" / "Quick thoughts" are the owner's own words: carry the last
-     post's lines forward unchanged unless the owner gives new ones. -->
+     post's lines forward unchanged unless the owner gives new ones.
+     Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
+     never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**
 
 {one-line note on anything unusual today (outage, glitch, big day); omit the line if nothing}
