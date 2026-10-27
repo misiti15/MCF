@@ -17,7 +17,6 @@
   ],
   "testing": [
    "CWT05-flush-m05-v3-long",
-   "CWT12-coil-k6-long",
    "CWT14-failbrk-pdl-p05-long",
    "IDX1-qqq100-0955-TQQQ-hold",
    "IDX1-qqq100-0955-TQQQ-trail",
@@ -175,6 +174,7 @@
   "graveyard": [
    "CWT09-gapdn-bounce-g5-lowerhalf-short",
    "CWT09-gapdn-vwaploss-g5-short",
+   "CWT12-coil-k6-long",
    "CWT13-vwapstretch-z05-short",
    "CWT14-failbrk-orl-p05-long",
    "CWT14-failbrk-orl-p05-lowvol-long",
@@ -304,11 +304,11 @@
   },
   "CWT12-coil-k6-long": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-26 22:55 ET",
    "from": [
-    "testing2"
+    "testing"
    ]
   },
   "CWT12-flag-s1-long": {
@@ -1613,76 +1613,15 @@
   }
  },
  "last_change": {
-  "at": "2026-10-26 18:47 ET",
+  "at": "2026-10-26 22:55 ET",
   "changes": [
    {
-    "setup": "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long",
-    "from": [],
+    "setup": "CWT12-coil-k6-long",
+    "from": [
+     "testing"
+    ],
     "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long",
-    "from": [],
-    "to": [
-     "gen"
+     "graveyard"
     ]
    }
   ]

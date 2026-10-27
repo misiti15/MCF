@@ -55,6 +55,7 @@ live:
     - CWT14-failbrk-pdh-p10-short          # ~42.71/day (moved from Testing 1 2026-10-22, P0; from session 2026-10-23)
     - CWT13-vwapstretch-z05-short          # ~37.95/day (moved from Testing 2 2026-10-22, D1; from session 2026-10-23)
     - CWT09-gapdn-vwaploss-g5-short        # ~8.60/day (moved from Testing 2 2026-10-25, D2; from session 2026-10-26)
+    - CWT12-coil-k6-long                   # ~13.43/day (moved from Testing 1 2026-10-26, D3; from session 2026-10-27)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -307,3 +308,15 @@ strategies:
     live_scale_out: false
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-5 E=out T1 t1s05 guest", fill: false}
     tags: [graveyard, "moved to Graveyard 2026-10-25 (owner)"]
+  CWT12-coil-k6-long:
+    # moved to Graveyard 2026-10-26 (owner D3; effective session 2026-10-27 - its earlier trades stay in Testing 1,
+    # the dashboard merges both records into one row under Graveyard). 90 trades, 31% win vs 38% needed, -0.27R.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-coil-k6-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    live_scale_out: false
+    testing2: {batch: cwt-2026-10-12, source: B4-parta-k6-t1s05-guest, fill: false}
+    tags: [graveyard, "moved to Graveyard 2026-10-26 (owner)"]
