@@ -1721,44 +1721,48 @@ window.MCF = window.MCF || {};
   }
 })();
 </script>
-<!-- On deck / demotion watch (owner 2026-10-23): in the setup panel, a two-step click (pick the target, then Confirm)
-     marks a setup "on deck" for promotion (Setup Generator / Graveyard -> Testing 1 or 2; Testing 1 / 2 -> Primary) or on
-     "demotion watch" (Primary -> Testing 1 / 2 / Graveyard; Testing 1 / 2 -> Graveyard). Confirm opens a pre-filled GitHub
-     issue in this repo (tap Submit there); the owner's open issues are the list (others' issues are ignored: the repo is public). No limit. Nothing moves until the owner approves
-     the final move with Claude; closing the issue (Remove) takes the mark off. Leaderboard rows carry a chip. -->
+<!-- Monitor for promo / demo (owner 2026-10-27, replaces the 2026-10-23 GitHub-issue "on deck" marks): in the setup panel
+     one click marks a setup "Monitor for promo -> <account>" or "Monitor for demo -> <account>". The mark is saved at
+     once in this browser (no GitHub step). Claude keeps the shared list in docs/live/monitor.json (what the nightly loop
+     reads and every device sees): tell Claude in chat, or tap "Copy for Claude" and paste. Marks still only flag a
+     setup for review; nothing moves until the owner approves the move with Claude. Leaderboard rows carry a chip. -->
 <style>
 .wchip { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .02em; padding: 1px 6px; border-radius: 999px; margin-left: 6px;
   vertical-align: 1px; border: 1px solid currentColor; white-space: nowrap; }
-.wchip.up { color: var(--good); } .wchip.dn { color: var(--bad); }
+.wchip.up { color: var(--good); } .wchip.dn { color: var(--bad); } .wchip.local { border-style: dashed; }
 #sd-watch .wbtns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-#sd-watch .wconf { margin-top: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
 #sd-watch .wcur { font-size: 13px; margin-top: 4px; }
+#sd-watch .wnote { font-size: 12px; margin-top: 6px; color: var(--muted); }
 </style>
 <script>
 (() => {
-  const REPO = "misiti15/MCF", OWNER = "misiti15", API = "https://api.github.com/repos/" + REPO + "/issues?state=open&per_page=100";
   const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard" };
-  const TAG = { up: "ON-DECK", dn: "DEMOTE-WATCH" };
-  const RX = /^\[MCF (ON-DECK|DEMOTE-WATCH)\] (\S+) -> (primary|testing2|testing|graveyard)\b/;
+  const KEY = "mcf.monitor";
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  let W = {}, last = null;   // setup -> [{kind, to, since, url}]
-  // where a setup may go from each account: promotions (on deck) and demotions (watch)
+  const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  let SHARED = [], W = {}, last = null;   // W: setup -> [{kind, to, since, shared}]
+  // where a setup may go from each account: promo (up) and demo (down)
   const MOVES = { gen: { up: ["testing", "testing2"], dn: ["graveyard"] }, graveyard: { up: ["testing", "testing2"], dn: [] },
     testing: { up: ["primary"], dn: ["graveyard"] }, testing2: { up: ["primary"], dn: ["graveyard"] },
     primary: { up: [], dn: ["testing", "testing2", "graveyard"] } };
-  async function load(force) {
-    let raw = null;
-    try { const c = JSON.parse(sessionStorage.getItem("mcf.watch") || "null"); if (!force && c && Date.now() - c.at < 120000) raw = c.d; } catch (_) {}
-    if (!raw) {
-      try { const r = await fetch(API, { cache: "no-store", headers: { Accept: "application/vnd.github+json" } }); raw = r.ok ? await r.json() : []; } catch (_) { raw = []; }
-      try { sessionStorage.setItem("mcf.watch", JSON.stringify({ at: Date.now(), d: raw.map(i => ({ title: i.title, created_at: i.created_at, html_url: i.html_url, pr: !!i.pull_request, by: (i.user || {}).login || i.by })) })); } catch (_) {}
-    }
+  const local = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]") || []; } catch (_) { return []; } };
+  const save = l => { try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (_) {} };
+  const same = (a, b) => a.code === b.code && a.kind === b.kind && a.to === b.to;
+  function merge() {
     W = {};
-    raw.filter(i => !i.pr && !i.pull_request && ((i.user || {}).login || i.by) === OWNER).forEach(i => { const m = RX.exec(i.title || ""); if (!m) return;
-      (W[m[2]] = W[m[2]] || []).push({ kind: m[1] === "ON-DECK" ? "up" : "dn", to: m[3], since: String(i.created_at || "").slice(0, 10), url: i.html_url }); });
+    const add = (m, shared) => { const l = (W[m.code] = W[m.code] || []); if (!l.some(x => same({ code: m.code, ...x }, m))) l.push({ kind: m.kind, to: m.to, since: m.since, shared }); };
+    SHARED.forEach(m => add(m, true));
+    const mine = local().filter(m => !SHARED.some(x => same(x, m)));     // marks Claude already has drop out of the local list
+    save(mine); mine.forEach(m => add(m, false));
     window.MCF = window.MCF || {}; window.MCF.watch = W; decorate(); if (last) panel(last);
   }
-  const chip = w => `<span class="wchip ${w.kind}" title="${w.kind === "up" ? "On deck for promotion" : "Demotion watch"} since ${e(w.since)}">${w.kind === "up" ? "ON DECK" : "DEMOTE?"} → ${e(LBL[w.to] || w.to)}</span>`;
+  async function load() {
+    try { const r = await fetch("../live/monitor.json?t=" + Date.now(), { cache: "no-store" }); const d = r.ok ? await r.json() : null;
+      SHARED = ((d && d.marks) || []).filter(m => m && m.code && (m.kind === "up" || m.kind === "dn")); } catch (_) { SHARED = []; }
+    merge();
+  }
+  const word = k => k === "up" ? "promo" : "demo";
+  const chip = w => `<span class="wchip ${w.kind}${w.shared ? "" : " local"}" title="Monitor for ${word(w.kind)} since ${e(w.since)}${w.shared ? "" : " (this browser only - not sent to Claude yet)"}">MONITOR ${w.kind === "up" ? "↑" : "↓"} ${e(LBL[w.to] || w.to)}</span>`;
   function decorate() {
     document.querySelectorAll("tr[data-setup]").forEach(tr => {
       const ws = W[tr.dataset.setup] || [], host = tr.querySelector(".nm") || tr.querySelector("td.l");
@@ -1768,36 +1772,37 @@ window.MCF = window.MCF || {};
       const b = have || document.createElement("span"); b.className = "wbox"; b.dataset.v = want; b.innerHTML = want; if (!have) host.appendChild(b);
     });
   }
-  function issueUrl(code, name, from, kind, to) {
-    const title = `[MCF ${TAG[kind]}] ${code} -> ${to}`;
-    const body = `${kind === "up" ? "On deck for promotion" : "Demotion watch"}: **${name}** (\`${code}\`)\n\nFrom: ${LBL[from] || from || "?"}\nTo: ${LBL[to] || to}\nMarked: ${new Date().toISOString().slice(0, 10)} (dashboard)\n\nOwner wants another session or two before deciding. Nothing moves until the owner approves the final move with Claude. Close this issue to remove the mark.\n\n_Educational only — not financial advice._`;
-    return `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+  const forClaude = l => "Monitor marks: " + l.map(m => `${m.code} ${word(m.kind)} -> ${LBL[m.to] || m.to} (since ${m.since})`).join("; ");
+  function copy(text, el) {
+    const done = () => { if (el) el.textContent = "Copied - paste it to Claude"; };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => prompt("Copy this and send it to Claude:", text));
+    else prompt("Copy this and send it to Claude:", text);
   }
   function panel(d) {
     last = d; const box = document.getElementById("sd-watch"); if (!box) return;
     const from = (d.accounts || [])[0], mv = MOVES[from] || { up: [], dn: [] }, ws = W[d.code] || [];
     const has = (k, t) => ws.some(w => w.kind === k && w.to === t);
-    const btn = (k, t) => `<button data-k="${k}" data-t="${t}" ${has(k, t) ? "disabled" : ""}>${k === "up" ? "On deck → " : "Demotion watch → "}${e(LBL[t])}</button>`;
+    const btn = (k, t) => `<button data-k="${k}" data-t="${t}" ${has(k, t) ? "disabled" : ""}>Monitor for ${word(k)} → ${e(LBL[t])}</button>`;
     const btns = [...mv.up.map(t => btn("up", t)), ...mv.dn.map(t => btn("dn", t))].join("");
-    box.innerHTML = `<h4>On deck / demotion watch</h4>` +
-      (ws.length ? ws.map(w => `<div class="wcur">${chip(w)} since ${e(w.since)} · <a href="${e(w.url)}" target="_blank" rel="noopener" title="Close the issue on GitHub to take the mark off">Remove</a></div>`).join("") : "") +
-      (btns ? `<div class="wbtns">${btns}</div><div id="sd-wconf"></div>` : `<div class="wcur" style="color:var(--muted)">${from ? "No moves from " + e(LBL[from] || from) + "." : "Not in a live account."}</div>`) +
-      `<div class="lg">Step 1 pick, step 2 Confirm (opens GitHub: tap Submit). A mark only flags it for review; the move itself is approved with Claude. <a href="#" id="sd-wref">Refresh</a></div>`;
+    const pending = local();
+    box.innerHTML = `<h4>Monitor for promo / demo</h4>` +
+      ws.map(w => `<div class="wcur">${chip(w)} since ${e(w.since)} · ${w.shared ? `<a href="#" data-x="${w.kind}|${w.to}" data-shared="1" title="Copies a note asking Claude to drop it">Remove</a>` : `<a href="#" data-x="${w.kind}|${w.to}">Remove</a> · <span style="color:var(--muted)">not sent to Claude yet</span>`}</div>`).join("") +
+      (btns ? `<div class="wbtns">${btns}</div>` : `<div class="wcur" style="color:var(--muted)">${from ? "No moves from " + e(LBL[from] || from) + "." : "Not in a live account."}</div>`) +
+      `<div class="wnote">One click marks it here. ${pending.length ? `<a href="#" id="sd-wcopy">Copy for Claude (${pending.length} new)</a> and paste it, or just tell Claude, so the nightly check and your other devices see it.` : "Claude's list is up to date."} A mark only flags a setup for review; the move itself is approved with Claude.</div>`;
     box.querySelectorAll("button[data-k]").forEach(b => b.onclick = () => {
-      const k = b.dataset.k, t = b.dataset.t, c = document.getElementById("sd-wconf");
-      c.innerHTML = `<div class="wconf">Put <b>${e(d.name)}</b> ${k === "up" ? "on deck for" : "on demotion watch for"} <b>${e(LBL[t])}</b>?
-        <div class="wbtns"><button id="sd-wok">Confirm</button><button id="sd-wno">Cancel</button></div></div>`;
-      document.getElementById("sd-wno").onclick = () => { c.innerHTML = ""; };
-      document.getElementById("sd-wok").onclick = () => { window.open(issueUrl(d.code, d.name, from, k, t), "_blank", "noopener");
-        c.innerHTML = `<div class="wconf">Opened GitHub — tap <b>Submit new issue</b> there. The chip shows here within a couple of minutes (or tap Refresh).</div>`;
-        try { sessionStorage.removeItem("mcf.watch"); } catch (_) {} };
+      const l = local(); l.push({ code: d.code, kind: b.dataset.k, to: b.dataset.t, since: today() }); save(l); merge();
     });
-    const r = document.getElementById("sd-wref"); if (r) r.onclick = ev => { ev.preventDefault(); load(true); };
+    box.querySelectorAll("a[data-x]").forEach(a => a.onclick = ev => {
+      ev.preventDefault(); const [k, t] = a.dataset.x.split("|");
+      if (a.dataset.shared) { copy(`Drop the monitor mark: ${d.code} ${word(k)} -> ${LBL[t] || t}`, a); return; }
+      save(local().filter(m => !(m.code === d.code && m.kind === k && m.to === t))); merge();
+    });
+    const c = document.getElementById("sd-wcopy"); if (c) c.onclick = ev => { ev.preventDefault(); copy(forClaude(local()), c); };
   }
   document.addEventListener("mcf:panel", ev => panel(ev.detail));
   new MutationObserver(() => { clearTimeout(decorate.t); decorate.t = setTimeout(decorate, 150); }).observe(document.body, { childList: true, subtree: true });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(false); });
-  load(false);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+  load();
 })();
 </script>
 </body></html>
