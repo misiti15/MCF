@@ -4,12 +4,11 @@ Primary closed green for the 3rd session in a row, so milestone M1 is reached fo
 
 **Changes before today:**
 
-- **Demoted** Failed Prior-Day-Low Break Long (0.1 ATR, low volume) to **Testing 2** (owner's call)
-- **Demoted** Afternoon VWAP Reclaim Fade (window version) to **Testing 2** (owner's call)
-- **Demoted** Early Sellers, Mid-High RSI (window version) to **Testing 2** (owner's call)
-- Primary position size raised to about $4,000 (up to 77 open at once) and 10 new generated setups
+- **Demoted** 3 setups from **Primary** to **Testing 2** (owner's call): Failed Prior-Day-Low Break Long (0.1 ATR, low volume), Afternoon VWAP Reclaim Fade (window version), Early Sellers, Mid-High RSI (window version)
+- Promoted = a setup moves up a level after earning it. Demoted = it moves down a level and keeps proving itself on paper there.
+- Primary position size raised to about $4,000 (up to 77 open at once)
 
-**Today:** -$2,335.58 across 5 accounts · Primary +$246.76 · Since Day 1 (10/23): -$2,222.03
+**Today:** **Primary** +$246.76 · End-of-day balance $95,963.22 · Since Day 1 (10/23): +$305.36
 **Milestones:** M1 (3 green days in a row) 3/3 · M2 (8 of last 10 green) 3/4
 **Best setup today:** Morning Failed-Breakout Buy (wild movers, SPY red) (+$341.40)
 
@@ -19,7 +18,7 @@ Primary closed green for the 3rd session in a row, so milestone M1 is reached fo
 - Alpaca API, paper trading, SIP market data (all US exchanges).
 - US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
 - Setups built by basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
-- Setup Generator - A bot that invents 10 new setups a night (at least 5 long) and trades them on its own paper account. New concept: setups built randomly from random indicators.
+- Setup Generator - A bot that invents 10 new setups a night (at least 5 long) and trades them on its own paper account. New concept: setups built randomly from random indicators. Today is the last day of new setups for now: trade counts can't keep up, so the ones we have get tested first.
 - Setup Life Cycle - Idea or generator -> 2-yr backtest (costs in) -> test through replay sessions (20+ of them) -> Testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
 - Avg R - Average result per trade in units of the risk taken, after costs, fees and slippage (factored in already).
 - Break-even win rate - Win rate a setup needs just to not lose money.
