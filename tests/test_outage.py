@@ -186,18 +186,19 @@ def test_watchdog_decide_thresholds():
 
 # ---------------------------------------------------------------- residual lots and the lot cap (option B)
 def _residual_setup(tmp_path, monkeypatch, left, frac=0.25):
+    """left = share of B's lot still open after a partial exit (sizing-independent)."""
     r, c = _runner(tmp_path, monkeypatch, client=LeakyAlpaca())
     r.risk.residual_frac = frac
     q = _three_filled(r, c)
-    c.part_fill("mcf-B-XYZ-20261013-1000", 12.0, q["B"] - left)
+    c.part_fill("mcf-B-XYZ-20261013-1000", 12.0, q["B"] - round(q["B"] * left))
     r.reconcile(DAY)
     r._sync_open()
     return r, c, q
 
 
 def test_residual_lot_below_quarter_frees_a_lot_cap_slot(tmp_path, monkeypatch):
-    r, c, q = _residual_setup(tmp_path, monkeypatch, left=40)        # 40 of 200 = 20% < 25%
-    assert q["B"] == 200 and r.risk.state.residual == {"XYZ": 1}
+    r, c, q = _residual_setup(tmp_path, monkeypatch, left=0.20)      # 20% < 25%
+    assert q["B"] >= 20 and r.risk.state.residual == {"XYZ": 1}
     _enter(r, "D")
     assert "D" in _setups(r) and len(c.orders) == 4                  # 4 lots on XYZ, one of them a residual
     _enter(r, "E")
@@ -208,13 +209,13 @@ def test_residual_lot_below_quarter_frees_a_lot_cap_slot(tmp_path, monkeypatch):
 
 
 def test_residual_at_or_above_quarter_still_counts(tmp_path, monkeypatch):
-    r, c, _ = _residual_setup(tmp_path, monkeypatch, left=60)        # 30%
+    r, c, _ = _residual_setup(tmp_path, monkeypatch, left=0.30)      # 30%
     assert r.risk.state.residual == {}
     _enter(r, "D")
     assert _skips(r)["D"][0] == "lot cap"
 
 
 def test_residual_rule_off_when_frac_zero(tmp_path, monkeypatch):
-    r, c, _ = _residual_setup(tmp_path, monkeypatch, left=40, frac=0.0)
+    r, c, _ = _residual_setup(tmp_path, monkeypatch, left=0.20, frac=0.0)
     _enter(r, "D")
     assert _skips(r)["D"][0] == "lot cap"
