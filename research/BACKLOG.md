@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 707 · coded: 85 · failed: 332 · configurations tried (all lineages): 32798046
+Total ideas: 711 · coded: 85 · failed: 334 · configurations tried (all lineages): 32798074
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -31,6 +31,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | probation | live-NS4-pm-vwap-reclaim-oversold-short | primary account setup NS4-pm-vwap-reclaim-oversold-short (monitoring entry) | config/default.yaml | – | – | – | – | – | – |
 | probation | live-NS5-sma50-flush-oversold-long | primary account setup NS5-sma50-flush-oversold-long (monitoring entry) | config/default.yaml | – | – | – | – | – | – |
 | probation | live-RW6G1-ns2-up3-vwap2sd-short | primary account setup RW6G1-ns2-up3-vwap2sd-short (monitoring entry) | config/default.yaml | – | – | – | – | – | – |
+| proposed | hf1027-costfloor-halfR | Half-R HF setups: skip entries whose entry-side cost (1c + 1 bp) exceeds 5% (alt 8%) of R | BDI hf1027 (research/bdi/hf1027/NOTES.md) | – | – | – | – | – | – |
 | holdout_passed | lh-mom-revfilter | Long-hold: 12-1 momentum top-20 excluding the top decile of the 21-day return, weekly rebalance (S6_mom12_1rev_N20_W) | longhold study 2026-10-10 (research/longhold/NOTES.md) | – | – | – | – | – | – |
 | finalist | rw-vf2_rsis3_fast10 | volume_flip_2 with RSI3 / SMA10 | rule-18 rework (lengths) | – | – | – | – | – | – |
 | finalist | bdi-rw-gapdn-bounce-flowsell | RW1: gap-down bounce into heavy selling, short 09:50-11:00 | BDI rule-18 rework 2026-10-08 (research/bdi/rework1008) | – | – | – | – | – | – |
@@ -377,6 +378,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1027-flatten-1545 | Day-trade flatten at 15:45 instead of 15:55 (all setups, or longs only): close every lot still open at 15:45 | nightly-2026-10-27 (research/bdi/nightly1027/NOTES.md, flat1545.py / flat1545_out.txt) | – | – | – | – | – | – |
 | idea | bdi1027-spread-bps-skip-replay | Replay every 'spread bps > max' and 'spread % of stop' skip since 10-06 (all accounts) with the quoted spread charged, before touching either guard | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
 | idea | bdi1027-graveyard-cap-replay | Graveyard caps: replay the signals blocked by 'max positions for this setup' and the per-setup -2R stop across every Graveyard session (from 10-21) | BDI daily 2026-10-27 (research/bdi/bdi1027/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1028-ns3-family-one-bet | NS3 failed-VWAP-reclaim short family (NS3, NS3-FD, NS3V1, RW4-ns3-adv150-FD): treat as one bet per account - one family short per symbol per day, and cap open family shorts in one theme (crypto miners / AI power) at 2 | nightly-2026-10-28 (research/bdi/nightly1028/NOTES.md, ns3fam.py / ns3fam_out.txt, tables_out.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -709,6 +711,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | top5-1027-exhaustion_short-exec | exhaustion_short: execution variants (time stops 15/30/60 min, stop x0.85/1.25/1.5 at same $, scale-out, breakeven, two targets, wait one bar, three window rows, SPY-sign and SPY 0.5% filters, clock exit, limit entry 0.1R) | BDI top-5 execution tune 2026-10-27 (tenth run) (research/bdi/top5_1027/NOTES.md) | – | – | – | – | – | – |
 | failed | sz-proof-1027-primary-size-tiers | Primary sizing by proof: 0.5x new / 1.0x proven / 1.5x strongly proven per setup + automatic drift step-down (last-20 vs long-run), up only at the weekly review | Owner 2026-10-27 SZ-PROOF (research/ops/sizing_proof.md) | – | – | – | – | – | – |
 | failed | late-cut-1027-per-setup-entry-cutoff | Per-setup late-entry cutoff or half size (13:30 / 14:00 / 14:30) only where a setup's late entries are clearly worse than its own earlier ones and the cut does not lower its total R | Owner 2026-10-27 LATE-CUT (research/ops/late_entry1027.md) | – | – | – | – | – | – |
+| failed | htf1028-mss-pullback | HTF-aligned 30-min structure shift, pullback entry (long; short mirror) | owner 2026-10-28 (HTF add): a trader's HTF-aligned structure-shift idea | – | – | – | – | – | – |
+| failed | htf1028-coil-k4-trendfilter | Coil Under the High (4 bars) only when the higher timeframe is up | owner 2026-10-28 (HTF add); evidence research/bdi/hf1027/NOTES.md | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
