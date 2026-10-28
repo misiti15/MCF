@@ -1,0 +1,34 @@
+coil-k4 two-year open history (locked block not read), first signal per symbol-day; lineage N 247, bar t 3.32; costs in
+                              config     n  per_day   win     exp  t_day   train   valid     up    flat    down  exbest  excess_ctrl  delta_vs_parent  t_delta
+P parent_live (0.5R, 0.35 scale-out) 44505    104.7 0.699 -0.0613  -6.00 -0.0573 -0.0650 0.0451 -0.1083 -0.1820 -0.0633       0.0048           0.0000      NaN
+                 tgt050 no scale-out 44505    104.7 0.635 -0.0739  -5.91 -0.0687 -0.0788 0.0602 -0.1264 -0.2355 -0.0763       0.0059          -0.0126    -4.12
+                 tgt075 no scale-out 44505    104.7 0.541 -0.0813  -4.95 -0.0778 -0.0846 0.0958 -0.1471 -0.2997 -0.0849       0.0093          -0.0200    -2.64
+                 tgt100 no scale-out 44505    104.7 0.483 -0.0873  -4.55 -0.0799 -0.0943 0.1228 -0.1642 -0.3480 -0.0920       0.0050          -0.0260    -2.42
+             parent + cost/R <= 0.05 37599     88.5 0.714 -0.0402  -3.82 -0.0313 -0.0481 0.0660 -0.0851 -0.1634 -0.0423       0.0252           0.0273    11.96
+             parent + cost/R <= 0.08 42192     99.3 0.711 -0.0505  -4.89 -0.0438 -0.0567 0.0558 -0.0970 -0.1720 -0.0525       0.0152           0.0134    11.78
+
+parent by cost/R bucket:
+                  n     win     exp    ctrl
+cf                                         
+(0.0, 0.03]   26446  0.7132 -0.0271 -0.0644
+(0.03, 0.05]  11153  0.7145 -0.0712 -0.0677
+(0.05, 0.08]   4593  0.6863 -0.1352 -0.0688
+(0.08, 0.12]   1695  0.4867 -0.2109 -0.0758
+(0.12, 9.0]     618  0.4547 -0.3858 -0.0653
+
+parent by entry window:
+                 n     exp    ctrl
+tw                                
+10:15-10:44  16889 -0.0790 -0.0812
+10:45-11:14  16811 -0.0496 -0.0587
+11:15-11:30  10805 -0.0517 -0.0540
+
+parent by entries per session (frequency): sessions bucketed by how many coil-k4 signals fired that day
+                sessions  trades           R  per_trade
+nb                                                     
+(0.999, 62.0]        108    3983 -395.962433    -0.0994
+(62.0, 98.0]         110    8665 -741.541809    -0.0856
+(98.0, 145.0]        101   12225 -985.276978    -0.0806
+(145.0, 391.0]       106   19632 -604.237793    -0.0308
+
+Educational only - not financial advice.

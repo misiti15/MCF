@@ -1,0 +1,68 @@
+CWT12-coil-k4-long live: n 349, sessions 12, win 0.645, avg R after costs -0.078 (sum -27.3R), avg win +0.426 / avg loss -0.993 -> break-even win 0.700
+target actually set: median 0.435R of the fill-to-stop risk (design 0.5R from the signal price; the fill is 4.1 bps above the signal price at the median, which shrinks the target and widens the risk)
+
+1. Cost drag (R per trade):
+   journal: entry slip vs signal +0.028R + stop-exit extra +0.018R = +0.046R; before those -0.032R
+   backtest cost model on the same trades: +0.074R per trade (gross -0.032 -> net -0.106); entry-side cost alone = 0.039R (median 0.032)
+   at a 0.5R target, a winner keeps 0.426R; costs of ~0.05-0.07R per trade are 11-17% of an average win
+
+2. By session (R after costs):
+             n    win       R   avgR
+date                                
+2026-10-12  44  0.614  -4.093 -0.093
+2026-10-13  32  0.688  -0.393 -0.012
+2026-10-14   2  0.500  -0.536 -0.268
+2026-10-15  65  0.738   3.711  0.057
+2026-10-16  22  0.273 -15.491 -0.704
+2026-10-19   7  0.857   2.307  0.330
+2026-10-20   1  1.000   0.344  0.344
+2026-10-21  17  0.824   2.595  0.153
+2026-10-22   3  0.667   0.473  0.158
+2026-10-23  31  0.871   7.348  0.237
+2026-10-26  52  0.308 -29.829 -0.574
+2026-10-27  73  0.753   6.253  0.086
+   two worst sessions ['2026-10-26', '2026-10-16'] = -45.3R on 74 trades; the other 10 sessions +18.0R on 275 trades (+0.065R/trade). Best day 2026-10-23 +7.3R; without it -0.109R/trade
+
+3. Target what-if (replay on SIP 1-min bars from the live fill and live stop, model costs, scale-out ignored):
+   live: -0.106R, win 0.650, sum -37.0R, without 10-16 & 10-26 +0.054R
+   t050: -0.109R, win 0.619, sum -38.1R, without 10-16 & 10-26 +0.045R
+   t075: -0.132R, win 0.516, sum -45.9R, without 10-16 & 10-26 +0.042R
+   t100: -0.085R, win 0.499, sum -29.5R, without 10-16 & 10-26 +0.105R
+   trades whose price reached +1R before the stop (or by 15:55): 0.358; +0.75R: 0.447; losers that never reached +0.2R: 80 of 124
+
+4. Repeat entries: every coil-k4 trade is the first coil-k4 trade in its symbol that day (max seq 1, max concurrent lots 1). The 29/session count is breadth (many symbols), not re-entry.
+   By entry order within the session (1 = the day's first coil trade):
+         n    win   avgR  sessions
+rk                                
+1-10    93  0.699 -0.045        12
+11-20   77  0.688 -0.010         8
+21-40  105  0.581 -0.170         7
+41+     74  0.622 -0.061         4
+   By burst size (coil-k4 entries in the same 5-minute poll):
+       n    win   avgR  sessions
+bb                              
+1     20  0.750  0.077         9
+2-4  141  0.638 -0.073        10
+5-9  123  0.772  0.088         6
+10+   65  0.385 -0.452         4
+
+5. Time window (entry time):
+               n    win   avgR  sessions
+tw                                      
+10:15-10:44  138  0.696 -0.023         9
+10:45-11:14  116  0.724  0.050        11
+11:15-11:30   95  0.474 -0.315         8
+
+6. Tight stops: entry-side cost (1c + 1 bp) as a share of R, and stop width in bps:
+                n    win   avgR  model  stop_bps    price
+cf                                                       
+(0.0, 0.03]   167  0.707 -0.018 -0.020   118.438  124.230
+(0.03, 0.05]   83  0.578 -0.163 -0.204    78.740   43.050
+(0.05, 0.08]   67  0.642 -0.048 -0.094    70.802   30.021
+(0.08, 0.12]   29  0.483 -0.317 -0.398    64.952   20.250
+(0.12, 9.0]     3  0.667  0.530  0.405    34.800   30.270
+   keep cost/R <= 0.05: n 250 avg -0.066R (dropped 99 at -0.109R)
+   keep cost/R <= 0.08: n 317 avg -0.062R (dropped 32 at -0.238R)
+   keep cost/R <= 0.10: n 336 avg -0.081R (dropped 13 at +0.000R)
+
+Educational only - not financial advice.
