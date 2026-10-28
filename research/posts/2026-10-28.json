@@ -1,0 +1,14 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: #1 is machine-generated (screened, never holdout-tested; 12 trades today), #2 did not pass its backtest and took only 2 trades today.",
+ "setups": [
+  {"setup": "GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long",
+   "title": "Morning Failed-Breakout Buy (wild movers, SPY red)",
+   "lines": [["When", "9:50–11:00 AM"], ["Market", "SPY below its open"],
+             ["Stock", "Normal daily range 7.9%+ of price, ≥ $20M traded a day"],
+             ["Trigger", "Broke above its opening-range high earlier today, is now back below it, and the last 6 five-minute bars moved mostly one way (efficiency 0.55+)"],
+             ["Action", "Buy"], ["Exit", "Stop 1 unit below; no target, hold to 3:55 PM"]]},
+  {"setup": "NS5-sma50-flush-oversold-long",
+   "title": "Big Loser Flush Buy",
+   "lines": [["When", "9:50–11:30 AM"], ["Market", "Any"], ["Stock", "Down more than 2% from the open, ≥ $95M traded a day"],
+             ["Trigger", "Breaks below its 50-bar (five-minute) average on this bar with RSI(14) at 30 or below"],
+             ["Action", "Buy the flush"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}

@@ -1,0 +1,318 @@
+
+######## Primary (p): n 14, P/L after costs $245.88, win 85.7% vs break-even 62.1% (avg win +0.640R, avg loss -1.049R), avg R +0.399, sum R +5.6
+-- by side
+       n   win   avgR      pl
+side                         
+-1    10  0.90  0.437   95.73
+ 1     4  0.75  0.302  150.15
+-- by entry hour
+      n   avgR      pl   hold    opp
+hour                                
+09    2  0.737  145.10  2.820 -1.000
+10    4  0.694   79.70  1.265 -1.000
+11    2 -0.007   -3.04  0.636 -0.002
+12    2  0.458   16.79 -0.137 -0.352
+13    3  0.513   32.13  0.793 -0.722
+14    1 -1.109  -24.80 -1.036  0.964
+-- exit what-ifs (sum R after costs)
+live      5.6
+be05      6.4
+t05       5.5
+t1        7.8
+trail     7.2
+hold     13.0
+sar       4.2
+reent     5.3
+opp      -7.9
+-- by setup
+                                                                          name  n    win   avgR   sumR      pl     t1  trail   hold  never  maxclus
+setup                                                                                                                                              
+ST7-rsi50dn-long-pm-t1s1-FD                     RSI Collapse Dip Buy (all day)  2  0.500 -0.133 -0.266    5.05 -0.036  0.193  0.650      1        1
+MF4-h40-open-flowsell-FD                    Early Sellers, Strong Heat (all da  2  1.000  0.458  0.915   16.79  0.704  0.433 -0.273      0        1
+RW3-gapdn-rsi5pop-flowsell-short-FD         Gap-Down Pop Fade, Heavy Selling (  1  1.000  0.509  0.509   17.43  1.000  1.151  1.151      0        1
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD         Gap-Down Pop Fade (all day)  7  0.857  0.421  2.950   61.51  4.160  4.497  5.875      0        2
+NS5-sma50-flush-oversold-long                              Big Loser Flush Buy  2  1.000  0.737  1.473  145.10  2.000  0.962  5.639      0        2
+-- loss types
+                 n    pl
+loss_type               
+gave_back_gains  1 -16.8
+never_worked     1 -24.8
+-- skipped signals replayed (R after costs)
+                               size   mean    sum
+reason                                           
+not shortable/ETB                 3  1.000  3.000
+spread #bps > max                 3  0.022  0.067
+spread is #% of stop distance     3  0.333  1.000
+
+######## Testing 1 (t1): n 162, P/L after costs $-702.27, win 46.3% vs break-even 60.7% (avg win +0.586R, avg loss -0.903R), avg R -0.214, sum R -34.6
+-- by side
+       n    win   avgR      pl
+side                          
+-1    75  0.240 -0.514 -773.37
+ 1    87  0.655  0.045   71.10
+-- by entry hour
+       n   avgR      pl   hold    opp
+hour                                 
+09    26  0.048  -32.27 -0.114 -0.142
+10    35 -0.398 -218.66 -0.388  0.306
+11    33 -0.145 -127.81 -0.163  0.125
+12    18 -0.111  -23.42 -0.265  0.095
+13    26 -0.262 -125.54 -0.377  0.338
+14    23 -0.412 -177.76 -0.449  0.394
+15     1  1.130    3.19  1.137 -1.000
+-- exit what-ifs (sum R after costs)
+live    -34.6
+be05    -31.5
+t05     -30.3
+t1      -36.7
+trail   -37.6
+hold    -45.7
+sar     -36.1
+reent   -32.2
+opp      29.7
+-- by setup
+                                                                      name   n    win   avgR    sumR      pl      t1   trail    hold  never  maxclus
+setup                                                                                                                                               
+RW4-ns3-adv150-short-FD                                                  ?  16  0.000 -1.058 -16.932 -362.68 -16.788 -15.591 -16.788      1        2
+NS3-failed-vwap-reclaim-short                  Big Loser VWAP Reclaim Fade   5  0.000 -1.061  -5.305 -119.54  -5.238  -4.021  -5.238      0        2
+exhaustion_short                                  Afternoon Blow-off Short   7  0.143 -0.721  -5.049 -114.53  -4.937  -4.937  -4.937      0        5
+CWT14-failbrk-pdl-p05-long              Failed Prior-Day-Low Break Long (s  77  0.649  0.011   0.879  -65.01  -4.516  -6.547 -13.294      6       19
+RW7-gapdn-bounce-early-short-FD                                          ?  21  0.476 -0.008  -0.177  -45.94   0.298  -0.309  -2.272      1        2
+exhaustion_short-FD                     Afternoon Blow-off Short (all day)   5  0.200 -0.651  -3.253  -40.16  -3.761  -3.604  -3.761      2        2
+ST3-rsi5up-short-pm-t1s1-FD                                              ?   1  0.000 -1.072  -1.072  -24.84  -1.060  -1.060  -1.060      0        1
+ST6-volspikeup-short-mid-t1s1-FD                                         ?   2  0.500 -0.270  -0.539  -17.41  -0.039  -0.619  -0.477      0        1
+MF3-open-flowsell-rsi5hi-FD             Early Sellers into a Pop (all day)   5  0.200 -0.451  -2.257  -13.86  -1.846  -1.384  -2.780      1        1
+RW6G1-ns2-up3-vwap2sd-short-FD          Big Gainer Fade with VWAP Band Gua   2  0.000 -0.584  -1.168  -13.62  -1.005  -0.969  -1.005      0        2
+L3-gap-slope-fromopen-FD                  Gap-Down Recovery Fade (all day)   7  0.571 -0.019  -0.134   -8.56   1.023   1.751   1.097      0        1
+MF5-flowsell-vwapup-rsi5hi                 Sellers into Strength (all day)   2  0.000 -0.723  -1.446   -7.23  -1.406  -0.779  -1.406      0        1
+NS4-pm-vwap-reclaim-oversold-short-FD   Afternoon VWAP Reclaim Fade (all d   1  0.000 -1.050  -1.050   -2.84  -1.030  -1.030  -1.030      1        1
+L3-gap-slope-lowdist-FD                                                  ?   1  0.000 -0.137  -0.137   -2.16  -0.086  -0.086  -0.086      0        1
+ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD  RSI Collapse Dip Buy, Nasdaq-below   2  0.500 -0.111  -0.222   -0.02  -0.035   0.187   0.643      1        1
+NS1-rsidip-rsi5pop-long-FD                Big Gainer Dip-and-Pop (all day)   3  0.667  0.087   0.260    2.94   0.834   0.326  -0.008      0        1
+intraday_momentum                            Index Last-Half-Hour Momentum   1  1.000  1.130   1.130    3.19   1.000   0.074   1.137      0        1
+NS5-sma50-flush-oversold-long-FD             Big Loser Flush Buy (all day)   2  1.000  0.720   1.439   33.26   2.000   0.923   5.567      0        2
+orb20_a                                   20-Minute Opening Range Breakout   2  0.500  0.195   0.390   96.74  -0.091   0.082  -0.015      0        1
+-- loss types
+                                    n     pl
+loss_type                                   
+gave_back_gains                    10  -75.3
+late_hold                          13 -120.6
+never_worked                       13 -157.3
+small MFE then failed (0.15-0.5R)  26 -403.4
+stopped_then_reversed               8  -86.4
+wrong_side_after_big_swing         17 -298.4
+-- skipped signals replayed (R after costs)
+                                    size   mean     sum
+reason                                                 
+lot cap                                9 -0.851  -7.659
+not shortable/ETB                    126 -0.309 -38.958
+opposite side held                    12  0.255   3.058
+price below minimum                    1  0.378   0.378
+size < # share after liquidity cap     3  0.167   0.500
+spread #bps > max                     48 -0.070  -3.350
+spread is #% of stop distance         24  0.022   0.530
+twin held                              3 -0.565  -1.695
+
+######## Testing 2 (t2): n 213, P/L after costs $-925.79, win 51.2% vs break-even 64.1% (avg win +0.541R, avg loss -0.965R), avg R -0.194, sum R -41.4
+-- by side
+        n    win   avgR      pl
+side                           
+-1     45  0.178 -0.665 -805.84
+ 1    168  0.601 -0.068 -119.95
+-- by entry hour
+       n   avgR       pl   hold    opp
+hour                                  
+09    19  0.082  -44.820 -0.264 -0.094
+10    90 -0.305 -576.555 -0.334  0.187
+11    47 -0.088  -83.155  0.059  0.012
+12    11 -0.249  -14.300 -0.385  0.238
+13    20 -0.421 -129.440 -0.596  0.176
+14    21 -0.038  -81.660 -0.226  0.187
+15     5  0.131    4.140  0.669 -0.512
+-- exit what-ifs (sum R after costs)
+live    -41.4
+be05    -36.7
+t05     -31.2
+t1      -31.4
+trail   -39.0
+hold    -49.9
+sar     -33.1
+reent   -27.0
+opp      23.1
+-- by setup
+                                                                              name   n    win   avgR    sumR      pl      t1   trail    hold  never  maxclus
+setup                                                                                                                                                       
+NS3V1-am-widestop-short                         Big Loser VWAP Reclaim Fade, Morni  13  0.000 -0.942 -12.251 -531.87 -12.254 -12.254 -12.254      3        3
+NS3-failed-vwap-reclaim-short-FD                Big Loser VWAP Reclaim Fade (all d  11  0.091 -0.985 -10.832 -161.35  -9.664  -9.664  -9.664      2        2
+exhaustion_short-FD                             Afternoon Blow-off Short (all day)   7  0.000 -0.712  -4.984  -88.38  -3.710  -4.691  -4.827      1        2
+CWT12-coil-k4-long                                    Coil Under the High (4 bars)  77  0.558 -0.156 -12.041  -77.71 -15.088  -9.008 -16.711     16       10
+CWT14-failbrk-pdl-p10-long                         Failed Prior-Day-Low Break Long  39  0.615  0.049   1.914  -42.58   1.639  -2.956  -6.432      3       13
+RW4-ns3-adv150-short-FD                                                          ?   3  0.333 -0.646  -1.938  -28.82  -1.645  -1.645  -1.645      0        1
+NM-HL-T75-pm-long                               Afternoon Higher-Low Long (near-mi   1  0.000 -1.027  -1.027  -23.44  -1.007  -1.007  -1.007      0        1
+CWT14-failbrk-pdl-p10-lowvol-long               Failed Prior-Day-Low Break Long (0   7  0.286 -0.579  -4.052  -21.98  -0.468  -1.526  -1.281      2        1
+NM-MF3-qqqdn-gapdn-FD                           Early Sellers into a Pop (index do   1  0.000 -1.122  -1.122   -3.99  -1.118  -1.118  -1.118      0        1
+NS4-pm-vwap-reclaim-oversold-short                     Afternoon VWAP Reclaim Fade   1  0.000 -1.091  -1.091   -2.56  -1.034  -1.034  -1.034      1        1
+MF5-flowsell-vwapup-rsi5hi-FD                   Sellers into Strength (all day) (a   3  0.333 -0.240  -0.721   -2.30  -0.546  -0.833  -1.551      0        1
+CWT14-failbrk-pdl-p05-lowvol-long               Failed Prior-Day-Low Break Long (0  36  0.667 -0.009  -0.323   -0.75   5.283   1.813   2.154      3        5
+L3-gap-slope-rsi5hi-FD                                                           ?   1  1.000  0.023   0.023    0.30   1.000   1.023   0.949      0        1
+LD6-spy-dip020atr-breadthturn-spxl-holdtr-long  * SPY Dip of 0.2 ATR, Breadth Turn   1  1.000  0.272   0.272    1.39   0.988   0.019   1.077      0        1
+CWT13-vwapstretch-z05-long                             Stretched Below VWAP Bounce   2  1.000  0.325   0.649    5.07   0.253   0.640   0.253      0        1
+NM-ETF-late-dip-di-long                           Late-Day ETF Dip Buy (near-miss)   2  1.000  0.334   0.668    6.08   2.000   0.334   2.616      0        2
+CWT12-flag-s1-long                                    Spike-Pullback Flag Breakout   1  1.000  0.581   0.581    6.51   1.000   0.815  -0.446      0        1
+LD2-qqq-dip015-breadthturn-tqqq-t05s1-long      * Shallow Nasdaq Dip, Breadth Turn   1  1.000  1.048   1.048    8.86   1.000   0.446   1.237      0        1
+RW1-gapdn-bounce-flowsell-short-FD                                               ?   5  0.800  0.598   2.992   13.13   0.991   1.066  -1.266      0        1
+NS5-sma50-flush-oversold-long-FD                     Big Loser Flush Buy (all day)   1  1.000  0.858   0.858   18.60   1.000   0.610   1.080      0        1
+-- loss types
+                                    n     pl
+loss_type                                   
+gave_back_gains                    10  -49.2
+late_hold                          14 -148.0
+never_worked                       31 -405.8
+small MFE then failed (0.15-0.5R)  27 -307.0
+stopped_then_reversed               7  -76.6
+wrong_side_after_big_swing         15 -370.3
+-- skipped signals replayed (R after costs)
+                                    size   mean     sum
+reason                                                 
+lot cap                                2 -1.030  -2.060
+not shortable/ETB                     34 -0.239  -8.129
+opposite side held                     8  0.227   1.817
+size < # share after liquidity cap     6  0.477   2.863
+spread #bps > max                     57 -0.064  -3.660
+spread is #% of stop distance         39 -0.142  -5.527
+twin held                             19 -0.900 -17.095
+
+######## Graveyard (gy): n 298, P/L after costs $-1079.05, win 49.3% vs break-even 63.4% (avg win +0.597R, avg loss -1.034R), avg R -0.229, sum R -68.3
+-- by side
+        n    win   avgR       pl
+side                            
+-1    148  0.358 -0.427 -1079.09
+ 1    150  0.627 -0.035     0.04
+-- by entry hour
+        n   avgR      pl   hold    opp
+hour                                  
+09     41 -0.592 -242.23 -0.646  0.641
+10    159 -0.170 -466.73 -0.132  0.032
+11     71 -0.206 -304.53 -0.340  0.078
+12     13 -0.558 -120.36 -0.537  0.155
+13      3  0.860   39.91  0.750 -1.000
+14      9  0.248    6.90  0.016 -0.081
+15      2  0.029    7.99  0.037 -0.037
+-- exit what-ifs (sum R after costs)
+live    -68.3
+be05    -49.1
+t05     -42.1
+t1      -50.9
+trail   -43.6
+hold    -76.2
+sar     -82.4
+reent   -59.3
+opp      35.1
+-- by setup
+                                                                     name   n    win   avgR    sumR       pl      t1   trail    hold  never  maxclus
+setup                                                                                                                                               
+heat_fade_short-FD                          Morning Bounce Fade (all day)  29  0.172 -0.650 -18.836 -369.270 -21.601 -15.188 -19.716      7        4
+CWT14-failbrk-pdh-p10-short            Failed Prior-Day-High Break Short   31  0.161 -0.835 -25.900 -329.150 -28.897 -23.230 -29.502     11       25
+RW2-exhaustion-noon-adv150-short-FD                                     ?  18  0.389 -0.349  -6.279 -191.810  -5.565  -8.036  -6.822      3        4
+heat_fade_short                                       Morning Bounce Fade   6  0.000 -0.848  -5.087 -130.750  -5.086  -3.890  -5.086      1        4
+CWT14-failbrk-orl-p05-lowvol-long      Failed Opening-Range-Low Break Lon  27  0.593 -0.188  -5.077  -98.020  -7.225  -0.588  -3.403      4        9
+CWT09-gapdn-bounce-g5-lowerhalf-short  Gap-Down Bounce Rejection Short (5   2  0.000 -0.918  -1.837  -68.330  -1.732  -0.993  -1.732      1        2
+CWT14-failbrk-pdh-p05-lowvol-short     Failed Prior-Day-High Break Short   31  0.581 -0.212  -6.570  -67.050  -3.559  -4.855  -8.774      3       16
+ST2-slope20up-long-am-t05s1-FD                                          ?  10  0.600 -0.160  -1.598  -54.430  -0.962   0.492   1.324      0        2
+LIQ-orl-sweep-open15-s25-long            Opening-Range Low Sweep Reversal   6  0.333  0.018   0.106  -33.600  -0.270   0.332   0.275      0        2
+CWT14-failbrk-orl-p05-long             Failed Opening-Range-Low Break Lon  33  0.667 -0.059  -1.940  -21.680  -3.423   0.104  -0.104      3        9
+CWT09-gapdn-vwaploss-g5-short           Gap-Down VWAP Loss Short (5% gap)   1  0.000 -1.094  -1.094  -17.010   0.919   0.027  -1.081      0        1
+MF1-945-flowsell-vwapup-FD             Early Sellers Above VWAP (all day)   6  0.333 -0.507  -3.041  -16.380   0.876  -0.681  -5.124      0        1
+RW6-ns2-up3-short-FD                                                    ?   1  0.000 -0.129  -0.129   -4.175  -0.038  -0.038  -0.038      0        1
+CWT14-failbrk-orl-p10-long             Failed Opening-Range-Low Break Lon  22  0.727  0.019   0.425   -1.560   3.690   2.684  -3.021      1        6
+CWT14-failbrk-orl-p10-lowvol-long      Failed Opening-Range-Low Break Lon  18  0.778  0.158   2.851   -0.690   5.056   5.798   0.112      0        5
+ST1-ordn-long-pm-t05s1-FD                                               ?   2  1.000  0.199   0.397   14.700   2.000   0.790   1.883      0        1
+CWT12-coil-k6-long                           Coil Under the High (6 bars)  22  0.364 -0.251  -5.530   21.850   1.897  -2.523  -6.896      3        4
+CWT13-vwapstretch-z05-short                     Stretched Above VWAP Fade   4  0.750  0.267   1.068   24.380   1.952  -0.566   2.089      1        1
+NS2-sma50break-overbought-short-FD     Big Gainer Average Reclaim Fade (a   6  0.500  0.432   2.594   31.365   0.655  -0.077   1.287      0        2
+heat_fade_long                                      Midday Gap-Up Dip Buy   2  1.000  0.922   1.843   39.660   0.931   0.524   0.587      0        1
+CWT14-failbrk-pdh-p10-lowvol-short     Failed Prior-Day-High Break Short   13  0.769  0.150   1.948   59.090   5.858   4.713   2.339      0        6
+heat_fade_long-FD                         Midday Gap-Up Dip Buy (all day)   8  0.750  0.418   3.346  133.810   3.632   1.632   5.246      0        5
+-- loss types
+                                    n     pl
+loss_type                                   
+gave_back_gains                    24 -390.6
+late_hold                           6  -33.9
+never_worked                       38 -653.5
+small MFE then failed (0.15-0.5R)  42 -741.9
+stopped_then_reversed              30 -541.1
+wrong_side_after_big_swing         11 -337.4
+-- skipped signals replayed (R after costs)
+                               size   mean     sum
+reason                                            
+already in symbol                 1  1.214   1.214
+crosscheck: quote #s old > #s     1 -0.168  -0.168
+lot cap                           6 -0.235  -1.412
+max positions for this setup      9 -0.015  -0.137
+not shortable/ETB                43 -0.340 -14.631
+opposite side held               11  0.729   8.014
+setup daily loss limit          255  0.138  35.202
+spread #bps > max                66 -0.197 -12.985
+spread is #% of stop distance    52 -0.176  -9.158
+twin held                        13  0.072   0.935
+
+######## Setup Generator (gen): n 82, P/L after costs $-121.63, win 48.8% vs break-even 53.7% (avg win +0.856R, avg loss -0.993R), avg R -0.091, sum R -7.5
+-- by side
+       n    win   avgR      pl
+side                          
+-1    22  0.227 -0.399 -416.26
+ 1    60  0.583  0.022  294.63
+-- by entry hour
+       n   avgR      pl   hold    opp
+hour                                 
+10    38  0.025  254.40  0.129 -0.036
+11    16 -0.036  -39.55  0.432 -0.216
+12     1 -1.032  -64.58 -1.040  0.960
+13    12 -0.289  -46.22 -0.125  0.002
+14    14 -0.237 -223.82  0.032  0.057
+15     1 -0.051   -1.86 -0.025  0.025
+-- exit what-ifs (sum R after costs)
+live     -7.5
+be05      0.3
+t05     -11.4
+t1       -2.2
+trail    -5.6
+hold      9.7
+sar      10.4
+reent     1.5
+opp      -3.0
+-- by setup
+                                                                                                                          name   n    win   avgR   sumR      pl     t1  trail   hold  never  maxclus
+setup                                                                                                                                                                                               
+GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short                           Generated: FlowShiftge0p42 PM shor  13  0.154 -0.680 -8.836 -380.60 -8.005 -7.459 -8.794      3        5
+GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long                            Generated: FlowShiftlem0p65 AM lon  24  0.500 -0.284 -6.821 -107.36 -3.277 -4.312 -0.449      3       19
+GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long                               Generated: EMAdChgge0p15 MID long    6  0.333 -0.281 -1.684  -98.74 -2.360 -3.584 -0.662      0        2
+GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short                     Generated: NewHOD AM short (SPYdn,   7  0.286 -0.129 -0.903  -64.76 -3.616 -2.504 -0.042      2        3
+GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long             Generated: VWAPxDn MID long (BRopl   1  0.000 -1.114 -1.114   -8.84 -1.086  0.250 -1.086      0        1
+GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short                    Generated: NewHOD, Ret15mATRge0p12   1  0.000 -0.173 -0.173   -2.10  1.000  0.067 -0.136      0        1
+GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long                      Generated: ORBfailUp LATE long (BR   1  1.000  0.956  0.956   16.94  0.826  0.500  2.522      0        1
+GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long                          Generated: ORBfailUp MID long (BRo   4  1.000  0.491  1.964   18.33  3.743  4.582  5.064      0        4
+GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long  Generated: Ret15mATRlem0p12 PM lon   5  0.600  0.007  0.037   24.01  1.958  0.935  1.823      0        3
+GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short                                 Generated: RSI14le35, FromOpenge2    1  1.000  1.136  1.136   31.20  1.000  0.257 -0.142      0        1
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long                       Generated: MACDhge0p12, Ret15mATRl   4  0.750  0.286  1.143   36.51  1.537 -0.166  3.508      0        2
+GEN-POD1022-03-wt-bull-flag-bailout-S-long                                                  Podcast: Bull Flag Breakout or Bai   1  1.000  0.564  0.564   40.60  1.000  1.326  1.292      0        1
+GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long                             Generated: BBpctle0p017 PM long (Q   2  1.000  0.573  1.146   42.18  1.700  1.417  1.095      0        1
+GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long                             Generated: ORBfailUp AM long (SPYd  12  0.583  0.425  5.100  331.00  3.405  3.137  5.728      1        5
+-- loss types
+                                    n     pl
+loss_type                                   
+gave_back_gains                     7 -117.4
+late_hold                           4 -108.7
+never_worked                        9 -284.2
+small MFE then failed (0.15-0.5R)  10 -246.1
+stopped_then_reversed               2  -39.5
+wrong_side_after_big_swing         10 -339.3
+-- skipped signals replayed (R after costs)
+                               size   mean    sum
+reason                                           
+no quote (ConnectionError)        1  0.986  0.986
+not shortable/ETB                 8 -0.125 -1.004
+spread #bps > max                29  0.305  8.833
+spread is #% of stop distance     6 -0.041 -0.248
+
+Educational only - not financial advice.

@@ -2,6 +2,7 @@
      **bold** only where shown; a blank line between sections. The 16:15 ET routine fills the {…} parts; the owner
      edits before posting. "Things I am still wanting" / "Quick thoughts" are the owner's own words: carry the last
      post's lines forward unchanged unless the owner gives new ones.
+     Owner 2026-10-28: balance / running totals for Primary only (Testing, Generator stay in the pictures).
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**
@@ -10,12 +11,13 @@
 
 **Changes before today:**
 
-- **Promoted** {display name(s)} to **Primary** ({whose call})
-- **Demoted** {display name} to **{Testing / Graveyard}** ({whose call})
+- **Promoted** {n} setup(s) to **Primary** ({whose call}): {display names}
+- **Demoted** {n} setup(s) from **Primary** to **{Testing / Graveyard}** ({whose call}): {display names}
+- Promoted = a setup moves up a level after earning it. Demoted = it moves down a level and keeps proving itself on paper there.
 - {any rule change that started with today's session, in plain words (research/ledger.jsonl `effective` = today; e.g. 10/29: Primary per-setup -2R daily stop)}
 {… one line per move; "No changes before today." if none}
 
-**Today:** {All 5 accounts P/L} across 5 accounts · Primary {P/L} · Since Day 1 (10/23): {total}
+**Today:** **Primary** {P/L} · End-of-day balance {Primary equity} · Since Day 1 (10/23): {Primary total}
 **Milestones:** M1 (3 green days in a row) {x}/3 · M2 (8 of last 10 green) {g}/{n}
 **Best setup today:** {display name} ({P/L})
 

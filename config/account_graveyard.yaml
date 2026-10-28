@@ -56,6 +56,7 @@ live:
     - CWT13-vwapstretch-z05-short          # ~37.95/day (moved from Testing 2 2026-10-22, D1; from session 2026-10-23)
     - CWT09-gapdn-vwaploss-g5-short        # ~8.60/day (moved from Testing 2 2026-10-25, D2; from session 2026-10-26)
     - CWT12-coil-k6-long                   # ~13.43/day (moved from Testing 1 2026-10-26, D3; from session 2026-10-27)
+    - CWT12-coil-k4-long                   # ~35/day live (moved from Testing 2 2026-10-28, K4-2; from session 2026-10-29)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -320,3 +321,15 @@ strategies:
     live_scale_out: false
     testing2: {batch: cwt-2026-10-12, source: B4-parta-k6-t1s05-guest, fill: false}
     tags: [graveyard, "moved to Graveyard 2026-10-26 (owner)"]
+  CWT12-coil-k4-long:
+    # moved to Graveyard 2026-10-28 (owner K4-2; effective session 2026-10-29 - its earlier trades stay in Testing 2,
+    # the dashboard merges both records into one row under Graveyard). 427 trades, -0.092R after costs (-0.118R w/o best day); 2-yr -0.075R.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT12-coil-k4-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: 0.35   # its backtest exit; the Graveyard runs no live scale-out (account rule)
+    live_scale_out: false
+    testing2: {batch: cwt-2026-10-12, source: B4-parta-k4-t05s1-guest, fill: false}
+    tags: [graveyard, "moved to Graveyard 2026-10-28 (owner)"]

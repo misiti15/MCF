@@ -84,7 +84,6 @@ live:
     - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
     - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
-    - CWT12-coil-k4-long   # 104.47/day
 strategies:
   # ---- swarm1017 near-misses runnable after Q8 (owner 2026-10-17): forward observation, NOT candidates;
   #      judge on >= 20 sessions / 60 trades
@@ -547,7 +546,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B4-parta-k6-t1s05-guest", fill: false}
   # Coil Under the High (4 bars): CWT package B B4-parta-k4-t05s1-guest (id 197); open history n 44505, exp -0.0746R, t -5.91, 104.47/day; verdict rework
   CWT12-coil-k4-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-28 (owner K4-2; from session 2026-10-29)
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k4-long.py
     min_adv: 95000000

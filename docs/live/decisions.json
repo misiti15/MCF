@@ -278,5 +278,20 @@
   "link": "research/bdi/nightly1027/NOTES.md",
   "status": "answered",
   "answered": "2026-10-27: no - keep in Testing 2 one more day (owner likes high-frequency setups); BDI study of high-frequency setups requested"
+ },
+ {
+  "code": "K4-2",
+  "title": "Move Coil Under the High (4 bars) to the Graveyard (after the extra day)",
+  "what": "CWT12-coil-k4-long stops trading in Testing 2 and runs in the Graveyard (a move: switched off in Testing 2, nothing deleted); its record moves with it.",
+  "recommend": "Yes - move to the Graveyard",
+  "numbers": [
+   "427 paper trades in 13 sessions: 63.0% win vs 68.4% needed, -0.092R after costs (-0.118R without its best day 10-23), t_day -1.05",
+   "extra day 10-28: 77 trades, -12.0R, -$77.71; last 4 sessions 234 trades -0.121R; record -$161.70",
+   "2-year backtest -0.075R/trade; hf1027 targets / cost floor and htf1028 trend filter all fail"
+  ],
+  "why": "You kept it one more day on 10-27 (K4 no); the extra day lost and every tweak tried on two years fails, so the high-frequency case does not rescue it.",
+  "link": "research/bdi/nightly1028/NOTES.md",
+  "status": "answered",
+  "answered": "2026-10-28: yes - moved to the Graveyard from 2026-10-29"
  }
 ]
