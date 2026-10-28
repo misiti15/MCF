@@ -12,6 +12,7 @@
 
 - **Promoted** {display name(s)} to **Primary** ({whose call})
 - **Demoted** {display name} to **{Testing / Graveyard}** ({whose call})
+- {any rule change that started with today's session, in plain words (research/ledger.jsonl `effective` = today; e.g. 10/29: Primary per-setup -2R daily stop)}
 {… one line per move; "No changes before today." if none}
 
 **Today:** {All 5 accounts P/L} across 5 accounts · Primary {P/L} · Since Day 1 (10/23): {total}

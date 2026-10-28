@@ -200,3 +200,11 @@ def test_generated_card_last_session():
     for c in ('["ls_trades", "Last-session trades"]', '["ls_r", "Last-session R"]', '["ls_pnl", "Last-session P/L"]'):
         assert c in gen, c
     assert 'id="gen-last-band"' in gen and "daySummary" in gen and "last_session" in gen
+
+
+def test_eod_card_graveyard_green_only_and_trend_lists():
+    """Owner 2026-10-28: Graveyard setups only in the green lists; 'k of last N' trend lists; changes started this session."""
+    html = HTML
+    assert "const keep = x => x.sign > 0 || !gy(x.s);" in html
+    assert "Trending up (green sessions of the last N traded)" in html and "Trending down (red sessions of the last N traded)" in html
+    assert "Changes that started this session" in html and "research/ledger.jsonl" in html
