@@ -44,3 +44,10 @@ def test_green_streaks(monkeypatch):
     assert [(x["setup"], x["run"]) for x in gs["current"]] == [("A", 4), ("B", 3)]
     assert gs["record"][0]["setup"] == "A" and gs["record"][0]["run"] == 4
     assert "A: 4 in a row" in "\n".join(dp._streak_lines(gs))
+
+
+def test_ledger_changes_lists_rules_effective_that_session():
+    """Owner 2026-10-28: a change that starts with a session shows in that session's EOD summary (ST-P from 10-29)."""
+    from mcf.report.daily_post import ledger_changes
+    assert any("down 2R" in x for x in ledger_changes("2026-10-29"))
+    assert ledger_changes("2026-01-02") == []

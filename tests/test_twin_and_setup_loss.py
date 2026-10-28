@@ -96,7 +96,7 @@ def test_setup_loss_off_when_absent():
 
 
 def test_accounts_config(monkeypatch):
-    assert "max_setup_daily_loss_r" not in load_config()["account"]
+    assert load_config()["account"]["max_setup_daily_loss_r"] == 2.0     # owner 2026-10-28 ST-P: Primary from 2026-10-29
     assert load_config()["account"]["max_daily_loss_r"] == 20
     # owner 2026-10-22 ST-A: per-setup stop off in Testing 1/2 + Gen (as Primary and the backtests); Graveyard keeps it
     for acct in ("testing", "testing2", "gen"):

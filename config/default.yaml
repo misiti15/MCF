@@ -10,6 +10,9 @@ account:
   max_concurrent_positions: 77   # owner 2026-10-27 (was 160, briefly 61), = slots
   max_positions_per_strategy: 30  # per-setup sleeve so one setup can't use every slot (was 100 of 160; now 30 of 77)
   max_daily_loss_r: 20           # risk control (not a signal filter): stop new entries after -20R in a day
+  max_setup_daily_loss_r: 2.0    # owner 2026-10-28 ST-P (from 2026-10-29): a Primary setup takes no new entries for the rest of the
+                                 # day once its net realized R <= -2 (latched). Live only (backtests ignore it); Testing 1/2 + Gen
+                                 # set null in their overlays (owner: off there so it blocks no trades)
   max_trades_per_day: 1000
 
 gates:

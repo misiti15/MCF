@@ -701,6 +701,20 @@ def render(htmls: dict[str, str], out: Path):
         b.close()
 
 
+def ledger_changes(date: str) -> list[str]:
+    """Plain lines of research/ledger.jsonl entries that took effect with this session (owner 2026-10-28: a change that
+    starts with a session is noted in that session's EOD summary)."""
+    out = []
+    for line in (ROOT / "research" / "ledger.jsonl").read_text().splitlines():
+        try:
+            e = json.loads(line)
+        except ValueError:
+            continue
+        if e.get("effective") == date:
+            out.append(e.get("plain") or e.get("title") or e.get("id", ""))
+    return [x for x in out if x]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--date", required=True)
@@ -727,7 +741,8 @@ def main(argv=None):
     gs = green_streaks(a.date, acc)
     gs["traded"] = traded_streaks(a.date, acc)       # owner 2026-10-26: green streaks that skip a session, explained
     (out / "facts.txt").write_text(facts_text(a.date, facts(acc), acc, gs))   # owner 2026-10-26: quick facts as text, 4 images max
-    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), a.changes or "", gs))
+    changes = a.changes or " ".join(ledger_changes(a.date))     # default: ledger entries effective with this session
+    (out / "post.txt").write_text(post_text(a.date, acc, top, words, a.day or len(_sessions(acc[0], a.date)), changes, gs))
     print(json.dumps({"out": str(out), "top": [t["setup"] for t in top]}))
 
 

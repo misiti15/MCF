@@ -206,7 +206,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
      status.json history, so it shows the last CLOSED session only (no intraday numbers). Setup Generator included,
      long-hold S6 excluded. Sections: trades per day by account (last 5 sessions), green-day and red-day streaks per setup
      (all accounts merged; a session the setup did not trade breaks the streak), and setups green / red on every day they
-     traded (no-trade days skipped). The owner adds more stats here over time. -->
+     traded (no-trade days skipped). Owner 2026-10-28: Graveyard setups only in green lists; trend lists ("7 of last 8");
+     changes that started with the session (ledger `effective`). The owner adds more stats here over time. -->
 <style>
 #eod-card .eg { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
 #eod-card .eb { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--page); min-width: 0; }
@@ -219,7 +220,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 <div class="card" id="eod-card" role="region" aria-label="End of day"><h2>End of day <span id="eod-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
   <div class="why">Quick stats from the last closed session (EOD reports). Paper results, after Alpaca paper fills.</div>
   <div class="eg" id="eod-grid"><div class="empty" style="padding:10px">Loading…</div></div>
-  <div class="note">Streaks: green / red = the setup's P/L that session, all accounts merged. Educational only — not financial advice.</div>
+  <div class="note">Streaks: green / red = the setup's P/L that session, all accounts merged. Graveyard setups appear only in the green lists. Educational only — not financial advice.</div>
 </div>
 <script>
 (() => {
@@ -230,9 +231,12 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const money = v => (v < 0 ? "-$" : "+$") + Math.abs(+v).toLocaleString(undefined, { maximumFractionDigits: 0 });
   const get = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
   async function run() {
-    const [st, sc, names] = await Promise.all([Promise.all(A.map(a => get(RAW + a[2] + "/status.json"))),
-      Promise.all(A.map(a => get(RAW + a[2] + "/reports/scorecard.json"))), get("../live/setup_names.json")]);
+    const [st, sc, names, asg, led] = await Promise.all([Promise.all(A.map(a => get(RAW + a[2] + "/status.json"))),
+      Promise.all(A.map(a => get(RAW + a[2] + "/reports/scorecard.json"))), get("../live/setup_names.json"), get("../live/assignments.json"),
+      fetch(RAW + "claude/intraday-trading-system-witis4/research/ledger.jsonl?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").catch(() => "")]);
     const nm = id => ((names || {})[id] || {}).name || id;
+    // owner 2026-10-28: Graveyard setups never show in red / downward lists; they show in green lists only (green streaks at 3+)
+    const gy = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length > 0 && a.every(x => x === "graveyard"); };
     // closed sessions = dates the EOD scorecards cover (today's intraday numbers stay out until the report lands)
     const daily = {};   // setup -> date -> [trades, pnl]
     let lastClosed = "";
@@ -258,11 +262,32 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
         if (r2 >= 3 && missed) traded.push({ s, sign, run: r2, pnl: p2, missed });
       }
     });
-    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · ${money(x.pnl)}${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
-    const block = (title, list, sign) => { const l = list.filter(x => x.sign === sign).sort((a, b) => b.run - a.run || Math.abs(b.pnl) - Math.abs(a.pnl));
+    // trend (owner 2026-10-28: "7 of last 8", "11 of last 13"): over the setup's last N sessions traded (N >= 5), the window
+    // whose green (or red) count is least likely by chance, z = (k - N/2) / sqrt(N/4); listed at z >= 1.5 (e.g. 5 of 5, 6 of 7, 7 of 9)
+    const trend = [];
+    Object.entries(daily).forEach(([s, m]) => {
+      const td = sess.filter(d => m[d] && m[d][0]);
+      for (const sign of [1, -1]) {
+        let best = null;
+        for (let n = 5; n <= td.length; n++) { const w = td.slice(-n), k = w.filter(d => Math.sign(m[d][1]) === sign).length, z = (k - n / 2) / Math.sqrt(n / 4);
+          if (!best || z > best.z || (z === best.z && n > best.n)) best = { k, n, z, pnl: w.reduce((a, d) => a + m[d][1], 0) }; }
+        if (best && best.z >= 1.5) trend.push({ s, sign, ...best });
+      }
+    });
+    const keep = x => x.sign > 0 || !gy(x.s);
+    const live = id => ((((asg || {}).setups || {})[id] || {}).accounts || []).length > 0;   // trend lists: setups running in some account
+    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""}${gy(x.s) ? " · Graveyard" : ""} · ${money(x.pnl)}${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
+    const block = (title, list, sign) => { const l = list.filter(x => x.sign === sign && keep(x)).sort((a, b) => b.run - a.run || Math.abs(b.pnl) - Math.abs(a.pnl));
       return `<div class="eb"><h3>${title} (${l.length})</h3>${l.length ? l.slice(0, 12).map(line).join("") + (l.length > 12 ? `<div class="sid">+${l.length - 12} more</div>` : "") : `<div class="sid">None at 3+ in a row.</div>`}</div>`; };
-    q("#eod-grid").innerHTML = `<div class="eb"><h3>Trades per day by account</h3>${t}</div>` +
+    const tline = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.k} of last ${x.n}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""}${gy(x.s) ? " · Graveyard" : ""} · ${money(x.pnl)}</div>`;
+    const tblock = (title, sign) => { const l = trend.filter(x => x.sign === sign && keep(x) && live(x.s)).sort((a, b) => b.z - a.z || b.n - a.n);
+      return `<div class="eb"><h3>${title} (${l.length})</h3>${l.length ? l.slice(0, 12).map(tline).join("") + (l.length > 12 ? `<div class="sid">+${l.length - 12} more</div>` : "") : `<div class="sid">None.</div>`}</div>`; };
+    // changes that started with this session (research/ledger.jsonl `effective` = the last closed session), owner 2026-10-28
+    const chg = String(led || "").split("\n").map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(x => x && x.effective === lastClosed);
+    const cblock = chg.length ? `<div class="eb"><h3>Changes that started this session (${chg.length})</h3>${chg.map(x => `<div class="sl">${e(x.plain || x.title)}</div>`).join("")}</div>` : "";
+    q("#eod-grid").innerHTML = `<div class="eb"><h3>Trades per day by account</h3>${t}</div>` + cblock +
       block("Green-day streaks (sessions in a row)", consec, 1) + block("Red-day streaks (sessions in a row)", consec, -1) +
+      tblock("Trending up (green sessions of the last N traded)", 1) + tblock("Trending down (red sessions of the last N traded)", -1) +
       block("Green every day traded (skipped days)", traded, 1) + block("Red every day traded (skipped days)", traded, -1);
   }
   run();
