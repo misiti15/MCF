@@ -1,0 +1,67 @@
+skipped signals 901, replayed 901
+                                         size   mean     sum
+acct reason                                                 
+gen  no quote (ConnectionError)             1  0.986   0.986
+     not shortable/ETB                      8 -0.125  -1.004
+     spread #bps > max                     29  0.305   8.833
+     spread is #% of stop distance          6 -0.041  -0.248
+gy   already in symbol                      1  1.214   1.214
+     crosscheck: quote #s old > #s          1 -0.168  -0.168
+     lot cap                                6 -0.235  -1.412
+     max positions for this setup           9 -0.015  -0.137
+     not shortable/ETB                     43 -0.340 -14.631
+     opposite side held                    11  0.729   8.014
+     setup daily loss limit               255  0.138  35.202
+     spread #bps > max                     66 -0.197 -12.985
+     spread is #% of stop distance         52 -0.176  -9.158
+     twin held                             13  0.072   0.935
+p    not shortable/ETB                      3  1.000   3.000
+     spread #bps > max                      3  0.022   0.067
+     spread is #% of stop distance          3  0.333   1.000
+t1   lot cap                                9 -0.851  -7.659
+     not shortable/ETB                    126 -0.309 -38.958
+     opposite side held                    12  0.255   3.058
+     price below minimum                    1  0.378   0.378
+     size < # share after liquidity cap     3  0.167   0.500
+     spread #bps > max                     48 -0.070  -3.350
+     spread is #% of stop distance         24  0.022   0.530
+     twin held                              3 -0.565  -1.695
+t2   lot cap                                2 -1.030  -2.060
+     not shortable/ETB                     34 -0.239  -8.129
+     opposite side held                     8  0.227   1.817
+     size < # share after liquidity cap     6  0.477   2.863
+     spread #bps > max                     57 -0.064  -3.660
+     spread is #% of stop distance         39 -0.142  -5.527
+     twin held                             19 -0.900 -17.095
+
+== by account x setup, reasons 'max positions' / 'daily loss limit' / 'lot cap' (sum R)
+                                                                       size  mean    sum
+acct reason                       setup                                                 
+t2   twin held                    NS3-failed-vwap-reclaim-short-FD       17 -1.04 -17.70
+gy   setup daily loss limit       RW2-exhaustion-noon-adv150-short-FD     7 -0.81  -5.69
+                                  heat_fade_short                         8 -0.71  -5.68
+                                  heat_fade_short-FD                     15 -0.34  -5.07
+     twin held                    heat_fade_short-FD                      7 -0.72  -5.07
+t1   lot cap                      RW4-ns3-adv150-short-FD                 4 -1.04  -4.17
+                                  ST6-volspikeup-short-mid-t1s1-FD        3 -1.02  -3.06
+gy   lot cap                      CWT14-failbrk-orl-p05-long              4 -0.62  -2.50
+t2   lot cap                      NS3V1-am-widestop-short                 2 -1.03  -2.06
+t1   twin held                    exhaustion_short-FD                     3 -0.56  -1.69
+     lot cap                      ST3-rsi5up-short-pm-t1s1-FD             1 -1.06  -1.06
+gy   max positions for this setup CWT14-failbrk-pdh-p05-lowvol-short      1 -1.00  -1.00
+     lot cap                      CWT14-failbrk-orl-p10-long              1  0.50   0.50
+                                  LIQ-orl-sweep-open15-s25-long           1  0.59   0.59
+t2   twin held                    MF5-flowsell-vwapup-rsi5hi              2  0.30   0.60
+t1   lot cap                      L3-gap-slope-fromopen-FD                1  0.63   0.63
+gy   max positions for this setup CWT14-failbrk-pdh-p10-short             8  0.11   0.86
+     setup daily loss limit       MF1-945-flowsell-vwapup-FD              1  1.97   1.97
+     twin held                    NS2-sma50break-overbought-short         2  1.00   2.00
+                                  heat_fade_long-FD                       2  1.00   2.00
+                                  heat_fade_long                          2  1.00   2.00
+     setup daily loss limit       CWT14-failbrk-pdh-p10-short            23  0.10   2.22
+                                  CWT14-failbrk-pdh-p10-lowvol-short     17  0.16   2.65
+                                  CWT14-failbrk-pdh-p05-lowvol-short     33  0.08   2.68
+                                  CWT14-failbrk-orl-p05-lowvol-long      42  0.27  11.45
+                                  CWT14-failbrk-orl-p05-long            109  0.28  30.67
+
+Educational only - not financial advice.
