@@ -236,6 +236,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
       fetch(RAW + "claude/intraday-trading-system-witis4/research/ledger.jsonl?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").catch(() => "")]);
     const nm = id => ((names || {})[id] || {}).name || id;
     // owner 2026-10-28: Graveyard setups never show in red / downward lists; they show in green lists only (green streaks at 3+)
+    // owner 2026-10-29: every streak / trend line names the account the setup is in now (assignments.json, today's view)
+    const ACC = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Generator", graveyard: "Graveyard" };
+    const where = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length ? a.map(x => ACC[x] || x).join(" + ") : "not running"; };
     const gy = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length > 0 && a.every(x => x === "graveyard"); };
     // closed sessions = dates the EOD scorecards cover (today's intraday numbers stay out until the report lands)
     const daily = {};   // setup -> date -> [trades, pnl]
@@ -276,10 +279,10 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     });
     const keep = x => x.sign > 0 || !gy(x.s);
     const live = id => ((((asg || {}).setups || {})[id] || {}).accounts || []).length > 0;   // trend lists: setups running in some account
-    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""}${gy(x.s) ? " · Graveyard" : ""} · ${money(x.pnl)}${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
+    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · ${money(x.pnl)}${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
     const block = (title, list, sign) => { const l = list.filter(x => x.sign === sign && keep(x)).sort((a, b) => b.run - a.run || Math.abs(b.pnl) - Math.abs(a.pnl));
       return `<div class="eb"><h3>${title} (${l.length})</h3>${l.length ? l.slice(0, 12).map(line).join("") + (l.length > 12 ? `<div class="sid">+${l.length - 12} more</div>` : "") : `<div class="sid">None at 3+ in a row.</div>`}</div>`; };
-    const tline = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.k} of last ${x.n}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""}${gy(x.s) ? " · Graveyard" : ""} · ${money(x.pnl)}</div>`;
+    const tline = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.k} of last ${x.n}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · ${money(x.pnl)}</div>`;
     const tblock = (title, sign) => { const l = trend.filter(x => x.sign === sign && keep(x) && live(x.s)).sort((a, b) => b.z - a.z || b.n - a.n);
       return `<div class="eb"><h3>${title} (${l.length})</h3>${l.length ? l.slice(0, 12).map(tline).join("") + (l.length > 12 ? `<div class="sid">+${l.length - 12} more</div>` : "") : `<div class="sid">None.</div>`}</div>`; };
     // changes that started with this session (research/ledger.jsonl `effective` = the last closed session), owner 2026-10-28

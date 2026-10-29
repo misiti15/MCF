@@ -1,43 +1,39 @@
 **Day 4 in the books!**
 
-Primary closed green for the 3rd session in a row, so milestone M1 is reached for the first time.
+First post on this sub!
+
+Primary closed green for the 3rd day in a row, so milestone M1 is hit for the first time.
 
 **Changes before today:**
 
-- **Demoted** 3 setups from **Primary** to **Testing 2** (owner's call): Failed Prior-Day-Low Break Long (0.1 ATR, low volume), Afternoon VWAP Reclaim Fade (window version), Early Sellers, Mid-High RSI (window version)
-- Promoted = a setup moves up a level after earning it. Demoted = it moves down a level and keeps proving itself on paper there.
-- Primary position size raised to about $4,000 (up to 77 open at once)
+- **Demoted** 3 setups from **Primary** to **Testing 2** (AI suggestion, my call): Failed Prior-Day-Low Break Long, Afternoon VWAP Reclaim Fade, Early Sellers Mid-High RSI
+- Position size in **Primary** bumped to about $4,000 (up to 77 open at once) since it runs fewer setups now. Risk per trade is still 0.25% of the account.
 
-**Today:** **Primary** +$246.76 · End-of-day balance $95,963.22 · Since Day 1 (10/23): +$305.36
+**Today:** **Primary** +$246.76 · Since Day 1 (10/23): **+$305.36**
 **Milestones:** M1 (3 green days in a row) 3/3 · M2 (8 of last 10 green) 3/4
-**Best setup today:** Morning Failed-Breakout Buy (wild movers, SPY red) (+$341.40)
+**Best setup today:** Morning Failed-Breakout Buy (wild movers, SPY red) +$341.40
 
-**Quick answers to common questions:**
+**Quick answers:**
 
-- Claude (Opus 5.5) - Python
-- Alpaca API, paper trading, SIP market data (all US exchanges).
-- US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
-- Setups built by basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
-- Setup Generator - A bot that invents 10 new setups a night (at least 5 long) and trades them on its own paper account. New concept: setups built randomly from random indicators. Today is the last day of new setups for now: trade counts can't keep up, so the ones we have get tested first.
-- Setup Life Cycle - Idea or generator -> 2-yr backtest (costs in) -> test through replay sessions (20+ of them) -> Testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
-- Avg R - Average result per trade in units of the risk taken, after costs, fees and slippage (factored in already).
-- Break-even win rate - Win rate a setup needs just to not lose money.
-- Avg R w/o best day - Same, with its single best session removed - spots records carried by one big day.
-- Accounts were meant to start at $100k; they could not be reset during earlier testing without conflicts, so some accounts started in a deficit.
+- Claude (Opus 5.5) + Python, Alpaca paper trading, SIP data.
+- US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing overnight.
+- Setups use basic indicators: RSI, VWAP, volume, gaps, opening range, prior-day levels, ATR.
+- Life cycle: idea -> 2-yr backtest (costs in) -> replays -> Testing (paper) -> Primary (paper) -> real money after milestones. Losers go to the Graveyard, never deleted.
+- Setup Generator: invented 10 setups a night. Paused after today so the ones we have get tested first.
+- Promoted = moves up a level after earning it. Demoted = moves down and keeps proving itself.
+- Avg R = average result per trade vs. the risk taken, after costs and slippage.
 
-**Things I am still wanting:**
+**Still wanting:**
 
-- Better system for more live setups. Reps and exposure to the market make the data wheels churn faster. Love the ideas if you have them!
-- Quality setup ideas - always looking to add! Especially LONGs, as you can see!
+- More live reps for setups. Exposure is what makes the data useful.
+- Quality setup ideas, especially LONGs!
 
 **Quick thoughts:**
 
-- Slowly realizing that removing bad setups from **Primary** is probably 2x better than adding potentially good setups. Maybe we should all not be so eager to think our system/setup works?
-- Patience
-- What I'm not posting is all of the operational decisions and testing that has to be worked through on the backend to mitigate things like duplicate orders from setups if signals re-trigger, setup limits per ticker, stopping a setup after a certain R, etc. It's boring stuff, but it makes a big difference and takes a lot of time, tokens (usage), and sessions of reps.
+- Three greens in a row can be luck. Calm down! But it's built over months, trades on its own with 100+ setups, and that's after costs, fees and slippage, so I'm a little excited.
+- Patience. Marathon, not a sprint.
+- The boring backend work (duplicate orders, per-ticker limits, stopping a setup after a set R) takes the most time and makes the biggest difference.
 
-As always, thanks so much for the support and input!
-
-Fun stuff!
+Thanks for the support and input. Fun stuff!
 
 Educational only - not financial advice.

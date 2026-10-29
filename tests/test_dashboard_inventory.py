@@ -208,3 +208,8 @@ def test_eod_card_graveyard_green_only_and_trend_lists():
     assert "const keep = x => x.sign > 0 || !gy(x.s);" in html
     assert "Trending up (green sessions of the last N traded)" in html and "Trending down (red sessions of the last N traded)" in html
     assert "Changes that started this session" in html and "research/ledger.jsonl" in html
+
+
+def test_eod_streak_lines_name_the_current_account():
+    """Owner 2026-10-29: each streak / trend line shows the account the setup is in now."""
+    assert "const where = id =>" in HTML and HTML.count("where(x.s)") >= 2
