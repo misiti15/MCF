@@ -1,0 +1,15 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: #1 was demoted from Primary on 10-22 and is back proving itself in Testing 1 (38 trades today); #2 failed its locked Apr-Jun holdout (-0.02R per trade) and has run on probation in Testing since.",
+ "setups": [
+  {"setup": "L3-gap-slope-fromopen-FD",
+   "title": "Gap-Down Recovery Fade (all day)",
+   "lines": [["When", "9:50 AM–3:00 PM"], ["Market", "Any"],
+             ["Stock", "Gapped down 2.66% or more at the open (no volume floor)"],
+             ["Trigger", "Has rallied more than 3.46% from its open and its 20-bar (five-minute) average is sloping up more than 0.37%; can re-enter after a 1-bar cooldown"],
+             ["Action", "Short the rally"], ["Exit", "Target 1 unit, stop 1 unit"]]},
+  {"setup": "exhaustion_short-FD",
+   "title": "Blow-off Short (all day)",
+   "lines": [["When", "9:50 AM–3:00 PM (in practice from about 11:10, it needs 100 minutes of today's bars)"], ["Market", "Any"],
+             ["Stock", "≥ $95M traded a day"],
+             ["Trigger", "At a 100-minute high with RSI(5) above 90, more than 1% above its 20-bar (five-minute) average, and RSI(14) more than 5 below its 20-bar peak (bearish divergence)"],
+             ["Action", "Short the exhaustion"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}
