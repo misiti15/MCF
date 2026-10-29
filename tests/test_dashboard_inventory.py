@@ -213,3 +213,8 @@ def test_eod_card_graveyard_green_only_and_trend_lists():
 def test_eod_streak_lines_name_the_current_account():
     """Owner 2026-10-29: each streak / trend line shows the account the setup is in now."""
     assert "const where = id =>" in HTML and HTML.count("where(x.s)") >= 2
+
+
+def test_setup_panel_has_last_10_sessions():
+    """Owner 2026-10-29: the setup panel shows the last 10 traded sessions (bars + daily table)."""
+    assert 'id="sd-recent"' in HTML and "async function recent(code, s)" in HTML
