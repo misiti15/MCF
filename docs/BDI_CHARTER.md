@@ -2,6 +2,33 @@
 
 *Educational only — not financial advice.*
 
+## North star (owner, 2026-10-29) — read this first
+**The goal is a profitable, sustaining, autonomous intraday trading system.** The moves are there: every day the 3,000+
+names in the universe make large moves, long and short, and large moves should have indicators pointing to them
+beforehand. MCF's core job is to **find the best ways to identify those moves before they happen, in high numbers**,
+and turn that into setups — so that over time we get good at seeing which way movement goes. Everything else
+(planning, tuning, rules, dashboards) serves this; when in doubt, return to it.
+
+- **Move Hunt (daily, BDI step 0a):** after each close, catalogue the day's biggest moves in the universe (both sides;
+  e.g. the top movers by move from a decision point in ATR units within 30-90 minutes), and for each ask: what was
+  known at the decision point (only data available then), which live setups caught it, which missed it and why
+  (no setup / filter blocked / skip reason / not in universe). Keep a running move library
+  (research/bdi/moves/moves.csv) and test recurring precursors as setups (precision vs the base rate of such moves,
+  costs in, the usual bars). Track a daily **capture rate**: share of the day's big moves at least one live setup traded
+  in the right direction, and the R it captured.
+- **Every day is a winning day in some way:** a profitable session, or a measurable step — a new precursor found, a
+  bug fixed, a loser identified, the capture rate up. Every BDI report names that day's win.
+
+- **Ask "why" on declines, then keep the opportunity open (owner 2026-10-29).** A red day, a losing trade cluster or a
+  setup declining over a few sessions triggers the question: why did it lose, and what do we change *going forward*
+  without closing the setup's opportunity. Preferred fixes, in order: risk sharing / sizing, execution (entries, costs),
+  exits and trade management — and only then filters. **Filter creep is a failure mode:** a good setup must not end
+  up used for 5% of its potential (narrow windows, narrow conditions, short holds). Any new filter must show it keeps
+  at least 80% of the setup's trades and at least 90% of its top-decile winners on two years, or it is not proposed;
+  every setup's "opportunity retained" (trades and big winners kept vs its unfiltered parent) is tracked.
+- **Simplicity.** Fewer rules, fewer metrics, fewer reports. Decide on: avg R after costs, avg R without the best
+  day, trades, and opportunity retained. Everything else lives in the drill-downs.
+
 ## Purpose (owner, 2026-10-10)
 MCF's purpose is to find edge and to be an efficient autonomous system in the market. After ~1.3M intraday
 configurations showed no stock-specific edge after costs (research/swarm1010), research moves to **longer holding

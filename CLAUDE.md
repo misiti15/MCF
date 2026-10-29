@@ -1,5 +1,7 @@
 # MCF — notes for Claude sessions
 
+- **North star (owner 2026-10-29):** build a profitable, sustaining, autonomous intraday trading system. The moves are there in the 3,000+ names, long and short; the core job is finding the best ways to identify those moves beforehand, in high numbers, and turning that into setups. Everything else serves this. See docs/BDI_CHARTER.md (Move Hunt, capture rate, "every day is a winning day in some way").
+
 - **Read `MARCOFLOW_CONTEXT.md` first** — what the predecessor system (MarcoFlow) learned, what failed, data rules, and the owner's standing rules.
 - Then `README.md` (architecture), `docs/RESEARCH.md` (setup evidence), `docs/ROADMAP.md` (phases).
 - MarcoFlow history DB: `python scripts/import_marcoflow.py` rebuilds `data/marcoflow.sqlite` from `data/marcoflow_export/Folder2_Data.zip` (not in git — too large).

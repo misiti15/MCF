@@ -1,0 +1,21 @@
+acct,setup,tier,sessions,trades,per_sess,signals,symdays,symdays_per_sess,skip_reasons
+testing,LIQ-pdl-sweep-open15-vwap-long,low,12,1,0.08,1,1,0.08,
+testing,ST3-rsi5up-short-pm-t1s1-FD,low,13,2,0.15,16,16,1.23,opposite side held:4; split-tape short gate:4; not shortable/ETB:3; lot cap:2; spread #bps > max:1
+testing,ST5-pdbrkup-short-mid-t05s1-FD,low,13,2,0.15,14,7,0.54,"split-tape short gate:6; not shortable/ETB:4; {""base_price"":""#"",""code"":#,""message"":""ta:1; spread #bps > max:1"
+testing,ST6-volspikeup-short-mid-t1s1-FD,low,13,6,0.46,23,16,1.23,split-tape short gate:6; not shortable/ETB:4; lot cap:4; spread #bps > max:3
+testing,ST8-volspikedn-long-pm-t1s1-FD,low,13,8,0.62,10,10,0.77,opposite side held:1; spread #bps > max:1
+testing,ST4-emadn-long-am-t1s05-FD,low,13,13,1.0,22,22,1.69,opposite side held:4; already in symbol:2; spread is #% of stop distance:2; spread #bps > max:1
+testing,NS4-pm-vwap-reclaim-oversold-short-FD,low,13,19,1.46,36,36,2.77,not shortable/ETB:10; lot cap:3; spread #bps > max:3; spread is #% of stop distance:1
+testing,intraday_momentum,low,13,19,1.46,20,20,1.54,daily loss limit:1
+testing2,CWT04-backside-lh-a25-short,dormant,13,0,0.0,0,0,0.0,
+testing2,CWT04-backside-vwaptest-a25-short,dormant,13,0,0.0,0,0,0.0,
+testing2,CWT04-backside-lh-a15-short,low,13,1,0.08,4,4,0.31,halted:1; spread #bps > max:1; spread is #% of stop distance:1
+testing2,CWT05-flush-m075-v5-long,low,13,3,0.23,6,6,0.46,daily loss limit:1; halted:1; spread is #% of stop distance:1
+testing2,CWT05-flush-m05-v5-long,low,13,4,0.31,9,9,0.69,halted:2; spread is #% of stop distance:2; already in symbol:1
+testing2,CWT09-gapdn-vwaploss-g10-short,low,13,4,0.31,44,44,3.38,not shortable/ETB:35; spread #bps > max:3; halted:1; price below minimum:1
+testing2,CWT04-backside-vwaptest-a15-short,low,13,6,0.46,11,11,0.85,spread #bps > max:1; halted:1; not shortable/ETB:1; opposite side held:1; spread is #% of stop distance:1
+testing2,CWT13-vwapstretch-z075-long,low,13,9,0.69,40,40,3.08,halted:28; spread is #% of stop distance:2; spread #bps > max:1
+testing2,CWT05-flush-m075-v3-long,low,13,10,0.77,15,15,1.15,"halted:3; {""base_price"":""#"",""code"":#,""message"":""ta:1; spread is #% of stop distance:1"
+testing2,CWT09-gapdn-bounce-g10-lowerhalf-short,low,13,11,0.85,70,70,5.38,"not shortable/ETB:53; spread #bps > max:2; {""base_price"":""#"",""code"":#,""message"":""st:1; spread is #% of stop distance:1; size < # share after liquidity cap:1; price below minimum:1"
+testing2,CWT12-flag-s1-long,low,13,13,1.0,17,17,1.31,"halted:2; {""base_price"":""#"",""code"":#,""message"":""st:1; spread #bps > max:1"
+testing2,CWT13-vwapstretch-z075-short,low,13,14,1.08,27,27,2.08,not shortable/ETB:8; halted:4; spread #bps > max:1

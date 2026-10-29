@@ -18,6 +18,7 @@ account:
   max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
 live:
+  max_stop_cost_r: 0.15   # owner 2026-10-29 CF: forward test of the p3_1029 A3 cost filter (Testing only; Primary/Gen/Graveyard off)
   # 2026-10-21 reallocation moved two live-scale-out setups here (CWT14-failbrk-pdh-p05-lowvol-short,
   # CWT14-failbrk-pdl-p05-long); same cap as Testing 2 (owner SO1 2026-10-19: at most 2 scale-outs per day).
   scale_out_max_per_day: 2
