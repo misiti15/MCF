@@ -2,7 +2,7 @@
      **bold** only where shown; a blank line between sections. The 16:15 ET routine fills the {…} parts; the owner
      edits before posting. "Things I am still wanting" / "Quick thoughts" are the owner's own words: carry the last
      post's lines forward unchanged unless the owner gives new ones.
-     Owner 2026-10-28: balance / running totals for Primary only (Testing, Generator stay in the pictures).
+     Owner 2026-10-28: no "Best setup today" line; running total in bold; balance / running totals for Primary only (Testing, Generator stay in the pictures).
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**
@@ -13,13 +13,11 @@
 
 - **Promoted** {n} setup(s) to **Primary** ({whose call}): {display names}
 - **Demoted** {n} setup(s) from **Primary** to **{Testing / Graveyard}** ({whose call}): {display names}
-- Promoted = a setup moves up a level after earning it. Demoted = it moves down a level and keeps proving itself on paper there.
 - {any rule change that started with today's session, in plain words (research/ledger.jsonl `effective` = today; e.g. 10/29: Primary per-setup -2R daily stop)}
 {… one line per move; "No changes before today." if none}
 
-**Today:** **Primary** {P/L} · End-of-day balance {Primary equity} · Since Day 1 (10/23): {Primary total}
+**Today:** **Primary** {P/L} · End-of-day balance {Primary equity} · Running total since Day 1 (10/23): **{Primary total}**
 **Milestones:** M1 (3 green days in a row) {x}/3 · M2 (8 of last 10 green) {g}/{n}
-**Best setup today:** {display name} ({P/L})
 
 **Quick answers to common questions:**
 
@@ -27,8 +25,9 @@
 - Alpaca API, paper trading, SIP market data (all US exchanges).
 - US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
 - Setups built by basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
-- Setup Generator - A bot that invents 10 new setups a night (at least 5 long) and trades them on its own paper account. New concept: setups built randomly from random indicators.
+- Setup Generator - A bot that invented 10 new setups a night (at least 5 long) and trades them on its own paper account. New concept: setups built randomly from random indicators. Paused after 10/28 so the existing ones get tested first.
 - Setup Life Cycle - Idea or generator -> 2-yr backtest (costs in) -> test through replay sessions (20+ of them) -> Testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Promoted / Demoted - Promoted = a setup moves up a level after earning it. Demoted = it moves down a level and keeps proving itself on paper there.
 - Avg R - Average result per trade in units of the risk taken, after costs, fees and slippage (factored in already).
 - Break-even win rate - Win rate a setup needs just to not lose money.
 - Avg R w/o best day - Same, with its single best session removed - spots records carried by one big day.
