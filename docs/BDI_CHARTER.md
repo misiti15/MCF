@@ -19,6 +19,16 @@ and turn that into setups — so that over time we get good at seeing which way 
 - **Every day is a winning day in some way:** a profitable session, or a measurable step — a new precursor found, a
   bug fixed, a loser identified, the capture rate up. Every BDI report names that day's win.
 
+- **Ask "why" on declines, then keep the opportunity open (owner 2026-10-29).** A red day, a losing trade cluster or a
+  setup declining over a few sessions triggers the question: why did it lose, and what do we change *going forward*
+  without closing the setup's opportunity. Preferred fixes, in order: risk sharing / sizing, execution (entries, costs),
+  exits and trade management — and only then filters. **Filter creep is a failure mode:** a good setup must not end
+  up used for 5% of its potential (narrow windows, narrow conditions, short holds). Any new filter must show it keeps
+  at least 80% of the setup's trades and at least 90% of its top-decile winners on two years, or it is not proposed;
+  every setup's "opportunity retained" (trades and big winners kept vs its unfiltered parent) is tracked.
+- **Simplicity.** Fewer rules, fewer metrics, fewer reports. Decide on: avg R after costs, avg R without the best
+  day, trades, and opportunity retained. Everything else lives in the drill-downs.
+
 ## Purpose (owner, 2026-10-10)
 MCF's purpose is to find edge and to be an efficient autonomous system in the market. After ~1.3M intraday
 configurations showed no stock-specific edge after costs (research/swarm1010), research moves to **longer holding
