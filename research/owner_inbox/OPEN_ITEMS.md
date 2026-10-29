@@ -49,6 +49,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 | REPS | Owner REPS yes (2026-10-28, research rule 21): replay audit vs live (>= 95% trade match, avg R +/-0.03, never optimistic), then dormant / low (<1.5 trades per session after 10+ sessions) Testing + Gen setups through the replay filter; Reps ETA on the dashboard | Claude | scheduled task 10-29 17:45 ET | 2026-10-29 | scheduled |
 | LB-R | Owner idea (10-28): drop $ P/L from the setup leaderboard / setup tables (keep R, add total R); account-level $ stays. Awaiting "LB-R yes" / "LB-R all" | owner | nightly brief | when owner decides | waiting on owner |
 | GEN-PAUSE | Setup Generator: final run 2026-10-28 (owner), scheduled task off; existing GEN setups keep trading | Claude | — | — | done 2026-10-28 |
+| LAB-RATE-PARITY | Live signal rate is 0.00-0.50x the 2-yr backtest rate in all 18 low/dormant Testing setups checked (p2_1029); borrow skips most CWT09 shorts. Housekeeping: run each setup's signal code on 10-12..10-28 live bars vs the journal's signals; add a borrow model to backtests | Claude | — | before any low-tier verdict | queued |
 
 ## Closed
 
