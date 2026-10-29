@@ -1,0 +1,133 @@
+Primary run 1, 2026-10-15..2026-10-28 (10 sessions): 489 trades, 216 losers (pnl_adj < 0), losers' R -200.00, $ -3870.78; all trades R +11.91, $ -33.24
+losers with a 15:29 SIP mark (open at 15:30): 68 of 68
+
+-- exclusive type (order A, B, C, Other)
+        n       R      usd   avgR  share_of_loser_usd
+type                                                 
+A      49 -54.432  -964.36 -1.111               0.249
+B      99 -95.614 -2016.53 -0.966               0.521
+C       9  -1.614   -25.62 -0.179               0.007
+Other  59 -48.337  -864.27 -0.819               0.223
+
+-- tags (overlapping)
+A_slip    n  43  R  -49.22  $   -929.00
+A_spread  n  16  R  -17.11  $   -280.63
+A         n  49  R  -54.43  $   -964.36
+B_sym     n  74  R  -75.37  $  -1184.60
+B_sec     n 116  R -118.48  $  -2436.00
+B         n 131  R -132.32  $  -2694.42
+C         n  13  R   -2.33  $    -48.99
+
+-- stop exits (all trades): slip $/share beyond stop: n 158 median 0.0084 mean 0.0352 share > 2c 0.088 | extra R cost of slip beyond 2c (losers): 46.77 $
+
+-- by date (losers)
+             n                  usd                       
+type         A   B  C Other       A       B      C   Other
+date                                                      
+2026-10-15  12  24  0     2 -383.77 -741.51   0.00  -43.84
+2026-10-16   7   9  0     3  -76.39 -106.64   0.00  -51.05
+2026-10-19   3  12  0     4   -9.43 -165.34   0.00  -34.63
+2026-10-20   5  13  2    12  -53.57  -84.65  -7.15 -153.27
+2026-10-21   8  18  4     2 -156.35 -516.62 -17.22  -70.70
+2026-10-22   5  13  0    11  -97.24 -296.80   0.00 -204.53
+2026-10-23   1   5  1     7  -47.38  -39.52  -0.37 -138.33
+2026-10-26   2   3  0     6  -37.15  -47.15   0.00  -56.46
+2026-10-27   5   2  2    11  -78.28  -18.30  -0.88  -94.62
+2026-10-28   1   0  0     1  -24.80    0.00   0.00  -16.84
+
+-- by setup (losers)
+                                             n                   R                    
+type                                         A   B  C Other      A      B     C  Other
+strategy                                                                              
+CWT13-vwapstretch-z05-long                   1   3  0     2  -1.09  -3.27  0.00  -1.56
+CWT14-failbrk-pdl-p10-lowvol-long            5   4  1    16  -5.50  -4.68 -0.04 -15.89
+L3-gap-slope-fromopen-FD                     4   8  0     1  -4.81  -9.77  0.00  -0.10
+MF1-945-flowsell-vwapup                      6   5  0     1  -8.29  -5.35  0.00  -1.08
+MF2-open-rsimidhi-flowsell-FD                0   4  1     5   0.00  -4.47 -0.04  -4.74
+MF3-open-flowsell-rsi5hi                     1   7  0     0  -1.17  -8.22  0.00   0.00
+MF3-open-flowsell-rsi5hi-FD                  4  15  1     2  -4.72 -15.45 -0.34  -0.95
+MF4-h40-open-flowsell                        1   0  0     0  -1.17   0.00  0.00   0.00
+MF4-h40-open-flowsell-FD                     2   4  1     5  -2.62  -2.12 -0.03  -5.46
+MF5-flowsell-vwapup-rsi5hi                   0   3  0     1   0.00  -3.36  0.00  -1.10
+NS1-rsidip-rsi5pop-long                      1   0  0     0  -1.10   0.00  0.00   0.00
+NS2-sma50break-overbought-short             10  23  0     1 -10.93 -23.47  0.00  -1.01
+NS3-failed-vwap-reclaim-short-FD             4  14  4     5  -2.90  -8.11 -0.83  -2.19
+NS4-pm-vwap-reclaim-oversold-short           2   0  0     5  -2.22   0.00  0.00  -5.10
+NS5-sma50-flush-oversold-long                1   1  0     4  -0.06  -1.09  0.00  -3.55
+RW3-gapdn-rsi5pop-flowsell-short-FD          1   1  1     4  -1.13  -0.85 -0.34  -2.86
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   3   6  0     7  -3.54  -4.29  0.00  -2.77
+RW6G1-ns2-up3-vwap2sd-short                  2   1  0     0  -2.10  -1.11  0.00   0.00
+ST7-rsi50dn-long-pm-t1s1-FD                  1   0  0     0  -1.11   0.00  0.00   0.00
+
+-- type B clusters (losers, same day, sector/symbol, within 30 min)
+2026-10-15 IGV short 8 trades ['TEM', 'SHOP', 'BB', 'RBRK', 'RBRK', 'S', 'MDB', 'MDB'] ['NS2-sma50break-overbought-short', 'RW6G1-ns2-up3-vwap2sd-short'] -239.53$ -8.54R
+2026-10-15 SOXX short 7 trades ['ON', 'MU', 'GFS', 'ARM', 'NXT', 'BE', 'STM'] ['NS2-sma50break-overbought-short'] -180.80$ -6.75R
+2026-10-15 SPY short 3 trades ['BMNR', 'ASST', 'PURR'] ['NS2-sma50break-overbought-short'] -98.93$ -3.25R
+2026-10-15 XLK short 9 trades ['RGTI', 'QBTS', 'CORZ', 'ARKK', 'ETHA', 'HOOD', 'ASTS', 'WULF', 'PL'] ['NS2-sma50break-overbought-short'] -282.03$ -9.71R
+2026-10-15 XME short 8 trades ['RDW', 'LUNR', 'LUNR', 'SMR', 'ONDS', 'LEU', 'OKLO', 'FCEL'] ['NS2-sma50break-overbought-short', 'RW6G1-ns2-up3-vwap2sd-short'] -296.99$ -8.16R
+2026-10-16 XHB long 2 trades ['OC', 'QXO'] ['NS1-rsidip-rsi5pop-long', 'NS5-sma50-flush-oversold-long'] -52.52$ -2.19R
+2026-10-16 XLE short 3 trades ['ENB', 'ENB', 'ENB'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi', 'MF3-open-flowsell-rsi5hi-FD'] -15.21$ -3.71R
+2026-10-16 XLP short 3 trades ['HRL', 'HRL', 'HRL'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi', 'MF3-open-flowsell-rsi5hi-FD'] -31.28$ -4.20R
+2026-10-16 XLRE short 3 trades ['CUBE', 'CUBE', 'CUBE'] ['MF3-open-flowsell-rsi5hi', 'MF3-open-flowsell-rsi5hi-FD', 'MF5-flowsell-vwapup-rsi5hi'] -32.11$ -3.59R
+2026-10-16 XLU short 2 trades ['CMS', 'CMS'] ['MF3-open-flowsell-rsi5hi-FD', 'MF5-flowsell-vwapup-rsi5hi'] -14.58$ -2.26R
+2026-10-16 XLV short 3 trades ['RPRX', 'RPRX', 'RPRX'] ['MF3-open-flowsell-rsi5hi', 'MF3-open-flowsell-rsi5hi-FD', 'MF4-h40-open-flowsell'] -37.33$ -3.50R
+2026-10-19 SOXX short 2 trades ['MCHP', 'MCHP'] ['MF3-open-flowsell-rsi5hi-FD', 'MF5-flowsell-vwapup-rsi5hi'] -33.60$ -2.10R
+2026-10-19 XLK short 12 trades ['DBMF', 'MGK', 'MGK', 'DBMF', 'DBMF', 'VOOG', 'VGT', 'VOOG', 'VGT', 'VGT', 'RGTI', 'RGTI'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi', 'MF3-open-flowsell-rsi5hi-FD'] -139.56$ -14.14R
+2026-10-20 ? short 5 trades ['ILF', 'ILF', 'OPCH', 'OPCH', 'OPCH'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi-FD', 'MF4-h40-open-flowsell-FD'] -31.91$ -3.95R
+2026-10-20 XLE short 2 trades ['SHEL', 'SHEL'] ['MF3-open-flowsell-rsi5hi-FD', 'MF4-h40-open-flowsell-FD'] -5.76$ -0.71R
+2026-10-20 XLF short 3 trades ['IVZ', 'TD', 'TD'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -28.70$ -3.38R
+2026-10-20 XLI short 4 trades ['EWC', 'TT', 'TT', 'EWC'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -42.04$ -4.70R
+2026-10-20 XLRE short 2 trades ['IYR', 'IYR'] ['MF1-945-flowsell-vwapup', 'MF3-open-flowsell-rsi5hi-FD'] -12.51$ -2.19R
+2026-10-21 ? short 2 trades ['TKNO', 'TKNO'] ['L3-gap-slope-fromopen-FD'] -118.83$ -2.52R
+2026-10-21 IGV short 5 trades ['FTNT', 'FTNT', 'FTNT', 'AKAM', 'AKAM'] ['L3-gap-slope-fromopen-FD', 'NS3-failed-vwap-reclaim-short-FD'] -85.91$ -4.13R
+2026-10-21 SOXX short 5 trades ['FPS', 'SKHY', 'SKHY', 'SKHY', 'AXTI'] ['NS3-failed-vwap-reclaim-short-FD'] -115.27$ -3.12R
+2026-10-21 XLK short 9 trades ['CLSK', 'HUT', 'RIOT', 'CIFR', 'NBIS', 'NBIS', 'CIFR', 'CIFR', 'CRWV'] ['NS3-failed-vwap-reclaim-short-FD'] -292.31$ -5.62R
+2026-10-21 XLY short 2 trades ['TCOM', 'BKNG'] ['MF2-open-rsimidhi-flowsell-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -18.82$ -2.29R
+2026-10-22 ? short 3 trades ['JBS', 'JBS', 'JBS'] ['L3-gap-slope-fromopen-FD'] -68.16$ -3.96R
+2026-10-22 IGV short 4 trades ['SNAP', 'SNAP', 'SNAP', 'DT'] ['L3-gap-slope-fromopen-FD', 'MF2-open-rsimidhi-flowsell-FD'] -105.97$ -4.77R
+2026-10-22 XBI short 3 trades ['ARKG', 'IBB', 'IBRX'] ['MF2-open-rsimidhi-flowsell-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -47.06$ -2.12R
+2026-10-22 XLY long 2 trades ['TSLG', 'TSLL'] ['CWT14-failbrk-pdl-p10-lowvol-long'] -68.75$ -2.45R
+2026-10-22 XRT short 2 trades ['GME', 'GME'] ['MF2-open-rsimidhi-flowsell-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -31.50$ -2.13R
+2026-10-23 ? short 5 trades ['BKH', 'BKH', 'BKH', 'SPLV', 'SPLV'] ['MF4-h40-open-flowsell-FD', 'RW3-gapdn-rsi5pop-flowsell-short-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD'] -39.52$ -3.42R
+2026-10-26 XLF long 2 trades ['FISV', 'FIS'] ['CWT13-vwapstretch-z05-long'] -27.15$ -2.16R
+2026-10-26 XRT long 2 trades ['M', 'BURL'] ['CWT13-vwapstretch-z05-long'] -39.52$ -2.19R
+2026-10-27 KBE long 2 trades ['XLF', 'RF'] ['CWT14-failbrk-pdl-p10-lowvol-long'] -18.30$ -2.24R
+2026-10-27 XLY long 2 trades ['FLUT', 'BKNG'] ['CWT14-failbrk-pdl-p10-lowvol-long'] -41.96$ -2.15R
+
+-- worst 15 losers
+           date symbol                          strategy  side                               nt exit_reason      R  pnl_adj  stop_slip  spread_bps  spread_frac sector   type
+375  2026-10-23   FCEL          MF4-h40-open-flowsell-FD    -1 2026-10-23 10:15:24.356593-04:00        stop -1.049   -80.50      0.001         9.2        0.023    XME  Other
+217  2026-10-21   CIFR  NS3-failed-vwap-reclaim-short-FD    -1 2026-10-21 11:10:40.644217-04:00        stop -1.088   -63.00      0.004        11.1        0.036    XLK      B
+203  2026-10-21   TKNO          L3-gap-slope-fromopen-FD    -1 2026-10-21 12:06:13.926201-04:00        stop -1.259   -59.50      0.015        18.5        0.074      ?      B
+202  2026-10-21   TKNO          L3-gap-slope-fromopen-FD    -1 2026-10-21 11:46:13.673280-04:00        stop -1.259   -59.33      0.015        18.4        0.074      ?      B
+207  2026-10-21   CLSK  NS3-failed-vwap-reclaim-short-FD    -1 2026-10-21 10:35:46.030160-04:00        stop -1.094   -51.06     -0.000        11.8        0.048    XLK      B
+209  2026-10-21    HUT  NS3-failed-vwap-reclaim-short-FD    -1 2026-10-21 10:50:58.447984-04:00        stop -1.084   -50.97      0.127        19.9        0.080    XLK      A
+210  2026-10-21   RIOT  NS3-failed-vwap-reclaim-short-FD    -1 2026-10-21 11:16:08.795331-04:00        stop -1.047   -49.95     -0.003         7.1        0.028    XLK      B
+211  2026-10-21   RIOT  NS3-failed-vwap-reclaim-short-FD    -1 2026-10-21 11:51:11.924779-04:00        stop -1.048   -48.60     -0.003         7.1        0.029    XLK  Other
+365  2026-10-23   FRVO           MF1-945-flowsell-vwapup    -1 2026-10-23 10:10:26.380406-04:00        stop -1.256   -47.38      0.021        24.9        0.126    SPY      A
+18   2026-10-15   PURR   NS2-sma50break-overbought-short    -1 2026-10-15 10:55:44.408527-04:00        stop -1.084   -46.46     -0.002        10.6        0.047    SPY      B
+27   2026-10-15   ASTS   NS2-sma50break-overbought-short    -1 2026-10-15 11:05:58.522337-04:00        stop -1.034   -46.43      0.014         4.7        0.020    XLK      B
+11   2026-10-15    SMR   NS2-sma50break-overbought-short    -1 2026-10-15 11:00:49.152945-04:00        stop -1.145   -45.92     -0.002        17.2        0.082    XME      B
+36   2026-10-15    ARM   NS2-sma50break-overbought-short    -1 2026-10-15 11:00:58.693780-04:00        stop -1.016   -45.92      0.069        20.2        0.085   SOXX      A
+8    2026-10-15   LUNR   NS2-sma50break-overbought-short    -1 2026-10-15 10:55:40.914345-04:00        stop -1.108   -45.24      0.005         9.1        0.043    XME      B
+7    2026-10-15   LUNR       RW6G1-ns2-up3-vwap2sd-short    -1 2026-10-15 10:55:39.745376-04:00        stop -1.108   -45.24      0.005         9.1        0.043    XME      B
+
+== funding gate: Primary last 10 sessions (live paper, after costs)
+              n      R      usd  usd_before
+date                                       
+2026-10-15   48 -29.12  -926.53     -861.83
+2026-10-16   36  -6.34   -14.41        7.17
+2026-10-19   37  -6.47   -63.92      -49.30
+2026-10-20   70  -3.67   -46.13      -29.61
+2026-10-21   46 -14.78  -626.57     -592.95
+2026-10-22  126  65.77  1369.10     1432.56
+2026-10-23   32  -2.05   -92.06      -80.80
+2026-10-26   22  -3.37    33.67       39.83
+2026-10-27   58   6.36    87.73       99.57
+2026-10-28   14   5.58   245.88      246.76
+green days: R 3/10, $ 4/10 | net $ -33.24, net R +11.91
+best day $ +1369.10 (2026-10-22): net $ <= 0, so share of net is undefined; 79% of gross green $
+best day R +65.77 (2026-10-22): 85% of gross green R, 552% of net R
+per trade: n 489, mean R +0.0244, sd 0.972; per day: mean R +1.191, sd 24.856, trades/day 48.9
+
+Educational only - not financial advice.

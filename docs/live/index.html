@@ -1740,6 +1740,24 @@ window.MCF = window.MCF || {};
       <text x="${P}" y="${H - 6}">${e(s[0].d)}</text><text x="${W - 4}" y="${H - 6}" text-anchor="end">${e(s[s.length - 1].d)} · cum ${f(c, 1)}R</text></svg>
       <div class="lg">Bars = R each session (hover for trades, P/L, account) · line = cumulative R · dashed = moved between accounts.</div>`;
   }
+  // owner 2026-10-29: the setup's last 10 traded sessions, day by day (bar per session + table: account, trades, win %, R, avg R, P/L)
+  async function recent(code, s) {
+    const last = s.slice(-10);
+    if (!last.length) return `<div class="empty" style="padding:10px">No live trades yet.</div>`;
+    const wins = {};
+    await Promise.all(last.flatMap(d => d.acc.map(k => M.daySummary(BR[k], d.d).then(by => { const v = by && by[code]; if (v) wins[d.d] = (wins[d.d] || 0) + (v.wins || 0); }).catch(() => {}))));
+    const W = 420, H = 120, P = 6, mx = Math.max(0.5, ...last.map(d => Math.abs(d.r))), bw = (W - 2 * P) / last.length - 6, y0 = H / 2;
+    const bars = last.map((d, i) => { const h = Math.abs(d.r) / mx * (H / 2 - 16), x = P + i * (bw + 6);
+      return `<rect x="${x.toFixed(1)}" y="${(d.r >= 0 ? y0 - h : y0).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1, h).toFixed(1)}" fill="${d.r >= 0 ? "var(--good)" : "var(--bad)"}" opacity=".7"><title>${e(d.d)}: ${d.n} trades, ${f(d.r)}R, ${money(d.p)}</title></rect>` +
+        `<text x="${(x + bw / 2).toFixed(1)}" y="${(d.r >= 0 ? y0 - h - 3 : y0 + h + 11).toFixed(1)}" text-anchor="middle">${f(d.r, 1)}</text>` +
+        `<text x="${(x + bw / 2).toFixed(1)}" y="${H - 2}" text-anchor="middle">${e(d.d.slice(5))}</text>`; }).join("");
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="R per session, last 10 traded sessions"><line x1="0" x2="${W}" y1="${y0}" y2="${y0}" stroke="var(--axis)"/>${bars}</svg>`;
+    const rows = last.slice().reverse().map(d => { const w = wins[d.d]; return `<tr><td class="l">${e(d.d.slice(5))}</td><td class="l" title="${e(d.acc.map(k => LBL[k]).join(" + "))}">${e(d.acc.map(k => ({ primary: "P", testing: "T1", testing2: "T2", gen: "Gen", graveyard: "GY" })[k] || k).join("+"))}</td><td>${d.n}</td>` +
+      `<td>${w != null && d.n ? pc(w / d.n) : "—"}</td><td class="${cls(d.r)}">${f(d.r, 2)}</td><td class="${cls(d.r)}">${d.n ? f(d.r / d.n, 2) : "—"}</td><td class="${cls(d.p)}">${money(d.p)}</td></tr>`; }).join("");
+    const tr = last.reduce((a, d) => a + d.r, 0), tn = last.reduce((a, d) => a + d.n, 0), g = last.filter(d => d.r > 0).length;
+    return svg + `<div class="tablewrap"><table><thead><tr><th class="l">Day</th><th class="l">Acct</th><th>Trd</th><th>Win</th><th>R</th><th>R/trd</th><th>P/L</th></tr></thead><tbody>${rows}</tbody></table></div>` +
+      `<div class="lg">${last.length} sessions: ${g} green in R · ${tn} trades · ${f(tr, 1)}R total · ${tn ? f(tr / tn, 2) : "—"}R per trade. Days it did not trade are skipped. Acct: P Primary · T1/T2 Testing · Gen Generator · GY Graveyard.</div>`;
+  }
   // the leaderboard's merged row when it has loaded, else the same merge from the scorecards' exact sums
   function merge(rs) {
     if (!rs.length) return null; if (rs.length === 1) return rs[0];
@@ -1773,6 +1791,7 @@ window.MCF = window.MCF || {};
       <div class="sect"><h4>Record — live · replay · backtest</h4><div class="tablewrap" id="sd-rec"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="sect"><h4>Market conditions — 2-year backtest</h4><div class="tablewrap" id="sd-reg"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="sect"><h4>Daily R since start</h4><div id="sd-spark"><div class="empty" style="padding:10px">Loading…</div></div></div>
+      <div class="sect"><h4>Last 10 sessions it traded</h4><div id="sd-recent"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="note">Paper results; few trades prove nothing. Educational only — not financial advice.</div>`;
     q("#sd-prev").onclick = () => step(-1); q("#sd-next").onclick = () => step(1); q("#sd-close").onclick = close;
     document.dispatchEvent(new CustomEvent("mcf:panel", { detail: { code, name: nameOf(code), accounts: a ? (a.accounts || []) : [] } }));
@@ -1813,6 +1832,9 @@ window.MCF = window.MCF || {};
     // a move stamped after the close takes effect the next session
     if (a && a.since) marks.push({ d: a.since.slice(0, 10), after: (a.since.slice(11, 13) || "00") >= "16", t: "→ " + (accs.join(" + ") || "off") });
     q("#sd-spark").innerHTML = spark(s, marks);
+    const rc = await recent(code, s);
+    if (my !== seq) return;
+    q("#sd-recent").innerHTML = rc;
   }
 })();
 </script>
