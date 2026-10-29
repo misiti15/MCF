@@ -293,5 +293,20 @@
   "link": "research/bdi/nightly1028/NOTES.md",
   "status": "answered",
   "answered": "2026-10-28: yes - moved to the Graveyard from 2026-10-29"
+ },
+ {
+  "code": "CF",
+  "title": "Cost filter forward test in Testing 1/2",
+  "what": "Testing 1 and Testing 2 skip entries whose round-trip cost if stopped out exceeds 0.15R; Primary untouched.",
+  "recommend": "Yes (Testing only)",
+  "numbers": [
+   "2-yr Primary-8: -0.070 -> -0.026R/trade",
+   "skips ~27% of trades, removed trades have 4x the costs",
+   "locked block -0.112 -> -0.053R"
+  ],
+  "why": "Cost avoidance on tight stops; forward test to see if the saving shows live. Review 2026-11-12.",
+  "link": "research/bdi/p3_1029/NOTES.md",
+  "status": "answered",
+  "answered": "2026-10-29: yes - Testing only, from 2026-10-30; review after 10 sessions"
  }
 ]

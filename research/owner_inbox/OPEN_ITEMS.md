@@ -50,6 +50,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 | LB-R | Owner idea (10-28): drop $ P/L from the setup leaderboard / setup tables (keep R, add total R); account-level $ stays. Awaiting "LB-R yes" / "LB-R all" | owner | nightly brief | when owner decides | waiting on owner |
 | GEN-PAUSE | Setup Generator: final run 2026-10-28 (owner), scheduled task off; existing GEN setups keep trading | Claude | — | — | done 2026-10-28 |
 | LAB-RATE-PARITY | Live signal rate is 0.00-0.50x the 2-yr backtest rate in all 18 low/dormant Testing setups checked (p2_1029); borrow skips most CWT09 shorts. Housekeeping: run each setup's signal code on 10-12..10-28 live bars vs the journal's signals; add a borrow model to backtests | Claude | — | before any low-tier verdict | queued |
+| CF-TEST | Cost filter forward test (owner CF yes 10-29): Testing 1/2 skip entries with stop-exit cost > 0.15R from 10-30. Review: kept vs skipped (what-if) avg R, trades lost, per setup; only then raise anything for the owner. Never Primary without the owner | Claude | nightly loop FYI | 2026-11-12 (10 sessions) | live from 10-30 |
 
 ## Closed
 

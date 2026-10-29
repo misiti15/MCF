@@ -1020,6 +1020,16 @@ class PaperRunner:
         risk_ps = abs(px - sig.stop)
         if risk_ps > 0 and spread / risk_ps > self.live.get("max_spread_risk_frac", 0.25):
             return False, f"spread is {spread / risk_ps:.0%} of stop distance", info
+        # owner 2026-10-29 CF (Testing 1/2 only, forward test of research/bdi/p3_1029 A3): skip an entry whose round-trip
+        # cost if it is stopped out (entry + exit slippage + the extra stop-exit slippage) exceeds live.max_stop_cost_r of R
+        lim = self.live.get("max_stop_cost_r")
+        if lim and risk_ps > 0:
+            c = self.cfg.get("costs", {})
+            one = float(c.get("slippage_per_share", 0.01)) + px * float(c.get("slippage_bps", 1.0)) / 1e4
+            cost_r = (2 * one + float(c.get("stop_slippage_per_share", 0.02))) / risk_ps
+            info["stop_cost_r"] = round(cost_r, 3)
+            if cost_r > float(lim):
+                return False, f"cost filter: stop-exit cost {cost_r:.2f}R > {float(lim):.2f}R", info
         vol = ctx.bars["volume"].tail(5).mean()
         info["cap_qty"] = int(self.live.get("max_participation", 0.10) * vol)
         return True, "ok", info
