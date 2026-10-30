@@ -53,3 +53,15 @@ units, target multiple, seed 20261030). Opportunity retained vs F1-A: trades kep
 (>= 80% / >= 90% to be proposable as a filter).
 
 Rework (rule 18) only after the 18 rows are scored, as new counted rows, declared in a dated amendment below before scoring.
+
+## Amendment 2026-10-30 (after the 18 rows failed, before any rework row was scored) — rule 18 rework, 6 new counted rows
+All 18 rows failed (results.csv). The parity check matched (-0.0677 / -0.0675). The failure pattern is the known regime
+split (longs lose on SPY down days, shorts on up days) and every row stays negative after costs. Rework rows, chosen
+from the gate family, not from new data looks; each is one condition added to the least-bad gate (G6, "active market
+yesterday"), both sides:
+| row | rule | sides |
+|---|---|---|
+| F2-RW1 | G6 + G8 (active market yesterday + clean one-way open) | L, S |
+| F2-RW2 | G6 + G1 (active market yesterday + active open, OR15 >= 0.30 ATR) | L, S |
+| F2-RW3 | G6 + cost floor: round-trip cost <= 5% of R | L, S |
+N becomes 2,000 + 108 + 6 = 2,114 (t_req recomputed; 3.52). No further rework is declared by F2.

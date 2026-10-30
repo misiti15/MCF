@@ -18,7 +18,7 @@ assert (d <= "2026-09-15").all()
 assert not ((d >= "2024-11-01") & (d <= "2025-02-28")).any() and not d.str[:7].isin(["2026-04", "2026-05", "2026-06", "2026-10"]).any()
 T["month"] = d.str[:7]; T["split"] = np.where(d <= "2025-12-31", "train", "valid")
 NSESS = T["date"].nunique()
-N_SWARM = int(os.environ.get("RDT_N_SWARM", 108))
+N_SWARM = int(os.environ.get("RDT_N_SWARM", 108 + 6))  # 108 DESIGN + 6 F2 rework rows (PLAN amendment)
 N = 2000 + N_SWARM
 BAR = 0.9 * max(1.5, math.sqrt(2 * math.log(N)))
 
@@ -104,14 +104,19 @@ def gate(X, side, g):
 
 
 def REWORK_GATES(X, sg):
-    return {}
+    g6 = np.asarray(X.g6 == 1)
+    return {"RW1": g6 & np.asarray(X.opp_before == 0), "RW2": g6 & np.asarray(X.orw >= 0.30),
+            "RW3": g6 & np.asarray(X.cost_rt_R <= 0.05)}
 
 
 GATES = {"G1": ("OR15 width >= 0.30 ATR", "Active Open"), "G2": ("OR15 width <= 0.55 ATR", "Unspent Range"),
          "G3": ("stock ER >= 0.40", "Trending Stock"), "G4": ("QQQ from open >= +0.20% / <= -0.20%", "Nasdaq With You"),
          "G5": ("SPY ER >= 0.40", "Trending Market"), "G6": ("SPY prior-day range >= 20-day median", "Active Market Yesterday"),
          "G7": ("volumeRatio >= 1.0", "High Relative Volume"), "G8": ("no prior close beyond the other OR side", "Clean One-Way Open"),
-         "G9": ("G3 + G4", "Trending Stock + Nasdaq With You")}
+         "G9": ("G3 + G4", "Trending Stock + Nasdaq With You"),
+         "RW1": ("rework: G6 + G8", "Active Market Yesterday + Clean One-Way Open"),
+         "RW2": ("rework: G6 + G1", "Active Market Yesterday + Active Open"),
+         "RW3": ("rework: G6 + round-trip cost <= 5% of R", "Active Market Yesterday + Low Cost")}
 SIDE_NAME = {"L": "Long", "S": "Short"}
 ROWS = [(f"F2-{g}-{s}", g, s) for g in GATES for s in ("L", "S")]
 
@@ -135,10 +140,13 @@ if __name__ == "__main__":
         pr = X["r"].to_numpy(float); top = pr >= np.nanquantile(pr, 0.9)
         st["kept_trades_pct"] = round(100 * m.mean(), 1)
         st["kept_top_decile_pct"] = round(100 * (m & top).sum() / top.sum(), 1)
-        st["gate_coverage_pct"] = round(100 * float(np.isfinite(X[{"G1": "orw", "G2": "orw", "G3": "er", "G4": "qqq_fo", "G5": "spy_er", "G6": "g6", "G7": "vr", "G8": "opp_before", "G9": "er"}.get(g, "orw")].to_numpy(float)).mean()), 1)
+        st["gate_coverage_pct"] = round(100 * float(np.isfinite(X[{"G1": "orw", "G2": "orw", "G3": "er", "G4": "qqq_fo", "G5": "spy_er", "G6": "g6", "G7": "vr", "G8": "opp_before", "G9": "er", "RW1": "g6", "RW2": "g6", "RW3": "g6"}.get(g, "orw")].to_numpy(float)).mean()), 1)
+        rid = rid if not g.startswith("RW") else f"F2-{g}-{s}"
         st.update(id=rid, name=f"15-min Opening Range Break with Gap + {GATES[g][1]}, {SIDE_NAME[s]}", rule=f"F1-A + {GATES[g][0]}",
                   side=s, counted=True, passes_bar=passes(st), fail_reasons=fails(st))
         out.append(st)
+    for s_, X in (("L", L), ("S", S)):
+        print(f"F1-A-{s_} approx gross (r + entry/exit cost, stop slip ignored): {float((X.r + X.cost_rt_R).mean()):.4f}; control {float(X.ctrl_r.mean()):.4f}")
     R = pd.DataFrame(out)
     R["bar_t"], R["N"] = round(BAR, 3), N
     cols = ["id", "name", "rule", "side", "counted", "passes_bar", "fail_reasons", "n", "trades_per_session", "win_rate", "avg_win_R", "avg_loss_R",
