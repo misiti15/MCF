@@ -2,6 +2,8 @@
  "note": "Live setup assignments from the configs; updated with every promotion / demotion / move. Educational only - not financial advice.",
  "accounts": {
   "primary": [
+   "L3-gap-slope-fromopen-FD",
+   "L3-gap-slope-rsi5hi-FD",
    "MF2-open-rsimidhi-flowsell-FD",
    "MF4-h40-open-flowsell",
    "MF4-h40-open-flowsell-FD",
@@ -13,13 +15,11 @@
   ],
   "testing": [
    "CWT05-flush-m05-v3-long",
-   "CWT14-failbrk-pdl-p05-long",
    "IDX1-qqq100-0955-TQQQ-hold",
    "IDX1-qqq100-0955-TQQQ-trail",
    "IDX2-spy075-0945-3x-trail",
    "IDX3-spy075-0955-3x-trail",
    "IDX5-spy050-0945-3x-trail",
-   "L3-gap-slope-fromopen-FD",
    "L3-gap-slope-lowdist-FD",
    "LIQ-pdl-sweep-open15-vwap-long",
    "MF1-945-flowsell-vwapup",
@@ -59,10 +59,8 @@
    "CWT13-vwapstretch-z05-long",
    "CWT13-vwapstretch-z075-long",
    "CWT13-vwapstretch-z075-short",
-   "CWT14-failbrk-pdl-p05-lowvol-long",
    "CWT14-failbrk-pdl-p10-long",
    "CWT14-failbrk-pdl-p10-lowvol-long",
-   "L3-gap-slope-rsi5hi-FD",
    "LD1-ns1-breadthup-t05s1-long",
    "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
    "LD3-st2-idxturn-t05s1-long",
@@ -203,6 +201,8 @@
    "CWT14-failbrk-pdh-p05-lowvol-short",
    "CWT14-failbrk-pdh-p10-lowvol-short",
    "CWT14-failbrk-pdh-p10-short",
+   "CWT14-failbrk-pdl-p05-long",
+   "CWT14-failbrk-pdl-p05-lowvol-long",
    "LIQ-orl-sweep-open15-s25-long",
    "MF1-945-flowsell-vwapup-FD",
    "NS2-sma50break-overbought-short",
@@ -437,19 +437,21 @@
   },
   "CWT14-failbrk-pdl-p05-long": {
    "accounts": [
-    "testing"
+    "graveyard"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-30 00:20 ET",
    "from": [
-    "testing2"
+    "testing"
    ]
   },
   "CWT14-failbrk-pdl-p05-lowvol-long": {
    "accounts": [
-    "testing2"
+    "graveyard"
    ],
-   "since": null,
-   "from": null
+   "since": "2026-10-30 00:20 ET",
+   "from": [
+    "testing2"
+   ]
   },
   "CWT14-failbrk-pdl-p10-long": {
    "accounts": [
@@ -1155,11 +1157,11 @@
   },
   "L3-gap-slope-fromopen-FD": {
    "accounts": [
-    "testing"
-   ],
-   "since": "2026-10-22 17:07 ET",
-   "from": [
     "primary"
+   ],
+   "since": "2026-10-30 00:31 ET",
+   "from": [
+    "testing"
    ]
   },
   "L3-gap-slope-lowdist-FD": {
@@ -1171,11 +1173,11 @@
   },
   "L3-gap-slope-rsi5hi-FD": {
    "accounts": [
-    "testing2"
+    "primary"
    ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-10-30 00:27 ET",
    "from": [
-    "testing"
+    "testing2"
    ]
   },
   "LD1-ns1-breadthup-t05s1-long": {
@@ -1779,76 +1781,15 @@
   }
  },
  "last_change": {
-  "at": "2026-10-28 19:02 ET",
+  "at": "2026-10-30 00:31 ET",
   "changes": [
    {
-    "setup": "GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long",
-    "from": [],
+    "setup": "L3-gap-slope-fromopen-FD",
+    "from": [
+     "testing"
+    ],
     "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-04-Ret15mge0p54-RVolDayle0p59-VWAPcrossesle1-LUNCH-SPYgt0p25-hold-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short",
-    "from": [],
-    "to": [
-     "gen"
-    ]
-   },
-   {
-    "setup": "GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short",
-    "from": [],
-    "to": [
-     "gen"
+     "primary"
     ]
    }
   ]

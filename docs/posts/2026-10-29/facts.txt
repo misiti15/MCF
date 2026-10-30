@@ -1,0 +1,35 @@
+Quick facts (as of 2026-10-29)
+- Sessions traded: 18 (since 2026-10-06) · paper trades: 10,636
+- Setups live: 108 + 93 machine-generated
+- Setups rejected by backtests so far: ~27,639
+- Entry slippage: ~4.1 bps vs the signal price (measured, paper fills)
+- Today, 5 day-trading accounts: -$3,736.50 · since Day 1 (10/23): -$5,958.53
+- Primary: today -$385.14 · since Day 1 -$79.78 · green days 3 of 5
+- Milestones: M1 (3 green in a row) 0/3 · M2 (8 of last 10 green) 3/5
+
+Green-day streaks (setups green every session in a row, all accounts)
+- Stretched Above VWAP Fade: 5 in a row (+$181.71)
+- Failed Opening-Range-Low Break Long (low volume): 5 in a row (+$130.89)
+Green-day record: 5 sessions in a row - Stretched Above VWAP Fade (10-23..10-29); Failed Opening-Range-Low Break Long (low volume) (10-23..10-29); Coil Under the High (4 bars) (10-19..10-23) (+2 tied)
+
+Green every day they traded (sessions with no trade explained)
+- Early Sellers, Strong Heat: 5 trading days in a row (+$106.17) · no trade: 10-27 blocked: twin held x2; 10-28 no signal; 10-29 blocked: twin held x1 (+6 earlier)
+- Panic Flush Reversal (deep, 3x volume): 5 trading days in a row (+$12.32) · no trade: 10-22 no signal; 10-27 blocked: spread is 48% of stop distance x1; 10-28 no signal (+3 earlier)
+- Gap-Down VWAP Loss Short (10% gap): 3 trading days in a row (+$164.76) · no trade: 10-23 blocked: not shortable/ETB x3; 10-27 blocked: not shortable/ETB x1 (+2 other); 10-28 blocked: not shortable/ETB x4 (+1 other) (+1 earlier)
+- Big Gainer Average Reclaim Fade: 3 trading days in a row (+$89.00) · no trade: 10-27 no signal; 10-28 blocked: twin held x2; 10-29 blocked: twin held x4 (+5 other) (+2 earlier)
+- Late-Day ETF Dip Buy (near-miss): 3 trading days in a row (+$28.18) · no trade: 10-26 no signal (late start: accounts from 10:39 ET, Gen from 12:02 ET); 10-27 no signal; 10-29 no signal (+3 earlier)
+- ST8-volspikedn-long-pm-t1s1-FD: 3 trading days in a row (+$18.43) · no trade: 10-27 no signal; 10-28 blocked: spread 44bps > max x1; 10-29 no signal (+3 earlier)
+- Unintended blocks: none - every block was an owner rule (borrow, spread, twin, caps)
+
+Quick answers
+- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.
+- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).
+- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
+- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
+- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.
+- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.
+- Break-even win rate? The win rate a setup needs just to not lose money.
+- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.
+- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).
+Not financial advice.

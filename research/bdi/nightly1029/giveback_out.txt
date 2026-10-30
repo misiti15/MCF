@@ -1,0 +1,73 @@
+acct  trades  est_trades   peak peak_t   trough trough_t    close  giveback  after_peak  open_at_peak  spy_peak_to_close  qqq_peak_to_close    runner_peak    runner_trough      runner_last
+   p      16           0  19.63  13:21  -411.08    15:05  -411.08    430.71           0             7               0.15               0.17  17.74 (13:19)  -385.14 (15:06)  -385.14 (15:55)
+  t1     174           0 475.38  13:53  -139.93    12:00   250.12    225.26          27            34               0.30               0.32 519.52 (13:54)  -112.08 (11:59)   276.69 (15:55)
+  t2     204           0 284.75  15:26  -276.37    10:50   245.96     38.79           0            25               0.19               0.26 291.83 (15:26)  -223.51 (10:52)    269.9 (15:55)
+  gy     401           0 124.12  10:53  -679.19    12:01  -300.63    424.75         171           129               0.21               0.33 303.41 (10:53)  -510.73 (11:57)  -188.34 (15:55)
+ gen     217           0 278.29  11:34 -3936.17    15:56 -3927.73   4206.02          94            77              -0.16              -0.37 475.55 (11:33) -3709.59 (15:55) -3709.59 (15:55)
+
+===== p: peak 19.63 at 13:21, trough -411.08 at 15:05, close -411.08, giveback 430.71; SPY peak->close +0.15%
+by category: {'a2_open_loser': {'n': 2, 'contrib': -24.8}, 'a_open_winner': {'n': 5, 'contrib': -405.9}}
+open winners at peak, exit: {'stop': {'size': 4, 'sum': -414.9}, 'target': {'size': 1, 'sum': 9.0}}
+against SPY's peak->close move: -426.9 | with: -3.8
+late flatten (>=15:50): 0.0 n 0
+side: {-1: -426.9, 1: -3.8}
+by entry hour: {11: -3.8, 13: -426.9}
+worst setups: {'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD': -247.2, 'RW3-gapdn-rsi5pop-flowsell-short-FD': -84.2, 'MF4-h40-open-flowsell-FD': -83.5, 'MF2-open-rsimidhi-flowsell-FD': -12.0, 'NS1-rsidip-rsi5pop-long': -3.8}
+best setups: {'MF4-h40-open-flowsell-FD': -83.5, 'MF2-open-rsimidhi-flowsell-FD': -12.0, 'NS1-rsidip-rsi5pop-long': -3.8}
+setups at peak: {'NS1-rsidip-rsi5pop-long': -29.2, 'ST7-rsi50dn-long-pm-t1s1-FD': -24.7, 'MF4-h40-open-flowsell-FD': -23.6, 'MF2-open-rsimidhi-flowsell-FD': -23.4, 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD': 41.8, 'RW3-gapdn-rsi5pop-flowsell-short-FD': 78.9}
+setups at trough: {'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD': -205.4, 'MF4-h40-open-flowsell-FD': -107.2, 'MF2-open-rsimidhi-flowsell-FD': -35.4, 'NS1-rsidip-rsi5pop-long': -33.1, 'ST7-rsi50dn-long-pm-t1s1-FD': -24.7, 'RW3-gapdn-rsi5pop-flowsell-short-FD': -5.3}
+curve every 30 min: {'09:31': 0, '10:01': 0, '10:31': 0, '11:01': -29, '11:31': -87, '12:01': -48, '12:31': -84, '13:01': -116, '13:31': -56, '14:01': -224, '14:31': -398, '15:01': -409, '15:31': -411}
+
+===== t1: peak 475.38 at 13:53, trough -139.93 at 12:00, close 250.12, giveback 225.26; SPY peak->close +0.30%
+by category: {'a2_open_loser': {'n': 14, 'contrib': -64.5}, 'a_open_winner': {'n': 20, 'contrib': -44.3}, 'b_after_peak': {'n': 27, 'contrib': -116.4}}
+open winners at peak, exit: {'flatten': {'size': 4, 'sum': -40.2}, 'stop': {'size': 4, 'sum': -48.4}, 'target': {'size': 12, 'sum': 44.2}}
+against SPY's peak->close move: -166.2 | with: -59.1
+late flatten (>=15:50): -114.7 n 22
+side: {-1: -166.2, 1: -59.1}
+by entry hour: {10: -1.8, 11: 7.3, 12: -44.4, 13: -82.5, 14: -81.9, 15: -21.9}
+worst setups: {'L3-gap-slope-fromopen-FD': -76.0, 'RW6G1-ns2-up3-vwap2sd-short-FD': -40.5, 'CWT14-failbrk-pdl-p05-long': -33.6, 'MF3-open-flowsell-rsi5hi-FD': -31.5, 'NS5-sma50-flush-oversold-long-FD': -25.6, 'RW7-gapdn-bounce-early-short-FD': -23.4}
+best setups: {'exhaustion_short': 3.4, 'NS4-pm-vwap-reclaim-oversold-short-FD': 7.1, 'exhaustion_short-FD': 8.9}
+setups at peak: {'CWT14-failbrk-pdl-p05-long': -65.9, 'NS1-rsidip-rsi5pop-long-FD': -9.2, 'L3-gap-slope-lowdist-FD': -7.5, 'exhaustion_short': 27.0, 'exhaustion_short-FD': 27.3, 'L3-gap-slope-fromopen-FD': 436.7}
+setups at trough: {'L3-gap-slope-fromopen-FD': -64.2, 'exhaustion_short-FD': -46.5, 'RW7-gapdn-bounce-early-short-FD': -33.0, 'NS3-failed-vwap-reclaim-short': -10.5, 'RW4-ns3-adv150-short-FD': 7.2, 'CWT14-failbrk-pdl-p05-long': 9.5}
+curve every 30 min: {'09:31': 0, '10:01': -8, '10:31': -22, '11:01': -61, '11:31': -29, '12:01': -137, '12:31': 55, '13:01': 160, '13:31': 309, '14:01': 454, '14:31': 346, '15:01': 400, '15:31': 341}
+
+===== t2: peak 284.75 at 15:26, trough -276.37 at 10:50, close 245.96, giveback 38.79; SPY peak->close +0.19%
+by category: {'a2_open_loser': {'n': 9, 'contrib': -18.9}, 'a_open_winner': {'n': 16, 'contrib': -19.8}}
+open winners at peak, exit: {'flatten': {'size': 11, 'sum': -30.4}, 'target': {'size': 5, 'sum': 10.6}}
+against SPY's peak->close move: -31.1 | with: -7.7
+late flatten (>=15:50): -40.6 n 16
+side: {-1: -31.1, 1: -7.7}
+by entry hour: {10: -32.7, 11: 8.5, 12: 0.5, 13: 1.0, 14: -7.4, 15: -8.6}
+worst setups: {'CWT09-gapdn-vwaploss-g10-short': -19.4, 'CWT09-gapdn-bounce-g10-lowerhalf-short': -13.3, 'CWT14-failbrk-pdl-p05-lowvol-long': -6.7, 'NM-MF3-qqqdn-gapdn-FD': -6.2, 'CWT04-backside-lh-a15-short': -5.9, 'CWT13-vwapstretch-z05-long': -3.5}
+best setups: {'CWT14-failbrk-pdl-p10-long': 2.3, 'NS4-pm-vwap-reclaim-oversold-short': 4.0, 'exhaustion_short-FD': 8.5}
+setups at peak: {'CWT14-failbrk-pdl-p05-lowvol-long': -55.0, 'NM-AMS-N1-quiet-morning-short': -24.9, 'CWT14-failbrk-pdl-p10-lowvol-long': -21.3, 'CWT09-gapdn-vwaploss-g10-short': 69.1, 'exhaustion_short-FD': 110.7, 'L3-gap-slope-rsi5hi-FD': 115.9}
+setups at trough: {'CWT14-failbrk-pdl-p05-lowvol-long': -125.2, 'CWT14-failbrk-pdl-p10-lowvol-long': -85.9, 'CWT14-failbrk-pdl-p10-long': -69.7, 'NM-AMS-N1-quiet-morning-short': -24.9, 'CWT13-vwapstretch-z075-long': 14.1, 'CWT09-gapdn-vwaploss-g10-short': 17.4}
+curve every 30 min: {'09:31': 0, '10:01': -7, '10:31': -83, '11:01': -127, '11:31': -42, '12:01': -40, '12:31': 47, '13:01': 114, '13:31': 105, '14:01': 121, '14:31': 246, '15:01': 266, '15:31': 261}
+
+===== gy: peak 124.12 at 10:53, trough -679.19 at 12:01, close -300.63, giveback 424.75; SPY peak->close +0.21%
+by category: {'a2_open_loser': {'n': 64, 'contrib': -150.8}, 'a_open_winner': {'n': 65, 'contrib': -472.6}, 'b_after_peak': {'n': 171, 'contrib': 198.6}}
+open winners at peak, exit: {'flatten': {'size': 18, 'sum': -306.0}, 'stop': {'size': 18, 'sum': -335.8}, 'target': {'size': 29, 'sum': 169.3}}
+against SPY's peak->close move: -459.4 | with: 34.6
+late flatten (>=15:50): -348.9 n 63
+side: {-1: -459.4, 1: 34.6}
+by entry hour: {9: -35.5, 10: -628.7, 11: 472.9, 12: -2.6, 13: -91.1, 14: -105.1, 15: -34.5}
+worst setups: {'CWT09-gapdn-bounce-g5-lowerhalf-short': -326.3, 'NS2-sma50break-overbought-short-FD': -114.2, 'CWT09-gapdn-vwaploss-g5-short': -75.0, 'CWT14-failbrk-orl-p10-long': -59.7, 'RW2-exhaustion-noon-adv150-short-FD': -48.1, 'CWT12-coil-k6-long': -47.4}
+best setups: {'heat_fade_long': 62.5, 'CWT14-failbrk-orl-p05-lowvol-long': 62.7, 'CWT14-failbrk-orl-p05-long': 80.2}
+setups at peak: {'CWT12-coil-k4-long': -64.7, 'heat_fade_short': -52.9, 'CWT14-failbrk-orl-p10-long': -47.4, 'CWT14-failbrk-orl-p05-lowvol-long': 30.8, 'CWT09-gapdn-vwaploss-g5-short': 71.8, 'CWT09-gapdn-bounce-g5-lowerhalf-short': 210.8}
+setups at trough: {'RW2-exhaustion-noon-adv150-short-FD': -137.4, 'CWT14-failbrk-orl-p10-long': -101.9, 'CWT12-coil-k6-long': -84.9, 'CWT14-failbrk-orl-p05-long': -76.2, 'CWT14-failbrk-orl-p05-lowvol-long': 18.7, 'heat_fade_long-FD': 53.8}
+curve every 30 min: {'09:31': 0, '10:01': -47, '10:31': -206, '11:01': -109, '11:31': -418, '12:01': -679, '12:31': -330, '13:01': -376, '13:31': -145, '14:01': 58, '14:31': -325, '15:01': -120, '15:31': -137}
+
+===== gen: peak 278.29 at 11:34, trough -3936.17 at 15:56, close -3927.73, giveback 4206.02; SPY peak->close -0.16%
+by category: {'a2_open_loser': {'n': 25, 'contrib': 38.6}, 'a_open_winner': {'n': 52, 'contrib': -2767.1}, 'b_after_peak': {'n': 94, 'contrib': -1477.6}}
+open winners at peak, exit: {'flatten': {'size': 13, 'sum': -155.2}, 'stop': {'size': 37, 'sum': -2632.1}, 'target': {'size': 2, 'sum': 20.2}}
+against SPY's peak->close move: -3899.0 | with: -307.1
+late flatten (>=15:50): -114.0 n 63
+side: {-1: -307.1, 1: -3899.0}
+by entry hour: {10: -2590.0, 11: -1133.1, 12: -53.7, 13: -239.4, 14: -80.6, 15: -109.2}
+worst setups: {'GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long': -2239.0, 'GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long': -698.8, 'GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long': -369.9, 'GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long': -247.7, 'GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long': -121.1, 'GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long': -108.4}
+best setups: {'GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long': -2.5, 'GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long': 2.5, 'GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short': 3.1}
+setups at peak: {'GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short': -125.6, 'GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short': -117.2, 'GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long': -33.2, 'GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long': 20.3, 'GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long': 96.6, 'GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long': 518.2}
+setups at trough: {'GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long': -1720.7, 'GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long': -678.5, 'GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long': -362.6, 'GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short': -186.2, 'GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long': -5.5, 'GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long': -3.0}
+curve every 30 min: {'09:31': 0, '10:01': -1, '10:31': -55, '11:01': -470, '11:31': 71, '12:01': 15, '12:31': -1142, '13:01': -1489, '13:31': -2277, '14:01': -3169, '14:31': -3638, '15:01': -3752, '15:31': -3840}
+
+Educational only - not financial advice.

@@ -82,9 +82,7 @@ live:
     - MF2-open-rsimidhi-flowsell   # back from Primary 2026-10-27
     - NS4-pm-vwap-reclaim-oversold-short   # back from Primary 2026-10-27
     - CWT14-failbrk-pdl-p10-lowvol-long   # back from Primary 2026-10-27
-    - L3-gap-slope-rsi5hi-FD   # 44.43/day (allocator)
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
-    - CWT14-failbrk-pdl-p05-lowvol-long   # 103.35/day
 strategies:
   # ---- swarm1017 near-misses runnable after Q8 (owner 2026-10-17): forward observation, NOT candidates;
   #      judge on >= 20 sessions / 60 trades
@@ -689,7 +687,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.05-Vlowvol-sideshort-t05s1-full", fill: true}
   # Failed Prior-Day-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full (id 118); open history n 44026, exp -0.0960R, t -10.03, 103.35/day; verdict rework
   CWT14-failbrk-pdl-p05-lowvol-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-10-30 (owner D2; from session 2026-10-30)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-lowvol-long.py
     min_adv: 95000000
@@ -707,7 +705,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vany-sideshort-t05s1-guest", fill: true}
   # ---- L3-gap-slope-rsi5hi-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   L3-gap-slope-rsi5hi-FD:
-    enabled: true
+    enabled: false   # promoted to Primary 2026-10-30 (owner); promotion = move. Its Testing 2 record stays here.
     refire: true
     refire_cooldown: 6
     type: lab
