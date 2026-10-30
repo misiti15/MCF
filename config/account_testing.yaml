@@ -33,7 +33,6 @@ live:
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
     - MF1-945-flowsell-vwapup   # demoted from Primary 2026-10-25 (narrow 09:50-10:30 window)
-    - L3-gap-slope-fromopen-FD   # demoted from Primary 2026-10-22
     - RW6G1-ns2-up3-vwap2sd-short   # demoted from Primary 2026-10-22 (windowed: narrower than its -FD)
     - IDX1-qqq100-0955-TQQQ-trail
     - IDX1-qqq100-0955-TQQQ-hold
@@ -365,7 +364,7 @@ strategies:
   L3-gap-slope-fromopen-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true    # demoted back from Primary 2026-10-22 (owner L3-1)
+    enabled: false   # re-promoted to Primary 2026-10-30 (owner); its Testing 1 record stays here
     type: lab
     module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
     min_adv: 0   # source had none (default 0)
