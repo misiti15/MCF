@@ -1,0 +1,17 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: both are machine-generated late-day dip buys that only trade when SPY is red on the day; on the two-year screen #1 was about flat after costs on its validation years and #2 about flat on both halves.",
+ "setups": [
+  {"setup": "GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long",
+   "title": "Late-Day Choppy Dip Buy (SPY red)",
+   "lines": [["When", "2:00–3:00 PM (first qualifying five-minute bar, once per stock per day)"],
+             ["Market", "SPY down more than 0.5% from its open"],
+             ["Stock", "≥ $50M traded a day"],
+             ["Trigger", "RSI(14) has dropped 5.5+ points over the last 3 bars, price is 1.7%+ below its 50-bar (five-minute) average, and it has crossed VWAP 8+ times since 9:50 AM"],
+             ["Action", "Buy"], ["Exit", "Target 1 unit, stop 1 unit"]]},
+  {"setup": "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long",
+   "title": "Late-Day New-Low Buy (SPY red)",
+   "lines": [["When", "2:00–3:00 PM (first qualifying five-minute bar, once per stock per day)"],
+             ["Market", "SPY down more than 0.25% from its open"],
+             ["Stock", "≥ $150M traded a day"],
+             ["Trigger", "The bar makes a new low of the day and the 20-bar (five-minute) average is sloping down 0.28%+ over the last 5 bars"],
+             ["Action", "Buy the new low"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}

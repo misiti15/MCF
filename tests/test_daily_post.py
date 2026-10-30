@@ -51,3 +51,13 @@ def test_ledger_changes_lists_rules_effective_that_session():
     from mcf.report.daily_post import ledger_changes
     assert any("down 2R" in x for x in ledger_changes("2026-10-29"))
     assert ledger_changes("2026-01-02") == []
+
+
+def test_m1_label_follows_current_run():
+    from mcf.report.daily_post import milestones
+    h = [dict(date=d, pnl=p, trades=1) for d, p in
+         [("2026-10-26", 1), ("2026-10-27", 1), ("2026-10-28", 1), ("2026-10-29", -1), ("2026-10-30", -1)]]
+    m = milestones(dict(history=h), "2026-10-30")
+    assert (m["run"], m["best_run"], m["m1"], m["m1_before"]) == (0, 3, False, True)
+    m = milestones(dict(history=h), "2026-10-28")
+    assert (m["run"], m["m1"], m["m1_before"]) == (3, True, False)
