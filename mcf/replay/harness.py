@@ -128,6 +128,9 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
         quotes = SimDataClient(clock, market, spread_bps, spreads or None)
         client.half_spread_bps = lambda sym, k: quotes._bps(sym, k) / 2
         r = R.PaperRunner(cfg, strategies, priors, broker=broker, data_client=quotes)
+        if r.index_syms - set(priors):   # daily index context (lab spy_prng) for a symbol outside the universe
+            dp = store.STORE / "daily.parquet"
+            r.index_priors_client = store.StoreHistClient(day, pd.read_parquet(dp) if dp.exists() else None)
         r._utcnow = lambda: clock.now.tz_convert("UTC")
         feed = ReplayFeed(r, bars)
         r.fetch = feed.fetch

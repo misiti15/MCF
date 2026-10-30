@@ -78,6 +78,8 @@ live:
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
+    - CWT14-failbrk-pdl-p05-R2A-long    # ~27/day on long-regime days (owner exception PDL-1a 2026-10-30)
+    - CWT14-failbrk-pdl-p05-R2A-short   # ~27/day on short-regime days (owner exception PDL-1a 2026-10-30)
     - CWT13-vwapstretch-z05-long   # 42.57/day (back from Primary 2026-10-26)
     - MF2-open-rsimidhi-flowsell   # back from Primary 2026-10-27
     - NS4-pm-vwap-reclaim-oversold-short   # back from Primary 2026-10-27
@@ -496,6 +498,34 @@ strategies:
     window: [1100, 1500]
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sideshort-t1s1-guest", fill: false}
+  # owner exception PDL-1a 2026-10-30: below the BAR90 bar (t 1.14 vs 4.355), forward observation
+  # NOT a candidate. research/bdi/pdl1030/regime-day row R2A (owner 2026-10-30 ~08:00 ET 'Move forward with 1a'): the
+  # CWT14-failbrk-pdl-p05 signal (first bar per symbol-day, cost <= 5% of R1 = 0.25 ATR), S3 exits (stop 0.75 ATR at the
+  # same $ risk, target price = the parent's +0.5R, half off at +0.25R1 then breakeven, flat 15:55), side by a pre-open
+  # regime: LONG when SPY's prior-day range / ATR > 0.7956, else SHORT at the same signal-bar close (mirrored exits).
+  # Exactly one of the two legs can fire on a day. TRAIN +0.0031 / VALID +0.0071 avg R, t 1.14, 76.5% months positive,
+  # 54.3 trades/session; 152 configurations tried in pdl1030 (lineage N 121,611). Parity: research/bdi/pdl1030/pdl1a/.
+  # scale_out_r is in units of the 0.75 ATR stop distance: 1/12 = +0.25 R1 (0.0625 ATR), as scored.
+  CWT14-failbrk-pdl-p05-R2A-long:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-long.py
+    context: [spy_prng]
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.08333333333333333
+    live_scale_out: true
+    tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
+  CWT14-failbrk-pdl-p05-R2A-short:
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-short.py
+    context: [spy_prng]
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.08333333333333333
+    live_scale_out: true
+    tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   # Failed Prior-Day-Low Break Long: CWT package B B3-LPD-p0.1-Vany-sidelong-t05s1-full (id 130); open history n 37499, exp -0.0861R, t -8.75, 88.03/day; verdict rework
   CWT14-failbrk-pdl-p10-long:
     enabled: true

@@ -12,6 +12,14 @@ that bar's close:
                 typical price (h+l+c)/3 weighted by volume since 09:30) - the QQQ frame `vwapDistPct` at the same bar
                 (owner 2026-10-22 S1, research/bdi/st7_1022: ST7Q fires only while qqq_vwap <= 0)
 
+Daily (pre-open) index context, opt-in by name only (`context: true` does NOT include it; owner 2026-10-30 PDL-1a):
+
+  spy_prng      SPY's prior-day range / SPY daily ATR(14) = (prev_high - prev_low) / atr from SPY's daily prior
+                (mcf.data.priors.Prior), one constant value for the whole session. This is the frame identity
+                dist_pdh_atr + dist_pdl_atr of SPY (constant intraday), research/bdi/pdl1030/regime-day "PRNG". The
+                prior comes from DayContext.index_priors (live: the runner loads SPY's prior once per session, also
+                when SPY is not in the tradable universe; it is never traded because of this). Missing -> NaN.
+
 These are the frame definitions the swarm1017 near-misses were scored with: spy_fo / qqq_fo are the SPY / QQQ frame
 `fromOpen` at the same (date, tod); qqq_vwap is the QQQ frame `vwapDistPct` at the same (date, tod); breadth is the mean of `vwapDistPct > 0` (breadth_open: `fromOpen > 0`) over the
 symbols that have a frame row at that (date, tod) - mcf.research.heat.heat_frame on RTH 5-minute bars.
@@ -35,6 +43,7 @@ INDEX_COLS = {"spy_fo": "SPY", "qqq_fo": "QQQ"}
 BREADTH_COLS = ("breadth", "breadth_open")
 INDEX_VWAP_COLS = {"qqq_vwap": "QQQ"}   # owner 2026-10-22 (S1): index close vs its session VWAP, %
 CONTEXT_COLS = (*INDEX_COLS, *BREADTH_COLS, *INDEX_VWAP_COLS)
+DAILY_COLS = {"spy_prng": "SPY"}   # owner 2026-10-30 PDL-1a: pre-open daily index context (by name only)
 
 _CACHE: dict = {}
 
@@ -46,9 +55,9 @@ def parse_context(spec) -> tuple[str, ...]:
     if spec is True:
         return CONTEXT_COLS
     names = [spec] if isinstance(spec, str) else list(spec)
-    bad = [n for n in names if n not in CONTEXT_COLS]
+    bad = [n for n in names if n not in CONTEXT_COLS and n not in DAILY_COLS]
     if bad:
-        raise ValueError(f"unknown lab context columns {bad}; known: {list(CONTEXT_COLS)}")
+        raise ValueError(f"unknown lab context columns {bad}; known: {[*CONTEXT_COLS, *DAILY_COLS]}")
     return tuple(dict.fromkeys(names))
 
 
@@ -56,6 +65,20 @@ def context_symbols(cols) -> set[str]:
     """Index symbols the runner must poll for these columns."""
     idx = {**INDEX_COLS, **INDEX_VWAP_COLS}
     return {idx[c] for c in cols if c in idx}
+
+
+def daily_context_symbols(cols) -> set[str]:
+    """Index symbols whose DAILY prior (prev_high / prev_low / atr) these columns need (DayContext.index_priors)."""
+    return {DAILY_COLS[c] for c in cols if c in DAILY_COLS}
+
+
+def prior_range_atr(p) -> float:
+    """(prev_high - prev_low) / atr of a daily prior (mcf.data.priors.Prior or a DayContext); NaN when unusable."""
+    try:
+        hi, lo, a = float(p.prev_high), float(p.prev_low), float(p.atr)
+    except (AttributeError, TypeError, ValueError):
+        return float("nan")
+    return (hi - lo) / a if np.isfinite(hi) and np.isfinite(lo) and np.isfinite(a) and a > 0 else float("nan")
 
 
 def _bucket_frame(peers: dict) -> pd.DataFrame:
@@ -124,7 +147,7 @@ def context_table(peers: dict | None, cols) -> pd.DataFrame:
     """Context columns per 5-minute bar start (index), from today's 1-minute bars of every peer. Cached per poll /
     session: the key is the peers' identity-free state (symbol count and latest bar), so every lab setup and symbol of
     one poll shares one build."""
-    cols = tuple(cols)
+    cols = tuple(c for c in cols if c not in DAILY_COLS)   # daily columns are not per-bar (add_context sets them)
     if not peers:
         return pd.DataFrame(columns=list(cols))
     key = _peers_key(peers)
@@ -169,9 +192,17 @@ def _peers_key(peers: dict) -> tuple:
     return key
 
 
-def add_context(f: pd.DataFrame, peers: dict | None, cols) -> pd.DataFrame:
-    """A copy of the live lab frame `f` (indexed by today's 5-minute bar starts) with the context columns."""
+def add_context(f: pd.DataFrame, peers: dict | None, cols, index_priors: dict | None = None) -> pd.DataFrame:
+    """A copy of the live lab frame `f` (indexed by today's 5-minute bar starts) with the context columns.
+    Daily columns (DAILY_COLS) come from `index_priors` (symbol -> daily prior), constant over the session."""
     g = f.copy()
+    if not cols:
+        return g
+    for c in cols:
+        if c in DAILY_COLS:
+            p = (index_priors or {}).get(DAILY_COLS[c])
+            g[c] = prior_range_atr(p) if p is not None else float("nan")
+    cols = [c for c in cols if c not in DAILY_COLS]
     if not cols:
         return g
     tab = context_table(peers, cols)

@@ -84,6 +84,14 @@ class PaperRunner:
         self.dry_run = dry_run
         self.broker = broker or AlpacaBroker(paper=True)
         self.dc = data_client
+        # Daily index context (opt-in lab `context: [spy_prng]`, owner 2026-10-30 PDL-1a): the daily priors of the index
+        # symbols those setups read, loaded once per session (from priors when the symbol is in the universe, else
+        # fetched). They only feed DayContext.index_priors: they never join the watchlist or the tradable contexts.
+        # None until loaded; empty set = no setup asks (nothing changes for any other setup).
+        self.index_syms: set[str] = set().union(*(getattr(s, "daily_context_symbols", None) or set() for s in strategies))
+        self.index_priors: dict | None = None
+        self.index_priors_client = None   # replay: a store-backed history client (mcf.replay.store.StoreHistClient)
+        self._index_tries = 0
         self.journal = Journal(cfg["data"]["journal_path"])
         self.run_id = self.journal.get_or_create_run("paper", "MCF Update (live paper)")
         self.risk = RiskManager(cfg, self.broker.equity())
@@ -458,8 +466,32 @@ class PaperRunner:
         # drop the still-forming bar
         return {s: b[b.index < cut] for s, b in self.bars.items()}
 
+    def _load_index_priors(self, today) -> dict | None:
+        """Daily priors of self.index_syms (see __init__): from self.priors, the rest via build_priors on the data
+        client. Retried on the next polls (3 tries) while one is missing; a missing prior gives a NaN context column,
+        so the setups that need it fire nothing (fail safe)."""
+        if not self.index_syms:
+            return None
+        if self.index_priors is not None and (set(self.index_priors) >= self.index_syms or self._index_tries >= 3):
+            return self.index_priors
+        out = {s: self.priors[s] for s in self.index_syms if s in self.priors}
+        miss = sorted(self.index_syms - set(out))
+        if miss:
+            self._index_tries += 1
+            try:
+                from ..data.priors import build_priors
+
+                out.update(build_priors(miss, today, feed=self.cfg["data"]["feed"],
+                                        client=self.index_priors_client or self._client(), log=lambda m: None))
+            except Exception as e:   # never fatal: the context column stays NaN
+                print(f"index priors {miss}: {type(e).__name__}: {str(e)[:120]}")
+        self.health["index_priors"] = sorted(out)
+        self.index_priors = out
+        return out
+
     def _contexts(self, today_bars: dict[str, pd.DataFrame], today) -> list[DayContext]:
         ctxs = []
+        ipri = self._load_index_priors(today)
         for sym, bars in today_bars.items():
             p = self.priors.get(sym)
             if p is None or bars.empty:
@@ -467,7 +499,7 @@ class PaperRunner:
             ctx = DayContext(symbol=sym, date=today, bars=bars, prev_close=p.prev_close, prev_high=p.prev_high,
                              prev_low=p.prev_low, atr=p.atr, avg_dollar_volume=p.adv,
                              avg_cum_volume=p.avg_cum, avg_move=p.avg_move, prior5=getattr(p, "tail5", None),
-                             sma20=getattr(p, "sma20", float("nan")), peers=today_bars)
+                             sma20=getattr(p, "sma20", float("nan")), peers=today_bars, index_priors=ipri)
             if universe_ok(ctx, self.cfg):
                 ctxs.append(ctx)
         orv = [c.rvol().iloc[min(4, len(c.bars) - 1)] for c in ctxs]
