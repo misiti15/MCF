@@ -1,0 +1,19 @@
+id,rule,n,per_session,train_avg_r,valid_avg_r,tv_avg_r,t_day,wf_pct,up_day_r,down_day_r,avg_r_wo_best_day,best_share,passes_bar
+parent-p05,p05 parent (parity),53326,153.2,-0.0677,-0.0675,-0.0677,-9.51,5.9,0.0141,-0.1461,-0.0693,,False
+parent-p10,p10 parent (parity),29836,85.7,-0.0861,-0.0912,-0.088,-7.72,11.8,0.0341,-0.2055,-0.0904,,False
+TA-G,"long if SPY fromOpen up, skip if down",24926,71.6,-0.0669,-0.0623,-0.0652,-7.15,5.9,-0.0085,-0.1735,-0.0688,,False
+TA-Sx,short at signal close if SPY fromOpen down,28286,81.3,-0.0527,-0.0265,-0.0432,-4.73,5.9,-0.1844,0.0158,-0.0449,,False
+TA-Sb,short at first close back below PDL if SPY fromOpen down,22071,63.4,-0.068,-0.0419,-0.0584,-6.52,0.0,-0.1999,-0.0038,-0.0602,,False
+TA-F,"long if SPY fromOpen up, short at signal close if down",53212,152.9,-0.0593,-0.0436,-0.0535,-8.89,0.0,-0.0575,-0.0288,-0.0551,,False
+TA-B,"long if SPY fromOpen up, short on PDL re-break if down",46997,135.0,-0.0674,-0.0529,-0.062,-10.29,5.9,-0.0477,-0.0497,-0.0639,,False
+TB-G,"long if SPY vs VWAP up, skip if down",25994,74.7,-0.0481,-0.0647,-0.0543,-6.56,11.8,0.0026,-0.1459,-0.0563,,False
+TB-Sx,short at signal close if SPY vs VWAP down,27332,78.5,-0.0362,-0.0333,-0.0351,-4.19,17.6,-0.1625,0.0219,-0.0373,,False
+TB-Sb,short at first close back below PDL if SPY vs VWAP down,21539,61.9,-0.0703,-0.0476,-0.062,-6.8,0.0,-0.207,-0.001,-0.0638,,False
+TB-F,"long if SPY vs VWAP up, short at signal close if down",53326,153.2,-0.0419,-0.0488,-0.0445,-8.47,11.8,-0.0456,-0.0242,-0.0458,,False
+TB-B,"long if SPY vs VWAP up, short on PDL re-break if down",47533,136.6,-0.0583,-0.057,-0.0578,-10.95,5.9,-0.0435,-0.0461,-0.0588,,False
+TC-G,"long if breadth vs 0.5 up, skip if down",25176,72.3,-0.0473,-0.07,-0.0557,-6.42,11.8,0.0028,-0.1572,-0.0575,,False
+TC-Sx,short at signal close if breadth vs 0.5 down,28099,80.7,-0.0319,-0.0319,-0.0319,-4.06,11.8,-0.1452,0.0204,-0.0344,,False
+TC-Sb,short at first close back below PDL if breadth vs 0.5 down,22180,63.7,-0.0668,-0.0528,-0.0616,-6.92,0.0,-0.2058,0.0005,-0.0635,,False
+TC-F,"long if breadth vs 0.5 up, short at signal close if down",53275,153.1,-0.0392,-0.0498,-0.0431,-7.88,11.8,-0.0344,-0.0195,-0.0445,,False
+TC-B,"long if breadth vs 0.5 up, short on PDL re-break if down",47356,136.1,-0.0564,-0.0619,-0.0585,-10.53,5.9,-0.0366,-0.0401,-0.0594,,False
+K(TC-F),"long if breadth vs 0.5 up, short at signal close if down + skip if round-trip cost > 10% of R",39804,114.4,0.0003,-0.0171,-0.0066,-1.23,35.3,-0.0041,0.0193,-0.0078,,False

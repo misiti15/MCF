@@ -1,0 +1,41 @@
+P05 p05 parent p05 {'avg_train': -0.0677, 'avg_valid': -0.0675, 't_tv': -9.51, 'wf_pct': 5.9, 'per_session': 153.2, 'up_day_r': -0.0085, 'down_day_r': -0.124, 'stop_pct': 20.6, 'tgt_pct': 42.9, 'Ru_A_med': 0.25}
+P10 p10 parent p10 {'avg_train': -0.0861, 'avg_valid': -0.0912, 't_tv': -7.72, 'wf_pct': 11.8, 'per_session': 85.7, 'up_day_r': -0.0019, 'down_day_r': -0.1718, 'stop_pct': 31.9, 'tgt_pct': 63.8, 'Ru_A_med': 0.25}
+PARITY True
+A1 p05 stop LOD-0.02A; parent target/scale prices {'avg_train': -0.0948, 'avg_valid': -0.0903, 't_tv': -11.86, 'wf_pct': 5.9, 'per_session': 153.2, 'up_day_r': -0.028, 'down_day_r': -0.1552, 'stop_pct': 22.5, 'tgt_pct': 41.6, 'Ru_A_med': 0.232}
+A2 p05 stop LOD-0.10A; parent target/scale prices {'avg_train': -0.0581, 'avg_valid': -0.0575, 't_tv': -8.78, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': -0.0019, 'down_day_r': -0.1113, 'stop_pct': 16.3, 'tgt_pct': 44.1, 'Ru_A_med': 0.312}
+A3 p05 stop LOD-0.25A; parent target/scale prices {'avg_train': -0.0361, 'avg_valid': -0.0344, 't_tv': -6.73, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0106, 'down_day_r': -0.0795, 'stop_pct': 9.6, 'tgt_pct': 45.8, 'Ru_A_med': 0.462}
+A4 p05 stop min(LOD-0.05A, e-0.25A); parent target/scale prices {'avg_train': -0.0555, 'avg_valid': -0.0553, 't_tv': -8.48, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': -0.0005, 'down_day_r': -0.1077, 'stop_pct': 16.1, 'tgt_pct': 44.2, 'Ru_A_med': 0.262}
+A5 p05 stop LOD-0.25A + exit on a close below LOD; parent target/scale prices {'avg_train': -0.0365, 'avg_valid': -0.0343, 't_tv': -9.27, 'wf_pct': 5.9, 'per_session': 153.2, 'up_day_r': -0.0036, 'down_day_r': -0.0662, 'stop_pct': 0.4, 'tgt_pct': 42.5, 'Ru_A_med': 0.462}
+STOP* A3
+B1 p05 stop A3; target VWAP (floor e+0.125A), no scale {'avg_train': -0.0515, 'avg_valid': -0.0508, 't_tv': -5.08, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0413, 'down_day_r': -0.1395, 'stop_pct': 16.4, 'tgt_pct': 61.8, 'Ru_A_med': 0.462}
+B2 p05 stop A3; target today's open (floor e+0.125A), no scale {'avg_train': -0.0593, 'avg_valid': -0.0554, 't_tv': -4.84, 'wf_pct': 17.6, 'per_session': 153.2, 'up_day_r': 0.0567, 'down_day_r': -0.1671, 'stop_pct': 18.3, 'tgt_pct': 49.1, 'Ru_A_med': 0.462}
+B3 p05 stop A3; target prior close (floor e+0.125A), no scale {'avg_train': -0.0565, 'avg_valid': -0.055, 't_tv': -4.13, 'wf_pct': 17.6, 'per_session': 153.2, 'up_day_r': 0.0796, 'down_day_r': -0.1852, 'stop_pct': 18.8, 'tgt_pct': 44.9, 'Ru_A_med': 0.462}
+B4 p05 stop A3; target PDL + 1x depth (floor e+0.125A), no scale {'avg_train': -0.0475, 'avg_valid': -0.0504, 't_tv': -5.12, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0423, 'down_day_r': -0.1353, 'stop_pct': 15.5, 'tgt_pct': 56.3, 'Ru_A_med': 0.462}
+B5 p05 stop A3; target PDL + 2x depth (floor e+0.125A), no scale {'avg_train': -0.0508, 'avg_valid': -0.0583, 't_tv': -4.33, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0672, 'down_day_r': -0.1687, 'stop_pct': 17.8, 'tgt_pct': 40.6, 'Ru_A_med': 0.462}
+B6 p05 stop A3; target 1:1 structural R (floor e+0.125A), no scale {'avg_train': -0.057, 'avg_valid': -0.0645, 't_tv': -3.5, 'wf_pct': 17.6, 'per_session': 153.2, 'up_day_r': 0.1064, 'down_day_r': -0.2181, 'stop_pct': 21.4, 'tgt_pct': 19.4, 'Ru_A_med': 0.462}
+TGT* A*
+C1 p05 A* base + break-even after +0.5R {'avg_train': -0.0361, 'avg_valid': -0.0344, 't_tv': -6.73, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0106, 'down_day_r': -0.0795, 'stop_pct': 9.6, 'tgt_pct': 45.8, 'Ru_A_med': 0.462}
+C2 p05 A* base + stop to PDL-0.02A after +0.25R {'avg_train': -0.0361, 'avg_valid': -0.0344, 't_tv': -6.73, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0106, 'down_day_r': -0.0795, 'stop_pct': 9.6, 'tgt_pct': 45.8, 'Ru_A_med': 0.462}
+C3 p05 A* base + hard 60-min time stop {'avg_train': -0.0363, 'avg_valid': -0.0328, 't_tv': -8.21, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': -0.0033, 'down_day_r': -0.0654, 'stop_pct': 4.7, 'tgt_pct': 40.1, 'Ru_A_med': 0.462}
+C4 p05 A* base + half at parent target, stop to e, runner to target {'avg_train': -0.0455, 'avg_valid': -0.0499, 't_tv': -5.9, 'wf_pct': 11.8, 'per_session': 153.2, 'up_day_r': 0.0269, 'down_day_r': -0.1177, 'stop_pct': 14.5, 'tgt_pct': 69.1, 'Ru_A_med': 0.462}
+D1 p10 best TRAIN row A3 on the p10 entry {'avg_train': -0.03, 'avg_valid': -0.0317, 't_tv': -5.43, 'wf_pct': 11.8, 'per_session': 85.7, 'up_day_r': 0.0104, 'down_day_r': -0.0706, 'stop_pct': 9.0, 'tgt_pct': 47.5, 'Ru_A_med': 0.499}
+count 18 bar 4.355
+     id setup  avg_train  avg_valid   t_tv  wf_pct  per_session  up_day_r  down_day_r  ex_best best_share  stop_pct  tgt_pct  Ru_A_med  passes
+0   P05   p05    -0.0677    -0.0675  -9.51     5.9        153.2   -0.0085     -0.1240  -0.0693       None      20.6     42.9     0.250   False
+1   P10   p10    -0.0861    -0.0912  -7.72    11.8         85.7   -0.0019     -0.1718  -0.0904       None      31.9     63.8     0.250   False
+2    A1   p05    -0.0948    -0.0903 -11.86     5.9        153.2   -0.0280     -0.1552  -0.0946       None      22.5     41.6     0.232   False
+3    A2   p05    -0.0581    -0.0575  -8.78    11.8        153.2   -0.0019     -0.1113  -0.0590       None      16.3     44.1     0.312   False
+4    A3   p05    -0.0361    -0.0344  -6.73    11.8        153.2    0.0106     -0.0795  -0.0363       None       9.6     45.8     0.462   False
+5    A4   p05    -0.0555    -0.0553  -8.48    11.8        153.2   -0.0005     -0.1077  -0.0566       None      16.1     44.2     0.262   False
+6    A5   p05    -0.0365    -0.0343  -9.27     5.9        153.2   -0.0036     -0.0662  -0.0364       None       0.4     42.5     0.462   False
+7    B1   p05    -0.0515    -0.0508  -5.08    11.8        153.2    0.0413     -0.1395  -0.0525       None      16.4     61.8     0.462   False
+8    B2   p05    -0.0593    -0.0554  -4.84    17.6        153.2    0.0567     -0.1671  -0.0596       None      18.3     49.1     0.462   False
+9    B3   p05    -0.0565    -0.0550  -4.13    17.6        153.2    0.0796     -0.1852  -0.0590       None      18.8     44.9     0.462   False
+10   B4   p05    -0.0475    -0.0504  -5.12    11.8        153.2    0.0423     -0.1353  -0.0508       None      15.5     56.3     0.462   False
+11   B5   p05    -0.0508    -0.0583  -4.33    11.8        153.2    0.0672     -0.1687  -0.0568       None      17.8     40.6     0.462   False
+12   B6   p05    -0.0570    -0.0645  -3.50    17.6        153.2    0.1064     -0.2181  -0.0641       None      21.4     19.4     0.462   False
+13   C1   p05    -0.0361    -0.0344  -6.73    11.8        153.2    0.0106     -0.0795  -0.0363       None       9.6     45.8     0.462   False
+14   C2   p05    -0.0361    -0.0344  -6.73    11.8        153.2    0.0106     -0.0795  -0.0363       None       9.6     45.8     0.462   False
+15   C3   p05    -0.0363    -0.0328  -8.21    11.8        153.2   -0.0033     -0.0654  -0.0357       None       4.7     40.1     0.462   False
+16   C4   p05    -0.0455    -0.0499  -5.90    11.8        153.2    0.0269     -0.1177  -0.0483       None      14.5     69.1     0.462   False
+17   D1   p10    -0.0300    -0.0317  -5.43    11.8         85.7    0.0104     -0.0706  -0.0317       None       9.0     47.5     0.499   False
