@@ -1,34 +1,34 @@
 {
  "sessions": 4,
- "window": "2026-10-26 to 2026-10-29",
+ "window": "2026-10-27 to 2026-10-30",
  "setups": [
   {
    "setup": "NS5-sma50-flush-oversold-long",
    "name": "Big Loser Flush Buy",
-   "trades": 2,
+   "trades": 4,
    "win_rate": 1.0,
-   "avg_r": 0.737,
-   "pnl": 145.1,
+   "avg_r": 0.855,
+   "pnl": 256.86,
    "expected_r": 0.002,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "L3-gap-slope-rsi5hi-FD",
+   "name": "Gap-Down Rebound Overbought Short (all day)",
+   "trades": 1,
+   "win_rate": 1.0,
+   "avg_r": 0.34,
+   "pnl": 4.76,
+   "expected_r": null,
    "verdict": "too few trades"
   },
   {
    "setup": "MF2-open-rsimidhi-flowsell-FD",
    "name": "Early Sellers, Mid-High RSI (all day)",
-   "trades": 10,
-   "win_rate": 0.6,
-   "avg_r": 0.593,
-   "pnl": 102.22,
-   "expected_r": null,
-   "verdict": "positive so far"
-  },
-  {
-   "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
-   "name": "Gap-Down Pop Fade, Heavy Selling (all day)",
-   "trades": 9,
-   "win_rate": 0.667,
-   "avg_r": 0.184,
-   "pnl": 51.43,
+   "trades": 8,
+   "win_rate": 0.5,
+   "avg_r": 0.3,
+   "pnl": -15.7,
    "expected_r": null,
    "verdict": "too few trades"
   },
@@ -37,8 +37,8 @@
    "name": "Gap-Down Pop Fade (all day)",
    "trades": 17,
    "win_rate": 0.647,
-   "avg_r": 0.061,
-   "pnl": -124.43,
+   "avg_r": 0.062,
+   "pnl": -167.07,
    "expected_r": null,
    "verdict": "positive so far"
   },
@@ -55,11 +55,31 @@
   {
    "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
    "name": "Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]",
-   "trades": 40,
-   "win_rate": 0.6,
-   "avg_r": -0.027,
-   "pnl": 14.07,
+   "trades": 34,
+   "win_rate": 0.618,
+   "avg_r": -0.013,
+   "pnl": -6.88,
    "expected_r": -0.095,
+   "verdict": "negative so far"
+  },
+  {
+   "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
+   "name": "RSI Collapse Dip Buy (all day)",
+   "trades": 9,
+   "win_rate": 0.444,
+   "avg_r": -0.123,
+   "pnl": -33.1,
+   "expected_r": null,
+   "verdict": "too few trades"
+  },
+  {
+   "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "name": "Gap-Down Pop Fade, Heavy Selling (all day)",
+   "trades": 12,
+   "win_rate": 0.5,
+   "avg_r": -0.128,
+   "pnl": -69.91,
+   "expected_r": null,
    "verdict": "negative so far"
   },
   {
@@ -67,30 +87,10 @@
    "name": "Early Sellers, Strong Heat (all day)",
    "trades": 13,
    "win_rate": 0.538,
-   "avg_r": -0.219,
-   "pnl": -79.28,
+   "avg_r": -0.224,
+   "pnl": -51.85,
    "expected_r": null,
    "verdict": "negative so far"
-  },
-  {
-   "setup": "CWT13-vwapstretch-z05-long",
-   "name": "Stretched Below VWAP Bounce",
-   "trades": 11,
-   "win_rate": 0.455,
-   "avg_r": -0.377,
-   "pnl": -55.29,
-   "expected_r": -0.08,
-   "verdict": "below backtest - review"
-  },
-  {
-   "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
-   "name": "RSI Collapse Dip Buy (all day)",
-   "trades": 3,
-   "win_rate": 0.333,
-   "avg_r": -0.467,
-   "pnl": -17.33,
-   "expected_r": null,
-   "verdict": "too few trades"
   },
   {
    "setup": "NS4-pm-vwap-reclaim-oversold-short",
@@ -113,55 +113,53 @@
   },
   {
    "bucket": "10:30-11:30",
-   "trades": 230,
-   "win_rate": 0.474,
-   "avg_r": -0.165,
-   "pnl": -1339.23
+   "trades": 238,
+   "win_rate": 0.479,
+   "avg_r": -0.15,
+   "pnl": -1243.24
   },
   {
    "bucket": "11:30-13:00",
-   "trades": 187,
-   "win_rate": 0.647,
+   "trades": 189,
+   "win_rate": 0.651,
    "avg_r": 0.35,
-   "pnl": 1334.53
+   "pnl": 1370.29
   },
   {
    "bucket": "13:00-14:00",
-   "trades": 65,
-   "win_rate": 0.477,
-   "avg_r": 0.004,
-   "pnl": -248.77
+   "trades": 66,
+   "win_rate": 0.47,
+   "avg_r": -0.013,
+   "pnl": -280.36
   },
   {
    "bucket": "14:00-16:00",
-   "trades": 67,
-   "win_rate": 0.552,
-   "avg_r": 0.015,
-   "pnl": -31.48
+   "trades": 71,
+   "win_rate": 0.521,
+   "avg_r": -0.044,
+   "pnl": -211.19
   }
  ],
  "note": "Paper results; a scorecard flags setups to review, it does not prove or disprove an edge.",
  "playing_time": {
   "account": "primary",
-  "day": "2026-10-29",
-  "window": "2026-10-06 to 2026-10-29",
+  "day": "2026-10-30",
+  "window": "2026-10-06 to 2026-10-30",
   "target_per_week": 15.0,
   "today": {
    "summary": {
     "sessions": 1,
-    "setups": 8,
-    "signals": 35,
-    "entries": 16,
-    "trades": 16,
-    "lost_to_other_setups": 1,
-    "lost_share": 0.029,
+    "setups": 10,
+    "signals": 105,
+    "entries": 15,
+    "trades": 15,
+    "lost_to_other_setups": 0,
+    "lost_share": 0.0,
     "skipped": {
-     "realism": 8,
-     "borrow": 6,
-     "daily_loss": 4,
-     "held_by_other": 1
+     "borrow": 73,
+     "realism": 17
     },
-    "peak_open_positions": 7,
+    "peak_open_positions": 8,
     "silent": [],
     "crowded_out": [],
     "starved": [],
@@ -173,17 +171,19 @@
      "MF4-h40-open-flowsell"
     ],
     "slow": [
-     "ST7-rsi50dn-long-pm-t1s1-FD"
+     "L3-gap-slope-rsi5hi-FD",
+     "L3-gap-slope-fromopen-FD",
+     "NS5-sma50-flush-oversold-long"
     ],
-    "sim_trades": 19,
-    "sim_win_rate": 0.211,
-    "sim_avg_r": -0.751,
-    "sim_total_r": -14.28,
-    "sim_held_trades": 1,
-    "sim_held_avg_r": -1.054,
-    "setups_live": 8,
+    "sim_trades": 87,
+    "sim_win_rate": 0.828,
+    "sim_avg_r": 0.54,
+    "sim_total_r": 46.96,
+    "sim_held_trades": 0,
+    "sim_held_avg_r": null,
+    "setups_live": 10,
     "slots": 77,
-    "earnings_excluded": 1490,
+    "earnings_excluded": 1871,
     "setup_source": "snapshot"
    },
    "setups": [
@@ -192,29 +192,27 @@
      "name": "Gap-Down Pop Fade (all day)",
      "priority": 1,
      "sessions": 1,
-     "signals": 7,
-     "entries": 3,
-     "trades": 3,
-     "entries_per_day": 3.0,
-     "signals_per_day": 7.0,
+     "signals": 2,
+     "entries": 1,
+     "trades": 1,
+     "entries_per_day": 1.0,
+     "signals_per_day": 2.0,
      "expected_per_day": 12.79,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 15.0,
+     "weekly_pace": 5.0,
      "skipped": {
-      "daily_loss": 1,
-      "borrow": 1,
-      "realism": 2
+      "borrow": 1
      },
      "lost_to": {},
      "lost_to_higher_priority": 0,
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "watch",
-     "why": "3.00 entries/day vs ~12.79 expected",
-     "sim_trades": 4,
+     "why": "1.00 entries/day vs ~12.79 expected",
+     "sim_trades": 1,
      "sim_win_rate": 0.0,
-     "sim_avg_r": -1.003,
-     "sim_total_r": -4.01,
+     "sim_avg_r": -1.029,
+     "sim_total_r": -1.03,
      "sim_held_trades": 0,
      "sim_held_avg_r": null
     },
@@ -223,16 +221,16 @@
      "name": "Gap-Down Pop Fade, Heavy Selling (all day)",
      "priority": 2,
      "sessions": 1,
-     "signals": 4,
+     "signals": 7,
      "entries": 3,
      "trades": 3,
      "entries_per_day": 3.0,
-     "signals_per_day": 4.0,
+     "signals_per_day": 7.0,
      "expected_per_day": 13.59,
      "expected_source": "two-year lab, 5 busiest days out",
      "weekly_pace": 15.0,
      "skipped": {
-      "realism": 1
+      "borrow": 4
      },
      "lost_to": {},
      "lost_to_higher_priority": 0,
@@ -240,10 +238,10 @@
      "took_from_others": 0,
      "verdict": "watch",
      "why": "3.00 entries/day vs ~13.59 expected",
-     "sim_trades": 1,
-     "sim_win_rate": 0.0,
-     "sim_avg_r": -1.186,
-     "sim_total_r": -1.19,
+     "sim_trades": 4,
+     "sim_win_rate": 0.25,
+     "sim_avg_r": -0.358,
+     "sim_total_r": -1.43,
      "sim_held_trades": 0,
      "sim_held_avg_r": null
     },
@@ -253,15 +251,15 @@
      "priority": 3,
      "sessions": 1,
      "signals": 7,
-     "entries": 2,
-     "trades": 2,
-     "entries_per_day": 2.0,
+     "entries": 1,
+     "trades": 1,
+     "entries_per_day": 1.0,
      "signals_per_day": 7.0,
      "expected_per_day": 10.09,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 10.0,
+     "weekly_pace": 5.0,
      "skipped": {
-      "borrow": 3,
+      "borrow": 4,
       "realism": 2
      },
      "lost_to": {},
@@ -269,11 +267,11 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "watch",
-     "why": "2.00 entries/day vs ~10.09 expected",
-     "sim_trades": 5,
-     "sim_win_rate": 0.0,
-     "sim_avg_r": -1.145,
-     "sim_total_r": -5.73,
+     "why": "1.00 entries/day vs ~10.09 expected",
+     "sim_trades": 6,
+     "sim_win_rate": 0.333,
+     "sim_avg_r": -0.205,
+     "sim_total_r": -1.23,
      "sim_held_trades": 0,
      "sim_held_avg_r": null
     },
@@ -282,29 +280,28 @@
      "name": "Early Sellers, Strong Heat (all day)",
      "priority": 4,
      "sessions": 1,
-     "signals": 11,
-     "entries": 4,
-     "trades": 4,
-     "entries_per_day": 4.0,
-     "signals_per_day": 11.0,
+     "signals": 12,
+     "entries": 1,
+     "trades": 1,
+     "entries_per_day": 1.0,
+     "signals_per_day": 12.0,
      "expected_per_day": 16.45,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 20.0,
+     "weekly_pace": 5.0,
      "skipped": {
-      "daily_loss": 3,
-      "borrow": 2,
-      "realism": 2
+      "borrow": 8,
+      "realism": 3
      },
      "lost_to": {},
      "lost_to_higher_priority": 0,
      "lost_to_earlier_lower_priority": 0,
-     "took_from_others": 1,
+     "took_from_others": 0,
      "verdict": "watch",
-     "why": "4.00 entries/day vs ~16.45 expected",
-     "sim_trades": 7,
-     "sim_win_rate": 0.429,
-     "sim_avg_r": -0.389,
-     "sim_total_r": -2.72,
+     "why": "1.00 entries/day vs ~16.45 expected",
+     "sim_trades": 11,
+     "sim_win_rate": 0.636,
+     "sim_avg_r": -0.084,
+     "sim_total_r": -0.93,
      "sim_held_trades": 0,
      "sim_held_avg_r": null
     },
@@ -313,68 +310,101 @@
      "name": "RSI Collapse Dip Buy (all day)",
      "priority": 5,
      "sessions": 1,
-     "signals": 1,
-     "entries": 1,
-     "trades": 1,
-     "entries_per_day": 1.0,
-     "signals_per_day": 1.0,
+     "signals": 10,
+     "entries": 6,
+     "trades": 6,
+     "entries_per_day": 6.0,
+     "signals_per_day": 10.0,
      "expected_per_day": 2.17,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 5.0,
-     "skipped": {},
-     "lost_to": {},
-     "lost_to_higher_priority": 0,
-     "lost_to_earlier_lower_priority": 0,
-     "took_from_others": 0,
-     "verdict": "slow",
-     "why": "5.0 entries/week; ~12 weeks to 60 trades",
-     "sim_trades": 0,
-     "sim_win_rate": null,
-     "sim_avg_r": null,
-     "sim_total_r": 0.0,
-     "sim_held_trades": 0,
-     "sim_held_avg_r": null
-    },
-    {
-     "setup": "NS1-rsidip-rsi5pop-long",
-     "name": "Big Gainer Dip-and-Pop",
-     "priority": 6,
-     "sessions": 1,
-     "signals": 4,
-     "entries": 3,
-     "trades": 3,
-     "entries_per_day": 3.0,
-     "signals_per_day": 4.0,
-     "expected_per_day": 0.92,
-     "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 15.0,
+     "weekly_pace": 30.0,
      "skipped": {
-      "realism": 1
+      "realism": 4
      },
      "lost_to": {},
      "lost_to_higher_priority": 0,
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "ok",
-     "why": "15.0 entries/week",
-     "sim_trades": 1,
-     "sim_win_rate": 1.0,
-     "sim_avg_r": 0.424,
-     "sim_total_r": 0.42,
+     "why": "30.0 entries/week",
+     "sim_trades": 4,
+     "sim_win_rate": 0.75,
+     "sim_avg_r": 0.412,
+     "sim_total_r": 1.65,
      "sim_held_trades": 0,
      "sim_held_avg_r": null
     },
     {
-     "setup": "NS5-sma50-flush-oversold-long",
-     "name": "Big Loser Flush Buy",
+     "setup": "L3-gap-slope-rsi5hi-FD",
+     "name": "Gap-Down Rebound Overbought Short (all day)",
+     "priority": 6,
+     "sessions": 1,
+     "signals": 17,
+     "entries": 1,
+     "trades": 1,
+     "entries_per_day": 1.0,
+     "signals_per_day": 17.0,
+     "expected_per_day": null,
+     "expected_source": null,
+     "weekly_pace": 5.0,
+     "skipped": {
+      "borrow": 15,
+      "realism": 1
+     },
+     "lost_to": {},
+     "lost_to_higher_priority": 0,
+     "lost_to_earlier_lower_priority": 0,
+     "took_from_others": 0,
+     "verdict": "slow",
+     "why": "5.0 entries/week; ~12 weeks to 60 trades",
+     "sim_trades": 14,
+     "sim_win_rate": 1.0,
+     "sim_avg_r": 0.486,
+     "sim_total_r": 6.8,
+     "sim_held_trades": 0,
+     "sim_held_avg_r": null
+    },
+    {
+     "setup": "L3-gap-slope-fromopen-FD",
+     "name": "Gap-Down Recovery Fade (all day)",
      "priority": 7,
+     "sessions": 1,
+     "signals": 46,
+     "entries": 0,
+     "trades": 0,
+     "entries_per_day": 0.0,
+     "signals_per_day": 46.0,
+     "expected_per_day": null,
+     "expected_source": null,
+     "weekly_pace": 0.0,
+     "skipped": {
+      "borrow": 41,
+      "realism": 5
+     },
+     "lost_to": {},
+     "lost_to_higher_priority": 0,
+     "lost_to_earlier_lower_priority": 0,
+     "took_from_others": 0,
+     "verdict": "slow",
+     "why": "no entries yet",
+     "sim_trades": 45,
+     "sim_win_rate": 0.956,
+     "sim_avg_r": 0.935,
+     "sim_total_r": 42.09,
+     "sim_held_trades": 0,
+     "sim_held_avg_r": null
+    },
+    {
+     "setup": "NS1-rsidip-rsi5pop-long",
+     "name": "Big Gainer Dip-and-Pop",
+     "priority": 8,
      "sessions": 1,
      "signals": 0,
      "entries": 0,
      "trades": 0,
      "entries_per_day": 0.0,
      "signals_per_day": 0.0,
-     "expected_per_day": 2.41,
+     "expected_per_day": 0.92,
      "expected_source": "two-year lab, 5 busiest days out",
      "weekly_pace": 0.0,
      "skipped": {},
@@ -383,7 +413,34 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "quiet - wait",
-     "why": "no signals yet; only ~2.4 expected so far",
+     "why": "no signals yet; only ~0.9 expected so far",
+     "sim_trades": 0,
+     "sim_win_rate": null,
+     "sim_avg_r": null,
+     "sim_total_r": 0.0,
+     "sim_held_trades": 0,
+     "sim_held_avg_r": null
+    },
+    {
+     "setup": "NS5-sma50-flush-oversold-long",
+     "name": "Big Loser Flush Buy",
+     "priority": 9,
+     "sessions": 1,
+     "signals": 2,
+     "entries": 2,
+     "trades": 2,
+     "entries_per_day": 2.0,
+     "signals_per_day": 2.0,
+     "expected_per_day": 2.41,
+     "expected_source": "two-year lab, 5 busiest days out",
+     "weekly_pace": 10.0,
+     "skipped": {},
+     "lost_to": {},
+     "lost_to_higher_priority": 0,
+     "lost_to_earlier_lower_priority": 0,
+     "took_from_others": 0,
+     "verdict": "slow",
+     "why": "10.0 entries/week; ~6 weeks to 60 trades",
      "sim_trades": 0,
      "sim_win_rate": null,
      "sim_avg_r": null,
@@ -394,48 +451,46 @@
     {
      "setup": "MF4-h40-open-flowsell",
      "name": "Early Sellers, Strong Heat",
-     "priority": 8,
+     "priority": 10,
      "sessions": 1,
-     "signals": 1,
+     "signals": 2,
      "entries": 0,
      "trades": 0,
      "entries_per_day": 0.0,
-     "signals_per_day": 1.0,
+     "signals_per_day": 2.0,
      "expected_per_day": 7.24,
      "expected_source": "two-year lab, 5 busiest days out",
      "weekly_pace": 0.0,
      "skipped": {
-      "held_by_other": 1
+      "realism": 2
      },
-     "lost_to": {
-      "MF4-h40-open-flowsell-FD": 1
-     },
-     "lost_to_higher_priority": 1,
+     "lost_to": {},
+     "lost_to_higher_priority": 0,
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "watch",
      "why": "0.00 entries/day vs ~7.24 expected",
-     "sim_trades": 1,
-     "sim_win_rate": 0.0,
-     "sim_avg_r": -1.054,
-     "sim_total_r": -1.05,
-     "sim_held_trades": 1,
-     "sim_held_avg_r": -1.054
+     "sim_trades": 2,
+     "sim_win_rate": 1.0,
+     "sim_avg_r": 0.517,
+     "sim_total_r": 1.03,
+     "sim_held_trades": 0,
+     "sim_held_avg_r": null
     }
    ]
   },
   "cumulative": {
    "summary": {
-    "sessions": 18,
-    "setups": 26,
-    "signals": 1174,
-    "entries": 732,
-    "trades": 734,
+    "sessions": 19,
+    "setups": 27,
+    "signals": 1279,
+    "entries": 747,
+    "trades": 749,
     "lost_to_other_setups": 87,
-    "lost_share": 0.074,
+    "lost_share": 0.068,
     "skipped": {
-     "realism": 203,
-     "borrow": 144,
+     "realism": 220,
+     "borrow": 217,
      "held_by_other": 87,
      "daily_loss": 6,
      "missed_trigger": 1,
@@ -456,6 +511,7 @@
     "watch": [],
     "slow": [
      "ST7-rsi50dn-long-pm-t1s1-FD",
+     "L3-gap-slope-rsi5hi-FD",
      "NS1-rsidip-rsi5pop-long",
      "NS5-sma50-flush-oversold-long",
      "orb20_a",
@@ -464,10 +520,10 @@
      "MF1-945-flowsell-vwapup",
      "NS4-pm-vwap-reclaim-oversold-short"
     ],
-    "sim_trades": 440,
-    "sim_win_rate": 0.552,
-    "sim_avg_r": 0.015,
-    "sim_total_r": 6.45,
+    "sim_trades": 527,
+    "sim_win_rate": 0.598,
+    "sim_avg_r": 0.101,
+    "sim_total_r": 53.41,
     "sim_held_trades": 87,
     "sim_held_avg_r": 0.006
    },
@@ -476,18 +532,18 @@
      "setup": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
      "name": "Gap-Down Pop Fade (all day)",
      "priority": 1,
-     "sessions": 10,
-     "signals": 87,
-     "entries": 69,
-     "trades": 69,
-     "entries_per_day": 6.9,
-     "signals_per_day": 8.7,
+     "sessions": 11,
+     "signals": 89,
+     "entries": 70,
+     "trades": 70,
+     "entries_per_day": 6.36,
+     "signals_per_day": 8.09,
      "expected_per_day": 12.79,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 34.5,
+     "weekly_pace": 31.8,
      "skipped": {
       "daily_loss": 1,
-      "borrow": 5,
+      "borrow": 6,
       "realism": 12
      },
      "lost_to": {},
@@ -495,11 +551,11 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 13,
      "verdict": "ok",
-     "why": "34.5 entries/week",
-     "sim_trades": 18,
-     "sim_win_rate": 0.444,
-     "sim_avg_r": -0.083,
-     "sim_total_r": -1.49,
+     "why": "31.8 entries/week",
+     "sim_trades": 19,
+     "sim_win_rate": 0.421,
+     "sim_avg_r": -0.133,
+     "sim_total_r": -2.52,
      "sim_held_trades": 0,
      "sim_held_avg_r": null,
      "live_today": true
@@ -508,18 +564,18 @@
      "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
      "name": "Gap-Down Pop Fade, Heavy Selling (all day)",
      "priority": 2,
-     "sessions": 10,
-     "signals": 68,
-     "entries": 49,
-     "trades": 49,
-     "entries_per_day": 4.9,
-     "signals_per_day": 6.8,
+     "sessions": 11,
+     "signals": 75,
+     "entries": 52,
+     "trades": 52,
+     "entries_per_day": 4.73,
+     "signals_per_day": 6.82,
      "expected_per_day": 13.59,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 24.5,
+     "weekly_pace": 23.6,
      "skipped": {
       "held_by_other": 1,
-      "borrow": 8,
+      "borrow": 12,
       "realism": 10
      },
      "lost_to": {
@@ -529,11 +585,11 @@
      "lost_to_earlier_lower_priority": 1,
      "took_from_others": 13,
      "verdict": "ok",
-     "why": "24.5 entries/week",
-     "sim_trades": 19,
-     "sim_win_rate": 0.579,
-     "sim_avg_r": 0.244,
-     "sim_total_r": 4.63,
+     "why": "23.6 entries/week",
+     "sim_trades": 23,
+     "sim_win_rate": 0.522,
+     "sim_avg_r": 0.139,
+     "sim_total_r": 3.2,
      "sim_held_trades": 1,
      "sim_held_avg_r": -0.86,
      "live_today": true
@@ -542,19 +598,19 @@
      "setup": "MF2-open-rsimidhi-flowsell-FD",
      "name": "Early Sellers, Mid-High RSI (all day)",
      "priority": 3,
-     "sessions": 8,
-     "signals": 54,
-     "entries": 38,
-     "trades": 38,
-     "entries_per_day": 4.75,
-     "signals_per_day": 6.75,
+     "sessions": 9,
+     "signals": 61,
+     "entries": 39,
+     "trades": 39,
+     "entries_per_day": 4.33,
+     "signals_per_day": 6.78,
      "expected_per_day": 10.09,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 23.8,
+     "weekly_pace": 21.7,
      "skipped": {
       "held_by_other": 4,
-      "borrow": 6,
-      "realism": 6
+      "borrow": 10,
+      "realism": 8
      },
      "lost_to": {
       "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": 4,
@@ -565,11 +621,11 @@
      "lost_to_earlier_lower_priority": 4,
      "took_from_others": 6,
      "verdict": "ok",
-     "why": "23.8 entries/week",
-     "sim_trades": 16,
-     "sim_win_rate": 0.5,
-     "sim_avg_r": 0.254,
-     "sim_total_r": 4.07,
+     "why": "21.7 entries/week",
+     "sim_trades": 22,
+     "sim_win_rate": 0.455,
+     "sim_avg_r": 0.129,
+     "sim_total_r": 2.84,
      "sim_held_trades": 4,
      "sim_held_avg_r": 1.06,
      "live_today": true
@@ -578,20 +634,20 @@
      "setup": "MF4-h40-open-flowsell-FD",
      "name": "Early Sellers, Strong Heat (all day)",
      "priority": 4,
-     "sessions": 8,
-     "signals": 66,
-     "entries": 37,
-     "trades": 37,
-     "entries_per_day": 4.62,
-     "signals_per_day": 8.25,
+     "sessions": 9,
+     "signals": 78,
+     "entries": 38,
+     "trades": 38,
+     "entries_per_day": 4.22,
+     "signals_per_day": 8.67,
      "expected_per_day": 16.45,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 23.1,
+     "weekly_pace": 21.1,
      "skipped": {
       "held_by_other": 4,
       "daily_loss": 3,
-      "borrow": 11,
-      "realism": 11
+      "borrow": 19,
+      "realism": 14
      },
      "lost_to": {
       "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": 4,
@@ -603,11 +659,11 @@
      "lost_to_earlier_lower_priority": 1,
      "took_from_others": 15,
      "verdict": "ok",
-     "why": "23.1 entries/week",
-     "sim_trades": 29,
-     "sim_win_rate": 0.69,
-     "sim_avg_r": 0.023,
-     "sim_total_r": 0.68,
+     "why": "21.1 entries/week",
+     "sim_trades": 40,
+     "sim_win_rate": 0.675,
+     "sim_avg_r": -0.006,
+     "sim_total_r": -0.25,
      "sim_held_trades": 4,
      "sim_held_avg_r": 0.438,
      "live_today": true
@@ -616,16 +672,47 @@
      "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
      "name": "RSI Collapse Dip Buy (all day)",
      "priority": 5,
-     "sessions": 4,
-     "signals": 4,
-     "entries": 3,
-     "trades": 3,
-     "entries_per_day": 0.75,
-     "signals_per_day": 1.0,
+     "sessions": 5,
+     "signals": 14,
+     "entries": 9,
+     "trades": 9,
+     "entries_per_day": 1.8,
+     "signals_per_day": 2.8,
      "expected_per_day": 2.17,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 3.8,
+     "weekly_pace": 9.0,
      "skipped": {
+      "realism": 5
+     },
+     "lost_to": {},
+     "lost_to_higher_priority": 0,
+     "lost_to_earlier_lower_priority": 0,
+     "took_from_others": 0,
+     "verdict": "slow",
+     "why": "9.0 entries/week; ~7 weeks to 60 trades",
+     "sim_trades": 5,
+     "sim_win_rate": 0.8,
+     "sim_avg_r": 0.482,
+     "sim_total_r": 2.41,
+     "sim_held_trades": 0,
+     "sim_held_avg_r": null,
+     "live_today": true
+    },
+    {
+     "setup": "L3-gap-slope-rsi5hi-FD",
+     "name": "Gap-Down Rebound Overbought Short (all day)",
+     "priority": 6,
+     "sessions": 1,
+     "signals": 17,
+     "entries": 1,
+     "trades": 1,
+     "entries_per_day": 1.0,
+     "signals_per_day": 17.0,
+     "expected_per_day": null,
+     "expected_source": null,
+     "weekly_pace": 5.0,
+     "skipped": {
+      "borrow": 15,
       "realism": 1
      },
      "lost_to": {},
@@ -633,28 +720,62 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "slow",
-     "why": "3.8 entries/week; ~16 weeks to 60 trades",
-     "sim_trades": 1,
+     "why": "5.0 entries/week; ~12 weeks to 60 trades",
+     "sim_trades": 14,
      "sim_win_rate": 1.0,
-     "sim_avg_r": 0.761,
-     "sim_total_r": 0.76,
+     "sim_avg_r": 0.486,
+     "sim_total_r": 6.8,
      "sim_held_trades": 0,
      "sim_held_avg_r": null,
      "live_today": true
     },
     {
+     "setup": "L3-gap-slope-fromopen-FD",
+     "name": "Gap-Down Recovery Fade (all day)",
+     "priority": 7,
+     "sessions": 3,
+     "signals": 129,
+     "entries": 23,
+     "trades": 23,
+     "entries_per_day": 7.67,
+     "signals_per_day": 43.0,
+     "expected_per_day": null,
+     "expected_source": null,
+     "weekly_pace": 38.3,
+     "skipped": {
+      "held_by_other": 9,
+      "borrow": 83,
+      "realism": 14
+     },
+     "lost_to": {
+      "L3-gap-slope-fromopen-FD": 9
+     },
+     "lost_to_higher_priority": 0,
+     "lost_to_earlier_lower_priority": 9,
+     "took_from_others": 0,
+     "verdict": "ok",
+     "why": "38.3 entries/week",
+     "sim_trades": 105,
+     "sim_win_rate": 0.81,
+     "sim_avg_r": 0.506,
+     "sim_total_r": 53.08,
+     "sim_held_trades": 9,
+     "sim_held_avg_r": 0.035,
+     "live_today": true
+    },
+    {
      "setup": "NS1-rsidip-rsi5pop-long",
      "name": "Big Gainer Dip-and-Pop",
-     "priority": 6,
-     "sessions": 16,
+     "priority": 8,
+     "sessions": 17,
      "signals": 15,
      "entries": 12,
      "trades": 12,
-     "entries_per_day": 0.75,
-     "signals_per_day": 0.94,
+     "entries_per_day": 0.71,
+     "signals_per_day": 0.88,
      "expected_per_day": 0.92,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 3.8,
+     "weekly_pace": 3.5,
      "skipped": {
       "realism": 3
      },
@@ -663,7 +784,7 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "slow",
-     "why": "3.8 entries/week; ~16 weeks to 60 trades",
+     "why": "3.5 entries/week; ~17 weeks to 60 trades",
      "sim_trades": 3,
      "sim_win_rate": 1.0,
      "sim_avg_r": 0.402,
@@ -675,16 +796,16 @@
     {
      "setup": "NS5-sma50-flush-oversold-long",
      "name": "Big Loser Flush Buy",
-     "priority": 7,
-     "sessions": 16,
-     "signals": 19,
-     "entries": 16,
-     "trades": 16,
-     "entries_per_day": 1.0,
-     "signals_per_day": 1.19,
+     "priority": 9,
+     "sessions": 17,
+     "signals": 21,
+     "entries": 18,
+     "trades": 18,
+     "entries_per_day": 1.06,
+     "signals_per_day": 1.24,
      "expected_per_day": 2.41,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 5.0,
+     "weekly_pace": 5.3,
      "skipped": {
       "realism": 3
      },
@@ -693,7 +814,7 @@
      "lost_to_earlier_lower_priority": 0,
      "took_from_others": 0,
      "verdict": "slow",
-     "why": "5.0 entries/week; ~12 weeks to 60 trades",
+     "why": "5.3 entries/week; ~11 weeks to 60 trades",
      "sim_trades": 3,
      "sim_win_rate": 1.0,
      "sim_avg_r": 0.924,
@@ -705,20 +826,20 @@
     {
      "setup": "MF4-h40-open-flowsell",
      "name": "Early Sellers, Strong Heat",
-     "priority": 8,
-     "sessions": 16,
-     "signals": 61,
+     "priority": 10,
+     "sessions": 17,
+     "signals": 63,
      "entries": 21,
      "trades": 21,
-     "entries_per_day": 1.31,
-     "signals_per_day": 3.81,
+     "entries_per_day": 1.24,
+     "signals_per_day": 3.71,
      "expected_per_day": 7.24,
      "expected_source": "two-year lab, 5 busiest days out",
-     "weekly_pace": 6.6,
+     "weekly_pace": 6.2,
      "skipped": {
       "held_by_other": 20,
       "borrow": 10,
-      "realism": 10
+      "realism": 12
      },
      "lost_to": {
       "MF4-h40-open-flowsell-FD": 15,
@@ -733,53 +854,19 @@
      "lost_to_earlier_lower_priority": 11,
      "took_from_others": 17,
      "verdict": "crowded-out",
-     "why": "20 of 61 signals (33%) lost to setups already holding the symbol",
-     "sim_trades": 40,
-     "sim_win_rate": 0.6,
-     "sim_avg_r": -0.09,
-     "sim_total_r": -3.59,
+     "why": "20 of 63 signals (32%) lost to setups already holding the symbol",
+     "sim_trades": 42,
+     "sim_win_rate": 0.619,
+     "sim_avg_r": -0.061,
+     "sim_total_r": -2.56,
      "sim_held_trades": 20,
      "sim_held_avg_r": -0.186,
      "live_today": true
     },
     {
-     "setup": "L3-gap-slope-fromopen-FD",
-     "name": "Gap-Down Recovery Fade (all day)",
-     "priority": 9,
-     "sessions": 2,
-     "signals": 83,
-     "entries": 23,
-     "trades": 23,
-     "entries_per_day": 11.5,
-     "signals_per_day": 41.5,
-     "expected_per_day": null,
-     "expected_source": null,
-     "weekly_pace": 57.5,
-     "skipped": {
-      "held_by_other": 9,
-      "borrow": 42,
-      "realism": 9
-     },
-     "lost_to": {
-      "L3-gap-slope-fromopen-FD": 9
-     },
-     "lost_to_higher_priority": 0,
-     "lost_to_earlier_lower_priority": 9,
-     "took_from_others": 0,
-     "verdict": "ok",
-     "why": "57.5 entries/week",
-     "sim_trades": 60,
-     "sim_win_rate": 0.7,
-     "sim_avg_r": 0.183,
-     "sim_total_r": 10.99,
-     "sim_held_trades": 9,
-     "sim_held_avg_r": 0.035,
-     "live_today": false
-    },
-    {
      "setup": "intraday_momentum",
      "name": "Index Last-Half-Hour Momentum",
-     "priority": 9,
+     "priority": 11,
      "sessions": 3,
      "signals": 0,
      "entries": 0,
@@ -807,7 +894,7 @@
     {
      "setup": "orb20_a",
      "name": "20-Minute Opening Range Breakout",
-     "priority": 10,
+     "priority": 12,
      "sessions": 4,
      "signals": 14,
      "entries": 8,
@@ -839,7 +926,7 @@
     {
      "setup": "MF3-open-flowsell-rsi5hi-FD",
      "name": "Early Sellers into a Pop (all day)",
-     "priority": 11,
+     "priority": 13,
      "sessions": 3,
      "signals": 50,
      "entries": 45,
@@ -869,7 +956,7 @@
     {
      "setup": "heat_fade_short",
      "name": "Morning Bounce Fade",
-     "priority": 11,
+     "priority": 13,
      "sessions": 4,
      "signals": 66,
      "entries": 49,
@@ -900,7 +987,7 @@
     {
      "setup": "heat_fade_long",
      "name": "Midday Gap-Up Dip Buy",
-     "priority": 12,
+     "priority": 14,
      "sessions": 4,
      "signals": 64,
      "entries": 43,
@@ -933,7 +1020,7 @@
     {
      "setup": "exhaustion_short",
      "name": "Afternoon Blow-off Short",
-     "priority": 13,
+     "priority": 15,
      "sessions": 4,
      "signals": 30,
      "entries": 23,
@@ -964,7 +1051,7 @@
     {
      "setup": "NS3-failed-vwap-reclaim-short",
      "name": "Big Loser VWAP Reclaim Fade",
-     "priority": 14,
+     "priority": 16,
      "sessions": 5,
      "signals": 19,
      "entries": 9,
@@ -998,7 +1085,7 @@
     {
      "setup": "NS3-failed-vwap-reclaim-short-FD",
      "name": "Big Loser VWAP Reclaim Fade (all day)",
-     "priority": 14,
+     "priority": 16,
      "sessions": 2,
      "signals": 46,
      "entries": 32,
@@ -1032,7 +1119,7 @@
     {
      "setup": "MF2-open-rsimidhi-flowsell",
      "name": "Early Sellers, Mid-High RSI",
-     "priority": 15,
+     "priority": 17,
      "sessions": 14,
      "signals": 13,
      "entries": 4,
@@ -1066,7 +1153,7 @@
     {
      "setup": "NS2-sma50break-overbought-short",
      "name": "Big Gainer Average Reclaim Fade",
-     "priority": 15,
+     "priority": 17,
      "sessions": 6,
      "signals": 77,
      "entries": 54,
@@ -1097,7 +1184,7 @@
     {
      "setup": "RW6G1-ns2-up3-vwap2sd-short",
      "name": "Big Gainer Fade with VWAP Band Guard",
-     "priority": 15,
+     "priority": 17,
      "sessions": 9,
      "signals": 5,
      "entries": 3,
@@ -1128,7 +1215,7 @@
     {
      "setup": "MF1-945-flowsell-vwapup",
      "name": "Early Sellers Above VWAP",
-     "priority": 17,
+     "priority": 19,
      "sessions": 12,
      "signals": 57,
      "entries": 25,
@@ -1165,7 +1252,7 @@
     {
      "setup": "NS4-pm-vwap-reclaim-oversold-short",
      "name": "Afternoon VWAP Reclaim Fade",
-     "priority": 17,
+     "priority": 19,
      "sessions": 14,
      "signals": 26,
      "entries": 20,
@@ -1196,7 +1283,7 @@
     {
      "setup": "CWT13-vwapstretch-z05-long",
      "name": "Stretched Below VWAP Bounce",
-     "priority": 19,
+     "priority": 21,
      "sessions": 1,
      "signals": 12,
      "entries": 11,
@@ -1226,7 +1313,7 @@
     {
      "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
      "name": "Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]",
-     "priority": 19,
+     "priority": 21,
      "sessions": 5,
      "signals": 114,
      "entries": 78,
@@ -1257,7 +1344,7 @@
     {
      "setup": "MF3-open-flowsell-rsi5hi",
      "name": "Early Sellers into a Pop",
-     "priority": 19,
+     "priority": 21,
      "sessions": 8,
      "signals": 50,
      "entries": 29,
@@ -1296,7 +1383,7 @@
     {
      "setup": "MF5-flowsell-vwapup-rsi5hi",
      "name": "Sellers into Strength (all day)",
-     "priority": 20,
+     "priority": 22,
      "sessions": 8,
      "signals": 74,
      "entries": 31,
@@ -1369,8 +1456,8 @@
    "days": [
     "2026-10-26"
    ],
-   "recent_trades": 11,
-   "recent_avg_r": -0.377,
+   "recent_trades": 0,
+   "recent_avg_r": null,
    "expected_r": -0.08,
    "score": -0.1339,
    "sim_trades": 1,
@@ -1385,7 +1472,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -1423,8 +1510,8 @@
     "2026-10-26",
     "2026-10-27"
    ],
-   "recent_trades": 40,
-   "recent_avg_r": -0.027,
+   "recent_trades": 34,
+   "recent_avg_r": -0.013,
    "expected_r": -0.095,
    "score": 0.0138,
    "sim_trades": 36,
@@ -1463,7 +1550,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -1473,7 +1560,7 @@
    "setup": "L3-gap-slope-fromopen-FD",
    "name": "Gap-Down Recovery Fade (all day)",
    "account": "primary",
-   "live": false,
+   "live": true,
    "former_primary": false,
    "trades": 23,
    "sessions_traded": 2,
@@ -1502,9 +1589,9 @@
    "recent_avg_r": null,
    "expected_r": null,
    "score": -0.127,
-   "sim_trades": 60,
-   "sim_win_rate": 0.7,
-   "sim_avg_r": 0.183,
+   "sim_trades": 105,
+   "sim_win_rate": 0.81,
+   "sim_avg_r": 0.506,
    "daily": [
     [
      "2026-10-21",
@@ -1520,10 +1607,60 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
+   }
+  },
+  {
+   "setup": "L3-gap-slope-rsi5hi-FD",
+   "name": "Gap-Down Rebound Overbought Short (all day)",
+   "account": "primary",
+   "live": true,
+   "former_primary": false,
+   "trades": 1,
+   "sessions_traded": 1,
+   "first": "2026-10-30",
+   "last": "2026-10-30",
+   "win_rate": 1.0,
+   "avg_r": 0.34,
+   "total_r": 0.34,
+   "pnl": 4.76,
+   "profit_factor": null,
+   "avg_win_r": 0.34,
+   "avg_loss_r": null,
+   "breakeven_wr": null,
+   "t_stat": null,
+   "n_win": 1,
+   "win_r_sum": 0.3403,
+   "loss_r_sum": -0.0,
+   "r_sq_sum": 0.1158,
+   "win_pnl": 4.76,
+   "loss_pnl": -0.0,
+   "days": [
+    "2026-10-30"
+   ],
+   "recent_trades": 1,
+   "recent_avg_r": 0.34,
+   "expected_r": null,
+   "score": 0.0162,
+   "sim_trades": 14,
+   "sim_win_rate": 1.0,
+   "sim_avg_r": 0.486,
+   "daily": [
+    [
+     "2026-10-30",
+     1,
+     0.34,
+     4.76
+    ]
+   ],
+   "last_session": {
+    "date": "2026-10-30",
+    "trades": 1,
+    "r": 0.34,
+    "pnl": 4.76
    }
   },
   {
@@ -1633,7 +1770,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -1704,7 +1841,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -1716,25 +1853,25 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 38,
-   "sessions_traded": 7,
+   "trades": 39,
+   "sessions_traded": 8,
    "first": "2026-10-20",
-   "last": "2026-10-29",
-   "win_rate": 0.684,
-   "avg_r": 0.949,
-   "total_r": 36.05,
-   "pnl": 521.34,
-   "profit_factor": 5.34,
+   "last": "2026-10-30",
+   "win_rate": 0.667,
+   "avg_r": 0.899,
+   "total_r": 35.06,
+   "pnl": 491.1,
+   "profit_factor": 4.27,
    "avg_win_r": 1.794,
-   "avg_loss_r": 0.882,
-   "breakeven_wr": 0.33,
-   "t_stat": 4.32,
+   "avg_loss_r": 0.891,
+   "breakeven_wr": 0.332,
+   "t_stat": 4.09,
    "n_win": 26,
    "win_r_sum": 46.6332,
-   "loss_r_sum": 10.5819,
-   "r_sq_sum": 102.0256,
+   "loss_r_sum": 11.5772,
+   "r_sq_sum": 103.0163,
    "win_pnl": 641.36,
-   "loss_pnl": 120.01,
+   "loss_pnl": 150.25,
    "days": [
     "2026-10-20",
     "2026-10-21",
@@ -1742,15 +1879,16 @@
     "2026-10-23",
     "2026-10-26",
     "2026-10-27",
-    "2026-10-29"
+    "2026-10-29",
+    "2026-10-30"
    ],
-   "recent_trades": 10,
-   "recent_avg_r": 0.593,
+   "recent_trades": 8,
+   "recent_avg_r": 0.3,
    "expected_r": null,
-   "score": 0.6216,
-   "sim_trades": 16,
-   "sim_win_rate": 0.5,
-   "sim_avg_r": 0.254,
+   "score": 0.5942,
+   "sim_trades": 22,
+   "sim_win_rate": 0.455,
+   "sim_avg_r": 0.129,
    "daily": [
     [
      "2026-10-20",
@@ -1793,13 +1931,19 @@
      2,
      -2.121,
      -32.52
+    ],
+    [
+     "2026-10-30",
+     1,
+     -0.995,
+     -30.24
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 2,
-    "r": -2.121,
-    "pnl": -32.52
+    "date": "2026-10-30",
+    "trades": 1,
+    "r": -0.995,
+    "pnl": -30.24
    }
   },
   {
@@ -1895,7 +2039,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -1959,7 +2103,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2003,9 +2147,9 @@
    "recent_avg_r": null,
    "expected_r": -0.017,
    "score": 0.036,
-   "sim_trades": 40,
-   "sim_win_rate": 0.6,
-   "sim_avg_r": -0.09,
+   "sim_trades": 42,
+   "sim_win_rate": 0.619,
+   "sim_avg_r": -0.061,
    "daily": [
     [
      "2026-10-08",
@@ -2051,7 +2195,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2063,24 +2207,24 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 37,
-   "sessions_traded": 8,
+   "trades": 38,
+   "sessions_traded": 9,
    "first": "2026-10-20",
-   "last": "2026-10-29",
-   "win_rate": 0.595,
-   "avg_r": -0.07,
-   "total_r": -2.61,
-   "pnl": -63.09,
-   "profit_factor": 0.79,
-   "avg_win_r": 0.468,
+   "last": "2026-10-30",
+   "win_rate": 0.605,
+   "avg_r": -0.057,
+   "total_r": -2.17,
+   "pnl": -32.09,
+   "profit_factor": 0.89,
+   "avg_win_r": 0.466,
    "avg_loss_r": 0.86,
    "breakeven_wr": 0.648,
-   "t_stat": -0.6,
-   "n_win": 22,
-   "win_r_sum": 10.2875,
+   "t_stat": -0.5,
+   "n_win": 23,
+   "win_r_sum": 10.726,
    "loss_r_sum": 12.8957,
-   "r_sq_sum": 18.2808,
-   "win_pnl": 235.28,
+   "r_sq_sum": 18.4731,
+   "win_pnl": 266.28,
    "loss_pnl": 298.37,
    "days": [
     "2026-10-20",
@@ -2090,15 +2234,16 @@
     "2026-10-26",
     "2026-10-27",
     "2026-10-28",
-    "2026-10-29"
+    "2026-10-29",
+    "2026-10-30"
    ],
    "recent_trades": 13,
-   "recent_avg_r": -0.219,
+   "recent_avg_r": -0.224,
    "expected_r": null,
-   "score": -0.0458,
-   "sim_trades": 29,
-   "sim_win_rate": 0.69,
-   "sim_avg_r": 0.023,
+   "score": -0.0374,
+   "sim_trades": 40,
+   "sim_win_rate": 0.675,
+   "sim_avg_r": -0.006,
    "daily": [
     [
      "2026-10-20",
@@ -2147,13 +2292,19 @@
      4,
      -2.761,
      -102.28
+    ],
+    [
+     "2026-10-30",
+     1,
+     0.439,
+     31.0
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 4,
-    "r": -2.761,
-    "pnl": -102.28
+    "date": "2026-10-30",
+    "trades": 1,
+    "r": 0.439,
+    "pnl": 31.0
    }
   },
   {
@@ -2249,7 +2400,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2341,10 +2492,10 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 3,
-    "r": -0.227,
-    "pnl": -31.77
+    "date": "2026-10-30",
+    "trades": 0,
+    "r": null,
+    "pnl": null
    }
   },
   {
@@ -2419,7 +2570,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2476,7 +2627,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2533,7 +2684,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2632,7 +2783,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -2644,24 +2795,24 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 16,
-   "sessions_traded": 8,
+   "trades": 18,
+   "sessions_traded": 9,
    "first": "2026-10-09",
-   "last": "2026-10-28",
-   "win_rate": 0.5,
-   "avg_r": 0.168,
-   "total_r": 2.68,
-   "pnl": 144.65,
-   "profit_factor": 2.06,
-   "avg_win_r": 1.006,
+   "last": "2026-10-30",
+   "win_rate": 0.556,
+   "avg_r": 0.257,
+   "total_r": 4.63,
+   "pnl": 256.41,
+   "profit_factor": 2.88,
+   "avg_win_r": 0.999,
    "avg_loss_r": 0.67,
-   "breakeven_wr": 0.4,
-   "t_stat": 0.66,
-   "n_win": 8,
-   "win_r_sum": 8.0472,
+   "breakeven_wr": 0.402,
+   "t_stat": 1.11,
+   "n_win": 10,
+   "win_r_sum": 9.9934,
    "loss_r_sum": 5.3636,
-   "r_sq_sum": 15.799,
-   "win_pnl": 281.35,
+   "r_sq_sum": 17.6975,
+   "win_pnl": 393.11,
    "loss_pnl": 136.7,
    "days": [
     "2026-10-09",
@@ -2671,12 +2822,13 @@
     "2026-10-19",
     "2026-10-20",
     "2026-10-22",
-    "2026-10-28"
+    "2026-10-28",
+    "2026-10-30"
    ],
-   "recent_trades": 2,
-   "recent_avg_r": 0.737,
+   "recent_trades": 4,
+   "recent_avg_r": 0.855,
    "expected_r": 0.002,
-   "score": 0.0745,
+   "score": 0.1218,
    "sim_trades": 3,
    "sim_win_rate": 1.0,
    "sim_avg_r": 0.924,
@@ -2728,13 +2880,19 @@
      2,
      1.473,
      145.1
+    ],
+    [
+     "2026-10-30",
+     2,
+     1.946,
+     111.76
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 0,
-    "r": null,
-    "pnl": null
+    "date": "2026-10-30",
+    "trades": 2,
+    "r": 1.946,
+    "pnl": 111.76
    }
   },
   {
@@ -2743,25 +2901,25 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 49,
-   "sessions_traded": 9,
+   "trades": 52,
+   "sessions_traded": 10,
    "first": "2026-10-16",
-   "last": "2026-10-29",
-   "win_rate": 0.816,
-   "avg_r": 0.537,
-   "total_r": 26.3,
-   "pnl": 669.09,
-   "profit_factor": 5.12,
+   "last": "2026-10-30",
+   "win_rate": 0.769,
+   "avg_r": 0.444,
+   "total_r": 23.11,
+   "pnl": 547.75,
+   "profit_factor": 2.93,
    "avg_win_r": 0.837,
-   "avg_loss_r": 0.796,
-   "breakeven_wr": 0.488,
-   "t_stat": 5.14,
+   "avg_loss_r": 0.864,
+   "breakeven_wr": 0.508,
+   "t_stat": 3.99,
    "n_win": 40,
    "win_r_sum": 33.4733,
-   "loss_r_sum": 7.1683,
-   "r_sq_sum": 39.7443,
+   "loss_r_sum": 10.3624,
+   "r_sq_sum": 43.1472,
    "win_pnl": 831.43,
-   "loss_pnl": 162.34,
+   "loss_pnl": 283.68,
    "days": [
     "2026-10-16",
     "2026-10-19",
@@ -2771,15 +2929,16 @@
     "2026-10-23",
     "2026-10-27",
     "2026-10-28",
-    "2026-10-29"
+    "2026-10-29",
+    "2026-10-30"
    ],
-   "recent_trades": 9,
-   "recent_avg_r": 0.184,
+   "recent_trades": 12,
+   "recent_avg_r": -0.128,
    "expected_r": null,
-   "score": 0.3812,
-   "sim_trades": 19,
-   "sim_win_rate": 0.579,
-   "sim_avg_r": 0.244,
+   "score": 0.321,
+   "sim_trades": 23,
+   "sim_win_rate": 0.522,
+   "sim_avg_r": 0.139,
    "daily": [
     [
      "2026-10-16",
@@ -2834,13 +2993,19 @@
      3,
      -1.212,
      -1.82
+    ],
+    [
+     "2026-10-30",
+     3,
+     -3.194,
+     -121.34
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 3,
-    "r": -1.212,
-    "pnl": -1.82
+    "r": -3.194,
+    "pnl": -121.34
    }
   },
   {
@@ -2849,25 +3014,25 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 69,
-   "sessions_traded": 10,
+   "trades": 70,
+   "sessions_traded": 11,
    "first": "2026-10-16",
-   "last": "2026-10-29",
-   "win_rate": 0.725,
-   "avg_r": 0.348,
-   "total_r": 24.02,
-   "pnl": 359.37,
-   "profit_factor": 1.98,
+   "last": "2026-10-30",
+   "win_rate": 0.714,
+   "avg_r": 0.328,
+   "total_r": 22.99,
+   "pnl": 299.65,
+   "profit_factor": 1.7,
    "avg_win_r": 0.752,
-   "avg_loss_r": 0.714,
-   "breakeven_wr": 0.487,
-   "t_stat": 3.92,
+   "avg_loss_r": 0.729,
+   "breakeven_wr": 0.493,
+   "t_stat": 3.66,
    "n_win": 50,
    "win_r_sum": 37.581,
-   "loss_r_sum": 13.562,
-   "r_sq_sum": 45.4403,
+   "loss_r_sum": 14.5888,
+   "r_sq_sum": 46.4946,
    "win_pnl": 727.23,
-   "loss_pnl": 367.86,
+   "loss_pnl": 427.58,
    "days": [
     "2026-10-16",
     "2026-10-19",
@@ -2878,15 +3043,16 @@
     "2026-10-26",
     "2026-10-27",
     "2026-10-28",
-    "2026-10-29"
+    "2026-10-29",
+    "2026-10-30"
    ],
    "recent_trades": 17,
-   "recent_avg_r": 0.061,
+   "recent_avg_r": 0.062,
    "expected_r": null,
-   "score": 0.2699,
-   "sim_trades": 18,
-   "sim_win_rate": 0.444,
-   "sim_avg_r": -0.083,
+   "score": 0.2555,
+   "sim_trades": 19,
+   "sim_win_rate": 0.421,
+   "sim_avg_r": -0.133,
    "daily": [
     [
      "2026-10-16",
@@ -2947,13 +3113,19 @@
      3,
      -3.217,
      -193.57
+    ],
+    [
+     "2026-10-30",
+     1,
+     -1.027,
+     -59.72
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 3,
-    "r": -3.217,
-    "pnl": -193.57
+    "date": "2026-10-30",
+    "trades": 1,
+    "r": -1.027,
+    "pnl": -59.72
    }
   },
   {
@@ -3000,7 +3172,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -3012,36 +3184,37 @@
    "account": "primary",
    "live": true,
    "former_primary": false,
-   "trades": 3,
-   "sessions_traded": 2,
+   "trades": 9,
+   "sessions_traded": 3,
    "first": "2026-10-28",
-   "last": "2026-10-29",
-   "win_rate": 0.333,
-   "avg_r": -0.467,
-   "total_r": -1.4,
-   "pnl": -17.33,
-   "profit_factor": 0.63,
-   "avg_win_r": 0.843,
-   "avg_loss_r": 1.123,
-   "breakeven_wr": 0.571,
-   "t_stat": -0.71,
-   "n_win": 1,
-   "win_r_sum": 0.8434,
-   "loss_r_sum": 2.2454,
-   "r_sq_sum": 3.237,
-   "win_pnl": 29.85,
-   "loss_pnl": 47.18,
+   "last": "2026-10-30",
+   "win_rate": 0.444,
+   "avg_r": -0.123,
+   "total_r": -1.11,
+   "pnl": -33.1,
+   "profit_factor": 0.77,
+   "avg_win_r": 1.059,
+   "avg_loss_r": 1.07,
+   "breakeven_wr": 0.502,
+   "t_stat": -0.33,
+   "n_win": 4,
+   "win_r_sum": 4.2378,
+   "loss_r_sum": 5.349,
+   "r_sq_sum": 10.528,
+   "win_pnl": 109.16,
+   "loss_pnl": 142.26,
    "days": [
     "2026-10-28",
-    "2026-10-29"
+    "2026-10-29",
+    "2026-10-30"
    ],
-   "recent_trades": 3,
-   "recent_avg_r": -0.467,
+   "recent_trades": 9,
+   "recent_avg_r": -0.123,
    "expected_r": null,
-   "score": -0.061,
-   "sim_trades": 1,
-   "sim_win_rate": 1.0,
-   "sim_avg_r": 0.761,
+   "score": -0.0383,
+   "sim_trades": 5,
+   "sim_win_rate": 0.8,
+   "sim_avg_r": 0.482,
    "daily": [
     [
      "2026-10-28",
@@ -3054,13 +3227,19 @@
      1,
      -1.172,
      -23.18
+    ],
+    [
+     "2026-10-30",
+     6,
+     0.291,
+     -15.77
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
-    "trades": 1,
-    "r": -1.172,
-    "pnl": -23.18
+    "date": "2026-10-30",
+    "trades": 6,
+    "r": 0.291,
+    "pnl": -15.77
    }
   },
   {
@@ -3128,7 +3307,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -3199,7 +3378,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -3263,7 +3442,7 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
@@ -3334,12 +3513,12 @@
     ]
    ],
    "last_session": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "trades": 0,
     "r": null,
     "pnl": null
    }
   }
  ],
- "generated": "2026-10-29 15:57 ET"
+ "generated": "2026-10-30 15:57 ET"
 }
