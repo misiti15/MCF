@@ -14,7 +14,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -64,6 +64,29 @@ def splits(strategies: dict | None = None) -> dict[str, dict[str, dict]]:
     return out
 
 
+def _wd(d: date, step: int) -> date:
+    d += timedelta(days=step)
+    while d.weekday() >= 5:
+        d += timedelta(days=step)
+    return d
+
+
+def sessions_around(since: str | None) -> tuple[str | None, str | None]:
+    """(last session in the old account, first session in the new one) for a move stamped `since` ("YYYY-MM-DD HH:MM ET").
+    Owner 2026-10-30: a moved setup's tag must say which session it moved around, so 'last session' numbers are never
+    read as the new account's. Moves happen outside market hours: before 09:30 on a weekday -> that day's session is the
+    first one in the new account; otherwise the next weekday. Weekdays only (a holiday shifts it by a day at most)."""
+    if not since:
+        return None, None
+    try:
+        t = datetime.strptime(since[:16], "%Y-%m-%d %H:%M")
+    except ValueError:
+        return None, None
+    d = t.date()
+    first = d if d.weekday() < 5 and (t.hour, t.minute) < (9, 30) else _wd(d, 1)
+    return _wd(first, -1).isoformat(), first.isoformat()
+
+
 def build(prev: dict | None = None, now: datetime | None = None) -> dict:
     now = now or datetime.now(ZoneInfo("America/New_York"))
     stamp = now.strftime("%Y-%m-%d %H:%M ET")
@@ -84,6 +107,9 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
             setups[name] = {"accounts": here, "since": since, "from": sorted(before) if before else old.get("from")}
         else:
             setups[name] = {"accounts": here, "since": old.get("since"), "from": old.get("from")}
+        if setups[name].get("from") and setups[name].get("since"):
+            lo, fi = sessions_around(setups[name]["since"])
+            setups[name]["last_old_session"], setups[name]["first_session"] = lo, fi
         if name in split:
             # split copies: one setup in both testing accounts, each on its own half of the tickers (stats combined)
             setups[name]["split"] = split[name]

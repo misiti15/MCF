@@ -116,3 +116,18 @@ def test_split_strategy_signals_only_its_half():
     st = {s.name: s for s in build_strategies(cfg)}
     assert st["X"].ticker_split == (1, 2) and st["Y"].ticker_split is None
     assert "ticker_split" not in st["X"].params
+
+
+def test_move_sessions_named():
+    """Owner 2026-10-30: a moved setup says which session it moved around (last session in the old account, first in
+    the new), so 'last session' numbers are never read as the new account's."""
+    assert A.sessions_around("2026-10-30 00:27 ET") == ("2026-10-29", "2026-10-30")    # overnight, before the open
+    assert A.sessions_around("2026-10-28 18:00 ET") == ("2026-10-28", "2026-10-29")    # after the close
+    assert A.sessions_around("2026-10-30 17:00 ET") == ("2026-10-30", "2026-11-02")    # Friday evening -> Monday
+    assert A.sessions_around("2026-10-31 12:00 ET") == ("2026-10-30", "2026-11-02")    # weekend
+    d = json.loads(A.OUT.read_text())
+    for k, v in d["setups"].items():
+        if v.get("from") and v.get("since"):
+            assert v.get("first_session") and v.get("last_old_session"), k
+    html = (A.ROOT / "docs" / "live" / "index.html").read_text()
+    assert "after ${e(x.movedLast.slice(5))} session" in html and "first_session" in html and "lsOld" in html
