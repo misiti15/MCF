@@ -1,0 +1,395 @@
+## Parity vs swarm15 parents (TRAIN+VALID)
+p05: n 53326, avgR -0.0677, TRAIN -0.0677, VALID -0.0675 | swarm15 n 53326 avgR -0.0677 -> diff +0.0000; trades/session 153.2; day t -9.49
+p05lv: n 35238, avgR -0.0950, TRAIN -0.0951, VALID -0.0948 | swarm15 n 35238 avgR -0.0950 -> diff +0.0000; trades/session 101.3; day t -8.56
+p10: n 29836, avgR -0.0880, TRAIN -0.0861, VALID -0.0912 | swarm15 n 29836 avgR -0.0880 -> diff +0.0000; trades/session 85.7; day t -7.71
+p10lv: n 16031, avgR -0.0968, TRAIN -0.0967, VALID -0.0969 | (not in swarm15); trades/session 46.1; day t -7.81
+sessions 348
+
+## 1) Frequency (liquid = adv20 >= 95M; 308141 symbol-days, 885 names/session)
+break 0.05 ATR under PDL by 15:00: 42.5%; 0.10 ATR: 38.9%
+p05: symbol-days with a reclaim signal 09:50-15:00 17.3% (= 153/session); of break days 40.8%; mean reclaim cycles/day on signal days 1.70
+p05lv: symbol-days with a reclaim signal 09:50-15:00 11.4% (= 101/session); of break days 26.9%; mean reclaim cycles/day on signal days 1.45
+p10: symbol-days with a reclaim signal 09:50-15:00 9.7% (= 86/session); of break days 24.9%; mean reclaim cycles/day on signal days 1.31
+p10lv: symbol-days with a reclaim signal 09:50-15:00 5.2% (= 46/session); of break days 13.4%; mean reclaim cycles/day on signal days 1.18
+open vs PDL (ATR) quantiles: {0.1: -0.11, 0.25: 0.14, 0.5: 0.42, 0.75: 0.76, 0.9: 1.14}
+prior close vs PDL (ATR) quantiles: {0.1: 0.08, 0.25: 0.19, 0.5: 0.38, 0.75: 0.65, 0.9: 0.95}
+
+### frequency by open vs PDL (ATR) [descriptive]
+              share_days  break05  signal_p05  signal_p10
+ob                                                       
+(-99.0, 0.0]       0.151    0.989       0.259       0.148
+(0.0, 0.25]        0.196    0.684       0.293       0.161
+(0.25, 0.5]        0.223    0.382       0.199       0.109
+(0.5, 1.0]         0.288    0.170       0.097       0.055
+(1.0, 2.0]         0.128    0.052       0.032       0.020
+(2.0, 99.0]        0.014    0.026       0.019       0.015
+
+### frequency by stock gap % [descriptive]
+               share_days  break05  signal_p05  signal_p10
+gb                                                        
+(-99.0, -2.0]       0.063    0.857       0.211       0.124
+(-2.0, -0.5]        0.197    0.692       0.240       0.134
+(-0.5, 0.0]         0.227    0.485       0.212       0.119
+(0.0, 0.5]          0.238    0.321       0.162       0.090
+(0.5, 2.0]          0.213    0.197       0.105       0.057
+(2.0, 99.0]         0.063    0.099       0.054       0.031
+
+### frequency by SPY gap [descriptive]
+              share_days  break05  signal_p05  signal_p10
+sg                                                       
+SPY gap down       0.431    0.523       0.198       0.110
+SPY gap up         0.569    0.350       0.154       0.087
+
+### frequency by SPY session [descriptive]
+                               share_days  break05  signal_p05  signal_p10
+sday                                                                      
+SPY down day (EOD, not known)        0.47    0.474       0.188       0.104
+SPY up day (EOD, not known)          0.53    0.381       0.159       0.090
+first 0.05-ATR break time, share of break days: {Interval(0, 940, closed='right'): 0.604, Interval(940, 1000, closed='right'): 0.111, Interval(1000, 1030, closed='right'): 0.086, Interval(1030, 1100, closed='right'): 0.05, Interval(1100, 1200, closed='right'): 0.061, Interval(1200, 1300, closed='right'): 0.034, Interval(1300, 1400, closed='right'): 0.029, Interval(1400, 1500, closed='right'): 0.026}
+
+## 2) Loss anatomy: p05 (n 53326, avgR -0.0677, 153.2/session)
+win 70.6%, avg win +0.262, avg loss -0.859; stops 20.6% avg -1.138; targets 42.9% avg +0.386; flat 15:55 2.6% avg -0.330; moved stop 33.9% avg +0.029
+cost: median round-trip cost 0.063R, mean 0.088R; gross avg R (r + cost approx) +0.020
+stops: median 0 min to stop, <=30 min 100.0%; stopped trades' MFE before stop: median 0.075R, >=0.25R 0.0%, >=0.4R 0.0%
+targets: median 0 min to target; all trades MFE >=0.5R 42.9%, MAE <=-0.5R 38.5%
+day's low (as of entry) broken later in the session: 51.0%; before exit 22.3%
+
+### time of day (signal bar close) [descriptive slice, not a scored config]
+      bucket     n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+ (945, 1000] 14719    42.296  0.276 -0.057 -4.618 -833.527 -0.046 -0.074 0.712 0.221
+(1000, 1030] 11905    34.210  0.223 -0.068 -5.597 -806.553 -0.071 -0.063 0.709 0.214
+(1030, 1100]  6870    19.741  0.129 -0.084 -5.053 -579.839 -0.096 -0.066 0.709 0.216
+(1100, 1200]  7712    22.161  0.145 -0.079 -5.695 -605.697 -0.082 -0.072 0.706 0.207
+(1200, 1300]  5017    14.417  0.094 -0.069 -3.619 -343.856 -0.069 -0.069 0.708 0.196
+(1300, 1400]  3765    10.819  0.071 -0.072 -3.540 -269.515 -0.082 -0.050 0.688 0.179
+(1400, 1500]  3338     9.592  0.063 -0.051 -3.446 -168.983 -0.045 -0.063 0.675 0.134
+
+### SPY from open % at entry (known) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -0.5]  6749    19.394  0.127 -0.059 -3.069  -401.199 -0.064 -0.048 0.717 0.202
+ (-0.5, -0.2]  9724    27.943  0.182 -0.078 -5.104  -754.783 -0.089 -0.058 0.694 0.211
+  (-0.2, 0.0] 11927    34.273  0.224 -0.069 -5.511  -827.333 -0.054 -0.093 0.704 0.211
+   (0.0, 0.2] 12943    37.193  0.243 -0.080 -6.398 -1035.777 -0.082 -0.077 0.699 0.217
+   (0.2, 0.5]  8109    23.302  0.152 -0.054 -4.371  -441.325 -0.057 -0.050 0.713 0.192
+  (0.5, 99.0]  3874    11.132  0.073 -0.038 -1.700  -147.555 -0.038 -0.039 0.729 0.180
+
+### SPY vs VWAP at entry (known) [descriptive slice, not a scored config]
+        bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+SPY above VWAP 25994    74.695  0.487 -0.054 -6.549 -1411.998 -0.048 -0.065 0.714 0.196
+SPY below VWAP 27332    78.540  0.513 -0.080 -8.411 -2195.972 -0.086 -0.070 0.698 0.216
+
+### QQQ vs VWAP at entry (known) [descriptive slice, not a scored config]
+        bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+QQQ above VWAP 26529    76.233  0.497 -0.054 -6.802 -1434.825 -0.055 -0.053 0.715 0.195
+QQQ below VWAP 26797    77.003  0.503 -0.081 -8.358 -2173.145 -0.081 -0.082 0.696 0.217
+
+### breadth at entry (known) [descriptive slice, not a scored config]
+    bucket     n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+(0.0, 0.3]  8687    24.963  0.163 -0.071 -4.041 -615.110 -0.073 -0.065 0.708 0.208
+(0.3, 0.4]  8987    25.825  0.169 -0.089 -6.341 -799.562 -0.108 -0.057 0.694 0.217
+(0.4, 0.5] 10476    30.103  0.196 -0.076 -6.608 -792.033 -0.079 -0.072 0.697 0.211
+(0.5, 0.6] 10506    30.190  0.197 -0.072 -6.064 -757.280 -0.056 -0.094 0.701 0.211
+(0.6, 0.7]  8358    24.017  0.157 -0.049 -3.221 -409.962 -0.047 -0.053 0.716 0.198
+(0.7, 1.0]  6312    18.138  0.118 -0.037 -2.457 -234.023 -0.037 -0.037 0.728 0.182
+
+### SPY gap % (known at open) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -0.5]  9415    27.055  0.177 -0.023 -1.158  -214.532 -0.004 -0.049 0.741 0.187
+  (-0.5, 0.0] 16873    48.486  0.316 -0.082 -6.654 -1376.095 -0.079 -0.087 0.698 0.215
+   (0.0, 0.5] 20824    59.839  0.391 -0.076 -7.295 -1578.420 -0.079 -0.070 0.697 0.207
+  (0.5, 99.0]  6214    17.856  0.117 -0.071 -3.910  -438.923 -0.087 -0.048 0.702 0.208
+
+### SPY session close vs open (EOD; NOT known at entry) [descriptive slice, not a scored config]
+          bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+SPY down session 27298    78.443  0.512 -0.124 -13.007 -3386.052 -0.130 -0.116 0.668 0.243
+  SPY up session 26028    74.793  0.488 -0.009  -1.089  -221.919 -0.009 -0.007 0.745 0.167
+
+### SPY move during the trade % (NOT known at entry) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+(-99.0, -0.3]  3291     9.457  0.062 -0.728 -37.724 -2397.269 -0.755 -0.677 0.284 0.684
+ (-0.3, -0.1]  7797    22.405  0.146 -0.327 -25.057 -2548.589 -0.361 -0.282 0.550 0.377
+  (-0.1, 0.0] 11620    33.391  0.218 -0.066  -7.789  -762.456 -0.076 -0.049 0.714 0.195
+   (0.0, 0.1] 13559    38.963  0.254  0.074  10.787   999.667  0.073  0.075 0.799 0.121
+   (0.1, 0.3] 10644    30.586  0.200  0.135  14.194  1439.833  0.139  0.129 0.854 0.097
+  (0.3, 99.0]  2799     8.043  0.052  0.176   7.554   491.766  0.202  0.098 0.879 0.082
+
+### break depth below PDL, ATR (known) [descriptive slice, not a scored config]
+     bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+ (0.0, 0.1] 16555    47.572  0.310 -0.073 -8.736 -1215.689 -0.072 -0.076 0.703 0.205
+ (0.1, 0.2] 15998    45.971  0.300 -0.069 -7.524 -1096.918 -0.064 -0.077 0.707 0.209
+(0.2, 0.35] 10796    31.023  0.202 -0.065 -6.598  -700.748 -0.071 -0.055 0.705 0.206
+(0.35, 0.5]  5003    14.376  0.094 -0.072 -6.019  -359.279 -0.074 -0.069 0.698 0.205
+(0.5, 0.75]  3218     9.247  0.060 -0.050 -3.013  -161.472 -0.056 -0.042 0.715 0.198
+(0.75, 1.0]  1024     2.943  0.019 -0.012 -0.541   -12.721 -0.005 -0.030 0.745 0.174
+(1.0, 99.0]   732     2.103  0.014 -0.084 -2.735   -61.143 -0.106 -0.016 0.706 0.258
+
+### gap-under vs intraday drift (known) [descriptive slice, not a scored config]
+                           bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+opened above PDL (intraday drift) 41280   118.621  0.774 -0.070 -9.518 -2874.391 -0.069  -0.07 0.705 0.208
+     opened below PDL (gap-under) 12046    34.615  0.226 -0.061 -5.257  -733.580 -0.062  -0.06 0.708 0.201
+
+### stock gap % (known) [descriptive slice, not a scored config]
+   bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99, -3]  1937     5.566  0.036 -0.010 -0.460   -20.336  0.008 -0.034 0.754 0.198
+ (-3, -1]  8591    24.687  0.161 -0.043 -3.270  -369.609 -0.036 -0.051 0.733 0.198
+  (-1, 0] 22944    65.931  0.430 -0.073 -8.774 -1665.786 -0.071 -0.075 0.699 0.205
+   (0, 1] 16353    46.991  0.307 -0.083 -8.710 -1363.118 -0.086 -0.078 0.691 0.212
+   (1, 3]  3055     8.779  0.057 -0.054 -2.770  -164.597 -0.045 -0.063 0.723 0.205
+  (3, 99]   446     1.282  0.008 -0.055 -1.327   -24.524 -0.105  0.018 0.729 0.231
+
+### reclaim bar close above PDL, ATR (known) [descriptive slice, not a scored config]
+      bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-1.0, 0.02] 17310    49.741  0.325 -0.070 -8.685 -1217.734 -0.069 -0.072 0.698 0.196
+(0.02, 0.05] 16374    47.052  0.307 -0.065 -8.381 -1058.453 -0.066 -0.062 0.710 0.200
+ (0.05, 0.1] 12090    34.741  0.227 -0.075 -7.883  -905.554 -0.076 -0.074 0.706 0.218
+  (0.1, 0.2]  6099    17.526  0.114 -0.064 -4.871  -390.462 -0.063 -0.065 0.711 0.222
+  (0.2, 0.4]  1257     3.612  0.024 -0.031 -1.396   -38.648 -0.039 -0.015 0.719 0.226
+ (0.4, 99.0]   196     0.563  0.004  0.015  0.171     2.880  0.059 -0.223 0.730 0.240
+
+### stock fromOpen minus SPY fromOpen % (known) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -2.0]  4837    13.899  0.091 -0.045 -4.031  -218.129 -0.041 -0.050 0.731 0.203
+ (-2.0, -1.0]  8911    25.606  0.167 -0.062 -7.233  -556.058 -0.063 -0.062 0.719 0.207
+ (-1.0, -0.5]  9641    27.704  0.181 -0.069 -7.321  -662.389 -0.061 -0.084 0.708 0.206
+  (-0.5, 0.0] 13176    37.862  0.247 -0.084 -8.873 -1108.564 -0.089 -0.073 0.686 0.208
+   (0.0, 0.5]  9487    27.261  0.178 -0.076 -6.541  -725.658 -0.074 -0.082 0.689 0.208
+  (0.5, 99.0]  7274    20.902  0.136 -0.046 -3.500  -337.173 -0.046 -0.047 0.726 0.201
+
+### stock vs SPY change from prior close % (approx; known) [descriptive slice, not a scored config]
+   bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99, -3]  2459     7.066  0.046 -0.053 -3.458  -130.554 -0.050 -0.056 0.725 0.212
+ (-3, -2]  3735    10.733  0.070 -0.064 -4.987  -238.288 -0.064 -0.064 0.721 0.213
+ (-2, -1] 11410    32.787  0.214 -0.053 -6.002  -601.051 -0.049 -0.058 0.722 0.199
+  (-1, 0] 24758    71.144  0.464 -0.076 -8.944 -1887.716 -0.077 -0.075 0.698 0.206
+   (0, 1]  9841    28.279  0.185 -0.070 -5.187  -685.392 -0.068 -0.073 0.696 0.208
+  (1, 99]  1123     3.227  0.021 -0.058 -1.560   -64.970 -0.073 -0.013 0.705 0.223
+
+### stock vs its VWAP % (known) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -1.0]  4618    13.270  0.087 -0.052 -3.329  -241.878 -0.057 -0.047 0.731 0.214
+ (-1.0, -0.5]  7606    21.856  0.143 -0.062 -5.818  -473.593 -0.057 -0.070 0.720 0.203
+  (-0.5, 0.0] 19486    55.994  0.365 -0.084 -9.610 -1640.720 -0.087 -0.079 0.690 0.211
+   (0.0, 0.5] 15196    43.667  0.285 -0.071 -7.496 -1084.991 -0.067 -0.079 0.695 0.205
+  (0.5, 99.0]  6420    18.448  0.120 -0.026 -2.026  -166.790 -0.023 -0.029 0.744 0.191
+
+### later break of the day low (NOT known) [descriptive slice, not a scored config]
+                    bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+day low broken again later 27194    78.144   0.51 -0.269 -35.717 -7320.855 -0.268 -0.271 0.571 0.339
+             day low holds 26132    75.092   0.49  0.142  32.784  3712.885  0.140  0.145 0.845 0.067
+
+### round-trip cost / R (known) [descriptive slice, not a scored config]
+      bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+ (0.0, 0.03]  6087    17.491  0.114 -0.019  -1.644  -118.393 -0.019 -0.020 0.760 0.204
+(0.03, 0.05] 12825    36.853  0.241 -0.018  -2.146  -227.764 -0.010 -0.028 0.773 0.202
+(0.05, 0.08] 14917    42.865  0.280 -0.041  -5.178  -617.178 -0.033 -0.056 0.772 0.210
+(0.08, 0.12]  9753    28.026  0.183 -0.061  -6.271  -594.386 -0.056 -0.071 0.760 0.202
+(0.12, 99.0]  9744    28.000  0.183 -0.210 -19.477 -2050.249 -0.212 -0.208 0.427 0.212
+
+### time of the day's FIRST PDL break (known) [descriptive slice, not a scored config]
+      bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+    (0, 945] 26578    76.374  0.498 -0.060 -6.987 -1582.649 -0.057 -0.064 0.711 0.205
+ (945, 1000]  6154    17.684  0.115 -0.070 -5.207  -431.764 -0.071 -0.069 0.703 0.221
+(1000, 1030]  6971    20.032  0.131 -0.089 -6.420  -621.491 -0.094 -0.081 0.697 0.222
+(1030, 1100]  3860    11.092  0.072 -0.091 -4.059  -351.895 -0.111 -0.055 0.694 0.217
+(1100, 1300]  6772    19.460  0.127 -0.064 -4.052  -436.295 -0.060 -0.073 0.708 0.194
+(1300, 1500]  2991     8.595  0.056 -0.061 -3.673  -183.877 -0.061 -0.063 0.688 0.161
+
+### MFE R (NOT known) [descriptive slice, not a scored config]
+     bucket     n  per_sess  share   avgR        t      sumR  train  valid   win  stop
+[-1.0, 0.1)  6748    19.391  0.127 -1.097 -298.738 -7401.153 -1.107 -1.080 0.000 0.943
+[0.1, 0.25)  5458    15.684  0.102 -1.026 -145.702 -5598.502 -1.039 -1.005 0.015 0.848
+[0.25, 0.4) 13392    38.483  0.251  0.031   20.337   411.114  0.023  0.044 0.805 0.000
+ [0.4, 0.5)  4868    13.989  0.091  0.032   13.816   155.733  0.030  0.036 0.813 0.000
+[0.5, 99.0) 22860    65.690  0.429  0.386  283.936  8824.838  0.383  0.392 0.998 0.000
+
+### SPY VWAP x breadth (known) [descriptive slice, not a scored config]
+                       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+SPY above VWAP & breadth<=0.5  5241    15.060  0.098 -0.066 -4.893  -346.190 -0.068 -0.063 0.704 0.200
+ SPY above VWAP & breadth>0.5 20753    59.635  0.389 -0.051 -5.359 -1065.808 -0.044 -0.065 0.716 0.194
+SPY below VWAP & breadth<=0.5 22909    65.830  0.430 -0.081 -7.629 -1860.515 -0.090 -0.066 0.698 0.215
+ SPY below VWAP & breadth>0.5  4423    12.710  0.083 -0.076 -4.162  -335.457 -0.066 -0.091 0.694 0.222
+
+### per-session R by SPY session quintile (EOD, NOT known) [descriptive]
+              sessions      sumR  trades  avg_trades   avgR
+q                                                          
+SPY q1 worst        70 -1955.062   12278     175.400 -0.159
+q2                  69 -1058.000   11185     162.101 -0.095
+q3                  70  -604.159   10141     144.871 -0.060
+q4                  69  -295.475    9483     137.435 -0.031
+q5 best             70   304.725   10239     146.271  0.030
+corr(session sum R, SPY session %) = 0.54; corr(trades/session, SPY session) = -0.05; corr(trades/session, session avg R) = -0.08
+signal-count quartile per session: {'fewest': '74/sess avgR -0.039', 'q2': '129/sess avgR -0.050', 'q3': '169/sess avgR -0.088', 'most': '241/sess avgR -0.072'}
+
+## 2) Loss anatomy: p10 (n 29836, avgR -0.0880, 85.7/session)
+win 64.5%, avg win +0.450, avg loss -1.065; stops 31.9% avg -1.140; targets 63.8% avg +0.452; flat 15:55 4.3% avg -0.305; moved stop 0.0% avg +nan
+cost: median round-trip cost 0.064R, mean 0.089R; gross avg R (r + cost approx) +0.001
+stops: median 0 min to stop, <=30 min 100.0%; stopped trades' MFE before stop: median 0.155R, >=0.25R 33.9%, >=0.4R 11.7%
+targets: median 0 min to target; all trades MFE >=0.5R 63.8%, MAE <=-0.5R 50.4%
+day's low (as of entry) broken later in the session: 47.5%; before exit 24.2%
+
+### time of day (signal bar close) [descriptive slice, not a scored config]
+      bucket    n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+ (945, 1000] 9368    26.920  0.314 -0.080 -4.523 -750.858 -0.067 -0.101 0.662 0.329
+(1000, 1030] 7028    20.195  0.236 -0.100 -5.385 -700.656 -0.111 -0.082 0.651 0.337
+(1030, 1100] 3869    11.118  0.130 -0.097 -3.522 -375.668 -0.088 -0.111 0.639 0.335
+(1100, 1200] 3877    11.141  0.130 -0.115 -4.175 -444.900 -0.126 -0.094 0.625 0.334
+(1200, 1300] 2323     6.675  0.078 -0.068 -1.922 -158.503 -0.053 -0.102 0.643 0.290
+(1300, 1400] 1731     4.974  0.058 -0.058 -1.541  -99.969 -0.076 -0.016 0.630 0.255
+(1400, 1500] 1640     4.713  0.055 -0.057 -2.239  -94.260 -0.052 -0.069 0.609 0.212
+
+### SPY from open % at entry (known) [descriptive slice, not a scored config]
+       bucket    n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+(-99.0, -0.5] 3632    10.437  0.122 -0.086 -2.765 -313.535 -0.091 -0.076 0.641 0.316
+ (-0.5, -0.2] 5465    15.704  0.183 -0.100 -4.277 -544.455 -0.116 -0.071 0.638 0.322
+  (-0.2, 0.0] 6846    19.672  0.229 -0.083 -3.910 -569.056 -0.056 -0.122 0.652 0.321
+   (0.0, 0.2] 7484    21.506  0.251 -0.100 -5.255 -745.365 -0.101 -0.097 0.642 0.329
+   (0.2, 0.5] 4397    12.635  0.147 -0.081 -3.951 -355.746 -0.081 -0.081 0.645 0.308
+  (0.5, 99.0] 2012     5.782  0.067 -0.048 -1.388  -96.656 -0.048 -0.048 0.660 0.288
+
+### SPY vs VWAP at entry (known) [descriptive slice, not a scored config]
+        bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+SPY above VWAP 14953    42.968  0.501 -0.068 -5.116 -1023.410 -0.059 -0.084 0.658 0.306
+SPY below VWAP 14883    42.767  0.499 -0.108 -6.941 -1601.403 -0.113 -0.099 0.632 0.331
+
+### QQQ vs VWAP at entry (known) [descriptive slice, not a scored config]
+        bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+QQQ above VWAP 15026    43.178  0.504 -0.068 -5.335 -1025.925 -0.068 -0.068 0.658 0.305
+QQQ below VWAP 14810    42.557  0.496 -0.108 -6.810 -1598.887 -0.105 -0.114 0.632 0.333
+
+### breadth at entry (known) [descriptive slice, not a scored config]
+    bucket    n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+(0.0, 0.3] 4411    12.675  0.148 -0.102 -3.157 -450.548 -0.103 -0.101 0.632 0.325
+(0.3, 0.4] 4744    13.632  0.159 -0.106 -4.970 -502.835 -0.125 -0.075 0.635 0.332
+(0.4, 0.5] 5827    16.744  0.195 -0.120 -6.229 -696.997 -0.135 -0.100 0.623 0.337
+(0.5, 0.6] 5999    17.239  0.201 -0.068 -3.651 -405.161 -0.044 -0.100 0.662 0.305
+(0.6, 0.7] 5163    14.836  0.173 -0.066 -2.794 -342.641 -0.059 -0.077 0.660 0.309
+(0.7, 1.0] 3692    10.609  0.124 -0.061 -2.499 -226.630 -0.052 -0.092 0.661 0.301
+
+### SPY gap % (known at open) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -0.5]  5372    15.437  0.180 -0.009 -0.309   -47.669  0.036 -0.073 0.694 0.279
+  (-0.5, 0.0]  9216    26.483  0.309 -0.105 -5.987  -971.044 -0.105 -0.106 0.633 0.330
+   (0.0, 0.5] 11673    33.543  0.391 -0.104 -5.503 -1215.509 -0.111 -0.091 0.637 0.324
+  (0.5, 99.0]  3575    10.273  0.120 -0.109 -4.394  -390.590 -0.125 -0.089 0.630 0.329
+
+### SPY session close vs open (EOD; NOT known at entry) [descriptive slice, not a scored config]
+          bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+SPY down session 15111    43.422  0.506 -0.172 -11.438 -2596.290 -0.181 -0.158 0.593 0.371
+  SPY up session 14725    42.313  0.494 -0.002  -0.143   -28.522  0.001 -0.008 0.699 0.265
+
+### SPY move during the trade % (NOT known at entry) [descriptive slice, not a scored config]
+       bucket    n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+(-99.0, -0.3] 2360     6.782  0.079 -0.850 -36.505 -2005.270 -0.874 -0.800 0.176 0.822
+ (-0.3, -0.1] 4249    12.210  0.142 -0.475 -24.797 -2016.710 -0.521 -0.412 0.418 0.581
+  (-0.1, 0.0] 5392    15.494  0.181 -0.103  -6.434  -555.169 -0.128 -0.064 0.651 0.346
+   (0.0, 0.1] 6636    19.069  0.222  0.114   9.209   755.534  0.113  0.115 0.787 0.211
+   (0.1, 0.3] 6446    18.523  0.216  0.213  15.548  1372.827  0.229  0.185 0.848 0.150
+  (0.3, 99.0] 2175     6.250  0.073  0.228   8.198   495.114  0.282  0.093 0.855 0.143
+
+### break depth below PDL, ATR (known) [descriptive slice, not a scored config]
+     bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+ (0.1, 0.2] 16206    46.569  0.543 -0.091 -7.176 -1481.319 -0.090 -0.094 0.642 0.319
+(0.2, 0.35]  7809    22.440  0.262 -0.097 -6.341  -758.728 -0.098 -0.097 0.643 0.328
+(0.35, 0.5]  2911     8.365  0.098 -0.056 -3.155  -163.487 -0.049 -0.068 0.661 0.298
+(0.5, 0.75]  1807     5.193  0.061 -0.075 -2.583  -136.156 -0.061 -0.097 0.649 0.309
+(0.75, 1.0]   609     1.750  0.020 -0.035 -0.966   -21.147 -0.036 -0.031 0.680 0.287
+(1.0, 99.0]   494     1.420  0.017 -0.130 -3.513   -63.974 -0.140 -0.093 0.623 0.360
+
+### gap-under vs intraday drift (known) [descriptive slice, not a scored config]
+                           bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+opened above PDL (intraday drift) 22945    65.934  0.769 -0.094 -7.958 -2162.673 -0.093 -0.096 0.640 0.323
+     opened below PDL (gap-under)  6891    19.802  0.231 -0.067 -3.733  -462.140 -0.062 -0.075 0.661 0.305
+
+### stock gap % (known) [descriptive slice, not a scored config]
+   bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99, -3]  1157     3.325  0.039 -0.007 -0.196    -7.839  0.013 -0.036 0.685 0.288
+ (-3, -1]  4857    13.957  0.163 -0.052 -2.637  -252.682 -0.034 -0.072 0.664 0.302
+  (-1, 0] 12856    36.943  0.431 -0.095 -7.643 -1223.278 -0.093 -0.099 0.645 0.321
+   (0, 1]  9008    25.885  0.302 -0.110 -6.294  -992.637 -0.110 -0.110 0.631 0.327
+   (1, 3]  1700     4.885  0.057 -0.072 -2.537  -122.254 -0.060 -0.084 0.641 0.317
+  (3, 99]   258     0.741  0.009 -0.101 -1.919   -26.122 -0.209  0.063 0.632 0.345
+
+### reclaim bar close above PDL, ATR (known) [descriptive slice, not a scored config]
+      bucket    n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+(-1.0, 0.02] 8914    25.615  0.299 -0.090 -6.896 -799.433 -0.076 -0.112 0.635 0.311
+(0.02, 0.05] 8785    25.244  0.294 -0.084 -6.397 -739.095 -0.086 -0.082 0.646 0.313
+ (0.05, 0.1] 7137    20.509  0.239 -0.093 -6.122 -660.641 -0.101 -0.078 0.647 0.329
+  (0.1, 0.2] 3968    11.402  0.133 -0.090 -4.829 -357.521 -0.091 -0.088 0.654 0.330
+  (0.2, 0.4]  873     2.509  0.029 -0.075 -2.271  -65.441 -0.079 -0.067 0.666 0.330
+ (0.4, 99.0]  159     0.457  0.005 -0.017 -0.157   -2.682  0.047 -0.417 0.704 0.289
+
+### stock fromOpen minus SPY fromOpen % (known) [descriptive slice, not a scored config]
+       bucket    n  per_sess  share   avgR      t     sumR  train  valid   win  stop
+(-99.0, -2.0] 2642     7.592  0.089 -0.054 -3.159 -143.517 -0.069 -0.038 0.652 0.307
+ (-2.0, -1.0] 4806    13.810  0.161 -0.087 -6.003 -416.196 -0.078 -0.099 0.637 0.325
+ (-1.0, -0.5] 5362    15.408  0.180 -0.084 -5.858 -452.006 -0.061 -0.128 0.646 0.313
+  (-0.5, 0.0] 7337    21.083  0.246 -0.112 -6.860 -822.811 -0.122 -0.091 0.636 0.327
+   (0.0, 0.5] 5402    15.523  0.181 -0.115 -6.191 -622.225 -0.112 -0.121 0.639 0.332
+  (0.5, 99.0] 4287    12.319  0.144 -0.039 -2.041 -168.056 -0.033 -0.049 0.673 0.294
+
+### stock vs SPY change from prior close % (approx; known) [descriptive slice, not a scored config]
+   bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99, -3]  1367     3.928  0.046 -0.065 -2.593   -88.649 -0.073 -0.057 0.647 0.317
+ (-3, -2]  2053     5.899  0.069 -0.092 -4.388  -188.904 -0.086 -0.099 0.629 0.332
+ (-2, -1]  6258    17.983  0.210 -0.077 -5.534  -480.531 -0.068 -0.090 0.647 0.314
+  (-1, 0] 13966    40.132  0.468 -0.102 -7.221 -1422.770 -0.102 -0.101 0.640 0.323
+   (0, 1]  5527    15.882  0.185 -0.078 -3.756  -430.834 -0.072 -0.088 0.657 0.312
+  (1, 99]   665     1.911  0.022 -0.020 -0.475   -13.124 -0.029  0.012 0.696 0.289
+
+### stock vs its VWAP % (known) [descriptive slice, not a scored config]
+       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+(-99.0, -1.0]  2025     5.819  0.068 -0.089 -3.933  -179.425 -0.098 -0.076 0.628 0.333
+ (-1.0, -0.5]  3390     9.741  0.114 -0.066 -3.309  -225.227 -0.062 -0.072 0.647 0.309
+  (-0.5, 0.0] 10567    30.365  0.354 -0.108 -7.567 -1142.514 -0.109 -0.107 0.636 0.324
+   (0.0, 0.5]  9980    28.678  0.334 -0.093 -6.472  -928.445 -0.089 -0.101 0.649 0.320
+  (0.5, 99.0]  3874    11.132  0.130 -0.039 -1.975  -149.202 -0.024 -0.060 0.668 0.300
+
+### later break of the day low (NOT known) [descriptive slice, not a scored config]
+                    bucket     n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+day low broken again later 14167    40.710  0.475 -0.454 -38.321 -6431.264 -0.458 -0.448 0.420 0.553
+             day low holds 15669    45.026  0.525  0.243  31.965  3806.451  0.243  0.242 0.849 0.107
+
+### round-trip cost / R (known) [descriptive slice, not a scored config]
+      bucket    n  per_sess  share   avgR       t      sumR  train  valid   win  stop
+ (0.0, 0.03] 3135     9.009  0.105 -0.029  -1.437   -92.412 -0.030 -0.029 0.645 0.312
+(0.03, 0.05] 7082    20.351  0.237 -0.046  -3.467  -323.286 -0.027 -0.070 0.643 0.317
+(0.05, 0.08] 8422    24.201  0.282 -0.069  -5.428  -580.833 -0.064 -0.079 0.644 0.323
+(0.08, 0.12] 5663    16.273  0.190 -0.067  -4.416  -382.120 -0.061 -0.081 0.666 0.306
+(0.12, 99.0] 5534    15.902  0.185 -0.225 -12.175 -1246.161 -0.224 -0.227 0.629 0.331
+
+### time of the day's FIRST PDL break (known) [descriptive slice, not a scored config]
+      bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+    (0, 945] 13949    40.083  0.468 -0.077 -5.515 -1079.752 -0.072 -0.087 0.655 0.316
+ (945, 1000]  4231    12.158  0.142 -0.104 -4.874  -441.022 -0.084 -0.138 0.645 0.341
+(1000, 1030]  4368    12.552  0.146 -0.108 -5.637  -472.711 -0.114 -0.100 0.640 0.335
+(1030, 1100]  2224     6.391  0.075 -0.123 -3.453  -272.474 -0.151 -0.073 0.619 0.342
+(1100, 1300]  3537    10.164  0.119 -0.074 -2.569  -262.345 -0.078 -0.067 0.642 0.300
+(1300, 1500]  1527     4.388  0.051 -0.063 -2.255   -96.508 -0.075 -0.036 0.617 0.244
+
+### MFE R (NOT known) [descriptive slice, not a scored config]
+     bucket     n  per_sess  share   avgR        t      sumR  train  valid   win  stop
+[-1.0, 0.1)  3867    11.112  0.130 -1.113 -262.465 -4303.965 -1.125 -1.092 0.000 0.967
+[0.1, 0.25)  2853     8.198  0.096 -1.066 -146.670 -3041.184 -1.087 -1.035 0.007 0.893
+[0.25, 0.4)  2578     7.408  0.086 -0.982  -98.216 -2532.542 -0.995 -0.963 0.041 0.818
+ [0.4, 0.5)  1496     4.299  0.050 -0.901  -65.213 -1347.441 -0.910 -0.884 0.085 0.742
+[0.5, 99.0) 19042    54.718  0.638  0.452  669.518  8600.319  0.449  0.457 0.998 0.000
+
+### SPY VWAP x breadth (known) [descriptive slice, not a scored config]
+                       bucket     n  per_sess  share   avgR      t      sumR  train  valid   win  stop
+SPY above VWAP & breadth<=0.5  2834     8.144  0.095 -0.085 -3.805  -241.712 -0.092 -0.077 0.645 0.317
+ SPY above VWAP & breadth>0.5 12119    34.825  0.406 -0.065 -4.248  -781.698 -0.053 -0.086 0.661 0.304
+SPY below VWAP & breadth<=0.5 12148    34.908  0.407 -0.116 -6.564 -1408.669 -0.127 -0.096 0.626 0.335
+ SPY below VWAP & breadth>0.5  2735     7.859  0.092 -0.070 -2.563  -192.734 -0.046 -0.108 0.661 0.312
+
+### per-session R by SPY session quintile (EOD, NOT known) [descriptive]
+              sessions      sumR  trades  avg_trades   avgR
+q                                                          
+SPY q1 worst        70 -1646.686    6807      97.243 -0.242
+q2                  69  -674.631    6144      89.043 -0.110
+q3                  70  -413.489    5697      81.386 -0.073
+q4                  69  -139.173    5202      75.391 -0.027
+q5 best             70   249.167    5986      85.514  0.042
+corr(session sum R, SPY session %) = 0.47; corr(trades/session, SPY session) = 0.02; corr(trades/session, session avg R) = -0.10
+signal-count quartile per session: {'fewest': '37/sess avgR -0.031', 'q2': '69/sess avgR -0.079', 'q3': '93/sess avgR -0.117', 'most': '145/sess avgR -0.089'}
+
+Educational only - not financial advice.

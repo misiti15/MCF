@@ -1,0 +1,24 @@
+p05: r = -0.0736 + +0.843 * SPY%move-during-trade (intercept = market-neutral net R); gross intercept +0.0143
+                       size   mean  per_sess
+cb        sv                                
+cost<=5%R SPYabvVWAP   9051 -0.007    26.009
+          SPYblwVWAP   9861 -0.028    28.336
+cost>5%R  SPYabvVWAP  16943 -0.079    48.687
+          SPYblwVWAP  17471 -0.110    50.204
+gross R by cost bucket: {Interval(0.0, 0.03, closed='right'): 0.003, Interval(0.03, 0.05, closed='right'): 0.023, Interval(0.05, 0.08, closed='right'): 0.022, Interval(0.08, 0.12, closed='right'): 0.036, Interval(0.12, 9.0, closed='right'): 0.009}
+price / atr% medians by cost bucket: {'price': {Interval(0.0, 0.05, closed='right'): 192.12, Interval(0.05, 0.12, closed='right'): 94.83, Interval(0.12, 9.0, closed='right'): 35.75}, 'atrpct': {Interval(0.0, 0.05, closed='right'): 4.05, Interval(0.05, 0.12, closed='right'): 2.42, Interval(0.12, 9.0, closed='right'): 1.84}}
+share of total loss from SPY-down sessions: -3386R of -3608R; up sessions -222R
+SPY gap<=-0.5 & cost<=5%R: n 4007, avgR +0.005
+p10: r = -0.1017 + +0.981 * SPY%move-during-trade (intercept = market-neutral net R); gross intercept -0.0131
+                      size   mean  per_sess
+cb        sv                               
+cost<=5%R SPYabvVWAP  5054 -0.023    14.523
+          SPYblwVWAP  5163 -0.058    14.836
+cost>5%R  SPYabvVWAP  9899 -0.092    28.445
+          SPYblwVWAP  9720 -0.134    27.931
+gross R by cost bucket: {Interval(0.0, 0.03, closed='right'): -0.007, Interval(0.03, 0.05, closed='right'): -0.005, Interval(0.05, 0.08, closed='right'): -0.005, Interval(0.08, 0.12, closed='right'): 0.029, Interval(0.12, 9.0, closed='right'): -0.007}
+price / atr% medians by cost bucket: {'price': {Interval(0.0, 0.05, closed='right'): 200.69, Interval(0.05, 0.12, closed='right'): 99.04, Interval(0.12, 9.0, closed='right'): 37.95}, 'atrpct': {Interval(0.0, 0.05, closed='right'): 3.98, Interval(0.05, 0.12, closed='right'): 2.39, Interval(0.12, 9.0, closed='right'): 1.82}}
+share of total loss from SPY-down sessions: -2596R of -2625R; up sessions -29R
+SPY gap<=-0.5 & cost<=5%R: n 2210, avgR +0.016
+
+Educational only - not financial advice.
