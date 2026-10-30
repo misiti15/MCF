@@ -123,6 +123,16 @@ CWT14-failbrk-pdl-p05-long:
   side: long
   what: "09:50-15:00: price pokes 0.05+ ATR under yesterday's low, then closes back above it within 3 bars; buy."
   account: testing2
+CWT14-failbrk-pdl-p05-R2A-long:
+  name: "Failed Prior-Day-Low Break, SPY-Range Regime (long leg)"
+  side: long
+  what: "Owner exception (PDL-1a), below the research bar: 09:50-15:00, first bar per stock-day where price pokes 0.05+ ATR under yesterday's low and closes back above it within 3 bars, cost <= 5% of 0.25 ATR; buy on days SPY's prior-day range is above 0.80 of its ATR. Stop 0.75 ATR, target 0.125 ATR."
+  account: testing2
+CWT14-failbrk-pdl-p05-R2A-short:
+  name: "Failed Prior-Day-Low Break, SPY-Range Regime (short leg)"
+  side: short
+  what: "Owner exception (PDL-1a), below the research bar: the same first prior-day-low reclaim bar and cost limit, but SHORTED at that bar's close on days SPY's prior-day range is below 0.80 of its ATR. Stop 0.75 ATR above, target 0.125 ATR below."
+  account: testing2
 CWT14-failbrk-pdh-p10-lowvol-short:
   name: "Failed Prior-Day-High Break Short (low volume)"
   side: short

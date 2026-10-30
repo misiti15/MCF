@@ -1,0 +1,6 @@
+{"F4-RW1": {"cfg": ["ORL", false, 2, 0.0, null, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, fixed 1R", "rule": "F4-05 with a fixed 1R target"},
+ "F4-RW2": {"cfg": ["PDL", false, 2, 0.0, null, 0], "name": "Prior-Day-Low Sweep then 15-min Gap, fixed 1R", "rule": "F4-01 with a fixed 1R target"},
+ "F4-RW3": {"cfg": ["ORL", false, 0, 0.0, null, 1], "name": "Opening-Range-Low Sweep then 15-min Gap, tight stop (FVG candle 1)", "rule": "F4-05 with stop at the FVG's first 15-min candle low - 0.02 ATR"},
+ "F4-RW4": {"cfg": ["ORL", false, 0, 0.0, 0.20, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up (QQQ >= +0.20% from open)", "rule": "F4-05 + qqq_fo >= +0.20% at entry"},
+ "F4-RW5": {"cfg": ["ORH", false, 0, 0.0, 0.20, 0], "name": "Opening-Range-High Sweep then 15-min Gap, Nasdaq down (QQQ <= -0.20% from open)", "rule": "F4-12 + qqq_fo <= -0.20% at entry"},
+ "F4-RW6": {"cfg": ["PDL", false, 0, 0.0, 0.20, 0], "name": "Prior-Day-Low Sweep then 15-min Gap, Nasdaq up (QQQ >= +0.20% from open)", "rule": "F4-01 + qqq_fo >= +0.20% at entry"}}

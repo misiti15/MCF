@@ -59,6 +59,8 @@
    "CWT13-vwapstretch-z05-long",
    "CWT13-vwapstretch-z075-long",
    "CWT13-vwapstretch-z075-short",
+   "CWT14-failbrk-pdl-p05-R2A-long",
+   "CWT14-failbrk-pdl-p05-R2A-short",
    "CWT14-failbrk-pdl-p10-long",
    "CWT14-failbrk-pdl-p10-lowvol-long",
    "LD1-ns1-breadthup-t05s1-long",
@@ -462,6 +464,20 @@
    ],
    "last_old_session": "2026-10-22",
    "first_session": "2026-10-23"
+  },
+  "CWT14-failbrk-pdl-p05-R2A-long": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-10-30 16:00 ET",
+   "from": null
+  },
+  "CWT14-failbrk-pdl-p05-R2A-short": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-10-30 16:00 ET",
+   "from": null
   },
   "CWT14-failbrk-pdl-p05-long": {
    "accounts": [
@@ -1879,15 +1895,20 @@
   }
  },
  "last_change": {
-  "at": "2026-10-30 00:31 ET",
+  "at": "2026-10-30 16:00 ET",
   "changes": [
    {
-    "setup": "L3-gap-slope-fromopen-FD",
-    "from": [
-     "testing"
-    ],
+    "setup": "CWT14-failbrk-pdl-p05-R2A-long",
+    "from": [],
     "to": [
-     "primary"
+     "testing2"
+    ]
+   },
+   {
+    "setup": "CWT14-failbrk-pdl-p05-R2A-short",
+    "from": [],
+    "to": [
+     "testing2"
     ]
    }
   ]

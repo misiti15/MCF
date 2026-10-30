@@ -456,12 +456,13 @@ class LabStrategy(Strategy):
     def __init__(self, name: str, module: str, r_atr_frac: float = 0.25, min_adv: float = 0.0,
                  window: tuple | list | None = None, prefilter: str | None = None, refire: bool = False,
                  refire_cooldown: int = 1, context=None, symbols=None, geom: str | None = None, **params):
-        from .lab_context import context_symbols, parse_context
+        from .lab_context import context_symbols, daily_context_symbols, parse_context
 
         super().__init__(module=module, r_atr_frac=r_atr_frac, min_adv=min_adv, window=window, prefilter=prefilter,
                          refire=bool(refire), refire_cooldown=int(refire_cooldown), **params)
         self.context = parse_context(context)
         self.context_symbols = context_symbols(self.context)
+        self.daily_context_symbols = daily_context_symbols(self.context)   # e.g. spy_prng -> SPY's daily prior
         if self.refire_cooldown < 0:
             raise ValueError(f"{name}: refire_cooldown must be >= 0")
         if self.refire:
@@ -571,7 +572,7 @@ class LabStrategy(Strategy):
         if self.context:   # opt-in market context on this setup's own copy (the shared cached frame stays as is)
             from .lab_context import add_context
 
-            f = add_context(f, getattr(ctx, "peers", None), self.context)
+            f = add_context(f, getattr(ctx, "peers", None), self.context, getattr(ctx, "index_priors", None))
         tod = f["tod"].to_numpy()
         lo, hi = self.window or (950, 1500)      # the YAML window binds live AND backtest (no drift)
         m = np.asarray(self.mod.mask(f), dtype=bool) & (tod >= max(950, lo)) & (tod <= min(1500, hi))

@@ -170,7 +170,7 @@ class FastSession:
                 if st.context:
                     from ..strategies.lab_context import add_context
 
-                    g = add_context(f, self.bars, st.context)
+                    g = add_context(f, self.bars, st.context, getattr(self.r, "index_priors", None))
                 mod = getattr(st.mod, "_mod", st.mod)
                 self.masks[k] = np.asarray(mod.mask(g), dtype=bool)
         return self.masks[k]
@@ -394,7 +394,8 @@ class FastSession:
                 ctx = DayContext(symbol=sym, date=c.date, bars=tb, prev_close=c.prev_close, prev_high=c.prev_high,
                                  prev_low=c.prev_low, atr=c.atr, avg_dollar_volume=c.avg_dollar_volume,
                                  avg_cum_volume=c.avg_cum_volume, avg_move=c.avg_move, prior5=c.prior5, sma20=c.sma20,
-                                 peers={s: x[x.index <= last] for s, x in self.bars.items()})
+                                 peers={s: x[x.index <= last] for s, x in self.bars.items()},
+                                 index_priors=getattr(self.r, "index_priors", None))
                 full_rv = self._rvol_full(sym)
                 if full_rv is not None and len(tb):
                     a_rv = _ORIG_RVOL(ctx).to_numpy(float)
@@ -431,7 +432,7 @@ class FastSession:
                     if st2.context:
                         from ..strategies.lab_context import add_context
 
-                        gg = add_context(g, ctx.peers, st2.context)
+                        gg = add_context(g, ctx.peers, st2.context, getattr(self.r, "index_priors", None))
                     try:
                         real = np.asarray(getattr(st2.mod, "_mod", st2.mod).mask(gg), dtype=bool)
                     except Exception:            # the module itself fails on this short frame (live would too)

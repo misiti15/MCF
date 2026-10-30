@@ -87,7 +87,8 @@ def milestones(primary: dict, date: str) -> dict:
         best = max(best, cur)
     last10 = h[-10:]
     g10 = sum((x.get("pnl") or 0) > 0 for x in last10)
-    return dict(run=run, best_run=best, m1=best >= 3, g10=g10, n10=len(last10), m2=len(last10) == 10 and g10 >= 8,
+    # m1 follows the count shown (current run), so "REACHED" never sits next to 0/3; an earlier run is in best_run
+    return dict(run=run, best_run=best, m1=run >= 3, m1_before=best >= 3 and run < 3, g10=g10, n10=len(last10), m2=len(last10) == 10 and g10 >= 8,
                 dots=[(x["date"], (x.get("pnl") or 0) > 0) for x in last10])
 
 
@@ -535,7 +536,7 @@ def html_today(date: str, accts: list[dict]) -> str:
     m = milestones(accts[0], date)
     dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
     ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
-          f'<div class="v">{min(m["run"], 3)} / 3</div><div class="d">Current streak {m["run"]} · best so far {m["best_run"]}</div></div>'
+          f'<div class="v">{min(m["run"], 3)} / 3</div><div class="d">Current streak {m["run"]} · best so far {m["best_run"]}{" (reached before, streak reset)" if m["m1_before"] else ""}</div></div>'
           f'<div class="m"><div class="t">M2 · {MILESTONES[1][1]}{"<span class=done>REACHED</span>" if m["m2"] else ""}</div>'
           f'<div class="v">{m["g10"]} / {m["n10"]}</div><div class="d">Need 8 of 10 · green / red, oldest → newest</div><div class="dots">{dots}</div></div></div>')
     return page(f'<div class="card"><h2>Accounts — end of day</h2><div class="accts accts5">{"".join(cards)}</div>{strip}</div>'
