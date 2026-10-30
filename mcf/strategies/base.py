@@ -68,6 +68,9 @@ class DayContext:
     # today's bars of every symbol in the poll / session (symbol -> 1-minute RTH bars), for setups that read one symbol
     # and trade another (IndexDipBounce: signal on SPY, trade SSO). None when the caller does not provide them.
     peers: dict | None = field(default=None, repr=False)
+    # daily priors of index symbols a setup reads as pre-open context (symbol -> object with prev_high / prev_low /
+    # atr, e.g. mcf.data.priors.Prior; lab `context: [spy_prng]`, owner 2026-10-30 PDL-1a). None when no setup asks.
+    index_priors: dict | None = field(default=None, repr=False)
     _cache: dict = field(default_factory=dict, repr=False)
 
     @property

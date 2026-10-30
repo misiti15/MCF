@@ -278,7 +278,10 @@ def test_config_flags_exactly_the_testing2_setups(monkeypatch):
     flagged = {n for n, p in cfg["strategies"].items() if (p or {}).get("live_scale_out")}
     scaled35 = {"CWT14-failbrk-pdh-p05-lowvol-short", "CWT14-failbrk-orl-p10-long", "CWT14-failbrk-orl-p10-lowvol-long",
                 "CWT12-coil-k4-long"}                        # owner 2026-10-17 (Q17)
-    assert flagged == set(SCALED) | scaled35
+    # owner exception PDL-1a 2026-10-30: +0.25 R1 written in units of the 0.75 ATR stop distance (1/12)
+    pdl1a = {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"}
+    assert flagged == set(SCALED) | scaled35 | pdl1a
+    assert all(abs(cfg["strategies"][n]["scale_out_r"] - 0.25 / 3) < 1e-12 for n in pdl1a)
     assert all(cfg["strategies"][n]["scale_out_r"] == 0.25 for n in SCALED)
     assert all(cfg["strategies"][n]["scale_out_r"] == 0.35 for n in scaled35)
     monkeypatch.setenv("MCF_ACCOUNT", "primary")

@@ -321,6 +321,7 @@ class Backtester:
     def run(self, data: dict[str, pd.DataFrame], progress: bool = False) -> pd.DataFrame:
         hist = {s: SymbolHistory(s, df) for s, df in data.items() if not df.empty}
         dates = sorted({d for h in hist.values() for d in h.by_day})
+        need_idx = set().union(*(getattr(s, "daily_context_symbols", None) or set() for s in self.strategies))
         candidates: list[Trade] = []
         for n, d in enumerate(dates):
             ctxs = [c for h in hist.values() if (c := h.context(d)) is not None and self._universe_ok(c)]
@@ -332,8 +333,12 @@ class Backtester:
             ctxs, orv = in_play_filter(ctxs, orv, self.cfg)
             rank_contexts(ctxs)
             peers = {s: h.by_day[d] for s, h in hist.items() if d in h.by_day}
+            ipri = None
+            if need_idx:   # lab `context: [spy_prng]` (owner 2026-10-30 PDL-1a): the index's own daily prior
+                ipri = {s: x for s in need_idx if s in hist and (x := hist[s].context(d)) is not None}
             for c in ctxs:
                 c.peers = peers
+                c.index_priors = ipri
                 for strat in self.strategies:
                     if not strat.eligible(c):
                         continue
