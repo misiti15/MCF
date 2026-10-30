@@ -1,0 +1,122 @@
+Educational only - not financial advice. BACKTEST parents (open history, TRAIN+VALID, costs in).
+=== L3-gap-slope-rsi5hi-FD  n 8383  exp -0.0468  win 0.665
+losers 2807: never reached +0.2R 1503, reached +0.5R 71; med MFE 0.54 med MAE -0.43
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   182 -0.092       0.665
+10:00-10:30   405 -0.245       0.585
+10:30-11:30  1041  0.019       0.708
+11:30-13:00  3844 -0.077       0.649
+13:00-14:00  1739 -0.021       0.677
+14:00-16:00  1172  0.031       0.689
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    2088 -0.051
+      True     3021 -0.107
+valid False    1134  0.102
+      True     2140 -0.037
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     5425  0.453
+2     2239 -1.187
+6      719 -0.263
+
+=== MF5-flowsell-vwapup-rsi5hi-FD  n 5664  exp -0.0667  win 0.492
+losers 2878: never reached +0.2R 1074, reached +0.5R 831; med MFE 0.72 med MAE -0.65
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   740 -0.052       0.530
+10:00-10:30   850 -0.080       0.505
+10:30-11:30  2166 -0.062       0.497
+11:30-13:00   975 -0.075       0.470
+13:00-14:00   548 -0.026       0.495
+14:00-16:00   385 -0.127       0.416
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1550  0.130
+      True     2377 -0.243
+valid False     899  0.072
+      True      838 -0.080
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     2149  0.946
+2     1918 -1.155
+6     1597 -0.122
+
+=== NS3-failed-vwap-reclaim-short-FD  n 13255  exp -0.0107  win 0.507
+losers 6533: never reached +0.2R 2640, reached +0.5R 1371; med MFE 0.55 med MAE -0.52
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   135  0.066       0.563
+10:00-10:30   517  0.168       0.617
+10:30-11:30   908  0.050       0.548
+11:30-13:00  1418 -0.005       0.500
+13:00-14:00  4004 -0.073       0.474
+14:00-16:00  6273  0.003       0.514
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    4575  0.094
+      True     2354 -0.195
+valid False    3782 -0.012
+      True     2544 -0.026
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     3740  0.971
+2     3158 -1.105
+6     6357 -0.045
+
+=== NS3V1-am-widestop-short  n 1560  exp +0.0693  win 0.658
+losers 533: never reached +0.2R 271, reached +0.5R 2; med MFE 0.51 med MAE -0.32
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   135  0.172       0.756
+10:00-10:30   517  0.092       0.706
+10:30-11:30   908  0.041       0.617
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     535  0.141
+      True      341 -0.117
+valid False     375  0.113
+      True      309  0.098
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1      882  0.484
+2      240 -1.062
+6      438 -0.146
+
+=== NS1-rsidip-rsi5pop-long-FD  n 1882  exp -0.0700  win 0.601
+losers 750: never reached +0.2R 410, reached +0.5R 5; med MFE 0.51 med MAE -0.48
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00    27 -0.060       0.667
+10:00-10:30    78 -0.089       0.628
+10:30-11:30   232  0.063       0.716
+11:30-13:00   635 -0.087       0.605
+13:00-14:00   493 -0.123       0.572
+14:00-16:00   417 -0.053       0.559
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     381 -0.193
+      True      627 -0.003
+valid False     384 -0.137
+      True      490 -0.007
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1030  0.466
+2      460 -1.110
+6      392 -0.257

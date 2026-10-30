@@ -1,0 +1,228 @@
+trades per acct/day:
+ acct         p   t1   t2
+date                    
+2026-10-26  22  136  136
+2026-10-27  58  189  238
+2026-10-28  14  162  213
+2026-10-29  16  174  204
+2026-10-30  15   43  118
+                                              n accounts  days    win  avg_r      pnl
+strategy                                                                             
+CWT14-failbrk-pdl-p05-long                  257       t1     4  0.588 -0.108 -220.140
+CWT12-coil-k4-long                          202       t2     3  0.564 -0.157  -62.030
+CWT14-failbrk-pdl-p05-lowvol-long           172       t2     4  0.593 -0.126 -131.680
+CWT14-failbrk-pdl-p10-long                  147       t2     5  0.599 -0.041  -79.700
+RW7-gapdn-bounce-early-short-FD             106       t1     5  0.557  0.067   55.990
+L3-gap-slope-fromopen-FD                     90       t1     4  0.622  0.275  580.623
+CWT14-failbrk-pdl-p10-lowvol-long            88     p,t2     5  0.580 -0.100  -48.700
+CWT13-vwapstretch-z05-long                   75     p,t2     5  0.560 -0.163  -52.790
+exhaustion_short-FD                          65    t1,t2     4  0.462 -0.084 -128.870
+MF3-open-flowsell-rsi5hi-FD                  40       t1     5  0.325 -0.424  -76.960
+L3-gap-slope-rsi5hi-FD                       39     p,t2     5  0.846  0.281  198.420
+exhaustion_short                             33       t1     4  0.606  0.082   40.110
+RW4-ns3-adv150-short-FD                      26    t1,t2     5  0.231 -0.601 -345.270
+MF5-flowsell-vwapup-rsi5hi-FD                24       t2     4  0.250 -0.531  -60.160
+L3-gap-slope-lowdist-FD                      21       t1     4  0.476 -0.010    5.207
+NS3-failed-vwap-reclaim-short-FD             20       t2     4  0.300 -0.561 -162.940
+RW1-gapdn-bounce-flowsell-short-FD           19       t2     5  0.579  0.035   10.690
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   18        p     5  0.611  0.000 -184.155
+NS3V1-am-widestop-short                      16       t2     2  0.125 -0.747 -523.210
+NS1-rsidip-rsi5pop-long-FD                   14       t1     5  0.643  0.076    8.610
+MF4-h40-open-flowsell-FD                     14        p     5  0.571 -0.172  -48.280
+MF5-flowsell-vwapup-rsi5hi                   14       t1     4  0.214 -0.650  -37.730
+intraday_momentum                            14       t1     5  0.143 -0.319  -10.790
+NM-AR-AM-gapdown-capitulation-long           13       t2     2  0.538 -0.152  -60.790
+CWT09-gapdn-bounce-g10-lowerhalf-short       13       t2     3  0.538  0.218   46.396
+                                                    0                              1                                 2                        3                           4
+setup                          L3-gap-slope-rsi5hi-FD  MF5-flowsell-vwapup-rsi5hi-FD  NS3-failed-vwap-reclaim-short-FD  NS3V1-am-widestop-short  NS1-rsidip-rsi5pop-long-FD
+acct                                             p,t2                             t2                                t2                       t2                          t1
+n                                                  39                             24                                20                       16                          14
+days                                                5                              4                                 4                        2                           5
+side                                            short                          short                             short                    short                        long
+win                                             0.846                           0.25                               0.3                    0.125                       0.643
+avg_r                                           0.281                         -0.531                            -0.561                   -0.747                       0.076
+pnl                                            198.42                         -60.16                           -162.94                  -523.21                        8.61
+avg_win_r                                       0.498                          0.722                             0.481                    0.511                       0.392
+avg_loss_r                                     -0.911                         -0.949                            -1.007                   -0.927                      -0.493
+be_win                                          0.647                          0.568                             0.677                    0.645                       0.557
+med_mfe                                          0.46                           0.37                              0.32                     0.16                        0.44
+med_mae                                          0.26                           0.95                              0.62                     0.98                        0.34
+losers                                              6                             18                                14                       14                           5
+losers_never_worked_mfe_lt_02                       3                              8                                 5                       12                           2
+losers_mfe_ge_05                                    0                              3                                 0                        0                           0
+giveback_losers_mean                             1.11                           1.23                              1.24                     1.05                        0.68
+winners_mae_ge_075                                  2                              1                                 0                        0                           2
+stop                                                5                             16                                10                       10                           1
+target                                             33                              4                                 1                        2                           8
+other                                               1                              4                                 9                        4                           5
+=== L3-gap-slope-rsi5hi-FD  (live paper, 39 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-26    18  0.453       0.944  8.158
+2026-10-27     4 -0.881       0.000 -3.525
+2026-10-28     1  0.023       1.000  0.023
+2026-10-29    15  0.397       0.933  5.958
+2026-10-30     1  0.340       1.000  0.340
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+10:30-11:30    10  0.478        1.00
+11:30-13:00    25  0.264        0.84
+14:00-16:00     4 -0.103        0.50
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     1 -1.022
+(0.1, 0.2]       2 -0.971
+(0.2, 0.3]       1 -1.017
+(0.3, 0.5]       2 -0.743
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]    18  0.522
+(0.25, 0.5]       8  0.581
+(0.5, 0.75]       4  0.383
+(0.75, 5.0]       2  0.413
+by exit reason:
+             size   mean
+exit_reason             
+flatten         1 -0.458
+stop            5 -1.002
+target         33  0.498
+
+=== MF5-flowsell-vwapup-rsi5hi-FD  (live paper, 24 trades)
+by date:
+            size   mean  <lambda_0>     sum
+date                                       
+2026-10-26     1  1.198       1.000   1.198
+2026-10-27    14 -0.867       0.071 -12.140
+2026-10-28     3 -0.201       0.333  -0.603
+2026-10-29     6 -0.202       0.500  -1.210
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+09:50-10:00     1 -1.012       0.000
+10:00-10:30     5 -1.039       0.000
+10:30-11:30     9 -0.597       0.222
+11:30-13:00     5 -0.069       0.400
+13:00-14:00     1  0.860       1.000
+14:00-16:00     3 -0.564       0.333
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     6 -1.050
+(0.1, 0.2]       2 -1.042
+(0.2, 0.3]       2 -1.036
+(0.3, 0.5]       5 -0.824
+(0.5, 5.0]       3 -0.839
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]     4  0.788
+(0.25, 0.5]       1  0.872
+(0.75, 5.0]       1  0.311
+by exit reason:
+             size   mean
+exit_reason             
+flatten         4  0.077
+stop           16 -1.037
+target          4  0.883
+
+=== NS3-failed-vwap-reclaim-short-FD  (live paper, 20 trades)
+by date:
+            size   mean  <lambda_0>     sum
+date                                       
+2026-10-26     1  0.267       1.000   0.267
+2026-10-27     5 -0.074       0.600  -0.369
+2026-10-28    11 -0.942       0.091 -10.365
+2026-10-30     3 -0.249       0.333  -0.747
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+11:30-13:00     1 -0.615       0.000
+13:00-14:00     9 -0.525       0.333
+14:00-16:00    10 -0.587       0.300
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     3 -1.178
+(0.1, 0.2]       2 -1.010
+(0.2, 0.3]       4 -1.004
+(0.3, 0.5]       5 -0.905
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]     3  0.528
+(0.25, 0.5]       3  0.433
+by exit reason:
+             size   mean
+exit_reason             
+flatten         9 -0.103
+stop           10 -1.114
+target          1  0.849
+
+=== NS3V1-am-widestop-short  (live paper, 16 trades)
+by date:
+            size   mean  <lambda_0>     sum
+date                                       
+2026-10-28    13 -0.921       0.000 -11.976
+2026-10-29     3  0.007       0.667   0.022
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+09:50-10:00     2 -0.989         0.0
+10:00-10:30     4 -0.966         0.0
+10:30-11:30    10 -0.611         0.2
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     6 -0.951
+(0.1, 0.2]       6 -0.901
+(0.2, 0.3]       2 -0.931
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]     2  0.511
+by exit reason:
+             size   mean
+exit_reason             
+flatten         4 -0.735
+stop           10 -1.003
+target          2  0.511
+
+=== NS1-rsidip-rsi5pop-long-FD  (live paper, 14 trades)
+by date:
+            size   mean  <lambda_0>    sum
+date                                      
+2026-10-26     1  0.426       1.000  0.426
+2026-10-27     4  0.158       0.500  0.631
+2026-10-28     3  0.087       0.667  0.260
+2026-10-29     5 -0.145       0.600 -0.727
+2026-10-30     1  0.477       1.000  0.477
+by entry time:
+             size   mean  <lambda_0>
+tod                                 
+10:30-11:30     4  0.052       0.750
+11:30-13:00     3  0.314       1.000
+13:00-14:00     3  0.211       0.667
+14:00-16:00     4 -0.179       0.250
+losers by MFE reached (R):
+              size   mean
+mfe_r                    
+(-0.01, 0.1]     2 -0.619
+(0.2, 0.3]       2 -0.576
+(0.3, 0.5]       1 -0.073
+winners by MAE (R):
+               size   mean
+mae_r                     
+(-0.01, 0.25]     3  0.448
+(0.25, 0.5]       4  0.417
+(0.75, 5.0]       2  0.259
+by exit reason:
+             size   mean
+exit_reason             
+flatten         5 -0.272
+stop            1 -1.010
+target          8  0.430
+
