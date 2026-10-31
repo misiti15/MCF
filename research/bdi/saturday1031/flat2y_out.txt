@@ -1,0 +1,58 @@
+geometry MF1-945-flowsell-vwapup                    t1s05   mean|sim-lab| 0.020R corr 1.000 covered 1.000
+geometry MF2-open-rsimidhi-flowsell                 t1s05   mean|sim-lab| 0.002R corr 1.000 covered 1.000
+geometry MF3-open-flowsell-rsi5hi                   t1s1    mean|sim-lab| 0.011R corr 1.000 covered 1.000
+geometry MF4-h40-open-flowsell                      t05s1   mean|sim-lab| 0.011R corr 0.995 covered 1.000
+geometry MF5-flowsell-vwapup-rsi5hi                 t1s1    mean|sim-lab| 0.005R corr 1.000 covered 1.000
+geometry NS1-rsidip-rsi5pop-long                    t05s1   mean|sim-lab| 0.003R corr 1.000 covered 1.000
+geometry NS2-sma50break-overbought-short            t1s1    mean|sim-lab| 0.004R corr 0.998 covered 1.000
+geometry NS3-failed-vwap-reclaim-short              t1s1    mean|sim-lab| 0.005R corr 1.000 covered 1.000
+geometry NS4-pm-vwap-reclaim-oversold-short         t1s05   mean|sim-lab| 0.001R corr 0.998 covered 1.000
+geometry NS5-sma50-flush-oversold-long              t1s1    mean|sim-lab| 0.001R corr 1.000 covered 1.000
+geometry RW1 bdi-rw-gapdn-bounce-flowsell           t1s1    mean|sim-lab| 0.004R corr 1.000 covered 1.000
+geometry RW2 bdi-rw-exhaustion-noon-adv150          t1s1    mean|sim-lab| 0.000R corr 1.000 covered 1.000
+geometry RW3 bdi-rw-gapdn-rsi5pop-flowsell          t1s1    mean|sim-lab| 0.005R corr 1.000 covered 1.000
+geometry RW4 bdi-rw-ns3-adv150                      t1s1    mean|sim-lab| 0.004R corr 1.000 covered 1.000
+geometry RW5 bdi-rw-heat30-flowsell-rsi5pop-gapdn   t1s1    mean|sim-lab| 0.003R corr 1.000 covered 1.000
+geometry RW6 bdi-rw-ns2-up3                         t1s1    mean|sim-lab| 0.005R corr 0.996 covered 1.000
+geometry RW7 bdi-rw-gapdn-bounce-early              t1s1    mean|sim-lab| 0.017R corr 0.999 covered 1.000
+geometry RW8 bdi-rw-sma50up-spikefade               t1s1    mean|sim-lab| 0.000R corr 1.000 covered 1.000
+geometry exhaustion_short                           t1s1    mean|sim-lab| 0.000R corr 1.000 covered 1.000
+geometry heat_fade_long                             t1s1    mean|sim-lab| 0.000R corr 1.000 covered 1.000
+geometry heat_fade_short                            t1s1    mean|sim-lab| 0.008R corr 0.999 covered 1.000
+
+trades 60907 (holdouts dropped), sessions 348; sim 15:55 vs lab r: mean -0.0256 vs -0.0219, corr 0.999
+bar (N 5): t >= 1.79
+
+         cfg     n  affected  d_per_trade  d_per_affected    sum_d   t_day  d_train  d_valid    d_up  d_flat  d_down  top10_R_kept  best_day_share  wo_best_day  months_pos  pass
+   F1540 all 60907     13651      -0.0002         -0.0009 -12.6227 -0.1071   0.0008  -0.0009  0.0057 -0.0003 -0.0070        0.9828             NaN      -0.0006      0.4706 False
+   F1545 all 60907     13257      -0.0011         -0.0052 -68.4862 -0.7160  -0.0023  -0.0004  0.0015 -0.0006 -0.0046        0.9883             NaN      -0.0014      0.4118 False
+   F1550 all 60907     12733      -0.0007         -0.0032 -41.3042 -0.5614  -0.0008  -0.0006  0.0026 -0.0012 -0.0040        0.9942             NaN      -0.0010      0.3529 False
+ F1545 longs 12757      2849      -0.0050         -0.0224 -63.7054 -1.0754  -0.0146  -0.0001 -0.0007 -0.0001 -0.0094        0.9923             NaN      -0.0066      0.2941 False
+F1545 shorts 48150     10408      -0.0001         -0.0005  -4.7808 -0.0584   0.0005  -0.0005  0.0017 -0.0007 -0.0022        0.9863             NaN      -0.0005      0.4118 False
+
+by setup (F1545, delta per trade, affected):
+                                              n   aff       d    sum_d
+setup                                                                 
+MF1-945-flowsell-vwapup                    1978    53  0.0002   0.3272
+MF2-open-rsimidhi-flowsell                  452    29 -0.0015  -0.6828
+MF3-open-flowsell-rsi5hi                   3416   525 -0.0005  -1.6004
+MF4-h40-open-flowsell                      2656   137  0.0004   1.0917
+MF5-flowsell-vwapup-rsi5hi                 5664  1666 -0.0037 -20.9278
+NS1-rsidip-rsi5pop-long                     336    23  0.0024   0.8190
+NS2-sma50break-overbought-short            2589   359  0.0029   7.5347
+NS3-failed-vwap-reclaim-short              1031   163 -0.0029  -2.9409
+NS4-pm-vwap-reclaim-oversold-short         1152   353  0.0031   3.5263
+NS5-sma50-flush-oversold-long              1053   146  0.0016   1.6721
+RW1 bdi-rw-gapdn-bounce-flowsell           1901   334  0.0000   0.0108
+RW2 bdi-rw-exhaustion-noon-adv150          5971  2406  0.0016   9.8098
+RW3 bdi-rw-gapdn-rsi5pop-flowsell          1492   245  0.0033   4.9393
+RW4 bdi-rw-ns3-adv150                       820   137 -0.0026  -2.1320
+RW5 bdi-rw-heat30-flowsell-rsi5pop-gapdn   1080   195 -0.0020  -2.1547
+RW6 bdi-rw-ns2-up3                         1240   151  0.0053   6.6008
+RW7 bdi-rw-gapdn-bounce-early              1325   162 -0.0029  -3.8285
+RW8 bdi-rw-sma50up-spikefade                365   182  0.0198   7.2204
+exhaustion_short                           4543  2131 -0.0015  -6.9775
+heat_fade_long                            11368  2680 -0.0058 -66.1965
+heat_fade_short                           10475  1180 -0.0004  -4.5970
+
+Educational only - not financial advice.
