@@ -15,8 +15,10 @@ No trading today, so here are some basic facts about where the system stands, wh
 
 **Position size was adjusted earlier this week:**
 
-- **Before (to 10/27):** each position was capped at about $1,900. The typical trade risked only about $15, roughly 0.02% of the account, even though the risk rule allows up to 0.25% (about $239). It was built that way on purpose: dozens of setups could fire at once and the account had to have room for all of them.
-- **Now (from 10/28):** Primary runs fewer, better setups, so each position is about $4,000 and the typical trade risks about $30. Still well under the 0.25% limit, and every daily loss limit stayed the same.
+- **How size is set:** the account is split into equal "slots", one per position it may hold at once. The number of slots follows how many setups an account runs and how many trades they take. More setups and trades mean more, smaller slots, so every signal still has room. Fewer means bigger slots.
+- **Risk always comes first:** no trade can lose more than 0.25% of the account if its stop is hit (about $239 today). Each trade takes the smaller of that risk-based size and its slot, and the daily loss limits sit on top.
+- **Before (to 10/27):** Primary ran many setups, so slots were small, about $1,900 per position. The typical trade risked only about $15, roughly 0.02% of the account. Very conservative, on purpose, while setups were still proving themselves.
+- **Now (from 10/28):** Primary runs fewer, better setups, so slots are about $4,000 and the typical trade risks about $30. Still far under the 0.25% limit, and every daily loss limit stayed the same.
 
 **Automatic start: glitched twice, now watched:**
 
