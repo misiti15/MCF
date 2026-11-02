@@ -1,0 +1,112 @@
+== by strategy x reason (all accounts, all days)
+                                                          n  days      avgR        sumR  avgR_adj    win
+strategy                 why                                                                            
+L3-gap-slope-fromopen    already in symbol                1     1  0.455489    0.455489       NaN  1.000
+                         not shortable/ETB                1     1 -0.066729   -0.066729       NaN  0.000
+                         spread                           1     1 -0.074319   -0.074319       NaN  0.000
+                         taken                            1     1 -1.080128   -1.080128    -1.234  0.000
+L3-gap-slope-fromopen-FD already in symbol                2     1 -0.015944   -0.031887       NaN  0.500
+                         crosscheck: ref                  2     1 -1.109658   -2.219316       NaN  0.000
+                         halted                         489     1 -0.801021 -391.699075       NaN  0.143
+                         lot cap                        159    11  0.391623   62.268095       NaN  0.774
+                         not shortable/ETB             1315    14  -0.05275  -69.366754       NaN  0.525
+                         price already through target     2     1 -0.210598   -0.421197       NaN  0.500
+                         size <                           2     2 -0.712955   -1.425911       NaN  0.000
+                         split-tape short gate           10     2  0.133275     1.33275       NaN  0.500
+                         spread                          89    13  0.000091    0.008058       NaN  0.573
+                         taken                          245    13  0.198714   48.684986     0.174  0.612
+L3-gap-slope-lowdist-FD  already in symbol                1     1   0.98157     0.98157       NaN  1.000
+                         halted                          72     1 -0.510295  -36.741256       NaN  0.278
+                         lot cap                          5     3 -0.207782    -1.03891       NaN  0.400
+                         not shortable/ETB               84    12   0.01035    0.869391       NaN  0.560
+                         opposite side held               1     1   0.62407     0.62407       NaN  1.000
+                         split-tape short gate            7     1 -0.542789   -3.799525       NaN  0.286
+                         spread                          11     6  0.036588    0.402471       NaN  0.636
+                         taken                           57    11  0.052363    2.984699     0.024  0.491
+L3-gap-slope-rsi5hi      not shortable/ETB                1     1  0.372731    0.372731       NaN  1.000
+                         spread                           1     1  0.440058    0.440058       NaN  1.000
+                         taken                            2     1  0.502222    1.004445     0.502  1.000
+L3-gap-slope-rsi5hi-FD   already in symbol                1     1  0.405258    0.405258       NaN  1.000
+                         halted                         119     1 -0.189252  -22.520967       NaN  0.597
+                         lot cap                          6     4  0.193732    1.162391       NaN  0.833
+                         not shortable/ETB              296    14 -0.021515   -6.368339       NaN  0.696
+                         size <                           1     1  0.473886    0.473886       NaN  1.000
+                         spread                          13     5 -0.187913   -2.442863       NaN  0.615
+                         taken                           77    12  0.188777   14.535806     0.175  0.766
+
+== L3-gap-slope-fromopen: per day, taken vs not shortable (r_multiple, before costs)
+                        size                    mean          
+why        not shortable/ETB taken not shortable/ETB     taken
+date                                                          
+2026-10-09                 1     1         -0.066729 -1.080128
+days with both: 1; corr of daily mean R nan; NTSB > taken on 1 days
+
+== L3-gap-slope-fromopen-FD: per day, taken vs not shortable (r_multiple, before costs)
+                        size                    mean          
+why        not shortable/ETB taken not shortable/ETB     taken
+date                                                          
+2026-10-12               1.0   NaN         -1.117092       NaN
+2026-10-13              18.0  15.0         -0.416202 -0.030366
+2026-10-14               6.0   6.0          0.433227  0.095189
+2026-10-15             344.0  12.0         -0.912434 -1.043741
+2026-10-16              38.0   8.0         -0.946032  0.351571
+2026-10-19               NaN   7.0               NaN   0.42741
+2026-10-20             246.0  80.0          0.087389  0.422883
+2026-10-21              38.0   5.0          0.482426 -1.083243
+2026-10-22               4.0  18.0          0.224762 -0.002442
+2026-10-23              16.0   4.0          0.738319  0.532108
+2026-10-26              82.0  42.0          0.732045  0.287403
+2026-10-27              37.0   3.0         -0.141863 -0.851384
+2026-10-28             101.0   7.0         -0.428331  0.017591
+2026-10-29             344.0  38.0          0.537568   0.39871
+2026-10-30              40.0   NaN          0.937156       NaN
+days with both: 12; corr of daily mean R 0.30; NTSB > taken on 8 days
+
+== L3-gap-slope-lowdist-FD: per day, taken vs not shortable (r_multiple, before costs)
+                        size                    mean          
+why        not shortable/ETB taken not shortable/ETB     taken
+date                                                          
+2026-10-12               3.0   NaN         -1.116928       NaN
+2026-10-13               2.0  14.0          -0.16872 -0.143653
+2026-10-15              23.0   2.0         -0.254707 -1.013748
+2026-10-19               NaN   3.0               NaN  0.898641
+2026-10-20              11.0  11.0             0.227  0.849095
+2026-10-21               2.0   2.0          1.029201 -1.002674
+2026-10-22               1.0   1.0          -1.08449 -1.027244
+2026-10-23               2.0   3.0          0.989573 -0.588804
+2026-10-26               1.0  10.0          1.046702  0.316286
+2026-10-27               1.0   2.0         -1.005093 -1.019247
+2026-10-28               3.0   1.0         -0.873859 -0.137297
+2026-10-29              23.0   8.0          0.174543 -0.150087
+2026-10-30              12.0   NaN          0.294274       NaN
+days with both: 10; corr of daily mean R 0.30; NTSB > taken on 6 days
+
+== L3-gap-slope-rsi5hi: per day, taken vs not shortable (r_multiple, before costs)
+                        size                    mean          
+why        not shortable/ETB taken not shortable/ETB     taken
+date                                                          
+2026-10-09                 1     2          0.372731  0.502222
+days with both: 1; corr of daily mean R nan; NTSB > taken on 0 days
+
+== L3-gap-slope-rsi5hi-FD: per day, taken vs not shortable (r_multiple, before costs)
+                        size                    mean          
+why        not shortable/ETB taken not shortable/ETB     taken
+date                                                          
+2026-10-12               3.0   NaN          0.419338       NaN
+2026-10-13               8.0  16.0         -0.277304 -0.093815
+2026-10-14               4.0   NaN         -0.112778       NaN
+2026-10-15              79.0   2.0         -0.311137  -1.05802
+2026-10-16              10.0   4.0         -0.702834  0.117499
+2026-10-19               NaN   2.0               NaN  0.571538
+2026-10-20              29.0   7.0          0.066459  0.579448
+2026-10-21               9.0   NaN         -0.305909       NaN
+2026-10-22               2.0   2.0          0.122877  0.287978
+2026-10-23              12.0   5.0          0.051644  0.190642
+2026-10-26              14.0  18.0          0.390432   0.45325
+2026-10-27              12.0   4.0         -0.219843 -0.881311
+2026-10-28              12.0   1.0         -0.518097  0.022786
+2026-10-29              89.0  15.0          0.267295  0.397213
+2026-10-30              13.0   1.0           0.47783  0.340276
+days with both: 11; corr of daily mean R 0.50; NTSB > taken on 3 days
+
+Educational only - not financial advice.

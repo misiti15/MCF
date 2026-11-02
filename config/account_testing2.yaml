@@ -38,7 +38,6 @@ live:
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
     - NS3V1-am-widestop-short                 # ~5.3/day (ns3var1022 V1, owner 2026-10-22; twin_group NS3-T2)
-    - NS3-failed-vwap-reclaim-short-FD        # ~24/day (demoted from Primary 2026-10-22; twin_group NS3-T2)
     - LD4-st4-breadthup-t1s05-long            # 0.05/day (longs1020 near-miss, owner 2026-10-20)
     - LD5-st2-breadthup-t05s1-long            # 0.07/day (twin_group LD-ST2)
     - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # 0.16/day (twin_group LD-SPXL)
@@ -74,7 +73,6 @@ live:
     - CWT13-vwapstretch-z075-short   # 6.14/day
     - RW1-gapdn-bounce-flowsell-short-FD   # 8.29/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi-FD   # 9.57/day (allocator)
-    - RW4-ns3-adv150-short-FD   # 14.71/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
@@ -346,7 +344,7 @@ strategies:
   NS3-failed-vwap-reclaim-short-FD:   # demoted from Primary 2026-10-22 (owner N5/R3); Testing 2 keeps it apart from NS3 in Testing 1
     refire: true
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-01 (owner DM-NS3; from session 2026-11-02)
     type: lab
     module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
     min_adv: 95000000
@@ -771,7 +769,7 @@ strategies:
     scale_out_r: null
   # ---- RW4-ns3-adv150-short-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   RW4-ns3-adv150-short-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-01 (owner DM-NS3; from session 2026-11-02)
     ticker_split: {part: 1, of: 2}
     refire: true
     refire_cooldown: 1

@@ -59,6 +59,8 @@ live:
     - CWT12-coil-k4-long                   # ~35/day live (moved from Testing 2 2026-10-28, K4-2; from session 2026-10-29)
     - CWT14-failbrk-pdl-p05-long           # 675 live trades (moved from Testing 1 2026-10-30, D1; from session 2026-10-30)
     - CWT14-failbrk-pdl-p05-lowvol-long    # 433 live trades (moved from Testing 2 2026-10-30, D2; from session 2026-10-30)
+    - NS3-failed-vwap-reclaim-short-FD     # 112 live trades (moved from Testing 2 2026-11-01, DM-NS3; from session 2026-11-02)
+    - RW4-ns3-adv150-short-FD              # 104 live trades (moved from Testing 1 + 2 2026-11-01, DM-NS3; from session 2026-11-02)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -359,3 +361,29 @@ strategies:
     live_scale_out: false
     testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full, fill: true}
     tags: [graveyard, "moved to Graveyard 2026-10-30 (owner)"]
+  NS3-failed-vwap-reclaim-short-FD:
+    # moved to Graveyard 2026-11-01 (owner DM-NS3; its earlier trades stay in Primary / Testing, the dashboard merges them).
+    # 112 trades -0.147R after costs (-0.270R w/o best day); 2-yr +0.056R (t 1.26).
+    enabled: true
+    refire: true
+    refire_cooldown: 1
+    type: lab
+    module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-01 (owner)"]
+  RW4-ns3-adv150-short-FD:
+    # moved to Graveyard 2026-11-01 (owner DM-NS3; was split across Testing 1 + 2 by ticker half, one full copy here).
+    # 104 trades -0.246R after costs (-0.354R w/o best day); 2-yr +0.054R (t 1.13).
+    enabled: true
+    refire: true
+    refire_cooldown: 1
+    type: lab
+    module: research/bdi/fullday/RW4-ns3-adv150-short-FD.py
+    min_adv: 150000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-01 (owner)"]

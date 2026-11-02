@@ -1,0 +1,8 @@
+{"S31-Q10": {"cfg": ["ORL", false, 0, 0.0, 0.10, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up (QQQ >= +0.10%)", "rule": "F4-RW4 with the QQQ gate at +0.10%"},
+ "S31-Q30": {"cfg": ["ORL", false, 0, 0.0, 0.30, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up (QQQ >= +0.30%)", "rule": "F4-RW4 with the QQQ gate at +0.30%"},
+ "S31-BE": {"cfg": ["ORL", false, 0, 1.0, 0.20, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up, break-even at +1R", "rule": "F4-RW4 + break-even at +1R"},
+ "S31-2R": {"cfg": ["ORL", false, 1, 0.0, 0.20, 0], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up, fixed 2R", "rule": "F4-RW4 with a fixed 2R target"},
+ "S31-RET": {"cfg": ["ORL", true, 0, 0.0, 0.20, 0], "name": "Opening-Range-Low Sweep, buy the 15-min Gap retest, Nasdaq up", "rule": "F4-RW4 with the limit retrace entry at the FVG edge"},
+ "S31-TS": {"cfg": ["ORL", false, 0, 0.0, 0.20, 1], "name": "Opening-Range-Low Sweep then 15-min Gap, Nasdaq up, tight stop", "rule": "F4-RW4 with the stop at the FVG's first candle low - 0.02 ATR"},
+ "S31-D30": {"cfg": ["ORL_D30", false, 0, 0.0, 0.20, 0], "name": "Opening-Range-Low Sweep + strong 15-min push (0.30 ATR), Nasdaq up", "rule": "F4-RW4 with displacement >= 0.30 ATR"},
+ "S31-G10": {"cfg": ["ORL_G10", false, 0, 0.0, 0.20, 0], "name": "Opening-Range-Low Sweep then big 15-min Gap (0.10 ATR), Nasdaq up", "rule": "F4-RW4 with FVG >= 0.10 ATR"}}

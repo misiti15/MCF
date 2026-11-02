@@ -15,7 +15,8 @@ MOVED_T2 = {"LIQ-orl-sweep-open15-s25-long", "RW2-exhaustion-noon-adv150-short-F
             "CWT13-vwapstretch-z05-short",   # owner 2026-10-22 (D1), effective 2026-10-23
             "CWT09-gapdn-vwaploss-g5-short",   # owner 2026-10-25 (D2), effective 2026-10-26
             "CWT12-coil-k4-long",   # owner 2026-10-28 (K4-2), effective 2026-10-29
-            "CWT14-failbrk-pdl-p05-lowvol-long"}   # owner 2026-10-30 (D2), effective 2026-10-30
+            "CWT14-failbrk-pdl-p05-lowvol-long",   # owner 2026-10-30 (D2), effective 2026-10-30
+            "NS3-failed-vwap-reclaim-short-FD", "RW4-ns3-adv150-short-FD"}   # owner 2026-11-01 (DM-NS3), effective 2026-11-02
 MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
             "CWT14-failbrk-pdh-p10-short",   # owner 2026-10-22 (P0), effective 2026-10-23
             "CWT12-coil-k6-long",   # owner 2026-10-26 (D3), effective 2026-10-27

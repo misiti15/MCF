@@ -57,8 +57,6 @@ live:
     - RW3-gapdn-rsi5pop-flowsell-short-FD
     - MF5-flowsell-vwapup-rsi5hi   # former primary (demoted 2026-10-20)
     - MF4-h40-open-flowsell-FD
-    - RW4-ns3-adv150-short-FD
-    - NS3-failed-vwap-reclaim-short-FD
     - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
     - MF3-open-flowsell-rsi5hi-FD
     - MF3-open-flowsell-rsi5hi   # former primary (demoted 2026-10-20)
@@ -464,7 +462,7 @@ strategies:
     ticker_split: {part: 0, of: 2}   # split copy (allocator)
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-01 (owner DM-NS3; from session 2026-11-02)
     type: lab
     module: research/bdi/fullday/RW4-ns3-adv150-short-FD.py
     min_adv: 150000000

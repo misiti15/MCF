@@ -1,0 +1,35 @@
+lab trades 78120 (sessions train 149, valid 277); bar t 2.23 (12 configs)
+baseline by split x side:
+             size   mean
+split side              
+train -1    18816 -0.053
+       1     4303 -0.066
+valid -1    43095 -0.001
+       1    11906 -0.035
+
+                 q     T     K  train_n  train_days  train_avgR  train_sumR  train_t_day  valid_n  valid_days  valid_avgR  valid_sumR  valid_t_day   pass
+0   Q1 skip shorts  1300  0.75      339        23.0      -0.089       -30.2         0.95      662        35.0      -0.093       -61.3         0.78  False
+1   Q1 skip shorts  1300  1.00      256        17.0      -0.132       -33.8         0.91      491        17.0      -0.057       -27.8         0.36  False
+2   Q1 skip shorts  1300  1.25      205        10.0      -0.157       -32.3         0.93      210         9.0       0.025         5.3        -0.13  False
+3   Q1 skip shorts  1330  0.75      295        22.0      -0.175       -51.5         1.62      572        29.0      -0.102       -58.6         0.79  False
+4   Q1 skip shorts  1330  1.00      217        14.0      -0.235       -51.1         1.45      441        15.0      -0.083       -36.6         0.51  False
+5   Q1 skip shorts  1330  1.25      188        10.0      -0.214       -40.2         1.17      191         9.0      -0.012        -2.2         0.06  False
+6   Q1 skip shorts  1400  0.75      167        14.0      -0.009        -1.5         0.11      453        26.0      -0.140       -63.4         0.94  False
+7   Q1 skip shorts  1400  1.00      117        11.0      -0.030        -3.5         0.31      358        13.0      -0.140       -50.2         0.76  False
+8   Q1 skip shorts  1400  1.25      102         7.0      -0.019        -1.9         0.20      119         9.0      -0.144       -17.1         0.61  False
+9    Q2 longs kept  1400  0.75        0         NaN         NaN         NaN          NaN        0         NaN         NaN         NaN          NaN  False
+10   Q2 longs kept  1400  1.00        0         NaN         NaN         NaN          NaN        0         NaN         NaN         NaN          NaN  False
+11   Q2 longs kept  1400  1.25        0         NaN         NaN         NaN          NaN        0         NaN         NaN         NaN          NaN  False
+
+passes: 0 of 12
+
+Q1 T1330 K1.0 skipped shorts by setup (both splits):
+                                    size   mean
+setup                                          
+MF5-flowsell-vwapup-rsi5hi            10 -0.402
+NS4-pm-vwap-reclaim-oversold-short    30  0.247
+RW2 bdi-rw-exhaustion-noon-adv150    279 -0.143
+RW8 bdi-rw-sma50up-spikefade           1  0.031
+exhaustion_short                     338 -0.152
+
+Educational only - not financial advice.
