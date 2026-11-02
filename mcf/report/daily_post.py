@@ -551,7 +551,7 @@ def html_top2(date: str, top: list[dict], words: dict) -> str:
     for i, t in enumerate(top, 1):
         w = words.get(t["setup"]) or {}
         lines = w.get("lines") or [["What", t["what"]]]
-        side = (t.get("side") or "").lower()
+        side = (t.get("side") or w.get("side") or "").lower()   # words file may carry the side when setup_names has none
         sd = f'<span class="side {"up" if side == "long" else "down"}">{"LONG" if side == "long" else "SHORT" if side == "short" else ""}</span>' if side else ""
         rows = "".join(f'<tr><td class="k">{_e(k)}</td><td>{_e(v)}</td></tr>' for k, v in lines)
         tops.append(f'<div class="ts"><div class="t">{i}. {_e(w.get("title") or t["name"])}{sd}</div>'
