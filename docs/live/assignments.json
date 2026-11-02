@@ -30,7 +30,6 @@
    "NS3-failed-vwap-reclaim-short",
    "NS4-pm-vwap-reclaim-oversold-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
-   "RW4-ns3-adv150-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
@@ -87,12 +86,10 @@
    "NM-RWR3-ns3-qqqup-early-short",
    "NM-RWR4-ns2-up3-qqqup-slopedn-short",
    "NM1-cwt09-g10-vwaploss-short",
-   "NS3-failed-vwap-reclaim-short-FD",
    "NS3V1-am-widestop-short",
    "NS4-pm-vwap-reclaim-oversold-short",
    "NS5-sma50-flush-oversold-long-FD",
    "RW1-gapdn-bounce-flowsell-short-FD",
-   "RW4-ns3-adv150-short-FD",
    "exhaustion_short-FD"
   ],
   "gen": [
@@ -209,7 +206,9 @@
    "MF1-945-flowsell-vwapup-FD",
    "NS2-sma50break-overbought-short",
    "NS2-sma50break-overbought-short-FD",
+   "NS3-failed-vwap-reclaim-short-FD",
    "RW2-exhaustion-noon-adv150-short-FD",
+   "RW4-ns3-adv150-short-FD",
    "RW6-ns2-up3-short-FD",
    "ST1-ordn-long-pm-t05s1-FD",
    "ST2-slope20up-long-am-t05s1-FD",
@@ -1563,14 +1562,14 @@
   },
   "NS3-failed-vwap-reclaim-short-FD": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-01 23:34 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-10-22 07:43 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-10-21",
-   "first_session": "2026-10-22"
+   "last_old_session": "2026-10-30",
+   "first_session": "2026-11-02"
   },
   "NS3V1-am-widestop-short": {
    "accounts": [
@@ -1662,25 +1661,15 @@
   },
   "RW4-ns3-adv150-short-FD": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-01 23:34 ET",
+   "from": [
     "testing",
     "testing2"
    ],
-   "since": "2026-10-20 22:32 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "split": {
-    "testing": {
-     "part": 0,
-     "of": 2
-    },
-    "testing2": {
-     "part": 1,
-     "of": 2
-    }
-   }
+   "last_old_session": "2026-10-30",
+   "first_session": "2026-11-02"
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
    "accounts": [
@@ -1895,20 +1884,25 @@
   }
  },
  "last_change": {
-  "at": "2026-10-30 16:00 ET",
+  "at": "2026-11-01 23:34 ET",
   "changes": [
    {
-    "setup": "CWT14-failbrk-pdl-p05-R2A-long",
-    "from": [],
-    "to": [
+    "setup": "NS3-failed-vwap-reclaim-short-FD",
+    "from": [
      "testing2"
+    ],
+    "to": [
+     "graveyard"
     ]
    },
    {
-    "setup": "CWT14-failbrk-pdl-p05-R2A-short",
-    "from": [],
-    "to": [
+    "setup": "RW4-ns3-adv150-short-FD",
+    "from": [
+     "testing",
      "testing2"
+    ],
+    "to": [
+     "graveyard"
     ]
    }
   ]

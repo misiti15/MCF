@@ -378,6 +378,6 @@ def test_st7q_and_ns3v1_configured(monkeypatch):
     assert v1.side == -1 and v1.geom == "t05s1" and v1.r_atr_frac == 0.5 and v1.window == [950, 1130]
     assert v1.refire and v1.refire_cooldown == 1 and v1.min_adv == 95000000
     o2 = cfg["live"]["setup_order"]
-    assert o2.index("NS3V1-am-widestop-short") == o2.index("NS3-failed-vwap-reclaim-short-FD") - 1
+    assert "NS3-failed-vwap-reclaim-short-FD" not in o2   # moved to the Graveyard 2026-11-01 (owner DM-NS3)
     g = twin_groups(cfg)
     assert twin_key("NS3V1-am-widestop-short", g) == twin_key("NS3-failed-vwap-reclaim-short-FD", g) == "group:NS3-T2"
