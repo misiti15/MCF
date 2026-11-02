@@ -512,6 +512,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: 0.08333333333333333
     live_scale_out: true
+    scale_out_cap_exempt: true   # owner SO-1A 2026-11-02: outside the 2/day cap (R2A's edge is the half-off; research/bdi/pdl1030/so1a)
     tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   CWT14-failbrk-pdl-p05-R2A-short:
     enabled: true
@@ -522,6 +523,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: 0.08333333333333333
     live_scale_out: true
+    scale_out_cap_exempt: true   # owner SO-1A 2026-11-02: outside the 2/day cap (R2A's edge is the half-off; research/bdi/pdl1030/so1a)
     tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   # Failed Prior-Day-Low Break Long: CWT package B B3-LPD-p0.1-Vany-sidelong-t05s1-full (id 130); open history n 37499, exp -0.0861R, t -8.75, 88.03/day; verdict rework
   CWT14-failbrk-pdl-p10-long:

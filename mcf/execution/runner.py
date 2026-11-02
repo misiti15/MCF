@@ -562,6 +562,12 @@ class PaperRunner:
     def _strategy(self, name):
         return next((s for s in self.strategies if getattr(s, "name", None) == name), None)
 
+    def _cap_exempt(self, name) -> bool:
+        """`scale_out_cap_exempt: true` on a setup (owner SO-1A 2026-11-02, the PDL-1a R2A legs in Testing 2): its lots
+        scale out without using live.scale_out_max_per_day, and its banked orders do not count toward the cap."""
+        st = self._strategy(name)
+        return bool((getattr(st, "params", None) or {}).get("scale_out_cap_exempt"))
+
     def _live_scale_out(self, sig) -> bool:
         st = self._strategy(sig.strategy)
         return bool((getattr(st, "params", None) or {}).get("live_scale_out")) and bool(sig.scale_out_r)
@@ -618,7 +624,7 @@ class PaperRunner:
             if verdict != "scale":
                 self.scaling.pop(key)                     # the stop or target took the bar first: no scale-out
                 continue
-            if not s.get("started") and not self._scale_cap_ok(now):
+            if not s.get("started") and not self._cap_exempt(s["strategy"]) and not self._scale_cap_ok(now):
                 self.scaling.pop(key)                     # the lot keeps its bracket unchanged
                 print(f"scale-out {sym}/{s['strategy']}: daily cap live.scale_out_max_per_day reached; lot unchanged")
                 continue
@@ -631,10 +637,12 @@ class PaperRunner:
         cap = self.live.get("scale_out_max_per_day")
         if cap is None:
             return True
+        exempt = tuple(f"{COID_PREFIX}{getattr(st, 'name', '')}-" for st in (getattr(self, "strategies", None) or [])
+                       if (getattr(st, "params", None) or {}).get("scale_out_cap_exempt"))
         try:
             day0 = now.tz_convert("America/New_York").normalize().to_pydatetime()
             n = sum(1 for o in self.broker.orders_today_with_prefix(COID_PREFIX, day0)
-                    if (o.client_order_id or "").endswith("-s"))
+                    if (o.client_order_id or "").endswith("-s") and not (o.client_order_id or "").startswith(exempt or ("\0",)))
         except Exception as e:
             print(f"scale-out cap check failed ({e}); not scaling")
             return False

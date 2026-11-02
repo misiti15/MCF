@@ -499,3 +499,38 @@ def test_scale_out_daily_cap_counts_banked_orders_at_the_broker():
     assert cls._scale_cap_ok(stub, now) is True                     # no cap configured
     cfg = yaml.safe_load(open("config/account_testing2.yaml"))
     assert cfg["live"]["scale_out_max_per_day"] == 2
+
+
+def test_scale_out_cap_exempt_setups_skip_and_do_not_use_the_cap():
+    """Owner SO-1A 2026-11-02: setups with scale_out_cap_exempt scale out without the daily cap, and their banked
+    orders do not count toward it (Testing 2's cap stays 2 for everyone else)."""
+    import types
+
+    import pandas as pd
+    import yaml
+
+    from mcf.execution import runner as R
+
+    class O:
+        def __init__(self, c):
+            self.client_order_id = c
+
+    cls = next(v for v in vars(R).values() if isinstance(v, type) and hasattr(v, "_scale_cap_ok"))
+    P = R.COID_PREFIX
+    ex = types.SimpleNamespace(name="R2A-long", params={"live_scale_out": True, "scale_out_cap_exempt": True})
+    other = types.SimpleNamespace(name="OTHER", params={"live_scale_out": True})
+    now = pd.Timestamp("2026-11-03 10:30", tz="America/New_York")
+    stub = types.SimpleNamespace(live={"scale_out_max_per_day": 2}, strategies=[ex, other],
+                                 broker=types.SimpleNamespace(orders_today_with_prefix=lambda p, a: [
+                                     O(f"{p}R2A-long-AAA-20261103-s"), O(f"{p}R2A-long-BBB-20261103-s"),
+                                     O(f"{p}R2A-long-CCC-20261103-s"), O(f"{p}OTHER-XYZ-20261103-s")]))
+    stub._strategy = lambda n: next((s for s in stub.strategies if s.name == n), None)
+    assert cls._scale_cap_ok(stub, now) is True          # 3 exempt banks ignored, 1 other < 2
+    assert cls._cap_exempt(stub, "R2A-long") is True and cls._cap_exempt(stub, "OTHER") is False
+    cfg = yaml.safe_load(open("config/account_testing2.yaml"))
+    st = cfg["strategies"]
+    assert st["CWT14-failbrk-pdl-p05-R2A-long"]["scale_out_cap_exempt"] is True
+    assert st["CWT14-failbrk-pdl-p05-R2A-short"]["scale_out_cap_exempt"] is True
+    assert cfg["live"]["scale_out_max_per_day"] == 2
+    assert not [k for k, v in st.items() if isinstance(v, dict) and v.get("scale_out_cap_exempt")
+                and not k.startswith("CWT14-failbrk-pdl-p05-R2A-")]
