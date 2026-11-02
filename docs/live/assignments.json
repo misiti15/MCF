@@ -24,7 +24,6 @@
    "LIQ-pdl-sweep-open15-vwap-long",
    "MF1-945-flowsell-vwapup",
    "MF3-open-flowsell-rsi5hi",
-   "MF3-open-flowsell-rsi5hi-FD",
    "MF5-flowsell-vwapup-rsi5hi",
    "NS1-rsidip-rsi5pop-long-FD",
    "NS3-failed-vwap-reclaim-short",
@@ -72,7 +71,6 @@
    "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
    "MF2-open-rsimidhi-flowsell",
    "MF5-flowsell-vwapup-rsi5hi",
-   "MF5-flowsell-vwapup-rsi5hi-FD",
    "NM-AMS-N1-quiet-morning-short",
    "NM-AR-AM-gapdown-capitulation-long",
    "NM-ETF-late-dip-di-long",
@@ -204,6 +202,8 @@
    "CWT14-failbrk-pdl-p05-lowvol-long",
    "LIQ-orl-sweep-open15-s25-long",
    "MF1-945-flowsell-vwapup-FD",
+   "MF3-open-flowsell-rsi5hi-FD",
+   "MF5-flowsell-vwapup-rsi5hi-FD",
    "NS2-sma50break-overbought-short",
    "NS2-sma50break-overbought-short-FD",
    "NS3-failed-vwap-reclaim-short-FD",
@@ -1365,14 +1365,14 @@
   },
   "MF3-open-flowsell-rsi5hi-FD": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-02 16:00 ET",
+   "from": [
     "testing"
    ],
-   "since": "2026-10-20 22:31 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21"
+   "last_old_session": "2026-11-02",
+   "first_session": "2026-11-03"
   },
   "MF4-h40-open-flowsell": {
    "accounts": [
@@ -1417,14 +1417,14 @@
   },
   "MF5-flowsell-vwapup-rsi5hi-FD": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-02 16:00 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-10-20 22:32 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21"
+   "last_old_session": "2026-11-02",
+   "first_session": "2026-11-03"
   },
   "NM-AMS-N1-quiet-morning-short": {
    "accounts": [
@@ -1884,21 +1884,20 @@
   }
  },
  "last_change": {
-  "at": "2026-11-01 23:34 ET",
+  "at": "2026-11-02 16:00 ET",
   "changes": [
    {
-    "setup": "NS3-failed-vwap-reclaim-short-FD",
+    "setup": "MF3-open-flowsell-rsi5hi-FD",
     "from": [
-     "testing2"
+     "testing"
     ],
     "to": [
      "graveyard"
     ]
    },
    {
-    "setup": "RW4-ns3-adv150-short-FD",
+    "setup": "MF5-flowsell-vwapup-rsi5hi-FD",
     "from": [
-     "testing",
      "testing2"
     ],
     "to": [

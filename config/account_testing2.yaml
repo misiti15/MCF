@@ -72,7 +72,6 @@ live:
     - NM-MF3-qqqdn-gapdn-FD   # ~4.9/day (mf3swarm1020 near-miss M1, owner 2026-10-20)
     - CWT13-vwapstretch-z075-short   # 6.14/day
     - RW1-gapdn-bounce-flowsell-short-FD   # 8.29/day (allocator)
-    - MF5-flowsell-vwapup-rsi5hi-FD   # 9.57/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
@@ -744,7 +743,7 @@ strategies:
     scale_out_r: null
   # ---- MF5-flowsell-vwapup-rsi5hi-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-02 (owner DM-MF; from session 2026-11-03)
     type: lab
     module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
     min_adv: 95000000

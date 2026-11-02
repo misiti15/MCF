@@ -58,7 +58,6 @@ live:
     - MF5-flowsell-vwapup-rsi5hi   # former primary (demoted 2026-10-20)
     - MF4-h40-open-flowsell-FD
     - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
-    - MF3-open-flowsell-rsi5hi-FD
     - MF3-open-flowsell-rsi5hi   # former primary (demoted 2026-10-20)
     - RW7-gapdn-bounce-early-short-FD
     - exhaustion_short
@@ -261,7 +260,7 @@ strategies:
     scale_out_r: null
   # from MF3-open-flowsell-rsi5hi (primary; source window 950-1100); ~24.8/day full-day [timeofday results.csv full, exp -0.071R]
   MF3-open-flowsell-rsi5hi-FD:
-    enabled: true            # demoted from Primary 2026-10-21 (owner 2026-10-20 evening); runs in Testing 1 only
+    enabled: false   # moved to Graveyard 2026-11-02 (owner DM-MF; from session 2026-11-03)
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
