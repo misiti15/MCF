@@ -1,0 +1,20 @@
+sessions 348 N 121709 BAR 4.355 trades 18912 mirror-mismatch 0.0000%
+                                                                      id  avg_train  t_train  avg_valid  t_valid  avg_tv  t_tv  ex_best  best_share   best_day  wf_pct  win_pct  avg_win  avg_loss  win_train  win_valid     n  per_session  passes_bar
+                               SO1A-1 research (half-off on every trade)     0.0031     0.53     0.0071     1.14  0.0049  1.14   0.0041       0.169 2025-04-09    76.5     84.9    0.090    -0.472       84.4       85.5 18912         54.3       False
+                                      SO1A-2 no half-off (plain bracket)    -0.0047    -0.49     0.0054     0.55 -0.0001 -0.02  -0.0014         NaN 2025-04-09    47.1     73.2    0.157    -0.429       72.3       74.3 18912         54.3       False
+                   SO1A-3 half-off on first 2 per session by signal time    -0.0035    -0.38     0.0056     0.57  0.0006  0.08  -0.0006       2.119 2025-04-09    47.1     73.6    0.154    -0.428       72.8       74.6 18912         54.3       False
+SO1A-4 half-off on first 2 per session to reach +0.25 R1 (live cap rule)    -0.0024    -0.26     0.0061     0.63  0.0014  0.21   0.0002       0.855 2025-04-09    47.1     73.9    0.152    -0.425       73.2       74.8 18912         54.3       False
+half-off lift train: +0.0078 R/trade
+half-off lift valid: +0.0017 R/trade
+half-off lift tv: +0.0050 R/trade
+scaled share of trades 64.1%
+scale-outs wanted per session: median 29 mean 34.8 p90 64 max 122; sessions >2: 99.7%
+tod when the 2nd slot is used: median 1000 p10 955 p90 1020
+trades/session: median 47 p90 100
+half-off lift on scaled trades: mean +0.008 R; first2_trg +0.042; others +0.006
+side split (n, avg SO, avg NO):
+           n      so      no
+side                        
+long   10114  0.0022 -0.0042
+short   8798  0.0080  0.0046
+exit codes (half-off run): {1: 8883, 2: 529, 3: 7009, 6: 2491}
