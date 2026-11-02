@@ -72,7 +72,6 @@ live:
     - NM-MF3-qqqdn-gapdn-FD   # ~4.9/day (mf3swarm1020 near-miss M1, owner 2026-10-20)
     - CWT13-vwapstretch-z075-short   # 6.14/day
     - RW1-gapdn-bounce-flowsell-short-FD   # 8.29/day (allocator)
-    - MF5-flowsell-vwapup-rsi5hi-FD   # 9.57/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT13-vwapstretch-z075-long   # 9.23/day
@@ -513,6 +512,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: 0.08333333333333333
     live_scale_out: true
+    scale_out_cap_exempt: true   # owner SO-1A 2026-11-02: outside the 2/day cap (R2A's edge is the half-off; research/bdi/pdl1030/so1a)
     tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   CWT14-failbrk-pdl-p05-R2A-short:
     enabled: true
@@ -523,6 +523,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: 0.08333333333333333
     live_scale_out: true
+    scale_out_cap_exempt: true   # owner SO-1A 2026-11-02: outside the 2/day cap (R2A's edge is the half-off; research/bdi/pdl1030/so1a)
     tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   # Failed Prior-Day-Low Break Long: CWT package B B3-LPD-p0.1-Vany-sidelong-t05s1-full (id 130); open history n 37499, exp -0.0861R, t -8.75, 88.03/day; verdict rework
   CWT14-failbrk-pdl-p10-long:
@@ -744,7 +745,7 @@ strategies:
     scale_out_r: null
   # ---- MF5-flowsell-vwapup-rsi5hi-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-02 (owner DM-MF; from session 2026-11-03)
     type: lab
     module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
     min_adv: 95000000

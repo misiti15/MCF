@@ -61,6 +61,8 @@ live:
     - CWT14-failbrk-pdl-p05-lowvol-long    # 433 live trades (moved from Testing 2 2026-10-30, D2; from session 2026-10-30)
     - NS3-failed-vwap-reclaim-short-FD     # 112 live trades (moved from Testing 2 2026-11-01, DM-NS3; from session 2026-11-02)
     - RW4-ns3-adv150-short-FD              # 104 live trades (moved from Testing 1 + 2 2026-11-01, DM-NS3; from session 2026-11-02)
+    - MF3-open-flowsell-rsi5hi-FD          # 141 live trades (moved from Testing 1 2026-11-02, DM-MF; from session 2026-11-03)
+    - MF5-flowsell-vwapup-rsi5hi-FD        # 74 live trades (moved from Testing 2 2026-11-02, DM-MF; from session 2026-11-03)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -387,3 +389,25 @@ strategies:
     scale_out_r: null
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-01 (owner)"]
+  MF3-open-flowsell-rsi5hi-FD:
+    # moved to Graveyard 2026-11-02 (owner DM-MF; its earlier trades stay in Primary / Testing 1, the dashboard merges them).
+    # 141 trades -0.225R after costs (-0.265R w/o best day; 3 busiest sessions -0.261R); 2-yr -0.074R.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-02 (owner)"]
+  MF5-flowsell-vwapup-rsi5hi-FD:
+    # moved to Graveyard 2026-11-02 (owner DM-MF; its earlier trades stay in Primary / Testing 2, the dashboard merges them).
+    # 74 trades -0.284R after costs (-0.361R w/o best day; 3 busiest sessions -0.454R); 2-yr -0.052R.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-02 (owner)"]

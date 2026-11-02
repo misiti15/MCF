@@ -16,11 +16,13 @@ MOVED_T2 = {"LIQ-orl-sweep-open15-s25-long", "RW2-exhaustion-noon-adv150-short-F
             "CWT09-gapdn-vwaploss-g5-short",   # owner 2026-10-25 (D2), effective 2026-10-26
             "CWT12-coil-k4-long",   # owner 2026-10-28 (K4-2), effective 2026-10-29
             "CWT14-failbrk-pdl-p05-lowvol-long",   # owner 2026-10-30 (D2), effective 2026-10-30
-            "NS3-failed-vwap-reclaim-short-FD", "RW4-ns3-adv150-short-FD"}   # owner 2026-11-01 (DM-NS3), effective 2026-11-02
+            "NS3-failed-vwap-reclaim-short-FD", "RW4-ns3-adv150-short-FD",   # owner 2026-11-01 (DM-NS3), effective 2026-11-02
+            "MF5-flowsell-vwapup-rsi5hi-FD"}   # owner 2026-11-02 (DM-MF), effective 2026-11-03
 MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
             "CWT14-failbrk-pdh-p10-short",   # owner 2026-10-22 (P0), effective 2026-10-23
             "CWT12-coil-k6-long",   # owner 2026-10-26 (D3), effective 2026-10-27
             "CWT14-failbrk-pdl-p05-long",   # owner 2026-10-30 (D1), effective 2026-10-30
+            "MF3-open-flowsell-rsi5hi-FD",   # owner 2026-11-02 (DM-MF), effective 2026-11-03
             "RW6-ns2-up3-short-FD", "NS2-sma50break-overbought-short-FD", "heat_fade_long-FD", "ST1-ordn-long-pm-t05s1-FD",
             "MF1-945-flowsell-vwapup-FD", "heat_fade_short-FD", "ST2-slope20up-long-am-t05s1-FD",
             "NS2-sma50break-overbought-short", "heat_fade_short"}
