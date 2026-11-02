@@ -1,0 +1,54 @@
+inverse symbols 98, leveraged-long 274; configs 4, bar t 1.665
+                         q  train_n  train_avgR  train_sumR  train_t  train_kept_avgR  valid_n  valid_avgR  valid_sumR  valid_t  valid_kept_avgR  pass
+    Q1 shorts skip inverse      521       0.030        15.6    -0.33           -0.055      748       0.024        18.1    -0.42           -0.002 False
+Q2 shorts skip lev+inverse     1418       0.001         2.0    -0.03           -0.057     3663       0.026        94.9    -0.95           -0.004 False
+     Q3 longs skip inverse      178      -0.056        -9.9     0.45           -0.067      215      -0.072       -15.6     0.96           -0.034 False
+    Q4 longs skip lev-long      219       0.029         6.4    -0.27           -0.071      779      -0.046       -36.2     0.71           -0.034 False
+
+per setup (non-'other' trades):
+                                                       size   mean
+side cls     setup                                                
+-1   inverse MF1-945-flowsell-vwapup                     14 -0.158
+             MF2-open-rsimidhi-flowsell                  15  0.106
+             MF3-open-flowsell-rsi5hi                    14 -0.105
+             MF4-h40-open-flowsell                       30  0.117
+             MF5-flowsell-vwapup-rsi5hi                  34 -0.219
+             NS2-sma50break-overbought-short            108 -0.105
+             NS3-failed-vwap-reclaim-short               50  0.175
+             NS4-pm-vwap-reclaim-oversold-short          28 -0.067
+             RW1 bdi-rw-gapdn-bounce-flowsell             3  0.894
+             RW2 bdi-rw-exhaustion-noon-adv150          331 -0.038
+             RW3 bdi-rw-gapdn-rsi5pop-flowsell            6  0.131
+             RW4 bdi-rw-ns3-adv150                       45  0.229
+             RW5 bdi-rw-heat30-flowsell-rsi5pop-gapdn     3  0.264
+             RW6 bdi-rw-ns2-up3                          48 -0.136
+             RW7 bdi-rw-gapdn-bounce-early                5  0.108
+             RW8 bdi-rw-sma50up-spikefade                11 -0.107
+             exhaustion_short                           250  0.054
+             heat_fade_short                            274  0.131
+     lev     MF1-945-flowsell-vwapup                     31 -0.055
+             MF2-open-rsimidhi-flowsell                  32  0.019
+             MF3-open-flowsell-rsi5hi                    49  0.059
+             MF4-h40-open-flowsell                      220 -0.050
+             MF5-flowsell-vwapup-rsi5hi                  62  0.245
+             NS2-sma50break-overbought-short            282 -0.038
+             NS3-failed-vwap-reclaim-short              207  0.138
+             NS4-pm-vwap-reclaim-oversold-short          78 -0.103
+             RW1 bdi-rw-gapdn-bounce-flowsell            14 -0.221
+             RW2 bdi-rw-exhaustion-noon-adv150          855  0.010
+             RW3 bdi-rw-gapdn-rsi5pop-flowsell           16 -0.222
+             RW4 bdi-rw-ns3-adv150                      149  0.089
+             RW5 bdi-rw-heat30-flowsell-rsi5pop-gapdn    11 -0.195
+             RW6 bdi-rw-ns2-up3                         195 -0.041
+             RW7 bdi-rw-gapdn-bounce-early                5 -1.153
+             RW8 bdi-rw-sma50up-spikefade                43  0.064
+             exhaustion_short                           688  0.031
+             heat_fade_short                            875  0.027
+ 1   inverse NS1-rsidip-rsi5pop-long                     11 -0.111
+             NS5-sma50-flush-oversold-long               40 -0.143
+             heat_fade_long                             342 -0.054
+     lev     NS1-rsidip-rsi5pop-long                     37  0.149
+             NS5-sma50-flush-oversold-long              136 -0.019
+             heat_fade_long                             825 -0.040
+
+Educational only - not financial advice.

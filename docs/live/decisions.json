@@ -353,5 +353,20 @@
   "link": "research/bdi/nightly1030/NOTES.md",
   "status": "answered",
   "answered": "2026-11-02: yes (move both) - Graveyard from 2026-11-03, merged after the close"
+ },
+ {
+  "code": "DM-N3",
+  "title": "Move Big Loser Flush Buy (all day), ST4 EMA-Down Dip Buy (all day) and Big Gainer Fade with VWAP Band Guard (all day) to the Graveyard",
+  "what": "NS5-sma50-flush-oversold-long-FD (Testing 1 + Testing 2), ST4-emadn-long-am-t1s05-FD (Testing 1) and RW6G1-ns2-up3-vwap2sd-short-FD (Testing 1) stop trading there and keep trading in the Graveyard (a move; nothing is switched off). Refresh of N3 (open since 10-20) with new numbers.",
+  "recommend": "Yes - move all three to the Graveyard",
+  "numbers": [
+   "NS5-FD: 44 trades / 15 sessions, 36.4% win, -0.384R after costs, -0.469R w/o best day (no carry day: total is negative), -0.699R on its 3 busiest sessions, -$339; 2-year base -0.039R (t -0.46)",
+   "ST4-FD: 15 trades / 8 sessions, 20.0% win, -0.578R, -0.737R w/o best day, -0.764R on its 3 busiest, -$119",
+   "RW6G1-FD: 28 trades / 12 sessions, 32.1% win, -0.237R, -0.277R w/o best day, -0.290R on its 3 busiest, -$98; 2-year parent RW6 +0.057R (t 0.68)"
+  ],
+  "why": "All three have lost on every cut since N3 was raised on 10-20 (NS5-FD was -0.46R on 25 trades then); none is carried by one bad day. Testing rules changed inside the window (per-setup stop off in Testing from 10-23, lab 5-minute clock from 10-27, BAR90 10-29, cost filter from 10-30), none of which explains the losses.",
+  "link": "research/bdi/nightly1102/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]

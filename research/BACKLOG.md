@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or fails. Costs are always in; holdouts are scored once; failures stay listed.
 
-Total ideas: 774 · coded: 88 · failed: 366 · configurations tried (all lineages): 32799178
+Total ideas: 778 · coded: 88 · failed: 367 · configurations tried (all lineages): 32799182
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -410,6 +410,9 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi1028-primary-stp-sizing-audit | Primary: audit the first 5 sessions of ST-P (-2R latched per-setup stop) together with the ~$4,000 / position sizing | BDI daily 2026-10-28 (research/bdi/1028/NOTES.md) | – | – | – | – | – | – |
 | idea | regime1029-preopen-vol-regime | Pre-open volatility regime switch for fade / mean-reversion setups (proxy for dealer gamma) | owner 2026-10-29 (article: FlashAlpha 'When not to sell options' - negative dealer gamma held most SPY/QQQ short-premium losses 2022-2026) | – | – | – | – | – | – |
 | idea | mh-1029-open-drive-window | Move Hunt: most of the day's big tradable moves start at the 09:35-09:45 decision bars, before the 09:50 lab window - build an opening-bar (09:35-09:50) test frame and re-test the best open setups there | Move Hunt 2026-10-29 (research/bdi/moves/moves.csv) | – | – | – | – | – | – |
+| idea | audit-1102-guardrail-saved-net | Audit the 'saved R' of guardrails (twin cap 57.2R, Graveyard -2R limit 188.6R, week of 10-26): paired live-vs-shadow paths, net of missed gains | owner 2026-11-02 (message-board reviewer critique); research/bdi/saturday1031/NOTES.md | – | – | – | – | – | – |
+| idea | shadow-1102-constant-size-track | Constant-size shadow track for every setup (signal quality separate from allocation) | owner 2026-11-02 (message-board reviewer critique) | – | – | – | – | – | – |
+| idea | nightly-1102-l3-inverse-etf-skip | L3 gap-down recovery fades (L3-gap-slope-fromopen-FD / -rsi5hi-FD / -lowdist-FD) skip inverse / leveraged ETFs | nightly-2026-11-02 (research/bdi/nightly1102/NOTES.md), detail_out.txt | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -776,6 +779,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | failed | sat1031-open-capitulation-reversal-long | 09:40-09:50 opening capitulation reversal long: gap <= -1%, prior bar RSI5 <= 20, reversal bar (close up, buyPressure > 0), volumeRatio >= 1.5 / 3, at or below PDL + 0.25 ATR | BDI Saturday deep run 2026-10-31 (research/bdi/saturday1031/PLAN.md, NOTES.md) | – | – | – | – | – | – |
 | failed | sat1031-open-gap-and-go-long | 09:40-09:50 gap-and-go long: gap >= +1%, from-open >= +0.25 ATR, above VWAP, volumeRatio >= 1.5 / 3, SPY up from the open | BDI Saturday deep run 2026-10-31 (research/bdi/saturday1031/PLAN.md, NOTES.md) | – | – | – | – | – | – |
 | failed | sat1031-burst-risk-share | Burst risk sharing: a setup entering >= 10 / 20 symbols on one 5-min bar risks 3 / 5 / 10 R in total (each lot C/n of normal risk); no trade removed | BDI Saturday deep run 2026-10-31 (research/bdi/saturday1031/PLAN.md, NOTES.md) | – | – | – | – | – | – |
+| failed | nightly-1102-skip-inverse-etf-shorts | Short setups skip inverse ETFs (a short on an inverse ETF is a long on the underlying); also: all leveraged / inverse ETFs, and the long mirror | nightly-2026-11-02 (research/bdi/nightly1102/NOTES.md), levetf.py / levetf_out.txt, detail_out.txt | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
