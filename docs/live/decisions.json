@@ -443,5 +443,80 @@
   "link": "research/bdi/night1102/PLAN.md",
   "status": "answered",
   "answered": "2026-11-03: yes"
+ },
+ {
+  "code": "EXEC1",
+  "title": "Research passive (mid-limit) entries on the live signals",
+  "what": "Research only: replay the 12,256 live signals with a limit at the NBBO mid valid 60 s on Alpaca historical quotes/trades (fill rate, R of filled vs missed), plus a 2-year re-score of the 10 busiest setups at a 0.5-ATR stop held to 15:55. No live change; anything useful goes to the backlog and Testing first.",
+  "recommend": "Yes - research only, no live change",
+  "numbers": [
+   "Live 10-06..11-02: entries +4.4 bps (+0.044R) worse than the mid, 86% at or through the far quote",
+   "Friction 0.068R per trade = -832R, about the book's whole gross loss from the mid (-862R)",
+   "Timing, the only positive line, is +0.046R per trade (smaller than friction)"
+  ],
+  "why": "Execution cost is where the book's R leaks; a small timing edge cannot clear costs until they fall.",
+  "link": "research/bdi/eu1103/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BETA1",
+  "title": "Show beta-removed avg R in reviews and on the dashboard",
+  "what": "Reporting only: show each setup's beta-removed avg R (R minus beta x SPY return over the hold) beside avg R and 'Avg R w/o best day', so a short-beta record on falling days is not read as setup skill.",
+  "recommend": "Yes - reporting only",
+  "numbers": [
+   "88% of the 26 profitable live records' R is SPY beta (24 of 26 shorts)",
+   "After beta: +0.020R per trade (t 0.5), +0.001R without 10-22",
+   "1 of 26 records has beta-removed t >= 1.5"
+  ],
+  "why": "Promotions should rest on setup skill, not on which way SPY went that week.",
+  "link": "research/bdi/eu1103/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "UNI1",
+  "title": "Testing-only check: lab setups trade only the top 500 by ADV x ATR%",
+  "what": "Via the backlog and its gates: each morning rank names with ADV >= $95M by ADV x ATR% and let lab setups in Testing 1 / Testing 2 trade only the top 500. A cost-per-R filter, not an edge. Not Primary. Keep the $95M floor; no HTB names, sector or move-history filters.",
+  "recommend": "Optional - lowers cost per R, adds no edge; every kept book still negative",
+  "numbers": [
+   "Live paper +0.019R all setups (t 0.42), +0.048R busiest 8 (t 1.07)",
+   "Live-date re-score +0.036R (t 1.99), green sessions 2/20 -> 5/20",
+   "2 years +0.037 / +0.053R (t 6.2 / 7.1), about half the trades; overlaps CF"
+  ],
+  "why": "A bigger universe is worse on every test; a smaller one helps a little by trading names where costs are a smaller share of R.",
+  "link": "research/bdi/eu1103/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OPEN1",
+  "title": "Keep the 09:50 start; close the general 09:50-09:55 reversal",
+  "what": "No change: keep live.no_entry_before 09:50 and no 09:40/09:45 lane for existing setups. 'OPEN1 narrow' additionally pre-declares one test of at most 8 configs of the reversal only at prior-day levels or on scan-flagged in-play names.",
+  "recommend": "Yes - no change",
+  "numbers": [
+   "No live data before 09:50; 2y: 09:40-09:49 trades -0.10 to -0.38R vs -0.06 to +0.06R at 09:50 (same symbol-days)",
+   "Total R per session worse for 3 of 4 early-capable setups; extra cost explains 0.02-0.03R",
+   "09:50-09:55 reversal negative in all 8 forms on TRAIN and VALID"
+  ],
+  "why": "The runner can react in time (43 s median at 09:50-09:59 since GX1); the early signals are simply worse.",
+  "link": "research/bdi/eu1103/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PRE1",
+  "title": "No pre-open switch; record borrow / short-volume data, aim BDI at the 09:35 mover scan",
+  "what": "Data recording and research direction only: each morning ~09:25 record Alpaca shortable / easy-to-borrow flags and the free FINRA Reg SHO daily short-volume ratio, and aim new-setup searches at side-taking rules on the 09:35 mover scan names. No setup is gated.",
+  "recommend": "Yes - data recording and research only",
+  "numbers": [
+   "0 of 756 pre-open gates pass; a 10% TRAIN cut becomes 21-43% live",
+   "Live best pick: green 2/20 -> 4/20 but avg R -0.134 -> -0.176R",
+   "09:35 scan top 150 hold 33-38% of the day's top-50 movers vs 15-18% random"
+  ],
+  "why": "Pre-open data finds movers but not winners; recording free borrow data now makes a short-side feature testable later without buying a feed.",
+  "link": "research/bdi/eu1103/PLAN.md",
+  "status": "open",
+  "answered": null
  }
 ]
