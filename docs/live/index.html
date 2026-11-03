@@ -226,7 +226,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);
   const A = [["primary", "Primary", "mcf-data"], ["testing", "Testing 1", "mcf-data-testing"], ["testing2", "Testing 2", "mcf-data-testing2"],
-    ["gen", "Generator", "mcf-data-gen"], ["graveyard", "Graveyard", "mcf-data-graveyard"]];
+    ["gen", "Generator", "mcf-data-gen"], ["graveyard", "Graveyard", "mcf-data-graveyard"],
+    ["livelab", "Live Lab", "mcf-data-livelab"], ["explore1", "Explore 1", "mcf-data-explore1"], ["explore2", "Explore 2", "mcf-data-explore2"]];
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const money = v => (v < 0 ? "-$" : "+$") + Math.abs(+v).toLocaleString(undefined, { maximumFractionDigits: 0 });
   const get = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
@@ -237,7 +238,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     const nm = id => ((names || {})[id] || {}).name || id;
     // owner 2026-10-28: Graveyard setups never show in red / downward lists; they show in green lists only (green streaks at 3+)
     // owner 2026-10-29: every streak / trend line names the account the setup is in now (assignments.json, today's view)
-    const ACC = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Generator", graveyard: "Graveyard" };
+    const ACC = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Generator", graveyard: "Graveyard", livelab: "Live Lab", explore1: "Explore 1", explore2: "Explore 2" };
     const where = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length ? a.map(x => ACC[x] || x).join(" + ") : "not running"; };
     const gy = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length > 0 && a.every(x => x === "graveyard"); };
     // closed sessions = dates the EOD scorecards cover (today's intraday numbers stay out until the report lands)
@@ -301,7 +302,8 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);
   const INBOX = RAW + "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md";
   const A = [["primary", "Primary", "mcf-data", "?"], ["testing", "Testing 1", "mcf-data-testing", "?account=testing"], ["testing2", "Testing 2", "mcf-data-testing2", "?account=testing2"],
-    ["gen", "Setup Generator", "mcf-data-gen", "?account=gen"], ["graveyard", "Graveyard", "mcf-data-graveyard", "?account=graveyard"]];
+    ["gen", "Setup Generator", "mcf-data-gen", "?account=gen"], ["graveyard", "Graveyard", "mcf-data-graveyard", "?account=graveyard"],
+    ["livelab", "Live Lab", "mcf-data-livelab", "?account=livelab"], ["explore1", "Explore 1", "mcf-data-explore1", "?account=explore1"], ["explore2", "Explore 2", "mcf-data-explore2", "?account=explore2"]];
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const money = v => v == null || isNaN(v) ? "–" : (v < 0 ? "-$" : "+$") + Math.abs(+v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
@@ -378,7 +380,8 @@ window.MCF = window.MCF || {};
         b.trades++; b.r += +x.r_multiple || 0; b.pnl += +x.pnl || 0; if (+x.pnl > 0) b.wins++; });
       return by; });
   Object.assign(window.MCF, { RAW, get, csv, daySummary,
-    BRANCH: { primary: "mcf-data", testing: "mcf-data-testing", testing2: "mcf-data-testing2", gen: "mcf-data-gen", graveyard: "mcf-data-graveyard" } });
+    BRANCH: { primary: "mcf-data", testing: "mcf-data-testing", testing2: "mcf-data-testing2", gen: "mcf-data-gen", graveyard: "mcf-data-graveyard",
+             livelab: "mcf-data-livelab", explore1: "mcf-data-explore1", explore2: "mcf-data-explore2" } });
 })();
 </script>
 <!-- All accounts at a glance (owner 2026-10-12): one card per paper account, read from each account's state branch.
@@ -405,6 +408,9 @@ window.MCF = window.MCF || {};
     { k: "testing2", name: "Testing 2", type: "intraday · minor league", br: "mcf-data-testing2", q: "?account=testing2" },
     { k: "gen", name: "Setup Generator", type: "intraday · machine-generated setups", br: "mcf-data-gen", q: "?account=gen" },
     { k: "graveyard", name: "Graveyard", type: "intraday · lowest performers, lower caps", br: "mcf-data-graveyard", q: "?account=graveyard" },
+    { k: "livelab", name: "Live Lab", type: "intraday · live-first lane, ~$1k lots", br: "mcf-data-livelab", q: "?account=livelab" },
+    { k: "explore1", name: "Explore 1", type: "intraday · exploratory setups, ~$1k lots", br: "mcf-data-explore1", q: "?account=explore1" },
+    { k: "explore2", name: "Explore 2", type: "intraday · exploratory setups, ~$1k lots", br: "mcf-data-explore2", q: "?account=explore2" },
     { k: "longhold", name: "Long-hold (S6)", type: "weekly momentum · separate Alpaca profile", br: "mcf-data-longhold", q: "?account=longhold", lh: true },
   ];
   const cur = new URLSearchParams(location.search).get("account") || "primary";
@@ -775,7 +781,9 @@ window.MCF = window.MCF || {};
   // Accounts: code names stay primary / testing / testing2; "testing" is shown as "Testing 1" (owner 2026-10-12).
   const ACCOUNTS = { primary: ["Primary", "mcf-data", ""], testing: ["Testing 1", "mcf-data-testing", "?account=testing"],
                      testing2: ["Testing 2", "mcf-data-testing2", "?account=testing2"], gen: ["Setup Generator", "mcf-data-gen", "?account=gen"],
-                     graveyard: ["Graveyard", "mcf-data-graveyard", "?account=graveyard"] };
+                     graveyard: ["Graveyard", "mcf-data-graveyard", "?account=graveyard"],
+                     livelab: ["Live Lab", "mcf-data-livelab", "?account=livelab"], explore1: ["Explore 1", "mcf-data-explore1", "?account=explore1"],
+                     explore2: ["Explore 2", "mcf-data-explore2", "?account=explore2"] };
   const qa = new URLSearchParams(location.search).get("account");
   const ACCT = Object.prototype.hasOwnProperty.call(ACCOUNTS, qa) ? qa : "primary";
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/" + ACCOUNTS[ACCT][1] + "/";
@@ -898,7 +906,7 @@ window.MCF = window.MCF || {};
   document.querySelectorAll("section").forEach(s => { if (s.id !== "lh") s.style.display = "none"; });
   const lh = q("#lh"); lh.style.display = "grid";
   const sw = document.createElement("div"); sw.className = "sub";
-  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <a href="?account=gen">Setup Generator</a> · <a href="?account=graveyard">Graveyard</a> · <b>Long-hold (S6)</b>';
+  sw.innerHTML = 'Account: <a href="?">Primary</a> · <a href="?account=testing">Testing 1</a> · <a href="?account=testing2">Testing 2</a> · <a href="?account=gen">Setup Generator</a> · <a href="?account=graveyard">Graveyard</a> · <a href="?account=livelab">Live Lab</a> · <a href="?account=explore1">Explore 1</a> · <a href="?account=explore2">Explore 2</a> · <b>Long-hold (S6)</b>';
   q("#lh-asof").after(sw);
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/mcf-data-longhold/longhold/";
   const get = async (p, json) => { const r = await fetch(RAW + p + "?t=" + Date.now(), { cache: "no-store" }); if (!r.ok) throw r.status; return json ? r.json() : r.text(); };
@@ -951,7 +959,8 @@ window.MCF = window.MCF || {};
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/";
   const ACC = { primary: ["Primary", "mcf-data"], testing: ["Testing 1", "mcf-data-testing"], testing2: ["Testing 2", "mcf-data-testing2"],
-                graveyard: ["Graveyard", "mcf-data-graveyard"] };
+                graveyard: ["Graveyard", "mcf-data-graveyard"], livelab: ["Live Lab", "mcf-data-livelab"],
+                explore1: ["Explore 1", "mcf-data-explore1"], explore2: ["Explore 2", "mcf-data-explore2"] };
   const q = s => document.querySelector(s);
   if (!q("#lb-card")) return;
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1086,7 +1095,7 @@ window.MCF = window.MCF || {};
         r.movedFrom = (a.from || []).map(x => (asg.labels || {})[x] || x).join(", ");
         // owner 2026-10-30: say which session the move fell between, so last-session numbers are never read as the new account's
         r.movedLast = a.last_old_session || null; r.movedFirst = a.first_session || null;
-        r.movedFromShort = (a.from || []).map(x => ({ primary: "P", testing: "T1", testing2: "T2", gen: "Gen", graveyard: "GY" })[x] || x).join("+"); } });
+        r.movedFromShort = (a.from || []).map(x => ({ primary: "P", testing: "T1", testing2: "T2", gen: "Gen", graveyard: "GY", livelab: "LL", explore1: "X1", explore2: "X2" })[x] || x).join("+"); } });
     const lc = asg && asg.last_change;
     if (q("#lb-asg")) q("#lb-asg").innerHTML = asg ? `<b>Assignments current as of ${e(lc ? lc.at : "–")}</b> (last promotion / demotion / move)` +
       (lc && lc.changes ? ": " + lc.changes.map(c => `${e((NM[c.setup] || {}).name || c.setup)} → ${c.to.map(x => (asg.labels || {})[x] || x).join(" + ")}`).join("; ") : "") +
@@ -1446,7 +1455,7 @@ window.MCF = window.MCF || {};
     "Rank": "Average R per trade, shrunk toward 0 when a setup has few trades.",
     "Setup": "The trading rule. Hover the name for what it does.",
     "Current account": "Where this setup is live now (from the live assignments); the scorecard itself covers the account you are viewing.",
-    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2, Graveyard, Setup Generator. \"Testing 1 + Testing 2 (split tickers)\" = split copies.",
+    "Account": "Which paper account runs it: Primary (promoted), Testing 1, Testing 2, Graveyard, Setup Generator, Live Lab, Explore 1, Explore 2. \"Testing 1 + Testing 2 (split tickers)\" = split copies.",
     "Live trades": "Closed paper trades since the setup started in this account.",
     "Trades": "Closed paper trades.",
     "Trades today": "Trades closed today in this account.",
@@ -1621,7 +1630,8 @@ window.MCF = window.MCF || {};
   const pc = v => v == null || isNaN(v) ? "—" : Math.round(v * 100) + "%";
   const money = v => v == null || isNaN(v) ? "—" : (v < 0 ? "-$" : "$") + Math.abs(+v).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
-  const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard" };
+  const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard",
+    livelab: "Live Lab", explore1: "Explore 1", explore2: "Explore 2" };
   const ROWTABLES = ["lb-tab", "lv-score", "gen-tab", "pipe-tab", "pt-tab", "dm-tab", "lv-val"];
   // status.json changes every minute: short-lived cache; the rest (EOD files) once per page load via MCF.get
   const fresh = {}, live = (k, p) => { const u = RAW + BR[k] + "/" + p, c = fresh[u];
@@ -1761,11 +1771,11 @@ window.MCF = window.MCF || {};
         `<text x="${(x + bw / 2).toFixed(1)}" y="${(d.r >= 0 ? y0 - h - 3 : y0 + h + 11).toFixed(1)}" text-anchor="middle">${f(d.r, 1)}</text>` +
         `<text x="${(x + bw / 2).toFixed(1)}" y="${H - 2}" text-anchor="middle">${e(d.d.slice(5))}</text>`; }).join("");
     const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="R per session, last 10 traded sessions"><line x1="0" x2="${W}" y1="${y0}" y2="${y0}" stroke="var(--axis)"/>${bars}</svg>`;
-    const rows = last.slice().reverse().map(d => { const w = wins[d.d]; return `<tr><td class="l">${e(d.d.slice(5))}</td><td class="l" title="${e(d.acc.map(k => LBL[k]).join(" + "))}">${e(d.acc.map(k => ({ primary: "P", testing: "T1", testing2: "T2", gen: "Gen", graveyard: "GY" })[k] || k).join("+"))}</td><td>${d.n}</td>` +
+    const rows = last.slice().reverse().map(d => { const w = wins[d.d]; return `<tr><td class="l">${e(d.d.slice(5))}</td><td class="l" title="${e(d.acc.map(k => LBL[k]).join(" + "))}">${e(d.acc.map(k => ({ primary: "P", testing: "T1", testing2: "T2", gen: "Gen", graveyard: "GY", livelab: "LL", explore1: "X1", explore2: "X2" })[k] || k).join("+"))}</td><td>${d.n}</td>` +
       `<td>${w != null && d.n ? pc(w / d.n) : "—"}</td><td class="${cls(d.r)}">${f(d.r, 2)}</td><td class="${cls(d.r)}">${d.n ? f(d.r / d.n, 2) : "—"}</td><td class="${cls(d.p)}">${money(d.p)}</td></tr>`; }).join("");
     const tr = last.reduce((a, d) => a + d.r, 0), tn = last.reduce((a, d) => a + d.n, 0), g = last.filter(d => d.r > 0).length;
     return svg + `<div class="tablewrap"><table><thead><tr><th class="l">Day</th><th class="l">Acct</th><th>Trd</th><th>Win</th><th>R</th><th>R/trd</th><th>P/L</th></tr></thead><tbody>${rows}</tbody></table></div>` +
-      `<div class="lg">${last.length} sessions: ${g} green in R · ${tn} trades · ${f(tr, 1)}R total · ${tn ? f(tr / tn, 2) : "—"}R per trade. Days it did not trade are skipped. Acct: P Primary · T1/T2 Testing · Gen Generator · GY Graveyard.</div>`;
+      `<div class="lg">${last.length} sessions: ${g} green in R · ${tn} trades · ${f(tr, 1)}R total · ${tn ? f(tr / tn, 2) : "—"}R per trade. Days it did not trade are skipped. Acct: P Primary · T1/T2 Testing · Gen Generator · GY Graveyard · LL Live Lab · X1/X2 Explore.</div>`;
   }
   // the leaderboard's merged row when it has loaded, else the same merge from the scorecards' exact sums
   function merge(rs) {
@@ -1862,7 +1872,8 @@ window.MCF = window.MCF || {};
 </style>
 <script>
 (() => {
-  const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard" };
+  const LBL = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Setup Generator", graveyard: "Graveyard",
+    livelab: "Live Lab", explore1: "Explore 1", explore2: "Explore 2" };
   const KEY = "mcf.monitor";
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const today = () => new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
@@ -1870,7 +1881,9 @@ window.MCF = window.MCF || {};
   // where a setup may go from each account: promo (up) and demo (down)
   const MOVES = { gen: { up: ["testing", "testing2"], dn: ["graveyard"] }, graveyard: { up: ["testing", "testing2"], dn: [] },
     testing: { up: ["primary"], dn: ["graveyard"] }, testing2: { up: ["primary"], dn: ["graveyard"] },
-    primary: { up: [], dn: ["testing", "testing2", "graveyard"] } };
+    primary: { up: [], dn: ["testing", "testing2", "graveyard"] },
+    // owner 2026-11-03: a Live Lab / Explore pass moves to Testing 1 / 2 (equal weight); a fail goes to the backlog
+    livelab: { up: ["testing", "testing2"], dn: [] }, explore1: { up: ["testing", "testing2"], dn: [] }, explore2: { up: ["testing", "testing2"], dn: [] } };
   const local = () => { try { return JSON.parse(localStorage.getItem(KEY) || "[]") || []; } catch (_) { return []; } };
   const save = l => { try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (_) {} };
   const same = (a, b) => a.code === b.code && a.kind === b.kind && a.to === b.to;

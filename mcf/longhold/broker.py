@@ -9,7 +9,8 @@ import os
 from .core import PREFIX
 
 KEY_ENVS_FORBIDDEN = ("ALPACA_API_KEY", "ALPACA_TESTING_API_KEY", "ALPACA_TESTING2_API_KEY", "ALPACA_PRIMARY_API_KEY",
-                      "ALPACA_GEN_API_KEY", "ALPACA_GRAVEYARD_API_KEY")
+                      "ALPACA_GEN_API_KEY", "ALPACA_GRAVEYARD_API_KEY", "ALPACA_LIVELAB_API_KEY",
+                      "ALPACA_EXPLORE1_API_KEY", "ALPACA_EXPLORE2_API_KEY")
 
 
 class KeySeparationError(RuntimeError):

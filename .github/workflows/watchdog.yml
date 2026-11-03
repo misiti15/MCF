@@ -5,7 +5,7 @@
 # account's state-branch status.json and the broker account (GET only) and decides whether the trading run is dead
 # (status.json older than live.outage.watchdog_dead_min while MCF positions/orders are open) or stuck on stale data
 # (health.data_stale longer than live.outage.flatten_min). If so it cancels the account's open MCF orders and flattens
-# its MCF positions (order prefix mcf- / mct- / mt2- / mcg- only; never the long-hold mcl- book or anything else).
+# its MCF positions (order prefix mcf- / mct- / mt2- / mcg- / mgy- / mll- / mx1- / mx2- only; never the long-hold mcl- book or anything else).
 #
 # MODE: "dry" (default) only logs what it would do (job summary). Set the repository variable MCF_WATCHDOG_MODE=act
 # (Settings -> Secrets and variables -> Actions -> Variables), or pick mode "act" on a manual run, to let it act.
@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing, testing2, gen, graveyard]
+        account: [primary, testing, testing2, gen, graveyard, livelab, explore1, explore2]
     concurrency:
       group: mcf-watchdog-${{ matrix.account }}
       cancel-in-progress: false
@@ -41,13 +41,13 @@ jobs:
     timeout-minutes: 10
     env:
       MCF_ACCOUNT: ${{ matrix.account }}
-      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || 'mct-'))) }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || 'mcf-data-testing'))) }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || (matrix.account == 'explore2' && 'mx2-' || 'mct-')))))) }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || (matrix.account == 'explore2' && 'mcf-data-explore2' || 'mcf-data-testing')))))) }}
       MCF_WATCHDOG_MODE: ${{ inputs.mode || vars.MCF_WATCHDOG_MODE || 'dry' }}
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || ''))) }}
-      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || ''))) }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || (matrix.account == 'explore2' && secrets.ALPACA_EXPLORE2_API_KEY || '')))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || (matrix.account == 'explore2' && secrets.ALPACA_EXPLORE2_SECRET_KEY || '')))))) }}
       PYTHONUNBUFFERED: "1"
     steps:
       - name: Window check
@@ -55,6 +55,10 @@ jobs:
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
           if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || [ -z "$ALPACA_API_KEY" ]; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
+          elif [ "$MCF_ACCOUNT" != "primary" ] && ! git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" "refs/heads/$STATE_BRANCH" >/dev/null 2>&1; then
+            # no state branch = the account never ran a session (e.g. Live Lab / Explore 1 / 2 before their first setups), so
+            # no MCF position or order can exist there; skip without installing anything (owner 2026-11-03, runner load)
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT: no state branch $STATE_BRANCH yet: skipped"
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0935 ] && [ "$now" -lt 1555 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:35-15:55 ET weekdays: nothing to do"; fi
 
       - uses: actions/checkout@v4

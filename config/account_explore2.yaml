@@ -1,0 +1,37 @@
+# Explore 2 paper account (owner 2026-11-03). MCF_ACCOUNT=explore2 overlay on config/default.yaml; orders mx2-*, state branch
+# mcf-data-explore2, secrets ALPACA_EXPLORE2_API_KEY / ALPACA_EXPLORE2_SECRET_KEY (market data: the primary SIP keys). The trade,
+# watchdog and session-guard jobs skip this account until the owner adds both secrets; the trade job also skips it while
+# no setup is enabled here (no idle 6.5-hour session).
+#
+# Exploratory account 2 of 2 (owner 2026-11-03): ground-up setup generation with unconventional setup conditions
+# (research/bdi/ex30). Live testing is the main verdict; the 2-year backtest is a light gate only (costs in, no BAR90).
+# Explore 1 and Explore 2 carry equal weight; allocation of setups between them comes later (owner).
+# Sizing (research/bdi/night1102/livelab NOTES "Exact pieces needed"): 200 slots and buying_power_multiple 2.0, so capital
+# per slot = equity x 2.0 / 200 = ~$1,000 constant notional per lot at $100k (mcf/backtest/engine.slot_notional, the
+# same rule as every account); up to 10 open lots per setup, so 20 seats x 10 never bind on slots.
+# max_setup_daily_loss_r: null = the per-setup daily stop is off (as Testing 1/2 since ST-A 2026-10-22); the account
+# daily stop is the Testing 120R catastrophe backstop. max_stop_cost_r 0.15 = the Testing cost filter (CF 2026-10-29).
+# block_twin_same_symbol false and no live scale-out (livelab PLAN).
+#
+# strategies_exclusive: only setups listed under `strategies` below run; every setup of config/default.yaml (Primary +
+# library) is switched off by the loader (mcf/config.py), including setups added there later. NO SETUPS ARE ENABLED YET:
+# each setup added here is a setup move (promotion = move, assignments regenerated in the same commit, a ledger entry,
+# outside 09:30-16:00 ET). Paper account. Educational only - not financial advice.
+strategies_exclusive: true
+account:
+  starting_equity: 100000
+  slots: 200
+  buying_power_multiple: 2.0
+  max_concurrent_positions: 200
+  max_positions_per_strategy: 10
+  max_daily_loss_r: 120
+  max_setup_daily_loss_r: null
+  max_trades_per_day: 1500
+live:
+  max_stop_cost_r: 0.15
+  block_twin_same_symbol: false
+  scale_out_max_per_day: 0
+  retry_after_release: true
+  longs_first_on_ties: true
+  setup_order: []
+strategies: {}

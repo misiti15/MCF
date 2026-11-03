@@ -31,10 +31,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "Testing 1", "mcf-data-testing", "testing"),
             ("testing2", "Testing 2", "mcf-data-testing2", "testing"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
-            ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers")]   # day-trading only (no S6)
+            ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers"),
+            ("livelab", "Live Lab", "mcf-data-livelab", "live-first lane"),                 # owner 2026-11-03
+            ("explore1", "Explore 1", "mcf-data-explore1", "exploratory setups"),
+            ("explore2", "Explore 2", "mcf-data-explore2", "exploratory setups")]   # day-trading only (no S6)
 MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
 DAY1 = "2026-10-23"   # owner 2026-10-26: the post's stats (P/L, milestones, chart, last sessions) start at Day 1
-LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard")
+NEW_ACCOUNTS = ("livelab", "explore1", "explore2")   # owner 2026-11-03: shown once they have a status.json
+LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "livelab", "explore1", "explore2")
 CHROME = ["/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell", "/opt/pw-browsers/chromium"]
 
 
@@ -62,6 +66,8 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
     out = []
     for k, name, br, kind in ACCOUNTS:
         s = _show(br, "status.json") or {}
+        if not s and k in NEW_ACCOUNTS:      # not started yet (no state branch / status.json): left out of the post
+            continue
         t, ss = s.get("today") or {}, s.get("since_start") or {}
         if s.get("session_date") != date:
             t = next((h for h in s.get("history") or [] if h.get("date") == date), {})
@@ -177,7 +183,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
         ls = _day(r, date)
         rows.append(dict(setup=code, name=nm.get("name") or r.get("name") or code,
                          acct=" + ".join({"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator",
-                                          "graveyard": "Graveyard"}.get(x, x) for x in a["accounts"]),
+                                          "graveyard": "Graveyard", "livelab": "Live Lab", "explore1": "Explore 1",
+                                          "explore2": "Explore 2"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
                          win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), t=r.get("t_stat"),
@@ -195,7 +202,7 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
     """The day's best setups by P/L across all intraday accounts (setups merged across accounts)."""
     names = _local("docs/live/setup_names.json") or {}
     agg: dict[str, dict] = {}
-    for k, label, br, _ in ACCOUNTS[:5]:
+    for k, label, br, _ in ACCOUNTS:
         for r in (_show(br, "reports/scorecard.json") or {}).get("leaderboard") or []:
             d = _day(r, date)
             if not d:
@@ -203,7 +210,7 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
             a = agg.setdefault(r["setup"], dict(setup=r["setup"], trades=0, r=0.0, pnl=0.0, accts=[]))
             a["trades"] += d[1]; a["r"] += d[2]; a["pnl"] += d[3]; a["accts"].append(label)
     if not agg:      # EOD scorecards not built yet: today's closed trades from each account's live status.json
-        for k, label, br, _ in ACCOUNTS[:5]:
+        for k, label, br, _ in ACCOUNTS:
             st = _show(br, "status.json") or {}
             if st.get("session_date") != date:
                 continue
@@ -220,7 +227,7 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
 
 
 def green_streaks(date: str, accts: list[dict], min_run: int = 3) -> dict:
-    """Owner 2026-10-26: per setup (all 5 accounts merged), green days = sessions with P/L > 0 after paper fills.
+    """Owner 2026-10-26: per setup (all intraday accounts merged), green days = sessions with P/L > 0 after paper fills.
     current: setups green on each of the last N market sessions (N >= min_run, a day not traded breaks the streak);
     record: the longest such run any setup has had. Market sessions = days any account traded (all history)."""
     sessions = sorted({x["date"] for a in accts for x in a.get("full_history") or a.get("history") or []
@@ -465,7 +472,8 @@ def page(body: str, title: str, sub: str) -> str:
             f'<h1>{_e(title)}</h1><div class="sub">{_e(sub)}</div>{body}{FOOT}</div></body></html>')
 
 
-COLORS = {"primary": "#2563eb", "testing": "#0d9488", "testing2": "#d97706", "gen": "#7c3aed", "graveyard": "#6b7280"}
+COLORS = {"primary": "#2563eb", "testing": "#0d9488", "testing2": "#d97706", "gen": "#7c3aed", "graveyard": "#6b7280",
+          "livelab": "#db2777", "explore1": "#0891b2", "explore2": "#65a30d"}
 
 
 def _chart(accts: list[dict], date: str) -> str:
@@ -504,7 +512,7 @@ def _chart(accts: list[dict], date: str) -> str:
     ticks = "".join(f'<text x="{P - 6}" y="{y(v) + 4:.1f}" text-anchor="end" font-size="10" fill="#666">{_money(v, False).replace(".00", "") if abs(v) >= 1 else "$0"}</text>'
                     f'<line x1="{P}" x2="{W - 10}" y1="{y(v):.1f}" y2="{y(v):.1f}" stroke="#eee"/>' for v in (hi, 0, lo))
     xl = f'<text x="{P}" y="{H - 6}" font-size="10" fill="#666">{days[1][5:]} open</text><text x="{W - 10}" y="{H - 6}" font-size="10" fill="#666" text-anchor="end">{days[-1][5:]}</text>'
-    leg = "".join(f'<span><i style="background:{COLORS[a["k"]]}"></i>{_e(a["name"])}</span>' for a in accts) + '<span><i style="background:#111"></i>All 5 (dashed)</span>'
+    leg = "".join(f'<span><i style="background:{COLORS[a["k"]]}"></i>{_e(a["name"])}</span>' for a in accts) + '<span><i style="background:#111"></i>All ' + str(len(accts)) + ' (dashed)</span>'
     return f'<svg viewBox="0 0 {W} {H}" width="100%">{ticks}{lines}{xl}</svg><div class="leg">{leg}</div>'
 
 
@@ -518,7 +526,7 @@ def _last5(accts: list[dict], date: str) -> str:
         pr = next((x for x in accts[0].get("history") or [] if x.get("date") == d), {})
         rows.append(f'<tr><td class="l">{d[5:]}</td><td class="{_cls(pnl)}">{_money(pnl)}</td><td class="{_cls(pr.get("pnl"))}">{_money(pr.get("pnl"))}</td>'
                     f'<td>{tr}</td><td class="{_cls(r)}">{_f(r)}</td></tr>')
-    return ('<table class="t5"><thead><tr><th class="l">Session</th><th>All 5 P/L</th><th>Primary P/L</th><th>Trades</th><th>Avg R</th></tr></thead>'
+    return (f'<table class="t5"><thead><tr><th class="l">Session</th><th>All {len(accts)} P/L</th><th>Primary P/L</th><th>Trades</th><th>Avg R</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table>')
 
 
@@ -531,8 +539,8 @@ def html_today(date: str, accts: list[dict]) -> str:
                      f'<div class="eq">{_money(a["equity"], sign=False)}</div><div class="ln">{l1}</div><div class="ln">{l2}</div></div>')
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
-    strip = (f'<div class="strip"><div>All 5 today: <b class="{_cls(today)}">{_money(today)}</b></div>'
-             f'<div>All 5 since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
+    strip = (f'<div class="strip"><div>All {len(accts)} today: <b class="{_cls(today)}">{_money(today)}</b></div>'
+             f'<div>All {len(accts)} since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
     m = milestones(accts[0], date)
     dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
     ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
@@ -570,7 +578,7 @@ def html_facts(date: str, fx: dict) -> str:
                      row("Broker / data", "Alpaca API · paper trading · SIP market data (all US exchanges)"),
                      row("Market", "US stocks and ETFs · intraday only (9:50 AM–3:55 PM ET) · long and short · nothing held overnight"),
                      row("Backtests", "2 years of 1-minute bars, train / validation split, a locked holdout never peeked at, costs in")])
-    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, Testing 1, Testing 2, Graveyard'),
+    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, Testing 1, Testing 2, Graveyard, Live Lab, Explore 1, Explore 2'),
                      row("Generated live", f'<b>{fx["gen"]}</b> in the Setup Generator account'),
                      row("Rejected so far", f'<b>~{fx["rejected"]:,}</b> setups failed backtests (plus many more variations)'),
                      row("Built from", "basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs and lows, ATR"),

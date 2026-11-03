@@ -229,7 +229,7 @@ def tried_families() -> set:
 
 
 # ------------------------------------------------------------------------------------------------ overlap
-def existing_keys(P, months=("2025-06", "2026-03"), log=print, accounts=("primary", "testing", "testing2", "gen"),
+def existing_keys(P, months=("2025-06", "2026-03"), log=print, accounts=("primary", "testing", "testing2", "gen", "livelab", "explore1", "explore2"),
                   exclude_prefix="GEN-") -> tuple[dict, list]:
     """Enabled lab setups of every account -> set of panel symbol-day ids where they would trade (first qualifying
     bar, its window and liquidity floor), on sample months. Non-lab setups and modules that fail are listed."""
