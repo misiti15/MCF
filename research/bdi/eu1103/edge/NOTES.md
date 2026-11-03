@@ -128,3 +128,62 @@ Not on the list on purpose: plain ORB on stocks in play (live as orb20_a; 2-year
 more single-name filters on fades (the night1102 work: 0 of 26 adjustments pass).
 
 
+
+## Two-year tests (backtest; PLAN.md pre-declared, 24 configs; `xs2y.py`, `results_2y.csv`)
+
+TRAIN 2024-09-30..10-31 + 2025-03..12 (231-235 sessions), VALID 2026-01-01..10-05 (189-190 sessions), lab universe
+(1,226 names), ~8-10 trades per session per config, costs in, SPY hedge costs in, R = 0.5 x ATR14 (the stop).
+Bar for a primary: TRAIN and VALID avg R > 0, VALID t >= 2.52 (sqrt(2 ln 24)), beats baseline in both, w/o best day > 0,
+up and down regimes > 0.
+
+### Failures first: both tests fail. 0 of 24 configurations are positive in both TRAIN and VALID.
+
+| primary (pre-declared) | split | n | avg R | t | w/o best day | vs day-matched random (t) | up / flat / down R | WF months + |
+|---|---|---|---|---|---|---|---|---|
+| **A** quiet fade, 09:50, exit 10:30, hedged | TRAIN | 2,259 | **-0.082** | -4.78 | -0.085 | -0.007 (-0.42) | -0.10 / -0.11 / -0.04 | 8% |
+| | VALID | 1,898 | **-0.076** | -3.90 | -0.080 | -0.020 (-1.09) | -0.06 / -0.10 / -0.07 | 20% |
+| **B** in-play ride, 09:45, exit 15:55, hedged | TRAIN | 1,860 | **-0.065** | -1.72 | -0.076 | +0.010 (+0.30) | -0.05 / -0.13 / -0.01 | 33% |
+| | VALID | 1,567 | **-0.058** | -1.23 | -0.074 | +0.032 (+0.78) | -0.16 / +0.11 / -0.14 | 30% |
+
+- **Test A (fade normal-volume extremes) is dead on every neighbour:** all 12 configs negative in both splits (TRAIN -0.05
+  to -0.14R, VALID -0.05 to -0.10R) and none beats the day-matched random entry in both splits. The live "timing from
+  fades" (+0.05-0.09R before costs) does not survive as a market-neutral, costed, cross-sectional rule. 09:40 is the
+  worst decision time (-0.10 to -0.14R): the earlier we fade, the more the open's move keeps going.
+- **Test B (ride heavy-volume extremes) is the better half but still negative.** Every one of the 6 VALID configs beats
+  its day-matched random in-play baseline (+0.03 to +0.07R; best t 1.83), and the 09:50 / 10:30 config does so in TRAIN
+  too (+0.080R, t 2.64; raw avg R +0.026 TRAIN, -0.006 VALID). So *choosing the strongest idiosyncratic movers among
+  in-play names, in their direction, carries some information* — about +0.05R over random — but the random in-play
+  entry itself loses ~-0.05 to -0.10R after costs, and the net stays below zero. Best raw config: 09:50, exit 10:30,
+  unhedged: TRAIN +0.026R (t 0.79, w/o best day +0.011, 57% of R one day), VALID -0.006R (t -0.19). Not a candidate.
+- **Hedging with SPY made every config worse** (by 0.01-0.04R): the hedge costs ~0.02R and removes beta that, on these
+  days, was slightly in our favour. Beta-neutral is not free at our R size.
+- **Neither is positive on up AND down sessions.** B in VALID makes money only on flat sessions (+0.04 to +0.11R) —
+  noted, not tuned (that would be a new lineage step).
+
+### What the tests say about our edge
+The two most natural "edges" for a fast, broad, disciplined scanner — fade the liquidity shock, ride the informed
+move — are both under water after the production cost (1c + 1 bps per side, the early-session spread multiplier, the hedge
+leg), even with a 0.5-ATR stop that keeps costs a small share of R. The information we can measure (Test B's +0.05R over random) is smaller than one
+round-trip of costs. That is the honest size of our "extremely small, almost scalping edges": real, but below costs
+unless execution costs fall (list item 3) or the R unit grows (item 4).
+
+## Summary for the owner (Q1)
+
+1. **What our edge is (measured):** a small short-term reversal timing effect (+0.05R per trade before costs live) and
+   some selection information in in-play names (+0.05R over random on two years). Both are smaller than our costs.
+2. **What our record is (measured):** the profitable live setups are a short-SPY bet on falling mornings (88% of their
+   R is beta; +0.020R per trade left after beta, +0.001R without 10-22). One record (Primary MF2-open-rsimidhi-flowsell-FD)
+   shows beta-neutral alpha (t 2.65 on 40 trades) — a hint, inside what ~240 looks would give by chance.
+3. **Where the money goes:** friction 0.068R per trade (-832R; we cross the spread on 86% of fills, 4.4 bps per entry,
+   ~0.10R all-in with paper touch-fill optimism removed) and standing in front of trending names (stock drift -1,327R).
+4. **Who is on the other side:** the market makers we pay on every trade; dip-buyers in gap-down names on the days the
+   market keeps falling (our winners); informed / institutional flow in names that trend all day (our losers).
+5. **Next tests, best first:** #3 passive entries (largest, cheapest, uses the data we have), #4 bigger R unit, #5 trade
+   the market view in SPY/QQQ, #6 hedged peer laggards. A "green every day" goal is not reachable from the current
+   book: it had 2 green sessions of 20; any path there goes through lower costs first, not more filters.
+
+**Today's win (charter):** a measured map of where the book's R comes from (beta / drift / timing / friction per account
+and setup), and two pre-declared edge hypotheses closed with their numbers.
+
+Nothing in this folder needs a new data source. Items 9-10 in the list do (short interest; auction imbalances), with
+rough costs given there.
