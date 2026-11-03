@@ -30,14 +30,16 @@ Green streaks flag promotion candidates, red streaks flag demotion reviews; a st
 
 **Behind the scenes:**
 
-- The daily swing review now explains every big intraday dip and turn, with leads that can be tested.
-- Research now runs from one ordered queue.
-- A market-adjusted avg R column is coming to the dashboard.
-- One testing account trials a smaller ticker pool from tomorrow.
+- Every blocked signal is tracked as a what-if trade, with a blocked-signal audit twice a week.
+- Nightly loser review, plus the Move Hunt capture rate (how many of the day's big moves the setups caught).
+- Replay audit being completed over 10 sessions.
+- Every result split by up, down and quiet days, and every rule change logged.
+
+New rules or limits may be added over the next 3-7 days as these reviews finish, since one session isn't the final word.
 
 **Quick update:**
 
-- Two new testing accounts coming soon.
+- Two new testing accounts open soon to explore new setup opportunities and give new and existing setups more reps.
 
 **Quick answers to common questions:**
 
