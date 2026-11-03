@@ -206,8 +206,16 @@ def test_eod_card_graveyard_green_only_and_trend_lists():
     """Owner 2026-10-28: Graveyard setups only in the green lists; 'k of last N' trend lists; changes started this session."""
     html = HTML
     assert "const keep = x => x.sign > 0 || !gy(x.s);" in html
-    assert "Trending up (green sessions of the last N traded)" in html and "Trending down (red sessions of the last N traded)" in html
+    assert "Trending up — mostly green, not all in a row" in html and "Trending down — mostly red, not all in a row" in html
     assert "Changes that started this session" in html and "research/ledger.jsonl" in html
+
+
+def test_eod_streak_kinds_are_labelled():
+    """Owner 2026-11-03: the three streak kinds are told apart plainly (every session / traded only / trending)."""
+    for t in ("Green streak — every session in a row", "Red streak — every session in a row",
+              "Green streak — traded sessions only (no-trade days skipped)", "Red streak — traded sessions only (no-trade days skipped)",
+              "A session with no trades ends the streak.", "Sessions it didn't trade are skipped and counted."):
+        assert t in HTML, t
 
 
 def test_eod_streak_lines_name_the_current_account():
