@@ -227,6 +227,11 @@ def main():
     allt, allc = [], []
     for split, months in (("TRAIN", TRAIN), ("VALID", VALID)):
         for mo in months:
+            cache = S / "cache" / f"{mo}.parquet"
+            if cache.exists() and mo != "2026-09":   # restart-safe: reuse finished months
+                allt.append(pd.read_parquet(cache)); allc.append(pd.read_parquet(S / "cache" / f"{mo}_ctrl.parquet"))
+                print(mo, split, "cached", flush=True)
+                continue
             df = lib.load_month(mo, columns=COLS + ["vol_climax"])
             if mo == "2026-09":
                 par = parity(df)
@@ -235,6 +240,7 @@ def main():
             tr, c = run_frame(df, split)
             allt.append(tr)
             allc.append(c)
+            cache.parent.mkdir(exist_ok=True); tr.to_parquet(cache, index=False); c.to_parquet(S / "cache" / f"{mo}_ctrl.parquet", index=False)
             print(mo, split, len(tr), f"{time.time() - t0:.0f}s", flush=True)
             del df
     lf = pd.read_parquet(S / "live_frames.parquet")
