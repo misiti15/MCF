@@ -61,14 +61,15 @@ G2-5 0.49 (+0.037). All VALID totals are negative (no carry).
    t 1.3), i.e. the selection is above random but not above the ~0.1R cost hole. G2-1 and G2-4 miss the -0.02 gate by
    0.004 and 0.003 R — reported as fails, not rounded.
 4. **Shortlist transfer (information only, the 30 shortlisted):** 10 of 30 have VALID avg R >= -0.02, mean VALID
-   -0.044R; 24 of 30 beat random on VALID. The distinct-trigger rule that chose the 5 skipped three other MACD-cross
+   -0.044R; 21 of 30 beat random on VALID. The distinct-trigger rule that chose the 5 skipped three other MACD-cross
    shorts that held better on VALID: rank 2 `macdup + slope_dn + vr_lo` short t1s1 10:00-15:00 (VALID +0.033, 2.2/session,
    down +0.196 / quiet +0.144 / up -0.233) and rank 5 `macdup + br_hi + vw_up` short W1 (VALID +0.122, but 0.7 VALID
    trades/session, quiet -0.250). Swapping them in would be a choice made on VALID, so they are NOT delivered; if the owner
    wants them they are labelled "VALID-selected" and need forward sessions only.
-5. **Most usable family the generator found: "MACD zero-cross up into a stretched, low-volume move = fade".** It shows up
-   in 9 of the 30 shortlisted rules, beats random on TRAIN and VALID in most of them, and is not a live family (GEN
-   MACDh rules are histogram levels, longs). It is the one lead worth live exposure in an exploratory account.
+5. **Most usable family the generator found: "MACD % crosses up while stretched / on low volume = fade short".** 6 of
+   the 30 shortlisted rules are macdup shorts (ranks 1, 2, 5, 20, 23, 25); 5 of 6 beat random on VALID and 4 of 6 have
+   VALID avg R >= -0.02 (-0.024, +0.033, +0.122, -0.107, +0.005, +0.065). Not a live family (GEN MACDh rules are
+   histogram levels). Picked by the generator from 18.5k tries, so it is a lead for live exposure, not an edge.
 
 ## Recommendation for the exploratory accounts (owner decides allocation)
 
