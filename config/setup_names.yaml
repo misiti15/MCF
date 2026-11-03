@@ -857,3 +857,7 @@ GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short:
   side: short
   what: "Short on the first 5-minute bar closing 09:50-10:30 ET where the share of stocks above their VWAP is above 0.5; RSI(14) change over 3 bars (frame column) >= 19; 1-bar (5 min) return % <= -0.21; EMA9 vs EMA21 % (frame column) >= 0.29 (stocks with 20-day average dollar volume >= $150M). Exit target +1R / stop 1R, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
   generated: "2026-10-29"
+RW3S-gapdn-flowsell-short-FD:
+  name: "Gap-Down Heavy-Selling Short, no RSI condition (all day)"
+  side: short
+  what: "09:50-15:00: stock gapped down, bearish heat <= -20, heavy net selling (buyPressure < -0.35); short. Target 1 unit, stop 1 unit (1 unit = 0.25 x daily ATR), flat 15:55. RW3-FD without its RSI(5) > 80 pop. Observation only."

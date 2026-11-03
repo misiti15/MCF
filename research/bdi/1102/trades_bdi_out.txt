@@ -1,0 +1,66 @@
+== 2026-11-02: 799 trades with bars (of 799), losers 455
+
+== sum of R after costs by account (what-ifs on 1-min SIP; orig = sanity check vs live)
+           live  orig  be05   t05    t1  trail  hold   sar  reent   opp
+account                                                                
+generator -82.6 -63.5 -50.4 -52.7 -58.4  -38.8  -7.5 -29.0  -68.7  43.4
+graveyard -83.7 -70.4 -59.1 -86.3 -59.1  -29.0 -25.8 -65.1  -55.8  42.2
+primary    -6.2  -5.6  -5.7  -4.3  -6.7   -5.5  -4.2  -2.6   -5.6   6.4
+testing   -16.8 -13.0 -12.1 -12.2 -11.6  -11.4  -4.2 -14.0  -11.7  10.5
+testing2  -33.1 -24.3 -19.3 -21.0 -17.0  -11.7   4.8 -18.2  -24.3  15.3
+
+== day-clustering impossible (1 day); per-trade mean and se, all accounts
+       live   orig   be05    t05     t1  trail   hold    sar  reent    opp
+mean -0.278 -0.221 -0.183 -0.221 -0.191 -0.121 -0.046 -0.161 -0.208  0.147
+se    0.034  0.032  0.031  0.025  0.032  0.034  0.052  0.036  0.033  0.031
+
+== loss types by account (count / $)
+                                       size                                          sum                                   
+account                           generator graveyard primary testing testing2 generator graveyard primary testing testing2
+loss_type                                                                                                                  
+gave_back_gains                          26        14       0       3        6    -282.0    -254.0     0.0   -16.0    -67.0
+late_hold                                13         9       0       2        6    -129.0     -82.0     0.0    -2.0    -42.0
+never_worked                             33        30       0       2       14    -756.0    -564.0     0.0   -23.0   -135.0
+small MFE then failed (0.15-0.5R)        42        54       0       4        6    -919.0    -829.0     0.0   -30.0    -34.0
+stopped_then_reversed                     1        54       2       8        8     -19.0    -948.0   -23.0   -61.0    -54.0
+wrong_side_after_big_swing               36        39       7       7       29   -1086.0   -1523.0  -769.0  -159.0   -525.0
+
+== opposite side 1R/1R: hindsight check (does a rule known at entry pick out the trades whose opposite won?)
+-- flag_spy
+            n  opp_win  opp_R  live_R
+flag_spy                             
+False     599    0.616  0.211  -0.327
+True      200    0.540 -0.044  -0.133
+   side 1:             n  opp_R  live_R | flag_spy                     | False     404  0.214  -0.339 | True      114  0.236  -0.470
+   side -1:             n  opp_R  live_R | flag_spy                     | False     195  0.205  -0.301 | True       86 -0.414   0.314
+-- flag_fo
+           n  opp_win  opp_R  live_R
+flag_fo                             
+False    452    0.553  0.077  -0.208
+True     347    0.654  0.240  -0.370
+   side 1:            n  opp_R  live_R | flag_fo                     | False    253  0.163  -0.326 | True     265  0.273  -0.408
+   side -1:            n  opp_R  live_R | flag_fo                     | False    199 -0.033  -0.058 | True      82  0.134  -0.246
+
+== by setup (sum R after costs), 12 worst and 6 best by live
+                                                                                     n accts   live   be05    t05     t1  trail   hold    sar  reent    opp  never  mfe_med  tmfe_med
+setup                                                                                                                                                                                
+GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                            46   gen -47.32 -39.21 -35.21 -46.31 -36.76 -46.31 -21.24 -47.50  43.16     16     0.21       4.0
+heat_fade_long                                                                      20    gy -18.59 -18.30 -18.74 -18.24 -18.44 -20.24  -3.83 -18.30  17.75     11     0.14       5.5
+heat_fade_short                                                                     26    gy -16.57 -15.88 -17.34 -14.34 -14.79  -7.66 -34.22  -6.67  13.66      6     0.21       4.5
+heat_fade_long-FD                                                                   22    gy -12.04  -2.82  -1.26  -4.76  -0.15 -20.09  -2.49 -10.82   4.21      3     0.66      21.0
+CWT14-failbrk-pdh-p05-lowvol-short                                                  15    gy -10.13  -5.92  -9.47  -9.86 -10.16 -12.19  -9.17  -5.33   8.91      3     0.28       3.0
+NM-HL-T75-pm-long                                                                   24    t2  -9.86  -6.87  -6.17  -9.15  -8.30  -9.15  -6.06  -7.02   9.05      7     0.30       8.0
+GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long                    21   gen  -9.55  -4.70  -1.67  -5.56  -4.74  -5.56  -5.90  -5.49   4.79      5     0.43      17.0
+CWT14-failbrk-pdl-p10-long                                                          24    t2  -8.37  -5.40  -5.35  -2.46  -2.97   2.35  -3.29  -6.20   2.08      7     0.38       8.5
+CWT12-coil-k4-long                                                                  46    gy  -8.19  -6.90  -5.16  -8.01  -7.35 -11.68  -7.10  -7.01   5.23      7     0.37      19.0
+CWT12-coil-k6-long                                                                   8    gy  -7.55  -5.24  -3.24  -7.24  -4.42  -7.37  -7.04  -7.02   4.76      1     0.55      16.5
+CWT13-vwapstretch-z05-long                                                          21    t2  -7.40  -3.76  -4.72  -9.12  -6.81  -9.92  -4.41  -5.86   8.58      4     0.40       8.0
+GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long  13   gen  -6.75  -3.57  -4.22  -3.34  -3.73  -3.73  -4.52  -4.32   2.03      3     0.38       8.0
+MF2-open-rsimidhi-flowsell-FD                                                        1     p   2.16   0.00   0.50   1.00   0.12   3.54   2.15   2.15  -1.00      0     2.34      86.0
+heat_fade_short-FD                                                                  18    gy   7.20   7.08   4.45   9.95  19.91  34.78   3.08   7.13 -10.05      2     0.80      42.5
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long               26   gen   8.86  10.51   5.00   8.97  14.20  48.47  16.70  11.23  -9.96      4     0.99      29.5
+RW2-exhaustion-noon-adv150-short-FD                                                 32    gy   9.84  11.01   4.35  13.44  20.99  39.41   6.95   9.83 -14.18      3     0.85      40.0
+CWT09-gapdn-bounce-g5-lowerhalf-short                                                1    gy  11.80  10.90   0.50   1.00   4.49  10.90  10.90  10.90  -1.00      0    11.80     227.0
+GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short          22   gen  15.08  13.68   8.30  15.82  20.21  38.24  16.29  15.47 -16.03      0     0.95      98.5
+
+Educational only - not financial advice.

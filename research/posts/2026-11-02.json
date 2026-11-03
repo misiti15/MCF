@@ -1,0 +1,17 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: #1 is a machine-generated morning short that was about flat after costs on the two-year screen; #2 has run in the Graveyard since 10/21 (moved there for a live win rate at or under 50%).",
+ "setups": [
+  {"setup": "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short",
+   "title": "Morning Selling-Flip Short (broad market up)",
+   "lines": [["When", "9:50–11:00 AM (first qualifying five-minute bar, once per stock per day)"],
+             ["Market", "More than half of stocks trading above their open"],
+             ["Stock", "≥ $20M traded a day, daily range (ATR) at least 3.6% of price"],
+             ["Trigger", "Close is 1.9+ standard deviations below its 12-bar (one-hour) average, and volume flow flipped hard to selling (last-3-bar flow minus the 9 bars before it ≤ -0.96)"],
+             ["Action", "Short"], ["Exit", "Target 1 unit, stop 1 unit"]]},
+  {"setup": "RW2-exhaustion-noon-adv150-short-FD",
+   "title": "Overbought Blow-off Short (all day)", "side": "short",
+   "lines": [["When", "9:50 AM–3:00 PM (five-minute bars)"],
+             ["Market", "Any"],
+             ["Stock", "≥ $150M traded a day"],
+             ["Trigger", "RSI(5) above 90, close more than 1% above its 20-bar (five-minute) average, and a bearish RSI divergence (a new 20-bar high while RSI(14) sits 5+ points under its 20-bar peak)"],
+             ["Action", "Short"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}

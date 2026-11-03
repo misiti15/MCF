@@ -1,0 +1,41 @@
+                                                                        pattern      actionable                         adjustment  primary_losers  primary_share  primary_lossR  all_losers  all_share  all_lossR
+0                                  P1 inverse-ETF short (= long the underlying)             yes                 B_no_inverse_short               8          0.060         -8.432          31      0.012    -32.895
+1                           P2 same symbol again (2nd+ lot that day, any setup)             yes               A_one_per_symbol_day              32          0.241        -34.482         720      0.271   -794.682
+2                      P3 stacked same-side lots (4th+ entry in a 10-min chain)             yes                 E_stack_cap3_10min              44          0.331        -49.774        2127      0.801  -2356.426
+3  P4 late (>=13:30) entry WITH an extended SPY move (|SPY from open| >= 0.75%)             yes  C_late_with_extended_spy_1330_075               5          0.038         -5.416          46      0.017    -49.602
+4         P5 chased entry (top/bottom 10% of the prior 5 bars, trade direction)             yes                   wait3 / lim_pb25              33          0.248        -30.397         764      0.288   -826.582
+5                            P6 tight stop (< 53 bps of price, bottom quintile)             yes                             wide15              37          0.278        -38.006         606      0.228   -699.231
+6                                  P7 never worked (MFE < 0.2R before the stop)  no (hindsight)                      scr30 / scr60              57          0.429        -63.762        1387      0.522  -1531.259
+7                                           P8 fast stop (stopped within 5 min)  no (hindsight)                     wait1 / wide15               4          0.030         -5.079          91      0.034   -113.594
+8       P9 market moved against after entry (SPY entry->15:55 against the side)  no (hindsight)    regime layer (other workstream)              72          0.541        -68.987        1583      0.596  -1736.411
+
+losers by account: {'graveyard': 1068, 'testing2': 488, 'testing1': 486, 'gen': 482, 'primary': 133} loser R: {'gen': -510.5, 'graveyard': -1183.5, 'primary': -129.9, 'testing1': -541.8, 'testing2': -544.8}
+
+loser medians (primary / all):
+primary {'R': -1.092, 'mfe_r': 0.278, 'mins_to_exit': 55.073, 'pos5_side': 0.611, 'rng5_R': 0.358, 'stop_bps': 76.599, 'fill_vs_bar_R': 0.043, 'spy_fo': 0.043}
+primary side {'short': 95, 'long': 38} type {'stock': 102, 'etf': 20, 'inverse': 8, 'lev': 3} exit {'stop': 118, 'target': 9, 'flatten': 6}
+primary opposite side would have won (R_opposite>0): 0.872 mean 0.544
+primary entry hour {'09': 8, '10': 44, '11': 37, '12': 16, '13': 12, '14': 15, '15': 1}
+all {'R': -1.086, 'mfe_r': 0.186, 'mins_to_exit': 56.388, 'pos5_side': 0.65, 'rng5_R': 0.397, 'stop_bps': 86.028, 'fill_vs_bar_R': 0.046, 'spy_fo': -0.014}
+all side {'long': 1516, 'short': 1141} type {'stock': 1897, 'etf': 486, 'lev': 174, 'inverse': 92, 'unknown': 8} exit {'stop': 2619, 'flatten': 26, 'target': 12}
+all opposite side would have won (R_opposite>0): 0.914 mean 0.617
+all entry hour {'09': 227, '10': 1252, '11': 618, '12': 218, '13': 151, '14': 166, '15': 25}
+
+Primary losers by setup
+                                             n      R
+strategy                                             
+CWT14-failbrk-pdl-p10-lowvol-long           22 -24.55
+L3-gap-slope-fromopen-FD                    16 -18.67
+MF4-h40-open-flowsell-FD                    16 -13.39
+MF2-open-rsimidhi-flowsell-FD               11 -12.32
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  15  -9.18
+NS3-failed-vwap-reclaim-short-FD             7  -7.62
+NS4-pm-vwap-reclaim-oversold-short           6  -7.16
+MF1-945-flowsell-vwapup                      6  -7.14
+MF3-open-flowsell-rsi5hi-FD                  6  -6.76
+ST7-rsi50dn-long-pm-t1s1-FD                  6  -6.69
+RW3-gapdn-rsi5pop-flowsell-short-FD          9  -6.37
+CWT13-vwapstretch-z05-long                   6  -5.92
+L3-gap-slope-rsi5hi-FD                       3  -1.70
+NS5-sma50-flush-oversold-long                3  -1.45
+NS1-rsidip-rsi5pop-long                      1  -1.03
