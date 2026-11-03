@@ -39,6 +39,14 @@ permissions:
 env:
   SCRIPT: research/bdi/cwt/actions/fetch_cwt.py
 
+# CAP1 (owner 2026-11-03): every research workflow shares ONE concurrency group, and matrix jobs run at most 4 legs
+# (strategy.max-parallel), so research never holds more than 4 of the 20 GitHub Free job slots the trading jobs need.
+# A second research run waits; note GitHub keeps only ONE pending run per group (a newer dispatch replaces it), so
+# dispatch research in the order of research/queue.jsonl (python -m mcf.research.queue tonight).
+concurrency:
+  group: mcf-research
+  cancel-in-progress: false
+
 jobs:
   list:
     runs-on: ubuntu-latest

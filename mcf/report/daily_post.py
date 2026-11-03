@@ -379,7 +379,7 @@ def facts(accts: list[dict]) -> dict:
     p = ROOT / "research" / "backlog.jsonl"
     if p.exists():
         st = [json.loads(l).get("status") for l in p.read_text().splitlines() if l.strip()]
-        rejected = sum(x in ("failed", "holdout_failed", "failed_locked", "rework") for x in st)
+        rejected = sum(x in ("failed", "parked", "holdout_failed", "failed_locked", "rework") for x in st)
     rejected += max(0, (lab.get("specs_screened") or 0) - (lab.get("setups_generated") or 0))
     slip, n = 0.0, 0
     for k, _, br, _ in ACCOUNTS:
