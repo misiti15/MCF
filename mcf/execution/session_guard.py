@@ -24,7 +24,7 @@ import pandas as pd
 
 NY = "America/New_York"
 WINDOW = (time(8, 40), time(15, 30))
-ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1", "explore2")   # last 3: owner 2026-11-03
+ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1")   # last 2: owner 2026-11-03
 ACTIVE = {"queued", "in_progress", "waiting", "requested", "pending"}
 MAX_DISPATCHES = 6
 WORKFLOW = "trade.yml"
@@ -100,7 +100,7 @@ def market_open_today(day: str) -> bool:
 
 
 def has_setups(account: str, config_dir: Path | None = None) -> bool:
-    """False only for a strategies_exclusive overlay with no enabled setup (e.g. Live Lab / Explore 1 / Explore 2 before
+    """False only for a strategies_exclusive overlay with no enabled setup (e.g. Live Lab / Explore 1 before
     their first setups, owner 2026-11-03): trade.yml skips such an account after ~1 minute, so the guard must not count
     it as a missing session (it would re-dispatch trade.yml up to MAX_DISPATCHES times a day). Unreadable -> True."""
     if account == "primary":

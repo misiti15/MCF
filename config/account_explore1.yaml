@@ -3,9 +3,12 @@
 # watchdog and session-guard jobs skip this account until the owner adds both secrets; the trade job also skips it while
 # no setup is enabled here (no idle 6.5-hour session).
 #
-# Exploratory account 1 of 2 (owner 2026-11-03): ground-up setup generation with unconventional setup conditions
-# (research/bdi/ex30). Live testing is the main verdict; the 2-year backtest is a light gate only (costs in, no BAR90).
-# Explore 1 and Explore 2 carry equal weight; allocation of setups between them comes later (owner).
+# Exploratory account (owner 2026-11-03; trimmed to 2 new accounts the same night: Explore 2 dropped): ground-up setup
+# generation with unconventional setup conditions (research/bdi/ex30). Live testing is the main verdict; the 2-year
+# backtest is a light gate only (costs in, no BAR90).
+# INACT2 (owner 2026-11-03): Explore 1 is also the home for setups trimmed for low activity - they move here for more
+# exposure, never just switched off. The 7 INACT2 setups (IDX1 trail, IDX1 hold, IDX2, IDX3, IDX5, LD4, LD5) move here
+# when it opens (CLAUDE.md "Trimmed setups").
 # Sizing (research/bdi/night1102/livelab NOTES "Exact pieces needed"): 200 slots and buying_power_multiple 2.0, so capital
 # per slot = equity x 2.0 / 200 = ~$1,000 constant notional per lot at $100k (mcf/backtest/engine.slot_notional, the
 # same rule as every account); up to 10 open lots per setup, so 20 seats x 10 never bind on slots.

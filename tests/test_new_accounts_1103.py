@@ -1,4 +1,4 @@
-"""Live Lab + Explore 1 + Explore 2 paper accounts (owner 2026-11-03). Wired like the Graveyard / Setup Generator: each
+"""Live Lab + Explore 1 paper accounts (owner 2026-11-03; trimmed to 2 the same night, Explore 2 dropped). Wired like the Graveyard / Setup Generator: each
 overlay runs only its own setups (none yet), ~$1,000 constant notional lots (200 slots, buying power x 2.0), up to 10
 lots per setup, the per-setup daily stop off and the Testing 120R account backstop; each routes to its own keys / order
 prefix / state branch, skips cleanly without keys (and while no setup is enabled), sends no EOD email and shows on the
@@ -10,14 +10,13 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-NEW = {"livelab": ("Live Lab", "mll-", "LIVELAB"), "explore1": ("Explore 1", "mx1-", "EXPLORE1"),
-       "explore2": ("Explore 2", "mx2-", "EXPLORE2")}
+NEW = {"livelab": ("Live Lab", "mll-", "LIVELAB"), "explore1": ("Explore 1", "mx1-", "EXPLORE1")}
 OLD = {"primary": ("mcf-", "mcf-data", "mcf-trade", None), "testing": ("mct-", "mcf-data-testing", "mcf-trade-testing", "TESTING"),
        "testing2": ("mt2-", "mcf-data-testing2", "mcf-trade-testing2", "TESTING2"),
        "gen": ("mcg-", "mcf-data-gen", "mcf-trade-gen", "GEN"),
        "graveyard": ("mgy-", "mcf-data-graveyard", "mcf-trade-graveyard", "GRAVEYARD")}
 EXPECT = {**OLD, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in NEW.items()}}
-MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, explore2]"
+MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1]"
 
 
 def _cfg(monkeypatch, acct):
@@ -138,3 +137,13 @@ def test_post_skips_accounts_not_started(monkeypatch):
     monkeypatch.setattr(P, "_show", lambda br, path: {"session_date": "2026-11-03"} if br in ("mcf-data", "mcf-data-testing") else None)
     got = [a["k"] for a in P.accounts("2026-11-03")]
     assert not set(got) & set(NEW) and got[:2] == ["primary", "testing"]
+
+
+def test_trimmed_to_two_accounts_explore1_home_for_trimmed_setups():
+    """Owner 2026-11-03: 2 new accounts only (Explore 2 dropped); Explore 1 is the home for setups trimmed for low
+    activity (INACT2)."""
+    assert not (ROOT / "config/account_explore2.yaml").exists()
+    for p in [*(ROOT / ".github/workflows").glob("*.yml"), *(ROOT / "mcf").rglob("*.py"), ROOT / "docs/live/index.html"]:
+        txt = p.read_text()
+        assert "explore2" not in txt.lower().replace("explore 2 dropped", "") and "mx2-" not in txt, p
+    assert "trimmed for low activity" in (ROOT / "config/account_explore1.yaml").read_text()

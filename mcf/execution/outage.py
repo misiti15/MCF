@@ -6,7 +6,7 @@ Shared by the runner's escalation (live.outage) and the independent watchdog (mc
     breakeven, through that lot's own stop leg only
   * flatten_prefix(): cancel this system's open orders (prefix only) and close the positions it traded today
 
-Only orders whose client order id starts with the account's MCF prefix (mcf- / mct- / mt2- / mcg- / mgy- / mll- / mx1- / mx2-) are ever touched; the
+Only orders whose client order id starts with the account's MCF prefix (mcf- / mct- / mt2- / mcg- / mgy- / mll- / mx1-) are ever touched; the
 long-hold book (mcl-) and anything else on an account are never read for action. No emails or alerts.
 Educational only - not financial advice."""
 
@@ -17,8 +17,8 @@ import time as _time
 import pandas as pd
 
 NY = "America/New_York"
-MCF_PREFIXES = ("mcf-", "mct-", "mt2-", "mcg-", "mgy-", "mll-", "mx1-", "mx2-")   # mcg- = Setup Generator (2026-10-19); mgy- = Graveyard (2026-10-21)
-# mll- = Live Lab, mx1- / mx2- = Explore 1 / Explore 2 (owner 2026-11-03)
+MCF_PREFIXES = ("mcf-", "mct-", "mt2-", "mcg-", "mgy-", "mll-", "mx1-")   # mcg- = Setup Generator (2026-10-19); mgy- = Graveyard (2026-10-21)
+# mll- = Live Lab, mx1- = Explore 1 (owner 2026-11-03; Explore 2 dropped the same night)
 DEFAULTS = {"enabled": True, "enter_pause_min": 5, "protect_min": 15, "flatten_min": 30, "watchdog_dead_min": 15}
 
 

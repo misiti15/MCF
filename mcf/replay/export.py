@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "gen", "livelab", "explore1", "explore2")
+ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "gen", "livelab", "explore1")
 DRIFT_R = 0.25
 DRIFT_MIN_TRADES = 10
 

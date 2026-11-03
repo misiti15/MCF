@@ -300,7 +300,7 @@ def config_at(account: str, day) -> dict | None:
 def data_branch(account: str) -> str:
     return {"primary": "origin/mcf-data", "testing": "origin/mcf-data-testing", "testing2": "origin/mcf-data-testing2",
             "gen": "origin/mcf-data-gen", "graveyard": "origin/mcf-data-graveyard", "livelab": "origin/mcf-data-livelab",
-            "explore1": "origin/mcf-data-explore1", "explore2": "origin/mcf-data-explore2"}.get(account,
+            "explore1": "origin/mcf-data-explore1"}.get(account,
                                                                                       f"origin/mcf-data-{account}")
 
 

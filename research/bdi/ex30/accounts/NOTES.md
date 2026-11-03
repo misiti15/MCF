@@ -2,6 +2,13 @@ Educational only — not financial advice
 
 # ex30 / accounts — three new paper accounts wired (2026-11-03)
 
+**Trimmed to 2 accounts (owner 2026-11-03 evening):** Explore 2 (`mx2-`, `mcf-data-explore2`) is dropped; only Live Lab
+(`mll-`) and Explore 1 (`mx1-`) are wired. **Explore 1 is the home for setups trimmed for low activity (INACT2):** a
+setup trimmed for low activity moves there for more exposure, never just switched off; the 7 INACT2 setups (IDX1 trail,
+IDX1 hold, IDX2, IDX3, IDX5, LD4, LD5) move to Explore 1 when it opens. This branch is NOT merged until the owner adds
+the Alpaca keys (ALPACA_LIVELAB_* / ALPACA_EXPLORE1_*); ROLL1 (roll-out order) is deferred until then. Rows below that
+mention Explore 2 describe the original 3-account draft.
+
 Branch `claude/accounts-3new` (from `claude/charming-mccarthy-i3rhhr`), pushed, **no PR opened, not merged**. It touches
 `config/` (new overlays only) and live paths (`.github/workflows/*`, `mcf/execution/*`), so it merges outside
 09:30-16:00 ET after the owner's review. No existing account's setups, exits or risk rules change. No bar history was
