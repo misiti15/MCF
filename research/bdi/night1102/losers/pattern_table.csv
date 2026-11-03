@@ -1,0 +1,10 @@
+pattern,actionable,adjustment,primary_losers,primary_share,primary_lossR,all_losers,all_share,all_lossR
+P1 inverse-ETF short (= long the underlying),yes,B_no_inverse_short,8,0.060,-8.432,31,0.012,-32.895
+"P2 same symbol again (2nd+ lot that day, any setup)",yes,A_one_per_symbol_day,32,0.241,-34.482,720,0.271,-794.682
+P3 stacked same-side lots (4th+ entry in a 10-min chain),yes,E_stack_cap3_10min,44,0.331,-49.774,2127,0.801,-2356.426
+P4 late (>=13:30) entry WITH an extended SPY move (|SPY from open| >= 0.75%),yes,C_late_with_extended_spy_1330_075,5,0.038,-5.416,46,0.017,-49.602
+"P5 chased entry (top/bottom 10% of the prior 5 bars, trade direction)",yes,wait3 / lim_pb25,33,0.248,-30.397,764,0.288,-826.582
+"P6 tight stop (< 53 bps of price, bottom quintile)",yes,wide15,37,0.278,-38.006,606,0.228,-699.231
+P7 never worked (MFE < 0.2R before the stop),no (hindsight),scr30 / scr60,57,0.429,-63.762,1387,0.522,-1531.259
+P8 fast stop (stopped within 5 min),no (hindsight),wait1 / wide15,4,0.030,-5.079,91,0.034,-113.594
+P9 market moved against after entry (SPY entry->15:55 against the side),no (hindsight),regime layer (other workstream),72,0.541,-68.987,1583,0.596,-1736.411
