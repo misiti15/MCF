@@ -57,6 +57,10 @@ jobs:
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
       PYTHONUNBUFFERED: "1"
+      # capacity1103: on 2026-10-30 the 14:3x standby hand-over hung 10 min in setup-python's pip-cache download on all 5
+      # accounts at once (the actions/cache default segment timeout is 10 min) -> 11-14 min without polls. 1 min, then pip
+      # installs without the cache (~20 s).
+      SEGMENT_DOWNLOAD_TIMEOUT_MINS: "1"
     steps:
       - uses: actions/checkout@v4
 

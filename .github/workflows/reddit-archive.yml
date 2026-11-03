@@ -26,6 +26,7 @@ jobs:
   pull:
     strategy:
       fail-fast: false
+      max-parallel: 4   # capacity1103: leave GitHub concurrency for the trading jobs
       matrix:
         sub: ${{ fromJSON(inputs.subs) }}
     runs-on: ubuntu-latest
