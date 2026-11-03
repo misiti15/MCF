@@ -120,7 +120,7 @@ def main():
     keep = ["symbol", "date", "pm_rvol", "pm_share", "pm_gap_atr", "pm_gap_atrs", "pm_range_atr", "pcl", "news_n",
             "o5_rvol", "o5_ret_atrs", "SPY_pm", "qqq_spy_pm", "pm_breadth", "pm_disp", "sec_pm", "sector", "pm_dvol",
             "adv20_p", "atr_p", "prev_close"]
-    x = x[keep]
+    x = x[keep].replace([np.inf, -np.inf], np.nan)
     if MODE == "hist":
         s = x.date
         ok = ((s >= "2024-10-01") & (s <= "2024-10-31")) | ((s >= "2025-03-01") & (s <= "2025-12-31")) | \
