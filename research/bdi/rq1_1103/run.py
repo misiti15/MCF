@@ -44,7 +44,7 @@ def _one(job: dict) -> dict:
         harness.SimClock = LateClock
     if job["conf"] == "FHB":          # REP-Q1: historical NBBO (hq.py) instead of recordings; other accounts' borrow only
         import pickle
-        rec_mod = N.recorded if hasattr(N, "recorded") else __import__("recorded")
+        import recorded as rec_mod   # night1102/replay/recorded.py (on sys.path), the module N._one imports
         orig = rec_mod.build
 
         def build(day, jdir, ac=job["account"]):

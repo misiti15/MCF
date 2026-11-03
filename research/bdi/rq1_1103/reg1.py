@@ -44,7 +44,7 @@ def prep(t: pd.DataFrame, rcol: str) -> pd.DataFrame:
     et = pd.to_datetime(t["entry_time"], utc=True, format="mixed").dt.tz_convert(NY)
     t["etod"] = et.dt.hour * 100 + et.dt.minute
     t["side"] = t["side"].astype(int)
-    t["R"] = rcol if False else t[rcol]
+    t["R"] = t[rcol]
     s = t["date"].map(STATE)
     t["keep"] = (t.etod < 1000) | ((t.side < 0) & (s == "up")) | ((t.side > 0) & (s == "down"))
     return t.dropna(subset=["R"])
