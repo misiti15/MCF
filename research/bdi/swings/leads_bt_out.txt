@@ -1,0 +1,35 @@
+configs tonight N = 21, bar t 2.468
+
+L1 vol / inverse-ETP beta guard (long lab setups ['NS5-sma50-flush-oversold-long', 'NS1-rsidip-rsi5pop-long', 'heat_fade_long']); beta coverage 95.0%
+   class A beta<=-1.5: n 434 avg -0.066R symbols ['APA', 'AU', 'AVS', 'BNO', 'BOIL', 'CF', 'DVA', 'FSLY', 'KOD', 'LABD', 'LYB', 'MOH', 'PRAX', 'QID', 'QURE']
+   class B others    : n 14966 avg -0.044R
+   A - B = -0.022R (Welch t -0.53); corr(A day R, SPY o-c) -0.31; PASS False
+   train: A n 149 -0.102 | B n 3441 -0.078
+   valid: A n 285 -0.047 | B n 11525 -0.034
+   class A by day type: down n 70 +0.492R; quiet n 93 +0.197R; up n 271 -0.300R | SPY<open@10 n 152 +0.062R; SPY>open@10 n 282 -0.135R
+   descriptive (no pass test): short lab setups on beta<=-1.5 symbols n 1360 avg +0.032R vs other shorts -0.016R
+
+L2 rotation turn: 1-min days 433 (2024-10-01..2026-10-16), trigger days 134
+   tech names excluded 225; tagged n 854 on 94 days avg -0.118R; other family shorts on trigger days n 1735 avg -0.108R
+   paired day diff (tagged - other) +0.030R over 93 days, t 0.47; PASS False
+   tagged by day type: down n 111 +0.358R; quiet n 217 -0.063R; up n 526 -0.241R | SPY<open@10 n 192 -0.036R; SPY>open@10 n 662 -0.141R
+   tagged w/o best day -0.147R, best-day share None
+   train: tagged n 323 -0.230R
+   valid: tagged n 531 -0.049R
+
+L3 up-morning delay: qualifying days 67 (of 426), cut median 1050, cut=10:50 (no break) on 0 days
+   before n 828 avg -0.078R | after n 411 avg -0.104R | after-before -0.026R; paired day diff -0.079R on 41 days t -1.01; PASS False
+   train: before n 165 -0.253 | after n 200 -0.299
+   valid: before n 663 -0.034 | after n 211 +0.080
+   by setup: MF2- b +0.139(90) a +0.018(52); MF4- b -0.048(398) a -0.317(208); RW3  b -0.214(199) a +0.135(83); RW5  b -0.110(141) a +0.161(68)
+   after by day type: down n 53 +0.154R; quiet n 68 +0.128R; up n 290 -0.206R | SPY>open@10 n 411 -0.104R
+   before by day type: down n 143 +0.244R; quiet n 105 +0.302R; up n 580 -0.226R | SPY>open@10 n 828 -0.078R
+
+L6 counter-index entries: spy_fo coverage 100.0%; counter n 28320 (71% shorts) raw -0.024R excess +0.003R | chase n 12507 raw -0.026R excess -0.005R | neither -0.020R
+   counter excess train +0.010 / valid -0.001; day-clustered t 0.1; PASS False
+   counter excess by day type: down n 8482 +0.009R (raw -0.033); quiet n 4188 +0.305R (raw +0.274); up n 15650 -0.082R (raw -0.099)
+   counter by side: short n 20219 raw -0.010 excess +0.008; long n 8101 raw -0.059 excess -0.012
+   counter (raw R) by day type: down n 8482 -0.033R; quiet n 4188 +0.274R; up n 15650 -0.099R | SPY<open@10 n 8256 +0.024R; SPY>open@10 n 20064 -0.044R
+   counter raw w/o best day -0.031R, best-day share None
+
+Educational only - not financial advice.
