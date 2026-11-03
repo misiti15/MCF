@@ -1,7 +1,7 @@
 """Inactive-setups audit (owner 2026-11-03): sessions since each enabled setup's last signal / last trade, its
 expected rate, the chance of its quiet streak, and why it is quiet. Read-only.
 
-    python research/ops/inactive1103/audit.py <scratch>
+    python research/ops/inactive1103/audit.py <scratch> [<today>]
       <scratch>/j/<branch>/journal.db   git show origin/<branch>:journal.db  (pulled 2026-11-03 ~11:05 ET)
       <scratch>/cfg/config/             git archive <last commit before 09:30 ET 11-03> config  (today's live set)
 
@@ -31,7 +31,7 @@ from mcf.report.playing_time import classify, expected_rates     # noqa: E402
 
 S = Path(sys.argv[1])
 OUT = Path(__file__).resolve().parent
-TODAY = "2026-11-03"
+TODAY = sys.argv[2] if len(sys.argv) > 2 else "2026-11-03"   # nightly: pass the next session date
 ACCTS = {"Primary": ("mcf-data", "primary"), "Testing 1": ("mcf-data-testing", "testing"),
          "Testing 2": ("mcf-data-testing2", "testing2"), "Graveyard": ("mcf-data-graveyard", "graveyard"),
          "Generated": ("mcf-data-gen", "gen")}
@@ -127,6 +127,9 @@ MANUAL = {
     "NM-PM-gapdn-above-pdh-rvol-short": (447 / H, None, "swarm1017 PROPOSED_CONFIG: n 274+173, top-5 days 89% of train P/L"),
     "NM1-cwt09-g10-vwaploss-short": (241 / H, None, "swarm1017 PROPOSED_CONFIG: n 241"),
     "NM-HL-T75-pm-long": (1860 / H, None, "swarm1017 PROPOSED_CONFIG: n 1860"),
+    "CWT14-failbrk-pdl-p05-R2A-short": (None, None, "regime leg (spy_prng): trades only after a narrow SPY prior-day range; "
+                                        "the 27/day order note is both legs together"),
+    "NM-RWR1-exh150-gapdn-spyup-pm-short": (654 / H, 1 - 78 / H, "swarm1017 PROPOSED_CONFIG_Q8: 654 trades on 78 sessions"),
 }
 CN = config_notes()
 
@@ -155,6 +158,41 @@ def expected(name: str, s: dict, ex: dict) -> tuple[float | None, float | None, 
     if base and base in RR:
         return RR[base][0], None, RR[base][1] + " (non-FD parent; FD runs a longer window)"
     return None, None, "none"
+
+
+IDX = pd.read_pickle(S / "idx_close.pkl") if (S / "idx_close.pkl").exists() else None
+
+
+def index_gate(name: str):
+    """(symbol, sign, threshold %) of an index-from-open gate written in the setup name, else None."""
+    import re
+    m = re.search(r"(SPY|QQQ)(gt|ltm)(\d+)p(\d+)", name)
+    if m:
+        return m.group(1), (1 if m.group(2) == "gt" else -1), float(f"{m.group(3)}.{m.group(4)}")
+    m = re.search(r"(spy|qqq)up(05)?", name) or re.search(r"(QQQ)up", name)
+    if m:
+        return m.group(1).upper(), 1, 0.5 if (m.lastindex or 0) >= 2 and m.group(2) else 0.0
+    return None
+
+
+def gate_days(name: str, window, days: list[str]) -> int | None:
+    """Sessions among `days` on which the index met the name's from-open gate at some 1-minute close inside the setup
+    window (first 09:30 close as the open; a loose upper bound on qualifying sessions: other conditions also apply)."""
+    g = index_gate(name)
+    if g is None or IDX is None or not days:
+        return None
+    sym, sign, th = g
+    a, b = (window or [950, 1500])[:2]
+    a, b = f"{int(a) // 100:02d}:{int(a) % 100:02d}", f"{int(b) // 100:02d}:{int(b) % 100:02d}"
+    n = 0
+    for d in days:
+        x = IDX[sym][IDX.index.strftime("%Y-%m-%d") == d].dropna()
+        if not len(x):
+            continue
+        fo = 100 * (x / x.iloc[0] - 1)
+        w = fo.between_time(a, b)
+        n += int(len(w) > 0 and ((w.max() > th) if sign > 0 else (w.min() < -th)))
+    return n
 
 
 def p_quiet(rate, p0, n):
@@ -237,6 +275,17 @@ for acct, (br, key) in ACCTS.items():
             + np.where(wis.exit_reason == "stop", 0.02, 0.0)
         wnet = (wis.r_multiple - np.where(R > 0, cps / R, 0.0)).sum() if len(wis) else 0.0
         trs = st[st.date < TODAY]
+        streak = [d for d in run if last_sig is None or d > last_sig]
+        gd = gate_days(name, s.get("window"), streak)
+        tstreak = [d for d in run if last_tr is None or d > last_tr]
+        wq = wis[wis.date.isin(tstreak)] if q_tr > q_sig else wis.iloc[0:0]
+        wq_net = (wq.r_multiple - np.where((wq.entry - wq.stop).abs() > 0, ((0.01 + wq.entry * 1e-4) + np.where(
+            wq.exit_reason == "target", 0.0, 0.01 + wq.exit * 1e-4) + np.where(wq.exit_reason == "stop", 0.02, 0.0))
+            / (wq.entry - wq.stop).abs(), 0.0)).sum() if len(wq) else 0.0
+        qs = ss[ss.day.isin(tstreak)]
+        qb = Counter(qs.bucket)
+        if live_sig == 0:
+            pq_live = None
         rows.append(dict(
             account=acct, setup=name, type=s.get("type", "rule"), order_pos=(order.index(name) + 1) if name in order else None,
             first_session=first, sessions_enabled=n_run, enabled_any_account_sessions=len(en),
@@ -256,6 +305,11 @@ for acct, (br, key) in ACCTS.items():
             other=bk.get("other", 0), missed_trigger=bk.get("missed_trigger", 0), split_gate=bk.get("split_gate", 0),
             whatif_n=len(wis), whatif_net_R=round(float(wnet), 2),
             window_cfg=str(s.get("window")), min_adv=s.get("min_adv"), context=str(s.get("context")) if s.get("context") else "",
+            gate=" ".join(map(str, index_gate(name) or ())), gate_sessions_in_streak=gd,
+            streak_signals_blocked=int(len(qs) - qb.get("taken", 0)) if q_tr >= 3 else None,
+            streak_top_block=(qs[qs.bucket != "taken"].reason.fillna("").str.replace(r"[0-9.]+", "#", regex=True)
+                              .value_counts().head(3).to_dict() if q_tr >= 3 and len(qs) else None),
+            streak_whatif_n=len(wq), streak_whatif_net_R=round(float(wq_net), 2),
             module=s.get("module") or "", module_exists=(ROOT / s["module"]).exists() if s.get("module") else None,
         ))
         # "other" reasons of this setup for the diagnosis
@@ -264,9 +318,54 @@ for acct, (br, key) in ACCTS.items():
             blocked_rows.append(dict(account=acct, setup=name, reason=r, n=n))
 
 df = pd.DataFrame(rows)
+
+
+def cause(r) -> str:
+    """Why a setup is quiet (signal streak >= 3, or trade streak >= 3 while it still signals)."""
+    if r.module and r.module_exists is False:
+        return "broken: module missing"
+    if r.quiet_sessions_trade >= 3 and r.quiet_sessions_trade > r.quiet_sessions_signal and r.today_taken == 0:
+        tb = r.streak_top_block or {}
+        k = next(iter(tb), "")
+        grp = ("place in line" if k.startswith(("twin held", "lot cap", "already in symbol", "opposite side held"))
+               else "borrow / short gate" if ("shortable" in k or "split-tape" in k)
+               else "spread / cost filter" if k.startswith(("spread", "cost filter"))
+               else "buying power" if "insufficient" in k else k or "blocked")
+        return f"blocked: {grp}"
+    if r.quiet_sessions_signal < 3 or r.today_signals > 0:
+        return ""
+    if r.gate and r.gate_sessions_in_streak is not None and r.gate_sessions_in_streak <= 1:
+        return f"rare by design: index gate met on {int(r.gate_sessions_in_streak)} of {r.quiet_sessions_signal} quiet sessions"
+    if r.p_quiet_exp is not None and r.p_quiet_exp >= 0.05:
+        return "rare by design (P >= 5%)"
+    if r.p_quiet_exp is None:
+        return "no expected rate (new)"
+    return "unexplained: P < 5% (replay check)"
+
+
+df["cause"] = [cause(r) for r in df.itertuples()]
+df["bucket_trade"] = ["traded today" if r.today_taken else "never traded since enabled" if r.trades == 0 else
+                      "traded last session" if r.quiet_sessions_trade == 0 else "quiet 1-2" if r.quiet_sessions_trade <= 2
+                      else "quiet 3-4" if r.quiet_sessions_trade <= 4 else "quiet 5+" for r in df.itertuples()]
+df["alarm"] = ["alarm (P < 1%)" if (r.p_quiet_exp is not None and r.p_quiet_exp == r.p_quiet_exp and r.p_quiet_exp < 0.01
+                                    and not str(r.cause).startswith("rare by design: index"))
+               else "watch (P < 5%)" if (r.p_quiet_exp == r.p_quiet_exp and r.p_quiet_exp is not None and r.p_quiet_exp < 0.05
+                                         and not str(r.cause).startswith("rare by design: index")) else ""
+               for r in df.itertuples()]
+summary = {"asof": "2026-11-03 ~11:05 ET (journals); completed sessions through 2026-11-02",
+           "enabled": int(len(df)), "by_account": df.groupby("account").size().to_dict(),
+           "signal_buckets": df.bucket.value_counts().to_dict(),
+           "signal_buckets_by_account": df.groupby(["account", "bucket"]).size().unstack(fill_value=0).to_dict("index"),
+           "trade_buckets": df.bucket_trade.value_counts().to_dict(),
+           "causes": df[df.cause != ""].cause.str.replace(r" on \d+ of \d+ quiet sessions", "", regex=True)
+           .value_counts().to_dict(),
+           "alarms": df[df.alarm != ""][["account", "setup", "alarm", "quiet_sessions_signal", "p_quiet_exp"]]
+           .to_dict("records")}
+(OUT / "results.json").write_text(json.dumps(summary, indent=1, default=str))
 df.to_csv(OUT / "table.csv", index=False)
 pd.DataFrame(blocked_rows).to_csv(S / "reasons.csv", index=False)
 print(df.groupby(["account", "bucket"]).size().unstack(fill_value=0))
 print(df.bucket.value_counts())
+print(df[df.cause != ""].groupby(["account", "cause"]).size().to_string())
 print("no expected rate:", (df.exp_source == "none").sum())
 print(df[df.exp_source == "none"][["account", "setup"]].to_string())

@@ -1,0 +1,1368 @@
+{
+ "_note": "Educational only - not financial advice.",
+ "FB": {
+  "accounts": {
+   "primary": {
+    "sessions": 10,
+    "first": "2026-10-20",
+    "last": "2026-11-02",
+    "live_trades": 411,
+    "live_trades_in_lab_universe": 411,
+    "replay_trades": 414,
+    "matched_exact": 409,
+    "matched_pm1": 409,
+    "match_pct": 99.5,
+    "match_pct_pm1": 99.5,
+    "match_pct_in_universe": 99.5,
+    "replay_only": 5,
+    "replay_only_pct_of_live": 1.2,
+    "live_avg_r": 0.104,
+    "replay_avg_r": 0.082,
+    "live_avg_r_costs": 0.001,
+    "replay_avg_r_costs": -0.017,
+    "live_avg_r_in_universe_costs": 0.001,
+    "live_total_r": 42.88,
+    "replay_total_r": 34.03,
+    "gap_costs": -0.018,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": -0.015,
+    "matched_live_avg_r": 0.102,
+    "matched_replay_avg_r": 0.087,
+    "matched_same_exit": 0.985,
+    "live_only_causes": {
+     "replay skipped: lot cap / caps": 1,
+     "no replay signal (data at decision minute)": 1
+    },
+    "diag_match_pct_if_spread_agreed": 99.5,
+    "diag_match_pct_if_spread_agreed_in_universe": 99.5,
+    "replay_only_causes": {
+     "live skipped: -2R / daily-loss latch": 3,
+     "live skipped: lot cap / caps": 1,
+     "no live signal": 1
+    },
+    "signals": {
+     "live": 1053,
+     "replay": 1056,
+     "matched": 1052,
+     "match_pct_live": 99.9,
+     "live_in_lab_universe": 1053,
+     "outcome_flips": {
+      "-2R / daily-loss latch -> submitted": 3,
+      "lot cap / caps -> submitted": 1,
+      "submitted -> lot cap / caps": 1
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 412,
+     "spread": 150,
+     "-2R / daily-loss latch": 34,
+     "lot cap / caps": 24,
+     "twin": 20,
+     "other: price below minimum": 1,
+     "other: opposite side held": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 414,
+     "spread": 151,
+     "-2R / daily-loss latch": 31,
+     "lot cap / caps": 24,
+     "twin": 20,
+     "other: price below minimum": 1,
+     "other: opposite side held": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 70,
+      "replay_trades": 70,
+      "matched_exact": 70,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.188,
+      "replay_avg_r_costs": -0.292,
+      "gap_costs": -0.104
+     },
+     "2026-10-21": {
+      "live_trades": 46,
+      "replay_trades": 46,
+      "matched_exact": 46,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.379,
+      "replay_avg_r_costs": -0.359,
+      "gap_costs": 0.02
+     },
+     "2026-10-22": {
+      "live_trades": 126,
+      "replay_trades": 126,
+      "matched_exact": 125,
+      "match_pct": 99.2,
+      "live_avg_r_costs": 0.445,
+      "replay_avg_r_costs": 0.449,
+      "gap_costs": 0.004
+     },
+     "2026-10-23": {
+      "live_trades": 32,
+      "replay_trades": 32,
+      "matched_exact": 32,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.134,
+      "replay_avg_r_costs": -0.067,
+      "gap_costs": 0.067
+     },
+     "2026-10-26": {
+      "live_trades": 22,
+      "replay_trades": 22,
+      "matched_exact": 22,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.229,
+      "replay_avg_r_costs": -0.253,
+      "gap_costs": -0.024
+     },
+     "2026-10-27": {
+      "live_trades": 58,
+      "replay_trades": 57,
+      "matched_exact": 57,
+      "match_pct": 98.3,
+      "live_avg_r_costs": 0.031,
+      "replay_avg_r_costs": -0.011,
+      "gap_costs": -0.042
+     },
+     "2026-10-28": {
+      "live_trades": 14,
+      "replay_trades": 14,
+      "matched_exact": 14,
+      "match_pct": 100.0,
+      "live_avg_r_costs": 0.352,
+      "replay_avg_r_costs": 0.46,
+      "gap_costs": 0.108
+     },
+     "2026-10-29": {
+      "live_trades": 16,
+      "replay_trades": 19,
+      "matched_exact": 16,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.774,
+      "replay_avg_r_costs": -0.637,
+      "gap_costs": 0.137
+     },
+     "2026-10-30": {
+      "live_trades": 15,
+      "replay_trades": 16,
+      "matched_exact": 15,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.219,
+      "replay_avg_r_costs": -0.345,
+      "gap_costs": -0.126
+     },
+     "2026-11-02": {
+      "live_trades": 12,
+      "replay_trades": 12,
+      "matched_exact": 12,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.553,
+      "replay_avg_r_costs": -0.58,
+      "gap_costs": -0.027
+     }
+    }
+   },
+   "testing": {
+    "sessions": 10,
+    "first": "2026-10-20",
+    "last": "2026-11-02",
+    "live_trades": 1450,
+    "live_trades_in_lab_universe": 1450,
+    "replay_trades": 1434,
+    "matched_exact": 1364,
+    "matched_pm1": 1364,
+    "match_pct": 94.1,
+    "match_pct_pm1": 94.1,
+    "match_pct_in_universe": 94.1,
+    "replay_only": 70,
+    "replay_only_pct_of_live": 4.8,
+    "live_avg_r": -0.078,
+    "replay_avg_r": -0.074,
+    "live_avg_r_costs": -0.172,
+    "replay_avg_r_costs": -0.165,
+    "live_avg_r_in_universe_costs": -0.172,
+    "live_total_r": -113.02,
+    "replay_total_r": -105.91,
+    "gap_costs": 0.007,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": 0.017,
+    "matched_live_avg_r": -0.093,
+    "matched_replay_avg_r": -0.077,
+    "matched_same_exit": 0.956,
+    "live_only_causes": {
+     "replay skipped: -2R / daily-loss latch": 66,
+     "replay skipped: twin": 9,
+     "replay skipped: spread": 4,
+     "replay skipped: lot cap / caps": 3,
+     "replay skipped: other: opposite side held": 2,
+     "replay skipped: already in symbol": 2
+    },
+    "diag_match_pct_if_spread_agreed": 94.3,
+    "diag_match_pct_if_spread_agreed_in_universe": 94.3,
+    "replay_only_causes": {
+     "live skipped: -2R / daily-loss latch": 23,
+     "live skipped: lot cap / caps": 11,
+     "no live signal": 11,
+     "no live signal (pre-10-27 %5 gate era)": 7,
+     "live skipped: spread": 5,
+     "live skipped: broker reject": 4,
+     "live skipped: other: opposite side held": 4,
+     "live skipped: other: missed: triggered at 09:50": 3,
+     "live signal at another minute": 2
+    },
+    "signals": {
+     "live": 3636,
+     "replay": 3685,
+     "matched": 3635,
+     "match_pct_live": 100.0,
+     "live_in_lab_universe": 3636,
+     "outcome_flips": {
+      "submitted -> -2R / daily-loss latch": 66,
+      "-2R / daily-loss latch -> submitted": 23,
+      "lot cap / caps -> submitted": 11,
+      "submitted -> twin": 9,
+      "spread -> submitted": 5,
+      "submitted -> spread": 4,
+      "other: opposite side held -> submitted": 4,
+      "broker reject -> submitted": 4,
+      "submitted -> lot cap / caps": 3,
+      "other: missed: triggered at 09:50 -> submitted": 3,
+      "submitted -> other: opposite side held": 2,
+      "submitted -> already in symbol": 2
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 1100,
+     "spread": 408,
+     "-2R / daily-loss latch": 259,
+     "lot cap / caps": 162,
+     "other: split-tape short gate": 97,
+     "twin": 66,
+     "other: opposite side held": 37,
+     "other: cost filter: stop-exit cost 0.": 29,
+     "other: missed: triggered at 09:50": 7,
+     "other: size < 1 share after liquidity": 7,
+     "broker reject": 5,
+     "quote crosscheck": 3
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 1110,
+     "spread": 408,
+     "-2R / daily-loss latch": 375,
+     "lot cap / caps": 97,
+     "other: split-tape short gate": 96,
+     "twin": 78,
+     "other: opposite side held": 35,
+     "other: cost filter: stop-exit cost 0.": 29,
+     "other: size < 1 share after liquidity": 7,
+     "already in symbol": 4,
+     "quote crosscheck": 3,
+     "other: missed: triggered at 09:50": 3
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 266,
+      "replay_trades": 217,
+      "matched_exact": 189,
+      "match_pct": 71.1,
+      "live_avg_r_costs": 0.018,
+      "replay_avg_r_costs": -0.07,
+      "gap_costs": -0.088
+     },
+     "2026-10-21": {
+      "live_trades": 199,
+      "replay_trades": 204,
+      "matched_exact": 198,
+      "match_pct": 99.5,
+      "live_avg_r_costs": -0.35,
+      "replay_avg_r_costs": -0.274,
+      "gap_costs": 0.076
+     },
+     "2026-10-22": {
+      "live_trades": 113,
+      "replay_trades": 126,
+      "matched_exact": 111,
+      "match_pct": 98.2,
+      "live_avg_r_costs": -0.268,
+      "replay_avg_r_costs": -0.174,
+      "gap_costs": 0.094
+     },
+     "2026-10-23": {
+      "live_trades": 131,
+      "replay_trades": 133,
+      "matched_exact": 130,
+      "match_pct": 99.2,
+      "live_avg_r_costs": -0.029,
+      "replay_avg_r_costs": -0.001,
+      "gap_costs": 0.028
+     },
+     "2026-10-26": {
+      "live_trades": 136,
+      "replay_trades": 138,
+      "matched_exact": 136,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.01,
+      "replay_avg_r_costs": 0.016,
+      "gap_costs": 0.026
+     },
+     "2026-10-27": {
+      "live_trades": 189,
+      "replay_trades": 189,
+      "matched_exact": 189,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.409,
+      "replay_avg_r_costs": -0.407,
+      "gap_costs": 0.002
+     },
+     "2026-10-28": {
+      "live_trades": 162,
+      "replay_trades": 173,
+      "matched_exact": 159,
+      "match_pct": 98.1,
+      "live_avg_r_costs": -0.274,
+      "replay_avg_r_costs": -0.267,
+      "gap_costs": 0.007
+     },
+     "2026-10-29": {
+      "live_trades": 174,
+      "replay_trades": 172,
+      "matched_exact": 172,
+      "match_pct": 98.9,
+      "live_avg_r_costs": -0.056,
+      "replay_avg_r_costs": -0.032,
+      "gap_costs": 0.024
+     },
+     "2026-10-30": {
+      "live_trades": 43,
+      "replay_trades": 45,
+      "matched_exact": 43,
+      "match_pct": 100.0,
+      "live_avg_r_costs": 0.028,
+      "replay_avg_r_costs": 0.026,
+      "gap_costs": -0.002
+     },
+     "2026-11-02": {
+      "live_trades": 37,
+      "replay_trades": 37,
+      "matched_exact": 37,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.505,
+      "replay_avg_r_costs": -0.488,
+      "gap_costs": 0.017
+     }
+    }
+   },
+   "testing2": {
+    "sessions": 10,
+    "first": "2026-10-20",
+    "last": "2026-11-02",
+    "live_trades": 1558,
+    "live_trades_in_lab_universe": 1558,
+    "replay_trades": 2168,
+    "matched_exact": 1471,
+    "matched_pm1": 1471,
+    "match_pct": 94.4,
+    "match_pct_pm1": 94.4,
+    "match_pct_in_universe": 94.4,
+    "replay_only": 697,
+    "replay_only_pct_of_live": 44.7,
+    "live_avg_r": -0.047,
+    "replay_avg_r": -0.018,
+    "live_avg_r_costs": -0.126,
+    "replay_avg_r_costs": -0.09,
+    "live_avg_r_in_universe_costs": -0.126,
+    "live_total_r": -73.35,
+    "replay_total_r": -39.16,
+    "gap_costs": 0.036,
+    "within_003": false,
+    "optimistic": true,
+    "matched_r_diff_mean": 0.001,
+    "matched_live_avg_r": -0.044,
+    "matched_replay_avg_r": -0.043,
+    "matched_same_exit": 0.969,
+    "live_only_causes": {
+     "replay skipped: -2R / daily-loss latch": 41,
+     "replay skipped: spread": 25,
+     "no replay signal (data at decision minute)": 12,
+     "replay skipped: other: opposite side held": 6,
+     "replay skipped: lot cap / caps": 3
+    },
+    "diag_match_pct_if_spread_agreed": 96.0,
+    "diag_match_pct_if_spread_agreed_in_universe": 96.0,
+    "replay_only_causes": {
+     "no live signal (pre-10-27 %5 gate era)": 590,
+     "no live signal": 40,
+     "live skipped: broker reject": 33,
+     "live skipped: spread": 19,
+     "live signal at another minute": 7,
+     "live skipped: other: opposite side held": 5,
+     "live skipped: quote crosscheck": 1,
+     "live skipped: lot cap / caps": 1,
+     "live skipped: other: size < 1 share after liquidity": 1
+    },
+    "signals": {
+     "live": 2783,
+     "replay": 3959,
+     "matched": 2768,
+     "match_pct_live": 99.5,
+     "live_in_lab_universe": 2783,
+     "outcome_flips": {
+      "submitted -> -2R / daily-loss latch": 41,
+      "broker reject -> submitted": 33,
+      "submitted -> spread": 25,
+      "spread -> submitted": 19,
+      "submitted -> other: opposite side held": 6,
+      "other: opposite side held -> submitted": 5,
+      "submitted -> lot cap / caps": 3,
+      "quote crosscheck -> submitted": 1,
+      "lot cap / caps -> submitted": 1,
+      "other: size < 1 share after liquidity -> submitted": 1
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 504,
+     "spread": 445,
+     "-2R / daily-loss latch": 74,
+     "other: cost filter: stop-exit cost 0.": 62,
+     "twin": 39,
+     "broker reject": 33,
+     "other: opposite side held": 28,
+     "lot cap / caps": 18,
+     "other: size < 1 share after liquidity": 17,
+     "quote crosscheck": 3,
+     "other: price below minimum": 2
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 650,
+     "spread": 601,
+     "-2R / daily-loss latch": 295,
+     "other: cost filter: stop-exit cost 0.": 68,
+     "lot cap / caps": 65,
+     "twin": 42,
+     "other: opposite side held": 40,
+     "other: size < 1 share after liquidity": 19,
+     "other: price below minimum": 6,
+     "quote crosscheck": 2,
+     "other: price already through target": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 142,
+      "replay_trades": 541,
+      "matched_exact": 134,
+      "match_pct": 94.4,
+      "live_avg_r_costs": 0.139,
+      "replay_avg_r_costs": 0.014,
+      "gap_costs": -0.125
+     },
+     "2026-10-21": {
+      "live_trades": 91,
+      "replay_trades": 187,
+      "matched_exact": 80,
+      "match_pct": 87.9,
+      "live_avg_r_costs": -0.072,
+      "replay_avg_r_costs": -0.097,
+      "gap_costs": -0.025
+     },
+     "2026-10-22": {
+      "live_trades": 138,
+      "replay_trades": 224,
+      "matched_exact": 103,
+      "match_pct": 74.6,
+      "live_avg_r_costs": -0.094,
+      "replay_avg_r_costs": -0.032,
+      "gap_costs": 0.062
+     },
+     "2026-10-23": {
+      "live_trades": 147,
+      "replay_trades": 150,
+      "matched_exact": 144,
+      "match_pct": 98.0,
+      "live_avg_r_costs": 0.068,
+      "replay_avg_r_costs": 0.077,
+      "gap_costs": 0.009
+     },
+     "2026-10-26": {
+      "live_trades": 136,
+      "replay_trades": 127,
+      "matched_exact": 125,
+      "match_pct": 91.9,
+      "live_avg_r_costs": -0.282,
+      "replay_avg_r_costs": -0.332,
+      "gap_costs": -0.05
+     },
+     "2026-10-27": {
+      "live_trades": 240,
+      "replay_trades": 242,
+      "matched_exact": 236,
+      "match_pct": 98.3,
+      "live_avg_r_costs": -0.233,
+      "replay_avg_r_costs": -0.221,
+      "gap_costs": 0.012
+     },
+     "2026-10-28": {
+      "live_trades": 213,
+      "replay_trades": 229,
+      "matched_exact": 205,
+      "match_pct": 96.2,
+      "live_avg_r_costs": -0.251,
+      "replay_avg_r_costs": -0.211,
+      "gap_costs": 0.04
+     },
+     "2026-10-29": {
+      "live_trades": 204,
+      "replay_trades": 206,
+      "matched_exact": 200,
+      "match_pct": 98.0,
+      "live_avg_r_costs": -0.018,
+      "replay_avg_r_costs": 0.022,
+      "gap_costs": 0.04
+     },
+     "2026-10-30": {
+      "live_trades": 118,
+      "replay_trades": 129,
+      "matched_exact": 116,
+      "match_pct": 98.3,
+      "live_avg_r_costs": -0.155,
+      "replay_avg_r_costs": -0.105,
+      "gap_costs": 0.05
+     },
+     "2026-11-02": {
+      "live_trades": 129,
+      "replay_trades": 133,
+      "matched_exact": 128,
+      "match_pct": 99.2,
+      "live_avg_r_costs": -0.284,
+      "replay_avg_r_costs": -0.269,
+      "gap_costs": 0.015
+     }
+    }
+   }
+  },
+  "overall": {
+   "live_trades": 3419,
+   "replay_trades": 4016,
+   "matched_exact": 3244,
+   "matched_pm1": 3244,
+   "replay_only": 772,
+   "live_trades_in_lab_universe": 3419,
+   "match_pct": 94.9,
+   "match_pct_pm1": 94.9,
+   "match_pct_in_universe": 94.9,
+   "live_avg_r_costs": -0.13,
+   "replay_avg_r_costs": -0.109,
+   "gap_costs": 0.021,
+   "within_003": true,
+   "optimistic": false
+  }
+ },
+ "FB_postfix5": {
+  "accounts": {
+   "primary": {
+    "sessions": 5,
+    "first": "2026-10-27",
+    "last": "2026-11-02",
+    "live_trades": 115,
+    "live_trades_in_lab_universe": 115,
+    "replay_trades": 118,
+    "matched_exact": 114,
+    "matched_pm1": 114,
+    "match_pct": 99.1,
+    "match_pct_pm1": 99.1,
+    "match_pct_in_universe": 99.1,
+    "replay_only": 4,
+    "replay_only_pct_of_live": 3.5,
+    "live_avg_r": -0.049,
+    "replay_avg_r": -0.075,
+    "live_avg_r_costs": -0.136,
+    "replay_avg_r_costs": -0.159,
+    "live_avg_r_in_universe_costs": -0.136,
+    "live_total_r": -5.67,
+    "replay_total_r": -8.91,
+    "gap_costs": -0.023,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": -0.005,
+    "matched_live_avg_r": -0.052,
+    "matched_replay_avg_r": -0.057,
+    "matched_same_exit": 0.982,
+    "live_only_causes": {
+     "no replay signal (data at decision minute)": 1
+    },
+    "diag_match_pct_if_spread_agreed": 99.1,
+    "diag_match_pct_if_spread_agreed_in_universe": 99.1,
+    "replay_only_causes": {
+     "live skipped: -2R / daily-loss latch": 3,
+     "no live signal": 1
+    },
+    "signals": {
+     "live": 578,
+     "replay": 580,
+     "matched": 577,
+     "match_pct_live": 99.8,
+     "live_in_lab_universe": 578,
+     "outcome_flips": {
+      "-2R / daily-loss latch -> submitted": 3
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 337,
+     "spread": 80,
+     "-2R / daily-loss latch": 34,
+     "lot cap / caps": 6,
+     "twin": 5,
+     "other: opposite side held": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 339,
+     "spread": 80,
+     "-2R / daily-loss latch": 31,
+     "lot cap / caps": 6,
+     "twin": 5,
+     "other: opposite side held": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-27": {
+      "live_trades": 58,
+      "replay_trades": 57,
+      "matched_exact": 57,
+      "match_pct": 98.3,
+      "live_avg_r_costs": 0.031,
+      "replay_avg_r_costs": -0.011,
+      "gap_costs": -0.042
+     },
+     "2026-10-28": {
+      "live_trades": 14,
+      "replay_trades": 14,
+      "matched_exact": 14,
+      "match_pct": 100.0,
+      "live_avg_r_costs": 0.352,
+      "replay_avg_r_costs": 0.46,
+      "gap_costs": 0.108
+     },
+     "2026-10-29": {
+      "live_trades": 16,
+      "replay_trades": 19,
+      "matched_exact": 16,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.774,
+      "replay_avg_r_costs": -0.637,
+      "gap_costs": 0.137
+     },
+     "2026-10-30": {
+      "live_trades": 15,
+      "replay_trades": 16,
+      "matched_exact": 15,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.219,
+      "replay_avg_r_costs": -0.345,
+      "gap_costs": -0.126
+     },
+     "2026-11-02": {
+      "live_trades": 12,
+      "replay_trades": 12,
+      "matched_exact": 12,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.553,
+      "replay_avg_r_costs": -0.58,
+      "gap_costs": -0.027
+     }
+    }
+   },
+   "testing": {
+    "sessions": 5,
+    "first": "2026-10-27",
+    "last": "2026-11-02",
+    "live_trades": 605,
+    "live_trades_in_lab_universe": 605,
+    "replay_trades": 616,
+    "matched_exact": 600,
+    "matched_pm1": 600,
+    "match_pct": 99.2,
+    "match_pct_pm1": 99.2,
+    "match_pct_in_universe": 99.2,
+    "replay_only": 16,
+    "replay_only_pct_of_live": 2.6,
+    "live_avg_r": -0.159,
+    "replay_avg_r": -0.152,
+    "live_avg_r_costs": -0.246,
+    "replay_avg_r_costs": -0.236,
+    "live_avg_r_in_universe_costs": -0.246,
+    "live_total_r": -96.04,
+    "replay_total_r": -93.7,
+    "gap_costs": 0.01,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": 0.004,
+    "matched_live_avg_r": -0.154,
+    "matched_replay_avg_r": -0.149,
+    "matched_same_exit": 0.958,
+    "live_only_causes": {
+     "replay skipped: other: opposite side held": 2,
+     "replay skipped: already in symbol": 2,
+     "replay skipped: lot cap / caps": 1
+    },
+    "diag_match_pct_if_spread_agreed": 99.2,
+    "diag_match_pct_if_spread_agreed_in_universe": 99.2,
+    "replay_only_causes": {
+     "no live signal": 11,
+     "live skipped: lot cap / caps": 3,
+     "live signal at another minute": 2
+    },
+    "signals": {
+     "live": 1579,
+     "replay": 1600,
+     "matched": 1579,
+     "match_pct_live": 100.0,
+     "live_in_lab_universe": 1579,
+     "outcome_flips": {
+      "lot cap / caps -> submitted": 3,
+      "submitted -> other: opposite side held": 2,
+      "submitted -> already in symbol": 2,
+      "submitted -> lot cap / caps": 1
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 651,
+     "spread": 212,
+     "lot cap / caps": 31,
+     "other: cost filter: stop-exit cost 0.": 29,
+     "twin": 26,
+     "other: opposite side held": 16,
+     "other: size < 1 share after liquidity": 4,
+     "other: price already through target": 2,
+     "other: split-tape short gate": 2,
+     "other: price below minimum": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 654,
+     "spread": 216,
+     "other: cost filter: stop-exit cost 0.": 29,
+     "twin": 28,
+     "lot cap / caps": 27,
+     "other: opposite side held": 17,
+     "other: size < 1 share after liquidity": 4,
+     "already in symbol": 4,
+     "other: price already through target": 2,
+     "other: split-tape short gate": 2,
+     "other: price below minimum": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-27": {
+      "live_trades": 189,
+      "replay_trades": 189,
+      "matched_exact": 189,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.409,
+      "replay_avg_r_costs": -0.407,
+      "gap_costs": 0.002
+     },
+     "2026-10-28": {
+      "live_trades": 162,
+      "replay_trades": 173,
+      "matched_exact": 159,
+      "match_pct": 98.1,
+      "live_avg_r_costs": -0.274,
+      "replay_avg_r_costs": -0.267,
+      "gap_costs": 0.007
+     },
+     "2026-10-29": {
+      "live_trades": 174,
+      "replay_trades": 172,
+      "matched_exact": 172,
+      "match_pct": 98.9,
+      "live_avg_r_costs": -0.056,
+      "replay_avg_r_costs": -0.032,
+      "gap_costs": 0.024
+     },
+     "2026-10-30": {
+      "live_trades": 43,
+      "replay_trades": 45,
+      "matched_exact": 43,
+      "match_pct": 100.0,
+      "live_avg_r_costs": 0.028,
+      "replay_avg_r_costs": 0.026,
+      "gap_costs": -0.002
+     },
+     "2026-11-02": {
+      "live_trades": 37,
+      "replay_trades": 37,
+      "matched_exact": 37,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.505,
+      "replay_avg_r_costs": -0.488,
+      "gap_costs": 0.017
+     }
+    }
+   },
+   "testing2": {
+    "sessions": 5,
+    "first": "2026-10-27",
+    "last": "2026-11-02",
+    "live_trades": 904,
+    "live_trades_in_lab_universe": 904,
+    "replay_trades": 939,
+    "matched_exact": 885,
+    "matched_pm1": 885,
+    "match_pct": 97.9,
+    "match_pct_pm1": 97.9,
+    "match_pct_in_universe": 97.9,
+    "replay_only": 54,
+    "replay_only_pct_of_live": 6.0,
+    "live_avg_r": -0.116,
+    "replay_avg_r": -0.092,
+    "live_avg_r_costs": -0.186,
+    "replay_avg_r_costs": -0.156,
+    "live_avg_r_in_universe_costs": -0.186,
+    "live_total_r": -104.78,
+    "replay_total_r": -86.59,
+    "gap_costs": 0.03,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": 0.011,
+    "matched_live_avg_r": -0.107,
+    "matched_replay_avg_r": -0.096,
+    "matched_same_exit": 0.974,
+    "live_only_causes": {
+     "replay skipped: spread": 14,
+     "no replay signal (data at decision minute)": 4,
+     "replay skipped: other: opposite side held": 1
+    },
+    "diag_match_pct_if_spread_agreed": 99.4,
+    "diag_match_pct_if_spread_agreed_in_universe": 99.4,
+    "replay_only_causes": {
+     "no live signal": 40,
+     "live skipped: spread": 9,
+     "live skipped: lot cap / caps": 1,
+     "live signal at another minute": 1,
+     "live skipped: other: opposite side held": 1,
+     "live skipped: other: size < 1 share after liquidity": 1,
+     "live skipped: broker reject": 1
+    },
+    "signals": {
+     "live": 1729,
+     "replay": 1832,
+     "matched": 1723,
+     "match_pct_live": 99.7,
+     "live_in_lab_universe": 1729,
+     "outcome_flips": {
+      "submitted -> spread": 14,
+      "spread -> submitted": 9,
+      "lot cap / caps -> submitted": 1,
+      "other: opposite side held -> submitted": 1,
+      "broker reject -> submitted": 1,
+      "other: size < 1 share after liquidity -> submitted": 1,
+      "submitted -> other: opposite side held": 1
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 387,
+     "spread": 300,
+     "other: cost filter: stop-exit cost 0.": 62,
+     "twin": 36,
+     "other: opposite side held": 17,
+     "other: size < 1 share after liquidity": 13,
+     "lot cap / caps": 7,
+     "other: price below minimum": 2,
+     "broker reject": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 422,
+     "spread": 326,
+     "other: cost filter: stop-exit cost 0.": 68,
+     "twin": 37,
+     "other: opposite side held": 16,
+     "other: size < 1 share after liquidity": 12,
+     "lot cap / caps": 8,
+     "other: price below minimum": 2
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-27": {
+      "live_trades": 240,
+      "replay_trades": 242,
+      "matched_exact": 236,
+      "match_pct": 98.3,
+      "live_avg_r_costs": -0.233,
+      "replay_avg_r_costs": -0.221,
+      "gap_costs": 0.012
+     },
+     "2026-10-28": {
+      "live_trades": 213,
+      "replay_trades": 229,
+      "matched_exact": 205,
+      "match_pct": 96.2,
+      "live_avg_r_costs": -0.251,
+      "replay_avg_r_costs": -0.211,
+      "gap_costs": 0.04
+     },
+     "2026-10-29": {
+      "live_trades": 204,
+      "replay_trades": 206,
+      "matched_exact": 200,
+      "match_pct": 98.0,
+      "live_avg_r_costs": -0.018,
+      "replay_avg_r_costs": 0.022,
+      "gap_costs": 0.04
+     },
+     "2026-10-30": {
+      "live_trades": 118,
+      "replay_trades": 129,
+      "matched_exact": 116,
+      "match_pct": 98.3,
+      "live_avg_r_costs": -0.155,
+      "replay_avg_r_costs": -0.105,
+      "gap_costs": 0.05
+     },
+     "2026-11-02": {
+      "live_trades": 129,
+      "replay_trades": 133,
+      "matched_exact": 128,
+      "match_pct": 99.2,
+      "live_avg_r_costs": -0.284,
+      "replay_avg_r_costs": -0.269,
+      "gap_costs": 0.015
+     }
+    }
+   }
+  },
+  "overall": {
+   "live_trades": 1624,
+   "replay_trades": 1673,
+   "matched_exact": 1599,
+   "matched_pm1": 1599,
+   "replay_only": 74,
+   "live_trades_in_lab_universe": 1624,
+   "match_pct": 98.5,
+   "match_pct_pm1": 98.5,
+   "match_pct_in_universe": 98.5,
+   "live_avg_r_costs": -0.205,
+   "replay_avg_r_costs": -0.186,
+   "gap_costs": 0.019,
+   "within_003": true,
+   "optimistic": false
+  }
+ },
+ "FB_prefix5_oldgate": {
+  "accounts": {
+   "primary": {
+    "sessions": 5,
+    "first": "2026-10-20",
+    "last": "2026-10-26",
+    "live_trades": 296,
+    "live_trades_in_lab_universe": 296,
+    "replay_trades": 296,
+    "matched_exact": 295,
+    "matched_pm1": 295,
+    "match_pct": 99.7,
+    "match_pct_pm1": 99.7,
+    "match_pct_in_universe": 99.7,
+    "replay_only": 1,
+    "replay_only_pct_of_live": 0.3,
+    "live_avg_r": 0.164,
+    "replay_avg_r": 0.145,
+    "live_avg_r_costs": 0.055,
+    "replay_avg_r_costs": 0.04,
+    "live_avg_r_in_universe_costs": 0.055,
+    "live_total_r": 48.55,
+    "replay_total_r": 42.93,
+    "gap_costs": -0.015,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": -0.019,
+    "matched_live_avg_r": 0.162,
+    "matched_replay_avg_r": 0.143,
+    "matched_same_exit": 0.986,
+    "live_only_causes": {
+     "replay skipped: lot cap / caps": 1
+    },
+    "diag_match_pct_if_spread_agreed": 99.7,
+    "diag_match_pct_if_spread_agreed_in_universe": 99.7,
+    "replay_only_causes": {
+     "live skipped: lot cap / caps": 1
+    },
+    "signals": {
+     "live": 475,
+     "replay": 476,
+     "matched": 475,
+     "match_pct_live": 100.0,
+     "live_in_lab_universe": 475,
+     "outcome_flips": {
+      "lot cap / caps -> submitted": 1,
+      "submitted -> lot cap / caps": 1
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 75,
+     "spread": 70,
+     "lot cap / caps": 18,
+     "twin": 15,
+     "other: price below minimum": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 75,
+     "spread": 71,
+     "lot cap / caps": 18,
+     "twin": 15,
+     "other: price below minimum": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 70,
+      "replay_trades": 70,
+      "matched_exact": 70,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.188,
+      "replay_avg_r_costs": -0.292,
+      "gap_costs": -0.104
+     },
+     "2026-10-21": {
+      "live_trades": 46,
+      "replay_trades": 46,
+      "matched_exact": 46,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.379,
+      "replay_avg_r_costs": -0.359,
+      "gap_costs": 0.02
+     },
+     "2026-10-22": {
+      "live_trades": 126,
+      "replay_trades": 126,
+      "matched_exact": 125,
+      "match_pct": 99.2,
+      "live_avg_r_costs": 0.445,
+      "replay_avg_r_costs": 0.449,
+      "gap_costs": 0.004
+     },
+     "2026-10-23": {
+      "live_trades": 32,
+      "replay_trades": 32,
+      "matched_exact": 32,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.134,
+      "replay_avg_r_costs": -0.067,
+      "gap_costs": 0.067
+     },
+     "2026-10-26": {
+      "live_trades": 22,
+      "replay_trades": 22,
+      "matched_exact": 22,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.229,
+      "replay_avg_r_costs": -0.253,
+      "gap_costs": -0.024
+     }
+    }
+   },
+   "testing": {
+    "sessions": 5,
+    "first": "2026-10-20",
+    "last": "2026-10-26",
+    "live_trades": 845,
+    "live_trades_in_lab_universe": 845,
+    "replay_trades": 818,
+    "matched_exact": 764,
+    "matched_pm1": 764,
+    "match_pct": 90.4,
+    "match_pct_pm1": 90.4,
+    "match_pct_in_universe": 90.4,
+    "replay_only": 54,
+    "replay_only_pct_of_live": 6.4,
+    "live_avg_r": -0.02,
+    "replay_avg_r": -0.015,
+    "live_avg_r_costs": -0.119,
+    "replay_avg_r_costs": -0.111,
+    "live_avg_r_in_universe_costs": -0.119,
+    "live_total_r": -16.98,
+    "replay_total_r": -12.21,
+    "gap_costs": 0.008,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": 0.026,
+    "matched_live_avg_r": -0.046,
+    "matched_replay_avg_r": -0.019,
+    "matched_same_exit": 0.954,
+    "live_only_causes": {
+     "replay skipped: -2R / daily-loss latch": 66,
+     "replay skipped: twin": 9,
+     "replay skipped: spread": 4,
+     "replay skipped: lot cap / caps": 2
+    },
+    "diag_match_pct_if_spread_agreed": 90.9,
+    "diag_match_pct_if_spread_agreed_in_universe": 90.9,
+    "replay_only_causes": {
+     "live skipped: -2R / daily-loss latch": 23,
+     "live skipped: lot cap / caps": 8,
+     "no live signal (pre-10-27 %5 gate era)": 7,
+     "live skipped: spread": 5,
+     "live skipped: broker reject": 4,
+     "live skipped: other: opposite side held": 4,
+     "live skipped: other: missed: triggered at 09:50": 3
+    },
+    "signals": {
+     "live": 2057,
+     "replay": 2085,
+     "matched": 2056,
+     "match_pct_live": 100.0,
+     "live_in_lab_universe": 2057,
+     "outcome_flips": {
+      "submitted -> -2R / daily-loss latch": 66,
+      "-2R / daily-loss latch -> submitted": 23,
+      "submitted -> twin": 9,
+      "lot cap / caps -> submitted": 8,
+      "spread -> submitted": 5,
+      "submitted -> spread": 4,
+      "other: opposite side held -> submitted": 4,
+      "broker reject -> submitted": 4,
+      "other: missed: triggered at 09:50 -> submitted": 3,
+      "submitted -> lot cap / caps": 2
+     }
+    },
+    "live_skip_reasons": {
+     "borrow / ETB": 449,
+     "-2R / daily-loss latch": 259,
+     "spread": 196,
+     "lot cap / caps": 131,
+     "other: split-tape short gate": 95,
+     "twin": 40,
+     "other: opposite side held": 21,
+     "other: missed: triggered at 09:50": 7,
+     "broker reject": 5,
+     "quote crosscheck": 3,
+     "other: size < 1 share after liquidity": 3,
+     "other: price below minimum": 1
+    },
+    "replay_skip_reasons": {
+     "borrow / ETB": 456,
+     "-2R / daily-loss latch": 375,
+     "spread": 192,
+     "other: split-tape short gate": 94,
+     "lot cap / caps": 70,
+     "twin": 50,
+     "other: opposite side held": 18,
+     "quote crosscheck": 3,
+     "other: missed: triggered at 09:50": 3,
+     "other: size < 1 share after liquidity": 3,
+     "other: price below minimum": 1,
+     "other: missed: triggered at 10:09": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 266,
+      "replay_trades": 217,
+      "matched_exact": 189,
+      "match_pct": 71.1,
+      "live_avg_r_costs": 0.018,
+      "replay_avg_r_costs": -0.07,
+      "gap_costs": -0.088
+     },
+     "2026-10-21": {
+      "live_trades": 199,
+      "replay_trades": 204,
+      "matched_exact": 198,
+      "match_pct": 99.5,
+      "live_avg_r_costs": -0.35,
+      "replay_avg_r_costs": -0.274,
+      "gap_costs": 0.076
+     },
+     "2026-10-22": {
+      "live_trades": 113,
+      "replay_trades": 126,
+      "matched_exact": 111,
+      "match_pct": 98.2,
+      "live_avg_r_costs": -0.268,
+      "replay_avg_r_costs": -0.174,
+      "gap_costs": 0.094
+     },
+     "2026-10-23": {
+      "live_trades": 131,
+      "replay_trades": 133,
+      "matched_exact": 130,
+      "match_pct": 99.2,
+      "live_avg_r_costs": -0.029,
+      "replay_avg_r_costs": -0.001,
+      "gap_costs": 0.028
+     },
+     "2026-10-26": {
+      "live_trades": 136,
+      "replay_trades": 138,
+      "matched_exact": 136,
+      "match_pct": 100.0,
+      "live_avg_r_costs": -0.01,
+      "replay_avg_r_costs": 0.016,
+      "gap_costs": 0.026
+     }
+    }
+   },
+   "testing2": {
+    "sessions": 5,
+    "first": "2026-10-20",
+    "last": "2026-10-26",
+    "live_trades": 654,
+    "live_trades_in_lab_universe": 654,
+    "replay_trades": 1229,
+    "matched_exact": 586,
+    "matched_pm1": 586,
+    "match_pct": 89.6,
+    "match_pct_pm1": 89.6,
+    "match_pct_in_universe": 89.6,
+    "replay_only": 643,
+    "replay_only_pct_of_live": 98.3,
+    "live_avg_r": 0.048,
+    "replay_avg_r": 0.039,
+    "live_avg_r_costs": -0.043,
+    "replay_avg_r_costs": -0.039,
+    "live_avg_r_in_universe_costs": -0.043,
+    "live_total_r": 31.43,
+    "replay_total_r": 47.44,
+    "gap_costs": 0.004,
+    "within_003": true,
+    "optimistic": false,
+    "matched_r_diff_mean": -0.014,
+    "matched_live_avg_r": 0.052,
+    "matched_replay_avg_r": 0.038,
+    "matched_same_exit": 0.961,
+    "live_only_causes": {
+     "replay skipped: -2R / daily-loss latch": 41,
+     "replay skipped: spread": 11,
+     "no replay signal (data at decision minute)": 8,
+     "replay skipped: other: opposite side held": 5,
+     "replay skipped: lot cap / caps": 3
+    },
+    "diag_match_pct_if_spread_agreed": 91.3,
+    "diag_match_pct_if_spread_agreed_in_universe": 91.3,
+    "replay_only_causes": {
+     "no live signal (pre-10-27 %5 gate era)": 590,
+     "live skipped: broker reject": 32,
+     "live skipped: spread": 10,
+     "live signal at another minute": 6,
+     "live skipped: other: opposite side held": 4,
+     "live skipped: quote crosscheck": 1
+    },
+    "signals": {
+     "live": 1054,
+     "replay": 2127,
+     "matched": 1045,
+     "match_pct_live": 99.1,
+     "live_in_lab_universe": 1054,
+     "outcome_flips": {
+      "submitted -> -2R / daily-loss latch": 41,
+      "broker reject -> submitted": 32,
+      "submitted -> spread": 11,
+      "spread -> submitted": 10,
+      "submitted -> other: opposite side held": 5,
+      "other: opposite side held -> submitted": 4,
+      "submitted -> lot cap / caps": 3,
+      "quote crosscheck -> submitted": 1
+     }
+    },
+    "live_skip_reasons": {
+     "spread": 145,
+     "borrow / ETB": 117,
+     "-2R / daily-loss latch": 74,
+     "broker reject": 32,
+     "lot cap / caps": 11,
+     "other: opposite side held": 11,
+     "other: size < 1 share after liquidity": 4,
+     "quote crosscheck": 3,
+     "twin": 3
+    },
+    "replay_skip_reasons": {
+     "-2R / daily-loss latch": 295,
+     "spread": 275,
+     "borrow / ETB": 228,
+     "lot cap / caps": 57,
+     "other: opposite side held": 24,
+     "other: size < 1 share after liquidity": 7,
+     "twin": 5,
+     "other: price below minimum": 4,
+     "quote crosscheck": 2,
+     "other: price already through target": 1
+    },
+    "errors": {},
+    "missing_modules": [],
+    "by_day": {
+     "2026-10-20": {
+      "live_trades": 142,
+      "replay_trades": 541,
+      "matched_exact": 134,
+      "match_pct": 94.4,
+      "live_avg_r_costs": 0.139,
+      "replay_avg_r_costs": 0.014,
+      "gap_costs": -0.125
+     },
+     "2026-10-21": {
+      "live_trades": 91,
+      "replay_trades": 187,
+      "matched_exact": 80,
+      "match_pct": 87.9,
+      "live_avg_r_costs": -0.072,
+      "replay_avg_r_costs": -0.097,
+      "gap_costs": -0.025
+     },
+     "2026-10-22": {
+      "live_trades": 138,
+      "replay_trades": 224,
+      "matched_exact": 103,
+      "match_pct": 74.6,
+      "live_avg_r_costs": -0.094,
+      "replay_avg_r_costs": -0.032,
+      "gap_costs": 0.062
+     },
+     "2026-10-23": {
+      "live_trades": 147,
+      "replay_trades": 150,
+      "matched_exact": 144,
+      "match_pct": 98.0,
+      "live_avg_r_costs": 0.068,
+      "replay_avg_r_costs": 0.077,
+      "gap_costs": 0.009
+     },
+     "2026-10-26": {
+      "live_trades": 136,
+      "replay_trades": 127,
+      "matched_exact": 125,
+      "match_pct": 91.9,
+      "live_avg_r_costs": -0.282,
+      "replay_avg_r_costs": -0.332,
+      "gap_costs": -0.05
+     }
+    }
+   }
+  },
+  "overall": {
+   "live_trades": 1795,
+   "replay_trades": 2343,
+   "matched_exact": 1645,
+   "matched_pm1": 1645,
+   "replay_only": 698,
+   "live_trades_in_lab_universe": 1795,
+   "match_pct": 91.6,
+   "match_pct_pm1": 91.6,
+   "match_pct_in_universe": 91.6,
+   "live_avg_r_costs": -0.063,
+   "replay_avg_r_costs": -0.054,
+   "gap_costs": 0.009,
+   "within_003": true,
+   "optimistic": false
+  }
+ }
+}
