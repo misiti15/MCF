@@ -12,10 +12,19 @@ A red day across all five day-trading accounts.
 
 **Streak facts:**
 
-- Longest current green-day streak (all accounts): Big Gainer Average Reclaim Fade (3% gainers, all day), 3 sessions in a row, +$43.35. Small days (1 to 8 trades), and its full record is 68 trades at -0.39R, -0.43R without its best day, so it is not a promotion candidate. Green-day record so far: 6 in a row, Stretched Above VWAP Fade (10/23-10/30).
-- Longest current red-day streaks (red every session they traded, ending today): Failed Prior-Day-Low Break Long (shallow) 6 sessions (10/26-11/02), -33.5R, -$259.21; Early Sellers into a Pop (all day) 5 sessions, -24.0R, -$115.56; Failed Prior-Day-Low Break Long 5 sessions, -13.5R, -$166.02; Failed Prior-Day-Low Break Long (0.1 ATR, low volume) 5 sessions, -13.1R, -$107.91.
-- Rule changes inside those windows: the shallow Prior-Day-Low Break Long moved from Testing to the Graveyard from 10/30; the 0.1 ATR low-volume version moved from Primary to Testing 2 from 10/28; Testing 1 and 2 skip entries whose stop-exit cost is over 0.15R from 10/30; and from 11/02 Big Loser VWAP Reclaim Fade (all day) and its twin trade in the Graveyard (4 red trading days in a row going in, -11.9R). Early Sellers into a Pop (all day) moves to the Graveyard from tomorrow's session (owner's call tonight).
-- How streaks feed long-term Primary moves: a green streak that still holds up without its best day flags a promotion candidate, and a red streak flags a demotion review. A streak alone never moves a setup; the owner decides from the full record.
+Green in a row (sessions traded, all accounts):
+
+- Late-Day ETF Dip Buy: 4 in a row, +3.2R
+- Big Gainer Reclaim Short (RW6): 3 in a row, +0.5R
+- Gap-Down Bounce Rejection Short (5% gap): 2 in a row, +20.0R
+
+Red in a row:
+
+- Failed Prior-Day-Low Break Long (low volume): 8 in a row, -38.8R
+- Failed Prior-Day-Low Break Long (shallow): 6 in a row, -40.5R
+- Early Sellers into a Pop (all day): 5 in a row, -25.6R
+
+Green streaks flag promotion candidates, red streaks flag demotion reviews; a streak alone never moves a setup. All three red leaders are already in the Graveyard or moving there.
 
 **Quick answers to common questions:**
 
