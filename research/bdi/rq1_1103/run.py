@@ -42,6 +42,16 @@ def _one(job: dict) -> dict:
             def __init__(self, now):
                 super().__init__(max(pd.Timestamp(now).tz_convert(broker.NY), pd.Timestamp(t, tz=broker.NY)))
         harness.SimClock = LateClock
+    if job["conf"] == "FHB":          # REP-Q1: historical NBBO (hq.py) instead of recordings; other accounts' borrow only
+        import pickle
+        rec_mod = N.recorded if hasattr(N, "recorded") else __import__("recorded")
+        orig = rec_mod.build
+
+        def build(day, jdir, ac=job["account"]):
+            r = orig(day, jdir)
+            hq = pickle.loads((Path(jdir) / f"hq_{day}_{ac}.pkl").read_bytes())
+            return {"quotes": hq, "borrow": {k: v for k, v in r["borrow"].items() if k != ac}}
+        rec_mod.build = build
     return N._one(job)
 
 
