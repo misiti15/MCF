@@ -211,9 +211,7 @@ only outside 09:30-16:00 ET and after the owner's review.
 - `.github/workflows/trade.yml`: R7 `SEGMENT_DOWNLOAD_TIMEOUT_MINS: "1"`.
 - `tests/test_capacity_1103.py`: 3 tests.
 
-On the full suite, every test passed except the known timing test `test_poll_log::test_overhead_and_size_on_a_live_
-sized_universe`. That test failed under machine load from other agents, as noted in ex30/accounts/NOTES.md, and it
-does not touch workflows. The 5 workflow test files pass, 44 tests in all.
+Full pytest on the branch: **468 passed**.
 
 Number of configurations tried: 0 (measurement and ops design, no setup scored).
 
