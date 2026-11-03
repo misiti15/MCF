@@ -64,7 +64,8 @@ def portfolio(cfg: dict, data: dict, start: str, end: str) -> dict:
     return out
 
 
-def check(days: int = 30) -> dict:
+def check(days: int = 30, only: list[str] | None = None) -> dict:
+    """only: re-check just these entry ids (HK-LEDGER speed-up: one full revert run per entry is slow at 100+ entries)."""
     from ..config import load_config
     from ..data.store import BarStore
 
@@ -79,12 +80,15 @@ def check(days: int = 30) -> dict:
     base = portfolio(cfg, data, start, end)
     rows = []
     for e in entries():
+        if only and e["id"] not in only:
+            continue
         alt = portfolio(revert(cfg, e), data, start, end)
         flag = (alt.get("total_r", 0) > base.get("total_r", 0)) and (alt.get("expectancy_r", 0) > base.get("expectancy_r", 0))
         rows.append({"id": e["id"], "title": e["title"], "reverted": alt,
                      "verdict": "FLAG: reverting improves the portfolio — review" if flag else "ok: still adds value"})
     res = {"window": [start, end], "current": base, "entries": rows}
-    (LEDGER.parent / "ledger_check.json").write_text(json.dumps(res, indent=1, default=str))
+    if not only:   # a partial check never overwrites the full one
+        (LEDGER.parent / "ledger_check.json").write_text(json.dumps(res, indent=1, default=str))
     return res
 
 
@@ -92,9 +96,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["check", "list"])
     ap.add_argument("--days", type=int, default=30)
+    ap.add_argument("--only", action="append", help="entry id to re-check (repeatable); default every entry")
     a = ap.parse_args()
     if a.cmd == "list":
         for e in entries():
             print(e["date"], e["id"], e["title"])
     else:
-        print(json.dumps(check(a.days), indent=1, default=str))
+        print(json.dumps(check(a.days, a.only), indent=1, default=str))

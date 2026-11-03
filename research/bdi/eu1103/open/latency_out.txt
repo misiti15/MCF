@@ -1,0 +1,88 @@
+Educational only - not financial advice.
+live trades run_id 1: 12270  dates 2026-10-06..2026-11-03  accounts 5
+
+seconds from the 5-min bar close to the signal (signal_time mod 5 min), all trades:
+count    12270.0
+mean        83.0
+std         47.4
+min          1.0
+10%         34.0
+50%         72.0
+90%        147.0
+99%        246.0
+max        299.0
+
+by account: median / p90 seconds after bar close, median / p90 signal->entry fill seconds
+                       n  sig_med  sig_p90  fill_med  fill_p90
+acct                                                          
+mcf-data             761     43.0     69.0       1.4       3.1
+mcf-data-gen        1002     93.0    161.9       1.4       3.2
+mcf-data-graveyard  2951     61.0    107.0       1.4       3.2
+mcf-data-testing    3402     65.0    127.0       1.2       2.8
+mcf-data-testing2   4154     95.0    182.0       1.3       2.9
+
+by entry bucket (all accounts): n, median spread bps, spread as R, median slip bps, mean slip R, avg R
+                n  sec_after  fill_s  spread_bps  spread_R  slip_bps  slip_R_mean   avgR
+bucket                                                                                  
+09:50-54      735       63.0   1.248         6.0     0.083     0.000       -0.304 -0.238
+09:55-59      303       60.0   1.184         8.0     0.101     1.706       -0.126 -0.136
+10:00-14     1676       69.0   1.426         7.0     0.089     4.400        0.013 -0.104
+10:15-29     1482       69.0   1.330         7.5     0.079     2.056       -0.006 -0.184
+10:30-59     2422       78.0   1.309         8.2     0.070     3.979        0.003 -0.130
+11:00-11:59  2448       73.0   1.243         7.7     0.064     3.662        0.021 -0.088
+12:00-14:59  3073       73.0   1.294         7.1     0.061     3.420        0.016 -0.060
+>=15:00       131       57.0   1.121         5.3     0.051     0.000       -0.016 -0.155
+
+slippage vs the signal price, |slip| <= 1R only (drops stop-entry / ref-price outliers): kept 12178 of 12270
+                n  slip_R_mean  slip_R_med  slip_bps_mean
+bucket                                                   
+09:50-54      706      -0.0238      0.0146         2.6783
+09:55-59      297      -0.0043      0.0280         3.7780
+10:00-14     1663       0.0291      0.0629         6.0256
+10:15-29     1474       0.0066      0.0291         3.9157
+10:30-59     2403       0.0249      0.0452         4.9136
+11:00-11:59  2441       0.0272      0.0391         4.9852
+12:00-14:59  3063       0.0234      0.0377         4.1896
+>=15:00       131      -0.0162      0.0000         0.5160
+
+lab-type setups only (5-min bar-close market entries): seconds after the 5-min close by bucket
+              count  mean   std   min   10%   50%    90%    max
+bucket                                                         
+09:50-54      721.0  78.0  51.0  17.0  31.0  62.0  146.0  299.0
+09:55-59      298.0  73.0  44.0  15.0  30.0  60.0  142.0  238.0
+10:00-14     1670.0  82.0  50.0   2.0  35.0  69.0  156.0  298.0
+10:15-29     1479.0  81.0  47.0   1.0  33.0  69.0  148.0  290.0
+10:30-59     2417.0  91.0  53.0   1.0  36.0  78.0  163.0  288.0
+11:00-11:59  2447.0  82.0  44.0   1.0  35.0  73.0  143.0  283.0
+12:00-14:59  3073.0  81.0  41.0  19.0  36.0  73.0  133.0  268.0
+>=15:00       100.0  79.0  40.0  24.0  39.0  67.0  143.0  206.0
+
+signals by bucket and status:
+status        rejected  skipped  submitted
+bucket                                    
+(949, 954]          18      678        780
+(954, 959]           3      360        318
+(959, 1014]        138     1270       1748
+(1014, 1029]         5     1424       1445
+(1029, 1059]        60     3036       2438
+(1059, 1159]         6     3441       2453
+(1159, 1459]        15     4233       3074
+(1459, 2400]         2      123        131
+
+skip share for 'spread' reasons by bucket:
+bucket
+(949, 954]      0.724
+(954, 959]      0.667
+(959, 1014]     0.635
+(1014, 1029]    0.340
+(1029, 1059]    0.229
+(1059, 1159]    0.124
+(1159, 1459]    0.107
+(1459, 2400]    0.130
+
+earliest signal minutes seen (any status): [np.int64(950), np.int64(951), np.int64(952), np.int64(953), np.int64(954), np.int64(955), np.int64(956), np.int64(957)]
+
+setups with entries before 09:50:
+Empty DataFrame
+Columns: [n, avgR, first]
+Index: []

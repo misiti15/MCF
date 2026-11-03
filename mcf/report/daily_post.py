@@ -106,8 +106,10 @@ def streak(primary: dict, date: str) -> tuple[int, int, int]:
 
 def _merge(rows: list[dict]) -> dict:
     """All accounts' scorecard rows of one setup -> one record (same sums as the dashboard)."""
+    from ..analytics import market_beta
+
     if len(rows) == 1:
-        return dict(rows[0])
+        return dict(rows[0], **market_beta.fit(rows[0])) if rows[0].get("mkt_n") else dict(rows[0])
     s = lambda k: sum((r.get(k) or 0) for r in rows)
     n, w = s("trades"), s("n_win")
     avg = s("total_r") / n if n else None
@@ -124,7 +126,8 @@ def _merge(rows: list[dict]) -> dict:
                 t_stat=(avg / (var / n) ** 0.5) if n and var > 0 else None,
                 breakeven_wr=(al / (aw + al)) if aw and al else None, sessions_traded=len(days) or None,
                 profit_factor=(s("win_pnl") / s("loss_pnl")) if s("loss_pnl") else None,
-                daily=[[d, *v] for d, v in sorted(daily.items())], recent_avg_r=None)
+                daily=[[d, *v] for d, v in sorted(daily.items())], recent_avg_r=None,
+                **(lambda m: {**m, **market_beta.fit(m)})(market_beta.merge(rows)))   # BETA1: exact merge of the OLS sums
 
 
 def best_day(r: dict) -> tuple:
@@ -180,7 +183,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
                                           "graveyard": "Graveyard"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
-                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), t=r.get("t_stat"),
+                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), exmkt=r.get("exmkt_r"), beta=r.get("beta"), t=r.get("t_stat"),
                          total_r=r.get("total_r"), pnl=r.get("pnl"), pf=r.get("profit_factor"),
                          last4=r.get("recent_avg_r") if len(rs) == 1 and r.get("recent_avg_r") is not None else _last4(r, last4),
                          screen=((nm.get("screen") or {}).get("train_exp_r"), (nm.get("screen") or {}).get("valid_exp_r")),
@@ -376,7 +379,7 @@ def facts(accts: list[dict]) -> dict:
     p = ROOT / "research" / "backlog.jsonl"
     if p.exists():
         st = [json.loads(l).get("status") for l in p.read_text().splitlines() if l.strip()]
-        rejected = sum(x in ("failed", "holdout_failed", "failed_locked", "rework") for x in st)
+        rejected = sum(x in ("failed", "parked", "holdout_failed", "failed_locked", "rework") for x in st)
     rejected += max(0, (lab.get("specs_screened") or 0) - (lab.get("setups_generated") or 0))
     slip, n = 0.0, 0
     for k, _, br, _ in ACCOUNTS:
@@ -623,6 +626,7 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None, gs: dict | 
            "- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.",
            "- Break-even win rate? The win rate a setup needs just to not lose money.",
            "- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.",
+           "- Avg R ex-market? Avg R with the market's move taken out (each trade's R regressed on SPY's move over the same minutes).",
            "- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).",
            "Not financial advice."]
     return "\n".join(lines) + "\n\n" + "\n".join(ans) + "\n"
@@ -651,10 +655,10 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
     if gen:
         head = ["#", "Setup", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades", "Trades/day", "Win rate",
-                "Break-even win rate", "Avg R", "Avg R w/o best day", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
+                "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R ex-market", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
     else:
         head = ["#", "Setup", "Account", "Best conditions", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades",
-                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Avg R w/o best day", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
+                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R ex-market", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
     ls_cols = {"Last-session trades", "Last-session R", "Last-session P/L"}
     th = "".join(f'<th class="{"l" if h in ("Setup", "Account", "Best conditions") else ""}{" ls" if h in ls_cols else ""}">{h}</th>' for h in head)
     trs = []
@@ -666,6 +670,7 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
               f'<td class="ls {_cls(x["ls_pnl"]) if x["ls_n"] else ""}">{_money(x["ls_pnl"]) if x["ls_n"] else "—"}</td>')
         common = (f'<td>{_pc(x["win"])}</td><td class="{_cls(edge)}">{be}</td><td class="{_cls(x["avg_r"])}">{_f(x["avg_r"])}</td>'
                   f'<td class="{_cls(x["exbest"][0])}">{_f(x["exbest"][0])}{ONE_DAY if (x["exbest"][2] or 0) >= 0.5 else ""}</td>'
+                  f'<td class="{_cls(x.get("exmkt"))}">{_f(x.get("exmkt"))}</td>'
                   f'<td>{_f(x["t"], 1, False)}</td><td class="{_cls(x["total_r"])}">{_f(x["total_r"], 1)}</td><td class="{_cls(x["pnl"])}">{_money(x["pnl"])}</td>')
         if gen:
             trs.append(f'<tr><td>{x["rank"]}</td>{nm}{ls}<td>{x["trades"]}</td><td>{_f(x["per_day"], 1, False)}</td>{common}'

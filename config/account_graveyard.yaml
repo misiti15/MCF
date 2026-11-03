@@ -63,6 +63,9 @@ live:
     - RW4-ns3-adv150-short-FD              # 104 live trades (moved from Testing 1 + 2 2026-11-01, DM-NS3; from session 2026-11-02)
     - MF3-open-flowsell-rsi5hi-FD          # 141 live trades (moved from Testing 1 2026-11-02, DM-MF; from session 2026-11-03)
     - MF5-flowsell-vwapup-rsi5hi-FD        # 74 live trades (moved from Testing 2 2026-11-02, DM-MF; from session 2026-11-03)
+    - NS5-sma50-flush-oversold-long-FD     # 44 live trades (moved from Testing 1 + 2 2026-11-03, DM-N3; from session 2026-11-04)
+    - ST4-emadn-long-am-t1s05-FD           # 15 live trades (moved from Testing 1 2026-11-03, DM-N3; from session 2026-11-04)
+    - RW6G1-ns2-up3-vwap2sd-short-FD       # 28 live trades (moved from Testing 1 2026-11-03, DM-N3; from session 2026-11-04)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -411,3 +414,35 @@ strategies:
     scale_out_r: null
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-02 (owner)"]
+  NS5-sma50-flush-oversold-long-FD:
+    # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1 + 2 split copies; the dashboard merges them). 44 trades -0.384R (-0.469R w/o best day; 3 busiest -0.699R); 2-yr base -0.039R.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
+  ST4-emadn-long-am-t1s05-FD:
+    # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 15 trades -0.578R (-0.737R w/o best day).
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
+  RW6G1-ns2-up3-vwap2sd-short-FD:
+    # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 28 trades -0.237R (-0.277R w/o best day).
+    enabled: true
+    refire: true
+    refire_cooldown: 1
+    type: lab
+    module: research/bdi/fullday/RW6G1-ns2-up3-vwap2sd-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]

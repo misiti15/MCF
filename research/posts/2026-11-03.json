@@ -1,0 +1,17 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: #1 took 18 trades today and its full-day backtest was about flat (-0.06R); #2 was demoted from Primary on 10/22 (23 trades, -0.31R) and re-promoted on 10/30.",
+ "setups": [
+  {"setup": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+   "title": "Gap-Down Pop Fade (all day)", "side": "short",
+   "lines": [["When", "9:50 AM–3:00 PM (five-minute bars)"],
+             ["Market", "Any"],
+             ["Stock", "Gapped down at the open, ≥ $95M traded a day"],
+             ["Trigger", "Bearish heat score -30 or lower, net selling (buy pressure below -0.15), and RSI(5) pops above 80"],
+             ["Action", "Short the pop"], ["Exit", "Target 1 unit, stop 1 unit"]]},
+  {"setup": "L3-gap-slope-fromopen-FD",
+   "title": "Gap-Down Recovery Fade (all day)", "side": "short",
+   "lines": [["When", "9:50 AM–3:00 PM (five-minute bars; can fire again after 1 bar)"],
+             ["Market", "Any"],
+             ["Stock", "Gapped down 2.66%+ at the open, no volume minimum"],
+             ["Trigger", "Up more than 3.46% from its open, with its 20-bar average sloping up more than 0.37%"],
+             ["Action", "Short the rally"], ["Exit", "Target 1 unit, stop 1 unit"]]}
+ ]}

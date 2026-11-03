@@ -7,9 +7,13 @@ after passing the pre-declared gates below. Approved changes then go in research
 Entry (one JSON object per line):
   {"id", "title", "added", "source", "category": "setup|exit|strategy|risk", "hypothesis",
    "module": "research.reddit_bt.t2_orb15" | null, "variant": "<name in module.VARIANTS>" | null,
-   "status": "idea|coded|testing|failed|rework|finalist|forward_wait|holdout_passed|holdout_failed|probation|proposed|live|retired",
+   "status": "idea|coded|testing|parked|rework|finalist|forward_wait|holdout_passed|holdout_failed|probation|proposed|live|retired",
    "notes", optional: "parent" (id it was reworked from), "holdout_burned" (true when an ancestor already used the
    locked holdouts), "configs_tried" (cumulative across the whole lineage)}
+
+PARK1 (owner 2026-11-03): a gate miss is "parked" (kept for a later re-test), not "failed". Old "failed" lines are read
+as "parked" (normalised on load, so every gate and report treats both the same); parked lab entries are re-tested at
+the biweekly parked review (`python -m mcf.research.backlog parked` lists them; `run --parked` re-tests them).
 
 Pre-declared gates (never changed to fit a candidate):
   finalist        train and valid both exp_r > 0 after costs, valid n >= 30, valid day-clustered t >= 1.5
@@ -57,12 +61,26 @@ RESULTS = ROOT / "research" / "backlog_results.jsonl"
 REPORT = ROOT / "research" / "BACKLOG.md"
 RUNNABLE = {"coded", "testing", "rework", "finalist", "forward_wait", "holdout_passed", "probation", "proposed", "live"}
 MAX_LOOKS = 4
+PARKED = "parked"
+LEGACY_STATUS = {"failed": PARKED}          # PARK1: read old lines as parked
+PARK_REVIEW_DAYS = 14                       # biweekly parked review (owner 2026-11-03)
 GATE = {"finalist_valid_n": 30, "finalist_valid_t": 1.5, "holdout_t": 1.0, "forward_review_n": 100,
         "forward_sessions": 20, "forward_n": 60, "forward_t": 1.0}
 
 
+def normalise(e: dict) -> dict:
+    """PARK1: legacy status names -> current ones (in place)."""
+    if e.get("status") in LEGACY_STATUS:
+        e["status"] = LEGACY_STATUS[e["status"]]
+    return e
+
+
+def is_parked(status: str | None) -> bool:
+    return status == PARKED or status in LEGACY_STATUS
+
+
 def entries() -> list[dict]:
-    return [json.loads(l) for l in BACKLOG.read_text().splitlines() if l.strip()] if BACKLOG.exists() else []
+    return [normalise(json.loads(l)) for l in BACKLOG.read_text().splitlines() if l.strip()] if BACKLOG.exists() else []
 
 
 def save(es: list[dict]) -> None:
@@ -112,13 +130,13 @@ def _run_module(e: dict, es: list[dict]) -> None:
             vals = [_score(e, "valid", v).get("exp_r", -1) for v in nb]
             e["plateau_valid_exp_r"] = round(sum(vals) / len(vals), 4)
             ok = e["plateau_valid_exp_r"] > 0
-        e["status"] = ("finalist" if holdout_looks(e, es) < MAX_LOOKS else "forward_wait") if ok else "failed"
+        e["status"] = ("finalist" if holdout_looks(e, es) < MAX_LOOKS else "forward_wait") if ok else PARKED
     if e["status"] in ("forward_wait", "probation"):
         f = got.get("forward", {})
         if f.get("days", 0) >= GATE["forward_sessions"] and f.get("n", 0) >= GATE["forward_n"]:
             good = _passes(f, GATE["forward_n"], GATE["forward_t"])
             e["status"] = ("live" if e["status"] == "probation" else "proposed") if good else \
-                ("retired" if e["status"] == "probation" else "failed")
+                ("retired" if e["status"] == "probation" else PARKED)
     f = got.get("forward", {})
     if e["status"] == "live" and f.get("n", 0) >= GATE["forward_review_n"] and f.get("exp_r", 0) < 0:
         e["notes"] = (e.get("notes", "") + f" | {date.today()}: FLAG forward exp_r {f['exp_r']} over {f['n']} trades").strip(" |")
@@ -133,7 +151,7 @@ def _summary(lines: list[str]) -> None:
             f.write("\n".join(["### Backlog re-test", ""] + [f"- {x}" for x in lines]) + "\n")
 
 
-def run(only: str | None = None, cache: str | Path | None = None, workers: int | None = None) -> int:
+def run(only: str | None = None, cache: str | Path | None = None, workers: int | None = None, parked: bool = False) -> int:
     """Re-test every runnable entry. `module` entries: the old reddit_bt splits and gates. `lab_module` entries:
     the lab pipeline on the 1-minute cache (mcf/research/backlog_lab.py; split "lab_cache", monitoring only).
     Prints how many entries were scored / skipped and why. Returns 1 when runnable entries exist but none was scored."""
@@ -141,7 +159,8 @@ def run(only: str | None = None, cache: str | Path | None = None, workers: int |
 
     t0 = time.time()
     es = entries()
-    runnable = [e for e in es if e["status"] in RUNNABLE and (not only or e["id"] == only)]
+    ok = RUNNABLE | ({PARKED} if parked else set())   # --parked: the biweekly parked re-test (PARK1)
+    runnable = [e for e in es if e["status"] in ok and (not only or e["id"] == only)]
     scored, skipped, specs = [], {}, []
     for e in runnable:
         if e.get("module"):
@@ -191,6 +210,21 @@ def run(only: str | None = None, cache: str | Path | None = None, workers: int |
         print("ERROR: runnable backlog entries exist but none was scored", file=sys.stderr)
         return 1
     return 0
+
+
+def parked_due(today: date | None = None, days: int = PARK_REVIEW_DAYS) -> list[dict]:
+    """Parked entries not re-tested in the last `days` (biweekly review); each gets `_last` = its last run date."""
+    today = today or date.today()
+    last: dict[str, str] = {}
+    for r in results():
+        last[r["id"]] = max(last.get(r["id"], ""), str(r.get("run_date", "")))
+    out = []
+    for e in entries():
+        if is_parked(e.get("status")):
+            d = last.get(e["id"])
+            if not d or (today - date.fromisoformat(d[:10])).days >= days:
+                out.append({**e, "_last": d})
+    return out
 
 
 def _root(e: dict, by_id: dict) -> str:
@@ -261,13 +295,14 @@ def report() -> None:
     cell = lambda e, s: (lambda m: "–" if not m else f"{m.get('exp_r', 0):+.3f}R n{m.get('n', 0)} t{m.get('t_day_clustered')}")(
         last.get((e["id"], s), {}).get("metrics"))
     order = ["live", "probation", "proposed", "holdout_passed", "finalist", "forward_wait", "rework", "testing", "coded", "idea",
-             "holdout_failed", "failed", "retired"]
+             "holdout_failed", PARKED, "retired"]
     es = sorted(entries(), key=lambda e: order.index(e["status"]) if e["status"] in order else 99)
     lines = ["# Strategy backlog", "", "*Educational only — not financial advice. Generated by `python -m mcf.research.backlog`.*", "",
              "Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) "
-             "or fails. Costs are always in; holdouts are scored once; failures stay listed.", "",
+             "or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the "
+             "biweekly parked review (PARK1, owner 2026-11-03).", "",
              f"Total ideas: {len(es)} · coded: {sum(1 for e in es if e.get('module') or e.get('lab_module'))} · "
-             f"failed: {sum(1 for e in es if e['status'] in ('failed', 'holdout_failed'))} · "
+             f"parked: {sum(1 for e in es if is_parked(e['status']))} · holdout failed: {sum(1 for e in es if e['status'] == 'holdout_failed')} · "
              f"configurations tried (all lineages): {sum(e.get('configs_tried') or 0 for e in es)}", "",
              "A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, "
              "paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look "
@@ -287,17 +322,21 @@ def report() -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["list", "run", "holdout", "report"])
+    ap.add_argument("cmd", choices=["list", "run", "holdout", "report", "parked"])
     ap.add_argument("id", nargs="?")
     ap.add_argument("--id", dest="only")
     ap.add_argument("--cache", help="research bar cache root (default data/cache; reads <cache>/1Min)")
     ap.add_argument("--workers", type=int, help="processes for the lab re-test (default min(4, CPUs))")
+    ap.add_argument("--parked", action="store_true", help="also re-test parked entries (biweekly parked review)")
     a = ap.parse_args()
     if a.cmd == "list":
         for e in entries():
             print(f"{e['status']:<15} {e['id']:<28} {e['title']}")
     elif a.cmd == "run":
-        sys.exit(run(a.only or a.id, a.cache, a.workers))
+        sys.exit(run(a.only or a.id, a.cache, a.workers, a.parked))
+    elif a.cmd == "parked":
+        for e in parked_due():
+            print(f"{e['id']:<40} last tested {e.get('_last') or 'never':<10} {e['title']}")
     elif a.cmd == "holdout":
         holdout(a.id)
     else:

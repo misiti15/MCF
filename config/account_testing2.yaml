@@ -26,6 +26,12 @@ account:
   max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
   max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
+universe:
+  # UNI1 (owner 2026-11-03, research/ledger.jsonl 2026-11-03-uni1-testing2-top500): from the 11-04 session Testing 2
+  # TRADES only a smaller ticker pool - names with 20d ADV >= $95M ranked by ADV x ATR% (prior sessions), top 500,
+  # plus pinned symbols. The full universe is still fetched and still feeds breadth/context columns.
+  top_n: 500
+  top_n_min_adv: 95000000
 live:
   max_stop_cost_r: 0.15   # owner 2026-10-29 CF: forward test of the p3_1029 A3 cost filter (Testing only; Primary/Gen/Graveyard off)
   # Owner SO1 2026-10-19: the fixed live scale-out (cancel legs, bank half, protect the rest) runs on at most 2 lots
@@ -62,7 +68,6 @@ live:
     - CWT04-backside-vwaptest-a25-short   # 0.56/day
     - CWT09-gapdn-vwaploss-g10-short   # 1.29/day
     - CWT05-flush-m075-v5-long   # 1.37/day
-    - NS5-sma50-flush-oversold-long-FD   # 5.86/day (allocator)
     - CWT09-gapdn-bounce-g10-lowerhalf-short   # 1.38/day
     - CWT04-backside-lh-a15-short   # 2.85/day
     - CWT05-flush-m05-v5-long   # 2.93/day
@@ -764,7 +769,7 @@ strategies:
     scale_out_r: null
   # ---- NS5-sma50-flush-oversold-long-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   NS5-sma50-flush-oversold-long-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-03 (owner DM-N3; from session 2026-11-04)
     ticker_split: {part: 1, of: 2}
     type: lab
     module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py

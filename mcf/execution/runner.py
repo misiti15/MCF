@@ -489,12 +489,28 @@ class PaperRunner:
         self.index_priors = out
         return out
 
+    def _top_n_pool(self) -> set[str] | None:
+        """UNI1 (`universe.top_n`, Testing 2 from 2026-11-04): the names this account may trade, from today's priors
+        (ADV >= top_n_min_adv, ranked by ADV x ATR%), plus pinned symbols. None when the account has no cap."""
+        if not hasattr(self, "_top_n_cache"):
+            from ..backtest.engine import pinned_symbols
+            from ..data.universe import top_n_symbols
+
+            rows = ((s, p.adv, (p.atr / p.prev_close * 100) if p.prev_close else float("nan"))
+                    for s, p in self.priors.items())
+            top = top_n_symbols(rows, self.cfg.get("universe", {}))
+            self._top_n_cache = None if top is None else top | pinned_symbols(self.cfg)
+            if top is not None:
+                self.health["universe_top_n"] = len(top)
+        return self._top_n_cache
+
     def _contexts(self, today_bars: dict[str, pd.DataFrame], today) -> list[DayContext]:
         ctxs = []
         ipri = self._load_index_priors(today)
+        pool = self._top_n_pool()
         for sym, bars in today_bars.items():
             p = self.priors.get(sym)
-            if p is None or bars.empty:
+            if p is None or bars.empty or (pool is not None and sym not in pool):
                 continue
             ctx = DayContext(symbol=sym, date=today, bars=bars, prev_close=p.prev_close, prev_high=p.prev_high,
                              prev_low=p.prev_low, atr=p.atr, avg_dollar_volume=p.adv,

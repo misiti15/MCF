@@ -1,0 +1,35 @@
+Educational only - not financial advice. Mechanism check (post hoc). 2y = two-year lab trades at the live floor (8 setups, costs in); cost_est = estimated round-trip cost in R; vs_rand = R minus same symbol-day random entry.
+
+== 2y by R per share
+split R_per_share      n    avgR      t  cost_est  avgR_plus_cost  vs_rand  vs_rand_t
+TRAIN         <5c    865 -0.5708 -16.03     1.063           0.543   0.0374       1.13
+TRAIN       5-10c   3198 -0.3434 -17.92     0.543           0.224   0.0008       0.05
+TRAIN      10-15c   6616 -0.2267 -15.55     0.360           0.137   0.0182       1.37
+TRAIN      15-25c  13821 -0.1470 -14.14     0.239           0.097   0.0346       3.75
+TRAIN      25-40c  19542 -0.0977 -11.25     0.158           0.062   0.0339       4.33
+TRAIN      40-75c  36953 -0.0745  -9.45     0.103           0.030   0.0391       5.41
+TRAIN        >75c 102861 -0.0469  -6.37     0.052           0.006   0.0265       4.10
+VALID         <5c    294 -0.6878 -11.40     1.068           0.542  -0.0298      -0.54
+VALID       5-10c   1522 -0.3494 -13.15     0.538           0.213  -0.0024      -0.10
+VALID      10-15c   2688 -0.2104 -10.94     0.355           0.151   0.0171       0.98
+VALID      15-25c   6818 -0.1441  -9.69     0.236           0.095   0.0333       2.80
+VALID      25-40c  10804 -0.1010  -8.43     0.154           0.056   0.0235       2.34
+VALID      40-75c  21149 -0.0658  -7.54     0.098           0.034   0.0430       5.62
+VALID        >75c  69320 -0.0289  -3.20     0.044           0.017   0.0311       3.99
+
+== 2y rule C1 (pooled; setups_better = of 8)
+               rule split  kept_share  base_R  kept_R  kept_t  dropped_R     kd  kd_t  kept_vs_rand  dropped_vs_rand  setups_better
+C1 R >= $0.25/share TRAIN       0.867 -0.0795 -0.0595   -9.02    -0.2091 0.1454 16.53        0.0303           0.0258              8
+C1 R >= $0.25/share VALID       0.899 -0.0601 -0.0443   -5.57    -0.2015 0.1590 12.12        0.0328           0.0229              8
+
+== LIVE (run_id 1, 5 accounts, 10-06..11-02) by R per share (|entry-stop|); exc = R minus setup-account mean; spread_in_R = median entry spread / risk per share
+R_per_share    n    avgR     t    exc  spread_bps  spread_in_R
+        <5c   67 -0.6307 -1.75 -0.544         5.9        0.246
+      5-10c  408 -0.1404 -1.70 -0.001         7.0        0.122
+     10-15c  798 -0.1687 -4.17 -0.044         6.7        0.078
+     15-25c 1747 -0.1085 -3.49  0.024         5.3        0.053
+     25-40c 1965 -0.0932 -3.20  0.031         4.7        0.039
+     40-75c 2336 -0.1497 -6.00 -0.018         6.1        0.064
+       >75c 4935 -0.1497 -5.34  0.002        10.1        0.088
+LIVE ALL C1: kept n 9236 avg R (np.float64(-0.1377), np.float64(-5.88)) | dropped n 3020 avg R (np.float64(-0.1403), np.float64(-4.01)) | kd 0.000 t 0.02 | kept exc 0.003 dropped exc -0.010 | green sessions kept 1/20 vs all 2/20
+LIVE Primary C1: kept n 541 avg R (np.float64(-0.0368), np.float64(-0.32)) | dropped n 220 avg R (np.float64(-0.0551), np.float64(-0.51)) | kd -0.062 t -0.46 | kept exc 0.002 dropped exc -0.006 | green sessions kept 7/20 vs all 5/20

@@ -25,13 +25,20 @@ on:
 permissions:
   contents: write
 
+# CAP1 (owner 2026-11-03): every research workflow shares ONE concurrency group, and matrix jobs run at most 4 legs
+# (strategy.max-parallel), so research never holds more than 4 of the 20 GitHub Free job slots the trading jobs need.
+# A second research run waits; note GitHub keeps only ONE pending run per group (a newer dispatch replaces it), so
+# dispatch research in the order of research/queue.jsonl (python -m mcf.research.queue tonight).
 concurrency:
-  group: research-data-publish
+  group: mcf-research
   cancel-in-progress: false
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    concurrency:                 # one publisher of the research-data branch at a time (shared with cwt-transcripts publish)
+      group: research-data-publish
+      cancel-in-progress: false
     timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4

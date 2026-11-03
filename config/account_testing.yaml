@@ -45,13 +45,10 @@ live:
     - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # ~1.25/day (st7_1022 S1, owner 2026-10-22; 534 trades / 426 sessions)
     - ST6-volspikeup-short-mid-t1s1-FD
     - ST3-rsi5up-short-pm-t1s1-FD
-    - ST4-emadn-long-am-t1s05-FD
     - NS4-pm-vwap-reclaim-oversold-short-FD
-    - RW6G1-ns2-up3-vwap2sd-short-FD
     - CWT05-flush-m05-v3-long   # 4.00/day (allocator)
     - L3-gap-slope-lowdist-FD
     - NS1-rsidip-rsi5pop-long-FD
-    - NS5-sma50-flush-oversold-long-FD
     - MF2-open-rsimidhi-flowsell-FD
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
     - RW3-gapdn-rsi5pop-flowsell-short-FD
@@ -321,7 +318,7 @@ strategies:
   # from NS5-sma50-flush-oversold-long (primary; source window 950-1130); ~7.37/day full-day [timeofday results.csv full, exp -0.043R]
   NS5-sma50-flush-oversold-long-FD:
     ticker_split: {part: 0, of: 2}   # split copy (allocator)
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-03 (owner DM-N3; from session 2026-11-04)
     type: lab
     module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py
     min_adv: 95000000
@@ -331,7 +328,7 @@ strategies:
   RW6G1-ns2-up3-vwap2sd-short-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-03 (owner DM-N3; from session 2026-11-04)
     type: lab
     module: research/bdi/fullday/RW6G1-ns2-up3-vwap2sd-short-FD.py
     min_adv: 95000000
@@ -396,7 +393,7 @@ strategies:
     scale_out_r: null
   # from ST4-emadn-long-am-t1s05 (testing; source window 950-1130); ~3.05/day full-day [timeofday results.csv full, exp +0.018R]
   ST4-emadn-long-am-t1s05-FD:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-03 (owner DM-N3; from session 2026-11-04)
     type: lab
     module: research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py
     min_adv: 95000000

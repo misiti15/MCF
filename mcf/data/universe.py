@@ -115,6 +115,22 @@ def drop_ptp(assets: pd.DataFrame, u: dict) -> pd.DataFrame:
     return assets[~pd.Series(ptp, index=assets.index)]
 
 
+def top_n_symbols(rows, u: dict) -> set[str] | None:
+    """UNI1 (owner 2026-11-03): the tradable top-N pool of an account that sets `universe.top_n` (Testing 2: 500 from
+    the 11-04 session). rows = iterable of (symbol, adv, atr_pct). Names with ADV >= `top_n_min_adv` (default $95M)
+    are ranked by ADV x ATR% (both from the prior sessions, no look-ahead) and the first top_n kept. None = no cap.
+    The full universe is still fetched and still feeds breadth/context; only which names may be TRADED changes.
+    Pinned symbols (named instruments) are kept by the caller."""
+    n = u.get("top_n")
+    if not n:
+        return None
+    floor = float(u.get("top_n_min_adv", 95_000_000))
+    ok = [(s, float(a) * float(p)) for s, a, p in rows
+          if a is not None and p is not None and np.isfinite(a) and np.isfinite(p) and a >= floor]
+    ok.sort(key=lambda t: (-t[1], t[0]))
+    return {s for s, _ in ok[:int(n)]}
+
+
 def build_universe(cfg: dict, out_path: str = "data/universe.csv") -> pd.DataFrame:
     u, c = cfg["universe"], cfg["costs"]
     tc, dc = _clients()
@@ -133,6 +149,9 @@ def build_universe(cfg: dict, out_path: str = "data/universe.csv") -> pd.DataFra
     df = df.reset_index(drop=True)
     df["tier"] = np.where(df.adv >= u["min_avg_dollar_volume"], "core", "extended")
     df["adv_rank"] = np.arange(1, len(df) + 1)
+    top = top_n_symbols(zip(df.symbol, df.adv, df.atr_pct), u)
+    if top is not None:   # UNI1: recorded for the journal / dashboard; the runner applies it (priors-based, same rule)
+        df["top_n"] = df.symbol.isin(top | pinned_symbols(cfg))
     df["built_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     df.to_csv(out_path, index=False)

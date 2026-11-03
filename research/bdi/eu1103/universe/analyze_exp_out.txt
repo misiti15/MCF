@@ -1,0 +1,28 @@
+Educational only - not financial advice. LIVE-period re-score (lab frames from SIP 5-min bars, 10-06..11-02, 2419 symbols with 10-05 ADV >= $20M, earnings blackout applied, production costs). Not live fills.
+
+== pooled 8 setups by ADV bucket (no floor)
+  bucket     n  per_day    avgR     t  wo_best  vs_rand green
+  20-50M 11702    585.1 -0.1369 -8.26  -0.1431   0.0295  0/20
+  50-95M  7591    379.6 -0.1174 -6.14  -0.1288   0.0253  2/20
+ 95-150M  4530    226.5 -0.0924 -4.09  -0.1050   0.0307  3/20
+150-300M  5155    257.8 -0.0956 -5.43  -0.1047   0.0257  2/20
+ 300M-1B  4149    207.4 -0.1033 -5.32  -0.1169   0.0045  2/20
+     >1B  1784     89.2 -0.0590 -1.36  -0.0788   0.0312  6/20
+
+== L2: names added by a $20M floor vs the live-floor base
+                              setup  base_n  base_avgR  base_t  base_vs_rand  added_n  added_avgR  added_t  added_vs_rand  both_avgR
+                                ALL   15029    -0.0925   -5.00        0.0214    19882     -0.1282    -7.70         0.0283    -0.1128
+                 CWT12-coil-k4-long    1755    -0.1084   -2.38       -0.0613     2851     -0.1337    -3.46        -0.0410    -0.1241
+         CWT14-failbrk-orl-p05-long    4363    -0.1032   -2.90        0.0305     5466     -0.1605    -4.27         0.0214    -0.1351
+        CWT14-failbrk-pdh-p10-short    1382    -0.1292   -3.00       -0.0127     1763     -0.1691    -5.70        -0.0419    -0.1515
+         CWT14-failbrk-pdl-p05-long    2394    -0.0839   -2.40        0.0110     3153     -0.1641    -4.75        -0.0151    -0.1295
+           L3-gap-slope-fromopen-FD     452    -0.1586   -0.87        0.2568        0         NaN      NaN            NaN    -0.1586
+RW2-exhaustion-noon-adv150-short-FD     924    -0.1828   -2.85        0.0793     2343     -0.1091    -1.71         0.1810    -0.1299
+    RW7-gapdn-bounce-early-short-FD    1175     0.0129    0.18       -0.0087     1842     -0.0415    -0.70         0.0126    -0.0203
+                 heat_fade_short-FD    2584    -0.0559   -1.07        0.0418     2464     -0.0578    -0.88         0.0958    -0.0568
+
+== smaller-universe rules on the live period (base n 15029, avg R -0.0925, green 2/20)
+                 rule  kept_share  kept_avgR  kept_t  kept_wo_best  kept_vs_rand kept_green  dropped_R     kd  kd_t
+S1 top-500 dollar-ATR       0.529    -0.0783   -3.13       -0.0946        0.0257       5/20    -0.1084 0.0359  1.99
+       S5 ADV >= 300M       0.395    -0.0900   -3.86       -0.1055        0.0125       3/20    -0.0941 0.0109  0.63
+  C1 R >= $0.25/share       0.844    -0.0674   -3.29       -0.0807        0.0268       5/20    -0.2283 0.1615  6.28

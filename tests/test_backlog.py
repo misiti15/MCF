@@ -126,3 +126,33 @@ def test_lab_retest_never_reads_locked_block(tmp_path):
     mixed = [d.date() for d in pd.bdate_range("2025-01-02", "2025-04-30")]
     frame, daily = BL.symbol_frame(_bars(mixed), "MIX")
     assert min(daily["date"]) > BL.LOCKED[1] and min(frame["date"]) > BL.LOCKED[1]
+
+
+def test_park1_failed_reads_as_parked_and_biweekly_review(tmp_path, monkeypatch):
+    """PARK1 (owner 2026-11-03): a gate miss is 'parked' (re-tested later); legacy 'failed' lines read as parked."""
+    from datetime import date
+
+    monkeypatch.setattr(b, "BACKLOG", tmp_path / "backlog.jsonl")
+    monkeypatch.setattr(b, "RESULTS", tmp_path / "results.jsonl")
+    monkeypatch.setattr(b, "REPORT", tmp_path / "BACKLOG.md")
+    (tmp_path / "backlog.jsonl").write_text(
+        json.dumps({"id": "old", "title": "Old", "status": "failed"}) + "\n"
+        + json.dumps({"id": "new", "title": "New", "status": "parked"}) + "\n"
+        + json.dumps({"id": "t", "title": "T", "status": "testing", "module": "m", "variant": "v"}) + "\n")
+    es = b.entries()
+    assert [e["status"] for e in es] == ["parked", "parked", "testing"]
+    assert b.is_parked("failed") and b.is_parked("parked") and not b.is_parked("holdout_failed")
+    (tmp_path / "results.jsonl").write_text(json.dumps({"id": "new", "run_date": "2026-11-01", "split": "lab_cache", "metrics": {}}) + "\n")
+    due = {e["id"] for e in b.parked_due(date(2026, 11, 3))}
+    assert due == {"old"}                                     # 'new' was re-tested 2 days ago
+    assert {e["id"] for e in b.parked_due(date(2026, 11, 20))} == {"old", "new"}
+    # a gate miss now parks instead of failing
+    monkeypatch.setattr(b, "_score", lambda e, s, v=None: {"n": 50, "exp_r": -0.1, "t_day_clustered": -1.0})
+    monkeypatch.setattr(b.importlib, "import_module", lambda m: type("M", (), {})())
+    e = es[2]
+    b._run_module(e, es)
+    assert e["status"] == "parked"
+    b.save(es)
+    b.report()
+    md = (tmp_path / "BACKLOG.md").read_text()
+    assert "| parked | old |" in md and "parked: 3" in md

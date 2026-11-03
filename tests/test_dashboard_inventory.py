@@ -86,7 +86,7 @@ STATIC_TH = [
 TILES = ["Trades today", "Win rate", "P/L today", "Signals", "Data health", "Equity", "Day P/L", "Since start", "vs SPY",
          "vs EW universe", "vs backtest replay", "Drawdown", "Holdings"]
 
-ACCOUNT_CARDS = ['"primary", name: "Primary"', '"testing", name: "Testing 1"', '"testing2", name: "Testing 2"',
+ACCOUNT_CARDS = ['"primary", name: "Primary"', '"testing", name: "Testing 1"', '"testing2", name: "Testing 2*"',   # * UNI1 top-500 trial (owner 2026-11-03)
                  '"gen", name: "Setup Generator"', '"graveyard", name: "Graveyard"', '"longhold", name: "Long-hold (S6)"']
 
 # every data source the page reads

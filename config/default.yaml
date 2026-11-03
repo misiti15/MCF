@@ -416,6 +416,9 @@ discovery:
   r_atr_frac: 0.25               # R = 0.25 x daily ATR
   report_top: 40
 
+research_queue:
+  # CAP1 (owner 2026-11-03): research/queue.jsonl running order; at most this many research jobs (matrix legs) a night
+  max_jobs_per_night: 6
 report:
   email_to: misiti15@gmail.com   # daily brief recipient
   email_enabled: false           # owner 2026-10-27: hold off on all notification emails (reports still built + saved)
