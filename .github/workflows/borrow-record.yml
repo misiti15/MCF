@@ -1,0 +1,93 @@
+# PRE1 (owner 2026-11-03): record borrow flags + FINRA daily short volume each trading morning, to learn from later.
+# Recorder: mcf/data/borrow_record.py (stdlib only - no pip install). Notes: research/ops/pre1/NOTES.md.
+# Educational only - not financial advice.
+#
+# Load (research/ops/capacity1103/NOTES.md): ONE short job a day, ~09:08 ET, clear of the 09:30-09:50 open and the
+# 14:30-14:40 hand-over peaks; timeout 5 min; no link to trade.yml (separate concurrency group, own branch).
+# Read-only on Alpaca (GET /v2/calendar, GET /v2/assets with the primary ALPACA_API_KEY / ALPACA_SECRET_KEY) and one
+# GET on cdn.finra.org. The universe tier comes from the newest universe.csv on mcf-data (one GitHub contents GET).
+# Output: branch mcf-data-borrow (created if missing), borrow/<day>.csv.gz + borrow/index.jsonl.
+# Two UTC lines cover EDT and EST; the off-season line (08:08 ET in EST, 10:08 ET in EDT) is outside the 08:45-10:00
+# ET window and stops at the first step (a few seconds, no checkout).
+name: borrow-record
+
+on:
+  schedule:
+    - cron: "8 13,14 * * 1-5"    # 09:08 ET (EDT 13:08 UTC / EST 14:08 UTC)
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "YYYY-MM-DD to file under (default: today ET)"
+        default: ""
+      force:
+        description: "ignore the ET window, holiday check and an existing file"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mcf-borrow-record
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      STATE_BRANCH: mcf-data-borrow
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Window check
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0845 ] && [ "$now" -lt 1000 ]; }; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:45-10:00 ET weekdays: nothing to do"; fi
+
+      - name: Check secrets
+        if: steps.window.outputs.run == 'true'
+        run: |
+          if [ -z "$ALPACA_API_KEY" ] || [ -z "$ALPACA_SECRET_KEY" ]; then echo "::error::ALPACA_API_KEY / ALPACA_SECRET_KEY missing"; exit 1; fi
+
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.run == 'true'
+        with:
+          sparse-checkout: mcf
+
+      - name: Newest live universe (mcf-data/universe.csv)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          curl -sSf -m 60 -H "Authorization: Bearer ${{ github.token }}" -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/universe.csv?ref=mcf-data" -o universe.csv \
+            || { echo "universe.csv not available: in_universe left empty"; rm -f universe.csv; }
+
+      - name: Check out state branch (mcf-data-borrow)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git clone -q --depth 1 --branch "$STATE_BRANCH" "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan "$STATE_BRANCH"
+            git -C state remote add origin "$url"
+          fi
+
+      - name: Record (read-only GETs)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          python3 -m mcf.data.borrow_record --state-dir state --universe universe.csv --ignore-window \
+            ${{ inputs.day != '' && format('--day {0}', inputs.day) || '' }} ${{ inputs.force && '--force' || '' }}
+
+      - name: Save to the state branch
+        if: steps.window.outputs.run == 'true'
+        run: |
+          cd state && git add -A
+          git diff --cached --quiet && { echo "nothing to save"; exit 0; }
+          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "borrow record $(TZ=America/New_York date +%F)"
+          for i in 1 2 3; do
+            git push -q origin "HEAD:$STATE_BRANCH" && exit 0
+            git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com pull -q --rebase --depth 1 origin "$STATE_BRANCH" || git rebase --abort
+          done
+          echo "::error::push failed"; exit 1
