@@ -102,9 +102,12 @@ def shortable_flags() -> dict:
 def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, fills: str = "costs",
                 limit_fill: str = "through", exact: bool = False, check: int = 24, equity: float | None = None,
                 spread_bps: float = 2.0, spreads: dict | None = None, shortable: dict | None = None, out_dir: str | Path | None = None,
-                log=print) -> dict:
+                recorded: dict | None = None, log=print) -> dict:
     """Replay `day` for the account config `cfg` (already merged; strategies enabled as wanted). Returns a dict with
-    signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given."""
+    signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given.
+
+    `recorded` = store.recorded_inputs(day, account): the live quotes journaled at each symbol + minute replace the
+    synthetic quote there, and the live runner's own borrow answers of that session override `shortable`."""
     from ..execution import runner as R
     from ..execution.alpaca_broker import AlpacaBroker
     from ..strategies.setups import build_strategies
@@ -116,16 +119,19 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
     market = SimMarket(day, bars)
     clock = SimClock(pd.Timestamp(f"{day} 09:29:50", tz=NY))
     ext = {s for s, p in priors.items() if p.adv < cfg["universe"]["min_avg_dollar_volume"]}
+    shortable = shortable if shortable is not None else shortable_flags()
+    if recorded and recorded.get("borrow"):
+        shortable = {**shortable, **{s: (bool(v), bool(v)) for s, v in recorded["borrow"].items()}}
     client = SimTradingClient(clock, market, cfg.get("costs"), fills=fills, limit_fill=limit_fill,
                               equity=equity or float(cfg["account"].get("starting_equity", 100_000)),
-                              shortable=shortable if shortable is not None else shortable_flags(), extended=ext)
+                              shortable=shortable, extended=ext)
     broker = AlpacaBroker.__new__(AlpacaBroker)
     broker.client = client
     strategies = build_strategies(cfg)
     fast = None
     with _patched(clock):
         spreads = store.load_spreads() if spreads is None else spreads
-        quotes = SimDataClient(clock, market, spread_bps, spreads or None)
+        quotes = SimDataClient(clock, market, spread_bps, spreads or None, recorded=(recorded or {}).get("quotes"))
         client.half_spread_bps = lambda sym, k: quotes._bps(sym, k) / 2
         r = R.PaperRunner(cfg, strategies, priors, broker=broker, data_client=quotes)
         if r.index_syms - set(priors):   # daily index context (lab spy_prng) for a symbol outside the universe
@@ -162,7 +168,7 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
                     "exact": exact, "symbols": len(feed.bars), "priors": len(priors),
                     "setups": [s.name for s in strategies], "polls": r.health["polls"],
                     "seconds": round(_wall.time() - t_start, 1), "fast": fstats, "fast_check": fc,
-                    "touches": len(client.touches), "fills_n": len(client.fill_log),
+                    "touches": len(client.touches), "fills_n": len(client.fill_log), "quotes": dict(quotes.used),
                     "log_tail": buf.getvalue().splitlines()[-5:]}
     if out_dir is not None:
         write(res, Path(out_dir))
@@ -330,11 +336,11 @@ def session_inputs(cfg: dict, day, universe: str = "lab", branch: str | None = N
     from ..backtest.engine import pinned_symbols
 
     day = store.check_dates([day])[0]
-    syms = set(store.symbols())
-    notes = {"universe": "lab"}
+    syms = set(store.symbols(day))
+    notes = {"universe": "lab" if syms == set(store.symbols()) else "store universe file (full live universe)"}
     live_u = store.live_universe(day, branch or "origin/mcf-data") if universe == "live" else None
     if live_u:
-        notes["universe"] = f"lab ∩ live universe.csv ({len(live_u)} live symbols)"
+        notes["universe"] = f"{notes['universe']} ∩ live universe.csv ({len(live_u)} live symbols)"
         notes["live_not_in_lab"] = len(live_u - syms)
         syms &= live_u | pinned_symbols(cfg)
     syms -= set(cfg.get("universe", {}).get("ptp_denylist") or [])
@@ -347,7 +353,7 @@ def session_inputs(cfg: dict, day, universe: str = "lab", branch: str | None = N
     exact = sorted({s for st in cfg["strategies"].values() if (st or {}).get("enabled")
                     for s in (st.get("symbols") or []) if isinstance(st.get("symbols"), list)})
     bars = store.load_day(day, sorted(syms | set(exact)))
-    allp = store.build_priors_for(day, store.symbols(), exact_symbols=[])
+    allp = store.build_priors_for(day, store.symbols(day), exact_symbols=[])
     priors = {s: p for s, p in allp.items() if s in syms}
     notes["symbols"] = len(priors)
     return bars, priors, notes

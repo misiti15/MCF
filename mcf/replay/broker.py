@@ -459,15 +459,33 @@ class SimDataClient:
     """StockHistoricalDataClient stand-in for the runner's quote checks: the latest quote is the last completed bar's
     close +- half a spread, stamped one second before the poll. The spread is drawn (deterministically per symbol and
     minute) from the spreads the live runner journaled for that symbol (data/replay/spreads.json, store.build_spreads;
-    median ~9 bps, a quarter above 18 bps), else max(1 cent, spread_bps of the price)."""
+    median ~9 bps, a quarter above 18 bps), else max(1 cent, spread_bps of the price).
 
-    def __init__(self, clock: SimClock, market: SimMarket, spread_bps: float = 2.0, spreads: dict | None = None):
+    `recorded` (store.recorded_inputs()["quotes"], symbol -> {poll minute: (bid, ask, age_s)}): the NBBO the live runner
+    journaled at that symbol + minute (+-1) is used as is - the quote, its age and the paper-fill half spread - before
+    any draw (research/bdi/night1102/replay: the drawn spread was the main cause of the 10-29 audit's misses)."""
+
+    def __init__(self, clock: SimClock, market: SimMarket, spread_bps: float = 2.0, spreads: dict | None = None,
+                 recorded: dict | None = None):
         self.clock, self.mkt, self.spread_bps = clock, market, float(spread_bps)
         self.spreads = spreads or None    # symbol -> live spreads (bps) to sample from; "_all" for other symbols
+        self.recorded = recorded or {}
+        self.used = {"recorded": 0, "model": 0}
+
+    def _rec(self, sym: str, k: int):
+        q = self.recorded.get(sym)
+        if q:
+            for dk in (0, -1, 1):
+                if k + dk in q:
+                    return q[k + dk]
+        return None
 
     def _bps(self, sym: str, k: int) -> float:
         """Spread for this symbol and minute: a deterministic draw from the symbol's live spreads (else all symbols'),
-        or the fixed spread_bps without a table."""
+        or the fixed spread_bps without a table. A recorded live quote at the minute wins."""
+        v = self._rec(sym, k)
+        if v is not None:
+            return (v[1] - v[0]) / ((v[1] + v[0]) / 2) * 1e4
         if not self.spreads:
             return self.spread_bps
         pool = self.spreads.get(sym) or self.spreads.get("_all")
@@ -483,9 +501,16 @@ class SimDataClient:
         k = self.mkt.minute(self.clock.now)
         out = {}
         for s in syms:
+            v = self._rec(s, k)
+            if v is not None:
+                self.used["recorded"] += 1
+                out[s] = NS(bid_price=v[0], ask_price=v[1],
+                            timestamp=(self.clock.now - timedelta(seconds=float(v[2]))).tz_convert("UTC").to_pydatetime())
+                continue
             px = self.mkt.last_close(s, k)
             if px is None:
                 raise KeyError(s)
+            self.used["model"] += 1
             half = max(0.005, px * self._bps(s, k) / 2e4)
             out[s] = NS(bid_price=round(px - half, 4), ask_price=round(px + half, 4),
                         timestamp=(self.clock.now - timedelta(seconds=1)).tz_convert("UTC").to_pydatetime())

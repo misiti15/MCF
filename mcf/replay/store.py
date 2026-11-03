@@ -57,7 +57,13 @@ def sessions(start, end) -> list[date]:
     return [d.date() for d in days]
 
 
-def symbols() -> list[str]:
+def symbols(d=None) -> list[str]:
+    """The replay universe: the lab list, or for session d the store's universe/<d>.txt when present (a store built for
+    the full live universe, ~4,700 names: research/bdi/night1102/replay/prep_full.py)."""
+    if d is not None:
+        p = STORE / "universe" / f"{_d(d)}.txt"
+        if p.exists():
+            return p.read_text().split()
     return SYMBOLS_FILE.read_text().split()
 
 
@@ -428,6 +434,63 @@ def build_spreads(branches=("origin/mcf-data", "origin/mcf-data-testing", "origi
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(by))
     return p
+
+
+def recorded_inputs(d, account: str, journals: dict[str, str | Path] | None = None) -> dict:
+    """What the live runners recorded on session d (signals, run_id 1) that the replay otherwise has to model:
+      quotes  symbol -> {poll minute k (0 = 09:30): (bid, ask, quote_age_s)}, every account's journaled NBBO
+      borrow  symbol -> bool, `account`'s own can_short answer that session (False after a 'not shortable/ETB' skip,
+              True after a submitted short), the other accounts' answers where it has none
+    `journals` maps account -> journal.db path (default: each account's data branch via git show)."""
+    import json
+    import sqlite3
+    import subprocess
+    import tempfile
+
+    accts = {"primary": "origin/mcf-data", "testing": "origin/mcf-data-testing", "testing2": "origin/mcf-data-testing2",
+             "graveyard": "origin/mcf-data-graveyard", "gen": "origin/mcf-data-gen"}
+    day = str(_d(d))
+    t0 = pd.Timestamp(f"{day} 09:30", tz=TZ)
+    quotes: dict[str, dict[int, tuple]] = {}
+    own: dict[str, bool] = {}
+    other: dict[str, bool] = {}
+
+    def rows(path):
+        con = sqlite3.connect(str(path))
+        try:
+            return con.execute("SELECT ts, symbol, side, status, reason, info FROM signals WHERE run_id=1 AND day=? "
+                               "ORDER BY ts", (day,)).fetchall()
+        finally:
+            con.close()
+
+    for ac, br in accts.items():
+        if journals is not None:
+            if ac not in journals:
+                continue
+            rs = rows(journals[ac])
+        else:
+            r = subprocess.run(["git", "-C", str(ROOT), "show", f"{br}:journal.db"], capture_output=True)
+            if r.returncode or not r.stdout:
+                continue
+            with tempfile.NamedTemporaryFile(suffix=".db") as f:
+                f.write(r.stdout)
+                f.flush()
+                rs = rows(f.name)
+        b = own if ac == account else other
+        for ts, sym, side, status, reason, info in rs:
+            try:
+                inf = json.loads(info) if info else {}
+            except ValueError:
+                inf = {}
+            if "bid" in inf and "ask" in inf:
+                k = int((pd.Timestamp(ts).tz_convert(TZ) - t0) // pd.Timedelta(minutes=1))
+                quotes.setdefault(sym, {}).setdefault(k, (float(inf["bid"]), float(inf["ask"]),
+                                                           float(inf.get("quote_age_s") or 1.0)))
+            if reason == "not shortable/ETB":
+                b.setdefault(sym, False)
+            elif status == "submitted" and int(side or 0) == -1:
+                b.setdefault(sym, True)
+    return {"quotes": quotes, "borrow": {**other, **own}}
 
 
 def load_spreads() -> dict | None:
