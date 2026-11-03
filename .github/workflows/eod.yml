@@ -21,6 +21,10 @@ permissions:
 
 jobs:
   report:
+    # capacity1103 (research/ops/capacity1103/NOTES.md): a cancelled trade run (a standby replaced in its concurrency
+    # group, ~5 of 8 trade runs a day) must not start one runner per account just to skip; the job is skipped with no
+    # runner. The closing run (success or failure) and the 16:25 backup cron still run the report.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
     strategy:
       fail-fast: false
       matrix:
