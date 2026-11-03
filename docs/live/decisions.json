@@ -518,5 +518,50 @@
   "link": "research/bdi/eu1103/PLAN.md",
   "status": "answered",
   "answered": "2026-11-03: yes - record borrow flags + FINRA short volume each morning if load/memory allow"
+ },
+ {
+  "code": "INACT1",
+  "title": "Nightly inactive-setups check: flag a quiet setup by its own expected rate, not a fixed 2 or 5 sessions",
+  "what": "Report only. After each close a script lists every enabled setup's sessions since its last signal and trade, and flags it when that streak would happen less than 5% of the time at its expected rate (watch), or less than 1% (alarm, diagnosed that night). Setups whose index condition never occurred are exempt. One FYI line a night; a decision comes to you only when a fix needs a setup_order change or a move.",
+  "recommend": "Yes - report only",
+  "numbers": [
+   "207 enabled: a fixed 2-session bar flags 62, a 5-session bar 29; the rate rule flags 0",
+   "Of 50 setups quiet 3+ sessions: 0 broken, 0 missed polls, 48 rare by design (12 index-gated), 2 blocked",
+   "Watch after ~9/rate sessions: 1 for a 10/day setup, 9 for 1/day, 90 for 0.1/day"
+  ],
+  "why": "Expected rates run from 0.01 to 49 signals a session, so no single session count is fair; the rate rule raises an alarm only when something is really off.",
+  "link": "research/ops/inactive1103/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INACT2",
+  "title": "Judge rare-by-design setups on 60 trades instead of 20 sessions, and keep them on",
+  "what": "Review rule only. Setups that fire rarely by design stay on where they are; their verdict comes at 60 trades rather than at 20 sessions, and a weekly list shows how many sessions each needs at its current pace so you can retire the ones that never will. 'Trim' also switches off the 7 setups expected under 0.1 trades a session (IDX1 trail, IDX1 hold, IDX2, IDX3, IDX5, LD4, LD5).",
+  "recommend": "Yes - keep and judge on trades",
+  "numbers": [
+   "78 of 207 average under 0.5 trades a session; 145 under the 3 a session the 20-session / 60-trade rule needs",
+   "IDX x5 need ~1,500-6,000 sessions to 60 trades; LD4 ~1,200",
+   "They cost little: IDX in Testing 1 (room), LD decisions all taken in Testing 2"
+  ],
+  "why": "Their quiet streaks are normal for their rate; the real playing-time gap is that many setups cannot reach a verdict in 20 sessions.",
+  "link": "research/ops/inactive1103/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GY-BP",
+  "title": "Graveyard runs out of buying power by ~10:45: replay a lower per-setup cap (25 -> 12) before changing anything?",
+  "what": "Research replay only, no live change. The Graveyard ran out of buying power at 10:40 on 11-02 and 10:50 on 11-03, so later setups and new arrivals lose their turn. A replay of 10-27..11-03 with a per-setup cap of 12 would show whether capital spreads across all its setups without a worse R; any change would come back to you with a ledger line.",
+  "recommend": "Optional - playing time, not R",
+  "numbers": [
+   "Buying-power rejects 48 (10-27..11-02) + 34 on 11-03 by 11:05, 14 of them MF3-FD / MF5-FD (moved in 11-03)",
+   "What-if of the rejected signals -0.1R / 42; per-setup cap skips 461, -79.2R",
+   "Peak 155 of 200 positions; DM-N3 adds 3 setups on 11-04"
+  ],
+  "why": "It is the only account where load takes turns away from setups; the blocked signals have not been profitable, so it matters for sample size, not money.",
+  "link": "research/ops/inactive1103/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
