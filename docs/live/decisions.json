@@ -368,5 +368,80 @@
   "link": "research/bdi/nightly1102/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "LL1",
+  "title": "Open a small live-first lane for new setups in Testing 1 / Testing 2",
+  "what": "Up to 10 lane seats at the end of Testing 1 and 10 in Testing 2 (no new account). New setups enter on a minimal costs-in gate (2-year expectancy >= -0.02R in train and valid), are switched off automatically after 45+ trades at avg R <= -0.30 or -15R cumulative, and get a verdict at 20 sessions (live avg R > 0, w/o best day > 0, >= -0.05R on 3+ up and 3+ down days). A pass stays in Testing; never straight to Primary.",
+  "recommend": "Yes - Testing only; reply 'LL1 account' for a 6th paper account instead",
+  "numbers": [
+   "T1 / T2 peak 73 / 89 of 400 slots, 0 buying-power rejects",
+   "45-trade / -0.30R kill: only 1 of 27 rules that separated setups (9 killed, 0 positive later)",
+   "Generator's screen-only lane: -0.284R on 990 trades (10-21..11-02)"
+  ],
+  "why": "The owner wants live testing to decide. Exposure, not the gate, is the bottleneck (19 of 238 setup records are verdict-ready), so the lane must be small, cheap and fail fast.",
+  "link": "research/bdi/night1102/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "REG1",
+  "title": "Keep Primary unchanged and shadow-score the 10:00 fade switch for 20 sessions",
+  "what": "No Primary trading change. Each night Primary trades entered at/after 10:00 are tagged kept (shorts when SPY >= its open at 10:00, longs when below) or dropped; a Testing trial is proposed only if, on 20 new sessions alone, kept beats dropped with t >= 1.0 and kept avg R > 0 without its best day.",
+  "recommend": "Yes - monitoring only",
+  "numbers": [
+   "Live Primary 10-06..11-02: kept +43.3R vs -32.1R all (t 1.45); 10-22 alone +70.6R",
+   "Last 3 days: -4.5R instead of -20R",
+   "2 years: TRAIN t 1.04, VALID t 0.62 (fails the bar)"
+  ],
+  "why": "Every Primary fix tested overnight failed (0 of 2,229 configurations). Rule changes inside the window: Primary size ~$4k 10-28, -2R setup stop 10-29, L3 pair promoted 10-30.",
+  "link": "research/bdi/night1102/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "QDAY",
+  "title": "Aim the new-setup search at quiet-day and both-direction setups for two weeks",
+  "what": "BDI's daily new idea goes first to setups built for range / quiet sessions and to hedged forms, and every candidate shows its R on up / down / quiet days first. No gate change.",
+  "recommend": "Yes - research only",
+  "numbers": [
+   "Quiet days: 10 of 20 live sessions, both sides lost (-611R)",
+   "0 of 68 live setups positive on up, down and quiet days",
+   "Every family tested this week is a direction bet on 2 years"
+  ],
+  "why": "The live book is a bet on market direction with no edge on quiet days; simplifying or filtering existing setups does not change that.",
+  "link": "research/bdi/night1102/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "RW3S",
+  "title": "Observe RW3 without its RSI line in one Testing account (owner exception)",
+  "what": "Add RW3S-gapdn-flowsell-short-FD (RW3-FD with the rsi5 > 80 line removed) to one Testing account, rules frozen; judge after 20+ sessions / 60+ trades on avg R, w/o best day and the up vs down split. Primary's RW3-FD untouched.",
+  "recommend": "Optional - thin evidence, fails every backtest bar",
+  "numbers": [
+   "Live re-score (bars, not paper) 10-06..11-02: 1,727 trades +0.110R, t 1.56; +0.072R w/o best day",
+   "Up days -0.125R, down days +0.327R (a down-day bet)",
+   "2 years: TRAIN -0.071 / VALID -0.026R; fails BAR90 and the lane gate"
+  ],
+  "why": "The only simpler form that beat its parent on the live dates and kept its 2-year result; 1 of 89 forms scored.",
+  "link": "research/bdi/night1102/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "RQ1",
+  "title": "Make the replay pass its 10-session audit before anything uses it",
+  "what": "Research tooling only: merge the replay input fix (recorded quotes / borrow, full live universe) after the close, add market quotes taken at the live decision moment for new setups, and run a rolling one-session-a-night audit for 10+ sessions. Replay numbers stay out of decisions until it passes (rule 21).",
+  "recommend": "Yes - research tooling, no live change",
+  "numbers": [
+   "Trade match 70.2% -> 95.8% on 10-30 + 11-02 (Primary 100%, T1 100%, T2 98.8%)",
+   "Avg R still +0.059R optimistic (mostly Gen's 39 unbooked 11-02 entries)",
+   "Quote at the decision moment matches live's spread decision 96.3% vs 84.5% today"
+  ],
+  "why": "A trustworthy replay would screen a new setup in hours instead of weeks of paper, which is what the owner's live-first view needs.",
+  "link": "research/bdi/night1102/PLAN.md",
+  "status": "open",
+  "answered": null
  }
 ]
