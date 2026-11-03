@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 839 · coded: 119 · parked: 354 · holdout failed: 23 · configurations tried (all lineages): 32893317
+Total ideas: 845 · coded: 119 · parked: 355 · holdout failed: 23 · configurations tried (all lineages): 32893321
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -438,6 +438,11 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | ex30-TM3-gapup-drift-powerhour-short | Gap-up drifted to the low, power-hour short (short, Clock and calendar) - ex30 exploratory setup | bdi ex30 time (research/bdi/ex30/time/NOTES.md; research/bdi/ex30/CATALOG.md) | – | – | – | – | – | – |
 | idea | ex30-G2-2-lwick-brlo-heatlo-W2-t1s05-long | Midday wick buy on a collapsing tape (long, Grammar generator (gen2)) - ex30 exploratory setup | bdi ex30 gen2 (research/bdi/ex30/gen2/NOTES.md; research/bdi/ex30/CATALOG.md) | – | – | – | – | – | – |
 | idea | ex30-G2-3-uwick-brhi-d20hi-W2-t1s1-long | Upper-wick absorption on a green tape (long, Grammar generator (gen2)) - ex30 exploratory setup | bdi ex30 gen2 (research/bdi/ex30/gen2/NOTES.md; research/bdi/ex30/CATALOG.md) | – | – | – | – | – | – |
+| idea | swing1103-L1-ns5-vol-etp-beta | NS5 Big Loser Flush Buy: a long on a volatility ETP (UVIX / UVXY, 5-min beta to SPY about -8 / -6) is a market-short bet; skip or tag long signals on symbols with beta <= -1.5 | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
+| idea | swing1103-L2-rotation-turn-short-timing | Rotation turn: QQQ new session high while IWM, up >= 0.4% from the open, sits >= 0.10% under its own high for 5+ minutes (10:30-11:30) -> family shorts in non-tech names do better in the next 30 min | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
+| idea | swing1103-L4-net-beta-cap | Net-beta cap: block new entries that push an account's beta-weighted net exposure beyond +/-50% of equity (vol / inverse ETPs count with their negative beta) | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
+| idea | swing1103-L5-early-latch-whatif | Primary -2R per-setup latch before 11:00: do the skipped signals in the next 15 min win (an early latch sells the low)? | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
+| idea | nightly-1103-brake1-morning-trigger | BRAKE-1 shadow: count family stops only from 11:00 (or require the 3 stops to span >= 30 min) so a stop cluster at a morning low does not halve the rebound | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -815,6 +820,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | reddit-1102-vwap-bounce-1m-megacap | 1-minute VWAP bounce in the 15-minute trend on the day's 6 highest-volume mega caps, 09:45-11:30: 15m close vs EMA20 and VWAP sets the side, a 1-min bar tags VWAP (+-0.05%) and closes back on the trend side in the trend colour with volume >= V x its 10-bar mean; stop 1c beyond the bar, 2R target or 11:30 exit | reddit r/Trading https://www.reddit.com/r/Trading/comments/1xjucpo/switching_to_1m_vwap_bounce_trading_from_smc_poi/ | – | – | – | – | – | – |
 | parked | simple1102-rw3-no-rsi5 | RW3S: RW3-gapdn-rsi5pop-flowsell-short-FD without the rsi5 > 80 condition (heat <= -20, buyPressure < -0.35, gap < 0; short t1s1 09:50-15:00, ADV >= 95M) | research/bdi/night1102/simple/NOTES.md | – | – | – | – | – | – |
 | parked | losers1102-wide-stop-15-same-dollar | Stop 1.5x wider at the same $ risk (2/3 of the shares), target price unchanged - all intraday lab setups | bdi night1102 losers (research/bdi/night1102/losers/NOTES.md) | – | – | – | – | – | – |
+| parked | swing1103-L3-upmorning-delay-family-shorts | Up-morning delay: on days SPY is up at 10:00, skip RW3 / RW5 / MF2 / MF4 shorts entered before 10:50 | nightly-2026-11-03 (research/bdi/nightly1103/NOTES.md); leads pre-registered in research/bdi/swing1103/AUTOPSY.md section 4 | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
