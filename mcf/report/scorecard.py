@@ -36,14 +36,15 @@ def _expected() -> dict[str, float]:
 
 
 def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = None, cfg: dict | None = None,
-          account: str | None = None, whatif: pd.DataFrame | None = None) -> dict:
+          account: str | None = None, whatif: pd.DataFrame | None = None, spy: pd.DataFrame | None = None) -> dict:
     """playing_time: the account's playing-time report (mcf/report/playing_time.py), stored as card['playing_time'].
-    cfg/account: adds the since-start leaderboard (all setups enabled in this account, traded or not)."""
+    cfg/account: adds the since-start leaderboard (all setups enabled in this account, traded or not).
+    spy: SPY 1-minute bars covering the trades (BETA1 "Avg R ex-market", mcf/analytics/market_beta.py)."""
     extra = {}
     if playing_time is not None:
         extra["playing_time"] = playing_time
     if cfg is not None:
-        extra["leaderboard"] = leaderboard(trades, cfg, account or "primary", whatif)
+        extra["leaderboard"] = leaderboard(trades, cfg, account or "primary", whatif, spy=spy)
         extra["generated"] = pd.Timestamp.now(tz="America/New_York").strftime("%Y-%m-%d %H:%M ET")
     if trades is None or not len(trades):
         return {"sessions": 0, "window": "no trades yet", "setups": [], **extra}
@@ -78,7 +79,8 @@ def build(trades: pd.DataFrame, sessions: int = 4, playing_time: dict | None = N
 SHRINK_N = 20   # ranking shrinks avg R toward 0 by n / (n + 20): 5 lucky trades do not outrank 80 steady ones
 
 
-def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd.DataFrame | None = None) -> list[dict]:
+def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd.DataFrame | None = None,
+                spy: pd.DataFrame | None = None) -> list[dict]:
     """Since-start results per setup in this account (owner 2026-10-12: rank, win rate, live trades, account),
     including enabled setups with no trades yet. The dashboard merges the accounts' lists. Report only.
     whatif: the account's what-if run (signals not taken, simulated). Its sim_* fields are SIMULATED playing time
@@ -89,6 +91,9 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
     enabled = {k for k, v in strat.items() if isinstance(v, dict) and v.get("enabled")}
     t = trades if trades is not None and len(trades) else pd.DataFrame(columns=["strategy", "date", "pnl", "r_multiple"])
     last_day = max(t["date"].astype(str)) if len(t) else None   # the account's most recent completed session
+    from ..analytics import market_beta
+
+    mkt = market_beta.per_setup(t, spy) if len(t) else {}   # BETA1 (owner 2026-11-03): exact sums + fit per setup
     rows = []
     for s in sorted(enabled | set(t["strategy"].dropna().astype(str))):
         g = t[t["strategy"] == s]
@@ -124,6 +129,7 @@ def leaderboard(trades: pd.DataFrame, cfg: dict | None, account: str, whatif: pd
             "score": round(avg * n / (n + SHRINK_N), 4) if n else None,
             **_sim(wi[wi["strategy"] == s]),
             **_daily(g, last_day),
+            **(mkt.get(s) or {"mkt_n": 0, "exmkt_r": None, "beta": None}),
         })
     return rows
 

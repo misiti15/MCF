@@ -267,13 +267,23 @@ def cmd_eod(args, cfg):
         playing = playing_time.from_journal(j, rid, day, cfg, args.state_dir)
     except Exception as e:
         print(f"playing time unavailable: {e}")
-    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing,
-                    chart_bars=ext)
-    eod.save(rep, Path(args.state_dir) / "reports", day)
     from .report import scorecard
 
+    spy_hist = spy   # BETA1 "Avg R ex-market": SPY 1-minute bars over every session in the journal (one SPY request)
+    try:
+        _all = j.trades(run_id=rid)
+        if len(_all):
+            d0 = datetime.fromisoformat(str(min(_all["date"].astype(str))))
+            df = _bars(_client(), ["SPY"], d0, datetime.fromisoformat(day) + timedelta(days=1), 1, cfg["data"]["feed"])
+            spy_hist = rth(normalize(df.droplevel(0))) if len(df) else spy
+    except Exception as e:
+        print(f"SPY history unavailable (Avg R ex-market blank): {e}")
     card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4), playing_time=playing,
-                           cfg=cfg, account=cfg.get("account_name", "primary"), whatif=j.trades(kind="whatif"))
+                           cfg=cfg, account=cfg.get("account_name", "primary"), whatif=j.trades(kind="whatif"), spy=spy_hist)
+    exmkt = {r["setup"]: r for r in card.get("leaderboard", []) if r.get("mkt_n")}
+    rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing,
+                    chart_bars=ext, exmkt=exmkt)
+    eod.save(rep, Path(args.state_dir) / "reports", day)
     scorecard.save(card, args.state_dir)
     print(rep["subject"])
     if not args.no_send:

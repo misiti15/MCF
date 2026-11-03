@@ -98,7 +98,8 @@ def lab_trades(df: pd.DataFrame, mask, side: str, geom: str, tod_costs: bool = T
 
 # ------------------------------------------------------------------------------------------------ statistics
 def summary(trades: pd.DataFrame) -> dict:
-    """n, sessions, win rate, exp R, day-clustered SE and t, green days, expectancy without the best day."""
+    """n, sessions, win rate, exp R, day-clustered SE and t, green days, expectancy without the best day; with a
+    `spy_move` column (SPY % move over each trade's window) also ex_market_r / beta (mcf/analytics/market_beta.py)."""
     if trades is None or not len(trades):
         return {"n": 0}
     r = trades["r"].to_numpy(float)
@@ -106,7 +107,13 @@ def summary(trades: pd.DataFrame) -> dict:
     mu = float(r.mean())
     se = float(np.sqrt(((g["sum"] - g["size"] * mu) ** 2).sum()) / len(r)) if len(g) > 1 else float("nan")
     b = g["sum"].idxmax()
-    return {"n": int(len(r)), "days": int(len(g)), "win_rate": round(float((r > 0).mean()), 4), "exp_r": round(mu, 4),
+    mkt = {}
+    if "spy_move" in trades:   # BETA1 (owner 2026-11-03): avg R with SPY's same-window move regressed out
+        from ..analytics import market_beta
+
+        mkt = market_beta.fit(market_beta.sums(trades["spy_move"], r))
+        mkt = {"ex_market_r": mkt["exmkt_r"], "beta": mkt["beta"]}
+    return {**mkt, "n": int(len(r)), "days": int(len(g)), "win_rate": round(float((r > 0).mean()), 4), "exp_r": round(mu, 4),
             "se": round(se, 4) if np.isfinite(se) else None,
             "t": round(mu / se, 2) if np.isfinite(se) and se > 0 else None,
             "green_days": round(float((g["sum"] > 0).mean()), 3),
