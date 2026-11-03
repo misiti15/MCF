@@ -2,7 +2,10 @@
      **bold** only where shown; a blank line between sections. The 16:15 ET routine fills the {…} parts; the owner
      edits before posting. "Things I am still wanting" / "Quick thoughts" are the owner's own words: carry the last
      post's lines forward unchanged unless the owner gives new ones.
-     Owner 2026-10-28: no "Best setup today" line; running total in bold; balance / running totals for Primary only (Testing, Generator stay in the pictures).
+     Owner 2026-10-28: no "Best setup today" line; running total in bold; running totals for Primary only (Testing, Generator stay in the pictures).
+     Owner 2026-11-03: no end-of-day balance on the Today line (day's net P/L + running total only). "Setup streak facts": 4 green + 3 red
+     leaders, each line says whether the streak counts consecutive sessions or traded sessions only (inactive sessions skipped); brief lines.
+     "Quick thoughts" may change daily: use the owner's newest lines when given, else carry forward.
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**
@@ -16,8 +19,15 @@
 - {any rule change that started with today's session, in plain words (research/ledger.jsonl `effective` = today; e.g. 10/29: Primary per-setup -2R daily stop)}
 {… one line per move; "No changes before today." if none}
 
-**Today:** **Primary** {P/L} · End-of-day balance {Primary equity} · Running total since Day 1 (10/23): **{Primary total}**
+**Today:** **Primary** {net P/L for the day after costs} · Running total since Day 1 (10/23): **{Primary total}**
 **Milestones:** M1 (3 green days in a row) {x}/3 · M2 (8 of last 10 green) {g}/{n}
+
+**Setup streak facts:** (counted on traded sessions only — sessions a setup didn't trade are skipped; say "{n} sessions in a row" only if it traded every session)
+
+- Green: {display name} - {n} traded sessions in a row, {R}
+{… 4 green lines}
+- Red: {display name} - {n} traded sessions in a row, {R}
+{… 3 red lines}
 
 **Quick answers to common questions:**
 
