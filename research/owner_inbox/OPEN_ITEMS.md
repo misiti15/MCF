@@ -65,11 +65,28 @@ and every decision the owner answers is set to `answered` with the date and the 
 | CF-TEST | Cost filter forward test (owner CF yes 10-29): Testing 1/2 skip entries with stop-exit cost > 0.15R from 10-30. Review: kept vs skipped (what-if) avg R, trades lost, per setup; only then raise anything for the owner. Never Primary without the owner | Claude | nightly loop FYI | 2026-11-12 (10 sessions) | live from 10-30 · 10-30 day 1: T1 skipped 5 (what-if +2.8R), T2 skipped 32 (what-if −16.4R) · 11-02: T1 skipped 24 (what-if −6.2R, saved), T2 skipped 30 (+3.0R, cost) |
 | HK-LATCH | Primary −2R per-setup latch reads realized R only after the reconcile books the stop fills (11-02: L3-fromopen SOXS lot 4 entered 12:45:39, 25 s after 2 stops filled, booked 12:46:44; −1.02R, −$87). Fix idea: count broker stop fills / pending exits in the entry check | Claude | step 1 | housekeeping, outside market hours | queued |
 | BL-1102 | Backlog from the 11-02 autopsy: nightly-1102-skip-inverse-etf-shorts (failed, 4 configs: inverse-ETF shorts are better on two years), nightly-1102-l3-inverse-etf-skip (idea; needs the l3_1022 scan rebuilt) | BDI | backlog | next BDI routing | idea / failed |
+| REG2 | Owner decision still open (raised 2026-11-03) | owner | nightly brief | when owner decides | waiting on owner |
+| KEYS | Alpaca paper keys for the 2 new accounts (Explore 1 `mx1-`, Live Lab `mll-`; branch claude/accounts-3new, trimmed to 2, NOT merged until the keys exist). Explore 1 = home of the trimmed low-activity setups (INACT2: IDX1 trail, IDX1 hold, IDX2, IDX3, IDX5, LD4, LD5) | owner | nightly brief | when owner adds keys | waiting on owner |
+| ROLL1 | Roll-out order of the new accounts: deferred by the owner 2026-11-03 - REMIND the owner when the first new account is added (EX1 waits on it) | Claude | nightly brief | first new account added | deferred |
+| UNI1-T2 | Testing 2 smaller ticker pool trial (top 500 by ADV x ATR%, ADV >= $95M) from 11-04 (ledger 2026-11-03-uni1-testing2-top500): daily T2 vs T1 R in the post; Testing 2 records before / after 11-04 never mixed | Claude | daily post + nightly loop | first review after 10 sessions (2026-11-17) | live from 2026-11-04 |
+| INACT-CHK | Nightly inactive check `python -m mcf.report.inactive --date <today> --next <next> --inbox` (INACT1: one FYI line; watch P<5%, alarm P<1%, index-gated exempt) + Monday INACT2 sessions-to-verdict list (research/ops/inactive/verdicts_<date>.md) | nightly loop | owner inbox | nightly | live from 2026-11-03 night |
+| PARK-REV | Biweekly parked-ideas review (PARK1): `python -m mcf.research.backlog parked` (scheduled task 1st / 15th) | Claude | scheduled task | 2026-11-15 | scheduled |
+| RQ-QUEUE | Research running order research/queue.jsonl (`python -m mcf.research.queue tonight`, max 6 jobs a night): COMBO1, GY-BP replay, swing autopsy leads L1-L3 | BDI | queue | nightly | COMBO1 next |
 
 ## Closed
 
 | ID | Item | Closed | Outcome |
 |---|---|---|---|
+| BETA1 | Beta-removed avg R in reviews and on the dashboard | 2026-11-03 | yes - "Avg R ex-market" (intercept of R on SPY's same-window move) on dashboard, daily post, EOD report, gates.summary |
+| UNI1 | Smaller ticker pool (top 500) live check | 2026-11-03 | yes, Testing 2 only, from 11-04 (row UNI1-T2) |
+| CAP1 | GitHub load reducers + research queue | 2026-11-03 | yes with research queue (max 6 jobs a night; research workflows one group, <= 4 legs) |
+| EX1 | Explore 1 account | 2026-11-03 | yes, pending ROLL1 / KEYS |
+| COMBO1 | Combine small positives (09:35 mover scan + fade timing + peer laggards + smaller universe) | 2026-11-03 | yes - top of research/queue.jsonl |
+| PARK1 | failed -> parked + biweekly review | 2026-11-03 | yes (row PARK-REV) |
+| INACT1 | Nightly inactive-setups check | 2026-11-03 | yes (row INACT-CHK) |
+| INACT2 | Judge rare setups on 60 trades | 2026-11-03 | yes + trimmed setups move to Explore 1 (CLAUDE.md standing rule) |
+| GY-BP | Graveyard per-setup cap replay | 2026-11-03 | yes (replay) - research/queue.jsonl GY-BP |
+| GH-PLAN | GitHub plan | 2026-11-03 | Free (20 concurrent jobs) |
 | ST-P | Primary per-setup daily stop (backlog st-a-1022-primary-setup-stop, owner ST-A+P): latched per-setup stop none vs 1.5 / 2 / 3R. No Primary change without the ow… | 2026-10-28 | approved by owner 2026-10-28: Primary only, −2R latched per-setup stop from 2026-10-29 (config max_setup_daily_loss_r 2.0; Testing 1/2 + Gen stay off, Graveyard keeps its own). Pre-rule baseline replay 17 sessions: 2R +21.10R vs none (research/bdi/nightly1028) |
 | EXP | Trade-count / exposure: add a 6th paper account (Testing 3 or Generator 2)? research/ops/exposure1026.md | 2026-10-28 | owner 2026-10-27: no new account yet |
 | HK-RECON | Testing 2 journal: 2 entries of 10-27 (Z CWT14-failbrk-pdl-p05-lowvol-long 10:10, SLN CWT12-coil-k4-long 10:20) still `submitted` (240 submitted vs 238 trades);… | 2026-10-28 | journaled under 10-27 by the 10-28 reconcile (Z −$0.56, SLN +$0.46; T2 10-27 = 240 trades, −$261.14) |

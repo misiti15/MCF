@@ -30,7 +30,8 @@ from mcf.config import _merge                                   # noqa: E402
 from mcf.report.playing_time import classify, expected_rates     # noqa: E402
 
 S = Path(sys.argv[1])
-OUT = Path(__file__).resolve().parent
+OUT = Path(os.environ.get("MCF_INACTIVE_OUT") or Path(__file__).resolve().parent)   # nightly: mcf/report/inactive.py
+OUT.mkdir(parents=True, exist_ok=True)
 TODAY = sys.argv[2] if len(sys.argv) > 2 else "2026-11-03"   # nightly: pass the next session date
 ACCTS = {"Primary": ("mcf-data", "primary"), "Testing 1": ("mcf-data-testing", "testing"),
          "Testing 2": ("mcf-data-testing2", "testing2"), "Graveyard": ("mcf-data-graveyard", "graveyard"),
@@ -352,7 +353,7 @@ df["alarm"] = ["alarm (P < 1%)" if (r.p_quiet_exp is not None and r.p_quiet_exp 
                else "watch (P < 5%)" if (r.p_quiet_exp == r.p_quiet_exp and r.p_quiet_exp is not None and r.p_quiet_exp < 0.05
                                          and not str(r.cause).startswith("rare by design: index")) else ""
                for r in df.itertuples()]
-summary = {"asof": "2026-11-03 ~11:05 ET (journals); completed sessions through 2026-11-02",
+summary = {"asof": os.environ.get("MCF_INACTIVE_ASOF") or "2026-11-03 ~11:05 ET (journals); completed sessions through 2026-11-02",
            "enabled": int(len(df)), "by_account": df.groupby("account").size().to_dict(),
            "signal_buckets": df.bucket.value_counts().to_dict(),
            "signal_buckets_by_account": df.groupby(["account", "bucket"]).size().unstack(fill_value=0).to_dict("index"),

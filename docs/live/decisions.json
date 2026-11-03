@@ -471,8 +471,8 @@
   ],
   "why": "Promotions should rest on setup skill, not on which way SPY went that week.",
   "link": "research/bdi/eu1103/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes - 'Avg R ex-market' column on the dashboard leaderboard, daily post, EOD report and reviews (from the 11-03 nightly scorecards)"
  },
  {
   "code": "UNI1",
@@ -486,8 +486,8 @@
   ],
   "why": "A bigger universe is worse on every test; a smaller one helps a little by trading names where costs are a smaller share of R.",
   "link": "research/bdi/eu1103/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes, Testing 2 only - top 500 by ADV x ATR% (ADV >= $95M) from the 11-04 session (ledger 2026-11-03-uni1-testing2-top500)"
  },
  {
   "code": "OPEN1",
@@ -531,8 +531,8 @@
   ],
   "why": "Expected rates run from 0.01 to 49 signals a session, so no single session count is fair; the rate rule raises an alarm only when something is really off.",
   "link": "research/ops/inactive1103/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes - nightly inactive check (python -m mcf.report.inactive): one FYI line a night, DECISION only when a fix needs the owner"
  },
  {
   "code": "INACT2",
@@ -546,8 +546,8 @@
   ],
   "why": "Their quiet streaks are normal for their rate; the real playing-time gap is that many setups cannot reach a verdict in 20 sessions.",
   "link": "research/ops/inactive1103/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes - judged on 60 trades with a weekly sessions-to-verdict list; trimmed low-activity setups move to Explore 1 when it opens"
  },
  {
   "code": "GY-BP",
@@ -561,7 +561,91 @@
   ],
   "why": "It is the only account where load takes turns away from setups; the blocked signals have not been profitable, so it matters for sample size, not money.",
   "link": "research/ops/inactive1103/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes (replay only) - queued in research/queue.jsonl (GY-BP)"
+ },
+ {
+  "code": "CAP1",
+  "title": "Cut GitHub job load so research never crowds out the trading jobs",
+  "what": "Load reducers from capacity1103 (research matrices capped at 4 parallel legs, cancelled-standby EOD skip) plus one research running order (research/queue.jsonl, at most 6 research jobs a night).",
+  "recommend": "Yes - housekeeping, no trading change",
+  "numbers": [
+   "GitHub Free: 20 concurrent jobs for all workflows",
+   "cwt-transcripts used up to 20 legs before the cap"
+  ],
+  "why": "A research burst could take every job slot and delay a trading hand-over.",
+  "link": "research/ops/capacity1103/NOTES.md",
+  "status": "answered",
+  "answered": "2026-11-03: yes, with a research queue (research/queue.jsonl, max 6 jobs a night, research workflows share one group)"
+ },
+ {
+  "code": "EX1",
+  "title": "Open the Explore 1 account for low-activity and exploratory setups",
+  "what": "A new paper account (orders mx1-) that gives trimmed low-activity setups and exploratory setups more exposure; built on branch claude/accounts-3new with the Live Lab account, not merged until the keys exist.",
+  "recommend": "Yes - after ROLL1",
+  "numbers": [
+   "7 INACT2 setups move there when it opens",
+   "Testing 1 has room; Testing 2 and Gen are CPU-crowded"
+  ],
+  "why": "Rare setups need more sessions to reach a verdict; a separate account adds exposure without in-session throttling.",
+  "link": "research/ops/inactive1103/NOTES.md",
+  "status": "answered",
+  "answered": "2026-11-03: yes, pending ROLL1 (account keys first)"
+ },
+ {
+  "code": "COMBO1",
+  "title": "Research: combine the small positives into one setup family",
+  "what": "Research only: combine the 09:35 mover scan, the fade timing effect, peer laggards and the smaller universe; top of the research queue.",
+  "recommend": "Yes - research only",
+  "numbers": [
+   "Measured edge so far: a small reversal timing effect (+0.05R per trade live)",
+   "UNI1 smaller pool lowers cost per R"
+  ],
+  "why": "Each piece is small on its own; together they may clear the bars.",
+  "link": "research/queue.jsonl",
+  "status": "answered",
+  "answered": "2026-11-03: yes - first in research/queue.jsonl"
+ },
+ {
+  "code": "PARK1",
+  "title": "Call failed backlog ideas 'parked' and re-test them every two weeks",
+  "what": "Backlog status 'failed' becomes 'parked' (kept for a later re-test); a biweekly review lists parked ideas whose blocker may have changed.",
+  "recommend": "Yes - research bookkeeping",
+  "numbers": [
+   "354 backlog entries were 'failed'",
+   "biweekly review scheduled (1st and 15th)"
+  ],
+  "why": "New data (borrow / short volume, more sessions, new accounts) can change an old verdict.",
+  "link": "research/BACKLOG.md",
+  "status": "answered",
+  "answered": "2026-11-03: yes + biweekly review"
+ },
+ {
+  "code": "GH-PLAN",
+  "title": "Which GitHub plan does the account use?",
+  "what": "The API could not show the plan; capacity planning assumed GitHub Free (20 concurrent jobs).",
+  "recommend": "Optional - Pro doubles the job headroom",
+  "numbers": [
+   "Free: 20 concurrent jobs",
+   "Pro: 40"
+  ],
+  "why": "The job-slot budget for trading and research depends on it.",
+  "link": "research/ops/capacity1103/NOTES.md",
+  "status": "answered",
+  "answered": "2026-11-03: GitHub Free"
+ },
+ {
+  "code": "ROLL1",
+  "title": "Roll-out order for the new accounts",
+  "what": "How and when the new accounts (Explore 1, Live Lab) are switched on once their keys exist.",
+  "recommend": "Optional - decide when the first new account is added",
+  "numbers": [
+   "2 accounts on claude/accounts-3new (Explore 2 dropped)",
+   "waits for the owner's Alpaca keys"
+  ],
+  "why": "Each account adds jobs to the 20-slot budget.",
+  "link": "research/ops/capacity1103/NOTES.md",
+  "status": "answered",
+  "answered": "2026-11-03: deferred - remind the owner when the first new account is added"
  }
 ]
