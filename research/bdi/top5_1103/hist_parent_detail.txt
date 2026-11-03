@@ -1,0 +1,125 @@
+Educational only - not financial advice. BACKTEST parents (open history, TRAIN+VALID, costs in).
+=== exhaustion_short-FD  n 21793  exp -0.0761  win 0.493
+losers 11056: never reached +0.2R 3985, reached +0.5R 3298; med MFE 0.76 med MAE -0.76
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00  2467 -0.088       0.492
+10:00-10:30  4134 -0.133       0.477
+10:30-11:30  7600 -0.085       0.484
+11:30-13:00  4170 -0.051       0.502
+13:00-14:00  1745 -0.029       0.524
+14:00-16:00  1677  0.011       0.515
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    5006  0.058
+      True     7754 -0.219
+valid False    4262  0.071
+      True     4771 -0.117
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     8706  0.962
+2     8828 -1.118
+6     4259 -0.040
+
+=== RW3S-gapdn-flowsell-short-FD  n 24363  exp -0.0555  win 0.494
+losers 12339: never reached +0.2R 4709, reached +0.5R 3475; med MFE 0.73 med MAE -0.70
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00  2074 -0.066       0.499
+10:00-10:30  3343 -0.024       0.519
+10:30-11:30  9975 -0.046       0.499
+11:30-13:00  5090 -0.077       0.482
+13:00-14:00  2274 -0.086       0.473
+14:00-16:00  1607 -0.058       0.464
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    7973  0.074
+      True     6471 -0.258
+valid False    6092  0.081
+      True     3827 -0.199
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     9475  0.966
+2     9161 -1.105
+6     5727 -0.067
+
+=== RW1-gapdn-bounce-flowsell-short-FD  n 5802  exp -0.0495  win 0.492
+losers 2947: never reached +0.2R 1125, reached +0.5R 765; med MFE 0.66 med MAE -0.60
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   146  0.044       0.548
+10:00-10:30   295 -0.097       0.505
+10:30-11:30  2043 -0.013       0.514
+11:30-13:00  1744 -0.068       0.487
+13:00-14:00   867 -0.097       0.464
+14:00-16:00   707 -0.051       0.458
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    1862  0.094
+      True     1758 -0.250
+valid False    1343  0.101
+      True      839 -0.190
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1995  0.963
+2     1883 -1.115
+6     1924 -0.056
+
+=== L3-gap-slope-lowdist-FD  n 3408  exp -0.1291  win 0.482
+losers 1764: never reached +0.2R 716, reached +0.5R 478; med MFE 0.77 med MAE -0.83
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00    81 -0.126       0.481
+10:00-10:30   211 -0.374       0.355
+10:30-11:30   638 -0.261       0.420
+11:30-13:00  1637 -0.116       0.487
+13:00-14:00   441 -0.079       0.524
+14:00-16:00   400  0.104       0.585
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     998  0.121
+      True     1195 -0.374
+valid False     350  0.146
+      True      865 -0.190
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1408  0.953
+2     1506 -1.148
+6      494 -0.106
+
+=== ST7-rsi50dn-long-pm-t1s1-FD  n 741  exp +0.0190  win 0.525
+losers 352: never reached +0.2R 128, reached +0.5R 105; med MFE 0.81 med MAE -0.61
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00     3 -0.046       0.667
+10:00-10:30     1 -1.048       0.000
+10:30-11:30   493  0.000       0.533
+11:30-13:00   106 -0.027       0.462
+13:00-14:00    67  0.181       0.597
+14:00-16:00    71  0.083       0.493
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     236 -0.236
+      True      135  0.244
+valid False     202  0.068
+      True      168  0.138
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1      303  0.967
+2      243 -1.146
+6      195 -0.002
