@@ -82,7 +82,18 @@ live:
     - NS4-pm-vwap-reclaim-oversold-short   # back from Primary 2026-10-27
     - CWT14-failbrk-pdl-p10-lowvol-long   # back from Primary 2026-10-27
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
+    - RW3S-gapdn-flowsell-short-FD   # owner RW3S 2026-11-03: observation, 5 live sessions
 strategies:
+  # ---- owner RW3S 2026-11-03 (research/bdi/night1102/simple): RW3-FD without RSI(5) > 80; observation for 5 live sessions,
+  #      then re-evaluate. Did NOT pass BAR90 or the twin bar; a down-day bet.
+  RW3S-gapdn-flowsell-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/night1102/simple/modules/RW3S-gapdn-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [observation, night1102, RW3S]
   # ---- swarm1017 near-misses runnable after Q8 (owner 2026-10-17): forward observation, NOT candidates;
   #      judge on >= 20 sessions / 60 trades
   NM-RWN3-ns3-spyup-early-short:
