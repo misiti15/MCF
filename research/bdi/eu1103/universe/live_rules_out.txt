@@ -1,0 +1,34 @@
+Educational only - not financial advice. LIVE paper trades (run_id 1, 5 accounts, 10-06..11-02, 20 sessions), after costs. kept / dropped avg R, day-clustered t, avg R w/o best session; kd = per-session kept minus dropped mean.
+
+== ALL setups: all trades n 12256 avg R -0.138 t -5.93 w/o best -0.148, green sessions 2/20
+                                       rule  n_kept  kept_R  kept_t  kept_wo_best  n_drop  drop_R     kd  kd_t  kept_totR green_days_kept
+                      S1 top-300 dollar-ATR    4784  -0.135   -3.67        -0.150    7472  -0.140  0.023  0.39     -647.8            4/20
+                      S1 top-500 dollar-ATR    6925  -0.145   -4.56        -0.155    5331  -0.130  0.019  0.42    -1002.7            2/20
+                      S1 top-800 dollar-ATR    9354  -0.139   -5.40        -0.149    2902  -0.137  0.034  0.57    -1297.5            1/20
+          S2 move history >= 3% (prior 60d)    1552  -0.108   -2.92        -0.128   10704  -0.143  0.029  0.92     -167.8            5/20
+                               S3 ATR% >= 3    7382  -0.132   -4.20        -0.145    4874  -0.149  0.012  0.22     -970.9            4/20
+        S4 drop idiosyncratic (sector none)   11436  -0.131   -5.61        -0.140     820  -0.246  0.062  1.21    -1493.6            2/20
+                             S5 ADV >= 300M    6376  -0.136   -4.87        -0.146    5880  -0.141 -0.024 -0.59     -867.1            1/20
+L0 below 95M only (what a lower floor adds)     398  -0.081   -0.72        -0.152   11858  -0.140  0.195  1.65      -32.2            9/20
+
+== busiest 8: all trades n 3881 avg R -0.103 t -3.46 w/o best -0.116, green sessions 4/16
+                                       rule  n_kept  kept_R  kept_t  kept_wo_best  n_drop  drop_R     kd  kd_t  kept_totR green_days_kept
+                      S1 top-300 dollar-ATR    1549  -0.052   -1.14        -0.073    2332  -0.136  0.095  2.19      -80.5            7/16
+                      S1 top-500 dollar-ATR    2238  -0.090   -2.30        -0.103    1643  -0.120  0.048  1.07     -201.2            6/16
+                      S1 top-800 dollar-ATR    3018  -0.096   -3.20        -0.107     863  -0.126  0.046  0.88     -288.9            6/16
+          S2 move history >= 3% (prior 60d)     484  -0.045   -1.22        -0.062    3397  -0.111  0.057  1.65      -21.9            7/16
+                               S3 ATR% >= 3    2250  -0.085   -2.04        -0.106    1631  -0.126  0.066  1.40     -192.3            6/16
+        S4 drop idiosyncratic (sector none)    3645  -0.097   -3.10        -0.109     236  -0.183  0.076  0.98     -354.7            4/16
+                             S5 ADV >= 300M    2128  -0.087   -2.57        -0.097    1753  -0.122  0.036  1.27     -184.3            6/16
+L0 below 95M only (what a lower floor adds)      83   0.133    0.87         0.021    3798  -0.108 -0.018 -0.08       11.1            5/11
+
+== Primary: all trades n 761 avg R -0.042 t -0.4 w/o best -0.154, green sessions 5/20
+                                       rule  n_kept  kept_R  kept_t  kept_wo_best  n_drop  drop_R     kd  kd_t  kept_totR green_days_kept
+                      S1 top-300 dollar-ATR     289  -0.096   -0.66        -0.246     472  -0.009 -0.061 -0.66      -27.8            9/20
+                      S1 top-500 dollar-ATR     436  -0.062   -0.41        -0.228     325  -0.016  0.043  0.45      -26.8            7/20
+                      S1 top-800 dollar-ATR     562  -0.033   -0.28        -0.153     199  -0.067  0.114  1.19      -18.7            7/20
+          S2 move history >= 3% (prior 60d)     104  -0.065   -0.49        -0.189     657  -0.038  0.061  0.49       -6.8            8/18
+                               S3 ATR% >= 3     443  -0.068   -0.51        -0.204     318  -0.006  0.017  0.14      -30.1            9/20
+        S4 drop idiosyncratic (sector none)     705  -0.035   -0.31        -0.156      56  -0.136 -0.092 -0.53      -24.5            5/20
+                             S5 ADV >= 300M     377  -0.015   -0.10        -0.181     384  -0.069  0.033  0.40       -5.7            9/20
+L0 below 95M only (what a lower floor adds)      21  -0.234   -1.65        -0.315     740  -0.037  0.039  0.11       -4.9             3/7
