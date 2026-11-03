@@ -456,8 +456,8 @@
   ],
   "why": "Execution cost is where the book's R leaks; a small timing edge cannot clear costs until they fall.",
   "link": "research/bdi/eu1103/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: no for now - keep crossing the spread (closest to real fills); mid-price replay not pursued"
  },
  {
   "code": "BETA1",
@@ -501,8 +501,8 @@
   ],
   "why": "The runner can react in time (43 s median at 09:50-09:59 since GX1); the early signals are simply worse.",
   "link": "research/bdi/eu1103/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: keep 09:50 for now, keep the option open; research pre-09:50 swings as a separate lineage (narrow)"
  },
  {
   "code": "PRE1",
@@ -516,7 +516,7 @@
   ],
   "why": "Pre-open data finds movers but not winners; recording free borrow data now makes a short-side feature testable later without buying a feed.",
   "link": "research/bdi/eu1103/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-03: yes - record borrow flags + FINRA short volume each morning if load/memory allow"
  }
 ]
