@@ -21,6 +21,10 @@ def _testing_strategies(monkeypatch):
     t2 = {s.name: s for s in build_strategies(load_config())}
     assert "LIQ-orl-sweep-open15-s25-long" not in out
     out["LIQ-orl-sweep-open15-s25-long"] = t2["LIQ-orl-sweep-open15-s25-long"]
+    monkeypatch.setenv("MCF_ACCOUNT", "livelab")     # LIQ-pdl: Live Lab from 2026-11-05 (owner low-rep rotation)
+    ll = {s.name: s for s in build_strategies(load_config())}
+    assert "LIQ-pdl-sweep-open15-vwap-long" not in out
+    out["LIQ-pdl-sweep-open15-vwap-long"] = ll["LIQ-pdl-sweep-open15-vwap-long"]
     return out
 
 

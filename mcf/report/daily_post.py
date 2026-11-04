@@ -36,7 +36,11 @@ ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "
             ("explore1", "Explore 1", "mcf-data-explore1", "exploratory + trimmed low-activity setups")]   # day-trading only (no S6)
 MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
 DAY1 = "2026-10-23"   # owner 2026-10-26: the post's stats (P/L, milestones, chart, last sessions) start at Day 1
-NEW_ACCOUNTS = ("livelab", "explore1")   # owner 2026-11-03: shown once they have a status.json
+NEW_ACCOUNTS = ("livelab", "explore1")   # owner 2026-11-03 / 2026-11-04: the low-rep homes
+# Owner 2026-11-04: Explore 1 / Live Lab account TOTALS never show in the post (today card, account P/L, chart, last
+# sessions, quick-facts counts); their SETUPS still count for the day's top setups and the leaderboard (account tag),
+# except a setup that came from the Graveyard (assignments.json "no_leaderboard").
+TOTALS_EXCLUDED = NEW_ACCOUNTS
 LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "livelab", "explore1")
 CHROME = ["/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell", "/opt/pw-browsers/chromium"]
 
@@ -64,9 +68,9 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
     """Per account: balance (actual), today's P/L, and P/L + history from `since` (Day 1) on; full_history keeps all."""
     out = []
     for k, name, br, kind in ACCOUNTS:
-        s = _show(br, "status.json") or {}
-        if not s and k in NEW_ACCOUNTS:      # not started yet (no state branch / status.json): left out of the post
+        if k in TOTALS_EXCLUDED:             # owner 2026-11-04: low-rep homes - no account totals in the post
             continue
+        s = _show(br, "status.json") or {}
         t, ss = s.get("today") or {}, s.get("since_start") or {}
         if s.get("session_date") != date:
             t = next((h for h in s.get("history") or [] if h.get("date") == date), {})
@@ -176,6 +180,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
     for code, rs in by.items():
         a = asg.get(code) or {}
         if not a.get("accounts"):        # "Live setups" view: only setups enabled somewhere now
+            continue
+        if a.get("no_leaderboard"):      # owner 2026-11-04: Graveyard-origin setup in Explore 1 / Live Lab
             continue
         r = _merge(rs)
         n = r.get("trades") or 0
@@ -388,6 +394,8 @@ def facts(accts: list[dict]) -> dict:
     rejected += max(0, (lab.get("specs_screened") or 0) - (lab.get("setups_generated") or 0))
     slip, n = 0.0, 0
     for k, _, br, _ in ACCOUNTS:
+        if k in TOTALS_EXCLUDED:          # owner 2026-11-04: no Explore 1 / Live Lab totals in the post
+            continue
         ss = (_show(br, "status.json") or {}).get("since_start") or {}
         if ss.get("avg_entry_slip_bps") is not None and ss.get("trades"):
             slip += ss["avg_entry_slip_bps"] * ss["trades"]; n += ss["trades"]

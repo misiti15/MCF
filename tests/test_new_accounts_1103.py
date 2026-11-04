@@ -41,12 +41,12 @@ def _expr(wf: str, key: str) -> str:
 
 
 @pytest.mark.parametrize("acct", sorted(NEW))
-def test_overlay_sizing_and_no_setups_yet(monkeypatch, acct):
+def test_overlay_sizing_and_own_setups_only(monkeypatch, acct):
     from mcf.backtest.engine import slot_notional
     from mcf.strategies.setups import build_strategies
 
     raw = yaml.safe_load((ROOT / f"config/account_{acct}.yaml").read_text())
-    assert raw["strategies_exclusive"] is True and not raw.get("strategies")
+    assert raw["strategies_exclusive"] is True and raw.get("strategies")      # low-rep setups from 2026-11-05 (owner 11-04)
     cfg = _cfg(monkeypatch, acct)
     a, live = cfg["account"], cfg["live"]
     assert cfg["account_name"] == acct
@@ -55,9 +55,9 @@ def test_overlay_sizing_and_no_setups_yet(monkeypatch, acct):
     t1 = _cfg(monkeypatch, "testing")["account"]
     assert a["max_daily_loss_r"] == t1["max_daily_loss_r"] == 120                  # the Testing account backstop
     assert a["risk_per_trade_pct"] == t1["risk_per_trade_pct"]
-    assert live["setup_order"] == [] and live["scale_out_max_per_day"] == 0 and live["block_twin_same_symbol"] is False
+    assert sorted(live["setup_order"]) == sorted(raw["strategies"]) and live["scale_out_max_per_day"] == 0 and live["block_twin_same_symbol"] is False
     monkeypatch.setenv("MCF_ACCOUNT", acct)
-    assert build_strategies(cfg) == []                                             # nothing from default.yaml leaks in
+    assert {s.name for s in build_strategies(cfg)} == set(raw["strategies"])      # nothing from default.yaml leaks in
     assert abs(slot_notional(a) - 1_000) < 1e-6                                   # ~$1,000 constant notional per lot
 
 
@@ -92,9 +92,11 @@ def test_session_guard_and_longhold_know_the_accounts(tmp_path):
         assert f"secrets.ALPACA_{s}_API_KEY != '' && secrets.ALPACA_{s}_SECRET_KEY != ''" in sg
         assert f'accts="$accts,{acct}"' in sg
         assert f"ALPACA_{s}_API_KEY" in KEY_ENVS_FORBIDDEN and f"secrets.ALPACA_{s}_API_KEY" in lh
-        assert G.has_setups(acct) is False                                        # empty: trade.yml skips, guard does not chase it
+        assert G.has_setups(acct) is True                                         # low-rep setups from 2026-11-05 (owner 11-04)
     for acct in ("primary", "testing", "testing2", "gen", "graveyard"):
         assert G.has_setups(acct) is True
+    (tmp_path / "account_y.yaml").write_text("strategies_exclusive: true\nstrategies: {}\n")
+    assert G.has_setups("y", tmp_path) is False                                   # empty: trade.yml skips, guard does not chase it
     (tmp_path / "account_x.yaml").write_text("strategies_exclusive: true\nstrategies:\n  s1: {enabled: true}\n")
     assert G.has_setups("x", tmp_path) is True
     assert G.has_setups("missing", tmp_path) is True                              # unreadable: keep guarding
@@ -122,7 +124,7 @@ def test_reports_and_dashboard_list_the_accounts():
     d = json.loads(A.OUT.read_text())
     post = {k: br for k, _, br, _ in P.ACCOUNTS}
     for acct, (label, _, _) in NEW.items():
-        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and d["accounts"][acct] == []
+        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and d["accounts"][acct]
         assert post[acct] == f"mcf-data-{acct}" and acct in P.LB_ACCOUNTS and acct in P.COLORS
         assert acct in export.ACCOUNTS and harness.data_branch(acct) == f"origin/mcf-data-{acct}"
         assert f'k: "{acct}", name: "{label}"' in html                           # all-accounts card

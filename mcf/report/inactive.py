@@ -30,7 +30,8 @@ ROOT = Path(__file__).resolve().parents[2]
 AUDIT = ROOT / "research" / "ops" / "inactive1103" / "audit.py"
 INBOX = ROOT / "research" / "owner_inbox"
 VERDICT_DIR = ROOT / "research" / "ops" / "inactive"
-BRANCHES = ("mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-graveyard", "mcf-data-gen")
+BRANCHES = ("mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-graveyard", "mcf-data-gen",
+            "mcf-data-explore1", "mcf-data-livelab")   # 2026-11-04: Explore 1 / Live Lab (no journal yet = skipped)
 WATCH_P, ALARM_P = 0.05, 0.01
 VERDICT_TRADES = 60
 RARE_PER_SESSION = 3.0
@@ -140,7 +141,10 @@ def run_audit(next_session: str, scratch: Path) -> pd.DataFrame:
         d = scratch / "j" / br
         d.mkdir(parents=True, exist_ok=True)
         with open(d / "journal.db", "wb") as f:
-            subprocess.run(["git", "-C", str(ROOT), "show", f"origin/{br}:journal.db"], stdout=f, check=True)
+            r = subprocess.run(["git", "-C", str(ROOT), "show", f"origin/{br}:journal.db"], stdout=f,
+                               stderr=subprocess.DEVNULL, check=br in BRANCHES[:5])   # a new account may have no journal yet
+        if r.returncode != 0:
+            (d / "journal.db").unlink()
     (scratch / "cfg").mkdir(parents=True, exist_ok=True)
     subprocess.run(f"git -C {ROOT} archive HEAD config | tar -x -C {scratch / 'cfg'}", shell=True, check=True)
     env = dict(os.environ, MCF_INACTIVE_OUT=str(scratch / "out"),
