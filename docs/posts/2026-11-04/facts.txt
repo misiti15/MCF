@@ -1,0 +1,38 @@
+Quick facts (as of 2026-11-04)
+- Sessions traded: 22 (since 2026-10-06) · paper trades: 14,007
+- Setups live: 111 + 93 machine-generated
+- Setups rejected by backtests so far: ~27,735
+- Entry slippage: ~4.4 bps vs the signal price (measured, paper fills)
+- Today, 5 day-trading accounts: -$3,614.36 · since Day 1 (10/23): -$16,346.28
+- Primary: today -$141.37 · since Day 1 -$769.01 · green days 4 of 9
+- Milestones: M1 (3 green in a row) 0/3 · M2 (8 of last 10 green) 4/9
+
+Green-day streaks (setups green every session in a row, all accounts)
+- Big Gainer SMA50 Cross Fade (all day): 5 in a row (+$88.12)
+- heat_fade_short-FD: 3 in a row (+$296.43)
+- Gap-Down Pop Fade (all day): 3 in a row (+$219.06)
+- RW1-gapdn-bounce-flowsell-short-FD: 3 in a row (+$70.98)
+Green-day record: 6 sessions in a row - Stretched Above VWAP Fade (10-23..10-30)
+
+Green every day they traded (sessions with no trade explained)
+- Gap-Down VWAP Loss Short (10% gap): 5 trading days in a row (+$289.75) · no trade: 10-28 blocked: not shortable/ETB x4 (+1 other); 11-02 blocked: not shortable/ETB x1 (+2 other); 11-03 blocked: not shortable/ETB x6 (+3 earlier)
+- Early Sellers, Strong Heat: 5 trading days in a row (+$106.17) · no trade: 11-02 blocked: twin held x2 (+3 other); 11-03 blocked: twin held x5 (+2 other); 11-04 blocked: twin held x8 (+9 other) (+10 earlier)
+- ST8-volspikedn-long-pm-t1s1-FD: 5 trading days in a row (+$47.39) · no trade: 10-29 no signal; 11-02 no signal; 11-03 no signal (+5 earlier)
+- RW7-gapdn-bounce-early-short-FD: 3 trading days in a row (+$168.70) · no trade: 11-04 blocked: split-tape short gate x50
+- Big Gainer Average Reclaim Fade: 3 trading days in a row (+$89.00) · no trade: 11-02 blocked: opposite side held x2 (+1 other); 11-03 blocked: twin held x7 (+6 other); 11-04 blocked: spread 78bps > max x1 (+1 other) (+6 earlier)
+- Stretched Below VWAP Bounce (far): 3 trading days in a row (+$50.45) · no trade: 11-02 blocked: cost filter: stop-exit cost 0.40R > 0.15R x1 (+1 other); 11-03 no signal
+- Unintended blocks: Big Gainer Average Reclaim Fade 11-02 blocked: opposite side held x2 (+1 other); Stretched Below VWAP Bounce (far) 11-02 blocked: cost filter: stop-exit cost 0.40R > 0.15R x1 (+1 other)
+
+Quick answers
+- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.
+- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).
+- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
+- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
+- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.
+- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.
+- Break-even win rate? The win rate a setup needs just to not lose money.
+- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.
+- Avg R ex-market? Avg R with the market's move taken out (each trade's R regressed on SPY's move over the same minutes).
+- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).
+Not financial advice.

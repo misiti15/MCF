@@ -1,0 +1,14 @@
+{"note": "1 unit = the stock's normal daily range (1 × daily ATR). Open trades close by 3:55 PM ET. Neither is a proven edge: both failed their backtest gates and live in the Graveyard; #1 made 8 trades today, #2 made 25.",
+ "setups": [
+  {"setup": "CWT09-gapdn-bounce-g5-lowerhalf-short",
+   "title": "Gap-Down Bounce Rejection Short (5% gap)",
+   "lines": [["When", "10:30 AM–3:00 PM"], ["Market", "Any"],
+             ["Stock", "Gapped down 5%+ at the open, no earnings within 4 days, ≥ $1M traded a day"],
+             ["Trigger", "A 5-minute bar went above VWAP between 9:35 and 10:30; now a bounce bar reaches VWAP (or the 9:30–10:00 high) and closes in the lower half of its range"],
+             ["Action", "Short"], ["Exit", "Stop at the 9:30–10:30 high; no target, hold to 3:55 PM"]]},
+  {"setup": "LIQ-orl-sweep-open15-s25-long",
+   "title": "Opening-Range Low Sweep Reversal",
+   "lines": [["When", "10:05 AM–3:00 PM"], ["Market", "Any"], ["Stock", "≥ $95M traded a day"],
+             ["Trigger", "Price runs 0.15+ unit below the 9:30–10:00 low, then within 60 minutes a 15-minute bar closes back above the open of the bar that made the sweep"],
+             ["Action", "Buy"], ["Exit", "Stop 0.05 unit under the sweep low (skipped if more than 1 unit away), target 2.5× the risk, else out at 3:55 PM"]]}
+ ]}
