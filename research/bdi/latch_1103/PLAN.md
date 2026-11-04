@@ -70,3 +70,14 @@ A categorical split "latch on for X, off for Y" is a finding only if, at one lev
 delta > 0 and cell Y has delta < 0 on TRAIN, (2) both signs hold on VALID, (3) the X-minus-Y difference reaches the bar
 on TRAIN or VALID-pooled, and (4) live does not contradict (signs, where n >= 5 latched setup-days). Otherwise: FYI and a
 forward-shadow tally rule in research/bdi/swings/hypotheses.jsonl.
+
+## Amendment 1 (2026-11-04, before any latch delta was read)
+The raw lab signal lists have no account caps (CWT14 failbrk fires up to ~240 times a setup-day). Before the latch is
+simulated, each setup-day applies the live caps that bind most: <= 3 open lots per symbol per setup and <= 30 open
+positions per setup (Primary's per-setup cap). Only counts per setup were looked at to decide this.
+
+## Amendment 2 (2026-11-04, before any VALID or full-history result was read)
+Control (rule 6): a latch "helps" any setup with negative average R just by trading less. Every cell also reports the
+**excess delta** x = delta + n_blocked x (the setup's own average R on that split): the part of the saving that comes
+from the blocked trades being worse than the setup's average, i.e. from same-day clustering. A categorical rule must
+work on delta AND on x. Pairwise contrasts between cells are counted in N as well (counts.json).
