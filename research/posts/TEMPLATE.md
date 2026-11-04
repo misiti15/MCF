@@ -6,6 +6,9 @@
      Owner 2026-11-03: no end-of-day balance on the Today line (day's net P/L + running total only). "Setup streak facts": 4 green + 3 red
      leaders, each line says whether the streak counts consecutive sessions or traded sessions only (inactive sessions skipped); brief lines.
      "Quick thoughts" may change daily: use the owner's newest lines when given, else carry forward.
+     Owner 2026-11-03 (tone): lines Claude writes (notes, behind the scenes, quick updates, setup notes, theories, what we changed)
+     read slightly more casual and easy - like a trader explaining it to a friend - still short, still with the metrics; format unchanged.
+     Streaks are judged and shown in total R (green = positive R that session), not dollars.
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**

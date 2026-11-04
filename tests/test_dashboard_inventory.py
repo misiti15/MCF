@@ -218,6 +218,12 @@ def test_eod_streak_kinds_are_labelled():
         assert t in HTML, t
 
 
+def test_eod_streaks_judged_and_shown_in_r():
+    """Owner 2026-11-03: green / red days are set by the session's total R (not P/L); every list shows total R."""
+    assert "x[1] += (+rr || 0)" in HTML and "Math.sign(x[1]) !== sign" in HTML
+    assert HTML.count("<b>${rfmt(x.pnl)}</b>") == 2
+
+
 def test_eod_streak_lines_name_the_current_account():
     """Owner 2026-10-29: each streak / trend line shows the account the setup is in now."""
     assert "const where = id =>" in HTML and HTML.count("where(x.s)") >= 2
