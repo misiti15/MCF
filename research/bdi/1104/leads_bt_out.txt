@@ -1,0 +1,22 @@
+trade lists: 1165576 trades, 95 setups, 446 sessions 2024-10-01..2026-11-04 (locked block absent); configs tonight N=8, bar t 2.04; qqq_fo coverage 100.0%, iwm coverage 100.0%
+
+swing1104-L7 short guard (qqq_fo >= +0.75%): pool 469122 trades / 47 setups (avg -0.059R); class A n 77766 on 138 days raw -0.017R, excess +0.031R, day-clustered t +1.03; class B raw -0.067R
+   train: A excess -0.003 (n 29333), B raw -0.078 | valid: A excess +0.052 (n 48433), B raw -0.063
+   as a filter: keeps 83.4% of trades, 78.8% of top-decile winners; pool avg after the filter -0.067R vs -0.059R; A excess w/o its best day +0.020R
+   by dtype: down A n 2849 raw +0.177 ex +0.246 | B n 148499 raw +0.061; quiet A n 8230 raw +0.266 ex +0.314 | B n 130327 raw -0.048; up A n 66687 raw -0.060 ex -0.013 | B n 112530 raw -0.258
+   by s10: SPY<open@10 A n 10548 raw -0.076 ex -0.022 | B n 203514 raw -0.052; SPY>open@10 A n 67218 raw -0.008 ex +0.039 | B n 187842 raw -0.084
+   PASS False
+
+L8 pool setups: ['CWT14-failbrk-orl-p05-long', 'CWT14-failbrk-orl-p05-lowvol-long', 'CWT14-failbrk-orl-p10-long', 'CWT14-failbrk-orl-p10-lowvol-long', 'CWT14-failbrk-pdl-p05-long', 'CWT14-failbrk-pdl-p05-lowvol-long', 'CWT14-failbrk-pdl-p10-long', 'CWT14-failbrk-pdl-p10-lowvol-long']
+
+swing1104-L8 failbrk-long guard (IWM fo <= -0.50%): pool 566538 trades / 8 setups (avg -0.092R); class A n 130363 on 229 days raw -0.088R, excess +0.004R, day-clustered t +0.27; class B raw -0.093R
+   train: A excess -0.014 (n 43737), B raw -0.082 | valid: A excess +0.014 (n 86626), B raw -0.097
+   as a filter: keeps 77.0% of trades, 73.5% of top-decile winners; pool avg after the filter -0.093R vs -0.092R; A excess w/o its best day +0.000R
+   by dtype: down A n 75763 raw -0.170 ex -0.078 | B n 113204 raw -0.228; quiet A n 31906 raw -0.030 ex +0.062 | B n 153596 raw -0.097; up A n 22694 raw +0.108 ex +0.200 | B n 169375 raw +0.001
+   by s10: SPY<open@10 A n 92792 raw -0.095 ex -0.003 | B n 176512 raw -0.105; SPY>open@10 A n 37571 raw -0.069 ex +0.023 | B n 259663 raw -0.085
+   PASS False
+
+descriptive: short lab entries by qqq_fo bucket (raw R): (-99.0, -0.75] n 65075 -0.046; (-0.75, -0.25] n 85773 -0.055; (-0.25, 0.25] n 133200 -0.060; (0.25, 0.75] n 107308 -0.098; (0.75, 99.0] n 77766 -0.017
+descriptive: long lab entries by qqq_fo bucket (raw R): (-99.0, -0.75] n 94799 -0.060; (-0.75, -0.25] n 139917 -0.099; (-0.25, 0.25] n 237029 -0.090; (0.25, 0.75] n 157066 -0.067; (0.75, 99.0] n 67643 -0.026
+
+Educational only - not financial advice.
