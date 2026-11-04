@@ -9,6 +9,8 @@
      Owner 2026-11-03 (tone): lines Claude writes (notes, behind the scenes, quick updates, setup notes, theories, what we changed)
      read slightly more casual and easy - like a trader explaining it to a friend - still short, still with the metrics; format unchanged.
      Streaks are judged and shown in total R (green = positive R that session), not dollars.
+     Owner 2026-11-04: "Quick answers to common questions" sits at the very bottom, right before the closing line - an
+     afterthought, so the exciting parts (today, streaks, updates, thoughts) are at the top.
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
 **Day {N} in the books!**
@@ -32,6 +34,14 @@
 - Red: {display name} - {n} traded sessions in a row, {R}
 {… 3 red lines}
 
+**Things I am still wanting:**
+
+- {owner's lines, carried forward}
+
+**Quick thoughts:**
+
+- {owner's lines, carried forward}
+
 **Quick answers to common questions:**
 
 - Claude (Opus 5.5) - Python
@@ -45,14 +55,6 @@
 - Break-even win rate - Win rate a setup needs just to not lose money.
 - Avg R w/o best day - Same, with its single best session removed - spots records carried by one big day.
 - Accounts were meant to start at $100k; they could not be reset during earlier testing without conflicts, so some accounts started in a deficit.
-
-**Things I am still wanting:**
-
-- {owner's lines, carried forward}
-
-**Quick thoughts:**
-
-- {owner's lines, carried forward}
 
 As always, thanks so much for the support and input!
 
