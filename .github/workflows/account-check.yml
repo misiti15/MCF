@@ -1,0 +1,42 @@
+# Account check (housekeeping, 2026-11-04): read-only GET of one paper account's /v2/account to confirm its keys
+# authenticate (status ACTIVE, not blocked). Prints status flags and equity only - never a key, never the account
+# number. Places no orders, writes nothing. Manual run only. Educational only - not financial advice.
+name: account-check
+
+on:
+  workflow_dispatch:
+    inputs:
+      account:
+        description: "Which paper account to check"
+        type: choice
+        options: [explore1, livelab, testing, testing2, gen, graveyard]
+        default: explore1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcf-account-check-${{ inputs.account }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      ACCT: ${{ inputs.account }}
+      ALPACA_TRADE_API_KEY: ${{ inputs.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (inputs.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (inputs.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (inputs.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (inputs.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (inputs.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || ''))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ inputs.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (inputs.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (inputs.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (inputs.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (inputs.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (inputs.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || ''))))) }}
+    steps:
+      - name: Keys present
+        run: |
+          if [ -z "$ALPACA_TRADE_API_KEY" ] || [ -z "$ALPACA_TRADE_SECRET_KEY" ]; then echo "$ACCT: keys NOT set"; exit 1; fi
+          echo "$ACCT: both keys set"
+      - name: GET paper /v2/account (read-only)
+        run: |
+          code=$(curl -sS -o acct.json -w '%{http_code}' https://paper-api.alpaca.markets/v2/account \
+                 -H "APCA-API-KEY-ID: $ALPACA_TRADE_API_KEY" -H "APCA-API-SECRET-KEY: $ALPACA_TRADE_SECRET_KEY")
+          echo "HTTP $code"
+          python3 -c "import json; d=json.load(open('acct.json')); print({k: d.get(k) for k in ('status', 'account_blocked', 'trading_blocked', 'equity', 'buying_power', 'shorting_enabled', 'currency')})" || true
+          rm -f acct.json
+          [ "$code" = "200" ]
