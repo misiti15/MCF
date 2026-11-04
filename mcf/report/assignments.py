@@ -23,6 +23,10 @@ OUT = ROOT / "docs" / "live" / "assignments.json"
 ACCOUNTS = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator"}
 if (ROOT / "config" / "account_graveyard.yaml").exists():      # the Graveyard account, once it exists
     ACCOUNTS["graveyard"] = "Graveyard"
+# Live Lab + the two exploratory accounts (owner 2026-11-03), once their overlays exist
+for _k, _v in (("livelab", "Live Lab"), ("explore1", "Explore 1")):
+    if (ROOT / "config" / f"account_{_k}.yaml").exists():
+        ACCOUNTS[_k] = _v
 # Split copies (owner 2026-10-20, "Goals for copies"): the only accounts where one setup may run twice, each copy on
 # its own half of the tickers (ticker_split). Never Primary, Graveyard or the Setup Generator.
 SPLIT_ACCOUNTS = ("testing", "testing2")

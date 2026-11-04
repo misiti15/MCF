@@ -102,7 +102,7 @@ def test_workflows_route_graveyard_to_its_own_account():
     eod = (ROOT / ".github/workflows/eod.yml").read_text()
     wd = (ROOT / ".github/workflows/watchdog.yml").read_text()
     for wf in (tr, eod, wd):
-        assert "account: [primary, testing, testing2, gen, graveyard]" in wf
+        assert "account: [primary, testing, testing2, gen, graveyard" in wf          # the matrix may grow (livelab, explore1, explore2, 2026-11-03)
         assert "(matrix.account == 'graveyard' && 'mcf-data-graveyard'" in wf
     for wf in (tr, wd):
         assert "(matrix.account == 'graveyard' && 'mgy-'" in wf
@@ -130,7 +130,7 @@ def test_dashboard_and_assignments_know_the_graveyard():
     html = (ROOT / "docs/live/index.html").read_text()
     assert 'k: "graveyard", name: "Graveyard"' in html                         # all-accounts card
     assert 'graveyard: ["Graveyard", "mcf-data-graveyard", "?account=graveyard"]' in html   # account switch
-    assert 'graveyard: ["Graveyard", "mcf-data-graveyard"] }' in html          # leaderboard
+    assert 'graveyard: ["Graveyard", "mcf-data-graveyard"], livelab:' in html   # leaderboard (+ 3 accounts 2026-11-03)
     assert A.ACCOUNTS.get("graveyard") == "Graveyard"
     d = json.loads(A.OUT.read_text())
     assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == MOVED_T1 | MOVED_T2
