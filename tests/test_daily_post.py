@@ -61,3 +61,34 @@ def test_m1_label_follows_current_run():
     assert (m["run"], m["best_run"], m["m1"], m["m1_before"]) == (0, 3, False, True)
     m = milestones(dict(history=h), "2026-10-28")
     assert (m["run"], m["m1"], m["m1_before"]) == (3, True, False)
+
+
+def _lb_row(i, gen=False):
+    nm = "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short" if gen else \
+        "CWT14-failbrk-pdl-p05-R2A-long-with-a-very-long-setup-identifier-FD"
+    return dict(rank=i, name="Failed Prior-Day-Low Break, SPY-Range Regime (long leg) [fill]", setup=nm, acct="Testing 2 · Explore 1",
+                best="Choppy", ls_n=25, ls_r=-12.76, ls_pnl=-1194.93, trades=1467, sessions=18, per_day=81.5, win=0.63, be=0.663,
+                avg_r=-0.074, exbest=(-0.114, "2026-10-20", 0.6), exmkt=-0.105, t=-0.84, total_r=-108.6, pnl=-12320.3, pf=0.93,
+                last4=-0.307, screen=(0.012, -0.034))
+
+
+def test_leaderboard_image_fits_all_columns():
+    """Housekeeping 11-04: the leaderboard PNG clipped PF / Last 4 avg R (table wider than the 1200px capture box)."""
+    import pytest
+    from pathlib import Path
+    from mcf.report import daily_post as dp
+    assert ".lb td.nm{white-space:normal" in dp.CSS and ".wrap:has(.lb){width:fit-content" in dp.CSS
+    pw = pytest.importorskip("playwright.sync_api")
+    exe = next((c for c in dp.CHROME if Path(c).exists()), None)
+    with pw.sync_playwright() as p:
+        try:
+            b = p.chromium.launch(executable_path=exe, args=["--no-sandbox"]) if exe else p.chromium.launch()
+        except Exception as e:  # no browser in this environment
+            pytest.skip(f"no chromium: {e}")
+        pg = b.new_page(viewport={"width": 1248, "height": 800})
+        for gen in (False, True):
+            pg.set_content(dp.html_lb("2026-11-04", [_lb_row(i, gen) for i in range(1, 11)], gen=gen))
+            m = pg.evaluate("() => { const c = document.getElementById('cap').getBoundingClientRect(), "
+                            "t = document.querySelector('.lb').getBoundingClientRect(); return [c.right, t.right]; }")
+            assert m[1] <= m[0], f"leaderboard table ends at {m[1]}px, capture box at {m[0]}px (gen={gen})"
+        b.close()

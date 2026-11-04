@@ -428,6 +428,9 @@ h1{font-size:22px;margin:0 0 2px} .sub{color:#666;font-size:13px;margin-bottom:1
 .lb th{font-size:11px;color:#555;text-align:right;padding:5px 4px;max-width:66px;white-space:normal;border-bottom:1px solid #ddd;vertical-align:bottom;line-height:1.2}
 .lb td{padding:5px 4px;text-align:right;border-bottom:1px solid #eee;white-space:nowrap}
 .lb .l{text-align:left} .lb th.l{max-width:none} .lb .nm{max-width:215px;overflow:hidden;text-overflow:ellipsis} .lb .nm div{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis}
+.lb td.nm{white-space:normal;min-width:150px} .lb .nm div{word-break:break-all;line-height:1.25}
+/* the leaderboard has ~20 columns: the capture box grows with the table instead of clipping PF / Last 4 avg R */
+.wrap:has(.lb){width:fit-content;min-width:1200px}
 .lb .ls{background:#eef3fb} .chip{display:inline-block;font-size:10.5px;padding:0 6px;border-radius:6px;border:1px solid #ccc;color:#444}
 .chip.Bear{color:#b91c1c;border-color:#b91c1c} .chip.Bull{color:#15803d;border-color:#15803d} .chip.Choppy{color:#b45309;border-color:#b45309}
 .gen{border-color:#c4b5fd;background:#faf8ff} .gb{display:inline-block;font-size:9.5px;font-weight:700;color:#fff;background:#7c3aed;border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:1px}
@@ -716,6 +719,8 @@ def render(htmls: dict[str, str], out: Path):
         for name, h in htmls.items():
             (out / f"{name}.html").write_text(h)
             pg.set_content(h, wait_until="domcontentloaded")
+            w = pg.evaluate("() => document.documentElement.scrollWidth")
+            pg.set_viewport_size({"width": max(1248, w), "height": 800})   # a wide table is never cut at the viewport edge
             pg.locator("#cap").screenshot(path=str(out / f"{name}.png"))
             (out / f"{name}.html").unlink()
         b.close()
