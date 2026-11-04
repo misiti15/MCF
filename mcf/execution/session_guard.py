@@ -18,12 +18,13 @@ import os
 import urllib.parse
 import urllib.request
 from datetime import time
+from pathlib import Path
 
 import pandas as pd
 
 NY = "America/New_York"
 WINDOW = (time(8, 40), time(15, 30))
-ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard")
+ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1")   # last 2: owner 2026-11-03
 ACTIVE = {"queued", "in_progress", "waiting", "requested", "pending"}
 MAX_DISPATCHES = 6
 WORKFLOW = "trade.yml"
@@ -98,6 +99,24 @@ def market_open_today(day: str) -> bool:
         return True
 
 
+def has_setups(account: str, config_dir: Path | None = None) -> bool:
+    """False only for a strategies_exclusive overlay with no enabled setup (e.g. Live Lab / Explore 1 before
+    their first setups, owner 2026-11-03): trade.yml skips such an account after ~1 minute, so the guard must not count
+    it as a missing session (it would re-dispatch trade.yml up to MAX_DISPATCHES times a day). Unreadable -> True."""
+    if account == "primary":
+        return True
+    f = (config_dir or Path(__file__).resolve().parents[2] / "config") / f"account_{account}.yaml"
+    try:
+        import yaml
+
+        over = yaml.safe_load(f.read_text()) or {}
+    except Exception:  # noqa: BLE001 - missing file / no PyYAML: keep guarding the account
+        return True
+    if not over.get("strategies_exclusive"):
+        return True
+    return any(isinstance(v, dict) and v.get("enabled") for v in (over.get("strategies") or {}).values())
+
+
 def run(accounts: list[str], ref: str, mode: str) -> dict:
     now = pd.Timestamp.now(tz=NY)
     day = now.strftime("%Y-%m-%d")
@@ -134,7 +153,11 @@ def main(argv=None):
     ap.add_argument("--ref", default=os.environ.get("GITHUB_REF_NAME") or "main")
     ap.add_argument("--mode", default="act", choices=["dry", "act"])
     a = ap.parse_args(argv)
-    d = run([x for x in a.accounts.split(",") if x], a.ref, a.mode)
+    accts = [x for x in a.accounts.split(",") if x]
+    idle = [x for x in accts if not has_setups(x)]
+    if idle:
+        print("no setup enabled (trade.yml skips them): " + ", ".join(idle))
+    d = run([x for x in accts if x not in idle], a.ref, a.mode)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
             f.write(_summary(d))

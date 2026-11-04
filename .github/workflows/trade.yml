@@ -17,7 +17,12 @@
 # mcf-data-gen); skipped while unset.
 # Optional: ALPACA_GRAVEYARD_API_KEY, ALPACA_GRAVEYARD_SECRET_KEY - the "Graveyard" paper account (owner 2026-10-20). When
 # set, a fifth job trades config/account_graveyard.yaml (lowest performers, lower caps; orders mgy-*, state branch
-# mcf-data-graveyard); skipped while unset. Market data always comes from the primary SIP keys above.
+# mcf-data-graveyard); skipped while unset.
+# Optional (owner 2026-11-03): three more paper accounts, each skipped until BOTH its secrets are set, and skipped while no
+# setup is enabled in its config (the "Setup check" step), so an empty account costs ~1 runner minute, not a session:
+#   ALPACA_LIVELAB_API_KEY, ALPACA_LIVELAB_SECRET_KEY   - "Live Lab" (config/account_livelab.yaml; orders mll-*, state branch mcf-data-livelab)
+#   ALPACA_EXPLORE1_API_KEY, ALPACA_EXPLORE1_SECRET_KEY - "Explore 1" (config/account_explore1.yaml; orders mx1-*, state branch mcf-data-explore1)
+# Market data always comes from the primary SIP keys above (one data key shared by every job).
 name: trade
 
 on:
@@ -39,20 +44,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing, testing2, gen, graveyard]
+        account: [primary, testing, testing2, gen, graveyard, livelab, explore1]
     concurrency:
-      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || (matrix.account == 'gen' && 'mcf-trade-gen' || (matrix.account == 'graveyard' && 'mcf-trade-graveyard' || 'mcf-trade-testing'))) }}
+      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || (matrix.account == 'gen' && 'mcf-trade-gen' || (matrix.account == 'graveyard' && 'mcf-trade-graveyard' || (matrix.account == 'livelab' && 'mcf-trade-livelab' || (matrix.account == 'explore1' && 'mcf-trade-explore1' || 'mcf-trade-testing'))))) }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 355
     env:
       MCF_ACCOUNT: ${{ matrix.account }}
-      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || 'mct-'))) }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || 'mcf-data-testing'))) }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || 'mct-'))))) }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || 'mcf-data-testing'))))) }}
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || ''))) }}
-      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || ''))) }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || ''))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || ''))))) }}
       ALPACA_DATA_FEED: sip
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
@@ -68,7 +73,7 @@ jobs:
         id: window
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ] || [ "$MCF_ACCOUNT" = "graveyard" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
+          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ] || [ "$MCF_ACCOUNT" = "livelab" ] || [ "$MCF_ACCOUNT" = "explore1" ] || [ "$MCF_ACCOUNT" = "graveyard" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
           elif [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
           echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
 
@@ -88,8 +93,16 @@ jobs:
         if: steps.window.outputs.run == 'true'
         run: pip install -q -e ".[alpaca]"
 
-      - name: Check out state branch (mcf-data / mcf-data-testing / mcf-data-testing2 / mcf-data-gen / mcf-data-graveyard)
+      - name: Setup check (skip an account with no enabled setup)
         if: steps.window.outputs.run == 'true'
+        id: setups
+        run: |
+          n=$(python -c "from mcf.config import load_config; from mcf.strategies.setups import build_strategies; print(len(build_strategies(load_config())))" | tail -1)   # a config error fails the job (bash -e, pipefail), never a silent skip
+          if [ "$n" -gt 0 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT: $n setups enabled"
+          else echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT: no setup enabled: skipped"; fi
+
+      - name: Check out state branch (mcf-data / mcf-data-testing / ... / mcf-data-<account>)
+        if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true'
         run: |
           url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
           if git clone -q --depth 50 --branch "$STATE_BRANCH" "$url" state; then :; else
@@ -101,7 +114,7 @@ jobs:
           fi
 
       - name: Restore today's priors
-        if: steps.window.outputs.run == 'true'
+        if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true'
         id: priors
         uses: actions/cache/restore@v4
         with:
@@ -109,16 +122,16 @@ jobs:
           key: priors-${{ steps.window.outputs.day }}
 
       - name: Pre-market prep (universe + priors)
-        if: steps.window.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
+        if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
         run: python -m mcf.cli prep --state-dir state
 
       - name: Save today's priors
-        if: steps.window.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
+        if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true' && steps.priors.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           path: state/cache
           key: priors-${{ steps.window.outputs.day }}
 
       - name: Trade
-        if: steps.window.outputs.run == 'true'
+        if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true'
         run: python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}

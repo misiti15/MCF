@@ -10,10 +10,10 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _cfg(monkeypatch):
+def _cfg(monkeypatch, acct="testing2"):
     from mcf.config import load_config
 
-    monkeypatch.setenv("MCF_ACCOUNT", "testing2")
+    monkeypatch.setenv("MCF_ACCOUNT", acct)
     return load_config()
 
 
@@ -99,8 +99,14 @@ def test_longs1020_and_m1_observation_setups(monkeypatch):
     from mcf.backtest.engine import pinned_symbols
     from mcf.strategies.setups import build_strategies
 
-    cfg = _cfg(monkeypatch)
-    st = {s.name: s for s in build_strategies(cfg)}
+    # LD1-LD8 moved to Explore 1 / Live Lab 2026-11-04 (owner, low-rep rotation); NM-MF3 stays in Testing 2
+    cfgs = {a: _cfg(monkeypatch, a) for a in ("testing2", "explore1", "livelab")}
+    home = {}
+    st = {}
+    for a, c in cfgs.items():
+        monkeypatch.setenv("MCF_ACCOUNT", a)
+        for s in build_strategies(c):
+            st[s.name], home[s.name] = s, a
     want = {"LD1-ns1-breadthup-t05s1-long": ("t05s1", ("breadth",), None),
             "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long": ("t05s1", ("qqq_fo", "breadth"), {"TQQQ"}),
             "LD3-st2-idxturn-t05s1-long": ("t05s1", ("spy_fo",), None),
@@ -111,13 +117,14 @@ def test_longs1020_and_m1_observation_setups(monkeypatch):
             "LD8-spy-dip030-breadthturn-spxl-holdtr-long": ("holdtr", ("spy_fo", "breadth"), {"SPXL"}),
             "NM-MF3-qqqdn-gapdn-FD": ("t1s1", ("qqq_fo",), None)}
     for n, (geom, ctx, syms) in want.items():
-        s = st[n]
+        s, cfg = st[n], cfgs[home[n]]
         assert (s.geom, s.context, s.symbols) == (geom, ctx, syms), n
         assert s.side == (-1 if n.startswith("NM-MF3") else 1) and not s.refire and s.params.get("scale_out_r") is None
         assert tuple(cfg["strategies"][n]["window"]) == tuple(getattr(s.mod, "WINDOW", None) or (950, 1500)), n
         if geom == "holdtr":
             assert s.params["trail_r"] == 1.0 and s.params["trail_after_r"] == 1.0
-    assert {"SPXL", "TQQQ"} <= pinned_symbols(cfg)
+    for n, (_, _, syms) in want.items():
+        assert (syms or set()) <= pinned_symbols(cfgs[home[n]]), n                 # each ETF pinned in its own account
 
 
 def test_ld8_fires_on_a_live_shaped_day(monkeypatch):
@@ -126,7 +133,7 @@ def test_ld8_fires_on_a_live_shaped_day(monkeypatch):
     from mcf.strategies.lab_context import _CACHE
     from mcf.strategies.setups import _LAB_FRAMES, build_strategies
 
-    (st,) = [s for s in build_strategies(_cfg(monkeypatch)) if s.name.startswith("LD8")]
+    (st,) = [s for s in build_strategies(_cfg(monkeypatch, "explore1")) if s.name.startswith("LD8")]   # Explore 1 from 11-05
     idx = pd.date_range("2026-10-12 09:30", periods=390, freq="1min", tz="America/New_York")
     m = np.arange(390)
 

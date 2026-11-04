@@ -23,9 +23,22 @@ OUT = ROOT / "docs" / "live" / "assignments.json"
 ACCOUNTS = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator"}
 if (ROOT / "config" / "account_graveyard.yaml").exists():      # the Graveyard account, once it exists
     ACCOUNTS["graveyard"] = "Graveyard"
+# Live Lab + the two exploratory accounts (owner 2026-11-03), once their overlays exist
+for _k, _v in (("livelab", "Live Lab"), ("explore1", "Explore 1")):
+    if (ROOT / "config" / f"account_{_k}.yaml").exists():
+        ACCOUNTS[_k] = _v
 # Split copies (owner 2026-10-20, "Goals for copies"): the only accounts where one setup may run twice, each copy on
 # its own half of the tickers (ticker_split). Never Primary, Graveyard or the Setup Generator.
 SPLIT_ACCOUNTS = ("testing", "testing2")
+# Low-rep homes (owner 2026-11-04): setups with little or no live history rotate through these for reps. Their setups
+# show on the leaderboard with the account tag, EXCEPT one that came from the Graveyard ("no_leaderboard": true).
+LOWREP_ACCOUNTS = ("explore1", "livelab")
+
+
+def no_leaderboard(entry: dict) -> bool:
+    """Owner 2026-11-04: a setup live only in Explore 1 / Live Lab that came from the Graveyard stays off the leaderboard."""
+    here, came = entry.get("accounts") or [], entry.get("from") or []
+    return bool(here) and set(here) <= set(LOWREP_ACCOUNTS) and "graveyard" in came
 
 
 def _strategies() -> dict[str, dict]:
@@ -110,6 +123,8 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
         if setups[name].get("from") and setups[name].get("since"):
             lo, fi = sessions_around(setups[name]["since"])
             setups[name]["last_old_session"], setups[name]["first_session"] = lo, fi
+        if no_leaderboard(setups[name]):
+            setups[name]["no_leaderboard"] = True
         if name in split:
             # split copies: one setup in both testing accounts, each on its own half of the tickers (stats combined)
             setups[name]["split"] = split[name]

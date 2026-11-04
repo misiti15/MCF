@@ -57,4 +57,10 @@
   - 3-month window still below break-even, or 6-month avg R down materially from the 12-month (size of the change
     decides which window): **demotion suggestion** to the owner (owner decides; promotion = move).
 - Shown as a dashboard card and one line in the nightly brief; tracked in research/owner_inbox/OPEN_ITEMS.md (LF-DECAY).
+- **Position sizing for live funds (owner 2026-11-04, LF-SIZE):** live sizing must follow the SIZE1 study (research queue):
+  risk % per trade, buying-power multiple, which signals get buying power when it is short (quality-ranked vs first-come),
+  per-setup risk weights and quiet-day / same-family burst sizing — tested with costs, on TRAIN/VALID and the live paper
+  record. First read (11-04 quick sim, top-5 setups, 17 sessions): 0.20-0.30% risk per trade with 4x intraday buying power
+  was best; more risk per trade did worse because early burst signals used up the buying power. Nothing goes live without
+  the owner's yes and a ledger entry.
 

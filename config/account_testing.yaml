@@ -33,18 +33,6 @@ live:
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
     - MF1-945-flowsell-vwapup   # demoted from Primary 2026-10-25 (narrow 09:50-10:30 window)
-    - RW6G1-ns2-up3-vwap2sd-short   # demoted from Primary 2026-10-22 (windowed: narrower than its -FD)
-    - IDX1-qqq100-0955-TQQQ-trail
-    - IDX1-qqq100-0955-TQQQ-hold
-    - IDX2-spy075-0945-3x-trail
-    - IDX3-spy075-0955-3x-trail
-    - IDX5-spy050-0945-3x-trail
-    - LIQ-pdl-sweep-open15-vwap-long   # 0.38/day (research/bdi/reddit1012liq, added 2026-10-12)
-    - ST5-pdbrkup-short-mid-t05s1-FD
-    - ST8-volspikedn-long-pm-t1s1-FD
-    - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # ~1.25/day (st7_1022 S1, owner 2026-10-22; 534 trades / 426 sessions)
-    - ST6-volspikeup-short-mid-t1s1-FD
-    - ST3-rsi5up-short-pm-t1s1-FD
     - NS4-pm-vwap-reclaim-oversold-short-FD
     - CWT05-flush-m05-v3-long   # 4.00/day (allocator)
     - L3-gap-slope-lowdist-FD
@@ -62,7 +50,7 @@ live:
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     class: index_dip_bounce
     symbols: [TQQQ]
     signal_symbol: QQQ
@@ -79,7 +67,7 @@ strategies:
     scale_out_r: null
     testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V1, bar: "forward test (owner request); research bar not met"}
   IDX1-qqq100-0955-TQQQ-hold:
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     class: index_dip_bounce
     symbols: [TQQQ]
     signal_symbol: QQQ
@@ -95,7 +83,7 @@ strategies:
     testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V1, bar: "forward test (owner request); research bar not met"}
   # ---- Index open-dip bounce V2: SPY down >= 0.75% from the open by 09:45 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX2-spy075-0945-3x-trail:
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     class: index_dip_bounce
     trade_candidates: [SPXL, UPRO]
     pick: max_dollar_volume
@@ -114,7 +102,7 @@ strategies:
     testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V2, bar: "forward test (owner request); research bar not met"}
   # ---- Index open-dip bounce V3: SPY down >= 0.75% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX3-spy075-0955-3x-trail:
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     class: index_dip_bounce
     trade_candidates: [SPXL, UPRO]
     pick: max_dollar_volume
@@ -133,7 +121,7 @@ strategies:
     testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V3, bar: "forward test (owner request); research bar not met"}
   # ---- Index open-dip bounce V5: SPY down >= 0.5% from the open by 09:45 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX5-spy050-0945-3x-trail:
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     class: index_dip_bounce
     trade_candidates: [SPXL, UPRO]
     pick: max_dollar_volume
@@ -197,7 +185,7 @@ strategies:
   RW6G1-ns2-up3-vwap2sd-short:   # demoted from Primary 2026-10-22 (owner N2); runs beside its all-day variant -FD (twin cap: never both on one symbol)
     refire: true
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py
     min_adv: 95000000
@@ -385,7 +373,7 @@ strategies:
     scale_out_r: null
   # from ST3-rsi5up-short-pm-t1s1 (testing; source window 1335-1500); ~1.54/day full-day [timeofday results.csv full, exp +0.017R]
   ST3-rsi5up-short-pm-t1s1-FD:
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/fullday/ST3-rsi5up-short-pm-t1s1-FD.py
     min_adv: 95000000
@@ -403,7 +391,7 @@ strategies:
   ST5-pdbrkup-short-mid-t05s1-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 3
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/fullday/ST5-pdbrkup-short-mid-t05s1-FD.py
     min_adv: 95000000
@@ -413,7 +401,7 @@ strategies:
   ST6-volspikeup-short-mid-t1s1-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
     min_adv: 95000000
@@ -435,7 +423,7 @@ strategies:
   # open history, first signal per symbol-day: train 183 +0.092R / valid 351 +0.141R; ~1.25/day; Bull +0.654 / Bear
   # +0.059 / Choppy +0.188 / Quiet +0.091. Module = scan on 534/534 signals (research/bdi/st7_1022/verify.json).
   ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD:
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/st7_1022/modules/ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD.py
     context: [qqq_vwap]
@@ -447,7 +435,7 @@ strategies:
     twin_group: ST7-T1   # with its parent ST7-rsi50dn-long-pm-t1s1-FD (same signal never held twice; ST7Q is first in setup_order)
   # from ST8-volspikedn-long-pm-t1s1 (testing; source window 1335-1500); ~1.24/day full-day [timeofday results.csv full, exp +0.041R]
   ST8-volspikedn-long-pm-t1s1-FD:
-    enabled: true
+    enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/fullday/ST8-volspikedn-long-pm-t1s1-FD.py
     min_adv: 95000000
@@ -554,7 +542,7 @@ strategies:
   # PD-low sweep, 0.25-ATR stop, VWAP target (>= 2R), break-even at +1R, 15-minute time stop: n 160, exp +0.088R,
   # t 0.58; train -0.220 (t -1.79) / valid +0.549 (t 2.34) - the halves disagree. ~0.38/day.
   LIQ-pdl-sweep-open15-vwap-long:
-    enabled: true
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
     type: lab
     module: research/bdi/reddit1012liq/live/LIQ-pdl-sweep-open15-vwap-long.py
     min_adv: 95000000

@@ -43,13 +43,15 @@ jobs:
       HAS_TESTING2: ${{ secrets.ALPACA_TESTING2_API_KEY != '' && secrets.ALPACA_TESTING2_SECRET_KEY != '' }}
       HAS_GEN: ${{ secrets.ALPACA_GEN_API_KEY != '' && secrets.ALPACA_GEN_SECRET_KEY != '' }}
       HAS_GRAVEYARD: ${{ secrets.ALPACA_GRAVEYARD_API_KEY != '' && secrets.ALPACA_GRAVEYARD_SECRET_KEY != '' }}
+      HAS_LIVELAB: ${{ secrets.ALPACA_LIVELAB_API_KEY != '' && secrets.ALPACA_LIVELAB_SECRET_KEY != '' }}
+      HAS_EXPLORE1: ${{ secrets.ALPACA_EXPLORE1_API_KEY != '' && secrets.ALPACA_EXPLORE1_SECRET_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Install
-        run: pip install -q pandas
+        run: pip install -q pandas pyyaml
       - name: Guard (dispatch trade.yml if a session is missing)
         run: |
           accts=primary
@@ -57,4 +59,7 @@ jobs:
           [ "$HAS_TESTING2" = "true" ] && accts="$accts,testing2"
           [ "$HAS_GEN" = "true" ] && accts="$accts,gen"
           [ "$HAS_GRAVEYARD" = "true" ] && accts="$accts,graveyard"
+          [ "$HAS_LIVELAB" = "true" ] && accts="$accts,livelab"
+          [ "$HAS_EXPLORE1" = "true" ] && accts="$accts,explore1"
+          # accounts with no enabled setup are dropped by the script (trade.yml skips them; has_setups)
           python -m mcf.execution.session_guard --accounts "$accts" --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.mode || 'act' }}"

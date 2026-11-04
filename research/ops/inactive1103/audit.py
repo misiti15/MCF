@@ -35,7 +35,8 @@ OUT.mkdir(parents=True, exist_ok=True)
 TODAY = sys.argv[2] if len(sys.argv) > 2 else "2026-11-03"   # nightly: pass the next session date
 ACCTS = {"Primary": ("mcf-data", "primary"), "Testing 1": ("mcf-data-testing", "testing"),
          "Testing 2": ("mcf-data-testing2", "testing2"), "Graveyard": ("mcf-data-graveyard", "graveyard"),
-         "Generated": ("mcf-data-gen", "gen")}
+         "Generated": ("mcf-data-gen", "gen"),
+         "Explore 1": ("mcf-data-explore1", "explore1"), "Live Lab": ("mcf-data-livelab", "livelab")}   # 2026-11-04
 
 
 def git_show(br: str, path: str) -> str:
@@ -209,6 +210,8 @@ def p_quiet(rate, p0, n):
 rows = []
 blocked_rows = []
 for acct, (br, key) in ACCTS.items():
+    if not (S / "j" / br / "journal.db").is_file():   # a new account (Explore 1 / Live Lab) with no journal yet
+        continue
     c = sqlite3.connect(S / "j" / br / "journal.db")
     sig = pd.read_sql("select id, day, ts, symbol, strategy, side, status, reason, info from signals where run_id=1", c)
     tr = pd.read_sql("select strategy, date, r_multiple from trades where run_id=1", c)
