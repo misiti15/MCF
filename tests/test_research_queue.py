@@ -45,11 +45,13 @@ def test_default_budget_and_cli(tmp_path, monkeypatch, capsys):
     assert "X1" in capsys.readouterr().out
 
 
-def test_repo_queue_has_combo1_on_top():
+def test_repo_queue_is_well_formed():
+    """Owner-added items sit ahead of the rest of the pending list; finished items (e.g. COMBO1, done 11-03) stay recorded."""
     es = [json.loads(l) for l in (ROOT / "research/queue.jsonl").read_text().splitlines() if l.strip()]
     assert all(FIELDS <= set(e) for e in es)
-    nxt = Q.next(3, es)
-    assert nxt[0]["id"] == "COMBO1" and nxt[0]["added_by"] == "owner"
+    nxt = Q.next(len(es), es)
+    owner = [i for i, e in enumerate(nxt) if e["added_by"] == "owner"]
+    assert owner == list(range(len(owner)))
     ids = {e["id"] for e in es}
     assert {"COMBO1", "GY-BP", "SWING-L1-L3"} <= ids
 
