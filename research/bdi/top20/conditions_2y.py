@@ -1,10 +1,10 @@
-"""top20 conditions deep dive (2026-11-03), two-year second opinion. BACKTEST: gates1021 live-shaped signal rows
+"""top20 conditions deep dive (2026-11-04), two-year second opinion. BACKTEST: gates1021 live-shaped signal rows
 (production R, costs in, x3 extended tier) on the open history, TRAIN (<= 2025-12) + VALID (2026-01..03, 07..09-15);
 HOLD rows dropped; the locked block 2024-11-01..2025-02-28 is never loaded (gates1021 loaders assert).
 Same pre-declared buckets as conditions_live.py; ATR% = daily ATR / price; SPY at 10:00 = close of the 09:59 1-minute
 bar vs the 09:30 open (data/cache_hist). Parents only - no tuning here.
 
-    G21SCR=/dev/shm/t5_1103/g python research/bdi/top20/conditions_2y.py   -> hist_buckets.csv, hist_summary.csv, hist_out.txt
+    G21SCR=/dev/shm/t5_1104/g python research/bdi/top20/conditions_2y.py   -> hist_buckets.csv, hist_summary.csv, hist_out.txt
 Educational only - not financial advice."""
 import os
 import sys
@@ -20,11 +20,13 @@ assert not os.environ.get("MCF_HIST_ALLOW_LOCKED")
 from load import load_sig  # noqa: E402
 from conditions_live import kind  # noqa: E402
 
-SETUPS = ["MF2-open-rsimidhi-flowsell-FD", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD", "RW3-gapdn-rsi5pop-flowsell-short-FD",
-          "L3-gap-slope-fromopen-FD", "NM-MF3-qqqdn-gapdn-FD", "L3-gap-slope-rsi5hi-FD", "NS4-pm-vwap-reclaim-oversold-short-FD",
-          "NS5-sma50-flush-oversold-long", "L3-gap-slope-lowdist-FD", "RW1-gapdn-bounce-flowsell-short-FD",
-          "ST7-rsi50dn-long-pm-t1s1-FD"]
-SIDE = {"NS5-sma50-flush-oversold-long": 1, "ST7-rsi50dn-long-pm-t1s1-FD": 1}
+SETUPS = ["MF4-h40-open-flowsell", "RW7-gapdn-bounce-early-short-FD", "MF4-h40-open-flowsell-FD",
+          "NS4-pm-vwap-reclaim-oversold-short", "MF3-open-flowsell-rsi5hi", "exhaustion_short",
+          "L3-gap-slope-fromopen-FD", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD", "RW3-gapdn-rsi5pop-flowsell-short-FD",
+          "MF2-open-rsimidhi-flowsell-FD"]
+SIDE = {}  # all tonight's 2-year setups are shorts
+# the gates1021 cache r is in 0.25-ATR units; for stop-0.5 geometries (t1s05) one R of risk is 0.5 unit (2026-11-04 fix)
+STOP_UNITS = {"MF2-open-rsimidhi-flowsell-FD": 0.5, "NS4-pm-vwap-reclaim-oversold-short": 0.5}
 
 
 def spy10():
@@ -47,6 +49,7 @@ def split(d):
 def main():
     S = load_sig(SETUPS)
     S["sp"] = split(S["date"])
+    S["r"] = S["r"] / S["setup"].map(STOP_UNITS).fillna(1.0)
     S = S[S.sp != "hold"].copy()
     S["dkey"] = pd.to_datetime(S["date"]).dt.strftime("%Y-%m-%d")
     S = S.join(spy10(), on="dkey")

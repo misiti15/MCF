@@ -1,0 +1,91 @@
+# Hunch live shadow (owner 2026-11-04): real next-3-min-bar guesses on live bars, scored and learned from.
+# Research only - NO orders, no trading config read or written, no link to trade.yml. Educational only - not financial advice.
+#
+# What it does (mcf/hunch/live.py): from ~09:51 to 16:00 ET, 35 s after each 3-min bar closes, it reads 1-min bars for the
+# Hunch universe (research/hunch/universe200.txt, carried in the model state) with read-only Alpaca market-data GETs
+# (StockHistoricalDataClient, the existing SIP data keys ALPACA_API_KEY / ALPACA_SECRET_KEY), guesses metric M1 for every
+# ticker (one Hunch per ticker + the pooled model), scores the previous guesses, learns, and writes
+#   guesses/<day>.csv, scoreboard.csv, scoreboard.md, state/model.npz (end of day)  on branch mcf-data-hunch.
+# The first day starts from the replay's end state (research/hunch/u200/state/M1_model.npz).
+#
+# Load: ONE job a trading day (concurrency group `hunch`, never cancelled): the 09:40 ET start runs until the close or until
+# ~5h40m, then exits so the queued hourly standby takes over (restart-safe: each tick recomputes today from the
+# start-of-day model; nothing is lost). ~6.4 runner-hours a trading day; 2-3 Alpaca bars requests every 3 minutes;
+# a push to mcf-data-hunch every ~15 minutes. Two UTC lines cover EDT and EST; a run outside 09:00-16:05 ET exits at once.
+name: hunch
+
+on:
+  schedule:
+    - cron: "40 13,14 * * 1-5"   # 09:40 ET start (EDT 13:40 UTC / EST 14:40 UTC)
+    - cron: "10 15-20 * * 1-5"   # hourly standby: queued behind the running job, takes over after a crash or hand-over
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hunch
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    env:
+      STATE_BRANCH: mcf-data-hunch
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_DATA_FEED: sip
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Window check
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ "$dow" -le 5 ] && [ "$now" -ge 0900 ] && [ "$now" -lt 1605 ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:00-16:05 ET weekdays: nothing to do"; fi
+
+      - name: Check secrets
+        if: steps.window.outputs.run == 'true'
+        run: |
+          if [ -z "$ALPACA_API_KEY" ] || [ -z "$ALPACA_SECRET_KEY" ]; then echo "::error::ALPACA_API_KEY / ALPACA_SECRET_KEY missing"; exit 1; fi
+
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.run == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        if: steps.window.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+
+      - name: Check out state branch (mcf-data-hunch)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git clone -q --depth 1 --branch "$STATE_BRANCH" "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan "$STATE_BRANCH"
+            git -C state remote add origin "$url"
+          fi
+
+      - name: Shadow loop (read-only market data, no orders)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          python -m mcf.hunch live --dry --loop --push --state-dir state \
+            --seed research/hunch/u200/state/M1_model.npz --max-minutes 340
+
+      - name: Save to the state branch
+        if: always() && steps.window.outputs.run == 'true'
+        run: |
+          [ -d state ] || exit 0
+          cd state && git add -A
+          git diff --cached --quiet && { echo "nothing to save"; exit 0; }
+          git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "hunch $(TZ=America/New_York date +%F) final save"
+          for i in 1 2 3; do
+            git push -q origin "HEAD:$STATE_BRANCH" && exit 0
+            git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com pull -q --rebase --depth 1 origin "$STATE_BRANCH" || git rebase --abort
+          done
+          echo "::error::push failed"; exit 1

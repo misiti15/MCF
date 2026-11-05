@@ -1,0 +1,63 @@
+SPY day types in the live window: {'quiet': 11, 'up': 6, 'down': 5} | 2026-11-04: {'spy_oc': 0.48, 'spy_fo10': 0.55, 'dtype': 'up', 's10': 'above'}
+
+== by dtype (all live sessions)
+            days     n   avgR       usd
+acct dtype                             
+gen  down      3   545 -0.218 -3993.520
+     quiet     6   510 -0.310 -3248.272
+     up        4   374 -0.434 -2028.910
+gy   down      3  1037 -0.205 -3668.349
+     quiet     5  1742 -0.099 -3085.891
+     up        3  1092 -0.114 -2126.520
+p    down      5   200  0.269   696.420
+     quiet    11   336 -0.096 -1330.810
+     up        6   322 -0.165 -1313.980
+t1   down      5   842 -0.077  -269.330
+     quiet     8  1747 -0.083 -1993.771
+     up        6   882 -0.214 -1058.030
+t2   down      5  1126 -0.254 -2282.550
+     quiet     8  2062 -0.065 -1568.809
+     up        5  1190 -0.139 -1730.520
+
+== by s10 (all live sessions)
+            days     n   avgR       usd
+acct s10                               
+gen  above     7   738 -0.325 -3890.331
+     below     6   691 -0.288 -5380.371
+gy   above     6  2072 -0.141 -5101.150
+     below     5  1799 -0.121 -3779.610
+p    above    10   469  0.072   194.660
+     below    12   389 -0.168 -2143.030
+t1   above     8  1123 -0.039   417.430
+     below    11  2348 -0.151 -3738.561
+t2   above     8  1568 -0.026  -650.830
+     below    10  2810 -0.194 -4931.048
+
+== live setups positive on BOTH up and down days (>= 10 trades each): 9
+                                                                                 size                mean              
+dtype                                                                            down quiet     up   down  quiet     up
+acct strategy                                                                                                          
+gen  GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short  26.0  15.0   10.0  0.620 -0.649  0.180
+gy   CWT09-gapdn-bounce-g5-lowerhalf-short                                       38.0  23.0   17.0  0.516 -0.313  0.035
+p    MF2-open-rsimidhi-flowsell-FD                                               25.0   9.0   18.0  1.213 -0.596  0.274
+     RW3-gapdn-rsi5pop-flowsell-short-FD                                         32.0  20.0   14.0  0.729 -0.224  0.144
+     RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                                  33.0  41.0   18.0  0.607  0.289  0.013
+t1   L3-gap-slope-fromopen-FD                                                    14.0  71.0  137.0  0.198  0.268  0.204
+     MF4-h40-open-flowsell-FD                                                    13.0   9.0   10.0  0.356  0.345  0.100
+     exhaustion_short                                                            11.0  20.0   24.0  0.132 -0.183  0.185
+t2   RW1-gapdn-bounce-flowsell-short-FD                                          20.0  19.0   12.0  0.298  0.116  0.312
+
+== best live setups on quiet days (>= 10 quiet-day trades)
+                                                 size               mean              
+dtype                                            down quiet    up   down  quiet     up
+acct strategy                                                                         
+t2   MF5-flowsell-vwapup-rsi5hi                   NaN  10.0   2.0    NaN  0.566 -0.099
+gy   MF5-flowsell-vwapup-rsi5hi-FD                NaN  11.0   3.0    NaN  0.475  0.204
+     heat_fade_long                              28.0  14.0  16.0 -0.512  0.457 -0.058
+     MF3-open-flowsell-rsi5hi-FD                  NaN  13.0  10.0    NaN  0.433 -0.131
+t1   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  15.0  16.0   2.0  0.539  0.333 -1.189
+p    CWT14-failbrk-pdl-p10-lowvol-long           18.0  20.0  40.0 -0.292  0.327 -0.047
+t2   L3-gap-slope-rsi5hi-FD                       2.0  21.0  22.0  0.288  0.317  0.202
+t1   CWT05-flush-m05-v3-long                     11.0  12.0   9.0 -0.336  0.301 -0.606
+
+Educational only - not financial advice.

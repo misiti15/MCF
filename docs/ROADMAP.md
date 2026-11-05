@@ -63,4 +63,12 @@
   record. First read (11-04 quick sim, top-5 setups, 17 sessions): 0.20-0.30% risk per trade with 4x intraday buying power
   was best; more risk per trade did worse because early burst signals used up the buying power. Nothing goes live without
   the owner's yes and a ledger entry.
+  - **SIZE1 result (2026-11-04, research/ops/size1/NOTES.md; 200 looks, bar 3.24, nothing passed):** recommendation for
+    live funds = **0.10% risk per trade, 4x intraday buying power, first-come**, no quality ranking, per-setup weights,
+    family limits or quiet-day / burst half-sizing. Live paper (22 sessions) 0.10%/4x kept ~2/3 of the 0.25% return at a
+    third of the drawdown (top 5: +9.3% / DD −0.7% vs +15.9% / −2.3%; Primary 10: +10.0% / −0.9% vs +12.5% / −4.3%).
+    The 2-year lab lists lose at every size (Primary book VALID −47% at 0.10%, −67% at 0.25%), so size cannot create an
+    edge — step up to 0.20-0.25% only after the live-funds record itself holds (decay monitor above). 1x / 2x buying
+    power cost most of the live return; ranking signals within a 5-min bar = first-come; dropping same-family bursts
+    hurt live. Re-check on forward sessions: the 10% per-position notional cap (live +16.7% / DD −2.0% for Primary).
 
