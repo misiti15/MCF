@@ -50,3 +50,20 @@ that window), to separate state timing from "trading less of a losing book".
 excess-delta t ≥ 1.0. Pass and holds live → DECISION (shadow first). Close (VALID t ≥ 1.5 with the other legs) → forward
 shadow lead `gate1-checkpoint-gate` with this bar. Graveyard: a setup is a "conditional performer" if one state has TRAIN
 avg R > +0.05 (n ≥ 60) and VALID avg R > 0 in the same state while its other states are ≤ 0 on TRAIN.
+
+Amendment (before any score): the context table has no 5-minute breadth row before 09:50, so the 09:45 state (used only
+for k = 2 confirmation at 10:00) uses the SPY / QQQ / IWM conditions without breadth. Sessions before 2024-10-01 (no
+frames) have no breadth and are outside every window anyway. The context table ends at the 15:00 bar, so 15:30 uses the 15:00 breadth (older, still point-in-time).
+
+## Addendum COMPASS (owner reframe 2026-11-04 evening; written after the GATE1 gate results above were read, before any compass number)
+Three questions at each checkpoint, point-in-time only: (1) moved so far (SPY fo, reported); (2) STAYING = P(SPY closes on
+the same side of its open as at T); (3) HEADING = sign of SPY close vs price at T (rest of day) and sign of SPY 60 min after T.
+Measures (each a +1 / −1 / abstain call): fo sign; vw sign; r30 sign; persist2 (fo same sign at T and previous checkpoint);
+persist3 (and the one before); breadth_open side of 0.5; index agreement (SPY, QQQ, IWM fo same sign); pre-registered state;
+strong move (|fo| ≥ 0.30%); gap sign; fade-r30 (−r30 sign); fade-fo (−fo sign). 12 measures × 3 outcomes = 36 looks.
+Hit rate with Wilson 95% CI and lift vs the base hit of a same-mix call; ranked on TRAIN, checked on VALID and LIVE.
+**Compass reading** (fixed now): votes v = sign(fo) + sign(vw) + persist2 + breadth side + index agreement (each −1/0/+1).
+UP-confirmed: v ≥ 4 and persist3 = +1; leaning up: v ≥ 2 (not confirmed); DOWN-confirmed / leaning down mirrored; else mixed.
+Usage rule: family × side allowed in compass readings with TRAIN avg R > 0 (n ≥ 200, ≥ 15 days), ungated if none / all;
+entries from 10:00, latest checkpoint, off / half; also setup-level (n ≥ 60). 4 gate configs; compass hit tables 3 looks.
+Total study looks now 62 + 7 + 36 + 3 + 4 = 112 → bar max(1.5, sqrt(2 ln 112)) = 3.07.
