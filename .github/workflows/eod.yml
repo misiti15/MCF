@@ -37,6 +37,9 @@ jobs:
     env:
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      # P/L reconcile (owner 2026-11-05): the account's own keys read its equity, fills and fees (read-only GETs)
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || ''))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || ''))))) }}
       ALPACA_DATA_FEED: sip
       MCF_ACCOUNT: ${{ matrix.account }}
       STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || 'mcf-data-testing'))))) }}
