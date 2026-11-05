@@ -26,7 +26,7 @@ NY = "America/New_York"
 WINDOW = (time(8, 40), time(15, 30))
 ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1")   # last 2: owner 2026-11-03
 ACTIVE = {"queued", "in_progress", "waiting", "requested", "pending"}
-MAX_DISPATCHES = 6
+MAX_DISPATCHES = 8   # shared with handover.py's successor dispatches (owner 2026-11-05; was 6)
 WORKFLOW = "trade.yml"
 TITLE = "trade"
 
@@ -132,6 +132,7 @@ def run(accounts: list[str], ref: str, mode: str) -> dict:
     d["guard_dispatches_today"] = mine
     d["mode"] = mode
     if d["action"] == "dispatch" and mode == "act":
+        ref = ref or (_gh("") or {}).get("default_branch") or "main"   # a schedule event may carry no default_branch
         _gh(f"/actions/workflows/{WORKFLOW}/dispatches", "POST", {"ref": ref, "inputs": {"dry_run": "false"}})
         d["dispatched"] = True
         print(f"dispatched {WORKFLOW} on {ref}: " + "; ".join(d["reasons"]))

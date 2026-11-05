@@ -4,6 +4,8 @@
 #   * pre-open runs at ~08:35/08:55 ET leave time for prep (universe + priors, ~15 min) before 09:30
 #   * hourly standby runs keep one job queued behind the running one (same concurrency group), so a
 #     crash, a skipped trigger or the 6-hour job limit costs minutes, not the session
+#   * GitHub cron can stop for hours (11-05: no scheduled run 09:40-14:50 ET), so each job also dispatches its own
+#     successor 15 min before its 355-min limit when none is queued (mcf/execution/handover.py; actions: write)
 #   * every run decides from the ET clock whether to work (mcf live exits at once outside 08:00-15:50 ET,
 #     on weekends and on market holidays); duplicate UTC lines cover both EDT and EST
 #
@@ -38,6 +40,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # handover (owner 2026-11-05): a job near its 355-min limit dispatches its own successor run
 
 jobs:
   session:
@@ -76,6 +79,7 @@ jobs:
           if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ] || [ "$MCF_ACCOUNT" = "livelab" ] || [ "$MCF_ACCOUNT" = "explore1" ] || [ "$MCF_ACCOUNT" = "graveyard" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
           elif [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
           echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
+          echo "MCF_JOB_T0=$(date +%s)" >> "$GITHUB_ENV"   # job start, for the hand-over below
 
       - name: Check secrets
         if: steps.window.outputs.run == 'true'
@@ -134,4 +138,13 @@ jobs:
 
       - name: Trade
         if: steps.window.outputs.run == 'true' && steps.setups.outputs.run == 'true'
-        run: python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Hand-over (owner 2026-11-05; mcf/execution/handover.py): on 11-05 GitHub fired no scheduled run 09:40-14:50 ET,
+          # so no hourly standby was queued when this job hit its 355-min limit. 15 min before the limit (if that falls
+          # before 15:50 ET) the background helper dispatches trade.yml unless a successor is already queued for this
+          # account; the new job waits in the concurrency group and starts when this one ends. Never fails the job.
+          nohup python -m mcf.execution.handover trade --account "$MCF_ACCOUNT" --job-start "$MCF_JOB_T0" \
+            --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.dry_run && 'dry' || 'act' }}" > handover.log 2>&1 &
+          python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}
