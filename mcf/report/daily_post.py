@@ -71,14 +71,45 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
         if k in TOTALS_EXCLUDED:             # owner 2026-11-04: low-rep homes - no account totals in the post
             continue
         s = _show(br, "status.json") or {}
-        t, ss = s.get("today") or {}, s.get("since_start") or {}
+        t, ss = _adj(s.get("today") or {}), s.get("since_start") or {}
+        full = [_adj(h) for h in s.get("history") or []]
         if s.get("session_date") != date:
-            t = next((h for h in s.get("history") or [] if h.get("date") == date), {})
-        full = s.get("history") or []
+            t = next((h for h in full if h.get("date") == date), {})
         hist = [h for h in full if since <= h.get("date", "") <= date]
         out.append(dict(k=k, name=name, kind=kind, equity=(s.get("account") or {}).get("equity"), today=t.get("pnl"),
                         trades=t.get("trades"), since=sum((h.get("pnl") or 0) for h in hist),
                         history=hist, full_history=full))
+    return out
+
+
+def _adj(h: dict) -> dict:
+    """Owner 2026-11-05: post P/L is after costs - status.json pnl_adj (broker P/L minus stop-exit slippage) when present."""
+    return dict(h, pnl=h["pnl_adj"]) if h.get("pnl_adj") is not None else h
+
+
+def journal_day(date: str, keys=None) -> dict:
+    """{setup: {trades, r, pnl, accts}} from each account's journal.db live trades on `date`, after costs:
+    pnl = pnl_adj, R = pnl_adj / (|entry - stop| x shares). Empty if no journal has trades that day."""
+    out: dict[str, dict] = {}
+    for k, label, br, _ in ACCOUNTS:
+        if keys is not None and k not in keys:
+            continue
+        db = _journal(br)
+        if db is None:
+            continue
+        try:
+            rows = db.execute("SELECT t.strategy, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj, t.r_multiple FROM trades t "
+                              "JOIN runs r ON r.id = t.run_id WHERE r.kind != 'whatif' AND t.date = ? AND t.exit_time IS NOT NULL",
+                              (date,)).fetchall()
+        except Exception:
+            continue
+        for st, e, sp, sh, p, pa, rm in rows:
+            pa = pa if pa is not None else (p or 0.0)
+            risk = abs((e or 0) - (sp or 0)) * (sh or 0)
+            a = out.setdefault(st, dict(setup=st, trades=0, r=0.0, pnl=0.0, accts=[]))
+            a["trades"] += 1; a["pnl"] += pa; a["r"] += (pa / risk) if risk else (rm or 0.0)
+            if label not in a["accts"]:
+                a["accts"].append(label)
     return out
 
 
@@ -176,6 +207,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
             by.setdefault(r["setup"], []).append(r)
             sessions.update(r.get("days") or [])
     last4 = sorted(d for d in sessions if d <= date)[-4:]
+    jd = journal_day(date, accts)  # owner 2026-11-05: the "today" columns after costs (journal pnl_adj)
     rows = []
     for code, rs in by.items():
         a = asg.get(code) or {}
@@ -189,6 +221,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
             continue
         nm = names.get(code) or names.get(code[:-3] if code.endswith("-FD") else code) or {}
         ls = _day(r, date)
+        if code in jd:
+            ls = (date, jd[code]["trades"], jd[code]["r"], jd[code]["pnl"])
         rows.append(dict(setup=code, name=nm.get("name") or r.get("name") or code,
                          acct=" + ".join({"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator",
                                           "graveyard": "Graveyard", "livelab": "Live Lab", "explore1": "Explore 1"}.get(x, x) for x in a["accounts"]),
@@ -226,6 +260,9 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
                 a["trades"] += 1; a["r"] += c.get("r") or 0.0; a["pnl"] += c.get("pnl") or 0.0
                 if label not in a["accts"]:
                     a["accts"].append(label)
+    jd = journal_day(date)       # owner 2026-11-05: rank and show the day's setups after costs (journal pnl_adj)
+    if jd:
+        agg = jd
     out = sorted(agg.values(), key=lambda x: -x["pnl"])[:n]
     for x in out:
         nm = names.get(x["setup"]) or {}
@@ -703,7 +740,7 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
            if gen else "Ranked by avg R per trade shrunk by trades ÷ (trades + 20), so a few lucky trades don't outrank a long record. "
                        "Break-even win rate = win rate needed to make money (green = beating it). Setup Generator excluded.")
     return page(f'<div class="card{" gen" if gen else ""}"><table class="lb"><thead><tr>{th}</tr></thead><tbody>{"".join(trs)}</tbody></table>'
-                f'<div class="sub" style="margin:8px 0 0">Last session = {date}. R = planned risk per trade; P/L after Alpaca paper fills.</div></div>',
+                f'<div class="sub" style="margin:8px 0 0">Last session = {date}. R = planned risk per trade. Last-session columns after costs (stop-exit slippage in); totals after Alpaca paper fills.</div></div>',
                 f"MCF daily — {date} · {title.split(' — ')[0]}", sub)
 
 

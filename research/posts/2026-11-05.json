@@ -1,0 +1,14 @@
+{"note": "#2: 1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Figures after costs. Neither is a proven edge: #1 failed its backtest gates and lives in the Graveyard (21 trades today); #2 runs in Primary (13 trades today, 12 winners).",
+ "setups": [
+  {"setup": "CWT09-gapdn-bounce-g5-lowerhalf-short",
+   "title": "Gap-Down Bounce Rejection Short (5% gap)",
+   "lines": [["When", "10:30 AM–3:00 PM"], ["Market", "Any"],
+             ["Stock", "Gapped down 5%+ at the open, no earnings within 4 days, ≥ $1M traded a day"],
+             ["Trigger", "A 5-minute bar went above VWAP between 9:35 and 10:30; now a bounce bar reaches VWAP (or the 9:30–10:00 high) and closes in the lower half of its range"],
+             ["Action", "Short"], ["Exit", "Stop at the 9:30–10:30 high; no target, hold to 3:55 PM"]]},
+  {"setup": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "title": "Gap-Down Pop Fade, Heavy Selling (all day)",
+   "lines": [["When", "9:50 AM–3:00 PM"], ["Market", "Any"], ["Stock", "Gapped down at the open, ≥ $95M traded a day"],
+             ["Trigger", "Strongly bearish heat (≤ −20), heavy net selling, and the 5-minute RSI(5) pops above 80"],
+             ["Action", "Short the pop"], ["Exit", "Target 1 unit below the signal price, stop 1 unit above; else out at 3:55 PM"]]}
+ ]}
