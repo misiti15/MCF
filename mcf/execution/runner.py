@@ -235,7 +235,35 @@ class PaperRunner:
                 order = td.sort_values("exit_time", kind="stable") if "exit_time" in td.columns else td
                 low = order.groupby("strategy")["r_multiple"].cumsum().groupby(order["strategy"]).min()
                 self.risk.latch_setup_losses({str(k): float(v) for k, v in low.items()})
+        self._restore_latches(sig)
         self._sync_open()
+
+    # reasons risk.check() journals once a latch has fired; their presence in today's signals is the persisted record
+    HALT_REASONS = ("daily loss limit", "halted")
+    SETUP_STOP_REASON = "setup daily loss limit"
+
+    def _restore_latches(self, sig: pd.DataFrame):
+        """HK-HALT-RESTART (2026-11-05): restore the day's sticky latches from today's journaled signals.
+
+        The account halt (account.max_daily_loss_r) is sticky in memory: once risk.check() sees realized R at or below
+        the limit it stays halted for the day, even if open lots then close green. restore() only re-derived it from the
+        CURRENT realized R, so a successor job started after such a recovery traded again (Gen 11-05: halted 14:10 ET
+        at <= -120R, journal net -119.7R by the 14:40 hand-over, the 14:49 successor took 32 entries). Every time a
+        latch fires, risk.check() rejects the signal with its reason and the runner journals it, so those skips are the
+        persisted record: the same latch, restored exactly (no new threshold, no stricter rule). The per-setup latch
+        (LL-LATCH) is also rebuilt from its own skip reason, on top of the running-low check above."""
+        if sig is None or not len(sig) or "reason" not in sig.columns:
+            return
+        skipped = sig[sig.status == "skipped"] if "status" in sig.columns else sig
+        reasons = skipped["reason"].astype(str)
+        if reasons.isin(self.HALT_REASONS).any():
+            if not self.risk.state.halted:
+                print("restore: account daily-loss halt fired earlier today - staying halted (no new entries)")
+            self.risk.state.halted = True
+        stopped = set(skipped.loc[reasons == self.SETUP_STOP_REASON, "strategy"].astype(str))
+        if stopped - self.risk.state.setup_stopped:
+            print(f"restore: setup daily-loss latch already fired today for {sorted(stopped)}")
+        self.risk.state.setup_stopped |= stopped
 
     def _restore_blocked(self, sig: pd.DataFrame):
         """retry_after_release state after a restart: blocked market entries, and which already used their retry."""
@@ -1464,6 +1492,9 @@ class PaperRunner:
 
     def write_status(self, now, phase):
         self.flush_poll_log(now, force=phase in ("closed", "handover"))
+        rs = self.risk.state      # visibility only (status health): the day's latches and counters a successor restores
+        self.health["risk_state"] = {"halted": bool(rs.halted), "setup_stopped": sorted(rs.setup_stopped),
+                                     "trades_today": int(rs.trades_today), "realized_r": round(float(rs.realized_r), 3)}
         if not (self.status_path or self.on_status):
             return
         from ..report.live_status import build_status
