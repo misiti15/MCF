@@ -9,8 +9,8 @@
 # The first day starts from the replay's end state (research/hunch/u200/state/M1_model.npz).
 #
 # Load: ONE job a trading day (concurrency group `hunch`, never cancelled): the 09:40 ET start runs until the close or until
-# ~5h40m, then exits so the queued hourly standby takes over (restart-safe: each tick recomputes today from the
-# start-of-day model; nothing is lost). ~6.4 runner-hours a trading day; 2-3 Alpaca bars requests every 3 minutes;
+# ~5h40m, then exits and dispatches its successor, or the queued hourly standby takes over (restart-safe: each tick recomputes today from the
+# start-of-day model; nothing is lost); watchdog.yml's hunch-start job also dispatches a missing run 09:45-15:50 ET. ~6.4 runner-hours a trading day; 2-3 Alpaca bars requests every 3 minutes;
 # a push to mcf-data-hunch every ~15 minutes. Two UTC lines cover EDT and EST; a run outside 09:00-16:05 ET exits at once.
 name: hunch
 
@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # hand-over: the ending run dispatches its successor (mcf/execution/handover.py, owner 2026-11-05)
 
 concurrency:
   group: hunch
@@ -76,6 +77,15 @@ jobs:
         run: |
           python -m mcf.hunch live --dry --loop --push --state-dir state \
             --seed research/hunch/u200/state/M1_model.npz --max-minutes 340
+
+      - name: Hand over (dispatch the next hunch run if none is queued)
+        # 11-05: GitHub fired no scheduled run 09:40-14:50 ET, so cron standbys cannot be the only hand-over. Before
+        # 15:55 ET, a loop that ended (340-min cap or crash) dispatches hunch.yml unless a run is already queued
+        # (max 4 bot dispatches a day). Never fails the job.
+        if: always() && steps.window.outputs.run == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m mcf.execution.handover hunch --relay --ref "${{ github.event.repository.default_branch }}" || true
 
       - name: Save to the state branch
         if: always() && steps.window.outputs.run == 'true'
