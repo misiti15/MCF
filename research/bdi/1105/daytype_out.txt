@@ -1,0 +1,68 @@
+SPY day types in the live window: {'quiet': 11, 'up': 6, 'down': 6} | 2026-11-05: {'spy_oc': -4.22, 'spy_fo10': -1.48, 'dtype': 'down', 's10': 'below'}
+
+== by dtype (all live sessions)
+            days     n   avgR       usd
+acct dtype                             
+ex1  down      1    36 -0.426    50.440
+gen  down      4   930 -0.265 -5093.604
+     quiet     6   510 -0.310 -3248.272
+     up        4   378 -0.426 -2017.460
+gy   down      4  1381 -0.198 -3345.040
+     quiet     5  1742 -0.099 -3085.891
+     up        3  1092 -0.114 -2126.520
+ll   down      1    19 -0.076   152.380
+p    down      6   261  0.224   277.420
+     quiet    11   336 -0.096 -1330.810
+     up        6   322 -0.165 -1313.980
+t1   down      6   933 -0.063  -221.760
+     quiet     8  1747 -0.083 -1993.771
+     up        6   882 -0.214 -1058.030
+t2   down      6  1397 -0.266 -3279.000
+     quiet     8  2062 -0.065 -1568.809
+     up        5  1190 -0.139 -1730.520
+
+== by s10 (all live sessions)
+            days     n   avgR       usd
+acct s10                               
+ex1  below     1    36 -0.426    50.440
+gen  above     7   742 -0.321 -3878.881
+     below     7  1076 -0.304 -6480.455
+gy   above     6  2072 -0.141 -5101.150
+     below     6  2143 -0.130 -3456.301
+ll   below     1    19 -0.076   152.380
+p    above    10   469  0.072   194.660
+     below    13   450 -0.135 -2562.030
+t1   above     8  1123 -0.039   417.430
+     below    12  2439 -0.143 -3690.991
+t2   above     8  1568 -0.026  -650.830
+     below    11  3081 -0.205 -5927.498
+
+== live setups positive on BOTH up and down days (>= 10 trades each): 10
+                                                                                 size                mean              
+dtype                                                                            down quiet     up   down  quiet     up
+acct strategy                                                                                                          
+gen  GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short  26.0  15.0   10.0  0.620 -0.649  0.180
+gy   CWT09-gapdn-bounce-g5-lowerhalf-short                                       59.0  23.0   17.0  0.481 -0.313  0.035
+     CWT09-gapdn-vwaploss-g5-short                                               49.0  11.0   10.0  0.358 -0.436  0.894
+p    MF2-open-rsimidhi-flowsell-FD                                               46.0   9.0   18.0  0.623 -0.596  0.274
+     RW3-gapdn-rsi5pop-flowsell-short-FD                                         45.0  20.0   14.0  0.885 -0.224  0.144
+     RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                                  36.0  41.0   18.0  0.639  0.289  0.013
+t1   L3-gap-slope-fromopen-FD                                                    14.0  71.0  137.0  0.198  0.268  0.204
+     MF4-h40-open-flowsell-FD                                                    13.0   9.0   10.0  0.356  0.345  0.100
+     exhaustion_short                                                            18.0  20.0   24.0  0.037 -0.183  0.185
+t2   RW1-gapdn-bounce-flowsell-short-FD                                          28.0  19.0   12.0  0.383  0.116  0.312
+
+== best live setups on quiet days (>= 10 quiet-day trades)
+                                                 size               mean              
+dtype                                            down quiet    up   down  quiet     up
+acct strategy                                                                         
+t2   MF5-flowsell-vwapup-rsi5hi                   1.0  10.0   2.0  1.076  0.566 -0.099
+gy   MF5-flowsell-vwapup-rsi5hi-FD                1.0  11.0   3.0  1.030  0.475  0.204
+     heat_fade_long                              34.0  14.0  16.0 -0.585  0.457 -0.058
+     MF3-open-flowsell-rsi5hi-FD                 16.0  13.0  10.0  0.464  0.433 -0.131
+t1   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  15.0  16.0   2.0  0.539  0.333 -1.189
+p    CWT14-failbrk-pdl-p10-lowvol-long           18.0  20.0  40.0 -0.292  0.327 -0.047
+t2   L3-gap-slope-rsi5hi-FD                       2.0  21.0  22.0  0.288  0.317  0.202
+t1   CWT05-flush-m05-v3-long                     27.0  12.0   9.0 -0.368  0.301 -0.606
+
+Educational only - not financial advice.

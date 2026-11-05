@@ -1,0 +1,33 @@
+trade lists 1165576 trades, 95 setups, 446 sessions 2024-10-01..2026-11-04 (locked block absent); feature coverage 100.0%, QQQ 100.0%; configs N=4, bar t 1.67
+
+FB1-S stock flush-chase guard (shorts, dist_lod_atr <= 0.15): pool 469122 / 47 setups (avg -0.059R); class A n 64592 (13.8%) on 446 days raw -0.058R, excess +0.013R, day-t +1.03; class B raw -0.059R
+   train A excess +0.023 (n 18818) | valid A excess +0.009 (n 45774); A excess w/o best day +0.010R (best day share 27%)
+   as a filter: keeps 86.2% of trades, 90.3% of top-decile; pool avg -0.059 -> -0.059R
+   families (with class-A trades): 24; helped by the rule 11, harmed 13; CWT13 nA 5 exA -1.265; RW6 nA 4 exA -0.426; MF1 nA 167 exA -0.131; MF5 nA 104 exA -0.130; exhaustion_short nA 77 exA -0.056; MF3 nA 841 exA -0.047; NS2 nA 15 exA -0.034; RW2 nA 61 exA -0.026; NS3V1 nA 77 exA -0.023; MF2 nA 1206 exA -0.014; GEN nA 4623 exA -0.010; CWT14 nA 33427 exA +0.005; RW7 nA 3709 exA +0.010; RW1 nA 979 exA +0.014; RW3 nA 609 exA +0.024; RW3S nA 13051 exA +0.025; MF4 nA 3000 exA +0.029; NM nA 190 exA +0.034; RW5 nA 243 exA +0.057; NS4 nA 5 exA +0.077; NS3 nA 298 exA +0.079; RW4 nA 235 exA +0.114; CWT09 nA 1618 exA +0.165; L3 nA 48 exA +0.195
+   by SPY day type: down A n 25895 raw +0.074 ex +0.144 | B raw +0.061; quiet A n 19819 raw -0.069 ex +0.001 | B raw -0.022; up A n 18878 raw -0.227 ex -0.154 | B raw -0.179
+   PASS False
+
+FB1-I index flush-chase guard (shorts, QQQ dist_lod <= 0.15 & fo <= -0.5%): pool 469122 / 47 setups (avg -0.059R); class A n 46173 (9.8%) on 191 days raw -0.055R, excess +0.005R, day-t +0.27; class B raw -0.059R
+   train A excess +0.042 (n 12908) | valid A excess -0.009 (n 33265); A excess w/o best day -0.003R (best day share 152%)
+   as a filter: keeps 90.2% of trades, 90.3% of top-decile; pool avg -0.059 -> -0.059R
+   families (with class-A trades): 24; helped by the rule 13, harmed 11; CWT13 nA 1310 exA -0.061; NM nA 415 exA -0.051; MF2 nA 876 exA -0.040; RW5 nA 462 exA -0.027; MF3 nA 921 exA -0.026; GEN nA 5298 exA -0.021; NS2 nA 632 exA -0.017; RW4 nA 968 exA -0.015; RW2 nA 1570 exA -0.008; L3 nA 2636 exA -0.005; RW6 nA 265 exA -0.004; RW1 nA 925 exA -0.003; NS3 nA 1278 exA -0.002; exhaustion_short nA 2065 exA +0.002; RW3 nA 599 exA +0.009; RW7 nA 3066 exA +0.011; CWT14 nA 13001 exA +0.012; NS3V1 nA 148 exA +0.017; MF5 nA 461 exA +0.017; RW3S nA 5892 exA +0.028; MF1 nA 727 exA +0.049; CWT09 nA 886 exA +0.062; MF4 nA 1597 exA +0.066; NS4 nA 175 exA +0.117
+   by SPY day type: down A n 34115 raw +0.002 ex +0.061 | B raw +0.080; quiet A n 8984 raw -0.197 ex -0.134 | B raw -0.017; up A n 3074 raw -0.270 ex -0.200 | B raw -0.183
+   PASS False
+
+FB1-L squeeze-chase guard (longs, dist_hod_atr <= 0.15): pool 696454 / 48 setups (avg -0.077R); class A n 103347 (14.8%) on 446 days raw -0.074R, excess +0.000R, day-t +0.02; class B raw -0.077R
+   train A excess +0.025 (n 34423) | valid A excess -0.012 (n 68924); A excess w/o best day -0.005R (best day share 2264%)
+   as a filter: keeps 85.2% of trades, 85.9% of top-decile; pool avg -0.077 -> -0.077R
+   families (with class-A trades): 11; helped by the rule 9, harmed 2; CWT13 nA 8 exA -0.669; ST4 nA 2 exA -0.354; CWT05 nA 7 exA -0.225; NS5 nA 4 exA -0.108; ST1 nA 7 exA -0.052; ST2 nA 10 exA -0.010; CWT12 nA 10839 exA -0.003; NS1 nA 832 exA -0.001; CWT14 nA 80341 exA -0.000; GEN nA 11296 exA +0.009; NM nA 1 exA +0.068
+   by SPY day type: down A n 24024 raw -0.268 ex -0.183 | B raw -0.173; quiet A n 31515 raw -0.117 ex -0.035 | B raw -0.076; up A n 47808 raw +0.052 ex +0.116 | B raw +0.025
+   PASS False
+
+FB1-B bounce-sold boost (shorts, dist_lod >= 0.5 & rsi5 >= 50): pool 469122 / 47 setups (avg -0.059R); class A n 176982 (37.7%) on 446 days raw -0.051R, excess +0.003R, day-t +0.17; class B raw -0.064R
+   train A excess +0.018 (n 53135) | valid A excess -0.003 (n 123847); A excess w/o best day -0.008R (best day share 355%)
+   families (with class-A trades): 24; helped by the rule 14, harmed 10; CWT09 nA 138 exA -0.300; MF2 nA 184 exA -0.238; NS4 nA 421 exA -0.070; NS3 nA 3731 exA -0.029; RW4 nA 2889 exA -0.013; GEN nA 12552 exA -0.013; RW2 nA 17899 exA -0.007; exhaustion_short nA 23363 exA -0.007; RW1 nA 978 exA -0.002; CWT13 nA 19478 exA -0.002; RW7 nA 3024 exA +0.000; NM nA 680 exA +0.000; CWT14 nA 19757 exA +0.000; NS2 nA 8331 exA +0.002; NS3V1 nA 446 exA +0.006; MF4 nA 1885 exA +0.007; RW5 nA 2229 exA +0.011; RW3S nA 3231 exA +0.012; MF5 nA 3362 exA +0.012; RW6 nA 3533 exA +0.013; RW3 nA 1840 exA +0.018; L3 nA 38923 exA +0.023; MF1 nA 4467 exA +0.024; MF3 nA 3641 exA +0.026
+   by SPY day type: down A n 48000 raw +0.028 ex +0.077 | B raw +0.079; quiet A n 48464 raw +0.011 ex +0.069 | B raw -0.050; up A n 80518 raw -0.134 ex -0.080 | B raw -0.225
+   PASS False
+
+descriptive (not scored): short raw R by entry dist_lod_atr bucket: (-1.0, 0.15] n 64592 -0.058 ex +0.013; (0.15, 0.3] n 88478 -0.049 ex +0.011; (0.3, 0.5] n 104088 -0.068 ex -0.007; (0.5, 1.0] n 138884 -0.073 ex -0.014; (1.0, 99.0] n 73080 -0.030 ex +0.012
+descriptive: long raw R by entry dist_hod_atr bucket: (-1.0, 0.15] n 103342 -0.074 ex +0.000; (0.15, 0.3] n 179944 -0.085 ex -0.002; (0.3, 0.5] n 190870 -0.085 ex -0.002; (0.5, 1.0] n 167074 -0.069 ex +0.003; (1.0, 99.0] n 55224 -0.049 ex +0.003
+
+Educational only - not financial advice.

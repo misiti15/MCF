@@ -7,3 +7,14 @@ date,hyp,n,avgR,note,in_sample
 2026-11-04,L2,0,,no trigger,False
 2026-11-04,L3,0,,"not qualifying (SPY +0.55%, IWM -0.05% at 10:00)",False
 2026-11-04,L6,469,-0.389,others n 506 avg -0.198; counter minus others -0.191,False
+2026-11-05,L1,5,0.12,class B (same setups elsewhere) n 27 avg -0.10; A - B +0.22 (nightly1105 forward_out),False
+2026-11-05,L2,0,,no trigger (QQQ never made a session high 10:30-11:30),False
+2026-11-05,L3,0,,"not qualifying (SPY -1.48%, IWM -1.18% at 10:00)",False
+2026-11-05,L6,639,-0.428,others n 568 avg -0.011; counter minus others -0.417; setup-adjusted excess -0.001,False
+2026-11-05,L7,0,,no class A (QQQ max +-0.27% from open; never >= +0.75%),False
+2026-11-05,L8,174,-0.666,"class B n 0 (IWM <= -0.5% at every failbrk long entry); GY 95 -0.845, T2 79 -0.451; contrast n/a",False
+2026-11-05,gate1-checkpoint-gate,158,,"state DOWN at every checkpoint 11:00-15:30; dropped 60 entries -13.81R (avg -0.230), kept 98 +11.73R -> gated - ungated +13.81R (GY +12.6, P +1.7, Gen -0.4)",False
+2026-11-05,burst1-openloss-latch3,0,,in-sample (the lead came from 11-05); BURST1 live check +4.6R on 11-05; forward tally from 11-06,True
+2026-11-05,latch1103-category-shadow,0,,"day 2: GY latch raw +292.2R (excess +87.2; longs +350.0, shorts -57.7), Primary -15.25R (excess -10.2); 2-day GY +248.8, P -12.75",False
+2026-11-05,flow1-book-sensor,0,,"merged T10:15 k3 win filter delta +150.3R = SPY-rule control (+150.3R): excess 0, no lift on top of the SPY rule; Primary 0 dropped",False
+2026-11-05,comp15-w60-early,0,,forward starts 2026-11-06 (pre-registered),True
