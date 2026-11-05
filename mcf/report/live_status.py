@@ -36,6 +36,47 @@ def _stats(tr: pd.DataFrame) -> dict:
     return out
 
 
+def _prior_status(runner) -> dict:
+    try:
+        return json.loads(Path(runner.status_path).read_text()) if getattr(runner, "status_path", None) else {}
+    except Exception:
+        return {}
+
+
+def equity_history(prior: dict, acct: str, day: str, account: dict) -> dict:
+    """Broker truth per session (owner 2026-11-05: one dollar truth = Alpaca): {date: {equity_close, alpaca_day_pl,
+    source}}. Seeded from docs/live/equity_history.json (backfill) and the previous status.json's equity_history; today's
+    row = account equity now and equity - last_equity; the previous session's close is reset to Alpaca's last_equity
+    (it includes the regulatory fees Alpaca posts after the close), and its day P/L recomputed."""
+    from .reconcile_pl import equity_history as stored
+
+    eqh = {d: dict(r) for d, r in stored(acct).items()}
+    for d, r in ((prior or {}).get("equity_history") or {}).items():
+        if (eqh.get(d) or {}).get("source") != "alpaca" or (r or {}).get("source") == "alpaca":
+            eqh[d] = dict(r)
+    eq, le = account.get("equity"), account.get("last_equity")
+    if eq is None:
+        return eqh
+    eqh[day] = {"equity_close": eq, "alpaca_day_pl": account.get("day_pl"), "source": "alpaca"}
+    prev = max((d for d in eqh if d < day), default=None)
+    if prev and le:
+        pp = max((d for d in eqh if d < prev), default=None)
+        base = (eqh.get(pp) or {}).get("equity_close") if pp else None
+        eqh[prev] = {"equity_close": le, "alpaca_day_pl": _f(le - base) if base is not None else eqh[prev].get("alpaca_day_pl"),
+                     "source": "alpaca"}
+    return eqh
+
+
+def _since_alpaca(by_day: list[dict]) -> dict:
+    """Since-start dollars from the broker: the sum of each session's Alpaca day P/L (journal pnl for a session with no
+    stored equity; alpaca_days says how many sessions are broker-measured)."""
+    if not by_day:
+        return {}
+    n = sum(h.get("alpaca_day_pl") is not None for h in by_day)
+    tot = sum(h["alpaca_day_pl"] if h.get("alpaca_day_pl") is not None else (h.get("pnl") or 0.0) for h in by_day)
+    return {"alpaca_pnl": round(tot, 2), "alpaca_days": n, "sessions": len(by_day)}
+
+
 def _f(x, nd=2):
     return None if x is None or (isinstance(x, float) and np.isnan(x)) else round(float(x), nd)
 
@@ -78,6 +119,15 @@ def build_status(runner, now, phase: str) -> dict:
         account = {"equity": _f(acct.equity), "cash": _f(acct.cash)} if acct else {}
     except Exception:
         account = {}
+    try:   # Alpaca's own day P/L base: last_equity = the prior session's closing equity
+        le = _f(acct.last_equity) if account and getattr(acct, "last_equity", None) is not None else None
+        if le:
+            account.update(last_equity=le, day_pl=_f(float(acct.equity) - le))
+    except Exception:
+        pass
+    acct_name = (runner.cfg or {}).get("account_name", "primary")
+    eqh = equity_history(_prior_status(runner), acct_name, day, account)
+    by_day = [dict(h, **{k: (eqh.get(h["date"]) or {}).get(k) for k in ("equity_close", "alpaca_day_pl")}) for h in by_day]
     return {
         "title": "MCF Update",
         "disclaimer": DISCLAIMER,
@@ -91,13 +141,14 @@ def build_status(runner, now, phase: str) -> dict:
                   "strategies": [s.name for s in runner.strategies]},
         "health": {"universe": len(runner.watchlist), **runner.health},
         "account": account,
-        "today": {**_stats(today), "signals": int(len(sig)), "by_status": counts, "skip_reasons": reasons,
+        "today": {**_stats(today), "alpaca_day_pl": account.get("day_pl"), "signals": int(len(sig)), "by_status": counts, "skip_reasons": reasons,
                   "open_positions": len(positions)},
         "positions": positions,
         "closed": closed,
         "signals": recent,
         "history": by_day[-30:],
-        "since_start": _stats(trades),
+        "equity_history": dict(sorted(eqh.items())[-60:]),
+        "since_start": {**_stats(trades), **_since_alpaca(by_day)},
         "marcoflow": json.loads(REF.read_text()) if REF.exists() else None,
         "validation": json.loads(VALIDATION.read_text()) if VALIDATION.exists() else None,
     }
