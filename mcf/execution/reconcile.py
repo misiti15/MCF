@@ -45,6 +45,22 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         after = max(floor, min(after, oldest.tz_convert("America/New_York").normalize()))
     after = after.to_pydatetime()
     by_id = {str(o.id): o for o in broker.closed_orders_today(after)}
+    # Fallback (Gen 2026-11-05): an open journal entry missing from the account-wide list - a truncated page, a busy
+    # day - is looked up by symbol, so every filled lot is booked once its exit has filled, whichever job placed it.
+    missing = sorted(set(orders.loc[~orders.broker_order_id.astype(str).isin(by_id), "symbol"].dropna().astype(str)))
+    by_sym = getattr(broker, "closed_orders_for_symbols", None)
+    if missing and by_sym is not None:
+        try:
+            extra = [o for o in by_sym(after, missing) if str(o.id) not in by_id]
+        except Exception as e:
+            extra = []
+            print(f"reconcile: symbol lookup failed ({type(e).__name__})")
+        legs = {_oid(leg) for o in [*by_id.values(), *extra] for leg in getattr(o, "legs", None) or []}
+        for o in extra:
+            if _oid(o) not in legs:          # a leg's own top-level copy: its parent carries it
+                by_id[str(o.id)] = o
+        if extra:
+            print(f"reconcile: {len(extra)} orders on {len(missing)} symbols were missing from the day's list (fetched by symbol)")
     lots = _lot_exits(by_id, set(orders.broker_order_id.astype(str)))
     rows, residual = [], {}
     for _, rec in orders.iterrows():

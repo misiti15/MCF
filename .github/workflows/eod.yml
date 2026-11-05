@@ -79,4 +79,4 @@ jobs:
       - name: Save the report to the state branch
         if: steps.w.outputs.run == 'true'
         run: |
-          cd state && git add reports && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "EOD report" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"
+          cd state && git add reports journal.db && git -c user.name=mcf-bot -c user.email=mcf-bot@users.noreply.github.com commit -q -m "EOD report" && git push -q origin "HEAD:$STATE_BRANCH" || echo "nothing to save"

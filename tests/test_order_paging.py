@@ -130,3 +130,81 @@ def test_reconcile_never_uses_a_leg_row_as_a_flatten_close():
     j = NS(open_orders=lambda run_id: pd.DataFrame(rows), update_order_status=lambda *a: None)
     tr = reconcile_day(NS(closed_orders_today=lambda after: [lot, stray]), j, 1, "2026-10-14")
     assert tr.empty
+
+
+def test_page_orders_keeps_paging_when_a_full_page_holds_fewer_distinct_rows():
+    """Gen 2026-11-05: a full page whose legs also come back as their own rows holds fewer than `limit` distinct rows;
+    the old short-page rule stopped there and the closing reconcile never saw the morning's 69 lots."""
+    parents = _many(400)
+
+    def fetch(until):                                     # 500 rows a page, every leg ALSO returned top-level
+        rows = sorted((p for p in parents if until is None or p.submitted_at < until),
+                      key=lambda p: p.submitted_at, reverse=True)
+        out, n = [], 0
+        for p in rows:
+            if n >= 500:
+                break
+            out += [p, *p.legs]
+            n += 1 + 2 * len(p.legs)
+        return out
+
+    got = page_orders(fetch, T0 - timedelta(hours=1))
+    assert sorted(o.id for o in got) == sorted(p.id for p in parents)
+
+
+def _gen_lot(i, t, close_t):
+    """A hold-to-close short (stop leg only, cancelled at the flatten) and the flatten's market buy."""
+    lot = _bracket(i, f"H{i}", "sell", 10, 20.0, t)
+    lot.legs = lot.legs[:1]
+    lot.legs[0].canceled_at = close_t - timedelta(seconds=5)
+    flat = NS(id=f"f{i}", symbol=f"H{i}", side="buy", status="filled", order_type="market", order_class="simple",
+              filled_avg_price=19.0, filled_qty="10", filled_at=close_t, submitted_at=close_t - timedelta(seconds=1),
+              client_order_id=f"close-{i}", legs=None, replaces=None, canceled_at=None)
+    row = {"broker_order_id": lot.id, "symbol": lot.symbol, "strategy": "HOLD", "side": -1, "stop": 21.0,
+           "target": None, "entry_ref": 20.0, "meta": "", "created_at": t.isoformat()}
+    return lot, flat, row
+
+
+def test_reconcile_looks_up_entries_missing_from_the_days_list_by_symbol():
+    close_t = T0 + timedelta(hours=6, minutes=5)
+    lot, flat, row = _gen_lot(1, T0 + timedelta(minutes=10), close_t)
+    late, late_flat, late_row = _gen_lot(2, T0 + timedelta(hours=4), close_t)
+    asked = []
+
+    class B:
+        def closed_orders_today(self, after):             # truncated: only the last hours (late lot + both closes)
+            return [late, late_flat, flat]
+
+        def closed_orders_for_symbols(self, after, symbols):
+            asked.append(list(symbols))
+            return [o for o in (lot, flat, lot.legs[0]) if o.symbol in symbols]
+
+    closed = []
+    j = NS(open_orders=lambda run_id: pd.DataFrame([row, late_row]),
+           update_order_status=lambda oid, st: closed.append(oid))
+    tr = reconcile_day(B(), j, 1, "2026-10-14")
+    assert asked == [["H1"]]
+    assert sorted(tr.broker_order_id) == ["p1", "p2"] and (tr.exit_reason == "flatten").all()
+    assert abs(tr.pnl.sum() - 20.0) < 1e-9 and sorted(closed) == ["p1", "p2"]
+
+
+def test_reconcile_without_symbol_lookup_still_works():
+    lot, flat, row = _gen_lot(1, T0, T0 + timedelta(hours=6))
+    j = NS(open_orders=lambda run_id: pd.DataFrame([row]), update_order_status=lambda *a: None)
+    assert reconcile_day(NS(closed_orders_today=lambda after: [flat]), j, 1, "2026-10-14").empty
+
+
+def test_eod_book_pairs_fills_the_trade_jobs_left_open(tmp_path):
+    from mcf.cli import eod_book
+    from mcf.journal import Journal
+
+    j = Journal(str(tmp_path / "journal.db"))
+    rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    lot, flat, row = _gen_lot(1, T0, T0 + timedelta(hours=6))
+    j.record_order(rid, "H1", "HOLD", -1, 10, 20.0, 21.0, None, lot.id, "submitted", "{}")
+    b = NS(closed_orders_today=lambda after: [lot, flat])
+    assert eod_book(j, rid, "2026-10-14", {}, broker=b) == 1
+    t = j.trades(run_id=rid)
+    assert len(t) == 1 and abs(float(t.iloc[0]["pnl"]) - 10.0) < 1e-9
+    assert j.open_orders(rid).empty
+    assert eod_book(j, rid, "2026-10-14", {}, broker=b) == 0           # nothing left open: no broker call, no rows
