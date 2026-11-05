@@ -12,6 +12,10 @@
 # The owner switches to act before real funds (docs/DECISIONS.md). No emails or alerts.
 # Its concurrency groups (mcf-watchdog-*) differ from trade.yml's (mcf-trade*), so it never queues behind or cancels a
 # trading job, and it writes nothing to the state branches.
+#
+# Job hunch-start (owner 2026-11-05): on trading days 09:45-15:50 ET it dispatches hunch.yml (research only, no orders)
+# when no hunch run is queued or in progress - 11-05's 09:40 Hunch start was lost in a GitHub cron outage. Max 4 bot
+# dispatches of hunch.yml a day (mcf/execution/handover.py). It touches no trading job or account.
 name: watchdog
 
 on:
@@ -83,3 +87,36 @@ jobs:
       - name: Watchdog (mode ${{ env.MCF_WATCHDOG_MODE }})
         if: steps.window.outputs.run == 'true'
         run: python -m mcf.execution.watchdog --status status.json --mode "$MCF_WATCHDOG_MODE" --out watchdog.json
+
+  hunch-start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: read
+    concurrency:
+      group: mcf-watchdog-hunch
+      cancel-in-progress: false
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - name: Window check
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ "$dow" -le 5 ] && [ "$now" -ge 0945 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"
+          else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:45-15:50 ET weekdays: nothing to do"; fi
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.run == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+      - name: Install
+        if: steps.window.outputs.run == 'true'
+        run: pip install -q pandas pyyaml
+      - name: Hunch start check (dispatch hunch.yml if no run is queued / in progress)
+        if: steps.window.outputs.run == 'true'
+        run: python -m mcf.execution.handover hunch --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.mode == 'dry' && 'dry' || 'act' }}"
