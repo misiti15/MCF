@@ -224,6 +224,30 @@ def cmd_discover(args, cfg):
     print(f"tried {p['rules_tried']:,} rules; {p['passed_train']} passed training; {p['replicated']} replicated -> {args.out}")
 
 
+def eod_book(j, rid, day, cfg, broker=None) -> int:
+    """EOD booking pass (Gen 2026-11-05): pair every filled order the trade jobs left open in the journal (a job that
+    ended early, a replacement job started mid-day, a truncated order list) into trades, with the account's own keys
+    (ALPACA_TRADE_*; Primary: ALPACA_*). Read-only at the broker. Returns the number of trades booked."""
+    from .execution.reconcile import reconcile_day
+
+    try:
+        if j.open_orders(rid).empty:
+            return 0
+        if broker is None:
+            from .execution.alpaca_broker import AlpacaBroker
+
+            broker = AlpacaBroker(paper=True)
+        tr = reconcile_day(broker, j, rid, day, cfg)
+        j.add_trades(rid, tr)
+    except Exception as e:
+        print(f"EOD booking skipped: {type(e).__name__}: {e}")
+        return 0
+    if len(tr):
+        print(f"EOD booking: {len(tr)} filled lots the trade jobs had not booked "
+              f"(${tr['pnl'].sum():+.2f}; dates {', '.join(sorted(set(tr['date'].astype(str))))})")
+    return len(tr)
+
+
 def cmd_eod(args, cfg):
     """End-of-day report from the saved journal: chart, best 3 / worst 5 trades with charts, CSV; emailed if SMTP secrets exist."""
     load_dotenv()
@@ -238,6 +262,8 @@ def cmd_eod(args, cfg):
     _state_cfg(cfg, args.state_dir)
     j = Journal(cfg["data"]["journal_path"])
     rid = j.get_or_create_run("paper", "MCF Update (live paper)")
+    if not getattr(args, "no_book", False):
+        eod_book(j, rid, day, cfg)
     spy = None
     try:
         d0 = datetime.fromisoformat(day)
@@ -351,6 +377,7 @@ def main(argv=None):
     eo.add_argument("--state-dir", default="state")
     eo.add_argument("--day")
     eo.add_argument("--no-send", action="store_true")
+    eo.add_argument("--no-book", action="store_true", help="skip the EOD booking pass (pairs fills left open in the journal)")
     eo.set_defaults(fn=cmd_eod)
 
     lv = sub.add_parser("live", help="run one slot of the live paper session")

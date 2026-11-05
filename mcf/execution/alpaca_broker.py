@@ -122,13 +122,15 @@ class AlpacaBroker:
         return [o for o in self._orders(QueryOrderStatus.ALL, after, symbol)
                 if (o.client_order_id or "").startswith(prefix)]
 
-    def _orders(self, status, after, symbol: str | None = None) -> list:
-        """Every order (status filter, submitted after `after`, legs nested), paged - see page_orders."""
+    def _orders(self, status, after, symbol=None) -> list:
+        """Every order (status filter, submitted after `after`, legs nested), paged - see page_orders. `symbol`: one
+        symbol or a list of them."""
         from alpaca.trading.requests import GetOrdersRequest
 
+        syms = None if not symbol else [symbol] if isinstance(symbol, str) else list(symbol)
         return page_orders(lambda until: self.client.get_orders(GetOrdersRequest(
             status=status, after=after, until=until, nested=True, limit=500, direction="desc",
-            symbols=[symbol] if symbol else None)), after)
+            symbols=syms)), after)
 
     def _open_mcf_ids(self, symbol: str | None, prefix: str) -> list:
         ids = []
@@ -598,6 +600,17 @@ class AlpacaBroker:
 
         return sorted(self._orders(QueryOrderStatus.CLOSED, after), key=lambda o: o.submitted_at)
 
+    def closed_orders_for_symbols(self, after, symbols, chunk: int = 50):
+        """Every closed order on `symbols` submitted after `after` (legs nested), paged per chunk of symbols. Reconcile's
+        fallback for entries missing from the account-wide list (Gen 2026-11-05: 69 lots never booked)."""
+        from alpaca.trading.enums import QueryOrderStatus
+
+        syms, out = sorted(set(symbols)), {}
+        for k in range(0, len(syms), chunk):
+            for o in self._orders(QueryOrderStatus.CLOSED, after, syms[k:k + chunk]):
+                out.setdefault(str(o.id), o)
+        return sorted(out.values(), key=lambda o: o.submitted_at)
+
 
 def _protect_base(coid) -> str | None:
     """Parent client id of a lot's protective order id (<parent>-p or <parent>-p<N>); None for any other id."""
@@ -615,10 +628,13 @@ def page_orders(fetch, after, page: int = 500, max_pages: int = 400) -> list:
     an arbitrary part of today (checked against the primary account 2026-10-14: one asc page since 10-06 returned
     202 of 289 entries and none of 10-12/10-13). Testing 1 on 2026-10-14: 9 filled lots (AMD: 1 of 2 lots of one
     flatten close) and the 10-12 ghosts were never booked. So: page newest -> oldest with `until` = oldest
-    submitted_at seen + 1 ms (orders sharing that timestamp are fetched again and de-duplicated) and stop when a page
-    brings nothing new or holds fewer than `page` rows counting its nested legs (on the primary account every full
-    page held at least `limit` rows, the last page fewer). A leg whose parent sits on another page can also come back as a top-level row; those
-    copies are dropped (the parent carries it)."""
+    submitted_at seen + 1 ms (orders sharing that timestamp are fetched again and de-duplicated) and stop only when a
+    page is empty or brings nothing new. (Until 2026-11-05 it also stopped at a page holding fewer than `page` distinct
+    rows counting nested legs; a full page can hold fewer once legs come back twice - nested and as their own row - or
+    replaced stop legs are counted, and on Gen 11-05 (~450 entries, hundreds of trailing-stop replacements) the closing
+    reconcile saw only the last ~2.5 hours: 69 lots entered before 13:20 ET and flattened at 15:55 were never booked,
+    -$873 in the journal vs -$156 at Alpaca.) A leg whose parent sits on another page can also come back as a top-level
+    row; those copies are dropped (the parent carries it). `page` is kept for callers; it no longer ends the paging."""
     from datetime import timedelta
 
     out: dict[str, object] = {}
@@ -628,11 +644,10 @@ def page_orders(fetch, after, page: int = 500, max_pages: int = 400) -> list:
         new = [o for o in got if str(o.id) not in out]
         for o in new:
             out[str(o.id)] = o
-        rows = {str(o.id) for o in got} | {str(getattr(leg, "id", "")) for o in got
-                                           for leg in (getattr(o, "legs", None) or [])}
-        if not new or len(rows) < page:
+        ts = [getattr(o, "submitted_at", None) for o in got]
+        if not new or None in ts:                 # nothing new (or no timestamp to page on): done
             break
-        oldest = min(o.submitted_at for o in got)
+        oldest = min(ts)
         until = oldest + timedelta(milliseconds=1)
     legs = {str(getattr(leg, "id", "")) for o in out.values() for leg in (getattr(o, "legs", None) or [])}
     return [o for i, o in out.items() if i not in legs]
