@@ -129,6 +129,7 @@ def post(monkeypatch):
                       "GY-ORIGIN": {"accounts": ["livelab"], "from": ["graveyard"], "no_leaderboard": True}}}
     monkeypatch.setattr(P, "_show", show)
     monkeypatch.setattr(P, "_local", lambda p: asg if p.endswith("assignments.json") else None)
+    monkeypatch.setattr(P, "_journal", lambda br: None)                        # no journals: scorecard figures only
     return P
 
 
