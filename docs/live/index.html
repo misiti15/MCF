@@ -181,6 +181,9 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   <div class="note">Source: docs/live/decisions.json · reply in chat with the code, e.g. "R1 yes". Educational only — not financial advice.</div>
 </div>
 <script>
+// owner 2026-11-05: ONE dollar truth = Alpaca - a day's P/L is the account's equity change vs the prior close
+// (status alpaca_day_pl); the journal pnl (broker fills) only when no equity is stored. pnl_adj is never a dollar figure.
+var alp = d => d == null ? null : (d.alpaca_day_pl ?? d.pnl);
 (() => {
   const q = s => document.querySelector(s), NOTE = "https://github.com/misiti15/MCF/blob/claude/intraday-trading-system-witis4/";
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -317,15 +320,15 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
   const get = (u, text) => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? (text ? r.text() : r.json()) : null).catch(() => null);
   async function tick() {
     const st = await Promise.all(A.map(a => get(RAW + a[2] + "/status.json"))), lh = await get(RAW + "mcf-data-longhold/longhold/status.json");
-    q("#gl-pl").innerHTML = A.map((a, i) => { const s = st[i], t = (s && s.today) || {};
-      return `<a href="${a[3]}">${a[1]}</a> <span class="${cls(t.pnl)}">${s ? (t.trades ? money(t.pnl) : "–") : "no data"}</span>${t.open_positions ? ` · ${t.open_positions} open` : ""}`; }).join("<br>") +
+    q("#gl-pl").innerHTML = A.map((a, i) => { const s = st[i], t = (s && s.today) || {}, ap = alp(t);
+      return `<a href="${a[3]}">${a[1]}</a> <span class="${cls(ap)}">${s ? (t.trades ? money(ap) : "–") : "no data"}</span>${t.open_positions ? ` · ${t.open_positions} open` : ""}`; }).join("<br>") +
       (lh ? `<br><a href="?account=longhold">Long-hold</a> <span class="${cls((lh.intraday || lh.mark || {}).day_pl)}">${money((lh.intraday || lh.mark || {}).day_pl)}</span>` : "");
     // positive-day streak: consecutive sessions with P/L > 0, newest first
     const h = ((st[0] && st[0].history) || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
-    let n = 0; for (let i = h.length - 1; i >= 0 && h[i].pnl > 0; i--) n++;
+    let n = 0; for (let i = h.length - 1; i >= 0 && alp(h[i]) > 0; i--) n++;
     const last = h[h.length - 1];
     q("#gl-streak").innerHTML = h.length ? `<span class="${n ? "up" : ""}">${n} session${n === 1 ? "" : "s"}</span>` : "–";
-    q("#gl-streak-n").textContent = last ? `last session ${last.date}: ${money(last.pnl)} · ${h.filter(x => x.pnl > 0).length} of ${h.length} green` : "";
+    q("#gl-streak-n").textContent = last ? `last session ${last.date}: ${money(alp(last))} (Alpaca) · ${h.filter(x => alp(x) > 0).length} of ${h.length} green` : "";
     // alerts from every account's status
     const al = [];
     st.forEach((s, i) => { if (!s) { al.push(`${A[i][1]}: no status`); return; }
@@ -457,8 +460,8 @@ window.MCF = window.MCF || {};
       const r = await fetch(RAW + a.br + "/status.json?t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw 0;
       const s = await r.json(), t = s.today || {}, all = s.since_start || {};
-      put(a, money((s.account || {}).equity), [`Today ${pl(t.pnl)} closed · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
-        `Since start ${pl(all.pnl)} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
+      put(a, money((s.account || {}).equity), [`Today ${pl(alp(t))} (Alpaca) · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
+        `Since start ${pl(all.alpaca_pnl ?? all.pnl)} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
         s.asof, m => s.phase === "trading" && m > 10);
       ok.add(a.k);
     } catch (_) {
@@ -653,7 +656,7 @@ window.MCF = window.MCF || {};
     const tiles = [
       ["Trades today", t.trades ?? 0, `${t.open_positions ?? 0} open`],
       ["Win rate", t.trades ? pc(t.win_rate) : "–", t.trades ? `${t.wins} of ${t.trades}` : "no closed trades"],
-      ["P/L today", t.trades ? money(t.pnl) : "–", t.trades ? `adj. ${money(t.pnl_adj)}` : ""],
+      ["P/L today (Alpaca)", t.trades ? money(alp(t)) : "–", t.trades ? `Adj. (incl. modelled stop slippage) ${money(t.pnl_adj)}` : ""],
       ["Signals", t.signals ?? 0, `${by.submitted ?? by.dry_run ?? 0} taken · ${by.skipped ?? 0} skipped · ${by.shadow ?? 0} shadow`],
       ["Data health", h.data_stale ? `STALE` : `${(h.symbols_last_bar ?? 0).toLocaleString()}`, h.data_stale
         ? `no fresh bars since ${String(h.data_stale.last_bar ?? "–").slice(11, 16)} (${h.data_stale.fresh ?? 0} of ${h.data_stale.of ?? 0} fresh) · new entries paused`
@@ -666,8 +669,8 @@ window.MCF = window.MCF || {};
     $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>${ACCOUNTS[ACCT][0]} today</th><th>${ACCOUNTS[ACCT][0]} since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
       row("Trades", t.trades ?? 0, all.trades ?? 0, `${m.trades ?? "–"} (${m.trades_per_day ?? "–"}/day)`),
       row("Win rate", pc(t.win_rate), pc(all.win_rate), pc(m.win_rate)),
-      row("P/L", `<span class="${cls(t.pnl)}">${money(t.pnl)}</span>`, `<span class="${cls(all.pnl)}">${money(all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
-      row("Adj. P/L (real-book stops)", money(t.pnl_adj), money(all.pnl_adj), "–"),
+      row("P/L (Alpaca)", `<span class="${cls(alp(t))}">${money(alp(t))}</span>`, `<span class="${cls(all.alpaca_pnl ?? all.pnl)}">${money(all.alpaca_pnl ?? all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
+      row("Adj. (incl. modelled stop slippage)", money(t.pnl_adj), money(all.pnl_adj), "–"),
       row("Avg P/L per trade", money(t.avg_pnl), money(all.avg_pnl), money(m.avg_pnl)),
       row("Profit factor", t.profit_factor ?? "–", all.profit_factor ?? "–", m.profit_factor ?? "–"),
       row("Stop-loss exits", pc(t.stop_exit_share), pc(all.stop_exit_share), pc(m.stop_loss_exit_share)),
@@ -677,9 +680,9 @@ window.MCF = window.MCF || {};
 
 
     const hist = s.history || [];
-    $l("#lv-days").innerHTML = hist.length ? table(["Date", "Trades", "Win rate", "P/L", "Adj. P/L", "Avg R", "PF", "Change"],
-      hist.slice().reverse().map((d, i, a) => { const prev = a[i + 1]; const ch = prev ? d.pnl - prev.pnl : null;
-        return `<tr><td class="l">${e(d.date)}</td><td>${d.trades}</td><td>${pc(d.win_rate)}</td><td class="${cls(d.pnl)}">${money(d.pnl)}</td><td>${money(d.pnl_adj)}</td><td>${d.avg_r ?? "–"}</td><td>${d.profit_factor ?? "–"}</td><td class="${cls(ch)}">${ch == null ? "–" : money(ch)}</td></tr>`; }))
+    $l("#lv-days").innerHTML = hist.length ? table(["Date", "Trades", "Win rate", "P/L (Alpaca)", "Adj. (incl. modelled stop slippage)", "Avg R", "PF", "Change"],
+      hist.slice().reverse().map((d, i, a) => { const prev = a[i + 1]; const ch = prev ? alp(d) - alp(prev) : null;
+        return `<tr><td class="l">${e(d.date)}</td><td>${d.trades}</td><td>${pc(d.win_rate)}</td><td class="${cls(alp(d))}">${money(alp(d))}</td><td>${money(d.pnl_adj)}</td><td>${d.avg_r ?? "–"}</td><td>${d.profit_factor ?? "–"}</td><td class="${cls(ch)}">${ch == null ? "–" : money(ch)}</td></tr>`; }))
       : `<div class="empty">No completed sessions yet.</div>`;
     const vs = (s.validation && s.validation.setups) || {};
     const names = (s.rules && s.rules.strategies) || Object.keys(vs);
@@ -1490,6 +1493,9 @@ window.MCF = window.MCF || {};
     "Total R": "Sum of R over all trades.",
     "P/L": "Profit or loss in dollars after costs (paper).",
     "P/L today": "Today's profit or loss in dollars after costs (paper).",
+    "P/L today (Alpaca)": "Today's profit or loss in dollars as Alpaca books it: account equity now minus the prior close (paper; open positions marked).",
+    "P/L (Alpaca)": "Profit or loss in dollars as Alpaca books it: the account's equity change vs the prior close (paper). Since start = the sum of those daily changes.",
+    "Adj. (incl. modelled stop slippage)": "Not a dollar result: broker P/L minus a modelled real-book stop slippage ($0.02/share on stop exits). Used inside R only (conservative R).",
     "Adj. P/L": "P/L recomputed with the stops a real book would have had (removes paper fill quirks).",
     "PF": "Profit factor: dollars won divided by dollars lost. Above 1 = profitable.",
     "Profit factor": "Dollars won divided by dollars lost. Above 1 = profitable.",

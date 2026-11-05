@@ -286,6 +286,13 @@ def cmd_eod(args, cfg):
     eod.save(rep, Path(args.state_dir) / "reports", day)
     scorecard.save(card, args.state_dir)
     print(rep["subject"])
+    try:   # owner 2026-11-05: dollar P/L lines up with Alpaca - Alpaca equity change vs journal vs status.json
+        from .report import reconcile_pl
+
+        print(reconcile_pl.save([reconcile_pl.reconcile(day, cfg.get("account_name", "primary"), state_dir=args.state_dir)],
+                                args.state_dir, day))
+    except Exception as e:
+        print(f"P/L reconcile unavailable: {type(e).__name__}: {e}")
     if not args.no_send:
         eod.send(rep, os.environ.get("MCF_EMAIL_TO") or cfg["report"]["email_to"], day)
 

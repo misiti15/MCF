@@ -71,14 +71,55 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
         if k in TOTALS_EXCLUDED:             # owner 2026-11-04: low-rep homes - no account totals in the post
             continue
         s = _show(br, "status.json") or {}
-        t, ss = s.get("today") or {}, s.get("since_start") or {}
+        from .reconcile_pl import equity_history
+
+        eqh = {**equity_history(k), **(s.get("equity_history") or {})}
+        today = s.get("today") or {}
+        t = dict(today, pnl=today["alpaca_day_pl"], pnl_source="alpaca") if today.get("alpaca_day_pl") is not None else _alpaca(dict(today, date=s.get("session_date")), eqh)
+        full = [_alpaca(h, eqh) for h in s.get("history") or []]
         if s.get("session_date") != date:
-            t = next((h for h in s.get("history") or [] if h.get("date") == date), {})
-        full = s.get("history") or []
+            t = next((h for h in full if h.get("date") == date), {})
         hist = [h for h in full if since <= h.get("date", "") <= date]
         out.append(dict(k=k, name=name, kind=kind, equity=(s.get("account") or {}).get("equity"), today=t.get("pnl"),
-                        trades=t.get("trades"), since=sum((h.get("pnl") or 0) for h in hist),
+                        trades=t.get("trades"), since=sum((h.get("pnl") or 0) for h in hist), source=t.get("pnl_source"),
                         history=hist, full_history=full))
+    return out
+
+
+def _alpaca(h: dict, eqh: dict | None = None) -> dict:
+    """Owner 2026-11-05 (P/L reconcile): ONE dollar truth = Alpaca. A day's P/L is the account's Alpaca equity change vs
+    the prior close (history alpaca_day_pl / equity_history), falling back to the journal pnl (broker fills) when no
+    equity is stored. The modelled stop-slippage allowance (pnl_adj) never enters dollars - only R."""
+    a = h.get("alpaca_day_pl")
+    if a is None and eqh:
+        a = (eqh.get(h.get("date")) or {}).get("alpaca_day_pl")
+    return dict(h, pnl_journal=h.get("pnl"), pnl=a, pnl_source="alpaca") if a is not None else dict(h, pnl_source="journal")
+
+
+def journal_day(date: str, keys=None) -> dict:
+    """{setup: {trades, r, pnl, accts}} from each account's journal.db live trades on `date`: pnl = broker fills (the
+    dollars Alpaca booked); R = pnl_adj / (|entry - stop| x shares), i.e. R includes the real-book stop-slippage
+    allowance (owner 2026-11-05: dollars = Alpaca, the allowance only inside R). Empty if no journal has trades that day."""
+    out: dict[str, dict] = {}
+    for k, label, br, _ in ACCOUNTS:
+        if keys is not None and k not in keys:
+            continue
+        db = _journal(br)
+        if db is None:
+            continue
+        try:
+            rows = db.execute("SELECT t.strategy, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj, t.r_multiple FROM trades t "
+                              "JOIN runs r ON r.id = t.run_id WHERE r.kind != 'whatif' AND t.date = ? AND t.exit_time IS NOT NULL",
+                              (date,)).fetchall()
+        except Exception:
+            continue
+        for st, e, sp, sh, p, pa, rm in rows:
+            pa = pa if pa is not None else (p or 0.0)
+            risk = abs((e or 0) - (sp or 0)) * (sh or 0)
+            a = out.setdefault(st, dict(setup=st, trades=0, r=0.0, pnl=0.0, accts=[]))
+            a["trades"] += 1; a["pnl"] += (p or 0.0); a["r"] += (pa / risk) if risk else (rm or 0.0)
+            if label not in a["accts"]:
+                a["accts"].append(label)
     return out
 
 
@@ -176,6 +217,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
             by.setdefault(r["setup"], []).append(r)
             sessions.update(r.get("days") or [])
     last4 = sorted(d for d in sessions if d <= date)[-4:]
+    jd = journal_day(date, accts)  # owner 2026-11-05: today's $ = broker fills; R incl. the stop-slippage allowance
     rows = []
     for code, rs in by.items():
         a = asg.get(code) or {}
@@ -189,6 +231,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
             continue
         nm = names.get(code) or names.get(code[:-3] if code.endswith("-FD") else code) or {}
         ls = _day(r, date)
+        if code in jd:
+            ls = (date, jd[code]["trades"], jd[code]["r"], jd[code]["pnl"])
         rows.append(dict(setup=code, name=nm.get("name") or r.get("name") or code,
                          acct=" + ".join({"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator",
                                           "graveyard": "Graveyard", "livelab": "Live Lab", "explore1": "Explore 1"}.get(x, x) for x in a["accounts"]),
@@ -226,6 +270,9 @@ def top_of_day(date: str, n: int = 2) -> list[dict]:
                 a["trades"] += 1; a["r"] += c.get("r") or 0.0; a["pnl"] += c.get("pnl") or 0.0
                 if label not in a["accts"]:
                     a["accts"].append(label)
+    jd = journal_day(date)       # owner 2026-11-05: the day's setups, $ = broker fills, R incl. the stop-slippage allowance
+    if jd:
+        agg = jd
     out = sorted(agg.values(), key=lambda x: -x["pnl"])[:n]
     for x in out:
         nm = names.get(x["setup"]) or {}
@@ -552,7 +599,7 @@ def html_today(date: str, accts: list[dict]) -> str:
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
     strip = (f'<div class="strip"><div>All {len(accts)} today: <b class="{_cls(today)}">{_money(today)}</b></div>'
-             f'<div>All {len(accts)} since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>Paper money · day-trading accounts only</div></div>')
+             f'<div>All {len(accts)} since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>P/L = Alpaca account change (paper) · day-trading accounts only</div></div>')
     m = milestones(accts[0], date)
     dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
     ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
@@ -628,6 +675,7 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None, gs: dict | 
         since = sum((a.get("since") or 0) for a in accts)
         lines += [f"- Today, 5 day-trading accounts: {_money(today)} · since Day 1 (10/23): {_money(since)}",
                   f"- Primary: today {_money(pr['today'])} · since Day 1 {_money(pr.get('since'))} · green days {g} of {len(h)}",
+                  "- P/L = each account's Alpaca equity change vs the prior close (paper); setup R today includes a real-book stop-slippage allowance",
                   f"- Milestones: M1 (3 green in a row) {min(m['run'], 3)}/3 · M2 (8 of last 10 green) {m['g10']}/{m['n10']}"]
     if gs:
         lines += [""] + _streak_lines(gs)
@@ -703,7 +751,7 @@ def html_lb(date: str, rows: list[dict], gen: bool) -> str:
            if gen else "Ranked by avg R per trade shrunk by trades ÷ (trades + 20), so a few lucky trades don't outrank a long record. "
                        "Break-even win rate = win rate needed to make money (green = beating it). Setup Generator excluded.")
     return page(f'<div class="card{" gen" if gen else ""}"><table class="lb"><thead><tr>{th}</tr></thead><tbody>{"".join(trs)}</tbody></table>'
-                f'<div class="sub" style="margin:8px 0 0">Last session = {date}. R = planned risk per trade; P/L after Alpaca paper fills.</div></div>',
+                f'<div class="sub" style="margin:8px 0 0">Last session = {date}. R = planned risk per trade. P/L = Alpaca paper fills; last-session R includes a real-book stop-slippage allowance.</div></div>',
                 f"MCF daily — {date} · {title.split(' — ')[0]}", sub)
 
 
