@@ -52,6 +52,7 @@ This is a standing Claude role. It runs every weekday after the close, after the
    - What exits would have done: breakeven, trail, +0.5R/+1R, the 15:55 close.
    - Whether the opposite side worked, and whether any rule known at entry pointed that way. Check this for hindsight before believing it.
    - The loss type: never worked, gave back gains, stopped then reversed, late hold, wrong side after a big swing, news or earnings.
+   - **Swing autopsy curve (owner 2026-11-05):** the swing autopsy uses the `python -m mcf.report.intraday --date D --account <acct>` marked-to-market R curves (research/intraday/<date>/<account>.{png,csv}; from the runner's per-poll snapshots when present, else journal + cached 1-min bars, source named in the file) when present.
 2. **Keep a running pattern tally per setup.** It goes in `research/bdi/patterns.csv`: a pattern seen on 3 or more days becomes a backlog hypothesis.
 3. **Act on the owner's chart reads.** Every ticker and time the owner flags is turned into a testable rule, using only information known at that minute, and tested across all stocks and days.
    - **Suggestions, not rules (owner, 2026-10-09).** The owner's notes and outside rules of thumb are hypotheses for analysis and testing, never hard-coded "rules". Keep the rule set lean: only what passes the gates goes live.
