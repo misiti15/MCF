@@ -178,6 +178,12 @@ class PaperRunner:
         self._poll_buf: list[str] = []
         self._poll_buf_since: float | None = None
         self._poll_log_ms = 0.0
+        # Intraday tracker (owner 2026-11-05): every poll record also carries a marked-to-market snapshot ("mtm", see
+        # mtm_snapshot) built only from state the runner already holds. coid -> (entry ref price, initial stop) of the
+        # lots entered by this process; lots restored after a restart are read once from today's journal signals.
+        # Logging only: nothing here is read by any trading decision.
+        self._mtm_lot: dict[str, tuple] = {}
+        self._mtm_restored = False
 
     # ---------------------------------------------------------------- state
     def restore(self, today):
@@ -1163,6 +1169,7 @@ class PaperRunner:
         if is_extended(ctx, self.cfg):
             info["tier"] = "extended"
         info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
+        self._mtm_lot[coid] = (px, sig.stop)              # intraday tracker only (poll snapshot); never read by trading
         if self.dry_run:
             self.fired.add(key)
             self.open_strategy[sig.symbol] = sig.strategy
@@ -1398,12 +1405,33 @@ class PaperRunner:
         t0 = _time.perf_counter()
         try:
             rec = poll_record(now, bars, self.watchlist, self.health, stale, self._poll_log_ms)
+            try:   # intraday tracker: its own guard, so a snapshot error never drops the poll record either
+                rec["mtm"] = self._mtm_snapshot(bars)
+            except Exception as e:
+                rec["mtm_err"] = type(e).__name__
             if self._poll_buf_since is None:
                 self._poll_buf_since = _time.time()
             self._poll_buf.append(json.dumps(rec, separators=(",", ":")))
         except Exception as e:
             print(f"poll log failed: {type(e).__name__}: {e}")
         self._poll_log_ms = round((_time.perf_counter() - t0) * 1000, 2)
+
+    def _mtm_snapshot(self, bars: dict) -> dict:
+        """The poll's marked-to-market snapshot (see mtm_snapshot). Lot entry/stop of lots this process did not enter
+        (restart) come from today's journal signals, read once. Reads state only; changes nothing the runner uses."""
+        if not self._mtm_restored:
+            self._mtm_restored = True
+            try:
+                sig = self.journal.signals(self.run_id, str(self.today or (self._now.date() if self._now else "")))
+                for r in sig.itertuples():
+                    if r.status in ("submitted", "dry_run"):
+                        coid = _info(getattr(r, "info", None)).get("coid")
+                        if coid and coid not in self._mtm_lot:
+                            self._mtm_lot[coid] = (float(r.ref_price), float(r.stop))
+            except Exception as e:
+                print(f"mtm restore skipped: {type(e).__name__}")
+        st = self.risk.state
+        return mtm_snapshot(self.lots, self._mtm_lot, bars, st.realized_r, st.realized_r_by_strategy, self._fill_px)
 
     def flush_poll_log(self, now: pd.Timestamp | None = None, force: bool = False) -> str | None:
         """Write the buffered poll records as one new gzip chunk <poll_log_dir>/<date>/<HHMMSS>.jsonl.gz (each chunk is
@@ -1484,6 +1512,60 @@ def poll_record(now: pd.Timestamp, bars: dict, watchlist, health: dict, stale: b
     return {"t": f"{pd.Timestamp(now):%H:%M:%S}", "ms": round(float(health.get("last_poll_s") or 0) * 1000),
             "lms": log_ms, "n": len(watchlist), "got": got, "fresh": fresh, "lm": f"{lm:%H:%M}", "exp": exp,
             "late": late, "miss": miss, "none_n": len(none), "none": none[:50], "stale": bool(stale)}
+
+
+MTM_INDEX = ("SPY", "QQQ", "IWM")
+
+
+def mtm_snapshot(lots: dict, lot_info: dict, bars: dict, realized_r: float, realized_by: dict | None = None,
+                 fill_px: dict | None = None) -> dict:
+    """Compact marked-to-market snapshot of one account at one poll (intraday tracker, owner 2026-11-05). Only data the
+    runner already holds: its lots, the completed 1-minute bars it fetched, the reconciled realized R. Keys:
+      rr    realized R today (risk.state.realized_r: reconciled closed trades, costs as the journal books them)
+      rs    realized R by setup (non-zero only)
+      pos   open lots [symbol, setup, side, entry, last, uR, frac]: entry = the parent fill when the runner knows it, else
+            the signal's reference price; uR = side x (last - entry) / |entry - initial stop| x frac (no costs), frac = the
+            share of the lot still held after a partial exit (1 = all); last/uR null without a bar or a stop
+      ur    sum of uR; nl / ns = open long / short lots; net / gross = signed / gross notional $ (last x shares held)
+      idx   {"SPY": [last, % from the 09:30 open]} for SPY/QQQ/IWM when the runner fetched their bars (watchlist), else null
+    Lots still pending a fill are counted as open (seconds)."""
+    fill_px = fill_px or {}
+    pos, ur, nl, ns, net, gross = [], 0.0, 0, 0, 0.0, 0.0
+    for sym in sorted(lots):
+        b = bars.get(sym)
+        last = float(b["close"].iloc[-1]) if b is not None and len(b) else None
+        for coid, lot in lots[sym].items():
+            side = int(lot.get("side") or 0)
+            entry, stop = lot_info.get(coid, (None, None))
+            entry = fill_px.get(str(lot.get("order_id"))) or entry
+            qty = float(lot.get("qty") or 0)
+            left, orig = lot.get("left"), lot.get("orig_qty")
+            frac = (float(left) / float(orig)) if left is not None and orig else 1.0
+            r = None
+            if last is not None and entry is not None and stop is not None and abs(float(entry) - float(stop)) > 0:
+                r = side * (last - float(entry)) / abs(float(entry) - float(stop)) * frac
+                ur += r
+            if last is not None:
+                net += side * last * qty * frac
+                gross += last * qty * frac
+            nl += side == 1
+            ns += side == -1
+            pos.append([sym, lot.get("strategy"), side, None if entry is None else round(float(entry), 4),
+                        None if last is None else round(last, 4), None if r is None else round(r, 3), round(frac, 3)])
+    idx = {}
+    for s in MTM_INDEX:
+        b = bars.get(s)
+        if b is None or not len(b):
+            idx[s] = None
+            continue
+        last = float(b["close"].iloc[-1])
+        first = b.index[0]
+        o = float(b["open"].iloc[0]) if f"{first:%H%M}" == "0930" else None
+        idx[s] = [round(last, 4), None if not o else round((last / o - 1) * 100, 3)]
+    return {"rr": round(float(realized_r or 0), 3),
+            "rs": {k: round(float(v), 3) for k, v in (realized_by or {}).items() if round(float(v), 3)},
+            "ur": round(ur, 3), "pos": pos, "nl": int(nl), "ns": int(ns), "net": round(net), "gross": round(gross),
+            "idx": idx}
 
 
 def read_poll_log(poll_dir: str, day: str) -> list[dict]:
