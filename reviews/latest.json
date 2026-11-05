@@ -1,0 +1,196 @@
+{
+ "date": "2026-11-05",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 19,
+  "win_rate": 0.579,
+  "exp_r": -0.063,
+  "total_r": -1.2,
+  "pnl": 154.24,
+  "stop_exit_share": 0.263,
+  "pnl_adj": 152.38,
+  "slip_bps": -4.9
+ },
+ "yesterday": {
+  "trades": 0
+ },
+ "rolling5": {
+  "exp_r": null,
+  "win_rate": null,
+  "pnl": null,
+  "slip_bps": null,
+  "stop_exit_share": null
+ },
+ "rolling20": {
+  "exp_r": null,
+  "win_rate": null,
+  "pnl": null,
+  "slip_bps": null,
+  "stop_exit_share": null
+ },
+ "beat_rolling5": {},
+ "by_setup": {
+  "CWT05-flush-m075-v3-long": {
+   "trades": 6,
+   "win_rate": 0.333,
+   "exp_r": -0.607,
+   "total_r": -3.64,
+   "pnl": -30.38,
+   "stop_exit_share": 0.667,
+   "pnl_adj": -32.02,
+   "slip_bps": -7.3
+  },
+  "CWT05-flush-m075-v5-long": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.098,
+   "total_r": -1.1,
+   "pnl": -5.28,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -5.5,
+   "slip_bps": -4.4
+  },
+  "CWT09-gapdn-vwaploss-g10-short": {
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.602,
+   "total_r": 1.2,
+   "pnl": 146.64,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 146.64,
+   "slip_bps": -71.6
+  },
+  "CWT12-flag-s1-long": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.136,
+   "total_r": 0.14,
+   "pnl": 3.05,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 3.05,
+   "slip_bps": 53.8
+  },
+  "LIQ-pdl-sweep-open15-vwap-long": {
+   "trades": 2,
+   "win_rate": 0.0,
+   "exp_r": -0.607,
+   "total_r": -1.21,
+   "pnl": -6.6,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -6.6,
+   "slip_bps": -10.8
+  },
+  "NM-ETF-late-dip-di-long": {
+   "trades": 3,
+   "win_rate": 1.0,
+   "exp_r": 0.487,
+   "total_r": 1.46,
+   "pnl": 30.67,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 30.67,
+   "slip_bps": 14.2
+  },
+  "ST3-rsi5up-short-pm-t1s1-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.923,
+   "total_r": 0.92,
+   "pnl": 6.73,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 6.73,
+   "slip_bps": 3.7
+  },
+  "ST5-pdbrkup-short-mid-t05s1-FD": {
+   "trades": 2,
+   "win_rate": 0.5,
+   "exp_r": 0.144,
+   "total_r": 0.29,
+   "pnl": 3.46,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 3.46,
+   "slip_bps": 2.7
+  },
+  "ST6-volspikeup-short-mid-t1s1-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.737,
+   "total_r": 0.74,
+   "pnl": 5.95,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 5.95,
+   "slip_bps": 13.6
+  }
+ },
+ "decisions": [
+  {
+   "status": "rejected",
+   "reason": "{\"base_price\":\"#\",\"code\":#,\"message\":\"take_profit.limit_price must be \\u#e= base_price + #\"}",
+   "signals": 1,
+   "whatif_exp_r": 0.327,
+   "whatif_total_r": 0.33,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "cost filter: stop-exit cost #R > #R",
+   "signals": 7,
+   "whatif_exp_r": -0.217,
+   "whatif_total_r": -1.52,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 45,
+   "whatif_exp_r": -0.109,
+   "whatif_total_r": -4.9,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "opposite side held",
+   "signals": 1,
+   "whatif_exp_r": 0.503,
+   "whatif_total_r": 0.5,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 4,
+   "whatif_exp_r": 0.462,
+   "whatif_total_r": 1.85,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 1,
+   "whatif_exp_r": -1.018,
+   "whatif_total_r": -1.02,
+   "verdict": "rule saved R today"
+  }
+ ],
+ "signals": {
+  "skipped": 59,
+  "submitted": 19,
+  "rejected": 1
+ },
+ "health": {
+  "polls": 62,
+  "last_poll_s": 7.6,
+  "symbols_last_bar": 2581,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 1502,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "flatten_failed": []
+ },
+ "findings": [
+  "1 orders were rejected by the broker. Read the reasons in the journal."
+ ]
+}
