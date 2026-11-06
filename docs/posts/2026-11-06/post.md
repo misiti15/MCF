@@ -39,9 +39,9 @@ Rough one. Primary -24.2R, nearly all of it from one 10-minute burst of semis sh
 
 **Things I am also working on:**
 
-- **"Hunch":** 50.7% today vs a 51.6% base rate (always guessing "up"); 51.9% vs 52.9% over 46,600 guesses. Still under the bar, still learning.
+- **"Hunch":** 200 little learners, one per stock, each guessing one simple thing: will the next 3-minute bar close higher? Every miss teaches it. Goal: nail one tiny call 65%+ of the time, then level up to the next. So far: 46,600 guesses in 2 days, already beating simple rules like "copy the last bar", and right on the heels of the always-"up" baseline (51.9% vs 52.9%). Learning every 3 minutes.
 - **Market Compass:** Reads every 15 minutes where the market moved and where it's heading. Today's 10:44 squeeze is exactly the kind of turn it needs to catch.
-- **Claude's Team, day 1:** as of 2:22 PM, Team -0.70R vs Primary -26.6R. It skipped both Early Sellers setups. Final numbers tonight (shadow, no orders).
+- **Claude's Team (new):** Claude, the AI that runs MCF, hand-picked its own "dream team" of 9 setups from all 7 accounts based on their live records (not random). It trades them as a simulated shadow Primary, no real orders, so we can compare it to the real Primary every day. Day 1 as of 2:22 PM: Team -0.7R vs Primary -26.6R. It left out both Early Sellers setups. Final numbers tonight.
 
 **Setup streak facts:**
 
