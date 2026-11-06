@@ -1,0 +1,28 @@
+acct | trades | setup-burst entries (n, avg R, sum) | other entries avg R | book-burst entries (n, avg R) | stacks (lots, sum R) | give-back $ (peak t -> close)
+p | 52 | 36 -0.753 -27.1 | +0.184 | 43 -0.592 | 16 -10.3 | +1526 (10:36 +435 -> -1091)
+t1 | 92 | 38 +0.020 +0.8 | +0.053 | 19 -0.106 | 0 +0.0 | +48 (10:42 +61 -> +13)
+t2 | 165 | 88 +0.061 +5.4 | -0.096 | 99 -0.007 | 87 -3.0 | +118 (11:14 +165 -> +47)
+gy | 623 | 466 +0.048 +22.3 | -0.003 | 564 +0.044 | 206 +8.8 | +1756 (11:34 +2153 -> +397)
+gen | 356 | 289 +0.005 +1.5 | -0.215 | 312 -0.023 | 31 -0.2 | +783 (10:36 +510 -> -273)
+ex1 | 24 | 15 +0.188 +2.8 | -0.047 | 0 +nan | 0 +0.0 | +179 (10:36 +228 -> +48)
+ll | 19 | 0 +nan +0.0 | -0.061 | 0 +nan | 0 +0.0 | +125 (10:08 +64 -> -61)
+
+largest setup bursts (by |sum R|):
+  gen `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` L 61 entries 09:50-09:57 +33.78R, stops 7
+  gen `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` S 26 entries 10:05-10:14 +24.16R, stops 4
+  gen `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` L 37 entries 10:46-10:53 -19.22R, stops 21
+  gy `heat_fade_short` S 27 entries 09:50-09:56 +19.22R, stops 2
+  p `MF2-open-rsimidhi-flowsell-FD` S 13 entries 10:40-10:40 -15.06R, stops 13
+  gen `GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long` L 20 entries 11:25-11:33 -14.64R, stops 13
+  gy `CWT14-failbrk-orl-p10-lowvol-long` L 28 entries 10:46-10:52 -11.84R, stops 14
+  gy `CWT14-failbrk-orl-p10-long` L 26 entries 10:46-10:52 -10.99R, stops 13
+  p `MF2-open-rsimidhi-flowsell-FD` S 9 entries 10:30-10:40 -9.83R, stops 9
+  gy `heat_fade_short-FD` S 15 entries 09:51-09:56 +9.20R, stops 1
+  gy `heat_fade_long` L 16 entries 12:46-12:52 +8.86R, stops 0
+  gen `GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long` L 11 entries 09:51-09:58 -8.05R, stops 8
+
+all setup bursts: 104, 932 entries, +5.6R (avg +0.006R vs non-burst -0.045R); bursts with >= 75% stops: 9 (-52.4R)
+
+patterns rows 551, tagged 466
+
+Educational only - not financial advice.

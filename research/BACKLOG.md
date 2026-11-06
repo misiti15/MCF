@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 953 · coded: 130 · parked: 391 · holdout failed: 23 · configurations tried (all lineages): 32894799
+Total ideas: 956 · coded: 132 · parked: 394 · holdout failed: 23 · configurations tried (all lineages): 32894801
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -929,6 +929,9 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | top5-1105-NS5-sma50-flush-oversold-long-exec | NS5-sma50-flush-oversold-long: execution variants (stop x1.5/x2.0 at same $, target x0.75/x1.5, half off at 0.5 x target + BE, clock exit, 60-min time stop, limit entry 0.1R, next-bar entry, SPY 0.5% veto, window first/second part, stock down > 2% skip, SPY-side filter, first 5 per session, CF stop-cost <= 0.15R, skip SPY flat (+/-0.10%) at the signal, skip price < $20) | BDI top-5 execution tune 2026-11-05 (sixteenth run) (research/bdi/top5_1105/NOTES.md) | – | – | – | – | – | – |
 | parked | reddit-1105-twice-defended-level-break | Twice-defended intraday level that weakens, then breaks: session low (high) touched in >= 2 episodes separated by >= 0.30 ATR bounces, last bounce weaker than the previous; 5-min close beyond the level by 0.05 ATR (10:00..14:30); enter on the break (stop beyond the failed bounce) or on the first retest of the broken level within 12 bars (stop beyond the retest extreme); target m x R; short and long mirror | reddit r/Daytrading https://www.reddit.com/r/Daytrading/comments/1xom7y4/1282_shorting_crwv_after_the_election/ | – | – | – | – | – | – |
 | parked | reddit-1105-gapup-holds-prior-close | Gap-up that holds the prior close after the open: open >= g above the prior close (<= 8%), the 09:30-09:45 lows all stay above the prior close; long at the 09:45 bar open, stop 1c below the prior close; hold to the close or 2R target | reddit r/Trading https://www.reddit.com/r/Trading/comments/1xokdhq/do_you_trade_the_open_or_wait_for_the_first_15/ (comment) | – | – | – | – | – | – |
+| parked | sqz1-1106-chase-burst-scalp | SQZ1: chase bursts (>= 3rd same-side entry of a setup in 15 min after QQQ already moved >= 0.4% that way in 30 min) take a +0.5R target | BDI daily 2026-11-06 (research/bdi/1106/NOTES.md) | – | – | – | – | – | – |
+| parked | mh-1106-defensive-rotation-0950 | Move Hunt precursor: on up opens (SPY >= +0.40% at 09:50) buy low-beta laggards (60d beta <= 0.5, fromOpen <= +0.10%) | BDI daily 2026-11-06 (research/bdi/1106/NOTES.md) | – | – | – | – | – | – |
+| parked | bdi-1106-gen261021-02-capacity | GEN-261021-02 (Gen) skipped 6 of the day's top-25 long movers on 'max positions for this setup' at 09:50 - review its position cap vs the 09:50 burst (housekeeping / playing time, not a setup change) | BDI daily 2026-11-06 (research/bdi/1106/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

@@ -1,0 +1,16 @@
+qualifying days (SPY >= +0.40% at the 09:50 bar) 20; class A 2,799 on 20 days; base 15,640; beta known 100%
+TRAIN: A n 1,695 days 14 win 51.7% avg R -0.040 | base n 10,653 win 44.7% avg -0.122 | excess +0.048 day-t 0.72
+VALID: A n 1,104 days 6 win 57.6% avg R +0.004 | base n 4,987 win 36.9% avg -0.353 | excess +0.357 day-t 1.62
+ALL: A n 2,799 days 20 win 54.1% avg R -0.023 | base n 15,640 win 42.2% avg -0.196 | excess +0.170 day-t 1.51
+
+QDAY split (SPY open-to-close; SPY above its open at 10:00 by construction):
+          n  days   avgR     ex
+dtype                          
+down    938     6  0.158  0.738
+up     1861    14 -0.114 -0.117
+base avg R by day type: {'down': -0.602, 'up': -0.018}
+avg R w/o best day -0.066 (best 2026-06-10 +108.6R, share of total nan%); months positive 40% of 10
+per month avg R: 25-03 +0.24 25-04 +0.03 25-05 +0.24 25-08 -0.10 25-11 -0.15 26-02 -0.15 26-03 -0.26 26-06 +0.40 26-07 -0.04 26-11 -0.19
+
+VERDICT (BAR90 1.35, N = 2 tonight): FAIL
+Locked block never read (asserted). Configurations: 1. Educational only - not financial advice.

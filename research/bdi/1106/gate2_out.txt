@@ -1,0 +1,34 @@
+
+=== GATE2-A: confirmed n 66,240 on 362 days; avg R -0.066 (win 49.9%), day-t -4.94 | unconfirmed n 68,943 avg -0.092 | confirmed - unconfirmed +0.026
+  TRAIN: n 41,658 avg -0.051 t -3.16; long 23,398 -0.041, short 18,260 -0.063
+  VALID: n 24,582 avg -0.092 t -4.14; long 13,679 -0.081, short 10,903 -0.107
+  QDAY split (confirmed; side +1 long on held-up, -1 short on held-down):
+                n  days   avgR
+dtype side                    
+down  -1    23139   123  0.018
+       1     1939    21 -0.692
+quiet -1     4574    45 -0.400
+       1     6632    45 -0.335
+up    -1     1450    17 -0.619
+       1    28506   148  0.053
+  by SPY vs open at 10:00: {'above': {'n': 36475, 'avgR': -0.053}, 'below': {'n': 29765, 'avgR': -0.083}}
+  w/o best day -0.070 (best 2026-03-20 +230.1R, share nan%); months positive 18% of 22
+  VERDICT GATE2-A (BAR90 1.50, N = 4 tonight): FAIL
+
+=== GATE2-B: confirmed n 12,458 on 357 days; avg R -0.081 (win 50.2%), day-t -3.47 | unconfirmed n 16,478 avg -0.116 | confirmed - unconfirmed +0.035
+  TRAIN: n 7,656 avg -0.063 t -2.33; long 3,511 -0.035, short 4,145 -0.087
+  VALID: n 4,802 avg -0.110 t -2.65; long 2,721 -0.111, short 2,081 -0.108
+  QDAY split (confirmed; side +1 long on held-up, -1 short on held-down):
+               n  days   avgR
+dtype side                   
+down  -1    4689   119 -0.018
+       1     253    19 -0.538
+quiet -1    1229    45 -0.333
+       1    1068    44 -0.338
+up    -1     308    16 -0.298
+       1    4911   147  0.015
+  by SPY vs open at 10:00: {'above': {'n': 6552, 'avgR': -0.06}, 'below': {'n': 5906, 'avgR': -0.105}}
+  w/o best day -0.089 (best 2025-04-09 +85.6R, share nan%); months positive 18% of 22
+  VERDICT GATE2-B (BAR90 1.50, N = 4 tonight): FAIL
+
+Locked block never read (asserted). Configurations: 2 (GATE2-A, GATE2-B). Educational only - not financial advice.
