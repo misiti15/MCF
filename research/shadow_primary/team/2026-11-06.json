@@ -1,0 +1,305 @@
+{
+ "date": "2026-11-06",
+ "label": null,
+ "team": "Claude's Team (shadow)",
+ "shadow": "Shadow \u2014 simulated independently; no orders",
+ "phase": "intraday",
+ "run_at": "2026-11-06 10:23 ET",
+ "asof": "2026-11-06 10:23 ET",
+ "picks_file": "research/shadow_primary/picks/2026-11-06.json",
+ "picks_date": "2026-11-06",
+ "setups": [
+  {
+   "id": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "name": "Gap-Down Pop Fade, Heavy Selling (all day)",
+   "account": "primary",
+   "account_tag": "Primary",
+   "side": "short",
+   "signals": 2,
+   "trades": 2,
+   "open": 2,
+   "wins": 1,
+   "r": -0.15,
+   "pnl": -0.84
+  },
+  {
+   "id": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+   "name": "Gap-Down Pop Fade (all day)",
+   "account": "primary",
+   "account_tag": "Primary",
+   "side": "short",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "RW1-gapdn-bounce-flowsell-short-FD",
+   "name": "Gap-Down Bounce Short, Heavy Selling (all day)",
+   "account": "testing2",
+   "account_tag": "Testing 2",
+   "side": "short",
+   "signals": 1,
+   "trades": 1,
+   "open": 1,
+   "wins": 0,
+   "r": -0.2,
+   "pnl": -2.85
+  },
+  {
+   "id": "CWT09-gapdn-vwaploss-g10-short",
+   "name": "Gap-Down VWAP Loss Short (10% gap)",
+   "account": "livelab",
+   "account_tag": "Live Lab",
+   "side": "short",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
+   "name": "Generated: NewLOD, Flow3lem0p37 LUNCH short (BRopgt0p5, holdtr)",
+   "account": "gen",
+   "account_tag": "Generator",
+   "side": "short",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "ST7-rsi50dn-long-pm-t1s1-FD",
+   "name": "RSI Collapse Dip Buy (all day)",
+   "account": "primary",
+   "account_tag": "Primary",
+   "side": "long",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "NS5-sma50-flush-oversold-long",
+   "name": "Big Loser Flush Buy",
+   "account": "primary",
+   "account_tag": "Primary",
+   "side": "long",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
+   "name": "Generated: Ret15mATRlem0p12 PM long (BRoplt0p5, t05s1)",
+   "account": "gen",
+   "account_tag": "Generator",
+   "side": "long",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  },
+  {
+   "id": "NM-ETF-late-dip-di-long",
+   "name": "Late-Day ETF Dip Buy (near-miss)",
+   "account": "livelab",
+   "account_tag": "Live Lab",
+   "side": "long",
+   "signals": 0,
+   "trades": 0,
+   "open": 0,
+   "wins": 0,
+   "r": 0,
+   "pnl": 0
+  }
+ ],
+ "trades": [
+  {
+   "symbol": "ACWI",
+   "strategy": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "side": -1,
+   "entry_time": "2026-11-06 10:00:03.000004-05:00",
+   "entry": 153.1197,
+   "stop": 153.6369,
+   "exit": 153.2253,
+   "exit_time": "2026-11-06 10:23:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 27.0,
+   "pnl": -2.85,
+   "r": -0.2042,
+   "open": true
+  },
+  {
+   "symbol": "ACWI",
+   "strategy": "RW1-gapdn-bounce-flowsell-short-FD",
+   "side": -1,
+   "entry_time": "2026-11-06 10:00:03.000008-05:00",
+   "entry": 153.1197,
+   "stop": 153.6369,
+   "exit": 153.2253,
+   "exit_time": "2026-11-06 10:23:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 27.0,
+   "pnl": -2.85,
+   "r": -0.2042,
+   "open": true
+  },
+  {
+   "symbol": "BIIB",
+   "strategy": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "side": -1,
+   "entry_time": "2026-11-06 10:10:03.000012-05:00",
+   "entry": 245.5404,
+   "stop": 247.752,
+   "exit": 245.4145,
+   "exit_time": "2026-11-06 10:23:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 16.0,
+   "pnl": 2.01,
+   "r": 0.0569,
+   "open": true
+  }
+ ],
+ "totals": {
+  "trades": 3,
+  "open": 3,
+  "wins": 1,
+  "r": -0.35,
+  "pnl": -3.69,
+  "long_r": 0,
+  "short_r": -0.35,
+  "vs_primary_r": -0.96
+ },
+ "primary": {
+  "r": 0.61,
+  "trades": 2,
+  "pnl_journal": 9.33,
+  "pnl_alpaca": -11746.11,
+  "alpaca_source": "status_snapshot",
+  "by_setup": {
+   "MF4-h40-open-flowsell-FD": 0.54,
+   "NS1-rsidip-rsi5pop-long": 0.07
+  }
+ },
+ "method": {
+  "engine": "mcf.replay.harness.run_session (as-live PaperRunner loop), fills=costs, limit_fill=through",
+  "universe": "Primary universe.csv built 2026-11-05 (4917 symbols, commit 9e160b18)",
+  "symbols": 4914,
+  "earnings_blackout": "not on record (not applied)",
+  "bars_symbols": 4903,
+  "priors": 4913,
+  "polls": 53,
+  "seconds": 361.3,
+  "rules": "Primary (config/default.yaml): 0.25% risk per trade, 77 slots, buying power x3.2, -2.0R per-setup daily stop",
+  "costs": {
+   "slippage_bps": 1.0,
+   "slippage_per_share": 0.01,
+   "stop_slippage_per_share": 0.02,
+   "extended_slippage_per_share": 0.03,
+   "commission_per_share": 0.0,
+   "min_price": 5.0
+  },
+  "setup_sources": {
+   "RW3-gapdn-rsi5pop-flowsell-short-FD": "primary config (checkout)",
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": "primary config (checkout)",
+   "RW1-gapdn-bounce-flowsell-short-FD": "testing2 config (checkout)",
+   "CWT09-gapdn-vwaploss-g10-short": "livelab config (checkout)",
+   "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": "gen config (checkout)",
+   "ST7-rsi50dn-long-pm-t1s1-FD": "primary config (checkout)",
+   "NS5-sma50-flush-oversold-long": "primary config (checkout)",
+   "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": "gen config (checkout)",
+   "NM-ETF-late-dip-di-long": "livelab config (checkout)"
+  },
+  "r_definition": "simulated P/L after costs / (|entry - stop| x shares); Primary actual: pnl_adj / risk",
+  "fills": "SIMULATED from 1-minute bars (not broker fills)"
+ },
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "crosscheck": [
+  {
+   "id": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "home": "Primary",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 2,
+   "same_symbols": 0
+  },
+  {
+   "id": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+   "home": "Primary",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "RW1-gapdn-bounce-flowsell-short-FD",
+   "home": "Testing 2",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 1,
+   "same_symbols": 0
+  },
+  {
+   "id": "CWT09-gapdn-vwaploss-g10-short",
+   "home": "Live Lab",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
+   "home": "Generator",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "ST7-rsi50dn-long-pm-t1s1-FD",
+   "home": "Primary",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "NS5-sma50-flush-oversold-long",
+   "home": "Primary",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
+   "home": "Generator",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  },
+  {
+   "id": "NM-ETF-late-dip-di-long",
+   "home": "Live Lab",
+   "home_trades": 0,
+   "home_r": null,
+   "team_trades": 0,
+   "same_symbols": 0
+  }
+ ]
+}
