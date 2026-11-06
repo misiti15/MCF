@@ -1,0 +1,187 @@
+{
+ "date": "2026-11-06",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 52,
+  "win_rate": 0.327,
+  "exp_r": -0.445,
+  "total_r": -23.11,
+  "pnl": -1057.07,
+  "stop_exit_share": 0.635,
+  "pnl_adj": -1091.13,
+  "slip_bps": -4.7
+ },
+ "yesterday": {
+  "trades": 61,
+  "win_rate": 0.492,
+  "exp_r": 0.104,
+  "total_r": 6.33,
+  "pnl": -363.32,
+  "stop_exit_share": 0.508,
+  "pnl_adj": -419.0,
+  "slip_bps": -3.2
+ },
+ "rolling5": {
+  "exp_r": -0.087,
+  "win_rate": 0.473,
+  "pnl": -210.51,
+  "slip_bps": 1.52,
+  "stop_exit_share": 0.483
+ },
+ "rolling20": {
+  "exp_r": -0.051,
+  "win_rate": 0.512,
+  "pnl": -68.955,
+  "slip_bps": 4.34,
+  "stop_exit_share": 0.395
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "L3-gap-slope-fromopen-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 1.204,
+   "total_r": 1.2,
+   "pnl": 26.98,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 26.98,
+   "slip_bps": -6.7
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "trades": 28,
+   "win_rate": 0.143,
+   "exp_r": -0.741,
+   "total_r": -20.75,
+   "pnl": -619.26,
+   "stop_exit_share": 0.857,
+   "pnl_adj": -641.36,
+   "slip_bps": -4.0
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "trades": 14,
+   "win_rate": 0.357,
+   "exp_r": -0.382,
+   "total_r": -5.34,
+   "pnl": -445.34,
+   "stop_exit_share": 0.5,
+   "pnl_adj": -456.14,
+   "slip_bps": -11.7
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "trades": 4,
+   "win_rate": 0.75,
+   "exp_r": -0.065,
+   "total_r": -0.26,
+   "pnl": -48.38,
+   "stop_exit_share": 0.25,
+   "pnl_adj": -49.3,
+   "slip_bps": 2.0
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 4,
+   "win_rate": 0.75,
+   "exp_r": 0.387,
+   "total_r": 1.55,
+   "pnl": 15.9,
+   "stop_exit_share": 0.25,
+   "pnl_adj": 15.66,
+   "slip_bps": 6.5
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.487,
+   "total_r": 0.49,
+   "pnl": 13.03,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 13.03,
+   "slip_bps": 3.6
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "daily loss limit",
+   "signals": 1,
+   "whatif_exp_r": 0.973,
+   "whatif_total_r": 0.97,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "halted",
+   "signals": 91,
+   "whatif_exp_r": 0.071,
+   "whatif_total_r": 6.47,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 278,
+   "whatif_exp_r": 0.154,
+   "whatif_total_r": 42.72,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 27,
+   "whatif_exp_r": -0.515,
+   "whatif_total_r": -13.9,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 6,
+   "whatif_exp_r": -0.494,
+   "whatif_total_r": -2.96,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "twin held",
+   "signals": 14,
+   "whatif_exp_r": -0.423,
+   "whatif_total_r": -5.92,
+   "verdict": "rule saved R today"
+  }
+ ],
+ "signals": {
+  "skipped": 419,
+  "submitted": 52
+ },
+ "health": {
+  "polls": 75,
+  "last_poll_s": 7.4,
+  "symbols_last_bar": 2515,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 1530,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "partial_lots": [],
+  "risk_state": {
+   "halted": true,
+   "setup_stopped": [
+    "MF2-open-rsimidhi-flowsell-FD",
+    "MF4-h40-open-flowsell-FD"
+   ],
+   "trades_today": 52,
+   "realized_r": -23.114
+  },
+  "flatten_failed": []
+ },
+ "findings": [
+  "'halted' (skipped) blocked 91 signals that would have made +6.5R. Track it for 20 sessions before loosening it.",
+  "'not shortable/ETB' (skipped) blocked 278 signals that would have made +42.7R. Track it for 20 sessions before loosening it."
+ ]
+}
