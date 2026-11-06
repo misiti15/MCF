@@ -1,4 +1,4 @@
-"""top20 (2026-11-05): live trades (reports/<date>.csv, run_id 1) for Primary, Testing 1, Testing 2, Graveyard, Live Lab and Explore 1 on
+"""top20 (2026-11-06): live trades (reports/<date>.csv, run_id 1) for Primary, Testing 1, Testing 2, Graveyard, Live Lab and Explore 1 on
 their data branches, plus Alpaca market-data GET only: daily bars for every traded symbol (2026-07-01..today, for
 point-in-time gap / ADV / price / ATR% / beta) and 1-minute SPY bars for every live date.
 Usage: python fetch_live.py <scratch>. Educational only - not financial advice."""
@@ -28,7 +28,7 @@ T.to_parquet(S / "trades.parquet")
 print("trades", len(T), T.date.min(), T.date.max())
 dc = _client()
 syms = sorted(set(T.symbol) | {"SPY", "QQQ"})
-D = _bars(dc, syms, datetime(2026, 7, 1), datetime(2026, 11, 6), None, "sip")
+D = _bars(dc, syms, datetime(2026, 7, 1), datetime(2026, 11, 7), None, "sip")
 D = D.reset_index()
 D.to_parquet(S / "daily.parquet")
 print("daily", len(D), D.symbol.nunique())

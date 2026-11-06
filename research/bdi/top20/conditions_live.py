@@ -1,5 +1,5 @@
-"""top20 conditions deep dive (2026-11-05), live part. Live = paper fills (rule 7), run_id 1, Primary + Testing 1 +
-Testing 2 + Graveyard + Live Lab + Explore 1 (from 11-05), every session since start (10-06..11-05), GEN-* and S6 out, "-FD" copies are their own setup.
+"""top20 conditions deep dive (2026-11-06), live part. Live = paper fills (rule 7), run_id 1, Primary + Testing 1 +
+Testing 2 + Graveyard + Live Lab + Explore 1 (from 11-05), every session since start (10-06..11-06), GEN-* and S6 out, "-FD" copies are their own setup.
 Top 20 = the dashboard leaderboard order (mcf.report.daily_post.leaderboard: shrunk avg R = avgR * n / (n + 20), setups
 enabled somewhere now) with >= 20 trades.
 
@@ -33,7 +33,7 @@ TZ = "America/New_York"
 
 
 def top20():
-    rows = [r for r in leaderboard("2026-11-05", top=500) if (r["trades"] or 0) >= 20][:20]
+    rows = [r for r in leaderboard("2026-11-06", top=500) if (r["trades"] or 0) >= 20][:20]
     return pd.DataFrame([{"rank": i + 1, "setup": r["setup"], "acct_now": r["acct"], "lb_n": r["trades"],
                           "lb_avg": r["avg_r"], "lb_shrunk": r["rank_score"]} for i, r in enumerate(rows)])
 
@@ -188,7 +188,7 @@ def main():
         txt.append("")
     pd.DataFrame(summ).to_csv(OUT / "live_summary.csv", index=False)
     pd.concat(B).round(4).to_csv(OUT / "live_buckets.csv", index=False)
-    (OUT / "live_out.txt").write_text("Educational only - not financial advice. Live paper trades 10-06..11-05, run_id 1.\n\n"
+    (OUT / "live_out.txt").write_text("Educational only - not financial advice. Live paper trades 10-06..11-06, run_id 1.\n\n"
                                       + "\n".join(txt))
     cols = ["rank", "setup", "n", "avg", "exbest", "best_share", "exmkt", "thrives", "struggles", "losers_cluster", "skip_ok"]
     with pd.option_context("display.width", 250, "display.max_colwidth", 80):

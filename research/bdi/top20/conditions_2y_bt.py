@@ -1,4 +1,4 @@
-"""top20 conditions deep dive (2026-11-05), two-year second opinion from the BDI 1104 trade lists
+"""top20 conditions deep dive (2026-11-06), two-year second opinion from the BDI 1104 trade lists
 (research/history2y/data/bt_lab1104, research/bdi/1104/DATA.md: production costs, stop first, 15:55 flatten, R per unit
 of live risk). BACKTEST, TRAIN (<= 2025-12) + VALID (2026-01..03, 07..09-15); HOLD rows dropped; the locked block
 2024-11-01..2025-02-28 is not in the lists (asserted) and the daily table is read without it (lib.daily()).
