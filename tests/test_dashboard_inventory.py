@@ -29,6 +29,7 @@ IDS = [
     "gen-last-band",   # added 2026-10-22 (Last session band in the Generated card)
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
+    "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -41,6 +42,7 @@ TITLES = [
     "New setup pipeline",   # added 2026-10-21
     "At a glance",          # added 2026-10-21
     "Your decisions",       # added 2026-10-22
+    "Claude's Team (shadow)",   # added 2026-11-05
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -105,6 +107,7 @@ SOURCES = [
     "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md",   # added 2026-10-21 (UI-DASH 4)
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
+    "mcf-data-team/", "team/latest.json", "picks/latest.json",   # added 2026-11-05 (Claude's Team (shadow))
 ]
 
 
