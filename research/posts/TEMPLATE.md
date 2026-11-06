@@ -65,3 +65,10 @@ As always, thanks so much for the support and input!
 Fun stuff!
 
 Educational only - not financial advice.
+
+## Owner style reference (2026-11-06)
+The owner's own edited Day 10 post is the model for tone and layout: research/posts/style/day10_owner_edit_1..3.png
+(opener "Day N in the books!", bold headings ending in ":", ultra-short bullets with the number first, sections like
+"What went wrong today:", "How we're fixing it:", "What's helped before:", "Things I am also working on:", one
+bold-italic key line, casual asides, closing "As always, thanks so much for the support and input!" / "Fun stuff!").
+Weekend "Day N.5" posts: about half the length, no Quick answers.
