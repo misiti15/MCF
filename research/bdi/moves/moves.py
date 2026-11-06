@@ -22,9 +22,10 @@ from mcf.backtest.engine import DayContext, universe_ok
 
 S, D = Path(sys.argv[1]), sys.argv[2]
 TOP = int(sys.argv[sys.argv.index("--top") + 1]) if "--top" in sys.argv else 25
-OUT = Path("/home/user/MCF/research/bdi/moves/moves.csv")
+OUT = Path(__file__).resolve().parent / "moves.csv"
 TZ = "America/New_York"
-ACCTS = ("p", "t1", "t2", "gy", "gen")
+ACCTS = tuple(sys.argv[sys.argv.index("--accts") + 1].split(",")) if "--accts" in sys.argv else ("p", "t1", "t2", "gy", "gen")
+NOWRITE = "--nowrite" in sys.argv
 day = pd.Timestamp(D).date()
 
 F = pd.read_parquet(S / "mh" / D / "frames.parquet")
@@ -128,7 +129,7 @@ ALL = C
 old = pd.read_csv(OUT) if OUT.exists() else pd.DataFrame()
 if len(old):
     old = old[old.date != D]
-pd.concat([old, ALL]).to_csv(OUT, index=False)
+if not NOWRITE: pd.concat([old, ALL]).to_csv(OUT, index=False)
 print(f"liquid names {len(liq)}, decision rows {len(R)}, live trades {len(T)} ({T.symbol.nunique()} symbols)")
 for sset in ("all", "tradable"):
   C = ALL[ALL.set == sset]; print(f"\n===== set: {sset} (top {TOP} per side{'' if sset == 'all' else ', earnings-blackout names removed'})")

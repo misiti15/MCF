@@ -9,7 +9,7 @@
      Owner 2026-11-03 (tone): lines Claude writes (notes, behind the scenes, quick updates, setup notes, theories, what we changed)
      read slightly more casual and easy - like a trader explaining it to a friend - still short, still with the metrics; format unchanged.
      Streaks are judged and shown in total R (green = positive R that session), not dollars.
-     Owner 2026-11-04: "Quick answers to common questions" sits at the very bottom, right before the closing line - an
+     Owner 2026-11-05: order ends with By the numbers, then Setup streak facts (lighter, casual, mostly green with 1-2 reds), then Quick answers at the very end before the closing lines. Owner 2026-11-04: "Quick answers to common questions" sits at the very bottom, right before the closing line - an
      afterthought, so the exciting parts (today, streaks, updates, thoughts) are at the top.
      Owner rule 2026-10-27: any wording Claude writes or changes must never suggest self-promotion or soliciting, and
      never say "DM", "message me", "reach out" or similar. -->
@@ -27,13 +27,6 @@
 **Today:** **Primary** {net P/L for the day after costs} · Running total since Day 1 (10/23): **{Primary total}**
 **Milestones:** M1 (3 green days in a row) {x}/3 · M2 (8 of last 10 green) {g}/{n}
 
-**Setup streak facts:** (counted on traded sessions only — sessions a setup didn't trade are skipped; say "{n} sessions in a row" only if it traded every session)
-
-- Green: {display name} - {n} traded sessions in a row, {R}
-{… 4 green lines}
-- Red: {display name} - {n} traded sessions in a row, {R}
-{… 3 red lines}
-
 **Things I am still wanting:**
 
 - {owner's lines, carried forward}
@@ -41,6 +34,17 @@
 **Quick thoughts:**
 
 - {owner's lines, carried forward}
+
+**By the numbers:**
+
+- {N closed} closed trades across {S} sessions (10/6 to {today}) (not including replays and backtesting)
+- {K} different setups have traded live
+- {140,000+} setups/variations of setups proven unworthy for advancement
+
+**Setup streak facts:**
+
+- {casual one-liner} {display name} - {n} traded sessions in a row, {+R}
+{… 3-4 green lines, then 1-2 red lines, same casual style; one short line noting no-trade sessions are skipped if any listed streak skips them}
 
 **Quick answers to common questions:**
 

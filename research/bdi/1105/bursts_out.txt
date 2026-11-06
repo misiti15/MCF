@@ -1,0 +1,28 @@
+acct | trades | setup-burst entries (n, avg R, sum) | other entries avg R | book-burst entries (n, avg R) | stacks (lots, sum R) | give-back $ (peak t -> close)
+p | 61 | 43 +0.104 +4.5 | +0.003 | 33 -0.327 | 3 -0.1 | +572 (11:06 +153 -> -419)
+t1 | 91 | 59 +0.139 +8.2 | -0.068 | 40 +0.193 | 0 +0.0 | +238 (13:08 +285 -> +48)
+t2 | 271 | 182 -0.380 -69.2 | -0.183 | 184 -0.475 | 42 -22.5 | +1010 (09:54 +13 -> -996)
+gy | 344 | 257 -0.229 -58.8 | -0.019 | 278 -0.172 | 122 -70.0 | -0 (15:56 +323 -> +323)
+gen | 385 | 290 -0.294 -85.2 | -0.448 | 324 -0.274 | 18 +8.4 | +1478 (11:38 +378 -> -1100)
+ex1 | 36 | 13 -0.404 -5.3 | -0.438 | 8 -0.025 | 0 +0.0 | +37 (13:01 +88 -> +50)
+ll | 19 | 0 +nan +0.0 | -0.076 | 0 +nan | 2 -2.3 | +0 (15:56 +152 -> +152)
+
+largest setup bursts (by |sum R|):
+  gen `GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short` S 48 entries 10:55-11:03 -58.49R, stops 48
+  gen `GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long` L 29 entries 09:50-09:58 -31.39R, stops 28
+  gy `CWT09-gapdn-vwaploss-g5-short` S 24 entries 10:30-10:31 +28.37R, stops 10
+  gy `CWT14-failbrk-orl-p05-lowvol-long` L 27 entries 10:09-10:16 -21.99R, stops 22
+  t2 `RW3S-gapdn-flowsell-short-FD` S 20 entries 11:00-11:10 -19.19R, stops 19
+  gen `GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long` L 17 entries 11:01-11:11 +18.33R, stops 17
+  gy `CWT14-failbrk-orl-p10-long` L 19 entries 10:11-10:20 -17.01R, stops 17
+  gy `CWT14-failbrk-orl-p05-long` L 19 entries 10:09-10:16 -16.55R, stops 16
+  gy `CWT14-failbrk-orl-p10-lowvol-long` L 17 entries 10:10-10:20 -15.07R, stops 15
+  gy `heat_fade_short-FD` S 21 entries 14:50-15:00 +12.39R, stops 2
+  p `MF4-h40-open-flowsell-FD` S 11 entries 11:00-11:10 -11.61R, stops 11
+  t1 `RW7-gapdn-bounce-early-short-FD` S 5 entries 11:30-11:40 +10.60R, stops 0
+
+all setup bursts: 96, 844 entries, -205.8R (avg -0.244R vs non-burst -0.204R); bursts with >= 75% stops: 34 (-300.7R)
+
+patterns rows 664, tagged 555
+
+Educational only - not financial advice.
