@@ -307,6 +307,65 @@ var alp = d => d == null ? null : (d.alpaca_day_pl ?? d.pnl);
   run();
 })();
 </script>
+<!-- Claude's Team (shadow), owner 2026-11-05: an independent simulated Primary book (mcf/report/team.py,
+     research/shadow_primary/README.md). Reads team/latest.json + picks/latest.json from the mcf-data-team data branch
+     (pushed during the day by `python -m mcf.report.team --date D --push`, no PR); before the first push, the picks
+     on the main branch. It changes no account. -->
+<style>
+#team-card .tm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 8px; }
+#team-card .tm-t { border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; }
+#team-card .tm-t .k { font-size: 11px; color: var(--muted); } #team-card .tm-t .v { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+#team-card .up { color: var(--good); } #team-card .down { color: var(--bad); }
+#team-card .tag { font-size: 11px; color: var(--muted); } #team-card .lbl { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+</style>
+<div class="card" id="team-card" role="region" aria-label="Claude's Team (shadow)"><h2>Claude's Team (shadow) <span id="team-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
+  <div class="why">Claude's best-estimate Primary book: setups picked from any account, run by the Team itself on the full Primary universe under Primary's rules, next to the real Primary account.</div>
+  <div class="lbl" id="team-label">Shadow — simulated independently; no orders</div>
+  <div class="tm-grid" id="team-tiles"><div class="empty" style="padding:10px">Loading…</div></div>
+  <div class="tablewrap" id="team-tab"><div class="empty">–</div></div>
+  <div class="note">Team R and P/L are after costs (repo cost model; simulated fills from 1-minute bars, not broker fills); every Team trade is sized at Primary's 0.25% risk; open lots are marked at the last bar. Primary = the real account (journal R, Alpaca P/L). Educational only — not financial advice.</div>
+</div>
+<script>
+(() => {
+  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", TEAM = RAW + "mcf-data-team/", q = s => document.querySelector(s);
+  const PICKS_MAIN = RAW + "claude/intraday-trading-system-witis4/research/shadow_primary/picks/";
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const get = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+  const R = v => v == null || isNaN(v) ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(+v).toFixed(2)}R</span>`;
+  const $ = v => v == null || isNaN(v) ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v < 0 ? "-$" : "+$"}${Math.abs(+v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+  const TAG = { primary: "Primary", testing: "Testing 1", testing2: "Testing 2", gen: "Generator", graveyard: "Graveyard", livelab: "Live Lab", explore1: "Explore 1" };
+  async function run() {
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+    const [rep, pk0, names] = await Promise.all([get(TEAM + "team/latest.json"), get(TEAM + "picks/latest.json"), get("../live/setup_names.json")]);
+    const pk = pk0 || await get(PICKS_MAIN + today + ".json") || await get(PICKS_MAIN + "2026-11-06.json");
+    const nm = id => ((names || {})[id] || {}).name || id;
+    const live = rep && rep.date === today && rep.phase !== "pre-open";
+    const setups = live ? rep.setups : ((pk || {}).setups || []).map(s => ({ id: s.id, name: nm(s.id), account_tag: TAG[s.account] || s.account, side: s.side }));
+    if (!setups.length) { q("#team-tiles").innerHTML = `<div class="empty" style="padding:10px">No Team picks yet.</div>`; return; }
+    if (!live) {   // before the day's first run (and before 11-06 data exists): the picks, "starts <date>"
+      const start = rep && rep.date === today ? today : ((pk || {}).date > today ? pk.date : today);
+      q("#team-asof").textContent = `· starts ${start.slice(5)}`;
+      const last = rep && rep.phase !== "pre-open" ? `<div class="tm-t"><div class="k">Last run ${e(rep.date)}${rep.label ? " (" + e(rep.label) + ")" : ""}</div><div class="v">${R((rep.totals || {}).r)}</div><div class="k">vs Primary ${R((rep.primary || {}).r)}</div></div>` : "";
+      q("#team-tiles").innerHTML = `<div class="tm-t"><div class="k">Team today</div><div class="v">starts ${e(start.slice(5))}</div><div class="k">${setups.length} setups picked</div></div>` + last;
+      q("#team-tab").innerHTML = `<table><tr><th class="l">Setup</th><th>Account</th><th>Side</th><th>Team R</th></tr>${setups.map(s =>
+        `<tr><td class="l">${e(s.name || nm(s.id))}</td><td><span class="tag">${e(s.account_tag)}</span></td><td>${e(s.side || "")}</td><td>starts ${e(start.slice(5))}</td></tr>`).join("")}</table>`;
+      return;
+    }
+    const t = rep.totals || {}, p = rep.primary || {};
+    q("#team-asof").textContent = `· ${rep.phase === "closed" ? "closed" : "intraday"} · last update ${rep.asof || rep.run_at}`;
+    q("#team-tiles").innerHTML =
+      `<div class="tm-t"><div class="k">Team R today (after costs)</div><div class="v">${R(t.r)}</div><div class="k">${t.trades ?? 0} trades · ${t.open ?? 0} open (marked)</div></div>` +
+      `<div class="tm-t"><div class="k">Team P/L today (after costs)</div><div class="v">${$(t.pnl)}</div><div class="k">simulated</div></div>` +
+      `<div class="tm-t"><div class="k">Primary R today</div><div class="v">${R(p.r)}</div><div class="k">${p.trades ?? 0} closed trades</div></div>` +
+      `<div class="tm-t"><div class="k">Primary P/L today</div><div class="v">${$(p.pnl_alpaca ?? p.pnl_journal)}</div><div class="k">${p.pnl_alpaca == null ? "journal" : "Alpaca"}</div></div>` +
+      `<div class="tm-t"><div class="k">Team − Primary</div><div class="v">${R(t.vs_primary_r)}</div><div class="k">run ${e(rep.run_at)}</div></div>`;
+    q("#team-tab").innerHTML = `<table><tr><th class="l">Setup</th><th>Account</th><th>Side</th><th>Trades</th><th>Open</th><th>Team R</th><th>Team P/L</th></tr>${setups.map(s =>
+      `<tr><td class="l">${e(s.name)}</td><td><span class="tag">${e(s.account_tag)}</span></td><td>${e(s.side || "")}</td><td>${s.trades}</td><td>${s.open}</td><td>${R(s.r)}</td><td>${$(s.pnl)}</td></tr>`).join("")}</table>`;
+  }
+  run();
+  setInterval(run, 300000);
+})();
+</script>
 <script>
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);

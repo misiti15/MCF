@@ -102,9 +102,11 @@ def shortable_flags() -> dict:
 def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, fills: str = "costs",
                 limit_fill: str = "through", exact: bool = False, check: int = 24, equity: float | None = None,
                 spread_bps: float = 2.0, spreads: dict | None = None, shortable: dict | None = None, out_dir: str | Path | None = None,
-                log=print) -> dict:
+                log=print, until: pd.Timestamp | None = None, keep: bool = False) -> dict:
     """Replay `day` for the account config `cfg` (already merged; strategies enabled as wanted). Returns a dict with
-    signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given."""
+    signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given.
+    until (ET timestamp): stop the session there (an intraday run on the bars so far; open positions stay open, the
+    caller marks them). keep: also return the runner and the simulated broker (res["runner"], res["client"])."""
     from ..execution import runner as R
     from ..execution.alpaca_broker import AlpacaBroker
     from ..strategies.setups import build_strategies
@@ -146,7 +148,7 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
         buf = io.StringIO()
         try:
             with (contextlib.redirect_stdout(buf) if quiet else contextlib.nullcontext()):
-                r.run(until=None)
+                r.run(until=until)
         finally:
             try:
                 fc = fast.check(check) if (fast is not None and check) else None
@@ -158,6 +160,8 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
             if fast is not None:
                 fast.uninstall()
     res = collect(r, client, day)
+    if keep:
+        res["runner"], res["client"] = r, client
     res["stats"] = {"day": str(day), "account": cfg.get("account_name"), "fills": fills, "limit_fill": limit_fill,
                     "exact": exact, "symbols": len(feed.bars), "priors": len(priors),
                     "setups": [s.name for s in strategies], "polls": r.health["polls"],
