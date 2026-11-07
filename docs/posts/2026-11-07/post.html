@@ -1,28 +1,16 @@
 <!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>MCF post 2026-11-07</title><style>body{font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;background:#fff;
 max-width:760px;margin:24px auto;padding:0 16px}p{margin:0 0 14px}ul{margin:0 0 14px;padding-left:22px}li{margin:0 0 4px}
 .hint{font-size:12px;color:#777;border-bottom:1px solid #eee;padding-bottom:8px;margin-bottom:16px}</style></head><body><div class='hint'>Select all below this line and copy - bold and spacing paste as shown.</div><p><b>Day 11.5 — weekend recap!</b></p>
-<p>Week in one line: Primary -25.2R over 5 sessions (2 green in R), and two short-burst days did nearly all of the damage.</p>
-<p><b>Friday:</b></p>
-<ul><li>-24.2R: Primary, almost all of it from one 10-minute burst of semis shorts.</li><li>-$1,238.60 with MTUM / -$1,057.07 without.</li><li>Running total since Day 1 (10/23): <b>-$13,848.44</b> with MTUM / <b>-$2,210.60</b> without.</li><li>MTUM: a broker paper glitch (a bogus split booked on 11/5). Reported to Alpaca; MCF&#x27;s orders were clean.</li></ul>
-<p><b>The short-cluster issue:</b></p>
-<ul><li>11/5: QQQ down 5.3% at the low, 13 Strong Heat shorts in 10 minutes all stopped in the bounce. Pop Fade +16.5R saved the day in R.</li><li>11/6, same movie: a semis short burst, Early Sellers -21.6R. The -2R setup stop latched, then the -20R account stop halted Primary at 10:55. So could have been a lot worse.</li><li><b>Two days, one failure: too many shorts in one direction, right into a squeeze.</b></li></ul>
-<p><b>How we&#x27;re fixing it:</b></p>
-<ul><li>BURST2 test: a &quot;QQQ already flushed&quot; gate fixed both days, but failed 2 years of history. So it runs in shadow, no orders.</li><li>This weekend: a full Primary reevaluation with rolling rules. Nothing live without my sign-off.</li></ul>
-<p><b>Market Compass:</b></p>
-<ul><li>~89%: once SPY has moved 0.30%+ from the open, it stays on that side of the open (89% train / 89% valid / 97% live).</li><li>Where it heads next is still close to a coin flip.</li></ul>
-<p><b>Claude&#x27;s Team, day 1:</b></p>
-<ul><li>Claude, the AI that runs MCF, hand-picked its own &quot;dream team&quot; of setups from all 7 accounts based on their live records (not random). Simulated shadow, no real orders.</li><li>+10.8R vs Primary -24.2R. It skipped both Early Sellers setups. Clever, eh?</li></ul>
-<p><b>Hunch:</b></p>
-<ul><li>200 little learners, one per stock, guessing whether the next 3-minute bar closes higher. Goal: nail one tiny call 65%+ of the time, then level up.</li></ul>
-<p><b>Top green setups (green over the last 10 AND 14 sessions, 10+ trades, R after costs):</b></p>
-<ul><li>+51.8R: Gap-Down Recovery Fade (all day) (1 big day)</li><li>+38.6R: Gap-Down Pop Fade, Heavy Selling (all day) (1 big day)</li><li>+31.7R: Gap-Down Early Bounce Short (all day), 5 green sessions in a row</li><li>+30.9R: Gap-Down Pop Fade (all day) (1 big day)</li><li>+16.1R: Gap-Down Bounce Short, Heavy Selling (all day), green 10 of 14</li><li>+6.3R: Gap-Down VWAP Loss Short (10% gap), green 6 of 7</li></ul>
-<p><b>Trade count:</b></p>
-<ul><li>Daily: 838 · 737 · 979 · 1,276 · <b>1,331</b> (11/2 to 11/6).</li><li>Weekly: 3,865 · 3,287 · 4,081 · <b>5,161</b> (weeks of 10/12 to 11/2).</li></ul>
-<p><b>Setup exposure:</b></p>
-<ul><li>~206 setups assigned, 168 traded this week.</li><li>The top 3 setups took 53-64% of Primary/Testing trades. That&#x27;s why Explore 1 / Live Lab exist: 42 low-rep setups moved there 11/5, rotated every ~2 sessions, 21 traded within 2 sessions.</li><li>Setup Generator paused for now: overcrowding (too many setups competing for trades), so the existing ones get a fair test first.</li></ul>
-<p><b>Why we&#x27;re still optimistic:</b></p>
-<ul><li>2% to 26%: share of the day&#x27;s big moves caught, 11/5 to 11/6.</li><li>+10.8R: Claude&#x27;s Team on Primary&#x27;s worst day.</li><li>The safety stops and the restart fix worked live, and 16,618 live trades of evidence (costs in) say where to look next.</li></ul>
-<p>Rule changes inside these windows: Primary lot ~$4k (10/28), -2R per-setup stop (10/29), Testing 2 top-500 pool (11/4), Explore 1 / Live Lab (11/5).</p>
+<p>What a week. Biggest one yet, and the system is getting sharper at spotting the moves before they happen.</p>
+<p><b>Week in a nutshell:</b></p>
+<ul><li>5,161 live trades, the biggest week yet (3,865 · 3,287 · 4,081 · <b>5,161</b> since the week of 10/12).</li><li>168 setups traded this week, long and short.</li><li>2% to 26%: share of the day&#x27;s big moves we caught, 11/5 to 11/6.</li></ul>
+<p><b>Wins this week:</b></p>
+<ul><li>+10.8R: Claude&#x27;s Team, day 1. Claude, the AI that runs MCF, hand-picked its own dream team of setups (simulated shadow, no real orders). It skipped both Early Sellers setups. Clever, eh?</li><li>+51.8R: Gap-Down Recovery Fade (all day), last 14 sessions (1 big day).</li><li>+38.6R: Gap-Down Pop Fade, Heavy Selling (all day) (1 big day).</li><li>+31.7R: Gap-Down Early Bounce Short (all day), 5 green sessions in a row.</li><li>+30.9R: Gap-Down Pop Fade (all day) (1 big day).</li><li>+16.1R: Gap-Down Bounce Short, Heavy Selling (all day), green 10 of 14.</li><li>+10.0R and +3.1R: Testing 1 and Testing 2 on the quiet days.</li></ul>
+<p><b>What we learned:</b></p>
+<ul><li>Two rough days had the same cause: too many shorts in one direction right into a squeeze. <b>Now we know exactly where to aim.</b></li><li>The safety stops and the restart fix worked live. So could have been a lot worse.</li><li>~89%: once SPY moves 0.30%+ from the open, it stays on that side. A real compass for picking setups by market.</li></ul>
+<p><b>Coming up:</b></p>
+<ul><li>A full Primary review is done and ready for Monday.</li><li>Hunch keeps learning every 3 minutes: 46,600+ guesses so far, aiming for 65%+.</li><li>Setup Generator paused for now (overcrowding), so existing setups get a fair test.</li></ul>
+<p>Paper trading, R after costs. Rule changes inside these windows: Primary lot ~$4k (10/28), -2R per-setup stop (10/29), Testing 2 top-500 pool (11/4), Explore 1 / Live Lab (11/5).</p>
 <p>As always, thanks so much for the support and input!</p>
 <p>Fun stuff!</p>
 <p>Educational only — not financial advice</p></body></html>
