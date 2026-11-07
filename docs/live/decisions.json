@@ -707,5 +707,129 @@
   "link": "research/bdi/nightly1106/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "PREVAL",
+  "title": "Primary reevaluation page (Saturday) - decide DM-MF2 / DM-MF4 / L3H / P4 there",
+  "what": "A complete Primary reevaluation with rolling ROTA1 parameters arrives as one decision page Saturday morning; the open Primary moves (DM-MF2, DM-MF4, L3H, the P4 trim) are decided on it, not tonight.",
+  "recommend": "Yes - decide on the page; nothing is due tonight",
+  "numbers": [
+   "MF2-FD -0.141R without its best day (196% `1 day`), 11-06 -21.62R",
+   "MF4-FD -0.118R (59.5% vs 67.0% break-even); L3-rsi5hi-FD -0.536R on Primary since 10-30",
+   "Primary 3 days (11-04..11-06) 167 trades -30.39R, -0.182R a trade, 43.7% win"
+  ],
+  "why": "Owner 2026-11-06: Primary changes are decided over the next couple of days from one complete reevaluation, not item by item.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "HN1",
+  "title": "Keep Hunch M1 live",
+  "what": "Hunch M1 (200 per-stock learners guessing the next 3-minute bar) keeps running live and logging.",
+  "recommend": "Yes",
+  "numbers": [
+   "46,600 guesses in 2 days",
+   "hit rate 51.9% vs 52.9% always-up baseline; beats copy-last-bar"
+  ],
+  "why": "It costs no orders and is still learning; the forward log is the only way to see if it reaches the 65% bar.",
+  "link": "research/hunch/M1_report.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "HN3",
+  "title": "Use volume as the main Hunch metric",
+  "what": "Switch the Hunch scorecard from hit rate to a volume-based measure.",
+  "recommend": "No - keep hit rate as the main metric",
+  "numbers": [
+   "target 65% hit rate on one call; 51.9% now"
+  ],
+  "why": "One simple, comparable number per learner; a volume metric would reset the comparison.",
+  "link": "research/hunch/M1_report.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "COMPASS",
+  "title": "Start live Market Compass recording",
+  "what": "Record the 15-minute Market Compass readings live (journal only), no trading use.",
+  "recommend": "Yes - record only",
+  "numbers": [
+   "GATE1: 112 looks, 0 pass (best rule kept as forward shadow)",
+   "REGX: compass rating right 33% out of sample"
+  ],
+  "why": "Live readings are needed to judge it forward; nothing trades on it.",
+  "link": "research/bdi/gate1/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BASE1",
+  "title": "Shadow baseline twin",
+  "what": "A journal-only baseline twin of Primary (no orders) to compare rule changes against.",
+  "recommend": "Yes",
+  "numbers": [
+   "no orders; Claude's Team shadow already simulates 57 trades a day independently"
+  ],
+  "why": "Gives every Primary change a same-day control.",
+  "link": "research/bdi/nightly1105/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "M1",
+  "title": "Drop the Primary mark on Afternoon VWAP Reclaim Fade (all day)",
+  "what": "NS4-pm-vwap-reclaim-oversold-short-FD: end the monitor mark (Testing 1 -> Primary); it stays in Testing 1.",
+  "recommend": "Yes - drop (lean)",
+  "numbers": [
+   "since the 10-27 mark 12 trades -0.397R",
+   "11-06: 2 trades -0.41R"
+  ],
+  "why": "Below zero since the mark.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "M2",
+  "title": "Generated NewLOD LUNCH short: keep waiting",
+  "what": "GEN-261026-03-...-holdtr-short: promote to Testing only after two green traded sessions (owner rule 11-03).",
+  "recommend": "No - wait (no promotion yet)",
+  "numbers": [
+   "1 of 2 green sessions",
+   "11-06 no trade (buying-power reject)"
+  ],
+  "why": "The owner condition is not met yet.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "REGX",
+  "title": "Dashboard hindsight label + reliability tags",
+  "what": "Show the SPY up/down day label as \"hindsight (known at close)\" and tag each Best-conditions rating trustworthy / weak / false.",
+  "recommend": "Yes - display only",
+  "numbers": [
+   "672 ratings, 66 trustworthy",
+   "only the hindsight SPY +/-0.25% label holds (49/53 VALID)"
+  ],
+  "why": "Stops reading hindsight conditions as entry filters.",
+  "link": "research/bdi/regx/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "RISK1",
+  "title": "Queue an equal-dollar-risk sizing study",
+  "what": "Research only: compare equal-dollar-risk lots with the fixed ~$4k notional lots on two years and live.",
+  "recommend": "Yes - queue",
+  "numbers": [
+   "$ per R $121 on MF4-FD vs $48 on RW3-FD (fixed ~$4k lots)"
+  ],
+  "why": "Fixed notional makes dollars and R disagree across setups.",
+  "link": "research/bdi/nightly1105/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
