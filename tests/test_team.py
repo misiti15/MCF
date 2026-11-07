@@ -39,7 +39,7 @@ def test_picks_file_shape():
 
 def test_picks_carry_over_and_explicit_file():
     assert team.picks_path("2026-11-06") == PICKS
-    assert team.picks_path("2026-11-09") == PICKS            # latest before the date carries over
+    assert team.picks_path("2026-11-07") == PICKS            # latest before the date carries over (11-09 has its own picks)
     assert team.picks_path("2026-11-05") is None              # nothing before the first Team
     assert team.load_picks("2026-11-05", "research/shadow_primary/picks/2026-11-06.json")["date"] == "2026-11-06"
 
