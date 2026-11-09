@@ -57,3 +57,17 @@ hit rate. (e) all t are day-clustered. (f) control C1 above. Burst times (Observ
 2-year SIP 1-minute cache rebuilt per research/bdi/1104/DATA.md, **after 16:00 ET** (live job's Alpaca rate budget);
 TRAIN 2024-10 + 2025-03..2025-09, VALID 2025-10..2026-11-06; the live-window sub-period 2026-10-06..11-06 shown
 separately. Locked block 2024-11-01..2025-02-28 dropped at read, asserted, never read.
+
+## Amendment 1 (2026-11-09 ~10:25 ET, before any score; Skeptic audit research/skeptic-20261109/gate2_audit.md, Lead decision lead-20261109-0900-2)
+No new configs; N stays 123; bar = excess-over-C1 day-clustered t >= 2.79 (Lead standard: excess t, kept avg R shown).
+- **A1 sizing:** the 3 sizing configs are scored on (weight - 1) x (r - the setup's own TRAIN / VALID mean), and pass
+  only if that day-clustered t >= 2.79, TRAIN and VALID > 0, **and** the total beats the 95th percentile of 200 random
+  relabelings with the same favoured share (seed 20261109). r(fav) - r(unfav) reported.
+- **A2 time lookup:** favoured only if the confirming reading bar closed at or before the lab entry bar's close
+  (entry minute compared to END_MIN; no default value; RTH asserted).
+- **A3 locked-hole gap:** daily return / true range set to NaN on the first row after a gap > 5 calendar days (beta
+  and ATR no longer see a 4-month "day"). I-HB has no beta in Oct 2024 (min 40 rows) -> its TRAIN is ~Mar-Sep 2025;
+  `train_sess_traded` reported.
+- **A4 reporting:** avg / total R on held vs failed-hold days (SPY close vs open on the reading's side), break-even hold
+  rate (hold share where avg R = 0; flag thin if > 85%), R by side x day type, median cost/R, n of C1 / C2 pairs.
+Implemented in gate2.py (sizing block tested on a synthetic list: entries before confirmation are not favoured).

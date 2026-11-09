@@ -14,6 +14,9 @@
 
 - Run 2 (08:40 ET): gate2.py written + synthetic-checked (trigger, E1, E2 trail, gap stop). Scout pre-writes SC2
   (research/sc2/); tonight's order: rebuild -> GATE2 -> Observer 09:50 -> SC2 -> C3FR.
+- Run 3 (10:25 ET): GATE2 Amendment 1 (Skeptic audit) in PLAN.md + gate2.py, sizing block synthetic-tested.
+  Queue tonight: rebuild -> GATE2 -> Observer 09:50 -> SC2 (Scout's research/sc2/sc2.py, PLAN frozen) -> C3FR ->
+  Observer CWT14 'already >= X ATR below open' skip (2 configs, plan first) ; SC1 script pending from Scout.
 
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
@@ -22,6 +25,10 @@
   friction in R scales with 1/R — the targeted remedy is wider R, not a new filter.
 - Tags so far mostly restate SPY direction (L1/L2/L3/L6): always split by SPY up/down/quiet and compare to a
   same-side control.
+
+- Dict lookups with a default (I.get(tod, 999)) can silently leak look-ahead; compare times numerically and assert.
+- Sizing / gate deltas on a losing book score positive from volume alone: demean by the setup's period mean and
+  compare to random relabelings.
 
 ## Failed
 - (none scored yet)

@@ -7,7 +7,7 @@
   sizing   3 configs on bt_lab1104 lists (x1.5 when the reading favours the side, x0.5 otherwise)
 Lineage N 123 (GATE1 112 + 11) -> BAR90 2.79. Locked block 2024-11-01..2025-02-28 dropped at every read (asserted).
     python gate2.py > gate2_out.txt        Educational only - not financial advice."""
-import os, sys
+import json, os, sys
 from pathlib import Path
 import numpy as np, pandas as pd, pyarrow.dataset as pds
 
@@ -35,6 +35,8 @@ Dd = lib.daily()                                          # locked block removed
 Dd = Dd.sort_values(["symbol", "date"]).reset_index(drop=True)
 assert not ((Dd.date >= LK0) & (Dd.date <= LK1)).any()
 pc = Dd.groupby("symbol").close.shift(1)
+gapd = pd.to_datetime(Dd.date).groupby(Dd.symbol).diff().dt.days > 5      # amendment A3: first row after the locked hole
+pc = pc.where(~gapd)
 tr = np.maximum(Dd.high - Dd.low, np.maximum((Dd.high - pc).abs(), (Dd.low - pc).abs()))
 Dd["atr"] = tr.groupby(Dd.symbol).transform(lambda s: s.shift(1).rolling(14, min_periods=10).mean())
 Dd["ret"] = Dd.close / pc - 1
@@ -124,7 +126,7 @@ def trade(a, s, ib, atr, ex):
     mult = G.tod_cost_mult(np.array([END_TOD[ib]]))[0]
     cost = (G.SLIP_PS + e * G.SLIP_BPS) * mult + SPREAD_BPS * e * mult + G.SLIP_PS + e * G.SLIP_BPS + (G.STOP_EXTRA if kind == "stop" else 0)
     g = s * (xp - e) / R
-    return g - cost / R, g, kind
+    return g - cost / R, g, kind, cost / R
 
 rows, ALLT = [], []
 NS = len(DATES); NS_TR = sum(d <= SPLIT for d in DATES); NS_VA = NS - NS_TR
@@ -150,7 +152,7 @@ for inst, X, RET, ex in GRID:
                 others = [o for o in syms if o != sym and (o, d) in PATH]
                 if others:
                     o = others[int(RNG.integers(len(others)))]; c2 = trade(PATH[(o, d)], s, ib, ATR[(o, d)], ex)
-            T.append(dict(date=d, symbol=sym, side=s, tod=int(END_TOD[ib]), r=res[0], gross=res[1], kind=res[2],
+            T.append(dict(date=d, symbol=sym, side=s, tod=int(END_TOD[ib]), r=res[0], gross=res[1], kind=res[2], cost_r=res[3],
                           c1=c1[0] if c1 else np.nan, c2=c2[0] if c2 else np.nan))
     t = pd.DataFrame(T); nm = f"GATE2-{inst}-X{X:.2f}-RET{RET:.2f}-{ex}"
     if not len(t):
@@ -171,6 +173,13 @@ for inst, X, RET, ex in GRID:
                wf_pos=round(float((mo > 0).mean()), 2), c1_ex=x1.get("exp_r"), c1_t=x1.get("t"),
                c2_ex=x2.get("exp_r"), c2_t=x2.get("t"), stops=round(float((t.kind == "stop").mean()), 2),
                reading_days=len(rd), long_share=round(float((t.side > 0).mean()), 2))
+    held = t.apply(lambda x: np.sign(SPYD.close[x.date] - SPYD.open[x.date]) == x.side, axis=1)
+    rh, rf = t.r[held].mean(), t.r[~held].mean()
+    row.update(held_share=round(float(held.mean()), 3), r_held=round(rh, 3), r_failed=round(rf, 3), R_held=round(t.r[held].sum(), 1),
+               R_failed=round(t.r[~held].sum(), 1), breakeven_hold=round(float(-rf / (rh - rf)), 3) if np.isfinite(rf) and rh > rf else None,
+               med_cost_r=round(float(t.cost_r.median()), 3), n_c1=int(t.c1.notna().sum()), n_c2=int(t.c2.notna().sum()),
+               train_sess_traded=int(t[t.date <= SPLIT].date.nunique()),
+               side_x_type=json.dumps({f"{'L' if k[0] > 0 else 'S'}-{k[1]}": round(v, 3) for k, v in t.groupby([t.side, t.date.map(dtype)]).r.mean().items()}))
     row["bar90"] = bool((row["t"] or 0) >= T90 and (row["c1_t"] or 0) >= T90 and (row["train"] or -1) > 0 and (row["valid"] or -1) > 0
                         and row["up"] > 0 and row["down"] > 0 and row["wf_pos"] >= .54 and (row["wo_best"] or -1) > 0
                         and (inst == "I-ETF" or row["per_sess"] >= 1.5))
@@ -187,14 +196,25 @@ if BT.exists():
     for setup, side, want in SZ:
         t = L[(L.setup == setup)].copy()
         if not len(t): rows.append(dict(config=f"GATE2-SIZE-{setup}", n=0)); continue
-        st = t.date.map(lambda d: rd.get(d, (0, 999))); sgn = st.map(lambda x: x[0]); icx = st.map(lambda x: x[1])
-        tix = t.tod.map(lambda x: I.get(int(x), 999))
-        fav = (sgn == want) & (icx < tix)                   # reading confirmed on a bar closed before the entry bar
-        t["r"] = (np.where(fav, 1.5, .5) - 1) * t.r          # weighted minus unweighted
+        st = t.date.map(lambda d: rd.get(d, (0, -1)))
+        sgn = st.map(lambda x: x[0]).to_numpy(); icx = st.map(lambda x: x[1]).to_numpy()
+        tod_ = t.tod.astype(int).to_numpy(); em = tod_ // 100 * 60 + tod_ % 100           # amendment A2: entry minute
+        assert ((em >= 570) & (em <= 960)).all(), "lab tod outside RTH"
+        conf_min = np.where(icx >= 0, END_MIN[np.clip(icx, 0, 77)], 10 ** 6)
+        fav = (sgn == want) & (conf_min <= em)               # reading bar closed at or before the entry bar close
+        per = np.where(t.date <= SPLIT, "TR", "VA")          # amendment A1: demean by the setup's own period mean
+        t["rdm"] = t.r - t.groupby(per).r.transform("mean")
+        w = np.where(fav, 1.5, .5) - 1
+        t["r"] = w * t.rdm
         s_ = G.summary(t); tr_, va_ = G.summary(t[t.date <= SPLIT]), G.summary(t[t.date > SPLIT])
+        real = float(t.r.sum()); rng = np.random.default_rng(20261109); perm = []
+        for _ in range(200):
+            fp = rng.permutation(fav); perm.append(float(((np.where(fp, 1.5, .5) - 1) * t.rdm).sum()))
+        p95 = float(np.percentile(perm, 95)); rr = L[L.setup == setup].r.to_numpy()
         rows.append(dict(config=f"GATE2-SIZE-{setup}", n=s_["n"], avg_r=s_["exp_r"], t=s_.get("t"), train=tr_.get("exp_r"),
                          valid=va_.get("exp_r"), valid_t=va_.get("t"), fav_share=round(float(fav.mean()), 2),
-                         bar90=bool((s_.get("t") or 0) >= T90 and (tr_.get("exp_r") or -1) > 0 and (va_.get("exp_r") or -1) > 0)))
+                         r_fav_minus_unfav=round(float(rr[fav].mean() - rr[~fav].mean()), 3), perm_p95=round(p95, 1), delta_sum=round(real, 1),
+                         bar90=bool((s_.get("t") or 0) >= T90 and real > p95 and (tr_.get("exp_r") or -1) > 0 and (va_.get("exp_r") or -1) > 0)))
 else:
     print("bt_lab1104 lists absent: sizing configs NOT scored (still counted in N)")
 
@@ -202,7 +222,8 @@ R = pd.DataFrame(rows); pd.set_option("display.width", 420); pd.set_option("disp
 print(R.to_string(index=False))
 print("\nentry next 5-min bar open (1-min SIP cache); stop own open -0.10 ATR, stop-first, gaps fill at the open; costs production + 4.4bp spread;"
       "\nc1 = excess over a random post-reading bar (same instrument/day/side), c2 = over a same-minute random I-HB name; day type = SPY o-c +-0.25%;"
-      "\nsizing rows: avg_r/t are weighted-minus-unweighted per trade.")
+      "\nsizing rows: avg_r/t = (weight-1) x (r - setup period mean) per trade; pass also needs delta_sum > 95th pct of 200 relabelings;"
+      "\nI-HB has no beta in Oct 2024 (min 40 rows), so its TRAIN is ~Mar-Sep 2025: see train_sess_traded.")
 print(f"configs 11 (lineage {N_LINEAGE}), BAR90 pass {int(R.bar90.fillna(False).sum())}")
 R.to_csv(HERE / "gate2_results.csv", index=False)
 if ALLT: pd.concat(ALLT).to_csv(HERE / "gate2_trades.csv", index=False)
