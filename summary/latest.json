@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T16:58-05:00",
+ "updated": "2026-11-09T19:10-05:00",
  "session": "2026-11-09",
- "headline": "First scores in: GATE2, SC2, SC1 and the 09:50 drive all fail after costs (0 of 30 configs), but GATE2's pullback timing is real and SC1's longs lean positive; two counted reworks queued.",
+ "headline": "Day 1 closes: 60 configs scored, 0 pass, every failure explained; five dead ends closed cheaply, two levers left (minimum stop width, GATE2 pullback timing).",
  "bullets": [
-  "GATE2 (trade with the held side): 0 of 8 pass; buying the pullback beats a random bar (t 7-12), but days the hold fails cost more than held days earn. One counted rework: mid-day exit / half size.",
-  "SC2 cross-asset laggards: 0 of 12; it was the driver's momentum, not catch-up. Laggard family parked at 0 of 92 tries.",
-  "SC1 event-day gap-and-hold: 0 of 8 and underpowered (5-35 trades in 2 years); longs lean positive (best +0.355R, t 1.99). 09:50 opening drive: a coin flip before costs, closed.",
-  "Costs: lab charges more than live paper fills (0.218R vs ~0.06R per trade), so lab bars are conservative. Tight stops eat most of the cost (0.42R vs 0.09R per trade) - a minimum stop width is the next lever.",
-  "For the owner (FYI): the Setup Generator's 2-year screen does not rank live results (rank correlation -0.04 / -0.21; top screen third did worst live)."
+  "Closed with numbers: 09:50 opening drive, laggard catch-up family (0 of 92), event-day gap-and-hold (0 of 12), quiet-top continuation long NH1, break-even exits (worse on 27 of 27 family-sides).",
+  "CWT14SKIP (skip CWT14 failed-break longs far below the open) passes its own bar (t 2.13) but loses on down days and adds +0.00026R/trade: a lead only.",
+  "Lab costs are heavier than live paper fills (0.218R vs ~0.06R per trade), so the bars are conservative; tight stops cost the most, which STOPW tests next.",
+  "Lesson: give-back counted from best excursions overstates any exit fix about 10x - break-even stops cut more winners than they save.",
+  "For the owner (FYI): the Setup Generator's screen does not rank live results, and none of its conditions is positive without its best day."
  ],
  "progress": {
-  "ideas": 15,
-  "tested": 8,
-  "configs": 34,
+  "ideas": 17,
+  "tested": 13,
+  "configs": 60,
   "passed": 0,
   "forward": 0
  },
- "next": "Tonight: CWT14SKIP -> break-even exit replay -> NH1; then plans for a minimum stop width (STOPW) and the GATE2 / SC1 reworks.",
+ "next": "Tomorrow: GATE2 matched-control check, then STOPW; if GATE2 timing survives, a combined rework (timing + minimum stop width + mid-day exit).",
  "by_role": {
-  "scout": "NH1 script ready; next: STOPW minimum-stop-width plan and SC1 rework.",
-  "builder": "Rebuilt 2 years of data; scored GATE2, SC2, SC1, 09:50 drive - 0 pass, clear mechanisms.",
-  "skeptic": "Lab vs live costs: lab is heavier; tight stops drive cost; checked OD0950.",
-  "observer": "Generator rules are recoverable for replay; its screen does not rank live results.",
-  "lead": "Closed 09:50 continuation, parked laggard family, dropped C3FR, queued two counted reworks."
+  "scout": "SC1 rework and NH1 failed honestly; STOPW plan frozen; next: a fresh long-side feature from the Move Hunt.",
+  "builder": "Scored 8 studies / 52 configs tonight; 1-min engine matches the lists (corr 0.98).",
+  "skeptic": "Attacked GATE2's control (likely an anti-signal) and CWT14SKIP (real but immaterial).",
+  "observer": "Generator feature tally; synthesis: real selectors, gross ~0, costs sink them.",
+  "lead": "Closed five ideas, kept CWT14SKIP as a lead only, opened the evening PR with the day's research files."
  },
  "disclaimer": "Educational only — not financial advice."
 }
