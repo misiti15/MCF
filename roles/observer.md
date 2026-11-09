@@ -43,3 +43,8 @@
 **Learned**: long movers caught 14% (3/67 at 09:35); catchers are dip reversals (fromOpen -1.7%, RSI 23); typical missed mover is flat, near HOD, RSI 49 -> no near-HOD continuation long exists. Late longs after the top -23.2R (GEN). Lead logged run-2 result; CWT14 skip queued with Builder tonight.
 **Failed**: nothing broke; caution n=21 caught, 6 days.
 **Next**: (a) tonight/next: laggard-vs-leader split once Builder's fromOpen column lands; (b) check backlog for near-HOD/ORB long family N before Scout writes a rule; (c) read Builder's 09:50 measurement; (d) reconcile moves.csv n_wrong 112 vs 144.
+
+## Run 4 — 2026-11-09 ~13:45 ET
+**Learned**: late-buying is not a GEN trait. GEN longs never-worked = non-GEN (20.8%), but GEN gives back: 45% reach +0.5R, 31% of those close <= 0 (-168R = 49% of GEN long loss); `hold` exits worst. CWT14 longs = 5,148 trades / -708R (biggest long drain). GEN module source: research/generator/modules/<name>.py; registry.jsonl is hashed.
+**Failed**: no bars -> mfe_r proxies only (peak-vs-stop order unknown); name parsing of GEN conditions is crude.
+**Next**: (a) tonight: laggard-vs-leader long split on 2y from Builder's fromOpen column (check "cache up" note); (b) Builder's 09:50 measurement result; (c) reconcile moves.csv n_wrong 112 vs 144; (d) maybe: CWT14 long drain by account/regime — is it one variant or the family?
