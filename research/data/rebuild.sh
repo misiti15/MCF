@@ -5,6 +5,9 @@ set -euo pipefail
 H=$(TZ=America/New_York date +%H%M); [ "$H" -ge 1600 ] || { echo "refusing: market hours ($H ET)"; exit 1; }
 M=/home/user/MCF; G=/home/user/guild/research/data; S=${SCRATCH:-/tmp/guild_build}; mkdir -p "$S" "$G/logs"
 cd "$M"
+# 0) earnings calendar for the blackout (gates GD._blackout silently returns "no blackout" without it); open rows only
+git fetch -q --depth=1 origin research-data && mkdir -p research/bdi/earnings/data \
+  && git show FETCH_HEAD:earnings_yf.parquet > research/bdi/earnings/data/earnings_yf.parquet
 python "$G/dl.py" 2024-09-16 2026-11-10 16 research/lab_symbols.txt          # 1) 1-min SIP bars (~25 min)
 python research/history2y/build_frames.py --workers 4 --context              # 2) lab frames + context + daily
 python research/bdi/timeofday/build_open.py --workers 4                       # 3) opening frame 09:35-10:30
