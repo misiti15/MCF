@@ -17,6 +17,11 @@
 - Run 3 (10:25 ET): GATE2 Amendment 1 (Skeptic audit) in PLAN.md + gate2.py, sizing block synthetic-tested.
   Queue tonight: rebuild -> GATE2 -> Observer 09:50 -> SC2 (Scout's research/sc2/sc2.py, PLAN frozen) -> C3FR ->
   Observer CWT14 'already >= X ATR below open' skip (2 configs, plan first) ; SC1 script pending from Scout.
+- Run 4 (12:30 ET): GATE2 Amendment 2 (strict < tie); CWT14SKIP PLAN + script (synthetic-tested). Lead's order
+  tonight: rebuild -> GATE2 -> 09:50 opening-drive -> SC2 (Scout amended, family N 76) -> CWT14SKIP -> C3FR if time ->
+  long-laggard column (name - SPY fromOpen at entry) for Observer. SC1 (Scout sc1.py) after.
+- Family try-count standard (Lead 11-09): a pass at a study's own bar = 'lead worth pursuing'; a Testing move must
+  clear the family's summed N (laggard catch-up family N 76 -> BAR90 2.65).
 
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a

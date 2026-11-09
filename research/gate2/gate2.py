@@ -201,7 +201,7 @@ if BT.exists():
         tod_ = t.tod.astype(int).to_numpy(); em = tod_ // 100 * 60 + tod_ % 100           # amendment A2: entry minute
         assert ((em >= 570) & (em <= 960)).all(), "lab tod outside RTH"
         conf_min = np.where(icx >= 0, END_MIN[np.clip(icx, 0, 77)], 10 ** 6)
-        fav = (sgn == want) & (conf_min <= em)               # reading bar closed at or before the entry bar close
+        fav = (sgn == want) & (conf_min < em)                # Amendment 2: reading bar closed strictly before the entry bar close
         per = np.where(t.date <= SPLIT, "TR", "VA")          # amendment A1: demean by the setup's own period mean
         t["rdm"] = t.r - t.groupby(per).r.transform("mean")
         w = np.where(fav, 1.5, .5) - 1

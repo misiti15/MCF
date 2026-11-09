@@ -71,3 +71,7 @@ No new configs; N stays 123; bar = excess-over-C1 day-clustered t >= 2.79 (Lead 
 - **A4 reporting:** avg / total R on held vs failed-hold days (SPY close vs open on the reading's side), break-even hold
   rate (hold share where avg R = 0; flag thin if > 85%), R by side x day type, median cost/R, n of C1 / C2 pairs.
 Implemented in gate2.py (sizing block tested on a synthetic list: entries before confirmation are not favoured).
+
+## Amendment 2 (2026-11-09 ~12:20 ET, before any score; Skeptic skeptic-20261109-1051-2, Lead lead-20261109-1058-4)
+Sizing configs: favoured only if the confirming reading bar closed **strictly before** the lab entry bar's close
+(`conf_min < entry minute`). A tie (reading and entry on the same bar) is not favoured. No config change; N 123.
