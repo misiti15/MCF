@@ -1,0 +1,19 @@
+{"note": "\"Daily ATR\" = the stock's average daily range over the last 14 days, ATR(14) on the daily chart. Open trades close by 3:55 PM ET. Figures after costs. Neither is a proven edge: #1 is a machine-generated setup, #2 sits in the Graveyard; today 27 and 45 trades, both long.",
+ "setups": [
+  {"setup": "GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long",
+   "title": "Generated: Morning RSI Surge Buy",
+   "lines": [["When", "5-min bars closing 9:50-11:00 AM; first signal per stock"],
+             ["Chart", "5-minute candles + RSI(14); most stocks above VWAP (approx.: SPY and QQQ above VWAP)"],
+             ["Stock", "Daily ATR(14) at least 4.4% of price; $50M+ traded a day"],
+             ["Trigger", "RSI(14) up 19+ points over the last 3 bars, and a lower wick of 1/3+ of the bar"],
+             ["Entry & stop", "Buy at that bar's close; stop 1/4 daily ATR below entry"],
+             ["Exit", "No target: hold until stopped or 3:55 PM"]]},
+  {"setup": "CWT12-coil-k4-long",
+   "title": "Coil Under the High (4 bars)",
+   "lines": [["When", "5-min bars closing 9:50-11:30 AM (needs 10+ bars of the day)"],
+             ["Chart", "5-minute candles, high of day line"],
+             ["Stock", "Any price; $95M+ traded a day"],
+             ["Trigger", "Day's high tagged 3+ times; last 4 bars each under half the normal bar size, closing within 1/4 daily ATR under it"],
+             ["Entry & stop", "Buy at that bar's close; stop 1/4 daily ATR below entry"],
+             ["Exit", "Target 1/8 daily ATR above (half the stop); else out at 3:55 PM"]]}
+ ]}
