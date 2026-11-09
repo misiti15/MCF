@@ -30,6 +30,7 @@ IDS = [
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
     "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
+    "cmp-card", "cmp-asof", "cmp-label", "cmp-tiles", "cmp-tab",   # added 2026-11-09 (Market Compass (live))
     "guild-card", "guild-asof", "guild-head", "guild-bullets", "guild-progress", "guild-next", "guild-roles",
     "guild-roles-list", "guild-link",   # added 2026-11-09 (Research Guild)
 ]
@@ -45,6 +46,7 @@ TITLES = [
     "At a glance",          # added 2026-10-21
     "Your decisions",       # added 2026-10-22
     "Claude's Team (shadow)",   # added 2026-11-05
+    "Market Compass (live)",    # added 2026-11-09
     "Research Guild",   # added 2026-11-09
 ]
 
@@ -111,6 +113,7 @@ SOURCES = [
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
     "mcf-data-team/", "team/latest.json", "picks/latest.json",   # added 2026-11-05 (Claude's Team (shadow))
+    "mcf-data-compass/", "compass/latest.json",   # added 2026-11-09 (Market Compass (live))
     "https://raw.githubusercontent.com/misiti15/MCF/mcf-guild/", "summary/latest.json",   # added 2026-11-09 (Research Guild)
 ]
 
