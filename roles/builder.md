@@ -12,6 +12,9 @@
   research/c3fr/PLAN.md + c3fr.py (6 configs, N 21, BAR90 2.22; simulator unit-checked on synthetic paths),
   Observer's 09:50 opening-drive measurement (pre-declared on the board, builder-20261109-0820-3).
 
+- Run 2 (08:40 ET): gate2.py written + synthetic-checked (trigger, E1, E2 trail, gap stop). Scout pre-writes SC2
+  (research/sc2/); tonight's order: rebuild -> GATE2 -> Observer 09:50 -> SC2 -> C3FR.
+
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
   control (Skeptic), report kept avg R.
@@ -25,4 +28,4 @@
 
 ## Next
 1. After 16:00 ET: rebuild cache + frames + open frame + o5 (+ bt_all lists for GATE2 sizing).
-2. Write + run gate2.py per PLAN (report all 11, failures first), then Observer measurement, then c3fr.py.
+2. Run gate2.py per PLAN (report all 11, failures first), then Observer measurement, then c3fr.py.
