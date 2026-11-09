@@ -20,8 +20,60 @@ poll evaluated, *including* bars before a late start; "own" = from the account's
 | **2026-10-29** | 10-27, 10-28, 10-29 (GX1 clock gate) | decision minutes of 77: 10-27 77 / 77 / 77 / 77 / 77 · 10-28 77 / 77 / **76** / 77 / **76** (handover 5.7 / 5.8 min, 14:35 bucket) · 10-29 77 ×5 (99.8% overall; polls < 90%: T2 70-82%, GY 72-82%, Gen 59-69%, non-lab only) | 67 of 209 enabled (P 0, T1 7, T2 10, GY 0, Gen 50); **broken 0** (load failures 0; rare by design / regime-gated / young; GEN-261020-09 low odds but fires in replay) | broker rejects 12 (8 bracket leg past base −8.4R, 4 buying power +2.5R), crosscheck 1 (−0.4R), no quote 1 (+0.9R), missed-triggered 0, crash 0; missed 14:35 bucket T2 / Gen 10-28 (≈ 1-5 signals); Gen 8 unbooked (HK-RECON-GEN) | unintended skips **−5.4R net** (14 signals, would have lost); place in line 212, −60.8R, no change; ETB +40.6R (T1 L3 2x ETFs), rest saved money; no fix, no decision |
 | **2026-11-02** | 10-30, 11-02 (GX1; Testing cost filter from 10-30; R2A legs T2 from 11-02) | decision minutes of 77: 10-30 **75 ×5** (handover 11.2-13.8 min, 14:40 + 14:45 decisions; standby setup-python ~10 min) · 11-02 77 / 77 / 77 / **76** (GY 14:30, slow 16 s poll) / 77 (759 / 770 = 98.6%; polls < 90%: T2 79 / 77%, GY 80% on 10-30, Gen 76 / 66%, non-lab minutes only) | 67 of 209 enabled (P 1, T1 8, T2 18, GY 0, Gen 40); **broken 0** (load failures 0; R2A short leg idle by its regime: 11-02 was a long-leg day, spy_prng present) | broker rejects 50, all buying power (GY 38 on 11-02 −2.6R, Gen 12 on 10-30 +8.0R); crosscheck / no quote / missed-triggered / crash / data-stale 0; 11 missed decision minutes (≈ 31,000 symbol-minutes, not priceable); Gen 39 unbooked (HK-RECON-GEN); Primary −2R latch one lot late 11-02 (HK-LATCH, −1.0R) | unintended skips **+5.4R net** (50 signals); place in line 204, −70.1R, no change; Testing cost filter 91 skips −29.8R saved; ETB −282R saved overall (T2 +36.5R); no fix, no decision |
 | **2026-11-05** | 11-03, 11-04, 11-05 (7 accounts from 11-05; UNI1 T2 from 11-04, ROLL1 from 11-05) | decision minutes of 77: 11-03 **76 / 76 / 76 / 76** / 77 (14:30 hand-over) · 11-04 **76** / 77 / 77 / **76** / 77 (14:30) · 11-05 **74 / 75 / 74 / 75 / 74**, Explore 1 **75**, Live Lab **75** (14:40 + 14:45 outage gap 12.7-14.8 min; 10:05 P / T2 130-s fetch; 10:10 Gen) (1,286 / 1,309 = 98.2%; polls < 90%: GY 78-85%, Gen 82 / 73 / **47%**, T2 85% 11-03, E1 77%, LL 81%) | 63 of 252 enabled (P 0, T1 6, T2 14, GY 0, Gen 20, E1 13, LL 10); **broken 0** (load failures 0; ROLL1 42: 19 fired day 1, 23 index / breadth gated on a crash day; IDX dip met, no 20% bounce, checked on SIP bars) | crosscheck 13 (+18.3R, Gen MU complex 11-05), buying power 83 (+15.9R: GY 59 11-03, Gen 20 at 14:50 halt-restart #152), bracket 36 (−8.1R), missed-triggered 1 (−1.1R); 23 missed decision minutes (14 outage #151, 6 at 14:30 hand-over, 3 slow fetch / poll); restart catch-up entries 61 (backlog); Gen 69 unbooked (#154) | unintended skips **+25.0R net** (133; +12.1R without the halt-restart 20); place in line 261, +0.3R, no change (Gen +11.1R, 1 day); costliest intended GY ETB +32.1R, T1 split-tape +14.9R; −2R stop −368R saved; no fix, no decision (14:30 hand-over alignment queued) |
+| **2026-11-09** | 11-06, 11-09 (both bot-dispatched; 11-06 change-over 14:38, 11-09 08:50 start + self-hand-over 14:39; EXPO1109 GEN temp moves 11-09) | decision minutes of 77: 11-06 77 / 77 / **76** / **76** / **76**, Explore 1 77, Live Lab **76** (14:35 bucket at the 14:38 change-over) · 11-09 **76** (P, 14:30 bucket at the self-hand-over) / 77 ×6 (1,073 / 1,078 = 99.5%; 08:50 start polled from 09:30:01 = 0 lost; polls < 90%: GY 70 / 67%, Gen 53 / 63%, E1 78% 11-09, LL 82 / 82%, non-decision minutes only) | 71 of 211 enabled (P 0, T1 2, T2 2, GY 0, Gen 44, E1 11, LL 12); **broken 0** (load failures 0; two up days: breadth < 0.5 / SPY- / QQQ-down gated GEN, IDX no dip, LD breadth, CWT04 / CWT05 / CWT13-z075 crash-day setups; moved GEN-261019-03 / -261026-02 in T1 p0 0.40 / 0.87) | buying power 1,025 (Gen 785 −131.7R, GY 240 +3.9R; HK-GEN-BP), bracket 16 (+6.7R), crosscheck 8 (−0.1R), missed-triggered 4 (T1 orb20_a 11-09, −1.1R); 5 missed decision minutes (≈ 48 signals, not priceable); data-stale / outage / crash / failed flatten / unbooked 0 | unintended skips **−122.3R net** (1,053; −51.1R gross; would have lost — Gen BP rejects saved money); place in line 387, −22.1R, no change (GY +14.8R, mostly twin heat_fade, split days); costliest intended Primary ETB +34.2R (L3-fromopen-FD), max positions per setup +84.1R (Gen GEN-261021-02 / GY CWT12 coil); no fix, no decision |
 
-Last audit: **2026-11-05**. Next: Mon 2026-11-09 (sessions 11-06, 11-09).
+Last audit: **2026-11-09**. Next: Thu 2026-11-12 (sessions 11-10, 11-11, 11-12).
+
+## 2026-11-09 — answer first (sessions 11-06 Fri, 11-09 Mon; 7 accounts)
+
+Script `research/ops/blocked1109_audit.py` (= blocked1105_audit.py with the dates set; empty place-in-line frames
+guarded); output `blocked1109_results.json`. Reused, not redone: `research/bdi/nightly1106`, `nightly1109` (closes,
+rejects, latches, hand-overs). No replay was run. **Both sessions were bot-dispatched** (GitHub's scheduler missed):
+11-06 changed over at 14:38 to a scheduled run; 11-09 started 08:50, polled from 09:30:01 and self-handed-over at
+14:39. Primary hit the −20R account halt ~10:55 on 11-06; the −2R latches fired on both days. **Rule changes inside the
+window** (research/ledger.jsonl): from 11-09 EXPO1109 (5 GEN setups temporarily Gen → Testing 1 / 2, revert after the
+11-10 close); ops fixes in effect from 11-06: #151 self-hand-over, #152 halt restore, #154 Gen booking. Both were up
+days (SPY ≈ +1.0% / +1.4%), so the never-fired list leans on one regime (the mirror of 11-05).
+
+- **Coverage: 1,073 of 1,078 decision minutes polled (99.5%).** The 5 misses are all at the hand-over: **11-06 14:35
+  bucket (minute 14:39) in Testing 2 / Graveyard / Gen / Live Lab** at the 14:38 change-over (gaps 1.9-4.5 min), and
+  **11-09 14:30 bucket (minute 14:34) in Primary** at the self-hand-over (14:34:13 → 14:36:01, 1.8 min; GX1 does not
+  catch up an older bucket). Size ≈ 3,500 symbol-minutes each, ~48 signals at those accounts' signal rate (GY 24, Gen 16,
+  P / T2 ~4), not priceable. Running tally of the hand-over miss since 11-02 (outage day excluded): **12 of 29
+  account-sessions** (OPS-HANDOVER alignment idea still queued; Gen's 3.5-4.2-min decision poll makes a fixed slot end
+  hard). **Late 08:50 start on 11-09: 0 coverage lost** — the run was polling at 09:30:01 in all 7, same as a normal
+  start; its only cost is the earlier slot end (14:30) that put the hand-over next to the 14:30 decision. Longest gap
+  per account ≤ 5.3 min (Gen 10:30 on 11-06, 4 gaps > 5 min that day, none on a lost decision); data-stale polls 0,
+  `data_outages` [], `flatten_failed` [], phase `closed` in all 7. **Polls < 90% of 384:** GY 268 / 257 (70 / 67%), Gen
+  203 / 243 (53 / 63%), Explore 1 300 (78%, 11-09), Live Lab 314 / 315 (82%) — non-decision minutes only. Decision poll
+  → next poll (median): P 1.3-1.4, T1 1.7-1.8, T2 1.4-1.6, **GY 3.0-3.2 (was 1.9-2.7)**, **Gen 4.2 / 3.5** (11-05 4.3),
+  E1 1.8-2.7, LL 2.5-2.6 min (watch, OPS-POLL: a decision is lost past ~6 min).
+- **Never fired: 71 of 211 enabled, broken 0.** Load failures 0 in all 7 freeze files, every module exists. Gen 44 of
+  93: all context-gated (breadth / breadth_open < 0.5, SPY- / QQQ-down, late windows) and nearly all fired through 11-05
+  (bursty on down days: e.g. GEN-261019-04 0 / 20 / 0 / 41 / 53 on 10-29 .. 11-05); context setups did fire on both days
+  at the 11-05 rate (Gen breadth 11 / 15 of 28, spy_fo 15 / 14 of 31), so nothing is stuck. T1: moved GEN-261019-03 /
+  -261026-02 (1 day, screen odds of 0 0.40 / 0.87). T2: NM-MF3-qqqdn (QQQ-down gate) and NM-HL-T75-pm-long (57 lifetime,
+  weak-day fires). Explore 1 / Live Lab 23: IDX (no dip), LD (breadth-up / index-turn), NM-RWN4 / RWR1, RW6G1, CWT04 /
+  CWT05 / CWT13-z075 / LIQ-pdl (crash-day pullback setups; CWT04's last signals were ETB skips) — same as the 11-09
+  low-rep review.
+- **Unintended blocks: 1,053 signals, −51.1R gross / −122.3R net (would have lost).** Buying power **1,025** (Gen 785,
+  −131.7R net — GEN-261026-10 172, GEN-261029-01 69; GY 240, +3.9R, 10:20-10:50 on 11-09) = HK-GEN-BP, queued; the
+  rejects acted as a capacity cap that saved money. Bracket leg past base price 16 (+6.7R; GY 15 on 11-06, CWT14 legs on
+  inverse / index ETFs). Crosscheck 8 (−0.1R; Gen OMH 7-11% on 11-09). "missed: triggered" 4 (T1 orb20_a NVDA / NVDL /
+  NVDX / ST at 09:50-09:51 on 11-09, −1.1R). No broker crash, exception, failed flatten or unbooked order.
+- **Place in line: 387 lost to a different setup, −22.1R net.** Primary 33 (MF4 non-FD 31 to its -FD twin, −27.7R),
+  T1 7 (+1.2R), T2 12 (−0.3R), **Graveyard 216 +14.8R (+0.07 vs live −0.10)** — twin heat_fade_short-FD 63 +6.5R, CWT12
+  coil k4 / k6 22 +11.7R; days split (11-06 twin held +16.6R, 11-09 −17.1R); Gen 121 −11.3R (−0.09 vs −0.17), Explore 1
+  1 (+0.2R). **No setup_order or cap change suggested** (GY lead is a twin by design plus one big coil day).
+- **Most costly intended blocks (no change):** max positions per setup +84.1R (495; Gen +59.6R GEN-261021-02 158 on 11-06,
+  GY +46.6R CWT12 coil k4 167; Explore 1 −22.2R); Primary not shortable/ETB +34.2R (442; L3-fromopen-FD 349 on L3 ETFs);
+  spread filter +16.4R overall (GY +23.8R, Primary −19.0R); opposite side held GY +12.2R; Primary account halt 11-06
+  +3.9R (92). Saved money: split-tape short gate T1 −83.4R (121, 113 on 11-09), setup −2R stop −82.0R (722; GY −78.1R,
+  Primary −3.9R), ETB −78.3R overall (GY −66.6R), twin held −27.0R (Primary MF4 −27.7R), Testing cost filter −22.9R,
+  spread vs stop −16.3R, lot cap −6.1R.
+- **No fix, no decision.** Every item already has an owner (HK-GEN-BP, OPS-HANDOVER, OPS-POLL).
+
+Educational only — not financial advice.
 
 ## 2026-11-05 — answer first (sessions 11-03 Tue, 11-04 Wed, 11-05 Thu; 7 accounts from 11-05)
 
