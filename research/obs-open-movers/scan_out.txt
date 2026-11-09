@@ -1,0 +1,16 @@
+[all] rows=300 dates=6 blackout_share=0.70
+  miss: {'blackout': 210, 'no setup signalled': 31, 'traded outside the move': 30, 'wrong side only': 13, 'skipped': 8, 'caught': 8}
+  caught=8 R_captured=+6.66 wrong_trades=26 R_wrong=-22.13
+[tradable] rows=300 dates=6 blackout_share=0.00
+  miss: {'traded outside the move': 98, 'no setup signalled': 85, 'caught': 44, 'skipped': 38, 'wrong side only': 35}
+  caught=44 R_captured=+8.16 wrong_trades=112 R_wrong=-85.49
+
+[tradable, decision 09:35] n=141 caught=7 (5%)
+  miss: {'traded outside the move': 61, 'no setup signalled': 48, 'skipped': 14, 'wrong side only': 11, 'caught': 7}
+
+[tradable, decision >= 09:40] n=159 caught=37 (23%)
+  miss: {'no setup signalled': 37, 'traded outside the move': 37, 'caught': 37, 'wrong side only': 24, 'skipped': 24}
+
+09:35 movers all days: n=141 extreme>=10:00 91%  extreme>=10:20 74%  median move_atr 1.33
+
+09:35 movers excl 2026-11-05: n=94 extreme>=10:00 87%  extreme>=10:20 63%  median move_atr 1.10
