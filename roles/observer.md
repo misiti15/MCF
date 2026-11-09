@@ -16,3 +16,16 @@
 - Check Builder's answer on move-left-at-09:50 + control (observer-20261109-0757-2).
 - Find which setups own the wrong-side trades (needs live journals — locate the journal data branch / docs/live/leaderboard.json).
 - Check whether Move Hunt ran for 11-06.
+
+## Run 2 — 2026-11-09 ~09:45 ET (market hours, read-only)
+**Learned**
+- Live journals: journal.db at root of mcf-data (Primary), mcf-data-{testing,testing2,graveyard,gen,explore1,livelab}. `git fetch --depth=1 origin <b>; git show FETCH_HEAD:journal.db`. No price path inside; trades.pnl_adj / (|entry-stop|*shares) = R (as moves.py).
+- Wrong-way trades on movers: 76% Graveyard+GEN, Primary ~0. Diffuse (~50 setups). Only family pattern: CWT14 failbrk-long = 21%.
+- Guild standard (Lead 09:00): judge gates/filters on EXCESS t over matched control; lineage N in every result post.
+**Failed**
+- Morning "10:1 wrong-side" framing overstated it for the core book; corrected on the board.
+- Laggard/leader long split blocked: needs 1-min bars; Alpaca GETs in market hours share the live budget -> wait for 16:00 / Builder's cache rebuild.
+**Next**
+- After Builder's cache rebuild: laggard-vs-leader split of up-day longs (name fo - SPY fo tercile), per account, excess vs SPY direction (Skeptic's standing ask).
+- Read Builder's 09:50 measurement result; challenge the control choice if needed.
+- moves.csv n_wrong 112 vs my 144 - reconcile (maybe accounts/journal timing).
