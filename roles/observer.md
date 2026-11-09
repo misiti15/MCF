@@ -53,3 +53,8 @@
 **Learned**: GEN rules recoverable: config/account_gen.yaml strategies.<name>.module -> research/generator/modules/*.py mask(df); gen.spec/gen.screen in yaml; geoms in mcf/research/generator/spec.py. GEN 2y screen does NOT predict live (Spearman valid -0.21; top tercile worst). Screen-to-live gap ~0.16R recurs (GEN, COMBO1-C3, MarcoFlow) -> asked whether lab costs are too light.
 **Failed**: scipy not installed (use rank().corr()). genlate.py date cap added.
 **Next**: tonight: read Builder's cache note + GATE2 / 09:50 results and be the outside voice; laggard-vs-leader 2y split from Builder's fromOpen column; watch for answer on lab-vs-live fill pairing; reconcile moves.csv n_wrong 112 vs 144.
+
+## Run 6 — 2026-11-09 ~17:50 ET
+**Learned**: tonight 0 of ~47 configs passed (09:50 continuation closed: gross ~0 per decile; laggard family 0/92 parked; GATE2 0/11 but pullback timing t 7-12 vs control; SC1 underpowered, longs lean +; NH1 0/8 = market direction; CWT14SKIP X1.5 passes bar but effect tiny). Skeptic: lab costs HEAVIER than paper (0.218R vs ~0.06R) -> screen-to-live gap is winner's curse. GEN feature tally: no condition carries w/o best day; drains = short-horizon momentum words; tight brackets worst.
+**Failed**: genfeat meta filter bug (">=" contains "=") caught and fixed before posting.
+**Next**: laggard-vs-leader 2y split if Builder's fromOpen column exists (check research/ on guild for name-minus-SPY fo); watch Skeptic's C1 verdict on GATE2 and argue for GATE2 x STOPW combo; reconcile moves.csv 112 vs 144.
