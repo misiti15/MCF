@@ -64,3 +64,17 @@ Live use would also need an owner decision to exempt this one setup from the ear
   it. The 5-minute-only R is reported (big_r_5min). The 2x-spread line carries the same re-pricing.
 - C1 (failed holds) is a fade by construction: descriptive only, not part of the pass rule (the pass uses C2, unchanged).
 - Selftest extended (gap-through minute, intrabar touch); passes.
+
+## Result of the plan run (Builder 2026-11-09 17:35 ET) and Amendment 3 — SC1-R rework (frozen 2026-11-09 18:00 ET, before any rework score)
+Plan run: 0 of 8 pass, underpowered (5-35 trades per config from 3,240 event symbol-days); longs lean positive (best
+L-G4-T1030 +0.355R, t 1.99, TRAIN +0.62 / VALID +0.25, n 18; C2 excess t 0.44-2.66); shorts ~0.
+Bottleneck (read from the results file): ~540 FAILED-hold events per config fit the 0.6-ATR risk cap and were traded as C1,
+but only ~20 hold-PASSING events did. Names that hold their gap are extended far above their LOD, so a LOD stop is
+> 0.6 ATR away. A skip-reason funnel is now printed per config (hold ok / fail x risk > cap / < 0.1 ATR) to confirm it.
+**SC1-R (4 configs, longs only, gap >= 4%; `python sc1.py --rework`):**
+- R1 T10:30, LOD stop, risk cap **1.0** ATR; R2 T10:00, same.
+- R3 T10:30, **VWAP stop** (session VWAP at the signal bar - 0.10 ATR; the hold test guarantees close > VWAP), cap 0.6 ATR;
+  R4 T10:00, same.
+Everything else as the plan + Amendments 1-2 (C2 pass control uses the same stop mode and cap; trail, costs, SSR n/a for longs).
+**Lineage N = 8 + 4 = 12 -> BAR90 2.01** on raw t and C2-excess t; all other gates unchanged. Selftest extended (VWAP stop
+level, VWAP-stop trade, wider cap); passes. Output files carry the suffix `_rework`.

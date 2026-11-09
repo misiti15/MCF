@@ -15,6 +15,10 @@ import numpy as np, pandas as pd
 ROOT = Path("/home/user/MCF"); HERE = Path(__file__).resolve().parent
 GRID = [(g, T, side) for g in (0.04, 0.06) for T in (1000, 1030) for side in (1, -1)]
 N_LINEAGE = 8
+# SC1-R rework (plan Amendment 3, frozen before any rework score): longs, gap >= 4%, (T, cap, stop) -> lineage N 12
+GRID_R = [(0.04, 1030, 1, 1.0, False), (0.04, 1000, 1, 1.0, False), (0.04, 1030, 1, 0.6, True), (0.04, 1000, 1, 0.6, True)]
+REWORK = "--rework" in sys.argv
+if REWORK: N_LINEAGE = 12
 END_MIN = 570 + 5 * np.arange(1, 79)
 END_TOD = END_MIN // 60 * 100 + END_MIN % 60
 I = {int(t): i for i, t in enumerate(END_TOD)}
@@ -43,15 +47,23 @@ def hold_ok(a, s, iT, pc):
     return bool(s * (c - o0) > 0 and s * (c - vwap) > 0 and s * (c - (pc + 0.5 * (o0 - pc))) >= 0)
 
 
-def trade(a, s, iT, atr, spread_mult=1.0):
+def stop_level(a, s, iT, atr, vwap_stop=False):
+    """LOD/HOD so far -/+ 0.05 ATR (plan), or session VWAP at the signal bar -/+ 0.10 ATR (rework SC1-R)."""
+    if vwap_stop:
+        v = float(np.nansum(a[:iT + 1, 4])); pv = float(np.nansum(a[:iT + 1, 5]))
+        return (pv / v - s * 0.10 * atr) if v > 0 else np.nan
+    ext = float(np.nanmin(a[:iT + 1, 2])) if s > 0 else float(np.nanmax(a[:iT + 1, 1]))
+    return ext - s * 0.05 * atr
+
+
+def trade(a, s, iT, atr, spread_mult=1.0, cap=0.6, vwap_stop=False):
     """signal bar iT -> (net R, gross R, kind, entry, cost R, exit bar, stop at exit, R) entering at bar iT+1 open; None if skipped."""
     j = iT + 1
     if j > I1555 or not (atr and np.isfinite(atr) and atr > 0): return None
     e = float(a[j, 0])
     if not np.isfinite(e) or e <= 0: return None
-    ext = float(np.nanmin(a[:iT + 1, 2])) if s > 0 else float(np.nanmax(a[:iT + 1, 1]))
-    stop = ext - s * 0.05 * atr; R = s * (e - stop)
-    if R > 0.6 * atr or R < 0.10 * atr: return None
+    stop = stop_level(a, s, iT, atr, vwap_stop); R = s * (e - stop)
+    if not np.isfinite(R) or R > cap * atr or R < 0.10 * atr: return None
     kind, xp, xb = "time", float(a[I1555, 3]), I1555; hit1 = False
     for i in range(j, I1555 + 1):
         o, h, l, c = (float(x) for x in a[i, :4])
@@ -66,6 +78,17 @@ def trade(a, s, iT, atr, spread_mult=1.0):
     cost = (SLIP_PS + e * SLIP_BPS) * m + spread_mult * SPREAD_BPS * e * m + SLIP_PS + e * SLIP_BPS + (STOP_EXTRA if kind == "stop" else 0)
     g = s * (xp - e) / R
     return g - cost / R, g, kind, e, cost / R, xb, stop, R
+
+
+def skip_reason(a, s, iT, atr, cap=0.6, vwap_stop=False):
+    """why trade() returned None (Lead lead-20261109-1658-2: log skips by reason)."""
+    j = iT + 1
+    if j > I1555 or not (atr and np.isfinite(atr) and atr > 0): return "no_bar_or_atr"
+    e = float(a[j, 0])
+    if not np.isfinite(e) or e <= 0: return "no_bar_or_atr"
+    R = s * (e - stop_level(a, s, iT, atr, vwap_stop))
+    if not np.isfinite(R): return "no_vwap"
+    return f"risk_gt_{cap}atr" if R > cap * atr else ("risk_lt_0.1atr" if R < 0.10 * atr else "other")
 
 
 def reprice_stop(res, m1, s):
@@ -112,6 +135,10 @@ def selftest():
     n2, g2 = reprice_stop(r, m1, 1); assert abs(g2 - (104.8 - 107) / 1.7) < 1e-4 and n2 < r[0], (g2, r)
     m1b = np.full((390, 4), 107.0, np.float32); m1b[k0 + 1, 2] = 105.0         # touches intrabar -> stop price kept
     assert abs(reprice_stop(r, m1b, 1)[1] - r[1]) < 1e-6
+    vs = stop_level(a, 1, iT, 4.0, True); assert abs(vs - (float(a[:iT + 1, 5].sum()) / float(a[:iT + 1, 4].sum()) - 0.4)) < 1e-4
+    rv = trade(a, 1, iT, 4.0, vwap_stop=True); assert rv is not None and abs(rv[7] - (107.0 - vs)) < 1e-4, rv   # R = entry - VWAP stop
+    assert trade(wide, 1, iT, 4.0) is None and trade(wide, 1, iT, 4.0, cap=1.1) is not None                  # cap 1.0+ admits it
+    print("selftest ok: VWAP stop level, VWAP-stop trade, wider cap")
     print("selftest ok: 1-min stop re-pricing (gap-through minute, intrabar touch)")
     print("selftest ok: hold test (open, VWAP, half gap, short), trade (time, stop, +1R trail, trailed stop, risk skip), ETP names")
 
@@ -225,33 +252,39 @@ def main():
         PB[s] = bars(s, set(ev_days))
         if k % 50 == 0: print(f"control bars {k}/{len(POOL)}", flush=True)
 
-    def c2_for(d, s, iT):
+    def c2_for(d, s, iT, cap=0.6, vw=False):
         cands = [c for c in POOL if d in PB[c] and c not in ev_by_day.get(d, set()) and (c, d) in INFO
                  and INFO[(c, d)][2] >= MIN_ADV and np.isfinite(INFO[(c, d)][1])]
         for _ in range(5):
             if not cands: return None
-            c = cands[int(RNG.integers(len(cands)))]; res = trade(PB[c][d], s, iT, INFO[(c, d)][1])
+            c = cands[int(RNG.integers(len(cands)))]; res = trade(PB[c][d], s, iT, INFO[(c, d)][1], cap=cap, vwap_stop=vw)
             if res is not None: return res
         return None
 
     rows, ALLT = [], []
     DATES = sorted(SPYD.index); NS = len(DATES)
     print(f"sessions {NS}; lineage N {N_LINEAGE}: full bar {T_FULL}, BAR90 {T90}")
-    for G_, T_, side in GRID:
-        nm = f"SC1-{'L' if side > 0 else 'S'}-G{int(G_ * 100)}-T{T_}"; iT = I[T_]; T = []; C1 = {}
+    for G_, T_, side, cap, vw in (GRID_R if REWORK else [g + (0.6, False) for g in GRID]):
+        nm = f"SC1-{'L' if side > 0 else 'S'}-G{int(G_ * 100)}-T{T_}" + (f"-cap{cap}-{'vwap' if vw else 'lod'}" if REWORK else "")
+        iT = I[T_]; T = []; C1 = {}; SK = {}
         for (s, d), (a, gap, p, atr, bl) in EVT.items():
             if side * gap < G_: continue
-            ok = hold_ok(a, side, iT, p); res = trade(a, side, iT, atr)
-            if res is None: continue
+            ok = hold_ok(a, side, iT, p); res = trade(a, side, iT, atr, cap=cap, vwap_stop=vw)
+            if res is None:
+                k_ = ("hold_ok+" if ok else "hold_fail+") + skip_reason(a, side, iT, atr, cap, vw); SK[k_] = SK.get(k_, 0) + 1
+                continue
+            if not ok: SK["hold_fail+traded_as_C1"] = SK.get("hold_fail+traded_as_C1", 0) + 1
             r5 = res[0]
             if abs(gap) > 0.10:                                              # Amendment 2: 1-min stop re-pricing
                 nr, ng = reprice_stop(res, M1.get((s, d)), side); res = (nr, ng) + tuple(res[2:])
             ssr = bool(side < 0 and (SSRP.get((s, d), False) or float(np.nanmin(a[:iT + 1, 2])) <= 0.90 * p))
             if not ok: C1.setdefault(d, []).append(res[0]); continue
-            c2 = c2_for(d, side, iT); r2x = trade(a, side, iT, atr, spread_mult=2.0)[0]
+            c2 = c2_for(d, side, iT, cap, vw); r2x = trade(a, side, iT, atr, spread_mult=2.0, cap=cap, vwap_stop=vw)[0]
             ab = abs(gap); bucket = "4-6" if ab < .06 else ("6-10" if ab < .10 else ">10")
             T.append(dict(date=d, symbol=s, side=side, gap=round(gap, 4), bucket=bucket, blackout=bl, r=res[0], gross=res[1],
                           kind=res[2], cost_r=res[4], r_2x=r2x - (r5 - res[0]), r_5min=r5, ssr=ssr, c2=c2[0] if c2 else np.nan))
+        SK["entered"] = len(T)
+        print(f"{nm} event funnel: " + ", ".join(f"{k} {v}" for k, v in sorted(SK.items())), flush=True)
         t = pd.DataFrame(T)
         if not len(t): rows.append(dict(config=nm, n=0)); continue
         t["c1"] = t.date.map(lambda d: float(np.mean(C1[d])) if d in C1 else np.nan)
@@ -292,9 +325,10 @@ def main():
           "\nhave adv20 >= $60M, so none is extended-tier (3x slippage rule not triggered)."
           "\nAmendment 2: shorts on SSR names (touched -10% vs prior close before entry, or SSR carried from the prior session) are"
           "\nreported (ssr_n / ssr_r) and EXCLUDED from scoring; stops on > 10% gaps re-priced on 1-min bars (big_r_5min = before).")
-    print(f"configs {len(GRID)} (lineage N {N_LINEAGE}), BAR90 {T90}: pass {int(R.bar90.fillna(False).sum())}")
-    R.to_csv(HERE / "sc1_results.csv", index=False)
-    if ALLT: pd.concat(ALLT).to_csv(HERE / "sc1_trades.csv", index=False)
+    print(f"configs {len(GRID_R) if REWORK else len(GRID)} (lineage N {N_LINEAGE}), BAR90 {T90}: pass {int(R.bar90.fillna(False).sum())}")
+    sfx = "_rework" if REWORK else ""
+    R.to_csv(HERE / f"sc1_results{sfx}.csv", index=False)
+    if ALLT: pd.concat(ALLT).to_csv(HERE / f"sc1_trades{sfx}.csv", index=False)
     print("Educational only - not financial advice.")
 
 
