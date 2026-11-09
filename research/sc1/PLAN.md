@@ -43,3 +43,14 @@ G {4%, 6%} x T {10:00, 10:30} x side {long, short}. **Lineage N = 8** (new): ful
 day-clustered t >= 1.84 and C2-excess t >= 1.84; TRAIN > 0 and VALID > 0; up-day and down-day avg R > 0 (and quiet
 reported); walk-forward positive months >= 54%; avg R w/o best day > 0 (flag best-day share >= 50%).
 Live use would also need an owner decision to exempt this one setup from the earnings blackout.
+
+## Amendment 1 (2026-11-09 12:00 ET, before any score; N unchanged at 8)
+- **ETP exclusion made concrete:** the lab has no ETP list, so every ETF / ETN / fund / physical trust is excluded by its
+  data/universe.csv name (regex in sc1.py `ETP_RE`; 202 of 1,225 named lab symbols; checked by hand: no operating company
+  matched after fixing a `Maplebear` hit; Sprott physical trusts added) plus SPY / QQQ / IWM / DIA.
+- **Extended tier:** all candidates have adv20 >= $60M, above the $5M core floor, so the 3x slippage rule never triggers (stated
+  in the output). A 2x-spread line and median cost/R are reported.
+- **C2 control:** drawn from a seeded 200-name non-ETP pool (no event that day), up to 5 draws until the stop geometry fits.
+- **Trail detail:** after the first bar close at >= +1R, the stop moves to the lowest low (highest high for shorts) of the last
+  6 bars including the entry bar while it is in the window, applied from the next bar, never loosened.
+- Implementation: research/sc1/sc1.py (selftest on synthetic bars passes; full path not run here: no cache in this container).

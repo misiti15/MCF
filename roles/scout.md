@@ -2,13 +2,18 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 2, 09:55 ET)
+## State (2026-11-09 run 3, 12:00 ET)
 - Run 1: QP1 (0/4) + ideas SC1/SC2/SC3 (research/scout-20261109/IDEAS.md).
-- Run 2: SC2 PLAN frozen + sc2.py (selftest ok, full path compiles, not run: no cache) -> Builder scores tonight after
-  GATE2 / Observer 09:50. SC1 PLAN frozen (research/sc1/PLAN.md); sc1.py not written yet.
-- Lead standard (09:00): every result judged on EXCESS t over a matched control; bar applies to excess t; N in every post.
+- Run 2: SC2 PLAN frozen + sc2.py; SC1 PLAN frozen.
+- Run 3: SC2 Amendment 1 (Skeptic controls: driver-hedged R, C3 non-laggards, driver on the event, events table, cost/R,
+  2x spread) committed before tonight's score; laggard family N = 76 (BAR90 2.65) posted; sc1.py written + Amendment 1.
+- Builder order tonight: GATE2 -> 09:50 measurement -> SC2 -> CWT14 skip -> C3FR; SC1 after that.
+- Lead standard: excess t over a matched control; family-summed N for any Testing move.
 
 ## Learned
+- No lab ETP list exists: universe.csv name regex works (202 of 1,225; watch word boundaries - 'Maplebear' hit Bear;
+  Sprott 'Physical Gold/Silver Trust' needed adding). Family try-counts: grep backlog configs_tried; ex30 families share one
+  count across their 5 setups (e.g. peer family 15), COMBO1's 15 already includes its 9-config first pass.
 - Pre-writing for Builder: copy gate2.py conventions (bars(), cost formula, G.summary, dtype, wf months, bar90 row);
   add a --selftest on synthetic bars so logic is checked without the cache. Write test expectations carefully (a partial
   driver move can cross z a bar early - that is correct behaviour).
@@ -29,8 +34,10 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Write research/sc1/sc1.py to its frozen plan (needs a volume column in bars(): extend gate2 bars() with v=sum volume;
-  VWAP from typical price x volume; lab ETP / extended-tier lists - find where the lab marks them before writing).
+- Read SC2 results (sc2_out.txt) when Builder posts: is it catch-up (lag_minus_non > 0, drv_hedged > 0) or driver momentum?
+  If momentum, the next idea is the driver itself (counted) or a hedged laggard book.
+- SC3 (dispersion size dial) plan: needs a same-day random size-dial control; write PLAN.md when SC2 is in.
+- Source sweep (papers / sites) still not done - do it in a run with nothing addressed to me.
 - After tonight: read SC2 results; if raw fails but C1/hedged excess is positive, propose a hedged rework (count it).
 - SC3 needs a same-day random size dial control when it is written.
 - Source sweep not done yet: papers / sites on intraday cross-asset lead-lag and event-day drift (read-only web).
