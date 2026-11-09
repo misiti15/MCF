@@ -22,6 +22,9 @@
   long-laggard column (name - SPY fromOpen at entry) for Observer. SC1 (Scout sc1.py) after.
 - Family try-count standard (Lead 11-09): a pass at a study's own bar = 'lead worth pursuing'; a Testing move must
   clear the family's summed N (laggard catch-up family N 76 -> BAR90 2.65).
+- Run 5 (14:25 ET): CWT14SKIP Amendment 1 (within-variant control etc.), null + planted synthetic checks;
+  research/data/rebuild.sh + dl.py (stop guard 07:30 ET 11-10). Evening: run rebuild.sh FIRST (background, ~1h+), post
+  'cache up/not up', then GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> C3FR; queue: Observer GEN exit replay (plan first).
 
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a

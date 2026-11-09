@@ -29,3 +29,9 @@ these 2 = **N 10 → full bar 2.15, BAR90 1.93**. (Own-only N 2 → bar 1.50, sh
 Excess t >= 1.93, TRAIN and VALID excess > 0, excess w/o best day > 0, retention 80% / 90% met, and more variants
 better than worse. Also written: per-trade `dist` and `fromOpen` at entry for the whole pool (`cwt14_dist.csv`),
 the shared column Observer asked for (long-laggard split).
+
+## Amendment 1 (2026-11-09 ~14:25 ET, before any score; Skeptic skeptic-20261109-1250-1, Lead lead-20261109-1258-3)
+Reporting / control only, N stays 10. (1) The random block is drawn **within the same variant**: each day, for each
+variant with k_v skips, k_v random trades of that variant that day (200 draws). (2) Retention (kept share, kept share
+of the variant's own top-decile winners) reported per variant. (3) Frame-join miss share (misses count as kept)
+reported by variant and by month. (4) Skip counts and excess by SPY up / down / quiet day. Forward tally from 11-10.
