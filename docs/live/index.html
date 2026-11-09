@@ -155,6 +155,60 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div><div class="gk">Open decisions for you</div><div class="gv" id="gl-dec">…</div><div class="gn" id="gl-dec-n"></div><div class="gn"><a href="#dec-card">Your decisions ↓</a></div></div>
     <div><div class="gk">Alerts</div><div class="gv" id="gl-alerts">…</div><div class="gn" id="gl-alerts-n"></div></div></div>
 </div>
+<!-- Research Guild (owner 2026-11-09): what the five research bots (Scout, Builder, Skeptic, Observer, Lead) discussed,
+     tested and learned. Source: the Lead's summary on the data branch mcf-guild (summary/latest.json, PROTOCOL.md). -->
+<style>
+#guild-card .gd-head { font-weight: 600; overflow-wrap: anywhere; }
+#guild-card ul { margin: 6px 0 4px; padding-left: 18px; font-size: 13px; }
+#guild-card ul li { overflow-wrap: anywhere; }
+#guild-card .gd-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+#guild-card .gd-chip { font-size: 12px; padding: 1px 9px; border-radius: 999px; border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+#guild-card .gd-chip b { font-weight: 600; }
+#guild-card .gd-next { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
+#guild-card .gd-lbl { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+#guild-card .gd-stale { color: var(--bad); }
+#guild-card details summary { cursor: pointer; font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+#guild-card details dl { margin: 4px 0 0; font-size: 13px; } #guild-card details dt { font-weight: 600; margin-top: 4px; }
+#guild-card details dd { margin: 0 0 0 12px; color: var(--ink-2); overflow-wrap: anywhere; }
+#guild-card .gd-foot a { color: var(--s1); }
+</style>
+<div class="card" id="guild-card" role="region" aria-label="Research Guild"><h2>Research Guild <span id="guild-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
+  <div class="why">Five research bots (Scout, Builder, Skeptic, Observer, Lead) hunting for the next setup: what they discussed, tested and learned this session.</div>
+  <div class="gd-lbl">Research only — no live changes</div>
+  <div class="gd-head" id="guild-head">Starting…</div>
+  <ul id="guild-bullets"></ul>
+  <div class="gd-chips" id="guild-progress"></div>
+  <div class="gd-next" id="guild-next"></div>
+  <details id="guild-roles"><summary>By role</summary><dl id="guild-roles-list"><dd>No role notes yet.</dd></dl></details>
+  <div class="note gd-foot"><span id="guild-link"></span> Educational only — not financial advice.</div>
+</div>
+<script>
+(() => {
+  const GUILD = "https://raw.githubusercontent.com/misiti15/MCF/mcf-guild/", q = s => document.querySelector(s);
+  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const ROLES = [["scout", "Scout"], ["builder", "Builder"], ["skeptic", "Skeptic"], ["observer", "Observer"], ["lead", "Lead"]];
+  const CHIPS = [["ideas", "ideas"], ["tested", "tested"], ["configs", "configs"], ["passed", "passed"], ["forward", "forward"]];
+  async function run() {
+    const s = await fetch(GUILD + "summary/latest.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+    if (!s || typeof s !== "object" || !s.headline) {   // absent or empty: the guild has not written its first summary yet
+      q("#guild-head").textContent = "Starting…"; q("#guild-asof").textContent = ""; return;
+    }
+    const t = Date.parse(s.updated || ""), age = isNaN(t) ? null : (Date.now() - t) / 3600000;
+    q("#guild-asof").innerHTML = s.updated ? `· last update ${e(s.updated)}${age != null && age > 36 ? ' <span class="gd-stale">(stale)</span>' : ""}` : "";
+    q("#guild-head").textContent = s.headline;
+    q("#guild-bullets").innerHTML = (Array.isArray(s.bullets) ? s.bullets : []).slice(0, 5).map(b => `<li>${e(b)}</li>`).join("");
+    const p = s.progress || {};
+    q("#guild-progress").innerHTML = CHIPS.map(([k, l]) => `<span class="gd-chip"><b>${e(p[k] ?? 0)}</b> ${l}</span>`).join("");
+    q("#guild-next").innerHTML = s.next ? `<b>Next:</b> ${e(s.next)}` : "";
+    const br = s.by_role || {}, rows = ROLES.filter(([k]) => br[k]).map(([k, l]) => `<dt>${l}</dt><dd>${e(br[k])}</dd>`);
+    q("#guild-roles-list").innerHTML = rows.length ? rows.join("") : "<dd>No role notes yet.</dd>";
+    const day = /^\d{4}-\d{2}-\d{2}$/.test(s.session || "") ? s.session : null;
+    q("#guild-link").innerHTML = day ? `<a href="https://github.com/misiti15/MCF/blob/mcf-guild/summary/${day}.md" target="_blank" rel="noopener">Summary for ${day}</a> ·` : "";
+  }
+  run();
+  setInterval(run, 300000);
+})();
+</script>
 <!-- Your decisions (owner 2026-10-22: "with all the tasks and new ideas it is very challenging to understand where to look to make
      the most informed decision"): every OPEN owner decision in one place - code, what it does, the recommendation, 2-3 key
      numbers and the research note. Source: docs/live/decisions.json (hand-maintained; the nightly brief refreshes it). -->

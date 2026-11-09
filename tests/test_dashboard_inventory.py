@@ -30,6 +30,8 @@ IDS = [
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
     "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
+    "guild-card", "guild-asof", "guild-head", "guild-bullets", "guild-progress", "guild-next", "guild-roles",
+    "guild-roles-list", "guild-link",   # added 2026-11-09 (Research Guild)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -43,6 +45,7 @@ TITLES = [
     "At a glance",          # added 2026-10-21
     "Your decisions",       # added 2026-10-22
     "Claude's Team (shadow)",   # added 2026-11-05
+    "Research Guild",   # added 2026-11-09
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -108,6 +111,7 @@ SOURCES = [
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
     "mcf-data-team/", "team/latest.json", "picks/latest.json",   # added 2026-11-05 (Claude's Team (shadow))
+    "https://raw.githubusercontent.com/misiti15/MCF/mcf-guild/", "summary/latest.json",   # added 2026-11-09 (Research Guild)
 ]
 
 
@@ -235,3 +239,18 @@ def test_eod_streak_lines_name_the_current_account():
 def test_setup_panel_has_last_10_sessions():
     """Owner 2026-10-29: the setup panel shows the last 10 traded sessions (bars + daily table)."""
     assert 'id="sd-recent"' in HTML and "async function recent(code, s)" in HTML
+
+
+def test_research_guild_card():
+    """Owner 2026-11-09: Research Guild card high on the page (right after At a glance), reading mcf-guild/summary/latest.json:
+    headline, <= 5 bullets, progress chips, Next, collapsible By role, last update, day's summary link, both labels,
+    "Starting…" when the summary is absent."""
+    i = HTML.index('id="guild-card"')
+    assert HTML.index('id="glance"') < i < HTML.index('id="dec-card"')
+    card = HTML[i:]
+    card = card[:card.index("</script>")]
+    for needle in ("Research only — no live changes", "Educational only — not financial advice", "Starting…",
+                   "summary/latest.json", ".slice(0, 5)", "<summary>By role</summary>", "Next:", "last update",
+                   "/summary/${day}.md", '"ideas"', '"tested"', '"configs"', '"passed"', '"forward"', "(stale)"):
+        assert needle in card, needle
+    assert "localStorage" not in card
