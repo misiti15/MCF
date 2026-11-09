@@ -68,8 +68,8 @@ for k, sym in enumerate(SYMS):
                 xp = cc[j]; kind = 0
             tier = 3.0 if e < 5 else 1.0; mult = float(G.tod_cost_mult(np.array([950]))[0])
             cost = tier * ((G.SLIP_PS + e * G.SLIP_BPS) * mult + SPREAD * e * mult + G.SLIP_PS + xp * G.SLIP_BPS + (G.STOP_EXTRA if kind else 0))
-            res[name] = s * (xp - e) / R - cost / R
-        rows.append((sym, d, s, z, res.get("X1130", np.nan), res.get("X1555", np.nan)))
+            res[name] = s * (xp - e) / R - cost / R; res["g" + name] = s * (xp - e) / R   # gross (reporting, Skeptic 11-09)
+        rows.append((sym, d, s, z, res.get("X1130", np.nan), res.get("X1555", np.nan), res.get("gX1130", np.nan), res.get("gX1555", np.nan)))
         if (sym, d) in mvkeys:
             side, ext = mvkeys[(sym, d)]; sm = 1 if side == "long" else -1
             je = np.searchsorted(mx, hm(ext), side="right") - 1
@@ -81,7 +81,7 @@ for k, sym in enumerate(SYMS):
                                 left_to_1555=fav(len(mx) - 1) / A, adverse_before=adv / A, ext=ext))
     if k % 200 == 0: print(f"{k}/{len(SYMS)}", flush=True)
 
-T = pd.DataFrame(rows, columns=["symbol", "date", "side", "z", "X1130", "X1555"])
+T = pd.DataFrame(rows, columns=["symbol", "date", "side", "z", "X1130", "X1555", "gX1130", "gX1555"])
 T["absz"] = T.z.abs(); T["dec"] = pd.qcut(T.absz, 10, labels=False)
 cuts = T.groupby("dec").absz.agg(["min", "max"]).round(3)
 M = pd.DataFrame(mov)
@@ -100,7 +100,8 @@ for dec, g in T.groupby("dec"):
         va_ = G.summary(g[g.date > SPLIT].assign(r=g[x]).dropna(subset=["r"]))
         out.append(dict(dec=dec, absz_lo=cuts.loc[dec, "min"], absz_hi=cuts.loc[dec, "max"], exit=x, n=s_["n"], avg_r=s_["exp_r"], t=s_.get("t"),
                         wo_best=s_.get("ex_best_day"), train=tr_.get("exp_r"), valid=va_.get("exp_r"),
-                        long=round(g[g.side > 0][x].mean(), 4), short=round(g[g.side < 0][x].mean(), 4)))
+                        long=round(g[g.side > 0][x].mean(), 4), short=round(g[g.side < 0][x].mean(), 4),
+                        gross=round(g['g' + x].mean(), 4), gross_valid=round(g[g.date > SPLIT]['g' + x].mean(), 4)))
 O_ = pd.DataFrame(out); print(O_.to_string(index=False))
 if len(M):
     md = sorted(M.dec.unique()); w = M.dec.value_counts(normalize=True)
