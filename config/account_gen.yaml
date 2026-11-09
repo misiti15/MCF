@@ -68,7 +68,6 @@ live:
   - GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short
   - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short
   - GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long
-  - GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long
   - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short
   - GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long
   - GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long
@@ -80,7 +79,6 @@ live:
   - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short
   - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long
   - GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long
-  - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short
   - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long
   - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short
   - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long
@@ -90,7 +88,6 @@ live:
   - GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long
   - GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long
   - GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short
-  - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long
   - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long
   - GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short
   - GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long
@@ -103,11 +100,9 @@ live:
   - GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short
   - GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short
   - GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short
-  - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short
   - GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short
   - GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long
   - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short
-  - GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long
   - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long
   - GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long
   - GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long
@@ -255,7 +250,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:
-    enabled: true
+    enabled: false   # EXPO1109 temporary move to Testing 1 2026-11-09 (owner exposure window 11-09..11-10); back to Gen after the 11-10 close
     type: lab
     module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
     context:
@@ -1501,7 +1496,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdh-p05-lowvol-short
         n_tried_in_run: 3000
   GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long:
-    enabled: true
+    enabled: false   # EXPO1109 temporary move to Testing 1 2026-11-09 (owner exposure window 11-09..11-10); back to Gen after the 11-10 close
     type: lab
     module: research/generator/modules/GEN-261021-02-barrngatr-hi-open-long.py
     context:
@@ -2485,7 +2480,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short:
-    enabled: true
+    enabled: false   # EXPO1109 temporary move to Testing 2 2026-11-09 (owner exposure window 11-09..11-10); back to Gen after the 11-10 close
     type: lab
     module: research/generator/modules/GEN-261022-07-z12-lo-am-short.py
     context:
@@ -3642,7 +3637,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
   GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long:
-    enabled: true
+    enabled: false   # EXPO1109 temporary move to Testing 1 2026-11-09 (owner exposure window 11-09..11-10); back to Gen after the 11-10 close
     type: lab
     module: research/generator/modules/GEN-261026-02-volratio-hi-late-long.py
     context:
@@ -3709,7 +3704,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short:
-    enabled: true
+    enabled: false   # EXPO1109 temporary move to Testing 2 2026-11-09 (owner exposure window 11-09..11-10); back to Gen after the 11-10 close
     type: lab
     module: research/generator/modules/GEN-261026-03-newlod-lunch-short.py
     context:

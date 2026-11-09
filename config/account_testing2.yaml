@@ -58,6 +58,8 @@ live:
     - CWT14-failbrk-pdl-p10-lowvol-long   # back from Primary 2026-10-27
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
     - RW3S-gapdn-flowsell-short-FD   # owner RW3S 2026-11-03: observation, 5 live sessions
+    - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # EXPO1109 temp from Gen (to 11-10 close)
+    - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short   # EXPO1109 temp from Gen (to 11-10 close)
 strategies:
   # ---- owner RW3S 2026-11-03 (research/bdi/night1102/simple): RW3-FD without RSI(5) > 80; observation for 5 live sessions,
   #      then re-evaluate. Did NOT pass BAR90 or the twin bar; a down-day bet.
@@ -775,3 +777,139 @@ strategies:
     window: [950, 1500]
     prefilter: new_high_100m
     scale_out_r: null
+  # ---- EXPO1109 (owner 2026-11-09; ledger 2026-11-09-expo1109-gen-temp-moves): TEMPORARY moves from Gen for the
+  # 11-09 / 11-10 exposure window (Gen halted / capped them: research/exposure_lab/NOTES.md). Back to Gen after the 11-10 close.
+  GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-07-z12-lo-am-short.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - atr_d_pct
+          - '>='
+          - 3.6
+        - - breadth_open
+          - '>'
+          - 0.5
+        - - flow_shift
+          - <=
+          - -0.96
+        - - z12
+          - <=
+          - -1.9
+      key: 8b3511f59fe2c427
+      screen:
+        train:
+          n: 1175
+          exp_r: 0.0315
+          t: 0.41
+          win: 0.543
+          days: 135
+        valid:
+          n: 1456
+          exp_r: 0.0105
+          t: 0.12
+          win: 0.536
+          days: 102
+        all:
+          n: 2631
+          exp_r: 0.0199
+          t: 0.34
+          win: 0.539
+          days: 237
+        per_day: 6.176
+        per_day_valid: 7.583
+        exp_up: -0.2794
+        exp_down: 0.4525
+        exp_flat: 0.1385
+        excess_train: 0.0612
+        excess_valid: -0.0137
+        tier1: true
+        score: 0.12
+        max_overlap: 0.206
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3000
+  GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-03-newlod-lunch-short.py
+    context:
+    - breadth_open
+    min_adv: 150000000
+    window:
+    - 1130
+    - 1400
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: short
+        window: LUNCH
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth_open
+          - '>'
+          - 0.5
+        - - flow3
+          - <=
+          - -0.37
+        - - fromOpen_atr
+          - <=
+          - -0.78
+        - - new_lod
+          - ==
+          - 1.0
+      key: 52221d5956d57007
+      screen:
+        train:
+          n: 582
+          exp_r: 0.0241
+          t: 0.35
+          win: 0.503
+          days: 116
+        valid:
+          n: 785
+          exp_r: 0.0103
+          t: 0.16
+          win: 0.471
+          days: 112
+        all:
+          n: 1367
+          exp_r: 0.0162
+          t: 0.34
+          win: 0.485
+          days: 228
+        per_day: 3.209
+        per_day_valid: 4.089
+        exp_up: -0.0893
+        exp_down: 0.4506
+        exp_flat: 0.0906
+        excess_train: 0.169
+        excess_valid: 0.1027
+        tier1: true
+        score: 0.41
+        max_overlap: 0.447
+        overlap_with: CWT13-vwapstretch-z05-long
+        n_tried_in_run: 3000

@@ -2,8 +2,10 @@
 (research/preval_1107/NOTES.md) plus the top 20 by total R over the last 15 sessions (10-19..11-06, all 7 accounts) get
 the most exposure possible in the 11-09 and 11-10 sessions, then PV is reconfirmed after the 11-10 close.
 
-Pin: until the 11-10 session is over, each of these setups stays enabled in its current home and in that account's
-setup_order, and is not switched on anywhere else (no moves, no copies). After 2026-11-10 the pin lapses (test skips).
+Pin: until the 11-10 session is over, each of these setups stays enabled in its window home and in that account's
+setup_order, and is not switched on anywhere else (no copies). EXPO1109 (owner update 2026-11-09, ledger
+2026-11-09-expo1109-gen-temp-moves): 5 GEN setups held back by Gen's halt / per-setup cap move TEMPORARILY to Testing 1
+(3 longs) / Testing 2 (2 shorts) and go back to Gen after the 11-10 close. After 2026-11-10 the pin lapses (test skips).
 Educational only - not financial advice."""
 import datetime as dt
 
@@ -23,13 +25,13 @@ HOME = {
     "CWT09-gapdn-bounce-g5-lowerhalf-short": "graveyard", "CWT09-gapdn-vwaploss-g5-short": "graveyard",
     "CWT09-gapdn-vwaploss-g10-short": "livelab",
     "GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short": "gen",
-    "GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long": "gen",
+    "GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long": "testing",
     "GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short": "gen",
-    "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short": "gen",
-    "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long": "gen",
-    "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": "gen",
+    "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short": "testing2",
+    "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long": "testing",
+    "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": "testing2",
     "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short": "gen",
-    "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": "gen",
+    "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": "testing",
 }
 ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "gen", "explore1", "livelab")
 
@@ -65,3 +67,23 @@ def test_exposure_set_enabled_in_home_only(monkeypatch):
                     assert s in order, f"{s} missing from {acct} setup_order"
             else:
                 assert s not in on, f"{s} must not run outside {home} (promotion = move; no moves before {END})"
+
+
+GEN_TEMP = {s for s, h in HOME.items() if s.startswith("GEN-") and h != "gen"}
+
+
+def test_gen_temp_moves_are_moves_and_logged():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    assert len(GEN_TEMP) == 5
+    led = [json.loads(l) for l in (root / "research/ledger.jsonl").read_text().splitlines() if l.strip()]
+    e = next(x for x in led if x["id"] == "2026-11-09-expo1109-gen-temp-moves")
+    assert e["temporary"]["until"] == "2026-11-10 close" and len(e["moves"]) == 5
+    a = json.loads((root / "docs/live/assignments.json").read_text())["setups"]
+    if dt.date.today() <= END:
+        for s in GEN_TEMP:
+            assert a[s]["accounts"] == [HOME[s]] and a[s]["from"] == ["gen"], s
+        txt = (root / "config/account_gen.yaml").read_text()
+        assert txt.count("EXPO1109 temporary move to Testing") == 5
