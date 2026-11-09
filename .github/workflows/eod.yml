@@ -4,6 +4,9 @@
 name: eod
 
 on:
+  # HK-EOD-CHAIN (2026-11-09): the primary start is now trade.yml's eod-start job, which dispatches this workflow with
+  # auto=true once the closing trade run's account jobs have ended (a bot-dispatched trade run does not fire workflow_run).
+  # workflow_run and the cron stay as backups; every automatic start skips an account whose report already exists.
   workflow_run:                  # chained: runs as soon as the closing trade job finishes (GitHub cron can start 15+ min late)
     workflows: [trade]
     types: [completed]
@@ -14,6 +17,10 @@ on:
       day:
         description: "Session date (YYYY-MM-DD); empty = today"
         default: ""
+      auto:
+        description: "Automatic start (trade.yml eod-start): skip accounts whose report for the day already exists"
+        type: boolean
+        default: false
 
 
 permissions:
@@ -54,6 +61,10 @@ jobs:
           dow=$(TZ=America/New_York date +%u); day=$(TZ=America/New_York date +%F)
           run=false
           if ! git ls-remote --exit-code "https://github.com/${{ github.repository }}.git" "refs/heads/$STATE_BRANCH" >/dev/null 2>&1; then run=false   # account not started yet
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.auto }}" = "true" ]; then
+            # automatic start from the closing trade run (already after the flatten): once per account and day
+            rday="${{ inputs.day }}"; rday=${rday:-$day}
+            if ! curl -sfI "https://raw.githubusercontent.com/${{ github.repository }}/$STATE_BRANCH/reports/$rday.html" >/dev/null; then run=true; fi
           elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then run=true
           elif [ "$dow" -le 5 ] && [ "$now" -ge 1556 ] && [ "$now" -lt 1800 ]; then
             # only once per account and day: skip when today's report is already on the state branch

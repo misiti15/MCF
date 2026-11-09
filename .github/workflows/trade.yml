@@ -148,3 +148,37 @@ jobs:
           nohup python -m mcf.execution.handover trade --account "$MCF_ACCOUNT" --job-start "$MCF_JOB_T0" \
             --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.dry_run && 'dry' || 'act' }}" > handover.log 2>&1 &
           python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}
+
+  # HK-EOD-CHAIN (2026-11-09): start EOD from the closing run itself. A trade run dispatched by a bot (session guard /
+  # hand-over) does not fire eod.yml's workflow_run chain, and on 11-09 the 16:25 backup cron did not fire either. This job
+  # waits for every account job of this run (final flatten + state push done), then, at/after 15:55 ET on a market day,
+  # dispatches eod.yml with auto=true (each account still skips when today's report exists) unless another trade run still
+  # has a session job active or an EOD run since 15:50 ET is running / done (mcf/execution/handover.py decide_eod).
+  # eod.yml keeps its workflow_run trigger and cron as backups. GitHub API + calendar GET only; never fails the run.
+  eod-start:
+    needs: session
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - name: Closing-run check
+        id: w
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ "$dow" -le 5 ] && [ "$now" -ge 1555 ] && [ "$now" -lt 2000 ]; then echo "run=true" >> "$GITHUB_OUTPUT"
+          else echo "run=false" >> "$GITHUB_OUTPUT"; echo "not after the close ($now ET): EOD not started from this run"; fi
+      - uses: actions/checkout@v4
+        if: steps.w.outputs.run == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.w.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+      - name: Start EOD
+        if: steps.w.outputs.run == 'true'
+        run: |
+          pip install -q pandas || true
+          python -m mcf.execution.handover eod --ref "${{ github.event.repository.default_branch }}" --mode act || true
