@@ -8,7 +8,7 @@ Ouch: one setup shorted a strong up day. Primary -18.1R.
 
 - 5 Generator setups moved to Testing 1/2 for exposure (11/9-11/10); live Compass on dashboard.
 
-**Today:** **Primary** -$172.26 · Running total since Day 1 (10/23): **-$2,382.86**
+**Today:** **Primary** -$175.87 · Running total since Day 1 (10/23): **-$2,387.69** (Alpaca close-to-close; 11-05/11-06 MTUM broker glitch excluded)
 **Milestones:** M1 (3 green days in a row) 0/3 · M2 (8 of last 10 green) 3/10
 
 **Top 2 setups today:**

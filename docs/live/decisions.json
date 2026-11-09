@@ -679,7 +679,6 @@
   "answered": null
  },
  {
-<<<<<<< HEAD
   "code": "DM-MF2",
   "title": "Move Early Sellers, Mid-High RSI (all day) from Primary to Testing 1 (Saturday reevaluation)",
   "what": "MF2-open-rsimidhi-flowsell-FD leaves Primary and trades in Testing 1 from Monday (a move: switched off in Primary, ex-primary marker).",
@@ -832,7 +831,8 @@
   "link": "research/bdi/nightly1105/NOTES.md",
   "status": "open",
   "answered": null
-=======
+ },
+ {
   "code": "COMP-LIVE",
   "title": "Record the Market Compass live during the day",
   "what": "Every 15 minutes from 09:45 ET the research compass (SPY from open, 30-min checkpoint, 15-min W60 reading, QQQ/IWM agreement) is recorded from the bars so far and shown on the dashboard. Display and research only; it never feeds trading.",
@@ -846,6 +846,20 @@
   "link": "research/bdi/hc1/NOTES.md",
   "status": "answered",
   "answered": "yes, 2026-11-09"
->>>>>>> origin/claude/intraday-trading-system-witis4
+ },
+ {
+  "code": "T1X",
+  "title": "Testing 1 holds a short that MCF did not place - check it in Alpaca and close it",
+  "what": "Since the 11-05 close the Testing 1 paper account has carried a short position (about $1.6k-1.8k) that is not in MCF's journal, so the 15:55 flatten never closes it. It moves Testing 1's Alpaca P/L (11-09: Alpaca -$126.46 vs MCF trades +$0.41). Likely the same Alpaca corporate-action booking that hit Primary's MTUM on 11-05.",
+  "recommend": "Yes - look at Testing 1 positions in the Alpaca paper dashboard, report it to Alpaca like MTUM, and close it (or say keep and Claude labels it with/without as for MTUM)",
+  "numbers": [
+   "Cash minus equity: $0 at the 11-05 15:55 status, $1,629.48 at the 11-06 close, $1,761.60 at the 11-09 close (it marked -$132 today)",
+   "11-05: Alpaca -$1,526.68 vs journal +$58.05; 11-09: Alpaca -$126.46 vs journal +$0.41",
+   "No Testing 1 MCF lots open (status positions 0, flatten_failed empty); Claude has no Testing 1 keys in its session to list positions"
+  ],
+  "why": "A position MCF does not manage mixes non-trading P/L into Testing 1's dollars; the daily post does not exclude it until it is confirmed.",
+  "link": "research/bdi/nightly1109/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]

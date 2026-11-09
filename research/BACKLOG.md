@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 985 · coded: 135 · parked: 403 · holdout failed: 23 · configurations tried (all lineages): 32895244
+Total ideas: 988 · coded: 135 · parked: 403 · holdout failed: 23 · configurations tried (all lineages): 32895248
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -535,6 +535,9 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | reddit-1106-dataday-wait-or-settle | 8:30 macro-data days (NFP / CPI): skip the first 30-60 minutes, then trade the break of the settled opening range (09:30-10:00 or 09:30-10:30) in either direction, stop at the OR midpoint, target 2R or hold; compare with the same rule on non-data days | reddit r/StockMarket https://www.reddit.com/r/StockMarket/comments/1xpl1wq/jobs_print_beat_hard_and_nasdaq_futures_bounced/ (post + comment: 'first move belongs to the algos ... the third move is the one I trade') | – | – | – | – | – | – |
 | idea | sat1107-gapup-midday-lod-long | Long: gap-up > 2% name making a new low of day 11:00-13:30 (buy the midday flush of a gap-up) - discovery 11-07 replicated long | BDI Saturday deep run 2026-11-07 (research/bdi/saturday1107/NOTES.md) | – | – | – | – | – | – |
 | idea | sat1107-index-first-open-two-sided | Index-first open, two-sided (carried from sat1031): pick the side from SPY / QQQ / breadth at 09:35-09:45, then the biggest volume-confirmed mover on that side, wide geometry | BDI Saturday deep run 2026-11-07 (research/bdi/saturday1107/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1109-mf-short-broad-etf-skip | MF family shorts: skip unleveraged (diversified / factor) ETFs | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
+| idea | nightly-1109-mf-short-upconfirmed-gate | MF family shorts: no new short while the index tape is UP-confirmed (W60 proxy, from 10:00) | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
+| idea | nightly-1109-gen-index-gated-short-trend-day | Generated shorts gated on 'SPY > +x% from open' fade a trend-up day | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |

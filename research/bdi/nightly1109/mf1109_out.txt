@@ -1,0 +1,24 @@
+MF shorts on 2y lists: 45,744 trades, setups 6; unlev ETF share 21.1%, all-ETF 27.0%; UP-confirmed proxy share 20.4% (no persistence 26.9%)
+       config split     n  dropped  drop_avg  kept_avg  base_avg  delta_R  t_day  days                                      by_regime
+  A_etf_unlev   FWD  2260      441   -0.0453   -0.0011   -0.0097     20.0   0.25    22       {'down': 2.8, 'flat': -59.2, 'up': 76.5}
+  A_etf_unlev TRAIN 23060     4802   -0.2171   -0.1031   -0.1269   1042.7   4.49   234  {'down': -113.0, 'flat': 110.5, 'up': 1045.2}
+  A_etf_unlev VALID 20424     4420   -0.0900   -0.0595   -0.0661    398.0   1.80   190   {'down': -238.1, 'flat': 192.8, 'up': 443.2}
+   A2_etf_all   FWD  2260      586   -0.0115   -0.0091   -0.0097      6.8   0.09    22      {'down': -0.7, 'flat': -54.1, 'up': 61.6}
+   A2_etf_all TRAIN 23060     5782   -0.1868   -0.1068   -0.1269   1080.1   4.37   234  {'down': -168.2, 'flat': 177.2, 'up': 1071.0}
+   A2_etf_all VALID 20424     5964   -0.0760   -0.0620   -0.0661    453.2   1.88   190   {'down': -289.8, 'flat': 221.9, 'up': 521.1}
+B_upc_persist   FWD  2260      413    0.2980   -0.0785   -0.0097   -123.1  -1.46    22     {'down': -2.7, 'flat': -83.0, 'up': -37.3}
+B_upc_persist TRAIN 23060     5320   -0.1099   -0.1319   -0.1269    584.9   2.26   234  {'down': -145.9, 'flat': -260.8, 'up': 991.6}
+B_upc_persist VALID 20424     3592   -0.1169   -0.0553   -0.0661    419.9   2.51   190      {'down': 3.8, 'flat': -69.5, 'up': 485.6}
+   B2_upc_now   FWD  2260      558    0.1909   -0.0755   -0.0097   -106.5  -1.28    22      {'down': 3.7, 'flat': -96.1, 'up': -14.1}
+   B2_upc_now TRAIN 23060     7193   -0.1076   -0.1356   -0.1269    773.9   2.21   234 {'down': -300.0, 'flat': -424.4, 'up': 1498.3}
+   B2_upc_now VALID 20424     4534   -0.1093   -0.0538   -0.0661    495.6   2.56   190     {'down': -37.2, 'flat': 15.7, 'up': 517.1}
+A_etf_unlev VALID per setup: better 6, worse 0 {'MF1-945-flowsell-vwapup-FD': 148.9, 'MF2-open-rsimidhi-flowsell-FD': 8.6, 'MF3-open-flowsell-rsi5hi-FD': 95.5, 'MF4-h40-open-flowsell': 54.0, 'MF4-h40-open-flowsell-FD': 83.1, 'MF5-flowsell-vwapup-rsi5hi-FD': 7.9}
+A2_etf_all VALID per setup: better 5, worse 1 {'MF1-945-flowsell-vwapup-FD': 158.4, 'MF2-open-rsimidhi-flowsell-FD': 63.8, 'MF3-open-flowsell-rsi5hi-FD': 87.9, 'MF4-h40-open-flowsell': 58.9, 'MF4-h40-open-flowsell-FD': 85.5, 'MF5-flowsell-vwapup-rsi5hi-FD': -1.3}
+B_upc_persist VALID per setup: better 6, worse 0 {'MF1-945-flowsell-vwapup-FD': 192.3, 'MF2-open-rsimidhi-flowsell-FD': 52.7, 'MF3-open-flowsell-rsi5hi-FD': 87.5, 'MF4-h40-open-flowsell': 12.2, 'MF4-h40-open-flowsell-FD': 44.7, 'MF5-flowsell-vwapup-rsi5hi-FD': 30.6}
+B2_upc_now VALID per setup: better 6, worse 0 {'MF1-945-flowsell-vwapup-FD': 251.5, 'MF2-open-rsimidhi-flowsell-FD': 41.4, 'MF3-open-flowsell-rsi5hi-FD': 94.8, 'MF4-h40-open-flowsell': 15.6, 'MF4-h40-open-flowsell-FD': 50.0, 'MF5-flowsell-vwapup-rsi5hi-FD': 42.4}
+A_etf_unlev: TRAIN delta +1042.7R (t 4.49), VALID delta +398.0R (t 1.8) vs bar 2.64; any setup worse >5%: False -> fail
+A2_etf_all: TRAIN delta +1080.1R (t 4.37), VALID delta +453.2R (t 1.88) vs bar 2.64; any setup worse >5%: True -> fail
+B_upc_persist: TRAIN delta +584.9R (t 2.26), VALID delta +419.9R (t 2.51) vs bar 2.64; any setup worse >5%: False -> fail
+B2_upc_now: TRAIN delta +773.9R (t 2.21), VALID delta +495.6R (t 2.56) vs bar 2.64; any setup worse >5%: False -> fail
+
+Educational only - not financial advice.
