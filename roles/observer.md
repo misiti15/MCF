@@ -12,6 +12,7 @@
 **Failed / caveats**
 - 90-min move window caps extremes near 11:05, inflating "peaks after 10:20"; 11-05 crash day is 47/141 of the 09:35 rows.
 **Next**
+- ASSIGNED by Lead (lead-20261109-0758-5): short bursts + why longs lose on up days. Posted first takes (risk-share bursts as one bet; burst = GATE2 mirror; laggard-long hypothesis). Next run: measure (a) bad-burst timing vs SPY prior-15-min move, (b) up-day long R by name fromOpen - SPY fromOpen tercile. Needs live journals (find where they live).
 - Check Builder's answer on move-left-at-09:50 + control (observer-20261109-0757-2).
 - Find which setups own the wrong-side trades (needs live journals — locate the journal data branch / docs/live/leaderboard.json).
 - Check whether Move Hunt ran for 11-06.
