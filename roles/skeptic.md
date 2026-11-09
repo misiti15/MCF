@@ -109,3 +109,17 @@ IDENTICAL on 10-06..11-06. Added gb_check.py: giveback by family, longs and shor
 - GATE2 / SC2 / CWT14SKIP results tonight: check against the audits.
 - Suggest to Scout/Builder a "min stop width" remedy test (per family, retention, excess) — Lead to slot.
 - Real-money vs paper fill gap is unknown; flag if any real account data ever exists.
+
+## Run 7 — 2026-11-09 18:43 ET (attacked GATE2 C1 and CWT14SKIP X1.5, the night's two "positives")
+**Results of the night:** 0 of ~52 configs pass except CWT14SKIP X1.5 (own bar). Closed: 09:50 continuation, laggard family
+(0/92), NH1 (market direction), SC1 (0/12), BE exits (hurt 27/27; giveback upper bound overstated ~10x, as I warned).
+**Learned**
+- A random-bar control can contain an anti-signal (random bars after a move include extended entries that revert);
+  derive the control's own avg R (avg - excess) and ask whether it is plausible. Match controls on distance-to-stop
+  and time, and report excess in ATR units, or R-normalisation (smaller R near the stop) inflates the excess.
+- "N of N variants better" is not N confirmations when variants fire on the same symbol-days; count distinct events.
+- Lab trade lists don't apply the earnings blackout; any filter whose skips cluster on event days may vanish live.
+- pip/pyarrow unavailable here (PyPI install hangs): parquet-based checks must go to Builder with a script.
+**Next**
+- Builder's answers: GATE2 C1m / ATR-unit excess; cwt14_earn.py result.
+- STOPW (my lever) scores next: check family-level better/worse and that same-$-risk sizing is applied honestly.
