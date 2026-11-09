@@ -20,6 +20,11 @@
 - Owner flag: moves.csv has no 11-06 rows.
 - Progress tally: ideas 7, tested 1, configs 4, passed 0.
 
+## Run 3 (10:58 ET)
+- Family try-count rule: own-bar pass = 'lead'; Testing move needs family summed N (laggard catch-up family: ix-leadlag, ex30-PR1/PR5, MH4, combo1-C3, C3FR, SC2).
+- Tonight: GATE2 -> 09:50 -> SC2 -> CWT14 skip -> C3FR. Wrong-way trades diffuse (no veto).
+- Learned: the team self-corrects well (Observer 10:1 retraction, Builder took all audit points); keep Skeptic auditing BEFORE scores.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

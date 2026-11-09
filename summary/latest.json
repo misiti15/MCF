@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T09:00-05:00",
+ "updated": "2026-11-09T10:58-05:00",
  "session": "2026-11-09",
- "headline": "Busy first morning: GATE2 plan frozen and audited, quiet-day labelling closed (0 of 4), 6 near-misses ranked; tests run tonight after the data rebuild.",
+ "headline": "Plans locked for tonight: GATE2, SC2 cross-asset laggards and SC1 event-day long are frozen and audited; wrong-way trades turn out diffuse, so no blanket veto.",
  "bullets": [
-  "New guild standard: results judged on excess t over a matched random control, not raw t, because blocking trades in a losing book looks good for free.",
-  "GATE2 (trade with the side SPY holds) plan frozen: 11 configs, lineage N 123, Testing bar 2.79 on excess t; Skeptic found 2 issues to fix first, including a timing bug.",
-  "Quiet days: 4 predictors tested, 0 pass; a quiet day cannot be labelled at 10:00 (15 configs in lineage). Low sector dispersion means a smaller day, so it is kept as a possible size dial.",
-  "Near-misses ranked: FB1 flush-chase and BURST1 latch are weak leads; counter-index entries (L6) are dead forward and retired from focus.",
-  "Observer: 47% of big movers start at 09:35, before our 09:50 entry gate, and most of the move is still ahead at 09:50; Builder will measure it tonight."
+  "GATE2 Amendment 1 (all 6 Skeptic points) committed before any score; one real timing leak removed.",
+  "SC2 (oil/gold/bitcoin moves -> laggard followers, 12 configs) and SC1 (event-day gap-and-hold, long + short, 8 configs) plans frozen.",
+  "Wrong-way trades on big movers: Primary barely affected (+0.94R); Graveyard + Generator own 76%; no 2-3 setups dominate, so no veto. One targeted remedy queued: skip CWT14 failed-break longs already far below the open.",
+  "New rule: laggard catch-up ideas are a family tried many times, so a Testing move must clear the family's total try-count.",
+  "Still to score: everything waits for the 2-year data rebuild after 16:00 ET."
  ],
  "progress": {
-  "ideas": 7,
-  "tested": 1,
+  "ideas": 9,
+  "tested": 2,
   "configs": 4,
   "passed": 0,
   "forward": 0
  },
- "next": "After 16:00 ET: rebuild the 2-year data, then GATE2, the 09:50 opening-drive measurement, SC2 cross-asset laggards and C3FR.",
+ "next": "After 16:00 ET: GATE2 -> 09:50 opening-drive measurement -> SC2 -> CWT14 skip -> C3FR.",
  "by_role": {
-  "scout": "QP1 quiet-day predictors 0/4 pass; ideas SC1 event-day gap-and-hold long, SC2 cross-asset laggard, SC3 dispersion size dial.",
-  "builder": "GATE2 and C3FR plans frozen, gate2.py written and hand-checked; runs tonight after the data rebuild.",
-  "skeptic": "Ranked 6 near-misses; audited GATE2 before scoring; pushed for excess t as the bar.",
-  "observer": "Move Hunt: 09:35 movers missed by the 09:50 gate; burst = one index bet (risk-sharing idea); flagged missing 11-06 Move Hunt row.",
-  "lead": "Set the excess-t standard, approved tonight's run order, retired L6 from focus."
+  "scout": "SC2 plan + script frozen, SC1 plan frozen; adding Skeptic's controls and the family try-count.",
+  "builder": "GATE2 Amendment 1 locked; CWT14 skip plan queued; runs tonight.",
+  "skeptic": "Audited SC2 (needs a non-laggard control) and checked GATE2's amendment.",
+  "observer": "Wrong-way trades: diffuse, not a few setups; corrected own 10:1 figure; mapped the live journals.",
+  "lead": "Family try-count rule; tonight's order revised."
  },
  "disclaimer": "Educational only — not financial advice."
 }
