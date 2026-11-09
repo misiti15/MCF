@@ -1,5 +1,5 @@
-"""top20 conditions deep dive (2026-11-06), live part. Live = paper fills (rule 7), run_id 1, Primary + Testing 1 +
-Testing 2 + Graveyard + Live Lab + Explore 1 (from 11-05), every session since start (10-06..11-06), GEN-* and S6 out, "-FD" copies are their own setup.
+"""top20 conditions deep dive (2026-11-09), live part. Live = paper fills (rule 7), run_id 1, Primary + Testing 1 +
+Testing 2 + Graveyard + Live Lab + Explore 1 (from 11-05), every session since start (10-06..11-09), GEN-* and S6 out, "-FD" copies are their own setup.
 Top 20 = the dashboard leaderboard order (mcf.report.daily_post.leaderboard: shrunk avg R = avgR * n / (n + 20), setups
 enabled somewhere now) with >= 20 trades.
 
@@ -10,6 +10,9 @@ Buckets (pre-declared, written before any bucket was read):
   time of day of entry: 09:50-10:30, 10:30-11:30, 11:30-13:00, 13:00-14:00, 14:00-16:00
   gap (today's open vs prior close): <-3%, -3..-1, -1..+1, +1..+3, >+3%
   ADV (20 prior sessions, $): <100M, 100-300M, 300M-1B, >=1B;  price: <20, 20-50, 50-150, >=150
+  compass at entry (11-09 add): W60 15-min compass (mcf.report.compass_live) at the latest mark <= the entry minute:
+  UP (UP-confirmed) / DOWN (DOWN-confirmed) / unconfirmed (leaning, mixed, or before 09:45); recorded rows from
+  mcf-data-compass (11-06, 11-09), backfilled with compass_live.compute() for every other session (compass_backfill.py)
   ATR% (14 prior sessions): <2, 2-3.5, 3.5-5, >=5;  type: stock / ETF / leveraged ETF (universe name);  side
   ex-market R = R - side * beta * SPY return (entry minute -> exit minute) * entry / risk-per-share, beta from daily
   returns 2026-07-01..10-05 (before the first live session), shrunk halfway to 1.
@@ -33,7 +36,7 @@ TZ = "America/New_York"
 
 
 def top20():
-    rows = [r for r in leaderboard("2026-11-06", top=500) if (r["trades"] or 0) >= 20][:20]
+    rows = [r for r in leaderboard("2026-11-09", top=500) if (r["trades"] or 0) >= 20][:20]
     return pd.DataFrame([{"rank": i + 1, "setup": r["setup"], "acct_now": r["acct"], "lb_n": r["trades"],
                           "lb_avg": r["avg_r"], "lb_shrunk": r["rank_score"]} for i, r in enumerate(rows)])
 
@@ -104,12 +107,25 @@ def features():
     T["pxb"] = pd.cut(T.entry, [0, 20, 50, 150, 1e9], right=False, labels=["<20", "20-50", "50-150", ">=150"]).astype(str)
     T["atrb"] = pd.cut(T.atrp, [0, 2, 3.5, 5, 1e9], right=False, labels=["<2", "2-3.5", "3.5-5", ">=5"]).astype(str)
     T["sideb"] = np.where(T.side > 0, "long", "short")
+    C = pd.read_parquet(S / "compass.parquet")
+    C["m"] = C["T"].str[:2].astype(int) * 100 + C["T"].str[3:].astype(int)
+    st = {}
+    for (d, m), w in zip(zip(C.date, C.m), C.w60):
+        st.setdefault(d, []).append((m, w))
+    def comp(d, tod):
+        k = [w for m, w in sorted(st.get(d, [])) if m <= tod]
+        if not k:
+            return "unconfirmed"
+        return "UP" if k[-1] == "UP-confirmed" else "DOWN" if k[-1] == "DOWN-confirmed" else "unconfirmed"
+    T["compass"] = [comp(d, t) for d, t in zip(T.date, T.tod)]
+    src = C.groupby("date").source.first()
+    T["compass_src"] = T.date.map(src).fillna("none")
     return T
 
 
 DIMS = [("day", "day type (hindsight)"), ("spy10b", "SPY vs open at 10:00"), ("spyfob", "SPY vs open at entry"),
         ("todb", "time"), ("gapb", "gap %"), ("advb", "ADV"), ("pxb", "price"), ("atrb", "ATR%"), ("kind", "type"),
-        ("sideb", "side")]
+        ("sideb", "side"), ("compass", "compass at entry")]
 PIT = [d for d, _ in DIMS if d != "day"]
 
 
@@ -188,11 +204,12 @@ def main():
         txt.append("")
     pd.DataFrame(summ).to_csv(OUT / "live_summary.csv", index=False)
     pd.concat(B).round(4).to_csv(OUT / "live_buckets.csv", index=False)
-    (OUT / "live_out.txt").write_text("Educational only - not financial advice. Live paper trades 10-06..11-06, run_id 1.\n\n"
+    (OUT / "live_out.txt").write_text("Educational only - not financial advice. Live paper trades 10-06..11-09, run_id 1.\n\n"
                                       + "\n".join(txt))
     cols = ["rank", "setup", "n", "avg", "exbest", "best_share", "exmkt", "thrives", "struggles", "losers_cluster", "skip_ok"]
     with pd.option_context("display.width", 250, "display.max_colwidth", 80):
         print(pd.DataFrame(summ)[cols].round(3).to_string())
+    print("compass:", T.compass.value_counts().to_dict(), T.compass_src.value_counts().to_dict())
     print("missing feats:", T[["gap", "adv", "atrp", "spy10", "spy_fo"]].isna().mean().round(3).to_dict())
     print(T.kind.value_counts().to_dict())
 
