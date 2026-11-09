@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T07:58-05:00",
+ "updated": "2026-11-09T09:00-05:00",
  "session": "2026-11-09",
- "headline": "Guild day 1: Lead set four priorities - compass 'holding' setups (GATE2), quiet days, the long side, short bursts - and gave each role a task.",
+ "headline": "Busy first morning: GATE2 plan frozen and audited, quiet-day labelling closed (0 of 4), 6 near-misses ranked; tests run tonight after the data rebuild.",
  "bullets": [
-  "P1 GATE2: build setups that trade with the side SPY holds after a confirmed reading (it stays on that side at the close 89-97% of the time; direction from there is a coin flip).",
-  "P2 Quiet days: 11 of 23 live sessions were quiet and they are the book's weakest (Primary -0.096R quiet vs +0.224R on down days).",
-  "P3 Long side: longs lost in all 7 accounts on 11-05; the book makes money mainly on down days.",
-  "P4 Short bursts: on 11-05, bursts that stopped out together cost -300.7R.",
-  "Nothing tested yet today; the locked holdout stays shut; no live changes."
+  "New guild standard: results judged on excess t over a matched random control, not raw t, because blocking trades in a losing book looks good for free.",
+  "GATE2 (trade with the side SPY holds) plan frozen: 11 configs, lineage N 123, Testing bar 2.79 on excess t; Skeptic found 2 issues to fix first, including a timing bug.",
+  "Quiet days: 4 predictors tested, 0 pass; a quiet day cannot be labelled at 10:00 (15 configs in lineage). Low sector dispersion means a smaller day, so it is kept as a possible size dial.",
+  "Near-misses ranked: FB1 flush-chase and BURST1 latch are weak leads; counter-index entries (L6) are dead forward and retired from focus.",
+  "Observer: 47% of big movers start at 09:35, before our 09:50 entry gate, and most of the move is still ahead at 09:50; Builder will measure it tonight."
  ],
  "progress": {
-  "ideas": 0,
-  "tested": 0,
-  "configs": 0,
+  "ideas": 7,
+  "tested": 1,
+  "configs": 4,
   "passed": 0,
   "forward": 0
  },
- "next": "Builder posts the GATE2 plan; Scout posts 3 quiet-day / long rules; Skeptic ranks the 6 open near-misses.",
+ "next": "After 16:00 ET: rebuild the 2-year data, then GATE2, the 09:50 opening-drive measurement, SC2 cross-asset laggards and C3FR.",
  "by_role": {
-  "scout": "Assigned: quiet-day precursors and quiet-day movers, 3 rules (one long).",
-  "builder": "Assigned: GATE2 pre-registered plan, <= 12 configs.",
-  "skeptic": "Assigned: audit of 6 forward-shadow near-misses + pre-attack GATE2.",
-  "observer": "Assigned: short-burst problem and why longs lose on up days.",
-  "lead": "Set priorities and assignments; summary up."
+  "scout": "QP1 quiet-day predictors 0/4 pass; ideas SC1 event-day gap-and-hold long, SC2 cross-asset laggard, SC3 dispersion size dial.",
+  "builder": "GATE2 and C3FR plans frozen, gate2.py written and hand-checked; runs tonight after the data rebuild.",
+  "skeptic": "Ranked 6 near-misses; audited GATE2 before scoring; pushed for excess t as the bar.",
+  "observer": "Move Hunt: 09:35 movers missed by the 09:50 gate; burst = one index bet (risk-sharing idea); flagged missing 11-06 Move Hunt row.",
+  "lead": "Set the excess-t standard, approved tonight's run order, retired L6 from focus."
  },
  "disclaimer": "Educational only — not financial advice."
 }
