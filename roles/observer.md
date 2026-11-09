@@ -1,5 +1,14 @@
 # observer notes
 
+## Data map (keep)
+- Live journals: journal.db at the root of each data branch: mcf-data (Primary), mcf-data-{testing,testing2,graveyard,gen,explore1,livelab}.
+  `git fetch -q --depth=1 origin <b> && git show FETCH_HEAD:journal.db > <scratch>/<b>.db`
+- Tables: trades (run_id 1 = paper, else what-if; R = pnl_adj / (|entry-stop|*shares)), signals (status submitted/skipped/shadow/rejected;
+  info JSON: spread, layers, bar_time), orders. No price path in journals.
+- mcf-data/polls/<date>/*.jsonl.gz = poll health + book MTM only; mcf-data/intraday, reports, reviews, setups, earnings also there.
+- Move Hunt: research/bdi/moves/moves.csv (default branch). Bars: none in this container; Builder rebuilds cache after 16:00 (research/bdi/1104/DATA.md).
+- No Alpaca bar GETs in market hours (shares the live runner's budget).
+
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
 ## Run 1 — 2026-11-09 ~08:00 ET (pre-market)
@@ -29,3 +38,8 @@
 - After Builder's cache rebuild: laggard-vs-leader split of up-day longs (name fo - SPY fo tercile), per account, excess vs SPY direction (Skeptic's standing ask).
 - Read Builder's 09:50 measurement result; challenge the control choice if needed.
 - moves.csv n_wrong 112 vs my 144 - reconcile (maybe accounts/journal timing).
+
+## Run 3 — 2026-11-09 ~11:45 ET
+**Learned**: long movers caught 14% (3/67 at 09:35); catchers are dip reversals (fromOpen -1.7%, RSI 23); typical missed mover is flat, near HOD, RSI 49 -> no near-HOD continuation long exists. Late longs after the top -23.2R (GEN). Lead logged run-2 result; CWT14 skip queued with Builder tonight.
+**Failed**: nothing broke; caution n=21 caught, 6 days.
+**Next**: (a) tonight/next: laggard-vs-leader split once Builder's fromOpen column lands; (b) check backlog for near-HOD/ORB long family N before Scout writes a rule; (c) read Builder's 09:50 measurement; (d) reconcile moves.csv n_wrong 112 vs 144.

@@ -1,0 +1,80 @@
+long movers 150; caught 21 (14%); long trades in window 35 R +3.31 avg +0.09
+caught movers: median move 1.08 ATR vs missed 1.24
+
+by decision bucket:
+         n  caught
+bucket            
+09:35   67       3
+later   83      18
+
+caught trades: entry minutes after the move's decision bar (neg = before): {'count': 35.0, 'mean': 19.8, 'std': 29.0, 'min': -28.1, '25%': 3.7, '50%': 15.5, '75%': 45.9, 'max': 72.0}
+caught trades: fraction of decision->extreme elapsed at entry: {'count': 35.0, 'mean': 0.27, 'std': 0.37, 'min': -0.41, '25%': 0.05, '50%': 0.23, '75%': 0.58, 'max': 0.93}
+  R by entry fraction: {Interval(-9.0, 0.0, closed='right'): {'count': 8, 'sum': -2.71, 'mean': -0.34}, Interval(0.0, 0.25, closed='right'): {'count': 12, 'sum': 2.25, 'mean': 0.19}, Interval(0.25, 0.5, closed='right'): {'count': 2, 'sum': 2.04, 'mean': 1.02}, Interval(0.5, 1.01, closed='right'): {'count': 13, 'sum': 1.73, 'mean': 0.13}}
+
+catchers by account:
+            count   sum  mean
+acct                        
+gen            6 -3.40 -0.57
+graveyard     15  1.32  0.09
+primary        1  0.63  0.63
+testing        4  1.84  0.46
+testing2       9  2.92  0.32
+
+catchers by setup:
+                                                                              n     R  movers  lag_med  mfe_med
+strategy                                                                                                      
+CWT12-coil-k4-long                                                           6  2.10       6    63.63     0.33
+CWT14-failbrk-pdl-p05-lowvol-long                                            5  1.71       5    10.50     0.40
+CWT14-failbrk-pdl-p05-long                                                   5  2.01       5     5.72     0.44
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long        2 -2.27       2     5.95     0.07
+CWT12-flag-s1-long                                                           1  0.30       1    46.13     0.29
+CWT14-failbrk-orl-p05-long                                                   1 -1.07       1   -19.22     0.35
+CWT13-vwapstretch-z075-long                                                  1  1.61       1    26.57     1.70
+CWT13-vwapstretch-z05-long                                                   1 -1.02       1   -23.27     0.06
+CWT14-failbrk-orl-p10-lowvol-long                                            1  0.30       1    10.78     0.57
+CWT14-failbrk-pdl-p05-R2A-long                                               1  0.09       1     5.73     0.10
+CWT14-failbrk-pdl-p10-long                                                   1  0.40       1    -9.42     0.44
+CWT14-failbrk-pdl-p10-lowvol-long                                            1  0.40       1    -9.42     0.44
+CWT14-failbrk-orl-p10-long                                                   1 -1.11       1   -19.23     0.36
+GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long  1  0.43       1    17.12     0.52
+GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long    1 -1.10       1    60.75     0.10
+GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long             1  0.64       1     2.02     0.88
+GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long         1 -1.11       1   -28.10     1.40
+LIQ-orl-sweep-open15-s25-long                                                1  0.84       1    20.87     2.04
+ST2-slope20up-long-am-t05s1-FD                                               1 -1.12       1    46.23    -0.15
+ST7-rsi50dn-long-pm-t1s1-FD                                                  1  0.63       1    20.55     0.62
+ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD                                       1  0.63       1    20.67     0.63
+
+missed movers: long trades on the symbol that day only AFTER the extreme: 26 | only BEFORE window: 2 | any long signal in window but not filled: 16
+
+features at the decision bar (median), caught vs missed (ex ante, from moves.csv):
+caught           False   True 
+gap               0.49   -0.33
+fromOpen         -0.02   -1.72
+vwapDistPct      -0.09   -0.60
+rsi              49.31   23.01
+rvol              1.30    1.36
+dist_hod_atr      0.23    0.81
+atr_pct_d         3.50    3.23
+adv_musd        225.00  274.00
+mae_before_atr    0.03    0.01
+move_atr          1.24    1.08
+
+by date: {'2026-10-29': {'size': 25, 'sum': 3}, '2026-10-30': {'size': 25, 'sum': 3}, '2026-11-02': {'size': 25, 'sum': 4}, '2026-11-03': {'size': 25, 'sum': 5}, '2026-11-04': {'size': 25, 'sum': 6}, '2026-11-05': {'size': 25, 'sum': 0}}
+
+long trades entered AFTER the mover's extreme: 42 R -23.20 avg -0.55; median minutes after extreme 58
+           count    sum
+acct                   
+gen           26 -20.89
+graveyard      2  -1.62
+livelab        1   0.14
+testing        3  -0.13
+testing2      10  -0.69
+top setups:                                                                            count   sum
+strategy                                                                              
+GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long             8 -8.99
+GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long      4 -4.26
+NM-AR-AM-gapdown-capitulation-long                                             3  1.71
+GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                       3 -2.02
+CWT14-failbrk-pdl-p10-long                                                     3 -1.21
+CWT14-failbrk-pdl-p05-lowvol-long                                              2  0.82
