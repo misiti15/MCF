@@ -85,7 +85,8 @@ def test_post_dollars_are_alpaca_and_r_keeps_the_allowance(monkeypatch):
     monkeypatch.setattr(rp, "equity_history", lambda a: {})
     a = dp.accounts("2026-11-05", since="2026-11-04")[0]
     assert a["today"] == -367.71 and a["source"] == "alpaca"
-    assert round(a["since"], 2) == round(-145.76 - 363.32, 2)          # 11-05 has no stored equity in history: journal pnl
+    # 11-05 Primary is in daily_post.PL_ADJUSTMENTS (MTUM glitch, trading-only -$367.71, PL1109): the table sets the day
+    assert round(a["since"], 2) == round(-145.76 - 367.71, 2) and a["adjusted"][0]["date"] == "2026-11-05"
     monkeypatch.setattr(dp, "_journal", lambda br: _db([("S1", 10.0, 9.0, 100, 50.0, 48.0, 0.5)]) if br == "mcf-data" else None)
     jd = dp.journal_day("2026-11-05", ["primary"])
     assert jd["S1"]["pnl"] == 50.0 and abs(jd["S1"]["r"] - 0.48) < 1e-9   # $ = fills, R = pnl_adj / risk
