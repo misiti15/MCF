@@ -32,7 +32,7 @@ def inventory():
         cfg = yaml.safe_load((ROOT / "config" / f).read_text()) or {}
         dref = bool((cfg.get("live") or {}).get("lab_refire", False))
         for name, p in (cfg.get("strategies") or {}).items():
-            if not p.get("enabled") or name in seen or (p.get("geom") or "") not in ("hold", "holdtr"):
+            if not p.get("enabled") or name in seen:
                 continue
             seen.add(name)
             r = dict(account=acct, setup=name, type=p.get("type", "classic"), module=p.get("module"), covered=False, why="")
@@ -44,6 +44,8 @@ def inventory():
                 try:
                     m = load_mod(name, p["module"])
                     g = p.get("geom") or getattr(m, "GEOM", "t1s1")
+                    if g not in ("hold", "holdtr"):
+                        continue   # BEREPLAY: only GEN hold / holdtr setups
                     if g not in GEOMK:
                         r["why"] = f"geom {g}"
                     else:
