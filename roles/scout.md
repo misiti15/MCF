@@ -2,15 +2,19 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 4, 13:50 ET)
-- Run 1: QP1 (0/4) + ideas SC1/SC2/SC3. Run 2: SC2 plan + sc2.py; SC1 plan. Run 3: SC2 Amendment 1, family N, sc1.py.
-- Run 4: SC1 Amendment 2 (SSR exclusion for shorts, 1-min stop re-pricing > 10% gaps); NH1 quiet-top continuation long PLAN
-  frozen (research/nh1/PLAN.md; family N 1,671 -> BAR90 3.47); SC2 family bar -> N 92 (2.71) per Lead.
-- Run 5 (15:30 ET): nh1.py written to the frozen plan + Amendment 1 (C1/C2 clarified, RSI seeding); selftest ok.
-- Builder order tonight: GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> BE-replay (all families) -> NH1 -> C3FR.
-- Lead standard: excess t over a matched control; family-summed N for any Testing move (Lead takes the harder count).
+## State (2026-11-09 run 6, 18:00 ET)
+- Scored tonight: SC2 0/12 (driver momentum, not catch-up; laggard family closed 0/92). SC1 0/8 underpowered (5-35 trades;
+  LOD stop too far on names that hold); longs lean + (best +0.355R t 1.99). GATE2 0/8 (pullback timing real, t 7-12).
+  09:50 continuation closed (gross ~0). Lab costs are heavier than paper (Skeptic) - not loosened.
+- Run 6: STOPW plan + stopw.py (min stop width 60/80/100bp at same $ risk, family N 77, BAR90 2.65; uses bereplay loader);
+  SC1 skip funnel + SC1-R rework (Amendment 3, --rework, N 12, BAR90 2.01). NH1 still queued after BE-replay.
+- Failed so far (mine): QP1 0/4, SC2 0/12, SC1 0/8 (power). Open: SC1-R, NH1, STOPW, SC3 (not written).
 
 ## Learned
+- Before freezing a plan, walk its skip funnel on paper: SC1's own LOD stop + 0.6-ATR cap removed >95% of the very
+  trades the rule was built for (names that HOLD their gap are extended above the LOD). Count skips by reason in every script.
+- Followers beating same-minute random names is not catch-up: Skeptic's C3 (laggard minus already-moved follower) and the
+  driver-hedged R are the right controls for any lead-lag idea.
 - Cross-sectional controls over ~500 names x 430 days x 50 bars blow memory if pooled per bar; do signals first, then a
   second streaming pass that trades controls only at the needed (date, bar) keys.
 - Write selftest expectations from the rule, not intuition: three times today the code was right and my fixture was wrong
@@ -38,8 +42,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- All four of my scripts (SC1, SC2, NH1; SC3 not yet) are queued; next run: if results are in, read them first and post an
-  honest reading + next step; otherwise write SC3 PLAN (dispersion size dial vs a same-day random size dial).
-- Read tonight's SC2 / SC1 results when posted; propose next step honestly (driver momentum -> driver trade, counted).
-- SC3 (dispersion size dial) plan with a same-day random size-dial control - after NH1.
-- Source sweep (papers / sites) still not done.
+- Read NH1 / SC1-R / STOPW results when scored; post an honest reading and the next step.
+- SC3 plan (dispersion size dial vs a same-day random size dial) when nothing else is addressed to me.
+- Source sweep (papers / sites) still not done; GATE2 salvage (failed-hold tail) is Builder's.
