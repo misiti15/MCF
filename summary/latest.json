@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T14:58-05:00",
+ "updated": "2026-11-09T16:58-05:00",
  "session": "2026-11-09",
- "headline": "Give-back is book-wide (-1,333R live on trades that reached +0.5R and closed at or below zero); a break-even exit replay across all families joins tonight's queue.",
+ "headline": "First scores in: GATE2, SC2, SC1 and the 09:50 drive all fail after costs (0 of 30 configs), but GATE2's pullback timing is real and SC1's longs lean positive; two counted reworks queued.",
  "bullets": [
-  "Observer + Skeptic (live paper trades 10-06..11-06, reproduced): trades that reached +0.5R then closed <= 0 cost longs -620R and shorts -713R; the Setup Generator is only 27% / 19% of it.",
-  "Exit fixes come before filters (charter), so a break-even-after-+0.5R replay across all families, longs and shorts, is queued tonight.",
-  "NH1 'quiet-top continuation long' plan frozen (8 configs); its family has 1,671 prior tries, so the Testing bar is t 3.47.",
-  "SC1 now handles short-sale restriction and halt fills; CWT14SKIP controls tightened; all plans frozen before any score.",
-  "Data rebuild starts after 16:00 ET, then GATE2 -> 09:50 drive -> SC2 -> CWT14SKIP -> SC1 -> BE replay -> NH1 -> C3FR."
+  "GATE2 (trade with the held side): 0 of 8 pass; buying the pullback beats a random bar (t 7-12), but days the hold fails cost more than held days earn. One counted rework: mid-day exit / half size.",
+  "SC2 cross-asset laggards: 0 of 12; it was the driver's momentum, not catch-up. Laggard family parked at 0 of 92 tries.",
+  "SC1 event-day gap-and-hold: 0 of 8 and underpowered (5-35 trades in 2 years); longs lean positive (best +0.355R, t 1.99). 09:50 opening drive: a coin flip before costs, closed.",
+  "Costs: lab charges more than live paper fills (0.218R vs ~0.06R per trade), so lab bars are conservative. Tight stops eat most of the cost (0.42R vs 0.09R per trade) - a minimum stop width is the next lever.",
+  "For the owner (FYI): the Setup Generator's 2-year screen does not rank live results (rank correlation -0.04 / -0.21; top screen third did worst live)."
  ],
  "progress": {
-  "ideas": 13,
-  "tested": 4,
-  "configs": 4,
+  "ideas": 15,
+  "tested": 8,
+  "configs": 34,
   "passed": 0,
   "forward": 0
  },
- "next": "Tonight: first scores (GATE2 and the 09:50 opening-drive measurement first).",
+ "next": "Tonight: CWT14SKIP -> break-even exit replay -> NH1; then plans for a minimum stop width (STOPW) and the GATE2 / SC1 reworks.",
  "by_role": {
-  "scout": "NH1 plan frozen (family N 1,671); SC1 Amendment 2 (short-sale restriction, 1-min stops).",
-  "builder": "CWT14SKIP Amendment 1; rebuild script with a guard that stops before the live job.",
-  "skeptic": "Reproduced Observer's numbers exactly; showed give-back is book-wide, not a Generator trait.",
-  "observer": "Late-buying is small; the Generator's long problem is give-back (-168R, 49% of its long loss).",
-  "lead": "Made the break-even exit replay book-wide and moved it up the queue."
+  "scout": "NH1 script ready; next: STOPW minimum-stop-width plan and SC1 rework.",
+  "builder": "Rebuilt 2 years of data; scored GATE2, SC2, SC1, 09:50 drive - 0 pass, clear mechanisms.",
+  "skeptic": "Lab vs live costs: lab is heavier; tight stops drive cost; checked OD0950.",
+  "observer": "Generator rules are recoverable for replay; its screen does not rank live results.",
+  "lead": "Closed 09:50 continuation, parked laggard family, dropped C3FR, queued two counted reworks."
  },
  "disclaimer": "Educational only — not financial advice."
 }

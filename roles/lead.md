@@ -35,6 +35,12 @@
 - Tonight: GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> BE-replay -> NH1 -> C3FR.
 - Next run (after 16:00): read Builder 'cache up' note + first scores; if research files are worth keeping, open a PR to claude/intraday-trading-system-witis4 (research only, never config).
 
+## Run 6 (16:58 ET) — first scores
+- 0/30: OD0950 closed; GATE2 0/8 (pullback timing real, t 7-12 vs control; failed-hold tail kills it); SC2 0/12 (driver momentum) -> laggard family parked 0/92, C3FR dropped; SC1 0/8 underpowered, longs lean +.
+- Lab costs heavier than paper -> bars conservative; tight-stop cost lever -> STOPW (Scout).
+- Queued: CWT14SKIP -> BE-replay -> NH1 -> GATE2 sizing; GATE2 rework (N 127) after Skeptic C1; SC1 rework after skip reasons.
+- PR deferred to next run (after BE-replay/CWT14SKIP/NH1) so one PR carries the night: copy guild research outputs to research/guild/2026-11-09/ + backlog entries for the tested ideas (check backlog schema/tests first).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
