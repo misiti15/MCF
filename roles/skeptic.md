@@ -51,3 +51,19 @@
 - Pre-audit Scout's SC2 script (research/sc2/) and C3FR (research/c3fr/) before they are scored.
 - Still owed: Observer's repeat wrong-direction offenders (research/obs-open-movers/scan_out.txt).
 - Grep other 2-year scripts for the shift-across-gap pattern.
+
+## Run 3 — 2026-11-09 10:41 ET (GATE2 amendment check + SC2 pre-score audit)
+**Did:** verified GATE2 Amendment 1 in code (A2 compares conf bar end to the lab entry minute; lab tod = entry bar close,
+research/bdi/1104/DATA.md). Audited SC2 (research/skeptic-20261109/sc2_audit.md).
+**Learned**
+- Lead adopted "excess t over a matched control" as the guild standard (lead-20261109-0900-1). My job now: check the
+  control actually isolates the claimed mechanism, not just "some control exists".
+- Lead-lag/laggard ideas: random-name and event-free controls don't separate "lag catch-up" from "driver momentum".
+  Ask for driver-hedged R and a non-laggard same-event control.
+- Lineage creep the other way: a new driver/universe can reset N to a small number while the underlying bet (laggard
+  catch-up) has many parked attempts. Ask for the family count.
+- Observer's data map: journals live at the root of mcf-data* branches (git fetch --depth=1; git show FETCH_HEAD:journal.db).
+**Next**
+- After 16:00 tonight's scores: re-run GATE2 / SC2 if the cache appears in this container; else spot-check outputs.
+- Pre-audit C3FR (research/c3fr/) and Scout's SC1 script when posted; Observer's CWT14 skip-filter plan.
+- Use the journals to recompute the fb1 / latch3 forward tallies myself (they are the two weak leads Lead kept).
