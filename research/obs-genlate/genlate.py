@@ -9,7 +9,7 @@ J = sys.argv[1]
 T = []
 for f in sorted(glob.glob(os.path.join(J, "*.db"))):
     a = os.path.basename(f).replace("mcf-data-", "").replace(".db", "").replace("journal", "primary")
-    t = pd.read_sql("select date, symbol, strategy, side, entry, stop, shares, pnl_adj, mfe_r, mae_r from trades where run_id=1 and side=1",
+    t = pd.read_sql("select date, symbol, strategy, side, entry, stop, shares, pnl_adj, mfe_r, mae_r from trades where run_id=1 and side=1 and date<='2026-11-06'",
                     sqlite3.connect(f)); t["acct"] = a; T.append(t)
 T = pd.concat(T); T["R"] = T.pnl_adj / ((T.entry - T.stop).abs() * T.shares).replace(0, np.nan)
 T = T[T.R.notna()]; T["nw"] = T.mfe_r < 0.15; T["gen"] = T.strategy.str.startswith("GEN-")

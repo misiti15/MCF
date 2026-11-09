@@ -48,3 +48,8 @@
 **Learned**: late-buying is not a GEN trait. GEN longs never-worked = non-GEN (20.8%), but GEN gives back: 45% reach +0.5R, 31% of those close <= 0 (-168R = 49% of GEN long loss); `hold` exits worst. CWT14 longs = 5,148 trades / -708R (biggest long drain). GEN module source: research/generator/modules/<name>.py; registry.jsonl is hashed.
 **Failed**: no bars -> mfe_r proxies only (peak-vs-stop order unknown); name parsing of GEN conditions is crude.
 **Next**: (a) tonight: laggard-vs-leader long split on 2y from Builder's fromOpen column (check "cache up" note); (b) Builder's 09:50 measurement result; (c) reconcile moves.csv n_wrong 112 vs 144; (d) maybe: CWT14 long drain by account/regime — is it one variant or the family?
+
+## Run 5 — 2026-11-09 ~15:45 ET
+**Learned**: GEN rules recoverable: config/account_gen.yaml strategies.<name>.module -> research/generator/modules/*.py mask(df); gen.spec/gen.screen in yaml; geoms in mcf/research/generator/spec.py. GEN 2y screen does NOT predict live (Spearman valid -0.21; top tercile worst). Screen-to-live gap ~0.16R recurs (GEN, COMBO1-C3, MarcoFlow) -> asked whether lab costs are too light.
+**Failed**: scipy not installed (use rank().corr()). genlate.py date cap added.
+**Next**: tonight: read Builder's cache note + GATE2 / 09:50 results and be the outside voice; laggard-vs-leader 2y split from Builder's fromOpen column; watch for answer on lab-vs-live fill pairing; reconcile moves.csv n_wrong 112 vs 144.

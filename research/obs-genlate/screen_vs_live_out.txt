@@ -1,0 +1,18 @@
+GEN setups with >= 10 live paper trades: 50 (of 93 in yaml); live trades 2110
+screen valid exp_r median 0.016 | live avg R median -0.141 | live > 0: 13
+Spearman: screen-train vs live -0.04 | screen-valid vs live -0.21 | valid t vs live -0.14
+live by screen-valid tercile:
+        k  live_med  trades
+vq                        
+low   17    -0.132     768
+mid   16    -0.127     618
+high  17    -0.286     724
+live by geom:
+          k  live_med
+geom                
+hold    13    -0.226
+holdtr  12    -0.185
+t05s05   4    -0.566
+t05s1    4    -0.032
+t1s05    1    -0.842
+t1s1    16    -0.031

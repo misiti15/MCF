@@ -30,3 +30,16 @@ All LONG paper trades, all 7 accounts, 2026-10-06..11-06 (9,393 trades; GEN 1,43
 ## Suggested next (remedy order per charter: sizing / execution / exits before filters)
 GEN-family exit remedy: break-even after +0.5R (or switch `hold` to `holdtr`) on GEN long setups, replayed on 1-min bars
 (stop-first, costs in), per-setup better/worse counts. Needs the bar path, so Builder's cache.
+
+## Run 5 additions (2026-11-09 ~15:45 ET)
+- genlate.py now capped at date <= 2026-11-06 (Skeptic's reproducibility point).
+- **Where GEN rules live (for Builder's replay): fully recoverable.** `config/account_gen.yaml` -> `strategies.<GEN-name>`: `module:`
+  (all 93 exist under `research/generator/modules/`, each a self-contained `mask(df)` on lab 5-min frames via
+  `mcf.research.arena.indicators.compute`, plus SIDE / GEOM / WINDOW / MIN_ADV / CONTEXT), `window`, `min_adv`, `context`
+  (breadth etc.), and `gen.spec` (conds, geom) + `gen.screen` (2y train/valid stats as found). Geometries in
+  `mcf/research/generator/spec.py` GEOM_WORDS (hold = stop 1R, flat 15:55; holdtr = + 1R trail once +1R; tXsY = target/stop in R,
+  R = 0.25 x daily ATR per module docstring). `research/generator/registry.jsonl` is only a hashed dedup list. 2 non-standard: GEN-POD1022-*.
+- **Screen vs live (screen_vs_live_out.txt):** 50 GEN setups with >= 10 live trades (2,110 trades). Spearman rank corr of 2y screen
+  vs live avg R: train -0.04, valid -0.21, valid t -0.14. Top screen-valid tercile is the WORST live (median -0.286 vs -0.13).
+  Screen valid exp median +0.016R vs live median -0.141R: a ~0.16R screen-to-live gap (same size as the friction that killed
+  COMBO1-C3). 3000 specs per run -> winner's curse; the screen does not rank.
