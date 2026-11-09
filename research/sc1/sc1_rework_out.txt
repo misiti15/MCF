@@ -1,0 +1,43 @@
+/home/user/guild/research/sc1/sc1.py:175: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  etp = set(uni[uni.name.fillna("").str.contains(ETP_RE)].symbol) | IDX
+lab symbols 1226; ETP/fund excluded by name 205; lab names without a universe.csv name 1 (kept)
+pass 1 0/1021: events so far 2
+pass 1 100/1021: events so far 291
+pass 1 200/1021: events so far 542
+pass 1 300/1021: events so far 879
+pass 1 400/1021: events so far 1205
+pass 1 500/1021: events so far 1566
+pass 1 600/1021: events so far 1873
+pass 1 700/1021: events so far 2229
+pass 1 800/1021: events so far 2541
+pass 1 900/1021: events so far 2881
+pass 1 1000/1021: events so far 3170
+event symbol-days 3240 on 406 days
+control bars 0/200
+control bars 50/200
+control bars 100/200
+control bars 150/200
+sessions 449; lineage N 12: full bar 2.229, BAR90 2.01
+SC1-L-G4-T1030-cap1.0-lod event funnel: entered 141, hold_fail+no_bar_or_atr 2, hold_fail+risk_gt_1.0atr 189, hold_fail+risk_lt_0.1atr 55, hold_fail+traded_as_C1 788, hold_ok+no_bar_or_atr 9, hold_ok+risk_gt_1.0atr 520
+SC1-L-G4-T1030-cap1.0-lod done
+SC1-L-G4-T1000-cap1.0-lod event funnel: entered 165, hold_fail+no_bar_or_atr 5, hold_fail+risk_gt_1.0atr 162, hold_fail+risk_lt_0.1atr 55, hold_fail+traded_as_C1 803, hold_ok+no_bar_or_atr 6, hold_ok+risk_gt_1.0atr 508
+SC1-L-G4-T1000-cap1.0-lod done
+SC1-L-G4-T1030-cap0.6-vwap event funnel: entered 439, hold_fail+no_bar_or_atr 2, hold_fail+risk_gt_0.6atr 15, hold_fail+risk_lt_0.1atr 863, hold_fail+traded_as_C1 154, hold_ok+no_bar_or_atr 9, hold_ok+risk_gt_0.6atr 210, hold_ok+risk_lt_0.1atr 12
+SC1-L-G4-T1030-cap0.6-vwap done
+SC1-L-G4-T1000-cap0.6-vwap event funnel: entered 446, hold_fail+no_bar_or_atr 5, hold_fail+risk_gt_0.6atr 14, hold_fail+risk_lt_0.1atr 856, hold_fail+traded_as_C1 150, hold_ok+no_bar_or_atr 6, hold_ok+risk_gt_0.6atr 223, hold_ok+risk_lt_0.1atr 4
+SC1-L-G4-T1000-cap0.6-vwap done
+                    config   n  days  per_sess   avg_r     t  gross  wo_best  best_share   train   valid  valid_t  live_n   live     up   down  quiet  n_quiet  wf_pos  c1_ex  c1_t  c1_n   c2_ex  c2_t  fail_hold_n  blackout_r  blackout_n  other_r  cost_r_med   r_2x  stops  ssr_n ssr_r  big_n  big_r_5min  gap4-6_r  gap6-10_r  gap>10_r  bar90
+ SC1-L-G4-T1030-cap1.0-lod 141   101      0.31  0.0735  1.17  0.115   0.0542        0.28 -0.0335  0.1220     1.61      14 0.3187  0.234 -0.121 -0.011       43    0.76 0.2170  2.00   109  0.0561  0.55          788       0.084          71    0.063       0.034  0.058   0.42      0  None     38       0.066     0.100      0.058     0.065  False
+ SC1-L-G4-T1000-cap1.0-lod 165   130      0.37 -0.0010 -0.02  0.051  -0.0216         NaN  0.0390 -0.0195    -0.23      15 0.3194  0.170 -0.379  0.065       54    0.57 0.0984  0.76   132  0.2586  2.65          803      -0.054          80    0.049       0.044 -0.023   0.59      0  None     45      -0.135     0.050      0.048    -0.135  False
+SC1-L-G4-T1030-cap0.6-vwap 439   223      0.98 -0.0042 -0.05  0.142  -0.0379         NaN -0.0695  0.0264     0.26      42 0.6571  0.189 -0.220 -0.041      150    0.43 0.0639  0.23   206  0.2571  2.95          154       0.025         289   -0.060       0.110 -0.054   0.93      0  None    126      -0.255     0.077      0.113    -0.256  False
+SC1-L-G4-T1000-cap0.6-vwap 446   224      0.99 -0.2288 -3.31 -0.058  -0.2504         NaN -0.2384 -0.2249    -2.70      38 0.3457 -0.030 -0.575 -0.147      156    0.23 0.3652  2.44   196 -0.0404 -0.43          150      -0.225         280   -0.235       0.120 -0.295   0.96      0  None    135      -0.366    -0.203     -0.141    -0.367  False
+
+entry next 5-min bar open (1-min SIP cache); stop LOD/HOD so far -/+ 0.05 ATR_d (skip > 0.6 / < 0.10 ATR_d), 15:55 exit,
+6-bar trail once +1R on a close; stop-first, gaps fill at the open; costs production + 4.4bp spread (tod multiplier on entry).
+c1 = excess over the same day's failed-hold event gaps (same side / T), c2 = over a same-minute random no-event pool name;
+blackout = earnings calendar window (+-4 days) where the calendar covers it; day type SPY o-c +-0.25%. All universe names
+have adv20 >= $60M, so none is extended-tier (3x slippage rule not triggered).
+Amendment 2: shorts on SSR names (touched -10% vs prior close before entry, or SSR carried from the prior session) are
+reported (ssr_n / ssr_r) and EXCLUDED from scoring; stops on > 10% gaps re-priced on 1-min bars (big_r_5min = before).
+configs 4 (lineage N 12), BAR90 2.01: pass 0
+Educational only - not financial advice.

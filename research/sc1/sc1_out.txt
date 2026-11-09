@@ -1,4 +1,4 @@
-/home/user/guild/research/sc1/sc1.py:148: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+/home/user/guild/research/sc1/sc1.py:175: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
   etp = set(uni[uni.name.fillna("").str.contains(ETP_RE)].symbol) | IDX
 lab symbols 1226; ETP/fund excluded by name 205; lab names without a universe.csv name 1 (kept)
 pass 1 0/1021: events so far 2
@@ -18,13 +18,21 @@ control bars 50/200
 control bars 100/200
 control bars 150/200
 sessions 449; lineage N 8: full bar 2.039, BAR90 1.84
+SC1-L-G4-T1000 event funnel: entered 22, hold_fail+no_bar_or_atr 5, hold_fail+risk_gt_0.6atr 421, hold_fail+risk_lt_0.1atr 55, hold_fail+traded_as_C1 544, hold_ok+no_bar_or_atr 6, hold_ok+risk_gt_0.6atr 651
 SC1-L-G4-T1000 done
+SC1-S-G4-T1000 event funnel: entered 66, hold_fail+no_bar_or_atr 4, hold_fail+risk_gt_0.6atr 283, hold_fail+risk_lt_0.1atr 69, hold_fail+traded_as_C1 549, hold_ok+no_bar_or_atr 2, hold_ok+risk_gt_0.6atr 563
 SC1-S-G4-T1000 done
+SC1-L-G4-T1030 event funnel: entered 18, hold_fail+no_bar_or_atr 2, hold_fail+risk_gt_0.6atr 449, hold_fail+risk_lt_0.1atr 55, hold_fail+traded_as_C1 528, hold_ok+no_bar_or_atr 9, hold_ok+risk_gt_0.6atr 643
 SC1-L-G4-T1030 done
+SC1-S-G4-T1030 event funnel: entered 42, hold_fail+no_bar_or_atr 6, hold_fail+risk_gt_0.6atr 344, hold_fail+risk_lt_0.1atr 46, hold_fail+traded_as_C1 491, hold_ok+risk_gt_0.6atr 607
 SC1-S-G4-T1030 done
+SC1-L-G6-T1000 event funnel: entered 12, hold_fail+no_bar_or_atr 3, hold_fail+risk_gt_0.6atr 294, hold_fail+risk_lt_0.1atr 36, hold_fail+traded_as_C1 380, hold_ok+no_bar_or_atr 4, hold_ok+risk_gt_0.6atr 464
 SC1-L-G6-T1000 done
+SC1-S-G6-T1000 event funnel: entered 48, hold_fail+no_bar_or_atr 3, hold_fail+risk_gt_0.6atr 197, hold_fail+risk_lt_0.1atr 49, hold_fail+traded_as_C1 394, hold_ok+no_bar_or_atr 1, hold_ok+risk_gt_0.6atr 379
 SC1-S-G6-T1000 done
+SC1-L-G6-T1030 event funnel: entered 12, hold_fail+no_bar_or_atr 1, hold_fail+risk_gt_0.6atr 302, hold_fail+risk_lt_0.1atr 34, hold_fail+traded_as_C1 378, hold_ok+no_bar_or_atr 6, hold_ok+risk_gt_0.6atr 460
 SC1-L-G6-T1030 done
+SC1-S-G6-T1030 event funnel: entered 35, hold_fail+no_bar_or_atr 4, hold_fail+risk_gt_0.6atr 232, hold_fail+risk_lt_0.1atr 32, hold_fail+traded_as_C1 364, hold_ok+risk_gt_0.6atr 404
 SC1-S-G6-T1030 done
         config  n  days  per_sess   avg_r     t  gross  wo_best  best_share   train   valid  valid_t  live_n    live     up   down  quiet  n_quiet  wf_pos   c1_ex  c1_t  c1_n   c2_ex  c2_t  fail_hold_n  blackout_r  blackout_n  other_r  cost_r_med   r_2x  stops  ssr_n  ssr_r  big_n  big_r_5min  gap4-6_r  gap6-10_r  gap>10_r  bar90
 SC1-L-G4-T1000 22    21      0.05  0.1364  0.72  0.214   0.0725        0.49 -0.4356  0.2635     1.33       3  0.2508  0.159    NaN  0.109       10    0.58  0.6454  1.42    11  0.1695  0.63          544       0.014          10    0.238       0.070  0.105   0.68      0    NaN      3      -0.605     0.055      0.474    -0.605  False

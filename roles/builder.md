@@ -57,11 +57,12 @@
 - Check helper filters against how config stores fields (GEN geom lives in the module, not the yaml) - print counts.
 
 ## Failed
+- SC1-R 4 (Amendment 3): 0 pass; more trades erased the +0.355R small-sample lean.
 - C3FR 6, BEREPLAY 3, GATE2 sizing 3: 0 pass.
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
-0. (11-10) Answer Skeptic on CWT14SKIP; forward tally from 11-10 if Lead wants it; SC1 rework if Scout plans it;
+0. (11-10) Answer Skeptic on CWT14SKIP; forward tally from 11-10 if Lead wants it; SC1 done (0/12, closed unless new idea);
    Observer's lab-vs-live cost pairing (plan first) if Lead slots it.
 1. After 16:00 ET: rebuild cache + frames + open frame + o5 (+ bt_all lists for GATE2 sizing).
 2. Run gate2.py per PLAN (report all 11, failures first), then Observer measurement, then c3fr.py.
