@@ -17,9 +17,15 @@ workflow_dispatch made with GITHUB_TOKEN does start a run), so a hand-over no lo
     unless a hunch run is already queued.
   * watchdog.yml (job hunch-start) - on trading days 09:45-15:50 ET it dispatches hunch.yml when no hunch run is queued
     or in progress.
+  * trade.yml (job eod-start, HK-EOD-CHAIN 2026-11-09) - after every account job of a run has ended, at/after the 15:55 ET
+    flatten on a market day, it dispatches eod.yml (input auto=true, so each account still skips when today's report
+    exists) unless another trade run still has a session job active (that run's eod-start goes last) or an EOD run since
+    15:50 ET is active / finished. On 11-09 the closing trade run was a bot workflow_dispatch, which does not fire eod.yml's
+    workflow_run chain, and the 16:25 backup cron also did not fire. Both stay as backups.
 
 Caps: trade.yml shares session_guard.MAX_DISPATCHES (bot dispatches of trade.yml per day); hunch.yml at most
-HUNCH_MAX_DISPATCHES bot dispatches a day. GitHub API only; no orders, no broker calls, no trading config touched."""
+HUNCH_MAX_DISPATCHES and eod.yml at most EOD_MAX_DISPATCHES bot dispatches a day.
+GitHub API only; no orders, no broker calls, no trading config touched."""
 
 from __future__ import annotations
 
@@ -40,6 +46,9 @@ TRADE_END = time(15, 50)            # mcf live stops polling at 15:50 ET (trade.
 HUNCH_WINDOW = (time(9, 45), time(15, 50))   # watchdog start check (owner 2026-11-05)
 HUNCH_RELAY_END = time(15, 55)      # after this a hunch successor has nothing left to guess
 HUNCH_MAX_DISPATCHES = 4
+EOD_WINDOW = (time(15, 55), time(20, 0))   # after the flatten (config session.flatten_by) until well past the EOD backups
+EOD_SINCE = time(15, 50)            # an EOD run created from here on covers today's close
+EOD_MAX_DISPATCHES = 3
 STAGGER_S = 30
 
 
@@ -105,6 +114,46 @@ def decide_hunch(now: pd.Timestamp, market_open_today: bool, runs: list[dict], d
     return out
 
 
+def other_trade_active(runs: list[dict], jobs: dict, own_run_id) -> bool:
+    """True when a trade run other than our own still has a session job (any account) queued / running, or is queued with
+    no jobs yet: that run's own eod-start job comes later and starts EOD once its accounts have pushed their final state."""
+    for r in runs:
+        if r.get("id") == own_run_id or r.get("status") not in ACTIVE:
+            continue
+        js = jobs.get(r.get("id"))
+        if not js:
+            return True
+        if any(j.get("name", "").startswith("session") and j.get("status") in ACTIVE for j in js):
+            return True
+    return False
+
+
+def decide_eod(now: pd.Timestamp, market_open_today: bool, trade_runs: list[dict], trade_jobs: dict, own_run_id,
+               eod_runs: list[dict], dispatches_today: int) -> dict:
+    """Pure: should this trade run (all its account jobs ended) dispatch eod.yml now?"""
+    now = now.tz_convert(NY)
+    out = {"at": str(now), "action": "none", "reasons": []}
+    since = pd.Timestamp.combine(now.date(), EOD_SINCE).tz_localize(NY)
+    recent = [r for r in eod_runs if r.get("created_at") and sg._ts(r["created_at"]) >= since]
+    if now.weekday() >= 5 or not (EOD_WINDOW[0] <= now.time() < EOD_WINDOW[1]):
+        out["reasons"].append(f"outside {EOD_WINDOW[0]:%H:%M}-{EOD_WINDOW[1]:%H:%M} ET weekdays: not the closing run")
+    elif not market_open_today:
+        out["reasons"].append("not a market day")
+    elif other_trade_active(trade_runs, trade_jobs, own_run_id):
+        out["reasons"].append("another trade run still has a session job active: its eod-start goes last")
+    elif any(r.get("status") in ACTIVE for r in recent):
+        out["reasons"].append("an EOD run is already queued or in progress")
+    elif any(r.get("status") == "completed" and r.get("conclusion") == "success" for r in recent):
+        out["reasons"].append("an EOD run already finished after the close")
+    elif dispatches_today >= EOD_MAX_DISPATCHES:
+        out["action"] = "capped"
+        out["reasons"].append(f"{dispatches_today} bot dispatches of eod.yml today (cap {EOD_MAX_DISPATCHES})")
+    else:
+        out["action"] = "dispatch"
+        out["reasons"].append("closing trade run ended and no EOD run since the close")
+    return out
+
+
 def _runs_today(workflow: str, now: pd.Timestamp) -> list[dict]:
     since = pd.Timestamp(now.tz_convert(NY).strftime("%Y-%m-%d"), tz=NY).tz_convert("UTC").strftime("%Y-%m-%dT%H:%M:%SZ")
     q = urllib.parse.quote(">=" + since)
@@ -159,6 +208,28 @@ def run_hunch(ref: str | None, mode: str, relay: bool) -> dict:
     return d
 
 
+def run_eod(ref: str | None, mode: str) -> dict:
+    now = pd.Timestamp.now(tz=NY)
+    own = int(os.environ.get("GITHUB_RUN_ID", "0"))
+    trade_runs = _runs_today("trade.yml", now)
+    trade_jobs = {r["id"]: (sg._gh(f"/actions/runs/{r['id']}/jobs?per_page=50") or {}).get("jobs", [])
+                  for r in trade_runs if r.get("status") in ACTIVE and r.get("id") != own}
+    eod_runs = _runs_today("eod.yml", now)
+    d = decide_eod(now, sg.market_open_today(now.strftime("%Y-%m-%d")), trade_runs, trade_jobs, own, eod_runs,
+                   bot_dispatches(eod_runs))
+    d["mode"] = mode
+    if d["action"] == "dispatch" and mode == "act":
+        _dispatch("eod.yml", _ref(ref), {"auto": "true"})
+        d["dispatched"] = True
+    print("handover " + json.dumps(d, default=str), flush=True)
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            f.write("## EOD start check\n\n" + f"- at: {d['at']}\n- action: **{d['action']}**"
+                    + (" (sent)" if d.get("dispatched") else "") + "\n" + "".join(f"- {r}\n" for r in d["reasons"])
+                    + "\n_Educational only - not financial advice._\n")
+    return d
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -169,13 +240,16 @@ def main(argv=None):
     t.add_argument("--lead-min", type=int, default=15)
     h = sub.add_parser("hunch", help="dispatch hunch.yml when no hunch run is queued / in progress")
     h.add_argument("--relay", action="store_true", help="called from a hunch run that is ending (ignore own run)")
-    for p in (t, h):
+    e = sub.add_parser("eod", help="after the closing trade run: dispatch eod.yml unless EOD already ran / is running")
+    for p in (t, h, e):
         p.add_argument("--ref", default=None, help="branch to dispatch on (default: the repo's default branch)")
         p.add_argument("--mode", default="act", choices=["dry", "act"])
     a = ap.parse_args(argv)
     try:
         if a.cmd == "trade":
             return run_trade(a.account, a.job_start, a.limit_min, a.lead_min, a.ref, a.mode)
+        if a.cmd == "eod":
+            return run_eod(a.ref, a.mode)
         return run_hunch(a.ref, a.mode, a.relay)
     except Exception as e:  # noqa: BLE001 - a hand-over hiccup must never fail the trading / research job
         print(f"::warning::handover {a.cmd} failed: {e}")
