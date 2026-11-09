@@ -95,3 +95,17 @@ IDENTICAL on 10-06..11-06. Added gb_check.py: giveback by family, longs and shor
 - Tonight's scores: GATE2, 09:50 measurement, SC2, CWT14SKIP (check amendments applied, controls behave).
 - NH1 plan (N 1,671, bar 3.47): priors are negative (HOD-break long -0.099R); pre-audit its script when posted.
 - fb1 / latch3 forward tallies need bars (dist to LOD, MTM): ask Builder for a cached 5-min file for live dates.
+
+## Run 6 — 2026-11-09 16:41 ET (lab-vs-live cost check; OD0950 review)
+**Did:** costgap.py on the 7 journals (trades joined to signals by broker_order_id; 16,615 paper trades 10-06..11-06).
+**Learned**
+- Lab costs are ~3x heavier than paper fills (0.218R vs ~0.015-0.06R/trade), same sign all 24 days and accounts.
+  The 0.16R screen-to-live gap is not cost -> winner's curse / exits / delay. Never loosen costs from paper data.
+- Journal facts: signals.ref_price is a stale price (~bar close; sd 20bp vs the quote mid); info JSON has bid/ask at submit;
+  paper fills sit ~4.6bp from mid (at the touch); signal->fill ~1.5 s; bar_age ~1.2 min at signal.
+- Cost per R is driven by stop width: tight quartile (44bp) 0.42R/trade lab cost. A min stop width in bps is a lever.
+- OD0950: flat -0.10R across deciles = the cost charge; gross ~0. Ask for gross R whenever net R is flat across buckets.
+**Next**
+- GATE2 / SC2 / CWT14SKIP results tonight: check against the audits.
+- Suggest to Scout/Builder a "min stop width" remedy test (per family, retention, excess) — Lead to slot.
+- Real-money vs paper fill gap is unknown; flag if any real account data ever exists.
