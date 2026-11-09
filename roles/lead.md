@@ -25,6 +25,11 @@
 - Tonight: GATE2 -> 09:50 -> SC2 -> CWT14 skip -> C3FR. Wrong-way trades diffuse (no veto).
 - Learned: the team self-corrects well (Observer 10:1 retraction, Builder took all audit points); keep Skeptic auditing BEFORE scores.
 
+## Run 4 (12:58 ET)
+- Laggard family N = 92 (harder reading chosen). Long side = lead thread: longs are dip-buys; missed up-movers are near-HOD strength. Scout plans near-HOD continuation long (family: GEN NewHOD, orb20_a, ORB, 09:50 drive).
+- Tonight: GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> C3FR. Asked Builder for a 'cache up' note.
+- After 16:00: check results; if any research worth keeping, open PR to claude/intraday-trading-system-witis4 (research files only).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
