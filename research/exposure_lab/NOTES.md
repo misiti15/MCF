@@ -107,3 +107,39 @@ from 1-minute bars, not broker fills.
 
 - Together (all 26): +21.77R in 218 trades, worst intraday drawdown -49.84R.
 - The alone runs were not part of the smoke. `2026-11-06.json` is that partial output.
+
+## 2026-11-09 — full run (30 runs, 3,654 symbols with bars, `--jobs 4`, exit 0, no code changes)
+Shadow, Primary rules for every run, fills simulated from 1-minute bars after costs. One session (SPY +1.75% from open
+by 15:21, a strong up day against the shorts).
+
+**PV books:**
+
+| book | R | trades | green | long / short R | worst intraday drawdown |
+|---|---|---|---|---|---|
+| PV0 (as is) | -17.85 | 33 | no | +1.55 / -19.41 | -19.49R |
+| PV1 (opt1b) | +0.19 | 16 | yes | +1.55 / -1.36 | -4.74R |
+| PV2 (opt2b) | +1.16 | 17 | yes | +1.99 / -0.83 | -4.97R |
+
+- PV0's loss is almost all MF4-h40-open-flowsell-FD: -16.71R in 16 trades (1 win). The live Primary journal closed
+  about -19.2R with MF4-FD at about -17.1R, so the shadow matches live closely.
+- PV0 minus MF4-FD and MF2-FD is roughly PV1; PV1 vs PV2 differ by L3-rsi5hi/NS1 vs NM-ETF late dip and ~1R.
+- Together (all 26): -15.74R in 89 trades (sum of alone runs -33.4R), worst intraday drawdown -24.29R.
+  Together beats the alone sum only because MF4 base is blocked by its own FD twin (see below).
+
+**Crowding (alone -> together; R / trades):**
+- L3-gap-slope-fromopen-FD +0.68/10 -> -1.22/8 (5 held_by_other, 23 daily_loss skips; 117 borrow skips in both).
+- L3-gap-slope-lowdist-FD +4.41/5 -> +2.62/3 (2 held_by_other).
+- NM-ETF-late-dip-di-long +0.99/2 -> 0/0 (2 daily_loss skips: the shared book was already latched/halted).
+- L3-gap-slope-rsi5hi-FD +1.37/3 -> +0.45/1.
+- Gainers from crowding are the losers being blocked: MF4 base -16.71 -> 0 (17 held_by_other), RW7-FD -2.53 -> +0.74,
+  CWT09 vwaploss g5 -2.65 -> -1.12, RW5-FD -1.22 -> -0.11.
+
+**Pairwise conflicts (alone runs):**
+- MF4-h40-open-flowsell x MF4-h40-open-flowsell-FD: 16 same-symbol overlaps, corr 1.00 — the same trades twice.
+- The three L3 gap-slope variants stack: fromopen x rsi5hi 9 overlaps (corr 0.64), fromopen x lowdist 9 (0.63),
+  lowdist x rsi5hi 3 (0.71).
+- Only true opposite-side clash: GEN-261021-02 (long) x RW7-FD (short), 2 overlaps, corr -0.31. Small.
+- Short-gap-down family (RW1/RW3/RW5/RW7/MF2) overlaps are 1-2 each, corr 0.1-0.6.
+
+**Rule changes in effect:** 11-09 `2026-11-09-expo1109-gen-temp-moves` (5 GENs live in Testing 1/2 for 11-09/11-10);
+the lab runs every setup under Primary rules regardless. One session only — decide with 11-10.
