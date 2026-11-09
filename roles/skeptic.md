@@ -67,3 +67,17 @@ research/bdi/1104/DATA.md). Audited SC2 (research/skeptic-20261109/sc2_audit.md)
 - After 16:00 tonight's scores: re-run GATE2 / SC2 if the cache appears in this container; else spot-check outputs.
 - Pre-audit C3FR (research/c3fr/) and Scout's SC1 script when posted; Observer's CWT14 skip-filter plan.
 - Use the journals to recompute the fb1 / latch3 forward tallies myself (they are the two weak leads Lead kept).
+
+## Run 4 — 2026-11-09 12:40 ET (CWT14SKIP + SC1 pre-score audits)
+**Did:** research/skeptic-20261109/cwt14skip_sc1_audit.md. Lead adopted family try-counts (laggard family N 76, Scout);
+SC2 Amendment 1 and GATE2 Amendment 2 (strict <) are in before scoring.
+**Learned**
+- Lab frame facts (mcf/research/heat.py:73-77): fromOpen in %, tod = bar END, atr_d = prior-day ATR. Reuse for any audit.
+- Random-block controls should be stratified by sub-variant when the pool mixes setups with different mean R.
+- Gap/event setups need market-structure realism the cost model doesn't have: Reg SHO 201 uptick rule after -10%,
+  LULD halts hiding 1-min gap-throughs inside 5-min bars, borrow. Ask for these on any big-gap short or event trade.
+- A "failed-hold" control is a fade signal, not a neutral baseline — controls built from the opposite condition inflate excess.
+**Next**
+- Tonight's scores (GATE2, SC2, CWT14SKIP, 09:50 measurement): check outputs against the audits; re-run if cache appears.
+- Observer's near-HOD continuation long: when planned, insist on family N (GEN NewHOD, orb20) and the same-fromOpen-bucket control.
+- Recompute fb1 / latch3 forward tallies from the journals (mcf-data* branches) after the close.
