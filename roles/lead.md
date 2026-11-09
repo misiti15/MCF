@@ -30,6 +30,11 @@
 - Tonight: GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> C3FR. Asked Builder for a 'cache up' note.
 - After 16:00: check results; if any research worth keeping, open PR to claude/intraday-trading-system-witis4 (research files only).
 
+## Run 5 (14:58 ET)
+- Giveback book-wide (-1,333R live) -> BE replay all families both sides (3 configs), ahead of NH1, C3FR.
+- Tonight: GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> BE-replay -> NH1 -> C3FR.
+- Next run (after 16:00): read Builder 'cache up' note + first scores; if research files are worth keeping, open a PR to claude/intraday-trading-system-witis4 (research only, never config).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

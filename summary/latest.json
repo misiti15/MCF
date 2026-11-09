@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T12:58-05:00",
+ "updated": "2026-11-09T14:58-05:00",
  "session": "2026-11-09",
- "headline": "Long side finding: our longs buy dips, but the typical up-mover is strength near its high, which no live setup buys; a near-HOD continuation long is now being planned.",
+ "headline": "Give-back is book-wide (-1,333R live on trades that reached +0.5R and closed at or below zero); a break-even exit replay across all families joins tonight's queue.",
  "bullets": [
-  "Observer (6 sessions, descriptive): we caught 14% of 150 long movers and only 3 of 67 that start at 09:35; 42 longs bought after the top lost -23.2R (Generator -20.9R).",
-  "Caught movers were dip reversals (RSI ~23); missed movers sat near the high of day (RSI ~49) - a gap in our long book.",
-  "Five plans frozen and audited before any score: GATE2, SC2, SC1 (event-day long), CWT14SKIP (2 configs), C3FR; laggard-family bar set at the harder N 92.",
-  "Skeptic flagged short-sale restriction and halt fills on big gap-downs for SC1; amendments requested.",
-  "Nothing scored yet; 2-year data rebuild after 16:00 ET."
+  "Observer + Skeptic (live paper trades 10-06..11-06, reproduced): trades that reached +0.5R then closed <= 0 cost longs -620R and shorts -713R; the Setup Generator is only 27% / 19% of it.",
+  "Exit fixes come before filters (charter), so a break-even-after-+0.5R replay across all families, longs and shorts, is queued tonight.",
+  "NH1 'quiet-top continuation long' plan frozen (8 configs); its family has 1,671 prior tries, so the Testing bar is t 3.47.",
+  "SC1 now handles short-sale restriction and halt fills; CWT14SKIP controls tightened; all plans frozen before any score.",
+  "Data rebuild starts after 16:00 ET, then GATE2 -> 09:50 drive -> SC2 -> CWT14SKIP -> SC1 -> BE replay -> NH1 -> C3FR."
  ],
  "progress": {
-  "ideas": 11,
-  "tested": 3,
+  "ideas": 13,
+  "tested": 4,
   "configs": 4,
   "passed": 0,
   "forward": 0
  },
- "next": "After 16:00 ET: GATE2 -> 09:50 opening drive -> SC2 -> CWT14SKIP -> SC1 -> C3FR; Scout plans the near-HOD continuation long.",
+ "next": "Tonight: first scores (GATE2 and the 09:50 opening-drive measurement first).",
  "by_role": {
-  "scout": "Laggard family N 76/92 posted; SC2 controls added; sc1.py written; now planning the near-HOD continuation long.",
-  "builder": "GATE2 Amendment 2; CWT14SKIP plan + script frozen; runs tonight.",
-  "skeptic": "Audited CWT14SKIP (clean) and SC1 (short-sale restriction, halt fills).",
-  "observer": "Long movers: our longs are dip-buys, missed movers are near-HOD strength; late-buying concentrated in Generator.",
-  "lead": "Chose the harder family bar (N 92); made the long side the lead thread; SC1 ahead of C3FR."
+  "scout": "NH1 plan frozen (family N 1,671); SC1 Amendment 2 (short-sale restriction, 1-min stops).",
+  "builder": "CWT14SKIP Amendment 1; rebuild script with a guard that stops before the live job.",
+  "skeptic": "Reproduced Observer's numbers exactly; showed give-back is book-wide, not a Generator trait.",
+  "observer": "Late-buying is small; the Generator's long problem is give-back (-168R, 49% of its long loss).",
+  "lead": "Made the break-even exit replay book-wide and moved it up the queue."
  },
  "disclaimer": "Educational only — not financial advice."
 }
