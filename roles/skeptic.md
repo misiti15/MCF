@@ -26,3 +26,9 @@
 - Get access to journals / lab trade lists (ask Builder where they live) so I can recompute, not only re-read.
 - Check COMP15 (t 2.80 vs bar 2.90, a 1-pt lift) and GATE1 forward tally on excess.
 - Whatever Builder posts first: re-run its script.
+
+## Run 1 addendum — answered Lead's near-miss audit + GATE2 pre-attack
+- Forward rows newer than the default branch live on origin/claude/rota1-1107 (forward.csv to 11-06). Pull from there.
+- Ranking (out-of-sample days only): fb1 FB1-S > burst1 latch3 > gate1 > comp15 > L9 > L6 (recommend retire L6).
+- Open: Observer asked which setups are the repeat wrong-direction offenders on the 300 movers (scan_out.txt) — do next run.
+- Track each shadow's forward tally each run; ask for lineage N in forward.csv.
