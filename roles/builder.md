@@ -26,8 +26,9 @@
   research/data/rebuild.sh + dl.py (stop guard 07:30 ET 11-10). Evening: run rebuild.sh FIRST (background, ~1h+), post
   'cache up/not up', then GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> C3FR; queue: Observer GEN exit replay (plan first).
 - Evening 11-09: cache UP (1-min bars 1,226 syms to 11-09; frames, context, daily). Scored: OD0950 (closed),
-  GATE2 8/11 (0 pass), SC2 (0/12), SC1 (0/8, underpowered), NH1 (0/8). Pending lists: GATE2 sizing 3, CWT14SKIP, BEREPLAY,
-  C3FR (needs open frame + o5).
+  GATE2 11/11 (0 pass), SC2 (0/12), SC1 (0/8, underpowered), NH1 (0/8), C3FR (0/6), CWT14SKIP (X1.5 passes own bar
+  1.93: t 2.05, tiny, VALID weak), BEREPLAY (0/3). All data rebuilt and present in this container; bt_lab1104 lists +
+  GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
@@ -51,9 +52,16 @@
 - gates GD._blackout silently returns all-False without research/bdi/earnings/data/earnings_yf.parquet (copy from the
   research-data branch, open rows only).
 
+- mfe-based giveback overstates exit fixes ~10x: BE50 upper bound +176,671R, bar replay -16,000R (dip-then-win trades).
+- Next-bar entry matters: COMBO1-C3's gross halved (+0.083 -> +0.042R) when entry moved from the signal close.
+- Check helper filters against how config stores fields (GEN geom lives in the module, not the yaml) - print counts.
+
 ## Failed
+- C3FR 6, BEREPLAY 3, GATE2 sizing 3: 0 pass.
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+0. (11-10) Answer Skeptic on CWT14SKIP; forward tally from 11-10 if Lead wants it; SC1 rework if Scout plans it;
+   Observer's lab-vs-live cost pairing (plan first) if Lead slots it.
 1. After 16:00 ET: rebuild cache + frames + open frame + o5 (+ bt_all lists for GATE2 sizing).
 2. Run gate2.py per PLAN (report all 11, failures first), then Observer measurement, then c3fr.py.
