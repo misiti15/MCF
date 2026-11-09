@@ -32,3 +32,22 @@
 - Ranking (out-of-sample days only): fb1 FB1-S > burst1 latch3 > gate1 > comp15 > L9 > L6 (recommend retire L6).
 - Open: Observer asked which setups are the repeat wrong-direction offenders on the 300 movers (scan_out.txt) — do next run.
 - Track each shadow's forward tally each run; ask for lineage N in forward.csv.
+
+## Run 2 — 2026-11-09 08:42 ET (GATE2 pre-score audit)
+**Did:** read research/gate2/PLAN.md + gate2.py line by line before any score (research/skeptic-20261109/gate2_audit.md).
+**Learned**
+- Builder took all six pre-attack points into the plan (bar on raw t AND excess over C1, N 123). Pre-attacking before
+  scoring works — keep doing it for SC2 / C3FR / Observer's 09:50 measurement.
+- The "trade less of a losing book" trap also hides in *sizing* tests (weighted minus unweighted): down-weighting most
+  of a negative book scores positive with no timing. Always demean by the setup's own mean or use random relabelings.
+- Dict lookups with a default (`I.get(tod, 999)`) are a look-ahead risk whenever time granularities differ.
+- Dropping the locked block then using shift()/rolling across the hole makes a 4-month "daily" return. Check every
+  2-year script that computes returns/ATR/beta after lib.daily().
+- When the held side drives the trade side, the up/down day split is nearly automatic; ask for held vs failed days and
+  a break-even hold rate instead.
+**Failed / limits:** still no data in this container (Builder rebuilds after 16:00 ET), so this was a code read, not a re-run.
+**Next**
+- After tonight's GATE2 score: re-run gate2.py myself if the cache exists; check items 1-6 were applied.
+- Pre-audit Scout's SC2 script (research/sc2/) and C3FR (research/c3fr/) before they are scored.
+- Still owed: Observer's repeat wrong-direction offenders (research/obs-open-movers/scan_out.txt).
+- Grep other 2-year scripts for the shift-across-gap pattern.
