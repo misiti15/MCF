@@ -52,3 +52,12 @@ K {0.5, 0.8} x exit {E1, E2} x M {M0, M1}.
 ## Pass (Testing, BAR90) — all required
 C1-excess t >= 3.47 (family bar) and raw t >= 3.47; TRAIN > 0 and VALID > 0; up-day AND down-day avg R > 0; walk-forward
 positive months >= 54%; avg R w/o best day > 0; best-day share < 50%. At NH1's own bar (1.84) a result is a lead only.
+
+## Amendment 1 (2026-11-09 15:30 ET, before any score; N unchanged) — implementation clarifications
+- **C1:** "same-minute random long" = one random universe name (not blackout, not ETP) whose fromOpen bucket at the signal bar
+  equals the signal's and that is not itself an NH1 signal at that bar (either K), drawn uniformly among those whose stop
+  geometry fits the same skip bounds (instead of "up to 5 draws"; same intent, no retry bias). Seed 20261109.
+- **C2 (descriptive):** "same name and bar" is impossible (the signal name is at its top), so C2 = a random universe name at
+  the same bar whose day is equally compressed (range <= K ATR) but sits in the BOTTOM 30% of its range.
+- RSI14 = Wilder on 5-min closes of the prior open session (<= 5 days back) + today; NaN (no signal) when no prior session.
+- Script: research/nh1/nh1.py (selftest passes; full path compiles, not run here: no cache in this container).
