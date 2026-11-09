@@ -81,3 +81,17 @@ SC2 Amendment 1 and GATE2 Amendment 2 (strict <) are in before scoring.
 - Tonight's scores (GATE2, SC2, CWT14SKIP, 09:50 measurement): check outputs against the audits; re-run if cache appears.
 - Observer's near-HOD continuation long: when planned, insist on family N (GEN NewHOD, orb20) and the same-fromOpen-bucket control.
 - Recompute fb1 / latch3 forward tallies from the journals (mcf-data* branches) after the close.
+
+## Run 5 — 2026-11-09 14:40 ET (re-ran Observer's GEN giveback study from the journals)
+**Did:** fetched all 7 journals (git fetch --depth=1 origin mcf-data*; journal.db at root), re-ran obs-genlate/genlate.py:
+IDENTICAL on 10-06..11-06. Added gb_check.py: giveback by family, longs and shorts, day concentration.
+**Learned**
+- First independent re-run in the guild: Observer's numbers hold. Journal-only studies are cheap to re-run — do it.
+- Scripts without a date cap drift as journals grow; ask every study to fix its window.
+- Giveback (mfe >= 0.5R then <= 0) is book-wide: longs -620R (GEN 27%), shorts -713R (GEN 19%; MF1 57% of reached).
+  A GEN-only exit remedy would break the Remedies rule; asked Builder to replay on all families.
+- Exit-tag comparisons across setups (hold vs holdtr) are confounded by setup; only a replay of the same entries settles it.
+**Next**
+- Tonight's scores: GATE2, 09:50 measurement, SC2, CWT14SKIP (check amendments applied, controls behave).
+- NH1 plan (N 1,671, bar 3.47): priors are negative (HOD-break long -0.099R); pre-audit its script when posted.
+- fb1 / latch3 forward tallies need bars (dist to LOD, MTM): ask Builder for a cached 5-min file for live dates.
