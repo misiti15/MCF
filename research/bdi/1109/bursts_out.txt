@@ -1,0 +1,28 @@
+acct | trades | setup-burst entries (n, avg R, sum) | other entries avg R | book-burst entries (n, avg R) | stacks (lots, sum R) | give-back $ (peak t -> close)
+p | 36 | 20 -0.835 -16.7 | -0.088 | 20 -0.901 | 3 +2.4 | +213 (10:06 +16 -> -197)
+t1 | 65 | 41 -0.103 -4.2 | +0.105 | 37 -0.051 | 0 +0.0 | +65 (10:08 +58 -> -7)
+t2 | 53 | 10 -0.175 -1.7 | -0.077 | 0 +nan | 10 +1.0 | +153 (11:30 +83 -> -69)
+gy | 512 | 343 -0.212 -72.8 | -0.021 | 431 -0.131 | 260 -30.5 | +695 (10:00 +42 -> -653)
+gen | 293 | 183 -0.231 -42.3 | -0.137 | 249 -0.237 | 18 -4.7 | +1311 (10:32 +173 -> -1138)
+ex1 | 4 | 0 +nan +0.0 | +0.150 | 0 +nan | 0 +0.0 | +14 (14:57 +1 -> -13)
+ll | 3 | 0 +nan +0.0 | +0.468 | 0 +nan | 0 +0.0 | +0 (15:32 +47 -> +47)
+
+largest setup bursts (by |sum R|):
+  gy `CWT12-coil-k6-long` L 15 entries 10:35-10:42 +15.32R, stops 3
+  gen `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` S 18 entries 10:05-10:12 -14.95R, stops 15
+  gen `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` S 18 entries 10:15-10:25 -13.44R, stops 13
+  gy `MF3-open-flowsell-rsi5hi-FD` S 11 entries 09:55-10:05 -12.20R, stops 11
+  gy `MF5-flowsell-vwapup-rsi5hi-FD` S 11 entries 09:55-10:05 -12.11R, stops 11
+  gen `GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long` L 19 entries 09:55-09:58 +10.18R, stops 2
+  gen `GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short` S 16 entries 10:46-10:56 -9.24R, stops 9
+  gy `heat_fade_short-FD` S 9 entries 11:18-11:26 -8.60R, stops 8
+  gy `MF1-945-flowsell-vwapup-FD` S 7 entries 09:56-10:01 -8.39R, stops 7
+  gy `heat_fade_short` S 8 entries 10:00-10:07 -8.33R, stops 8
+  gy `RW2-exhaustion-noon-adv150-short-FD` S 10 entries 09:50-09:57 -8.30R, stops 8
+  p `MF4-h40-open-flowsell-FD` S 7 entries 10:20-10:25 -8.04R, stops 7
+
+all setup bursts: 73, 597 entries, -137.8R (avg -0.231R vs non-burst -0.051R); bursts with >= 75% stops: 20 (-144.2R)
+
+patterns rows 484, tagged 414
+
+Educational only - not financial advice.

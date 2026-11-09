@@ -1,0 +1,89 @@
+SPY o-c +1.53% (at 10:00 +0.82%, low +0.00% 09:30, high +1.89% 15:28); QQQ close +2.46%, low +0.00% 09:30; IWM close +1.95%, low -0.06% 09:31. Betas 5-min 09-22..11-06.
+
+#### Primary: 36 lots (long 1, short 35); close -18.10R / $-197; peak +0.25R (10:05), trough -21.61R (14:41); range 21.85R, swing threshold 5.46R
+   legs: 09:50->10:05 +0.25R ($+17, SPY +0.78->+0.94%); 10:05->15:59 -18.35R ($-215, SPY +0.94->+1.53%)
+   fixed legs (local extremes): 09:50->10:05 +0.25R; 10:05->10:58 -19.20R; 10:58->11:39 +5.42R; 11:39->15:59 -4.58R
+   SWING 09:50->10:05: +0.25R ($+17) = market +0.00 + setup-day mismatch +0.00 + bad entries +0.25 + stock-specific +0.00 (check +0.25)
+     top 5 names: COIN `L3-gap-slope-fromopen-FD` +0.20R; USD `L3-gap-slope-fromopen-FD` +0.04R; AVLV `MF4-h40-open-flowsell-FD` +0.00R; AVUV `MF4-h40-open-flowsell-FD` +0.00R; BAC `MF4-h40-open-flowsell-FD` +0.00R (together +0.25R)
+     by setup: `L3-gap-slope-fromopen-FD` +0.25; `L3-gap-slope-rsi5hi-FD` +0.00; `MF2-open-rsimidhi-flowsell-FD` +0.00; `MF4-h40-open-flowsell-FD` +0.00
+     entries inside the leg: 0 (long 0, short 0), their final avg R +nan; longs/shorts open at start 0/0, net beta +0.0R per +1% SPY
+   SWING 10:05->10:58: -19.20R ($-654) = market -13.75 + setup-day mismatch -2.37 + bad entries -2.64 + stock-specific -0.44 (check -19.20)
+     top 5 names: USD `L3-gap-slope-fromopen-FD` -2.68R; COIN `L3-gap-slope-fromopen-FD` -2.57R; AVLV `MF4-h40-open-flowsell-FD` -1.18R; QUAL `MF4-h40-open-flowsell-FD` -1.17R; JEPI `MF4-h40-open-flowsell-FD` -1.13R (together -8.73R)
+     by setup: `MF4-h40-open-flowsell-FD` -12.12; `L3-gap-slope-fromopen-FD` -6.35; `MF2-open-rsimidhi-flowsell-FD` -0.77; `L3-gap-slope-rsi5hi-FD` -0.18
+     entries inside the leg: 30 (long 1, short 29), their final avg R -0.621; longs/shorts open at start 0/2, net beta +0.0R per +1% SPY
+   SWING 10:58->11:39: +5.42R ($+460) = market +7.31 + setup-day mismatch -4.42 + bad entries -0.22 + stock-specific +2.76 (check +5.42)
+     top 5 names: COIN `L3-gap-slope-fromopen-FD` +2.88R; BMNR `L3-gap-slope-fromopen-FD` +2.45R; USD `L3-gap-slope-fromopen-FD` +1.12R; MAGS `MF4-h40-open-flowsell-FD` +1.09R; SPYM `MF4-h40-open-flowsell-FD` +0.70R (together +8.24R)
+     by setup: `L3-gap-slope-fromopen-FD` +5.74; `L3-gap-slope-rsi5hi-FD` +0.66; `MF2-open-rsimidhi-flowsell-FD` +0.00; `RW3-gapdn-rsi5pop-flowsell-short-FD` +0.00
+     entries inside the leg: 1 (long 0, short 1), their final avg R +0.911; longs/shorts open at start 1/23, net beta -36.8R per +1% SPY
+   SWING 11:39->15:59: -4.58R ($-20) = market -4.13 + setup-day mismatch -1.64 + bad entries +0.22 + stock-specific +0.98 (check -4.58)
+     top 5 names: FNDE `MF4-h40-open-flowsell-FD` -1.57R; TCOM `RW5-heat30-flowsell-rsi5pop-gapdn-short-FD` -1.16R; USD `L3-gap-slope-fromopen-FD` -1.13R; ACGL `RW5-heat30-flowsell-rsi5pop-gapdn-short-FD` -1.07R; SPYM `MF4-h40-open-flowsell-FD` -0.90R (together -5.83R)
+     by setup: `MF4-h40-open-flowsell-FD` -4.36; `L3-gap-slope-fromopen-FD` -0.93; `MF2-open-rsimidhi-flowsell-FD` -0.44; `RW5-heat30-flowsell-rsi5pop-gapdn-short-FD` -0.32
+     entries inside the leg: 5 (long 0, short 5), their final avg R -0.075; longs/shorts open at start 1/11, net beta -10.3R per +1% SPY
+
+#### Testing 1: 65 lots (long 58, short 7); close -1.69R / $-7; peak +2.28R (15:30), trough -7.26R (14:29); range 9.54R, swing threshold 2.39R
+   legs: 09:50->09:56 -1.15R ($-29, SPY +0.78->+0.88%); 09:56->10:07 +3.24R ($+91, SPY +0.88->+0.87%); 10:07->10:17 -5.69R ($-104, SPY +0.87->+1.04%); 10:17->10:29 +3.03R ($+57, SPY +1.04->+1.05%); 10:29->10:31 -2.53R ($-49, SPY +1.05->+1.09%); 10:31->10:41 +3.75R ($+44, SPY +1.09->+1.10%); 10:41->11:14 -4.01R ($-58, SPY +1.10->+1.17%); 11:14->11:44 +3.21R ($+33, SPY +1.17->+1.25%); 11:44->13:27 -5.60R ($-101, SPY +1.25->+1.44%); 13:27->13:48 +3.56R ($+61, SPY +1.44->+1.61%); 13:48->14:29 -5.07R ($-94, SPY +1.61->+1.42%); 14:29->14:40 +7.08R ($+139, SPY +1.42->+1.79%); 14:40->14:53 -4.38R ($-90, SPY +1.79->+1.60%); 14:53->15:30 +6.85R ($+150, SPY +1.60->+1.82%); 15:30->15:59 -3.97R ($-62, SPY +1.82->+1.53%)
+   SWING 14:29->14:40: +7.08R ($+139) = market +5.34 + setup-day mismatch +0.23 + bad entries +0.00 + stock-specific +1.50 (check +7.08)
+     top 5 names: ETHA `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` +1.01R; ETHU `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` +0.91R; ESTC `NS1-rsidip-rsi5pop-long-FD` +0.86R; ARKK `NS1-rsidip-rsi5pop-long-FD` +0.86R; MDB `NS1-rsidip-rsi5pop-long-FD` +0.72R (together +4.36R)
+     by setup: `NS1-rsidip-rsi5pop-long-FD` +9.70; `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` +0.08; `CWT05-flush-m05-v3-long` +0.00; `exhaustion_short` +0.00
+     entries inside the leg: 0 (long 0, short 0), their final avg R +nan; longs/shorts open at start 25/3, net beta +17.5R per +1% SPY
+   SWING 14:53->15:30: +6.85R ($+150) = market +2.51 + setup-day mismatch +2.00 + bad entries +0.35 + stock-specific +1.99 (check +6.85)
+     top 5 names: NVDA `NS1-rsidip-rsi5pop-long-FD` +0.83R; NVDL `NS1-rsidip-rsi5pop-long-FD` +0.75R; LITE `NS1-rsidip-rsi5pop-long-FD` +0.58R; ASX `NS1-rsidip-rsi5pop-long-FD` +0.58R; USO `CWT05-flush-m05-v3-long` +0.51R (together +3.26R)
+     by setup: `NS1-rsidip-rsi5pop-long-FD` +4.55; `CWT05-flush-m05-v3-long` +1.53; `exhaustion_short` +0.76; `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` +0.32
+     entries inside the leg: 7 (long 4, short 3), their final avg R +0.286; longs/shorts open at start 15/1, net beta +13.7R per +1% SPY
+
+#### Testing 2: 53 lots (long 25, short 28); close -5.07R / $-69; peak +5.13R (11:53), trough -9.33R (15:28); range 14.46R, swing threshold 3.62R
+   legs: 09:50->09:54 -0.85R ($-24, SPY +0.78->+0.85%); 09:54->11:53 +6.13R ($+86, SPY +0.85->+1.31%); 11:53->13:34 -9.09R ($-121, SPY +1.31->+1.49%); 13:34->14:28 +4.98R ($+55, SPY +1.49->+1.44%); 14:28->15:28 -10.35R ($-110, SPY +1.44->+1.89%); 15:28->15:59 +4.26R ($+47, SPY +1.89->+1.53%)
+   SWING 11:53->13:34: -9.09R ($-121) = market -1.91 + setup-day mismatch -1.04 + bad entries -0.23 + stock-specific -5.92 (check -9.09)
+     top 5 names: DE `MF5-flowsell-vwapup-rsi5hi` -1.30R; GTLB `CWT14-failbrk-pdl-p10-lowvol-long` -1.02R; EQT `CWT14-failbrk-pdl-p10-lowvol-long` -1.02R; EQT `CWT14-failbrk-pdl-p10-long` -1.02R; HSY `RW3S-gapdn-flowsell-short-FD` -1.01R (together -5.38R)
+     by setup: `NM-AR-AM-gapdown-capitulation-long` -2.48; `CWT14-failbrk-pdl-p10-lowvol-long` -1.65; `MF5-flowsell-vwapup-rsi5hi` -1.37; `RW3S-gapdn-flowsell-short-FD` -0.95
+     entries inside the leg: 10 (long 4, short 6), their final avg R -0.365; longs/shorts open at start 13/12, net beta -6.6R per +1% SPY
+   SWING 14:28->15:28: -10.35R ($-110) = market -4.92 + setup-day mismatch -2.34 + bad entries -0.32 + stock-specific -2.77 (check -10.35)
+     top 5 names: OKTA `NS4-pm-vwap-reclaim-oversold-short` -1.51R; SNDK `NS4-pm-vwap-reclaim-oversold-short` -1.41R; MDB `NS4-pm-vwap-reclaim-oversold-short` -1.36R; CRS `exhaustion_short-FD` -1.35R; TZA `CWT13-vwapstretch-z05-long` -1.17R (together -6.80R)
+     by setup: `NS4-pm-vwap-reclaim-oversold-short` -5.53; `exhaustion_short-FD` -3.53; `CWT13-vwapstretch-z05-long` -1.17; `MF5-flowsell-vwapup-rsi5hi` -1.01
+     entries inside the leg: 2 (long 0, short 2), their final avg R -0.026; longs/shorts open at start 4/20, net beta -20.9R per +1% SPY
+
+#### Graveyard: 512 lots (long 256, short 256); close -76.41R / $-653; peak +9.82R (09:59), trough -101.65R (15:15); range 111.48R, swing threshold 27.87R
+   legs: 09:50->09:59 +10.54R ($+84, SPY +0.78->+0.86%); 09:59->15:59 -86.24R ($-724, SPY +0.86->+1.53%)
+   SWING 09:50->09:59: +10.54R ($+84) = market +0.30 + setup-day mismatch +4.23 + bad entries +3.72 + stock-specific +2.29 (check +10.54)
+     top 5 names: CPRT `CWT14-failbrk-pdh-p10-short` +1.55R; XLC `RW2-exhaustion-noon-adv150-short-FD` +0.70R; GE `heat_fade_short` +0.68R; EWC `MF1-945-flowsell-vwapup-FD` +0.60R; BA `heat_fade_short` +0.60R (together +4.14R)
+     by setup: `heat_fade_short` +1.97; `MF5-flowsell-vwapup-rsi5hi-FD` +1.73; `MF3-open-flowsell-rsi5hi-FD` +1.65; `MF1-945-flowsell-vwapup-FD` +1.45
+     entries inside the leg: 66 (long 16, short 50), their final avg R -0.539; longs/shorts open at start 4/7, net beta +0.0R per +1% SPY
+   SWING 09:59->15:59: -86.24R ($-724) = market -31.59 + setup-day mismatch -12.95 + bad entries -24.16 + stock-specific -17.54 (check -86.24)
+     top 5 names: CPRT `CWT14-failbrk-pdh-p10-short` -2.64R; EAT `NS3-failed-vwap-reclaim-short-FD` -2.34R; XRP `CWT09-gapdn-vwaploss-g5-short` -2.03R; PDBC `CWT14-failbrk-orl-p05-long` -1.91R; EWC `MF1-945-flowsell-vwapup-FD` -1.83R (together -10.75R)
+     by setup: `MF3-open-flowsell-rsi5hi-FD` -20.43; `heat_fade_short-FD` -19.28; `MF5-flowsell-vwapup-rsi5hi-FD` -18.37; `heat_fade_short` -15.50
+     entries inside the leg: 446 (long 240, short 206), their final avg R -0.092; longs/shorts open at start 15/48, net beta -57.3R per +1% SPY
+
+#### Generator: 293 lots (long 189, short 104); close -57.36R / $-1138; peak +3.92R (10:30), trough -57.36R (15:58); range 61.28R, swing threshold 15.32R
+   legs: 09:50->10:30 +3.92R ($+200, SPY +0.78->+1.05%); 10:30->14:28 -46.51R ($-1165, SPY +1.05->+1.44%); 14:28->14:41 +31.66R ($+872, SPY +1.44->+1.83%); 14:41->15:59 -46.44R ($-1044, SPY +1.83->+1.53%)
+   SWING 10:30->14:28: -46.51R ($-1165) = market -4.10 + setup-day mismatch -0.62 + bad entries -11.42 + stock-specific -30.36 (check -46.51)
+     top 5 names: VMC `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` -1.87R; BMA `GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short` -1.48R; AEM `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` -1.45R; IDXX `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` -1.43R; HD `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` -1.41R (together -7.64R)
+     by setup: `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` -35.72; `GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long` -10.68; `GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short` -9.85; `GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short` -4.58
+     entries inside the leg: 166 (long 125, short 41), their final avg R -0.194; longs/shorts open at start 41/52, net beta -7.3R per +1% SPY
+   SWING 14:41->15:59: -46.44R ($-1044) = market -15.98 + setup-day mismatch -7.60 + bad entries +3.45 + stock-specific -26.30 (check -46.44)
+     top 5 names: STGW `GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long` -2.31R; BAH `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` -1.70R; FSLR `GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long` -1.61R; KBE `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` -1.49R; KRE `GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long` -1.47R (together -8.59R)
+     by setup: `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` -15.82; `GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long` -15.66; `GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long` -5.33; `GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long` -5.24
+     entries inside the leg: 20 (long 11, short 9), their final avg R +0.220; longs/shorts open at start 135/26, net beta +71.2R per +1% SPY
+
+#### Explore 1: 4 lots (long 4, short 0); close +0.60R / $-13; peak +0.61R (15:25), trough -0.46R (15:01); range 1.07R, swing threshold 0.27R
+   legs: 09:50->14:56 +0.04R ($+1, SPY +0.78->+1.63%); 14:56->15:01 -0.50R ($-11, SPY +1.63->+1.70%); 15:01->15:04 +0.55R ($+7, SPY +1.70->+1.70%); 15:04->15:05 -0.30R ($-6, SPY +1.70->+1.73%); 15:05->15:08 +0.38R ($+3, SPY +1.73->+1.74%); 15:08->15:10 -0.41R ($-8, SPY +1.74->+1.74%); 15:10->15:11 +0.42R ($+5, SPY +1.74->+1.75%); 15:11->15:14 -0.56R ($-13, SPY +1.75->+1.84%); 15:14->15:59 +0.98R ($+7, SPY +1.84->+1.53%)
+   SWING 15:11->15:14: -0.56R ($-13) = market -0.30 + setup-day mismatch +0.13 + bad entries +0.00 + stock-specific -0.40 (check -0.56)
+     top 5 names: SNDQ `ST8-volspikedn-long-pm-t1s1-FD` -0.33R; BNO `CWT05-flush-m05-v5-long` -0.15R; USO `CWT05-flush-m05-v5-long` -0.06R; UCO `CWT05-flush-m05-v5-long` -0.03R (together -0.56R)
+     by setup: `ST8-volspikedn-long-pm-t1s1-FD` -0.33; `CWT05-flush-m05-v5-long` -0.24
+     entries inside the leg: 0 (long 0, short 0), their final avg R +nan; longs/shorts open at start 4/0, net beta -3.7R per +1% SPY
+   SWING 15:14->15:59: +0.98R ($+7) = market -0.04 + setup-day mismatch +0.48 + bad entries +0.00 + stock-specific +0.54 (check +0.98)
+     top 5 names: UCO `CWT05-flush-m05-v5-long` +0.43R; USO `CWT05-flush-m05-v5-long` +0.43R; BNO `CWT05-flush-m05-v5-long` +0.36R; SNDQ `ST8-volspikedn-long-pm-t1s1-FD` -0.23R (together +0.98R)
+     by setup: `CWT05-flush-m05-v5-long` +1.22; `ST8-volspikedn-long-pm-t1s1-FD` -0.23
+     entries inside the leg: 0 (long 0, short 0), their final avg R +nan; longs/shorts open at start 4/0, net beta -3.7R per +1% SPY
+
+#### Live Lab: 3 lots (long 3, short 0); close +1.40R / $+47; peak +1.40R (15:31), trough -0.11R (13:07); range 1.52R, swing threshold 0.38R
+   legs: 09:50->12:50 +0.34R ($+5, SPY +0.78->+1.54%); 12:50->13:07 -0.46R ($-6, SPY +1.54->+1.48%); 13:07->15:59 +1.52R ($+49, SPY +1.48->+1.53%)
+   SWING 12:50->13:07: -0.46R ($-6) = market -0.06 + setup-day mismatch -0.08 + bad entries -0.12 + stock-specific -0.20 (check -0.46)
+     top 5 names: VKTX `CWT12-flag-s1-long` -0.46R; SOXL `NM-ETF-late-dip-di-long` +0.00R; TECL `NM-ETF-late-dip-di-long` +0.00R (together -0.46R)
+     by setup: `CWT12-flag-s1-long` -0.46; `NM-ETF-late-dip-di-long` +0.00
+     entries inside the leg: 0 (long 0, short 0), their final avg R +nan; longs/shorts open at start 1/0, net beta +1.2R per +1% SPY
+   SWING 13:07->15:59: +1.52R ($+49) = market +0.63 + setup-day mismatch +0.70 + bad entries -0.08 + stock-specific +0.27 (check +1.52)
+     top 5 names: VKTX `CWT12-flag-s1-long` +0.62R; SOXL `NM-ETF-late-dip-di-long` +0.47R; TECL `NM-ETF-late-dip-di-long` +0.43R (together +1.52R)
+     by setup: `NM-ETF-late-dip-di-long` +0.90; `CWT12-flag-s1-long` +0.62
+     entries inside the leg: 2 (long 2, short 0), their final avg R +0.448; longs/shorts open at start 1/0, net beta +1.2R per +1% SPY
+
+Educational only - not financial advice.

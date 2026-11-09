@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 988 · coded: 135 · parked: 403 · holdout failed: 23 · configurations tried (all lineages): 32895248
+Total ideas: 991 · coded: 137 · parked: 405 · holdout failed: 23 · configurations tried (all lineages): 32895250
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -538,6 +538,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | nightly-1109-mf-short-broad-etf-skip | MF family shorts: skip unleveraged (diversified / factor) ETFs | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
 | idea | nightly-1109-mf-short-upconfirmed-gate | MF family shorts: no new short while the index tape is UP-confirmed (W60 proxy, from 10:00) | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
 | idea | nightly-1109-gen-index-gated-short-trend-day | Generated shorts gated on 'SPY > +x% from open' fade a trend-up day | nightly learning loop 2026-11-09 (research/bdi/nightly1109/NOTES.md, mf1109_out.txt) | – | – | – | – | – | – |
+| idea | ecg2-1109-strong-up-gate | ECG2 (rework of ECG1, not run): the same momentum-short gate only when the UP compass is also strong (SPY >= +0.75% from its open at the mark) | BDI daily 2026-11-09 (research/bdi/1109/NOTES.md) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -964,6 +965,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | reddit-1106-lowvol-pullbackday-15m-ema20-volbounce-long | Low-volume pullback day, then a volume-confirmed 15-minute EMA20 bounce (long): daily ctx = D-2 green up-day, D-1 red day on <= 0.75x D-2 volume closing above the daily EMA20; intraday 15-min bar (closes 10:00..14:30) with low <= EMA20 + 0.05 ATR, close > EMA20, green, prior 15-min bar red, volume >= v x prior bar, EMA20 rising over 4 bars; long next 5-min open, stop 1c below the signal bar low, target m x R, else out at the close | reddit r/Daytrading https://www.reddit.com/r/Daytrading/comments/1xpp3mz/dal_day_trade_recap_a_020r_trade_that_never/ | – | – | – | – | – | – |
 | parked | sat1107-burst-flush-latch-rework | BURST rework: flush-gate neighbours (QQQ 30-min -0.3/-0.5%, 4th+ short), QDAY flush gate (only while SPY >= -0.25% from open), realised -2R + open -3R latch, and the pair | BDI Saturday deep run 2026-11-07 (research/bdi/saturday1107/NOTES.md) | – | – | – | – | – | – |
 | parked | sat1107-range-extreme | QDAY range-tape extremes: buy lab long entries within 0.15/0.25 ATR of the session low, or sell shorts within 0.15/0.25 ATR of the high, while |SPY from-open| <= 0.25% | BDI Saturday deep run 2026-11-07 (research/bdi/saturday1107/NOTES.md) | – | – | – | – | – | – |
+| parked | ecg1-1109-early-compass-momentum-short-gate | ECG1: block new momentum shorts (MF / flowsell / L3) from 10:00 while the W60 15-min compass is UP-confirmed | BDI daily 2026-11-09 (research/bdi/1109/NOTES.md) | – | – | – | – | – | – |
+| parked | mh-1109-inplay-compass-side | MH1109-P1: at 10:00 with W60 confirmed, trade in-play names (vol_exp >= 0.12) already moving the compass's way, both directions, t1s1 | BDI daily 2026-11-09 (research/bdi/1109/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
