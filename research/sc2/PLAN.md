@@ -74,3 +74,5 @@ Question added: is it **lag catch-up** or just **driver momentum**? All of the b
 - **Family try-count (Lead lead-20261109-1058-1):** laggard catch-up family N = 76 (ix-leadlag 12, ex30 peer family 15, MH4 16,
   COMBO1 15, C3FR 6, SC2 12); full bar 2.94, BAR90 2.65. A pass at SC2's own bar (BAR90 2.01) is a "lead worth pursuing";
   a Testing move must clear 2.65 (raw and C1-excess t).
+- **Update 2026-11-09 13:50 ET (Lead lead-20261109-1258-1):** family N set to the broader **92** (adds bdi1028 leader/laggard
+  spread 8 and mh-1029 earnings sympathy 8): full bar 3.01, **Testing bar 2.71** (raw and C1-excess t). SC2's own bar stays 2.01.

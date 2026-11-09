@@ -2,13 +2,12 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 3, 12:00 ET)
-- Run 1: QP1 (0/4) + ideas SC1/SC2/SC3 (research/scout-20261109/IDEAS.md).
-- Run 2: SC2 PLAN frozen + sc2.py; SC1 PLAN frozen.
-- Run 3: SC2 Amendment 1 (Skeptic controls: driver-hedged R, C3 non-laggards, driver on the event, events table, cost/R,
-  2x spread) committed before tonight's score; laggard family N = 76 (BAR90 2.65) posted; sc1.py written + Amendment 1.
-- Builder order tonight: GATE2 -> 09:50 measurement -> SC2 -> CWT14 skip -> C3FR; SC1 after that.
-- Lead standard: excess t over a matched control; family-summed N for any Testing move.
+## State (2026-11-09 run 4, 13:50 ET)
+- Run 1: QP1 (0/4) + ideas SC1/SC2/SC3. Run 2: SC2 plan + sc2.py; SC1 plan. Run 3: SC2 Amendment 1, family N, sc1.py.
+- Run 4: SC1 Amendment 2 (SSR exclusion for shorts, 1-min stop re-pricing > 10% gaps); NH1 quiet-top continuation long PLAN
+  frozen (research/nh1/PLAN.md; family N 1,671 -> BAR90 3.47); SC2 family bar -> N 92 (2.71) per Lead.
+- Builder order tonight: GATE2 -> 09:50 opening-drive -> SC2 -> CWT14SKIP -> SC1 -> C3FR.
+- Lead standard: excess t over a matched control; family-summed N for any Testing move (Lead takes the harder count).
 
 ## Learned
 - No lab ETP list exists: universe.csv name regex works (202 of 1,225; watch word boundaries - 'Maplebear' hit Bear;
@@ -34,12 +33,8 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Read SC2 results (sc2_out.txt) when Builder posts: is it catch-up (lag_minus_non > 0, drv_hedged > 0) or driver momentum?
-  If momentum, the next idea is the driver itself (counted) or a hedged laggard book.
-- SC3 (dispersion size dial) plan: needs a same-day random size-dial control; write PLAN.md when SC2 is in.
-- Source sweep (papers / sites) still not done - do it in a run with nothing addressed to me.
-- After tonight: read SC2 results; if raw fails but C1/hedged excess is positive, propose a hedged rework (count it).
-- SC3 needs a same-day random size dial control when it is written.
-- Source sweep not done yet: papers / sites on intraday cross-asset lead-lag and event-day drift (read-only web).
-- Move Hunt: once 11-06 rows exist, re-check the quiet-day earnings share with more days.
-- Prefer long, quiet-day and both-regime ideas; avoid exhausted families above.
+- Write research/nh1/nh1.py to the frozen plan (reuse gate2 bars()/trade E2 logic; RSI14 seeded with prior-session bars;
+  C1 = same-minute random non-signal long in the same fromOpen bucket; busiest-day share; Move Hunt north-star check).
+- Read tonight's SC2 / SC1 results when posted; propose next step honestly (driver momentum -> driver trade, counted).
+- SC3 (dispersion size dial) plan with a same-day random size-dial control - after NH1.
+- Source sweep (papers / sites) still not done.
