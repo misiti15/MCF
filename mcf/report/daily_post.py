@@ -5,7 +5,8 @@ and reports/scorecard.json, docs/live/assignments.json / setup_names.json / regi
 (the long-hold S6 account is left out, owner 2026-10-25):
 
   1-today.png         EOD balance, today's and since-start P/L per account, the owner's milestones (M1: Primary 3 green
-                      days in a row; M2: 8 green of the last 10), cumulative P/L chart, last-5-sessions table - all from Day 1 (DAY1)
+                      days in a row; M2: 8 green of the last 10), cumulative P/L chart, last-5-sessions table - all from Day 1 (DAY1);
+                      dollars = Alpaca equity close-to-close, broker glitches excluded via PL_ADJUSTMENTS (labelled)
   2-top2.png          the day's top two setups explained in plain words (words from --top2 JSON, written by Claude each
                       night; without it the setup's own one-line description is used)
   3-leaderboard.png   setup leaderboard, top 10 (all accounts merged, Setup Generator excluded), same columns and rank as
@@ -65,7 +66,12 @@ def fetch():
 
 # ---------------------------------------------------------------- data
 def accounts(date: str, since: str = DAY1) -> list[dict]:
-    """Per account: balance (actual), today's P/L, and P/L + history from `since` (Day 1) on; full_history keeps all."""
+    """Per account: balance (actual), today's P/L, and P/L + history from `since` (Day 1) on; full_history keeps all.
+
+    Dollars (owner 2026-11-09, PL1109): a day's P/L is the Alpaca equity change close-to-close (the EOD reconcile's
+    stored equity close of that session minus the prior session's), so the days add up to the account's equity change;
+    the runner's intraday `day_pl` (equity - Alpaca last_equity, before post-close fees/marks) is only the fallback.
+    Then the explicit PL_ADJUSTMENTS table (broker glitches, labelled) is applied."""
     out = []
     for k, name, br, kind in ACCOUNTS:
         if k in TOTALS_EXCLUDED:             # owner 2026-11-04: low-rep homes - no account totals in the post
@@ -77,12 +83,78 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
         today = s.get("today") or {}
         t = dict(today, pnl=today["alpaca_day_pl"], pnl_source="alpaca") if today.get("alpaca_day_pl") is not None else _alpaca(dict(today, date=s.get("session_date")), eqh)
         full = [_alpaca(h, eqh) for h in s.get("history") or []]
-        if s.get("session_date") != date:
-            t = next((h for h in full if h.get("date") == date), {})
+        sd = s.get("session_date")
+        if sd and not any(h.get("date") == sd for h in full) and today:
+            full.append(dict(t, date=sd))
+        full = close_to_close(full, equity_closes(br, s))
+        if sd == date:                       # the just-closed session: close-to-close when known, else today's Alpaca day P/L
+            row = next((h for h in full if h.get("date") == date), {})
+            if row.get("pnl_source") == "alpaca_close":
+                t = dict(t, pnl=row["pnl"], pnl_source="alpaca_close")
+            full = [dict(h, pnl=t.get("pnl"), pnl_source=t.get("pnl_source")) if h.get("date") == date else h for h in full]
+        full = [_adjust(k, h) for h in full]
+        row = next((h for h in full if h.get("date") == date), None)
+        t = dict(t, **{x: row[x] for x in ("pnl", "pnl_source", "adjusted", "pnl_unadjusted") if x in row}) if sd == date and row else (row or {}) if sd != date else t
         hist = [h for h in full if since <= h.get("date", "") <= date]
         out.append(dict(k=k, name=name, kind=kind, equity=(s.get("account") or {}).get("equity"), today=t.get("pnl"),
                         trades=t.get("trades"), since=sum((h.get("pnl") or 0) for h in hist), source=t.get("pnl_source"),
-                        history=hist, full_history=full))
+                        adjusted=[h["adjusted"] for h in hist if h.get("adjusted")], history=hist, full_history=full))
+    return out
+
+
+# PL1109 (owner 2026-11-09): explicit, labelled dollar adjustments for the post's account P/L (today, since Day 1, chart,
+# last 5 sessions). Only broker glitches that are not trading go here - never a trading loss. (account, date, kind,
+# value, label): kind "set" replaces the day's P/L, "add" adds to it.
+PL_ADJUSTMENTS = (
+    # 11-05: Alpaca paper booked a bogus MTUM 1:4 forward split at 14:40 ET (MCF was already flat) -> -183 sh phantom
+    # short with no cash credit (equity -$11,824.02 that day); trading-only P/L -$367.71 (research/owner_inbox/2026-11-06.md).
+    ("primary", "2026-11-05", "set", -367.71, "MTUM broker glitch excluded (bogus split booking); trading-only P/L"),
+    # 11-06: the phantom -183 sh marked from the 11-05 close $62.585 to the 15:55 flatten cover $63.59 = -$183.92.
+    ("primary", "2026-11-06", "add", 183.92, "MTUM phantom marks removed (-183 sh, $62.585 -> $63.59 cover)"),
+)
+
+
+def _adjust(k: str, h: dict) -> dict:
+    """Apply PL_ADJUSTMENTS to one history row (pnl in dollars); the original stays in pnl_unadjusted."""
+    for acct, d, kind, v, label in PL_ADJUSTMENTS:
+        if acct == k and h.get("date") == d and h.get("pnl") is not None:
+            new = round(v if kind == "set" else h["pnl"] + v, 2)
+            h = dict(h, pnl_unadjusted=h["pnl"], pnl=new, adjusted=dict(date=d, delta=round(new - h["pnl"], 2), label=label))
+    return h
+
+
+def equity_closes(branch: str, status: dict | None = None) -> dict[str, float]:
+    """{date: Alpaca equity at that session's close}: the EOD reconcile's stored close (reports/pl_reconcile/<date>.json
+    on the data branch), plus the just-closed session's closing equity from status.json when its reconcile has not
+    landed yet."""
+    out = {}
+    try:
+        names = subprocess.run(["git", "-C", str(ROOT), "ls-tree", "--name-only", f"origin/{branch}", "reports/pl_reconcile/"],
+                               capture_output=True, text=True, check=True).stdout.split()
+    except Exception:
+        names = []
+    for n in names:
+        if n.endswith(".json"):
+            for r in ((_show(branch, n) or {}).get("rows") or []):
+                if r.get("equity_close") is not None and r.get("date"):
+                    out[r["date"]] = float(r["equity_close"])
+    st = status or {}
+    eq, sd = (st.get("account") or {}).get("equity"), st.get("session_date")
+    if eq is not None and sd and sd not in out and st.get("phase") == "closed":
+        out[sd] = float(eq)
+    return out
+
+
+def close_to_close(rows: list[dict], closes: dict[str, float]) -> list[dict]:
+    """Each row's pnl = equity close of its date minus the close of the previous session in `rows`, when both closes
+    are known (pnl_source "alpaca_close"); other rows keep their pnl."""
+    rows = sorted(rows, key=lambda h: h.get("date", ""))
+    out = []
+    for i, h in enumerate(rows):
+        d, prev = h.get("date"), rows[i - 1].get("date") if i else None
+        if prev and d in closes and prev in closes:
+            h = dict(h, pnl_day_pl=h.get("pnl"), pnl=round(closes[d] - closes[prev], 2), pnl_source="alpaca_close")
+        out.append(h)
     return out
 
 
@@ -464,7 +536,7 @@ h1{font-size:22px;margin:0 0 2px} .sub{color:#666;font-size:13px;margin-bottom:1
 .acc .ty{font-size:10.5px;color:#888} .acc .eq{font-size:19px;font-weight:650;margin:3px 0;font-variant-numeric:tabular-nums}
 .acc .ln{font-size:11.5px;color:#444;font-variant-numeric:tabular-nums}
 .up{color:#15803d} .down{color:#b91c1c}
-.strip{display:flex;gap:28px;font-size:13px;margin-top:10px;color:#333} .strip b{font-size:15px}
+.strip{display:flex;flex-wrap:wrap;gap:6px 28px;font-size:13px;margin-top:10px;color:#333} .strip b{font-size:15px} .adj{flex-basis:100%;font-size:11px;color:#666}
 .top2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ts{border:1px solid #e3e3e0;border-radius:10px;padding:11px 13px} .ts .t{font-weight:650;font-size:14.5px}
 .ts .st{font-size:12px;color:#444;margin:3px 0 7px;font-variant-numeric:tabular-nums} .ts .id{font-size:10.5px;color:#888;word-break:break-all}
@@ -589,6 +661,15 @@ def _last5(accts: list[dict], date: str) -> str:
             f'<tbody>{"".join(rows)}</tbody></table>')
 
 
+def _adj_note(accts: list[dict]) -> str:
+    """One labelled line per PL_ADJUSTMENTS row inside the window, so an excluded glitch is never hidden."""
+    rows = [(a["name"], x) for a in accts for x in a.get("adjusted") or []]
+    if not rows:
+        return ""
+    txt = " · ".join(f'{_e(n)} {x["date"][5:]}: {_e(x["label"])} ({_money(x["delta"])})' for n, x in rows)
+    return f'<div class="adj">Excluded: {txt}</div>'
+
+
 def html_today(date: str, accts: list[dict]) -> str:
     cards = []
     for a in accts:
@@ -599,7 +680,8 @@ def html_today(date: str, accts: list[dict]) -> str:
     today = sum((a["today"] or 0) for a in accts)
     since = sum((a.get("since") or 0) for a in accts)
     strip = (f'<div class="strip"><div>All {len(accts)} today: <b class="{_cls(today)}">{_money(today)}</b></div>'
-             f'<div>All {len(accts)} since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>P/L = Alpaca account change (paper) · day-trading accounts only</div></div>')
+             f'<div>All {len(accts)} since Day 1: <b class="{_cls(since)}">{_money(since)}</b></div><div>P/L = Alpaca account change (paper) · day-trading accounts only</div>'
+             + _adj_note(accts) + '</div>')
     m = milestones(accts[0], date)
     dots = "".join(f'<div class="dot {"g" if g else "r"}" title="{d}"></div>' for d, g in m["dots"]) + "".join('<div class="dot"></div>' for _ in range(10 - len(m["dots"])))
     ms = (f'<div class="ms"><div class="m"><div class="t">M1 · {MILESTONES[0][1]}{"<span class=done>REACHED</span>" if m["m1"] else ""}</div>'
