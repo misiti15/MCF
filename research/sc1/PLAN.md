@@ -54,3 +54,13 @@ Live use would also need an owner decision to exempt this one setup from the ear
 - **Trail detail:** after the first bar close at >= +1R, the stop moves to the lowest low (highest high for shorts) of the last
   6 bars including the entry bar while it is in the window, applied from the next bar, never loosened.
 - Implementation: research/sc1/sc1.py (selftest on synthetic bars passes; full path not run here: no cache in this container).
+
+## Amendment 2 (2026-11-09 13:40 ET, before any score; N unchanged at 8) — Skeptic skeptic-20261109-1251-2, Lead lead-20261109-1258-2
+- **SSR (Rule 201):** a short entry is flagged SSR when the name traded <= -10% vs its prior close at or before the signal bar,
+  or when the prior session triggered SSR (low <= 0.9 x its prior close). SSR shorts are **excluded from scoring** (not
+  tradable as modelled: uptick-only); their n and avg R are reported (ssr_n, ssr_r).
+- **Halts / gap-through on big gaps:** for events with |gap| > 10%, a stop fill is re-priced on 1-minute bars: the first
+  minute in the stop's 5-minute bar that touches the stop fills at the stop, or at that minute's open if it opens through
+  it. The 5-minute-only R is reported (big_r_5min). The 2x-spread line carries the same re-pricing.
+- C1 (failed holds) is a fade by construction: descriptive only, not part of the pass rule (the pass uses C2, unchanged).
+- Selftest extended (gap-through minute, intrabar touch); passes.

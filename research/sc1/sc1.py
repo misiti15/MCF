@@ -44,7 +44,7 @@ def hold_ok(a, s, iT, pc):
 
 
 def trade(a, s, iT, atr, spread_mult=1.0):
-    """signal bar iT -> (net R, gross R, kind, entry, cost R) entering at bar iT+1 open; None if skipped."""
+    """signal bar iT -> (net R, gross R, kind, entry, cost R, exit bar, stop at exit, R) entering at bar iT+1 open; None if skipped."""
     j = iT + 1
     if j > I1555 or not (atr and np.isfinite(atr) and atr > 0): return None
     e = float(a[j, 0])
@@ -52,11 +52,11 @@ def trade(a, s, iT, atr, spread_mult=1.0):
     ext = float(np.nanmin(a[:iT + 1, 2])) if s > 0 else float(np.nanmax(a[:iT + 1, 1]))
     stop = ext - s * 0.05 * atr; R = s * (e - stop)
     if R > 0.6 * atr or R < 0.10 * atr: return None
-    kind, xp = "time", float(a[I1555, 3]); hit1 = False
+    kind, xp, xb = "time", float(a[I1555, 3]), I1555; hit1 = False
     for i in range(j, I1555 + 1):
         o, h, l, c = (float(x) for x in a[i, :4])
-        if i > j and s * (o - stop) <= 0: kind, xp = "stop", o; break
-        if (s > 0 and l <= stop) or (s < 0 and h >= stop): kind, xp = "stop", stop; break
+        if i > j and s * (o - stop) <= 0: kind, xp, xb = "stop", o, i; break
+        if (s > 0 and l <= stop) or (s < 0 and h >= stop): kind, xp, xb = "stop", stop, i; break
         if s * (c - e) >= R: hit1 = True                                   # +1R on a bar close
         if hit1:                                                           # trail from the next bar, never loosened
             w = a[max(j, i - 5):i + 1]
@@ -65,7 +65,22 @@ def trade(a, s, iT, atr, spread_mult=1.0):
     m = tod_mult(int(END_TOD[iT]))
     cost = (SLIP_PS + e * SLIP_BPS) * m + spread_mult * SPREAD_BPS * e * m + SLIP_PS + e * SLIP_BPS + (STOP_EXTRA if kind == "stop" else 0)
     g = s * (xp - e) / R
-    return g - cost / R, g, kind, e, cost / R
+    return g - cost / R, g, kind, e, cost / R, xb, stop, R
+
+
+def reprice_stop(res, m1, s):
+    """Amendment 2 (Skeptic): re-price a 5-min stop fill on 1-min bars. m1: (390, 4) o h l c minutes 09:30..15:59.
+    The fill is the stop, or the first touching minute's open when that minute opens through it. Returns (net, gross)."""
+    net, g, kind, e, cr, xb, stop, R = res
+    if kind != "stop" or m1 is None: return net, g
+    for k in range(xb * 5, xb * 5 + 5):
+        o, h, l = (float(x) for x in m1[k, :3])
+        if not np.isfinite(o): continue
+        if (s > 0 and l <= stop) or (s < 0 and h >= stop):
+            fill = o if s * (o - stop) <= 0 else stop
+            g2 = s * (fill - e) / R
+            return net - g + g2, g2
+    return net, g
 
 
 def selftest():
@@ -92,6 +107,12 @@ def selftest():
     wide = a.copy(); wide[1, 2] = 103.0; assert trade(wide, 1, iT, 4.0) is None  # risk 4.2 > 2.4 -> skip
     assert ETP_RE.search("ProShares UltraPro QQQ") and ETP_RE.search("Direxion Daily Semiconductor Bull 3X Shares")
     assert not ETP_RE.search("Micron Technology, Inc. Common Stock") and not ETP_RE.search("Glaukos Corporation")
+    m1 = np.full((390, 4), 107.0, np.float32); r = trade(t2, 1, iT, 4.0)
+    k0 = r[5] * 5; m1[k0 + 2] = [104.8, 104.9, 104.6, 104.7]                    # 1-min bar opens below the 105.3 stop
+    n2, g2 = reprice_stop(r, m1, 1); assert abs(g2 - (104.8 - 107) / 1.7) < 1e-4 and n2 < r[0], (g2, r)
+    m1b = np.full((390, 4), 107.0, np.float32); m1b[k0 + 1, 2] = 105.0         # touches intrabar -> stop price kept
+    assert abs(reprice_stop(r, m1b, 1)[1] - r[1]) < 1e-6
+    print("selftest ok: 1-min stop re-pricing (gap-through minute, intrabar touch)")
     print("selftest ok: hold test (open, VWAP, half gap, short), trade (time, stop, +1R trail, trailed stop, risk skip), ETP names")
 
 
@@ -117,6 +138,9 @@ def main():
     Dd["pc"] = pc.mask(gapd)
     Dd["atr"] = tr.groupby(Dd.symbol).transform(lambda s: s.shift(1).rolling(14, min_periods=10).mean())
     Dd["bl"] = GD._blackout(Dd.symbol.to_numpy(), Dd.date.to_numpy())
+    trig = (Dd.low / Dd.pc <= 0.90)                                        # Rule 201 trigger that day (prior close known)
+    Dd["ssr_prev"] = trig.groupby(Dd.symbol).shift(1).fillna(False).astype(bool) & ~gapd   # SSR carries into the next session
+    SSRP = {(s, d): bool(v) for s, d, v in Dd[["symbol", "date", "ssr_prev"]].itertuples(index=False)}
     INFO = {(s, d): (p, a, adv, bl) for s, d, p, a, adv, bl in Dd[["symbol", "date", "pc", "atr", "adv20", "bl"]].itertuples(index=False)}
     SPYD = Dd[Dd.symbol == "SPY"].set_index("date")
     dtype = pd.Series(np.where(SPYD.close / SPYD.open - 1 > .0025, "up", np.where(SPYD.close / SPYD.open - 1 < -.0025, "down", "quiet")), index=SPYD.index)
@@ -152,8 +176,24 @@ def main():
             out[d] = a
         return out
 
+    def bars1m(sym, dates):
+        """Amendment 2: raw 1-min RTH o h l c (390 rows) for the given dates (gap > 10% events only)."""
+        p = CACHE / f"{sym}.parquet"; ix = "__index_level_0__"
+        df = pds.dataset(str(p), format="parquet").to_table(filter=(pds.field(ix) < TL0) | (pds.field(ix) >= TL1)).to_pandas()
+        if ix in df.columns: df = df.set_index(ix)
+        assert not ((df.index >= TL0) & (df.index < TL1)).any()
+        df = df[~df.index.duplicated(keep="last")].sort_index(); mm = df.index.hour * 60 + df.index.minute
+        df = df[(mm >= 570) & (mm < 960)]; mm = df.index.hour * 60 + df.index.minute
+        out = {}
+        for d in dates:
+            k = df.index.date == d
+            if not k.any(): continue
+            a = np.full((390, 4), np.nan, np.float32); a[mm[k] - 570] = df.loc[k, ["open", "high", "low", "close"]].to_numpy()
+            out[d] = a
+        return out
+
     # pass 1: every lab name -> opening volume norm and event days (only event-day arrays are kept)
-    EVT, OPENV = {}, {}
+    EVT, OPENV, M1 = {}, {}, {}
     trad = [s for s in syms if s not in etp]
     for k, s in enumerate(trad):
         B = bars(s); ds = sorted(B)
@@ -169,6 +209,9 @@ def main():
             gap = float(B[d][0, 0]) / p - 1
             if abs(gap) >= 0.04 and ov[d] >= VOL_X * norm[d]:
                 EVT[(s, d)] = (B[d], gap, p, atr, bool(bl))
+        big = [d for d in ds if (s, d) in EVT and abs(EVT[(s, d)][1]) > 0.10]
+        if big:
+            for d, m in bars1m(s, big).items(): M1[(s, d)] = m
         if k % 100 == 0: print(f"pass 1 {k}/{len(trad)}: events so far {len(EVT)}", flush=True)
     ev_days = sorted({d for (_, d) in EVT}); ev_by_day = {}
     for (s, d) in EVT: ev_by_day.setdefault(d, set()).add(s)
@@ -200,15 +243,22 @@ def main():
             if side * gap < G_: continue
             ok = hold_ok(a, side, iT, p); res = trade(a, side, iT, atr)
             if res is None: continue
+            r5 = res[0]
+            if abs(gap) > 0.10:                                              # Amendment 2: 1-min stop re-pricing
+                nr, ng = reprice_stop(res, M1.get((s, d)), side); res = (nr, ng) + tuple(res[2:])
+            ssr = bool(side < 0 and (SSRP.get((s, d), False) or float(np.nanmin(a[:iT + 1, 2])) <= 0.90 * p))
             if not ok: C1.setdefault(d, []).append(res[0]); continue
             c2 = c2_for(d, side, iT); r2x = trade(a, side, iT, atr, spread_mult=2.0)[0]
             ab = abs(gap); bucket = "4-6" if ab < .06 else ("6-10" if ab < .10 else ">10")
             T.append(dict(date=d, symbol=s, side=side, gap=round(gap, 4), bucket=bucket, blackout=bl, r=res[0], gross=res[1],
-                          kind=res[2], cost_r=res[4], r_2x=r2x, c2=c2[0] if c2 else np.nan))
+                          kind=res[2], cost_r=res[4], r_2x=r2x - (r5 - res[0]), r_5min=r5, ssr=ssr, c2=c2[0] if c2 else np.nan))
         t = pd.DataFrame(T)
         if not len(t): rows.append(dict(config=nm, n=0)); continue
         t["c1"] = t.date.map(lambda d: float(np.mean(C1[d])) if d in C1 else np.nan)
         t["config"] = nm; ALLT.append(t)
+        ssr_n, ssr_r = int(t.ssr.sum()), (round(t[t.ssr].r.mean(), 3) if t.ssr.any() else None)
+        t = t[~t.ssr]                                       # Amendment 2: SSR shorts are not tradable as modelled -> scored without them
+        if not len(t): rows.append(dict(config=nm, n=0, ssr_n=ssr_n, ssr_r=ssr_r)); continue
         S = G.summary(t); tr_, va_ = G.summary(t[t.date <= SPLIT]), G.summary(t[t.date > SPLIT]); lv = G.summary(t[t.date >= LIVE0])
         x1 = G.summary(t.dropna(subset=["c1"]).assign(r=lambda x: x.r - x.c1))
         x2 = G.summary(t.dropna(subset=["c2"]).assign(r=lambda x: x.r - x.c2))
@@ -225,7 +275,8 @@ def main():
                    blackout_r=round(t[t.blackout].r.mean(), 3) if t.blackout.any() else None, blackout_n=int(t.blackout.sum()),
                    other_r=round(t[~t.blackout].r.mean(), 3) if (~t.blackout).any() else None,
                    cost_r_med=round(float(t.cost_r.median()), 3), r_2x=round(float(t.r_2x.mean()), 3),
-                   stops=round(float((t.kind == "stop").mean()), 2),
+                   stops=round(float((t.kind == "stop").mean()), 2), ssr_n=ssr_n, ssr_r=ssr_r,
+                   big_n=int((t.bucket == ">10").sum()), big_r_5min=round(float(t[t.bucket == ">10"].r_5min.mean()), 3) if (t.bucket == ">10").any() else None,
                    **{f"gap{b}_r": round(v, 3) for b, v in t.groupby("bucket").r.mean().items()})
         row["bar90"] = bool((row["t"] or 0) >= T90 and (row["c2_t"] or 0) >= T90 and (row["train"] or -1) > 0
                             and (row["valid"] or -1) > 0 and (row["up"] or -1) > 0 and (row["down"] or -1) > 0
@@ -238,7 +289,9 @@ def main():
           "\n6-bar trail once +1R on a close; stop-first, gaps fill at the open; costs production + 4.4bp spread (tod multiplier on entry)."
           "\nc1 = excess over the same day's failed-hold event gaps (same side / T), c2 = over a same-minute random no-event pool name;"
           "\nblackout = earnings calendar window (+-4 days) where the calendar covers it; day type SPY o-c +-0.25%. All universe names"
-          "\nhave adv20 >= $60M, so none is extended-tier (3x slippage rule not triggered).")
+          "\nhave adv20 >= $60M, so none is extended-tier (3x slippage rule not triggered)."
+          "\nAmendment 2: shorts on SSR names (touched -10% vs prior close before entry, or SSR carried from the prior session) are"
+          "\nreported (ssr_n / ssr_r) and EXCLUDED from scoring; stops on > 10% gaps re-priced on 1-min bars (big_r_5min = before).")
     print(f"configs {len(GRID)} (lineage N {N_LINEAGE}), BAR90 {T90}: pass {int(R.bar90.fillna(False).sum())}")
     R.to_csv(HERE / "sc1_results.csv", index=False)
     if ALLT: pd.concat(ALLT).to_csv(HERE / "sc1_trades.csv", index=False)
