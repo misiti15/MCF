@@ -4,8 +4,8 @@
  "team": "Claude's Team (shadow)",
  "shadow": "Shadow \u2014 simulated independently; no orders",
  "phase": "intraday",
- "run_at": "2026-11-09 10:23 ET",
- "asof": "2026-11-09 10:23 ET",
+ "run_at": "2026-11-09 11:22 ET",
+ "asof": "2026-11-09 11:22 ET",
  "picks_file": "research/shadow_primary/picks/2026-11-09.json",
  "picks_date": "2026-11-09",
  "setups": [
@@ -15,12 +15,12 @@
    "account": "primary",
    "account_tag": "Primary",
    "side": "short",
-   "signals": 0,
-   "trades": 0,
-   "open": 0,
+   "signals": 1,
+   "trades": 1,
+   "open": 1,
    "wins": 0,
-   "r": 0,
-   "pnl": 0
+   "r": -0.43,
+   "pnl": -9.41
   },
   {
    "id": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
@@ -28,12 +28,12 @@
    "account": "primary",
    "account_tag": "Primary",
    "side": "short",
-   "signals": 0,
-   "trades": 0,
-   "open": 0,
+   "signals": 1,
+   "trades": 1,
+   "open": 1,
    "wins": 0,
-   "r": 0,
-   "pnl": 0
+   "r": -0.35,
+   "pnl": -7.43
   },
   {
    "id": "CWT09-gapdn-vwaploss-g10-short",
@@ -41,12 +41,12 @@
    "account": "livelab",
    "account_tag": "Live Lab",
    "side": "short",
-   "signals": 0,
-   "trades": 0,
-   "open": 0,
+   "signals": 12,
+   "trades": 3,
+   "open": 2,
    "wins": 0,
-   "r": 0,
-   "pnl": 0
+   "r": -1.75,
+   "pnl": -441.45
   },
   {
    "id": "ST7-rsi50dn-long-pm-t1s1-FD",
@@ -54,12 +54,12 @@
    "account": "primary",
    "account_tag": "Primary",
    "side": "long",
-   "signals": 1,
-   "trades": 0,
-   "open": 0,
-   "wins": 0,
-   "r": 0,
-   "pnl": 0
+   "signals": 5,
+   "trades": 1,
+   "open": 1,
+   "wins": 1,
+   "r": 0.63,
+   "pnl": 16.03
   },
   {
    "id": "NS5-sma50-flush-oversold-long",
@@ -101,33 +101,129 @@
    "pnl": 0
   }
  ],
- "trades": [],
+ "trades": [
+  {
+   "symbol": "TRP",
+   "strategy": "RW3-gapdn-rsi5pop-flowsell-short-FD",
+   "side": -1,
+   "entry_time": "2026-11-09 10:25:03.000004-05:00",
+   "entry": 62.6937,
+   "stop": 63.0271,
+   "exit": 62.8363,
+   "exit_time": "2026-11-09 11:22:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 66.0,
+   "pnl": -9.41,
+   "r": -0.4277,
+   "open": true
+  },
+  {
+   "symbol": "IONS",
+   "strategy": "CWT09-gapdn-vwaploss-g10-short",
+   "side": -1,
+   "entry_time": "2026-11-09 10:30:03.000007-05:00",
+   "entry": 27.8572,
+   "stop": 32.58,
+   "exit": 28.8129,
+   "exit_time": "2026-11-09 11:22:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 53.0,
+   "pnl": -50.65,
+   "r": -0.2024,
+   "open": true
+  },
+  {
+   "symbol": "OFIX",
+   "strategy": "CWT09-gapdn-vwaploss-g10-short",
+   "side": -1,
+   "entry_time": "2026-11-09 10:30:03.000010-05:00",
+   "entry": 6.5693,
+   "stop": 7.09,
+   "exit": 7.1407,
+   "exit_time": "2026-11-09 11:05:01-05:00",
+   "exit_reason": "stop",
+   "shares": 480,
+   "pnl": -274.26,
+   "r": -1.0974,
+   "open": false
+  },
+  {
+   "symbol": "TRP",
+   "strategy": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+   "side": -1,
+   "entry_time": "2026-11-09 10:35:03.000014-05:00",
+   "entry": 62.7237,
+   "stop": 63.0471,
+   "exit": 62.8363,
+   "exit_time": "2026-11-09 11:22:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 66.0,
+   "pnl": -7.43,
+   "r": -0.3481,
+   "open": true
+  },
+  {
+   "symbol": "IBRX",
+   "strategy": "CWT09-gapdn-vwaploss-g10-short",
+   "side": -1,
+   "entry_time": "2026-11-09 10:40:03.000017-05:00",
+   "entry": 6.6543,
+   "stop": 7.3,
+   "exit": 6.9457,
+   "exit_time": "2026-11-09 11:22:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 400.0,
+   "pnl": -116.54,
+   "r": -0.4513,
+   "open": true
+  },
+  {
+   "symbol": "MAR",
+   "strategy": "ST7-rsi50dn-long-pm-t1s1-FD",
+   "side": 1,
+   "entry_time": "2026-11-09 10:45:03.000021-05:00",
+   "entry": 417.8218,
+   "stop": 414.9991,
+   "exit": 419.603,
+   "exit_time": "2026-11-09 11:22:00-05:00",
+   "exit_reason": "open (marked)",
+   "shares": 9.0,
+   "pnl": 16.03,
+   "r": 0.631,
+   "open": true
+  }
+ ],
  "totals": {
-  "trades": 0,
-  "open": 0,
-  "wins": 0,
-  "r": 0,
-  "pnl": 0,
-  "long_r": 0,
-  "short_r": 0
+  "trades": 6,
+  "open": 5,
+  "wins": 1,
+  "r": -1.9,
+  "pnl": -442.26,
+  "long_r": 0.63,
+  "short_r": -2.53,
+  "vs_primary_r": 11.42
  },
  "primary": {
-  "r": null,
-  "trades": 0,
-  "pnl_journal": null,
-  "pnl_alpaca": -70.86,
+  "r": -13.32,
+  "trades": 15,
+  "pnl_journal": -363.52,
+  "pnl_alpaca": -374.03,
   "alpaca_source": "status_snapshot",
-  "by_setup": {}
+  "by_setup": {
+   "L3-gap-slope-fromopen-FD": -4.36,
+   "L3-gap-slope-rsi5hi-FD": 0.48,
+   "MF4-h40-open-flowsell-FD": -9.44
+  }
  },
  "method": {
   "engine": "mcf.replay.harness.run_session (as-live PaperRunner loop), fills=costs, limit_fill=through",
   "universe": "Primary universe.csv built 2026-11-06 (5043 symbols, commit 41ca659f)",
   "symbols": 5038,
   "earnings_blackout": "not on record (not applied)",
-  "bars_symbols": 5004,
+  "bars_symbols": 5029,
   "priors": 5038,
-  "polls": 53,
-  "seconds": 323.4,
+  "polls": 112,
+  "seconds": 413.8,
   "rules": "Primary (config/default.yaml): 0.25% risk per trade, 77 slots, buying power x3.2, -2.0R per-setup daily stop",
   "costs": {
    "slippage_bps": 1.0,
@@ -156,7 +252,7 @@
    "home": "Primary",
    "home_trades": 0,
    "home_r": null,
-   "team_trades": 0,
+   "team_trades": 1,
    "same_symbols": 0
   },
   {
@@ -164,7 +260,7 @@
    "home": "Primary",
    "home_trades": 0,
    "home_r": null,
-   "team_trades": 0,
+   "team_trades": 1,
    "same_symbols": 0
   },
   {
@@ -172,7 +268,7 @@
    "home": "Live Lab",
    "home_trades": 0,
    "home_r": null,
-   "team_trades": 0,
+   "team_trades": 3,
    "same_symbols": 0
   },
   {
@@ -180,7 +276,7 @@
    "home": "Primary",
    "home_trades": 0,
    "home_r": null,
-   "team_trades": 0,
+   "team_trades": 1,
    "same_symbols": 0
   },
   {
