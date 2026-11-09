@@ -25,6 +25,9 @@
 - Run 5 (14:25 ET): CWT14SKIP Amendment 1 (within-variant control etc.), null + planted synthetic checks;
   research/data/rebuild.sh + dl.py (stop guard 07:30 ET 11-10). Evening: run rebuild.sh FIRST (background, ~1h+), post
   'cache up/not up', then GATE2 -> 09:50 -> SC2 -> CWT14SKIP -> SC1 -> C3FR; queue: Observer GEN exit replay (plan first).
+- Evening 11-09: cache UP (1-min bars 1,226 syms to 11-09; frames, context, daily). Scored: OD0950 (closed),
+  GATE2 8/11 (0 pass), SC2 (0/12), SC1 (0/8, underpowered), NH1 (0/8). Pending lists: GATE2 sizing 3, CWT14SKIP, BEREPLAY,
+  C3FR (needs open frame + o5).
 
 ## Learned
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
@@ -38,8 +41,18 @@
 - Sizing / gate deltas on a losing book score positive from volume alone: demean by the setup's period mean and
   compare to random relabelings.
 
+- GATE2: pullback timing after a confirmed SPY reading beats a random post-reading bar by +0.1..+0.2R (t up to 11.9),
+  but failed holds (stop at the open, ~-1R) eat it: break-even hold 83-94% vs 72-86% observed on traded days.
+- Pattern tonight: names "picked" vs same-minute random names usually add ~0..+0.02R; most raw R is SPY direction (up
+  days +, down days -). Always print up/down/quiet and a same-minute control first; it saves reading noise as edge.
+- SC2: follower-vs-random was positive (t 2.4-5.4) only because the driver kept moving; the laggard-vs-non-laggard
+  control (Skeptic) is the one that tells catch-up from momentum.
+- Ops: never edit a shell script while bash is running it (bash reads it incrementally) - run a frozen copy.
+- gates GD._blackout silently returns all-False without research/bdi/earnings/data/earnings_yf.parquet (copy from the
+  research-data branch, open rows only).
+
 ## Failed
-- (none scored yet)
+- OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
 1. After 16:00 ET: rebuild cache + frames + open frame + o5 (+ bt_all lists for GATE2 sizing).
