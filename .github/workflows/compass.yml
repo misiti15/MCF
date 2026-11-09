@@ -1,0 +1,78 @@
+# Market Compass (live) (owner "Compass live: yes", 2026-11-09): every 15 min from 09:45 ET it records the research compass
+# (SPY % from open, 30-min checkpoint state, W60 15-min reading + votes, QQQ/IWM agreement) from 1-minute bars so far,
+# point-in-time only, to compass/<date>.csv + compass/latest.json on the data branch mcf-data-compass (dashboard card
+# "Market Compass (live)"). DISPLAY / RESEARCH ONLY - not a trading signal: no orders, no trading config read or written,
+# no link to trade.yml. Read-only Alpaca market-data GETs with the existing SIP data keys (as hunch.yml).
+#
+# Short job per run (~1 min). GitHub cron is unreliable: the command is idempotent and catches up every missed mark,
+# so any later run (this cron, a manual dispatch, or the hourly BDI monitor running
+# `python -m mcf.report.compass_live --push`) backfills the gaps. Educational only - not financial advice.
+name: compass
+
+on:
+  schedule:
+    - cron: "45 13 * * 1-5"          # 13:45-21:00 UTC weekdays covers 09:45-16:00 ET in EDT and EST;
+    - cron: "0,15,30,45 14-20 * * 1-5"   # the ET window is checked inside (DST-safe)
+    - cron: "0 21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "session date YYYY-MM-DD (default: today ET; a past date backfills the whole day)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: compass
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_DATA_FEED: sip
+      PYTHONUNBUFFERED: "1"
+      DAY: ${{ github.event.inputs.date }}
+    steps:
+      - name: Window check (09:45-16:15 ET weekdays; a dispatch with a date always runs)
+        id: window
+        run: |
+          now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
+          if [ -n "$DAY" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0945 ] && [ "$now" -le 1615 ]; }; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:45-16:15 ET weekdays: nothing to do"; fi
+
+      - name: Check secrets
+        if: steps.window.outputs.run == 'true'
+        run: |
+          if [ -z "$ALPACA_API_KEY" ] || [ -z "$ALPACA_SECRET_KEY" ]; then echo "::error::ALPACA_API_KEY / ALPACA_SECRET_KEY missing"; exit 1; fi
+
+      - uses: actions/checkout@v4
+        if: steps.window.outputs.run == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.window.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        if: steps.window.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+
+      - name: Check out the data branch (mcf-data-compass)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git clone -q --depth 1 --branch mcf-data-compass "$url" state; then :; else
+            git init -q state && git -C state checkout -q --orphan mcf-data-compass
+            git -C state remote add origin "$url"
+          fi
+
+      - name: Record the compass (read-only market data, no orders)
+        if: steps.window.outputs.run == 'true'
+        run: |
+          python -m mcf.report.compass_live ${DAY:+--date "$DAY"} --push --state-dir state

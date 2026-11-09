@@ -677,5 +677,20 @@
   "link": "research/bdi/nightly1105/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "COMP-LIVE",
+  "title": "Record the Market Compass live during the day",
+  "what": "Every 15 minutes from 09:45 ET the research compass (SPY from open, 30-min checkpoint, 15-min W60 reading, QQQ/IWM agreement) is recorded from the bars so far and shown on the dashboard. Display and research only; it never feeds trading.",
+  "recommend": "Yes - display / research only, no trading change",
+  "numbers": [
+   "30-min checkpoint (SPY >= 0.30% from open) holds its side to the close 89% / 89% / 97% (train / valid / live)",
+   "W60 15-min compass: confirms ~30 min earlier, first confirmed reading 72% vs 80% precise (valid)",
+   "Where it heads next stays a coin flip (48-51%) on every clock"
+  ],
+  "why": "Answered yes 2026-11-09: live from 2026-11-09 (.github/workflows/compass.yml, mcf/report/compass_live.py, data branch mcf-data-compass, card \"Market Compass (live)\"); feeds the forward shadows gate1-checkpoint-gate and comp15-w60-early.",
+  "link": "research/bdi/hc1/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-09"
  }
 ]

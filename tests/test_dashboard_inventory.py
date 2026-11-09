@@ -30,6 +30,7 @@ IDS = [
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
     "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
+    "cmp-card", "cmp-asof", "cmp-label", "cmp-tiles", "cmp-tab",   # added 2026-11-09 (Market Compass (live))
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -43,6 +44,7 @@ TITLES = [
     "At a glance",          # added 2026-10-21
     "Your decisions",       # added 2026-10-22
     "Claude's Team (shadow)",   # added 2026-11-05
+    "Market Compass (live)",    # added 2026-11-09
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -108,6 +110,7 @@ SOURCES = [
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
     "mcf-data-team/", "team/latest.json", "picks/latest.json",   # added 2026-11-05 (Claude's Team (shadow))
+    "mcf-data-compass/", "compass/latest.json",   # added 2026-11-09 (Market Compass (live))
 ]
 
 
