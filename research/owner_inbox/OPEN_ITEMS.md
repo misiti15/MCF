@@ -84,11 +84,13 @@ and every decision the owner answers is set to `answered` with the date and the 
 | PREVAL | Complete Primary reevaluation (owner 2026-11-06): every Primary setup re-scored with rolling ROTA1 parameters (research/queue.jsonl ROTA1), delivered as one decision page Saturday morning; DM-MF2 / DM-MF4 / L3H / P4 decided there; owner decides Primary changes over the next couple of days | Claude/BDI | nightly brief | page 2026-11-07 morning | queued (docs/live/decisions.json open) |
 | MTUM-WW | Alpaca paper bogus MTUM 1:4 split (11-05, phantom −183 sh, closed by the 11-06 15:55 flatten): owner rule 11-06 — every Primary / Alpaca total from 11-05 on shown WITH and WITHOUT MTUM (11-06 −$1,238.60 / −$1,057.07); reported to Alpaca | Claude | daily post + nightly brief | until Alpaca corrects the books | live rule |
 | POST-11.5 | Day 11.5 weekend post (owner 2026-11-06), built 19:45 ET 11-06; carries the MTUM with / without figures and the generator-paused note | Claude | — | 2026-11-06 evening | in progress |
+| COMPASS-LIVE | Market Compass recorded live (owner "Compass live: yes" 2026-11-09; display / research only, never trading): every 15 min from 09:45 ET `python -m mcf.report.compass_live --push` (.github/workflows/compass.yml) appends compass/<date>.csv + latest.json on `mcf-data-compass`; dashboard card "Market Compass (live)". Cron is unreliable: the hourly BDI monitor runs the same command to backfill missed marks (idempotent, rows tagged backfilled). Feeds the forward shadows gate1-checkpoint-gate / comp15-w60-early | Claude | hourly BDI monitor | each session; shadow reviews after 20 forward sessions | live from 2026-11-09 |
 
 ## Closed
 
 | ID | Item | Closed | Outcome |
 |---|---|---|---|
+| COMP-LIVE | Compass — start live recording? (nightly brief 2026-11-05, item 4) | 2026-11-09 | yes, 2026-11-09: live recording from 2026-11-09 (row COMPASS-LIVE; docs/live/decisions.json COMP-LIVE answered); display only, no trading change |
 | LF-SIZE | Live-funds sizing study SIZE1 (owner 2026-11-04) | 2026-11-04 | done, no decision: 200 looks, bar 3.24, 0 pass; recommendation for live funds 0.10% risk / 4x buying power / first-come (research/ops/size1/NOTES.md, ROADMAP Phase 5 LF-SIZE); re-check the 10% notional cap on forward sessions in the live-funds plan |
 | N3 | Move NS5-FD, ST4-FD, RW6G1-FD from Testing 1 to the Graveyard | 2026-11-03 | answered as DM-N3 yes - Graveyard from 2026-11-04 (ledger 2026-11-03-graveyard-ns5fd-st4fd-rw6g1fd) |
 | BETA1 | Beta-removed avg R in reviews and on the dashboard | 2026-11-03 | yes - "Avg R ex-market" (intercept of R on SPY's same-window move) on dashboard, daily post, EOD report, gates.summary |

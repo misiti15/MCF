@@ -47,6 +47,9 @@ live:
     - RW7-gapdn-bounce-early-short-FD
     - exhaustion_short
     - exhaustion_short-FD
+    - GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long   # EXPO1109 temp from Gen (to 11-10 close)
+    - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # EXPO1109 temp from Gen (to 11-10 close)
+    - GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long   # EXPO1109 temp from Gen (to 11-10 close)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -600,3 +603,203 @@ strategies:
     scale_out_r: 0.25
     live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vany-sidelong-t05s1-full, fill: false}
+  # ---- EXPO1109 (owner 2026-11-09; ledger 2026-11-09-expo1109-gen-temp-moves): TEMPORARY moves from Gen for the
+  # 11-09 / 11-10 exposure window (Gen halted / capped them: research/exposure_lab/NOTES.md). Back to Gen after the 11-10 close.
+  GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261021-02-barrngatr-hi-open-long.py
+    context:
+    - spy_fo
+    min_adv: 95000000
+    window:
+    - 950
+    - 1030
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-21
+    gen:
+      date: '2026-10-21'
+      spec:
+        side: long
+        window: OPEN
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - - bar_range_atr
+          - '>='
+          - 0.14
+        - - dist_pdl_atr
+          - <=
+          - -0.045
+        - - spy_fo
+          - '>'
+          - 0.5
+      key: 45e1bc8dcc1ebccf
+      screen:
+        train:
+          n: 1707
+          exp_r: 0.2194
+          t: 1.13
+          win: 0.649
+          days: 23
+        valid:
+          n: 1383
+          exp_r: 0.1156
+          t: 0.85
+          win: 0.595
+          days: 17
+        all:
+          n: 3090
+          exp_r: 0.1729
+          t: 1.35
+          win: 0.625
+          days: 40
+        per_day: 7.254
+        per_day_valid: 7.203
+        exp_up: 0.2192
+        exp_down: -0.1626
+        exp_flat: -0.1601
+        excess_train: -0.0086
+        excess_valid: 0.0581
+        tier1: true
+        score: 0.85
+        max_overlap: 0.426
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: PM
+        geom: t05s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.5
+        - - fromOpen_atr
+          - <=
+          - -0.34
+        - - ret3_atr
+          - <=
+          - -0.12
+        - - sma20_slope_pct
+          - '>='
+          - 0.29
+      key: ee345e097b08c6e9
+      screen:
+        train:
+          n: 1238
+          exp_r: 0.1081
+          t: 0.78
+          win: 0.76
+          days: 108
+        valid:
+          n: 753
+          exp_r: 0.0635
+          t: 1.1
+          win: 0.701
+          days: 112
+        all:
+          n: 1991
+          exp_r: 0.0913
+          t: 0.99
+          win: 0.738
+          days: 220
+        per_day: 4.674
+        per_day_valid: 3.922
+        exp_up: -0.1695
+        exp_down: 0.1142
+        exp_flat: -0.0036
+        excess_train: 0.0617
+        excess_valid: 0.0799
+        tier1: true
+        score: 1.03
+        max_overlap: 0.346
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long:
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-02-volratio-hi-late-long.py
+    context:
+    - breadth_open
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: long
+        window: LATE
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - - bars_since_lod
+          - <=
+          - 1.0
+        - - breadth_open
+          - <
+          - 0.35
+        - - sma20_dist_pct
+          - <=
+          - -0.58
+        - - volumeRatio
+          - '>='
+          - 2.0
+      key: e3c79a9a89641463
+      screen:
+        train:
+          n: 720
+          exp_r: 0.0432
+          t: 0.49
+          win: 0.581
+          days: 63
+        valid:
+          n: 394
+          exp_r: 0.0156
+          t: 0.17
+          win: 0.533
+          days: 31
+        all:
+          n: 1114
+          exp_r: 0.0335
+          t: 0.51
+          win: 0.564
+          days: 94
+        per_day: 2.615
+        per_day_valid: 2.052
+        exp_up: null
+        exp_down: 0.0048
+        exp_flat: 0.7657
+        excess_train: 0.089
+        excess_valid: 0.1879
+        tier1: true
+        score: 0.42
+        max_overlap: 0.379
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
