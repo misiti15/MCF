@@ -54,8 +54,8 @@ def is_laggard(a_f, b, s, beta, rD, L):
     return bool(np.isfinite(rF) and beta >= 0.5 and s * rF < L * beta * abs(rD))
 
 
-def trade(a, s, ib, atr, H):
-    """signal bar ib -> (net R, gross R, kind, exit bar, entry price) entering at bar ib+1 open; None if no bar / bad R."""
+def trade(a, s, ib, atr, H, spread_mult=1.0):
+    """signal bar ib -> (net R, gross R, kind, exit bar, entry price, cost R) entering at bar ib+1 open; None if no bar / bad R."""
     j = ib + 1
     if j > I1555 or not (atr and np.isfinite(atr) and atr > 0): return None
     e = float(a[j, 0]); R = 0.25 * atr
@@ -69,9 +69,9 @@ def trade(a, s, ib, atr, H):
         if i > j and s * (o - tgt) >= 0: kind, xp, xb = "target", o, i; break      # gap through the target: fill at open
         if (s > 0 and h >= tgt) or (s < 0 and l <= tgt): kind, xp, xb = "target", tgt, i; break
     m = tod_mult(int(END_TOD[ib]))
-    cost = (SLIP_PS + e * SLIP_BPS) * m + SPREAD_BPS * e * m + SLIP_PS + e * SLIP_BPS + (STOP_EXTRA if kind == "stop" else 0)
+    cost = (SLIP_PS + e * SLIP_BPS) * m + spread_mult * SPREAD_BPS * e * m + SLIP_PS + e * SLIP_BPS + (STOP_EXTRA if kind == "stop" else 0)
     g = s * (xp - e) / R
-    return g - cost / R, g, kind, xb, e
+    return g - cost / R, g, kind, xb, e, cost / R
 
 
 # ---------------------------------------------------------------------------------------------------- self-test
@@ -104,6 +104,7 @@ def selftest():
     r = trade(s5, -1, b, 4.0, 60); assert r[2] == "target" and abs(r[1] - 1) < 1e-6, r
     assert trade(flat(), 1, I1555, 4.0, 60) is None                            # no bar after 15:55
     assert r[0] < r[1]                                                          # costs subtract
+    r2 = trade(s5, -1, b, 4.0, 60, spread_mult=2.0); assert r2[0] < r[0] and abs(r2[5] - r[5] - 4.4e-4 * 50 / 1.0) < 1e-6
     print("selftest ok: events (crossing, side, open-side), laggard (move, beta), trade (target, stop-first, gap, time, short, costs)")
 
 
@@ -207,7 +208,13 @@ def main():
         mv = float(a[xb, 3]) / float(a[ib + 1, 0]) - 1
         return beta_spy * s * mv * e / R + (2 * (SLIP_PS / float(a[ib + 1, 0]) + SLIP_BPS)) * abs(beta_spy) * e / R
 
-    rows, ALLT = [], []
+    def drv_hedge(a_d, s, ib, xb, e, R, beta):
+        """driver-hedged leg (Amendment 1): beta-to-driver x the driver's move over the same holding, in follower R, + driver costs."""
+        pd0 = float(a_d[ib + 1, 0]); mv = float(a_d[xb, 3]) / pd0 - 1
+        m = tod_mult(int(END_TOD[ib])); cst = (SLIP_PS / pd0 + SLIP_BPS) * (1 + m) + SPREAD_BPS * m
+        return beta * s * mv * e / R + cst * abs(beta) * e / R
+
+    rows, ALLT, ALLE = [], [], []
     NS = len(DATES)
     print(f"lineage N {N_LINEAGE}: full bar {T_FULL}, BAR90 {T90}")
     for Z, L, H in GRID:
@@ -218,13 +225,18 @@ def main():
                 if a_d is None or sig is None: continue
                 busy = {}
                 for ib, s in events(a_d, sig, Z):
-                    rD = ret15(a_d)[ib]
+                    rD = ret15(a_d)[ib]; lag_r, non_r = [], []
+                    di = INFO.get((drv, d)); dres = trade(a_d, s, ib, di[0], H) if di else None     # (c) driver on the event
                     for f in fol:
                         a = P.get(f, {}).get(d); inf = INFO.get((f, d)); beta = BETA.get((f, d))
                         if a is None or inf is None or beta is None: continue
                         atr, bspy, bl, adv = inf
                         if bl or not (adv >= 60e6) or busy.get(f, -1) >= ib: continue
-                        if not is_laggard(a, ib, s, beta, rD, L): continue
+                        if not is_laggard(a, ib, s, beta, rD, L):
+                            if beta >= 0.5:                                  # (b) C3: same event, follower already moved
+                                cr = trade(a, s, ib, atr, H)
+                                if cr is not None: non_r.append(cr[0])
+                            continue
                         res = trade(a, s, ib, atr, H)
                         if res is None: continue
                         busy[f] = res[3]
@@ -237,10 +249,17 @@ def main():
                         z = ret15(a_d) / sig; free = [b for b in range(I1000, I1500 + 1) if np.isfinite(z[b]) and abs(z[b]) < 1]
                         c2 = trade(a, s, int(RNG.choice(free)), atr, H) if free else None
                         hedge = spy_hedge(d, s, ib, res[3], res[4], 0.25 * atr, bspy)
+                        dh = drv_hedge(a_d, s, ib, res[3], res[4], 0.25 * atr, beta)
+                        r2x = trade(a, s, ib, atr, H, spread_mult=2.0)[0]; lag_r.append(res[0])
                         T.append(dict(date=d, group=gname, symbol=f, side=s, tod=int(END_TOD[ib]), r=res[0], gross=res[1],
                                       kind=res[2], c1=c1[0] if c1 else np.nan, c2=c2[0] if c2 else np.nan,
-                                      r_hedged=res[0] - hedge if np.isfinite(hedge) else np.nan,
+                                      r_hedged=res[0] - hedge if np.isfinite(hedge) else np.nan, r_drv_hedged=res[0] - dh,
+                                      cost_r=res[5], r_2x=r2x, ev=f"{gname}|{d}|{ib}",
                                       eia=bool(gname == "OIL" and pd.Timestamp(d).dayofweek == 2 and 1035 <= END_TOD[ib] <= 1100)))
+                    ALLE.append(dict(config=nm, group=gname, date=d, side=s, tod=int(END_TOD[ib]), n_lag=len(lag_r),
+                                     n_non=len(non_r), r_event=float(np.sum(lag_r)) if lag_r else np.nan,
+                                     lag_mean=float(np.mean(lag_r)) if lag_r else np.nan,
+                                     non_mean=float(np.mean(non_r)) if non_r else np.nan, drv_r=dres[0] if dres else np.nan))
         t = pd.DataFrame(T)
         if not len(t): rows.append(dict(config=nm, n=0)); continue
         t["config"] = nm; ALLT.append(t)
@@ -248,6 +267,12 @@ def main():
         x1 = G.summary(t.dropna(subset=["c1"]).assign(r=lambda x: x.r - x.c1))
         x2 = G.summary(t.dropna(subset=["c2"]).assign(r=lambda x: x.r - x.c2))
         hd = G.summary(t.dropna(subset=["r_hedged"]).assign(r=lambda x: x.r_hedged))
+        dhd = G.summary(t.assign(r=lambda x: x.r_drv_hedged))
+        E = pd.DataFrame([e for e in ALLE if e["config"] == nm])
+        lvn = E.dropna(subset=["lag_mean", "non_mean"]).assign(r=lambda x: x.lag_mean - x.non_mean)
+        lvn_s = G.summary(lvn) if len(lvn) else {}
+        drv_s = G.summary(E.dropna(subset=["drv_r"]).assign(r=lambda x: x.drv_r)) if len(E) else {}
+        cm = t[t.group.isin(["GOLD", "CRYPTO"])]
         ty = t.groupby(t.date.map(dtype)).r.agg(["mean", "size"])
         mo = t.groupby(pd.to_datetime(t.date).dt.to_period("M")).r.mean()
         gd = t.groupby("date").r.sum(); share = round(gd.max() / gd.sum(), 2) if gd.sum() > 0 else None
@@ -262,7 +287,11 @@ def main():
                    hedged=hd.get("exp_r"), hedged_t=hd.get("t"), long_r=round(t[t.side > 0].r.mean(), 3),
                    short_r=round(t[t.side < 0].r.mean(), 3), long_share=round(float((t.side > 0).mean()), 2),
                    eia_n=int(t.eia.sum()), eia_r=round(t[t.eia].r.mean(), 3) if t.eia.any() else None,
-                   targets=round(float((t.kind == "target").mean()), 2), stops=round(float((t.kind == "stop").mean()), 2), **grp)
+                   targets=round(float((t.kind == "target").mean()), 2), stops=round(float((t.kind == "stop").mean()), 2),
+                   drv_hedged=dhd.get("exp_r"), drv_hedged_t=dhd.get("t"), events=len(E), lag_minus_non=lvn_s.get("exp_r"),
+                   lag_minus_non_t=lvn_s.get("t"), lag_minus_non_n=lvn_s.get("n", 0), driver_r=drv_s.get("exp_r"), driver_t=drv_s.get("t"),
+                   cost_r_med=round(float(t.cost_r.median()), 3), gc_r=round(float(cm.r.mean()), 3) if len(cm) else None,
+                   gc_r_2x=round(float(cm.r_2x.mean()), 3) if len(cm) else None, **grp)
         row["bar90"] = bool((row["t"] or 0) >= T90 and (row["c1_t"] or 0) >= T90 and (row["train"] or -1) > 0
                             and (row["valid"] or -1) > 0 and (row["up"] or -1) > 0 and (row["down"] or -1) > 0
                             and row["wf_pos"] >= .54 and (row["wo_best"] or -1) > 0)
@@ -272,8 +301,20 @@ def main():
     print(R.to_string(index=False))
     print("\nentry next 5-min bar open (1-min SIP cache); stop 0.25 ATR_d, target +1R, time exit H min / 15:55; stop-first, gaps fill"
           "\nat the open; costs production + 4.4bp spread (tod multiplier on entry). c1 = excess over a same-minute random pool name,"
-          "\nc2 = over the same follower at a random event-free bar; hedged = minus beta_SPY x SPY move (report only); day type SPY o-c +-0.25%.")
+          "\nc2 = over the same follower at a random event-free bar; hedged = minus beta_SPY x SPY move (report only); day type SPY o-c +-0.25%."
+          "\nAmendment 1 (report only): drv_hedged = minus beta-to-driver x driver move (+ driver costs); lag_minus_non = per event, laggard"
+          "\nmean R minus already-moved followers' mean R (C3); driver_r = the driver itself traded on the event (a new config if proposed);"
+          "\ngc_r_2x = GOLD + CRYPTO followers with the spread doubled.")
     print(f"configs {len(GRID)} (lineage N {N_LINEAGE}), BAR90 {T90}: pass {int(R.bar90.fillna(False).sum())}")
+    if ALLE:                                                   # Amendment 1: events and R per event by group / side
+        EV = pd.DataFrame(ALLE); EV.to_csv(HERE / "sc2_events.csv", index=False)
+        print("\nevents by config x group x side (n events, events with >= 1 laggard trade, mean R per event = sum of its laggard R,"
+              "\nlaggard minus non-laggard per event (events with both), driver's own R on the event; cost R median per group):")
+        print(EV.groupby(["config", "group", "side"]).agg(events=("n_lag", "size"), with_trade=("n_lag", lambda v: int((v > 0).sum())),
+              r_per_event=("r_event", "mean"), lag_minus_non=("lag_mean", lambda v: np.nan), drv_r=("drv_r", "mean")).assign(
+              lag_minus_non=EV.assign(x=EV.lag_mean - EV.non_mean).groupby(["config", "group", "side"]).x.mean()).round(3).to_string())
+        if ALLT:
+            print(pd.concat(ALLT).groupby(["config", "group"]).agg(cost_r_med=("cost_r", "median"), r=("r", "mean"), r_2x_spread=("r_2x", "mean")).round(3).to_string())
     R.to_csv(HERE / "sc2_results.csv", index=False)
     if ALLT: pd.concat(ALLT).to_csv(HERE / "sc2_trades.csv", index=False)
     print("Educational only - not financial advice.")

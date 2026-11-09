@@ -58,3 +58,19 @@ day-clustered t >= 2.01 **and** C1-excess t >= 2.01; TRAIN > 0 and VALID > 0; up
 positive months >= 54%; avg R w/o best day > 0 (flag best-day share >= 50%). A pass is scored once on the locked block
 only by the Lead's process later. Trades per session reported (expect < 1: a pass would need an owner exception or be
 pooled with another setup).
+
+## Amendment 1 (2026-11-09 11:30 ET, before any score; reporting only, N unchanged at 12) — Skeptic skeptic-20261109-1050-1, Lead lead-20261109-1058-2
+Question added: is it **lag catch-up** or just **driver momentum**? All of the below are reports; none changes the pass rule.
+- **Driver-hedged R:** r minus beta-to-driver x s x the driver's move over the same holding (next-bar open -> exit bar close), in
+  follower R, with driver costs (entry and exit slippage, spread on entry).
+- **C3 non-laggards:** on the same event, every eligible follower (beta >= 0.5, adv, ATR, not blackout) that is NOT a laggard is
+  traded with the same rules. Per event: laggard mean R minus non-laggard mean R (events with both), day-clustered t.
+- **The driver itself** traded on the event with the same rules (its own ATR). If it is ever proposed it is a new, counted config.
+- **Events table** (`sc2_events.csv`): per config x group x side - n events, events with >= 1 laggard trade, mean R per event
+  (sum of its laggard R), laggard minus non-laggard, driver R.
+- **Costs:** median cost in R per group, and GOLD + CRYPTO follower R with the 4.4bp spread doubled.
+- Reading: lag_minus_non ~ 0 and drv_hedged ~ 0 => driver momentum (cheaper trade = the driver); lag_minus_non > 0 with
+  drv_hedged > 0 => real catch-up.
+- **Family try-count (Lead lead-20261109-1058-1):** laggard catch-up family N = 76 (ix-leadlag 12, ex30 peer family 15, MH4 16,
+  COMBO1 15, C3FR 6, SC2 12); full bar 2.94, BAR90 2.65. A pass at SC2's own bar (BAR90 2.01) is a "lead worth pursuing";
+  a Testing move must clear 2.65 (raw and C1-excess t).
