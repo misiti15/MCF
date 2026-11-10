@@ -1,0 +1,80 @@
+# SC1 — event-day gap-and-hold (LONG first, short mirror) (Scout plan, FROZEN 2026-11-09 09:55 ET, before any score)
+
+*Educational only — not financial advice. Pre-registration; nothing scored. Script to follow (research/sc1/sc1.py);
+queued after SC2 / C3FR per Lead.*
+
+## Hypothesis
+On quiet days the big movers are event names (Move Hunt 10-29 / 11-03: 86% of long and 94% of short top movers were in
+the earnings blackout). An event gap that still holds its open, VWAP and half the gap 30-60 minutes in shows persistent
+informed demand and keeps going into the close. Daily-horizon earnings studies (er-react-*) are parked; this intraday
+event-day entry has never been scored on 2 years (no historical calendar) — the opening-volume proxy sidesteps that.
+
+## Data
+1-minute SIP cache (`data/cache_hist/1Min`, open / high / low / close / volume) -> 5-minute RTH bars as gate2 `bars()`
+plus a volume column; `lib.daily()` for prior close, ATR14 (prior days) and adv20. **Locked block 2024-11-01..2025-02-28
+filtered at read and asserted absent;** rolling windows restart after a > 5-day gap.
+
+## Rule
+- Universe: lab names, adv20 >= $60M, not SPY / QQQ / IWM / DIA, no leveraged / inverse ETPs (lab ETP list).
+- gap = open / prior close - 1. **Event proxy:** |gap| >= G and 09:30-09:55 volume >= 4 x the name's mean 09:30-09:55
+  volume over its prior 20 sessions (>= 15 needed). Earnings blackout is **not** applied (that is the point); the
+  report splits blackout-calendar days (`_blackout`, where the calendar covers them) vs other events.
+- **Long (gap >= +G), checked once at bar close T:** close > session open, close > session VWAP (from 09:30, typical
+  price x volume), close >= prior close + 0.5 x (open - prior close). Enter next bar open. Stop = low of day so far
+  - 0.05 ATR_d; skip if entry - stop > 0.6 ATR_d or < 0.10 ATR_d. Exit 15:55 close; once +1R is reached (bar close),
+  stop trails to the lowest low of the last 6 five-minute bars (never lowered).
+- **Short (gap <= -G):** mirror (below open and VWAP, close <= prior close + 0.5 x gap move, stop = HOD so far + 0.05 ATR_d,
+  trail on the highest high of the last 6 bars).
+- Costs: production as gate2 `trade()` (tod multiplier, + 4.4bp spread on entry, 2c extra on stops), and 3x slippage on
+  names the lab marks as extended-tier (RESEARCH_RULES rule 1).
+
+## Grid (8 configs, all reported)
+G {4%, 6%} x T {10:00, 10:30} x side {long, short}. **Lineage N = 8** (new): full bar max(1.5, sqrt(2 ln 8)) = 2.04,
+**BAR90 = 1.84**.
+
+## Controls and reports (no extra configs)
+- **C1 failed hold (same names, same day, same T):** event gaps that FAIL the hold test, entered the same side at the same
+  bar with the same stop rule. Excess = r - mean r_C1 that day (paired by day).
+- **C2 same-minute random name** (adv20 >= $60M, no event that day), same side and stop geometry. Excess r - r_C2.
+- Day type (SPY o-c +-0.25%), TRAIN (<= 2025-09-30) / VALID / live window (>= 2026-10-06), walk-forward share, avg R
+  without the best day and its share, trades per session, blackout vs non-blackout events, gap bucket 4-6 / 6-10 / > 10%.
+
+## Pass (Testing, BAR90) — all required
+day-clustered t >= 1.84 and C2-excess t >= 1.84; TRAIN > 0 and VALID > 0; up-day and down-day avg R > 0 (and quiet
+reported); walk-forward positive months >= 54%; avg R w/o best day > 0 (flag best-day share >= 50%).
+Live use would also need an owner decision to exempt this one setup from the earnings blackout.
+
+## Amendment 1 (2026-11-09 12:00 ET, before any score; N unchanged at 8)
+- **ETP exclusion made concrete:** the lab has no ETP list, so every ETF / ETN / fund / physical trust is excluded by its
+  data/universe.csv name (regex in sc1.py `ETP_RE`; 202 of 1,225 named lab symbols; checked by hand: no operating company
+  matched after fixing a `Maplebear` hit; Sprott physical trusts added) plus SPY / QQQ / IWM / DIA.
+- **Extended tier:** all candidates have adv20 >= $60M, above the $5M core floor, so the 3x slippage rule never triggers (stated
+  in the output). A 2x-spread line and median cost/R are reported.
+- **C2 control:** drawn from a seeded 200-name non-ETP pool (no event that day), up to 5 draws until the stop geometry fits.
+- **Trail detail:** after the first bar close at >= +1R, the stop moves to the lowest low (highest high for shorts) of the last
+  6 bars including the entry bar while it is in the window, applied from the next bar, never loosened.
+- Implementation: research/sc1/sc1.py (selftest on synthetic bars passes; full path not run here: no cache in this container).
+
+## Amendment 2 (2026-11-09 13:40 ET, before any score; N unchanged at 8) — Skeptic skeptic-20261109-1251-2, Lead lead-20261109-1258-2
+- **SSR (Rule 201):** a short entry is flagged SSR when the name traded <= -10% vs its prior close at or before the signal bar,
+  or when the prior session triggered SSR (low <= 0.9 x its prior close). SSR shorts are **excluded from scoring** (not
+  tradable as modelled: uptick-only); their n and avg R are reported (ssr_n, ssr_r).
+- **Halts / gap-through on big gaps:** for events with |gap| > 10%, a stop fill is re-priced on 1-minute bars: the first
+  minute in the stop's 5-minute bar that touches the stop fills at the stop, or at that minute's open if it opens through
+  it. The 5-minute-only R is reported (big_r_5min). The 2x-spread line carries the same re-pricing.
+- C1 (failed holds) is a fade by construction: descriptive only, not part of the pass rule (the pass uses C2, unchanged).
+- Selftest extended (gap-through minute, intrabar touch); passes.
+
+## Result of the plan run (Builder 2026-11-09 17:35 ET) and Amendment 3 — SC1-R rework (frozen 2026-11-09 18:00 ET, before any rework score)
+Plan run: 0 of 8 pass, underpowered (5-35 trades per config from 3,240 event symbol-days); longs lean positive (best
+L-G4-T1030 +0.355R, t 1.99, TRAIN +0.62 / VALID +0.25, n 18; C2 excess t 0.44-2.66); shorts ~0.
+Bottleneck (read from the results file): ~540 FAILED-hold events per config fit the 0.6-ATR risk cap and were traded as C1,
+but only ~20 hold-PASSING events did. Names that hold their gap are extended far above their LOD, so a LOD stop is
+> 0.6 ATR away. A skip-reason funnel is now printed per config (hold ok / fail x risk > cap / < 0.1 ATR) to confirm it.
+**SC1-R (4 configs, longs only, gap >= 4%; `python sc1.py --rework`):**
+- R1 T10:30, LOD stop, risk cap **1.0** ATR; R2 T10:00, same.
+- R3 T10:30, **VWAP stop** (session VWAP at the signal bar - 0.10 ATR; the hold test guarantees close > VWAP), cap 0.6 ATR;
+  R4 T10:00, same.
+Everything else as the plan + Amendments 1-2 (C2 pass control uses the same stop mode and cap; trail, costs, SSR n/a for longs).
+**Lineage N = 8 + 4 = 12 -> BAR90 2.01** on raw t and C2-excess t; all other gates unchanged. Selftest extended (VWAP stop
+level, VWAP-stop trade, wider cap); passes. Output files carry the suffix `_rework`.

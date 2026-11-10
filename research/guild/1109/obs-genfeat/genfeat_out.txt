@@ -1,0 +1,68 @@
+GEN live paper trades 2536, 2026-10-19..2026-11-09, setups traded 85
+traded setups without gen.spec (excluded): ['GEN-POD1022-03-wt-bull-flag-bailout-S-long']
+GEN book avg R -0.224 (all 2536 trades)
+
+by side / window / geometry:
+               setups       n  days    avg    total  avg_wo_best  best_share  vs_book
+word                                                                                
+geom=t1s05       4.0    19.0   5.0 -0.914  -17.372       -0.960         NaN   -0.690
+geom=t05s05      5.0   124.0  11.0 -0.545  -67.523       -0.618         NaN   -0.320
+window=LAM       7.0   114.0   7.0 -0.518  -59.062       -0.571         NaN   -0.294
+window=OPEN     12.0   414.0  11.0 -0.396 -163.835       -0.602         NaN   -0.172
+geom=hold       24.0   966.0  14.0 -0.288 -278.372       -0.313         NaN   -0.064
+side=short      34.0   908.0  14.0 -0.252 -228.971       -0.298         NaN   -0.028
+window=AM       15.0   775.0  13.0 -0.242 -187.229       -0.323         NaN   -0.017
+side=long       50.0  1626.0  16.0 -0.209 -339.531       -0.226         NaN    0.015
+window=MID      11.0   472.0  12.0 -0.199  -94.118       -0.328         NaN    0.025
+geom=holdtr     21.0   592.0  13.0 -0.191 -112.900       -0.206         NaN    0.033
+geom=t05s1      12.0   165.0  13.0 -0.134  -22.174       -0.201         NaN    0.090
+window=PM       18.0   359.0  12.0 -0.133  -47.754       -0.258         NaN    0.091
+geom=t1s1       18.0   668.0  13.0 -0.105  -70.162       -0.195         NaN    0.119
+window=LUNCH     9.0   247.0  11.0 -0.099  -24.397       -0.139         NaN    0.125
+window=LATE     12.0   153.0   8.0  0.052    7.893       -0.149       3.077    0.276
+
+conditions used by >= 3 setups and >= 30 trades (39 of 88), worst first:
+                       setups      n  days    avg    total  avg_wo_best  best_share  vs_book
+word                                                                                       
+ret3_atr >=              3.0   76.0   9.0 -0.854  -64.871       -0.890         NaN   -0.629
+or_high_dist_atr <=      3.0  126.0   9.0 -0.780  -98.240       -0.801         NaN   -0.556
+rsiSlope <=              4.0   90.0   7.0 -0.758  -68.225       -0.958         NaN   -0.534
+sma20_dist_pct >=        3.0   56.0   9.0 -0.641  -35.887       -0.723         NaN   -0.417
+macd_hist >=             9.0  159.0  10.0 -0.585  -92.975       -0.607         NaN   -0.361
+upper_wick >=            4.0   72.0   7.0 -0.518  -37.322       -0.533         NaN   -0.294
+bars_since_lod <=        3.0   95.0   3.0 -0.434  -41.191       -0.474         NaN   -0.210
+breadth <=              10.0  291.0   9.0 -0.399 -116.097       -0.404         NaN   -0.175
+ret3_atr <=              4.0   95.0  10.0 -0.369  -35.065       -0.392         NaN   -0.145
+qqq_fo >=                6.0  131.0   7.0 -0.341  -44.631       -0.350         NaN   -0.117
+rsiSlope >=              4.0  151.0   9.0 -0.340  -51.322       -0.436         NaN   -0.116
+adx7 <=                  3.0  163.0   7.0 -0.295  -48.149       -0.414         NaN   -0.071
+day_vs_prev_range >=     4.0   30.0   8.0 -0.293   -8.797       -0.434         NaN   -0.069
+breadth_open >=         10.0  401.0   9.0 -0.286 -114.714       -0.364         NaN   -0.062
+compress6_atr <=         3.0   75.0   8.0 -0.280  -20.994       -0.293         NaN   -0.056
+breadth >=              14.0  290.0   9.0 -0.273  -79.196       -0.441         NaN   -0.049
+flow3 <=                 3.0  189.0   8.0 -0.272  -51.492       -0.574         NaN   -0.048
+spy_fo <=               12.0  212.0   7.0 -0.272  -57.646       -0.420         NaN   -0.048
+gap >=                   4.0  234.0  11.0 -0.251  -58.802       -0.344         NaN   -0.027
+emaDiff_chg3 <=          4.0  145.0   7.0 -0.250  -36.316       -0.366         NaN   -0.026
+orb_fail_up ==           8.0  411.0  13.0 -0.234  -96.183       -0.283         NaN   -0.010
+rsi <=                   5.0  120.0  10.0 -0.226  -27.177       -0.341         NaN   -0.002
+flow_shift <=            4.0  150.0  11.0 -0.204  -30.625       -0.360         NaN    0.020
+dist_pdl_atr <=          3.0  244.0   7.0 -0.170  -41.446       -0.486         NaN    0.054
+breadth_open <=         11.0  338.0   9.0 -0.166  -56.071       -0.333         NaN    0.058
+atr_d_pct >=             6.0  294.0  13.0 -0.152  -44.627       -0.227         NaN    0.072
+spy_fo >=               14.0  679.0  10.0 -0.146  -99.081       -0.231         NaN    0.078
+vwapReclaim ==           5.0  173.0   8.0 -0.143  -24.805       -0.264         NaN    0.081
+bar_range_atr >=         4.0  257.0   8.0 -0.128  -32.907       -0.396         NaN    0.096
+sma20_dist_pct <=        5.0  157.0  11.0 -0.075  -11.802       -0.107         NaN    0.149
+emaDiff_chg3 >=          7.0  191.0  10.0 -0.074  -14.214       -0.347         NaN    0.150
+vwap_cross_n <=          3.0   89.0   7.0 -0.065   -5.787       -0.546         NaN    0.159
+vwap_cross_n >=          4.0  137.0  11.0 -0.062   -8.493       -0.129         NaN    0.162
+new_lod ==               7.0  136.0  10.0 -0.041   -5.535       -0.153         NaN    0.183
+day_vs_prev_range <=     4.0   92.0   6.0 -0.028   -2.621       -0.203         NaN    0.196
+orb_fail_dn ==           7.0  204.0  12.0 -0.006   -1.252       -0.074         NaN    0.218
+qqq_fo <=                7.0  192.0   5.0 -0.006   -1.066       -0.211         NaN    0.219
+volumeRatio >=           3.0   62.0   4.0  0.021    1.304       -0.130       6.171    0.245
+rsi5 <=                  4.0   37.0   6.0  0.022    0.812       -0.393      14.062    0.246
+
+carriers (avg > 0 and avg_wo_best > 0): []
+drains (avg_wo_best <= -0.30): ['ret3_atr >=', 'or_high_dist_atr <=', 'rsiSlope <=', 'sma20_dist_pct >=', 'macd_hist >=', 'upper_wick >=', 'bars_since_lod <=', 'breadth <=', 'ret3_atr <=', 'qqq_fo >=', 'rsiSlope >=', 'adx7 <=', 'day_vs_prev_range >=', 'breadth_open >=', 'breadth >=', 'flow3 <=', 'spy_fo <=', 'gap >=', 'emaDiff_chg3 <=', 'rsi <=', 'flow_shift <=', 'dist_pdl_atr <=', 'breadth_open <=', 'bar_range_atr >=', 'emaDiff_chg3 >=', 'vwap_cross_n <=', 'rsi5 <=']
