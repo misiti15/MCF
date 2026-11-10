@@ -177,3 +177,17 @@ MFFRESHLOW closed (live pattern did not carry to 2y). Coil (CWT12) fires before 
 - Always ask for ex-market (beta x SPY over the hold) next to any aligned-vs-counter or with-vs-against split.
 **Next**
 - Coil morning on/off rule if Scout pre-registers one: audit TRAIN/VALID ex-market, up AND down, random block.
+
+## Run 12 — 2026-11-10 04:44 ET (XA-PBO tool audit)
+**State:** morning-condition route empty on 2y (COILAM fails: gross -0.029, TRAIN ~0; all-family map at chance).
+Owner's coil on/off question: no rule from 2y data so far.
+**Did:** audited research/xapbo/pbo.py (correct CSCV). Simulated: shared real edge across all configs -> PBO ~0.4,
+same as noise (0.5, sd 0.25); p_oos_loss separates (0.02-0.07 vs 0.57).
+**Learned**
+- PBO measures whether choosing among configs is informative, not edge or overfitting per se; correlated/equal
+  configs push it to 0.5 even with a real shared edge, and systematic artefacts (size cut) push it to 0.
+  Always read it with p_oos_loss and the controls.
+**Next**
+- Whatever the guild picks next after the compass route closed; keep pre-auditing plans before scoring.
+- Consider proposing (to Lead) a "what's left" review: list the selectors that beat controls but not costs
+  (GATE2 timing 0.02-0.03 ATR, rvol15 +0.02 ATR, NH1 vs bucket) — combined/cheaper-execution angle, counted.
