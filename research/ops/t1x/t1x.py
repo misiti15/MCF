@@ -1,9 +1,10 @@
 """T1X (owner "T1X yes", 2026-11-09): find and close the position in the Testing 1 paper account that MCF never placed.
 
   python research/ops/t1x/t1x.py inspect <journal.db>                 # READ-ONLY: positions, journal, activities
-  python research/ops/t1x/t1x.py close <journal.db> <SYMBOL> <QTY>    # one market-on-open (opg) close of that position
+  python research/ops/t1x/t1x.py close <journal.db> <SYMBOL> <QTY> [TIF] [COID_DATE]   # one market close (default opg)
 
-`close` refuses unless: the journal has no open MCF order, the account holds SYMBOL with exactly QTY (signed: negative =
+`close` refuses unless: the journal has no open MCF order (tif=day: none in SYMBOL), the account holds SYMBOL with exactly
+QTY (signed: negative =
 short), QTY is a whole number, and no open order exists for SYMBOL. The order's client_order_id starts "owner-t1x-" so
 MCF's reconcile never takes it for an MCF lot. Prints no keys, no account number. Educational only - not financial advice.
 """
@@ -15,7 +16,14 @@ import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 BASE = "https://paper-api.alpaca.markets/v2"
-ACT_DAYS = ["2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08", "2026-11-09"]
+ACT_DAYS = ["2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08", "2026-11-09", "2026-11-10"]
+DIAG_ORDER = "d2db7df7-6a04-432c-802d-c2ca88dc23bb"  # 11-09 opg buy-to-cover SOXX 12 that did not fill
+DIAG_SYMBOL = "SOXX"
+DIAG_SINCE = "2026-11-04"
+ORDER_KEYS = ("id", "client_order_id", "symbol", "side", "qty", "filled_qty", "filled_avg_price", "type", "time_in_force",
+              "status", "created_at", "submitted_at", "updated_at", "filled_at", "canceled_at", "expired_at", "failed_at",
+              "replaced_at", "extended_hours", "position_intent", "order_class", "reject_reason", "status_reason", "reason")
+TIFS = ("opg", "day")
 
 
 def _h():
@@ -41,9 +49,12 @@ def activities(day):
         token = got[-1]["id"]
 
 
-def journal_open(db):
+def journal_open(db, symbol=None):
     con = sqlite3.connect(db)
-    n = con.execute("select count(*) from orders where status not in ('closed','rejected','expired')").fetchone()[0]
+    q, args = "select count(*) from orders where status not in ('closed','rejected','expired')", ()
+    if symbol:
+        q, args = q + " and symbol = ?", (symbol,)
+    n = con.execute(q, args).fetchone()[0]
     last = con.execute("select max(date) from trades").fetchone()[0]
     return n, last
 
@@ -55,7 +66,7 @@ def positions():
 def show_positions(pos):
     print(f"positions: {len(pos)}")
     for p in pos:
-        print({k: p.get(k) for k in ("symbol", "asset_id", "side", "qty", "avg_entry_price", "cost_basis", "market_value",
+        print({k: p.get(k) for k in ("symbol", "asset_id", "side", "qty", "qty_available", "avg_entry_price", "cost_basis", "market_value",
                                      "current_price", "unrealized_pl", "asset_class")})
 
 
@@ -87,18 +98,58 @@ def inspect(db):
                                      if k in ("id", "symbol", "name", "exchange", "status", "tradable", "shortable")})
         except requests.HTTPError as e:
             print(f"asset {s}: {e}")
+    diagnose()
 
 
-def close(db, symbol, qty):
+def diagnose():
+    """GET-only: why the 11-09 opg close of the phantom SOXX short did not fill."""
+    print(f"\n# diagnosis {DIAG_SYMBOL}")
+    try:
+        o = _get(f"/orders/{DIAG_ORDER}")
+        print("order:", {k: o.get(k) for k in ORDER_KEYS if k in o})
+        extra = {k: v for k, v in o.items() if k not in ORDER_KEYS and k not in ("legs", "asset_id", "asset_class")
+                 and v not in (None, "", [], False)}
+        print("order other fields:", extra)
+    except requests.HTTPError as e:
+        print(f"order {DIAG_ORDER}: {e}")
+    try:
+        p = _get(f"/positions/{DIAG_SYMBOL}")
+        print("position:", {k: p.get(k) for k in ("symbol", "asset_id", "side", "qty", "qty_available", "avg_entry_price",
+                                                  "cost_basis", "current_price", "exchange")})
+    except requests.HTTPError as e:
+        print(f"position {DIAG_SYMBOL}: {e}")
+    try:
+        a = _get(f"/assets/{DIAG_SYMBOL}")
+        print("asset:", {k: a.get(k) for k in ("id", "symbol", "status", "exchange", "tradable", "shortable",
+                                               "easy_to_borrow", "fractionable", "marginable", "attributes")})
+    except requests.HTTPError as e:
+        print(f"asset {DIAG_SYMBOL}: {e}")
+    print("orders for symbol (all, last 20):", [{k: x.get(k) for k in ("id", "client_order_id", "side", "qty", "type",
+                                                 "time_in_force", "status", "created_at", "filled_avg_price")}
+                                                for x in _get("/orders", status="all", limit=20, symbols=DIAG_SYMBOL)])
+    try:
+        nt = _get("/account/activities", category="non_trade_activity", after=DIAG_SINCE, direction="asc", page_size=100)
+    except requests.HTTPError as e:
+        print(f"non-trade activities: {e}")
+        nt = []
+    mine = [x for x in nt if x.get("symbol") == DIAG_SYMBOL]
+    print(f"non-trade activities since {DIAG_SINCE}: {len(nt)} total, {len(mine)} for {DIAG_SYMBOL}")
+    for x in mine:
+        print({k: v for k, v in x.items() if k not in ("account_id",)})
+
+
+def close(db, symbol, qty, tif="opg", coid_date="20261109"):
     from alpaca.trading.enums import OrderSide, TimeInForce
     from alpaca.trading.requests import MarketOrderRequest
 
     from mcf.execution.alpaca_broker import AlpacaBroker
 
     q = float(qty)
-    n, _ = journal_open(db)
+    # opg (pre-market): no open MCF order at all. day (in session): MCF may be trading other names, so refuse only on
+    # an open MCF order in this symbol; the broker-side open-order check below still covers the symbol.
+    n, _ = journal_open(db, symbol if tif == "day" else None)
     if n:
-        sys.exit(f"REFUSED: journal has {n} open MCF orders")
+        sys.exit(f"REFUSED: journal has {n} open MCF orders" + (f" in {symbol}" if tif == "day" else ""))
     pos = {p["symbol"]: p for p in positions()}
     p = pos.get(symbol)
     if p is None:
@@ -108,13 +159,17 @@ def close(db, symbol, qty):
         sys.exit(f"REFUSED: {symbol} qty {held} != expected {q}")
     if q != int(q) or q == 0:
         sys.exit(f"REFUSED: qty {q} is not a whole, non-zero number (opg needs whole shares)")
+    if tif not in TIFS:
+        sys.exit(f"REFUSED: tif {tif} not in {TIFS}")
+    if not (coid_date.isdigit() and len(coid_date) == 8):
+        sys.exit(f"REFUSED: coid date {coid_date} is not YYYYMMDD")
     if [o for o in _get("/orders", status="open", limit=500, symbols=symbol)]:
         sys.exit(f"REFUSED: open order(s) already exist for {symbol}")
     side = OrderSide.BUY if q < 0 else OrderSide.SELL
-    coid = f"owner-t1x-{symbol}-20261109"
+    coid = f"owner-t1x-{symbol}-{coid_date}"
     b = AlpacaBroker(paper=True)
     o = b.client.submit_order(MarketOrderRequest(symbol=symbol, qty=abs(int(q)), side=side,
-                                                 time_in_force=TimeInForce.OPG, client_order_id=coid))
+                                                 time_in_force=TimeInForce(tif), client_order_id=coid))
     print({"order_id": str(o.id), "client_order_id": o.client_order_id, "symbol": o.symbol, "side": str(o.side),
            "qty": str(o.qty), "type": str(o.type), "time_in_force": str(o.time_in_force), "status": str(o.status)})
 
@@ -123,6 +178,6 @@ if __name__ == "__main__":
     if sys.argv[1] == "inspect":
         inspect(sys.argv[2])
     elif sys.argv[1] == "close":
-        close(sys.argv[2], sys.argv[3], sys.argv[4])
+        close(*sys.argv[2:7])
     else:
-        sys.exit("usage: inspect <db> | close <db> <SYMBOL> <QTY>")
+        sys.exit("usage: inspect <db> | close <db> <SYMBOL> <QTY> [opg|day] [YYYYMMDD]")
