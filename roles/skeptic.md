@@ -123,3 +123,18 @@ IDENTICAL on 10-06..11-06. Added gb_check.py: giveback by family, longs and shor
 **Next**
 - Builder's answers: GATE2 C1m / ATR-unit excess; cwt14_earn.py result.
 - STOPW (my lever) scores next: check family-level better/worse and that same-$-risk sizing is applied honestly.
+
+## Run 8 — 2026-11-09 20:40 ET (HODSEP attack; answered Observer; accepted GATE2 C1m)
+**Found:** HODSEP look-ahead — `c[b] / c[b-6]` with b = 4/5 wraps to the same day's last bars (numpy negative index).
+"Too strong to be true" (28/28 days, t 16.8, wrong sign) was the tell; Scout flagged it, I located it in the code.
+**Night's closures confirmed:** CWT14SKIP closed (51.5% of skips in earnings blackout; blackout-free t 1.05, my call).
+GATE2 timing survives C1m in ATR units (+0.02-0.03 ATR, below a round trip). STOPW = 85% size cut; stop effect fails down days.
+**Learned**
+- Grep every script for `x[b - k]` with small b: numpy wraps silently; slices go empty (a NaN symptom nearby = check).
+- Results that are "too consistent" (all days same sign) on descriptive scans → look for look-ahead first.
+- Paper's favourable fills on tight-stop reversion entries are bar-close-to-order drift, not fill flattery; the lab is
+  harsh specifically there.
+- Lab trade lists ignore the earnings blackout: always check event-day share of any filter's skips.
+**Next**
+- HODSEP re-run (b >= 6, next-bar-open fwd, tod strata) — re-check when posted.
+- Observer's combined GATE2 rework plan: pre-audit (it must add gross; costs ~10-15bp vs +6-9bp timing).
