@@ -1,0 +1,23 @@
+C3 signals 956 over 449 sessions (2024-10-01..2026-11-09, locked absent)
+paths built: 197502 symbol-days
+sessions train 170 / valid 279; lineage N 21: full bar 2.468, BAR90 2.22
+C3FR-R0.25-B(anchor) done
+C3FR-R0.50-B done
+C3FR-R0.75-B done
+C3FR-R1.00-B done
+C3FR-R0.50-T done
+C3FR-R0.75-T done
+C3FR-R1.00-T done
+              config   n  per_sess   avg_r     t  wo_best best_share  gross  friction  nofloor_r   train   valid  valid_t  tr_ps  va_ps     up   down  quiet  n_up  n_down  n_quiet  wf_pos  dm_excess  dm_t  long_share  bar90
+C3FR-R0.25-B(anchor) 956      2.13 -0.1451 -3.35  -0.1561       None  0.042     0.180    -0.1379 -0.3350 -0.0910    -1.89   1.25   2.67 -0.204 -0.103 -0.120   339     271      346    0.20     0.0507  1.25        0.52  False
+        C3FR-R0.50-B 956      2.13 -0.0578 -1.60  -0.0675       None  0.061     0.089    -0.0283 -0.2477 -0.0037    -0.09   1.25   2.67 -0.126  0.035 -0.064   339     271      346    0.35     0.0601  1.82        0.52  False
+        C3FR-R0.75-B 956      2.13 -0.0616 -2.23  -0.0677       None  0.044     0.059    -0.0152 -0.2434 -0.0098    -0.32   1.25   2.67 -0.088  0.008 -0.090   339     271      346    0.35     0.0427  1.67        0.52  False
+        C3FR-R1.00-B 956      2.13 -0.0686 -3.12  -0.0736       None  0.033     0.044    -0.0108 -0.2291 -0.0228    -0.96   1.25   2.67 -0.080 -0.015 -0.099   339     271      346    0.30     0.0336  1.68        0.52  False
+        C3FR-R0.50-T 956      2.13 -0.0703 -2.37  -0.0771       None  0.049     0.092    -0.0428 -0.1933 -0.0352    -1.07   1.25   2.67 -0.107  0.012 -0.099   339     271      346    0.30     0.0381  1.44        0.52  False
+        C3FR-R0.75-T 956      2.13 -0.0726 -3.40  -0.0772       None  0.033     0.060    -0.0271 -0.1671 -0.0456    -2.02   1.25   2.67 -0.097 -0.011 -0.097   339     271      346    0.30     0.0287  1.51        0.52  False
+        C3FR-R1.00-T 956      2.13 -0.0797 -4.76  -0.0832       None  0.022     0.045    -0.0224 -0.1584 -0.0573    -3.36   1.25   2.67 -0.102 -0.030 -0.097   339     271      346    0.20     0.0209  1.44        0.52  False
+
+entry = next 5-min bar open (1-min SIP cache); stop-first; friction floor 0.10R kept (nofloor_r is info only, never a pass);
+day type = SPY open-to-close (up > +0.25%, down < -0.25%, else quiet); dm_excess = vs mean of all eligible U names, same bar/side/R/exit.
+new configs 6 (+1 anchor already counted; lineage 21), BAR90 pass 0
+Educational only - not financial advice.
