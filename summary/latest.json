@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T23:00-05:00",
+ "updated": "2026-11-10T01:00-05:00",
  "session": "2026-11-10",
- "headline": "Owner's new focus is the guild's P1: a rolling market compass that puts afternoon setups on standby when the morning condition flips, starting with the Graveyard coil setups.",
+ "headline": "Rolling compass rebuilt over 2 years with the live code (17 of 17 fields match); the flip study is frozen and waits on one timing fix.",
  "bullets": [
-  "P1 (owner 2026-11-10): backfill the live compass over 2 years, then test whether setups that open after a midday flip do worse; coil-under-the-high first. Gross first, random-standby control, every flip definition counted.",
-  "GATE2 closed: the rework lost before costs; exiting when SPY falls back to its open made trades worse (SPY recovers too often). Lineage 0 of 15.",
-  "HODSEP closed: with the look-ahead bug fixed the near-high separation disappeared.",
-  "Live trades (18 days): entering at a fresh extreme is not worse book-wide, so no blanket rule; but flow-sell shorts sold at a fresh low lose (MF2 -0.40R vs +0.28R) - a targeted idea for a 2-year test.",
-  "Since the guild started: 68 configs scored, 0 pass; every closure has a measured reason."
+  "Compass backfill: 460 sessions x 25 marks from the live module itself; matches the live record on every field (2 live days, same code + same data).",
+  "Skeptic's audit: one fix before use - a mark must only count from a minute after it is published (about 1 in 3 entries affected).",
+  "Try-count: gating setups by market state has been tried ~2,605 ways (bar t 3.57 for Testing). Realistic route: one standby rule from the 2-year split, then 20+ forward shadow sessions.",
+  "Flip study (RCOMPASS) plan frozen: 3 flip definitions, compared with a random standby block, market direction removed; coil setups first.",
+  "Withdrawn: 'longs at a fresh high' (82% from one day). Flow-sell shorts at a fresh low: weak, goes to a 2-year test."
  ],
  "progress": {
-  "ideas": 20,
-  "tested": 18,
+  "ideas": 21,
+  "tested": 19,
   "configs": 68,
   "passed": 0,
   "forward": 0
  },
- "next": "Builder backfills the compass (validated vs live); Scout plans the flip study; Observer writes the flow-sell fresh-low skip for a 2-year test.",
+ "next": "Builder re-tags with the fix; Scout reads the flip split (coil first); then the MF fresh-low test.",
  "by_role": {
-  "scout": "HODSEP v2 closed honestly; takes the rolling-compass study.",
-  "builder": "GATE2 rework scored and closed; next: compass backfill + coil trade tagging.",
-  "skeptic": "Challenged the 'longs at a fresh high' reading; pre-attacked the rolling compass; will audit the backfill.",
-  "observer": "Extension entries not a book-wide remedy; flow-sell shorts at fresh lows lose.",
-  "lead": "Made the owner's rolling compass P1; closed GATE2 and HODSEP."
+  "scout": "Froze the RCOMPASS flip-study plan with Skeptic's guards.",
+  "builder": "Rebuilt the compass over 2 years and tagged 20,779 coil trades.",
+  "skeptic": "Audited the backfill (one timing fix) and counted 2,605 prior market-state tries.",
+  "observer": "Withdrew the long-at-high reading; wrote the MF fresh-low test entry.",
+  "lead": "Set the try-count and the shadow route for the rolling compass."
  },
  "disclaimer": "Educational only — not financial advice."
 }
