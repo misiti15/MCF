@@ -1,0 +1,17 @@
+trades 378411, family-sides 46, dates 2024-10-01..2026-11-09; classes {'none': 142211, 'counter': 118607, 'aligned': 117593}
+pooled ex-market R by class: {('TRAIN', 'aligned'): -0.0179, ('TRAIN', 'counter'): 0.0412, ('TRAIN', 'none'): 0.0191, ('VALID', 'aligned'): -0.0102, ('VALID', 'counter'): 0.0284, ('VALID', 'none'): 0.0072}
+
+L1 (aligned minus counter): testable 37; same sign TRAIN/VALID 19 (coin flip ~18); aligned better in both 5, worse in both 14; consistent |t|>=1 both: + 2 / - 2
+
+L2 (aligned minus no-reading): testable 42; same sign TRAIN/VALID 26 (coin flip ~21); aligned better in both 11, worse in both 15; consistent |t|>=1 both: + 0 / - 1
+
+family-sides with a consistent L1 or L2 sign:
+                   n  share_aligned  share_counter  L1_TRAIN  L1_TRAIN_t  L1_VALID  L1_VALID_t L1_cons  L2_TRAIN  L2_VALID L2_cons
+fam                                                                                                                              
+GEN-261019-S   7492          0.488          0.094     0.192       2.237     0.073       1.133       +     0.062    -0.031        
+GEN-261026-L  22042          0.726          0.111    -0.099      -1.462    -0.092      -1.489       -    -0.037    -0.006        
+GEN-261029-S   9439          0.817          0.003       NaN         NaN       NaN         NaN            -0.196    -0.049       -
+NS1-L          2006          0.461          0.158     0.122       1.224     0.110       1.629       +     0.013     0.061        
+exhaustion-S   8219          0.243          0.405    -0.105      -1.018    -0.062      -1.165       -     0.017    -0.067        
+
+Reminder: any rule built on this map faces N 2,605 (BAR90 3.57) and a same-day random-block control. Educational only - not financial advice.

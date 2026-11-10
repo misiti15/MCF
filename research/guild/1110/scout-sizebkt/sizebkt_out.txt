@@ -1,0 +1,20 @@
+rows 246285 (1021 names, 27 days, bars 10:00..14:00 every 30 min)
+
+== by score quintile: mean |60-min move| / ATR [0.126, 0.133, 0.14, 0.151, 0.189]
+  k 0.15: trigger rate [0.57, 0.61, 0.65, 0.69, 0.81] | gross R/trigger Q1..Q5 [-0.066, -0.07, -0.082, -0.111, -0.214] | median cost R [0.2, 0.209, 0.213, 0.213, 0.209] | Q5-Q1 per day + 1/27 day-t -8.78 | Q5 gross day-t -20.71 | Q5 halves -0.200 / -0.223
+  k 0.25: trigger rate [0.25, 0.27, 0.3, 0.34, 0.49] | gross R/trigger Q1..Q5 [-0.007, -0.008, 0.005, 0.002, -0.074] | median cost R [0.117, 0.122, 0.124, 0.123, 0.121] | Q5-Q1 per day + 5/27 day-t -4.64 | Q5 gross day-t -7.84 | Q5 halves -0.086 / -0.067
+
+== by rvol15 quintile: mean |60-min move| / ATR [0.122, 0.131, 0.141, 0.154, 0.192]
+  k 0.15: trigger rate [0.56, 0.61, 0.66, 0.71, 0.8] | gross R/trigger Q1..Q5 [-0.067, -0.079, -0.085, -0.115, -0.203] | median cost R [0.201, 0.214, 0.215, 0.212, 0.204] | Q5-Q1 per day + 0/27 day-t -14.55 | Q5 gross day-t -19.75 | Q5 halves -0.202 / -0.204
+  k 0.25: trigger rate [0.23, 0.27, 0.3, 0.36, 0.49] | gross R/trigger Q1..Q5 [-0.024, -0.011, -0.002, -0.003, -0.057] | median cost R [0.118, 0.125, 0.125, 0.124, 0.118] | Q5-Q1 per day + 5/27 day-t -4.92 | Q5 gross day-t -6.29 | Q5 halves -0.069 / -0.049
+
+== by range_atr quintile: mean |60-min move| / ATR [0.137, 0.139, 0.141, 0.145, 0.177]
+  k 0.15: trigger rate [0.62, 0.63, 0.64, 0.67, 0.78] | gross R/trigger Q1..Q5 [-0.077, -0.075, -0.089, -0.116, -0.199] | median cost R [0.201, 0.207, 0.21, 0.211, 0.214] | Q5-Q1 per day + 3/27 day-t -5.85 | Q5 gross day-t -17.84 | Q5 halves -0.178 / -0.212
+  k 0.25: trigger rate [0.29, 0.29, 0.3, 0.32, 0.44] | gross R/trigger Q1..Q5 [0.009, 0.008, -0.006, -0.026, -0.074] | median cost R [0.117, 0.121, 0.122, 0.123, 0.123] | Q5-Q1 per day + 6/27 day-t -4.55 | Q5 gross day-t -6.97 | Q5 halves -0.070 / -0.076
+
+conservative: a bar touching both levels = -1R; gap through a level fills at the open; stop at the bracket centre;
+target 2k; time exit 60 min. Gross R; costs shown separately. Educational only - not financial advice.
+
+--- sensitivity: ambiguous both-touch triggers EXCLUDED (not scored)
+  k 0.15: both-touch share by score quintile [0.001, 0.0, 0.0, 0.001, 0.005] | gross R/trigger ex-both Q1..Q5 [-0.066, -0.07, -0.082, -0.111, -0.211]
+  k 0.25: both-touch share by score quintile [0.0, 0.0, 0.0, 0.0, 0.001] | gross R/trigger ex-both Q1..Q5 [-0.007, -0.008, 0.005, 0.002, -0.073]

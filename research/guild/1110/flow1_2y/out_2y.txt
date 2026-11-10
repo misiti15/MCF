@@ -1,0 +1,106 @@
+lab trades 1176959 on 449 days (2024-10-01..2026-11-09); SPY ctx rows 1840
+TRAIN done 667932
+VALID done 439233
+EXTRA 10-08..11-09 done 69794
+
+TRAIN pick (best excess t of 32): T 660 k 3 m sumR rule scale  (TRAIN excess t 0.3)
+            window   T  k    m  rule  days  n_later  base_avg   delta     t  excess  excess_t  delta_wo_best  kept_avg  drop_avg  n_drop  on_spy_delta  on_spy_t   dt_up  dt_down  dt_quiet
+             TRAIN 660  3 sumR scale   273   311458   -0.0595 1716.46  0.68  760.68      0.30        1058.40   -0.0595       NaN       0       -734.66     -0.47  417.86  2188.58   -889.98
+             VALID 660  3 sumR scale   153   196968   -0.0412 -314.26 -0.19 -428.28     -0.26        -761.40   -0.0412       NaN       0       -997.65     -1.14 1396.44   189.82  -1900.52
+EXTRA 10-08..11-09 660  3 sumR scale    23    30963   -0.0818  403.66  0.64  171.72      0.28        -100.42   -0.0818       NaN       0       -120.02     -0.53  474.22   233.50   -304.07
+
+SPY / VWAP controls at the pick's T:
+            window   T  k m     rule  days  n_later  base_avg   delta    t   excess  excess_t  delta_wo_best  kept_avg  drop_avg  n_drop  on_spy_delta  on_spy_t  dt_up  dt_down  dt_quiet
+             TRAIN 660  0 -  SPYrule   273   311458   -0.0595 9078.50 3.07  -384.50     -0.12        8366.87   -0.0623   -0.0569  159594           NaN       NaN    NaN      NaN       NaN
+             TRAIN 660  0 - VWAPrule   273   311458   -0.0595 7532.28 2.51 -1981.18     -0.61        6820.65   -0.0733   -0.0467  161325           NaN       NaN    NaN      NaN       NaN
+             VALID 660  0 -  SPYrule   153   196968   -0.0412 3189.57 1.52  -828.80     -0.39        2450.55   -0.0511   -0.0317  100557           NaN       NaN    NaN      NaN       NaN
+             VALID 660  0 - VWAPrule   153   196968   -0.0412 1643.58 0.80 -2428.91     -1.16         904.57   -0.0682   -0.0161  102110           NaN       NaN    NaN      NaN       NaN
+EXTRA 10-08..11-09 660  0 -  SPYrule    23    30963   -0.0818 2068.32 2.09   795.47      0.89        1172.58   -0.0306   -0.1313   15747           NaN       NaN    NaN      NaN       NaN
+EXTRA 10-08..11-09 660  0 - VWAPrule    23    30963   -0.0818 1764.66 1.74   405.96      0.43         868.92   -0.0521   -0.1088   16214           NaN       NaN    NaN      NaN       NaN
+
+all 32 configs on TRAIN (excess t) and VALID (excess t), for the record:
+window             EXTRA 10-08..11-09  TRAIN  VALID
+T   k m    rule                                    
+615 3 sumR filter                1.07   0.16  -0.74
+           scale                 1.56   0.20  -0.86
+      win  filter                0.02  -0.19   0.21
+           scale                 0.02  -0.23   0.18
+    5 sumR filter                1.07   0.16  -0.74
+           scale                 1.56   0.20  -0.86
+      win  filter                0.02  -0.19   0.21
+           scale                 0.02  -0.23   0.18
+630 3 sumR filter                0.60  -0.47  -0.31
+           scale                 0.91  -0.61  -0.37
+      win  filter               -0.27  -1.75   0.34
+           scale                -0.22  -2.08   0.25
+    5 sumR filter                0.60  -0.47  -0.31
+           scale                 0.91  -0.61  -0.37
+      win  filter               -0.27  -1.75   0.34
+           scale                -0.22  -2.08   0.25
+645 3 sumR filter                0.45  -0.66   0.41
+           scale                 0.71  -1.03   0.54
+      win  filter                0.50  -1.07   0.55
+           scale                 0.77  -1.50   0.46
+    5 sumR filter                0.45  -0.66   0.41
+           scale                 0.71  -1.03   0.54
+      win  filter                0.50  -1.07   0.55
+           scale                 0.77  -1.50   0.46
+660 3 sumR filter                0.18   0.23  -0.21
+           scale                 0.28   0.30  -0.26
+      win  filter                0.66  -0.94   0.35
+           scale                 0.98  -1.20   0.39
+    5 sumR filter                0.18   0.23  -0.21
+           scale                 0.28   0.30  -0.26
+      win  filter                0.66  -0.94   0.35
+           scale                 0.98  -1.20   0.39
+
+regressions (book signal beyond SPY), pick's T, k:
+              book   T  k                             model      n  days      b0      b1    t0    t1      b2    t2      b3    t3             window
+             TRAIN 660  3                         book_sign 311458 273.0 -0.0579  0.0040 -5.24  0.24     NaN   NaN     NaN   NaN              TRAIN
+             TRAIN 660  3                         book_avgR 311458 273.0 -0.0576  0.1646 -5.12  0.61     NaN   NaN     NaN   NaN              TRAIN
+             TRAIN 660  3                          spy_only 311458 273.0 -0.0601 -0.0306 -5.87 -0.47 -0.0125 -0.09     NaN   NaN              TRAIN
+             TRAIN 660  3                     book_sign+spy 311458 273.0 -0.0585  0.0224 -5.76  1.52 -0.0273 -0.44 -0.0504 -0.34              TRAIN
+             TRAIN 660  3                     book_avgR+spy 311458 273.0 -0.0588  0.3525 -5.70  1.37 -0.0271 -0.44 -0.0335 -0.23              TRAIN
+             TRAIN 660  3 corr(book sumR sign, side*SPY fo)    546   NaN  0.4110     NaN   NaN   NaN     NaN   NaN     NaN   NaN              TRAIN
+             VALID 660  3                         book_sign 196968 153.0 -0.0413 -0.0044 -4.63 -0.26     NaN   NaN     NaN   NaN              VALID
+             VALID 660  3                         book_avgR 196968 153.0 -0.0403  0.2310 -4.68  0.48     NaN   NaN     NaN   NaN              VALID
+             VALID 660  3                          spy_only 196968 153.0 -0.0425  0.0602 -4.95  0.62 -0.1814 -0.91     NaN   NaN              VALID
+             VALID 660  3                     book_sign+spy 196968 153.0 -0.0425  0.0094 -4.99  0.61  0.0661  0.68 -0.2111 -1.03              VALID
+             VALID 660  3                     book_avgR+spy 196968 153.0 -0.0406  0.6430 -4.86  1.43  0.0722  0.75 -0.2389 -1.19              VALID
+             VALID 660  3 corr(book sumR sign, side*SPY fo)    306   NaN  0.3650     NaN   NaN   NaN     NaN   NaN     NaN   NaN              VALID
+EXTRA 10-08..11-09 660  3                         book_sign  30963  23.0 -0.0799  0.0093 -4.07  0.26     NaN   NaN     NaN   NaN EXTRA 10-08..11-09
+EXTRA 10-08..11-09 660  3                         book_avgR  30963  23.0 -0.0810  0.1702 -3.91  0.13     NaN   NaN     NaN   NaN EXTRA 10-08..11-09
+EXTRA 10-08..11-09 660  3                          spy_only  30963  23.0 -0.0807 -0.0367 -3.61 -0.19  0.1835  0.35     NaN   NaN EXTRA 10-08..11-09
+EXTRA 10-08..11-09 660  3                     book_sign+spy  30963  23.0 -0.0848 -0.0214 -4.26 -0.87 -0.0522 -0.27  0.2473  0.48 EXTRA 10-08..11-09
+EXTRA 10-08..11-09 660  3                     book_avgR+spy  30963  23.0 -0.0840 -0.7863 -4.00 -0.83 -0.0571 -0.30  0.2572  0.50 EXTRA 10-08..11-09
+EXTRA 10-08..11-09 660  3 corr(book sumR sign, side*SPY fo)     46   NaN  0.4440     NaN   NaN   NaN     NaN   NaN     NaN   NaN EXTRA 10-08..11-09
+
+simple picture (10:30, first k closes green vs red):
+              book  k  side first_k  days  trades   win    avgR  avgR_wo_best_day             window
+             TRAIN  3  long   green   179  151831 0.612 -0.0750           -0.0812              TRAIN
+             TRAIN  3  long     red    94   78755 0.642 -0.0399           -0.0461              TRAIN
+             TRAIN  3 short   green   172  112095 0.511 -0.0736           -0.0857              TRAIN
+             TRAIN  3 short     red   101   79051 0.527 -0.0525           -0.0842              TRAIN
+             TRAIN  5  long   green   189  160169 0.615 -0.0727           -0.0786              TRAIN
+             TRAIN  5  long     red    84   70417 0.640 -0.0409           -0.0478              TRAIN
+             TRAIN  5 short   green   182  115781 0.513 -0.0752           -0.0853              TRAIN
+             TRAIN  5 short     red    91   75365 0.525 -0.0490           -0.0820              TRAIN
+             VALID  3  long   green   102   95161 0.613 -0.0620           -0.0704              VALID
+             VALID  3  long     red    51   43711 0.602 -0.0782           -0.0841              VALID
+             VALID  3 short   green    86   75489 0.539 -0.0173           -0.0263              VALID
+             VALID  3 short     red    67   58147 0.523 -0.0291           -0.0366              VALID
+             VALID  5  long   green   107   98092 0.605 -0.0749           -0.0834              VALID
+             VALID  5  long     red    46   40780 0.621 -0.0482           -0.0652              VALID
+             VALID  5 short   green   101   87288 0.536 -0.0224           -0.0301              VALID
+             VALID  5 short     red    52   46348 0.526 -0.0226           -0.0332              VALID
+EXTRA 10-08..11-09  3  long   green    13   11848 0.612 -0.0576           -0.0721 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  3  long     red    10    9451 0.580 -0.1373           -0.1696 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  3 short   green     8    6962 0.543 -0.0028           -0.0173 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  3 short     red    15   14108 0.484 -0.1230           -0.1470 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  5  long   green    15   13480 0.600 -0.0869           -0.1014 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  5  long     red     8    7819 0.595 -0.1035           -0.1388 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  5 short   green    13   12629 0.503 -0.0865           -0.1113 EXTRA 10-08..11-09
+EXTRA 10-08..11-09  5 short     red    10    8441 0.505 -0.0786           -0.0905 EXTRA 10-08..11-09
+
+VERDICT (fixed): VALID excess t -0.26 vs plan bar 3.02 / family BAR90 3.57; on-top-of-SPY t -1.14. Pass = excess t >= 3.57 AND on_spy_t > 0 AND VALID excess > 0: False
+Educational only - not financial advice.

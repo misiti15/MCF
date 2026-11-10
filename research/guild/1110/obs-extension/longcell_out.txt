@@ -1,0 +1,48 @@
+LONG trades 8364; EXT threshold 0.10 ATR
+
+(1) units:
+           n  gross_R  median_R  gross_atr  move_atr  ex_spy_atr  risk_atr_med  days
+grp                                                                                
+EXT   620.0    0.058     0.423      0.021    -0.003       0.004         0.261  18.0
+MID  2666.0   -0.109     0.345     -0.013    -0.028      -0.015         0.253  18.0
+PB   5078.0   -0.222     0.066     -0.038    -0.043      -0.023         0.253  18.0
+
+(2) by SPY day type:
+                 n  gross_R  median_R  gross_atr  move_atr  ex_spy_atr  risk_atr_med  days
+dtype grp                                                                                
+down  EXT    83.0   -0.059     0.407     -0.007    -0.034       0.024         0.278   6.0
+      MID   469.0   -0.457    -0.828     -0.064    -0.075       0.012         0.255   6.0
+      PB   2294.0   -0.379    -0.817     -0.081    -0.081      -0.026         0.255   6.0
+quiet EXT   344.0   -0.002     0.410      0.006    -0.016      -0.010         0.255   7.0
+      MID  1546.0   -0.070     0.341     -0.009    -0.026      -0.017         0.252   7.0
+      PB   1706.0   -0.047     0.391     -0.001    -0.009      -0.016         0.251   7.0
+up    EXT   193.0    0.215     0.442      0.059     0.034       0.021         0.267   5.0
+      MID   651.0    0.048     0.405      0.016    -0.001      -0.031         0.253   5.0
+      PB   1078.0   -0.165     0.392     -0.005    -0.016      -0.028         0.254   5.0
+
+(3) EXT longs: best day 2026-11-06 = +29.4R of +36.1R total (82% share)
+    EXT longs by family:
+             n  gross_R  gross_atr    sumR
+fam                                      
+CWT14     267    0.130      0.040  34.768
+CWT12     201   -0.019      0.000  -3.918
+GEN       125    0.037      0.015   4.632
+orb20      11   -0.027     -0.017  -0.293
+NS1         8    0.424      0.125   3.392
+LIQ         6   -0.148     -0.039  -0.890
+LD2         1   -0.990     -0.244  -0.990
+intraday    1   -0.643     -0.178  -0.643
+    CWT12+CWT14 share of EXT longs: 75%
+
+EXT minus PB longs, gross_atr, day-clustered:
+  up   : days  5  mean +0.0497  t +3.48  days>0 4
+  down : days  6  mean -0.0093  t -0.11  days>0 4
+  quiet: days  7  mean +0.0062  t +0.20  days>0 2
+  all  : days 18  mean +0.0131  t +0.43  days>0 10
+
+EXT minus PB longs, ex_spy_atr, day-clustered:
+  up   : days  5  mean +0.0382  t +2.19  days>0 4
+  down : days  6  mean -0.0317  t -0.33  days>0 4
+  quiet: days  7  mean +0.0023  t +0.07  days>0 3
+  all  : days 18  mean +0.0009  t +0.03  days>0 11
+Educational only - not financial advice.

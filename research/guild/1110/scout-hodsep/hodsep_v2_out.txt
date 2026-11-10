@@ -1,0 +1,37 @@
+symbol-days 40363, sessions 33 (2026-09-24..2026-11-09), sectors assigned 1215
+candidates 19276 on 28 days; up-mover base rate 1.5%; mean fwd60 +0.026 ATR
+             feature     n   auc  auc_h1  auc_h2  up_q1  up_q5  fwd_q1  fwd_q5  q5_cut
+              rvol15 19276 0.676   0.718   0.660  0.010  0.036   0.015   0.036   1.482
+              rvol30 19276 0.691   0.715   0.680  0.007  0.035   0.020   0.034   1.426
+         stock_ret30 19276 0.636   0.704   0.601  0.009  0.028   0.027   0.031   1.274
+        sector_ret30 19276 0.479   0.450   0.470  0.018  0.015   0.027   0.022   0.516
+sector_minus_stock30 19276 0.353   0.285   0.380  0.030  0.009   0.028   0.020   0.015
+                pdcl 19276 0.496   0.496   0.499  0.013  0.014   0.039   0.020   0.810
+       gap_vs_sector 19276 0.521   0.486   0.523  0.019  0.022   0.002   0.049   0.672
+           range_atr 19276 0.709   0.685   0.710  0.004  0.034   0.015   0.037   0.783
+              fo_atr 19276 0.685   0.674   0.677  0.007  0.034   0.016   0.041   0.430
+rvol15: top-minus-bottom quintile up-rate per day: positive on 23 of 28 days, mean +0.023
+rvol30: top-minus-bottom quintile up-rate per day: positive on 23 of 28 days, mean +0.025
+sector_ret30: top-minus-bottom quintile up-rate per day: positive on 9 of 28 days, mean -0.007
+pdcl: top-minus-bottom quintile up-rate per day: positive on 15 of 28 days, mean +0.004
+gap_vs_sector: top-minus-bottom quintile up-rate per day: positive on 13 of 28 days, mean +0.002
+
+Move Hunt long movers (non-blackout, decision >= 09:50): 58; that were near-HOD candidates that day: 31 (first near-HOD bar at/before decision: 3)
+  rvol15: movers' median percentile among same-day candidates 0.60 (n 31)
+  rvol30: movers' median percentile among same-day candidates 0.67 (n 31)
+  stock_ret30: movers' median percentile among same-day candidates 0.73 (n 31)
+  sector_ret30: movers' median percentile among same-day candidates 0.45 (n 31)
+  sector_minus_stock30: movers' median percentile among same-day candidates 0.25 (n 31)
+  pdcl: movers' median percentile among same-day candidates 0.54 (n 31)
+  gap_vs_sector: movers' median percentile among same-day candidates 0.43 (n 31)
+  range_atr: movers' median percentile among same-day candidates 0.79 (n 31)
+  fo_atr: movers' median percentile among same-day candidates 0.49 (n 31)
+
+--- v2 directional check (fwd 60 min to bar b+12 close, from the b+1 open and the b+2 open; day-demeaned)
+stock_ret30            | fwd60_o1 Q1..Q5 [0.008, -0.005, 0.003, 0.0, -0.005] Q5-Q1 + 10/28 day-t -1.19 | fwd60_o2 Q1..Q5 [0.006, -0.005, 0.0, 0.001, -0.002] Q5-Q1 + 11/28 day-t -0.83
+sector_ret30           | fwd60_o1 Q1..Q5 [0.012, -0.001, 0.018, -0.004, -0.025] Q5-Q1 + 11/27 day-t -2.23 | fwd60_o2 Q1..Q5 [0.009, 0.001, 0.01, 0.003, -0.024] Q5-Q1 + 12/27 day-t -2.01
+sector_minus_stock30   | fwd60_o1 Q1..Q5 [-0.0, 0.009, -0.002, 0.002, -0.008] Q5-Q1 + 14/28 day-t 0.02 | fwd60_o2 Q1..Q5 [0.002, 0.006, -0.003, 0.0, -0.005] Q5-Q1 + 14/28 day-t 0.09
+rvol15                 | fwd60_o1 Q1..Q5 [-0.01, -0.009, 0.004, 0.005, 0.01] Q5-Q1 + 17/28 day-t 2.80 | fwd60_o2 Q1..Q5 [-0.011, -0.011, 0.003, 0.005, 0.014] Q5-Q1 + 21/28 day-t 3.68
+range_atr              | fwd60_o1 Q1..Q5 [-0.004, 0.0, 0.001, 0.001, 0.001] Q5-Q1 + 16/28 day-t 0.07 | fwd60_o2 Q1..Q5 [-0.006, 0.0, -0.0, 0.0, 0.006] Q5-Q1 + 15/28 day-t 0.44
+fo_atr                 | fwd60_o1 Q1..Q5 [-0.009, -0.01, 0.004, 0.006, 0.009] Q5-Q1 + 15/28 day-t 0.69 | fwd60_o2 Q1..Q5 [-0.009, -0.008, 0.002, 0.004, 0.011] Q5-Q1 + 15/28 day-t 0.87
+Educational only - not financial advice.
