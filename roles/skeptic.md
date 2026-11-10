@@ -238,3 +238,14 @@ ex-market uses full-window SPY for stopped legs; no snapshot_at < open assert; a
 - e-processes with clipping test the clipped mean; report the raw mean beside K.
 **Next**
 - First FAMC nightly rows once a calendar source is decided; D2PM results tonight.
+
+## Run 17 — 2026-11-10 14:41 ET (owner COMPASS task: attacked COMPCAL; read compass_5m)
+**State:** owner priority = compass improvements. Main session's compass_5m: next 5-90 min direction 48-53% (142 tests);
+5/10-min glue earlier but noisier. COMPCAL: M1 (prior-60-day remaining-move line) beats the cell table out of sample.
+FAMC fixes all in; status UNBUILDABLE until owner picks a calendar source (A/D).
+**Did:** audited compcal.py (no leak); proposed a vol-scaled M1 (one counted look); framing note: 'stays' != tradable (GATE2).
+**Learned**
+- Display tools can still mislead: always pair a "probability it stays" with "and trading it has not paid" when that's known.
+- Calibration models that ignore today's volatility are likely overconfident on high-vol days — test by vol tercile.
+**Next**
+- Vol-scaled M1 result if Builder runs it; D2PM results tonight; FAMC row 1 when a source exists.
