@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-09T21:00-05:00",
- "session": "2026-11-09",
- "headline": "Late day 1: live losses are mostly direction, not cost (87% of trades are in setups that lose before costs); two more ideas closed, GATE2's pullback timing survives a fair test but is tiny.",
+ "updated": "2026-11-09T23:00-05:00",
+ "session": "2026-11-10",
+ "headline": "Owner's new focus is the guild's P1: a rolling market compass that puts afternoon setups on standby when the morning condition flips, starting with the Graveyard coil setups.",
  "bullets": [
-  "Observer (16,615 live paper trades): 71 of 91 setups lose before costs; tight stops lose on direction, not fees. Every study must now show positive gross edge first.",
-  "CWT14SKIP closed: half its skipped trades were earnings days; without them t 1.05.",
-  "STOPW (minimum stop width) closed as a stop fix: 85% of its gain was simply trading smaller, and the stop effect loses on down days.",
-  "GATE2 pullback timing beats a matched random entry (t 4-32 in ATR units) but is only ~6-9bp per trade, below a round trip; one counted rework (mid-day exit / half size) must add gross edge.",
-  "Skeptic caught a look-ahead bug in Scout's near-high scan (HODSEP) before anything was built on it; re-run tomorrow."
+  "P1 (owner 2026-11-10): backfill the live compass over 2 years, then test whether setups that open after a midday flip do worse; coil-under-the-high first. Gross first, random-standby control, every flip definition counted.",
+  "GATE2 closed: the rework lost before costs; exiting when SPY falls back to its open made trades worse (SPY recovers too often). Lineage 0 of 15.",
+  "HODSEP closed: with the look-ahead bug fixed the near-high separation disappeared.",
+  "Live trades (18 days): entering at a fresh extreme is not worse book-wide, so no blanket rule; but flow-sell shorts sold at a fresh low lose (MF2 -0.40R vs +0.28R) - a targeted idea for a 2-year test.",
+  "Since the guild started: 68 configs scored, 0 pass; every closure has a measured reason."
  ],
  "progress": {
-  "ideas": 18,
-  "tested": 16,
-  "configs": 64,
+  "ideas": 20,
+  "tested": 18,
+  "configs": 68,
   "passed": 0,
   "forward": 0
  },
- "next": "Tomorrow: GATE2 rework plan (<= 4 configs), HODSEP re-run with the fix, book-wide 'extension vs pullback entry' check on live trades.",
+ "next": "Builder backfills the compass (validated vs live); Scout plans the flip study; Observer writes the flow-sell fresh-low skip for a 2-year test.",
  "by_role": {
-  "scout": "HODSEP near-high scan looked strong; asked Skeptic to attack it; bug found, re-run next.",
-  "builder": "CWT14SKIP closed by the earnings check; GATE2 matched-control check; STOPW with a size-cut control.",
-  "skeptic": "Found the HODSEP look-ahead; explained tight-stop fills; accepted GATE2 timing as real but tiny.",
-  "observer": "Live losses are direction, not cost; mapped where STOPW would bite.",
-  "lead": "Closed CWT14SKIP and STOPW; set 'gross edge first' as the guild rule."
+  "scout": "HODSEP v2 closed honestly; takes the rolling-compass study.",
+  "builder": "GATE2 rework scored and closed; next: compass backfill + coil trade tagging.",
+  "skeptic": "Challenged the 'longs at a fresh high' reading; pre-attacked the rolling compass; will audit the backfill.",
+  "observer": "Extension entries not a book-wide remedy; flow-sell shorts at fresh lows lose.",
+  "lead": "Made the owner's rolling compass P1; closed GATE2 and HODSEP."
  },
  "disclaimer": "Educational only — not financial advice."
 }
