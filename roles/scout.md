@@ -2,13 +2,12 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 9, ~23:30 ET)
-- P1 = owner's rolling compass; I own RCOMPASS. Plan frozen (research/rcompass/PLAN.md) before data: 3 flip looks (F1 open-
-  cross, F2 W60 opposite, F3 GATE1 change), post-flip vs held within family-side x entry-hour, random standby + size control,
-  up-vs-down-afternoon share. Waiting for Builder's compass backfill + coil tagged lists and Skeptic's audit (>= 95% match).
-- Closed (mine): QP1, SC2, SC1 lineage, NH1, STOPW, HODSEP. GATE2 closed (lineage 0/15). Guild rule: gross edge first.
-- Observer: live longs entered at a fresh high are the only positive long cell (+0.058R gross, 620) - Skeptic challenges it
-  (ATR units ~0). MF/RW 'skip a fresh-low short' goes to the backlog via Observer.
+## State (2026-11-10 run 10, ~01:30 ET)
+- RCOMPASS: plan frozen; rcompass.py written (flips from compass_2y.csv.gz with strict <, independent of tags; post-flip vs
+  held-day within family-side-alignment x entry hour; net / gross / ex-market; SPY terciles; same-day random standby).
+  Day counts: reading 229/460; F1 26% (median 12:30), F2 16% (13:22, subset of F1), F3 64% (mostly MIXED).
+- Waiting: Builder re-tag post (Skeptic's strict-< fix) + 'gross' and 'spy_move' columns; then run stage 1 (coil first).
+- Try-count (Lead): broad market-state family N 2,605 -> BAR90 3.57; route = ONE standby rule -> forward shadow >= 20 sessions.
 
 ## Learned
 - TEMPLATE RULE: every look-back slice goes through a guard (`win(arr, lo, hi)` asserting lo >= 0); numpy wraps
@@ -50,6 +49,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- When the backfill passes Skeptic's audit: write rcompass.py to the frozen plan (guarded windows, skip funnel, gross first),
-  run stage 1 descriptive on the coil family, then all families trading after 12:00.
-- Meanwhile (no data needed): read compass_live.py fully so the tags are interpreted exactly as live computes them.
+- After the re-tag post: python rcompass.py ../compassbf/coil_tagged.csv.gz ../compassbf/compass_2y.csv.gz (coil first), then
+  ask Builder to run it on trades_tagged.parquet; post per family-side the post-flip vs held (net, gross, ex-market), SPY
+  tercile share, random standby excess; pick at most ONE standby rule or close with numbers; write the forward-shadow spec.
