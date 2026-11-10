@@ -58,16 +58,15 @@
    "family": "Generated late breadth-up dip long",
    "why": "New: replaces the Generated PM long. 10 trades / 3 sessions, +0.164R, w/o best day +0.083R (70%), ex-market +0.168R with negative beta (-0.42) - not a market long; 11-06 +0.09R. Late dip buy only when breadth is up (share above VWAP > 0.5).",
    "notes": "Low-rep and weak on 2 years: screen +0.050R (TRAIN +0.068 / VALID +0.023, t 0.87; 3,082 tried in its run), flat days -0.086R. Weight 0.3. Generated - exploration, not a tested edge."
+  },
+  {
+   "id": "L3-gap-slope-fromopen-FD",
+   "account": "primary",
+   "why": "Owner ADD8 (2026-11-09 evening): 8th setup on the same metrics as the 7 \u2014 most live trades of any positive setup (267 / 18 sessions, +42.1R raw); with the -2R per-setup stop replayed: 240 trades, +47.9R, +0.20R/trade, +14.3R w/o best day, worst day -5.7R (raw -13.5R).",
+   "notes": "'1 day' flag: best day = 70% of R. 50% green days. Thrives with compass UP (top-20 conditions 11-09). Added before the 11-10 session so the Wed-Fri lineup gets a test day."
   }
  ],
- "rationale": [
-  "Held unchanged for the 2-day out-of-sample test before the Wed-Fri Team->Primary decision (owner 2026-11-09): same 7 setups, same weights, same Primary rule set as the 11-09 pick; nothing added, nothing dropped (all 7 ids still exist in config and none showed a data or sizing bug on 11-09).",
-  "Out-of-sample day 1 (11-09): Team +2.54R / +$433.50 after costs (14 trades, 10 wins) vs Primary -18.10R (+20.64R). Longs +4.05R, shorts -1.51R. One session - one draw.",
-  "Concern - thin records: CWT09 (15 live trades), NM-ETF late dip (15 + 2), GEN-261027-01 (10 + 7; generated, weak 2-year screen) and NS5 (w/o best day about zero, 1-day tag) are low-rep; ST7 also carries a 1-day tag (best session 68% of R). Most of the 11-09 gain came from GEN-261027-01 (+2.06R, 7 trades) and NM-ETF (+0.99R) - low-rep setups doing the work is a fragility, not proof.",
-  "Concern - sizing: Gap-Down VWAP Loss Short (10% gap) / CWT09 is sized at $250 per R in its Live Lab home, so its live-dollar record is not comparable to Primary's 0.25% risk; the Team sizes it at Primary's rule. On 11-09 it had 9 signals and 0 Team trades - check whether that is a filter/sizing block before the decision. Separately, the ~$4k Primary lot cap makes risk dollars per trade uneven (11-09 RW5: UVXY ~$114 at risk vs TCOM/ACGL ~$29), so equal R can mean very unequal dollars (RW5 -1.22R but +$45.60).",
-  "Concern - family/side balance: 3 shorts / 4 longs, but two shorts are sister RW gap-down pop-fade rules (RW3/RW5, overlap resolved by setup order) and carry most expected R on the long-run record, while day 1 was carried by the late longs (GEN + NM-ETF, both 14:00-15:00, both long). Short side was -1.51R on 11-09 (RW3 -0.29R, RW5 -1.22R). A one-sided or late-window-heavy book could swing hard on a trend-down afternoon.",
-  "Method unchanged from 11-09 (live R after costs pooled across homes, w/o best day, best-day share, ex-market R and beta, last-5, green rate; 2-year lists as tie-breakers). No new ranking was run for this pick, so no new configurations were tried."
- ],
+ "rationale": "[\"Held unchanged for the 2-day out-of-sample test before the Wed-Fri Team->Primary decision (owner 2026-11-09): same 7 setups, same weights, same Primary rule set as the 11-09 pick; nothing added, nothing dropped (all 7 ids still exist in config and none showed a data or sizing bug on 11-09).\", \"Out-of-sample day 1 (11-09): Team +2.54R / +$433.50 after costs (14 trades, 10 wins) vs Primary -18.10R (+20.64R). Longs +4.05R, shorts -1.51R. One session - one draw.\", \"Concern - thin records: CWT09 (15 live trades), NM-ETF late dip (15 + 2), GEN-261027-01 (10 + 7; generated, weak 2-year screen) and NS5 (w/o best day about zero, 1-day tag) are low-rep; ST7 also carries a 1-day tag (best session 68% of R). Most of the 11-09 gain came from GEN-261027-01 (+2.06R, 7 trades) and NM-ETF (+0.99R) - low-rep setups doing the work is a fragility, not proof.\", \"Concern - sizing: Gap-Down VWAP Loss Short (10% gap) / CWT09 is sized at $250 per R in its Live Lab home, so its live-dollar record is not comparable to Primary's 0.25% risk; the Team sizes it at Primary's rule. On 11-09 it had 9 signals and 0 Team trades - check whether that is a filter/sizing block before the decision. Separately, the ~$4k Primary lot cap makes risk dollars per trade uneven (11-09 RW5: UVXY ~$114 at risk vs TCOM/ACGL ~$29), so equal R can mean very unequal dollars (RW5 -1.22R but +$45.60).\", \"Concern - family/side balance: 3 shorts / 4 longs, but two shorts are sister RW gap-down pop-fade rules (RW3/RW5, overlap resolved by setup order) and carry most expected R on the long-run record, while day 1 was carried by the late longs (GEN + NM-ETF, both 14:00-15:00, both long). Short side was -1.51R on 11-09 (RW3 -0.29R, RW5 -1.22R). A one-sided or late-window-heavy book could swing hard on a trend-down afternoon.\", \"Method unchanged from 11-09 (live R after costs pooled across homes, w/o best day, best-day share, ex-market R and beta, last-5, green rate; 2-year lists as tie-breakers). No new ranking was run for this pick, so no new configurations were tried.\"] | 2026-11-09 evening: owner ADD8 \u2014 Gap-Down Recovery Fade (all day) added as the 8th setup (8 = 4 shorts + 4 longs).",
  "weights": {
   "note": "Confidence only (1 = full); every Team trade is sized the same (Primary's 0.25% risk), weights do not change sizing.",
   "RW3-gapdn-rsi5pop-flowsell-short-FD": 1.0,
@@ -76,12 +75,13 @@
   "ST7-rsi50dn-long-pm-t1s1-FD": 0.7,
   "NS5-sma50-flush-oversold-long": 0.6,
   "NM-ETF-late-dip-di-long": 0.5,
-  "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long": 0.3
+  "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long": 0.3,
+  "L3-gap-slope-fromopen-FD": 0.7
  },
  "day1_result": "Team 2026-11-06 +10.84R (57 trades) vs Primary -24.18R; 2026-11-09 (out-of-sample day 1 of the decision test) Team +2.54R / +$433.50 (14 trades) vs Primary -18.10R.",
  "configs_looked_at": "0 new (lineup carried forward unchanged from the 11-09 pick, which looked at about 290 account-setup records)",
  "rule_changes_in_window": "~$4k Primary lot 10-28; Primary -2R per-setup latch 10-29; CF 10-30; Testing 2 top-500 pool (UNI1) 11-04; Explore 1 / Live Lab (ROLL1) 11-05; Compass live yes 11-09 (owner brief; no ledger entry yet). The Team itself runs one rule set (Primary's).",
- "disclaimer": "Educational only — not financial advice.",
+ "disclaimer": "Educational only \u2014 not financial advice.",
  "changes_vs_2026-11-09": {
   "in": [],
   "out": [],
