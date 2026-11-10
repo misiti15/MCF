@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T15:00-05:00",
+ "updated": "2026-11-10T17:10-05:00",
  "session": "2026-11-10",
- "headline": "Owner's compass task: a simple calibrated line ('on N of the last 60 days the rest-of-day move was smaller, so SPY finishes this side ~P%') beats the current cell table out of sample; 5/10-minute glue does not help direction.",
+ "headline": "Day 2 closes: the owner's compass task delivered (a calibrated 'finishes this side' line beats the current card - sent as a DECISION); every setup idea tested today failed honestly. Premarket and earnings data tell size, not direction.",
  "bullets": [
-  "Next 5-90 min direction stays a coin flip (48-53%) whatever the interval; finer 5/10-min marks don't change that.",
-  "The 'finishes on this side' read is mostly arithmetic: distance from the open vs how much the market usually still moves from this time.",
-  "COMPCAL: that arithmetic line (M1) beats the card's cell table on validation and forward data, and is well calibrated; yesterday's close adds nothing.",
-  "Tonight: one more counted look (scale by today's volatility), then it goes to the owner as a DECISION with the line 'Not a direction forecast'.",
-  "FAMC (after-close earnings fade) is ready but waits for earnings-timing data."
+  "DECISION for the owner (COMPCAL): show 'on N of the last 60 days the rest-of-day move was smaller, so it finishes this side ~P%' - beats the cell table out of sample, display only.",
+  "Rolling compass: switching setups on/off by midday flip or morning reading does not help on 2 years (owner FYI).",
+  "Closed today: GATE2, STOPW, CWT14SKIP, HODSEP, MFFRESHLOW, SIZEBKT, FLOW1-2Y (owner queue), EVD1, D2PM.",
+  "Kept alive: after-close earnings fade (forward-only, waits for timing data); worst-quarter Generator screen (forward test).",
+  "PR #176 merged after the close (research files, backlog, owner inbox; 606 tests passed)."
  ],
  "progress": {
-  "ideas": 33,
-  "tested": 30,
+  "ideas": 34,
+  "tested": 31,
   "configs": 124,
   "passed": 0,
   "forward": 0
  },
- "next": "Vol-scaled line check, a move-size band, D2PM, then the evening PR with a COMPCAL DECISION and owner FYIs.",
+ "next": "Day 3: FAMC via news timestamps (full check), one partial-vol-scaling look for the compass line and size band, fresh direction sources.",
  "by_role": {
-  "scout": "FAMC spec finished with all 6 fixes; takes the move-size band.",
-  "builder": "COMPCAL: calibrated line beats the cell table out of sample.",
-  "skeptic": "Tried to break COMPCAL (it holds); wrote the owner framing line.",
-  "observer": "Showed the rest-of-day read is arithmetic; proposed the single calibrated line.",
-  "lead": "Answered both halves of the owner's compass task; DECISION tonight."
+  "scout": "SZBAND size band (calibrated on VALID, drifts with volatility); FAMC spec ready.",
+  "builder": "COMPCAL and its vol-scaled check (keep the plain line).",
+  "skeptic": "Audited COMPCAL, the news-timestamp classifier and D2PM.",
+  "observer": "Closed D2PM by its kill line; found a no-code AMC timing source (news, 79% recall).",
+  "lead": "Sent COMPCAL to the owner; merged day-2 research PR #176."
  },
  "disclaimer": "Educational only — not financial advice."
 }
