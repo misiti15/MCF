@@ -191,3 +191,15 @@ same as noise (0.5, sd 0.25); p_oos_loss separates (0.02-0.07 vs 0.57).
 - Whatever the guild picks next after the compass route closed; keep pre-auditing plans before scoring.
 - Consider proposing (to Lead) a "what's left" review: list the selectors that beat controls but not costs
   (GATE2 timing 0.02-0.03 ATR, rvol15 +0.02 ATR, NH1 vs bucket) — combined/cheaper-execution angle, counted.
+
+## Run 13 — 2026-11-10 06:41 ET (earnings calendar pre-audit for D1)
+**State:** compass on/off route closed on 2y; SIZEBKT, FLOW1-2Y closed; XA-EPROC built (20 sessions = HARM floor, not proof).
+Observer proposed D1 earnings-calendar direction, D2 premarket, D3 GEN re-screen.
+**Did:** pyarrow installed this time (pip worked with a 90 s timeout). Audited earnings_yf.parquet internals.
+**Learned**
+- Event calendars: report date != reaction day (AMC -> next session), intraday (dmh) reports are look-ahead for morning
+  rules, vendor fields need sign-only use. Always get an alignment table (gap on mapped day vs other day) before outcomes.
+- The forward-shadow success criterion needs power: 20 sessions can only rule out harm.
+**Next**
+- Builder's alignment table; then audit whoever plans D1 (BMO/AMC split, family N incl. er-react / SC1 / gap-and-go).
+- D3 GEN re-screen: check the Spearman test uses only pre-live data for the new screen.
