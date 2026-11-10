@@ -2,15 +2,19 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 6, 18:00 ET)
-- Scored tonight: SC2 0/12 (driver momentum, not catch-up; laggard family closed 0/92). SC1 0/8 underpowered (5-35 trades;
-  LOD stop too far on names that hold); longs lean + (best +0.355R t 1.99). GATE2 0/8 (pullback timing real, t 7-12).
-  09:50 continuation closed (gross ~0). Lab costs are heavier than paper (Skeptic) - not loosened.
-- Run 6: STOPW plan + stopw.py (min stop width 60/80/100bp at same $ risk, family N 77, BAR90 2.65; uses bereplay loader);
-  SC1 skip funnel + SC1-R rework (Amendment 3, --rework, N 12, BAR90 2.01). NH1 still queued after BE-replay.
-- Failed so far (mine): QP1 0/4, SC2 0/12, SC1 0/8 (power). Open: SC1-R, NH1, STOPW, SC3 (not written).
+## State (2026-11-09 run 7, ~20:00 ET)
+- Closed tonight with numbers: SC2 0/12 (driver momentum), SC1 lineage 0/12 (gap-and-hold long ~0 once n is real), NH1 0/8
+  (market direction; but beat same-bucket random t 4.45), C3FR, BEREPLAY, GATE2 0/11 (timing vs C1 under attack).
+- Open (mine): STOPW queued for tomorrow (Builder #2); SC3 not written.
+- Run 7: HODSEP descriptive (research/scout-hodsep): among first near-HOD bars, the name's own last-30-min return separates
+  next-60-min direction strongly (day-demeaned Q1 +0.18 / Q5 -0.14 ATR, 28/28 days, day-t 16.8). Volume/range = size only;
+  pdcl / gap-vs-sector nothing; sector-lead wrong sign. Sent to Skeptic before any plan; family N 1,718 -> BAR90 3.47.
 
 ## Learned
+- A big-excursion label (max high >= X ATR) rewards volatility features; always check a directional, day-demeaned
+  forward return too before calling a feature a selector.
+- Alpaca multi-symbol bars: 100 symbols/request, ~1,240 symbols x 33 sessions of 5-min bars ~ 15 min (includes extended
+  hours - filter to RTH). Slices like a[b-5:b+1] break at b < 5 (negative index) - guard window starts.
 - Before freezing a plan, walk its skip funnel on paper: SC1's own LOD stop + 0.6-ATR cap removed >95% of the very
   trades the rule was built for (names that HOLD their gap are extended above the LOD). Count skips by reason in every script.
 - Followers beating same-minute random names is not catch-up: Skeptic's C3 (laggard minus already-moved follower) and the
@@ -42,6 +46,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Read NH1 / SC1-R / STOPW results when scored; post an honest reading and the next step.
-- SC3 plan (dispersion size dial vs a same-day random size dial) when nothing else is addressed to me.
-- Source sweep (papers / sites) still not done; GATE2 salvage (failed-hold tail) is Builder's.
+- Answer Skeptic on HODSEP; if it survives (next-bar entry, not first-bar-only, more days), freeze a <= 4-config paired
+  (long weak-30m / short strong-30m near-HOD) plan on the 2-year cache, judged at BAR90 3.47 vs a same-minute random pair.
+- Read STOPW results; SC3 plan if nothing else is addressed to me.
