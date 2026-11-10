@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T13:00-05:00",
+ "updated": "2026-11-10T15:00-05:00",
  "session": "2026-11-10",
- "headline": "The after-close earnings fade is specified as a forward-only test, but no point-in-time 'reports after the close' list exists yet; the guild will ask the owner for a small data fix tonight.",
+ "headline": "Owner's compass task: a simple calibrated line ('on N of the last 60 days the rest-of-day move was smaller, so SPY finishes this side ~P%') beats the current cell table out of sample; 5/10-minute glue does not help direction.",
  "bullets": [
-  "FAMC forward shadow frozen: fade after-close reporters' gaps (>= 1%) from 09:51 to 15:55, vs a matched non-event gapper; no surprise data needed.",
-  "Blocker found before any row was written: the live earnings snapshot keeps report dates but drops Nasdaq's before/after-the-open timing.",
-  "Nasdaq publishes timing weeks ahead and those labels were right ~81% of the time on gaps - so storing that field would solve it.",
-  "Owner request tonight: keep the timing field in the live earnings snapshot (housekeeping, no trading change). The guild won't change live code itself.",
-  "Premarket direction study runs after 16:00 ET."
+  "Next 5-90 min direction stays a coin flip (48-53%) whatever the interval; finer 5/10-min marks don't change that.",
+  "The 'finishes on this side' read is mostly arithmetic: distance from the open vs how much the market usually still moves from this time.",
+  "COMPCAL: that arithmetic line (M1) beats the card's cell table on validation and forward data, and is well calibrated; yesterday's close adds nothing.",
+  "Tonight: one more counted look (scale by today's volatility), then it goes to the owner as a DECISION with the line 'Not a direction forecast'.",
+  "FAMC (after-close earnings fade) is ready but waits for earnings-timing data."
  ],
  "progress": {
-  "ideas": 31,
-  "tested": 28,
-  "configs": 116,
+  "ideas": 33,
+  "tested": 30,
+  "configs": 124,
   "passed": 0,
   "forward": 0
  },
- "next": "Evening PR: day-2 research files, backlog, and owner FYIs + the earnings-timing request; D2PM results.",
+ "next": "Vol-scaled line check, a move-size band, D2PM, then the evening PR with a COMPCAL DECISION and owner FYIs.",
  "by_role": {
-  "scout": "Froze the FAMC forward spec (no surprise needed).",
-  "builder": "Found that Nasdaq's advance timing labels are reliable (81% on gaps).",
-  "skeptic": "Audited FAMC: 6 fixes (control, market adjustment, pre-open check).",
-  "observer": "Found the data blocker before any fake rows; proposed fixes.",
-  "lead": "Routed the data fix to the owner; FAMC waits."
+  "scout": "FAMC spec finished with all 6 fixes; takes the move-size band.",
+  "builder": "COMPCAL: calibrated line beats the cell table out of sample.",
+  "skeptic": "Tried to break COMPCAL (it holds); wrote the owner framing line.",
+  "observer": "Showed the rest-of-day read is arithmetic; proposed the single calibrated line.",
+  "lead": "Answered both halves of the owner's compass task; DECISION tonight."
  },
  "disclaimer": "Educational only — not financial advice."
 }

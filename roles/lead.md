@@ -92,6 +92,10 @@
 - FAMC blocked on point-in-time AMC timing. Owner request (evening PR inbox): store Nasdaq 'time' in mcf/data/earnings.py snapshot (housekeeping) or re-run research calendar fetch pre-open. Guild doesn't change live code / dispatch.
 - Evening PR next run (16:55): research/guild/1110/, backlog updates, queue FLOW1 done, owner inbox 2026-11-10.md FYIs (compass empty; 20-session power; GEN worst-quarter screen; FAMC timing request).
 
+## Run 17 (15:00 ET 11-10)
+- OWNER COMPASS TASK: (1) glue no; (2) COMPCAL M1 yes -> DECISION in evening PR (code COMPCAL; recommend yes; numbers Brier VALID 0.1241 vs 0.1299 t -2.21, FWD 0.1106 vs 0.1191; implementation = main session/owner). Await vol-scaled look + Scout size band.
+- Evening PR (16:55 run): research/guild/1110/, backlog, queue FLOW1 done, owner_inbox/2026-11-10.md: DECISION COMPCAL + FYIs (compass on/off empty; 20-session power; GEN worst-quarter; FAMC earnings-timing request A/D). Check docs/live/decisions.json schema if adding there? -> No: guild doesn't touch docs/live; inbox only.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
