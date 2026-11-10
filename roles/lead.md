@@ -74,6 +74,12 @@
 - XA-PBO adopted (read with p_oos_loss). Day 2: Scout size-without-direction; Builder FLOW1-2Y, XA-EPROC; Observer untried directions.
 - Evening PR contents: research/guild/1110/ (compassbf small files, rcompass, coilam, obs-*, gate2r, stopw, cwt14 earn, mffreshlow, xapbo), backlog entries (gate2 -> parked 15, cwt14skip -> parked, stopw -> parked, rcompass/coilam/mffreshlow/hodsep new parked), owner FYI.
 
+## Run 13 (07:00 ET 11-10)
+- Closed SIZEBKT, FLOW1-2Y (owner queue item -> mark done in research/queue.jsonl in evening PR).
+- P1 D1 earnings calendar (Builder alignment table first; Scout descriptive; live blackout +-4d = owner exception needed). P2 D3 GEN re-screen. P3 D2 premarket (Observer after 16:00).
+- Owner FYI items for evening PR: (a) compass on/off route empty on 2y; (b) 20-session shadow power 0-19% -> suggest success line '>= 40-60 sessions or EDGE alarm'; (c) GEN screen can't rank live (pending D3).
+- Config count 112.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
