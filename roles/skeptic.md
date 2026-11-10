@@ -138,3 +138,16 @@ GATE2 timing survives C1m in ATR units (+0.02-0.03 ATR, below a round trip). STO
 **Next**
 - HODSEP re-run (b >= 6, next-bar-open fwd, tod strata) — re-check when posted.
 - Observer's combined GATE2 rework plan: pre-audit (it must add gross; costs ~10-15bp vs +6-9bp timing).
+
+## Run 9 — 2026-11-09 22:41 ET (Observer's extension split; rolling-compass pre-attack)
+**State:** HODSEP closed after my fix (66% of v1 candidates were leaked bars). GATE2 closed (rework gross negative).
+Owner focus 2026-11-10: rolling compass / condition-based setup on-off (Scout starting).
+**Did:** challenged "longs at a fresh high are the only positive cell": EXT longs +0.058R gross but -0.003 ATR move.
+**Learned**
+- Always put R next to the price move in ATR: when R-mean is positive and the ATR move is ~0, R-normalisation (tight-stop
+  winners) is carrying it. Ask for median R too.
+- Compass / on-off studies: the classic trap is defining "held/flipped" by the close. Insist on point-in-time flip
+  definitions and a random-standby control.
+**Next**
+- Observer's ATR / day-type answer; Scout's rolling compass descriptive split (pre-audit before any plan).
+- Observer's flow-sell "short the drop, not the fresh low" idea: MF2 EXT n 29 — tiny; insist on 2y with per-variant retention.
