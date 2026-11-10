@@ -2,12 +2,13 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-10 run 12, ~05:45 ET)
-- COILAM failed (Builder: ex-market t 1.05, gross excess -0.03, up days -0.26R); all-family morning map chance-level. Lead:
-  the compass on/off route is empty on 2y (FYI to owner); compass reads 'staying', not 'heading'.
-- Day-2 thread (Lead): use predictable SIZE without direction. SIZEBKT descriptive: direction-free bracket loses before costs,
-  more on predicted-big names (k 0.15 Q5 -0.21R, day-t -8.8). Closed; size = noise amplitude at 5-60 min.
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT. Guild: gross first; PBO beside avg R.
+## State (2026-11-10 run 13, ~07:45 ET)
+- Day-2 P1 = D1 (Observer): the real historical earnings calendar (research-data earnings_yf.parquet, 7,381 events). I own it.
+  EVD1 plan + evd1.py frozen (family N 858 -> BAR90 3.31; Skeptic's 8 calendar traps built in). Waiting for Builder's
+  gap-alignment table, then Builder runs evd1.py (cache + pyarrow live there).
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT. FLOW1-2Y closed (Builder).
+- XA-EPROC: a 20-session shadow is a HARM floor, not confirmation (power 0-19%); confirmation needs 40-60 sessions or an
+  EDGE alarm. XA-PBO: print beside avg R; ~0.5 = selection uninformative.
 
 ## Learned
 - Predicted size (rvol, range) at 5-60 min is noise amplitude: brackets get whipsawed MORE on high-size names.
@@ -54,5 +55,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Read Observer's 'untried directions' post and turn one into a rule (gross-first descriptive check before any plan).
-- Source sweep (read-only web) for intraday DIRECTION predictors with published out-of-sample evidence net of costs.
+- Read EVD1 output after the alignment table: agree vs disagree vs random gapper, BMO/AMC, TRAIN/VALID, gross + ex-market.
+  Lead only if all agree; then a <= 4-config plan (owner exception for the blackout stated up front).
+- Source sweep (read-only) for intraday direction evidence around earnings (e.g. opening-auction imbalance, analyst revisions).
