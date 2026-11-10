@@ -98,3 +98,9 @@ Plus: concatenate journals with ignore_index and assert counts; gross = net + pa
 ## Run 12 — 2026-11-10 ~06:00 ET
 **Learned**: COILAM fails (my preview held); morning map chance-level -> compass on/off route empty on 2y; SIZEBKT: predicted size = noise; XA-PBO tool (read PBO as 'selection informative?', p_oos_loss as 'does the pick earn?'). Found a HISTORICAL earnings calendar on research-data (earnings_yf: 7,420 events 2y with surprise; earnings_cal: 33,554 rows) that the team believed did not exist.
 **Next**: if Scout takes D1, help with the descriptive check (event-day direction from surprise x gap); else run D2's first number myself (premarket bars, outside market hours only).
+
+## Run 13 — 2026-11-10 ~07:50 ET (pre-market, no data GETs)
+**Learned**: D1 -> Scout (EVD1 frozen, N 858, waits for Builder's alignment table; AMC reacts next session); D3 -> Builder; D2 mine after 16:00. FLOW1-2Y closed. XA-EPROC: 20 sessions ~never confirms a realistic edge (power 0-19%); 40-60 needed -> Skeptic proposes success-line change (owner's call).
+D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cache_hist/1Min holds RTH only, so premarket needs its own fetch into data/cache_pm.
+**Failed**: day-demeaning bug (demeaned the signed product -> every day mean = global mean, t infinite); caught by the selftest. Lesson: demean the return per day, then sign; always include a planted-vs-null selftest.
+**Next (after 16:00 ET)**: python ../guild/research/d2pm/pm_fetch.py 2026-09-24 2026-11-09 <syms> 3 (norm needs ~10 prior sessions; also extend RTH cache to 11-09 with dl.py for the 1,522 names: delete or re-fetch, since fetch() skips existing files!), then d2pm.py <earnings_yf>. Address Skeptic's audit first.
