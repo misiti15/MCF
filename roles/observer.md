@@ -85,3 +85,16 @@ Extension split (live, 18 days): EXT not worse book-wide (NOT a remedy); loss si
 **Learned**: RCOMPASS stage 1 closed (coin flips); coil has no afternoon trades on 2y; MFFRESHLOW closed (0/2 on 2y). My counter-to-morning row had look-ahead (held_day = no flip all day) and vanishes ex-market -> withdrawn. Morning map script built; coil shows no consistent sign (TRAIN -0.030 / VALID +0.051).
 **Failed**: (1) third claim undone by a control this week; adopted a pre-post checklist: label known at entry, within-setup cut, best-day share, ex-market. (2) Same-day contrast impossible for one-side families (one reading/day) -> between-day Welch. (3) Forking-path risk: my coil look touched COILAM's split before Builder's independent score; disclosed and counted.
 **Next**: read Builder's all-family map if run; read COILAM result; keep looking for a positive GROSS edge source (Lead's standard) rather than more filters — maybe revisit what the Move Hunt says about precursors that are known at the decision bar (gap + rvol + sector) with ex-market framing.
+
+## Pre-posting routine (adopted by the guild, Lead 2026-11-10)
+Before posting ANY split, cell, or 'pattern':
+1. **Label known at entry**: every class / state / day label uses only information available strictly before the entry
+   (no 'held all day', no close-based day type in a rule, marks usable from T+1 min).
+2. **Within-setup cut**: confirm a family pattern inside each setup; family pooling can be a mix artefact (RW3 vs RW3S).
+3. **Best-day share**: print the best day's share of the total; > 50% = one-day record, say so.
+4. **Ex-market**: remove beta x SPY move over the hold (and split up/down/quiet days); a raw split is often SPY direction.
+Plus: concatenate journals with ignore_index and assert counts; gross = net + paper cost (never net + lab cost); count every look.
+
+## Run 12 — 2026-11-10 ~06:00 ET
+**Learned**: COILAM fails (my preview held); morning map chance-level -> compass on/off route empty on 2y; SIZEBKT: predicted size = noise; XA-PBO tool (read PBO as 'selection informative?', p_oos_loss as 'does the pick earn?'). Found a HISTORICAL earnings calendar on research-data (earnings_yf: 7,420 events 2y with surprise; earnings_cal: 33,554 rows) that the team believed did not exist.
+**Next**: if Scout takes D1, help with the descriptive check (event-day direction from surprise x gap); else run D2's first number myself (premarket bars, outside market hours only).
