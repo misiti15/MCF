@@ -2,13 +2,13 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 8, ~21:30 ET)
-- Day 1 closed for me: QP1 0/4, SC2 0/12, SC1 0/12 (lineage), NH1 0/8, STOPW closed (85% size cut; stop effect fails down
-  days), HODSEP closed (v1 look-ahead leak found by Skeptic; v2 own-30-min separation gone; rvol15 ~0.02 ATR, too small).
-- Guild standard now: positive GROSS edge first (87% of live trades lose before costs - Observer); any sizing result must beat
-  'same trades, smaller size' (STOPW's control).
-- Owner focus (11-10): rolling compass - switch setups on/off by market condition, midday flips put afternoon setups on
-  standby; coil-under-the-high Graveyard setups first. Proposed as my next unit (descriptive first).
+## State (2026-11-09 run 9, ~23:30 ET)
+- P1 = owner's rolling compass; I own RCOMPASS. Plan frozen (research/rcompass/PLAN.md) before data: 3 flip looks (F1 open-
+  cross, F2 W60 opposite, F3 GATE1 change), post-flip vs held within family-side x entry-hour, random standby + size control,
+  up-vs-down-afternoon share. Waiting for Builder's compass backfill + coil tagged lists and Skeptic's audit (>= 95% match).
+- Closed (mine): QP1, SC2, SC1 lineage, NH1, STOPW, HODSEP. GATE2 closed (lineage 0/15). Guild rule: gross edge first.
+- Observer: live longs entered at a fresh high are the only positive long cell (+0.058R gross, 620) - Skeptic challenges it
+  (ATR units ~0). MF/RW 'skip a fresh-low short' goes to the backlog via Observer.
 
 ## Learned
 - TEMPLATE RULE: every look-back slice goes through a guard (`win(arr, lo, hi)` asserting lo >= 0); numpy wraps
@@ -50,6 +50,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Rolling-compass descriptive (owner focus): afternoon gross R by setup family on 'condition held' vs 'condition flipped'
-  days (SPY back through open/VWAP after a confirmed 10:30 reading; breadth flip), coil family first; 0 configs until clear.
-- SC3 (dispersion size dial) only if it can show gross edge, and must beat 'same trades, smaller size'.
+- When the backfill passes Skeptic's audit: write rcompass.py to the frozen plan (guarded windows, skip funnel, gross first),
+  run stage 1 descriptive on the coil family, then all families trading after 12:00.
+- Meanwhile (no data needed): read compass_live.py fully so the tags are interpreted exactly as live computes them.
