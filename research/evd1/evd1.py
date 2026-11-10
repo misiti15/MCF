@@ -63,7 +63,7 @@ def main():
     Dd["beta"] = Dd.groupby("symbol", group_keys=False).apply(_b)
     INFO = {(s, d): (p, a, adv, b) for s, d, p, a, adv, b in Dd[["symbol", "date", "pc", "atr", "adv20", "beta"]].itertuples(index=False)}
     S = np.array(sorted(SPYD.index))
-    tcol = next(c for c in ("timing", "time", "report_time", "hour_class") if c in er.columns)
+    tcol = next(c for c in ("timing", "time", "report_time", "hour_class", "session") if c in er.columns)   # "session" added by Builder 11-10 (input column name only)
     er["react"] = [reaction_session(d, t, S) for d, t in zip(er.date, er[tcol])]
     n0 = len(er); ev = er[er.react.notna()].copy()
     print(f"events {n0}; dropped (dmh/other timing or no next session) {n0 - len(ev)}; weekend/non-session report dates mapped "

@@ -1,0 +1,18 @@
+GEN setups scored: 56 (>= 40 pre-gen lab trades, >= 3 quarters with >= 20, >= 10 live trades)
+       score   target  n  spearman  perm_p_one_sided
+   old_score live_avg 56     0.017             0.454
+   old_score live_wob 52    -0.063             0.634
+   old_valid live_avg 56    -0.137             0.823
+   old_valid live_wob 52     0.006             0.469
+    lab_mean live_avg 56    -0.229             0.948
+    lab_mean live_wob 52    -0.178             0.894
+  S1_worst_q live_avg 56     0.238             0.037
+  S1_worst_q live_wob 52     0.214             0.061
+S2_pos_share live_avg 56     0.069             0.300
+S2_pos_share live_wob 52     0.053             0.350
+
+S3 all-quarters-positive survivors: 1 of 56; their live avg -0.500 (w/o best day -0.646) vs the rest -0.180 (-0.488)
+XA-PBO over the scored setups' pre-gen daily lab P&L: {'pbo': 0.62, 'splits': 12870, 'S': 16, 'N': 56, 'T_used': 432, 'metric': 'mean', 'median_logit': -1.812, 'degradation_slope': -0.171, 'p_oos_loss': 0.573}
+
+VERDICT (fixed): S1 spearman 0.238 (p 0.037) vs old 0.017 -> stricter screen ranks live better: True
+Educational only - not financial advice.

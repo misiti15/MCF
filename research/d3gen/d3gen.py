@@ -36,8 +36,8 @@ def sp(a, b):
     return round(r, 3), round(float((perm >= r).mean()), 3)
 out = []
 for col in ("old_score", "old_valid", "lab_mean", "S1_worst_q", "S2_pos_share"):
-    d = R.dropna(subset=[col])
     for tgt in ("live_avg", "live_wob"):
+        d = R.dropna(subset=[col, tgt])   # fix 11-10: drop NaN in the target too (single-live-day setups have no w/o-best-day value)
         rho, pv = sp(d[col], d[tgt]); out.append(dict(score=col, target=tgt, n=len(d), spearman=rho, perm_p_one_sided=pv))
 O = pd.DataFrame(out); pd.set_option("display.width", 250); print(O.to_string(index=False))
 s3 = R[R.S3_all_pos]; print(f"\nS3 all-quarters-positive survivors: {len(s3)} of {len(R)}; their live avg {s3.live_avg.mean():+.3f} (w/o best day "

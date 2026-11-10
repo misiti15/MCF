@@ -67,6 +67,8 @@
 
 - PBO (research/xapbo): stable ranking != edge (STOPW PBO 0, loses OOS 100%); single-study PBO sd ~0.22.
 
+- Winner's curse is measurable: GEN lab mean vs live rho -0.23; worst-quarter (robustness) is the only screen with + rank.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -76,6 +78,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 09:25: earnings alignment table (BMO/AMC aligned 5.6-5.7x; dmh reacts next day), D3GEN (worst-quarter screen ranks
+  live GEN rho +0.24, p 0.04; old screen ~0), EVD1 running for Scout (added 'session' as a timing column name).
 - 11-10 07:20: FLOW1-2Y closed (restates SPY), XA-EPROC built (daily-peeked t = 27% false holds; 20 sessions ~no power).
 - 11-10 05:00: COILAM 0/1, all-family morning map chance-level, XA-PBO tool built + tested.
 - Done 11-10 night: compass re-tag (strict <, +gross/spy_move), RCOMPASS stage 1 run (flips don't separate),
