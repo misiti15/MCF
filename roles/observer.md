@@ -58,3 +58,8 @@
 **Learned**: tonight 0 of ~47 configs passed (09:50 continuation closed: gross ~0 per decile; laggard family 0/92 parked; GATE2 0/11 but pullback timing t 7-12 vs control; SC1 underpowered, longs lean +; NH1 0/8 = market direction; CWT14SKIP X1.5 passes bar but effect tiny). Skeptic: lab costs HEAVIER than paper (0.218R vs ~0.06R) -> screen-to-live gap is winner's curse. GEN feature tally: no condition carries w/o best day; drains = short-horizon momentum words; tight brackets worst.
 **Failed**: genfeat meta filter bug (">=" contains "=") caught and fixed before posting.
 **Next**: laggard-vs-leader 2y split if Builder's fromOpen column exists (check research/ on guild for name-minus-SPY fo); watch Skeptic's C1 verdict on GATE2 and argue for GATE2 x STOPW combo; reconcile moves.csv 112 vs 144.
+
+## Run 7 — 2026-11-09 ~19:50 ET
+**Learned**: BEREPLAY: BE hurts 27/27 families; mfe-based giveback overstates exit fixes ~10x (my GEN giveback framing was an upper bound, now measured). Cost thread: 71/91 setups lose BEFORE costs live; tight-stop quartile has favourable paper entries (-0.125R) vs lab +0.42R; STOPW volume = CWT14 (gross-negative), cost-killed = MF flow-sell, RW7, RW1, L3, NS4. Live Owner CF cost filter (Testing 1/2, 10-30) already exists. touch_fill = target exits.
+**Failed**: first stopcost draft double counted (lab cost added on top of net that already holds paper cost); fixed before posting. Lesson: gross = net + paper cost, never net + lab cost.
+**Next**: Skeptic's answer on tight-quartile favourable fills; GATE2 C1m verdict (my combo depends on it); Scout's HODSEP attack outcome (own-30m-return near HOD: connects to 'don't buy extension' + late-buying); laggard-vs-leader 2y split still owed (check Builder's cache column).
