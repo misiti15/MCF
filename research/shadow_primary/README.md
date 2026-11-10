@@ -13,7 +13,7 @@ configured.
 |---|---|
 | `picks/<date>.json` | the Team for a session: `{date, setups: [{id, account, side, family, why, notes}], rationale, weights}`; weights are confidence only (no sizing effect). The latest picks before a date carry over. |
 | `team/<date>.json` | one Team session: trades, per-setup R / P/L, totals, actual Primary R and Alpaca P/L, cross-check, method. |
-| `scoreboard.csv` | one row per run (intraday runs and the after-close run); the last row of a date is that day's result. |
+| `scoreboard.csv` | one row per intraday run; the after-close run replaces that date's rows, so a finished date has exactly one row (its result). |
 | `mcf/report/team.py` | the runner: `python -m mcf.report.team --date D [--push]`. |
 
 Data branch **`mcf-data-team`** (no PR needed, like the accounts' data branches): `team/<date>.json`, `team/latest.json`,
@@ -33,6 +33,11 @@ push the picks on the main branch). Until a run for today exists it lists the pi
    ~$1k lots, ...) do **not** apply.
 3. **Universe** - the full Primary universe of the session: Primary's `universe.csv` (mcf-data, built that morning;
    min ADV $5M core + the extended tier) minus the PTP denylist and the live earnings blackout. Not any account's pool.
+   **Before ~14:35 ET** the live run has not yet published that session's `universe.csv` or `earnings/<date>.json` (it
+   publishes them when its job ends: handover or close). Intraday runs then use the previous session's universe.csv and a
+   PROVISIONAL earnings blackout (the previous session's live list cut to this session's window + a fresh computation),
+   labelled in `method`. Until 2026-11-10 they skipped the blackout (~1,200 earnings names Primary never trades), which
+   inflated the morning trade counts (11-10: 181 trades at 14:22, 76 at 15:21 once the live list appeared).
 4. **Inputs** - read-only Alpaca market data only (never a trading endpoint): the live prep's priors
    (`mcf.data.priors.build_priors`, unchanged) and the session's 1-minute SIP bars from 09:30 to now. Cached in
    `data/team/` (git-ignored).

@@ -102,9 +102,15 @@ def test_r_definition():
 def test_scoreboard_append_and_text(tmp_path):
     p = tmp_path / "scoreboard.csv"
     team.append_scoreboard(_rep(), p)
-    team.append_scoreboard(_rep(phase="closed"), p)
+    team.append_scoreboard(_rep(date="2026-11-09"), p)
+    team.append_scoreboard(_rep(totals={"trades": 9, "r": -6.0}), p)
     rows = list(csv.DictReader(p.open()))
-    assert [r["phase"] for r in rows] == ["intraday", "closed"] and list(rows[0]) == team.SCOREBOARD_COLS
+    assert [r["phase"] for r in rows] == ["intraday"] * 3 and list(rows[0]) == team.SCOREBOARD_COLS
+    team.append_scoreboard(_rep(phase="closed"), p)
+    team.append_scoreboard(_rep(phase="closed"), p)   # the nightly loop re-running the final: still one row
+    rows = list(csv.DictReader(p.open()))
+    # the final replaces that date's intraday rows; other dates are untouched
+    assert [(r["date"], r["phase"]) for r in rows] == [("2026-11-09", "intraday"), ("2026-11-06", "closed")]
     assert rows[1]["team_r"] == "1.5" and rows[1]["primary_pnl_alpaca"] == "75.5"
     t = team.text(_rep())
     assert "+1.50R" in t and "Primary +1.00R" in t and "Educational only — not financial advice" in t and "no orders" in t
@@ -152,3 +158,46 @@ def test_team_card_does_not_touch_other_cards():
     # the card sits between the End of day card and the next script; the other cards keep their places
     assert HTML.index('id="eod-card"') < HTML.index('id="team-card"') < HTML.index('<section id="live"')
     assert HTML.count('id="team-card"') == 1
+
+
+def test_intraday_applies_earnings_blackout_before_the_live_list_is_published(monkeypatch):
+    """2026-11-10: the live run publishes earnings/<day>.json and the day's universe.csv only when its job ends (handover
+    ~14:35 ET). Before that the Team skipped the blackout and replayed ~1,200 earnings names Primary never traded (181
+    trades at 14:22, 76 at 15:21 once the list appeared). With no live list the Team applies the same blackout itself."""
+    from mcf.replay import store
+
+    uni = pd.DataFrame({"symbol": ["AAA", "BBB", "ERN", "XYZ"]})
+    cfg = {"universe": {"earnings_blackout_days": 4, "ptp_denylist": ["XYZ"]}, "strategies": {}}
+    monkeypatch.setattr(store, "earnings_blackout", lambda d, b="origin/mcf-data": None)
+    asked = {}
+
+    def fake(day, syms, n):
+        asked.update(day=day, syms=syms, n=n)
+        return {"source": "nasdaq", "complete": True, "symbols": {"ERN": ["2026-11-10"]}}
+
+    monkeypatch.setattr(team, "blackout_for", fake)
+    monkeypatch.setattr(team, "previous_blackout", lambda d, n: ({"AAA"}, "2026-11-09"))
+    syms, notes = team.team_symbols(cfg, uni, "2026-11-10")
+    assert syms == ["BBB"] and asked["n"] == 4 and "ERN" in asked["syms"]
+    assert "PROVISIONAL" in str(notes["earnings_blackout"]) and notes["symbols"] == 1
+    monkeypatch.setattr(team, "previous_blackout", lambda d, n: None)
+    syms, notes = team.team_symbols(cfg, uni, "2026-11-10")
+    assert syms == ["AAA", "BBB"]
+    # the published live list wins when it exists
+    monkeypatch.setattr(store, "earnings_blackout", lambda d, b="origin/mcf-data": {"BBB"})
+    monkeypatch.setattr(team, "blackout_for", lambda *a: (_ for _ in ()).throw(AssertionError("live list on record")))
+    syms, notes = team.team_symbols(cfg, uni, "2026-11-10")
+    assert syms == ["AAA", "ERN"] and notes["earnings_blackout"] == 1
+    # no network: labelled, never silent
+    monkeypatch.setattr(store, "earnings_blackout", lambda d, b="origin/mcf-data": None)
+    monkeypatch.setattr(team, "blackout_for", lambda *a: (_ for _ in ()).throw(OSError("offline")))
+    syms, notes = team.team_symbols(cfg, uni, "2026-11-10")
+    assert "not applied" in notes["earnings_blackout"] and "OSError" in notes["earnings_blackout"]
+
+
+def test_previous_blackout_cut_to_the_session_window(monkeypatch):
+    monkeypatch.setattr(team, "_git", lambda *a, **k: "earnings/2026-11-06.json\nearnings/2026-11-09.json\n")
+    monkeypatch.setattr(team, "_branch_json", lambda b, p: {"symbols": {"OLD": ["2026-11-03"], "IN": ["2026-11-12"],
+                                                                         "NEXT": ["2026-11-16"]}} if "11-09" in p else None)
+    got, src = team.previous_blackout("2026-11-10", 4)
+    assert src == "2026-11-09" and got == {"IN", "NEXT"}   # 11-03 is outside 11-10's +-4 trading-day window

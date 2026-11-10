@@ -173,7 +173,10 @@ def primary_universe(day) -> tuple[pd.DataFrame, str]:
         built = pd.Timestamp(str(u["built_at"].iloc[0])).tz_convert(NY).date() if len(u) else None
         if built is None or built < day - timedelta(days=4):
             break
-        return u, f"Primary universe.csv built {built} ({len(u)} symbols, commit {sha[:8]})"
+        note = f"Primary universe.csv built {built} ({len(u)} symbols, commit {sha[:8]})"
+        if built < day:   # the live run publishes the session's universe.csv only when its job ends (~14:35 ET)
+            note += f" - PROVISIONAL: the {day} universe is not published yet"
+        return u, note
     raise FileNotFoundError(f"no Primary universe.csv for {day} on origin/mcf-data")
 
 
@@ -190,10 +193,58 @@ def team_symbols(cfg: dict, uni: pd.DataFrame, day) -> tuple[list[str], dict]:
         syms -= eb
         notes["earnings_blackout"] = len(eb)
     else:
-        notes["earnings_blackout"] = "not on record (not applied)"
+        # The live run publishes earnings/<day>.json (and that day's universe.csv) only when its job ends (handover
+        # ~14:35 ET or the close). Intraday runs before that used to skip the blackout and replay ~1,200 earnings names
+        # Primary never traded (2026-11-10: 181 trades at 14:22 -> 76 at 15:21 once the list appeared). Apply the same
+        # blackout the live prep computes (mcf.data.earnings.blackout, cached under data/team/), labelled.
+        # The Nasdaq calendar can be unreachable from where the Team runs (the news fallback is past-side only), so the
+        # previous session's published live list, cut to this session's window, is added (its dates are recorded).
+        n = int((cfg.get("universe") or {}).get("earnings_blackout_days") or 0)
+        if n:
+            got, parts = set(), []
+            prev = previous_blackout(day, n)
+            if prev is not None:
+                got |= prev[0]
+                parts.append(f"{len(prev[0])} from the {prev[1]} live list in this window")
+            try:
+                eb = blackout_for(day, sorted(syms), n)
+                got |= set(eb.get("symbols") or {})
+                parts.append(f"{len(eb.get('symbols') or {})} computed now ({eb.get('source')})")
+            except Exception as e:  # network missing: say so, never silently
+                parts.append(f"Team computation failed ({type(e).__name__})")
+            if got:
+                syms -= got
+                notes["earnings_blackout"] = (f"{len(got & set(uni['symbol'].astype(str)))} (PROVISIONAL, live list not "
+                                              f"yet published: {'; '.join(parts)})")
+            else:
+                notes["earnings_blackout"] = f"not on record; {'; '.join(parts) or 'no source'}: not applied"
+        else:
+            notes["earnings_blackout"] = "not on record (blackout off in config)"
     syms |= pinned_symbols(cfg)
     notes["symbols"] = len(syms)
     return sorted(syms), notes
+
+
+def blackout_for(day, symbols: list[str], n: int) -> dict:
+    """The live prep's earnings blackout (mcf.data.earnings.blackout, Nasdaq calendar), cached in data/team/earnings/."""
+    from ..data.earnings import blackout
+
+    return blackout(pd.Timestamp(str(day)).date(), symbols, n, state_dir=CACHE)
+
+
+def previous_blackout(day, n: int, branch: str = "mcf-data", max_age_days: int = 7):
+    """(symbols, date) from the newest published live earnings list before `day` (origin/<branch>:earnings/<d>.json),
+    kept only where a recorded earnings date falls inside `day`'s +-n trading-day window. None when there is none."""
+    from ..data.earnings import window
+
+    d = pd.Timestamp(str(day)).date()
+    names = (_git("ls-tree", "--name-only", f"origin/{branch}", "earnings/") or "").split()
+    older = sorted(x for x in (Path(p).stem for p in names) if len(x) == 10 and d - timedelta(days=max_age_days) <= pd.Timestamp(x).date() < d)
+    if not older:
+        return None
+    rec = _branch_json(branch, f"earnings/{older[-1]}.json") or {}
+    w = {str(x) for x in window(d, n)}
+    return {s for s, ds in (rec.get("symbols") or {}).items() if any(str(x)[:10] in w for x in (ds or []))}, older[-1]
 
 
 def _client():
@@ -517,6 +568,15 @@ def append_scoreboard(rep: dict, path: Path = OUT / "scoreboard.csv") -> Path:
            "open": tot.get("open", 0), "team_r": tot.get("r", ""), "team_pnl": tot.get("pnl", ""),
            "primary_r": act.get("r", ""), "primary_pnl_journal": act.get("pnl_journal", ""),
            "primary_pnl_alpaca": act.get("pnl_alpaca", ""), "diff_r": tot.get("vs_primary_r", "")}
+    if rep["phase"] == "closed" and path.exists():
+        # the after-close run is the day's result: it replaces that date's intraday rows (and any earlier final, e.g.
+        # the nightly loop re-running it), so the date has exactly one row holding the final numbers
+        with path.open(newline="") as f:
+            keep = [r for r in csv.DictReader(f) if r.get("date") != rep["date"]]
+        with path.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=SCOREBOARD_COLS, extrasaction="ignore")
+            w.writeheader()
+            w.writerows(keep)
     new = not path.exists()
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", newline="") as f:
