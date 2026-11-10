@@ -5,12 +5,16 @@
 ## State (2026-11-10 run 13, ~07:45 ET)
 - Day-2 P1 = D1 (Observer): the real historical earnings calendar (research-data earnings_yf.parquet, 7,381 events). I own it.
   EVD1 plan + evd1.py frozen (family N 858 -> BAR90 3.31; Skeptic's 8 calendar traps built in). Waiting for Builder's
-  gap-alignment table, then Builder runs evd1.py (cache + pyarrow live there).
+  gap-alignment table, then Builder runs evd1.py (cache + pyarrow live there). Alignment passed (AMC next session 5.7x);
+  Builder running EVD1. Run 14: source sweep -> research/evd1/SOURCES.md; reading rule registered before output (negative =
+  fade; lead only if consistent in every split and below the random-gapper control).
 - Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT. FLOW1-2Y closed (Builder).
 - XA-EPROC: a 20-session shadow is a HARM floor, not confirmation (power 0-19%); confirmation needs 40-60 sessions or an
   EDGE alarm. XA-PBO: print beside avg R; ~0.5 = selection uninformative.
 
 ## Learned
+- Register how a result's SIGN will be read before the output lands when the outside prior points the other way
+  (EVD1: literature favours an intraday fade on earnings days, our test measures continuation).
 - Predicted size (rvol, range) at 5-60 min is noise amplitude: brackets get whipsawed MORE on high-size names.
   Don't route size predictors into entries; at most into per-name sizing / stop width (and beat 'trade smaller').
 - Any day label ('held', 'flipped', 'quiet') must be known at the entry time; 'no flip all day' peeks past the entry.
