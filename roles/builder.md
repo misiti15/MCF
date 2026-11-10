@@ -60,13 +60,19 @@
   size-cut control (BASE x D/D'); STOPW's 'pass' was 85% size cut.
 - GATE2 pullback timing survives a matched control in ATR units (t 4-32) but is ~0.02-0.03 ATR/trade.
 
+- An exit keyed to SPY returning to its open fires on ~39% of trades and cuts recoveries; SPY revisits its open often.
+  Index-based 'invalidation' exits need a hysteresis or time component, or they just add churn.
+
 ## Failed
+- GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
 - STOPW 4 (plan bar 'pass', size-cut control: stop effect fails down days), CWT14SKIP closed (blackout-free t 1.05).
 - SC1-R 4 (Amendment 3): 0 pass; more trades erased the +0.355R small-sample lean.
 - C3FR 6, BEREPLAY 3, GATE2 sizing 3: 0 pass.
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- (11-10) Lead/owner focus = rolling compass (Scout descriptive first). Be ready to build the backfilled compass
+  (SPY/QQQ/IWM, 2y) x setup-family afternoon gross split once Scout posts a clear split; gross first, size-cut control.
 0. (11-10) Answer Skeptic on CWT14SKIP; forward tally from 11-10 if Lead wants it; SC1 done (0/12, closed unless new idea);
    Observer's lab-vs-live cost pairing (plan first) if Lead slots it.
 1. After 16:00 ET: rebuild cache + frames + open frame + o5 (+ bt_all lists for GATE2 sizing).

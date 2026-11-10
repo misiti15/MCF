@@ -1,0 +1,18 @@
+bars 0/705
+bars 200/705
+bars 400/705
+bars 600/705
+paths 91757; SPY sessions 438 (2024-10-16..2026-11-09, locked absent)
+B1 done
+B2 done
+       config     n   gross     net     t  plain_e1  wo_best best_share   train   valid     up   down  quiet  r_held  r_failed  mx_share   mx_r  mx_plain  ex_c1m_r  ex_c1m_r_t  ex_c1m_atr  ex_c1m_atr_t  pass  sizectl_ex  sizectl_t  w_mean
+ GATE2R-B1-MX 25297 -0.0210 -0.1364 -5.16   -0.1092  -0.1477       None -0.1349 -0.1370 -0.064 -0.057 -0.370  -0.064    -0.388     0.395 -0.177    -0.108    0.0895       14.69      0.0255         23.56 False         NaN        NaN     NaN
+GATE2R-B1-MXH 25297 -0.0110 -0.0781 -5.31   -0.1092  -0.0838       None -0.0748 -0.0793 -0.033 -0.037 -0.213  -0.037    -0.220     0.395 -0.177    -0.108    0.0514       14.99      0.0152         23.50 False      0.0030       0.94   0.595
+ GATE2R-B2-MX 35594 -0.0130 -0.0979 -4.08   -0.0837  -0.1075       None -0.1058 -0.0951 -0.029 -0.027 -0.327  -0.040    -0.349     0.390 -0.206    -0.169    0.0496       11.08      0.0188         17.43 False         NaN        NaN     NaN
+GATE2R-B2-MXH 35594 -0.0069 -0.0544 -4.26   -0.0837  -0.0592       None -0.0548 -0.0543 -0.013 -0.018 -0.182  -0.024    -0.188     0.390 -0.206    -0.169    0.0282       12.20      0.0111         18.45 False      0.0017       0.71   0.573
+
+lineage N 127, BAR90 2.8; gross reported first and required; plain_e1 = the same trades without MX; mx_* = trades MX exited
+(their MX R vs their plain-E1 R); C1m = matched random bar (distance-from-open + 30-min bucket) with the same exit;
+MXH: weights 0.5 before 13:00, sizectl = sum(w r) - w_mean x sum(r) per trade (must clear the bar too).
+configs 4 (lineage 127), pass 0
+Educational only - not financial advice.
