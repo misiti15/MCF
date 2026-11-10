@@ -78,6 +78,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 10:30: D3GEN robustness: CI [+0.04,+0.44], LOO +0.18..+0.31; ranks but top third still -0.10R live. EVD1 run
+  posted to Scout (no surprise-direction signal). Next: on request; D2PM is Observer's after 16:00.
 - 11-10 09:25: earnings alignment table (BMO/AMC aligned 5.6-5.7x; dmh reacts next day), D3GEN (worst-quarter screen ranks
   live GEN rho +0.24, p 0.04; old screen ~0), EVD1 running for Scout (added 'session' as a timing column name).
 - 11-10 07:20: FLOW1-2Y closed (restates SPY), XA-EPROC built (daily-peeked t = 27% false holds; 20 sessions ~no power).
