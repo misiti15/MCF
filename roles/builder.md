@@ -71,6 +71,9 @@
 
 - Lookup tables fitted on one period can't follow base-rate drift; a rolling empirical benchmark stays calibrated.
 
+- Volatility scaling helps SIZE forecasts strongly (alpha ~0.8) but not close-SIDE probabilities (alpha 0): size
+  scales with vol; whether the day holds its side depends on distance vs remaining variance, already in M1.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -80,6 +83,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 18:45: PVSCALE: size band vol-scaled alpha 0.8 adopts (VALID pinball t -4.48, tercile coverage fixed);
+  close-side M1 alpha* 0 (unchanged).
 - 11-10 16:30: COMPCAL Amendment 1 vol-scaled M1: VALID better (t -0.78) but FWD worse (t +2.14) -> keep M1;
   full-ratio vol scaling over-corrects low-vol days.
 - 11-10 14:45: owner COMPASS task part 2: COMPCAL - continuous remaining-move line (M1) beats the cell table out of
