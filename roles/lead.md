@@ -44,7 +44,7 @@
 ## Run 7 (19:10 ET) — day-1 close
 - 60 configs, 0 pass. Closed: OD0950, laggard family, SC1 lineage, NH1, C3FR, BEREPLAY. CWT14SKIP = lead only (regime gate fails).
 - Live levers: STOPW; GATE2 timing (pending Skeptic's C1m) -> combined rework.
-- PR claude/guild-1109: research/guild/1109/ (files < 200 kB) + 9 backlog entries + BACKLOG.md. Merge once tests pass (no setup/exit change; housekeeping/research).
+- PR #167 (claude/guild-1109) merged 19:01 ET after 593 tests passed: research/guild/1109/ + 9 backlog entries.
 - Lesson: mfe-based giveback overstates exit fixes ~10x. Lesson: check skip funnel before freezing.
 - Tomorrow (day 2): Builder C1m -> STOPW -> cwt14_earn; Scout fresh long feature (descriptive first); Observer per-setup stop-width cost table. Quiet-day thread: only the dispersion size dial left.
 
