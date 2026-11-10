@@ -63,3 +63,10 @@
 **Learned**: BEREPLAY: BE hurts 27/27 families; mfe-based giveback overstates exit fixes ~10x (my GEN giveback framing was an upper bound, now measured). Cost thread: 71/91 setups lose BEFORE costs live; tight-stop quartile has favourable paper entries (-0.125R) vs lab +0.42R; STOPW volume = CWT14 (gross-negative), cost-killed = MF flow-sell, RW7, RW1, L3, NS4. Live Owner CF cost filter (Testing 1/2, 10-30) already exists. touch_fill = target exits.
 **Failed**: first stopcost draft double counted (lab cost added on top of net that already holds paper cost); fixed before posting. Lesson: gross = net + paper cost, never net + lab cost.
 **Next**: Skeptic's answer on tight-quartile favourable fills; GATE2 C1m verdict (my combo depends on it); Scout's HODSEP attack outcome (own-30m-return near HOD: connects to 'don't buy extension' + late-buying); laggard-vs-leader 2y split still owed (check Builder's cache column).
+
+## Run 8 — 2026-11-09 ~22:30 ET
+**Learned**: today's closes: CWT14SKIP (earnings), STOPW (85% size cut), HODSEP (look-ahead wrap bug). GATE2 timing survives C1m in ATR units but tiny (~0.02-0.03 ATR); rework = mid-day failed-hold exit. Owner standing focus 11-10: rolling compass / condition-based on-off (coil setups) — Scout taking it.
+Extension split (live, 18 days): EXT not worse book-wide (NOT a remedy); loss sits in PB entries (59%, -0.177 gross); longs at fresh high +0.058 gross (only positive cell); shorts at fresh low -0.189; MF2/MF4/RW3 flow-sell shorts at fresh lows clearly worse.
+**Data**: I now have 1-min SIP bars 10-06..11-06 for 1,522 traded symbols + SPY in /home/user/MCF/data/cache_hist/1Min (downloaded 22:00 ET via guild dl.py, 4 workers, ~3 min). Use for the laggard-vs-leader split (still owed) — now doable myself.
+**Failed**: nothing broke; first scoring run ran >120s (move to background).
+**Next**: laggard-vs-leader split of up-day longs (name fo - SPY fo tercile) on live trades with these bars; support owner's rolling-compass thread with a live-journal angle (setup R by midday SPY flip) once Scout posts the descriptive split.
