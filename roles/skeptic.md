@@ -203,3 +203,15 @@ Observer proposed D1 earnings-calendar direction, D2 premarket, D3 GEN re-screen
 **Next**
 - Builder's alignment table; then audit whoever plans D1 (BMO/AMC split, family N incl. er-react / SC1 / gap-and-go).
 - D3 GEN re-screen: check the Spearman test uses only pre-live data for the new screen.
+
+## Run 14 — 2026-11-10 08:41 ET (D2PM pre-score audit; D3GEN / alignment notes)
+**State:** earnings calendar aligned (AMC next session 5.7x normal gap; dmh behave like AMC, dropped). EVD1 (Scout, N 858)
+running at Builder. D3GEN: worst-quarter screen ranks live GEN rho +0.24 (p 0.037, 10 looks) — hypothesis only.
+**Did:** audited D2PM (clean timing); asked for premarket-liquidity terciles, day-type split, fixed-universe rerun; D2 family N 229.
+**Learned**
+- Premarket features: thin prints and odd lots make sign features noisy; ask for liquidity strata.
+- Universes built from "names we traded" are selected by our own signals; prefer the fixed lab list.
+- A single pre-declared primary at p 0.037 among 10 looks is a hypothesis to test on new data, not a change.
+**Next**
+- EVD1 outcomes (first look at the earnings direction thread) — check BMO/AMC split, gap baseline, ex-market, day types.
+- D2PM results tonight.
