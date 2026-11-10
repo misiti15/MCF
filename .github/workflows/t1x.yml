@@ -1,0 +1,34 @@
+# T1X (owner "T1X yes", 2026-11-09): inspect, then close, the Testing 1 position MCF never placed (likely the Alpaca
+# paper corporate-action glitch seen on Primary's MTUM). Manual run only. mode=inspect is GET-only. mode=close submits
+# ONE market-on-open (opg) order for the exact symbol/qty given, after the checks in research/ops/t1x/t1x.py; its
+# client_order_id starts "owner-t1x-". Prints no secrets. Educational only - not financial advice.
+name: t1x
+on:
+  workflow_dispatch:
+    inputs:
+      mode: {description: "inspect | close", type: choice, options: [inspect, close], default: inspect}
+      symbol: {description: "symbol to close (mode=close)", default: ""}
+      qty: {description: "signed position qty to close, negative = short (mode=close)", default: ""}
+permissions:
+  contents: read
+concurrency:
+  group: mcf-t1x
+  cancel-in-progress: false
+jobs:
+  t1x:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ALPACA_TRADE_API_KEY: ${{ secrets.ALPACA_TESTING_API_KEY }}
+      ALPACA_TRADE_SECRET_KEY: ${{ secrets.ALPACA_TESTING_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q -e ".[alpaca]" requests
+      - run: git fetch -q origin mcf-data-testing && git show origin/mcf-data-testing:journal.db > /tmp/t1.db
+      - if: inputs.mode == 'inspect'
+        run: python research/ops/t1x/t1x.py inspect /tmp/t1.db
+      - if: inputs.mode == 'close'
+        run: python research/ops/t1x/t1x.py close /tmp/t1.db "${{ inputs.symbol }}" "${{ inputs.qty }}"
