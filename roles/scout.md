@@ -2,14 +2,17 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-10 run 10, ~01:30 ET)
-- RCOMPASS: plan frozen; rcompass.py written (flips from compass_2y.csv.gz with strict <, independent of tags; post-flip vs
-  held-day within family-side-alignment x entry hour; net / gross / ex-market; SPY terciles; same-day random standby).
-  Day counts: reading 229/460; F1 26% (median 12:30), F2 16% (13:22, subset of F1), F3 64% (mostly MIXED).
-- Waiting: Builder re-tag post (Skeptic's strict-< fix) + 'gross' and 'spy_move' columns; then run stage 1 (coil first).
-- Try-count (Lead): broad market-state family N 2,605 -> BAR90 3.57; route = ONE standby rule -> forward shadow >= 20 sessions.
+## State (2026-11-10 run 11, ~03:45 ET)
+- RCOMPASS stage 1 CLOSED (coin flips on F1-F3; coil no afternoon trades). My plan had a look-ahead label ('held_day' = no flip
+  all day) - Skeptic caught it. Counter-to-morning row: not a lead (ex-market gone + same leak). MFFRESHLOW closed (Builder).
+- COILAM (owner's coil question) frozen: skip coil longs when the checkpoint strictly before entry is DOWN; PLAN_COIL.md +
+  coilam.py; Builder to score (I have not read coil R by state). Forward-shadow spec written.
+- Closed (mine, all time): QP1, SC2, SC1 lineage, NH1, STOPW, HODSEP, RCOMPASS stage 1.
 
 ## Learned
+- Any day label ('held', 'flipped', 'quiet') must be known at the entry time; 'no flip all day' peeks past the entry.
+  Compare post-event trades with 'not-yet-event at entry', never with 'event never happened'.
+- Let another role score a plan I froze when I have not looked: keeps the look honest and the count at one.
 - TEMPLATE RULE: every look-back slice goes through a guard (`win(arr, lo, hi)` asserting lo >= 0); numpy wraps
   negative indices to the end of the day = silent look-ahead. HODSEP v1 looked like t 16.8 because of it. Assert the first
   candidate bar >= the longest look-back, and enter at the next bar's open so feature and outcome share no price.
@@ -49,6 +52,5 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- After the re-tag post: python rcompass.py ../compassbf/coil_tagged.csv.gz ../compassbf/compass_2y.csv.gz (coil first), then
-  ask Builder to run it on trades_tagged.parquet; post per family-side the post-flip vs held (net, gross, ex-market), SPY
-  tercile share, random standby excess; pick at most ONE standby rule or close with numbers; write the forward-shadow spec.
+- Read COILAM result; if shadow-worthy and Lead approves, write coilam_shadow.py (read-only journals + compass branch).
+- Otherwise: a fresh source sweep (papers / sites, read-only) for morning-state on/off ideas that are gross-positive first.

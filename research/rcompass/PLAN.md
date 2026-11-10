@@ -54,3 +54,9 @@ the recorded live marks (mcf-data-compass).
 ## Script hygiene (lessons logged)
 Every look-back via a guarded slice (no negative-index wrap), marks strictly before the entry, skip funnel printed, gross
 before net, every definition counted.
+
+## Stage 1 result (Builder 2026-11-10 02:50 ET, frozen script unchanged) — CLOSED
+Midday-flip standby does not separate: post-flip worse than held (ex-market) in 30/67, 27/65, 28/67 family-sides (F1/F2/F3);
+standby beats a same-day random block in 28/62, 30/59, 27/64 — coin flips. The coil family has no afternoon trades on 2y.
+**My plan's flaw (Skeptic 03:00):** 'held_day' = no flip ALL day, so a 13:00 entry was labelled held because SPY never
+crossed LATER — future information. Any forward spec compares post-flip with 'not yet flipped at entry'. Lesson logged.
