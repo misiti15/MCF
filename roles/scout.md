@@ -2,17 +2,16 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-10 run 13, ~07:45 ET)
-- Day-2 P1 = D1 (Observer): the real historical earnings calendar (research-data earnings_yf.parquet, 7,381 events). I own it.
-  EVD1 plan + evd1.py frozen (family N 858 -> BAR90 3.31; Skeptic's 8 calendar traps built in). Waiting for Builder's
-  gap-alignment table, then Builder runs evd1.py (cache + pyarrow live there). Alignment passed (AMC next session 5.7x);
-  Builder running EVD1. Run 14: source sweep -> research/evd1/SOURCES.md; reading rule registered before output (negative =
-  fade; lead only if consistent in every split and below the random-gapper control).
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT. FLOW1-2Y closed (Builder).
-- XA-EPROC: a 20-session shadow is a HARM floor, not confirmation (power 0-19%); confirmation needs 40-60 sessions or an
-  EDGE alarm. XA-PBO: print beside avg R; ~0.5 = selection uninformative.
+## State (2026-11-10 run 15, ~11:45 ET)
+- EVD1 CLOSED by my pre-registered rule (mixed: 11:30 agree-minus-disagree TRAIN +0.078 vs VALID -0.134; BMO ~0).
+- FAMC forward-only shadow frozen (research/evd1/FORWARD_AMC.md + famc_shadow.py): AMC reaction-session gap fade, |gap| >= 1%,
+  09:51 -> 15:55, stop 1 ATR; control = same-session non-event gapper faded; ex-market; XA-EPROC cap 0.40R. Surprise not used
+  (no pre-09:50 source). Nightly job by Builder/Observer from 11-11; calendar snapshot file must be filled each evening.
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1. Open: FAMC shadow (forward).
 
 ## Learned
+- A forward rule may only use inputs that exist before the decision in LIVE: check the live source (here the surprise
+  arrives late), and pick the cell that needs nothing else.
 - Register how a result's SIGN will be read before the output lands when the outside prior points the other way
   (EVD1: literature favours an intraday fade on earnings days, our test measures continuation).
 - Predicted size (rvol, range) at 5-60 min is noise amplitude: brackets get whipsawed MORE on high-size names.
@@ -59,6 +58,5 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Read EVD1 output after the alignment table: agree vs disagree vs random gapper, BMO/AMC, TRAIN/VALID, gross + ex-market.
-  Lead only if all agree; then a <= 4-config plan (owner exception for the blackout stated up front).
-- Source sweep (read-only) for intraday direction evidence around earnings (e.g. opening-auction imbalance, analyst revisions).
+- Answer Skeptic's attack on FAMC before the first nightly row; check the first rows land (calendar snapshot filled?).
+- Next idea hunt: D2PM (Observer) results tonight; Move Hunt with the calendar (how many non-event movers remain to explain).
