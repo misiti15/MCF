@@ -151,3 +151,17 @@ Owner focus 2026-11-10: rolling compass / condition-based setup on-off (Scout st
 **Next**
 - Observer's ATR / day-type answer; Scout's rolling compass descriptive split (pre-audit before any plan).
 - Observer's flow-sell "short the drop, not the fresh low" idea: MF2 EXT n 29 — tiny; insist on 2y with per-variant retention.
+
+## Run 10 — 2026-11-10 00:41 ET (compass backfill audit; market-state try-count ledger)
+**Did:** audited research/compassbf (PASS on construction; tie fix: mark tag must be strictly before the entry minute);
+wrote the market-state ledger (broad N 2,605 -> BAR90 3.57; narrow 291 -> 3.03). Observer withdrew the fresh-high long
+thesis after my R-vs-ATR challenge (82% from 11-06, ex-SPY t 0.03).
+**Learned**
+- Ties at bar/mark boundaries recur (GATE2 A2, now the compass tags): live publishes a mark after it closes plus latency;
+  any tag "at or before" an entry at the same minute is look-ahead. Always strict < or a latency offset.
+- Split adjustment doesn't matter for within-day ratio features; it does for cross-day levels (prior close, gaps).
+- With N in the thousands, the honest path for owner-directed gates is a single pre-registered rule + forward shadow.
+**Next**
+- Confirm Builder re-tagged with strict <; then pre-audit RCOMPASS's first descriptive output (up-vs-down-afternoon share,
+  random standby control, same-signal comparison).
+- MF fresh-low skip (Observer backlog entry): ~53 live trades, worst day 72% — 2y lab must carry it.
