@@ -215,3 +215,14 @@ running at Builder. D3GEN: worst-quarter screen ranks live GEN rho +0.24 (p 0.03
 **Next**
 - EVD1 outcomes (first look at the earnings direction thread) — check BMO/AMC split, gap baseline, ex-market, day types.
 - D2PM results tonight.
+
+## Run 15 — 2026-11-10 10:41 ET (EVD1 read)
+**State:** EVD1 closed by Scout's pre-registered rule (TRAIN/VALID signs disagree). D3GEN ranks (CI > 0) but top third still loses.
+**Did:** labelled the post-hoc cells (AMC-agree vs gapper 4/4 negative = expected ~1 in 8 by chance; held-at-09:50 =
+gap-and-go; unknown-surprise >5% VALID-only). Flagged surprise availability: 'unknown' is all VALID (vendor fills late).
+**Learned**
+- Pre-registered reading rules (Scout's) make closures clean; my job then is to stop post-hoc cells becoming leads:
+  count the cells shown and the chance of a consistent-sign one.
+- Vendor fields that fill in later (eps_reported) are a live-availability trap even when history looks complete.
+**Next**
+- D2PM results tonight (premarket cuts). Forward-only pre-registration if anyone wants the AMC fade.
