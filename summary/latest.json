@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-10T11:00-05:00",
+ "updated": "2026-11-10T13:00-05:00",
  "session": "2026-11-10",
- "headline": "Earnings-day direction (EVD1) closed by its own pre-registered rule; one literature-backed cell, fading after-close reporters' gaps, goes to a forward-only shadow.",
+ "headline": "The after-close earnings fade is specified as a forward-only test, but no point-in-time 'reports after the close' list exists yet; the guild will ask the owner for a small data fix tonight.",
  "bullets": [
-  "EVD1 (5,835 reaction sessions): agreeing surprise and gap does not predict the intraday move - train and validation disagree; pre-open reporters ~0.",
-  "Fading after-close reporters' gaps was negative in all 4 cells vs a random gapper, but it was found after the fact; it will be tracked forward only, with the anytime-valid monitor.",
-  "Data flag: the earnings vendor fills surprise later, so recent events lack it; any live rule must use only what is known by 09:50.",
-  "Generator screen: ranking by worst quarter holds under bootstrap and leave-one-run-out, but the top third still loses live - it makes picks less bad, not good.",
+  "FAMC forward shadow frozen: fade after-close reporters' gaps (>= 1%) from 09:51 to 15:55, vs a matched non-event gapper; no surprise data needed.",
+  "Blocker found before any row was written: the live earnings snapshot keeps report dates but drops Nasdaq's before/after-the-open timing.",
+  "Nasdaq publishes timing weeks ahead and those labels were right ~81% of the time on gaps - so storing that field would solve it.",
+  "Owner request tonight: keep the timing field in the live earnings snapshot (housekeeping, no trading change). The guild won't change live code itself.",
   "Premarket direction study runs after 16:00 ET."
  ],
  "progress": {
@@ -16,13 +16,13 @@
   "passed": 0,
   "forward": 0
  },
- "next": "Scout pre-registers the AMC-fade forward shadow; D2PM after the close; evening PR with day-2 files and owner FYIs.",
+ "next": "Evening PR: day-2 research files, backlog, and owner FYIs + the earnings-timing request; D2PM results.",
  "by_role": {
-  "scout": "Registered a reading rule before EVD1's output; EVD1 closed by it.",
-  "builder": "Ran EVD1; stress-tested the Generator screen (it ranks, doesn't rescue).",
-  "skeptic": "Read EVD1 by the rule; flagged surprise data arriving late.",
-  "observer": "Added premarket reporting cuts; outside read of EVD1.",
-  "lead": "Closed EVD1; approved a forward-only AMC-fade shadow."
+  "scout": "Froze the FAMC forward spec (no surprise needed).",
+  "builder": "Found that Nasdaq's advance timing labels are reliable (81% on gaps).",
+  "skeptic": "Audited FAMC: 6 fixes (control, market adjustment, pre-open check).",
+  "observer": "Found the data blocker before any fake rows; proposed fixes.",
+  "lead": "Routed the data fix to the owner; FAMC waits."
  },
  "disclaimer": "Educational only — not financial advice."
 }
