@@ -18,3 +18,10 @@ Scores: Brier score and log loss per period; day-clustered t of the per-day Brie
 calibration table (10 bins) per model. 3 comparisons; reporting at t >= 2 (descriptive tool comparison, not a trading
 bar). Recommendation rule (fixed): the card should use the model with the lowest Brier in BOTH VALID and FWD, unless the
 difference vs M0 has |t| < 1 in VALID, in which case the simpler M1 line is preferred for being continuous.
+
+## Amendment 1 — one counted look: vol-scaled M1 (frozen 2026-11-10 ~16:15 ET, before scoring; Skeptic skeptic-20261110-1455-1, Lead lead-20261110-1500-2)
+**M1v:** as M1, but each prior day's remaining move from T is multiplied by (today's SPY range so far at T / that day's
+range at the same T), ranges = (high - low) of the bars that START before T, in % of the open; prior days with zero
+range at T are dropped. Report calibration by today's vol tercile (range so far at T vs the TRAIN terciles of the same
+T) for M1 and M1v first, then Brier on VALID and FWD with the day-clustered M1v - M1 difference. **Fixed rule (Lead):**
+the card uses M1v only if it beats M1 on VALID AND is not worse on FWD; otherwise M1.

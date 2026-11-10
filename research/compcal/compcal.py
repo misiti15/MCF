@@ -22,8 +22,9 @@ for d, g in s.groupby(s.index.date):
     for T in MARKS:
         x = g[g.m < T]
         if not len(x): continue
-        c = x.close.iloc[-1]; days.append((d, T, (c / o - 1) * 100, (cl / c - 1) * 100 * (c / o), c, cl, o))
-D = pd.DataFrame(days, columns=["date", "T", "fo", "m_pct_o", "cT", "close", "open"])
+        c = x.close.iloc[-1]; rg = (x.high.max() - x.low.min()) / o * 100
+        days.append((d, T, (c / o - 1) * 100, (cl / c - 1) * 100 * (c / o), c, cl, o, rg))
+D = pd.DataFrame(days, columns=["date", "T", "fo", "m_pct_o", "cT", "close", "open", "rg"])
 D["m"] = (D.close / D.open - 1) * 100 - D.fo                          # rest-of-day move in % of the open
 pc = D.groupby("date").close.first().shift(1)                        # yesterday's close (consecutive sessions in the table)
 gap = pd.Series(pd.to_datetime(pc.index)).diff().dt.days.to_numpy() > 5; pc[gap] = np.nan
@@ -39,7 +40,13 @@ p1 = []
 for d, T, fo in zip(D.date, D["T"], D.fo):
     i = pos[d]; prev = M[T].reindex(dl[max(0, i - 60):i]).dropna().to_numpy()
     p1.append(np.mean(np.sign(fo) * (fo + prev) > 0) if len(prev) >= 30 else np.nan)
-D["M1"] = p1; D = D.dropna(subset=["M1"]).copy()
+D["M1"] = p1
+RG = D.pivot_table(index="date", columns="T", values="rg"); p1v = []
+for d, T, fo, rg in zip(D.date, D["T"], D.fo, D.rg):                 # Amendment 1: vol-scaled M1
+    i = pos[d]; ix_ = dl[max(0, i - 60):i]; mv = M[T].reindex(ix_).to_numpy(); rv = RG[T].reindex(ix_).to_numpy()
+    ok = np.isfinite(mv) & np.isfinite(rv) & (rv > 0)
+    p1v.append(np.mean(np.sign(fo) * (fo + mv[ok] * rg / rv[ok]) > 0) if ok.sum() >= 30 else np.nan)
+D["M1v"] = p1v; D = D.dropna(subset=["M1", "M1v"]).copy()
 # M0: TRAIN cell table
 bins = [-np.inf, -.4, -.2, 0, .2, .4, np.inf]; D["bin"] = pd.cut(D.fo, bins, labels=False)
 tr = D[D.per == "TRAIN"]
@@ -70,9 +77,19 @@ for per in ("TRAIN", "VALID", "FWD"):
         out.append(dict(period=per, model=f"{a}-{b_} brier diff", n=len(dd), brier=round(dd.mean(), 5), logloss=None,
                         base_rate=round(dd.mean() / (dd.std(ddof=1) / np.sqrt(len(dd))), 2)))
 O = pd.DataFrame(out); pd.set_option("display.width", 200); print(O.to_string(index=False)); print("(for the diff rows, base_rate column = day-clustered t; negative brier diff = first model better)")
+tq = D[D.per == "TRAIN"].groupby("T").rg.quantile([1/3, 2/3]).unstack()
+D["volt"] = np.where(D.rg <= D["T"].map(tq[1/3]), "low", np.where(D.rg >= D["T"].map(tq[2/3]), "high", "mid"))
+print("\nAmendment 1 - calibration by today's vol tercile (VALID+FWD): mean predicted vs observed")
+z = D[D.per != "TRAIN"]
+for v in ("low", "mid", "high"):
+    x = z[z.volt == v]
+    print(f"  {v:4s} n {len(x):5d} obs {x.y.mean():.3f} | M1 pred {x.M1.mean():.3f} (brier {((x.M1-x.y)**2).mean():.4f}) | M1v pred {x.M1v.mean():.3f} (brier {((x.M1v-x.y)**2).mean():.4f})")
+for per in ("VALID", "FWD"):
+    x = D[D.per == per]; dd = ((x.M1v - x.y) ** 2 - (x.M1 - x.y) ** 2).groupby(x.date).mean()
+    print(f"  {per}: brier M1 {((x.M1-x.y)**2).mean():.5f} vs M1v {((x.M1v-x.y)**2).mean():.5f}; M1v-M1 per-day diff {dd.mean():+.5f}, day-t {dd.mean()/(dd.std(ddof=1)/np.sqrt(len(dd))):.2f}")
 print("\ncalibration (VALID+FWD pooled; predicted-prob decile: mean predicted vs observed):")
 z = D[D.per != "TRAIN"]
-for mdl in ("M0", "M1", "M2"):
+for mdl in ("M0", "M1", "M2", "M1v"):
     q = pd.qcut(z[mdl].rank(method="first"), 10, labels=False)
     t = z.groupby(q).agg(pred=(mdl, "mean"), obs=("y", "mean")).round(3)
     print(f"  {mdl}: " + "  ".join(f"{a:.2f}->{b:.2f}" for a, b in zip(t.pred, t.obs)))
