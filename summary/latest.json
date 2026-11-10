@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T17:10-05:00",
+ "updated": "2026-11-10T19:00-05:00",
  "session": "2026-11-10",
- "headline": "Day 2 closes: the owner's compass task delivered (a calibrated 'finishes this side' line beats the current card - sent as a DECISION); every setup idea tested today failed honestly. Premarket and earnings data tell size, not direction.",
+ "headline": "Evening: the after-close earnings fade can now start without any live-code change (a checked earnings-timing classifier, 89% precision); the compass card's move-size line now passes with volatility scaling.",
  "bullets": [
-  "DECISION for the owner (COMPCAL): show 'on N of the last 60 days the rest-of-day move was smaller, so it finishes this side ~P%' - beats the cell table out of sample, display only.",
-  "Rolling compass: switching setups on/off by midday flip or morning reading does not help on 2 years (owner FYI).",
-  "Closed today: GATE2, STOPW, CWT14SKIP, HODSEP, MFFRESHLOW, SIZEBKT, FLOW1-2Y (owner queue), EVD1, D2PM.",
-  "Kept alive: after-close earnings fade (forward-only, waits for timing data); worst-quarter Generator screen (forward test).",
-  "PR #176 merged after the close (research files, backlog, owner inbox; 606 tests passed)."
+  "AMC classifier: news alone was only 58% precise once checked on every name; combined with the live job's pre-open earnings list it is 89% precise, 76% recall, before the open.",
+  "FAMC (fade after-close reporters' gaps) starts tracking from its first reaction session; nightly health check on the classifier.",
+  "Compass size band: scaling by today's range (fitted on train) fixes the volatility drift (validation t -4.48; coverage 77-81% in every volatility third) - added to the COMPCAL decision.",
+  "Option flow (first-30-min call share) closed by its kill line: right sign, too small (0.035 ATR, t 1.05).",
+  "No owner replies yet on COMPCAL or the earnings-timing request."
  ],
  "progress": {
-  "ideas": 34,
-  "tested": 31,
-  "configs": 124,
+  "ideas": 35,
+  "tested": 33,
+  "configs": 129,
   "passed": 0,
-  "forward": 0
+  "forward": 1
  },
- "next": "Day 3: FAMC via news timestamps (full check), one partial-vol-scaling look for the compass line and size band, fresh direction sources.",
+ "next": "Observer builds the nightly earnings-timing list; Builder runs FAMC nightly; Scout picks a fresh direction source; COMPCAL addendum to the owner.",
  "by_role": {
-  "scout": "SZBAND size band (calibrated on VALID, drifts with volatility); FAMC spec ready.",
-  "builder": "COMPCAL and its vol-scaled check (keep the plain line).",
-  "skeptic": "Audited COMPCAL, the news-timestamp classifier and D2PM.",
-  "observer": "Closed D2PM by its kill line; found a no-code AMC timing source (news, 79% recall).",
-  "lead": "Sent COMPCAL to the owner; merged day-2 research PR #176."
+  "scout": "Option-flow pilot closed by its kill line.",
+  "builder": "Volatility-scaled size band passes; close-side line unchanged.",
+  "skeptic": "Audited the hybrid classifier and PVSCALE; set a label-free health check.",
+  "observer": "Corrected own precision figure (0.91 -> 0.58), then built a hybrid at 0.89.",
+  "lead": "Approved the hybrid for FAMC; added the size band to the owner decision."
  },
  "disclaimer": "Educational only — not financial advice."
 }
