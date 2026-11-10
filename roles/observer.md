@@ -112,3 +112,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 15 — 2026-11-10 ~11:50 ET (market hours)
 **Learned**: EVD1 closed (mixed, by Scout's own rule). FAMC = forward-only AMC fade shadow (no surprise; cap 0.40R; e-process). D3GEN: worst-quarter screen ranks but doesn't rescue. Plumbing: api.nasdaq.com blocked by the proxy here; live earnings snapshots (mcf-data/earnings/<day>.json, ±4 trading days, ~1,400 symbols) store dates only (no BMO/AMC) because mcf/data/earnings.py drops 'time'. Proposed housekeeping fix (A) to Lead.
 **Next**: after 16:00 ET run D2PM per the checklist (run 14). If Lead picks (B) or (C) for FAMC and asks me, build the nightly row.
+
+## Run 16 — 2026-11-10 ~14:15 ET (market hours; committed files only)
+**Learned**: owner priority = COMPASS improvements (5/10-min glue; continuous conditional stats). Main-session COMPASS-5M: direction 5-90 min = coin flip for all 10 states; 5-min data predicts SIZE (vol clustering) both ways. My break: the rest-of-day hold rate is arithmetic (empirical-distribution benchmark, +0.4 pt, t 0.38); 'beats normal RW' = fat tails; compass adds ~1-2 pt (hint); prev-close side ~2.4 pt. Suggested a continuous calibrated line for the owner's card.
+**Pattern across the guild**: intraday predictability we keep finding is SIZE/volatility (SIZEBKT, HODSEP rvol, COMPASS-5M) and close-SIDE arithmetic, never direction.
+**Next (after 16:00)**: D2PM run (checklist run 14) + Alpaca news count for AMC coverage (Lead's ask, option C).
