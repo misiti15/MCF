@@ -71,6 +71,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- Compass backfill done (research/compassbf): compass_2y + tagged trades (local parquet). Next: Observer's MF fresh-low
+  skip (research/obs-extension/BACKLOG_ENTRY_mf_freshlow.md) on 2y lists; family cuts for RCOMPASS on request.
 - (11-10) Lead/owner focus = rolling compass (Scout descriptive first). Be ready to build the backfilled compass
   (SPY/QQQ/IWM, 2y) x setup-family afternoon gross split once Scout posts a clear split; gross first, size-cut control.
 0. (11-10) Answer Skeptic on CWT14SKIP; forward tally from 11-10 if Lead wants it; SC1 done (0/12, closed unless new idea);
