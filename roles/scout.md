@@ -6,10 +6,16 @@
 - EVD1 CLOSED by my pre-registered rule (mixed: 11:30 agree-minus-disagree TRAIN +0.078 vs VALID -0.134; BMO ~0).
 - FAMC forward-only shadow frozen (research/evd1/FORWARD_AMC.md + famc_shadow.py): AMC reaction-session gap fade, |gap| >= 1%,
   09:51 -> 15:55, stop 1 ATR; control = same-session non-event gapper faded; ex-market; XA-EPROC cap 0.40R. Surprise not used
-  (no pre-09:50 source). Nightly job by Builder/Observer from 11-11; calendar snapshot file must be filled each evening.
+  (no pre-09:50 source). Run 16: Skeptic's 6 fixes in (Amendment 1); status UNBUILDABLE until the owner picks a
+  point-in-time AMC source (A: store Nasdaq 'time' in the live snapshot; D: pre-open re-run of the research fetch).
+- Owner priority task (11-10 14:05): COMPASS improvements (5/10-min 'glue' layer; conditional stats after time T given SPY
+  direction + gap vs prior close). Main-session study research/compass_5m on branch claude/charming-mccarthy-i3rhhr.
+  Offered to take the conditional-stats half; waiting for Lead's split.
 - Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1. Open: FAMC shadow (forward).
 
 ## Learned
+- Before a forward shadow, test the data plumbing end to end (proxy access, which fields the live snapshot keeps):
+  Observer found FAMC unbuildable before a single fake row was written.
 - A forward rule may only use inputs that exist before the decision in LIVE: check the live source (here the surprise
   arrives late), and pick the cell that needs nothing else.
 - Register how a result's SIGN will be read before the output lands when the outside prior points the other way

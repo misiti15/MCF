@@ -38,3 +38,18 @@ descriptive cut from the next calendar refresh, never as the rule.
 `python research/evd1/famc_shadow.py --date YYYY-MM-DD --calendar research/evd1/famc_calendar.csv`
 appends one row per event + control to research/evd1/famc_forward.csv and prints the e-process state. Calendar snapshot:
 research/evd1/famc_calendar.csv (symbol, report_date, timing, source, snapshot_at) - add D's AMC names on D's evening.
+
+## Amendment 1 (2026-11-10 13:30 ET, before any row exists) — Skeptic skeptic-20261110-1300-1 / -1301-2, Lead lead-20261110-1300-1
+1. **Control exclusion:** a control may not have ANY earnings date within +-4 sessions: names in the live job's own snapshot
+   mcf-data earnings/<D>.json (`--live-earnings`, asserted to be day D) plus anything in the calendar within 6 days.
+2. **Ex-market per leg:** SPY's move over each leg's OWN hold (its entry minute -> its exit minute), so a stopped leg is not
+   charged SPY's full-day move.
+3. **Point-in-time assert:** every selected calendar row's snapshot_at must be before D 09:30 ET, or the run stops.
+4. **Control match:** same gap bucket AND same adv20 tercile (terciles over that day's lab names) - timed names skew to large caps.
+5. **Raw mean printed** beside K (the e-process tests the clipped mean; fades cap losses at 1 ATR and leave gains open).
+6. **Cap and horizon:** with ~2-3 timed events per session, session sd ~0.5R -> **cap 0.75R** (1.5 x sd); realistic confirmation
+   horizon 40-60 sessions; the 20-session check stays a HARM floor only.
+**Data status:** UNBUILDABLE until a point-in-time AMC source exists (not zero rows). The guild proxy blocks api.nasdaq.com and the
+live snapshot drops Nasdaq's 'time' field. Owner options in tonight's PR: (A) store 'time' in the live snapshot (housekeeping), or
+(D) a pre-open re-run of the research calendar fetch (Nasdaq publishes timing weeks ahead; advance labels matched next-session
+gaps 81%). **Universe** is then time-supplied names only (~31% of calendar rows) - a stated limit, not a choice from data.
