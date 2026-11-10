@@ -76,6 +76,7 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 07:20: FLOW1-2Y closed (restates SPY), XA-EPROC built (daily-peeked t = 27% false holds; 20 sessions ~no power).
 - 11-10 05:00: COILAM 0/1, all-family morning map chance-level, XA-PBO tool built + tested.
 - Done 11-10 night: compass re-tag (strict <, +gross/spy_move), RCOMPASS stage 1 run (flips don't separate),
   MFFRESHLOW 0/2. Queue empty -> wait for Lead / Scout's RCOMPASS verdict.
