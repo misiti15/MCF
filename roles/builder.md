@@ -80,6 +80,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 16:30: COMPCAL Amendment 1 vol-scaled M1: VALID better (t -0.78) but FWD worse (t +2.14) -> keep M1;
+  full-ratio vol scaling over-corrects low-vol days.
 - 11-10 14:45: owner COMPASS task part 2: COMPCAL - continuous remaining-move line (M1) beats the cell table out of
   sample (Brier VALID t -2.21, FWD t -0.93), calibrated; prior-close side adds nothing OOS. Recommended for the card.
 - 11-10 12:35: FAMC data: Nasdaq calendar snapshot (research-data earnings_cal, fetch_public.py on Actions) carries
