@@ -1,0 +1,13 @@
+trades 20779, family-sides 1, dates 2024-10-01..2026-11-09; classes {'none': 12684, 'aligned': 6070, 'counter': 2025}
+pooled ex-market R by class: {('TRAIN', 'aligned'): -0.0524, ('TRAIN', 'counter'): -0.0377, ('TRAIN', 'none'): 0.0198, ('VALID', 'aligned'): 0.0176, ('VALID', 'counter'): -0.0402, ('VALID', 'none'): -0.0275}
+
+L1 (aligned minus counter): testable 1; same sign TRAIN/VALID 0 (coin flip ~0); aligned better in both 0, worse in both 0; consistent |t|>=1 both: + 0 / - 0
+
+L2 (aligned minus no-reading): testable 1; same sign TRAIN/VALID 0 (coin flip ~0); aligned better in both 0, worse in both 0; consistent |t|>=1 both: + 0 / - 0
+
+family-sides with a consistent L1 or L2 sign:
+ Empty DataFrame
+Columns: [n, share_aligned, share_counter, L1_TRAIN, L1_TRAIN_t, L1_VALID, L1_VALID_t, L1_cons, L2_TRAIN, L2_VALID, L2_cons]
+Index: []
+
+Reminder: any rule built on this map faces N 2,605 (BAR90 3.57) and a same-day random-block control. Educational only - not financial advice.
