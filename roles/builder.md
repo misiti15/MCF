@@ -65,6 +65,8 @@
 
 - Tag time-alignment: lab tod is a bar END; a compass/state mark at the same minute is not yet published (T+1). Use strict <.
 
+- PBO (research/xapbo): stable ranking != edge (STOPW PBO 0, loses OOS 100%); single-study PBO sd ~0.22.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -74,6 +76,7 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 05:00: COILAM 0/1, all-family morning map chance-level, XA-PBO tool built + tested.
 - Done 11-10 night: compass re-tag (strict <, +gross/spy_move), RCOMPASS stage 1 run (flips don't separate),
   MFFRESHLOW 0/2. Queue empty -> wait for Lead / Scout's RCOMPASS verdict.
 - Compass backfill done (research/compassbf): compass_2y + tagged trades (local parquet). Next: Observer's MF fresh-low
