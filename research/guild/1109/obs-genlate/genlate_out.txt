@@ -1,0 +1,108 @@
+long trades 9393, dates 2026-10-06..2026-11-06
+
+GEN vs non-GEN longs:
+             n         R    avg     nw  mfe_med  days
+gen                                                 
+False  7954.0 -1165.386 -0.147  0.208    0.366  24.0
+True   1439.0  -345.184 -0.240  0.208    0.465  15.0
+
+by account:
+                 n        R    avg     nw  mfe_med  days
+acct                                                   
+explore1     37.0  -16.854 -0.456  0.405    0.376   2.0
+gen        1439.0 -345.184 -0.240  0.208    0.465  15.0
+graveyard  2928.0 -398.742 -0.136  0.199    0.370  13.0
+livelab      18.0   -5.258 -0.292  0.333    0.171   2.0
+primary     205.0   -7.243 -0.035  0.127    0.444  24.0
+testing    1191.0 -254.281 -0.214  0.213    0.401  21.0
+testing2   3575.0 -483.008 -0.135  0.214    0.348  20.0
+
+GEN longs by window:
+            n        R    avg     nw  mfe_med  days
+win                                               
+AM     296.0 -101.322 -0.342  0.233    0.446  11.0
+LAM     58.0  -27.167 -0.468  0.172    0.543   6.0
+LATE    75.0   12.984  0.173  0.133    0.730   6.0
+LUNCH  169.0  -41.510 -0.246  0.195    0.463   9.0
+MID    422.0 -116.926 -0.277  0.197    0.440  11.0
+OPEN   274.0  -59.648 -0.218  0.219    0.530  10.0
+PM     143.0  -11.809 -0.083  0.238    0.365  10.0
+
+GEN longs by kind (name-parsed):
+            n        R    avg     nw  mfe_med  days
+kind                                              
+both   130.0  -58.708 -0.452  0.238    0.526  10.0
+chase  379.0 -114.719 -0.303  0.232    0.450  12.0
+dip    383.0  -42.750 -0.112  0.201    0.542  11.0
+other  547.0 -129.007 -0.236  0.188    0.417  13.0
+
+GEN long setups (n>=10), worst first:
+                                                                                                 n      R   avg    nw  mfe_med  days
+strategy                                                                                                                           
+GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long             53.0 -53.21 -1.00  0.26     0.31   2.0
+GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long                    99.0 -48.17 -0.49  0.27     0.52   5.0
+GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                                    147.0 -47.06 -0.32  0.18     0.34   7.0
+GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long                         52.0 -37.80 -0.73  0.27     0.42   2.0
+GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long                            36.0 -23.52 -0.65  0.25     0.45   2.0
+GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long                                        74.0 -18.68 -0.25  0.32     0.21   3.0
+GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long                             53.0 -18.07 -0.34  0.17     0.30   3.0
+GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long         24.0 -17.75 -0.74  0.25     0.24   2.0
+GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long         53.0 -13.86 -0.26  0.23     0.25   2.0
+GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long                           33.0 -11.44 -0.35  0.24     0.42   3.0
+GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long                  22.0  -9.18 -0.42  0.32     0.43   4.0
+GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long                           10.0  -8.42 -0.84  0.10     0.83   2.0
+GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long                   32.0  -7.29 -0.23  0.28     0.29   2.0
+GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long              32.0  -7.23 -0.23  0.19     0.37   5.0
+GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long                       14.0  -6.99 -0.50  0.43     0.31   5.0
+GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long                                49.0  -6.45 -0.13  0.27     0.46   5.0
+GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long           21.0  -6.01 -0.29  0.19     0.40   3.0
+GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long                              40.0  -5.49 -0.14  0.05     0.84   6.0
+GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long                                           23.0  -2.73 -0.12  0.26     0.55   2.0
+GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long                        18.0  -2.60 -0.14  0.11     0.61   3.0
+GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long                           27.0  -1.91 -0.07  0.33     0.29   2.0
+GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long             71.0  -1.29 -0.02  0.17     0.63   6.0
+GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long                              23.0  -0.76 -0.03  0.13     0.47   2.0
+GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long                                   12.0  -0.54 -0.05  0.25     0.49   2.0
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long             73.0   1.10  0.02  0.10     1.05   3.0
+GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long            17.0   1.14  0.07  0.18     0.83   2.0
+GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long                             35.0   1.57  0.04  0.14     0.66   3.0
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long                        10.0   1.64  0.16  0.20     0.43   3.0
+GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   25.0   5.57  0.22  0.36     0.27   6.0
+GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long            10.0   8.05  0.80  0.00     0.88   1.0
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long                       183.0  12.14  0.07  0.18     0.65   3.0
+
+non-GEN long families (n>=20):
+                n        R    avg     nw  mfe_med  days
+fam                                                   
+intraday    25.0   -9.864 -0.395  0.200    0.243  11.0
+ST1         53.0  -15.933 -0.301  0.245    0.294  14.0
+heat       472.0 -131.744 -0.279  0.197    0.501  24.0
+CWT05       94.0  -21.362 -0.227  0.266    0.384  14.0
+ST2        249.0  -46.372 -0.186  0.229    0.347  20.0
+NS5         92.0  -16.739 -0.182  0.185    0.587  21.0
+NM         115.0  -16.566 -0.144  0.200    0.411  11.0
+ST8         22.0   -3.168 -0.144  0.273    0.244  10.0
+CWT13      311.0  -44.006 -0.141  0.215    0.388  19.0
+CWT14     5148.0 -707.779 -0.137  0.207    0.353  20.0
+orb20       20.0   -2.515 -0.126  0.150    0.707  13.0
+CWT12      882.0 -110.364 -0.125  0.212    0.389  20.0
+LIQ        301.0  -36.518 -0.121  0.196    0.459  19.0
+NS1         81.0   -7.377 -0.091  0.198    0.328  18.0
+ST4         35.0   -2.390 -0.068  0.200    0.763  11.0
+ST7         37.0    5.973  0.161  0.108    0.736  12.0
+
+giveback (mfe >= 0.5R then closed <= 0):
+             n  reached05  gaveback_of_reached     gb_R
+gen                                                   
+False  7954.0      0.298                0.183 -451.647
+True   1439.0      0.448                0.310 -168.363
+
+GEN giveback by exit tag:
+             n    avg  mfe_med  gb_share
+ex                                     
+hold    485.0 -0.322    0.436     0.194
+holdtr  287.0 -0.159    0.547     0.098
+t05s05   88.0 -0.613    0.376     0.193
+t05s1   123.0 -0.148    0.297     0.024
+t1s05    15.0 -0.953    0.553     0.467
+t1s1    439.0 -0.130    0.570     0.116

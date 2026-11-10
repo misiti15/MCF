@@ -1,0 +1,52 @@
+trades 16615 (joined to their signal), 2026-10-06..2026-11-06
+
+ALL:
+ n                 16615.000
+entry_bps_med         3.496
+entry_bps_mean        4.363
+spread_bps_med        7.400
+entry_R              -0.018
+stopx_R               0.009
+adj_R                 0.024
+live_R                0.015
+lab_R                 0.218
+gap_R                -0.203
+gap_R_med            -0.093
+risk_bps_med         94.051
+
+by account:
+                 n  entry_bps_med  entry_bps_mean  spread_bps_med  entry_R  stopx_R  adj_R  live_R  lab_R  gap_R  gap_R_med  risk_bps_med
+acct                                                                                                                                    
+explore1     60.0          0.954           3.684           10.05   -0.021    0.039  0.015   0.032  0.121 -0.089     -0.039       109.023
+gen        2243.0          4.365           4.775            8.60   -0.037   -0.056  0.034  -0.059  0.187 -0.246     -0.068       113.581
+graveyard  4838.0          3.879           4.572            7.30    0.001    0.020  0.022   0.042  0.188 -0.146     -0.076        87.223
+livelab      38.0         -0.649          -0.867            6.05   -0.002    0.001  0.007   0.007  0.089 -0.083     -0.055       195.752
+primary     969.0          3.019           3.265            7.00    0.011    0.019  0.025   0.054  0.247 -0.192     -0.126        87.844
+testing    3654.0          3.529           4.284            7.60   -0.017    0.018  0.020   0.021  0.209 -0.189     -0.096       107.382
+testing2   4813.0          2.855           4.291            7.00   -0.034    0.018  0.024   0.008  0.265 -0.257     -0.124        87.356
+
+by signal time:
+                   n  entry_bps_med  entry_bps_mean  spread_bps_med  entry_R  stopx_R  adj_R  live_R  lab_R  gap_R  gap_R_med  risk_bps_med
+tod_b                                                                                                                                     
+<10:00       1795.0          3.288           4.376             7.9   -0.160    0.028  0.032  -0.100  0.312 -0.412     -0.132        82.587
+10:00-10:30  3739.0          3.464           4.960             7.3   -0.029    0.018  0.031   0.020  0.237 -0.217     -0.104        83.586
+10:30-12     5567.0          3.764           4.296             7.6    0.002    0.003  0.025   0.030  0.158 -0.128     -0.060        99.556
+12-14        2514.0          3.190           4.289             7.3    0.017   -0.008  0.015   0.025  0.134 -0.110     -0.064       108.920
+14-16        1156.0          3.661           3.983             7.3    0.018    0.003  0.009   0.029  0.124 -0.095     -0.055       114.416
+
+by stop width (risk bps quartile):
+                       n  entry_bps_med  entry_bps_mean  spread_bps_med  entry_R  stopx_R  adj_R  live_R  lab_R  gap_R  gap_R_med  risk_bps_med
+risk_b                                                                                                                                        
+risk Q1 (tight)  4154.0         -0.668          -3.375             3.1   -0.196    0.025  0.045  -0.125  0.421 -0.546     -0.307        43.698
+Q2               4154.0          3.012           1.609             6.8    0.020    0.015  0.020   0.054  0.206 -0.152     -0.107        76.139
+Q3               4153.0          7.460           6.330            10.0    0.052    0.002  0.017   0.072  0.152 -0.081     -0.048       117.765
+Q4 (wide)        4154.0         12.048          12.888            11.9    0.053   -0.007  0.012   0.058  0.092 -0.034     -0.013       221.917
+
+by side:
+            n  entry_bps_med  entry_bps_mean  spread_bps_med  entry_R  stopx_R  adj_R  live_R  lab_R  gap_R  gap_R_med  risk_bps_med
+side                                                                                                                               
+-1    7224.0          4.160           4.978             7.8   -0.016    0.011  0.023   0.018  0.208 -0.190     -0.082       100.256
+ 1    9391.0          2.974           3.890             7.1   -0.019    0.007  0.025   0.012  0.226 -0.214     -0.103        90.129
+
+days 24; days with gap_R > 0: 0; daily gap mean -0.216, sd 0.110, t -9.64
+Educational only - not financial advice.

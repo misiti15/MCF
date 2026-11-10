@@ -1,0 +1,84 @@
+wrong-direction trades 144 R -84.16 | right-direction 67 R +8.18
+wrong entered BEFORE the move's decision bar (in the 30-min lookback): 18 R -6.08
+
+by account:
+            count    sum  mean
+acct                         
+graveyard     59 -41.75 -0.71
+gen           24 -21.72 -0.91
+testing2      18 -14.00 -0.78
+testing        9  -6.27 -0.70
+explore1       1  -1.36 -1.36
+primary        2   0.94  0.47
+
+by setup (all 6 days, all accounts; all_* = every trade of that setup on those 6 days):
+                                                                                          n      R   avg  days               accts  all_n  all_R  all_avg  share_of_wrongR  cum_share
+strategy                                                                                                                                                                            
+CWT14-failbrk-orl-p05-long                                                               7 -10.82 -1.55     3           graveyard    213 -63.26    -0.30             0.13       0.13
+CWT13-vwapstretch-z05-short                                                              5  -6.17 -1.23     3           graveyard     53  -8.70    -0.16             0.07       0.20
+NS3-failed-vwap-reclaim-short-FD                                                         4  -4.37 -1.09     3  graveyard,testing2     17 -10.19    -0.60             0.05       0.25
+CWT14-failbrk-pdh-p10-short                                                              5  -3.91 -0.78     3           graveyard    131  -5.76    -0.04             0.05       0.30
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long                    5  -3.70 -0.74     2                 gen     98 -23.74    -0.24             0.04       0.34
+heat_fade_short                                                                          3  -3.18 -1.06     2           graveyard     86 -11.29    -0.13             0.04       0.38
+GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long                3  -3.16 -1.05     1                 gen     69 -47.52    -0.69             0.04       0.42
+CWT14-failbrk-orl-p05-lowvol-long                                                        3  -3.15 -1.05     2           graveyard    193 -49.93    -0.26             0.04       0.46
+CWT05-flush-m05-v3-long                                                                  3  -3.10 -1.03     1             testing     32 -11.81    -0.37             0.04       0.49
+RW2-exhaustion-noon-adv150-short-FD                                                      8  -3.09 -0.39     5           graveyard    127 -10.12    -0.08             0.04       0.53
+GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long         2  -2.45 -1.23     1                 gen     53 -53.21    -1.00             0.03       0.56
+heat_fade_short-FD                                                                       4  -2.38 -0.60     2           graveyard    114  23.18     0.20             0.03       0.59
+GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short        2  -2.31 -1.16     2                 gen      5  -1.86    -0.37             0.03       0.62
+NS3-failed-vwap-reclaim-short                                                            2  -2.26 -1.13     2             testing      9  -3.83    -0.43             0.03       0.64
+NM-RWN3-ns3-spyup-early-short                                                            2  -2.21 -1.11     2            testing2      4  -2.37    -0.59             0.03       0.67
+CWT05-flush-m075-v3-long                                                                 2  -2.11 -1.06     1            testing2     10  -6.25    -0.62             0.02       0.69
+CWT14-failbrk-orl-p10-long                                                               1  -2.10 -2.10     1           graveyard    111 -35.76    -0.32             0.02       0.72
+NS3V1-am-widestop-short                                                                  2  -2.08 -1.04     2            testing2     13  -0.99    -0.08             0.02       0.74
+CWT12-coil-k4-long                                                                       3  -1.91 -0.64     2           graveyard    202 -25.67    -0.13             0.02       0.77
+CWT14-failbrk-pdl-p10-long                                                               3  -1.70 -0.57     2            testing2    145 -41.43    -0.29             0.02       0.79
+CWT09-gapdn-vwaploss-g5-short                                                            1  -1.54 -1.54     1           graveyard     68  23.79     0.35             0.02       0.80
+CWT14-failbrk-pdh-p05-lowvol-short                                                       3  -1.49 -0.50     2           graveyard    108 -11.61    -0.11             0.02       0.82
+GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                                 2  -1.35 -0.67     2                 gen    105 -60.39    -0.58             0.02       0.84
+GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short                        1  -1.23 -1.23     1                 gen     11  -3.75    -0.34             0.02       0.85
+GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short                  1  -1.21 -1.21     1                 gen      5   0.31     0.06             0.01       0.87
+CWT09-gapdn-bounce-g5-lowerhalf-short                                                    1  -1.18 -1.18     1           graveyard     76  27.66     0.36             0.01       0.88
+GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short                      1  -1.17 -1.17     1                 gen     37   7.42     0.20             0.01       0.90
+GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short                1  -1.13 -1.13     1                 gen     58 -46.86    -0.81             0.01       0.91
+RW3S-gapdn-flowsell-short-FD                                                             1  -1.12 -1.12     1            testing2    111 -34.07    -0.31             0.01       0.92
+GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long                     1  -1.11 -1.11     1                 gen      6  -0.54    -0.09             0.01       0.93
+NM-RWR3-ns3-qqqup-early-short                                                            1  -1.10 -1.10     1            testing2      2  -0.29    -0.15             0.01       0.95
+GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short                  1  -1.07 -1.07     1                 gen     10  -4.10    -0.41             0.01       0.96
+LIQ-orl-sweep-open15-s25-long                                                            1  -1.07 -1.07     1           graveyard     63   1.16     0.02             0.01       0.97
+GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short           1  -1.06 -1.06     1                 gen     35  -2.12    -0.06             0.01       0.99
+CWT14-failbrk-pdh-p10-lowvol-short                                                       1  -1.06 -1.06     1           graveyard     56  -9.88    -0.18             0.01       1.00
+CWT13-vwapstretch-z05-long                                                               1  -1.05 -1.05     1            testing2    197 -40.37    -0.20             0.01       1.01
+GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short        1  -1.03 -1.03     1                 gen     49 -28.64    -0.58             0.01       1.02
+GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short  1  -1.03 -1.03     1                 gen     58 -57.16    -0.99             0.01       1.04
+CWT14-failbrk-pdl-p10-lowvol-long                                                        1  -1.03 -1.03     1            testing2     96 -26.86    -0.28             0.01       1.05
+CWT13-vwapstretch-z075-long                                                              2  -0.84 -0.42     2   explore1,testing2     31  -4.81    -0.16             0.01       1.06
+CWT14-failbrk-pdl-p05-R2A-long                                                           1  -0.51 -0.51     1            testing2     76 -11.56    -0.15             0.01       1.06
+ST1-ordn-long-pm-t05s1-FD                                                                1  -0.47 -0.47     1           graveyard     12  -6.01    -0.50             0.01       1.07
+CWT14-failbrk-pdl-p05-long                                                               5  -0.16 -0.03     3   graveyard,testing    181 -32.07    -0.18             0.00       1.07
+exhaustion_short-FD                                                                      2  -0.08 -0.04     1    testing,testing2     41   3.24     0.08             0.00       1.07
+heat_fade_long-FD                                                                        1   0.06  0.06     1           graveyard     60 -17.70    -0.29            -0.00       1.07
+heat_fade_long                                                                           3   0.48  0.16     3           graveyard     49 -18.18    -0.37            -0.01       1.07
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                                               2   0.94  0.47     1             primary     29   8.13     0.28            -0.01       1.06
+GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long                   1   1.29  1.29     1                 gen      3   3.73     1.24            -0.02       1.04
+CWT14-failbrk-pdl-p05-lowvol-long                                                        2   1.49  0.74     2  graveyard,testing2    131 -24.40    -0.19            -0.02       1.02
+NS2-sma50break-overbought-short-FD                                                       2   1.84  0.92     2           graveyard     42  -1.79    -0.04            -0.02       1.00
+
+by move side x day:
+                       count    sum
+date       move_side              
+2026-10-29 long          13 -10.53
+           short         11  -5.58
+2026-10-30 long           6  -5.06
+           short          1   1.00
+2026-11-02 long           6  -3.35
+           short         18 -11.37
+2026-11-03 long           7  -0.79
+           short          5  -3.20
+2026-11-04 long          22 -20.21
+           short         16 -15.50
+2026-11-05 long           5  -5.76
+           short          3  -3.81
+
+worst day share of wrong R: -35.71 on 2026-11-04 = 42%
