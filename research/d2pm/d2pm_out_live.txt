@@ -1,0 +1,38 @@
+name-days 28937, names 1602, sessions 24 (2026-10-07..2026-11-09); movers 2385; ex-market = minus SPY (beta 1)
+
+[all] n 28937  L1 AUC pm_rvol -> mover 0.605   (gap |.| AUC 0.548 for reference)
+   all                    r1130: GAP baseline +7.3bp t +0.77 | L2 pm_vwap_drift +8.7bp t +1.42 | L3 pm_late -1.8bp t -0.48 | days 24
+   all                    r1555: GAP baseline +14.2bp t +1.11 | L2 pm_vwap_drift +13.6bp t +1.49 | L3 pm_late +1.4bp t +0.23 | days 24
+   top pm_rvol quintile   r1130: GAP baseline +9.3bp t +1.32 | L2 pm_vwap_drift +6.4bp t +1.29 | L3 pm_late -0.8bp t -0.28 | days 24
+   top pm_rvol quintile   r1555: GAP baseline +11.5bp t +1.09 | L2 pm_vwap_drift +7.3bp t +1.11 | L3 pm_late +0.2bp t +0.05 | days 24
+   L2 agrees with gap minus disagrees (gap-side r1130): +15.4bp t +2.09 days 24
+   L3 agrees with gap minus disagrees (gap-side r1130): -1.4bp t -0.21 days 24
+   pm $vol tercile    r1130: [T1 n 9655 d 24: gap +2.4bp t +0.49, L2 +2.5bp t +0.94, L3 +0.6bp t +0.33] [T2 n 9638 d 24: gap +9.3bp t +1.11, L2 +7.9bp t +1.34, L3 -1.7bp t -0.53] [T3 n 9644 d 24: gap +12.2bp t +0.84, L2 +14.4bp t +1.45, L3 -4.3bp t -0.60] 
+   pm trades tercile  r1130: [T1 n 9655 d 24: gap +2.6bp t +0.59, L2 +3.8bp t +1.53, L3 +1.6bp t +1.22] [T2 n 9638 d 24: gap +8.2bp t +1.09, L2 +6.5bp t +1.29, L3 -0.9bp t -0.31] [T3 n 9644 d 24: gap +13.6bp t +0.94, L2 +13.9bp t +1.34, L3 -5.9bp t -0.77] 
+   SPY day            r1130: [down n 7508 d 6: gap +22.0bp t +2.56, L2 +20.5bp t +3.80, L3 +5.4bp t +1.36] [quiet n 13956 d 12: gap +2.9bp t +0.39, L2 +1.6bp t +0.34, L3 +1.1bp t +0.38] [up n 7473 d 6: gap +1.5bp t +0.04, L2 +11.0bp t +0.49, L3 -14.7bp t -1.16] 
+   best-day share of L2 r1130 total: 40%
+
+[event] n 562  L1 AUC pm_rvol -> mover 0.652   (gap |.| AUC 0.570 for reference)
+   all                    r1130: GAP baseline +14.2bp t +1.38 | L2 pm_vwap_drift +14.4bp t +1.45 | L3 pm_late -13.1bp t -1.36 | days 23
+   all                    r1555: GAP baseline +19.6bp t +1.33 | L2 pm_vwap_drift +4.8bp t +0.38 | L3 pm_late -6.6bp t -0.64 | days 23
+   top pm_rvol quintile   r1130: GAP baseline +14.3bp t +0.71 | L2 pm_vwap_drift -4.7bp t -0.30 | L3 pm_late -19.3bp t -0.94 | days 23
+   top pm_rvol quintile   r1555: GAP baseline +18.5bp t +0.65 | L2 pm_vwap_drift -0.1bp t -0.01 | L3 pm_late -10.6bp t -0.34 | days 23
+   L2 agrees with gap minus disagrees (gap-side r1130): +0.1bp t +0.00 days 19
+   L3 agrees with gap minus disagrees (gap-side r1130): -38.8bp t -1.47 days 19
+   pm $vol tercile    r1130: [T1 n 191 d 19: gap +3.7bp t +0.37, L2 +1.5bp t +0.13, L3 +2.4bp t +0.30] [T2 n 180 d 19: gap -24.5bp t -1.15, L2 -17.8bp t -0.94, L3 -39.6bp t -2.32] [T3 n 186 d 19: gap +48.0bp t +3.06, L2 +23.2bp t +1.63, L3 -16.3bp t -0.95] 
+   pm trades tercile  r1130: [T1 n 191 d 19: gap -13.9bp t -0.85, L2 +16.5bp t +1.69, L3 -15.6bp t -0.93] [T2 n 180 d 19: gap -2.5bp t -0.16, L2 -32.2bp t -1.55, L3 -54.1bp t -3.45] [T3 n 186 d 19: gap +38.7bp t +2.40, L2 +20.3bp t +1.49, L3 -8.3bp t -0.46] 
+   SPY day            r1130: [down n 168 d 6: gap +0.4bp t +0.02, L2 +15.0bp t +0.84, L3 -33.1bp t -1.61] [quiet n 272 d 11: gap +14.4bp t +0.99, L2 +6.2bp t +0.37, L3 -11.1bp t -0.78] [up n 122 d 6: gap +27.7bp t +1.40, L2 +28.6bp t +1.89, L3 +2.8bp t +0.17] 
+   best-day share of L2 r1130 total: 65%
+
+[non-event] n 28375  L1 AUC pm_rvol -> mover 0.577   (gap |.| AUC 0.528 for reference)
+   all                    r1130: GAP baseline +7.0bp t +0.73 | L2 pm_vwap_drift +8.8bp t +1.43 | L3 pm_late -1.4bp t -0.38 | days 24
+   all                    r1555: GAP baseline +14.0bp t +1.08 | L2 pm_vwap_drift +13.6bp t +1.47 | L3 pm_late +1.6bp t +0.26 | days 24
+   top pm_rvol quintile   r1130: GAP baseline +8.0bp t +1.16 | L2 pm_vwap_drift +5.9bp t +1.23 | L3 pm_late +0.1bp t +0.03 | days 24
+   top pm_rvol quintile   r1555: GAP baseline +10.4bp t +0.97 | L2 pm_vwap_drift +7.5bp t +1.14 | L3 pm_late +0.3bp t +0.06 | days 24
+   L2 agrees with gap minus disagrees (gap-side r1130): +15.8bp t +2.12 days 24
+   L3 agrees with gap minus disagrees (gap-side r1130): -0.7bp t -0.10 days 24
+   pm $vol tercile    r1130: [T1 n 9468 d 24: gap +2.0bp t +0.41, L2 +2.2bp t +0.87, L3 +0.5bp t +0.30] [T2 n 9448 d 24: gap +9.6bp t +1.14, L2 +8.2bp t +1.39, L3 -1.3bp t -0.41] [T3 n 9459 d 24: gap +11.4bp t +0.77, L2 +14.6bp t +1.44, L3 -3.6bp t -0.47] 
+   pm trades tercile  r1130: [T1 n 9468 d 24: gap +2.5bp t +0.58, L2 +3.6bp t +1.48, L3 +1.4bp t +1.07] [T2 n 9448 d 24: gap +8.1bp t +1.07, L2 +6.3bp t +1.27, L3 -0.7bp t -0.23] [T3 n 9459 d 24: gap +13.1bp t +0.88, L2 +14.4bp t +1.36, L3 -4.8bp t -0.61] 
+   SPY day            r1130: [down n 7340 d 6: gap +22.2bp t +2.50, L2 +20.9bp t +3.97, L3 +6.0bp t +1.38] [quiet n 13684 d 12: gap +2.2bp t +0.29, L2 +1.6bp t +0.34, L3 +1.7bp t +0.57] [up n 7351 d 6: gap +1.4bp t +0.04, L2 +11.0bp t +0.48, L3 -15.0bp t -1.19] 
+   best-day share of L2 r1130 total: 39%
+Educational only - not financial advice.

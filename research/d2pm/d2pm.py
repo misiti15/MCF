@@ -8,6 +8,9 @@ D0, D1 = "2026-10-07", "2026-11-09"
 def auc(score, y):
     s = pd.Series(score).rank().to_numpy(); y = np.asarray(y, bool); n1, n0 = y.sum(), (~y).sum()
     return (s[y].sum() - n1 * (n1 + 1) / 2) / (n1 * n0) if n1 and n0 else np.nan
+def terc(s):
+    """per-day tercile label; days with < 3 names get NaN (small event subgroups)."""
+    return pd.qcut(s.rank(method="first"), 3, labels=["T1", "T2", "T3"]) if s.notna().sum() >= 3 else pd.Series(np.nan, index=s.index)
 def welch_day(x, by):
     """day-demeaned mean of x and its day-clustered t (days as the unit)."""
     d = pd.Series(x).groupby(np.asarray(by)).mean(); return d.mean(), d.mean() / (d.std(ddof=1) / np.sqrt(len(d))) if len(d) > 2 else np.nan, len(d)
@@ -73,8 +76,8 @@ def score(X):
             a, b = v[agree].groupby(z.date[agree]).mean(), v[~agree].groupby(z.date[~agree]).mean(); j = a.index.intersection(b.index)
             dd = (a[j] - b[j]); print(f"   {lab} agrees with gap minus disagrees (gap-side r1130): {dd.mean() * 1e4:+.1f}bp t {dd.mean() / (dd.std() / np.sqrt(len(dd))):+.2f} days {len(dd)}")
         # Skeptic's reporting cuts (no new looks): premarket volume / trade-count tercile, SPY day type (hindsight label, descriptive)
-        for cut, key in (("pm $vol tercile", Y.groupby("date").pm_dvol.transform(lambda s: pd.qcut(s.rank(method="first"), 3, labels=["T1", "T2", "T3"]))),
-                         ("pm trades tercile", Y.groupby("date").pm_trades.transform(lambda s: pd.qcut(s.rank(method="first"), 3, labels=["T1", "T2", "T3"])) if Y.pm_trades.notna().any() else None),
+        for cut, key in (("pm $vol tercile", Y.groupby("date").pm_dvol.transform(terc)),
+                         ("pm trades tercile", Y.groupby("date").pm_trades.transform(terc) if Y.pm_trades.notna().any() else None),
                          ("SPY day", Y.dtype)):
             if key is None: continue
             line = f"   {cut:18s} r1130: "

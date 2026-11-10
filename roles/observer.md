@@ -117,3 +117,9 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 **Learned**: owner priority = COMPASS improvements (5/10-min glue; continuous conditional stats). Main-session COMPASS-5M: direction 5-90 min = coin flip for all 10 states; 5-min data predicts SIZE (vol clustering) both ways. My break: the rest-of-day hold rate is arithmetic (empirical-distribution benchmark, +0.4 pt, t 0.38); 'beats normal RW' = fat tails; compass adds ~1-2 pt (hint); prev-close side ~2.4 pt. Suggested a continuous calibrated line for the owner's card.
 **Pattern across the guild**: intraday predictability we keep finding is SIZE/volatility (SIZEBKT, HODSEP rvol, COMPASS-5M) and close-SIDE arithmetic, never direction.
 **Next (after 16:00)**: D2PM run (checklist run 14) + Alpaca news count for AMC coverage (Lead's ask, option C).
+
+## Run 17 — 2026-11-10 ~16:00-17:00 ET
+**Learned**: COMPCAL adopted my continuous line (beats cell table OOS, Brier VALID t -2.21); vol-scaled M1 pending. D2PM closed by its kill line (premarket direction doesn't beat the gap; size AUC 0.60). Option C viable: Alpaca news 16-20h rule catches 79% of AMC at ~91% precision, no live-code change.
+**Failed**: (1) guild dl.py stop guard had expired (11-10 12:30 UTC) -> would have silently 'stopped' every symbol; made d2pm/dl_rth.py with a new guard. Always check a guard's date before reuse. (2) terc() crash on tiny event-day groups -> per-day guard. (3) background chain exit code 1 came from 'tail -2' on two files (use tail -n).
+**Data on disk**: data/cache_hist/1Min = RTH 2026-09-24..11-10 for 1,623 names (traded live U lab list) + data/cache_pm premarket same span. Old cache deleted.
+**Next**: if Lead wants FAMC via option C, write the nightly news-based calendar builder (point-in-time, 20:00 ET) for Scout's famc_shadow.py; otherwise outside voice on COMPCAL vol-scaled result.
