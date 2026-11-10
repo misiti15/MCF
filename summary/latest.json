@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T03:00-05:00",
+ "updated": "2026-11-10T05:00-05:00",
  "session": "2026-11-10",
- "headline": "Rolling compass, first answer: switching afternoon setups off after a midday flip does not help on 2 years (coin-flip counts); the coil setups trade before noon, so a morning on/off rule is tested next.",
+ "headline": "Rolling compass answered on 2 years: neither a midday-flip standby nor a morning on/off rule helps (coil rule t 1.05; all-family map at chance). The compass reads where the day stands, not when setups should trade.",
  "bullets": [
-  "Flip study on 357,664 two-year afternoon trades: after a flip, setups did worse in only 27-30 of ~65 family-sides; standby beat a random block in only ~half - for all 3 flip definitions.",
-  "Live (25 sessions): only one midday flip (11-02, -85R aligned trades after it); on 2 years flips happen on 16-26% of days.",
-  "'Trading against the morning reading' looked costly, but it is market direction plus look-ahead in the label - not a lead.",
-  "Closed too: skipping flow-sell shorts at a fresh low (0 of 2 on 2 years).",
-  "Next: one pre-registered morning on/off rule for the coil setups (bar t 3.57), then a forward shadow."
+  "Coil morning rule (skip coil longs when the 30-min checkpoint is DOWN): ex-market t 1.05, negative before costs, loses on up days - fails.",
+  "All-family morning map (378,411 afternoon trades, 46 family-sides): same sign in train and validation in 19 of 37 - a coin flip.",
+  "Owner's rolling-compass question will be answered as an FYI with numbers in tonight's PR.",
+  "New tool: backtest-overfitting check (PBO) - tells whether picking the best config is informative, printed beside results and controls.",
+  "Day 2 turns back to the north star: use predictable move SIZE (volume, range) without needing direction."
  ],
  "progress": {
-  "ideas": 23,
-  "tested": 22,
-  "configs": 77,
+  "ideas": 25,
+  "tested": 24,
+  "configs": 80,
   "passed": 0,
   "forward": 0
  },
- "next": "Scout freezes the coil morning rule; Builder scores it and builds an overfitting check (PBO); Observer maps where morning conditions matter.",
+ "next": "Scout: a size-without-direction angle; Builder: FLOW1-2Y (owner queue) and a forward monitor tool; Observer: untried directions.",
  "by_role": {
-  "scout": "Flip study script and day-level flip counts; next: one coil morning rule.",
-  "builder": "Re-tagged with the fix; ran the flip study on 357k trades; scored and closed the fresh-low skip.",
-  "skeptic": "Showed the counter-to-morning row is market direction plus look-ahead.",
-  "observer": "Live flips are rare; coil needs a morning condition (confirmed on 2 years).",
-  "lead": "Closed the midday-flip standby; pointed the owner's question at a morning rule."
+  "scout": "COILAM rule frozen and scored independently; logged own label flaw.",
+  "builder": "Scored COILAM, ran the all-family map, built the PBO tool.",
+  "skeptic": "Audited PBO: read it with out-of-sample loss and controls.",
+  "observer": "Morning map built; withdrew the counter-row claim; adopted a pre-posting checklist.",
+  "lead": "Called the compass on/off route empty on 2 years; set day-2 direction."
  },
  "disclaimer": "Educational only — not financial advice."
 }
