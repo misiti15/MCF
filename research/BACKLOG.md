@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1032 · coded: 146 · parked: 419 · holdout failed: 23 · configurations tried (all lineages): 32895865
+Total ideas: 1034 · coded: 146 · parked: 419 · holdout failed: 23 · configurations tried (all lineages): 32895865
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -566,6 +566,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | top20-1109-compass-unconfirmed-halfsize | CU1: half size when the W60 compass is unconfirmed at entry (top-20 setups; sizing, not a filter) | BDI top-20 conditions 2026-11-09 (research/bdi/top20/CONDITIONS.md, research/bdi/top5_1109/NOTES.md) | – | – | – | – | – | – |
 | idea | reddit-1109-chop-day-inside-pdr-lowvol-filter | Chop-day filter: at 10:00 (or 10:30) the stock (and/or SPY) trades inside the prior-day range with 09:30-10:00 volume below its 20-day norm for that window -> skip breakout/continuation entries that day (or route to range/fade setups) | reddit r/Daytrading https://www.reddit.com/r/Daytrading/comments/1xrifsz/how_do_you_guys_filter_out_choppylowvolume_days/ | – | – | – | – | – | – |
 | idea | guild-1109-stopw-min-stop-width | STOPW: minimum stop width max(D, 60/80/100bp x entry), same $ risk, on all lab families | Research Guild 2026-11-09 (mcf-guild board; research/guild/1109/NOTES.md) | – | – | – | – | – | – |
+| idea | nightly-1110-latch-closes-open-lots | Per-setup -2R latch: also close (or tighten to breakeven / 0.5R) the setup's lots already open when it latches | nightly learning loop 2026-11-10 (research/bdi/nightly1110/NOTES.md, latchopen_out.txt, flip_out.txt) | – | – | – | – | – | – |
+| idea | nightly-1110-midday-flip-open-book-exit | Midday flip (SPY back across its open for 15 min after 12:00): close or tighten open lots on the morning-side | nightly learning loop 2026-11-10 (research/bdi/nightly1110/NOTES.md, latchopen_out.txt, flip_out.txt) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
