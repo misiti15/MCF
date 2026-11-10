@@ -123,3 +123,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 **Failed**: (1) guild dl.py stop guard had expired (11-10 12:30 UTC) -> would have silently 'stopped' every symbol; made d2pm/dl_rth.py with a new guard. Always check a guard's date before reuse. (2) terc() crash on tiny event-day groups -> per-day guard. (3) background chain exit code 1 came from 'tail -2' on two files (use tail -n).
 **Data on disk**: data/cache_hist/1Min = RTH 2026-09-24..11-10 for 1,623 names (traded live U lab list) + data/cache_pm premarket same span. Old cache deleted.
 **Next**: if Lead wants FAMC via option C, write the nightly news-based calendar builder (point-in-time, 20:00 ET) for Scout's famc_shadow.py; otherwise outside voice on COMPCAL vol-scaled result.
+
+## Run 18 — 2026-11-10 ~18:00 ET
+**Learned**: Day-2 closes: D2PM, vol-scaled M1 (keep M1); COMPCAL M1 to owner as DECISION. Option C on full denominator: news-only precision 0.58 (Skeptic right; my 0.91 was a selected denominator). HYBRID (fresh evening earnings headline AND listed for D in live pre-open snapshot mcf-data/earnings/<D>.json) precision 0.887, recall 0.756 over 7 evenings. Yahoo earnings_yf: AMC after 11-02 are 'dmh' placeholders (stale fetch) -> unusable as reference/label for recent dates.
+**Failed**: precision measured on a pre-selected denominator (only calendar names) — lesson: measure a classifier on the population it will scan live.
+**Next**: if Lead/Scout say go, write research/evd1/famc_calendar_build.py (nightly ~20:00 ET, outside market hours, appends famc_calendar.csv with snapshot_at); else fresh direction sources with Scout (OPTFLOW pilot under way).
