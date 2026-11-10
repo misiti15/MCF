@@ -2,20 +2,17 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-10 run 15, ~11:45 ET)
-- EVD1 CLOSED by my pre-registered rule (mixed: 11:30 agree-minus-disagree TRAIN +0.078 vs VALID -0.134; BMO ~0).
-- FAMC forward-only shadow frozen (research/evd1/FORWARD_AMC.md + famc_shadow.py): AMC reaction-session gap fade, |gap| >= 1%,
-  09:51 -> 15:55, stop 1 ATR; control = same-session non-event gapper faded; ex-market; XA-EPROC cap 0.40R. Surprise not used
-  (no pre-09:50 source). Run 16: Skeptic's 6 fixes in (Amendment 1); status UNBUILDABLE until the owner picks a
-  point-in-time AMC source (A: store Nasdaq 'time' in the live snapshot; D: pre-open re-run of the research fetch).
-- Owner priority task (11-10 14:05): COMPASS improvements (5/10-min 'glue' layer; conditional stats after time T given SPY
-  direction + gap vs prior close). Main-session study research/compass_5m on branch claude/charming-mccarthy-i3rhhr.
-  Lead: glue = no (48-53% every horizon); COMPCAL M1 (calibrated hold line) -> owner DECISION. My half = SZBAND (size band):
-  run 17 one look - VALID calibrated (79%/50%) but TRAIN 89% / FWD 70% (vol regime drift); low-vol days 91-100% inside,
-  high-vol 57-68%. Not card-ready; vol-scaled band proposed as a second look.
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1. Open: FAMC shadow (forward).
+## State (2026-11-10 run 18, ~18:45 ET)
+- Day 2 closed: EVD1 (mixed), D2PM (Observer), COMPCAL M1 -> owner DECISION (keep M1; vol-scaled lost FWD), SZBAND (VALID
+  calibrated, drifts with vol). Lesson: premarket / earnings data tell SIZE, not direction. FAMC: Observer testing option C
+  (Alpaca news headlines as point-in-time AMC list, 79% recall) on the full denominator; could start without live-code change.
+- Day 3 (mine): fresh direction sources. OPTFLOW pilot (Alpaca option minute bars, unsigned call-share proxy) CLOSED by kill
+  line: monotone right sign but Q5-Q1 +0.035 ATR, day-t 1.05 (54 sessions). Signed version = new counted look, Lead's call.
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW pilot. Open: FAMC (forward).
 
 ## Learned
+- Alpaca serves historical option minute / 30-min bars (OCC symbols built directly: und + yymmdd + C/P + strike x1000,
+  8 digits; Friday expiries; strikes on 1 / 2.5 / 5 grids). 60 names x 54 sessions ~ 1 hour of GETs. Bars are unsigned.
 - A prior-N-day percentile band is a base rate, not a today-rate: it is calibrated on average and miscalibrated
   by today's volatility (predictably). Report coverage by today's vol tercile, always.
 - Before a forward shadow, test the data plumbing end to end (proxy access, which fields the live snapshot keeps):
@@ -68,5 +65,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Answer Skeptic's attack on FAMC before the first nightly row; check the first rows land (calendar snapshot filled?).
-- Next idea hunt: D2PM (Observer) results tonight; Move Hunt with the calendar (how many non-event movers remain to explain).
+- If Lead wants it: signed option volume (option trades vs quotes) as ONE new counted look on a larger sample, frozen first.
+- Other fresh direction sources to check for data access first: short-sale volume (FINRA daily, idea sw-w5-finra-shvol),
+  ETF creation/redemption, news sentiment from Alpaca news (headline polarity at 09:50 for non-earnings movers).

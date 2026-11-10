@@ -23,3 +23,12 @@ pilot uses a call-vs-put premium proxy, not the paper's signed score (stated lim
   within terciles of the stock's own 09:30-10:00 return (does option flow add over the stock's own first half hour?).
 - **Kill line:** Q5 - Q1 <= 0, or day-t < 2, or it vanishes inside the stock-return terciles -> close OPTFLOW. Pass -> phase 2:
   2-year sample (open block only) with a frozen plan, family N stated (new data; nearest family = first-30-min momentum, pod).
+
+## Pilot result (2026-11-10 ~18:40 ET) — CLOSED by the kill line
+3,234 name-days (60 names, 54 sessions; 195,688 option 30-min bars). THE LOOK: abnormal call share quintiles -> day-demeaned
+ex-market 10:00->15:55: Q1..Q5 -0.016, -0.013, -0.003, +0.014, +0.019 ATR (monotone), **Q5-Q1 +0.035 ATR, day-t 1.05, + on 32/54
+days -> fails 'day-t >= 2'.** Reported, after the look (not evidence): inside the stock's own 09:30-10:00 return terciles, Q5-Q1
++0.068 (t 2.06) low, +0.107 (t 2.48) mid, -0.003 high. The stock's own first-30-min return as a signal: ~0 (t 0.13).
+Reading: the right sign and a monotone shape on an UNSIGNED proxy, too weak on 54 sessions. The paper's measure is SIGNED
+volume (trades vs quotes); that would be a new, counted look in the same lineage, not a rework of this pilot. Gross only;
+0.035 ATR is far below one round trip.
