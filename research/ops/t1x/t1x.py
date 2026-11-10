@@ -3,7 +3,8 @@
   python research/ops/t1x/t1x.py inspect <journal.db>                 # READ-ONLY: positions, journal, activities
   python research/ops/t1x/t1x.py close <journal.db> <SYMBOL> <QTY> [TIF] [COID_DATE]   # one market close (default opg)
 
-`close` refuses unless: the journal has no open MCF order, the account holds SYMBOL with exactly QTY (signed: negative =
+`close` refuses unless: the journal has no open MCF order (tif=day: none in SYMBOL), the account holds SYMBOL with exactly
+QTY (signed: negative =
 short), QTY is a whole number, and no open order exists for SYMBOL. The order's client_order_id starts "owner-t1x-" so
 MCF's reconcile never takes it for an MCF lot. Prints no keys, no account number. Educational only - not financial advice.
 """
@@ -48,9 +49,12 @@ def activities(day):
         token = got[-1]["id"]
 
 
-def journal_open(db):
+def journal_open(db, symbol=None):
     con = sqlite3.connect(db)
-    n = con.execute("select count(*) from orders where status not in ('closed','rejected','expired')").fetchone()[0]
+    q, args = "select count(*) from orders where status not in ('closed','rejected','expired')", ()
+    if symbol:
+        q, args = q + " and symbol = ?", (symbol,)
+    n = con.execute(q, args).fetchone()[0]
     last = con.execute("select max(date) from trades").fetchone()[0]
     return n, last
 
@@ -141,9 +145,11 @@ def close(db, symbol, qty, tif="opg", coid_date="20261109"):
     from mcf.execution.alpaca_broker import AlpacaBroker
 
     q = float(qty)
-    n, _ = journal_open(db)
+    # opg (pre-market): no open MCF order at all. day (in session): MCF may be trading other names, so refuse only on
+    # an open MCF order in this symbol; the broker-side open-order check below still covers the symbol.
+    n, _ = journal_open(db, symbol if tif == "day" else None)
     if n:
-        sys.exit(f"REFUSED: journal has {n} open MCF orders")
+        sys.exit(f"REFUSED: journal has {n} open MCF orders" + (f" in {symbol}" if tif == "day" else ""))
     pos = {p["symbol"]: p for p in positions()}
     p = pos.get(symbol)
     if p is None:
