@@ -69,6 +69,8 @@
 
 - Winner's curse is measurable: GEN lab mean vs live rho -0.23; worst-quarter (robustness) is the only screen with + rank.
 
+- Lookup tables fitted on one period can't follow base-rate drift; a rolling empirical benchmark stays calibrated.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -78,6 +80,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-10 14:45: owner COMPASS task part 2: COMPCAL - continuous remaining-move line (M1) beats the cell table out of
+  sample (Brier VALID t -2.21, FWD t -0.93), calibrated; prior-close side adds nothing OOS. Recommended for the card.
 - 11-10 12:35: FAMC data: Nasdaq calendar snapshot (research-data earnings_cal, fetch_public.py on Actions) carries
   AMC timing weeks ahead, labels right 81% on gaps; needs a fresh fetch (Lead's call). Yahoo 15:00 'dmh' = placeholder.
 - 11-10 10:30: D3GEN robustness: CI [+0.04,+0.44], LOO +0.18..+0.31; ranks but top third still -0.10R live. EVD1 run
