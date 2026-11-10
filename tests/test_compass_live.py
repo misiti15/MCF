@@ -134,3 +134,71 @@ def test_dashboard_card():
     assert "Educational only — not financial advice" in card
     assert '"mcf-data-compass/"' in card and '"compass/latest.json"' in card
     assert html.index('id="team-card"') < i < html.index('id="live"')
+
+
+# ------------------------------------------------------------------ "In plain English" sub-card (owner 2026-11-10)
+def _rows(path_pct, until):
+    b = sample()
+    b["SPY"] = _bars(path_pct)
+    rows = cl.compute(b, DAY, pd.Timestamp(f"{DAY} {until}", tz=cl.NY), NAMES)
+    return [cl._typed({k: ("" if v is None else v) for k, v in r.items()}) for r in rows]
+
+
+def test_plain_table_from_the_study():
+    t = json.loads(cl.PLAIN.read_text())
+    assert t["window"].startswith("the rest of today")
+    assert {b["id"] for b in t["blocks"]} == {"early", "mid", "late"}
+    for s in ("UP-confirmed", "leaning up", "mixed", "leaning down", "DOWN-confirmed", "flipped up", "flipped down"):
+        assert s in t["states"], s
+    for s in ("UP-confirmed", "DOWN-confirmed"):
+        for b in ("early", "mid", "late"):
+            x = t["states"][s][b]
+            assert 0.7 < x["hit"] < 1 and x["n"] > 300 and x["days"] > 100      # measured, not typed
+    assert 0.45 < t["next_hour"]["hit"] < 0.56 and t["next_hour"]["n"] > 1000      # next hour ~ coin flip
+    assert "Educational only" in t["disclaimer"]
+
+
+def test_plain_sentences():
+    t = json.loads(cl.PLAIN.read_text())
+    p = cl.plain(_rows([(570, 0), (600, 0.4), (630, 0.6), (720, 0.8), (960, 1.0)], "13:31"), DAY)
+    assert p["state"] == "UP-confirmed" and p["block"] == "late"
+    assert p["headline"] == "SPY is likely to finish today ABOVE its open."
+    assert f"{round(t['states']['UP-confirmed']['late']['hit'] * 100)}%" in p["detail"]
+    assert p["window"].startswith("the rest of today") and "coin flip" in p["next_hour"]
+    assert p["disclaimer"] == "Educational only — not financial advice." and p["cell"] is None   # no cond stats given
+    # morning up >= 0.20% at 12:00, back below the open at 12:30 -> after a midday flip
+    p = cl.plain(_rows([(570, 0), (700, 0.5), (720, 0.4), (750, -0.2), (960, -0.3)], "12:31"), DAY)
+    assert p["state"] == "flipped down" and p["headline"].startswith("SPY has flipped back BELOW its open")
+    # flat: no clear direction
+    p = cl.plain(_rows([(570, 0), (600, 0.01), (660, -0.01), (960, 0)], "11:01"), DAY)
+    assert p["headline"] == "No clear direction yet — so far today is a coin flip."
+    assert cl.plain([], DAY) is None
+
+
+def test_plain_cell_line_needs_yesterdays_close():
+    from mcf.report import compass_cond as cc
+    rows = _rows([(570, 0), (600, 0.4), (630, 0.6), (720, 0.8), (960, 1.0)], "11:31")
+    px = rows[-1]["spy_px"]
+    key = f"vs_prev|11:30|{cc.bucket(rows[-1]['spy_fo'])}|above prev close"
+    cond = dict(asof_date="2026-11-05", last_close=px * 0.99, cells={key: dict(n=40, same_side_open=0.875)})
+    p = cl.plain(rows, DAY, cond)                                 # 11-05 is the session before 11-06
+    assert p["cell"].startswith("At 11:30 with SPY +") and "above yesterday’s close" in p["cell"] and "88% of 40" in p["cell"]
+    assert cl.plain(rows, DAY, dict(cond, asof_date="2026-11-04"))["cell"] is None          # stale close -> no line
+    assert cl.plain(rows, DAY, dict(cond, cells={key: dict(n=5, same_side_open=1.0)}))["cell"] is None   # too few days
+
+
+def test_latest_json_carries_plain(tmp_path):
+    def fake(day, syms, now, log=print):
+        return {k: v[v.index < now] for k, v in sample().items()}
+    cl.update(tmp_path, DAY, pd.Timestamp(f"{DAY} 10:46", tz=cl.NY), bars_fn=fake, names=NAMES, log=lambda *_: None)
+    j = json.loads((tmp_path / "compass" / "latest.json").read_text())
+    assert j["plain"]["headline"] and j["plain"]["window"].startswith("the rest of today")
+    assert isinstance(j["latest"]["spy_px"], float)
+
+
+def test_dashboard_plain_subcard():
+    html = (ROOT / "docs/live/index.html").read_text()
+    i = html.index('id="cmp-card"')
+    card = html[i:html.index("</script>", i)]
+    assert 'id="cmp-plain"' in card and "In plain English" in card and "d.plain" in card
+    assert "P.next_hour" in card and "P.detail" in card and "Educational only — not financial advice" in card
