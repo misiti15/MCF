@@ -165,3 +165,15 @@ thesis after my R-vs-ATR challenge (82% from 11-06, ex-SPY t 0.03).
 - Confirm Builder re-tagged with strict <; then pre-audit RCOMPASS's first descriptive output (up-vs-down-afternoon share,
   random standby control, same-signal comparison).
 - MF fresh-low skip (Observer backlog entry): ~53 live trades, worst day 72% — 2y lab must carry it.
+
+## Run 11 — 2026-11-10 02:41 ET (counter-to-morning row; RCOMPASS stage 1)
+**State:** re-tag done (36% of mark tags changed with strict <). RCOMPASS stage 1: flips don't separate (coin-flip counts).
+MFFRESHLOW closed (live pattern did not carry to 2y). Coil (CWT12) fires before noon -> flips can't touch it.
+**Did:** killed the "counter to the morning reading" row from the committed family table: ex-market, aligned is no better
+(F1 -0.069 vs -0.058). Also flagged held_day = "no flip all day" as future-conditioned.
+**Learned**
+- "Held / stayed" day labels defined over the whole session are look-ahead for intraday entries; the tradable baseline is
+  "not yet flipped at entry". Watch every compass study for whole-day labels.
+- Always ask for ex-market (beta x SPY over the hold) next to any aligned-vs-counter or with-vs-against split.
+**Next**
+- Coil morning on/off rule if Scout pre-registers one: audit TRAIN/VALID ex-market, up AND down, random block.
