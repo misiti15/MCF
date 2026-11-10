@@ -249,3 +249,15 @@ FAMC fixes all in; status UNBUILDABLE until owner picks a calendar source (A/D).
 - Calibration models that ignore today's volatility are likely overconfident on high-vol days — test by vol tercile.
 **Next**
 - Vol-scaled M1 result if Builder runs it; D2PM results tonight; FAMC row 1 when a source exists.
+
+## Run 18 — 2026-11-10 16:40 ET (option C news classifier; vol-scaled M1; D2PM)
+**State:** vol-scaled M1 lost on FWD -> card keeps M1 (my overconfidence call confirmed: +3.8 pt high-vol). SZBAND drifts
+with vol. D2PM closed by its kill line. Option C (Alpaca news 16:00-19:59 -> AMC) 79% recall / 91% precision on Yahoo names.
+**Did:** challenged option C's precision denominator (only Yahoo-calendar names), multi-symbol news tags, preview headlines,
+limit=50 truncation; advised TRAIN-fitted partial vol exponent if tried.
+**Learned**
+- Classifier precision measured on a pre-filtered set (known events) overstates live precision; demand the full-universe
+  denominator before a classifier feeds a shadow.
+- News APIs tag several symbols per item.
+**Next**
+- Option C full-denominator check; FAMC row 1 once a source passes. Anything new Scout/Observer propose for day 3.
