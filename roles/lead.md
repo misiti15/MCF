@@ -64,6 +64,11 @@
 - Route: RCOMPASS stage 1 -> one standby rule -> journal-only forward shadow >= 20 sessions. Then MF fresh-low (2 configs).
 - Day-2 PR (evening, after 16:00): research/guild/1110/ incl. compassbf (small files), rcompass, obs-extension, gate2r, stopw, cwt14 earn; backlog updates.
 
+## Run 11 (03:00 ET 11-10)
+- Closed: midday-flip standby (coin flips), counter-to-morning (SPY dir + held_day look-ahead), MFFRESHLOW. Configs 77, 0 pass.
+- Next: coil morning rule (Scout plan -> Builder score), XA-PBO tool (Builder), morning-reading map (Observer).
+- Owner framing: flips rare and don't separate; the coil question needs a morning condition.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
