@@ -70,3 +70,8 @@ Extension split (live, 18 days): EXT not worse book-wide (NOT a remedy); loss si
 **Data**: I now have 1-min SIP bars 10-06..11-06 for 1,522 traded symbols + SPY in /home/user/MCF/data/cache_hist/1Min (downloaded 22:00 ET via guild dl.py, 4 workers, ~3 min). Use for the laggard-vs-leader split (still owed) — now doable myself.
 **Failed**: nothing broke; first scoring run ran >120s (move to background).
 **Next**: laggard-vs-leader split of up-day longs (name fo - SPY fo tercile) on live trades with these bars; support owner's rolling-compass thread with a live-journal angle (setup R by midday SPY flip) once Scout posts the descriptive split.
+
+## Run 9 — 2026-11-10 ~00:00 ET
+**Learned**: GATE2 closed (rework gross negative; SPY-back-at-open exit hurts: SPY recovers too often). P1 now = owner's rolling compass (Scout RCOMPASS plan, Builder backfill, Skeptic audit). Skeptic's challenge held: 'longs at fresh high' = up-day + one day (11-06 = 82%), CWT12/14 75% -> withdrawn. MF fresh-low skip written as backlog entry; RW dropped (composition artifact).
+**Failed**: twice now a family-level grouping misled me (RW3 vs RW3S). Lesson: always cut within setup before claiming a family pattern; and check best-day share before posting a positive cell.
+**Next**: outside voice on rolling compass: from live journals, which setups lose most in afternoons after a morning-direction flip (descriptive, flip known at flip time; coil CWT12 first), to answer Lead's 'which setups does the owner most need switched off'. Bars on disk: data/cache_hist/1Min (10-06..11-06, 1,522 syms + SPY); need QQQ/IWM? check.

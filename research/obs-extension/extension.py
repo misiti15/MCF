@@ -19,7 +19,7 @@ R = []
 for f in sorted(glob.glob(os.path.join(J, "*.db"))):
     if "_" in os.path.basename(f): continue
     a = os.path.basename(f).replace("mcf-data-", "").replace(".db", "").replace("journal", "primary"); c = sqlite3.connect(f)
-    t = pd.read_sql("select t.date,t.symbol,t.strategy,t.side,t.entry_time,t.entry,t.stop,t.exit,t.exit_reason,t.shares,t.pnl,t.pnl_adj,"
+    t = pd.read_sql("select t.date,t.symbol,t.strategy,t.side,t.entry_time,t.exit_time,t.entry,t.stop,t.exit,t.exit_reason,t.shares,t.pnl,t.pnl_adj,"
                     "s.ref_price from trades t join signals s on s.broker_order_id=t.broker_order_id "
                     "where t.run_id=1 and s.run_id=1 and t.date between '2026-10-06' and '2026-11-06' and t.exit is not null", c)
     t["acct"] = a; R.append(t)
@@ -57,6 +57,7 @@ for sym, g in T.groupby("symbol"):
 X = T.join(pd.DataFrame(out).set_index("i"), how="inner")
 X["grp"] = np.select([X.recent & (X.dist <= EXT), X.dist >= 0.30], ["EXT", "PB"], "MID")
 X["fam"] = X.strategy.str.extract(r"^(GEN|[A-Za-z]+\d*)")[0]
+if len(sys.argv) > 3: X.drop(columns=["et"]).assign(et=X.et.astype(str)).to_csv(sys.argv[3], index=False)   # rows for follow-ups
 print(f"EXT threshold {EXT} ATR | trades with bars+ATR {len(X)} of {len(T)} ({X.date.min()}..{X.date.max()}), setups {X.strategy.nunique()}, families {X.fam.nunique()}")
 f = lambda g: pd.Series(dict(n=len(g), share=len(g) / len(X), gross=g.gross.mean(), net=g.net.mean(), move_atr=g.move_atr.mean(), days=g.date.nunique()))
 print("\nALL by group:\n", X.groupby("grp").apply(f).round(3).to_string())
