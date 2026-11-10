@@ -10,7 +10,8 @@ Input: a T x N matrix of per-day P&L (rows = sessions in time order, columns = t
   Also: degradation = OLS slope of OOS metric on IS metric for the chosen configs (< 0 = IS winners decay), and
   p_oos_loss = share of splits where the chosen config's OOS mean is < 0.
 Noise check (selftest): mean PBO over noise draws ~0.5 but sd ~0.24 per draw - a single study's PBO is itself noisy.
-Reading: PBO ~ 0.5 = picking the best config is no better than picking at random (overfit selection); PBO near 0 = the
+Reading: PBO ~ 0.5 = selection among configs is uninformative (picking the best is no better than random; also the case when
+all configs share the same real edge - Skeptic 2026-11-10); PBO near 0 = the
 IS winner usually stays above the OOS median. PBO says nothing about whether ANY config is profitable: report it next
 to BAR90 / avg R, never instead of them.
     python pbo.py --selftest

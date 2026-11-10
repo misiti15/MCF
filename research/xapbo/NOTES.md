@@ -8,14 +8,17 @@ days x configs P&L matrix. Report PBO **next to** BAR90, avg R, the controls and
 
 ## Calibration (selftest)
 Pure noise: mean PBO 0.47-0.51 over 20-30 draws, **but sd ~0.22-0.24 per draw** (0.08..0.86) — one study's PBO is noisy;
-treat 0.3-0.7 as "selection uninformative". One planted real edge (+0.35 sd/day): PBO 0.00.
+treat 0.3-0.7 as "selection uninformative".
+**Skeptic (2026-11-10):** if every config shares the SAME real edge, PBO is also ~0.38-0.42 — picking the IS-best among
+equals is random, not overfit. So PBO ~0.5 = **selection uninformative** (not "overfit"); `p_oos_loss` with the study's
+controls says whether the pick earns (shared edge 0.02-0.07 vs noise ~0.57). Small N (e.g. 4) gives coarse PBO steps. One planted real edge (+0.35 sd/day): PBO 0.00.
 
 ## Known-answer tests
 | study | N | PBO (sharpe / mean) | p_oos_loss | reading |
 |---|---|---|---|---|
 | GATE2, 8 setup configs | 8 | 0.64 / 0.36 | 0.94 / 0.87 | choosing the best config is no better than random, and it loses OOS ~90% of splits — matches 0 of 8 |
 | GATE2 I-HB 4 | 4 | 0.33 / 0.09 | 0.86 / 0.78 | stable ranking (X0.50 = fewer trades = smaller losses), still a loser |
-| GATE2 I-ETF 4 | 4 | 0.87 / 0.49 | 0.90 / 0.84 | overfit selection |
+| GATE2 I-ETF 4 | 4 | 0.87 / 0.49 | 0.90 / 0.84 | selection uninformative |
 | STOPW 4 variants (± BASE) | 4-5 | 0.00 / 0.00 | 1.00 | perfectly stable ranking (W100 best every split) — because a bigger size cut always loses less on a losing book; the chosen variant loses OOS in 100% of splits |
 
 **Lesson:** low PBO = the ranking is stable, NOT that the winner makes money or is an edge. STOPW shows a systematic
