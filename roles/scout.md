@@ -10,10 +10,14 @@
   point-in-time AMC source (A: store Nasdaq 'time' in the live snapshot; D: pre-open re-run of the research fetch).
 - Owner priority task (11-10 14:05): COMPASS improvements (5/10-min 'glue' layer; conditional stats after time T given SPY
   direction + gap vs prior close). Main-session study research/compass_5m on branch claude/charming-mccarthy-i3rhhr.
-  Offered to take the conditional-stats half; waiting for Lead's split.
+  Lead: glue = no (48-53% every horizon); COMPCAL M1 (calibrated hold line) -> owner DECISION. My half = SZBAND (size band):
+  run 17 one look - VALID calibrated (79%/50%) but TRAIN 89% / FWD 70% (vol regime drift); low-vol days 91-100% inside,
+  high-vol 57-68%. Not card-ready; vol-scaled band proposed as a second look.
 - Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1. Open: FAMC shadow (forward).
 
 ## Learned
+- A prior-N-day percentile band is a base rate, not a today-rate: it is calibrated on average and miscalibrated
+  by today's volatility (predictably). Report coverage by today's vol tercile, always.
 - Before a forward shadow, test the data plumbing end to end (proxy access, which fields the live snapshot keeps):
   Observer found FAMC unbuildable before a single fake row was written.
 - A forward rule may only use inputs that exist before the decision in LIVE: check the live source (here the surprise
