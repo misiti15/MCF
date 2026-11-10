@@ -1,0 +1,17 @@
+trades 1165576, setups 95, sessions 446 2024-10-01..2026-11-04 (locked block absent); coverage dist 100.0%, spy_fo 100.0%
+
+## Block C (FB1 rework; bar 2.04, N 8; delta = R gained by removing the guarded shorts, vs setup mean)
+                               config  blocked  share  blocked_raw  blocked_ex  train_d  train_t  valid_d  valid_t    spy_up  spy_down  spy_quiet    reg_up  reg_down  fam_helped  fam_harmed  setups_helped  setups_harmed  setups_harmed_R  setups_helped_R  keep_top  passes
+0  C1 dist_lod<=0.15 & SPY fo>=-0.25%    44875  0.096       -0.063       0.009   65.991    0.188 -488.392   -1.116  2382.067 -2132.409   -672.058  1912.090 -2056.387          10          14             18             20         -592.364          169.964     0.944   False
+1  C2 dist_lod<=0.10 & SPY fo>=-0.25%    29280  0.062       -0.067       0.007   11.789    0.046 -214.285   -0.719  1415.198 -1239.023   -378.672  1248.360 -1142.487           9          14             13             21         -342.320          139.823     0.968   False
+2  C3 dist_lod<=0.25 & SPY fo>=-0.25%    85142  0.181       -0.064       0.005   41.421    0.070 -485.359   -0.590  5322.937 -4456.657  -1310.219  4390.597 -4116.159          11          13             17             22         -856.773          412.836     0.878   False
+3          C4 C1 & QQQ dist_lod<=0.15    14985  0.032       -0.066       0.014 -237.038   -1.039   31.667    0.131   759.039  -964.981      0.571   671.535  -699.940           5          16             11             21         -242.286           36.915     0.985   False
+
+## Block E (range-tape extremes; Testing bar t >= 1.50, N 4; first entry per symbol-day; baseline = same side, same tape)
+                     config      n  days  per_sess  exp_r     t  wo_best  best_share  train  valid  reg_up  reg_flat  reg_down  spy_up  spy_down  spy_quiet     wf  baseline  excess  passes
+0   E1a long dist_lod<=0.15  47416   415   106.314 -0.097 -9.27   -0.098         NaN -0.109 -0.093   0.051    -0.070    -0.215   0.042    -0.286     -0.085  0.000    -0.096  -0.001   False
+1   E1b long dist_lod<=0.25  84106   418   188.578 -0.098 -9.79   -0.100         NaN -0.106 -0.096   0.050    -0.077    -0.220   0.036    -0.273     -0.089  0.000    -0.096  -0.002   False
+2  E2a short dist_hod<=0.15  37106   419    83.197 -0.091 -6.31   -0.093         NaN -0.143 -0.072  -0.291    -0.064     0.099  -0.308     0.099     -0.045  0.167    -0.076  -0.015   False
+3  E2b short dist_hod<=0.25  52857   419   118.513 -0.084 -6.48   -0.086         NaN -0.127 -0.068  -0.280    -0.062     0.097  -0.291     0.097     -0.045  0.056    -0.076  -0.008   False
+
+Educational only - not financial advice.

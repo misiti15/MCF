@@ -1,0 +1,15 @@
+{"note": "1 unit = ¼ of the stock's normal daily range (0.25 × daily ATR). Open trades close by 3:55 PM ET. Figures after costs. Neither is a proven edge: both are the former Primary setup (and its all-day version), now in the Graveyard; today 34 and 27 trades, both short.",
+ "setups": [
+  {"setup": "heat_fade_short",
+   "title": "Morning Bounce Fade",
+   "lines": [["When", "9:50–10:30 AM"], ["Market", "Any"],
+             ["Stock", "Trading below today's open, ≥ $125M traded a day"],
+             ["Trigger", "Heat score says it bounced too far, too fast (stretched RSI / price action vs momentum and VWAP)"],
+             ["Action", "Short the bounce"], ["Exit", "Target 1 unit, stop 1 unit; else out at 3:55 PM"]]},
+  {"setup": "heat_fade_short-FD",
+   "title": "Morning Bounce Fade (all day)",
+   "lines": [["When", "9:50 AM–3:00 PM"], ["Market", "Any"],
+             ["Stock", "Trading below today's open, ≥ $125M traded a day"],
+             ["Trigger", "Same heat-score bounce as #1, any time of day"],
+             ["Action", "Short the bounce"], ["Exit", "Target 1 unit, stop 1 unit; else out at 3:55 PM"]]}
+ ]}

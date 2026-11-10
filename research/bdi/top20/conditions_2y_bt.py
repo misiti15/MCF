@@ -1,4 +1,4 @@
-"""top20 conditions deep dive (2026-11-05), two-year second opinion from the BDI 1104 trade lists
+"""top20 conditions deep dive (2026-11-09), two-year second opinion from the BDI 1104 trade lists
 (research/history2y/data/bt_lab1104, research/bdi/1104/DATA.md: production costs, stop first, 15:55 flatten, R per unit
 of live risk). BACKTEST, TRAIN (<= 2025-12) + VALID (2026-01..03, 07..09-15); HOLD rows dropped; the locked block
 2024-11-01..2025-02-28 is not in the lists (asserted) and the daily table is read without it (lib.daily()).
@@ -7,7 +7,9 @@ All 22 open months are built now (11-04's CWT13 / CWT14 reads had 11 of 22).
 Same pre-declared buckets as conditions_live.py. Point-in-time features from the daily table: gap = open vs prior close
 (NaN across the locked gap), ADV = adv20 (prior 20 sessions), price = prior close, ATR% = 14-session ATR of prior
 sessions / prior close; SPY vs open at 10:00 = close of the 09:59 1-minute bar, SPY vs open at entry = close of the bar
-before the entry minute (data/cache_hist). Parents only - no tuning here.
+before the entry minute (data/cache_hist). Compass at entry (11-09 add) = W60 at the latest 15-min mark <= the entry
+minute from compass_2y.py (<scratch>/compass2y.parquet, scratch in env T20_SCRATCH; lab-context breadth, HC1
+approximation). Parents only - no tuning here.
 
     python research/bdi/top20/conditions_2y_bt.py SETUP [SETUP ...] -> hist_bt_buckets.csv, hist_bt_summary.csv, hist_bt_out.txt
 Educational only - not financial advice."""
@@ -86,6 +88,15 @@ def main():
     T["pxb"] = pd.cut(T.pclose, [0, 20, 50, 150, 1e9], right=False, labels=["<20", "20-50", "50-150", ">=150"]).astype(str)
     T["atrb"] = pd.cut(T.atrp, [0, 2, 3.5, 5, 1e9], right=False, labels=["<2", "2-3.5", "3.5-5", ">=5"]).astype(str)
     T["sideb"] = np.where(T.side > 0, "long", "short")
+    C = pd.read_parquet(Path(os.environ["T20_SCRATCH"]) / "compass2y.parquet").sort_values(["date", "T"]).astype({"T": "int64"})
+    em = (T.tod // 100) * 60 + T.tod % 100
+    T = T.reset_index(drop=True)
+    T["_m"] = em.to_numpy().astype("int64")
+    T["_i"] = np.arange(len(T))
+    mm = pd.merge_asof(T[["_i", "dkey", "_m"]].sort_values("_m"), C.rename(columns={"date": "dkey", "T": "_m"}).sort_values("_m"),
+                       on="_m", by="dkey", direction="backward").set_index("_i").w60
+    lv = mm.reindex(T._i).to_numpy()
+    T["compass"] = np.where(lv == 2, "UP", np.where(lv == -2, "DOWN", "unconfirmed"))
     rows, summ, txt = [], [], []
     for s in want:
         d = T[T.setup == s].reset_index(drop=True)

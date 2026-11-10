@@ -44,6 +44,9 @@ select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid 
 .tile .n { color: var(--muted); font-size: 12px; }
 .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
 @media (max-width: 760px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+/* Owner 2026-11-10: cards hidden "for now"; the data behind them is still recorded and the scripts still fill them. */
+.owner-hidden { display: none !important; }
+.grid2.solo { grid-template-columns: minmax(0, 1fr); }
 .card { min-width: 0; }
 svg { display: block; width: 100%; height: auto; overflow: visible; }
 svg text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
@@ -671,21 +674,23 @@ window.MCF = window.MCF || {};
   <div class="card" id="chg-card"><h2>Changes for the next session</h2><div class="sub" id="lv-chg-when"></div>
     <div class="tablewrap" id="lv-chg"><div class="empty">Loading the change ledger…</div></div>
     <div class="note">From <code>research/ledger.jsonl</code> on the trading branch, re-read every 5 minutes. A change counts for the session that follows its merge; owner-directed mid-session changes count for the day they landed. Weekends are skipped, market holidays are not.</div></div>
-  <div class="grid2">
+  <!-- Owner 2026-11-10: Open MCF positions, Signals today, Closed MCF trades today and Setups and their status are hidden
+       for now (class owner-hidden). Tracking is unchanged; remove the class to bring a card back. -->
+  <div class="grid2 solo">
     <div class="card"><h2 id="lv-cmp-h">MCF Primary vs MarcoFlow</h2><div class="tablewrap" id="lv-cmp"><div class="empty">No MCF trades yet.</div></div>
       <div class="note">The MCF columns are <b>this account only</b> (<span id="lv-cmp-acct">Primary</span>), not all of MCF. Win = trade closed with P/L &gt; 0 for both systems. MarcoFlow = its paper record, clean window 8/28–10/2. "Adj. P/L" adds the extra stop slippage a real order book charges.</div></div>
-    <div class="card"><h2>Open MCF positions</h2><div class="tablewrap" id="lv-pos"><div class="empty">No open positions.</div></div></div>
+    <div class="card owner-hidden"><h2>Open MCF positions</h2><div class="tablewrap" id="lv-pos"><div class="empty">No open positions.</div></div></div>
   </div>
-  <div class="grid2">
-    <div class="card"><h2>Signals today</h2><div class="tablewrap" id="lv-sig"><div class="empty">No signals yet.</div></div>
+  <div class="grid2 solo">
+    <div class="card owner-hidden"><h2>Signals today</h2><div class="tablewrap" id="lv-sig"><div class="empty">No signals yet.</div></div>
       <div class="note">Every signal is recorded: <b>submitted</b> (traded), <b>skipped</b> (with the reason), or <b>shadow</b> (9:30–9:50, your caution window). Skipped and shadow signals are simulated after the close so their cost or benefit is measured.</div></div>
     <div class="card"><h2>Why signals were skipped</h2><div class="tablewrap" id="lv-skip"><div class="empty">Nothing skipped yet.</div></div>
-      <h2 style="margin-top:14px">Closed MCF trades today</h2><div class="tablewrap" id="lv-closed"><div class="empty">No closed trades yet.</div></div></div>
+      <div class="owner-hidden"><h2 style="margin-top:14px">Closed MCF trades today</h2><div class="tablewrap" id="lv-closed"><div class="empty">No closed trades yet.</div></div></div></div>
   </div>
-  <div class="grid2">
+  <div class="grid2 solo">
     <div class="card"><h2>Day by day</h2><div class="tablewrap" id="lv-days"><div class="empty">No completed sessions yet.</div></div>
       <div class="note">One row per session from the journal (paper). Change = today vs the previous session.</div></div>
-    <div class="card"><h2>Setups and their status</h2><div class="tablewrap" id="lv-val"><div class="empty">–</div></div>
+    <div class="card owner-hidden"><h2>Setups and their status</h2><div class="tablewrap" id="lv-val"><div class="empty">–</div></div>
       <div class="note">Probation = trading in paper to collect data; it has not passed both locked test periods.</div></div>
   </div>
   <!-- Demoted from Primary (owner 2026-10-12; rule 20). Script at the end of the page. -->
@@ -1590,7 +1595,7 @@ window.MCF = window.MCF || {};
     ["vs MarcoFlow", "Is this account doing better or worse than the old system's paper record?"],
     ["Open MCF positions", "What this account holds right now and how it is doing."],
     ["Signals today", "Every signal today and whether it was traded, skipped or shadowed."],
-    ["Why signals were skipped", "Which rules blocked signals today, and today's closed trades."],
+    ["Why signals were skipped", "Which rules blocked signals today."],
     ["Day by day", "One line per session: is this account trending up or down?"],
     ["Setups and their status", "Which setups this account runs and what their backtest expected."],
     ["Demoted from Primary", "How the setups moved out of Primary are doing in Testing 1."],

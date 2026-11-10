@@ -1,0 +1,44 @@
+
+## Primary: Alpaca $-172.26 | journal pnl_adj $-197.36 | -18.10R | trades 36 | win 31% vs break-even 59% | avg R -0.503 | peak $+16 (10:06) -> close $-197 (journal $)
+   sides: short 35.0 -18.6R; long 1.0 +0.5R
+   best:  `RW3-gapdn-rsi5pop-flowsell-short-FD` 2.0 +1.0R $+49; `L3-gap-slope-rsi5hi-FD` 1.0 +0.5R $+33
+   worst: `MF4-h40-open-flowsell-FD` 17.0 -17.1R $-203; `L3-gap-slope-fromopen-FD` 10.0 -1.3R $-137
+   skips: 227 of 263 signals; top reasons not shortable/ETB 163; setup daily loss limit 28; twin held 17
+
+## Testing 1: Alpaca $-122.83 | journal pnl_adj $-6.99 | -1.69R | trades 65 | win 57% vs break-even 59% | avg R -0.026 | peak $+58 (10:08) -> close $-7 (journal $)
+   sides: short 7.0 -0.8R; long 58.0 -0.9R
+   best:  `NS1-rsidip-rsi5pop-long-FD` 22.0 +3.6R $+55; `CWT05-flush-m05-v3-long` 3.0 +1.5R $+16
+   worst: `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` 29.0 -3.6R $-67; `intraday_momentum` 4.0 -2.3R $-6
+   skips: 161 of 226 signals; top reasons split-tape short gate 113; cost filter 24; spread 14
+
+## Testing 2: Alpaca $-64.28 | journal pnl_adj $-69.30 | -5.07R | trades 53 | win 60% vs break-even 68% | avg R -0.096 | peak $+83 (11:30) -> close $-69 (journal $)
+   sides: short 28.0 -3.2R; long 25.0 -1.9R
+   best:  `CWT14-failbrk-pdl-p10-long` 13.0 +3.8R $+52; `MF5-flowsell-vwapup-rsi5hi` 3.0 +2.5R $+13
+   worst: `NS4-pm-vwap-reclaim-oversold-short` 6.0 -5.0R $-48; `NM-AR-AM-gapdown-capitulation-long` 4.0 -4.2R $-91
+   skips: 49 of 102 signals; top reasons not shortable/ETB 22; spread 12; opposite side held 8
+
+## Graveyard: Alpaca $-528.13 | journal pnl_adj $-653.05 | -76.41R | trades 512 | win 54% vs break-even 65% | avg R -0.149 | peak $+42 (10:00) -> close $-653 (journal $)
+   sides: short 256.0 -136.0R; long 256.0 +59.5R
+   best:  `CWT12-coil-k6-long` 17.0 +16.6R $+135; `CWT12-coil-k4-long` 45.0 +10.4R $+208
+   worst: `heat_fade_short-FD` 26.0 -19.3R $-254; `MF3-open-flowsell-rsi5hi-FD` 20.0 -18.8R $-120
+   skips: 997 of 1509 signals; top reasons setup daily loss limit 282; max positions for this setup 181; {"buying_power" 173
+
+## Gen: Alpaca $-1037.72 | journal pnl_adj $-1137.94 | -57.36R | trades 293 | win 40% vs break-even 52% | avg R -0.196 | peak $+173 (10:32) -> close $-1138 (journal $)
+   sides: short 104.0 -63.2R; long 189.0 +5.9R
+   best:  `GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long` 27.0 +9.2R $+398; `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` 29.0 +8.5R $+66
+   worst: `GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short` 50.0 -38.9R $-811; `GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short` 28.0 -18.1R $-408
+   skips: 709 of 1002 signals; top reasons {"buying_power" 437; spread 157; opposite side held 61
+
+## Explore 1: Alpaca $-12.46 | journal pnl_adj $-13.14 | +0.60R | trades 4 | win 75% vs break-even 65% | avg R +0.150 | peak $+1 (14:57) -> close $-13 (journal $)
+   sides: long 4.0 +0.6R
+   best:  `CWT05-flush-m05-v5-long` 3.0 +1.6R $+19; `ST8-volspikedn-long-pm-t1s1-FD` 1.0 -1.0R $-32
+   worst: `ST8-volspikedn-long-pm-t1s1-FD` 1.0 -1.0R $-32; `CWT05-flush-m05-v5-long` 3.0 +1.6R $+19
+   skips: 13 of 17 signals; top reasons not shortable/ETB 11; cost filter 1; spread 1
+
+## Live Lab: Alpaca $+47.11 | journal pnl_adj $+47.11 | +1.40R | trades 3 | win 100% vs break-even nan% | avg R +0.468 | peak $+47 (15:32) -> close $+47 (journal $)
+   sides: long 3.0 +1.4R
+   best:  `NM-ETF-late-dip-di-long` 2.0 +0.9R $+40; `CWT12-flag-s1-long` 1.0 +0.5R $+7
+   worst: `CWT12-flag-s1-long` 1.0 +0.5R $+7; `NM-ETF-late-dip-di-long` 2.0 +0.9R $+40
+   skips: 10 of 13 signals; top reasons not shortable/ETB 10
+
+Educational only - not financial advice.

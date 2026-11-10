@@ -433,7 +433,7 @@ GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long:
   what: "Buy on the first 5-minute bar closing 11:00-13:00 ET where the share of stocks above their open is below 0.5; VWAP reclaim/loss over 3 bars (frame column) = -1; least-squares slope of the last 6 closes per bar, in daily ATRs <= -0.011; bars since the last new high of day (from 09:50) >= 35 (stocks with 20-day average dollar volume >= $95M). Exit stop 1R, no target, 1R trailing stop once +1R, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
   generated: "2026-10-20"
 GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long:
-  name: "Generated: RSIslopege19, LowWickge0p33 AM long (BRvwgt0p7, hold)"
+  name: "Generated: Morning RSI Surge Buy"
   side: long
   what: "Buy on the first 5-minute bar closing 09:50-11:00 ET where the share of stocks above their VWAP is above 0.7; RSI(14) change over 3 bars (frame column) >= 19; lower wick share of the bar (frame column) >= 0.33; daily ATR % of price >= 4.4 (stocks with 20-day average dollar volume >= $50M). Exit stop 1R, no target, flat 15:55, R = 0.25 x daily ATR. Machine-generated for exploration; not a tested edge."
   generated: "2026-10-20"
@@ -873,3 +873,7 @@ RW7-gapdn-bounce-early-short-FD:
   name: "Gap-Down Early Bounce Short (all day)"
   side: short
   what: "09:50-15:00: stock gapped down, bearish heat <= -20, net selling (lighter than RW1), and RSI(14) bounces to 55-65; short the bounce."
+heat_fade_short-FD:
+  name: "Morning Bounce Fade (all day)"
+  side: short
+  what: "09:50-15:00: a stock trading below its open bounces too far, too fast (heat score); short the bounce. Full-day version of heat_fade_short."

@@ -1,0 +1,24 @@
+compass-confirmed days at 10:00: 217 (UP 111, DOWN 106); class A 78,822 on 217 days; base 118,459
+TRAIN: A n 36,002 days 115 win 48.8% avg R -0.119 | base n 60,075 win 46.6% avg -0.080 | excess -0.027 day-t -1.22
+VALID: A n 42,820 days 102 win 45.8% avg R -0.154 | base n 58,384 win 43.7% avg -0.142 | excess +0.013 day-t 0.47
+ALL: A n 78,822 days 217 win 47.2% avg R -0.138 | base n 118,459 win 45.2% avg -0.111 | excess -0.005 day-t -0.59
+  long (UP-confirmed): A n 39,034 days 111 avg -0.134 (TRAIN -0.125 / VALID -0.142) vs base -0.114; excess day-t -0.44
+  short (DOWN-confirmed): A n 39,788 days 106 avg -0.141 (TRAIN -0.112 / VALID -0.166) vs base -0.107; excess day-t -0.39
+
+QDAY split (SPY open-to-close +-0.25%) x side:
+                n  days   avgR     ex
+dtype side                           
+down  -1    20693    57 -0.005 -0.020
+       1     6154    17 -0.443  0.012
+quiet -1    13158    34 -0.297 -0.017
+       1     9158    27 -0.219  0.022
+up    -1     5937    15 -0.273  0.014
+       1    23722    67 -0.022 -0.006
+by SPY vs open at 10:00: above n 39034 avg -0.134; below n 39788 avg -0.141
+avg R w/o best day -0.144 (best 2025-04-02 +407.6R, share of total nan%); months positive 18% of 22
+per month avg R: 24-10 +0.04 25-03 -0.04 25-04 -0.13 25-05 -0.16 25-06 -0.16 25-07 -0.11 25-08 -0.14 25-09 -0.30 25-10 -0.25 25-11 -0.12 25-12 +0.00 26-01 -0.14 26-02 +0.19 26-03 -0.39 26-04 +0.03 26-05 -0.23 26-06 -0.27 26-07 -0.04 26-08 -0.13 26-09 -0.07 26-10 -0.18 26-11 -0.10
+
+VERDICT (lineage N 4: full bar 1.67, BAR90 1.50): FAIL; light lane (>= -0.02R both halves, excess t >= 1.50): fail
+
+11-09 in-sample (W60 UP-confirmed at 10:00 -> long): class A n 579 win 84% avg +0.610 | base n 685 avg +0.453 | excess +0.157
+Locked block never read (asserted). Configurations: 1. Educational only - not financial advice.

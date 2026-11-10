@@ -679,6 +679,160 @@
   "answered": null
  },
  {
+  "code": "DM-MF2",
+  "title": "Move Early Sellers, Mid-High RSI (all day) from Primary to Testing 1 (Saturday reevaluation)",
+  "what": "MF2-open-rsimidhi-flowsell-FD leaves Primary and trades in Testing 1 from Monday (a move: switched off in Primary, ex-primary marker).",
+  "recommend": "Yes - its record is one session (10-22) and it made the 11-06 loss",
+  "numbers": [
+   "124 trades / 18 sessions, 44.4% win vs 38.3% break-even, +0.121R but -0.141R without its best day (10-22 = 196% of R, '1 day')",
+   "Ex-market -0.106R, t 0.37, last 4 -0.485R; Primary 101 trades +0.065R, -$154.25 combined",
+   "11-06: 28 shorts -21.62R (semis burst 10:35-10:40 stopped 10:44-10:52); rule changes: promoted 10-20, ~$4k lot 10-28, -2R latch 10-29"
+  ],
+  "why": "It sells after the index has already flushed; when a whole theme qualifies in one poll its tight stops go together (11-04, 11-06).",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "DM-MF4",
+  "title": "Move Early Sellers, Strong Heat (all day) from Primary to Testing 1 (Saturday reevaluation)",
+  "what": "MF4-h40-open-flowsell-FD leaves Primary and trades in Testing 1 from Monday (a move: switched off in Primary, ex-primary marker). Supersedes the MF4-FD part of P4.",
+  "recommend": "Yes - below break-even on every cut of its record",
+  "numbers": [
+   "121 trades / 20 sessions, 59.5% win vs 67.0% break-even, -0.118R, -0.171R without its best day, t -0.94",
+   "Ex-market -0.148R, last 4 -0.364R, 3 busiest -0.302R, -$1,825.20; Primary 89 trades -0.258R",
+   "11-05 -10.66R and 11-06 -5.52R, both burst days (BURST1 / BURST2)"
+  ],
+  "why": "Same failure as MF2: entries at the low of a washout, stopped together in the bounce; its +0.5R / -1R geometry needs a 67% win rate.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PREVAL",
+  "title": "Primary reevaluation page (Saturday) - decide DM-MF2 / DM-MF4 / L3H / P4 there",
+  "what": "A complete Primary reevaluation with rolling ROTA1 parameters arrives as one decision page Saturday morning; the open Primary moves (DM-MF2, DM-MF4, L3H, the P4 trim) are decided on it, not tonight.",
+  "recommend": "Yes - decide on the page; nothing is due tonight",
+  "numbers": [
+   "MF2-FD -0.141R without its best day (196% `1 day`), 11-06 -21.62R",
+   "MF4-FD -0.118R (59.5% vs 67.0% break-even); L3-rsi5hi-FD -0.536R on Primary since 10-30",
+   "Primary 3 days (11-04..11-06) 167 trades -30.39R, -0.182R a trade, 43.7% win"
+  ],
+  "why": "Owner 2026-11-06: Primary changes are decided over the next couple of days from one complete reevaluation, not item by item.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "HN1",
+  "title": "Keep Hunch M1 live",
+  "what": "Hunch M1 (200 per-stock learners guessing the next 3-minute bar) keeps running live and logging.",
+  "recommend": "Yes",
+  "numbers": [
+   "46,600 guesses in 2 days",
+   "hit rate 51.9% vs 52.9% always-up baseline; beats copy-last-bar"
+  ],
+  "why": "It costs no orders and is still learning; the forward log is the only way to see if it reaches the 65% bar.",
+  "link": "research/hunch/M1_report.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-09"
+ },
+ {
+  "code": "HN3",
+  "title": "Use volume as the main Hunch metric",
+  "what": "Switch the Hunch scorecard from hit rate to a volume-based measure.",
+  "recommend": "No - keep hit rate as the main metric",
+  "numbers": [
+   "target 65% hit rate on one call; 51.9% now"
+  ],
+  "why": "One simple, comparable number per learner; a volume metric would reset the comparison.",
+  "link": "research/hunch/M1_report.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "COMPASS",
+  "title": "Start live Market Compass recording",
+  "what": "Record the 15-minute Market Compass readings live (journal only), no trading use.",
+  "recommend": "Yes - record only",
+  "numbers": [
+   "GATE1: 112 looks, 0 pass (best rule kept as forward shadow)",
+   "REGX: compass rating right 33% out of sample"
+  ],
+  "why": "Answered yes 2026-11-09 (\"Compass live: yes\"): superseded by COMP-LIVE, live from 2026-11-09 (display / research only).",
+  "link": "research/bdi/gate1/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-09"
+ },
+ {
+  "code": "BASE1",
+  "title": "Shadow baseline twin",
+  "what": "A journal-only baseline twin of Primary (no orders) to compare rule changes against.",
+  "recommend": "Yes",
+  "numbers": [
+   "no orders; Claude's Team shadow already simulates 57 trades a day independently"
+  ],
+  "why": "Gives every Primary change a same-day control.",
+  "link": "research/bdi/nightly1105/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "M1",
+  "title": "Drop the Primary mark on Afternoon VWAP Reclaim Fade (all day)",
+  "what": "NS4-pm-vwap-reclaim-oversold-short-FD: end the monitor mark (Testing 1 -> Primary); it stays in Testing 1.",
+  "recommend": "Yes - drop (lean)",
+  "numbers": [
+   "since the 10-27 mark 12 trades -0.397R",
+   "11-06: 2 trades -0.41R"
+  ],
+  "why": "Below zero since the mark.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "M2",
+  "title": "Generated NewLOD LUNCH short: keep waiting",
+  "what": "GEN-261026-03-...-holdtr-short: promote to Testing only after two green traded sessions (owner rule 11-03).",
+  "recommend": "No - wait (no promotion yet)",
+  "numbers": [
+   "1 of 2 green sessions",
+   "11-06 no trade (buying-power reject)"
+  ],
+  "why": "The owner condition is not met yet.",
+  "link": "research/bdi/nightly1106/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "REGX",
+  "title": "Dashboard hindsight label + reliability tags",
+  "what": "Show the SPY up/down day label as \"hindsight (known at close)\" and tag each Best-conditions rating trustworthy / weak / false.",
+  "recommend": "Yes - display only",
+  "numbers": [
+   "672 ratings, 66 trustworthy",
+   "only the hindsight SPY +/-0.25% label holds (49/53 VALID)"
+  ],
+  "why": "Stops reading hindsight conditions as entry filters.",
+  "link": "research/bdi/regx/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "RISK1",
+  "title": "Queue an equal-dollar-risk sizing study",
+  "what": "Research only: compare equal-dollar-risk lots with the fixed ~$4k notional lots on two years and live.",
+  "recommend": "Yes - queue",
+  "numbers": [
+   "$ per R $121 on MF4-FD vs $48 on RW3-FD (fixed ~$4k lots)"
+  ],
+  "why": "Fixed notional makes dollars and R disagree across setups.",
+  "link": "research/bdi/nightly1105/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-09"
+ },
+ {
   "code": "COMP-LIVE",
   "title": "Record the Market Compass live during the day",
   "what": "Every 15 minutes from 09:45 ET the research compass (SPY from open, 30-min checkpoint, 15-min W60 reading, QQQ/IWM agreement) is recorded from the bars so far and shown on the dashboard. Display and research only; it never feeds trading.",
@@ -690,6 +844,21 @@
   ],
   "why": "Answered yes 2026-11-09: live from 2026-11-09 (.github/workflows/compass.yml, mcf/report/compass_live.py, data branch mcf-data-compass, card \"Market Compass (live)\"); feeds the forward shadows gate1-checkpoint-gate and comp15-w60-early.",
   "link": "research/bdi/hc1/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-09"
+ },
+ {
+  "code": "T1X",
+  "title": "Testing 1 holds a short that MCF did not place - check it in Alpaca and close it",
+  "what": "Since the 11-05 close the Testing 1 paper account has carried a short position (about $1.6k-1.8k) that is not in MCF's journal, so the 15:55 flatten never closes it. It moves Testing 1's Alpaca P/L (11-09: Alpaca -$126.46 vs MCF trades +$0.41). Likely the same Alpaca corporate-action booking that hit Primary's MTUM on 11-05.",
+  "recommend": "Yes - look at Testing 1 positions in the Alpaca paper dashboard, report it to Alpaca like MTUM, and close it (or say keep and Claude labels it with/without as for MTUM)",
+  "numbers": [
+   "Cash minus equity: $0 at the 11-05 15:55 status, $1,629.48 at the 11-06 close, $1,761.60 at the 11-09 close (it marked -$132 today)",
+   "11-05: Alpaca -$1,526.68 vs journal +$58.05; 11-09: Alpaca -$126.46 vs journal +$0.41",
+   "No Testing 1 MCF lots open (status positions 0, flatten_failed empty); Claude has no Testing 1 keys in its session to list positions"
+  ],
+  "why": "Answered yes 2026-11-09: the position was SOXX −12 sh (avg $67.10), left by a bogus Alpaca SOXX split booked on 11-05 after MCF's 6-sh SOXX short had been covered; closed by a market-on-open buy-to-cover, order d2db7df7-6a04-432c-802d-c2ca88dc23bb (owner-t1x-SOXX-20261109), at the 11-10 open.",
+  "link": "research/bdi/nightly1109/NOTES.md",
   "status": "answered",
   "answered": "yes, 2026-11-09"
  }

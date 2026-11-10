@@ -1,0 +1,60 @@
+trades 1,102,755, setups 95, days 424, 2024-10-01..2026-10-05; kinds {2: 599829, 1: 358791, 0: 144135}
+class A 84,269 (7.64%); eligible geometry 32%; A with q30 known 100%
+TRAIN: trades 668,130, class A 52,164 (live R avg -0.002 -> scalp -0.007; hit 70%); delta -268.3R (day-clustered t -1.15, 273 days); excess +71.4R (per A trade +0.001, t 0.25); control: same scalp on all trades -3185.9R (per trade -0.0048)
+   short A n 20,132 delta +66.3R avg r -0.052 -> -0.049
+   long A n 32,032 delta -334.5R avg r +0.030 -> +0.020
+VALID: trades 434,625, class A 32,105 (live R avg -0.021 -> scalp -0.030; hit 68%); delta -276.8R (day-clustered t -1.38, 151 days); excess -84.1R (per A trade -0.003, t -0.45); control: same scalp on all trades -1903.2R (per trade -0.0044)
+   short A n 10,187 delta -101.6R avg r -0.010 -> -0.020
+   long A n 21,918 delta -175.2R avg r -0.026 -> -0.034
+
+class A by dtype:
+                 n  days      r    r_s    delta
+half  dtype                                    
+TRAIN down   19767    75  0.051  0.031 -397.679
+      quiet   7082    52 -0.031 -0.034  -16.284
+      up     25315    77 -0.034 -0.028  145.711
+VALID down    9452    40 -0.038 -0.069 -287.276
+      quiet  10403    46 -0.039 -0.034   51.597
+      up     12250    46  0.007  0.004  -41.124
+all trades by dtype (base):
+                  n  all_r
+half  dtype               
+TRAIN down   241008 -0.096
+      quiet  178850 -0.077
+      up     248272 -0.058
+VALID down   130606 -0.068
+      quiet  146916 -0.045
+      up     157103 -0.059
+
+class A by s10:
+                 n  days      r    r_s    delta
+half  s10                                      
+TRAIN above  29420   104 -0.047 -0.041  198.515
+      below  22744   100  0.057  0.037 -466.767
+VALID above  19491    76 -0.019 -0.036 -336.168
+      below  12614    56 -0.025 -0.020   59.364
+all trades by s10 (base):
+                  n  all_r
+half  s10                 
+TRAIN above  343361 -0.074
+      below  324769 -0.079
+VALID above  249573 -0.059
+      below  185052 -0.054
+
+families (class A n / delta R):
+                  n_TRAIN  n_VALID  delta_TRAIN  delta_VALID
+fam                                                         
+CWT                 35543    24658       -139.3         59.2
+GEN                  6539     2754       -338.5       -239.0
+L                    3574      438        202.3          2.8
+MF                   1076      817        -44.1        -37.8
+NM                     40       25          1.6          0.6
+NS                    468      247         56.1          8.8
+RW                   3677     2234        -32.0         -9.8
+ST                    571      332         -0.5          0.3
+exhaustion_short      676      600         26.0        -61.9
+TRAIN setups better 26 (+424.0R) / worse 27 (-692.3R); worst {'GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long': -145.6, 'CWT09-gapdn-vwaploss-g5-short': -101.4, 'GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long': -77.1}
+VALID setups better 20 (+146.1R) / worse 29 (-422.9R); worst {'GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long': -155.5, 'exhaustion_short-FD': -61.9, 'RW2-exhaustion-noon-adv150-short-FD': -44.5}
+
+VERDICT: VALID t -1.38 (bar 2.61, BAR90 2.35), TRAIN delta -268.3R, VALID excess -84.1R (t -0.45), families harmed (VALID < -5R) 4 -> FAIL
+Locked block 2024-11-01..2025-02-28 never read (asserted). Configurations: 1. Educational only - not financial advice.

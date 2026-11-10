@@ -1,0 +1,40 @@
+Quick facts (as of 2026-11-06)
+- Sessions traded: 24 (since 2026-10-06) · paper trades: 16,520
+- Setups live: 111 + 93 machine-generated
+- Setups rejected by backtests so far: ~27,793
+- Entry slippage: ~4.4 bps vs the signal price (measured, paper fills)
+- Today, 5 day-trading accounts: -$838.61 · since Day 1 (10/23): -$31,492.15
+- Primary: today -$1,238.60 · since Day 1 -$13,848.44 · green days 4 of 11
+- P/L = each account's Alpaca equity change vs the prior close (paper); setup R today includes a real-book stop-slippage allowance
+- Milestones: M1 (3 green in a row) 0/3 · M2 (8 of last 10 green) 4/10
+
+Green-day streaks (setups green every session in a row, all accounts)
+- Morning Bounce Fade (all day): 5 in a row (+$1,056.12)
+- Gap-Down Pop Fade (all day): 5 in a row (+$453.25)
+- Gap-Down Bounce Short, Heavy Selling (all day): 5 in a row (+$138.27)
+- Gap-Down Pop Fade, Heavy Selling (all day): 3 in a row (+$914.02)
+- ST1-ordn-long-pm-t05s1-FD: 3 in a row (+$240.20)
+Green-day record: 6 sessions in a row - Stretched Above VWAP Fade (10-23..10-30)
+
+Green every day they traded (sessions with no trade explained)
+- Gap-Down Early Bounce Short (all day): 5 trading days in a row (+$384.48) · no trade: 11-04 blocked: split-tape short gate x50
+- Early Sellers, Strong Heat: 5 trading days in a row (+$106.17) · no trade: 11-04 blocked: twin held x8 (+9 other); 11-05 blocked: twin held x2 (+1 other); 11-06 blocked: twin held x14 (+6 other) (+12 earlier)
+- Big Gainer Average Reclaim Fade: 4 trading days in a row (+$112.61) · no trade: 11-03 blocked: twin held x7 (+6 other); 11-04 blocked: spread 78bps > max x1 (+1 other); 11-05 no signal (+7 earlier)
+- ST5-pdbrkup-short-mid-t05s1-FD: 4 trading days in a row (+$36.06) · no trade: 11-02 no signal; 11-03 no signal; 11-04 blocked: split-tape short gate x4 (+12 earlier)
+- Gap-Down Recovery Fade (all day): 3 trading days in a row (+$306.06) · no trade: 11-05 blocked: not shortable/ETB x69
+- Gap-Down Bounce Rejection Short (10% gap): 3 trading days in a row (+$264.93) · no trade: 11-03 blocked: not shortable/ETB x3; 11-04 blocked: not shortable/ETB x2 (+1 other); 11-06 blocked: not shortable/ETB x12 (+1 earlier)
+- Unintended blocks: Big Gainer Average Reclaim Fade 11-02 blocked: opposite side held x2 (+1 other); ST5-pdbrkup-short-mid-t05s1-FD 10-16 blocked: {"base_price":"33.5","code":42210000,"message":"take_profit.limit_price must be \u003c= base_price - 0.01"} x1
+
+Quick answers
+- What AI? Claude (Opus 5.5) builds, tests and runs it. Code is Python.
+- Broker / data? Alpaca API, paper trading, SIP market data (all US exchanges).
+- What's traded? US stocks + ETFs, intraday only (9:50 AM-3:55 PM ET), long and short, nothing held overnight.
+- How are setups built? Basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs/lows, ATR.
+- Setup Generator? A bot that invents 10 new setups a night and trades them on its own paper account.
+- Life cycle? Idea/generator -> 2-yr backtest (costs in) -> replay -> testing (paper) -> Primary (paper) -> real money after the milestones. Losers move down to the Graveyard, never deleted.
+- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.
+- Break-even win rate? The win rate a setup needs just to not lose money.
+- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.
+- Avg R ex-market? Avg R with the market's move taken out (each trade's R regressed on SPY's move over the same minutes).
+- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).
+Not financial advice.
