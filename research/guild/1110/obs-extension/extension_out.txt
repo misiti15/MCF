@@ -1,0 +1,35 @@
+EXT threshold 0.1 ATR | trades with bars+ATR 14770 of 16615 (2026-10-14..2026-11-06), setups 178, families 43
+
+ALL by group:
+           n  share  gross    net  move_atr  days
+grp                                             
+EXT  1063.0  0.072 -0.045 -0.127    -0.024  18.0
+MID  4998.0  0.338 -0.062 -0.096    -0.019  18.0
+PB   8709.0  0.590 -0.177 -0.165    -0.034  18.0
+
+by side x group:
+                n  share  gross    net  move_atr  days
+side grp                                             
+-1   EXT   443.0  0.030 -0.189 -0.262    -0.055  18.0
+     MID  2332.0  0.158 -0.007 -0.038    -0.008  18.0
+     PB   3631.0  0.246 -0.113 -0.110    -0.022  18.0
+ 1   EXT   620.0  0.042  0.058 -0.030    -0.003  18.0
+     MID  2666.0  0.181 -0.109 -0.147    -0.028  18.0
+     PB   5078.0  0.344 -0.222 -0.204    -0.043  18.0
+
+day-clustered EXT minus non-EXT gross: mean +0.075R, t 1.29, days 18, days EXT worse 9
+
+per family (>= 15 EXT and >= 15 other): 8; EXT worse in 3; trades-weighted diff +0.101R
+          n  ext_n  ext_share  ext_gross  other_gross   diff  ext_move_atr  other_move_atr  top_kept sides
+fam                                                                                                       
+MF2     130     29      0.223     -0.403        0.282 -0.685        -0.085           0.052     0.846    -1
+MF4     124     25      0.202     -0.304       -0.008 -0.296        -0.084          -0.015     0.769    -1
+RW3     251     39      0.155     -0.095        0.085 -0.180        -0.062           0.020     0.923    -1
+heat   1174     56      0.048     -0.177       -0.196  0.019        -0.075          -0.029     0.975  -1,1
+CWT12   779    201      0.258     -0.019       -0.051  0.032        -0.024          -0.023     0.782     1
+CWT09   259     22      0.085      0.083        0.042  0.041         0.056           0.018     0.885    -1
+GEN    2242    245      0.109     -0.112       -0.308  0.196        -0.034          -0.045     0.907  -1,1
+CWT14  5436    405      0.075      0.037       -0.164  0.201        -0.002          -0.036     0.921  -1,1
+
+retention if EXT were dropped: trades kept 92.8% (need >= 80%); top-decile winners kept 93.5% (need >= 90%)
+Educational only - not financial advice.

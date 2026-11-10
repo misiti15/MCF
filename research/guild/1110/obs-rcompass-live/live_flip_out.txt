@@ -1,0 +1,80 @@
+live afternoon trades 4682, sessions 25 (2026-10-06..2026-11-09)
+  2026-10-06  M=None  
+  2026-10-07  M=None  
+  2026-10-08  M=None  
+  2026-10-09  M=None  
+  2026-10-12  M=None  
+  2026-10-13  M=None  
+  2026-10-14  M=DOWN  F1=-  F2=-  F3=-
+  2026-10-15  M=UP  F1=-  F2=-  F3=-
+  2026-10-16  M=DOWN  F1=-  F2=-  F3=-
+  2026-10-19  M=None  
+  2026-10-20  M=UP  F1=-  F2=-  F3=13:00
+  2026-10-21  M=None  
+  2026-10-22  M=DOWN  F1=-  F2=-  F3=12:00
+  2026-10-23  M=UP  F1=-  F2=-  F3=13:30
+  2026-10-26  M=UP  F1=-  F2=-  F3=15:00
+  2026-10-27  M=None  
+  2026-10-28  M=None  
+  2026-10-29  M=None  
+  2026-10-30  M=DOWN  F1=-  F2=-  F3=-
+  2026-11-02  M=UP  F1=12:30  F2=13:15  F3=11:30
+  2026-11-03  M=UP  F1=-  F2=-  F3=15:00
+  2026-11-04  M=UP  F1=-  F2=-  F3=11:30
+  2026-11-05  M=DOWN  F1=-  F2=-  F3=-
+  2026-11-06  M=UP  F1=-  F2=-  F3=13:00
+  2026-11-09  M=UP  F1=-  F2=-  F3=-
+
+=== F1: reading-day afternoon trades 3065 | flip days 1 | held days 13
+                   count   mean      sum
+cls       al                            
+held_day  aligned   1520  0.074  111.760
+          counter   1326 -0.072  -95.543
+post_flip aligned    158 -0.540  -85.330
+          counter     49 -0.354  -17.331
+pre_flip  aligned     12 -0.394   -4.732
+
+F1 post-flip ALIGNED trades by family (what a standby would have removed) vs the same family aligned on held days:
+           post_n  post_avg  post_sum  held_n  held_avg  days
+fam                                                         
+GEN           58    -0.529   -30.688     393    -0.041     1
+heat          15    -0.964   -14.454     168     0.204     1
+CWT14         28    -0.404   -11.306     224    -0.079     1
+NM            25    -0.373    -9.332      25     0.497     1
+CWT13         18    -0.391    -7.043      48    -0.085     1
+ST1            4    -0.885    -3.540      11     0.334     1
+intraday       4    -0.818    -3.271      30    -0.446     1
+ST7            2    -1.109    -2.218       2    -0.176     1
+NS1            1    -1.050    -1.050      44    -0.084     1
+NS5            1    -1.036    -1.036      10     0.160     1
+LIQ            1    -0.779    -0.779       3     1.071     1
+ST2            1    -0.615    -0.615      75    -0.151     1
+
+  by account: {'gen': {'count': 58, 'sum': -30.69}, 'graveyard': {'count': 29, 'sum': -24.65}, 'primary': {'count': 1, 'sum': -1.11}, 'testing': {'count': 6, 'sum': -5.43}, 'testing2': {'count': 64, 'sum': -23.46}}
+
+  CWT12 coil (owner-named), F1 classes:
+                   count  mean    sum
+cls      al                         
+held_day aligned      3  0.23  0.691
+         counter      2  0.19  0.380
+
+=== F2: reading-day afternoon trades 3065 | flip days 1 | held days 13
+                   count   mean      sum
+cls       al                            
+held_day  aligned   1520  0.074  111.760
+          counter   1326 -0.072  -95.543
+post_flip aligned    115 -0.471  -54.157
+          counter     40 -0.327  -13.083
+pre_flip  aligned     55 -0.653  -35.905
+          counter      9 -0.472   -4.248
+
+=== F3: reading-day afternoon trades 3065 | flip days 8 | held days 6
+                   count   mean      sum
+cls       al                            
+held_day  aligned    809  0.063   50.797
+          counter    734 -0.164 -120.115
+post_flip aligned    526 -0.051  -26.948
+          counter    416 -0.045  -18.814
+pre_flip  aligned    355 -0.006   -2.151
+          counter    225  0.116   26.055
+Educational only - not financial advice.

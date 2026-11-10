@@ -1,0 +1,45 @@
+events 42085; dropped (dmh/other timing or no next session) 805; weekend/non-session report dates mapped 34742
+after dedupe + adv20 >= $60M: 6760 events, 358 sessions; surprise buckets {'beat': 4471, 'miss': 1205, 'unknown': 629, 'inline': 455}
+paths 0/1049
+paths 100/1049
+paths 200/1049
+paths 300/1049
+paths 400/1049
+paths 500/1049
+paths 600/1049
+paths 700/1049
+paths 800/1049
+paths 900/1049
+paths 1000/1049
+
+rows 5835 events on 355 sessions; timing {'bmo': 3069, 'amc': 2766}; agree buckets {'agree': 2871, 'disagree': 1986, 'unknown': 614, 'inline': 364}
+
+== 09:50->11:30 (gap-sign direction, ATR units; mean, day-t, days)
+  ALL   all | agree n 2871 gross -0.029 ex -0.028 | disagree n 1986 gross +0.018 ex +0.017 | inline n 364 gross -0.035 ex -0.038 | unknown n 614 gross -0.114 ex -0.104 || agree-disagree ex (same-day pairs) -0.065 t -1.54 days 251 | agree-minus-random-gapper ex -0.053 t -1.77
+  ALL   bmo | agree n 1474 gross -0.004 ex -0.005 | disagree n 981 gross +0.016 ex +0.017 | inline n 202 gross -0.067 ex -0.072 | unknown n 412 gross -0.069 ex -0.079 || agree-disagree ex (same-day pairs) -0.016 t -0.27 days 188 | agree-minus-random-gapper ex -0.018 t -0.46
+  ALL   amc | agree n 1397 gross -0.045 ex -0.049 | disagree n 1005 gross +0.016 ex +0.017 | inline n 162 gross +0.037 ex +0.037 | unknown n 202 gross -0.117 ex -0.067 || agree-disagree ex (same-day pairs) -0.045 t -1.00 days 174 | agree-minus-random-gapper ex -0.089 t -2.40
+  TRAIN all | agree n 929 gross -0.017 ex -0.020 | disagree n 636 gross -0.088 ex -0.107 | inline n 121 gross +0.008 ex +0.009 || agree-disagree ex (same-day pairs) +0.078 t 0.99 days 82 | agree-minus-random-gapper ex -0.050 t -0.78
+  TRAIN bmo | agree n 482 gross -0.048 ex -0.044 | disagree n 317 gross -0.054 ex -0.065 | inline n 68 gross -0.041 ex -0.046 || agree-disagree ex (same-day pairs) +0.012 t 0.12 days 55 | agree-minus-random-gapper ex -0.050 t -0.62
+  TRAIN amc | agree n 447 gross -0.017 ex -0.032 | disagree n 319 gross -0.089 ex -0.104 | inline n 53 gross +0.142 ex +0.148 || agree-disagree ex (same-day pairs) +0.060 t 0.63 days 58 | agree-minus-random-gapper ex -0.081 t -1.09
+  VALID all | agree n 1942 gross -0.036 ex -0.033 | disagree n 1350 gross +0.072 ex +0.081 | inline n 243 gross -0.057 ex -0.062 | unknown n 612 gross -0.060 ex -0.065 || agree-disagree ex (same-day pairs) -0.134 t -2.73 days 169 | agree-minus-random-gapper ex -0.055 t -1.76
+  VALID bmo | agree n 992 gross +0.018 ex +0.015 | disagree n 664 gross +0.051 ex +0.057 | inline n 134 gross -0.080 ex -0.085 | unknown n 412 gross -0.069 ex -0.079 || agree-disagree ex (same-day pairs) -0.027 t -0.38 days 133 | agree-minus-random-gapper ex -0.002 t -0.05
+  VALID amc | agree n 950 gross -0.060 ex -0.059 | disagree n 686 gross +0.071 ex +0.082 | inline n 109 gross -0.018 ex -0.021 | unknown n 200 gross -0.014 ex +0.015 || agree-disagree ex (same-day pairs) -0.097 t -2.02 days 116 | agree-minus-random-gapper ex -0.093 t -2.24
+  by |gap| x agree (ALL, gross mean): {('2-5%', 'agree'): -0.008, ('2-5%', 'disagree'): -0.021, ('2-5%', 'inline'): -0.006, ('2-5%', 'unknown'): 0.031, ('<2%', 'agree'): 0.004, ('<2%', 'disagree'): -0.007, ('<2%', 'inline'): -0.034, ('<2%', 'unknown'): -0.038, ('>5%', 'agree'): -0.048, ('>5%', 'disagree'): -0.053, ('>5%', 'inline'): 0.055, ('>5%', 'unknown'): 0.143}
+  held vs faded at 09:50 (ALL, agree only, gross): {False: -0.049, True: 0.01}
+
+== 09:50->15:55 (gap-sign direction, ATR units; mean, day-t, days)
+  ALL   all | agree n 2871 gross -0.011 ex -0.015 | disagree n 1986 gross -0.051 ex -0.045 | inline n 364 gross -0.008 ex -0.011 | unknown n 614 gross +0.016 ex +0.025 || agree-disagree ex (same-day pairs) +0.013 t 0.24 days 251 | agree-minus-random-gapper ex -0.042 t -0.96
+  ALL   bmo | agree n 1474 gross +0.054 ex +0.040 | disagree n 981 gross -0.059 ex -0.045 | inline n 202 gross +0.017 ex +0.012 | unknown n 412 gross +0.035 ex +0.028 || agree-disagree ex (same-day pairs) +0.101 t 1.46 days 188 | agree-minus-random-gapper ex +0.023 t 0.40
+  ALL   amc | agree n 1397 gross -0.062 ex -0.064 | disagree n 1005 gross -0.045 ex -0.042 | inline n 162 gross -0.033 ex -0.044 | unknown n 202 gross -0.060 ex -0.008 || agree-disagree ex (same-day pairs) +0.006 t 0.10 days 174 | agree-minus-random-gapper ex -0.111 t -2.07
+  TRAIN all | agree n 929 gross -0.050 ex -0.074 | disagree n 636 gross -0.171 ex -0.169 | inline n 121 gross +0.008 ex +0.018 || agree-disagree ex (same-day pairs) +0.108 t 1.03 days 82 | agree-minus-random-gapper ex -0.139 t -1.52
+  TRAIN bmo | agree n 482 gross -0.012 ex -0.036 | disagree n 317 gross -0.151 ex -0.139 | inline n 68 gross +0.059 ex +0.068 || agree-disagree ex (same-day pairs) +0.149 t 1.27 days 55 | agree-minus-random-gapper ex -0.079 t -0.59
+  TRAIN amc | agree n 447 gross -0.103 ex -0.123 | disagree n 319 gross -0.125 ex -0.132 | inline n 53 gross +0.022 ex +0.001 || agree-disagree ex (same-day pairs) +0.056 t 0.41 days 58 | agree-minus-random-gapper ex -0.173 t -1.51
+  VALID all | agree n 1942 gross +0.010 ex +0.017 | disagree n 1350 gross +0.011 ex +0.019 | inline n 243 gross -0.015 ex -0.026 | unknown n 612 gross +0.041 ex +0.033 || agree-disagree ex (same-day pairs) -0.033 t -0.53 days 169 | agree-minus-random-gapper ex +0.010 t 0.22
+  VALID bmo | agree n 992 gross +0.087 ex +0.078 | disagree n 664 gross -0.013 ex +0.001 | inline n 134 gross -0.003 ex -0.016 | unknown n 412 gross +0.035 ex +0.028 || agree-disagree ex (same-day pairs) +0.081 t 0.95 days 133 | agree-minus-random-gapper ex +0.073 t 1.34
+  VALID amc | agree n 950 gross -0.042 ex -0.033 | disagree n 686 gross -0.002 ex +0.005 | inline n 109 gross -0.063 ex -0.068 | unknown n 200 gross -0.024 ex +0.003 || agree-disagree ex (same-day pairs) -0.019 t -0.31 days 116 | agree-minus-random-gapper ex -0.079 t -1.41
+  by |gap| x agree (ALL, gross mean): {('2-5%', 'agree'): 0.021, ('2-5%', 'disagree'): -0.06, ('2-5%', 'inline'): 0.056, ('2-5%', 'unknown'): 0.027, ('<2%', 'agree'): 0.0, ('<2%', 'disagree'): -0.026, ('<2%', 'inline'): -0.044, ('<2%', 'unknown'): 0.039, ('>5%', 'agree'): -0.011, ('>5%', 'disagree'): -0.073, ('>5%', 'inline'): 0.054, ('>5%', 'unknown'): 0.198}
+  held vs faded at 09:50 (ALL, agree only, gross): {False: -0.038, True: 0.045}
+
+Looks: 2 (agree-disagree, agree-random gapper) x 2 horizons, one family (N 858 + looks -> BAR90 ~3.31). Gross first;
+ex = minus beta60 x SPY move; random gapper = same-day non-event name, |gap| bucket matched, own gap-sign direction.
+Educational only - not financial advice.

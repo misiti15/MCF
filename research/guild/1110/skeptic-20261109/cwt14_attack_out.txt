@@ -1,0 +1,29 @@
+pool 570543 trades, 449 days
+
+(1) plateau (X in daily ATR below the open):
+  X 1.00: skipped  10012  skipped avg -0.123  excess  +114.5  t +0.78
+  X 1.25: skipped   4480  skipped avg -0.154  excess  +164.8  t +1.67
+  X 1.50: skipped   2355  skipped avg -0.170  excess  +145.8  t +2.13
+  X 1.75: skipped   1254  skipped avg -0.161  excess   +78.6  t +1.53
+  X 2.00: skipped    761  skipped avg -0.203  excess   +93.1  t +2.05
+  X 2.50: skipped    316  skipped avg -0.154  excess   +28.3  t +1.16
+
+(2) overlap: 2355 skipped trades on 832 symbol-days (mean 2.8 trades each; symbol-days with >= 4 variants firing: 321)
+    worst 5 skipped symbol-days (R removed = gain): {('RIG', datetime.date(2026, 1, 5)): 9.4, ('ACGL', datetime.date(2025, 7, 30)): 9.2, ('TRMB', datetime.date(2025, 8, 6)): 9.1, ('SMTC', datetime.date(2026, 5, 18)): 8.3, ('KDP', datetime.date(2026, 8, 6)): 7.5}
+    gain from the 10 worst symbol-days: 73.6 R of skipped total 401.1
+    top 5 symbols by R removed: {'CSGP': 15.0, 'ACGL': 12.7, 'BMY': 9.5, 'TRMB': 9.1, 'VRSK': 8.8}
+
+(3) X 1.5 excess by quarter:
+          sum  count     t
+2024Q4   6.14     23  0.42
+2025Q1   5.99     21  0.79
+2025Q2  36.24     62  1.64
+2025Q3  44.78     64  1.23
+2025Q4   7.21     64  0.28
+2026Q1  33.20     61  1.29
+2026Q2  10.53     62  0.52
+2026Q3  10.48     64  0.44
+2026Q4  -8.80     28 -0.49
+
+(4) size: pool 1271 trades/day; excess +0.325 R/day = +0.00026 R/trade
+Educational only - not financial advice.

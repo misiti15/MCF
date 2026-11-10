@@ -1,0 +1,96 @@
+trades 16615, 2026-10-06..2026-11-06, setups 187
+
+[A] entry slip by entry type x fill tag (bps, + = adverse), and by stop quartile:
+                          n  e_bps_mean  e_bps_med    net
+entry_type fill_tag                                      
+market     none        9583       2.212      2.237 -0.685
+           touch_fill  6996       7.305      5.209  0.626
+                        n  e_bps_mean  share_neg_slip
+q        entry_type                                  
+Q1 tight market      4148      -3.383           0.484
+         stop           6       2.687           0.000
+Q2       market      4151       1.606           0.309
+         stop           3       5.581           0.000
+Q3       market      4148       6.323           0.263
+         stop           5      11.886           0.000
+Q4 wide  market      4132      12.936           0.272
+         stop          22       3.976           0.364
+
+[B] setups with >= 30 trades: 91; tightest 25 by median stop (gross = net + paper cost; net_lab = gross - lab cost):
+                                                                                           n                       accts  stop_bps_med   lt60  lt100  lab_cost  live_cost  gross    net  net_lab
+strategy                                                                                                                                                                                        
+MF1-945-flowsell-vwapup                                                                   30             primary,testing        26.009  0.833  0.900     0.840      0.214 -0.146 -0.360   -0.985
+MF1-945-flowsell-vwapup-FD                                                               103           graveyard,testing        29.186  0.864  0.951     0.634      0.085 -0.061 -0.147   -0.696
+intraday_momentum                                                                         45                     testing        33.999  0.956  1.000     0.232      0.015 -0.317 -0.332   -0.549
+CWT12-coil-k6-long                                                                       189  graveyard,testing,testing2        44.380  0.688  0.889     0.460      0.117 -0.102 -0.219   -0.563
+GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short           57                         gen        48.426  0.614  0.860     0.395     -0.766 -1.516 -0.750   -1.911
+MF5-flowsell-vwapup-rsi5hi-FD                                                            102  graveyard,testing,testing2        54.897  0.578  0.892     0.304      0.085 -0.067 -0.153   -0.371
+MF5-flowsell-vwapup-rsi5hi                                                                86    primary,testing,testing2        55.117  0.605  0.872     0.339      0.075  0.003 -0.071   -0.335
+MF3-open-flowsell-rsi5hi                                                                  44             primary,testing        57.560  0.545  0.909     0.377      0.105  0.089 -0.015   -0.288
+GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short   62                         gen        59.385  0.516  0.823     0.284      0.174 -0.735 -0.909   -1.019
+GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long                        33                         gen        63.054  0.455  0.758     0.264     -0.325 -0.671 -0.347   -0.935
+GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long                                     74                         gen        63.568  0.473  0.730     0.220      0.163 -0.090 -0.252   -0.309
+MF3-open-flowsell-rsi5hi-FD                                                              199   graveyard,primary,testing        63.684  0.462  0.754     0.232      0.072 -0.048 -0.120   -0.281
+CWT13-vwapstretch-z075-long                                                               40           explore1,testing2        64.646  0.400  0.800     0.192      0.029 -0.059 -0.088   -0.251
+NS4-pm-vwap-reclaim-oversold-short                                                        30            primary,testing2        67.257  0.433  0.700     0.262      0.124  0.153  0.029   -0.109
+GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long                      52                         gen        69.505  0.404  0.635     0.325      0.103 -0.624 -0.727   -0.949
+MF2-open-rsimidhi-flowsell-FD                                                            124             primary,testing        69.597  0.403  0.758     0.279      0.013  0.133  0.121   -0.146
+CWT14-failbrk-pdh-p10-short                                                              454  graveyard,testing,testing2        71.464  0.363  0.725     0.307      0.004 -0.185 -0.188   -0.492
+CWT14-failbrk-orl-p10-lowvol-long                                                        540          graveyard,testing2        72.605  0.367  0.741     0.269      0.036 -0.089 -0.125   -0.358
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                                               129             primary,testing        73.571  0.357  0.667     0.190      0.036  0.398  0.361    0.208
+CWT14-failbrk-orl-p05-lowvol-long                                                        810          graveyard,testing2        74.010  0.362  0.710     0.279      0.034 -0.167 -0.202   -0.447
+CWT14-failbrk-orl-p10-long                                                               526          graveyard,testing2        75.313  0.354  0.694     0.275      0.017 -0.150 -0.167   -0.425
+CWT14-failbrk-pdh-p10-lowvol-short                                                       216          graveyard,testing2        75.456  0.306  0.731     0.273      0.049 -0.119 -0.168   -0.392
+CWT14-failbrk-pdh-p05-lowvol-short                                                       438  graveyard,testing,testing2        76.212  0.349  0.708     0.264      0.047 -0.118 -0.165   -0.382
+CWT13-vwapstretch-z05-short                                                              166          graveyard,testing2        77.069  0.271  0.723     0.222      0.035 -0.085 -0.120   -0.306
+CWT14-failbrk-orl-p05-long                                                               908          graveyard,testing2        77.269  0.335  0.665     0.276      0.002 -0.161 -0.163   -0.437
+
+[C] where STOPW bites (share of each setup's trades with stop < 60 / 100 bp), top 15 by trades affected at 100bp:
+                                       n                       accts  stop_bps_med   lt60  lt100  lab_cost  live_cost  gross    net  net_lab
+strategy                                                                                                                                    
+CWT14-failbrk-orl-p05-long           908          graveyard,testing2        77.269  0.335  0.665     0.276      0.002 -0.161 -0.163   -0.437
+CWT14-failbrk-orl-p05-lowvol-long    810          graveyard,testing2        74.010  0.362  0.710     0.279      0.034 -0.167 -0.202   -0.447
+CWT14-failbrk-pdl-p05-long           832  graveyard,testing,testing2        78.349  0.320  0.653     0.283     -0.011 -0.101 -0.090   -0.385
+CWT12-coil-k4-long                   673          graveyard,testing2        83.977  0.218  0.600     0.189      0.062 -0.035 -0.097   -0.224
+CWT14-failbrk-orl-p10-lowvol-long    540          graveyard,testing2        72.605  0.367  0.741     0.269      0.036 -0.089 -0.125   -0.358
+CWT14-failbrk-pdl-p05-lowvol-long    593          graveyard,testing2        79.215  0.312  0.668     0.250      0.046 -0.086 -0.133   -0.336
+CWT14-failbrk-orl-p10-long           526          graveyard,testing2        75.313  0.354  0.694     0.275      0.017 -0.150 -0.167   -0.425
+heat_fade_short-FD                   651           graveyard,testing        93.188  0.174  0.539     0.171     -0.038 -0.082 -0.044   -0.253
+CWT14-failbrk-pdl-p10-long           530                    testing2        83.489  0.268  0.636     0.281     -0.073 -0.171 -0.098   -0.452
+CWT14-failbrk-pdh-p10-short          454  graveyard,testing,testing2        71.464  0.363  0.725     0.307      0.004 -0.185 -0.188   -0.492
+CWT14-failbrk-pdh-p05-lowvol-short   438  graveyard,testing,testing2        76.212  0.349  0.708     0.264      0.047 -0.118 -0.165   -0.382
+RW7-gapdn-bounce-early-short-FD      436                     testing        95.025  0.222  0.539     0.177      0.052  0.113  0.061   -0.064
+RW2-exhaustion-noon-adv150-short-FD  408  graveyard,testing,testing2        99.640  0.120  0.502     0.172      0.066 -0.174 -0.239   -0.346
+CWT14-failbrk-pdl-p10-lowvol-long    299            primary,testing2        83.037  0.251  0.632     0.211      0.045 -0.033 -0.078   -0.244
+CWT13-vwapstretch-z05-long           271            primary,testing2        83.444  0.258  0.642     0.139      0.030 -0.120 -0.149   -0.258
+
+[D] 'cost-killed': gross (before costs) > 0 but net under the lab cost model < 0:
+                                                                         n                     accts  stop_bps_med  lt100  lab_cost  live_cost  gross    net  net_lab  cost_share
+strategy                                                                                                                                                                         
+MF3-open-flowsell-rsi5hi                                                44           primary,testing        57.560  0.909     0.377      0.105  0.089 -0.015   -0.288       4.231
+MF5-flowsell-vwapup-rsi5hi                                              86  primary,testing,testing2        55.117  0.872     0.339      0.075  0.003 -0.071   -0.335      99.636
+MF2-open-rsimidhi-flowsell-FD                                          124           primary,testing        69.597  0.758     0.279      0.013  0.133  0.121   -0.146       2.096
+NS4-pm-vwap-reclaim-oversold-short                                      30          primary,testing2        67.257  0.700     0.262      0.124  0.153  0.029   -0.109       1.713
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long  183                       gen        95.113  0.530     0.231      0.115  0.182  0.066   -0.049       1.273
+NS5-sma50-flush-oversold-long                                           31           primary,testing       138.689  0.258     0.190      0.082  0.145  0.064   -0.045       1.306
+ST4-emadn-long-am-t1s05-FD                                              35         graveyard,testing       131.033  0.314     0.185      0.118  0.049 -0.068   -0.136       3.743
+RW7-gapdn-bounce-early-short-FD                                        436                   testing        95.025  0.539     0.177      0.052  0.113  0.061   -0.064       1.564
+RW1-gapdn-bounce-flowsell-short-FD                                     108          testing,testing2       102.664  0.491     0.163      0.033  0.121  0.088   -0.042       1.351
+L3-gap-slope-lowdist-FD                                                 72                   testing       164.738  0.139     0.150      0.069  0.135  0.067   -0.014       1.107
+L3-gap-slope-rsi5hi-FD                                                  90  primary,testing,testing2       200.104  0.078     0.145      0.016  0.079  0.063   -0.066       1.847
+CWT09-gapdn-bounce-g5-lowerhalf-short                                  141        graveyard,testing2       249.224  0.135     0.132      0.059  0.035 -0.024   -0.097       3.794
+GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short       47                       gen       168.026  0.149     0.101      0.033  0.004 -0.029   -0.097      28.317
+GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long        35                       gen       141.237  0.114     0.093      0.016  0.061  0.045   -0.032       1.534
+
+[E] setups that lose BEFORE costs (gross <= 0): wider stops cannot fix these: 71 of 91 | trades 13568 of 15665
+
+[F] by stop quartile (all trades): live cost, lab cost, gross, net
+             n  stop_bps  live_cost  lab_cost  gross    net
+q                                                          
+Q1 tight  4154    43.698     -0.125     0.421 -0.297 -0.172
+Q2        4154    76.139      0.054     0.206 -0.069 -0.124
+Q3        4153   117.765      0.072     0.152 -0.060 -0.131
+Q4 wide   4154   221.917      0.058     0.092 -0.042 -0.100
+
+cost-killed setups: 14 of 91; their median stop 117bp vs all 108bp
+Educational only - not financial advice.
