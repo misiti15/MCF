@@ -1,0 +1,274 @@
+{
+ "window": "the rest of today (where SPY closes vs its open)",
+ "why": "COMPASS-5M (research/compass_5m/NOTES.md): no state, 5-, 10- or 15-min, calls SPY's next 5-90 min direction better than ~52% in VALID / FWD; the close-vs-open side is what the compass reads.",
+ "blocks": [
+  {
+   "id": "early",
+   "lo": 585,
+   "hi": 659,
+   "label": "09:45-10:59"
+  },
+  {
+   "id": "mid",
+   "lo": 660,
+   "hi": 779,
+   "label": "11:00-12:59"
+  },
+  {
+   "id": "late",
+   "lo": 780,
+   "hi": 945,
+   "label": "13:00-15:45"
+  }
+ ],
+ "states": {
+  "UP-confirmed": {
+   "early": {
+    "hit": 0.7923,
+    "n": 443,
+    "days": 171,
+    "fwd_hit": 0.75,
+    "fwd_n": 20,
+    "fwd_days": 9
+   },
+   "mid": {
+    "hit": 0.8432,
+    "n": 1180,
+    "days": 217,
+    "fwd_hit": 0.9855,
+    "fwd_n": 69,
+    "fwd_days": 13
+   },
+   "late": {
+    "hit": 0.9242,
+    "n": 1859,
+    "days": 207,
+    "fwd_hit": 1.0,
+    "fwd_n": 96,
+    "fwd_days": 13
+   },
+   "all": {
+    "hit": 0.88,
+    "n": 3482,
+    "days": 267,
+    "fwd_hit": 0.9676,
+    "fwd_n": 185,
+    "fwd_days": 17
+   }
+  },
+  "leaning up": {
+   "early": {
+    "hit": 0.6455,
+    "n": 567,
+    "days": 287,
+    "fwd_hit": 0.7667,
+    "fwd_n": 30,
+    "fwd_days": 14
+   },
+   "mid": {
+    "hit": 0.6354,
+    "n": 491,
+    "days": 184,
+    "fwd_hit": 0.6452,
+    "fwd_n": 31,
+    "fwd_days": 14
+   },
+   "late": {
+    "hit": 0.7096,
+    "n": 544,
+    "days": 132,
+    "fwd_hit": 0.9535,
+    "fwd_n": 43,
+    "fwd_days": 10
+   },
+   "all": {
+    "hit": 0.6642,
+    "n": 1602,
+    "days": 328,
+    "fwd_hit": 0.8077,
+    "fwd_n": 104,
+    "fwd_days": 19
+   }
+  },
+  "mixed": {
+   "early": {
+    "hit": 0.4728,
+    "n": 239,
+    "days": 160,
+    "fwd_hit": 0.6875,
+    "fwd_n": 16,
+    "fwd_days": 10
+   },
+   "mid": {
+    "hit": 0.5161,
+    "n": 279,
+    "days": 140,
+    "fwd_hit": 0.75,
+    "fwd_n": 16,
+    "fwd_days": 7
+   },
+   "late": {
+    "hit": 0.4452,
+    "n": 283,
+    "days": 108,
+    "fwd_hit": 0.6429,
+    "fwd_n": 28,
+    "fwd_days": 6
+   },
+   "all": {
+    "hit": 0.4782,
+    "n": 801,
+    "days": 256,
+    "fwd_hit": 0.6833,
+    "fwd_n": 60,
+    "fwd_days": 14
+   }
+  },
+  "leaning down": {
+   "early": {
+    "hit": 0.6741,
+    "n": 491,
+    "days": 277,
+    "fwd_hit": 0.5172,
+    "fwd_n": 29,
+    "fwd_days": 15
+   },
+   "mid": {
+    "hit": 0.714,
+    "n": 493,
+    "days": 188,
+    "fwd_hit": 0.619,
+    "fwd_n": 21,
+    "fwd_days": 8
+   },
+   "late": {
+    "hit": 0.8196,
+    "n": 621,
+    "days": 143,
+    "fwd_hit": 0.3636,
+    "fwd_n": 11,
+    "fwd_days": 5
+   },
+   "all": {
+    "hit": 0.7427,
+    "n": 1605,
+    "days": 322,
+    "fwd_hit": 0.5246,
+    "fwd_n": 61,
+    "fwd_days": 18
+   }
+  },
+  "DOWN-confirmed": {
+   "early": {
+    "hit": 0.8158,
+    "n": 380,
+    "days": 144,
+    "fwd_hit": 0.5333,
+    "fwd_n": 15,
+    "fwd_days": 8
+   },
+   "mid": {
+    "hit": 0.896,
+    "n": 933,
+    "days": 186,
+    "fwd_hit": 0.8974,
+    "fwd_n": 39,
+    "fwd_days": 9
+   },
+   "late": {
+    "hit": 0.9388,
+    "n": 1487,
+    "days": 184,
+    "fwd_hit": 0.9302,
+    "fwd_n": 86,
+    "fwd_days": 8
+   },
+   "all": {
+    "hit": 0.9079,
+    "n": 2800,
+    "days": 236,
+    "fwd_hit": 0.8786,
+    "fwd_n": 140,
+    "fwd_days": 13
+   }
+  },
+  "flipped up": {
+   "early": {
+    "hit": null,
+    "n": 0,
+    "days": 0,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "mid": {
+    "hit": 0.4286,
+    "n": 7,
+    "days": 7,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "late": {
+    "hit": 0.6056,
+    "n": 142,
+    "days": 25,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "all": {
+    "hit": 0.5973,
+    "n": 149,
+    "days": 27,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   }
+  },
+  "flipped down": {
+   "early": {
+    "hit": null,
+    "n": 0,
+    "days": 0,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "mid": {
+    "hit": 0.5556,
+    "n": 9,
+    "days": 8,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "late": {
+    "hit": 0.8355,
+    "n": 152,
+    "days": 26,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   },
+   "all": {
+    "hit": 0.8199,
+    "n": 161,
+    "days": 28,
+    "fwd_hit": null,
+    "fwd_n": 0,
+    "fwd_days": 0
+   }
+  }
+ },
+ "next_hour": {
+  "hit": 0.5351,
+  "n": 5190,
+  "fwd_hit": 0.513,
+  "fwd_n": 269
+ },
+ "periods": "TRAIN 2024-10 + 2025-03..12, VALID 2026-01-01..10-05 (pooled = hit); FWD 2026-10-06..11-04",
+ "unit": "share of 15-min readings (day x mark) in that state after which SPY closed on the stated side of its open",
+ "source": "research/compass_5m/plain_table.py",
+ "disclaimer": "Educational only \u2014 not financial advice."
+}

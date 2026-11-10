@@ -55,7 +55,8 @@ STRONG = 0.003                                    # 30-min checkpoint state: |SP
 NAMES = {2: "UP-confirmed", 1: "leaning up", 0: "mixed", -1: "leaning down", -2: "DOWN-confirmed"}
 COLS = ["date", "T", "spy_fo", "qqq_fo", "iwm_fo", "spy_vwap", "breadth_open", "breadth_n", "v_fo", "v_vwap",
         "v_breadth", "v_agree", "v_persist", "votes", "w60", "w60_low_conf", "agreement", "c30", "c30_at", "checkpoint",
-        "checkpoint_at", "gate1_state", "computed_at", "backfilled"]
+        "checkpoint_at", "gate1_state", "computed_at", "backfilled", "spy_px"]
+PLAIN = Path(__file__).resolve().parent / "compass_plain.json"   # research/compass_5m/plain_table.py (state hit rates)
 
 lab = lambda T: f"{T // 60:02d}:{T % 60:02d}"
 sg = lambda x: 0 if x is None or not np.isfinite(x) else int(np.sign(x))
@@ -79,7 +80,7 @@ def snap(b: pd.DataFrame | None, T: int) -> dict | None:
     tp = ((x.high + x.low + x.close) / 3).values.astype(float)
     v = x.volume.values.astype(float)
     vw = (tp * v).sum() / v.sum() if v.sum() > 0 else np.nan
-    return dict(fo=c[-1] / o - 1, vw=c[-1] / vw - 1 if np.isfinite(vw) else np.nan)
+    return dict(fo=c[-1] / o - 1, vw=c[-1] / vw - 1 if np.isfinite(vw) else np.nan, px=float(c[-1]))
 
 
 def breadth(bars: dict, names: list[str], T: int) -> tuple[float, int]:
@@ -182,7 +183,7 @@ def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = N
             votes=votes, w60=NAMES[w60], w60_low_conf=int(T == 585), agreement=agreement,
             c30=NAMES[c30] if c30 is not None else "", c30_at=lab(cp) if cp else "", checkpoint=chk,
             checkpoint_at=lab(kcp) if kcp else "", gate1_state=gate1(cp) if cp else "",
-            computed_at=f"{now:%Y-%m-%d %H:%M}", backfilled=int(t_now > T + 10)))
+            computed_at=f"{now:%Y-%m-%d %H:%M}", backfilled=int(t_now > T + 10), spy_px=r4(y["spy"]["px"])))
     return rows
 
 
@@ -232,7 +233,72 @@ def _typed(r: dict) -> dict:
     return out
 
 
-def latest(day: str, rows: list[dict], now: pd.Timestamp) -> dict:
+def _pct(x, sign=True) -> str:
+    return f"{'+' if sign and x > 0 else ''}{x * 100:.2f}%".replace("-", "−")
+
+
+def plain(rows: list[dict], day: str, cond: dict | None = None, table: dict | None = None) -> dict | None:
+    """The "In plain English" sub-card (owner 2026-11-10): what the compass expects, for which window, with the measured
+    hit rate of that state (mcf/report/compass_plain.json, built by research/compass_5m/plain_table.py from TRAIN+VALID,
+    FWD shown) + the conditional-stats cell (mcf/report/compass_cond.py) when yesterday's close is known. Rows: typed."""
+    if not rows:
+        return None
+    if table is None:
+        try:
+            table = json.loads(PLAIN.read_text())
+        except (OSError, ValueError):
+            return None
+    L = rows[-1]
+    T = int(str(L["T"])[:2]) * 60 + int(str(L["T"])[3:])
+    fo = L.get("spy_fo")
+    noon = next((r.get("spy_fo") for r in rows if r.get("T") == "12:00"), None)
+    ms = 0 if noon is None else (1 if noon >= 0.002 else (-1 if noon <= -0.002 else 0))
+    flip = -ms if (ms and T >= 735 and fo is not None and np.sign(fo) == -ms) else 0
+    if flip:
+        state, block = ("flipped up" if flip > 0 else "flipped down"), "all"
+    else:
+        state = L.get("w60") or "mixed"
+        block = next((b["id"] for b in table["blocks"] if b["lo"] <= T <= b["hi"]), "late")
+    st = table["states"].get(state, {}).get(block) or {}
+    hit, fwd = st.get("hit"), st.get("fwd_hit")
+    up = "up" in state or "UP" in state
+    side = "ABOVE" if up else "BELOW"
+    pc = lambda v: "–" if v is None else f"{round(v * 100)}%"
+    if state in ("UP-confirmed", "DOWN-confirmed"):
+        head = f"SPY is likely to finish today {side} its open."
+        det = f"When the compass looked like this, SPY closed {side.lower()} its open {pc(hit)} of the time"
+    elif state in ("leaning up", "leaning down"):
+        head = f"SPY is leaning {side} its open — not confirmed yet."
+        det = f"With this reading, SPY closed {side.lower()} its open {pc(hit)} of the time"
+    elif flip:
+        head = f"SPY has flipped back {side} its open since midday."
+        det = f"After a midday flip like this, SPY closed {side.lower()} its open {pc(hit)} of the time"
+    else:
+        head = "No clear direction yet — so far today is a coin flip."
+        det = f"With this reading, SPY closed above its open {pc(hit)} of the time"
+    if hit is None:
+        det = "Too few past days with this reading to give a rate"
+    else:
+        det += f" (on {st.get('days')} past days, 2024-26" + (f"; latest {pc(fwd)} in {st.get('fwd_days')} recent days" if fwd is not None
+                                                      and st.get("fwd_days", 0) >= 5 else "") + ")."
+    nh = table.get("next_hour", {})
+    nxt = (f"Next hour: no reliable read — a confirmed compass called SPY's next 60 minutes right only "
+           f"{pc(nh.get('hit', 0.5))} of the time ({pc(nh.get('fwd_hit', 0.5))} recently), about a coin flip.")
+    cell = None
+    try:
+        from . import compass_cond as CC
+        if cond and str(pd.Timestamp(day) - pd.offsets.BDay(1))[:10] == cond.get("asof_date"):
+            c = CC.lookup(cond, T, fo, L.get("spy_px"))
+            if c and c.get("n", 0) >= 15 and c.get("same_side_open") is not None and fo:
+                cell = (f"At {c['T']} with SPY {_pct(fo)} from its open and {c['side'].replace('prev close', 'yesterday’s close')}, "
+                        f"it finished on the same side of its open in {pc(c['same_side_open'])} of {c['n']} past days.")
+    except Exception:                                   # display only: never fail the compass for the extra line
+        cell = None
+    return dict(window=table.get("window"), state=state, block=block, headline=head, detail=det, hit=hit,
+                days=st.get("days"), fwd_hit=fwd, next_hour=nxt, cell=cell, disclaimer=DISCLAIMER)
+
+
+def latest(day: str, rows: list[dict], now: pd.Timestamp, cond: dict | None = None) -> dict:
     rows = [_typed(r) for r in rows]
     tl = [{k: r.get(k) for k in ("T", "spy_fo", "qqq_fo", "iwm_fo", "agreement", "breadth_open", "votes", "w60",
                                  "w60_low_conf", "c30", "checkpoint", "gate1_state", "backfilled")} for r in rows]
@@ -240,7 +306,7 @@ def latest(day: str, rows: list[dict], now: pd.Timestamp) -> dict:
     t = now.hour * 60 + now.minute
     phase = "pre-open" if not rows else ("closed" if str(now.date()) > day or t >= 960 else "intraday")
     return dict(date=day, asof=last.get("T"), phase=phase, computed_at=f"{now:%Y-%m-%d %H:%M} ET", latest=last,
-                timeline=tl, label=LABEL, disclaimer=DISCLAIMER,
+                timeline=tl, plain=plain(rows, day, cond), label=LABEL, disclaimer=DISCLAIMER,
                 method="research/bdi/gate1/NOTES.md (30-min compass, checkpoint = SPY >= 0.30% from open), "
                        "research/bdi/hc1/NOTES.md (W60 15-min compass); mcf/report/compass_live.py")
 
@@ -273,8 +339,13 @@ def update(out: Path, day: str, now: pd.Timestamp, bars_fn=fetch, names: list[st
             w.writerows(rows)
     lj = out / "compass" / "latest.json"
     prev = json.loads(lj.read_text()) if lj.exists() else {}
-    if new or prev.get("date") != day or not lj.exists():
-        lj.write_text(json.dumps(latest(day, rows, now), indent=1))
+    cj = out / "compass" / "cond_stats.json"
+    try:
+        cond = json.loads(cj.read_text()) if cj.exists() else None
+    except ValueError:
+        cond = None
+    if new or prev.get("date") != day or not lj.exists() or "plain" not in prev:
+        lj.write_text(json.dumps(latest(day, rows, now, cond), indent=1))
     log(f"compass: {day} +{len(new)} marks ({len(rows)} total)" + (f", latest {rows[-1]['T']} W60 {rows[-1]['w60']}, "
         f"checkpoint {rows[-1]['checkpoint'] or '-'}" if rows else ""))
     return len(new)

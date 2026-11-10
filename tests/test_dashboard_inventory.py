@@ -31,6 +31,7 @@ IDS = [
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
     "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
     "cmp-card", "cmp-asof", "cmp-label", "cmp-tiles", "cmp-tab",   # added 2026-11-09 (Market Compass (live))
+    "cmp-plain",   # added 2026-11-10 (Market Compass "In plain English")
     "guild-card", "guild-asof", "guild-head", "guild-bullets", "guild-progress", "guild-next", "guild-roles",
     "guild-roles-list", "guild-link",   # added 2026-11-09 (Research Guild)
 ]

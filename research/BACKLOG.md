@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1031 · coded: 146 · parked: 418 · holdout failed: 23 · configurations tried (all lineages): 32895839
+Total ideas: 1032 · coded: 146 · parked: 419 · holdout failed: 23 · configurations tried (all lineages): 32895865
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -1007,6 +1007,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | guild-1109-sc1-event-gap-and-hold | SC1: event-day gap-and-hold (gap >= 4/6%, opening volume >= 4x) long + short mirror, incl. rework (LOD cap 1.0 ATR / VWAP stop) | Research Guild 2026-11-09 (mcf-guild board; research/guild/1109/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1109-nh1-quiet-top-continuation-long | NH1: long a name pinned near its HOD on a compressed day (range <= 0.5/0.8 ATR, HOD-close <= 0.25 ATR), 09:50-14:00 | Research Guild 2026-11-09 (mcf-guild board; research/guild/1109/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1109-bereplay-breakeven-exits | BEREPLAY: break-even after +0.5R / +0.75R on all lab families + GEN hold -> holdtr | Research Guild 2026-11-09 (mcf-guild board; research/guild/1109/NOTES.md) | – | – | – | – | – | – |
+| parked | l3leash-1110-up-market-leash | L3LEASH: leash Gap-Down Recovery Fade (all day) L3-gap-slope-fromopen-FD on up-market mornings (compass block/scale, time ramp, SPY-from-open skip/half, -1R latch after UP-confirmed) | owner 2026-11-10 (~12:30 ET): cut bad up-market days without giving up good days; research/l3leash/NOTES.md | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

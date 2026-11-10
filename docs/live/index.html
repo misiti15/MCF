@@ -434,10 +434,16 @@ var alp = d => d == null ? null : (d.alpaca_day_pl ?? d.pnl);
 #cmp-card .lbl { font-size: 12px; font-weight: 600; color: var(--ink-2); }
 #cmp-card table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
 #cmp-card td, #cmp-card th { padding: 2px 5px; text-align: right; white-space: nowrap; } #cmp-card td.l, #cmp-card th.l { text-align: left; }
+#cmp-card .cp-plain { border: 1px solid var(--border); border-left: 4px solid var(--muted); border-radius: 8px; padding: 7px 10px; margin: 6px 0 8px; font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+#cmp-card .cp-plain.up { border-left-color: var(--good); color: inherit; } #cmp-card .cp-plain.down { border-left-color: var(--bad); color: inherit; }
+#cmp-card .cp-plain .h { font-weight: 600; font-size: 15px; } #cmp-card .cp-plain .s { font-size: 12px; color: var(--muted); margin-top: 3px; }
 </style>
 <div class="card" id="cmp-card" role="region" aria-label="Market Compass (live)"><h2>Market Compass (live) <span id="cmp-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
   <div class="why">Where the market stands today, read every 15 minutes from 09:45 ET with only the bars so far. Research says the side of the open SPY is on can be read (confirmed readings hold to the close ~80-90% of days); where it goes next is close to a coin flip.</div>
   <div class="lbl" id="cmp-label">Display only — not a trading signal</div>
+  <!-- "In plain English" sub-card (owner 2026-11-10): what the compass expects for the REST OF TODAY (close vs open) with the
+       measured hit rate of the current state (latest.json "plain", mcf/report/compass_plain.json from research/compass_5m). -->
+  <div class="cp-plain" id="cmp-plain" hidden></div>
   <div class="cp-grid" id="cmp-tiles"><div class="empty" style="padding:10px">Loading…</div></div>
   <div class="tablewrap" id="cmp-tab"><div class="empty">–</div></div>
   <div class="note">SPY / QQQ / IWM = % from the day's open. Checkpoint (from 10:30, every 30 min) = UP / DOWN when SPY is at least 0.30% from its open on that side, else UNCONFIRMED (held its side to the close 89% of days in the 2-year research). 15-min reading (W60) = 5 votes: SPY's side of the open, side of VWAP, breadth (share of 200 liquid names above their open), SPY/QQQ/IWM agreement, and the same side at every 15-min mark of the last hour; confirmed = 4+ votes with that persistence; 09:45 is low confidence. 30-min = the GATE1 compass. backfilled = recorded late from the same bars (cron missed). Research: research/bdi/gate1/NOTES.md, research/bdi/hc1/NOTES.md. Educational only — not financial advice.</div>
@@ -453,7 +459,14 @@ var alp = d => d == null ? null : (d.alpaca_day_pl ?? d.pnl);
     const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
     const d = await get(CMP + "compass/latest.json");
     if (!d || !(d.timeline || []).length) { q("#cmp-tiles").innerHTML = `<div class="empty" style="padding:10px">No compass reading yet — the first one is recorded at 09:45 ET.</div>`; q("#cmp-tab").innerHTML = ""; return; }
-    const L = d.latest || {}, isToday = d.date === today;
+    const L = d.latest || {}, isToday = d.date === today, P = d.plain, pb = q("#cmp-plain");
+    if (P && P.headline) {
+      pb.hidden = false;
+      pb.className = "cp-plain" + (/ABOVE/.test(P.headline) ? " up" : /BELOW/.test(P.headline) ? " down" : "");
+      pb.innerHTML = `<div class="lbl">In plain English · window: ${e(P.window || "the rest of today")}${isToday ? "" : " · " + e(d.date)}</div>` +
+        `<div class="h">${e(P.headline)}</div><div>${e(P.detail)}</div>` + (P.cell ? `<div class="s">${e(P.cell)}</div>` : "") +
+        `<div class="s">${e(P.next_hour)}</div><div class="s">${e(P.disclaimer || "Educational only — not financial advice.")}</div>`;
+    } else pb.hidden = true;
     q("#cmp-asof").textContent = isToday ? `· today · as of ${d.asof} ET${d.phase === "closed" ? " (closed)" : ""}` : `· last recorded session ${d.date} · today's first reading at 09:45 ET`;
     const votes = L.votes == null ? "–" : `${L.votes > 0 ? "+" : ""}${L.votes}`;
     q("#cmp-tiles").innerHTML =
