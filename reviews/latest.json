@@ -1,7 +1,17 @@
 {
- "date": "2026-11-09",
+ "date": "2026-11-10",
  "disclaimer": "Educational only \u2014 not financial advice.",
  "today": {
+  "trades": 5,
+  "win_rate": 1.0,
+  "exp_r": 0.493,
+  "total_r": 2.46,
+  "pnl": 53.18,
+  "stop_exit_share": 0.0,
+  "pnl_adj": 53.18,
+  "slip_bps": 30.2
+ },
+ "yesterday": {
   "trades": 3,
   "win_rate": 1.0,
   "exp_r": 0.468,
@@ -11,29 +21,19 @@
   "pnl_adj": 47.11,
   "slip_bps": 10.0
  },
- "yesterday": {
-  "trades": 19,
-  "win_rate": 0.421,
-  "exp_r": -0.059,
-  "total_r": -1.13,
-  "pnl": -59.54,
-  "stop_exit_share": 0.211,
-  "pnl_adj": -60.52,
-  "slip_bps": 3.2
- },
  "rolling5": {
-  "exp_r": -0.061,
-  "win_rate": 0.5,
-  "pnl": 47.35,
-  "slip_bps": -0.85,
-  "stop_exit_share": 0.237
+  "exp_r": 0.115,
+  "win_rate": 0.667,
+  "pnl": 47.27,
+  "slip_bps": 2.767,
+  "stop_exit_share": 0.158
  },
  "rolling20": {
-  "exp_r": -0.061,
-  "win_rate": 0.5,
-  "pnl": 47.35,
-  "slip_bps": -0.85,
-  "stop_exit_share": 0.237
+  "exp_r": 0.115,
+  "win_rate": 0.667,
+  "pnl": 47.27,
+  "slip_bps": 2.767,
+  "stop_exit_share": 0.158
  },
  "beat_rolling5": {
   "exp_r": true,
@@ -42,25 +42,35 @@
   "stop_exit_share": true
  },
  "by_setup": {
+  "CWT05-flush-m075-v3-long": {
+   "trades": 3,
+   "win_rate": 1.0,
+   "exp_r": 0.371,
+   "total_r": 1.11,
+   "pnl": 14.72,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 14.72,
+   "slip_bps": 54.7
+  },
   "CWT12-flag-s1-long": {
    "trades": 1,
    "win_rate": 1.0,
-   "exp_r": 0.507,
-   "total_r": 0.51,
-   "pnl": 6.8,
+   "exp_r": 0.81,
+   "total_r": 0.81,
+   "pnl": 5.58,
    "stop_exit_share": 0.0,
-   "pnl_adj": 6.8,
-   "slip_bps": -1.7
+   "pnl_adj": 5.58,
+   "slip_bps": -11.0
   },
   "NM-ETF-late-dip-di-long": {
-   "trades": 2,
+   "trades": 1,
    "win_rate": 1.0,
-   "exp_r": 0.448,
-   "total_r": 0.9,
-   "pnl": 40.31,
+   "exp_r": 0.54,
+   "total_r": 0.54,
+   "pnl": 32.88,
    "stop_exit_share": 0.0,
-   "pnl_adj": 40.31,
-   "slip_bps": 15.9
+   "pnl_adj": 32.88,
+   "slip_bps": -1.8
   }
  },
  "decisions": [
@@ -68,34 +78,44 @@
    "status": "skipped",
    "reason": "not shortable/ETB",
    "signals": 10,
-   "whatif_exp_r": -0.113,
-   "whatif_total_r": -1.13,
+   "whatif_exp_r": -0.049,
+   "whatif_total_r": -0.49,
    "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 1,
+   "whatif_exp_r": 0.473,
+   "whatif_total_r": 0.47,
+   "verdict": "rule cost us R today"
   }
  ],
  "signals": {
-  "skipped": 10,
-  "submitted": 3
+  "skipped": 11,
+  "submitted": 5
  },
  "health": {
   "polls": 72,
-  "last_poll_s": 6.4,
-  "symbols_last_bar": 2670,
+  "last_poll_s": 8.0,
+  "symbols_last_bar": 2769,
   "last_bar": "15:53",
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
-  "earnings_excluded": 1439,
+  "earnings_excluded": 1251,
   "earnings_source": "nasdaq",
   "earnings_complete": true,
   "partial_lots": [],
   "risk_state": {
    "halted": false,
    "setup_stopped": [],
-   "trades_today": 3,
-   "realized_r": 1.403
+   "trades_today": 5,
+   "realized_r": 2.463
   },
   "flatten_failed": []
  },
- "findings": []
+ "findings": [
+  "Entry slippage averaged 30.2 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency."
+ ]
 }
