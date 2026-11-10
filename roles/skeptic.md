@@ -226,3 +226,15 @@ gap-and-go; unknown-surprise >5% VALID-only). Flagged surprise availability: 'un
 - Vendor fields that fill in later (eps_reported) are a live-availability trap even when history looks complete.
 **Next**
 - D2PM results tonight (premarket cuts). Forward-only pre-registration if anyone wants the AMC fade.
+
+## Run 16 — 2026-11-10 12:45 ET (FAMC forward-shadow audit)
+**State:** FAMC (AMC reaction-session fade, forward-only) frozen; blocked on a point-in-time AMC list (Nasdaq blocked by proxy;
+live snapshot drops 'time'). Options: A store 'time' in live snapshot (housekeeping), D re-run the Nasdaq fetch action.
+**Did:** audited famc_shadow.py + eproc.py: control can include same-day BMO reporters (exclusion uses AMC-only calendar);
+ex-market uses full-window SPY for stopped legs; no snapshot_at < open assert; adv20 matching; clipped-mean caveat.
+**Learned**
+- "Non-event" controls need the FULL event calendar (all timings), not the subset the rule uses.
+- Ex-market adjustments must use each leg's own holding window when stops can end trades early.
+- e-processes with clipping test the clipped mean; report the raw mean beside K.
+**Next**
+- First FAMC nightly rows once a calendar source is decided; D2PM results tonight.
