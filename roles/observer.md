@@ -108,3 +108,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 14 — 2026-11-10 ~09:45 ET (market hours: no data GETs)
 **Learned**: earnings calendar aligned (AMC next session 5.7x normal gap); EVD1 mixed (VALID fade, TRAIN ~0) pending Scout's read; D3GEN: worst-quarter screen ranks live GEN (rho +0.24, p 0.037) -> forward-test hypothesis, no GEN change. D2PM family N 229 (BAR90 2.97). Added Skeptic's 3 reporting cuts (pm $vol + trade-count terciles, SPY day, --universe lab list).
 **After 16:00 ET checklist**: (1) RTH bars: dl.py SKIPS existing files -> fetch 2026-09-24..2026-11-11 for union(1,522 traded + 102 lab extras) into a FRESH dir or move data/cache_hist/1Min aside first; (2) pm_fetch.py 2026-09-24 2026-11-11 union 3; (3) earnings_yf from research-data (scratch rd/); (4) d2pm.py rd/earnings_yf.parquet, then with --universe research/lab_symbols.txt; (5) post failures first; kill line.
+
+## Run 15 — 2026-11-10 ~11:50 ET (market hours)
+**Learned**: EVD1 closed (mixed, by Scout's own rule). FAMC = forward-only AMC fade shadow (no surprise; cap 0.40R; e-process). D3GEN: worst-quarter screen ranks but doesn't rescue. Plumbing: api.nasdaq.com blocked by the proxy here; live earnings snapshots (mcf-data/earnings/<day>.json, ±4 trading days, ~1,400 symbols) store dates only (no BMO/AMC) because mcf/data/earnings.py drops 'time'. Proposed housekeeping fix (A) to Lead.
+**Next**: after 16:00 ET run D2PM per the checklist (run 14). If Lead picks (B) or (C) for FAMC and asks me, build the nightly row.
