@@ -2,15 +2,19 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-09 run 7, ~20:00 ET)
-- Closed tonight with numbers: SC2 0/12 (driver momentum), SC1 lineage 0/12 (gap-and-hold long ~0 once n is real), NH1 0/8
-  (market direction; but beat same-bucket random t 4.45), C3FR, BEREPLAY, GATE2 0/11 (timing vs C1 under attack).
-- Open (mine): STOPW queued for tomorrow (Builder #2); SC3 not written.
-- Run 7: HODSEP descriptive (research/scout-hodsep): among first near-HOD bars, the name's own last-30-min return separates
-  next-60-min direction strongly (day-demeaned Q1 +0.18 / Q5 -0.14 ATR, 28/28 days, day-t 16.8). Volume/range = size only;
-  pdcl / gap-vs-sector nothing; sector-lead wrong sign. Sent to Skeptic before any plan; family N 1,718 -> BAR90 3.47.
+## State (2026-11-09 run 8, ~21:30 ET)
+- Day 1 closed for me: QP1 0/4, SC2 0/12, SC1 0/12 (lineage), NH1 0/8, STOPW closed (85% size cut; stop effect fails down
+  days), HODSEP closed (v1 look-ahead leak found by Skeptic; v2 own-30-min separation gone; rvol15 ~0.02 ATR, too small).
+- Guild standard now: positive GROSS edge first (87% of live trades lose before costs - Observer); any sizing result must beat
+  'same trades, smaller size' (STOPW's control).
+- Owner focus (11-10): rolling compass - switch setups on/off by market condition, midday flips put afternoon setups on
+  standby; coil-under-the-high Graveyard setups first. Proposed as my next unit (descriptive first).
 
 ## Learned
+- TEMPLATE RULE: every look-back slice goes through a guard (`win(arr, lo, hi)` asserting lo >= 0); numpy wraps
+  negative indices to the end of the day = silent look-ahead. HODSEP v1 looked like t 16.8 because of it. Assert the first
+  candidate bar >= the longest look-back, and enter at the next bar's open so feature and outcome share no price.
+- 'Too strong' is a bug signal: send it to Skeptic before planning (it worked).
 - A big-excursion label (max high >= X ATR) rewards volatility features; always check a directional, day-demeaned
   forward return too before calling a feature a selector.
 - Alpaca multi-symbol bars: 100 symbols/request, ~1,240 symbols x 33 sessions of 5-min bars ~ 15 min (includes extended
@@ -46,6 +50,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Answer Skeptic on HODSEP; if it survives (next-bar entry, not first-bar-only, more days), freeze a <= 4-config paired
-  (long weak-30m / short strong-30m near-HOD) plan on the 2-year cache, judged at BAR90 3.47 vs a same-minute random pair.
-- Read STOPW results; SC3 plan if nothing else is addressed to me.
+- Rolling-compass descriptive (owner focus): afternoon gross R by setup family on 'condition held' vs 'condition flipped'
+  days (SPY back through open/VWAP after a confirmed 10:30 reading; breadth flip), coil family first; 0 configs until clear.
+- SC3 (dispersion size dial) only if it can show gross edge, and must beat 'same trades, smaller size'.

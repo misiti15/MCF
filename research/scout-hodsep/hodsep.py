@@ -32,6 +32,13 @@ for (s, d), x in M.groupby(["symbol", "date"]):
     A[(s, d)] = a
 DATES = sorted({d for (_, d) in A}); print(f"symbol-days {len(A)}, sessions {len(DATES)} ({DATES[0]}..{DATES[-1]}), sectors assigned {len(SECTOR)}")
 I950, I1400 = 4, 53                                          # bar index of the 09:50 and 14:00 closes
+B0 = 6                                                       # fix (Skeptic 2026-11-09 21:00): b - 6 must be >= 0 (no negative-index wrap)
+
+
+def win(arr, lo, hi):
+    """slice arr[lo:hi] but refuse a negative start (numpy would wrap to the end of the day = look-ahead)."""
+    assert lo >= 0, f"negative window start {lo}"
+    return arr[lo:hi]
 rows = []
 bysym = {}
 for (s, d) in A: bysym.setdefault(s, []).append(d)
@@ -44,29 +51,33 @@ for s, ds in bysym.items():
         atr, adv, pc, pdcl = inf
         if not (np.isfinite(atr) and atr > 0 and adv >= 60e6 and np.isfinite(pc)): continue
         a = A[(s, d)]; o = a[0, 0]; hod = np.maximum.accumulate(a[:, 1]); lod = np.minimum.accumulate(a[:, 2]); c = a[:, 3]
-        ok = ((hod - c) <= 0.25 * atr) & (c >= o); ok[:I950] = False; ok[I1400 + 1:] = False
+        ok = ((hod - c) <= 0.25 * atr) & (c >= o); ok[:max(I950, B0)] = False; ok[I1400 + 1:] = False
         h = np.flatnonzero(ok)
         if not len(h): continue
-        b = int(h[0]); prev = [A[(s, x)] for x in ds[max(0, k - 20):k]]
-        vn3 = np.mean([p[b - 2:b + 1, 4].sum() for p in prev]); vn6 = np.mean([p[b - 5:b + 1, 4].sum() for p in prev])
+        b = int(h[0]); assert b >= B0; prev = [A[(s, x)] for x in ds[max(0, k - 20):k]]
+        vn3 = np.mean([win(p, b - 2, b + 1)[:, 4].sum() for p in prev]); vn6 = np.mean([win(p, b - 5, b + 1)[:, 4].sum() for p in prev])
         sec = SECTOR.get(s); sa = A.get((sec, d)) if sec else None
-        sr30 = (sa[b, 3] / sa[b - 6, 3] - 1) * 100 if sa is not None else np.nan
+        sr30 = (sa[b, 3] / win(sa, b - 6, b - 5)[0, 3] - 1) * 100 if sa is not None else np.nan
         sgap = (sa[0, 0] / INFO[(sec, d)][2] - 1) * 100 if (sa is not None and (sec, d) in INFO) else np.nan
         fwd = a[b + 1:min(78, b + 13)]
-        if len(fwd) < 6: continue
+        if len(fwd) < 12: continue                           # full 60 min after the bar (b <= 65)
+        e1, e2 = a[b + 1, 0], a[b + 2, 0]                     # entry at the b+1 / b+2 open (no shared price with the feature)
         rows.append(dict(symbol=s, date=d, tod=b, sector=sec, rvol15=a[b - 2:b + 1, 4].sum() / vn3 if vn3 > 0 else np.nan,
                          rvol30=a[b - 5:b + 1, 4].sum() / vn6 if vn6 > 0 else np.nan, sector_ret30=sr30,
-                         sector_minus_stock30=sr30 - (c[b] / c[b - 6] - 1) * 100 if np.isfinite(sr30) else np.nan,
+                         sector_minus_stock30=sr30 - (c[b] / win(c, b - 6, b - 5)[0] - 1) * 100 if np.isfinite(sr30) else np.nan,
+                         stock_ret30=(c[b] / win(c, b - 6, b - 5)[0] - 1) * 100,
                          pdcl=pdcl, gap_vs_sector=(o / pc - 1) * 100 - sgap if np.isfinite(sgap) else np.nan,
                          range_atr=(hod[b] - lod[b]) / atr, fo_atr=(c[b] - o) / atr,
-                         up=float(fwd[:, 1].max() - c[b] >= 0.75 * atr), fwd60=(fwd[-1, 3] - c[b]) / atr))
-X = pd.DataFrame(rows); X.to_csv(sys.path[0] + "/hodsep_rows.csv.gz" if False else f"{DIR}/hodsep_rows.csv.gz", index=False)
+                         up=float(fwd[:, 1].max() - c[b] >= 0.75 * atr), fwd60=(fwd[-1, 3] - c[b]) / atr,
+                         fwd60_o1=(fwd[-1, 3] - e1) / atr, fwd60_o2=(fwd[-1, 3] - e2) / atr))
+X = pd.DataFrame(rows); X.to_csv(f"{DIR}/hodsep_rows_v2.csv.gz", index=False)
+assert (X.tod >= B0).all()
 print(f"candidates {len(X)} on {X.date.nunique()} days; up-mover base rate {X.up.mean():.1%}; mean fwd60 {X.fwd60.mean():+.3f} ATR")
 def auc(f, y):
     m = f.notna(); f, y = f[m], y[m]; r = f.rank(); n1 = y.sum(); n0 = len(y) - n1
     return (r[y == 1].sum() - n1 * (n1 + 1) / 2) / (n1 * n0) if n1 and n0 else np.nan
 half = X.date < DATES[len(DATES) // 2 + 2]
-F = ["rvol15", "rvol30", "sector_ret30", "sector_minus_stock30", "pdcl", "gap_vs_sector", "range_atr", "fo_atr"]
+F = ["rvol15", "rvol30", "stock_ret30", "sector_ret30", "sector_minus_stock30", "pdcl", "gap_vs_sector", "range_atr", "fo_atr"]
 out = []
 for f in F:
     q = pd.qcut(X[f].rank(method="first"), 5, labels=False)
@@ -89,5 +100,16 @@ for f in F:
     if not len(mm_): break
     pct = [float((X[(X.date == r.date)][f] < getattr(r, f)).mean()) for r in mm_.itertuples() if np.isfinite(getattr(r, f))]
     print(f"  {f}: movers' median percentile among same-day candidates {np.median(pct):.2f} (n {len(pct)})")
-R.to_csv(f"{DIR}/hodsep_results.csv", index=False)
+# v2 (Skeptic fix): directional forward move from the b+1 / b+2 open, day-demeaned, per feature quintile
+print("\n--- v2 directional check (fwd 60 min to bar b+12 close, from the b+1 open and the b+2 open; day-demeaned)")
+for col in ("fwd60_o1", "fwd60_o2"):
+    X[col + "_dm"] = X[col] - X.groupby("date")[col].transform("mean")
+for f in ("stock_ret30", "sector_ret30", "sector_minus_stock30", "rvol15", "range_atr", "fo_atr"):
+    q = pd.qcut(X[f].rank(method="first"), 5, labels=False); line = f"{f:22s}"
+    for col in ("fwd60_o1_dm", "fwd60_o2_dm"):
+        d = X.assign(q=q).groupby("date").apply(lambda g: g[col][g.q == 4].mean() - g[col][g.q == 0].mean()).dropna()
+        t = d.mean() / (d.std(ddof=1) / np.sqrt(len(d)))
+        line += f" | {col[:8]} Q1..Q5 {X.groupby(q)[col].mean().round(3).tolist()} Q5-Q1 + {int((d > 0).sum())}/{len(d)} day-t {t:.2f}"
+    print(line)
+R.to_csv(f"{DIR}/hodsep_results_v2.csv", index=False)
 print("Educational only - not financial advice.")

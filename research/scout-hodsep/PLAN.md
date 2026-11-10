@@ -17,3 +17,12 @@ was downloaded. Hindsight labels are used only to describe; nothing here is a tr
   first-half vs second-half dates for stability; days counted. Move Hunt check: each long mover's (non-blackout, decision
   >= 09:50) feature percentile among that day's candidates.
 - Output: the one feature with the clearest, stable separation, then its family N before any plan.
+
+## v1 bug and v2 result (2026-11-09 21:30 ET) — CLOSED
+- **Bug (found by Skeptic):** candidates started at the 09:50 bar (b = 4); `c[b-6]` / `sa[b-6]` wrapped to the same day's
+  15:50 / 15:55 closes, so for 66% of v1 candidates "own 30-min return" was minus the rest-of-day move. v1 numbers are void.
+- **v2 (b >= 6 asserted, `win()` refuses negative starts, entry at the b+1 / b+2 open, day-demeaned):** own 30-min return
+  Q5-Q1 day-t -1.19 / -0.83 (10-11 of 28 days) -> gone. Sector 30-min return day-t -2.2 (small, wrong sign for 'sector leads').
+  Only rvol15 keeps a sign: Q5-Q1 +0.02 ATR in 60 min, day-t 2.8 / 3.7 - a real-looking but tiny selector, below one round
+  trip (same scale as GATE2's timing). Volume and day range still predict move SIZE, not direction.
+- **Verdict:** HODSEP closed as an angle; nothing to plan. Lesson: guard every look-back window against negative indices.
