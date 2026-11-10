@@ -1,23 +1,23 @@
 {
  "date": "2026-11-10",
- "asof": "15:30",
- "phase": "intraday",
- "computed_at": "2026-11-10 15:36 ET",
+ "asof": "15:45",
+ "phase": "closed",
+ "computed_at": "2026-11-10 16:11 ET",
  "latest": {
   "date": "2026-11-10",
-  "T": "15:30",
-  "spy_fo": 0.00195,
-  "qqq_fo": 0.00244,
-  "iwm_fo": 0.00154,
-  "spy_vwap": 0.00174,
-  "breadth_open": 0.515,
+  "T": "15:45",
+  "spy_fo": 0.00178,
+  "qqq_fo": 0.00123,
+  "iwm_fo": 0.00129,
+  "spy_vwap": 0.0015,
+  "breadth_open": 0.5,
   "breadth_n": 200,
   "v_fo": 1,
   "v_vwap": 1,
-  "v_breadth": 1,
+  "v_breadth": 0,
   "v_agree": 1,
   "v_persist": 1,
-  "votes": 5,
+  "votes": 4,
   "w60": "UP-confirmed",
   "w60_low_conf": 0,
   "agreement": "all up",
@@ -26,8 +26,9 @@
   "checkpoint": "UNCONFIRMED",
   "checkpoint_at": "15:30",
   "gate1_state": "UP",
-  "computed_at": "2026-11-10 15:36",
-  "backfilled": 0
+  "computed_at": "2026-11-10 16:11",
+  "backfilled": 1,
+  "spy_px": 749.27
  },
  "timeline": [
   {
@@ -389,8 +390,36 @@
    "checkpoint": "UNCONFIRMED",
    "gate1_state": "UP",
    "backfilled": 0
+  },
+  {
+   "T": "15:45",
+   "spy_fo": 0.00178,
+   "qqq_fo": 0.00123,
+   "iwm_fo": 0.00129,
+   "agreement": "all up",
+   "breadth_open": 0.5,
+   "votes": 4,
+   "w60": "UP-confirmed",
+   "w60_low_conf": 0,
+   "c30": "UP-confirmed",
+   "checkpoint": "UNCONFIRMED",
+   "gate1_state": "UP",
+   "backfilled": 1
   }
  ],
+ "plain": {
+  "window": "the rest of today (where SPY closes vs its open)",
+  "state": "flipped up",
+  "block": "all",
+  "headline": "SPY has flipped back ABOVE its open since midday.",
+  "detail": "After a midday flip like this, SPY closed above its open 60% of the time (on 27 past days, 2024-26).",
+  "hit": 0.5973,
+  "days": 27,
+  "fwd_hit": null,
+  "next_hour": "Next hour: no reliable read \u2014 a confirmed compass called SPY's next 60 minutes right only 54% of the time (51% recently), about a coin flip.",
+  "cell": "At 15:40 with SPY +0.18% from its open and below yesterday\u2019s close, it finished on the same side of its open in 62% of 16 past days.",
+  "disclaimer": "Educational only \u2014 not financial advice."
+ },
  "label": "Display only \u2014 not a trading signal",
  "disclaimer": "Educational only \u2014 not financial advice.",
  "method": "research/bdi/gate1/NOTES.md (30-min compass, checkpoint = SPY >= 0.30% from open), research/bdi/hc1/NOTES.md (W60 15-min compass); mcf/report/compass_live.py"
