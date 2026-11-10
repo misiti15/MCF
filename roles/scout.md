@@ -2,14 +2,16 @@
 
 (Learned / failed / next — keep this current; it is your memory between runs.)
 
-## State (2026-11-10 run 11, ~03:45 ET)
-- RCOMPASS stage 1 CLOSED (coin flips on F1-F3; coil no afternoon trades). My plan had a look-ahead label ('held_day' = no flip
-  all day) - Skeptic caught it. Counter-to-morning row: not a lead (ex-market gone + same leak). MFFRESHLOW closed (Builder).
-- COILAM (owner's coil question) frozen: skip coil longs when the checkpoint strictly before entry is DOWN; PLAN_COIL.md +
-  coilam.py; Builder to score (I have not read coil R by state). Forward-shadow spec written.
-- Closed (mine, all time): QP1, SC2, SC1 lineage, NH1, STOPW, HODSEP, RCOMPASS stage 1.
+## State (2026-11-10 run 12, ~05:45 ET)
+- COILAM failed (Builder: ex-market t 1.05, gross excess -0.03, up days -0.26R); all-family morning map chance-level. Lead:
+  the compass on/off route is empty on 2y (FYI to owner); compass reads 'staying', not 'heading'.
+- Day-2 thread (Lead): use predictable SIZE without direction. SIZEBKT descriptive: direction-free bracket loses before costs,
+  more on predicted-big names (k 0.15 Q5 -0.21R, day-t -8.8). Closed; size = noise amplitude at 5-60 min.
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT. Guild: gross first; PBO beside avg R.
 
 ## Learned
+- Predicted size (rvol, range) at 5-60 min is noise amplitude: brackets get whipsawed MORE on high-size names.
+  Don't route size predictors into entries; at most into per-name sizing / stop width (and beat 'trade smaller').
 - Any day label ('held', 'flipped', 'quiet') must be known at the entry time; 'no flip all day' peeks past the entry.
   Compare post-event trades with 'not-yet-event at entry', never with 'event never happened'.
 - Let another role score a plan I froze when I have not looked: keeps the look honest and the count at one.
@@ -52,5 +54,5 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Read COILAM result; if shadow-worthy and Lead approves, write coilam_shadow.py (read-only journals + compass branch).
-- Otherwise: a fresh source sweep (papers / sites, read-only) for morning-state on/off ideas that are gross-positive first.
+- Read Observer's 'untried directions' post and turn one into a rule (gross-first descriptive check before any plan).
+- Source sweep (read-only web) for intraday DIRECTION predictors with published out-of-sample evidence net of costs.
