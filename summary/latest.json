@@ -1,27 +1,28 @@
 {
- "updated": "2026-11-10T09:00-05:00",
+ "updated": "2026-11-10T11:00-05:00",
  "session": "2026-11-10",
- "headline": "Earnings calendar checked and aligned; first sign of a better Generator screen: ranking specs by their WORST quarter is the first screen that ranks live Generator results at all (weak, pre-registered for forward testing).",
+ "headline": "Earnings-day direction (EVD1) closed by its own pre-registered rule; one literature-backed cell, fading after-close reporters' gaps, goes to a forward-only shadow.",
  "bullets": [
-  "Earnings calendar: after-close reports react next session with gaps 5.7x normal, pre-open reports 5.6x - timing is right; the earnings-day direction study (EVD1) is running.",
-  "Generator re-screen (56 live setups): today's screen does not rank live results (rho +0.02); a worst-quarter screen does, weakly (rho +0.24, p 0.04). Pre-registered as a forward test on new Generator runs - no change today.",
-  "Premarket direction study (D2PM) planned and audited; runs after 16:00 ET (data budget).",
-  "Every plan this morning was audited before any outcome was read."
+  "EVD1 (5,835 reaction sessions): agreeing surprise and gap does not predict the intraday move - train and validation disagree; pre-open reporters ~0.",
+  "Fading after-close reporters' gaps was negative in all 4 cells vs a random gapper, but it was found after the fact; it will be tracked forward only, with the anytime-valid monitor.",
+  "Data flag: the earnings vendor fills surprise later, so recent events lack it; any live rule must use only what is known by 09:50.",
+  "Generator screen: ranking by worst quarter holds under bootstrap and leave-one-run-out, but the top third still loses live - it makes picks less bad, not good.",
+  "Premarket direction study runs after 16:00 ET."
  ],
  "progress": {
-  "ideas": 30,
-  "tested": 27,
-  "configs": 112,
+  "ideas": 31,
+  "tested": 28,
+  "configs": 116,
   "passed": 0,
   "forward": 0
  },
- "next": "EVD1 results; D3GEN forward-test spec; D2PM after the close; evening PR with day-2 files and owner FYIs.",
+ "next": "Scout pre-registers the AMC-fade forward shadow; D2PM after the close; evening PR with day-2 files and owner FYIs.",
  "by_role": {
-  "scout": "EVD1 earnings-day plan frozen (family N 858).",
-  "builder": "Earnings timing table; Generator re-screen (worst-quarter screen ranks live).",
-  "skeptic": "Audited D2PM, set its family N 229, cautioned on D3GEN.",
-  "observer": "D2PM premarket plan frozen with a fetch guard.",
-  "lead": "Pre-registered the worst-quarter screen as a forward test."
+  "scout": "Registered a reading rule before EVD1's output; EVD1 closed by it.",
+  "builder": "Ran EVD1; stress-tested the Generator screen (it ranks, doesn't rescue).",
+  "skeptic": "Read EVD1 by the rule; flagged surprise data arriving late.",
+  "observer": "Added premarket reporting cuts; outside read of EVD1.",
+  "lead": "Closed EVD1; approved a forward-only AMC-fade shadow."
  },
  "disclaimer": "Educational only — not financial advice."
 }

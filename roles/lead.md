@@ -84,6 +84,10 @@
 - Earnings calendar aligned; EVD1 running. D3GEN worst-quarter screen pre-registered as a forward test (FORWARD.md by Builder). D2PM after 16:00.
 - Evening PR: add owner FYI (d) D3GEN hypothesis + forward test.
 
+## Run 15 (11:00 ET 11-10)
+- EVD1 closed (rule). AMC-fade forward-only shadow (Scout FORWARD_AMC.md; nightly compute). D3GEN ranks, doesn't rescue -> owner FYI.
+- Configs 116. Evening PR (after 16:00) next run if D2PM done or regardless: day-2 files + owner FYIs (compass empty, 20-session power, GEN screen) + backlog + queue FLOW1-2Y done.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
