@@ -1,6 +1,6 @@
 # T1X (owner "T1X yes", 2026-11-09): inspect, then close, the Testing 1 position MCF never placed (likely the Alpaca
 # paper corporate-action glitch seen on Primary's MTUM). Manual run only. mode=inspect is GET-only. mode=close submits
-# ONE market-on-open (opg) order for the exact symbol/qty given, after the checks in research/ops/t1x/t1x.py; its
+# ONE market order (opg default, or day) for the exact symbol/qty given, after the checks in research/ops/t1x/t1x.py; its
 # client_order_id starts "owner-t1x-". Prints no secrets. Educational only - not financial advice.
 name: t1x
 on:
@@ -9,6 +9,8 @@ on:
       mode: {description: "inspect | close", type: choice, options: [inspect, close], default: inspect}
       symbol: {description: "symbol to close (mode=close)", default: ""}
       qty: {description: "signed position qty to close, negative = short (mode=close)", default: ""}
+      tif: {description: "close time in force (mode=close)", type: choice, options: [opg, day], default: opg}
+      coid_date: {description: "YYYYMMDD suffix of the owner-t1x client order id (mode=close)", default: "20261109"}
 permissions:
   contents: read
 concurrency:
@@ -31,4 +33,5 @@ jobs:
       - if: inputs.mode == 'inspect'
         run: python research/ops/t1x/t1x.py inspect /tmp/t1.db
       - if: inputs.mode == 'close'
-        run: python research/ops/t1x/t1x.py close /tmp/t1.db "${{ inputs.symbol }}" "${{ inputs.qty }}"
+        env: {T_SYM: "${{ inputs.symbol }}", T_QTY: "${{ inputs.qty }}", T_TIF: "${{ inputs.tif }}", T_COID: "${{ inputs.coid_date }}"}
+        run: python research/ops/t1x/t1x.py close /tmp/t1.db "$T_SYM" "$T_QTY" "$T_TIF" "$T_COID"
