@@ -56,7 +56,12 @@
 - Next-bar entry matters: COMBO1-C3's gross halved (+0.083 -> +0.042R) when entry moved from the signal close.
 - Check helper filters against how config stores fields (GEN geom lives in the module, not the yaml) - print counts.
 
+- Equal-$-risk changes (wider stop, fewer shares) shrink losses in R on a losing book by size alone: always add the
+  size-cut control (BASE x D/D'); STOPW's 'pass' was 85% size cut.
+- GATE2 pullback timing survives a matched control in ATR units (t 4-32) but is ~0.02-0.03 ATR/trade.
+
 ## Failed
+- STOPW 4 (plan bar 'pass', size-cut control: stop effect fails down days), CWT14SKIP closed (blackout-free t 1.05).
 - SC1-R 4 (Amendment 3): 0 pass; more trades erased the +0.355R small-sample lean.
 - C3FR 6, BEREPLAY 3, GATE2 sizing 3: 0 pass.
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
