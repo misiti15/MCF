@@ -261,3 +261,12 @@ limit=50 truncation; advised TRAIN-fitted partial vol exponent if tried.
 - News APIs tag several symbols per item.
 **Next**
 - Option C full-denominator check; FAMC row 1 once a source passes. Anything new Scout/Observer propose for day 3.
+
+## Run 19 — 2026-11-10 18:41 ET (hybrid AMC classifier; PVSCALE; OPTFLOW)
+**State:** my full-denominator ask cut option C precision 0.91 -> 0.58; Observer's HYBRID (news + live pre-open calendar)
+0.887 / recall 0.76. PVSCALE: size band vol-scaled (alpha 0.8, VALID t -4.48); close-side stays M1. OPTFLOW closed.
+**Learned**
+- When the reference labels go stale (Yahoo 'dmh' placeholders), switch to a label-free consistency check (gap on the
+  mapped day vs normal) for forward monitoring of a classifier.
+**Next**
+- FAMC first rows once the nightly builder exists; check the gap-consistency share nightly.
