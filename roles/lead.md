@@ -48,6 +48,12 @@
 - Lesson: mfe-based giveback overstates exit fixes ~10x. Lesson: check skip funnel before freezing.
 - Tomorrow (day 2): Builder C1m -> STOPW -> cwt14_earn; Scout fresh long feature (descriptive first); Observer per-setup stop-width cost table. Quiet-day thread: only the dispersion size dial left.
 
+## Run 8 (21:00 ET)
+- Closed: CWT14SKIP (earnings), STOPW (size cut). Rule: gross edge first (87% of live trades lose before costs). Size-cut control standard for sizing.
+- GATE2 timing real but tiny (0.02-0.03 ATR) -> one rework, N 127, must be net > 0.
+- HODSEP look-ahead bug -> re-run. Observer -> extension-vs-pullback entries book-wide.
+- Next PR: tomorrow evening with day-2 files (research/guild/1110/), backlog status updates (cwt14skip -> parked, stopw -> parked, gate2 rework).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
