@@ -30,7 +30,7 @@ def fetch(a):
         prm["page_token"] = j["next_page_token"]
     if not rows: return sym, "empty"
     d = pd.DataFrame(rows); d.index = pd.to_datetime(d.t, utc=True).dt.tz_convert(ET)
-    d = d.rename(columns={"o": "open", "h": "high", "l": "low", "c": "close", "v": "volume"})[["open", "high", "low", "close", "volume"]]
+    d = d.rename(columns={"o": "open", "h": "high", "l": "low", "c": "close", "v": "volume", "n": "trades"})[["open", "high", "low", "close", "volume"] + (["trades"] if "trades" in d.rename(columns={"n": "trades"}) else [])]
     d = d.between_time("04:00", "09:29")
     d.to_parquet(p); return sym, f"ok {len(d)}"
 if __name__ == "__main__":
