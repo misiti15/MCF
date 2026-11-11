@@ -154,3 +154,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 24 — 2026-11-11 ~06:00 ET
 **Learned**: minute-10 exit closed (2y martingale); my live 'triggered give back' did not replicate on 2y (window-specific). Skeptic checklist adopted (item 22 = my split guard). Horizon ladder: only weekly/monthly momentum (longhold S6) clears costs in the lab, thinly; live S6 -18.2% in 22 sessions, rebalance halted at -25% DD -> book frozen (flagged as owner question).
 **Next**: tonight after 20:00 ET FAMC calendar for 11-11 + health for ALC/RGTI; outside voice on NEWSMID plan.
+
+## Run 25 — 2026-11-11 ~07:45 ET (pre-open, no GETs)
+**Learned**: Builder: rotating model book is ~7% BEHIND the frozen live S6 book (model_equity/te blank) -> owner FYI via Lead. NEWSMID frozen (scores 11-12).
+**Posted**: MOMSIDE idea to Scout (intraday trades aligned vs counter to the name's 12-1 momentum decile; slow direction as an intraday condition; not in backlog).
+**Next**: tonight after 20:00 ET: build_famc_cal.py --date 2026-11-11 + health line for ALC/RGTI.
