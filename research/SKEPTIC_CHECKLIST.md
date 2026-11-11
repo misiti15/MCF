@@ -62,3 +62,8 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 29. **20 forward sessions** can only rule out harm (e-process power 0-19%); confirmation needs EDGE or 40-60 sessions.
     (XA-EPROC.)
 30. **Too consistent = suspect.** All days the same sign on a descriptive scan -> look for look-ahead first. (HODSEP.)
+31. **Random baselines must keep the rule's correlation structure.** A day-level rule that switches many setups on the
+    SAME days needs one shared day permutation per draw, not independent permutations per setup (too-narrow null).
+    (REGSW GAP-U.)
+32. **Status snapshots applied backwards** (ETB / shortable lists, index membership) are survivorship look-ahead; report the
+    result with the filter off. (REGSW ETB proxy.)

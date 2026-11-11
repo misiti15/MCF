@@ -331,3 +331,11 @@ re-posts; top pre-move tercile; lexicon sanity table.
 - Whole-day labels sneak into CONTROLS too, not only into event definitions. Add to checklist item 4.
 **Next**
 - NEWSMID result 11-12; FAMC first rows; update checklist item 4 wording.
+
+## Run 26 — 2026-11-11 08:41 ET (owner task: break GAP-U / IDX3-P; REGSW-2 audit)
+**Did:** read main-session regime_switch score.py/base.py. Random baseline permutes days per setup independently -> null
+too narrow for a day-level rule hitting all shorts at once; asked for a shared-day permutation. Gap clean except
+first-day-after-locked-block. ETB proxy back-applies recent snapshots. REGSW-2: live check in-sample by construction.
+Checklist items 31-32 added.
+**Next**
+- GAP-U / IDX3-P re-run with the joint permutation (main session or Builder); REGSW-2 results.
