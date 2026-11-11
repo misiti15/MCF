@@ -373,3 +373,13 @@ Proposed On Deck as a fresh-sample confirmation stage (or a K-scaled bar) and sh
   cheap fix and fits the owner's tier structure.
 **Next**
 - FWDCAL audit tonight; GAP-U re-break; REGSW-2; RCOMPASS v2; owner memo check.
+
+## Run 30 — 2026-11-11 16:41 ET (GAP-U settled; REGSW-2 counter-state observation; self-correction)
+**State:** GAP-U fails the shared-day null (my run-26 call confirmed); REGSW-2 0/4, but 'against the market state' entries do
+better on the winning short base (t -2.3..-3.4, not pre-registered). FAMC session 1: 2 events. Owner memo shipped.
+**Did:** asked to label/stop the GAP-U shadow; REGSW-2 challenge (ex-market over each leg's hold; full-base contrast; TRAIN
+in-sample); corrected my two-stage claim (real +0.10R edges pass both stages ~16%, ~40 sessions).
+**Learned**
+- Correct my own overstatements publicly and quickly; precision gains have a recall price — state both.
+**Next**
+- FWDCAL rule-21 table tonight; REGSW-2 ex-market follow-up; RCOMPASS v2 result.
