@@ -36,9 +36,11 @@ ET = ZoneInfo("America/New_York")
 EQUITY_HISTORY = ROOT / "docs" / "live" / "equity_history.json"
 DISCLAIMER = "Educational only — not financial advice."
 BRANCH = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing2": "mcf-data-testing2", "gen": "mcf-data-gen",
-          "graveyard": "mcf-data-graveyard", "livelab": "mcf-data-livelab", "explore1": "mcf-data-explore1"}
+          "graveyard": "mcf-data-graveyard", "livelab": "mcf-data-livelab", "explore1": "mcf-data-explore1",
+          "testingd": "mcf-data-testingd", "testinge": "mcf-data-testinge", "testingf": "mcf-data-testingf"}
 KEYS = {"primary": "ALPACA", "testing": "ALPACA_TESTING", "testing2": "ALPACA_TESTING2", "gen": "ALPACA_GEN",
-        "graveyard": "ALPACA_GRAVEYARD", "livelab": "ALPACA_LIVELAB", "explore1": "ALPACA_EXPLORE1"}
+        "graveyard": "ALPACA_GRAVEYARD", "livelab": "ALPACA_LIVELAB", "explore1": "ALPACA_EXPLORE1",
+        "testingd": "ALPACA_TESTINGD", "testinge": "ALPACA_TESTINGE", "testingf": "ALPACA_TESTINGF"}
 ABS_TOL, REL_TOL, SYM_TOL = 10.0, 0.02, 1.0
 PAPER_START = 100_000.0
 PAPER = "https://paper-api.alpaca.markets/v2"
