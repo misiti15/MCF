@@ -515,7 +515,7 @@ It is a proposal only.
 - `test_gen_*`: Gen is out of scope. They are expected to be unaffected unless they assert the shared label dict. Run them
   anyway.
 
-**Label changes after the close** (report and dashboard side; the runner keys nothing on labels):
+**Label changes** (report and dashboard side; the runner keys nothing on labels). *Update: the display rename landed on this branch while this plan was being written (commit ac1ad3624, merged here). Check the list below against that commit; only the items it missed are still open, plus ledger entry 1 if it has none.*
 - **Report code:**
   - `mcf/report/assignments.py` (`ACCOUNTS` and the livelab / explore1 loop);
   - `mcf/report/daily_post.py` (`ACCOUNTS` list and the account-name map near line 309);
