@@ -128,3 +128,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 **Learned**: Day-2 closes: D2PM, vol-scaled M1 (keep M1); COMPCAL M1 to owner as DECISION. Option C on full denominator: news-only precision 0.58 (Skeptic right; my 0.91 was a selected denominator). HYBRID (fresh evening earnings headline AND listed for D in live pre-open snapshot mcf-data/earnings/<D>.json) precision 0.887, recall 0.756 over 7 evenings. Yahoo earnings_yf: AMC after 11-02 are 'dmh' placeholders (stale fetch) -> unusable as reference/label for recent dates.
 **Failed**: precision measured on a pre-selected denominator (only calendar names) — lesson: measure a classifier on the population it will scan live.
 **Next**: if Lead/Scout say go, write research/evd1/famc_calendar_build.py (nightly ~20:00 ET, outside market hours, appends famc_calendar.csv with snapshot_at); else fresh direction sources with Scout (OPTFLOW pilot under way).
+
+## Run 19 — 2026-11-10 ~20:00 ET
+**Learned**: PVSCALE adopted for the SIZE line (alpha 0.8); close-side stays M1. OPTFLOW and NEWSDIR closed (direction already in the gap by 09:50). Hybrid approved; I built build_famc_cal.py; first row 11-10 = ALC, RGTI. The live job commits mcf-data state at day END (~14:3x ET) -> git commit times are never pre-open; use 'job HH:MM done D' subject + single-commit check.
+**Duty**: nightly after 20:00 ET run build_famc_cal.py --date <D> (until someone else takes it); post the health line when reaction sessions close.
+**Next**: 11-11 evening: build row for D=11-11; health line for 11-10 flags; outside voice on Scout's next direction source.

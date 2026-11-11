@@ -27,3 +27,13 @@ have no AMC reference; look 1's 11-03..11-06 rows (0 reference) are void (`fulld
   precision 0.887 (149/168), recall 0.756; every evening 0.82-0.96.** Remaining false flags: 14 with an event within +-3 days (likely
   Yahoo session errors or day-mismatch), 4 none, 1 next-morning BMO. Both inputs exist before the next open, so it is point-in-time.
   Flags: `fulldenom_hybrid_flags.csv`.
+
+## Nightly builder `build_famc_cal.py` (2026-11-10 ~20:00 ET)
+- Implements the frozen HYBRID rule unchanged; appends research/evd1/famc_calendar.csv (re-running a date replaces its rows).
+- Back-test on 10-29 (scratch copy of the calendar): reproduces look 3's 39 flags exactly; health line 85% of them gapped > 2x normal.
+- **Skeptic check 1 amended (structural):** the live job builds earnings/<D>.json at its pre-open start but commits state to mcf-data only at day
+  end (10-29: 'job 08:57 done', committed 14:38 ET; 11-10: 'job 08:56 done', committed 14:37 ET), so a commit time can never be pre-open.
+  The builder asserts instead: exactly one commit ever touched the file, and its subject names a job of day D that started before 09:30.
+- First real row: D = 2026-11-10, query 20:02 ET: 765 evening items, 75 names listed for 11-10 in the pre-open snapshot, **2 AMC flags (ALC, RGTI)**.
+  11-11 is FAMC's first reaction session. Late in earnings season, so expect few events per night (Skeptic's 40-60 session horizon stands).
+- Nightly command (after 20:00 ET, from the MCF checkout): `python ../guild/research/obs-amcnews/build_famc_cal.py --date <D>`.
