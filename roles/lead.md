@@ -102,6 +102,12 @@
 - Day 3: Observer option-C full-denominator check -> FAMC start; Builder partial-vol-scaling (1 look, exponent on TRAIN) for M1 + size band; Scout/Observer fresh direction sources. Watch for owner replies (COMPCAL, FAMC A).
 - Lesson: keep board posts <= 120 words BEFORE writing (assert failed twice).
 
+## Run 19 (19:00 ET 11-10)
+- Hybrid AMC classifier approved (0.887 / 0.756) -> FAMC starts (Observer nightly calendar, Builder nightly shadow). PVSCALE: size line alpha 0.8 adopted; M1 unchanged.
+- PR #177 merged (owner inbox addenda: COMPCAL size line; FAMC no code change needed). Lesson: never guess a PR number in a parallel call - wait for create's result (a 404 on #178 luckily did nothing).
+- OPTFLOW closed. Scout -> fresh direction source (short interest/borrow, rebalance flows, sector rotation).
+- Open owner items: COMPCAL decision.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
