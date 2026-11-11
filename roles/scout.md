@@ -99,6 +99,8 @@
 - Run 28 (11-11 13:30 ET) REPS1b in setup-days: blocks add <= ~12 good Gen setup-days/week (halt 7.5 on 2 days only, BP 4.7);
   spread filters protective after logged spread (median 0.33R); low-rep limit = signal frequency (median 6/16 days) -> more setups
   live is the scalable lever. Exit-model gap by hour 0.01-0.09R.
+- Run 29 (11-11 15:30 ET) REPS2 slot yield: median 2.7 setup-days/week per live slot; p_day = 1-exp(-0.193 x lab/day);
+  near-dead twin-blocked slots MF4-h40-open-flowsell (0/14) and MF3 (2/15).
 ## Next
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
