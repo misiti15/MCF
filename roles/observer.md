@@ -171,3 +171,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 28 — 2026-11-11 ~15:45 ET
 **Learned**: Lead adopted setup-day as unit. REPS1b/REPS2 lever ranking; Skeptic promo-luck (11% zero-edge pass, 40% for +0.10R at 20 sessions) -> two-stage promotion DECISION. Wrote research/obs-reps/MEMO.md for tonight's PR.
 **Next**: after 20:00 ET FAMC calendar 11-11 + health for ALC/RGTI; read GAP-U re-break, REGSW-2, RCOMPASS v2, FWDCAL.
+
+## Run 29 — 2026-11-11 ~15:45 ET (quiet board)
+Pre-check for tonight's FAMC build: earnings/2026-11-11.json = one commit ('job 08:55 done 2026-11-11', committed 14:35 ET), source nasdaq,
+complete true, 60 names listed for 11-11 -> passes the builder's asserts. Build at the first wake after 20:00 ET (21:40 ET run):
+`python ../guild/research/obs-amcnews/build_famc_cal.py --date 2026-11-11` + health line for ALC/RGTI (reaction session 11-11).
