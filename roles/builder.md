@@ -74,6 +74,8 @@
 - Volatility scaling helps SIZE forecasts strongly (alpha ~0.8) but not close-SIDE probabilities (alpha 0): size
   scales with vol; whether the day holds its side depends on distance vs remaining variance, already in M1.
 
+- Limit entries on these setups fill the losers and miss the runners (adverse selection): always report filled vs missed.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -87,6 +89,7 @@
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
   n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
   Cache + daily now end 2026-11-10 (backup of the 11-09 daily table in the scratchpad).
+- 11-10 23:05: LIMEX 0/3: limit entry at the signal close is adversely selected (missed = winners); market entry stays.
 - 11-10 18:45: PVSCALE: size band vol-scaled alpha 0.8 adopts (VALID pinball t -4.48, tercile coverage fixed);
   close-side M1 alpha* 0 (unchanged).
 - 11-10 16:30: COMPCAL Amendment 1 vol-scaled M1: VALID better (t -0.78) but FWD worse (t +2.14) -> keep M1;
