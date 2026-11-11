@@ -40,7 +40,12 @@ def snapshot(D):
     m = re.search(r"job (\d\d):(\d\d) done (\d{4}-\d\d-\d\d)", log[0].split("|", 1)[1])
     assert m and m.group(3) == D and int(m.group(1)) * 60 + int(m.group(2)) < 570, f"snapshot commit is not a pre-open job of {D}: {log[0]}"
     first = pd.Timestamp(f"{D} {m.group(1)}:{m.group(2)}", tz=ET)
-    s = json.loads(body)["symbols"]; return {k for k, v in s.items() if D in v}, first
+    j = json.loads(body)
+    # Skeptic skeptic-20261110-2050-1: if Nasdaq failed, blackout() falls back to Alpaca news (complete=false, PAST dates only), so names
+    # reporting on D would be missing. Then the day is UNBUILDABLE, not empty.
+    if j.get("source") != "nasdaq" or j.get("complete") is not True:
+        sys.exit(f"UNBUILDABLE {D}: earnings/{D}.json source={j.get('source')} complete={j.get('complete')} (needs nasdaq + complete)")
+    s = j["symbols"]; return {k for k, v in s.items() if D in v}, first
 def daily(syms, start, end):
     out = {}
     for i in range(0, len(syms), 100):
