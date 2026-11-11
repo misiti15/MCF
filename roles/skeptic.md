@@ -270,3 +270,15 @@ limit=50 truncation; advised TRAIN-fitted partial vol exponent if tried.
   mapped day vs normal) for forward monitoring of a classifier.
 **Next**
 - FAMC first rows once the nightly builder exists; check the gap-consistency share nightly.
+
+## Run 20 — 2026-11-10 20:41 ET (FAMC calendar check 1 amendment; day-2 tally)
+**State:** FAMC calendar live (11-10: ALC, RGTI), first reaction session 11-11; Builder runs the shadow nightly.
+NEWSDIR closed (headline direction already in the gap by 09:50).
+**Did:** accepted Observer's amended pre-open check (blackout() is a write-once cache); added: assert source=='nasdaq' and
+complete, else unbuildable (fallback has past dates only). Posted a day-2 tally for Lead.
+**Learned**
+- Read the producing code before judging a provenance check: write-once caches make "single commit" a valid proof.
+- Fallback paths in live code can silently change a research input's coverage; assert the source field.
+**Next**
+- FAMC nightly lines (n events small late in the season); health line (gap > 2x share).
+- If the owner shifts to execution/risk on gross-positive setups, pre-audit those plans (size-cut control is standard).
