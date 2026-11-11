@@ -362,3 +362,14 @@ REPS1: exit-model bias by entry hour, halt-skip what-if concentration, HTB virtu
 - Calibrations that pick a free parameter (delay) on the audit sample are tuned audits.
 **Next**
 - FWDCAL audit table tonight; GAP-U re-break; REGSW-2; RCOMPASS v2.
+
+## Run 29 — 2026-11-11 14:41 ET (promotion multiplicity under 'more setups live')
+**State:** all my FWDCAL/REPS1 points adopted. Lead: setup-day is the unit. REPS1b: more setups live is the only lever that
+scales; halt what-if unproven (2 days), buying power +0.13R t 1.7.
+**Did:** simulated promotion luck at live noise: 11% of zero-edge setups flagged after 20 sessions; +0.10R edges ~40%.
+Proposed On Deck as a fresh-sample confirmation stage (or a K-scaled bar) and showing K in promotion suggestions.
+**Learned**
+- Scaling the number of candidates without scaling the bar raises false promotions linearly; two-stage confirmation is the
+  cheap fix and fits the owner's tier structure.
+**Next**
+- FWDCAL audit tonight; GAP-U re-break; REGSW-2; RCOMPASS v2; owner memo check.
