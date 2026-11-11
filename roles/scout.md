@@ -91,6 +91,8 @@
 - Run 25 (11-11 07:50 ET) NEWSMID frozen (A1 Skeptic's six points; A2 lexicon fix from dry-run sanity table). Scorer
   newsmid.py --selftest/--dry/--score; dry funnel 1,341 events / 23 days; re-posts 169. Lesson: a --dry mode that stops at the
   entry bar lets lexicon/funnel bugs be fixed before any outcome is seen.
+- Run 26 (11-11 09:45 ET) COILGAP (owner item 3): coil longs off on SPY gap <= -0.25% -> ex-mkt shared-day z -0.01; closed.
+  Coil switches from market state now 0/2 (COILAM checkpoint, COILGAP gap). Shared-day random switch code: research/coilgap/coilgap.py.
 ## Next
 - One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
   move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).

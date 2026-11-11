@@ -26,3 +26,14 @@ Lineage: REGSW (Builder's REGSW-2 at 103) + 1 = 104 -> BAR90 2.74 to call a lead
 market-state family N 2,605 -> BAR90 3.57 (Lead 11-10).
 Pass (shadow-worthy lead): ex-market z >= 2.74 over ALL, AND z > 0 in TRAIN and in VALID, AND k4 and k6 each not worse than
 their own null mean (per-setup harm), AND the kept book's gross avg R > 0. Below 2.74 -> closed (one look).
+
+## RESULT (one look, 2026-11-11 09:45 ET) — FAIL, COILGAP closed
+`python -I research/coilgap/coilgap.py research/compassbf/coil_tagged.csv.gz <spy cache>` -> `coilgap_out.txt`.
+20,779 coil long trades, 445 days. 107 gap-down days (TRAIN 40 / VALID 67) remove 4,716 trades (22.7%).
+- Removed trades are worse in raw terms (net -0.103 vs kept -0.073 R; gross -0.029 vs -0.002), but almost all of that is the
+  market: ex-market -0.090 vs -0.084.
+- Shared-day random switch, ex-market: ALL z -0.01 (diff -1.4R), TRAIN +0.08, VALID -0.06. Net z +0.56, gross z +0.68.
+- Per setup ex-market: k4 -20.5R (harmed), k6 +20.0R. The kept book's gross avg R is -0.0015 (not > 0).
+- SPY open->close on gap-down days averages -0.008% (vs +0.004% on other days), so the day itself does not keep falling. The
+  coil trades on those days lose through their market beta over their own hold (k4 beta 0.93, k6 2.14).
+Reading: the SPY gap state carries nothing for coil longs beyond market beta, the same as COILAM.
