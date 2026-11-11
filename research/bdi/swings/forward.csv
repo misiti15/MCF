@@ -47,3 +47,20 @@ date,hyp,n,avgR,note,in_sample
 2026-11-09,fb1-flush-chase-shadow,59,-0.508,A (near-LOD shorts) 59 -0.508 vs rest 361 -0.500 (no separation on a trend-up day); Bn (bounce-sold) 168 -0.384 vs -0.578 (right sign),False
 2026-11-09,mh1106-p1,226,0.275,"forward day 1 (SPY +0.69% at 09:50, up-close day): class A 226 win 68% +0.275 vs base 763 +0.561 -> excess -0.286 (wrong sign; matches the 2-year up-close split -0.114)",False
 2026-11-09,swing1109-L11,86,-0.469,"in-sample (lead from 11-09): family shorts 86 (MF / flowsell / L3, 7 accounts), shadow-blocked 70 live -40.32R -> gate gain +40.32R (P 35 +18.58, GY 29 +25.47, T2 6 -3.72); forward from 11-10",True
+2026-11-10,L1,35,-0.243,nightly1110: inverse/vol ETP longs A 35 -0.243 vs same setups elsewhere B 420 +0.118; A - B -0.36 (right sign),False
+2026-11-10,L2,0,,"no rotation trigger (nightly1110); the 10:55-12:45 tech-out rotation (XLK -1.12%, XLP / XLU / XLV / XLF +0.5..+0.7%) had no QQQ new high, so L2's trigger cannot fire on it",False
+2026-11-10,L3,129,-0.394,qualifying up morning (SPY +0.37% / IWM +0.34% at 10:00): family shorts 129 avg -0.394 (right sign),False
+2026-11-10,L6,100,0.328,"nightly1110: counter-index 100 +0.328 vs others 1,194 -0.103; diff +0.431 (wrong sign; opposite of 11-09)",False
+2026-11-10,swing1104-L7,69,0.25,class A shorts with QQQ >= +0.75% (max +1.21% 10:01) 69 +0.250 vs same-setup B 162 -0.269; A - B +0.518 (wrong sign),False
+2026-11-10,swing1104-L8,16,-0.079,IWM min -0.65%: class A 16 -0.079 vs class B 398 +0.194; A - B -0.273 (right sign),False
+2026-11-10,gate1-checkpoint-gate,43,-0.155,"nightly1110 forward_gate1: dropped 43 -6.67R, gated - ungated +6.67R (P +9.06, GY +0.29, Gen -2.68)",False
+2026-11-10,comp15-w60-early,0,,"W60 UP-confirmed 10:00 (first), 30-min 10:30; flipped to DOWN-confirmed 11:30-14:00, UP-confirmed again 15:30 (close +0.27%): early UP right at the close, wrong for 11:30-14:00",False
+2026-11-10,burst1-openloss-latch3,60,,"nightly1110 openloss: shadow - live P +11.29R (24 blocked, 4 better / 0 worse), GY -2.45R (36, 2 better / 3 worse)",False
+2026-11-10,burst2-openloss-latch4,109,-0.19,"forward day 2, 7 accounts: 12 shadow-latched setup-days, 109 blocked taken entries, shadow - live +20.72R (T1 RW7-FD 12:35 45 -25.4R; P RW5 12:31 8 -3.1R, RW3 12:35 2 -0.8R, MF4 14:10 3 -0.9R; Gen GEN-261027-06 12:00 17 +11.3R the other way)",False
+2026-11-10,burst2-flush-gate-short,122,-0.465,"forward day 2: 122 shorts blocked -56.68R -> gate gain +56.68R (Gen 55 +44.0, T2 30 +8.7, P 12 +4.1, T1 6 +1.9, GY 19 -2.0); QQQ 30-min min -0.93%",False
+2026-11-10,swing1105-L9,0,,not qualifying (SPY +0.37% at 09:59),False
+2026-11-10,swing1106-L10,314,-0.202,"forward day 2: class A 314 (192 long, 122 short): live -63.33R vs +0.5R scalp -35.31R -> scalp - live +28.02R (Gen +10.4, GY +10.7, T2 +7.7, P -0.8, T1 0.0)",False
+2026-11-10,fb1-flush-chase-shadow,99,-0.503,"A (near-LOD shorts) 99 -0.503 vs rest 433 -0.284 (right sign, -0.22); Bn (bounce-sold) 101 -0.143 vs -0.367 (right sign)",False
+2026-11-10,mh1106-p1,0,,not qualifying (SPY +0.07% at the 09:50 bar); descriptive class A 225 -0.117 vs base +0.217,False
+2026-11-10,swing1109-L11,26,0.542,"forward day 1: W60 UP-confirmed 10:00-10:44 and 15:30-; 220 family shorts, 26 shadow-blocked live +14.10R -> gate gain -14.10R (P 13 -8.29: L3-fromopen 9 -7.82R; T2 RW3S 13 -5.81R) - wrong way; the 2-year harm was in L3 too",False
+2026-11-10,swing1110-L12,289,,"in-sample (lead from 11-10): flip 14:31 ET (SPY below its open at 12:00); shorts open at the flip closed at the 14:30 bar close, costs in: P 50 lots -23.97R -> -19.28R (+4.69R, 5 setups better / 1 worse), T1 +16.15R, T2 +23.71R, GY +10.37R, Gen +1.36R; total +56.28R",True

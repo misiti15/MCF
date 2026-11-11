@@ -876,5 +876,72 @@
   "link": "research/bdi/nightly1110/NOTES.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "COMPCAL",
+  "title": "Show the compass card's \"finishes this side of the open\" chance as one calibrated line",
+  "what": "The Market Compass card replaces its cell table with one plain line (e.g. \"finishes above its open about 87% of the time\"), with the caveat that it is not a direction forecast. Display only, no trading change.",
+  "recommend": "Yes - display only, not a trading signal",
+  "numbers": [
+   "Brier VALID 0.1241 vs 0.1299 (day-clustered t -2.21)",
+   "FWD 0.1106 vs 0.1191 (t -0.93); calibrated (says 0.78 -> happens 0.78)",
+   "Holding the side has not been profitable to trade (GATE2, 0 of 15)"
+  ],
+  "why": "Out of sample it beats the current cell table and is calibrated; the card keeps the not-a-forecast caveat.",
+  "link": "research/guild/1110/compcal/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "T7c",
+  "title": "Thin Team setups: which go to Primary with the TEAM-6 switch",
+  "what": "Only the Late-Day ETF Dip Buy (NM-ETF-late-dip-di-long) would go Live Lab -> Primary; CWT09-gapdn-vwaploss-g10-short and GEN-261027-01 stay actively traded for more data. Wed lineup = TEAM-6 if the switch is confirmed.",
+  "recommend": "Yes",
+  "numbers": [
+   "TEAM-6 = RW3-FD, RW5-FD, L3-gap-slope-fromopen-FD, ST7-FD, NS5, NM-ETF (3 short / 3 long)"
+  ],
+  "why": "Owner answered ~10:30 ET 11-10; no config change until after the close; the switch itself is decided separately tonight.",
+  "link": "research/owner_inbox/2026-11-10.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-10 ~10:30 ET (owner T7c)"
+ },
+ {
+  "code": "L3LEASH-2",
+  "title": "Re-score the L3LEASH leashes on a universe live can actually short",
+  "what": "Research re-run of the L3 leash study on a shortable lab universe (research only).",
+  "recommend": "Yes",
+  "numbers": [
+   "Gap-Down Recovery Fade (all day) L3-gap-slope-fromopen-FD"
+  ],
+  "why": "Owner answered ~13:30 ET 11-10.",
+  "link": "research/l3leash2/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-10 ~13:30 ET"
+ },
+ {
+  "code": "LEASH-SH",
+  "title": "Run the LEASH forward shadow (no orders)",
+  "what": "Journal-only forward shadow of the leash variants on L3-gap-slope-fromopen-FD; re-score after 20 forward sessions.",
+  "recommend": "Yes",
+  "numbers": [
+   "Forward day 1 (11-10): base +6.26R (18), K11 +3.88R, K12 +6.26R"
+  ],
+  "why": "Owner answered ~13:30 ET 11-10.",
+  "link": "research/l3leash2/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-10 ~13:30 ET"
+ },
+ {
+  "code": "CARD-HIDE",
+  "title": "Dashboard card hiding",
+  "what": "Owner's answer on hiding dashboard cards (handled in session on 11-10).",
+  "recommend": "Optional",
+  "numbers": [
+   "Display only, no trading change"
+  ],
+  "why": "Owner answered on 11-10; recorded here so it is not re-asked.",
+  "link": "research/owner_inbox/2026-11-10.md",
+  "status": "answered",
+  "answered": "answered by the owner, 2026-11-10"
  }
 ]
