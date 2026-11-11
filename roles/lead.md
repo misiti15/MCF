@@ -135,6 +135,10 @@
 - S6 long-hold frozen-book flag -> owner FYI (PR #179 merged). Horizon: only slow momentum clears costs.
 - NEWSMID freeze + score 11-12. FAMC tonight.
 
+## Run 26 (09:00 ET 11-11) — OWNER REGSW TASK
+- Order after 16:00: GAP-U re-break (shared-day null) -> REGSW-2 -> RCOMPASS v2 -> coil gap switch. Bars: REGSW N for lead, 2,605 for Testing.
+- Evening PR: relay to owner that item 3 was answered by RCOMPASS/COILAM + v2 results; GAP-U re-break result (affects main-session shadow).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
