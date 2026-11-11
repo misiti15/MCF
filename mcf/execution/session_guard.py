@@ -24,7 +24,8 @@ import pandas as pd
 
 NY = "America/New_York"
 WINDOW = (time(8, 40), time(15, 30))
-ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1")   # last 2: owner 2026-11-03
+ACCOUNTS = ("primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1",   # livelab/explore1: owner 2026-11-03
+            "testingd", "testinge", "testingf")                                          # Testing D/E/F: owner 2026-11-11
 ACTIVE = {"queued", "in_progress", "waiting", "requested", "pending"}
 MAX_DISPATCHES = 8   # shared with handover.py's successor dispatches (owner 2026-11-05; was 6)
 WORKFLOW = "trade.yml"

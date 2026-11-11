@@ -25,9 +25,10 @@ select { font:inherit; padding:6px 8px; border-radius:8px; border:1px solid var(
 <script>
 (() => {
   const acct = { testing: "mcf-data-testing", testing2: "mcf-data-testing2", gen: "mcf-data-gen", graveyard: "mcf-data-graveyard",
-                 livelab: "mcf-data-livelab", explore1: "mcf-data-explore1" }[new URLSearchParams(location.search).get("account")] || "mcf-data";
+                 livelab: "mcf-data-livelab", explore1: "mcf-data-explore1",
+                 testingd: "mcf-data-testingd", testinge: "mcf-data-testinge", testingf: "mcf-data-testingf" }[new URLSearchParams(location.search).get("account")] || "mcf-data";
   // display names (owner rename 2026-11-11; keys and branches unchanged)
-  const NAME = { testing: "On Deck", testing2: "Testing A", gen: "Setup Generator", graveyard: "Graveyard", livelab: "Testing C", explore1: "Testing B" };
+  const NAME = { testing: "On Deck", testing2: "Testing A", gen: "Setup Generator", graveyard: "Graveyard", livelab: "Testing C", explore1: "Testing B", testingd: "Testing D", testinge: "Testing E", testingf: "Testing F" };
   document.querySelector("h1").textContent += " — " + (NAME[new URLSearchParams(location.search).get("account")] || "Primary");
   const RAW = `https://raw.githubusercontent.com/misiti15/MCF/${acct}/`;
   const sel = document.getElementById("day"), rep = document.getElementById("rep"), csv = document.getElementById("csv");

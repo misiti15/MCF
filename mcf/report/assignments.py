@@ -21,12 +21,14 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "live" / "assignments.json"
 # Display names (owner 2026-11-11 rename; keys unchanged): testing = On Deck (promotion candidates),
-# testing2 / explore1 / livelab = Testing A / B / C (the testing areas).
+# testing2 / explore1 / livelab = Testing A / B / C, testingd / testinge / testingf = Testing D / E / F (the testing areas).
 ACCOUNTS = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Setup Generator"}
 if (ROOT / "config" / "account_graveyard.yaml").exists():      # the Graveyard account, once it exists
     ACCOUNTS["graveyard"] = "Graveyard"
 # Testing C (livelab) + Testing B (explore1) (owner 2026-11-03; renamed 2026-11-11), once their overlays exist
-for _k, _v in (("livelab", "Testing C"), ("explore1", "Testing B")):
+# Testing D / E / F (owner 2026-11-11; testingd / testinge / testingf), once their overlays exist
+for _k, _v in (("livelab", "Testing C"), ("explore1", "Testing B"), ("testingd", "Testing D"), ("testinge", "Testing E"),
+               ("testingf", "Testing F")):
     if (ROOT / "config" / f"account_{_k}.yaml").exists():
         ACCOUNTS[_k] = _v
 # Split copies (owner 2026-10-20, "Goals for copies"): the only accounts where one setup may run twice, each copy on

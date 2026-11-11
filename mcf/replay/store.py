@@ -399,7 +399,8 @@ def frozen_setups(d, branch: str = "origin/mcf-data") -> dict | None:
 
 def build_spreads(branches=("origin/mcf-data", "origin/mcf-data-testing", "origin/mcf-data-testing2",
                              "origin/mcf-data-graveyard", "origin/mcf-data-gen", "origin/mcf-data-livelab",
-                             "origin/mcf-data-explore1")) -> Path:
+                             "origin/mcf-data-explore1", "origin/mcf-data-testingd", "origin/mcf-data-testinge",
+                             "origin/mcf-data-testingf")) -> Path:
     """The live SIP quote spreads the runner journaled at decision time (signals.info spread_bps, every account) ->
     data/replay/spreads.json {symbol: [bps, ...], "_all": [...]}: the replay's quote model samples from them."""
     import json

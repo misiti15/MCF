@@ -52,7 +52,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "research" / "allocation"
 TESTING = ("testing", "testing2")
-LABEL = {"testing": "On Deck", "testing2": "Testing A", "both": "both (split)"}
+LABEL = {"testing": "On Deck", "testing2": "Testing A", "explore1": "Testing B", "livelab": "Testing C", "testingd": "Testing D",
+         "testinge": "Testing E", "testingf": "Testing F", "both": "both (split)"}
 CROWD_REASONS = ("held_by_other", "setup_cap", "daily_loss")
 SPLIT_VERDICTS = ("starved", "crowded-out")
 CONFLICT_W, FD_W, MOVE_W, BALANCE_W = 5.0, 1000.0, 8.0, 0.5
