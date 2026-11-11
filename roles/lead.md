@@ -112,6 +112,11 @@
 - NEWSDIR closed. Day 3 pivot: execution on 14 cost-killed setups (Observer cost table -> Builder limit-entry plan). One direction pilot/day (Scout: unexplained gaps).
 - FAMC live from 11-11 (ALC, RGTI). Owner FYI for next PR: direction hunt vs execution split.
 
+## Run 21 (23:00 ET 11-10)
+- Closed: execution remedy (cost-killed), LIMEX, UNGAP. Opened CONFIRM (stop entry at trigger, k 0.1/0.25, N 10; 2 configs).
+- Scout: what-works live list. Observer: DAY1-3 synthesis -> attach to next PR as owner FYI (with direction-vs-execution FYI).
+- Next PR: after 16:00 11-11: research/guild/1111/, backlog entries (newsdir, ungap, limex, optflow, costkilled), owner FYIs.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

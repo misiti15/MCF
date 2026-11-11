@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T21:00-05:00",
+ "updated": "2026-11-10T23:00-05:00",
  "session": "2026-11-11",
- "headline": "After two days and four new data sources (earnings, premarket, options, news) that carry size but not direction, day 3 shifts the main effort to execution on setups that already make money before costs.",
+ "headline": "Execution is not the fix: cheaper limit entries fill the losers and miss the runners, and no cost-killed setup is net positive as traded. That flips into one new test - entering only once price confirms.",
  "bullets": [
-  "News headlines (NEWSDIR) closed: by 09:50 their direction is already in the gap.",
-  "FAMC (after-close earnings fade) starts tomorrow as a journal-only shadow; first names ALC and RGTI; nightly data and pre-open checks in place.",
-  "Compass size-line spec is ready for the main session (research/pvscale/NOTES.md); COMPCAL still awaits the owner.",
-  "Day-3 plan: compare lab vs real paper costs for 14 setups that are positive before costs, then test limit entries at the signal price on their 2-year lists.",
-  "One direction pilot a day continues (next: gaps with no news behind them)."
+  "Limit entries at the signal price (LIMEX, 0 of 3): the trades they miss earn +0.22R, the ones they fill -0.07R.",
+  "Cost-killed setups: live paper costs are ~1/3 of the lab charge, but only 2 of 17 stay positive without their best day, and both depend on one short-friendly window.",
+  "Unexplained gaps (no news, no sector move) closed: they drift with the gap, not against it, and the pilot's line was the opposite sign.",
+  "Next: one counted confirmation-entry test (CONFIRM); a 'what works' list of live setups positive after costs and without their best day; a 3-day synthesis for the owner.",
+  "FAMC first reaction session is today (ALC, RGTI)."
  ],
  "progress": {
-  "ideas": 37,
-  "tested": 35,
-  "configs": 130,
+  "ideas": 40,
+  "tested": 38,
+  "configs": 134,
   "passed": 0,
   "forward": 1
  },
- "next": "Observer: lab vs live cost per setup; Builder: FAMC nightly + limit-entry plan; Scout: unexplained-gap pilot.",
+ "next": "CONFIRM plan + Skeptic attack; Scout's what-works list; Observer's 3-day synthesis; FAMC nightly.",
  "by_role": {
-  "scout": "NEWSDIR pilot closed by its kill line.",
-  "builder": "Nightly data append and FAMC runner ready; size-band spec written.",
-  "skeptic": "Accepted the pre-open check with a source assert; posted the day-2 tally and the strategic question.",
-  "observer": "Built the nightly earnings-timing list (first flags ALC, RGTI).",
-  "lead": "Shifted day 3 toward execution on gross-positive setups."
+  "scout": "UNGAP pilot closed (wrong sign).",
+  "builder": "LIMEX scored: limit entries are adversely selected.",
+  "skeptic": "Re-checked the two cost-killed survivors (RW7 gone after 11-10).",
+  "observer": "Lab vs live cost table for 17 cost-killed setups; FAMC assert in.",
+  "lead": "Closed execution as a remedy; opened a confirmation-entry test."
  },
  "disclaimer": "Educational only — not financial advice."
 }
