@@ -314,3 +314,10 @@ minute-10 exit: measure post-10 continuation gross, random same-share exit contr
   time is tradable. Check overlap between selection window and outcome window every time.
 **Next**
 - Exit plan if Builder writes it; FAMC first rows (11-11 session).
+
+## Run 24 — 2026-11-11 04:41 ET (checklist)
+**State:** minute-10 exit closed (martingale; 2y and live); DISP1 closed; CONFIRM closed.
+**Did:** wrote research/SKEPTIC_CHECKLIST.md (30 checks, each tied to the study it came from); asked Lead to reference it in
+PROTOCOL so plans run it before freezing.
+**Next**
+- Keep the checklist current; FAMC first nightly row (11-11 session); audit any new plan against the checklist.
