@@ -16,7 +16,7 @@ OLD = {"primary": ("mcf-", "mcf-data", "mcf-trade", None), "testing": ("mct-", "
        "gen": ("mcg-", "mcf-data-gen", "mcf-trade-gen", "GEN"),
        "graveyard": ("mgy-", "mcf-data-graveyard", "mcf-trade-graveyard", "GRAVEYARD")}
 EXPECT = {**OLD, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in NEW.items()}}
-MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1]"
+MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"   # + D/E/F 2026-11-11
 
 
 def _cfg(monkeypatch, acct):

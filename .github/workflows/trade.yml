@@ -24,7 +24,13 @@
 # setup is enabled in its config (the "Setup check" step), so an empty account costs ~1 runner minute, not a session:
 #   ALPACA_LIVELAB_API_KEY, ALPACA_LIVELAB_SECRET_KEY   - "Live Lab" (config/account_livelab.yaml; orders mll-*, state branch mcf-data-livelab)
 #   ALPACA_EXPLORE1_API_KEY, ALPACA_EXPLORE1_SECRET_KEY - "Explore 1" (config/account_explore1.yaml; orders mx1-*, state branch mcf-data-explore1)
-# Market data always comes from the primary SIP keys above (one data key shared by every job).
+# Optional (owner 2026-11-11): Testing D / E / F, same skip rules (both secrets set + at least one enabled setup):
+#   ALPACA_TESTINGD_API_KEY, ALPACA_TESTINGD_SECRET_KEY - "Testing D" (config/account_testingd.yaml; orders mtd-*, state branch mcf-data-testingd)
+#   ALPACA_TESTINGE_API_KEY, ALPACA_TESTINGE_SECRET_KEY - "Testing E" (config/account_testinge.yaml; orders mte-*, state branch mcf-data-testinge)
+#   ALPACA_TESTINGF_API_KEY, ALPACA_TESTINGF_SECRET_KEY - "Testing F" (config/account_testingf.yaml; orders mtf-*, state branch mcf-data-testingf)
+# Market data comes from the primary SIP keys above (ALPACA_API_KEY / ALPACA_SECRET_KEY), shared by every job EXCEPT
+# Testing D / E / F: their jobs map ALPACA_API_KEY / ALPACA_SECRET_KEY to their own account keys (owner 2026-11-11), so
+# their data calls do not draw on the shared key's rate limit. The runner reads data keys only from ALPACA_API_KEY.
 name: trade
 
 on:
@@ -47,20 +53,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        account: [primary, testing, testing2, gen, graveyard, livelab, explore1]
+        account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]
     concurrency:
-      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || (matrix.account == 'gen' && 'mcf-trade-gen' || (matrix.account == 'graveyard' && 'mcf-trade-graveyard' || (matrix.account == 'livelab' && 'mcf-trade-livelab' || (matrix.account == 'explore1' && 'mcf-trade-explore1' || 'mcf-trade-testing'))))) }}
+      group: ${{ matrix.account == 'primary' && 'mcf-trade' || (matrix.account == 'testing2' && 'mcf-trade-testing2' || (matrix.account == 'gen' && 'mcf-trade-gen' || (matrix.account == 'graveyard' && 'mcf-trade-graveyard' || (matrix.account == 'livelab' && 'mcf-trade-livelab' || (matrix.account == 'explore1' && 'mcf-trade-explore1' || (matrix.account == 'testingd' && 'mcf-trade-testingd' || (matrix.account == 'testinge' && 'mcf-trade-testinge' || (matrix.account == 'testingf' && 'mcf-trade-testingf' || 'mcf-trade-testing')))))))) }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 355
     env:
       MCF_ACCOUNT: ${{ matrix.account }}
-      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || 'mct-'))))) }}
-      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || 'mcf-data-testing'))))) }}
-      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
-      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || ''))))) }}
-      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || ''))))) }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || (matrix.account == 'testingd' && 'mtd-' || (matrix.account == 'testinge' && 'mte-' || (matrix.account == 'testingf' && 'mtf-' || 'mct-')))))))) }}
+      STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || (matrix.account == 'testingd' && 'mcf-data-testingd' || (matrix.account == 'testinge' && 'mcf-data-testinge' || (matrix.account == 'testingf' && 'mcf-data-testingf' || 'mcf-data-testing')))))))) }}
+      # Market data: Testing D / E / F (owner 2026-11-11) use their OWN account keys for data too, so the shared SIP data
+      # key's rate limit is not strained; every other account keeps the shared ALPACA_API_KEY / ALPACA_SECRET_KEY.
+      ALPACA_API_KEY: ${{ matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || secrets.ALPACA_API_KEY)) }}
+      ALPACA_SECRET_KEY: ${{ matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || secrets.ALPACA_SECRET_KEY)) }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || '')))))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || '')))))))) }}
       ALPACA_DATA_FEED: sip
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
@@ -76,7 +84,7 @@ jobs:
         id: window
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ] || [ "$MCF_ACCOUNT" = "livelab" ] || [ "$MCF_ACCOUNT" = "explore1" ] || [ "$MCF_ACCOUNT" = "graveyard" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
+          if { [ "$MCF_ACCOUNT" != "primary" ] && [ -z "$ALPACA_TRADE_API_KEY" ]; } || { { [ "$MCF_ACCOUNT" = "testing2" ] || [ "$MCF_ACCOUNT" = "gen" ] || [ "$MCF_ACCOUNT" = "livelab" ] || [ "$MCF_ACCOUNT" = "explore1" ] || [ "$MCF_ACCOUNT" = "testingd" ] || [ "$MCF_ACCOUNT" = "testinge" ] || [ "$MCF_ACCOUNT" = "testingf" ] || [ "$MCF_ACCOUNT" = "graveyard" ]; } && [ -z "$ALPACA_TRADE_SECRET_KEY" ]; }; then echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT account keys not set: skipped"
           elif [ "$dow" -le 5 ] && [ "$now" -ge 0800 ] && [ "$now" -lt 1550 ]; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 08:00-15:50 ET weekdays: nothing to do"; fi
           echo "day=$(TZ=America/New_York date +%F)" >> "$GITHUB_OUTPUT"
           echo "MCF_JOB_T0=$(date +%s)" >> "$GITHUB_ENV"   # job start, for the hand-over below

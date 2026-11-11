@@ -31,6 +31,7 @@ NY = "America/New_York"
 ROOT = Path(__file__).resolve().parents[2]
 BRANCH = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing1": "mcf-data-testing",
           "testing2": "mcf-data-testing2", "explore1": "mcf-data-explore1", "livelab": "mcf-data-livelab",
+          "testingd": "mcf-data-testingd", "testinge": "mcf-data-testinge", "testingf": "mcf-data-testingf",
           "graveyard": "mcf-data-graveyard", "gen": "mcf-data-gen", "longhold": "mcf-data-longhold",
           "hunch": "mcf-data-hunch", "borrow": "mcf-data-borrow"}
 DISCLAIMER = "Educational only — not financial advice"

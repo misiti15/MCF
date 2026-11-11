@@ -1,0 +1,38 @@
+# Testing D paper account (owner 2026-11-11). MCF_ACCOUNT=testingd overlay on config/default.yaml; orders mtd-*, state branch
+# mcf-data-testingd, secrets ALPACA_TESTINGD_API_KEY / ALPACA_TESTINGD_SECRET_KEY. MARKET DATA: this account's OWN keys
+# (trade.yml / watchdog.yml / eod.yml map ALPACA_API_KEY / ALPACA_SECRET_KEY to them for Testing D / E / F only), so its data
+# calls do not draw on the shared SIP data key's rate limit. The trade, watchdog and session-guard jobs skip this account until
+# both secrets are set; the trade job's "Setup check" also skips it while no setup is enabled here (no idle session).
+#
+# Testing area (owner 2026-11-11; ledger 2026-11-11-testing-def-accounts): same base rules as Testing B / C (explore1 / livelab):
+# - sizing: 200 slots and buying_power_multiple 2.0, so capital per slot = equity x 2.0 / 200 = ~$1,000 constant notional per
+#   lot at $100k (mcf/backtest/engine.slot_notional, the same rule as every account); up to 10 open lots per setup (the
+#   Testing B / C per-setup cap; follow B / C if ODX-4 lifts theirs to 30);
+# - max_setup_daily_loss_r: null = no -2R per-setup daily stop (as every testing area since ST-A 2026-10-22); the account daily
+#   stop is the Testing 120R catastrophe backstop; max_stop_cost_r 0.15 = the Testing cost filter (CF 2026-10-29);
+# - full universe (no top_n pool, unlike Testing A); block_twin_same_symbol false and no live scale-out (as B / C).
+#
+# strategies_exclusive: only setups listed under `strategies` below run; every setup of config/default.yaml (Primary +
+# library) is switched off by the loader (mcf/config.py), including setups added there later. Starts EMPTY: no setup is
+# enabled, so nothing trades until the after-close build assigns setups. Each setup added here is a setup move (promotion =
+# move, assignments regenerated in the same commit, a ledger entry, outside 09:30-16:00 ET). Paper account. Educational only -
+# not financial advice.
+strategies_exclusive: true
+account:
+  starting_equity: 100000
+  slots: 200
+  buying_power_multiple: 2.0
+  max_concurrent_positions: 200
+  max_positions_per_strategy: 10
+  max_daily_loss_r: 120
+  max_setup_daily_loss_r: null
+  max_trades_per_day: 1500
+live:
+  max_stop_cost_r: 0.15
+  block_twin_same_symbol: false
+  scale_out_max_per_day: 0
+  retry_after_release: true
+  longs_first_on_ties: true
+  # Priority: narrowest (fewest expected trades/session) first, as in the other testing areas.
+  setup_order: []
+strategies: {}

@@ -53,9 +53,11 @@ DISCLAIMER = "Educational only — not financial advice."
 LABEL = "Shadow — simulated independently; no orders"
 ACCOUNT_BRANCH = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing2": "mcf-data-testing2",
                   "gen": "mcf-data-gen", "graveyard": "mcf-data-graveyard", "explore1": "mcf-data-explore1",
-                  "livelab": "mcf-data-livelab"}
+                  "livelab": "mcf-data-livelab", "testingd": "mcf-data-testingd", "testinge": "mcf-data-testinge",
+                  "testingf": "mcf-data-testingf"}
 ACCOUNT_TAG = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Generator",
-               "graveyard": "Graveyard", "explore1": "Testing B", "livelab": "Testing C"}
+               "graveyard": "Graveyard", "explore1": "Testing B", "livelab": "Testing C", "testingd": "Testing D",
+               "testinge": "Testing E", "testingf": "Testing F"}
 # per-setup keys that would carry an account's own sizing / limits into the Team (the Team sizes every trade the same)
 SIZING_KEYS = ("risk_pct", "risk_per_trade_pct", "risk_mult", "size_mult", "lot_mult", "notional", "max_positions",
                "max_setup_daily_loss_r")

@@ -34,15 +34,21 @@ ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "
             ("testing2", "Testing A", "mcf-data-testing2", "testing area"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
             ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers"),
             ("livelab", "Testing C", "mcf-data-livelab", "testing area"),                    # owner 2026-11-03; renamed 2026-11-11
-            ("explore1", "Testing B", "mcf-data-explore1", "testing area")]   # day-trading only (no S6)
+            ("explore1", "Testing B", "mcf-data-explore1", "testing area"),
+            ("testingd", "Testing D", "mcf-data-testingd", "testing area"),                  # owner 2026-11-11
+            ("testinge", "Testing E", "mcf-data-testinge", "testing area"),
+            ("testingf", "Testing F", "mcf-data-testingf", "testing area")]   # day-trading only (no S6)
 MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
 DAY1 = "2026-10-23"   # owner 2026-10-26: the post's stats (P/L, milestones, chart, last sessions) start at Day 1
 NEW_ACCOUNTS = ("livelab", "explore1")   # owner 2026-11-03 / 2026-11-04: the low-rep homes
 # Owner 2026-11-04: Testing B / Testing C (explore1 / livelab) account TOTALS never show in the post (today card, account P/L, chart, last
 # sessions, quick-facts counts); their SETUPS still count for the day's top setups and the leaderboard (account tag),
 # except a setup that came from the Graveyard (assignments.json "no_leaderboard").
-TOTALS_EXCLUDED = NEW_ACCOUNTS
-LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "livelab", "explore1")
+# Testing D / E / F (owner 2026-11-11): new ~$1k-lot testing areas on the Testing B / C base rules; their totals stay out
+# of the post like B / C (owner may change), their setups count for the leaderboard with the account tag.
+DEF_ACCOUNTS = ("testingd", "testinge", "testingf")
+TOTALS_EXCLUDED = NEW_ACCOUNTS + DEF_ACCOUNTS
+LB_ACCOUNTS = ("primary", "testing", "testing2", "graveyard", "livelab", "explore1", "testingd", "testinge", "testingf")
 CHROME = ["/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell", "/opt/pw-browsers/chromium"]
 
 
@@ -307,7 +313,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
             ls = (date, jd[code]["trades"], jd[code]["r"], jd[code]["pnl"])
         rows.append(dict(setup=code, name=nm.get("name") or r.get("name") or code,
                          acct=" + ".join({"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Setup Generator",
-                                          "graveyard": "Graveyard", "livelab": "Testing C", "explore1": "Testing B"}.get(x, x) for x in a["accounts"]),
+                                          "graveyard": "Graveyard", "livelab": "Testing C", "explore1": "Testing B", "testingd": "Testing D",
+                                          "testinge": "Testing E", "testingf": "Testing F"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
                          win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), exmkt=r.get("exmkt_r"), beta=r.get("beta"), t=r.get("t_stat"),
@@ -604,7 +611,7 @@ def page(body: str, title: str, sub: str) -> str:
 
 
 COLORS = {"primary": "#2563eb", "testing": "#0d9488", "testing2": "#d97706", "gen": "#7c3aed", "graveyard": "#6b7280",
-          "livelab": "#db2777", "explore1": "#0891b2"}
+          "livelab": "#db2777", "explore1": "#0891b2", "testingd": "#65a30d", "testinge": "#c2410c", "testingf": "#4f46e5"}
 
 
 def _chart(accts: list[dict], date: str) -> str:
@@ -719,7 +726,7 @@ def html_facts(date: str, fx: dict) -> str:
                      row("Broker / data", "Alpaca API · paper trading · SIP market data (all US exchanges)"),
                      row("Market", "US stocks and ETFs · intraday only (9:50 AM–3:55 PM ET) · long and short · nothing held overnight"),
                      row("Backtests", "2 years of 1-minute bars, train / validation split, a locked holdout never peeked at, costs in")])
-    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, On Deck, Testing A, Testing B, Testing C, Graveyard'),
+    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, On Deck, Testing A-F, Graveyard'),
                      row("Generated live", f'<b>{fx["gen"]}</b> in the Setup Generator account'),
                      row("Rejected so far", f'<b>~{fx["rejected"]:,}</b> setups failed backtests (plus many more variations)'),
                      row("Built from", "basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs and lows, ATR"),
