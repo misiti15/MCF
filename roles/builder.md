@@ -31,6 +31,8 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- 11-11: a per-setup random null is too narrow for day-level switches; GAP-U's edge vanished with a shared-day null.
+  Against-the-market-state entries beat their setup-day peers book-wide, mostly SPY intraday reversion (ex-market ~30% left).
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
   control (Skeptic), report kept avg R.
 - Lag/peer signals pick names (COMBO1 C3 +0.096R vs random) but opening friction (0.16-0.23R at R 0.25 ATR) kills them;
@@ -88,6 +90,14 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-11 18:00: DONE tonight: FAMC s1 (2 events, +0.611R raw, K 1/1); GAP-U re-test (fails vs shared-day null, VALID
+  +4,538 vs 95th +4,905; ETB off same; posted); REGSW-2 0/4 (base 11 frozen 57911e03c; S2-S4 negative = against-state
+  better; full base t -6, ex-market removes ~70%, residual < 3.57); RCOMPASS v2 0/3 (VALID post-flip BETTER).
+  RUNNING: run_fwdcal.sh (Gen books ~25 min each; D1 sel -> D0 sel -> holdout). Post rule-21 result when it lands
+  (out/audit_d*_sel.csv, out/chosen_delay.txt, out/audit_dD_hold.csv, causes, exitkind).
+  LESSONS: never `git stash -u` while jobs write into the worktree (it unlinked live output files; recovered via
+  /proc/<pid>/fd and reruns). run_evening.sh's --depth=1 data fetches truncate history (fwdcal re-deepens).
+  Don't put `timeout 1500` on rcompass_v2 (~35 min).
 - 11-11 14:45: FWDCAL takes Skeptic's 4 points: config per day via git archive of the default-branch commit at 09:30
   (needs git fetch --shallow-since=2026-10-28 origin claude/intraday-trading-system-witis4), live equity from status.json,
   D picked on 11-04..11-06, rule 21 once on 11-10..11-11, exit-kind gap table. EVENING ORDER: run_evening.sh, then
