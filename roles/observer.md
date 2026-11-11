@@ -150,3 +150,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 **Learned**: CONFIRM closed as entry; skip-part t 19 = path continuity. DISP1 closed. Live minute-10 check: untriggered = martingale after minute 10 (exit adds cost); triggered trades give back -0.03/-0.04 ATR after minute 10 (path-conditioned, flagged to Builder).
 **Failed**: split-adjusted bars vs unadjusted live prices (SOXX 3:1 etc.) -> wild means; ALWAYS price-match bars to fills (3% guard) when joining journals to the cache.
 **Next**: 11-11 after 20:00 ET FAMC calendar + health; read Builder's 2y minute-10 numbers.
+
+## Run 24 — 2026-11-11 ~06:00 ET
+**Learned**: minute-10 exit closed (2y martingale); my live 'triggered give back' did not replicate on 2y (window-specific). Skeptic checklist adopted (item 22 = my split guard). Horizon ladder: only weekly/monthly momentum (longhold S6) clears costs in the lab, thinly; live S6 -18.2% in 22 sessions, rebalance halted at -25% DD -> book frozen (flagged as owner question).
+**Next**: tonight after 20:00 ET FAMC calendar for 11-11 + health for ALC/RGTI; outside voice on NEWSMID plan.
