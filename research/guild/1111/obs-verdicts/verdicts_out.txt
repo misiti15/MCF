@@ -1,0 +1,23 @@
+trades 18878, setups 194, sessions 26 (2026-10-06..2026-11-10)
+
+walk-forward (16 checkpoints, first call per setup, next-5-session outcome on the SAME measure):
+measure method     dir  calls  precision  ci_lo  base   lift  fwd_avg_of_called  wrong_calls  wrong_fwd_avg  median_sessions_at_call
+      R     EB  demote     35      0.657  0.492 0.689 -0.032             -0.093         12.0          0.262                      4.0
+      R     EB promote      7      0.857  0.487 0.282  0.576              0.200          1.0         -0.243                      4.0
+      R  EPROC  demote      0        NaN    NaN   NaN    NaN                NaN          NaN            NaN                      NaN
+      R  EPROC promote      0        NaN    NaN   NaN    NaN                NaN          NaN            NaN                      NaN
+      R    RAW  demote     42      0.643  0.492 0.694 -0.051             -0.080         15.0          0.268                      5.0
+      R    RAW promote     13      0.538  0.291 0.314  0.225              0.096          6.0         -0.234                      5.0
+      x     EB  demote      8      0.375  0.137 0.492 -0.117              0.205          5.0          0.403                      4.5
+      x     EB promote     24      0.375  0.212 0.423 -0.048             -0.065         15.0         -0.239                      4.0
+      x  EPROC  demote      0        NaN    NaN   NaN    NaN                NaN          NaN            NaN                      NaN
+      x  EPROC promote      0        NaN    NaN   NaN    NaN                NaN          NaN            NaN                      NaN
+      x    RAW  demote     20      0.400  0.219 0.525 -0.125              0.156         12.0          0.417                      5.5
+      x    RAW promote     23      0.522  0.330 0.468  0.054              0.007         11.0         -0.248                      4.0
+
+split-half persistence across setups with >= 8 sessions (corr of odd-session avg vs even-session avg):
+   R : setups 71, r -0.072 (Fisher z -0.59)
+   x : setups 71, r +0.163 (Fisher z +1.35)
+
+x = R minus the leave-one-out mean of other setups' trades on the same date and side. Live paper R (after paper costs).
+Educational only - not financial advice.

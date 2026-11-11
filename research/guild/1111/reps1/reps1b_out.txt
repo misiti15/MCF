@@ -1,0 +1,53 @@
+16 sessions (10-20..11-10). Exit-model gap (sim - live gross) by entry hour, submitted trades:
+   9h +0.077 (n 1238)  10h +0.080 (n 6052)  11h +0.059 (n 2655)  12h +0.088 (n 1437)  13h +0.060 (n 1016)  14h +0.042 (n 1121)  15h +0.008 (n 175)
+current submitted setup-days per week: Gen 90.9, low-rep 43.8, other 260.3
+
+GEN: levers ranked by NEW setup-days per week (adj_vs_live = hour-adjusted what-if minus this group's submitted live gross; day_t / best_day_share on per-day differences)
+                                lever  signals  new_setup_days_wk  setups  newday_share  adj_vs_live  day_t  n_days  best_day_share  longs
+     spread filters (bps / % of stop)     1329              8.438      79         0.032        0.083  0.941      15           0.394  0.679
+                         account halt     1061              7.500      40         0.638        0.230    NaN       2           0.830  0.690
+          borrow: not shortable / ETB      428              6.562      28         0.147       -0.004 -1.013      13           4.861  0.000
+                         buying power      967              4.688      53         0.043        0.126  1.707       5           1.221  0.922
+         symbol conflict / twin block      219              1.250      49         0.023        0.183  1.372      10           0.414  0.699
+            execution / timing checks       27              1.250      16         0.148        0.444  1.287       7           0.757  0.926
+             account daily loss limit        4              0.312       3         0.250        0.274    NaN       2           0.642  0.250
+bracket order reject (price rounding)       30              0.312      14         0.067       -0.145  0.118       4             NaN  0.700
+                        minimum price       16              0.000      10         0.000       -0.116  0.051       5             NaN  0.938
+                size / liquidity caps        9              0.000       6         0.000       -0.149 -0.414       4             NaN  0.667
+              per-setup max positions      486              0.000       7         0.000       -0.015 -0.481       6             NaN  0.391
+
+LOW-REP: levers ranked by NEW setup-days per week (adj_vs_live = hour-adjusted what-if minus this group's submitted live gross; day_t / best_day_share on per-day differences)
+                                lever  signals  new_setup_days_wk  setups  newday_share  adj_vs_live  day_t  n_days  best_day_share  longs
+          borrow: not shortable / ETB      490             21.250      22         0.382       -0.018 -2.378      15             NaN  0.000
+     spread filters (bps / % of stop)      202             16.875      30         0.416        0.225  1.380      16           0.457  0.277
+         symbol conflict / twin block      179             10.625      10         0.771       -0.290 -1.334      16             NaN  0.022
+    cost filter (stop+exit cost in R)       69              4.688      17         0.304       -0.214 -1.784       8             NaN  0.493
+                split-tape short gate      100              4.062       5         0.940       -0.416 -1.115       6             NaN  0.000
+                        minimum price        2              0.625       2         1.000       -0.504    NaN       1             NaN  0.000
+                         account halt       10              0.625       2         1.000        0.118    NaN       1           1.000  0.900
+                size / liquidity caps       11              0.625       8         0.182       -0.633 -2.037       5             NaN  0.000
+                         buying power        9              0.312       1         0.333       -0.183    NaN       2             NaN  0.000
+bracket order reject (price rounding)        1              0.000       1         0.000        0.396    NaN       1           1.000  1.000
+                 setup daily loss cap        4              0.000       1         0.000       -0.819    NaN       1             NaN  1.000
+              per-setup max positions       86              0.000       2         0.000       -0.455    NaN       2             NaN  0.779
+
+OTHER: levers ranked by NEW setup-days per week (adj_vs_live = hour-adjusted what-if minus this group's submitted live gross; day_t / best_day_share on per-day differences)
+                                lever  signals  new_setup_days_wk  setups  newday_share  adj_vs_live  day_t  n_days  best_day_share  longs
+          borrow: not shortable / ETB     4538             11.562      40         0.075        0.188  2.833      16           0.270  0.000
+     spread filters (bps / % of stop)     3860             10.625      63         0.013       -0.005  0.134      16           6.489  0.535
+                split-tape short gate      329              4.062      13         0.432        0.083  0.970       8           1.178  0.000
+    cost filter (stop+exit cost in R)      394              2.500      28         0.038        0.022  0.811       8           1.381  0.543
+                         buying power      447              0.938      28         0.009        0.147  1.855       7           0.827  0.729
+            execution / timing checks       34              0.938      11         0.265        0.087  0.355      11           2.757  0.588
+         symbol conflict / twin block      740              0.938      49         0.008       -0.005 -0.667      16           9.250  0.324
+                         account halt       82              0.625       7         0.110        0.145    NaN       1           1.000  0.024
+                        minimum price       15              0.312      10         0.067       -0.251 -0.478       5             NaN  0.733
+             account daily loss limit        1              0.000       1         0.000        0.999    NaN       1           1.000  0.000
+bracket order reject (price rounding)       71              0.000      14         0.000        0.218  0.294       9           0.606  0.831
+              per-setup max positions     1309              0.000      20         0.000        0.119  1.296      15           0.396  0.819
+                 setup daily loss cap     5145              0.000      40         0.000       -0.024  1.607      16           3.880  0.604
+                size / liquidity caps      519              0.000      41         0.000        0.106  0.249      16           0.918  0.434
+
+LOW-REP: 41 setups with any signal; median signal-days 6 of 16, median submitted-days 3; setup-days with a signal but no submission: 129
+HTB / not-shortable skips stay labelled 'virtual' and out of any verdict (Skeptic): squeeze-prone names, no borrow fee.
+Educational only - not financial advice.

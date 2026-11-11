@@ -22,9 +22,13 @@ Testing cost filter from 10-30. Live results are never read without them.
    coin-flip counts (RCOMPASS, COILAM, obs-morningmap).
 5. **Exits and execution don't fix it.** Break-even stops hurt 27 of 27 families (BEREPLAY). Cheaper limit entries are adversely
    selected: the trades a limit misses earn +0.22R, the ones it fills -0.07R (LIMEX). Wider minimum stops were 85% just 'trade smaller' (STOPW).
-6. **What works live is one short family in one window.** One setup x account clears 'positive after costs, positive without its best day,
-   best day < 50%': RW1-gapdn-bounce-flowsell-short-FD in Testing 2 (75 trades, +0.211R; scout WHATWORKS). The 11 near-misses are all shorts,
-   carried by 11-04/11-05. Rule changes (cost filter 10-30) and that sell-off overlap completely.
+6. **What works live is a short bet in a short-friendly window, and the 2-year lab agrees.** One setup x account clears 'positive after
+   costs, positive without its best day, best day < 50%': RW1-gapdn-bounce-flowsell-short-FD in Testing 2 (75 trades, +0.211R; scout
+   WHATWORKS). The 11 near-misses are all shorts, carried by 11-04/11-05. On 2 years every one of them is NEGATIVE (RW1 -0.045, RW3 -0.057,
+   RW5 -0.048, MF2-FD -0.087, MF4-FD -0.087, L3 -0.03/-0.04R) and each is a market-direction bet: +0.08..+0.27R on SPY down days,
+   -0.09..-0.32R on up days (Builder's lab join). Across 74 live setups (scout BOTHDAYS), none earns on both up and down days without its
+   best day; median beta is about +-0.14R per 1% SPY move, and the one direction-free intercept with t >= 2 is fewer than chance would give.
+   So there is no all-weather setup in the book today. The Testing cost filter (10-30) and the sell-off overlap completely.
 
 ## Still open (honestly labelled)
 - **FAMC** — fading after-close earnings gaps, journal-only forward shadow, first session 11-11 (ALC, RGTI). Calendar precision 0.887

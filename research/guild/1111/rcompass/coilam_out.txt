@@ -1,0 +1,21 @@
+coil trades 20779 (445 days); removed by rule 2025 (9.7%); beta per setup (TRAIN): {'CWT12-coil-k4-long': 0.897, 'CWT12-coil-k6-long': 2.075}
+
+== CWT12-coil-k4-long: n 16912, removed 1684 (10.0%); kept gross -0.0115 net -0.0668 | removed gross -0.0511 net -0.1075 ex -0.0274 vs kept ex -0.0152; retention trades 90.0%, top-decile winners 90.4%
+   gross excess -0.0675 t -1.51 days 45 | TRAIN -0.1037 (t -0.91) VALID -0.0557 (t -1.18) | down -0.0502 (n 25) quiet +0.0574 (n 9) up -0.2088 (n 11) | sum -3.04
+   r     excess -0.0770 t -1.68 days 45 | TRAIN -0.1345 (t -1.30) VALID -0.0584 (t -1.14) | down -0.0714 (n 25) quiet +0.0619 (n 9) up -0.2032 (n 11) | sum -3.46
+   ex    excess -0.0010 t -0.03 days 45 | TRAIN -0.0372 (t -0.55) VALID +0.0106 (t 0.25) | down -0.0020 (n 25) quiet +0.0679 (n 9) up -0.0552 (n 11) | sum -0.05
+
+== CWT12-coil-k6-long: n 3867, removed 341 (8.8%); kept gross +0.0471 net -0.0987 | removed gross -0.1897 net -0.3359 ex -0.0979 vs kept ex +0.0125; retention trades 91.2%, top-decile winners 93.0%
+   gross excess +0.0188 t 0.16 days 31 | TRAIN +0.0360 (t 0.26) VALID +0.0137 (t 0.10) | down +0.0811 (n 16) quiet +0.2051 (n 9) up -0.4269 (n 6) | w/o best day -0.0341, best share 2.76
+   r     excess -0.1144 t -0.65 days 31 | TRAIN -0.5495 (t -0.93) VALID +0.0125 (t 0.08) | down -0.1670 (n 16) quiet +0.1773 (n 9) up -0.4116 (n 6) | sum -3.55
+   ex    excess +0.1048 t 1.25 days 31 | TRAIN +0.0847 (t 1.13) VALID +0.1106 (t 1.04) | down +0.0927 (n 16) quiet +0.2219 (n 9) up -0.0387 (n 6) | w/o best day +0.0587, best share 0.46
+
+== ALL: n 20779, removed 2025 (9.7%); kept gross -0.0005 net -0.0728 | removed gross -0.0744 net -0.1460 ex -0.0393 vs kept ex -0.0100; retention trades 90.3%, top-decile winners 90.7%
+   gross excess -0.0287 t -0.55 days 76 | TRAIN -0.0447 (t -0.50) VALID -0.0237 (t -0.38) | down -0.0030 (n 41) quiet +0.1309 (n 18) up -0.2594 (n 17) | sum -2.18
+   r     excess -0.0847 t -1.15 days 76 | TRAIN -0.2841 (t -1.29) VALID -0.0228 (t -0.34) | down -0.0931 (n 41) quiet +0.1293 (n 18) up -0.2912 (n 17) | sum -6.44
+   ex    excess +0.0431 t 1.05 days 76 | TRAIN +0.0027 (t 0.05) VALID +0.0557 (t 1.09) | down +0.0444 (n 41) quiet +0.1521 (n 18) up -0.0755 (n 17) | w/o best day +0.0398, best share 0.47
+
+rule: skip when e_checkpoint == DOWN (strict-< tag); excess = random same-day block minus rule-removed (>0 = rule removes worse);
+ex = gross minus TRAIN beta x signed SPY move over the hold; family N 2605 -> BAR90 3.57 on the ex-market excess t.
+Size control: a skip rule's kept avg vs all-trades avg is the 'trade less' comparison; reported above as kept vs removed.
+Educational only - not financial advice.

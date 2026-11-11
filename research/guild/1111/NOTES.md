@@ -15,3 +15,12 @@ Owner summary of days 1-3: **`obs-synthesis/DAY1-3.md`** (Observer). Locked bloc
 - **FAMC** journal-only forward shadow from 11-11; nightly calendar builder `obs-amcnews/build_famc_cal.py` (hybrid: precision 0.887, recall 0.756; pre-open + source asserts).
 
 Rule-change context: the live window 10-06..11-10 holds many ledger changes (Owner CF cost filter Testing 1/2 from 10-30, UNI1 top-500 11-04, Graveyard moves 11-02/03, ROLL1 11-05, EXPO1109 11-09/10); live survivors' gains sit after 10-30 and overlap the 11-04/05 sell-off.
+
+## Evening 11-11 (owner REGSW and live-reps tasks)
+**Failures first:**
+- **GAP-U re-test** (reporting only; Phase 1 code + Skeptic's fixes, `regsw_rebreak/`): with ONE day permutation shared by all setups, GAP-U-OFF no longer beats its random 95th percentile — VALID +4,538R vs +4,905 (Phase 1 +4,616 vs +3,904), FWD +991 vs +1,102; ETB off the same; IDX3-P and SPYO-P also below. SPY o→c flat on gap days (+0.08% / +0.02%). Phase 1's 'beats random' came from the per-setup null.
+- **REGSW-2** (owner item 2; 4 switches, N 103, BAR90 2.74; `regsw2/`): 0 of 4 on an 11-setup winning base (TRAIN gross > 0 and live net > 0). GAP-U under the shared null everywhere; checkpoint / W60 / SPY-from-open switches turn negative vs random (VALID t −2.31 / −2.78 / −3.42) — trades against the market state did better on this short-heavy base (unregistered; Skeptic: check ex-market and on the full base first).
+- **COILGAP** (owner item 3; 1 look): coil longs off on SPY gap ≤ −0.25% → ex-market z −0.01, closed (second coil shape after COILAM).
+- **DISP1, minute-10 exit, CONFIRM, BOTHDAYS, NEWSMID plan, horizon ladder** — see the board; all closed or descriptive.
+**Live reps (owner top priority):** owner memo `obs-reps/MEMO.md`. Setup-day is the unit (ICC ~0.19; ~4.8 effective trades per session). Levers ranked by new setup-days: more setups live is the only one that scales; Gen halt / buying power small and unproven; filters protective. No verdict rule beats the 69% base rate. Promotion luck (`skeptic-20261111/promo_luck*`): ~11% of zero-edge setups flagged in 20 sessions. FWDCAL (mirror-live replay, `fwdcal/`) result pending.
+**FAMC** forward session 1 (11-11): 2 events, rule − control +0.611R; no alarm (one session).
