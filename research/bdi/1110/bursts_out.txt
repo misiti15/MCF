@@ -1,0 +1,28 @@
+acct | trades | setup-burst entries (n, avg R, sum) | other entries avg R | book-burst entries (n, avg R) | stacks (lots, sum R) | give-back $ (peak t -> close)
+p | 99 | 32 -0.148 -4.7 | -0.396 | 16 -0.563 | 28 -13.3 | +1252 (10:56 +1089 -> -163)
+t1 | 127 | 87 -0.441 -38.4 | -0.164 | 55 -0.406 | 4 +2.2 | +492 (10:00 +8 -> -484)
+t2 | 147 | 84 -0.200 -16.8 | -0.164 | 59 -0.145 | 41 -5.0 | +579 (12:41 +247 -> -333)
+gy | 629 | 433 +0.159 +69.0 | -0.006 | 553 +0.136 | 355 +64.1 | +234 (15:39 +1874 -> +1639)
+gen | 280 | 224 -0.278 -62.4 | +0.044 | 208 -0.291 | 14 -3.9 | +1171 (11:09 +85 -> -1086)
+ex1 | 7 | 0 +nan +0.0 | +0.309 | 0 +nan | 0 +0.0 | +10 (15:53 +20 -> +10)
+ll | 5 | 0 +nan +0.0 | +0.493 | 0 +nan | 0 +0.0 | +0 (15:53 +53 -> +53)
+
+largest setup bursts (by |sum R|):
+  gen `GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short` S 48 entries 10:45-10:50 -43.03R, stops 41
+  gen `GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long` L 18 entries 10:05-10:12 -12.36R, stops 15
+  gen `GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long` L 12 entries 13:55-13:57 -12.02R, stops 9
+  t1 `GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long` L 33 entries 10:05-10:10 -11.80R, stops 20
+  gen `GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long` L 17 entries 12:00-12:02 +11.34R, stops 0
+  gen `GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long` L 48 entries 10:50-10:52 -10.84R, stops 21
+  gy `CWT14-failbrk-orl-p05-lowvol-long` L 21 entries 10:15-10:25 +6.90R, stops 2
+  gen `GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long` L 7 entries 10:36-10:42 +6.60R, stops 0
+  t1 `RW7-gapdn-bounce-early-short-FD` S 8 entries 13:11-13:21 -6.15R, stops 4
+  gy `CWT14-failbrk-orl-p05-long` L 18 entries 10:15-10:25 +5.46R, stops 2
+  gy `CWT14-failbrk-orl-p10-long` L 12 entries 10:15-10:21 +4.95R, stops 0
+  gen `GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long` L 14 entries 09:56-10:05 +4.87R, stops 2
+
+all setup bursts: 108, 860 entries, -53.3R (avg -0.062R vs non-burst -0.086R); bursts with >= 75% stops: 9 (-91.0R)
+
+patterns rows 574, tagged 446
+
+Educational only - not financial advice.

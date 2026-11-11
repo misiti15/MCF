@@ -1,0 +1,40 @@
+SPY days 457 (locked block excluded); flip days 107 (23%); median flip 13:10; false flips (closed back on the morning side) 44
+affected lab trades 23,455 (86 setups, 100 days); actual avg -0.3497R, closed-at-flip avg -0.2781R
+TRAIN: affected 12,196 on 59 flip days | actual -5284.1R (-0.4333) -> at flip -3728.2R (-0.3057) | delta +1555.9R, day-t 2.92, days better 71%; best day 2025-03-04 +313.4R, delta w/o best +1242.5R
+   by dtype: down 3766 trades / 14 days +791.8R; quiet 5576 trades / 31 days +280.1R; up 2854 trades / 14 days +484.0R
+   by s10: above 6886 trades / 35 days +658.8R; below 5310 trades / 24 days +897.0R
+   by ff: False 7905 trades / 39 days +1603.0R; True 4291 trades / 20 days -47.2R
+   by side: -1 6972 trades / 29 days +898.6R; 1 5224 trades / 30 days +657.3R
+VALID: affected 10,162 on 36 flip days | actual -2519.5R (-0.2479) -> at flip -2599.3R (-0.2558) | delta -79.8R, day-t -0.17, days better 64%; best day 2026-09-16 +129.9R, delta w/o best -209.7R
+   by dtype: down 3220 trades / 12 days -139.1R; quiet 4978 trades / 17 days -17.6R; up 1964 trades / 7 days +76.9R
+   by s10: above 5083 trades / 18 days -148.8R; below 5079 trades / 18 days +69.0R
+   by ff: False 4694 trades / 19 days +713.7R; True 5468 trades / 17 days -793.6R
+   by side: -1 5213 trades / 16 days -176.8R; 1 4949 trades / 20 days +97.0R
+LATE: affected 1,097 on 5 flip days | actual -398.6R (-0.3633) -> at flip -196.2R (-0.1788) | delta +202.4R, day-t 2.60, days better 80%; best day 2026-11-02 +90.6R, delta w/o best +111.8R
+   by dtype: down 246 trades / 1 days +90.6R; quiet 851 trades / 4 days +111.8R
+   by s10: above 652 trades / 3 days +156.5R; below 445 trades / 2 days +45.9R
+   by ff: False 764 trades / 3 days +184.9R; True 333 trades / 2 days +17.5R
+   by side: -1 655 trades / 3 days +114.0R; 1 442 trades / 2 days +88.4R
+VALID families (>= 30 affected): 4 better, 5 worse of 9
+   NS: 833 trades, actual -103.5R, delta -67.3R
+   GEN: 355 trades, actual -38.8R, delta -42.2R
+   exhaustion_short: 404 trades, actual -32.3R, delta -22.9R
+   L: 508 trades, actual -33.2R, delta -15.8R
+   RW: 2139 trades, actual -433.8R, delta -8.2R
+   NM: 121 trades, actual -29.1R, delta +4.4R
+   ST: 239 trades, actual -51.1R, delta +12.8R
+   CWT: 5130 trades, actual -1684.7R, delta +28.2R
+   MF: 433 trades, actual -113.0R, delta +31.1R
+VALID setups (>= 30 affected): 22 better / 24 worse; worst 3: RW4-ns3-adv150-short-FD -46.6R; NS3-failed-vwap-reclaim-short-FD -44.1R; GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short -29.4R; best 3: CWT14-failbrk-pdl-p10-long +31.4R; RW3S-gapdn-flowsell-short-FD +35.2R; CWT14-failbrk-pdl-p05-long +42.8R
+VERDICT: VALID t -0.17 vs full 2.66 / BAR90 2.39; TRAIN delta +1555.9R; VALID w/o best -209.7R; families better 4/9 -> FAIL
+
+LIVE 2026-11-10: morning side -1, flip F 14:31 ET
+   p: 50 open lots actual -23.97R -> at flip -19.28R (delta +4.69R); setups better 5 / worse 1
+   t1: 63 open lots actual -29.69R -> at flip -13.55R (delta +16.15R); setups better 4 / worse 1
+   t2: 55 open lots actual -34.94R -> at flip -11.23R (delta +23.71R); setups better 5 / worse 0
+   gy: 85 open lots actual -23.37R -> at flip -13.00R (delta +10.37R); setups better 9 / worse 1
+   gen: 36 open lots actual -3.85R -> at flip -2.49R (delta +1.36R); setups better 7 / worse 3
+   ex1: 0 open on side -1
+   ll: 0 open on side -1
+
+Educational only - not financial advice.

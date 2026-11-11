@@ -47,6 +47,8 @@ live:
     - NM-AR-AM-gapdown-capitulation-long   # swarm1017 near-miss
     - NM-HL-T75-pm-long   # swarm1017 near-miss
     - NM-MF3-qqqdn-gapdn-FD   # ~4.9/day (mf3swarm1020 near-miss M1, owner 2026-10-20)
+    - NS1-rsidip-rsi5pop-long   # from Primary 2026-11-10 (owner Team yes; 09:50-11:30 window)
+    - MF4-h40-open-flowsell   # from Primary 2026-11-10 (owner Team yes; 09:50-11:00 window)
     - CWT13-vwapstretch-z075-short   # 6.14/day
     - RW1-gapdn-bounce-flowsell-short-FD   # 8.29/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
@@ -129,7 +131,7 @@ strategies:
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation, q8]
   NM-ETF-late-dip-di-long:
-    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
+    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); Primary from 2026-11-11 (owner Team yes 2026-11-10)
     type: lab
     module: research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py
     symbols: module
@@ -357,7 +359,9 @@ strategies:
     scale_out_r: null
     twin_group: NS3-T2
     tags: [observation, ns3var1022]
-  MF4-h40-open-flowsell: {enabled: false}
+  MF4-h40-open-flowsell:   # from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); kept apart from its FD twin (Testing 1)
+    enabled: true
+    former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
   # ---- MF5-flowsell-vwapup-rsi5hi: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi:
     enabled: true
@@ -368,7 +372,9 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
     former_primary: {demoted: '2026-10-20', first_testing_session: '2026-10-20', review_after_sessions: 10}
-  NS1-rsidip-rsi5pop-long: {enabled: false}
+  NS1-rsidip-rsi5pop-long:   # from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); Testing 1 holds its twin NS1-rsidip-rsi5pop-long-FD
+    enabled: true
+    former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
   NS2-sma50break-overbought-short: {enabled: false}
   NS3-failed-vwap-reclaim-short: {enabled: false}
   NS4-pm-vwap-reclaim-oversold-short:   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
