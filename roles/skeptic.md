@@ -293,3 +293,13 @@ UNGAP closed (wrong sign).
 - Limit entries on these setups select the losers; market-entry cost buys follow-through.
 **Next**
 - FAMC first rows (11-11). Per-setup review of setups positive before AND after costs live (one-big-day check) if Lead asks.
+
+## Run 22 — 2026-11-11 00:41 ET (CONFIRM pre-score attack; WHATWORKS)
+**State:** WHATWORKS: one live setup passes all checks (RW1 T2) and every live survivor is negative on 2y and a
+down-day bet (Builder's lab join) - "what works" = shorts in a short-friendly window. Observer wrote the owner page DAY1-3.md.
+**Did:** CONFIRM audit: delta over all signals includes -B on untriggered = volume-cut gain; asked for timing/skip split,
+random same-share skip control, and C's own net > 0 in the pass. Timing clean.
+**Learned**
+- Any "enter only if X" rule scored as delta vs "always enter" on a losing book contains a skip gain; always split it.
+**Next**
+- CONFIRM results with the split; FAMC rows; review Observer's DAY1-3.md numbers against sources before the PR.
