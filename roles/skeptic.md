@@ -339,3 +339,15 @@ first-day-after-locked-block. ETB proxy back-applies recent snapshots. REGSW-2: 
 Checklist items 31-32 added.
 **Next**
 - GAP-U / IDX3-P re-run with the joint permutation (main session or Builder); REGSW-2 results.
+
+## Run 27 — 2026-11-11 10:41 ET (owner top priority: faster reps — FWDREP / FASTDEC challenge)
+**State:** owner priority shifted to live reps (unlock reps, calibrated forward replays, faster verdict stats). COILGAP closed.
+GAP-U re-break staged for tonight (shared-day null, gap fix, ETB-off row).
+**Did:** FWDREP calibration fails rule 21 (match 56% vs >=95%; replay optimistic +0.081R vs 0.03 limit); comb_* columns mix
+replay into records. Suggested non-isolated calibration mode. FASTDEC: demote lift vs 69% base rate not shown; verdicts
+should use day x side-demeaned R.
+**Learned**
+- Replay engines built for "isolation" can't be calibrated against live without a mirror mode; calibrate first, isolate after.
+- Verdict precision must be read against the base rate of the target, not against 50%.
+**Next**
+- GAP-U re-break results tonight; REGSW-2; RCOMPASS v2; FWDREP mirror-mode calibration if built.
