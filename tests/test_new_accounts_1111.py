@@ -1,8 +1,8 @@
 """Testing D / E / F paper accounts (owner 2026-11-11; ledger 2026-11-11-testing-def-accounts). Wired like Testing B / C
 (explore1 / livelab): each overlay is exclusive and starts with NO setup enabled (trade.yml's Setup check skips it until the
 after-close build assigns setups), ~$1,000 lots, 10 lots per setup, no -2R per-setup stop, full universe; each routes to its
-own keys / order prefix / state branch / concurrency group, and - unlike every other account - its jobs also use its OWN keys
-for market data (ALPACA_API_KEY / ALPACA_SECRET_KEY mapped per account), so the shared SIP data key is not strained.
+own keys / order prefix / state branch / concurrency group, and - unlike every other account - its jobs can use its OWN keys
+for market data (ALPACA_API_KEY / ALPACA_SECRET_KEY mapped per account, repo variable MCF_DEF_OWN_DATA_KEYS) once they have SIP.
 Educational only - not financial advice."""
 import json
 from pathlib import Path
@@ -56,10 +56,14 @@ def test_workflows_route_every_account():
             assert _eval(_expr(wf, "ALPACA_TRADE_API_KEY"), acct) == (f"<ALPACA_{sec}_API_KEY>" if sec else ""), acct
             assert _eval(_expr(wf, "ALPACA_TRADE_SECRET_KEY"), acct) == (f"<ALPACA_{sec}_SECRET_KEY>" if sec else ""), acct
             assert _eval(_expr(wf, "STATE_BRANCH"), acct) == br, acct
-            # market data: Testing D / E / F use their own keys; every other account keeps the shared SIP keys
-            own = acct in DEF
-            assert _eval(_expr(wf, "ALPACA_API_KEY"), acct) == (f"<ALPACA_{sec}_API_KEY>" if own else "<ALPACA_API_KEY>"), acct
-            assert _eval(_expr(wf, "ALPACA_SECRET_KEY"), acct) == (f"<ALPACA_{sec}_SECRET_KEY>" if own else "<ALPACA_SECRET_KEY>"), acct
+            # market data: with repo variable MCF_DEF_OWN_DATA_KEYS == 'true', Testing D / E / F use their own keys; unset
+            # (default: their keys had no SIP plan on 11-11), everyone uses the shared SIP keys; other accounts always do
+            for on in (True, False):
+                own = on and acct in DEF
+                for kind in ("API", "SECRET"):
+                    ex = _expr(wf, f"ALPACA_{kind}_KEY").replace("vars.MCF_DEF_OWN_DATA_KEYS == 'true'", repr(on))
+                    want = f"<ALPACA_{sec}_{kind}_KEY>" if own else f"<ALPACA_{kind}_KEY>"
+                    assert _eval(ex, acct) == want, (acct, kind, on)
         assert _eval(_expr(tr, "group"), acct) == grp, acct
     for acct in DEF:                                                              # skipped until BOTH secrets are set
         assert f'[ "$MCF_ACCOUNT" = "{acct}" ]' in tr

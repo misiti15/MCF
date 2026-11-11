@@ -29,8 +29,10 @@
 #   ALPACA_TESTINGE_API_KEY, ALPACA_TESTINGE_SECRET_KEY - "Testing E" (config/account_testinge.yaml; orders mte-*, state branch mcf-data-testinge)
 #   ALPACA_TESTINGF_API_KEY, ALPACA_TESTINGF_SECRET_KEY - "Testing F" (config/account_testingf.yaml; orders mtf-*, state branch mcf-data-testingf)
 # Market data comes from the primary SIP keys above (ALPACA_API_KEY / ALPACA_SECRET_KEY), shared by every job EXCEPT
-# Testing D / E / F: their jobs map ALPACA_API_KEY / ALPACA_SECRET_KEY to their own account keys (owner 2026-11-11), so
-# their data calls do not draw on the shared key's rate limit. The runner reads data keys only from ALPACA_API_KEY.
+# Testing D / E / F when the repo variable MCF_DEF_OWN_DATA_KEYS is 'true': then their jobs map ALPACA_API_KEY /
+# ALPACA_SECRET_KEY to their own account keys (owner 2026-11-11), so their data calls do not draw on the shared key's rate
+# limit. Set it only once those accounts have the SIP data plan (account-check's SIP probe returns 200). The runner reads
+# data keys only from ALPACA_API_KEY / ALPACA_SECRET_KEY.
 name: trade
 
 on:
@@ -63,10 +65,13 @@ jobs:
       MCF_ACCOUNT: ${{ matrix.account }}
       MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || (matrix.account == 'testingd' && 'mtd-' || (matrix.account == 'testinge' && 'mte-' || (matrix.account == 'testingf' && 'mtf-' || 'mct-')))))))) }}
       STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || (matrix.account == 'testingd' && 'mcf-data-testingd' || (matrix.account == 'testinge' && 'mcf-data-testinge' || (matrix.account == 'testingf' && 'mcf-data-testingf' || 'mcf-data-testing')))))))) }}
-      # Market data: Testing D / E / F (owner 2026-11-11) use their OWN account keys for data too, so the shared SIP data
-      # key's rate limit is not strained; every other account keeps the shared ALPACA_API_KEY / ALPACA_SECRET_KEY.
-      ALPACA_API_KEY: ${{ matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || secrets.ALPACA_API_KEY)) }}
-      ALPACA_SECRET_KEY: ${{ matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || secrets.ALPACA_SECRET_KEY)) }}
+      # Market data: Testing D / E / F (owner 2026-11-11) can use their OWN account keys for data, so the shared SIP data key's
+      # rate limit is not strained - switched by the repo variable MCF_DEF_OWN_DATA_KEYS ('true' = own keys). It stays unset
+      # (shared keys) until those accounts have the SIP data plan: on 2026-11-11 their keys got 403 'subscription does not
+      # permit querying recent SIP data' (account-check), and the runner reads SIP (ALPACA_DATA_FEED: sip). Every other
+      # account always uses the shared ALPACA_API_KEY / ALPACA_SECRET_KEY.
+      ALPACA_API_KEY: ${{ vars.MCF_DEF_OWN_DATA_KEYS == 'true' && (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || secrets.ALPACA_API_KEY))) || secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ vars.MCF_DEF_OWN_DATA_KEYS == 'true' && (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || secrets.ALPACA_SECRET_KEY))) || secrets.ALPACA_SECRET_KEY }}
       ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || '')))))))) }}
       ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || '')))))))) }}
       ALPACA_DATA_FEED: sip

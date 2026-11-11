@@ -1,7 +1,7 @@
 # Testing D paper account (owner 2026-11-11). MCF_ACCOUNT=testingd overlay on config/default.yaml; orders mtd-*, state branch
-# mcf-data-testingd, secrets ALPACA_TESTINGD_API_KEY / ALPACA_TESTINGD_SECRET_KEY. MARKET DATA: this account's OWN keys
-# (trade.yml / watchdog.yml / eod.yml map ALPACA_API_KEY / ALPACA_SECRET_KEY to them for Testing D / E / F only), so its data
-# calls do not draw on the shared SIP data key's rate limit. The trade, watchdog and session-guard jobs skip this account until
+# mcf-data-testingd, secrets ALPACA_TESTINGD_API_KEY / ALPACA_TESTINGD_SECRET_KEY. MARKET DATA: the shared SIP keys, or this
+# account's OWN keys once the repo variable MCF_DEF_OWN_DATA_KEYS is 'true' (trade / watchdog / eod map ALPACA_API_KEY /
+# ALPACA_SECRET_KEY to them for Testing D / E / F only); off until these accounts have the SIP plan (11-11: 403 on SIP). The trade, watchdog and session-guard jobs skip this account until
 # both secrets are set; the trade job's "Setup check" also skips it while no setup is enabled here (no idle session).
 #
 # Testing area (owner 2026-11-11; ledger 2026-11-11-testing-def-accounts): same base rules as Testing B / C (explore1 / livelab):
