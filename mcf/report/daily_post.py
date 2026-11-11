@@ -290,7 +290,9 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
     for k in accts:
         sc = _show(dict((a, b) for a, _, b, _ in ACCOUNTS)[k], "reports/scorecard.json") or {}
         for r in sc.get("leaderboard") or []:
-            if gen != r["setup"].startswith("GEN-"):
+            # GEN rows belong to the generated board, except a GEN setup that graduated to a testing area (GEN-GRAD,
+            # owner 2026-11-11): its rows from a testing account (k != "gen") are a testing-area record
+            if gen != r["setup"].startswith("GEN-") and (gen or k == "gen"):
                 continue
             by.setdefault(r["setup"], []).append(r)
             sessions.update(r.get("days") or [])

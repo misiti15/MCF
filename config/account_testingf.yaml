@@ -6,15 +6,15 @@
 #
 # Testing area (owner 2026-11-11; ledger 2026-11-11-testing-def-accounts): same base rules as Testing B / C (explore1 / livelab):
 # - sizing: 200 slots and buying_power_multiple 2.0, so capital per slot = equity x 2.0 / 200 = ~$1,000 constant notional per
-#   lot at $100k (mcf/backtest/engine.slot_notional, the same rule as every account); up to 10 open lots per setup (the
-#   Testing B / C per-setup cap; follow B / C if ODX-4 lifts theirs to 30);
+#   lot at $100k (mcf/backtest/engine.slot_notional, the same rule as every account); up to 30 open lots per setup (the
+#   Testing B / C per-setup cap; 10 until ODX-4 on 2026-11-11);
 # - max_setup_daily_loss_r: null = no -2R per-setup daily stop (as every testing area since ST-A 2026-10-22); the account daily
-#   stop is the Testing 120R catastrophe backstop; max_stop_cost_r 0.15 = the Testing cost filter (CF 2026-10-29);
+#   stop is the Testing 300R catastrophe backstop (120R until 2026-11-11); max_stop_cost_r 0.15 = the Testing cost filter (CF 2026-10-29);
 # - full universe (no top_n pool, unlike Testing A); block_twin_same_symbol false and no live scale-out (as B / C).
 #
 # strategies_exclusive: only setups listed under `strategies` below run; every setup of config/default.yaml (Primary +
-# library) is switched off by the loader (mcf/config.py), including setups added there later. Starts EMPTY: no setup is
-# enabled, so nothing trades until the after-close build assigns setups. Each setup added here is a setup move (promotion =
+# library) is switched off by the loader (mcf/config.py), including setups added there later. Started EMPTY; the 2026-11-11
+# after-close build (ledger 2026-11-12-testing-areas-fill) assigned its first setups, from session 2026-11-12. Each setup added here is a setup move (promotion =
 # move, assignments regenerated in the same commit, a ledger entry, outside 09:30-16:00 ET). Paper account. Educational only -
 # not financial advice.
 strategies_exclusive: true
@@ -23,8 +23,8 @@ account:
   slots: 200
   buying_power_multiple: 2.0
   max_concurrent_positions: 200
-  max_positions_per_strategy: 10
-  max_daily_loss_r: 120
+  max_positions_per_strategy: 30   # owner 2026-11-11 after close; from session 2026-11-12 (ODX-4 / REPV-7): generic cap was 10
+  max_daily_loss_r: 300   # owner 2026-11-11 after close; from session 2026-11-12: account catastrophe backstop (was 120)
   max_setup_daily_loss_r: null
   max_trades_per_day: 1500
 live:
@@ -34,5 +34,159 @@ live:
   retry_after_release: true
   longs_first_on_ties: true
   # Priority: narrowest (fewest expected trades/session) first, as in the other testing areas.
-  setup_order: []
-strategies: {}
+  setup_order:
+    - IDX3-spy075-0955-3x-trail   # 0 traded sessions to 11-11
+    - LD5-st2-breadthup-t05s1-long   # 0 traded sessions to 11-11
+    - NM-RWN4-ns2-spyup05-notfri-short   # 1 traded sessions to 11-11
+    - NM-AMS-N1-quiet-morning-short   # 2 traded sessions to 11-11
+    - GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long   # 8 traded sessions to 11-11
+    - MF1-945-flowsell-vwapup   # 14 traded sessions to 11-11
+    - NS4-pm-vwap-reclaim-oversold-short-FD   # 14 traded sessions to 11-11
+    - CWT05-flush-m05-v3-long   # 16 traded sessions to 11-11
+    - exhaustion_short   # 20 traded sessions to 11-11
+    - intraday_momentum   # 21 traded sessions to 11-11
+strategies:
+  CWT05-flush-m05-v3-long:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B5-m0.5-v3-Dnone-t05s1-full, fill: false}
+  MF1-945-flowsell-vwapup:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
+    # earlier note: demoted from Primary 2026-10-25 (owner MF1-D); its -FD twin runs in the Graveyard
+    enabled: true
+    former_primary: {demoted: "2026-10-25", first_testing_session: "2026-10-26", review_after_sessions: 10}
+  NS4-pm-vwap-reclaim-oversold-short-FD:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/NS4-pm-vwap-reclaim-oversold-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  exhaustion_short:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN); twin -FD in Testing A); from session 2026-11-12
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  intraday_momentum:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+  NM-AMS-N1-quiet-morning-short:   # moved from Testing B 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 1 live trades so far; ~0.83/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/AMS-N1-downtrend-quiet-bounce.py
+    min_adv: 95000000
+    window: [1000, 1100]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  IDX3-spy075-0955-3x-trail:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.02/session lab.
+    enabled: true
+    class: index_dip_bounce
+    trade_candidates: [SPXL, UPRO]
+    pick: max_dollar_volume
+    signal_symbol: SPY
+    dip_pct: 0.75
+    dip_by: "09:55"
+    entry_from: "09:50"
+    entry_until: "10:05"
+    trigger: recovery
+    recovery_frac: 0.20
+    stop_buffer_frac: 0.10
+    target: null
+    trail_r: 1.0
+    trail_after_r: 1.0
+    scale_out_r: null
+    testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V3, bar: "forward test (owner request); research bar not met"}
+  LD5-st2-breadthup-t05s1-long:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep); twin LD3 in Testing B); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.07/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD5-st2-breadthup-t05s1-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-ST2
+    tags: [observation, longs1020]
+  NM-RWN4-ns2-spyup05-notfri-short:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 8 live trades so far; ~2.11/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN4-ns2-spyup05-notfri-t05s1-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, day-of-week]
+  GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long:   # moved from Setup Generator 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261020-05-orbfaildn-lunch-long.py
+    context:
+    - spy_fo
+    min_adv: 150000000
+    window:
+    - 1130
+    - 1400
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-20
+    gen:
+      date: '2026-10-20'
+      spec:
+        side: long
+        window: LUNCH
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - orb_fail_dn
+          - ==
+          - 1.0
+        - - sma20_dist_pct
+          - <=
+          - -0.31
+        - - spy_fo
+          - '>'
+          - 0.25
+        - - vwap_cross_n
+          - '>='
+          - 4.0
+      key: c8921a1cebf2db50
+      screen:
+        train:
+          n: 2026
+          exp_r: 0.0624
+          t: 0.98
+          win: 0.536
+          days: 109
+        valid:
+          n: 2611
+          exp_r: 0.0232
+          t: 0.23
+          win: 0.491
+          days: 91
+        all:
+          n: 4637
+          exp_r: 0.0404
+          t: 0.64
+          win: 0.51
+          days: 200
+        per_day: 10.885
+        per_day_valid: 13.599
+        exp_up: 0.1726
+        exp_down: -0.4577
+        exp_flat: -0.1249
+        excess_train: 0.0574
+        excess_valid: 0.027
+        tier1: true
+        score: 0.48
+        max_overlap: 0.571
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3146

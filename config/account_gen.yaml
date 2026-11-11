@@ -9,21 +9,24 @@
 #
 # strategies_exclusive: only the GEN-* setups below run; every setup of config/default.yaml (primary + library) is
 # switched off by the loader (mcf/config.py), including setups added there later. Testing 1/2 setups never load here.
-# 200 slots (owner GX2 2026-10-26, was 80): capital per slot = equity x buying_power_multiple / slots
-# (mcf/backtest/engine.slot_notional), the same rule as every account, so each slot is an equal increment (~$1,900 at
-# $100k x 3.8 / 200); up to 48 open positions per setup (was 16).
+# 300 slots x buying_power_multiple 1.8 (owner REPV-1, from session 2026-11-12; was 200 x 3.8, 80 slots before GX2
+# 2026-10-26): capital per slot = equity x buying_power_multiple / slots (mcf/backtest/engine.slot_notional), the same
+# rule as every account, so each slot is an equal increment (~$540 at $89k x 1.8 / 300: smaller lots so Alpaca's
+# intraday buying power no longer rejects entries); up to 150 open positions per setup (owner REPV-5; was 48, 16 before).
+# GEN-GRAD (owner 2026-11-11): a GEN setup with >= 4 traded sessions, >= 10 trades, shrunk avg R > 0 and avg R without
+# its best day >= -0.10 (live, R after costs) graduates to a testing area; it stays listed here, switched off.
 # This file is maintained by `python -m mcf.research.generator run --apply` (setup_order rebuilt each run:
 # narrowest = fewest screened trades/day first). Hand edits to entries are kept; comments below this header are not.
 # max_setup_daily_loss_r: null = owner 2026-10-22 ST-A: the per-setup -2R daily stop is off (was 2.0) so testing runs
-# as Primary + backtests; the 120R account backstop stays.
+# as Primary + backtests; the account backstop is 300R (owner 2026-11-11, was 120R).
 strategies_exclusive: true
 account:
   starting_equity: 100000
-  slots: 200
-  buying_power_multiple: 3.8
-  max_concurrent_positions: 200
-  max_positions_per_strategy: 48
-  max_daily_loss_r: 120
+  slots: 300
+  buying_power_multiple: 1.8
+  max_concurrent_positions: 300
+  max_positions_per_strategy: 150
+  max_daily_loss_r: 300
   max_setup_daily_loss_r: null
   max_trades_per_day: 1000
 live:
@@ -69,7 +72,6 @@ live:
   - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short
   - GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long
   - GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long
-  - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short
   - GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long
   - GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long
   - GEN-261029-04-Ret15mge0p54-RVolDayle0p59-VWAPcrossesle1-LUNCH-SPYgt0p25-hold-long
@@ -80,7 +82,6 @@ live:
   - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short
   - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long
   - GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long
-  - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short
   - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long
   - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short
   - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long
@@ -90,7 +91,6 @@ live:
   - GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long
   - GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long
   - GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short
-  - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long
   - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long
   - GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short
   - GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long
@@ -112,8 +112,6 @@ live:
   - GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long
   - GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long
   - GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short
-  - GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long
-  - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
   - GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short
   - GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long
   - GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short
@@ -255,7 +253,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
     type: lab
     module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
     context:
@@ -1038,7 +1036,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3146
   GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long:
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
     type: lab
     module: research/generator/modules/GEN-261020-05-orbfaildn-lunch-long.py
     context:
@@ -3709,7 +3707,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short:
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
     type: lab
     module: research/generator/modules/GEN-261026-03-newlod-lunch-short.py
     context:
@@ -4239,7 +4237,7 @@ strategies:
         overlap_with: NM-RWR1-exh150-gapdn-spyup-pm-short
         n_tried_in_run: 3000
   GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long:
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
     type: lab
     module: research/generator/modules/GEN-261027-01-macdh-hi-late-long.py
     context:
@@ -4671,7 +4669,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3082
   GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short:
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
     type: lab
     module: research/generator/modules/GEN-261027-07-rsi14-lo-am-short.py
     context:

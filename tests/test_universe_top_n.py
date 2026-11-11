@@ -22,10 +22,9 @@ def test_top_n_ranks_by_adv_x_atr_after_adv_floor():
 
 
 def test_only_testing2_sets_top_500(monkeypatch):
-    monkeypatch.setenv("MCF_ACCOUNT", "testing2")
-    u = load_config()["universe"]
-    assert u["top_n"] == 500 and u["top_n_min_adv"] == 95_000_000
-    for acct in ("primary", "testing"):
+    # UNI1 (top-500 pool, Testing 2 / Testing A 2026-11-04 .. 11-11) ended by the owner 2026-11-11 (ledger
+    # 2026-11-12-testing-a-full-universe): no account sets a pool now; the top_n mechanism above stays available.
+    for acct in ("primary", "testing", "testing2", "explore1", "livelab", "testingd", "testinge", "testingf"):
         monkeypatch.setenv("MCF_ACCOUNT", acct)
         assert not load_config()["universe"].get("top_n")
 

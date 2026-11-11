@@ -19,17 +19,20 @@ def _cfg(monkeypatch, acct="gen"):
     return load_config()
 
 
-def test_config_loads_with_200_equal_slots(monkeypatch):   # owner GX2 2026-10-26 (was 80)
+def test_config_loads_with_300_equal_slots(monkeypatch):   # owner REPV-1 / REPV-5 2026-11-11 (was 200 x 3.8, cap 48; 80 before GX2)
     from mcf.backtest.engine import slot_notional
+    from mcf.research.generator import apply as GA
 
     cfg = _cfg(monkeypatch)
     a = cfg["account"]
     assert cfg["account_name"] == "gen"
-    assert a["slots"] == 200 and a["max_concurrent_positions"] == 200 and a["max_positions_per_strategy"] == 48
+    assert a["slots"] == 300 and a["max_concurrent_positions"] == 300 and a["max_positions_per_strategy"] == 150
+    assert a["buying_power_multiple"] == 1.8                                      # smaller lots: ~$540 at $89k
     testing = yaml.safe_load((ROOT / "config/account_testing.yaml").read_text())["account"]
-    assert a["max_daily_loss_r"] == testing["max_daily_loss_r"]
-    assert a["buying_power_multiple"] == testing["buying_power_multiple"]       # same multiple logic as Testing
-    assert abs(slot_notional({**a, "equity": 100000}) - 100000 * a["buying_power_multiple"] / 200) < 1e-6
+    assert a["max_daily_loss_r"] == testing["max_daily_loss_r"] == 300           # the testing-area halt (was 120)
+    assert abs(slot_notional({**a, "equity": 100000}) - 100000 * a["buying_power_multiple"] / 300) < 1e-6
+    for k in ("slots", "buying_power_multiple", "max_concurrent_positions", "max_positions_per_strategy", "max_daily_loss_r"):
+        assert GA.BASE["account"][k] == a[k], k                                   # the generator writes the same base
 
 
 def test_only_gen_setups_run(monkeypatch):
@@ -40,9 +43,10 @@ def test_only_gen_setups_run(monkeypatch):
     assert all(isinstance(s, LabStrategy) and s.name.startswith("GEN-") for s in st)
     on = {k for k, v in cfg["strategies"].items() if v.get("enabled")}
     assert all(k.startswith("GEN-") for k in on)
-    for f in ("config/default.yaml", "config/account_testing.yaml", "config/account_testing2.yaml"):
-        other = yaml.safe_load((ROOT / f).read_text())["strategies"]
-        assert not (on & {k for k, v in other.items() if (v or {}).get("enabled")})
+    for f in ("config/default.yaml", *sorted(str(p.relative_to(ROOT)) for p in (ROOT / "config").glob("account_*.yaml")
+                                                if p.name != "account_gen.yaml")):
+        other = yaml.safe_load((ROOT / f).read_text())["strategies"] or {}
+        assert not (on & {k for k, v in other.items() if (v or {}).get("enabled")}), f   # one home: graduates are off here
     assert sorted(cfg["live"]["setup_order"]) == sorted(s.name for s in st)
 
 
@@ -66,6 +70,12 @@ def test_other_accounts_unchanged_by_the_loader(monkeypatch):
     for acct in ("primary", "testing", "testing2", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
         assert not any(k.startswith("GEN-") for k in cfg["strategies"])
+    # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen
+    gen = _cfg(monkeypatch, "gen")["strategies"]
+    for acct in ("explore1", "livelab", "testingd", "testinge", "testingf"):
+        for k, v in _cfg(monkeypatch, acct)["strategies"].items():
+            if k.startswith("GEN-") and v.get("enabled"):
+                assert k in gen and not gen[k]["enabled"], (acct, k)
 
 
 def test_every_gen_module_runs_in_the_live_lab_strategy(monkeypatch):
@@ -132,7 +142,7 @@ def test_gen_setups_have_generated_display_names():
             assert names[k]["name"].startswith("Generated: ") and names[k]["what"]
         sc = v["gen"]["screen"]
         assert {"train", "valid", "per_day"} <= set(sc)              # screen stats recorded, negative or not
-    others = set()
+    others = set()   # GEN-GRAD graduates (testing areas B-F) keep their generated id and display name
     for f in ("config/default.yaml", "config/account_testing.yaml", "config/account_testing2.yaml"):
         others |= set(yaml.safe_load((ROOT / f).read_text())["strategies"])
     assert not any(k.startswith("GEN-") for k in others)

@@ -30,6 +30,7 @@ MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
             "NS2-sma50break-overbought-short", "heat_fade_short"}
 # combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1
 STAYED_T1 = {"L3-gap-slope-lowdist-FD", "exhaustion_short-FD"}   # L3-gap-slope-fromopen-FD: promoted to Primary 2026-10-21
+# exhaustion_short-FD: single home Testing A from 2026-11-12 (ONDECK dual-home fix) - still a testing account, never the Graveyard
 
 
 def _cfg(monkeypatch, acct="graveyard"):
@@ -48,8 +49,10 @@ def test_caps_lower_than_testing(monkeypatch):
     a, live = cfg["account"], cfg["live"]
     t2 = yaml.safe_load((ROOT / "config/account_testing2.yaml").read_text())["account"]
     assert cfg["account_name"] == "graveyard"
-    assert a["slots"] == t2["slots"] // 2 and a["max_concurrent_positions"] == t2["max_concurrent_positions"] // 2
-    assert a["max_positions_per_strategy"] == t2["max_positions_per_strategy"] // 2
+    # REPV-11 / REPV-12 (owner 2026-11-11, from session 2026-11-12): smaller lots, more slots, per-setup cap 75 - was
+    # half of Testing 2's 400 slots / 50 per setup at x3.8
+    assert a["slots"] == a["max_concurrent_positions"] == 300 and a["buying_power_multiple"] == 1.6
+    assert a["max_positions_per_strategy"] == 75
     assert a["max_trades_per_day"] < t2["max_trades_per_day"]
     assert a["risk_per_trade_pct"] == _cfg(monkeypatch, "testing2")["account"]["risk_per_trade_pct"]
     assert a["max_setup_daily_loss_r"] == 2.0 and a["max_daily_loss_r"] == 120
@@ -87,7 +90,7 @@ def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
 def test_moves_switched_off_at_source(monkeypatch):
     t1, t2 = _on(_cfg(monkeypatch, "testing")), _on(_cfg(monkeypatch, "testing2"))
     assert not (MOVED_T1 & t1) and not (MOVED_T2 & t2)
-    assert STAYED_T1 <= t1
+    assert STAYED_T1 <= t1 | t2
     for acct, on in (("testing", t1), ("testing2", t2)):
         order = _cfg(monkeypatch, acct)["live"]["setup_order"]
         assert not ((MOVED_T1 | MOVED_T2) & set(order)), acct

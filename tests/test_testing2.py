@@ -100,7 +100,8 @@ def test_longs1020_and_m1_observation_setups(monkeypatch):
     from mcf.strategies.setups import build_strategies
 
     # LD1-LD8 moved to Explore 1 / Live Lab 2026-11-04 (owner, low-rep rotation); NM-MF3 stays in Testing 2
-    cfgs = {a: _cfg(monkeypatch, a) for a in ("testing2", "explore1", "livelab")}
+    # 2026-11-12: some moved on to Testing D / E / F (ledger 2026-11-12-testing-areas-fill)
+    cfgs = {a: _cfg(monkeypatch, a) for a in ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf")}
     home = {}
     st = {}
     for a, c in cfgs.items():
@@ -133,7 +134,7 @@ def test_ld8_fires_on_a_live_shaped_day(monkeypatch):
     from mcf.strategies.lab_context import _CACHE
     from mcf.strategies.setups import _LAB_FRAMES, build_strategies
 
-    (st,) = [s for s in build_strategies(_cfg(monkeypatch, "explore1")) if s.name.startswith("LD8")]   # Explore 1 from 11-05
+    (st,) = [s for s in build_strategies(_cfg(monkeypatch, "testinge")) if s.name.startswith("LD8")]   # Explore 1 11-05, Testing E 11-12
     idx = pd.date_range("2026-10-12 09:30", periods=390, freq="1min", tz="America/New_York")
     m = np.arange(390)
 

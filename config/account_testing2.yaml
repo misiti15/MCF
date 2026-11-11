@@ -23,15 +23,11 @@ account:
   # Playing time: a per-setup cap well below the slot count, so the busy setups (up to ~250 signals/day) cannot fill
   # the account and every setup gets entries (Testing 1 uses 150 with fewer busy setups).
   max_positions_per_strategy: 50   # owner 2026-10-14 (was 25; it blocked 215 signals on 10-13 once stacking went live)
-  max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
+  max_daily_loss_r: 300          # owner 2026-11-11 after close; from session 2026-11-12: catastrophe backstop only (was 120; 60 before 2026-10-19)
   max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
-universe:
-  # UNI1 (owner 2026-11-03, research/ledger.jsonl 2026-11-03-uni1-testing2-top500): from the 11-04 session Testing 2
-  # TRADES only a smaller ticker pool - names with 20d ADV >= $95M ranked by ADV x ATR% (prior sessions), top 500,
-  # plus pinned symbols. The full universe is still fetched and still feeds breadth/context columns.
-  top_n: 500
-  top_n_min_adv: 95000000
+# UNI1 (top-500 pool, 2026-11-04 .. 2026-11-11) ended by the owner 2026-11-11 after close; from session 2026-11-12: Testing A trades the full universe again
+# (ledger 2026-11-12-testing-a-full-universe; same universe as On Deck and Primary).
 live:
   max_stop_cost_r: 0.15   # owner 2026-10-29 CF: forward test of the p3_1029 A3 cost filter (Testing only; Primary/Gen/Graveyard off)
   # Owner SO1 2026-10-19: the fixed live scale-out (cancel legs, bank half, protect the rest) runs on at most 2 lots
@@ -45,26 +41,20 @@ live:
   setup_order:
     - NS3V1-am-widestop-short                 # ~5.3/day (ns3var1022 V1, owner 2026-10-22; twin_group NS3-T2)
     - NM-AR-AM-gapdown-capitulation-long   # swarm1017 near-miss
-    - NM-HL-T75-pm-long   # swarm1017 near-miss
     - NM-MF3-qqqdn-gapdn-FD   # ~4.9/day (mf3swarm1020 near-miss M1, owner 2026-10-20)
-    - NS1-rsidip-rsi5pop-long   # from Primary 2026-11-10 (owner Team yes; 09:50-11:30 window)
     - MF4-h40-open-flowsell   # from Primary 2026-11-10 (owner Team yes; 09:50-11:00 window)
     - CWT13-vwapstretch-z075-short   # 6.14/day
-    - RW1-gapdn-bounce-flowsell-short-FD   # 8.29/day (allocator)
     - MF5-flowsell-vwapup-rsi5hi   # 15.47/day (allocator)
     - exhaustion_short-FD   # 18.29/day (allocator)
     - CWT14-failbrk-pdl-p05-R2A-long    # ~27/day on long-regime days (owner exception PDL-1a 2026-10-30)
     - CWT14-failbrk-pdl-p05-R2A-short   # ~27/day on short-regime days (owner exception PDL-1a 2026-10-30)
     - CWT13-vwapstretch-z05-long   # 42.57/day (back from Primary 2026-10-26)
-    - NS4-pm-vwap-reclaim-oversold-short   # back from Primary 2026-10-27
-    - CWT14-failbrk-pdl-p10-lowvol-long   # back from Primary 2026-10-27
     - CWT14-failbrk-pdl-p10-long   # 88.03/day
-    - RW3S-gapdn-flowsell-short-FD   # owner RW3S 2026-11-03: observation, 5 live sessions
 strategies:
   # ---- owner RW3S 2026-11-03 (research/bdi/night1102/simple): RW3-FD without RSI(5) > 80; observation for 5 live sessions,
   #      then re-evaluate. Did NOT pass BAR90 or the twin bar; a down-day bet.
   RW3S-gapdn-flowsell-short-FD:
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-11 after the close (D/E/F fill (busy)); from session 2026-11-12
     type: lab
     module: research/bdi/night1102/simple/modules/RW3S-gapdn-flowsell-short-FD.py
     min_adv: 95000000
@@ -173,7 +163,7 @@ strategies:
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
   NM-HL-T75-pm-long:
-    enabled: true
+    enabled: false   # moved to On Deck 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
     type: lab
     module: research/swarm1017/final/modules/NM-HL-T75-pm-t05s1-long.py
     min_adv: 125000000
@@ -365,7 +355,6 @@ strategies:
   # ---- MF5-flowsell-vwapup-rsi5hi: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   MF5-flowsell-vwapup-rsi5hi:
     enabled: true
-    ticker_split: {part: 1, of: 2}
     type: lab
     module: research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py
     min_adv: 95000000
@@ -373,12 +362,12 @@ strategies:
     scale_out_r: null
     former_primary: {demoted: '2026-10-20', first_testing_session: '2026-10-20', review_after_sessions: 10}
   NS1-rsidip-rsi5pop-long:   # from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); Testing 1 holds its twin NS1-rsidip-rsi5pop-long-FD
-    enabled: true
+    enabled: false   # moved to On Deck 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
     former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
   NS2-sma50break-overbought-short: {enabled: false}
   NS3-failed-vwap-reclaim-short: {enabled: false}
   NS4-pm-vwap-reclaim-oversold-short:   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-11 after the close (D/E/F fill); from session 2026-11-12
     former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
   NS5-sma50-flush-oversold-long: {enabled: false}
   RW6G1-ns2-up3-vwap2sd-short: {enabled: false}
@@ -688,7 +677,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B3-LOR-p0.05-Vany-sidelong-t05s1-full", fill: true}
   # Failed Prior-Day-Low Break Long (0.1 ATR, low volume) [fill]: CWT package B B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full (id 142); open history n 20080, exp -0.0946R, t -8.85, 47.14/day; verdict retire
   CWT14-failbrk-pdl-p10-lowvol-long:
-    enabled: true   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
+    enabled: false   # moved to Testing D 2026-11-11 after the close (D/E/F fill); from session 2026-11-12
     former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
@@ -754,7 +743,7 @@ strategies:
     scale_out_r: null
   # ---- RW1-gapdn-bounce-flowsell-short-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   RW1-gapdn-bounce-flowsell-short-FD:
-    enabled: true
+    enabled: false   # moved to On Deck 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
     type: lab
     module: research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py
     min_adv: 95000000
@@ -774,7 +763,6 @@ strategies:
   # ---- exhaustion_short-FD: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   exhaustion_short-FD:
     enabled: true
-    ticker_split: {part: 1, of: 2}
     type: lab
     module: research/bdi/fullday/exhaustion_short-FD.py
     min_adv: 95000000
