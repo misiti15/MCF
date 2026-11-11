@@ -92,6 +92,8 @@
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
   n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
   Cache + daily now end 2026-11-10 (backup of the 11-09 daily table in the scratchpad).
+- 11-11 08:45: OWNER TASK REGSW-2 plan frozen (winning base = lab TRAIN gross > 0 AND live net > 0; 4 switches, N 103).
+  Next: base stage (--base-only) commit, Skeptic audit, then score. FAMC tonight.
 - 11-11 06:35: S6 long-hold: model book $76.0k vs live $81.5k (frozen live ahead), model_equity/te blank -> flagged as
   housekeeping for the main session. Checklist: run research/SKEPTIC_CHECKLIST.md before posting any frozen plan.
 - 11-11 04:30: minute-10 exit CLOSED (untriggered post-10 ~0 / slightly +; live giveback of triggered trades doesn't
