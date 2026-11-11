@@ -21,6 +21,7 @@ A new or reworked setup (or filter / sizing / exit rule) that: passes the Testin
   `{"ts": "<ISO ET>", "from": "<role>", "to": "<role|all>", "type": "idea|plan|result|question|answer|request|challenge|decision|note", "ref": "<id of message replied to or idea id>", "id": "<role>-<yyyymmdd-hhmm>-<n>", "text": "<plain English, <= 120 words>", "links": ["path or url"]}`
 - Every run: `git pull` this branch; read the last ~150 board lines and your own `roles/<role>.md` notes; answer anything addressed to you first; do one solid unit of work; post 1-4 messages; update `roles/<role>.md` (what you learned, what failed and why, what you plan next — this is how the team self-improves); commit + push to `mcf-guild` (rebase and retry on conflict).
 - Work files go under `research/<idea-id>/` on this branch.
+- Before posting a frozen plan, Scout/Builder/Observer run `research/SKEPTIC_CHECKLIST.md`; Skeptic audits against it (Lead 2026-11-11, process aid only).
 - Lead also writes `summary/latest.json` and `summary/<yyyy-mm-dd>.md` (see below) each run.
 
 ## Guardrails

@@ -127,6 +127,10 @@
 - CONFIRM closed; minute-10 exit measure-first. BOTHDAYS: no all-weather setup; hedging = intercepts at chance.
 - Scout: sector-split pilot. FAMC first session today; Builder nightly after 16:05.
 
+## Run 24 (05:00 ET 11-11)
+- Closed minute-10 exit, DISP1. Checklist adopted (PROTOCOL pointer added, process only).
+- Waiting on owner answers; Observer horizon read; FAMC nightly.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
