@@ -93,7 +93,13 @@
   entry bar lets lexicon/funnel bugs be fixed before any outcome is seen.
 - Run 26 (11-11 09:45 ET) COILGAP (owner item 3): coil longs off on SPY gap <= -0.25% -> ex-mkt shared-day z -0.01; closed.
   Coil switches from market state now 0/2 (COILAM checkpoint, COILGAP gap). Shared-day random switch code: research/coilgap/coilgap.py.
+- Run 27 (11-11 12:30 ET) REPS1 lever table (owner P1 item 1): Gen starved by account halt (66/session) + buying power (60),
+  what-if no worse than traded; low-rep starved by borrow (30.6/session vs 19.9 submitted). Simplified exit is +0.071R optimistic
+  vs live gross (corr 0.92) -> use relative only. Alpaca 5-min fetch of 2,236 names takes > 30 min: run it with a start index in parts.
 ## Next
+- P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
+- REPS1 next: cost-in what-if for spread-filtered signals (logged bps from the reason text); per-setup reps gain for the ~10 Gen
+  candidates once their list is on a branch; check repv when pushed.
 - One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
   move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
 - 11-12 pilot: score NEWSMID once: `python -I research/newsmid/newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` (slow loops; run in background).
