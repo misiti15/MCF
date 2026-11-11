@@ -63,8 +63,9 @@ def test_default_off_primary_and_testing2(monkeypatch):
     for acct in ("primary", "testing2"):
         monkeypatch.setenv("MCF_ACCOUNT", acct)
         assert load_config()["live"]["split_tape_short_gate"] == {"enabled": False, "spread_pct": 0.50}
+    # ODX-1 (owner 2026-11-11, from session 2026-11-12): off in On Deck (testing) too; the block stays for a testing-area test
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
-    assert load_config()["live"]["split_tape_short_gate"] == {"enabled": True, "spread_pct": 0.50}
+    assert load_config()["live"]["split_tape_short_gate"] == {"enabled": False, "spread_pct": 0.50}
 
 
 def test_watchlist_adds_qqq_iwm_only_when_on(tmp_path, monkeypatch):

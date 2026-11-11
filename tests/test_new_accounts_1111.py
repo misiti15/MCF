@@ -21,13 +21,16 @@ WF = ROOT / ".github/workflows"
 
 
 @pytest.mark.parametrize("acct", sorted(DEF))
-def test_overlay_loads_with_no_setup_enabled(monkeypatch, acct):
+def test_overlay_loads_with_its_own_setups(monkeypatch, acct):
+    """Started empty (11-11); the 2026-11-11 after-close build assigned 10 setups each (ledger 2026-11-12-testing-areas-fill)."""
     from mcf.backtest.engine import slot_notional
     from mcf.execution import session_guard as G
     from mcf.strategies.setups import build_strategies
 
     raw = yaml.safe_load((ROOT / f"config/account_{acct}.yaml").read_text())
-    assert raw["strategies_exclusive"] is True and not raw.get("strategies") and not raw["live"]["setup_order"]
+    assert raw["strategies_exclusive"] is True
+    own = {k for k, v in raw["strategies"].items() if v.get("enabled")}
+    assert len(own) == 10 and sorted(raw["live"]["setup_order"]) == sorted(own)          # every setup has a priority
     cfg = _cfg(monkeypatch, acct)
     a, live = cfg["account"], cfg["live"]
     b = _cfg(monkeypatch, "explore1")                                             # Testing B: the base rules
@@ -41,8 +44,8 @@ def test_overlay_loads_with_no_setup_enabled(monkeypatch, acct):
     assert not (cfg.get("universe") or {}).get("top_n")                           # full universe (not Testing A's top-500)
     assert abs(slot_notional(a) - 1_000) < 1e-6
     monkeypatch.setenv("MCF_ACCOUNT", acct)
-    assert len(build_strategies(cfg)) == 0                                        # nothing trades until setups are assigned
-    assert G.has_setups(acct) is False                                            # the session guard does not chase it
+    assert {s.name for s in build_strategies(cfg)} == own                         # nothing from default.yaml leaks in
+    assert G.has_setups(acct) is True                                             # the session guard now chases it
 
 
 def test_workflows_route_every_account():
@@ -109,7 +112,7 @@ def test_labels_reports_and_dashboard():
     post = {k: br for k, _, br, _ in P.ACCOUNTS}
     for acct, (label, _, s) in DEF.items():
         br = f"mcf-data-{acct}"
-        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and d["accounts"][acct] == []
+        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and len(d["accounts"][acct]) == 10   # filled 11-12
         assert post[acct] == br and acct in P.LB_ACCOUNTS and acct in P.COLORS and acct in P.TOTALS_EXCLUDED
         assert team.ACCOUNT_TAG[acct] == label and team.ACCOUNT_BRANCH[acct] == br and allocate.LABEL[acct] == label
         assert br in inactive.BRANCHES and intraday.BRANCH[acct] == br

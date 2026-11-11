@@ -36,19 +36,22 @@ HEADER = """\
 #
 # strategies_exclusive: only the GEN-* setups below run; every setup of config/default.yaml (primary + library) is
 # switched off by the loader (mcf/config.py), including setups added there later. Testing 1/2 setups never load here.
-# 200 slots (owner GX2 2026-10-26, was 80): capital per slot = equity x buying_power_multiple / slots
-# (mcf/backtest/engine.slot_notional), the same rule as every account, so each slot is an equal increment (~$1,900 at
-# $100k x 3.8 / 200); up to 48 open positions per setup (was 16).
+# 300 slots x buying_power_multiple 1.8 (owner REPV-1, from session 2026-11-12; was 200 x 3.8, 80 slots before GX2
+# 2026-10-26): capital per slot = equity x buying_power_multiple / slots (mcf/backtest/engine.slot_notional), the same
+# rule as every account, so each slot is an equal increment (~$540 at $89k x 1.8 / 300: smaller lots so Alpaca's
+# intraday buying power no longer rejects entries); up to 150 open positions per setup (owner REPV-5; was 48, 16 before).
+# GEN-GRAD (owner 2026-11-11): a GEN setup with >= 4 traded sessions, >= 10 trades, shrunk avg R > 0 and avg R without
+# its best day >= -0.10 (live, R after costs) graduates to a testing area; it stays listed here, switched off.
 # This file is maintained by `python -m mcf.research.generator run --apply` (setup_order rebuilt each run:
 # narrowest = fewest screened trades/day first). Hand edits to entries are kept; comments below this header are not.
 # max_setup_daily_loss_r: null = owner 2026-10-22 ST-A: the per-setup -2R daily stop is off (was 2.0) so testing runs
-# as Primary + backtests; the 120R account backstop stays.
+# as Primary + backtests; the account backstop is 300R (owner 2026-11-11, was 120R).
 """
 
 BASE = {
     "strategies_exclusive": True,
-    "account": {"starting_equity": 100000, "slots": 200, "buying_power_multiple": 3.8, "max_concurrent_positions": 200,
-                "max_positions_per_strategy": 48, "max_daily_loss_r": 120, "max_setup_daily_loss_r": None,
+    "account": {"starting_equity": 100000, "slots": 300, "buying_power_multiple": 1.8, "max_concurrent_positions": 300,
+                "max_positions_per_strategy": 150, "max_daily_loss_r": 300, "max_setup_daily_loss_r": None,
                 "max_trades_per_day": 1000},
     "live": {"lab_refire": False, "setup_order": []},
     "strategies": {},

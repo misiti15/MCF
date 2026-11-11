@@ -102,10 +102,12 @@ def test_accounts_config(monkeypatch):
     for acct in ("testing", "testing2", "gen"):
         monkeypatch.setenv("MCF_ACCOUNT", acct)
         cfg = load_config()
-        assert not cfg["account"].get("max_setup_daily_loss_r") and cfg["account"]["max_daily_loss_r"] == 120
+        # account halt 120R -> 300R in On Deck / Testing A-F / Gen (owner 2026-11-11, from session 2026-11-12)
+        assert not cfg["account"].get("max_setup_daily_loss_r") and cfg["account"]["max_daily_loss_r"] == 300
         assert RiskManager(cfg, 100000).setup_loss_limit is None
     monkeypatch.setenv("MCF_ACCOUNT", "graveyard")
     assert load_config()["account"]["max_setup_daily_loss_r"] == 2.0
+    assert load_config()["account"]["max_daily_loss_r"] == 120           # Graveyard halt unchanged (not in the 11-11 list)
 
 
 def test_playing_time_buckets():
