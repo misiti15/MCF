@@ -1,0 +1,16 @@
+M1-alpha: close-side marks 15463 on 430 days; TRAIN Brier by alpha: 0.0:0.13404 0.1:0.13409 0.2:0.13422 0.3:0.13426 0.4:0.13441 0.5:0.13467 0.6:0.13511 0.7:0.13560 0.8:0.13617 0.9:0.13726 1.0:0.13838 -> alpha* 0.0
+/home/user/guild/research/pvscale/pvscale.py:55: RuntimeWarning: invalid value encountered in scalar divide
+  dd = (f(x, col_a) - f(x, col_b)).groupby(x.date).mean(); return dd.mean(), dd.mean() / (dd.std(ddof=1) / np.sqrt(len(dd))), dd.std(ddof=1) / np.sqrt(len(dd))
+  VALID: Brier alpha* 0.12414 vs alpha 0 0.12414; per-day diff +0.00000 (se 0.00000), day-t nan
+    by vol tercile (obs / alpha0 / alpha*): low 0.767 / 0.741 / 0.741; mid 0.850 / 0.831 / 0.831; high 0.868 / 0.912 / 0.912
+  FWD: Brier alpha* 0.11061 vs alpha 0 0.11061; per-day diff +0.00000 (se 0.00000), day-t nan
+    by vol tercile (obs / alpha0 / alpha*): low 0.601 / 0.714 / 0.714; mid 0.889 / 0.890 / 0.890; high 0.995 / 0.968 / 0.968
+
+SIZE-alpha: rows 36120 on 420 days; TRAIN pinball by alpha: 0.0:0.1911 0.1:0.1853 0.2:0.1798 0.3:0.1748 0.4:0.1703 0.5:0.1663 0.6:0.1629 0.7:0.1606 0.8:0.1595 0.9:0.1600 1.0:0.1625 -> alpha* 0.8
+  VALID: pinball alpha* 0.1192 vs alpha 0 0.1280; per-day diff -0.0088 (se 0.0020), day-t -4.48 | alpha0 in80 0.791 in50 0.505 | alpha* in80 0.794 in50 0.503
+    in80 by vol tercile (alpha0 -> alpha*): low 0.90 -> 0.77; mid 0.81 -> 0.80; high 0.64 -> 0.81
+  FWD: pinball alpha* 0.1082 vs alpha 0 0.1277; per-day diff -0.0195 (se 0.0182), day-t -1.07 | alpha0 in80 0.677 in50 0.423 | alpha* in80 0.780 in50 0.485
+    in80 by vol tercile (alpha0 -> alpha*): low 0.87 -> 0.78; mid 0.62 -> 0.71; high 0.56 -> 0.88
+
+adoption rule (fixed): use alpha* if VALID improves with day-t <= -1.0 AND FWD not worse by > 1 se; else alpha 0.
+Educational only - not financial advice.

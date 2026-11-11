@@ -4,7 +4,11 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
+<<<<<<< HEAD
+Total ideas: 1045 · coded: 157 · parked: 432 · holdout failed: 23 · configurations tried (all lineages): 32895924
+=======
 Total ideas: 1043 · coded: 154 · parked: 429 · holdout failed: 23 · configurations tried (all lineages): 32895919
+>>>>>>> origin/claude/charming-mccarthy-i3rhhr
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -1018,7 +1022,14 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | guild-1110-flow1-2y | FLOW1-2Y: book-as-sensor rules on the 2-year lists | Research Guild 2026-11-10 (mcf-guild board; research/guild/1110/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1110-evd1-earnings-reaction | EVD1: earnings reaction session, sign(surprise) x sign(gap) -> 09:50-11:30/15:55 direction | Research Guild 2026-11-10 (mcf-guild board; research/guild/1110/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1110-d2pm-premarket-direction | D2PM: premarket VWAP drift / last-30-min drift sign -> 09:51 direction | Research Guild 2026-11-10 (mcf-guild board; research/guild/1110/NOTES.md) | – | – | – | – | – | – |
+<<<<<<< HEAD
+| parked | guild-1111-newsdir-headline-polarity | NEWSDIR: company headline polarity 16:00 prior -> 09:45 as 09:50-15:55 direction | Research Guild 2026-11-11 (mcf-guild board; research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-ungap-unexplained-gap-fade | UNGAP: fade gaps >= 1% with no news and no same-direction sector gap | Research Guild 2026-11-11 (mcf-guild board; research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-optflow-call-share | OPTFLOW: abnormal first-30-min near-ATM call premium share -> 10:00-15:55 direction | Research Guild 2026-11-11 (mcf-guild board; research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-limex-limit-at-signal | LIMEX: limit entry at the signal bar close (fill within 2/5/10 min) vs next-bar market entry | Research Guild 2026-11-11 (mcf-guild board; research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+=======
 | parked | mfx1-1110-midday-flip-open-book-exit | MFX1: when SPY crosses back over its open for 15 min after 12:00, close the open trades on the morning side | BDI daily 2026-11-10 (research/bdi/1110/NOTES.md) | – | – | – | – | – | – |
+>>>>>>> origin/claude/charming-mccarthy-i3rhhr
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
