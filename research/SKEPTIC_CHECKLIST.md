@@ -10,7 +10,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
    strict `<` for "known before entry". (GATE2 Amendment 2; compass re-tag changed 36% of tags.)
 3. **Default values in time lookups.** `dict.get(tod, 999)` turns unknown times into "always known". No defaults; assert.
    (GATE2 sizing.)
-4. **Whole-day labels.** "Held day", "flipped day", "up day" defined over the whole session are hindsight for an intraday entry.
+4. **Whole-day labels (events AND controls).** "Held day", "flipped day", "up day" defined over the whole session are hindsight for an intraday entry.
    Use "not yet flipped at entry". Day-type splits are fine for REPORTING only. (RCOMPASS held_day; counter-to-morning row.)
 5. **Selection window overlaps outcome window.** "Untriggered in the first 10 min" is part of the trade's own result: only the
    continuation after the selection time is tradable. (CONFIRM skip part t 19 = path continuity.)

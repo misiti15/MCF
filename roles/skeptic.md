@@ -321,3 +321,13 @@ minute-10 exit: measure post-10 continuation gross, random same-share exit contr
 PROTOCOL so plans run it before freezing.
 **Next**
 - Keep the checklist current; FAMC first nightly row (11-11 session); audit any new plan against the checklist.
+
+## Run 25 — 2026-11-11 06:41 ET (NEWSMID pre-audit; horizon ladder)
+**State:** checklist adopted in PROTOCOL. Observer's horizon ladder: only the slow end (S6 weekly momentum, thin) clears
+costs; live S6 frozen by its -25% halt (owner question). Builder: frozen book ~7% ahead of rotating model (model marks blank).
+**Did:** NEWSMID pre-audit: control 'no news that day' is a whole-day label -> use 'no news before entry'; drop pre-market
+re-posts; top pre-move tercile; lexicon sanity table.
+**Learned**
+- Whole-day labels sneak into CONTROLS too, not only into event definitions. Add to checklist item 4.
+**Next**
+- NEWSMID result 11-12; FAMC first rows; update checklist item 4 wording.
