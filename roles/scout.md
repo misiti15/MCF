@@ -14,9 +14,15 @@
 - Run 20: UNGAP (unexplained gaps fade?) CLOSED, wrong sign: unexplained gaps drift WITH the gap (+0.039 ATR t 1.49) vs
   explained flat; diff +0.041 t 1.75. Lead (21:00): main effort shifts to execution/sizing on the 14 cost-killed setups; I keep
   ONE direction pilot per day. FAMC first reaction session 11-11 (ALC, RGTI); Builder runs nightly.
+- Run 21: Lead paused direction pilots for a day. WHATWORKS (descriptive): of 128 live setup x account rows (>= 20 trades),
+  only RW1-gapdn-bounce-flowsell-short-FD (Testing 2) is + after live costs, + w/o best day and best-day share < 50%;
+  all 11 near-misses are shorts (gap-down / flow-sell), best days mostly 11-04/11-05. Asked Builder for the 2y lab column.
+  CLOSED tonight (others): LIMEX (limits adversely selected), cost-killed execution remedy. Builder next: CONFIRM entries.
 - Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW, NEWSDIR, UNGAP. Open: FAMC.
 
 ## Learned
+- Journals: git fetch --depth=1 origin mcf-data*, git show FETCH_HEAD:journal.db; live paper = runs.kind 'paper';
+  R = pnl_adj / (|entry - stop| x shares). Ledger effective dates give the rule-change context per window.
 - The 60-name / 63-session pilot kit (scratchpad optflow: stock1m, daily, news, opt30) makes a direction pilot a
   ~30-minute job; its limits (large caps, one regime, ~60 days) mean only a t >= 2 there is worth a 2-year plan.
 - By 09:50 public direction information (earnings surprise, headline polarity, premarket drift) is already in the gap;
