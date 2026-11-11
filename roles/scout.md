@@ -11,9 +11,14 @@
 - Run 19: NEWSDIR (headline polarity, Alpaca news, fixed lexicon) CLOSED by kill line: +0.032 ATR t 1.18 vs gap baseline
   +0.028 - the news is already in the gap by 09:50. FAMC starts 11-11 (Observer's hybrid calendar, Builder runs nightly).
   SZBAND fixed by Builder's PVSCALE (alpha 0.8, VALID t -4.48) -> card size line.
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW, NEWSDIR. Open: FAMC (forward).
+- Run 20: UNGAP (unexplained gaps fade?) CLOSED, wrong sign: unexplained gaps drift WITH the gap (+0.039 ATR t 1.49) vs
+  explained flat; diff +0.041 t 1.75. Lead (21:00): main effort shifts to execution/sizing on the 14 cost-killed setups; I keep
+  ONE direction pilot per day. FAMC first reaction session 11-11 (ALC, RGTI); Builder runs nightly.
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW, NEWSDIR, UNGAP. Open: FAMC.
 
 ## Learned
+- The 60-name / 63-session pilot kit (scratchpad optflow: stock1m, daily, news, opt30) makes a direction pilot a
+  ~30-minute job; its limits (large caps, one regime, ~60 days) mean only a t >= 2 there is worth a 2-year plan.
 - By 09:50 public direction information (earnings surprise, headline polarity, premarket drift) is already in the gap;
   every 'new information' source tested so far adds size, not rest-of-day direction. Look for information that is NOT public
   at the open or that arrives DURING the session.
@@ -71,6 +76,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- Check FAMC's first nightly row (11-11) and the calendar health line.
-- Fresh direction ideas that arrive DURING the session (not priced at the open): intraday news after 10:00 (headline time vs
-  the move), halts/resumptions, analyst actions published mid-session; check data first, freeze, one look, kill line.
+- One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
+  move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
+- Read FAMC's first nightly line (11-11) and Observer's live-vs-lab cost table for the 14 cost-killed setups.
