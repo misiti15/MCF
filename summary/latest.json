@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T13:00-05:00",
+ "updated": "2026-11-11T15:00-05:00",
  "session": "2026-11-11",
- "headline": "Reps finding: evidence comes from setup-DAYS, not trades - a session is worth ~5 independent trades however many it holds, so the fast lever is more days per setup, not more same-day trades or cleverer statistics.",
+ "headline": "Reps plan taking shape: more setups live is the only lever that scales, but more setups also means more lucky promotions - so it comes paired with a two-stage confirmation rule for the owner to decide.",
  "bullets": [
-  "Observer: same-day trades are correlated (ICC ~0.19); doubling a setup's same-day trades adds almost nothing (4.8 -> 5.1 effective).",
-  "No verdict rule (raw, shrinkage, e-process) beats the 69% 'demote everything' base rate on 26 live sessions; a setup's own excess mean-reverts.",
-  "Where reps are lost (Scout, 37,202 live signals): the Setup Generator by account halts and buying power (~126 signals a session); low-rep setups by borrow (HTB names can't be shorted).",
-  "Calibrated replays: a mirror-live replay is built; it runs tonight under research rule 21's audit (95% match, within 0.03R, never optimistic).",
-  "Tonight: owner memo ranking levers by new setup-days, plus the REGSW results."
+  "Levers by new setup-days/week: adding setups ~+1 each (scales); Gen halt +7.5 and buying power +4.7 (small, unproven); spread/twin/short-gate/cost filters stay - skipped signals do worse.",
+  "Skeptic's simulation: with today's promote flag, ~11% of zero-edge setups get flagged within 20 sessions and only ~40% of +0.10R setups; at 100 mostly-noise setups, ~70% of flags would be luck.",
+  "Proposed fix (owner decision tonight): On Deck as a confirmation stage scored only on sessions after the move (zero-edge passes ~11% -> ~1%), and the number of setups evaluated shown on every promotion suggestion.",
+  "Calibrated replay (FWDCAL) runs tonight with per-day configs; rule-21 result follows.",
+  "Tonight's PR: owner memo, REGSW switching results, the promotion DECISION."
  ],
  "progress": {
-  "ideas": 52,
-  "tested": 47,
+  "ideas": 54,
+  "tested": 49,
   "configs": 145,
   "passed": 0,
   "forward": 1
  },
- "next": "FWDCAL calibration and REGSW runs tonight; Scout's setup-days column; Observer's owner memo; evening PR.",
+ "next": "After 16:00: FAMC, REGSW runs, FWDCAL; then the evening PR with the reps memo and a DECISION.",
  "by_role": {
-  "scout": "REPS1: where live reps are lost, by lever.",
-  "builder": "Built the mirror-live replay for rule-21 calibration.",
-  "skeptic": "Audited FWDCAL and REPS1; endorsed setup-days as the currency.",
-  "observer": "Verdict rules give no lift; sessions, not trades, carry information.",
-  "lead": "Set setup-days as the ranking unit for reps levers."
+  "scout": "REPS1b: levers ranked by new setup-days; spread filters protect.",
+  "builder": "FWDCAL fixed per audit; runs tonight.",
+  "skeptic": "Promotion-luck simulation and the two-stage proposal.",
+  "observer": "Writing the owner reps memo.",
+  "lead": "Paired 'more setups' with a two-stage promotion rule for the owner."
  },
  "disclaimer": "Educational only — not financial advice."
 }
