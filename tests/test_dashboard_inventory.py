@@ -258,3 +258,31 @@ def test_research_guild_card():
                    "/summary/${day}.md", '"ideas"', '"tested"', '"configs"', '"passed"', '"forward"', "(stale)"):
         assert needle in card, needle
     assert "localStorage" not in card
+
+
+def test_account_totals_primary_ondeck_testing_all_only():
+    """Owner 2026-11-11: account totals only for Primary, On Deck and one Testing (all) summary; setup stats everywhere."""
+    assert ("Account totals shown: Primary, On Deck, Testing (all) — owner 2026-11-11; setup stats cover every account."
+            in HTML)
+    helper = HTML[HTML.index("window.MCF_TOTALS = "):]
+    helper = helper[:helper.index("</script>")]
+    # Testing (all) = Testing A-F; D/E/F optional; Gen and Graveyard never in the sum
+    for k in ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf"):
+        assert f'["{k}", ' in helper, k
+    assert '"gen"' not in helper and '"graveyard"' not in helper
+    assert 'SHOWN = ["primary", "testing"]' in helper
+    assert "alp(t)" in helper   # dollars = Alpaca, as the existing cards compute it
+    # the per-account cards for every other account carry owner-hidden (kept, not deleted)
+    cards = HTML[HTML.index('<nav id="acc-all"'):]
+    cards = cards[:cards.index("</script>")]
+    for k in ("testing2", "gen", "graveyard", "explore1", "livelab", "longhold"):
+        line = next(ln for ln in cards.splitlines() if f'k: "{k}"' in ln or f'{{ k: "{k}"' in ln)
+        assert "hide: true" in line or "hide: true" in cards[cards.index(line):cards.index(line) + 400], k
+    assert 'a.hide ? " owner-hidden"' in cards and 'id="acc-testingall"' in cards
+    for k in ("primary", "testing"):
+        line = next(ln for ln in cards.splitlines() if f'k: "{k}"' in ln)
+        assert "hide: true" not in line, k
+    # switcher: Primary, On Deck, Testing (all); old ?account= links stay as owner-hidden spans
+    assert '<span class="owner-hidden"> · ${lnk(x)}</span>' in HTML and "lv-totals-hidden" in HTML
+    # setup-level views keep the new accounts' tags
+    assert 'testingd: "TD", testinge: "TE", testingf: "TF"' in HTML
