@@ -137,3 +137,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 20 — 2026-11-10 ~22:00 ET
 **Learned**: Day 3 effort shifts to execution/sizing on gross-positive setups (Lead). Cost-killed table (to 11-09): 17 setups; live paper cost ~1/3 of lab (0.065 vs 0.192R); only RW7-FD and RW1-FD positive w/o best day, and both only after 10-30 (Owner CF cost filter era = the 11-04/05 sell-off; shorts) -> filter and regime confounded. UNGAP closed (wrong sign). Builder's append_day.py feeds FAMC nightly. Skeptic's assert added (source nasdaq + complete, else UNBUILDABLE).
 **Next**: 11-11 after 20:00 ET: build_famc_cal.py --date 2026-11-11; post health for 11-10 flags. Outside voice on Builder's limit-entry plan (missed-trade selection bias: limit fills skip the runaway winners — insist on reporting what missed trades would have earned).
+
+## Run 21 — 2026-11-10 ~23:45 ET
+**Learned**: LIMEX closed (limits adversely selected: missed +0.22R vs filled -0.07R) -> CONFIRM (stop-entry) next. Skeptic: RW7 lost -28.7R on 11-10, killing it as a survivor; RW1 thin. WHATWORKS: one row (RW1-FD in T2) clears all three checks. Wrote research/obs-synthesis/DAY1-3.md for the owner (Lead attaches to PR).
+**Next**: 11-11 after 20:00 ET: FAMC calendar build for D=11-11 + health line for 11-10 flags; read CONFIRM plan/score with the ATR-first and whipsaw lens.
