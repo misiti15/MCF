@@ -22,7 +22,8 @@ LIVELAB = {"CWT04-backside-lh-a25-short", "CWT04-backside-vwaptest-a15-short", "
            "CWT05-flush-m075-v5-long", "CWT09-gapdn-vwaploss-g10-short", "CWT12-flag-s1-long",
            "IDX1-qqq100-0955-TQQQ-trail", "IDX3-spy075-0955-3x-trail", "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
            "LD5-st2-breadthup-t05s1-long", "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long",
-           "LD7-ns1-idxturn-holdtr-long", "LIQ-pdl-sweep-open15-vwap-long", "NM-ETF-late-dip-di-long",
+           "LD7-ns1-idxturn-holdtr-long", "LIQ-pdl-sweep-open15-vwap-long",
+           # NM-ETF-late-dip-di-long left for Primary 2026-11-11 (owner Team yes 2026-11-10, ledger 2026-11-10-team6-primary)
            "NM-PM-gapdn-above-pdh-rvol-short", "NM-RWN4-ns2-spyup05-notfri-short",
            "NM-RWR1-exh150-gapdn-spyup-pm-short", "NM-RWR3-ns3-qqqup-early-short", "ST3-rsi5up-short-pm-t1s1-FD",
            "ST5-pdbrkup-short-mid-t05s1-FD", "ST6-volspikeup-short-mid-t1s1-FD"}

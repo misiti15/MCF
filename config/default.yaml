@@ -93,7 +93,7 @@ strategies:
   L3-gap-slope-rsi5hi-FD:
     # Gap-Down Rebound Overbought Short (all day): promoted from Testing 2 2026-10-30 (owner); promotion = move (off in Testing 2).
     # 76 live trades +0.173R; w/o best day +0.089R (10-26 = 61% of total R: '1 day' tag).
-    enabled: true
+    enabled: false   # moved to Testing 1 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11)
     refire: true
     refire_cooldown: 6
     type: lab
@@ -102,6 +102,17 @@ strategies:
     window: [950, 1500]
     prefilter: "gap_le:-2.6573517322540283"
     scale_out_r: null
+  NM-ETF-late-dip-di-long:
+    # Late-Day ETF Dip Buy: promoted from Live Lab 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); promotion = move (off in Live Lab).
+    # Block copied unchanged from config/account_livelab.yaml; Primary's own risk rules apply (0.25%, -2R latch, ~$4k slot).
+    enabled: true
+    type: lab
+    module: research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py
+    symbols: module
+    min_adv: 95000000
+    window: [1400, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, etf, fragile]
   ST7-rsi50dn-long-pm-t1s1-FD:
     # RSI Collapse Dip Buy (all day): promoted from Testing 1 2026-10-25 (owner); promotion = move (off in Testing 1).
     # Its variant ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD stays in Testing 1 (independent setup).
@@ -310,14 +321,14 @@ strategies:
   MF2-open-rsimidhi-flowsell-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Testing 1 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11)
     type: lab
     module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
   MF4-h40-open-flowsell-FD:
-    enabled: true
+    enabled: false   # moved to Testing 1 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11)
     type: lab
     module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
     min_adv: 95000000
@@ -333,7 +344,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   MF4-h40-open-flowsell:
-    enabled: true
+    enabled: false   # moved to Testing 2 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); kept apart from its FD twin (Testing 1)
     type: lab
     module: research/primitives/marcoflow/MF-h40-open-flowsell.py
     min_adv: 95000000
@@ -351,7 +362,7 @@ strategies:
   # moves" scan (research/owner1008: 7,374 configs, 33 positive on train+valid). Scored once on the locked holdouts
   # for information (research/owner1008/holdouts.json): none clears the t >= 1.0 bar on both. Ledger 2026-10-08-owner-ns5.
   NS1-rsidip-rsi5pop-long:
-    enabled: true
+    enabled: false   # moved to Testing 2 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); Testing 1 holds its twin NS1-rsidip-rsi5pop-long-FD
     type: lab
     module: research/owner1008/NS1-rsidip-rsi5pop-long.py
     min_adv: 95000000
@@ -434,20 +445,17 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
+    # TEAM-6 from 2026-11-11 (owner Team yes 2026-11-10; frozen, no rotation, review Fri 11-13 after the close).
+    - NM-ETF-late-dip-di-long   # promoted from Live Lab 2026-11-10 (~1.1/session, 14:00-15:00 ETFs: narrowest, so first)
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
-    - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
-    - MF4-h40-open-flowsell-FD   # promoted 2026-10-20
     - ST7-rsi50dn-long-pm-t1s1-FD   # promoted 2026-10-25 (~2.4/day: narrow, so early)
-    - L3-gap-slope-rsi5hi-FD   # promoted 2026-10-30 (~7/day live)
     - L3-gap-slope-fromopen-FD   # re-promoted 2026-10-30 (~19/day live)
     - intraday_momentum
     - orb20_a
-    - NS1-rsidip-rsi5pop-long
     - NS5-sma50-flush-oversold-long
     - NS3-failed-vwap-reclaim-short
     - NS2-sma50break-overbought-short
-    - MF4-h40-open-flowsell
     - MF3-open-flowsell-rsi5hi
     - exhaustion_short
     - MF5-flowsell-vwapup-rsi5hi

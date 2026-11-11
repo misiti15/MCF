@@ -50,7 +50,6 @@ live:
     - ST5-pdbrkup-short-mid-t05s1-FD   # ~0.78/session lab, 2 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
     - NM-RWR3-ns3-qqqup-early-short   # ~0.83/session lab, 4 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
     - NM-PM-gapdn-above-pdh-rvol-short   # ~0.93/session lab, 2 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - NM-ETF-late-dip-di-long   # ~1.10/session lab, 8 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
     - ST6-volspikeup-short-mid-t1s1-FD   # ~1.24/session lab, 6 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
     - CWT09-gapdn-vwaploss-g10-short   # ~1.29/session lab, 11 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
     - ST3-rsi5up-short-pm-t1s1-FD   # ~1.35/session lab, 2 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
@@ -203,16 +202,8 @@ strategies:
     window: [1400, 1500]
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
-  NM-ETF-late-dip-di-long:
-    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 8 live trades so far; ~1.10/session lab.
-    enabled: true
-    type: lab
-    module: research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py
-    symbols: module
-    min_adv: 95000000
-    window: [1400, 1500]
-    scale_out_r: null
-    tags: [near-miss, swarm1017, forward-observation, q8, etf, fragile]
+  # NM-ETF-late-dip-di-long: promoted to Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11);
+  # promotion = move, so its block is gone from this exclusive overlay (off here). Ran here 2026-11-05..11-10.
   ST6-volspikeup-short-mid-t1s1-FD:
     # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~1.24/session lab.
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
