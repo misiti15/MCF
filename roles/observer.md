@@ -159,3 +159,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 **Learned**: Builder: rotating model book is ~7% BEHIND the frozen live S6 book (model_equity/te blank) -> owner FYI via Lead. NEWSMID frozen (scores 11-12).
 **Posted**: MOMSIDE idea to Scout (intraday trades aligned vs counter to the name's 12-1 momentum decile; slow direction as an intraday condition; not in backlog).
 **Next**: tonight after 20:00 ET: build_famc_cal.py --date 2026-11-11 + health line for ALC/RGTI.
+
+## Run 26 — 2026-11-11 ~10:00 ET (market hours, no GETs)
+**Learned**: owner priority REGSW (setup on/off): Phase 1 0/74; GAP-U survivor under Skeptic re-break (shared-day null). COILGAP closed. I wrote RCOMPASS v2 (PLAN_V2.md + rcompass_v2.py): post-flip vs not-yet-flipped (no future label), ex-market gross, shared-day permutation null, pass rule frozen; Builder runs tonight.
+**Next**: tonight after 20:00 ET: FAMC calendar for 11-11 + health for ALC/RGTI; read RCOMPASS v2 output.
