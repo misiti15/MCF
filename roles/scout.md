@@ -101,7 +101,10 @@
   live is the scalable lever. Exit-model gap by hour 0.01-0.09R.
 - Run 29 (11-11 15:30 ET) REPS2 slot yield: median 2.7 setup-days/week per live slot; p_day = 1-exp(-0.193 x lab/day);
   near-dead twin-blocked slots MF4-h40-open-flowsell (0/14) and MF3 (2/15).
+- Run 30 (11-11 17:30 ET) REPS3 frozen forecast for the 11-12 roster: 482.8 setup-days/week = baseline; restructure moves
+  setups, adds none by itself; gains must come from unlocks / universe / unrated setups. Owner unlocked halt (300R), Gen x1.8.
 ## Next
+- Score REPS3 after >= 5 sessions from 11-12 (~11-18): realized vs forecast per account (scoring rule in research/reps3/NOTES.md).
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
   log / Gen candidate list is on a branch; check repv when pushed.
