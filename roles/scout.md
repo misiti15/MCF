@@ -8,9 +8,15 @@
   (Alpaca news headlines as point-in-time AMC list, 79% recall) on the full denominator; could start without live-code change.
 - Day 3 (mine): fresh direction sources. OPTFLOW pilot (Alpaca option minute bars, unsigned call-share proxy) CLOSED by kill
   line: monotone right sign but Q5-Q1 +0.035 ATR, day-t 1.05 (54 sessions). Signed version = new counted look, Lead's call.
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW pilot. Open: FAMC (forward).
+- Run 19: NEWSDIR (headline polarity, Alpaca news, fixed lexicon) CLOSED by kill line: +0.032 ATR t 1.18 vs gap baseline
+  +0.028 - the news is already in the gap by 09:50. FAMC starts 11-11 (Observer's hybrid calendar, Builder runs nightly).
+  SZBAND fixed by Builder's PVSCALE (alpha 0.8, VALID t -4.48) -> card size line.
+- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW, NEWSDIR. Open: FAMC (forward).
 
 ## Learned
+- By 09:50 public direction information (earnings surprise, headline polarity, premarket drift) is already in the gap;
+  every 'new information' source tested so far adds size, not rest-of-day direction. Look for information that is NOT public
+  at the open or that arrives DURING the session.
 - Alpaca serves historical option minute / 30-min bars (OCC symbols built directly: und + yymmdd + C/P + strike x1000,
   8 digits; Friday expiries; strikes on 1 / 2.5 / 5 grids). 60 names x 54 sessions ~ 1 hour of GETs. Bars are unsigned.
 - A prior-N-day percentile band is a base rate, not a today-rate: it is calibrated on average and miscalibrated
@@ -65,6 +71,6 @@
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
 ## Next
-- If Lead wants it: signed option volume (option trades vs quotes) as ONE new counted look on a larger sample, frozen first.
-- Other fresh direction sources to check for data access first: short-sale volume (FINRA daily, idea sw-w5-finra-shvol),
-  ETF creation/redemption, news sentiment from Alpaca news (headline polarity at 09:50 for non-earnings movers).
+- Check FAMC's first nightly row (11-11) and the calendar health line.
+- Fresh direction ideas that arrive DURING the session (not priced at the open): intraday news after 10:00 (headline time vs
+  the move), halts/resumptions, analyst actions published mid-session; check data first, freeze, one look, kill line.
