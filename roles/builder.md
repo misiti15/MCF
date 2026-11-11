@@ -88,6 +88,13 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-11 12:40: OWNER P1 item 2 (Lead lead-20261111-1100-3): FWDCAL mirror-live calibration built
+  (research/fwdcal/mirror.py; vendor/ = fwdrep run.py + report.py from charming-mccarthy d3901f7e, ROOT line only).
+  Each account replays with its own snapshot (enabled setups, live/shorts/exits) and caps, twin block, -R halt, Testing A
+  top-500 pool from 11-04, and --delay D for entries (unit-tested: D=1 fills at the next bar's open). Audit = rule 21 per
+  account plus a cause for every unmatched trade. EVENING after run_evening.sh: bash research/fwdcal/run_fwdcal.sh
+  (11-04..11-11, D=1 then D=0). Limits: account yaml = today's (shallow clone has no config history); equity = config
+  starting_equity, not the live balance (buying power differs, mainly Gen).
 - NIGHTLY from 11-11 after 16:00 ET: python research/evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
   n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
