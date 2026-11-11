@@ -88,6 +88,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-11 14:45: FWDCAL takes Skeptic's 4 points: config per day via git archive of the default-branch commit at 09:30
+  (needs git fetch --shallow-since=2026-10-28 origin claude/intraday-trading-system-witis4), live equity from status.json,
+  D picked on 11-04..11-06, rule 21 once on 11-10..11-11, exit-kind gap table. EVENING ORDER: run_evening.sh, then
+  bash research/fwdcal/run_fwdcal.sh, then REGSW-2 / RCOMPASS v2. Engine code = today's (not mirrored) - say so.
 - 11-11 12:40: OWNER P1 item 2 (Lead lead-20261111-1100-3): FWDCAL mirror-live calibration built
   (research/fwdcal/mirror.py; vendor/ = fwdrep run.py + report.py from charming-mccarthy d3901f7e, ROOT line only).
   Each account replays with its own snapshot (enabled setups, live/shorts/exits) and caps, twin block, -R halt, Testing A
