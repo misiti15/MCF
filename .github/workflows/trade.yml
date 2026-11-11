@@ -77,6 +77,8 @@ jobs:
       ALPACA_DATA_FEED: sip
       MCF_SMTP_USER: ${{ secrets.MCF_SMTP_USER }}
       MCF_SMTP_PASSWORD: ${{ secrets.MCF_SMTP_PASSWORD }}
+      # LR5 / LR7 alerts (owner 2026-11-11): optional push webhook (JSON {"text"}); nothing is sent while the secret is unset
+      MCF_ALERT_WEBHOOK: ${{ secrets.MCF_ALERT_WEBHOOK }}
       PYTHONUNBUFFERED: "1"
       # capacity1103: on 2026-10-30 the 14:3x standby hand-over hung 10 min in setup-python's pip-cache download on all 5
       # accounts at once (the actions/cache default segment timeout is 10 min) -> 11-14 min without polls. 1 min, then pip
@@ -182,7 +184,8 @@ jobs:
         id: w
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if [ "$dow" -le 5 ] && [ "$now" -ge 1555 ] && [ "$now" -lt 2000 ]; then echo "run=true" >> "$GITHUB_OUTPUT"
+          # from 12:55 (LR1: a 13:00 half-day close flattens at 12:55); mcf.execution.handover eod checks the calendar
+          if [ "$dow" -le 5 ] && [ "$now" -ge 1255 ] && [ "$now" -lt 2000 ]; then echo "run=true" >> "$GITHUB_OUTPUT"
           else echo "run=false" >> "$GITHUB_OUTPUT"; echo "not after the close ($now ET): EOD not started from this run"; fi
       - uses: actions/checkout@v4
         if: steps.w.outputs.run == 'true'

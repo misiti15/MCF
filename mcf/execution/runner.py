@@ -26,6 +26,7 @@ import numpy as np
 import pandas as pd
 
 from ..backtest.engine import Costs, in_play_filter, is_extended, rank_contexts, simulate, universe_ok
+from ..costs import cost_r
 from ..data.bars import TZ, normalize, rth
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
@@ -53,6 +54,14 @@ def parse_coid(coid: str | None, prefix: str | None = None):
     if m is None or m["setup"].startswith("flatten"):
         return None
     return m["setup"], m["symbol"], m["day"], m["hhmm"]
+
+
+def _num(x) -> float | None:
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return v if v == v else None
 
 
 def _info(raw) -> dict:
@@ -95,7 +104,29 @@ class PaperRunner:
         self.journal = Journal(cfg["data"]["journal_path"])
         self.run_id = self.journal.get_or_create_run("paper", "MCF Update (live paper)")
         self.risk = RiskManager(cfg, self.broker.equity())
-        self.flatten = t(cfg["session"]["flatten_by"])
+        # LR1 (owner 2026-11-11): the flatten time is min(session.flatten_by, calendar close - flatten_lead_min). On a
+        # half day (13:00 close) that is 12:55; self.flatten is re-derived from the broker clock / calendar each session.
+        self.flatten_cfg = t(cfg["session"]["flatten_by"])
+        self.flatten = self.flatten_cfg
+        self.flatten_lead_min = float(cfg["session"].get("flatten_lead_min", 5))
+        self.session_close = None                        # datetime.time of today's exchange close, once known
+        self.session_done = False                        # True once the closing flatten ran (EOD review may follow)
+        self._sleep = lambda s: _time.sleep(s)          # injectable (tests); looks _time.sleep up at call time
+        # LR3: cost-in R for the loss stops (account.loss_stops_cost_r_accounts) and open marks in the account halt
+        acct_name = cfg.get("account_name", "primary")
+        self.cost_r_stops = acct_name in set((cfg.get("account") or {}).get("loss_stops_cost_r_accounts") or [])
+        self.risk.include_open = self.cost_r_stops
+        # LR4 kill switch / LR5 position check / LR7 alerts (see _kill_check, _check_positions, _notify)
+        self.kill: dict | None = None
+        self.kill_git_dir: str | None = None             # set by `mcf live` to the state checkout (origin = this repo)
+        self._kill_done: set[str] = set()
+        pc = self.live.get("position_check") or {}
+        self.pos_check = bool(pc.get("enabled", True))
+        self.pos_persist = max(1, int(pc.get("persist_polls", 5)))
+        self._pos_seen: dict[str, dict] = {}
+        self.mismatch_block: set[str] = set()
+        self._held_pos: dict = {}
+        self._alerted: set[str] = set()
         self.no_entry_before = t(self.live.get("no_entry_before", "09:30"))
         self.fired: set[tuple[str, str]] = set()
         self.seen: set[tuple[str, str]] = set()      # signals already journaled today
@@ -223,17 +254,23 @@ class PaperRunner:
             self._restore_scaling()
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
-            td = done.loc[done.date == str(today)]
-            self.risk.state.realized_r = float(td["r_multiple"].sum())
+            td = done.loc[done.date == str(today)].copy()
+            # LR3: the loss stops count R after costs in account.loss_stops_cost_r_accounts (Primary), raw R elsewhere
+            td["_rc"] = cost_r(td) if len(td) else []
+            td["_rs"] = td["_rc"] if self.cost_r_stops else td["r_multiple"]
+            self.risk.state.realized_r = float(td["_rs"].sum())
+            self.risk.state.realized_cost_r = float(td["_rc"].sum())
             # per-setup net R today (account.max_setup_daily_loss_r)
+            has = "strategy" in td.columns and len(td)
             self.risk.state.realized_r_by_strategy = (
-                {str(k): float(v) for k, v in td.groupby("strategy")["r_multiple"].sum().items()}
-                if "strategy" in td.columns and len(td) else {})
+                {str(k): float(v) for k, v in td.groupby("strategy")["_rs"].sum().items()} if has else {})
+            self.risk.state.realized_cost_r_by_strategy = (
+                {str(k): float(v) for k, v in td.groupby("strategy")["_rc"].sum().items()} if has else {})
             # LL-LATCH after a restart: a setup that touched the limit at any point today (running net R in exit order)
             # stays stopped, even if it has since recovered
-            if "strategy" in td.columns and len(td):
+            if has:
                 order = td.sort_values("exit_time", kind="stable") if "exit_time" in td.columns else td
-                low = order.groupby("strategy")["r_multiple"].cumsum().groupby(order["strategy"]).min()
+                low = order.groupby("strategy")["_rs"].cumsum().groupby(order["strategy"]).min()
                 self.risk.latch_setup_losses({str(k): float(v) for k, v in low.items()})
         self._restore_latches(sig)
         self._sync_open()
@@ -415,7 +452,11 @@ class PaperRunner:
     PENDING_GRACE_S = 300
 
     def _sync_open(self):
-        held = set(self.broker.positions()) if not self.dry_run else self._mcf_symbols()
+        if not self.dry_run:
+            self._held_pos = dict(self.broker.positions())    # LR5 reads the same snapshot (no second call)
+            held = set(self._held_pos)
+        else:
+            held = self._mcf_symbols()
         now = _time.time()
         self.pending = {s: t0 for s, t0 in self.pending.items() if s not in held and now - t0 < self.PENDING_GRACE_S}
         self.risk.state.open_symbols = (held | set(self.pending)) & self._mcf_symbols()
@@ -933,6 +974,7 @@ class PaperRunner:
         today = now.date()
         self._now = now
         bars = self.fetch(now)
+        self._open_marks(bars)                        # LR3: open lots' R after costs (the Primary halt counts it)
         self.manage(now, bars)
         self.scale_outs(now, bars)
         stale = self._check_data(now, bars)
@@ -941,6 +983,8 @@ class PaperRunner:
         self._escalate(now, stale)
         if stale:
             return                                    # stale data: no new entries (signals would use old bars)
+        if self.kill is not None:
+            return                                    # LR4 kill switch: no new entries (open lots keep their brackets)
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
@@ -1165,6 +1209,8 @@ class PaperRunner:
         if now.time() < self.no_entry_before:
             self._log(sig, "shadow", f"before {self.no_entry_before:%H:%M} (owner rule)", px, now)
             return
+        if sig.symbol in self.mismatch_block:             # LR5: broker vs journal mismatch on this symbol
+            return self._log(sig, "skipped", "position mismatch", px, now)
         if sig.side == -1:
             sh = self.cfg.get("shorts", {})
             if not sh.get("enabled", True):
@@ -1243,10 +1289,56 @@ class PaperRunner:
             self.last_entry[k] = max(self.last_entry.get(k, ""), self._moment(sig, ctx, now))
 
     # ---------------------------------------------------------------- session
+    def _set_session_close(self, now: pd.Timestamp, clock=None):
+        """LR1: today's exchange close and the flatten time that follows from it. While the market is open the broker
+        clock's next_close IS today's close; otherwise (pre-open, restart) the calendar is read (market_calendar)."""
+        from .market_calendar import flatten_time, is_early_close, session_close
+
+        close = None
+        if clock is not None and getattr(clock, "is_open", False) and getattr(clock, "next_close", None) is not None:
+            nc = pd.Timestamp(clock.next_close)
+            nc = (nc.tz_localize("UTC") if nc.tzinfo is None else nc).tz_convert(NY)
+            if nc.date() == now.date():
+                close = nc.time().replace(second=0, microsecond=0)
+        if close is None and self.session_close is not None:
+            return
+        if close is None:
+            try:
+                close = session_close(now.date(), self.broker if not self.dry_run else None,
+                                      use_http=not self.dry_run)
+            except Exception as e:                       # never fatal: keep the configured flatten
+                print(f"session close lookup failed ({type(e).__name__}); flatten stays {self.flatten_cfg:%H:%M}")
+                return
+        if close != self.session_close:
+            self.session_close = close
+            self.flatten = flatten_time(self.flatten_cfg, close, self.flatten_lead_min)
+            self.health.update(session_close=f"{close:%H:%M}", flatten_at=f"{self.flatten:%H:%M}",
+                               early_close=is_early_close(close))
+            if is_early_close(close):
+                print(f"EARLY CLOSE today: market closes {close:%H:%M} ET, MCF flattens at {self.flatten:%H:%M} ET")
+
+    def _after_close_flatten(self, now: pd.Timestamp):
+        """LR1 safety net: the job found the market already closed for the day (e.g. it started after a 13:00 half-day
+        close). Close whatever MCF still holds from today's orders (after hours: extended-hours limit), never anything
+        else. A holiday or a flat book is a no-op."""
+        if self.dry_run or self.session_done:
+            return
+        try:
+            mine = {o.symbol for o in self.broker.orders_today_with_prefix(COID_PREFIX, now.normalize().to_pydatetime())}
+            held = sorted(mine & set(self.broker.positions()))
+        except Exception as e:
+            print(f"after-close check failed: {e}")
+            return
+        if held:
+            self._notify("after_close_exposure", f"market closed with MCF positions still open: {held}; closing them "
+                         "after hours (extended-hours limit orders)")
+            self.flatten_mcf()
+
     def run(self, until: pd.Timestamp | None = None, poll_seconds: int = 60):
         """Trade until `until` (end of this job's slot) or the session flatten time."""
         clock = self.broker.clock()
         now = pd.Timestamp(clock.timestamp).tz_convert(NY)
+        self._set_session_close(now, clock)
         self.restore(now.date())
         last_status = None
         while True:
@@ -1259,7 +1351,7 @@ class PaperRunner:
                     break
                 print(f"broker clock failed: {e}")
                 self._broker_unreachable(now, e)
-                _time.sleep(poll_seconds)
+                self._sleep(poll_seconds)
                 continue
             now = pd.Timestamp(clock.timestamp).tz_convert(NY)
             self._broker_reachable(now)
@@ -1268,29 +1360,63 @@ class PaperRunner:
                 break
             if not clock.is_open:
                 if now.time() >= t("16:00") or pd.Timestamp(clock.next_open).tz_convert(NY).date() > now.date():
-                    print("market closed for the day (after close or holiday)")
+                    print("market closed for the day (after close, half-day close or holiday)")
+                    self._after_close_flatten(now)
                     break
                 self.write_status(now, "pre-open")
-                _time.sleep(min(30, max(1, (pd.Timestamp(clock.next_open).tz_convert(NY) - now).total_seconds())))
+                self._sleep(min(30, max(1, (pd.Timestamp(clock.next_open).tz_convert(NY) - now).total_seconds())))
                 continue
+            self._set_session_close(now, clock)
             if now.time() >= self.flatten:
-                self.flatten_mcf()
-                _time.sleep(20)  # let the closing market orders fill before reconciling
+                self.flatten_mcf(retry_until=self._retry_deadline(now))
+                self.session_done = True
+                if not self.health.get("flatten_failed"):
+                    self.risk.state.open_r = 0.0          # flat: no open marks left (status only)
+                self._sleep(20)  # let the closing market orders fill before reconciling
                 break
+            self._kill_check(now)
             self.step(now)
             self._sync_open()
+            self._check_positions(now)
             if last_status is None or now - last_status >= pd.Timedelta(minutes=self.live.get("status_every_min", 2)):
                 self.reconcile(now.date())
                 self.write_status(now, "trading")
                 last_status = now
-            _time.sleep(max(1, poll_seconds - now.second % poll_seconds + 3))
+            self._sleep(max(1, poll_seconds - now.second % poll_seconds + 3))
         self.reconcile(now.date())
         if now.time() >= self.flatten:
             self.what_if(now.date())
         self.write_status(now, "closed" if now.time() >= self.flatten else "handover")
 
-    def flatten_mcf(self):
-        """Close MCF's own positions/orders only — never anything else on the account."""
+    FLATTEN_RETRY_S = 20
+
+    def _retry_deadline(self, now: pd.Timestamp) -> pd.Timestamp:
+        """LR7: the closing flatten keeps retrying until 1 minute before the calendar close (15:59; 12:59 on a half day)."""
+        close = self.session_close or t("16:00")
+        return pd.Timestamp.combine(now.date(), close).tz_localize(NY) - pd.Timedelta(minutes=1)
+
+    def _broker_now(self) -> pd.Timestamp:
+        try:
+            return pd.Timestamp(self.broker.clock().timestamp).tz_convert(NY)
+        except Exception:
+            return pd.Timestamp.now(tz=NY)
+
+    def _close_pass(self, syms, attempt: str):
+        for sym in syms:
+            try:
+                if not self.broker.close_mcf_position(sym, COID_PREFIX):
+                    print(f"close {sym} not confirmed (pass {attempt})")
+            except Exception as e:
+                print(f"close {sym} failed: {e}")
+
+    def flatten_mcf(self, retry_until: pd.Timestamp | None = None):
+        """Close MCF's own positions/orders only — never anything else on the account.
+
+        LR7 (owner 2026-11-11): when symbols are still open after the 3 passes and `retry_until` is given (the closing
+        flatten: calendar close - 1 min), every FLATTEN_RETRY_S seconds their orders are cancelled and the close is
+        retried until that time; then one more pass (after the close, close_mcf_position uses an extended-hours limit).
+        Whatever is still open goes to health.flatten_failed and raises an alert (_notify); the watchdog (act on Primary
+        until calendar close + 5 min) acts on health.flatten_failed too."""
         print("flatten time: closing MCF positions")
         if self.dry_run:
             return
@@ -1300,25 +1426,176 @@ class PaperRunner:
                 COID_PREFIX, pd.Timestamp.now(tz=NY).normalize().to_pydatetime())}
         except Exception as e:
             print(f"order lookup failed: {e}")
-        self.broker.cancel_orders_with_prefix(COID_PREFIX)
+        try:
+            self.broker.cancel_orders_with_prefix(COID_PREFIX)
+        except Exception as e:
+            print(f"cancel by prefix failed: {e}")
         left = []
         for attempt in range(3):
             left = sorted(mine & set(self.broker.positions()))
             if not left:
                 break
-            for sym in left:
-                try:
-                    if not self.broker.close_mcf_position(sym, COID_PREFIX):
-                        print(f"close {sym} not confirmed (pass {attempt + 1})")
-                except Exception as e:
-                    print(f"close {sym} failed: {e}")
-            _time.sleep(3)
+            self._close_pass(left, str(attempt + 1))
+            self._sleep(3)
         left = sorted(mine & set(self.broker.positions()))
+        retries = 0
+        if left and retry_until is not None:
+            print(f"FLATTEN: {left} still open after 3 passes; retrying every {self.FLATTEN_RETRY_S}s until "
+                  f"{retry_until:%H:%M} ET")
+            while left and self._broker_now() < retry_until:
+                retries += 1
+                self._sleep(self.FLATTEN_RETRY_S)
+                try:
+                    self.broker.cancel_orders_with_prefix(COID_PREFIX)
+                except Exception as e:
+                    print(f"cancel by prefix failed: {e}")
+                self._close_pass(left, f"retry {retries}")
+                self._sleep(3)
+                left = sorted(mine & set(self.broker.positions()))
+                self.health["flatten_retry"] = {"retries": retries, "left": left, "until": str(retry_until)}
+            if left:                                     # final pass at/after the close: extended-hours limit closes
+                self._close_pass(left, "final")
+                self._sleep(3)
+                left = sorted(mine & set(self.broker.positions()))
         self.health["flatten_failed"] = left
         if left:
-            print(f"FLATTEN FAILED: still open after 3 passes: {left}")
+            print(f"FLATTEN FAILED: still open after 3 passes{f' and {retries} retries' if retries else ''}: {left}")
+            self._notify("flatten_failed", f"flatten failed: MCF positions still open: {left}")
         else:
             print("flatten complete: no MCF positions open")
+
+    # ---------------------------------------------------------------- alerts (LR5 / LR7)
+    def _notify(self, kind: str, text: str, key: str | None = None):
+        """Alert path (owner 2026-11-11; no mid-session emails, owner 2026-10-16): health.alerts in status.json (read by
+        the dashboard and the half-hourly glitch check), a GitHub ::error:: annotation on the run, and a push to the
+        repository secret MCF_ALERT_WEBHOOK when it is set (JSON {"text"}; nothing is sent while it is unset). Once per
+        key per session. Never raises."""
+        key = key or f"{kind}:{text}"
+        if key in self._alerted:
+            return
+        self._alerted.add(key)
+        acct = (self.cfg or {}).get("account_name", "primary")
+        rec = {"at": str(self._now or pd.Timestamp.now(tz=NY)), "kind": kind, "account": acct, "text": text}
+        self.health["alerts"] = [*self.health.get("alerts", []), rec][-50:]
+        print(f"::error title=MCF {acct} {kind}::{text}", flush=True)
+        url = os.environ.get("MCF_ALERT_WEBHOOK")
+        if url and not self.dry_run:
+            try:
+                import urllib.request
+
+                req = urllib.request.Request(url, method="POST", headers={"Content-Type": "application/json"},
+                                             data=json.dumps({"text": f"MCF {acct} {kind}: {text}"}).encode())
+                urllib.request.urlopen(req, timeout=10).close()
+            except Exception as e:
+                print(f"alert push failed: {type(e).__name__}")
+
+    # ---------------------------------------------------------------- kill switch (LR4)
+    def _kill_check(self, now: pd.Timestamp):
+        """LR4 kill switch, checked every poll: the HALT flag (mcf.execution.kill.read_flag: the HALT.json file on the
+        mcf-control branch, written by the manual kill.yml workflow; or a local file MCF_HALT_FILE). For this account
+        (or "all"): mode "entries" = no new entries for the rest of the session; mode "flatten" = no new entries, and
+        cancel + flatten every MCF order/position once (per flag). A read failure keeps the last known flag."""
+        from .kill import flag_for, read_flag
+
+        try:
+            flags = read_flag(self.kill_git_dir)
+        except Exception as e:
+            print(f"kill flag read failed ({type(e).__name__}); keeping {self.kill and self.kill.get('mode')}")
+            return
+        if flags is None:                                 # unreadable: keep the last known state
+            return
+        f = flag_for(flags, (self.cfg or {}).get("account_name", "primary"))
+        if f is None:
+            if self.kill is not None:
+                print("KILL SWITCH cleared: new entries allowed again")
+            self.kill = None
+            self.health["kill"] = None
+            return
+        if self.kill is None or self.kill.get("at") != f.get("at") or self.kill.get("mode") != f.get("mode"):
+            self._notify("kill_switch", f"kill switch set: mode {f.get('mode')} (set {f.get('at')} by {f.get('by')})",
+                         key=f"kill:{f.get('at')}:{f.get('mode')}")
+        self.kill = f
+        self.health["kill"] = {**f, "seen": str(now)}
+        tag = f"{f.get('at')}:{f.get('mode')}"
+        if f.get("mode") == "flatten" and tag not in self._kill_done:
+            self._kill_done.add(tag)
+            self.flatten_mcf(retry_until=now + pd.Timedelta(minutes=2))
+            self.health["kill"]["flattened"] = self.health.get("flatten_failed") or []
+            self._sync_open()
+
+    # ---------------------------------------------------------------- broker vs journal positions (LR5)
+    SPLIT_RATIOS = (2, 3, 4, 5, 8, 10, 20, 1 / 2, 1 / 3, 1 / 4, 1 / 5, 1 / 8, 1 / 10, 1 / 20)
+
+    def _expected_qty(self) -> dict[str, float]:
+        """Signed shares MCF's open lots should hold per symbol (lot quantity, less a partial exit / scale-out)."""
+        out: dict[str, float] = {}
+        for sym, lots in self.lots.items():
+            for lot in lots.values():
+                q = lot.get("left")
+                if q is None:
+                    q = float(lot.get("qty") or 0) - float(lot.get("scaled") or 0)
+                out[sym] = out.get(sym, 0.0) + int(lot.get("side") or 0) * float(q)
+        return out
+
+    def _check_positions(self, now: pd.Timestamp):
+        """LR5 (owner 2026-11-11), every poll on every account: broker quantity per symbol vs the open journal lots.
+        A symbol the broker holds with no MCF lot (a phantom, e.g. SOXX in T1X), a quantity that differs from the lots
+        (e.g. MTUM's fake 1:4 split on 11-05: 'corporate_action' when the ratio is a split ratio), or the wrong side, is
+        flagged once it has persisted live.position_check.persist_polls polls (fills / reconcile lag clear sooner):
+        health.position_mismatch, no new entries in that symbol for the rest of the session (mismatch_block), and an
+        alert. Nothing is closed automatically: that stays the owner's decision. Symbols with an entry pending are
+        skipped. Never raises."""
+        if self.dry_run or not self.pos_check:
+            return
+        try:
+            held = self._held_pos or self.broker.positions()
+            exp = self._expected_qty()
+            found: dict[str, dict] = {}
+            for sym in sorted(set(held) | {s for s, q in exp.items() if abs(q) > 1e-9}):
+                if sym in self.pending:
+                    continue
+                p = held.get(sym)
+                bq = float(getattr(p, "qty", 0) or 0) if p is not None else 0.0
+                side = str(getattr(getattr(p, "side", None), "value", getattr(p, "side", "")) or "").lower()
+                if p is not None and side == "short" and bq > 0:
+                    bq = -bq
+                eq = exp.get(sym, 0.0)
+                if abs(bq - eq) < 1e-6:
+                    continue
+                rec = {"symbol": sym, "broker_qty": bq, "journal_qty": eq,
+                       "avg_entry_price": None if p is None else _num(getattr(p, "avg_entry_price", None))}
+                if abs(eq) < 1e-9:
+                    rec["kind"] = "unknown_symbol"       # held at the broker, no open MCF lot (phantom / not ours)
+                elif abs(bq) < 1e-9:
+                    rec["kind"] = "missing"              # lots open in the journal, broker flat
+                elif (bq > 0) != (eq > 0):
+                    rec["kind"] = "side_mismatch"
+                else:
+                    ratio = bq / eq
+                    rec["kind"] = "corporate_action" if any(abs(ratio - k) < 0.02 * k for k in self.SPLIT_RATIOS) \
+                        else "qty_mismatch"
+                    rec["ratio"] = round(ratio, 4)
+                found[sym] = rec
+            for sym in list(self._pos_seen):
+                if sym not in found or self._pos_seen[sym]["kind"] != found[sym]["kind"]:
+                    self._pos_seen.pop(sym)
+            flagged = []
+            for sym, rec in found.items():
+                seen = self._pos_seen.setdefault(sym, {"kind": rec["kind"], "since": str(now), "polls": 0})
+                seen["polls"] += 1
+                if seen["polls"] >= self.pos_persist:
+                    flagged.append({**rec, "since": seen["since"], "polls": seen["polls"]})
+                    if sym not in self.mismatch_block:
+                        self.mismatch_block.add(sym)
+                        self._notify("position_mismatch",
+                                     f"{sym}: broker {rec['broker_qty']:g} vs journal lots {rec['journal_qty']:g} "
+                                     f"({rec['kind']}); new entries in {sym} blocked; no automatic close",
+                                     key=f"pos:{sym}:{rec['kind']}")
+            self.health["position_mismatch"] = flagged
+            self.health["position_check"] = {"at": str(now), "symbols": len(set(held) | set(exp)),
+                                             "blocked": sorted(self.mismatch_block)}
+        except Exception as e:
+            print(f"position check failed: {type(e).__name__}: {e}")
 
     def reconcile(self, day):
         """Pair entry/exit fills from Alpaca into closed trades in the journal."""
@@ -1332,13 +1609,19 @@ class PaperRunner:
         self.journal.add_trades(self.run_id, trades)
         self._release_closed_lots()
         if len(trades):
-            today = trades[trades["date"] == str(day)]   # late-recovered trades of earlier sessions don't count today
-            self.risk.state.realized_r += float(today["r_multiple"].sum())
-            if "strategy" in today.columns:
+            today = trades[trades["date"] == str(day)].copy()   # late-recovered trades of earlier sessions don't count
+            rc = cost_r(today) if len(today) else pd.Series(dtype=float)
+            rs = rc if self.cost_r_stops else today["r_multiple"].astype(float)   # LR3 basis (see restore)
+            self.risk.state.realized_r += float(rs.sum())
+            self.risk.state.realized_cost_r += float(rc.sum())
+            if "strategy" in today.columns and len(today):
                 by = self.risk.state.realized_r_by_strategy
+                byc = self.risk.state.realized_cost_r_by_strategy
+                today["_rs"], today["_rc"] = rs, rc
                 order = today.sort_values("exit_time", kind="stable") if "exit_time" in today.columns else today
-                for k, v in zip(order["strategy"], order["r_multiple"]):   # trade by trade, in exit order:
+                for k, v, vc in zip(order["strategy"], order["_rs"], order["_rc"]):   # trade by trade, in exit order:
                     by[str(k)] = by.get(str(k), 0.0) + float(v)
+                    byc[str(k)] = byc.get(str(k), 0.0) + float(vc)
                     self.risk.latch_setup_losses({str(k): by[str(k)]})   # LL-LATCH: touching the limit latches
             print(f"reconciled {len(trades)} trades for {day}")
 
@@ -1444,9 +1727,8 @@ class PaperRunner:
             print(f"poll log failed: {type(e).__name__}: {e}")
         self._poll_log_ms = round((_time.perf_counter() - t0) * 1000, 2)
 
-    def _mtm_snapshot(self, bars: dict) -> dict:
-        """The poll's marked-to-market snapshot (see mtm_snapshot). Lot entry/stop of lots this process did not enter
-        (restart) come from today's journal signals, read once. Reads state only; changes nothing the runner uses."""
+    def _mtm_restore(self):
+        """Lot entry/stop of lots this process did not enter (restart), from today's journal signals, read once."""
         if not self._mtm_restored:
             self._mtm_restored = True
             try:
@@ -1458,8 +1740,44 @@ class PaperRunner:
                             self._mtm_lot[coid] = (float(r.ref_price), float(r.stop))
             except Exception as e:
                 print(f"mtm restore skipped: {type(e).__name__}")
+
+    def _open_marks(self, bars: dict) -> float:
+        """LR3: R after costs of the open lots, marked at the last completed bar: side x (last - entry) / |entry - stop|
+        x share still held, less a market exit (max($0.01, 1 bp x last) per share, costs.live_model) per lot. Lots
+        without a bar or a stop count 0. Sets risk.state.open_r. Never raises."""
+        try:
+            self._mtm_restore()
+            m = (self.cfg.get("costs") or {}).get("live_model") or {}
+            mmin, mbps = float(m.get("market_exit_min_per_share", 0.01)), float(m.get("market_exit_bps", 1.0))
+            tot = 0.0
+            for sym, lots in self.lots.items():
+                b = bars.get(sym)
+                if b is None or not len(b):
+                    continue
+                last = float(b["close"].iloc[-1])
+                for coid, lot in lots.items():
+                    entry, stop = self._mtm_lot.get(coid, (None, None))
+                    entry = self._fill_px.get(str(lot.get("order_id"))) or entry
+                    if entry is None or stop is None or not abs(float(entry) - float(stop)) > 0:
+                        continue
+                    left, orig = lot.get("left"), lot.get("orig_qty")
+                    frac = (float(left) / float(orig)) if left is not None and orig else 1.0
+                    rps = abs(float(entry) - float(stop))
+                    side = int(lot.get("side") or 0)
+                    tot += (side * (last - float(entry)) - max(mmin, mbps * last / 1e4)) / rps * frac
+            self.risk.state.open_r = tot
+        except Exception as e:
+            print(f"open marks failed: {type(e).__name__}: {e}")
+        return self.risk.state.open_r
+
+    def _mtm_snapshot(self, bars: dict) -> dict:
+        """The poll's marked-to-market snapshot (see mtm_snapshot). Lot entry/stop of lots this process did not enter
+        (restart) come from today's journal signals, read once. Reads state only; changes nothing the runner uses."""
+        self._mtm_restore()
         st = self.risk.state
-        return mtm_snapshot(self.lots, self._mtm_lot, bars, st.realized_r, st.realized_r_by_strategy, self._fill_px)
+        # LR2: rr / rs are R after costs (the loss-stop basis is in status health.risk_state)
+        return mtm_snapshot(self.lots, self._mtm_lot, bars, st.realized_cost_r, st.realized_cost_r_by_strategy,
+                            self._fill_px)
 
     def flush_poll_log(self, now: pd.Timestamp | None = None, force: bool = False) -> str | None:
         """Write the buffered poll records as one new gzip chunk <poll_log_dir>/<date>/<HHMMSS>.jsonl.gz (each chunk is
@@ -1494,7 +1812,11 @@ class PaperRunner:
         self.flush_poll_log(now, force=phase in ("closed", "handover"))
         rs = self.risk.state      # visibility only (status health): the day's latches and counters a successor restores
         self.health["risk_state"] = {"halted": bool(rs.halted), "setup_stopped": sorted(rs.setup_stopped),
-                                     "trades_today": int(rs.trades_today), "realized_r": round(float(rs.realized_r), 3)}
+                                     "trades_today": int(rs.trades_today), "realized_r": round(float(rs.realized_r), 3),
+                                     # LR3: what the loss stops count, and R after costs for display
+                                     "r_basis": "R after costs" if self.cost_r_stops else "raw R",
+                                     "open_r": round(float(rs.open_r), 3), "halt_counts_open": bool(self.risk.include_open),
+                                     "realized_r_after_costs": round(float(rs.realized_cost_r), 3)}
         if not (self.status_path or self.on_status):
             return
         from ..report.live_status import build_status

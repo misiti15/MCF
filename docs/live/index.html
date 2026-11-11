@@ -806,7 +806,8 @@ window.MCF = window.MCF || {};
     <div class="controls" style="margin:8px 0" id="lb-ctl"></div><div class="sub" id="lb-sorted" style="margin-bottom:6px"></div>
     <div class="tablewrap" id="lb-tab" style="max-height:max(480px, calc(100vh - 110px));overflow-y:auto"><div class="empty">Loading…</div></div>
     <div class="note">Rank = average R per trade shrunk toward 0 by trades ÷ (trades + 20), so a few lucky trades do not outrank a long steady record.
-      R = the setup's planned risk per trade. <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
+      R = the setup's planned risk per trade. Every R on this page is <b>R after costs</b>: the broker P/L less the modelled real-book costs, ÷ the planned risk
+      (LR2, from 2026-11-11; until then this table showed raw broker R, about 0.02R per trade higher; from 2026-11-12 new trades use the LR8 cost model). <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
       <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
       <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Avg R w/o best day</b> = avg R with its single best session removed; <b>Avg R ex-market</b> = avg R with SPY's same-window move regressed out (beta removed); the <b>1 day</b> tag = half or more of its total R came from one session (owner 2026-10-25: a record carried by 1-2 big days). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
@@ -944,7 +945,7 @@ window.MCF = window.MCF || {};
 
 
     const hist = s.history || [];
-    $l("#lv-days").innerHTML = hist.length ? table(["Date", "Trades", "Win rate", "P/L (Alpaca)", "Adj. (incl. modelled stop slippage)", "Avg R", "PF", "Change"],
+    $l("#lv-days").innerHTML = hist.length ? table(["Date", "Trades", "Win rate", "P/L (Alpaca)", "Adj. (incl. modelled costs)", "Avg R after costs", "PF", "Change"],
       hist.slice().reverse().map((d, i, a) => { const prev = a[i + 1]; const ch = prev ? alp(d) - alp(prev) : null;
         return `<tr><td class="l">${e(d.date)}</td><td>${d.trades}</td><td>${pc(d.win_rate)}</td><td class="${cls(alp(d))}">${money(alp(d))}</td><td>${money(d.pnl_adj)}</td><td>${d.avg_r ?? "–"}</td><td>${d.profit_factor ?? "–"}</td><td class="${cls(ch)}">${ch == null ? "–" : money(ch)}</td></tr>`; }))
       : `<div class="empty">No completed sessions yet.</div>`;

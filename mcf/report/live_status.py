@@ -84,7 +84,9 @@ def _f(x, nd=2):
 def build_status(runner, now, phase: str) -> dict:
     j, day = runner.journal, str(now.date())
     sig = j.signals(runner.run_id, day)
-    trades = j.trades(run_id=runner.run_id)
+    from ..costs import with_cost_r
+
+    trades = with_cost_r(j.trades(run_id=runner.run_id))   # LR2: avg_r / r = R after costs; r_raw = raw broker R
     today = trades[trades.date == day] if len(trades) else trades
     by_day = []
     if len(trades):
@@ -113,6 +115,7 @@ def build_status(runner, now, phase: str) -> dict:
         closed.append({"symbol": r.symbol, "strategy": r.strategy, "side": int(r.side),
                        "entry_t": str(r.entry_time)[11:16], "exit_t": str(r.exit_time)[11:16],
                        "entry": _f(r.entry), "exit": _f(r.exit), "reason": r.exit_reason, "r": _f(r.r_multiple, 2),
+                       "r_raw": _f(getattr(r, "r_raw", None), 2),
                        "pnl": _f(r.pnl), "slip_bps": _f(getattr(r, "slip_bps", None), 1)})
     try:
         acct = runner.broker.client.get_account() if not runner.dry_run else None
@@ -130,6 +133,7 @@ def build_status(runner, now, phase: str) -> dict:
     by_day = [dict(h, **{k: (eqh.get(h["date"]) or {}).get(k) for k in ("equity_close", "alpaca_day_pl")}) for h in by_day]
     return {
         "title": "MCF Update",
+        "r_basis": "R after costs",   # LR2: every R below is R after costs (raw broker R only as r_raw)
         "disclaimer": DISCLAIMER,
         "asof": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "asof_et": now.strftime("%Y-%m-%d %H:%M ET"),

@@ -17,7 +17,7 @@ def test_eod_skips_cancelled_trade_runs_without_a_runner():
 def test_research_matrices_leave_room_for_trading_jobs():
     # GitHub Free = 20 concurrent jobs per account; a research matrix must never take them all during a session
     for p in WF.glob("*.yml"):
-        if p.name in ("trade.yml", "watchdog.yml", "eod.yml"):   # per-account matrices (one job per account)
+        if p.name in ("trade.yml", "watchdog.yml", "eod.yml", "kill.yml"):   # per-account matrices (one job per account)
             continue
         for name, job in (yaml.safe_load(p.read_text()).get("jobs") or {}).items():
             strat = job.get("strategy") or {}
