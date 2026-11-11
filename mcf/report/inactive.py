@@ -31,7 +31,7 @@ AUDIT = ROOT / "research" / "ops" / "inactive1103" / "audit.py"
 INBOX = ROOT / "research" / "owner_inbox"
 VERDICT_DIR = ROOT / "research" / "ops" / "inactive"
 BRANCHES = ("mcf-data", "mcf-data-testing", "mcf-data-testing2", "mcf-data-graveyard", "mcf-data-gen",
-            "mcf-data-explore1", "mcf-data-livelab")   # 2026-11-04: Explore 1 / Live Lab (no journal yet = skipped)
+            "mcf-data-explore1", "mcf-data-livelab")   # 2026-11-04: Testing B / Testing C (explore1 / livelab) (no journal yet = skipped)
 WATCH_P, ALARM_P = 0.05, 0.01
 VERDICT_TRADES = 60
 RARE_PER_SESSION = 3.0
@@ -105,7 +105,7 @@ def verdict_md(v: pd.DataFrame, day: str) -> str:
     lines = [DISCLAIMER, "", f"# Sessions to verdict - rare setups judged on {VERDICT_TRADES} trades ({day})", "",
              "INACT2 (owner 2026-11-03): setups under 3 trades a session are judged on trade count, not on 20 sessions. "
              "Sessions to verdict = (60 - trades so far) / trades per session (live rate; expected rate before the first trade). "
-             "Trimmed low-activity setups move to a testing account (Explore 1 when it opens), never just switched off.", "",
+             "Trimmed low-activity setups move to a testing area (Testing A / B / C), never just switched off.", "",
              "| Account | Setup | Trades | Per session | Rate from | Sessions enabled | Sessions to verdict |",
              "|---|---|---|---|---|---|---|"]
     for r in v.itertuples():

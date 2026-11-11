@@ -58,6 +58,22 @@ Data you already have, such as a MarcoFlow export, can be imported from CSV with
 `BarStore.from_csv_dir(csv_dir, "data/cache")`. Each CSV holds one symbol, with a timestamp column
 first and then open/high/low/close/volume.
 
+## Accounts (paper, owner 2026-11-11 names)
+
+Display names only; the internal keys, state branches, `MCF_ACCOUNT` values and order prefixes are unchanged.
+
+| Key (`MCF_ACCOUNT`) | Name | Role |
+|---|---|---|
+| `primary` | Primary | promoted setups |
+| `testing` | On Deck | promotion candidates (2-3x Primary's size, eventually ~15-30 setups); formerly "Testing 1" |
+| `testing2` | Testing A | testing area; formerly "Testing 2" |
+| `explore1` | Testing B | testing area; formerly "Explore 1" |
+| `livelab` | Testing C | testing area; formerly "Live Lab" |
+| `gen` | Setup Generator | machine-generated setups |
+| `graveyard` | Graveyard | lowest performers |
+
+Setups advance testing area → On Deck → Primary. On/off switch experiments are field-tested only in the testing areas.
+
 ## Setups (Phase 0)
 | name | basis | default |
 |---|---|---|

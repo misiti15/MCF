@@ -40,7 +40,7 @@ IDS = [
 TITLES = [
     "MCF Update — live paper session", "Changes for the next session", "MCF Primary vs MarcoFlow", "Open MCF positions",
     "Signals today", "Why signals were skipped", "Closed MCF trades today", "Day by day", "Setups and their status",
-    "Demoted from Primary — how they are doing in Testing 1", "Setup leaderboard — all accounts, since start",
+    "Demoted from Primary — how they are doing in On Deck", "Setup leaderboard — all accounts, since start",
     "Generated setups leaderboard — Setup Generator account", "Scorecard (last 4 sessions)", "Playing time per setup",
     "Generator Lab", "Long-hold (S6) — paper account", "Return since start", "Holdings", "Last sessions",
     "New setup pipeline",   # added 2026-10-21
@@ -78,7 +78,7 @@ TABLE_HEADERS = [
     "What changes", "What you should see", "Type", "Effective", "Setup (priority)", "Today sig / taken", "Sessions",
     "Signals / taken / trades", "Taken/day", "Expected/day", "Per week", "Lost to others", "Lost to", "Top skips",
     "Sim. trades / sim avg R (SIMULATED)", "Metric", "Run", "Screened", "New setups", "From scan", "Median screen R",
-    "Best screen R", "Best t", "Today (Testing 1)", "In Testing so far", "In Primary (before demotion)",
+    "Best screen R", "Best t", "Today (On Deck)", "In Testing so far", "In Primary (before demotion)",
     "Full-day twin today", "Testing sessions", "So far", "Value", "Weight", "Unrealised P/L", "Equity", "Day", "SPY",
     "EW univ.", "Replay", "Tracking diff.", "Drawdown",
     # added 2026-10-21 (UI-DASH 1: scorecard last session)
@@ -87,14 +87,14 @@ TABLE_HEADERS = [
 STATIC_TH = [
     "Best screen R", "Best t", "Date", "Day", "Drawdown", "EW univ.", "Entry", "Equity", "From scan", "Full-day twin today",
     "In Primary (before demotion)", "In Testing so far", "Median screen R", "Metric", "New setups", "Qty", "Replay",
-    "Run", "SPY", "Screened", "Setup", "So far", "Symbol", "Testing sessions", "Today (Testing 1)", "Tracking diff.",
+    "Run", "SPY", "Screened", "Setup", "So far", "Symbol", "Testing sessions", "Today (On Deck)", "Tracking diff.",
     "Unrealised P/L", "Value", "Weight",
 ]
 
 TILES = ["Trades today", "Win rate", "P/L today", "Signals", "Data health", "Equity", "Day P/L", "Since start", "vs SPY",
          "vs EW universe", "vs backtest replay", "Drawdown", "Holdings"]
 
-ACCOUNT_CARDS = ['"primary", name: "Primary"', '"testing", name: "Testing 1"', '"testing2", name: "Testing 2*"',   # * UNI1 top-500 trial (owner 2026-11-03)
+ACCOUNT_CARDS = ['"primary", name: "Primary"', '"testing", name: "On Deck"', '"testing2", name: "Testing A*"',   # * UNI1 top-500 trial (owner 2026-11-03)
                  '"gen", name: "Setup Generator"', '"graveyard", name: "Graveyard"', '"longhold", name: "Long-hold (S6)"']
 
 # every data source the page reads

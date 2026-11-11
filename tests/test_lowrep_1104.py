@@ -144,5 +144,5 @@ def test_new_account_setups_eligible_for_top2_and_leaderboard(post):
     top = [x["setup"] for x in post.top_of_day("2026-11-05", n=2)]
     assert top == ["GY-ORIGIN", "X1-SETUP"]                                    # top setups: any account
     lb = {x["setup"]: x["acct"] for x in post.leaderboard("2026-11-05")}
-    assert lb["X1-SETUP"] == "Explore 1" and lb["LL-SETUP"] == "Live Lab"      # tagged with their account
+    assert lb["X1-SETUP"] == "Testing B" and lb["LL-SETUP"] == "Testing C"      # tagged with their account
     assert "GY-ORIGIN" not in lb                                               # Graveyard origin: off the leaderboard

@@ -20,11 +20,13 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "docs" / "live" / "assignments.json"
-ACCOUNTS = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator"}
+# Display names (owner 2026-11-11 rename; keys unchanged): testing = On Deck (promotion candidates),
+# testing2 / explore1 / livelab = Testing A / B / C (the testing areas).
+ACCOUNTS = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Setup Generator"}
 if (ROOT / "config" / "account_graveyard.yaml").exists():      # the Graveyard account, once it exists
     ACCOUNTS["graveyard"] = "Graveyard"
-# Live Lab + the two exploratory accounts (owner 2026-11-03), once their overlays exist
-for _k, _v in (("livelab", "Live Lab"), ("explore1", "Explore 1")):
+# Testing C (livelab) + Testing B (explore1) (owner 2026-11-03; renamed 2026-11-11), once their overlays exist
+for _k, _v in (("livelab", "Testing C"), ("explore1", "Testing B")):
     if (ROOT / "config" / f"account_{_k}.yaml").exists():
         ACCOUNTS[_k] = _v
 # Split copies (owner 2026-10-20, "Goals for copies"): the only accounts where one setup may run twice, each copy on
@@ -36,7 +38,7 @@ LOWREP_ACCOUNTS = ("explore1", "livelab")
 
 
 def no_leaderboard(entry: dict) -> bool:
-    """Owner 2026-11-04: a setup live only in Explore 1 / Live Lab that came from the Graveyard stays off the leaderboard."""
+    """Owner 2026-11-04: a setup live only in Testing B / Testing C (explore1 / livelab) that came from the Graveyard stays off the leaderboard."""
     here, came = entry.get("accounts") or [], entry.get("from") or []
     return bool(here) and set(here) <= set(LOWREP_ACCOUNTS) and "graveyard" in came
 

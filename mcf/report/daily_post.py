@@ -30,15 +30,15 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "Testing 1", "mcf-data-testing", "testing"),
-            ("testing2", "Testing 2", "mcf-data-testing2", "testing"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
+ACCOUNTS = [("primary", "Primary", "mcf-data", "promoted setups"), ("testing", "On Deck", "mcf-data-testing", "promotion candidates"),
+            ("testing2", "Testing A", "mcf-data-testing2", "testing area"), ("gen", "Setup Generator", "mcf-data-gen", "machine-generated setups"),
             ("graveyard", "Graveyard", "mcf-data-graveyard", "lowest performers"),
-            ("livelab", "Live Lab", "mcf-data-livelab", "live-first lane"),                 # owner 2026-11-03
-            ("explore1", "Explore 1", "mcf-data-explore1", "exploratory + trimmed low-activity setups")]   # day-trading only (no S6)
+            ("livelab", "Testing C", "mcf-data-livelab", "testing area"),                    # owner 2026-11-03; renamed 2026-11-11
+            ("explore1", "Testing B", "mcf-data-explore1", "testing area")]   # day-trading only (no S6)
 MILESTONES = (("M1", "3 green days in a row (Primary)"), ("M2", "8 green days out of the last 10 (Primary)"))
 DAY1 = "2026-10-23"   # owner 2026-10-26: the post's stats (P/L, milestones, chart, last sessions) start at Day 1
 NEW_ACCOUNTS = ("livelab", "explore1")   # owner 2026-11-03 / 2026-11-04: the low-rep homes
-# Owner 2026-11-04: Explore 1 / Live Lab account TOTALS never show in the post (today card, account P/L, chart, last
+# Owner 2026-11-04: Testing B / Testing C (explore1 / livelab) account TOTALS never show in the post (today card, account P/L, chart, last
 # sessions, quick-facts counts); their SETUPS still count for the day's top setups and the leaderboard (account tag),
 # except a setup that came from the Graveyard (assignments.json "no_leaderboard").
 TOTALS_EXCLUDED = NEW_ACCOUNTS
@@ -295,7 +295,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
         a = asg.get(code) or {}
         if not a.get("accounts"):        # "Live setups" view: only setups enabled somewhere now
             continue
-        if a.get("no_leaderboard"):      # owner 2026-11-04: Graveyard-origin setup in Explore 1 / Live Lab
+        if a.get("no_leaderboard"):      # owner 2026-11-04: Graveyard-origin setup in Testing B / Testing C
             continue
         r = _merge(rs)
         n = r.get("trades") or 0
@@ -306,8 +306,8 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
         if code in jd:
             ls = (date, jd[code]["trades"], jd[code]["r"], jd[code]["pnl"])
         rows.append(dict(setup=code, name=nm.get("name") or r.get("name") or code,
-                         acct=" + ".join({"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Setup Generator",
-                                          "graveyard": "Graveyard", "livelab": "Live Lab", "explore1": "Explore 1"}.get(x, x) for x in a["accounts"]),
+                         acct=" + ".join({"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Setup Generator",
+                                          "graveyard": "Graveyard", "livelab": "Testing C", "explore1": "Testing B"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
                          win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), exmkt=r.get("exmkt_r"), beta=r.get("beta"), t=r.get("t_stat"),
@@ -513,7 +513,7 @@ def facts(accts: list[dict]) -> dict:
     rejected += max(0, (lab.get("specs_screened") or 0) - (lab.get("setups_generated") or 0))
     slip, n = 0.0, 0
     for k, _, br, _ in ACCOUNTS:
-        if k in TOTALS_EXCLUDED:          # owner 2026-11-04: no Explore 1 / Live Lab totals in the post
+        if k in TOTALS_EXCLUDED:          # owner 2026-11-04: no Testing B / Testing C totals in the post
             continue
         ss = (_show(br, "status.json") or {}).get("since_start") or {}
         if ss.get("avg_entry_slip_bps") is not None and ss.get("trades"):
@@ -719,7 +719,7 @@ def html_facts(date: str, fx: dict) -> str:
                      row("Broker / data", "Alpaca API · paper trading · SIP market data (all US exchanges)"),
                      row("Market", "US stocks and ETFs · intraday only (9:50 AM–3:55 PM ET) · long and short · nothing held overnight"),
                      row("Backtests", "2 years of 1-minute bars, train / validation split, a locked holdout never peeked at, costs in")])
-    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, Testing 1, Testing 2, Graveyard, Live Lab, Explore 1'),
+    scale = "".join([row("Setups live", f'<b>{fx["live"]}</b> across Primary, On Deck, Testing A, Testing B, Testing C, Graveyard'),
                      row("Generated live", f'<b>{fx["gen"]}</b> in the Setup Generator account'),
                      row("Rejected so far", f'<b>~{fx["rejected"]:,}</b> setups failed backtests (plus many more variations)'),
                      row("Built from", "basic indicators: RSI, VWAP, volume / buy-sell pressure, gaps, opening range, prior-day highs and lows, ATR"),
@@ -730,8 +730,8 @@ def html_facts(date: str, fx: dict) -> str:
                      row("Confidence (t)", "how sure it isn't luck: 2+ solid, under 1 could be luck"),
                      row("Trades/session", "average trades per session it traded: how active it is"),
                      row("Slippage", f'entries fill on average <b>{_f(fx["slip"], 1, False)} bps</b> worse than the signal price (measured on paper fills)')])
-    tree = ("Idea / Setup Generator\n └─ 2-year backtest (costs in)\n     └─ Replay on real sessions\n         └─ Testing 1 / Testing 2 / Setup Generator (paper)\n"
-            "             └─ Primary (paper)\n                 └─ Live money (after milestones)\nLosers move down: Primary → Testing → Graveyard (never deleted)")
+    tree = ("Idea / Setup Generator\n └─ 2-year backtest (costs in)\n     └─ Replay on real sessions\n         └─ Testing A / B / C / Setup Generator (paper)\n"
+            "             └─ On Deck (paper, promotion candidates)\n                 └─ Primary (paper)\n                     └─ Live money (after milestones)\nLosers move down: Primary → On Deck / Testing → Graveyard (never deleted)")
     ms = "".join(row(k, v) for k, v in MILESTONES)
     return page(f'<div class="facts"><div class="fb"><h3>Stack</h3><table>{stack}</table></div><div class="fb"><h3>Setups</h3><table>{scale}</table></div>'
                 f'<div class="fb"><h3>Life cycle of a setup</h3><pre class="tree">{_e(tree)}</pre></div>'

@@ -66,7 +66,7 @@ def test_m1_label_follows_current_run():
 def _lb_row(i, gen=False):
     nm = "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short" if gen else \
         "CWT14-failbrk-pdl-p05-R2A-long-with-a-very-long-setup-identifier-FD"
-    return dict(rank=i, name="Failed Prior-Day-Low Break, SPY-Range Regime (long leg) [fill]", setup=nm, acct="Testing 2 · Explore 1",
+    return dict(rank=i, name="Failed Prior-Day-Low Break, SPY-Range Regime (long leg) [fill]", setup=nm, acct="Testing A · Testing B",
                 best="Choppy", ls_n=25, ls_r=-12.76, ls_pnl=-1194.93, trades=1467, sessions=18, per_day=81.5, win=0.63, be=0.663,
                 avg_r=-0.074, exbest=(-0.114, "2026-10-20", 0.6), exmkt=-0.105, t=-0.84, total_r=-108.6, pnl=-12320.3, pf=0.93,
                 last4=-0.307, screen=(0.012, -0.034))
