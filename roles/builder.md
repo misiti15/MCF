@@ -76,6 +76,9 @@
 
 - Limit entries on these setups fill the losers and miss the runners (adverse selection): always report filled vs missed.
 
+- Board posts: assert ALL messages' length before writing ANY (a later assert left duplicates of earlier posts).
+- A move through a level after the signal is a strong selector (t 19) but entering AT it pays the move: use it as an exit.
+
 ## Failed
 - MFFRESHLOW 2: 0 pass (live 53-trade pattern did not carry to 2y).
 - GATE2-R 4 (MX failed-hold exit, MXH half size): 0 pass; gross negative; GATE2 closed.
@@ -89,6 +92,8 @@
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
   n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
   Cache + daily now end 2026-11-10 (backup of the 11-09 daily table in the scratchpad).
+- 11-11 03:00: CONFIRM 0/2 as entry (timing t -18), but the trigger selects (skip excess t 19): proposed a 10-min
+  confirmation EXIT (market entry, flat at min 10 if no k x D move) - awaiting Lead.
 - 11-11 00:40: CONFIRM plan + script frozen, waiting for Skeptic's attack before scoring. WHATWORKS lab join: all
   live survivors negative on 2y, down-day positive / up-day negative (market direction).
 - 11-10 23:05: LIMEX 0/3: limit entry at the signal close is adversely selected (missed = winners); market entry stays.

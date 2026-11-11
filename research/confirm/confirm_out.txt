@@ -1,0 +1,9 @@
+pool: 10 of 14 setups have 2y lists (missing: ['CWT09-gapdn-bounce-g5-lowerhalf-short', 'MF3-open-flowsell-rsi5hi', 'MF5-flowsell-vwapup-rsi5hi', 'NS4-pm-vwap-reclaim-oversold-short']); trades 71595
+signals walked 71594; baseline (market) -0.0092 ATR/signal; family N 1962, BAR90 3.5
+       config  trig  C_net_atr_trig  B_on_trig  B_on_untrig  timing  timing_t  train   valid  valid_t  wo_best     up   down  quiet  skip_part  skip_excess  skip_excess_t  vs_mirror  vs_mirror_t  mirror_net_atr_trig  whipsaw  stop_in_trigger_bar  better  worse  pass
+ CONFIRM-k0.1 0.723         -0.0186     0.0168      -0.0771 -1833.7    -18.11 -686.2 -1147.5   -24.09  -1834.1 -676.1 -661.0 -496.7     1531.7       1066.4          19.33      945.9         2.18              -0.0383    0.003                0.001       0     10 False
+CONFIRM-k0.25 0.438         -0.0190     0.0489      -0.0545 -2127.3    -14.67 -791.8 -1335.5   -21.13  -2127.6 -774.8 -803.6 -548.9     2192.5       1433.1          17.51      473.5         1.89              -0.0364    0.002                0.001       0     10 False
+
+units: ATR. timing = sum over triggered signals of (C - market entry); skip_part = -market R of untriggered signals;
+skip_excess = vs a random same-share skip per setup-day; vs_mirror = C - opposite-side trigger. R-unit reward/risk is lower by design.
+Educational only - not financial advice.
