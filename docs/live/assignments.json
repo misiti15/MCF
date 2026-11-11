@@ -10,21 +10,19 @@
    "ST7-rsi50dn-long-pm-t1s1-FD"
   ],
   "testing": [
-   "CWT05-flush-m05-v3-long",
+   "CWT05-flush-m05-v5-long",
+   "CWT09-gapdn-bounce-g10-lowerhalf-short",
+   "CWT09-gapdn-vwaploss-g10-short",
    "L3-gap-slope-lowdist-FD",
    "L3-gap-slope-rsi5hi-FD",
-   "MF1-945-flowsell-vwapup",
    "MF2-open-rsimidhi-flowsell-FD",
    "MF3-open-flowsell-rsi5hi",
    "MF4-h40-open-flowsell-FD",
-   "MF5-flowsell-vwapup-rsi5hi",
-   "NS1-rsidip-rsi5pop-long-FD",
-   "NS3-failed-vwap-reclaim-short",
-   "NS4-pm-vwap-reclaim-oversold-short-FD",
+   "NM-HL-T75-pm-long",
+   "NS1-rsidip-rsi5pop-long",
+   "RW1-gapdn-bounce-flowsell-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
-   "exhaustion_short",
-   "exhaustion_short-FD",
-   "intraday_momentum",
+   "ST6-volspikeup-short-mid-t1s1-FD",
    "orb20_a"
   ],
   "testing2": [
@@ -33,23 +31,16 @@
    "CWT14-failbrk-pdl-p05-R2A-long",
    "CWT14-failbrk-pdl-p05-R2A-short",
    "CWT14-failbrk-pdl-p10-long",
-   "CWT14-failbrk-pdl-p10-lowvol-long",
    "MF4-h40-open-flowsell",
    "MF5-flowsell-vwapup-rsi5hi",
    "NM-AR-AM-gapdown-capitulation-long",
-   "NM-HL-T75-pm-long",
    "NM-MF3-qqqdn-gapdn-FD",
-   "NS1-rsidip-rsi5pop-long",
    "NS3V1-am-widestop-short",
-   "NS4-pm-vwap-reclaim-oversold-short",
-   "RW1-gapdn-bounce-flowsell-short-FD",
-   "RW3S-gapdn-flowsell-short-FD",
    "exhaustion_short-FD"
   ],
   "gen": [
    "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long",
    "GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long",
-   "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
    "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long",
    "GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long",
    "GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long",
@@ -61,7 +52,6 @@
    "GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short",
    "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long",
    "GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short",
-   "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long",
    "GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long",
    "GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long",
    "GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long",
@@ -99,7 +89,6 @@
    "GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long",
    "GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short",
    "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long",
-   "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
    "GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short",
    "GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short",
    "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long",
@@ -107,13 +96,11 @@
    "GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short",
    "GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long",
    "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long",
-   "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long",
    "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long",
    "GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long",
    "GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short",
    "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long",
    "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long",
-   "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short",
    "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short",
    "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short",
    "GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long",
@@ -177,53 +164,67 @@
    "heat_fade_short-FD"
   ],
   "livelab": [
-   "CWT04-backside-lh-a25-short",
    "CWT04-backside-vwaptest-a15-short",
    "CWT05-flush-m075-v3-long",
-   "CWT05-flush-m075-v5-long",
-   "CWT09-gapdn-vwaploss-g10-short",
    "CWT12-flag-s1-long",
    "IDX1-qqq100-0955-TQQQ-trail",
-   "IDX3-spy075-0955-3x-trail",
    "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
-   "LD5-st2-breadthup-t05s1-long",
    "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long",
    "LD7-ns1-idxturn-holdtr-long",
-   "LIQ-pdl-sweep-open15-vwap-long",
    "NM-PM-gapdn-above-pdh-rvol-short",
-   "NM-RWN4-ns2-spyup05-notfri-short",
-   "NM-RWR1-exh150-gapdn-spyup-pm-short",
    "NM-RWR3-ns3-qqqup-early-short",
    "ST3-rsi5up-short-pm-t1s1-FD",
-   "ST5-pdbrkup-short-mid-t05s1-FD",
-   "ST6-volspikeup-short-mid-t1s1-FD"
+   "ST5-pdbrkup-short-mid-t05s1-FD"
   ],
   "explore1": [
    "CWT04-backside-lh-a15-short",
-   "CWT04-backside-vwaptest-a25-short",
-   "CWT05-flush-m05-v5-long",
-   "CWT09-gapdn-bounce-g10-lowerhalf-short",
    "CWT13-vwapstretch-z075-long",
    "IDX1-qqq100-0955-TQQQ-hold",
-   "IDX2-spy075-0945-3x-trail",
-   "IDX5-spy050-0945-3x-trail",
    "LD1-ns1-breadthup-t05s1-long",
    "LD3-st2-idxturn-t05s1-long",
-   "LD4-st4-breadthup-t1s05-long",
-   "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
    "MF2-open-rsimidhi-flowsell",
-   "NM-AMS-N1-quiet-morning-short",
    "NM-RWN3-ns3-spyup-early-short",
-   "NM-RWN5-ns3-mon-weakrs-short",
    "NM-RWR4-ns2-up3-qqqup-slopedn-short",
    "NM1-cwt09-g10-vwaploss-short",
-   "RW6G1-ns2-up3-vwap2sd-short",
    "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
    "ST8-volspikedn-long-pm-t1s1-FD"
   ],
-  "testingd": [],
-  "testinge": [],
-  "testingf": []
+  "testingd": [
+   "CWT04-backside-vwaptest-a25-short",
+   "CWT05-flush-m075-v5-long",
+   "CWT14-failbrk-pdl-p10-lowvol-long",
+   "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
+   "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
+   "IDX2-spy075-0945-3x-trail",
+   "LD4-st4-breadthup-t1s05-long",
+   "NM-RWN5-ns3-mon-weakrs-short",
+   "NM-RWR1-exh150-gapdn-spyup-pm-short",
+   "NS4-pm-vwap-reclaim-oversold-short"
+  ],
+  "testinge": [
+   "CWT04-backside-lh-a25-short",
+   "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long",
+   "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short",
+   "IDX5-spy050-0945-3x-trail",
+   "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
+   "LIQ-pdl-sweep-open15-vwap-long",
+   "NS1-rsidip-rsi5pop-long-FD",
+   "NS3-failed-vwap-reclaim-short",
+   "RW3S-gapdn-flowsell-short-FD",
+   "RW6G1-ns2-up3-vwap2sd-short"
+  ],
+  "testingf": [
+   "CWT05-flush-m05-v3-long",
+   "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long",
+   "IDX3-spy075-0955-3x-trail",
+   "LD5-st2-breadthup-t05s1-long",
+   "MF1-945-flowsell-vwapup",
+   "NM-AMS-N1-quiet-morning-short",
+   "NM-RWN4-ns2-spyup05-notfri-short",
+   "NS4-pm-vwap-reclaim-oversold-short-FD",
+   "exhaustion_short",
+   "intraday_momentum"
+  ]
  },
  "labels": {
   "primary": "Primary",
@@ -251,14 +252,14 @@
   },
   "CWT04-backside-lh-a25-short": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT04-backside-vwaptest-a15-short": {
    "accounts": [
@@ -273,36 +274,36 @@
   },
   "CWT04-backside-vwaptest-a25-short": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT05-flush-m05-v3-long": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": "2026-10-20 22:32 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT05-flush-m05-v5-long": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT05-flush-m075-v3-long": {
    "accounts": [
@@ -317,25 +318,25 @@
   },
   "CWT05-flush-m075-v5-long": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT09-gapdn-bounce-g10-lowerhalf-short": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT09-gapdn-bounce-g5-lowerhalf-short": {
    "accounts": [
@@ -350,14 +351,14 @@
   },
   "CWT09-gapdn-vwaploss-g10-short": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "CWT09-gapdn-vwaploss-g5-short": {
    "accounts": [
@@ -565,14 +566,14 @@
   },
   "CWT14-failbrk-pdl-p10-lowvol-long": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-10-27 16:42 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-10-27",
-   "first_session": "2026-10-28"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long": {
    "accounts": [
@@ -590,14 +591,14 @@
   },
   "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "gen"
    ],
-   "since": "2026-11-10 16:12 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-10",
-   "first_session": "2026-11-11"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long": {
    "accounts": [
@@ -678,10 +679,14 @@
   },
   "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "gen"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long": {
    "accounts": [
@@ -956,14 +961,14 @@
   },
   "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "gen"
    ],
-   "since": "2026-11-10 16:12 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-10",
-   "first_session": "2026-11-11"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short": {
    "accounts": [
@@ -1016,10 +1021,14 @@
   },
   "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "gen"
    ],
-   "since": "2026-10-26 18:47 ET",
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long": {
    "accounts": [
@@ -1058,10 +1067,14 @@
   },
   "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "gen"
    ],
-   "since": "2026-10-26 18:47 ET",
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short": {
    "accounts": [
@@ -1269,36 +1282,36 @@
   },
   "IDX2-spy075-0945-3x-trail": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "IDX3-spy075-0955-3x-trail": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "IDX5-spy050-0945-3x-trail": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "L3-gap-slope-fromopen-FD": {
    "accounts": [
@@ -1364,25 +1377,25 @@
   },
   "LD4-st4-breadthup-t1s05-long": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "LD5-st2-breadthup-t05s1-long": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long": {
    "accounts": [
@@ -1408,14 +1421,14 @@
   },
   "LD8-spy-dip030-breadthturn-spxl-holdtr-long": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "LIQ-orl-sweep-open15-s25-long": {
    "accounts": [
@@ -1430,25 +1443,25 @@
   },
   "LIQ-pdl-sweep-open15-vwap-long": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "MF1-945-flowsell-vwapup": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": "2026-10-25 21:05 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-10-23",
-   "first_session": "2026-10-26"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "MF1-945-flowsell-vwapup-FD": {
    "accounts": [
@@ -1529,25 +1542,15 @@
   },
   "MF5-flowsell-vwapup-rsi5hi": {
    "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing",
     "testing2"
    ],
-   "since": "2026-10-20 22:32 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "split": {
-    "testing": {
-     "part": 0,
-     "of": 2
-    },
-    "testing2": {
-     "part": 1,
-     "of": 2
-    }
-   }
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "MF5-flowsell-vwapup-rsi5hi-FD": {
    "accounts": [
@@ -1562,14 +1565,14 @@
   },
   "NM-AMS-N1-quiet-morning-short": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NM-AR-AM-gapdown-capitulation-long": {
    "accounts": [
@@ -1591,10 +1594,14 @@
   },
   "NM-HL-T75-pm-long": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing2"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NM-MF3-qqqdn-gapdn-FD": {
    "accounts": [
@@ -1627,36 +1634,36 @@
   },
   "NM-RWN4-ns2-spyup05-notfri-short": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NM-RWN5-ns3-mon-weakrs-short": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NM-RWR1-exh150-gapdn-spyup-pm-short": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NM-RWR3-ns3-qqqup-early-short": {
    "accounts": [
@@ -1693,21 +1700,25 @@
   },
   "NS1-rsidip-rsi5pop-long": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-11-11 07:45 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-11-10",
-   "first_session": "2026-11-11"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NS1-rsidip-rsi5pop-long-FD": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NS2-sma50break-overbought-short": {
    "accounts": [
@@ -1733,10 +1744,14 @@
   },
   "NS3-failed-vwap-reclaim-short": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NS3-failed-vwap-reclaim-short-FD": {
    "accounts": [
@@ -1758,21 +1773,25 @@
   },
   "NS4-pm-vwap-reclaim-oversold-short": {
    "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-10-27 16:42 ET",
-   "from": [
-    "primary"
-   ],
-   "last_old_session": "2026-10-27",
-   "first_session": "2026-10-28"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NS4-pm-vwap-reclaim-oversold-short-FD": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "NS5-sma50-flush-oversold-long": {
    "accounts": [
@@ -1795,14 +1814,14 @@
   },
   "RW1-gapdn-bounce-flowsell-short-FD": {
    "accounts": [
-    "testing2"
-   ],
-   "since": "2026-10-20 22:32 ET",
-   "from": [
     "testing"
    ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21"
+   "since": "2026-11-11 16:21 ET",
+   "from": [
+    "testing2"
+   ],
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "RW2-exhaustion-noon-adv150-short-FD": {
    "accounts": [
@@ -1829,10 +1848,14 @@
   },
   "RW3S-gapdn-flowsell-short-FD": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing2"
    ],
-   "since": "2026-11-03 07:52 ET",
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "RW4-ns3-adv150-short-FD": {
    "accounts": [
@@ -1871,14 +1894,14 @@
   },
   "RW6G1-ns2-up3-vwap2sd-short": {
    "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "explore1"
    ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "RW6G1-ns2-up3-vwap2sd-short-FD": {
    "accounts": [
@@ -1955,14 +1978,14 @@
   },
   "ST6-volspikeup-short-mid-t1s1-FD": {
    "accounts": [
-    "livelab"
-   ],
-   "since": "2026-11-04 16:05 ET",
-   "from": [
     "testing"
    ],
-   "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "since": "2026-11-11 16:21 ET",
+   "from": [
+    "livelab"
+   ],
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "ST7-rsi50dn-long-pm-t1s1-FD": {
    "accounts": [
@@ -2000,32 +2023,26 @@
   },
   "exhaustion_short": {
    "accounts": [
-    "testing"
+    "testingf"
    ],
-   "since": null,
-   "from": null
-  },
-  "exhaustion_short-FD": {
-   "accounts": [
-    "testing",
-    "testing2"
-   ],
-   "since": "2026-10-20 22:32 ET",
+   "since": "2026-11-11 16:21 ET",
    "from": [
     "testing"
    ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "split": {
-    "testing": {
-     "part": 0,
-     "of": 2
-    },
-    "testing2": {
-     "part": 1,
-     "of": 2
-    }
-   }
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
+  },
+  "exhaustion_short-FD": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
+    "testing",
+    "testing2"
+   ],
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "heat_fade_long": {
    "accounts": [
@@ -2073,10 +2090,14 @@
   },
   "intraday_momentum": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-11 16:21 ET",
+   "from": [
     "testing"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-11",
+   "first_session": "2026-11-12"
   },
   "orb20_a": {
    "accounts": [
@@ -2087,60 +2108,359 @@
   }
  },
  "last_change": {
-  "at": "2026-11-11 07:45 ET",
+  "at": "2026-11-11 16:21 ET",
   "changes": [
    {
-    "setup": "L3-gap-slope-rsi5hi-FD",
+    "setup": "CWT04-backside-lh-a25-short",
     "from": [
-     "primary"
+     "livelab"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "CWT04-backside-vwaptest-a25-short",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "CWT05-flush-m05-v3-long",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "CWT05-flush-m05-v5-long",
+    "from": [
+     "explore1"
     ],
     "to": [
      "testing"
     ]
    },
    {
-    "setup": "MF2-open-rsimidhi-flowsell-FD",
+    "setup": "CWT05-flush-m075-v5-long",
     "from": [
-     "primary"
+     "livelab"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "CWT09-gapdn-bounce-g10-lowerhalf-short",
+    "from": [
+     "explore1"
     ],
     "to": [
      "testing"
     ]
    },
    {
-    "setup": "MF4-h40-open-flowsell",
+    "setup": "CWT09-gapdn-vwaploss-g10-short",
     "from": [
-     "primary"
+     "livelab"
+    ],
+    "to": [
+     "testing"
+    ]
+   },
+   {
+    "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
+    "from": [
+     "testing2"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
+    "from": [
+     "gen"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long",
+    "from": [
+     "gen"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
+    "from": [
+     "gen"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long",
+    "from": [
+     "gen"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short",
+    "from": [
+     "gen"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "IDX2-spy075-0945-3x-trail",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "IDX3-spy075-0955-3x-trail",
+    "from": [
+     "livelab"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "IDX5-spy050-0945-3x-trail",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "LD4-st4-breadthup-t1s05-long",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "LD5-st2-breadthup-t05s1-long",
+    "from": [
+     "livelab"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "LIQ-pdl-sweep-open15-vwap-long",
+    "from": [
+     "livelab"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "MF1-945-flowsell-vwapup",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "MF5-flowsell-vwapup-rsi5hi",
+    "from": [
+     "testing",
+     "testing2"
     ],
     "to": [
      "testing2"
     ]
    },
    {
-    "setup": "MF4-h40-open-flowsell-FD",
+    "setup": "NM-AMS-N1-quiet-morning-short",
     "from": [
-     "primary"
+     "explore1"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "NM-HL-T75-pm-long",
+    "from": [
+     "testing2"
     ],
     "to": [
      "testing"
     ]
    },
    {
-    "setup": "NM-ETF-late-dip-di-long",
+    "setup": "NM-RWN4-ns2-spyup05-notfri-short",
     "from": [
      "livelab"
     ],
     "to": [
-     "primary"
+     "testingf"
+    ]
+   },
+   {
+    "setup": "NM-RWN5-ns3-mon-weakrs-short",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "NM-RWR1-exh150-gapdn-spyup-pm-short",
+    "from": [
+     "livelab"
+    ],
+    "to": [
+     "testingd"
     ]
    },
    {
     "setup": "NS1-rsidip-rsi5pop-long",
     "from": [
-     "primary"
+     "testing2"
+    ],
+    "to": [
+     "testing"
+    ]
+   },
+   {
+    "setup": "NS1-rsidip-rsi5pop-long-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "NS3-failed-vwap-reclaim-short",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "NS4-pm-vwap-reclaim-oversold-short",
+    "from": [
+     "testing2"
+    ],
+    "to": [
+     "testingd"
+    ]
+   },
+   {
+    "setup": "NS4-pm-vwap-reclaim-oversold-short-FD",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "RW1-gapdn-bounce-flowsell-short-FD",
+    "from": [
+     "testing2"
+    ],
+    "to": [
+     "testing"
+    ]
+   },
+   {
+    "setup": "RW3S-gapdn-flowsell-short-FD",
+    "from": [
+     "testing2"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "RW6G1-ns2-up3-vwap2sd-short",
+    "from": [
+     "explore1"
+    ],
+    "to": [
+     "testinge"
+    ]
+   },
+   {
+    "setup": "ST6-volspikeup-short-mid-t1s1-FD",
+    "from": [
+     "livelab"
+    ],
+    "to": [
+     "testing"
+    ]
+   },
+   {
+    "setup": "exhaustion_short",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testingf"
+    ]
+   },
+   {
+    "setup": "exhaustion_short-FD",
+    "from": [
+     "testing",
+     "testing2"
     ],
     "to": [
      "testing2"
+    ]
+   },
+   {
+    "setup": "intraday_momentum",
+    "from": [
+     "testing"
+    ],
+    "to": [
+     "testingf"
     ]
    }
   ]

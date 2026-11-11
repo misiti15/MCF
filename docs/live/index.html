@@ -1295,13 +1295,15 @@ window.MCF = window.MCF || {};
       if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
       lbOf[k] = lb || [];
       if (ACC[k][2] && lb && q("#lb-acct") && !q(`#lb-acct option[value="${k}"]`)) q("#lb-acct").insertAdjacentHTML("beforeend", `<option value="${k}">${e(lab)}</option>`);
-      // generated setups have their own card (owner 2026-10-19): never in this leaderboard
+      // generated setups have their own card (owner 2026-10-19): never in this leaderboard, EXCEPT a GEN setup that
+      // graduated to a testing area (GEN-GRAD, owner 2026-11-11): it is a testing-area setup now, with its Gen record merged
+      const grad = s => isGen(s) && !!(asg && asg.setups && asg.setups[s] && (asg.setups[s].accounts || []).some(a => a !== "gen"));
       const on = asg && asg.accounts && asg.accounts[k] ? new Set(asg.accounts[k]) : null;
       const seen = new Set();
-      (lb || []).filter(r => !isGen(r.setup)).forEach(r => { seen.add(r.setup);
+      (lb || []).filter(r => !isGen(r.setup) || grad(r.setup)).forEach(r => { seen.add(r.setup);
         all.push({ ...r, acct: k, acctLabel: lab, pt: pt[r.setup], live: on ? on.has(r.setup) : r.live }); });
       // newly assigned here (e.g. promoted this morning): no record in this account yet
-      if (on) on.forEach(sname => { if (!seen.has(sname) && !isGen(sname))
+      if (on) on.forEach(sname => { if (!seen.has(sname) && (!isGen(sname) || grad(sname)))
         all.push({ setup: sname, name: (NM[sname] || {}).name || sname, acct: k, acctLabel: lab, live: true, trades: 0, sessions_traded: 0,
                    total_r: 0, pnl: 0, former_primary: false }); });
     }));

@@ -302,7 +302,8 @@ def trading_days(a: str, b: str) -> list[str]:
 
 
 def books_for(day: str, inv: pd.DataFrame, accounts) -> list[tuple]:
-    elig = inv[(inv.freeze <= day) & inv.home.isin(accounts) & inv.setup.isin(_CTX["blocks"])]
+    have = _CTX.get("blocks")
+    elig = inv[(inv.freeze <= day) & inv.home.isin(accounts) & (inv.setup.isin(have) if have else True)]
     jl = []
     for acc, g in elig.groupby("home"):
         if SPLIT_SIDES:
@@ -333,6 +334,14 @@ def finalize_day(day: str, inv: pd.DataFrame) -> pd.DataFrame | None:
     df.to_csv(TRADES / f"{day}.csv", index=False, float_format="%.6g")
     (TRADES / f"{day}.meta.json").write_text(json.dumps(meta, default=str))
     return df
+
+
+def finalize_all() -> list[str]:
+    """Rebuild every trades/<day>.csv from the finished books of the current inventory (cheap; used by report.py)."""
+    inv = pd.read_csv(HERE / "inventory.csv", keep_default_na=False)
+    inv.attrs["asof"] = str(inv["asof"].iloc[0])
+    days = sorted(p.name for p in PART.glob("????-??-??") if p.is_dir())
+    return [d for d in days if finalize_day(d, inv) is not None]
 
 
 def inv_asof(inv) -> str:
@@ -392,6 +401,9 @@ def main(argv=None):
     jl = [j for d in ok_days for j in books_for(d, inv, accounts)]
     pri = {acc: i for i, acc in enumerate(["gen", "testing", "testing2", "explore1", "livelab", "primary", "graveyard"])}
     jl.sort(key=lambda j: (pri.get(j[1], 9), j[0]))   # Gen first (priority), then On Deck, Testing A/B/C, Primary, Graveyard
+    if os.environ.get("FWDREP_REVERSE") == "1":    # a second runner working from the other end of the same queue
+        jl.sort(key=lambda j: (pri.get(j[1], 9), j[0]), reverse=False)
+        jl = sorted(jl, key=lambda j: (pri.get(j[1], 9), [-ord(c) for c in j[0]]))
     todo = [j for j in jl if not book_path(j).exists()]
     print(f"fwdrep: {len(ok_days)} sessions, {len(jl)} books ({len(todo)} to run), jobs={a.jobs}", flush=True)
     t0 = time.time()

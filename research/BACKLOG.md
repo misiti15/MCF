@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1083 · coded: 158 · parked: 439 · holdout failed: 23 · configurations tried (all lineages): 32896899
+Total ideas: 1087 · coded: 162 · parked: 443 · holdout failed: 23 · configurations tried (all lineages): 32896908
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -1059,6 +1059,10 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | top5-1110-RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-exec | RW5-heat30-flowsell-rsi5pop-gapdn-short-FD: execution variants (stop x1.5/x0.75 at same $, target x0.75/x1.5, half off at 0.5 x target + BE, 30/60-min time stop, clock exit 13:00, limit entry 0.1R, next-bar entry, entries before / from 11:00, CF stop-cost <= 0.15R, skip price < $20, first 5 per session, SPY-side filter, skip / half size against a W60-confirmed compass, ADV floor x1.2) | BDI top-5 execution tune 2026-11-10 (nineteenth run) (research/bdi/top5_1110/NOTES.md) | – | – | – | – | – | – |
 | parked | top5-1110-RW7-gapdn-bounce-early-short-FD-exec | RW7-gapdn-bounce-early-short-FD: execution variants (stop x1.5/x0.75 at same $, target x0.75/x1.5, half off at 0.5 x target + BE, 30/60-min time stop, clock exit 13:00, limit entry 0.1R, next-bar entry, entries before / from 11:00, CF stop-cost <= 0.15R, skip price < $20, first 5 per session, SPY-side filter, skip / half size against a W60-confirmed compass, ADV floor x1.2) | BDI top-5 execution tune 2026-11-10 (nineteenth run) (research/bdi/top5_1110/NOTES.md) | – | – | – | – | – | – |
 | parked | reddit-1110-grind-no-pullback-continuation | Grind with no real pullback, continuation to the close (both sides): at 11:00 / 12:30 the stock is >= 0.5 ATR14 from the open, path efficiency >= 0.30/0.45, largest retrace <= 35% of the move and the close in the top 25% of it; enter next 5-min open, stop the last-30-min low/high -/+ 1c (skip R < 0.30% or > 1.5 ATR14), exit 15:55 | reddit r/Daytrading https://www.reddit.com/r/Daytrading/comments/1xszib3/low_float_small_cap_regime_change/ | – | – | – | – | – | – |
+| parked | guild-1111-coilgap | COILGAP: coil k4/k6 longs off on SPY gap <= -0.25% | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-regsw2-winning-base | REGSW-2: 4 market-state switches on an 11-setup winning base | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-disp1-sector-split | DISP1: follow/fade member split on flat sector-ETF mornings | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | guild-1111-confirm-stop-entry | CONFIRM: stop entry at signal + k x stop distance within 10 min | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

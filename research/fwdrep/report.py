@@ -174,7 +174,29 @@ def bt2y() -> dict:
     return {s: b for s, b in zip(I.setup, I.bt2y) if b == b}
 
 
+def gen_blocked() -> pd.DataFrame:
+    """Per setup, live Gen-account signals (run 1): submitted vs lost to ACCOUNT limits (halt, buying power, per-setup
+    position cap, concurrent cap) - exposure a testing account would give back."""
+    raw = RUN.git("show", "origin/mcf-data-gen:journal.db", text=False)
+    if not raw:
+        return pd.DataFrame(columns=["setup", "gen_submitted", "gen_lost_to_limits"])
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
+        f.write(raw)
+    try:
+        c = sqlite3.connect(f.name)
+        s = pd.read_sql("select strategy as setup, status, reason from signals where run_id=1", c)
+        c.close()
+    finally:
+        os.unlink(f.name)
+    r = s.reason.fillna("").str.lower()
+    lim = (r.str.contains("halted|daily loss limit|max positions|max concurrent|buying_power|insufficient"))
+    return pd.DataFrame({"gen_submitted": s[s.status == "submitted"].groupby("setup").size(),
+                         "gen_lost_to_limits": s[lim].groupby("setup").size()}).fillna(0).astype(int).reset_index() \
+        .rename(columns={"index": "setup"})
+
+
 def main():
+    RUN.finalize_all()
     inv = pd.read_csv(HERE / "inventory.csv", keep_default_na=False)
     S = RUN.snapshots("9999")
     live_on = set(zip(S[S.enabled].setup, S[S.enabled].date))          # (setup, date) enabled in some live account
@@ -223,17 +245,22 @@ def main():
                          same_minute_share=(pa.entry_gap_min < 1).mean() if nm else np.nan,
                          match_rate_live_10min=(len(m10x & set(xa.index)) / len(la)) if len(la) else np.nan,
                          replay_avgR=xa.R.mean() if len(xa) else np.nan, live_avgR=la.R.mean() if len(la) else np.nan,
+                         matched_replay_avgR=pa.rep.mean() if nm else np.nan, matched_live_avgR=pa.live.mean() if nm else np.nan,
+                         replay_only_avgR=xa[~xa.index.isin(mx)].R.mean() if len(xa) > nm else np.nan,
+                         live_only_avgR=la[~la.index.isin(ml)].R.mean() if len(la) > nm else np.nan,
                          replay_totR=xa.R.sum(), live_totR=la.R.sum()))
     C = pd.DataFrame(rows)
     C["haircut_raw"] = C.replay_avgR - C.live_avgR
     C.to_csv(HERE / "calibration_raw.csv", index=False, float_format="%.4f")
     allrow = C[C.family == "ALL"].iloc[0]
     n = C.replay_trades + C.live_trades
-    for col, base in (("haircut_raw", allrow.haircut_raw), ("jaccard", allrow.jaccard)):
+    for col, base in (("haircut_raw", allrow.haircut_raw), ("match_rate_live", allrow.match_rate_live)):
         C[col.replace("_raw", "") + "_shrunk"] = (C[col].fillna(base) * n + base * SHRINK_K) / (n + SHRINK_K)
     C["haircut"] = C.haircut_shrunk.clip(lower=0)     # conservative: a family where replay UNDERstates live gets 0, not a bonus
-    C["weight"] = C.jaccard_shrunk.clip(W_MIN, W_MAX)
-    C.loc[C.family == "ALL", ["haircut", "weight"]] = [max(allrow.haircut_raw, 0), float(np.clip(allrow.jaccard, W_MIN, W_MAX))]
+    # weight of one replay rep = the family's match rate (share of live trades the replay reproduces), shrunk, 0.2-0.8
+    C["weight"] = C.match_rate_live_shrunk.clip(W_MIN, W_MAX)
+    C.loc[C.family == "ALL", ["haircut", "weight"]] = [max(allrow.haircut_raw, 0),
+                                                      float(np.clip(allrow.match_rate_live, W_MIN, W_MAX))]
     C.to_csv(HERE / "calibration.csv", index=False, float_format="%.4f")
     H = dict(zip(C.family, C.haircut))
     Wt = dict(zip(C.family, C.weight))
@@ -292,10 +319,19 @@ def main():
     D.to_csv(HERE / "ledger.csv", index=False, float_format="%.4f")
 
     # ---------------------------------------------------------------- 4. Gen fast-track
-    G = D[D.gen & D.reps_min & D.od_in].copy().sort_values(["comb_shrunk", "comb_eff_sessions"], ascending=False)
+    D = D.merge(gen_blocked(), on="setup", how="left")
+    D[["gen_submitted", "gen_lost_to_limits"]] = D[["gen_submitted", "gen_lost_to_limits"]].fillna(0).astype(int)
+    D.to_csv(HERE / "ledger.csv", index=False, float_format="%.4f")
+    D["tier"] = np.where(D.reps_min & D.od_in, "FAST-TRACK",
+                         np.where(D.od_in, "NEAR (OD-IN yes, REPS-MIN 8/30 not yet)", ""))
+    G = D[D.gen & (D.tier != "")].copy().sort_values(["reps_min", "comb_shrunk", "comb_eff_sessions"], ascending=False)
     cnt = {"Testing A": 0, "Testing B": 0, "Testing C": 0}
     sug = []
     for x in G.itertuples():
+        if x.home != "Generator":
+            sug.append(f"stay ({x.home}: already a live testing home)" if not (x.candidate and not x.comb_one_day)
+                       else "On Deck")
+            continue
         if x.candidate and not x.comb_one_day:
             sug.append("On Deck")
             continue
@@ -305,11 +341,43 @@ def main():
         sug.append(tgt)
     G["from"] = G.home
     G["suggested"] = sug
-    cols = ["setup", "from", "suggested", "side", "freeze", "live_trades", "live_sessions", "live_avgR", "live_totR",
+    cols = ["setup", "tier", "from", "suggested", "side", "freeze", "gen_submitted", "gen_lost_to_limits", "live_trades", "live_sessions", "live_avgR", "live_totR",
             "fwd_sessions_replayed", "fwd_raw_trades", "fwd_sessions", "fwd_raw_avgR", "fwd_avgR", "fwd_totR",
             "fwd_added_trades", "weight", "haircut", "comb_trades", "comb_eff_sessions", "comb_avgR", "comb_shrunk",
             "comb_exbest", "comb_share", "comb_one_day", "comb_last5", "od_in_live_only", "candidate", "bt", "r21_value"]
     G[cols].to_csv(HERE / "gen_fasttrack.csv", index=False, float_format="%.4f")
+    A = D[D.gen].copy()
+
+    def why(x):
+        w = []
+        if x.comb_eff_sessions < REPS_MIN["ses"]:
+            w.append(f"eff sessions {x.comb_eff_sessions:.1f}<8")
+        if x.comb_trades < REPS_MIN["n"]:
+            w.append(f"eff trades {x.comb_trades:.1f}<30")
+        if not x.comb_shrunk > OD_IN["shrunk"]:
+            w.append(f"shrunk {x.comb_shrunk:.3f}<=-0.02")
+        if not (x.comb_exbest == x.comb_exbest and x.comb_exbest >= OD_IN["exbest"]):
+            w.append(f"w/o best day {x.comb_exbest:.3f}")
+        if not x.comb_last5 > OD_IN["last5"]:
+            w.append(f"last5 {x.comb_last5:.3f}")
+        return "; ".join(w) or "PASS"
+    A["fails"] = [why(x) for x in A.itertuples()]
+    A.sort_values("comb_shrunk", ascending=False)[["setup", "home", "fails"] + [c for c in cols if c not in ("setup", "from", "suggested", "tier")]] \
+        .to_csv(HERE / "gen_ranked.csv", index=False, float_format="%.4f")
+    # On Deck candidates (research/ondeck_build: roster + next in line) - combined evidence
+    nxt = ["CWT05-flush-m05-v5-long", "CWT13-vwapstretch-z075-short", "MF2-open-rsimidhi-flowsell-FD",
+           "L3-gap-slope-rsi5hi-FD", "NS4-pm-vwap-reclaim-oversold-short-FD"]
+    ro = RUN.ROOT / "research" / "ondeck_build" / "roster.csv"
+    roster = list(pd.read_csv(ro).setup) if ro.exists() else []
+    O = D[D.setup.isin(roster + nxt)].copy()
+    O["od_group"] = ["roster" if s in roster else "next in line" for s in O.setup]
+    ocols = ["setup", "od_group", "home", "side", "freeze", "live_trades", "live_sessions", "live_avgR", "live_exbest",
+             "live_share", "live_one_day", "fwd_sessions_replayed", "fwd_raw_trades", "fwd_sessions", "fwd_raw_avgR",
+             "fwd_avgR", "fwd_exbest", "fwd_one_day", "fwd_added_trades", "weight", "haircut", "comb_trades",
+             "comb_eff_sessions", "comb_avgR", "comb_shrunk", "comb_exbest", "comb_share", "comb_one_day", "comb_last5",
+             "od_in_live_only", "od_in", "reps_min", "r21_value"]
+    O.sort_values(["od_group", "comb_shrunk"], ascending=[False, False])[ocols].to_csv(
+        HERE / "ondeck_combined.csv", index=False, float_format="%.4f")
     pd.set_option("display.width", 250)
     print(C.round(3).to_string(index=False))
     print(f"\nledger: {len(D)} setups; gen fast-track: {len(G)}")

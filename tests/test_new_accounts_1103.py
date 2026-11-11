@@ -51,13 +51,15 @@ def test_overlay_sizing_and_own_setups_only(monkeypatch, acct):
     a, live = cfg["account"], cfg["live"]
     assert cfg["account_name"] == acct
     assert a["slots"] == 200 and a["max_concurrent_positions"] == 200 and a["buying_power_multiple"] == 2.0
-    assert a["max_positions_per_strategy"] == 10 and a["max_setup_daily_loss_r"] is None
+    # generic per-setup cap 10 -> 30 (ODX-4, owner 2026-11-11, from session 2026-11-12)
+    assert a["max_positions_per_strategy"] == 30 and a["max_setup_daily_loss_r"] is None
     t1 = _cfg(monkeypatch, "testing")["account"]
-    assert a["max_daily_loss_r"] == t1["max_daily_loss_r"] == 120                  # the Testing account backstop
+    assert a["max_daily_loss_r"] == t1["max_daily_loss_r"] == 300                  # the Testing account backstop (was 120)
     assert a["risk_per_trade_pct"] == t1["risk_per_trade_pct"]
-    assert sorted(live["setup_order"]) == sorted(raw["strategies"]) and live["scale_out_max_per_day"] == 0 and live["block_twin_same_symbol"] is False
+    own = {k for k, v in raw["strategies"].items() if v.get("enabled")}         # moved-out blocks stay listed, switched off
+    assert sorted(live["setup_order"]) == sorted(own) and live["scale_out_max_per_day"] == 0 and live["block_twin_same_symbol"] is False
     monkeypatch.setenv("MCF_ACCOUNT", acct)
-    assert {s.name for s in build_strategies(cfg)} == set(raw["strategies"])      # nothing from default.yaml leaks in
+    assert {s.name for s in build_strategies(cfg)} == own                         # nothing from default.yaml leaks in
     assert abs(slot_notional(a) - 1_000) < 1e-6                                   # ~$1,000 constant notional per lot
 
 

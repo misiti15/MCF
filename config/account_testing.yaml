@@ -14,7 +14,7 @@ account:
   buying_power_multiple: 3.8
   max_concurrent_positions: 400
   max_positions_per_strategy: 150
-  max_daily_loss_r: 120          # owner 2026-10-19 evening: catastrophe backstop only (was 60)
+  max_daily_loss_r: 300          # owner 2026-11-11 after close; from session 2026-11-12: catastrophe backstop only (was 120; 60 before 2026-10-19)
   max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
 live:
@@ -26,28 +26,28 @@ live:
   retry_after_release: true
   longs_first_on_ties: true
   # Owner 2026-10-14 (research/bdi/bdi1013/NOTES.md G7, Testing 1 only): skip new shorts while QQQ fo - IWM fo >= 0.50%.
+  # ODX-1 (owner 2026-11-11 after close; from session 2026-11-12): OFF in On Deck - an on/off market switch belongs in a testing area, never in On Deck;
+  # Primary runs without it. The block stays so a testing-area switch test can turn it on there.
   split_tape_short_gate:
-    enabled: true
+    enabled: false
     spread_pct: 0.50
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
-    - MF1-945-flowsell-vwapup   # demoted from Primary 2026-10-25 (narrow 09:50-10:30 window)
-    - NS4-pm-vwap-reclaim-oversold-short-FD
-    - CWT05-flush-m05-v3-long   # 4.00/day (allocator)
-    - L3-gap-slope-lowdist-FD
-    - L3-gap-slope-rsi5hi-FD   # from Primary 2026-11-10 (owner Team yes; ~7/day live)
-    - NS1-rsidip-rsi5pop-long-FD
-    - MF2-open-rsimidhi-flowsell-FD   # back from Primary 2026-11-10 (owner Team yes)
-    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
-    - RW3-gapdn-rsi5pop-flowsell-short-FD
-    - MF5-flowsell-vwapup-rsi5hi   # former primary (demoted 2026-10-20)
-    - MF4-h40-open-flowsell-FD   # back from Primary 2026-11-10 (owner Team yes)
-    - NS3-failed-vwap-reclaim-short   # former primary (demoted 2026-10-14)
-    - MF3-open-flowsell-rsi5hi   # former primary (demoted 2026-10-20)
-    - RW7-gapdn-bounce-early-short-FD
-    - exhaustion_short
-    - exhaustion_short-FD
+    - ST6-volspikeup-short-mid-t1s1-FD   # 6 traded sessions to 11-11
+    - CWT09-gapdn-bounce-g10-lowerhalf-short   # 7 traded sessions to 11-11
+    - CWT05-flush-m05-v5-long   # 8 traded sessions to 11-11
+    - CWT09-gapdn-vwaploss-g10-short   # 9 traded sessions to 11-11
+    - MF3-open-flowsell-rsi5hi   # 11 traded sessions to 11-11
+    - NM-HL-T75-pm-long   # 11 traded sessions to 11-11
+    - NS1-rsidip-rsi5pop-long   # 11 traded sessions to 11-11
+    - L3-gap-slope-lowdist-FD   # 15 traded sessions to 11-11
+    - L3-gap-slope-rsi5hi-FD   # 18 traded sessions to 11-11
+    - orb20_a   # 18 traded sessions to 11-11
+    - MF2-open-rsimidhi-flowsell-FD   # 20 traded sessions to 11-11
+    - RW7-gapdn-bounce-early-short-FD   # 21 traded sessions to 11-11
+    - RW1-gapdn-bounce-flowsell-short-FD   # 22 traded sessions to 11-11
+    - MF4-h40-open-flowsell-FD   # 23 traded sessions to 11-11
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -144,7 +144,7 @@ strategies:
   #      Review for full retirement after 10 Testing sessions; never removed without prompting the owner with a
   #      description and stats first.
   intraday_momentum:
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   orb20_a:
     enabled: true
@@ -158,13 +158,13 @@ strategies:
   exhaustion_short:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   NS3-failed-vwap-reclaim-short:
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
   MF1-945-flowsell-vwapup:   # demoted from Primary 2026-10-25 (owner MF1-D); its -FD twin runs in the Graveyard
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     former_primary: {demoted: "2026-10-25", first_testing_session: "2026-10-26", review_after_sessions: 10}
   CWT14-failbrk-pdl-p10-lowvol-long: {enabled: false}   # Primary only (promoted 2026-10-21)
   CWT13-vwapstretch-z05-long: {enabled: false}   # runs in Testing 2 (back from Primary 2026-10-26)
@@ -174,10 +174,12 @@ strategies:
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   MF4-h40-open-flowsell: {enabled: false}   # replaced by MF4-h40-open-flowsell-FD
   MF5-flowsell-vwapup-rsi5hi:
-    ticker_split: {part: 0, of: 2}   # split copy (allocator)
-    enabled: true
+    enabled: false   # single home Testing A from session 2026-11-12 (ONDECK dual-home fix; was a split copy)
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
-  NS1-rsidip-rsi5pop-long: {enabled: false}   # replaced by NS1-rsidip-rsi5pop-long-FD
+  NS1-rsidip-rsi5pop-long:   # moved from Testing A 2026-11-11 after the close (ONDECK OD-IN; rule 20, protected to ~11-25); from session 2026-11-12
+    # earlier note: from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11); Testing 1 holds its twin NS1-rsidip-rsi5pop-long-FD
+    enabled: true
+    former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
   NS2-sma50break-overbought-short:
     enabled: false   # moved to Graveyard 2026-10-21 (owner)
     former_primary: {demoted: "2026-10-16", first_testing_session: "2026-10-16", review_after_sessions: 10}
@@ -217,8 +219,7 @@ strategies:
   # ---- FULL-DAY versions (all: window [950, 1500], scale_out_r null; min_adv / prefilter as the source)
   # from exhaustion_short (primary; source window 1300-1500); ~66.8/day full-day [timeofday results.csv full, exp -0.059R]
   exhaustion_short-FD:
-    ticker_split: {part: 0, of: 2}   # split copy (allocator)
-    enabled: true
+    enabled: false   # single home Testing A from session 2026-11-12 (ONDECK dual-home fix; was a split copy)
     type: lab
     module: research/bdi/fullday/exhaustion_short-FD.py
     min_adv: 95000000
@@ -275,7 +276,7 @@ strategies:
   NS1-rsidip-rsi5pop-long-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 3
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     type: lab
     module: research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py
     min_adv: 95000000
@@ -301,7 +302,7 @@ strategies:
     scale_out_r: null
   # from NS4-pm-vwap-reclaim-oversold-short (primary; source window 1130-1500); ~3.97/day full-day [timeofday results.csv full, exp -0.054R]
   NS4-pm-vwap-reclaim-oversold-short-FD:
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     type: lab
     module: research/bdi/fullday/NS4-pm-vwap-reclaim-oversold-short-FD.py
     min_adv: 95000000
@@ -403,10 +404,11 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   # from ST6-volspikeup-short-mid-t1s1 (testing; source window 1135-1330); ~1.42/day full-day [timeofday results.csv full, exp +0.024R]
-  ST6-volspikeup-short-mid-t1s1-FD:
+  ST6-volspikeup-short-mid-t1s1-FD:   # moved from Testing C 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~1.24/session lab.
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
+    enabled: true
     type: lab
     module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
     min_adv: 95000000
@@ -478,8 +480,8 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   # from RW1-gapdn-bounce-flowsell-short (testing; source window 950-1100); ~17.54/day full-day [timeofday results.csv full, exp -0.046R]
-  RW1-gapdn-bounce-flowsell-short-FD:
-    enabled: false   # allocator 2026-10-20: runs in Testing 2
+  RW1-gapdn-bounce-flowsell-short-FD:   # moved from Testing A 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
+    enabled: true
     type: lab
     module: research/bdi/fullday/RW1-gapdn-bounce-flowsell-short-FD.py
     min_adv: 95000000
@@ -559,7 +561,7 @@ strategies:
     testing: {added: "2026-10-12", source: "LIQ-PD-long-x0.05-open-k15-a1-A-NL-BE+TS", bar: "PLAN.md 5(b)"}
   # ---- CWT05-flush-m05-v3-long: moved here by the allocator 2026-10-20 (mcf/research/allocate.py)
   CWT05-flush-m05-v3-long:
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     type: lab
     module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
     min_adv: 95000000
@@ -605,3 +607,38 @@ strategies:
     scale_out_r: 0.25
     live_scale_out: true
     testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vany-sidelong-t05s1-full, fill: false}
+  CWT09-gapdn-vwaploss-g10-short:   # moved from Testing C 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 11 live trades so far; ~1.29/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-vwaploss-g10-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T1 S guest", fill: false}
+  CWT09-gapdn-bounce-g10-lowerhalf-short:   # moved from Testing B 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 17 live trades so far; ~1.38/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-bounce-g10-lowerhalf-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T2 S guest", fill: false}
+  NM-HL-T75-pm-long:   # moved from Testing A 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/NM-HL-T75-pm-t05s1-long.py
+    min_adv: 125000000
+    window: [1300, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  CWT05-flush-m05-v5-long:   # moved from Testing B 2026-11-11 after the close (ONDECK OD-FILL); from session 2026-11-12
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~2.93/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v5-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v5-Dnone-t05s1-full", fill: false}

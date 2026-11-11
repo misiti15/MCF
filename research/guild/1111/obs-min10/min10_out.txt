@@ -1,0 +1,75 @@
+live trades open at minute 10 with bars: 14469 of 17584 (2026-10-06..2026-11-09), setups 193; dropped 50 trades whose entry-minute bar is > 3% from the fill (split-adjusted bars: ['EFG', 'ITA', 'MTUM', 'SOXX'])
+
+k 0.1: triggered share 62%
+   triggered   n  8948: first-10-min move +0.0168 ATR (t +4.31); AFTER minute 10 to live exit -0.0308 ATR (day-t -2.13, days 25); median +0.0274
+   untriggered n  5521: first-10-min move -0.0720 ATR (t -17.23); AFTER minute 10 to live exit -0.0013 ATR (day-t -0.14, days 25); median -0.0394
+   untriggered by family (n >= 30): 25 families; after-minute-10 < 0 in 16, > 0 in 9
+               n    cont  median  days
+fam                                   
+NS3          111 -0.0364 -0.0313    19
+RW2          123 -0.0361 -0.1109    21
+NS2           84 -0.0291 -0.0682    15
+RW6           58 -0.0262 -0.0592     9
+CWT13        165 -0.0254 -0.0803    19
+GEN          807 -0.0243 -0.0746    16
+heat         480 -0.0237 -0.0609    25
+MF3           60 -0.0231 -0.0782    20
+NS5           37 -0.0223 -0.0187    15
+MF4           51 -0.0213 -0.0712    18
+ST2          115 -0.0192 -0.0137    20
+CWT12        311 -0.0158  0.0071    19
+CWT14       1944 -0.0151 -0.0263    21
+LIQ          136 -0.0129 -0.0596    18
+RW4           58 -0.0100 -0.0236    14
+NM            65 -0.0076 -0.0354    10
+exhaustion   127  0.0088  0.0023    20
+RW7          182  0.0192  0.0220    18
+NS1           47  0.0194  0.0997    14
+MF5           61  0.0325 -0.0268    19
+RW1           39  0.0449  0.0602    19
+L3            99  0.0509  0.0935    16
+CWT09         76  0.0561 -0.0584    10
+RW3           74  0.0868  0.1473    16
+RW5           44  0.1257  0.2204    15
+
+k 0.25: triggered share 30%
+   triggered   n  4400: first-10-min move +0.0498 ATR (t +9.67); AFTER minute 10 to live exit -0.0387 ATR (day-t -2.50, days 25); median +0.0342
+   untriggered n 10069: first-10-min move -0.0465 ATR (t -18.06); AFTER minute 10 to live exit -0.0107 ATR (day-t -1.75, days 25); median -0.0200
+   untriggered by family (n >= 30): 32 families; after-minute-10 < 0 in 20, > 0 in 12
+               n    cont  median  days
+fam                                   
+intraday      31 -0.0811 -0.0716    11
+ST1           35 -0.0642 -0.1302    12
+CWT05         41 -0.0456 -0.0961    11
+NS3          199 -0.0441 -0.0425    20
+RW2          250 -0.0361 -0.1114    22
+RW4          116 -0.0345 -0.0490    17
+GEN         1464 -0.0314 -0.0854    16
+heat         869 -0.0291 -0.0640    25
+NS2          161 -0.0272 -0.0733    20
+NS5           60 -0.0271 -0.0276    19
+NS4           38 -0.0268 -0.0595    11
+RW6          113 -0.0243 -0.0533    16
+ST2          181 -0.0212 -0.0037    21
+CWT12        560 -0.0174  0.0412    21
+CWT13        296 -0.0152 -0.0545    19
+CWT14       3500 -0.0125  0.0421    21
+MF4           91 -0.0118 -0.0068    22
+MF3          133 -0.0114 -0.0413    23
+LIQ          232 -0.0024 -0.0699    18
+NM           116 -0.0007 -0.0154    12
+NS1           72  0.0069  0.0592    15
+MF5          110  0.0074 -0.0447    20
+exhaustion   202  0.0182  0.0316    22
+RW7          315  0.0193  0.0316    19
+MF1           34  0.0321 -0.0411    18
+ST7           32  0.0381  0.0180    11
+L3           223  0.0514  0.0913    19
+RW1           79  0.0596  0.0811    21
+MF2           34  0.0640  0.0107    14
+CWT09        147  0.0706 -0.0195    14
+RW3          160  0.0733  0.1361    20
+RW5           88  0.1019  0.1938    19
+
+Reading: a minute-10 exit on untriggered trades helps only if their AFTER-minute-10 move is clearly < 0 (and beats exit cost ~0.01-0.02 ATR).
+Educational only - not financial advice.

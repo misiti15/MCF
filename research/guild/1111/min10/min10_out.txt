@@ -1,0 +1,19 @@
+pool: 10 of 14 setups have 2y lists (missing: ['CWT09-gapdn-bounce-g5-lowerhalf-short', 'MF3-open-flowsell-rsi5hi', 'MF5-flowsell-vwapup-rsi5hi', 'NS4-pm-vwap-reclaim-oversold-short']); trades 71595
+signals open at minute 10: 64766 (10 setups, 2y lab lists, split-adjusted cache throughout - no live-price join)
+median extra exit cost at minute 10 (1c + 1bp, ATR units): 0.0056
+  k 0.10 UNTRIGGERED ALL   n  18654  first10 -0.0522  post10 gross +0.0056 ATR (day-t 2.22)
+  k 0.10 UNTRIGGERED TRAIN n   6006  first10 -0.0540  post10 gross -0.0040 ATR (day-t -1.04)
+  k 0.10 UNTRIGGERED VALID n  12648  first10 -0.0514  post10 gross +0.0102 ATR (day-t 3.95)
+  k 0.10 TRIGGERED   ALL   n  46112  first10 +0.0225  post10 gross +0.0080 ATR (day-t 2.54)
+  k 0.10 TRIGGERED   TRAIN n  14311  first10 +0.0222  post10 gross +0.0015 ATR (day-t 0.28)
+  k 0.10 TRIGGERED   VALID n  31801  first10 +0.0226  post10 gross +0.0110 ATR (day-t 3.2)
+  k 0.10 untriggered post10 by setup: GEN-261019-10-FlowShif +0.018 (n 1701); GEN-261021-02-BarRngAT +0.056 (n 432); GEN-261026-06-NewLOD-S +0.028 (n 438); L3-gap-slope-lowdist-F -0.006 (n 929); L3-gap-slope-rsi5hi-FD +0.014 (n 2435); MF2-open-rsimidhi-flow +0.004 (n 883); NS5-sma50-flush-overso -0.011 (n 245); RW1-gapdn-bounce-flows +0.002 (n 2419); RW7-gapdn-bounce-early +0.001 (n 8951); ST4-emadn-long-am-t1s0 -0.001 (n 221)
+  k 0.25 UNTRIGGERED ALL   n  38373  first10 -0.0328  post10 gross +0.0070 ATR (day-t 2.93)
+  k 0.25 UNTRIGGERED TRAIN n  11971  first10 -0.0356  post10 gross -0.0023 ATR (day-t -0.51)
+  k 0.25 UNTRIGGERED VALID n  26402  first10 -0.0316  post10 gross +0.0112 ATR (day-t 4.4)
+  k 0.25 TRIGGERED   ALL   n  26393  first10 +0.0501  post10 gross +0.0079 ATR (day-t 1.56)
+  k 0.25 TRIGGERED   TRAIN n   8346  first10 +0.0503  post10 gross +0.0030 ATR (day-t -0.06)
+  k 0.25 TRIGGERED   VALID n  18047  first10 +0.0501  post10 gross +0.0101 ATR (day-t 2.14)
+  k 0.25 untriggered post10 by setup: GEN-261019-10-FlowShif +0.015 (n 3662); GEN-261021-02-BarRngAT +0.049 (n 1047); GEN-261026-06-NewLOD-S +0.023 (n 962); L3-gap-slope-lowdist-F -0.001 (n 2018); L3-gap-slope-rsi5hi-FD +0.012 (n 5157); MF2-open-rsimidhi-flow +0.009 (n 1768); NS5-sma50-flush-overso -0.009 (n 568); RW1-gapdn-bounce-flows +0.005 (n 4914); RW7-gapdn-bounce-early +0.003 (n 17788); ST4-emadn-long-am-t1s0 -0.000 (n 489)
+Reading rule (Lead, fixed): ~0 = martingale -> close the minute-10 exit; only clearly negative in TRAIN AND VALID -> counted plan.
+Educational only - not financial advice.

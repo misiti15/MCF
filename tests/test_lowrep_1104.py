@@ -10,7 +10,8 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPLORE1 = {"CWT04-backside-lh-a15-short", "CWT04-backside-vwaptest-a25-short", "CWT05-flush-m05-v5-long",
+# The 11-04 moves as made (historical sets; ledger 2026-11-04-lowrep-explore1-livelab).
+MOVED_X1 = {"CWT04-backside-lh-a15-short", "CWT04-backside-vwaptest-a25-short", "CWT05-flush-m05-v5-long",
             "CWT09-gapdn-bounce-g10-lowerhalf-short", "CWT13-vwapstretch-z075-long", "IDX1-qqq100-0955-TQQQ-hold",
             "IDX2-spy075-0945-3x-trail", "IDX5-spy050-0945-3x-trail", "LD1-ns1-breadthup-t05s1-long",
             "LD3-st2-idxturn-t05s1-long", "LD4-st4-breadthup-t1s05-long",
@@ -18,7 +19,7 @@ EXPLORE1 = {"CWT04-backside-lh-a15-short", "CWT04-backside-vwaptest-a25-short", 
             "NM-AMS-N1-quiet-morning-short", "NM-RWN3-ns3-spyup-early-short", "NM-RWN5-ns3-mon-weakrs-short",
             "NM-RWR4-ns2-up3-qqqup-slopedn-short", "NM1-cwt09-g10-vwaploss-short", "RW6G1-ns2-up3-vwap2sd-short",
             "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD", "ST8-volspikedn-long-pm-t1s1-FD"}
-LIVELAB = {"CWT04-backside-lh-a25-short", "CWT04-backside-vwaptest-a15-short", "CWT05-flush-m075-v3-long",
+MOVED_LL = {"CWT04-backside-lh-a25-short", "CWT04-backside-vwaptest-a15-short", "CWT05-flush-m075-v3-long",
            "CWT05-flush-m075-v5-long", "CWT09-gapdn-vwaploss-g10-short", "CWT12-flag-s1-long",
            "IDX1-qqq100-0955-TQQQ-trail", "IDX3-spy075-0955-3x-trail", "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
            "LD5-st2-breadthup-t05s1-long", "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long",
@@ -27,11 +28,27 @@ LIVELAB = {"CWT04-backside-lh-a25-short", "CWT04-backside-vwaptest-a15-short", "
            "NM-PM-gapdn-above-pdh-rvol-short", "NM-RWN4-ns2-spyup05-notfri-short",
            "NM-RWR1-exh150-gapdn-spyup-pm-short", "NM-RWR3-ns3-qqqup-early-short", "ST3-rsi5up-short-pm-t1s1-FD",
            "ST5-pdbrkup-short-mid-t05s1-FD", "ST6-volspikeup-short-mid-t1s1-FD"}
+# Testing B (explore1) / Testing C (livelab) NOW: after the 2026-11-11 after-close build (ledger 2026-11-12-ondeck-build,
+# 2026-11-12-testing-areas-fill): 4 of the 11-04 movers went up to On Deck, 15 moved on to Testing D / E / F.
+EXPLORE1 = {"CWT04-backside-lh-a15-short", "CWT13-vwapstretch-z075-long", "IDX1-qqq100-0955-TQQQ-hold",
+            "LD1-ns1-breadthup-t05s1-long", "LD3-st2-idxturn-t05s1-long", "MF2-open-rsimidhi-flowsell",
+            "NM-RWN3-ns3-spyup-early-short", "NM-RWR4-ns2-up3-qqqup-slopedn-short", "NM1-cwt09-g10-vwaploss-short",
+            "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD", "ST8-volspikedn-long-pm-t1s1-FD"}
+LIVELAB = {"CWT04-backside-vwaptest-a15-short", "CWT05-flush-m075-v3-long", "CWT12-flag-s1-long",
+           "IDX1-qqq100-0955-TQQQ-trail", "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+           "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long", "LD7-ns1-idxturn-holdtr-long",
+           "NM-PM-gapdn-above-pdh-rvol-short", "NM-RWR3-ns3-qqqup-early-short", "ST3-rsi5up-short-pm-t1s1-FD",
+           "ST5-pdbrkup-short-mid-t05s1-FD"}
+# 11-04 movers that qualified for On Deck at the 2026-11-11 build (OD-IN, or OD-FILL for CWT05-m05-v5)
+TO_ONDECK = {"CWT09-gapdn-vwaploss-g10-short", "CWT09-gapdn-bounce-g10-lowerhalf-short", "ST6-volspikeup-short-mid-t1s1-FD",
+             "CWT05-flush-m05-v5-long"}
+TESTING_AREAS = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf")
 INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy075-0945-3x-trail",
           "IDX3-spy075-0955-3x-trail", "IDX5-spy050-0945-3x-trail", "LD4-st4-breadthup-t1s05-long",
           "LD5-st2-breadthup-t05s1-long"}
 # kept where they are: mid-observation by owner decision, or a Graveyard setup with >= 10 live trades
-STAY = {"testing2": {"RW3S-gapdn-flowsell-short-FD", "CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"},
+# (RW3S-gapdn-flowsell-short-FD stayed on 11-04 and moved on to Testing E on 2026-11-12)
+STAY = {"testing2": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"},
         "graveyard": {"ST4-emadn-long-am-t1s05-FD"}}
 
 
@@ -49,7 +66,8 @@ def _on(cfg):
 def test_moves_are_moves(monkeypatch):
     from mcf.strategies.setups import build_strategies
 
-    assert not (EXPLORE1 & LIVELAB) and INACT2 <= EXPLORE1 | LIVELAB
+    assert not (EXPLORE1 & LIVELAB) and not (MOVED_X1 & MOVED_LL) and INACT2 <= MOVED_X1 | MOVED_LL
+    assert EXPLORE1 | LIVELAB <= MOVED_X1 | MOVED_LL and TO_ONDECK <= MOVED_X1 | MOVED_LL
     for acct, want in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
@@ -57,8 +75,10 @@ def test_moves_are_moves(monkeypatch):
         assert {s.name for s in build_strategies(cfg)} == want, acct
     for acct in ("testing", "testing2", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
-        assert not (_on(cfg) & (EXPLORE1 | LIVELAB)), acct                     # switched off where they came from
-        assert not (set(cfg["live"]["setup_order"]) & (EXPLORE1 | LIVELAB)), acct
+        back = TO_ONDECK if acct == "testing" else set()                       # On Deck from 2026-11-12
+        assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back), acct              # switched off where they came from
+        assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back), acct
+        assert back <= _on(cfg), acct
         assert STAY.get(acct, set()) <= _on(cfg), acct
     txt = (ROOT / "config/account_testing2.yaml").read_text()
     assert "moved to Explore 1 2026-11-04 (owner, low-rep rotation)" in txt
@@ -66,16 +86,24 @@ def test_moves_are_moves(monkeypatch):
 
 
 def test_twins_split_across_the_two_accounts():
+    """Twins never share an account (they were split Explore 1 / Live Lab on 11-04; since 2026-11-12 they may sit in
+    On Deck or Testing A-F, still apart). Trimmed (INACT2) setups are never just switched off."""
+    home = {}
+    for k, v in json.loads((ROOT / "docs/live/assignments.json").read_text())["accounts"].items():
+        for s in v:
+            home.setdefault(s, set()).add(k)
+    for s in INACT2:
+        assert home.get(s) and home[s] <= set(TESTING_AREAS), s
     for pair in (("IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold"),
                  ("NM1-cwt09-g10-vwaploss-short", "CWT09-gapdn-vwaploss-g10-short"),
                  ("CWT04-backside-lh-a15-short", "CWT04-backside-lh-a25-short"),
                  ("CWT04-backside-vwaptest-a15-short", "CWT04-backside-vwaptest-a25-short"),
                  ("LD4-st4-breadthup-t1s05-long", "LD5-st2-breadthup-t05s1-long")):
-        assert len({("x" if s in EXPLORE1 else "l") for s in pair}) == 2, pair
+        assert home[pair[0]] and home[pair[1]] and not (home[pair[0]] & home[pair[1]]), pair
 
 
 def test_twin_groups_never_share_an_account(monkeypatch):
-    for acct in ("explore1", "livelab"):
+    for acct in ("testing", *TESTING_AREAS):
         groups = [v.get("twin_group") for v in _cfg(monkeypatch, acct)["strategies"].values()
                   if isinstance(v, dict) and v.get("enabled") and v.get("twin_group")]
         assert len(groups) == len(set(groups)), acct
