@@ -45,3 +45,26 @@ Only 439 of 23,223 skipped signals were traded in another account the same day, 
 
 Rule-change context in the window: Explore 1 / Live Lab trade from 11-05; Testing A top-500 pool from 11-04; Gen/Testing size and
 halt settings per the ledger in 10-20..11-10. Counts mix those regimes; per-day counts are in `reps1_signals_sim.csv.gz` (scratch).
+
+## REPS1b — levers in SETUP-DAYS (Lead lead-20261111-1300-2; Skeptic's fixes) — `reps1b.py` -> `reps1b_out.txt`, `spreadcost_out.txt`
+The unit is the setup-day (Observer: same-day ICC ~0.19, a session ~ 4.8 independent trades). A skipped signal counts as a NEW
+setup-day only if that setup submitted nothing that day in any account. What-ifs now subtract the exit-model gap by entry
+hour (sim minus live gross on submitted trades: 9h +0.077, 10h +0.080, 11h +0.059, 12h +0.088, 13h +0.060, 14h +0.042, 15h +0.008).
+Each lever is compared per day with the same group's submitted live gross (day-clustered t, n days, best-day share).
+Current submitted setup-days per week: Gen 90.9, low-rep 43.8, other 260.3.
+
+| Rank | Lever | New setup-days / week | Quality (hour-adjusted, vs traded) | Read |
+|---|---|---|---|---|
+| 1 | More setups live (new homes: Testing D/E/F, rotation of idle setups) | ~1 per added setup (Gen 1.07; low-rep median 3 submitted days of 16) | each setup's own | the only lever that scales; low-rep setups fire on a median 6 of 16 days, so their limit is how often they signal, not blocks |
+| 2 | Gen account halt (spread Gen over more accounts) | 7.5 (40 setups) | +0.23R, but only 2 halt days, best day 83% | real days, unproven quality; one or two rebound afternoons |
+| 3 | Gen buying power (same remedy) | 4.7 (53 setups) | +0.13R, day-t 1.71, 5 days | modest, plausible |
+| - | Borrow (not shortable / ETB) | low-rep 21.3, other 11.6, Gen 6.6 | low-rep -0.02 (day-t -2.4); other +0.19 (t 2.8) | not unlockable at Alpaca. 'Virtual' only, labelled, never in a verdict (squeeze-prone, no borrow fee) |
+| - | Spread filters | low-rep 16.9, Gen 8.4 | after the logged full spread (median 0.33R): Gen -0.52R, low-rep -0.16R vs live net -0.22 / -0.09 | KEEP the filters |
+| - | Twin / opposite side; split-tape short gate; cost filter | low-rep 10.6 / 4.1 / 4.7 | -0.29 / -0.42 / -0.21R | KEEP |
+| - | Setup daily loss cap; per-setup max positions | 0 new days | ~0 | only extra same-day entries on busy setups |
+
+Honest bottom line: releasing blocks adds at most ~12 good-quality Gen setup-days a week (halt + buying power, about +13%), and
+the halt's quality rests on 2 days. Every other block is either protective (spread, twin, short gate, cost) or not unlockable
+(borrow). The scalable source of setup-days is more setups live at once: more homes and accounts, and rotating idle setups in.
+That fits the playing-time rule (session rotation, no in-session throttling). Benched sessions produce no signals, so this
+journal table cannot measure rotation itself. That needs the bench log.
