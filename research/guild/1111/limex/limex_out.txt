@@ -1,0 +1,21 @@
+pool: 10 of 14 setups have 2y lists (missing: ['CWT09-gapdn-bounce-g5-lowerhalf-short', 'MF3-open-flowsell-rsi5hi', 'MF5-flowsell-vwapup-rsi5hi', 'NS4-pm-vwap-reclaim-oversold-short']); trades 71595
+trades walked 71594; baseline (next-bar market) net -0.0404 gross +0.0407; family N 1960, BAR90 3.5
+config  fill  lim_net  B_net_filled  B_net_missed  missed_sumB   delta     t  gross_delta  gross_t  train  train_t  valid  valid_t  wo_best    up   down  quiet  better  worse  pass
+    L2 0.743  -0.0579       -0.0621        0.0220        405.9  -184.6 -0.50      -3266.1    -8.33  243.8     0.94 -428.4    -1.64   -268.4 878.2 -989.0  -73.9       4      6 False
+    L5 0.830  -0.0623       -0.0725        0.1156       1411.2  -803.2 -2.83      -3396.1   -10.67    0.2     0.00 -803.4    -4.37   -854.7 313.5 -911.5 -205.3       3      7 False
+   L10 0.877  -0.0639       -0.0767        0.2172       1920.2 -1115.4 -4.77      -3414.7   -12.65 -138.7    -0.78 -976.7    -6.58  -1158.5  86.3 -902.4 -299.3       1      9 False
+
+per setup (n, baseline net, L5 net incl. misses as 0, delta per signal, L5 fill share):
+  GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRo n   6511 B +0.0025 L5 -0.0090 delta -0.0115 fill 0.87
+  GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OP n   4388 B +0.1426 L5 +0.1247 delta -0.0179 fill 0.88
+  GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYl n   1663 B +0.0139 L5 +0.0187 delta +0.0048 fill 0.80
+  L3-gap-slope-lowdist-FD                          n   4410 B -0.1318 L5 -0.1289 delta +0.0030 fill 0.85
+  L3-gap-slope-rsi5hi-FD                           n  10597 B -0.0444 L5 -0.0437 delta +0.0008 fill 0.84
+  MF2-open-rsimidhi-flowsell-FD                    n   5661 B -0.0913 L5 -0.1237 delta -0.0324 fill 0.83
+  NS5-sma50-flush-oversold-long                    n   1360 B -0.0477 L5 -0.0612 delta -0.0135 fill 0.89
+  RW1-gapdn-bounce-flowsell-short-FD               n   7895 B -0.0465 L5 -0.0644 delta -0.0179 fill 0.81
+  RW7-gapdn-bounce-early-short-FD                  n  27707 B -0.0565 L5 -0.0680 delta -0.0114 fill 0.81
+  ST4-emadn-long-am-t1s05-FD                       n   1402 B +0.0049 L5 -0.0085 delta -0.0134 fill 0.84
+
+delta = sum over signals of (limit R - market R), missed limits count 0R; adverse selection = B_net_filled vs B_net_missed.
+Educational only - not financial advice.
