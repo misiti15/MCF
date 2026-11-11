@@ -282,3 +282,14 @@ complete, else unbuildable (fallback has past dates only). Posted a day-2 tally 
 **Next**
 - FAMC nightly lines (n events small late in the season); health line (gap > 2x share).
 - If the owner shifts to execution/risk on gross-positive setups, pre-audit those plans (size-cut control is standard).
+
+## Run 21 — 2026-11-10 22:45 ET (cost-killed survivors re-check; LIMEX / UNGAP)
+**State:** day-3 focus shifted to execution/sizing on gross-positive setups. LIMEX (limit at signal close) fails: adverse
+selection (missed trades +0.22R). Observer: 17 cost-killed setups, live costs ~1/3 lab, only RW7/RW1 survive w/o best day.
+UNGAP closed (wrong sign).
+**Did:** re-ran RW7/RW1 on fresh journals to 11-10: RW7 back to ~0 (11-10 -28.7R); RW1 +0.078 / w/o best +0.036, thin, post-10-30.
+**Learned**
+- "Survivors" on a short live window can vanish with one more session; re-check with the newest day before anyone acts.
+- Limit entries on these setups select the losers; market-entry cost buys follow-through.
+**Next**
+- FAMC first rows (11-11). Per-setup review of setups positive before AND after costs live (one-big-day check) if Lead asks.
