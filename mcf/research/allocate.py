@@ -52,7 +52,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 OUT_DIR = ROOT / "research" / "allocation"
 TESTING = ("testing", "testing2")
-LABEL = {"testing": "Testing 1", "testing2": "Testing 2", "both": "both (split)"}
+LABEL = {"testing": "On Deck", "testing2": "Testing A", "both": "both (split)"}
 CROWD_REASONS = ("held_by_other", "setup_cap", "daily_loss")
 SPLIT_VERDICTS = ("starved", "crowded-out")
 CONFLICT_W, FD_W, MOVE_W, BALANCE_W = 5.0, 1000.0, 8.0, 0.5
@@ -247,9 +247,9 @@ def markdown(d: dict) -> str:
     out = [f"# Testing allocation proposal ({d['generated']})", "",
            "*Educational only — not financial advice.* Proposal only until applied (`python -m mcf.research.allocate "
            "--apply`, outside market hours). Heuristic and inputs: `mcf/research/allocate.py`.", "",
-           f"Scorecards: Testing 1 {d['scorecards'].get('testing')}, Testing 2 {d['scorecards'].get('testing2')} "
+           f"Scorecards: On Deck {d['scorecards'].get('testing')}, Testing A {d['scorecards'].get('testing2')} "
            "(cumulative playing time). Signals/day = observed per session (>= 3 sessions) else the backtest expectation.", "",
-           "| | Testing 1 setups | Testing 2 setups | Testing 1 signals/day | Testing 2 signals/day | same-account crowding (lost/day) | setup + -FD together | moves | new split copies |",
+           "| | On Deck setups | Testing A setups | On Deck signals/day | Testing A signals/day | same-account crowding (lost/day) | setup + -FD together | moves | new split copies |",
            "|---|---|---|---|---|---|---|---|---|"]
     for k, s in (("current", b), ("proposed", a)):
         out.append(f"| {k} | {s['setups']['testing']} | {s['setups']['testing2']} | {s['signals_per_day']['testing']} | "
@@ -257,10 +257,10 @@ def markdown(d: dict) -> str:
                    f"{s['moves'] if k == 'proposed' else '–'} | {s['new_split_copies'] if k == 'proposed' else '–'} |")
     out += ["", f"**Moves ({len(d['moves'])}):** " + (", ".join(d["moves"]) or "none"),
             f"**Split-ticker copies ({len(d['split_copies'])}):** " + (", ".join(d["split_copies"]) or "none")
-            + " — each runs in both testing accounts, Testing 1 on ticker half 0 and Testing 2 on half 1 "
+            + " — each runs in both testing accounts, On Deck on ticker half 0 and Testing A on half 1 "
               "(crc32(symbol) % 2), so no signal is traded twice and the leaderboard shows one combined record.", "",
-           "Caveat: a moved setup takes on its new account's own rules (Testing 1: per-setup lot cap 150, split-tape "
-           "short gate; Testing 2: lot cap 50, live scale-outs capped at 2/day). A split copy keeps its -FD sibling in "
+           "Caveat: a moved setup takes on its new account's own rules (On Deck: per-setup lot cap 150, split-tape "
+           "short gate; Testing A: lot cap 50, live scale-outs capped at 2/day). A split copy keeps its -FD sibling in "
            "the same account on one half (rule c is waived for split copies).", "",
            "| Setup | Current | Proposed | Signals/day | Verdict | Crowding lost/day | Reason |", "|---|---|---|---|---|---|---|"]
     order = {"both": 0}
@@ -442,8 +442,8 @@ def main(argv=None) -> int:
     (OUT_DIR / f"{day}.md").write_text(markdown(d))
     (OUT_DIR / f"{day}.json").write_text(json.dumps(d, indent=1) + "\n")
     b, f = d["before"], d["after"]
-    print(f"allocation: Testing 1 {f['setups']['testing']} setups / {f['signals_per_day']['testing']} signals/day, "
-          f"Testing 2 {f['setups']['testing2']} / {f['signals_per_day']['testing2']} (was {b['signals_per_day']['testing']} / "
+    print(f"allocation: On Deck {f['setups']['testing']} setups / {f['signals_per_day']['testing']} signals/day, "
+          f"Testing A {f['setups']['testing2']} / {f['signals_per_day']['testing2']} (was {b['signals_per_day']['testing']} / "
           f"{b['signals_per_day']['testing2']}); {len(d['moves'])} moves; split copies: {', '.join(d['split_copies']) or 'none'}")
     print(f"wrote {OUT_DIR / (day + '.md')}")
     if not a.apply:

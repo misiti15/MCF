@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-NEW = {"livelab": ("Live Lab", "mll-", "LIVELAB"), "explore1": ("Explore 1", "mx1-", "EXPLORE1")}
+NEW = {"livelab": ("Testing C", "mll-", "LIVELAB"), "explore1": ("Testing B", "mx1-", "EXPLORE1")}   # display names (owner rename 2026-11-11)
 OLD = {"primary": ("mcf-", "mcf-data", "mcf-trade", None), "testing": ("mct-", "mcf-data-testing", "mcf-trade-testing", "TESTING"),
        "testing2": ("mt2-", "mcf-data-testing2", "mcf-trade-testing2", "TESTING2"),
        "gen": ("mcg-", "mcf-data-gen", "mcf-trade-gen", "GEN"),

@@ -50,4 +50,4 @@ def test_inact2_sessions_to_verdict():
     assert v.loc["NM-RWN3-ns3-spyup-early-short", "rate_from"] == "expected"
     assert v.loc["NM-RWN3-ns3-spyup-early-short", "sessions_to_verdict"] == 67   # 60 / 0.9
     md = I.verdict_md(I.verdicts(_df()), "2026-11-03")
-    assert md.startswith("Educational only") and "Explore 1" in md
+    assert md.startswith("Educational only") and "Testing A / B / C" in md

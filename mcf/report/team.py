@@ -54,8 +54,8 @@ LABEL = "Shadow — simulated independently; no orders"
 ACCOUNT_BRANCH = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing2": "mcf-data-testing2",
                   "gen": "mcf-data-gen", "graveyard": "mcf-data-graveyard", "explore1": "mcf-data-explore1",
                   "livelab": "mcf-data-livelab"}
-ACCOUNT_TAG = {"primary": "Primary", "testing": "Testing 1", "testing2": "Testing 2", "gen": "Generator",
-               "graveyard": "Graveyard", "explore1": "Explore 1", "livelab": "Live Lab"}
+ACCOUNT_TAG = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Generator",
+               "graveyard": "Graveyard", "explore1": "Testing B", "livelab": "Testing C"}
 # per-setup keys that would carry an account's own sizing / limits into the Team (the Team sizes every trade the same)
 SIZING_KEYS = ("risk_pct", "risk_per_trade_pct", "risk_mult", "size_mult", "lot_mult", "notional", "max_positions",
                "max_setup_daily_loss_r")
