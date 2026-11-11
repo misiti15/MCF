@@ -45,6 +45,9 @@ jobs:
       HAS_GRAVEYARD: ${{ secrets.ALPACA_GRAVEYARD_API_KEY != '' && secrets.ALPACA_GRAVEYARD_SECRET_KEY != '' }}
       HAS_LIVELAB: ${{ secrets.ALPACA_LIVELAB_API_KEY != '' && secrets.ALPACA_LIVELAB_SECRET_KEY != '' }}
       HAS_EXPLORE1: ${{ secrets.ALPACA_EXPLORE1_API_KEY != '' && secrets.ALPACA_EXPLORE1_SECRET_KEY != '' }}
+      HAS_TESTINGD: ${{ secrets.ALPACA_TESTINGD_API_KEY != '' && secrets.ALPACA_TESTINGD_SECRET_KEY != '' }}
+      HAS_TESTINGE: ${{ secrets.ALPACA_TESTINGE_API_KEY != '' && secrets.ALPACA_TESTINGE_SECRET_KEY != '' }}
+      HAS_TESTINGF: ${{ secrets.ALPACA_TESTINGF_API_KEY != '' && secrets.ALPACA_TESTINGF_SECRET_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -61,5 +64,8 @@ jobs:
           [ "$HAS_GRAVEYARD" = "true" ] && accts="$accts,graveyard"
           [ "$HAS_LIVELAB" = "true" ] && accts="$accts,livelab"
           [ "$HAS_EXPLORE1" = "true" ] && accts="$accts,explore1"
+          [ "$HAS_TESTINGD" = "true" ] && accts="$accts,testingd"
+          [ "$HAS_TESTINGE" = "true" ] && accts="$accts,testinge"
+          [ "$HAS_TESTINGF" = "true" ] && accts="$accts,testingf"
           # accounts with no enabled setup are dropped by the script (trade.yml skips them; has_setups)
           python -m mcf.execution.session_guard --accounts "$accts" --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.mode || 'act' }}"
