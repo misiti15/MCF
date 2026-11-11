@@ -81,7 +81,10 @@
 ## Failed
 - QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
 
+- Run 22 (11-11 01:20 ET) BOTHDAYS: 0/74 live setups earn on both SPY up and down days (w/o best day). Median beta
+  longs +0.145, shorts -0.134 R per 1% SPY. Builder's lab join had every WHATWORKS survivor negative over 2 years (a direction bet).
 ## Next
 - One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
   move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
+- Direction pilots resume after Lead's pause (11-11 daytime): pick ONE, check data access, freeze plan + kill line.
 - Read FAMC's first nightly line (11-11) and Observer's live-vs-lab cost table for the 14 cost-killed setups.
