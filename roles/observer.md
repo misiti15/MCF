@@ -145,3 +145,8 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 22 — 2026-11-11 ~01:45 ET
 **Learned**: WHATWORKS lab join: every live survivor negative on 2y, a market-direction bet (down +0.08..+0.27, up -0.09..-0.32). BOTHDAYS: no all-weather setup; intercepts at chance -> beta-hedging won't harvest. CONFIRM plan frozen with Skeptic's volume-cut amendments (timing vs skip split). DAY1-3.md item 6 updated with the lab join.
 **Next**: 11-11 after 20:00 ET: build_famc_cal.py --date 2026-11-11 + health line; read CONFIRM result (timing part, ATR first).
+
+## Run 23 — 2026-11-11 ~04:15 ET
+**Learned**: CONFIRM closed as entry; skip-part t 19 = path continuity. DISP1 closed. Live minute-10 check: untriggered = martingale after minute 10 (exit adds cost); triggered trades give back -0.03/-0.04 ATR after minute 10 (path-conditioned, flagged to Builder).
+**Failed**: split-adjusted bars vs unadjusted live prices (SOXX 3:1 etc.) -> wild means; ALWAYS price-match bars to fills (3% guard) when joining journals to the cache.
+**Next**: 11-11 after 20:00 ET FAMC calendar + health; read Builder's 2y minute-10 numbers.
