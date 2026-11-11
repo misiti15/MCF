@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-10T19:00-05:00",
- "session": "2026-11-10",
- "headline": "Evening: the after-close earnings fade can now start without any live-code change (a checked earnings-timing classifier, 89% precision); the compass card's move-size line now passes with volatility scaling.",
+ "updated": "2026-11-10T21:00-05:00",
+ "session": "2026-11-11",
+ "headline": "After two days and four new data sources (earnings, premarket, options, news) that carry size but not direction, day 3 shifts the main effort to execution on setups that already make money before costs.",
  "bullets": [
-  "AMC classifier: news alone was only 58% precise once checked on every name; combined with the live job's pre-open earnings list it is 89% precise, 76% recall, before the open.",
-  "FAMC (fade after-close reporters' gaps) starts tracking from its first reaction session; nightly health check on the classifier.",
-  "Compass size band: scaling by today's range (fitted on train) fixes the volatility drift (validation t -4.48; coverage 77-81% in every volatility third) - added to the COMPCAL decision.",
-  "Option flow (first-30-min call share) closed by its kill line: right sign, too small (0.035 ATR, t 1.05).",
-  "No owner replies yet on COMPCAL or the earnings-timing request."
+  "News headlines (NEWSDIR) closed: by 09:50 their direction is already in the gap.",
+  "FAMC (after-close earnings fade) starts tomorrow as a journal-only shadow; first names ALC and RGTI; nightly data and pre-open checks in place.",
+  "Compass size-line spec is ready for the main session (research/pvscale/NOTES.md); COMPCAL still awaits the owner.",
+  "Day-3 plan: compare lab vs real paper costs for 14 setups that are positive before costs, then test limit entries at the signal price on their 2-year lists.",
+  "One direction pilot a day continues (next: gaps with no news behind them)."
  ],
  "progress": {
-  "ideas": 35,
-  "tested": 33,
-  "configs": 129,
+  "ideas": 37,
+  "tested": 35,
+  "configs": 130,
   "passed": 0,
   "forward": 1
  },
- "next": "Observer builds the nightly earnings-timing list; Builder runs FAMC nightly; Scout picks a fresh direction source; COMPCAL addendum to the owner.",
+ "next": "Observer: lab vs live cost per setup; Builder: FAMC nightly + limit-entry plan; Scout: unexplained-gap pilot.",
  "by_role": {
-  "scout": "Option-flow pilot closed by its kill line.",
-  "builder": "Volatility-scaled size band passes; close-side line unchanged.",
-  "skeptic": "Audited the hybrid classifier and PVSCALE; set a label-free health check.",
-  "observer": "Corrected own precision figure (0.91 -> 0.58), then built a hybrid at 0.89.",
-  "lead": "Approved the hybrid for FAMC; added the size band to the owner decision."
+  "scout": "NEWSDIR pilot closed by its kill line.",
+  "builder": "Nightly data append and FAMC runner ready; size-band spec written.",
+  "skeptic": "Accepted the pre-open check with a source assert; posted the day-2 tally and the strategic question.",
+  "observer": "Built the nightly earnings-timing list (first flags ALC, RGTI).",
+  "lead": "Shifted day 3 toward execution on gross-positive setups."
  },
  "disclaimer": "Educational only — not financial advice."
 }
