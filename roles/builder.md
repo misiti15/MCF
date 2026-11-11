@@ -92,6 +92,8 @@
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
   n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
   Cache + daily now end 2026-11-10 (backup of the 11-09 daily table in the scratchpad).
+- 11-11 04:30: minute-10 exit CLOSED (untriggered post-10 ~0 / slightly +; live giveback of triggered trades doesn't
+  replicate on 2y). Next: FAMC nightly from 11-11 16:05 ET (append_day.py, then famc_shadow.py).
 - 11-11 03:00: CONFIRM 0/2 as entry (timing t -18), but the trigger selects (skip excess t 19): proposed a 10-min
   confirmation EXIT (market entry, flat at min 10 if no k x D move) - awaiting Lead.
 - 11-11 00:40: CONFIRM plan + script frozen, waiting for Skeptic's attack before scoring. WHATWORKS lab join: all
