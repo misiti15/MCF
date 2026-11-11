@@ -6,7 +6,10 @@
 set -euo pipefail
 hm=$(TZ=America/New_York date +%H%M); [ "$hm" -ge 1605 ] || { echo "refusing before 16:05 ET"; exit 1; }
 cd "$(dirname "$0")"; mkdir -p out
-git -C /home/user/MCF fetch -q origin mcf-data mcf-data-testing mcf-data-testing2 mcf-data-gen mcf-data-graveyard mcf-data-explore1 mcf-data-livelab
+# run_evening.sh fetches data branches with --depth=1, which cuts history; status.json per day needs it back (objects are local)
+git -C /home/user/MCF fetch -q --shallow-since=2026-11-02 origin mcf-data mcf-data-testing mcf-data-testing2 mcf-data-gen mcf-data-graveyard mcf-data-explore1 mcf-data-livelab
+git -C /home/user/MCF fetch -q --shallow-since=2026-10-28 origin claude/intraday-trading-system-witis4
+for b in mcf-data mcf-data-testing mcf-data-gen; do git -C /home/user/MCF rev-list -1 --before=2026-11-04T09:30-05:00 origin/$b -- status.json | grep -q . || { echo "no status.json history on $b"; exit 1; }; done
 python mirror.py --dates 2026-11-04..2026-11-06 --delay 1 --fetch --jobs 3 --tag _sel > out/sel_d1.txt 2>&1
 python mirror.py --dates 2026-11-04..2026-11-06 --delay 0 --jobs 3 --tag _sel > out/sel_d0.txt 2>&1
 D=$(python - <<'PY'
