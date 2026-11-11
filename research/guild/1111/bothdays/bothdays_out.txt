@@ -1,0 +1,27 @@
+live paper trades 18878, 194 setups, 2026-10-06..2026-11-10; SPY o->c up days 17, down days 9
+setups with >= 10 trades on each day type: 74 (long-only 32, short-only 40)
+  positive on up days: 20; positive on down days: 24; both: 2; both incl. w/o best day: 0
+  median beta (R per 1% SPY o->c): longs +0.145, shorts -0.134
+  intercept > 0: 13; intercept t >= 2: 1 (expected by chance at 5% one-sided ~3.7)
+
+BOTH-DAY setups (descriptive gate):
+Empty DataFrame
+Columns: [setup, accounts, n, days, long_share, avg, n_up, avg_up, wob_up, n_dn, avg_dn, wob_dn, icpt, t_icpt, beta]
+Index: []
+
+Top 12 by intercept (direction-free part), any:
+                                                                     setup                           accounts   n  days  long_share    avg  n_up  avg_up  wob_up  n_dn  avg_dn  wob_dn  icpt  t_icpt   beta
+                                     CWT09-gapdn-bounce-g5-lowerhalf-short                 graveyard/testing2 148    16         0.0 -0.031    87  -0.400  -0.504    61   0.495   0.307 0.467   0.577 -0.713
+                                               CWT13-vwapstretch-z075-long                  explore1/testing2  40     9         1.0 -0.088    10   0.360   0.148    30  -0.237  -0.381 0.453   2.563  0.219
+                                             NS5-sma50-flush-oversold-long                    primary/testing  33    13         1.0  0.019    23   0.049  -0.044    10  -0.051  -0.306 0.293   1.163  0.325
+GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short                       gen/testing2  55     7         0.0  0.184    29  -0.207  -0.346    26   0.620     NaN 0.255   0.961 -0.663
+                                       RW3-gapdn-rsi5pop-flowsell-short-FD                    primary/testing 140    21         0.0  0.293    58  -0.120  -0.176    82   0.585   0.416 0.129   1.058 -0.195
+                                                  MF3-open-flowsell-rsi5hi                    primary/testing  44    10         0.0 -0.015    20   0.216   0.085    24  -0.208  -0.457 0.110   0.581  0.910
+                                                            heat_fade_long graveyard/primary/testing/testing2 236    25         1.0 -0.209   112   0.166   0.087   124  -0.548  -0.593 0.092   0.839  0.281
+                                        RW1-gapdn-bounce-flowsell-short-FD                   testing/testing2 116    21         0.0  0.078    62  -0.026  -0.080    54   0.197   0.135 0.054   0.504 -0.134
+                                RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                    primary/testing 155    21         0.0  0.217    89  -0.063  -0.217    66   0.595   0.530 0.032   0.239 -0.238
+     GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long                        gen/testing 245     5         1.0 -0.013   219  -0.056  -0.359    26   0.341     NaN 0.031   0.173 -0.252
+                                                  L3-gap-slope-fromopen-FD                    primary/testing 285    19         0.0  0.170   242   0.199   0.090    43   0.007  -0.073 0.030   0.196 -0.030
+                                                      RW6-ns2-up3-short-FD                  graveyard/testing 111    19         0.0 -0.224    99  -0.242  -0.361    12  -0.075  -0.280 0.026   0.220 -0.442
+
+Educational only - not financial advice.

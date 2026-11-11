@@ -1,0 +1,62 @@
+signals 37202 on 16 sessions, 193 setups; submitted 13979
+groups (setups): Gen 89, low-rep 41, other 67
+
+CALIBRATION (submitted signals with a live trade, n 13694): simplified-exit gross -0.029R vs live gross -0.100R (gap +0.071), live net -0.121R; corr 0.92
+   Gen: n 2810, sim -0.112 vs live gross -0.192
+   non-Gen: n 10884, sim -0.007 vs live gross -0.076
+A what-if below is the simplified exit; read it against the submitted row of the same group, not as an absolute R.
+
+ALL SETUPS  (reps/session if the lever were fully released; what-if gross R, simplified exit)
+                                           n  per_session  setups  longs  sim_n    sim
+lever                                                                                 
+SUBMITTED                              13979      873.688     184  0.575  13979 -0.027
+borrow: not shortable / ETB             5456      341.000      88  0.000   5442  0.144
+spread filters (bps / % of stop)        5391      336.938     171  0.561   5391 -0.003
+setup daily loss cap                    5149      321.812      41  0.604   5149 -0.037
+per-setup max positions                 1881      117.562      29  0.707   1881  0.028
+buying power                            1423       88.938      82  0.856   1423  0.036
+account halt                            1153       72.062      49  0.644   1153  0.096
+symbol conflict / twin block            1138       71.125     108  0.349   1138 -0.028
+size / liquidity caps                    539       33.688      55  0.429    539  0.078
+cost filter (stop+exit cost in R)        463       28.938      45  0.536    463 -0.008
+split-tape short gate                    429       26.812      18  0.000    429 -0.018
+bracket order reject (price rounding)    102        6.375      29  0.794    102  0.077
+execution / timing checks                 61        3.812      27  0.738     61  0.188
+minimum price                             33        2.062      22  0.788     33 -0.255
+account daily loss limit                   5        0.312       4  0.200      5  0.306
+
+GEN ACCOUNT  (reps/session if the lever were fully released; what-if gross R, simplified exit)
+                                          n  per_session  setups  longs  sim_n    sim
+lever                                                                                
+SUBMITTED                              2810      175.625      85  0.644   2810 -0.112
+spread filters (bps / % of stop)       1329       83.062      79  0.679   1329 -0.037
+account halt                           1061       66.312      40  0.690   1061  0.092
+buying power                            967       60.438      53  0.922    967 -0.010
+per-setup max positions                 486       30.375       7  0.391    486 -0.130
+borrow: not shortable / ETB             428       26.750      28  0.000    428 -0.128
+symbol conflict / twin block            219       13.688      49  0.699    219  0.053
+bracket order reject (price rounding)    30        1.875      14  0.700     30 -0.270
+execution / timing checks                27        1.688      16  0.926     27  0.316
+minimum price                            16        1.000      10  0.938     16 -0.234
+size / liquidity caps                     9        0.562       6  0.667      9 -0.295
+account daily loss limit                  4        0.250       3  0.250      4  0.133
+
+LOW-REP SETUPS  (reps/session if the lever were fully released; what-if gross R, simplified exit)
+                                         n  per_session  setups  longs  sim_n    sim
+lever                                                                               
+borrow: not shortable / ETB            490       30.625      22  0.000    490  0.081
+SUBMITTED                              319       19.938      36  0.524    319  0.084
+spread filters (bps / % of stop)       202       12.625      30  0.277    202  0.324
+symbol conflict / twin block           179       11.188      10  0.022    179 -0.189
+split-tape short gate                  100        6.250       5  0.000    100 -0.318
+per-setup max positions                 86        5.375       2  0.779     86 -0.365
+cost filter (stop+exit cost in R)       69        4.312      17  0.493     69 -0.120
+size / liquidity caps                   11        0.688       8  0.000     11 -0.532
+account halt                            10        0.625       2  0.900     10  0.203
+buying power                             9        0.562       1  0.000      9 -0.097
+setup daily loss cap                     4        0.250       1  1.000      4 -0.730
+minimum price                            2        0.125       2  0.000      2 -0.399
+bracket order reject (price rounding)    1        0.062       1  1.000      1  0.500
+
+skipped signals whose setup+symbol+day was traded in another account (no new information): 439 of 23223
+Educational only - not financial advice.
