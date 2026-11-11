@@ -129,14 +129,18 @@ def other_trade_active(runs: list[dict], jobs: dict, own_run_id) -> bool:
 
 
 def decide_eod(now: pd.Timestamp, market_open_today: bool, trade_runs: list[dict], trade_jobs: dict, own_run_id,
-               eod_runs: list[dict], dispatches_today: int) -> dict:
-    """Pure: should this trade run (all its account jobs ended) dispatch eod.yml now?"""
+               eod_runs: list[dict], dispatches_today: int, flatten_at: time | None = None) -> dict:
+    """Pure: should this trade run (all its account jobs ended) dispatch eod.yml now?
+    flatten_at: today's flatten time when it is earlier than 15:55 (LR1 half day: 12:55); the window and the 'EOD run
+    since' cut-off move with it."""
     now = now.tz_convert(NY)
     out = {"at": str(now), "action": "none", "reasons": []}
-    since = pd.Timestamp.combine(now.date(), EOD_SINCE).tz_localize(NY)
+    w0 = min(EOD_WINDOW[0], flatten_at) if flatten_at else EOD_WINDOW[0]
+    since_t = min(EOD_SINCE, flatten_at) if flatten_at else EOD_SINCE
+    since = pd.Timestamp.combine(now.date(), since_t).tz_localize(NY)
     recent = [r for r in eod_runs if r.get("created_at") and sg._ts(r["created_at"]) >= since]
-    if now.weekday() >= 5 or not (EOD_WINDOW[0] <= now.time() < EOD_WINDOW[1]):
-        out["reasons"].append(f"outside {EOD_WINDOW[0]:%H:%M}-{EOD_WINDOW[1]:%H:%M} ET weekdays: not the closing run")
+    if now.weekday() >= 5 or not (w0 <= now.time() < EOD_WINDOW[1]):
+        out["reasons"].append(f"outside {w0:%H:%M}-{EOD_WINDOW[1]:%H:%M} ET weekdays: not the closing run")
     elif not market_open_today:
         out["reasons"].append("not a market day")
     elif other_trade_active(trade_runs, trade_jobs, own_run_id):
@@ -215,8 +219,11 @@ def run_eod(ref: str | None, mode: str) -> dict:
     trade_jobs = {r["id"]: (sg._gh(f"/actions/runs/{r['id']}/jobs?per_page=50") or {}).get("jobs", [])
                   for r in trade_runs if r.get("status") in ACTIVE and r.get("id") != own}
     eod_runs = _runs_today("eod.yml", now)
-    d = decide_eod(now, sg.market_open_today(now.strftime("%Y-%m-%d")), trade_runs, trade_jobs, own, eod_runs,
-                   bot_dispatches(eod_runs))
+    from .market_calendar import flatten_time, session_close
+
+    day = now.strftime("%Y-%m-%d")
+    d = decide_eod(now, sg.market_open_today(day), trade_runs, trade_jobs, own, eod_runs, bot_dispatches(eod_runs),
+                   flatten_time("15:55", session_close(day)))
     d["mode"] = mode
     if d["action"] == "dispatch" and mode == "act":
         _dispatch("eod.yml", _ref(ref), {"auto": "true"})

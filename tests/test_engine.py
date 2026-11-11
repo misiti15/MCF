@@ -228,7 +228,7 @@ def test_daily_review_compares_days(tmp_path):
                exit_time="2026-10-05T15:55:00-04:00", exit=10.2, exit_reason="flatten", mae_r=None, mfe_r=None,
                success=1, shares=100, meta="", slip_bps=4.0, pnl_adj=20.0)
     j.add_trades(rid, pd.DataFrame([{**row, "date": "2026-10-05", "r_multiple": 2.0, "pnl": 20.0},
-                                    {**row, "date": "2026-10-06", "r_multiple": -1.0, "pnl": -10.0, "slip_bps": 25.0}]))
+                                    {**row, "date": "2026-10-06", "r_multiple": -1.0, "pnl": -10.0, "pnl_adj": -10.0, "slip_bps": 25.0}]))
     rv = build_review(j, rid, "2026-10-06")
     assert rv["today"]["trades"] == 1 and rv["yesterday"]["exp_r"] == 2.0
     assert rv["beat_rolling5"]["exp_r"] is False

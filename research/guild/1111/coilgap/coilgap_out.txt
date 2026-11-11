@@ -1,0 +1,23 @@
+coil long trades 20779 on 445 days (2024-10-01..2026-11-09); setups {'CWT12-coil-k4-long': 16912, 'CWT12-coil-k6-long': 3867}
+beta per setup (TRAIN): {'CWT12-coil-k4-long': 0.927, 'CWT12-coil-k6-long': 2.139}; gap NaN days 1
+gap-down days (<= -0.25%) with coil trades: 107 (TRAIN 40, VALID 67); removed trades 4716 (22.7%)
+  removed: n 4716, avg net R -0.1029, gross -0.0290, ex-mkt -0.0901
+  kept: n 16063, avg net R -0.0731, gross -0.0015, ex-mkt -0.0837
+  kept avg net R w/o best day (2026-08-04): -0.0778; best-day share of kept total nan
+  SPY open->close: gap-down days -0.0082% (n 107), other days +0.0044%
+
+SHARED-DAY RANDOM SWITCH (kept-book total R: rule vs null mean; z; p = share of null >= rule)
+  ALL   gross: rule     -23.3  null    -124.4  diff   +101.0  z +0.68  p 0.247
+  ALL   r    : rule   -1174.8  null   -1259.0  diff    +84.1  z +0.56  p 0.289
+  ALL   xr   : rule   -1344.9  null   -1343.5  diff     -1.4  z -0.01  p 0.512
+  TRAIN gross: rule     -88.8  null     -80.4  diff     -8.4  z -0.11  p 0.536
+  TRAIN r    : rule    -472.4  null    -465.8  diff     -6.6  z -0.08  p 0.518
+  TRAIN xr   : rule    -415.4  null    -419.3  diff     +4.0  z +0.08  p 0.471
+  VALID gross: rule     +65.4  null     -43.4  diff   +108.8  z +0.87  p 0.191
+  VALID r    : rule    -702.4  null    -792.7  diff    +90.3  z +0.73  p 0.234
+  VALID xr   : rule    -929.5  null    -924.5  diff     -5.0  z -0.06  p 0.516
+  per setup CWT12-coil-k4-long: ex-mkt diff -20.5 (z -0.31)
+  per setup CWT12-coil-k6-long: ex-mkt diff +20.0 (z +0.43)
+
+PASS (lead, BAR90 2.74 on ex-mkt z, TRAIN&VALID > 0, no setup harmed, kept gross > 0): False -> COILGAP closed; Testing bar 3.57: False
+1 config; lineage REGSW 104. Educational only - not financial advice.

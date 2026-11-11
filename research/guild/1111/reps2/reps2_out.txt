@@ -1,0 +1,26 @@
+setups with live signals: 193; with a lab rate and >= 5 active sessions: 43; fitted a = 0.193 (p_day = 1 - exp(-a x lab trades/day)); corr(p_day, fit) 0.76
+slot yield (setup-days/week) by lab trades/day: 0.1/day -> 0.1, 0.3/day -> 0.3, 1/day -> 0.9, 3/day -> 2.2, 10/day -> 4.3
+
+live setups with >= 5 active sessions: 165; setup-days/week per slot: median 2.69, mean 2.93; slots yielding < 1/week: 9; >= 3/week: 74
+
+by account (setups, median setup-days/week per slot, total setup-days/week):
+   explore1    13  median 1.33  total 20.3
+   gen         71  median 2.00  total 163.2
+   graveyard   33  median 5.00  total 149.7
+   livelab     12  median 1.74  total 23.7
+   primary     14  median 4.38  total 50.2
+   testing     13  median 3.93  total 48.7
+   testing2     9  median 2.81  total 27.0
+
+signal days vs submitted days (how much of a slot's yield blocks take away): median sig_p 0.71 vs p_day 0.54
+
+lowest-yield slots (p_day < 0.2, >= 8 active sessions), by account:
+                                                        acct  active  sig_days  sub_days  p_day  lab_per_day
+strategy                                                                                                    
+MF2-open-rsimidhi-flowsell         explore1/primary/testing2      14        10       2.0   0.14         1.30
+NM-AMS-N1-quiet-morning-short              explore1/testing2      14         4       2.0   0.14          NaN
+CWT04-backside-vwaptest-a15-short           livelab/testing2      16         8       3.0   0.19          NaN
+MF4-h40-open-flowsell                                primary      16        14       0.0   0.00         7.24
+MF3-open-flowsell-rsi5hi                             testing      16        15       2.0   0.12         9.19
+NM-RWN4-ns2-spyup05-notfri-short                    testing2       8         2       1.0   0.12          NaN
+Educational only - not financial advice.

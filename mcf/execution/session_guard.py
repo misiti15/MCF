@@ -38,12 +38,16 @@ def _ts(s) -> pd.Timestamp:
 
 
 def decide(now: pd.Timestamp, market_open_today: bool, runs: list[dict], jobs: dict, accounts: list[str],
-           guard_dispatches_today: int) -> dict:
-    """Pure decision. runs = trade.yml runs (id, status, created_at); jobs = {run_id: [{name, status}]}."""
+           guard_dispatches_today: int, close: time = time(16, 0)) -> dict:
+    """Pure decision. runs = trade.yml runs (id, status, created_at); jobs = {run_id: [{name, status}]}.
+    close: today's calendar close (LR1): the window ends 30 min before it at the latest (12:30 on a 13:00 half day)."""
+    from datetime import datetime, timedelta
+
     now = now.tz_convert(NY)
+    end = min(WINDOW[1], (datetime.combine(now.date(), close) - timedelta(minutes=30)).time())
     out = {"at": str(now), "action": "none", "missing": [], "active_runs": [], "reasons": []}
-    if now.weekday() >= 5 or not (WINDOW[0] <= now.time() < WINDOW[1]):
-        out["note"] = "outside 08:40-15:30 ET weekdays"
+    if now.weekday() >= 5 or not (WINDOW[0] <= now.time() < end):
+        out["note"] = f"outside {WINDOW[0]:%H:%M}-{end:%H:%M} ET weekdays"
         return out
     if not market_open_today:
         out["note"] = "not a market day (holiday)"
@@ -129,7 +133,9 @@ def run(accounts: list[str], ref: str, mode: str) -> dict:
             jobs[r["id"]] = (_gh(f"/actions/runs/{r['id']}/jobs?per_page=50") or {}).get("jobs", [])
     mine = sum(1 for r in runs if r.get("event") == "workflow_dispatch"
                and (r.get("triggering_actor") or {}).get("login") == "github-actions[bot]")
-    d = decide(now, market_open_today(day), runs, jobs, accounts, mine)
+    from .market_calendar import session_close
+
+    d = decide(now, market_open_today(day), runs, jobs, accounts, mine, session_close(day))
     d["guard_dispatches_today"] = mine
     d["mode"] = mode
     if d["action"] == "dispatch" and mode == "act":

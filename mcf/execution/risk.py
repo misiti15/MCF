@@ -24,6 +24,12 @@ class RiskState:
     # setups that reached the limit today: stopped for the rest of the day, even if a later winner lifts their net R
     # back above it (owner 2026-10-22 LL-LATCH; before, the stop re-armed)
     setup_stopped: set[str] = field(default_factory=set)
+    # LR3 (owner 2026-11-11): R after costs of the open lots marked at the last bar, less a market-exit cost (runner,
+    # every poll). Counted in the account halt only when RiskManager.include_open (account.loss_stops_cost_r_accounts).
+    open_r: float = 0.0
+    # R after costs, always (reports / status / the intraday tracker), whichever basis the loss stops use
+    realized_cost_r: float = 0.0
+    realized_cost_r_by_strategy: dict[str, float] = field(default_factory=dict)
 
 
 def twin_key(name: str | None, groups: dict[str, str] | None = None) -> str:
@@ -61,6 +67,9 @@ class RiskManager:
         # owner 2026-10-19 evening: a setup takes no new entries today once its net realized R <= -limit (absent = off)
         lim = self.a.get("max_setup_daily_loss_r")
         self.setup_loss_limit = float(lim) if lim else None
+        # LR3: the account halt also counts the open lots' marks (state.open_r); set by the runner for the accounts in
+        # account.loss_stops_cost_r_accounts (whose realized R is then R after costs too)
+        self.include_open = False
         self.state = RiskState()
 
     def latch_setup_losses(self, by: dict[str, float] | None = None):
@@ -93,7 +102,7 @@ class RiskManager:
             return False, "halted"
         if ref_price < self.min_price:
             return False, "price below minimum"
-        if s.realized_r <= -self.a["max_daily_loss_r"]:
+        if s.realized_r + (s.open_r if self.include_open else 0.0) <= -self.a["max_daily_loss_r"]:
             s.halted = True
             return False, "daily loss limit"
         if self.setup_loss_limit is not None:

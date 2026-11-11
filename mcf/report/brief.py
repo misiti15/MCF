@@ -29,7 +29,9 @@ def _fmt(v, kind="r"):
 
 
 def build_brief(journal: Journal, day: str | None = None, kind: str = "paper", dashboard_url: str | None = None):
-    tr = journal.trades(kind=kind)
+    from ..costs import with_cost_r
+
+    tr = with_cost_r(journal.trades(kind=kind))   # LR2: every R in the brief is R after costs
     if tr.empty:
         return f"MCF Daily Brief — no {kind} trades yet", f"No {kind} trades in the journal yet.\n\n{DISCLAIMER}", None
     tr["date"] = tr["date"].astype(str)

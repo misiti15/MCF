@@ -145,7 +145,7 @@ def test_trade_workflow_starts_eod_and_eod_keeps_its_backups():
     assert es["needs"] == "session" and es["if"] == "always()" and "strategy" not in es
     assert tr["permissions"]["actions"] == "write"
     run = "\n".join(s.get("run", "") for s in es["steps"])
-    assert "mcf.execution.handover eod" in run and "1555" in run and "|| true" in run
+    assert "mcf.execution.handover eod" in run and "1255" in run and "|| true" in run
     assert "ALPACA_TRADE_API_KEY" not in es.get("env", {})          # no trading keys in the dispatcher job
     eod = yaml.safe_load((WF / "eod.yml").read_text())
     on = eod[True] if True in eod else eod["on"]                       # PyYAML reads `on:` as True

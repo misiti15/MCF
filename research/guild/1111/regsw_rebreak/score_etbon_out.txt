@@ -1,0 +1,76 @@
+# REGSW score output (Educational only - not financial advice)
+targets in lab 53 (core 17); lab base trades 532,642; live trades 13,691 ({'Gen': 183, 'Graveyard': 5285, 'Primary': 903, 'Testing1': 2645, 'Testing2': 4675}); bar t >= 3.03 (N 100)
+SPYO-U-OFF       V dR  +3713.5 (sw +112.96, t +1.40, rand95 +6012.8) F dR  +576.8 (rand95 +912.0)  LIVE  +737.1  V better/worse 41/11  sw% 35
+SPYO-U-HALF      V dR  +1856.8 (sw  +56.48, t +1.40, rand95 +2958.2) F dR  +288.4 (rand95 +461.7)  LIVE  +368.6  V better/worse 41/11  sw% 35
+SPYO-F-OFF       V dR    -44.8 (sw   -0.80, t -0.03, rand95 +370.6) F dR  +102.4 (rand95 +122.5)  LIVE   +76.5  V better/worse 4/8  sw% 2
+SPYO-F-HALF      V dR    -22.4 (sw   -0.40, t -0.03, rand95 +164.4) F dR   +51.2 (rand95 +56.4)  LIVE   +38.2  V better/worse 4/8  sw% 2
+SPYO-P-OFF       V dR   +372.2 (sw  +27.50, t +0.74, rand95 +608.9) F dR  +109.0 (rand95 +173.6)  LIVE  +110.8  V better/worse 11/8  sw% 3
+SPYO-P-HALF      V dR   +186.1 (sw  +13.75, t +0.74, rand95 +301.7) F dR   +54.5 (rand95 +87.4)  LIVE   +55.4  V better/worse 11/8  sw% 3
+IDX3-U-OFF       V dR  +2679.3 (sw  +82.58, t +1.26, rand95 +3852.3) F dR  +270.9 (rand95 +568.1)  LIVE  +509.7  V better/worse 42/10  sw% 21
+IDX3-U-HALF      V dR  +1339.6 (sw  +41.29, t +1.26, rand95 +1951.6) F dR  +135.4 (rand95 +280.9)  LIVE  +254.9  V better/worse 42/10  sw% 21
+IDX3-F-OFF       V dR     +0.0 (sw   +0.00, t +nan, rand95 +0.0) F dR    +0.0 (rand95 +0.0)  LIVE    +0.0  V better/worse 0/0  sw% 0
+IDX3-F-HALF      V dR     +0.0 (sw   +0.00, t +nan, rand95 +0.0) F dR    +0.0 (rand95 +0.0)  LIVE    +0.0  V better/worse 0/0  sw% 0
+IDX3-P-OFF       V dR   +834.6 (sw  +21.53, t +0.64, rand95 +1051.7) F dR  +121.9 (rand95 +141.7)  LIVE  +151.8  V better/worse 14/5  sw% 6
+IDX3-P-HALF      V dR   +417.3 (sw  +10.77, t +0.64, rand95 +543.0) F dR   +60.9 (rand95 +67.3)  LIVE   +75.9  V better/worse 14/5  sw% 6
+GAP-U-OFF        V dR  +4537.6 (sw +216.87, t +3.75, rand95 +4905.2) F dR  +990.8 (rand95 +1101.8)  LIVE  +635.7  V better/worse 47/6  sw% 28
+GAP-U-HALF       V dR  +2268.8 (sw +108.44, t +3.75, rand95 +2370.5) F dR  +495.4 (rand95 +563.2)  LIVE  +317.8  V better/worse 47/6  sw% 28
+GAP-F-OFF        V dR   +274.0 (sw  +37.47, t +0.94, rand95 +593.7) F dR  +152.8 (rand95 +192.2)  LIVE   +50.0  V better/worse 11/2  sw% 3
+GAP-F-HALF       V dR   +137.0 (sw  +18.73, t +0.94, rand95 +300.8) F dR   +76.4 (rand95 +98.4)  LIVE   +25.0  V better/worse 11/2  sw% 3
+GAP-P-OFF        V dR   +436.3 (sw  +37.86, t +0.84, rand95 +954.8) F dR  +213.8 (rand95 +282.2)  LIVE  +143.4  V better/worse 16/9  sw% 5
+GAP-P-HALF       V dR   +218.1 (sw  +18.93, t +0.84, rand95 +503.2) F dR  +106.9 (rand95 +143.0)  LIVE   +71.7  V better/worse 16/9  sw% 5
+
+configs scored: 18 main + 25 sensitivity = 43 (bar uses N 100: t >= 3.03)
+PASS: []  near-miss: []
+        cfg   variant  VALID_dR  VALID_dR_sw  VALID_t  VALID_better  VALID_worse   FWD_dR  FWD_dR_sw  FWD_t  FWD_better  FWD_worse  LIVE_dR  LIVE_dR_sw  LIVE_t  LIVE_better  LIVE_worse
+  GAP-U-OFF      x0.8  +4906.62      +232.24    +3.72            47            6 +1091.49     +40.41  +2.38          33         19  +728.04      +38.47   +2.69           41          12
+  GAP-U-OFF      x1.2  +4425.24      +215.83    +3.79            48            5  +830.96     +29.64  +1.87          37         15  +482.25      +22.99   +1.75           38          14
+  GAP-U-OFF    sticky  +4537.64      +216.87    +3.75            47            6  +990.82     +32.27  +2.05          35         17  +635.68      +29.76   +2.20           40          12
+  GAP-U-OFF only10:00  +3850.73      +193.34    +3.54            45            8  +785.57     +29.06  +1.96          35         17  +477.45      +24.50   +2.11           39          13
+  GAP-U-OFF only12:00  +1260.54       +95.53    +3.09            37            7   +28.69      -0.45  -0.07          25         17   +31.75       +6.16   +1.49           28          12
+ GAP-U-HALF      x0.8  +2453.31      +116.12    +3.72            47            6  +545.75     +20.21  +2.38          33         19  +364.02      +19.24   +2.69           41          12
+ GAP-U-HALF      x1.2  +2212.62      +107.91    +3.79            48            5  +415.48     +14.82  +1.87          37         15  +241.12      +11.50   +1.75           38          14
+ GAP-U-HALF    sticky  +2268.82      +108.44    +3.75            47            6  +495.41     +16.14  +2.05          35         17  +317.84      +14.88   +2.20           40          12
+ GAP-U-HALF only10:00  +1925.36       +96.67    +3.54            45            8  +392.78     +14.53  +1.96          35         17  +238.72      +12.25   +2.11           39          13
+ GAP-U-HALF only12:00   +630.27       +47.76    +3.09            37            7   +14.34      -0.23  -0.07          25         17   +15.87       +3.08   +1.49           28          12
+ SPYO-U-OFF      x0.8  +4298.67      +137.35    +1.68            41           11  +596.02     +25.58  +0.83          32         20  +772.71      +48.48   +1.97           41          11
+ SPYO-U-OFF      x1.2  +3478.38      +122.46    +1.55            42           10  +552.03     +30.74  +1.00          37         15  +706.15      +46.50   +1.89           43           8
+ SPYO-U-OFF    sticky  +5048.11      +175.07    +1.84            42           11 +1020.61     +48.80  +1.55          38         14 +1002.17      +63.91   +2.85           44           8
+ SPYO-U-OFF only10:00  +3846.94      +144.61    +1.78            41           11  +237.15      +2.99  +0.18          28         24  +594.62      +29.90   +2.05           40          11
+ SPYO-U-OFF only12:00   +816.33       +54.11    +1.23            33           11   +78.94      +5.53  +0.61          20         19   +68.56       +7.97   +1.45           27          13
+SPYO-U-HALF      x0.8  +2149.34       +68.68    +1.68            41           11  +298.01     +12.79  +0.83          32         20  +386.35      +24.24   +1.97           41          11
+SPYO-U-HALF      x1.2  +1739.19       +61.23    +1.55            42           10  +276.01     +15.37  +1.00          37         15  +353.08      +23.25   +1.89           43           8
+SPYO-U-HALF    sticky  +2524.06       +87.53    +1.84            42           11  +510.30     +24.40  +1.55          38         14  +501.09      +31.96   +2.85           44           8
+SPYO-U-HALF only10:00  +1923.47       +72.31    +1.78            41           11  +118.57      +1.50  +0.18          28         24  +297.31      +14.95   +2.05           40          11
+SPYO-U-HALF only12:00   +408.17       +27.06    +1.23            33           11   +39.47      +2.76  +0.61          20         19   +34.28       +3.98   +1.45           27          13
+ IDX3-U-OFF      x0.8  +2790.97       +97.66    +1.49            43            9  +380.89     +26.41  +0.86          35         17  +583.91      +37.63   +1.53           37          13
+ IDX3-U-OFF      x1.2  +2564.17       +83.13    +1.31            43            9  +156.48     +19.68  +0.64          33         19  +448.08      +33.95   +1.35           37          13
+ IDX3-U-OFF    sticky  +3235.66      +108.47    +1.27            40           12  +399.90     +24.80  +0.83          35         17  +741.92      +49.00   +2.03           44           8
+ IDX3-U-OFF only10:00  +2894.64      +121.65    +1.82            42           10  +133.55      +4.42  +0.44          34         15  +431.64      +21.71   +1.61           41           8
+ IDX3-U-OFF only12:00   +776.92       +59.01    +1.48            33           11   +89.92      +6.32  +0.83          21         18   +26.95       +4.46   +0.86           24          16
+
+## REGX stability: share of setups whose TRAIN best / worst state is also best / worst in VALID / LIVE
+split signal  setups  best_same  worst_same  chance   rho
+ LIVE   BRDO      49       0.43        0.37    0.36  0.09
+ LIVE   BRDV      46       0.30        0.39    0.35  0.11
+ LIVE    CMP      49       0.37        0.53    0.36  0.15
+ LIVE   CMPL      46       0.35        0.33    0.39 -0.03
+ LIVE    DOW      47       0.28        0.23    0.26  0.02
+ LIVE    GAP      50       0.40        0.38    0.36  0.05
+ LIVE   IDX3      47       0.43        0.53    0.37  0.30
+ LIVE    PDT      50       0.32        0.30    0.36 -0.05
+ LIVE   RVOL      51       0.53        0.47    0.40  0.14
+ LIVE   SECT      46       0.39        0.20    0.37 -0.17
+ LIVE   SPYO      47       0.55        0.36    0.37  0.03
+ LIVE    VXX      47       0.43        0.43    0.37  0.14
+VALID   BRDO      53       0.30        0.17    0.34 -0.24
+VALID   BRDV      53       0.26        0.19    0.34 -0.28
+VALID    CMP      53       0.26        0.28    0.34 -0.20
+VALID   CMPL      52       0.33        0.33    0.33  0.00
+VALID    DOW      53       0.17        0.26    0.20 -0.02
+VALID    GAP      53       0.34        0.32    0.33 -0.02
+VALID   IDX3      52       0.27        0.42    0.34 -0.07
+VALID    PDT      53       0.28        0.23    0.33 -0.10
+VALID   RVOL      53       0.25        0.32    0.34 -0.16
+VALID   SECT      53       0.42        0.28    0.34  0.00
+VALID   SPYO      52       0.35        0.44    0.33  0.01
+VALID    VXX      53       0.21        0.36    0.33 -0.09

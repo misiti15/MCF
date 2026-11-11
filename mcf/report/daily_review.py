@@ -36,7 +36,9 @@ def _day_stats(tr: pd.DataFrame) -> dict:
 
 
 def build_review(journal, run_id: int, day: str, health: dict | None = None) -> dict:
-    trades = journal.trades(run_id=run_id)
+    from ..costs import with_cost_r
+
+    trades = with_cost_r(journal.trades(run_id=run_id))   # LR2: exp_r / total_r are R after costs
     trades["date"] = trades["date"].astype(str)
     days = sorted(trades["date"].unique()) if len(trades) else []
     today = trades[trades.date == day] if len(trades) else trades

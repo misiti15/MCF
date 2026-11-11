@@ -12,7 +12,8 @@ Sources, in order (the one used is printed and written into the CSV / chart):
              ("journal+bars" / "journal (no bars: realized only)").
 State is read from --state-dir (a folder holding polls/ and journal.db) or, by default, from the account's state branch
 (origin/mcf-data*, via `git show`, read-only). Writes research/intraday/<date>/<account>.{png,csv} unless --out is given
-(a path ending in .png/.csv, or a folder). Unrealized marks carry no costs; realized R is as the journal books it.
+(a path ending in .png/.csv, or a folder). Realized R is R after costs (LR2: pnl_adj / risk); unrealized marks of open
+lots carry no exit costs (the snapshots' rr is R after costs from 2026-11-12).
 The BDI swing autopsy uses these curves when present (docs/BDI_CHARTER.md). Educational only - not financial advice."""
 from __future__ import annotations
 
@@ -157,7 +158,9 @@ def journal_trades(jpath: str, day: str) -> pd.DataFrame:
                         con, params=[day])
     finally:
         con.close()
-    return t
+    from ..costs import with_cost_r
+
+    return with_cost_r(t)   # LR2: realized R = R after costs (raw broker R in r_raw)
 
 
 def curve_from_journal(trades: pd.DataFrame, day: str, step: int = 1, bars: dict | None = None
@@ -244,8 +247,8 @@ def write_outputs(curve, ev, source, day, account, out: str | None = None, step:
                              gridspec_kw={"height_ratios": [3, 1]} if has_idx else None)
     ax = axes[0] if has_idx else axes
     ax.axhline(0, color="#9a9a9a", lw=0.8)
-    ax.plot(curve.index, curve["total_r"], color="#2a6fdb", lw=2, label="total R (realized + open)")
-    ax.plot(curve.index, curve["realized_r"], color="#7a7a7a", lw=1.2, ls="--", label="realized R")
+    ax.plot(curve.index, curve["total_r"], color="#2a6fdb", lw=2, label="total R (realized after costs + open marks)")
+    ax.plot(curve.index, curve["realized_r"], color="#7a7a7a", lw=1.2, ls="--", label="realized R after costs")
     if ev is not None and not ev.empty:
         tot = curve["total_r"]
         for kind, mk, col in (("entry", "^", "#1b9e5a"), ("exit", "x", "#c2410c")):
@@ -262,7 +265,7 @@ def write_outputs(curve, ev, source, day, account, out: str | None = None, step:
                 ax.annotate(f"{e.symbol} {e.r:+.1f}R" if pd.notna(e.r) else str(e.symbol),
                             (k, tot[k]), fontsize=7, color="#333333", xytext=(3, 4), textcoords="offset points")
     last = curve["total_r"].dropna()
-    ax.set_ylabel("R")
+    ax.set_ylabel("R after costs")
     ax.set_title(f"{account} {day}: marked-to-market R ({'end ' + format(last.iloc[-1], '+.2f') + 'R' if len(last) else 'n/a'})"
                  f"  source: {source}", fontsize=10)
     ax.grid(alpha=0.25)

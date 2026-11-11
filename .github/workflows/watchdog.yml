@@ -1,13 +1,15 @@
 # MCF outage watchdog (owner 2026-10-16, outage plan step 5; docs/OPERATIONS.md "Outage plan").
 # Educational only - not financial advice.
 #
-# Independent of the trading run: every ~10 minutes during 09:35-15:55 ET on weekdays, per account, it reads that
+# Independent of the trading run: every ~10 minutes during 09:35-16:05 ET on weekdays (LR7: until the calendar close + 5 min;
+# 13:05 on a half day), per account, it reads that
 # account's state-branch status.json and the broker account (GET only) and decides whether the trading run is dead
 # (status.json older than live.outage.watchdog_dead_min while MCF positions/orders are open) or stuck on stale data
 # (health.data_stale longer than live.outage.flatten_min). If so it cancels the account's open MCF orders and flattens
 # its MCF positions (order prefix mcf- / mct- / mt2- / mcg- / mgy- / mll- / mx1- only; never the long-hold mcl- book or anything else).
 #
-# MODE: "dry" (default) only logs what it would do (job summary). Set the repository variable MCF_WATCHDOG_MODE=act
+# It also flattens when the run reports a failed closing flatten (health.flatten_failed) or MCF exposure remains 3 min after
+# the flatten time (LR7). MODE: Primary "act" by default from 2026-11-12 (LR7); other accounts "dry" (only log). Set the repository variable MCF_WATCHDOG_MODE=act
 # (Settings -> Secrets and variables -> Actions -> Variables), or pick mode "act" on a manual run, to let it act.
 # The owner switches to act before real funds (docs/DECISIONS.md). No emails or alerts.
 # Its concurrency groups (mcf-watchdog-*) differ from trade.yml's (mcf-trade*), so it never queues behind or cancels a
@@ -20,7 +22,7 @@ name: watchdog
 
 on:
   schedule:
-    - cron: "5-55/10 13-20 * * 1-5"   # every 10 min; the ET window (09:35-15:55, EDT and EST) is checked below
+    - cron: "5-55/10 13-21 * * 1-5"   # every 10 min; the ET window (09:35-16:05, EDT and EST) is checked below
   workflow_dispatch:
     inputs:
       mode:
@@ -47,7 +49,9 @@ jobs:
       MCF_ACCOUNT: ${{ matrix.account }}
       MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || (matrix.account == 'testingd' && 'mtd-' || (matrix.account == 'testinge' && 'mte-' || (matrix.account == 'testingf' && 'mtf-' || 'mct-')))))))) }}
       STATE_BRANCH: ${{ matrix.account == 'primary' && 'mcf-data' || (matrix.account == 'testing2' && 'mcf-data-testing2' || (matrix.account == 'gen' && 'mcf-data-gen' || (matrix.account == 'graveyard' && 'mcf-data-graveyard' || (matrix.account == 'livelab' && 'mcf-data-livelab' || (matrix.account == 'explore1' && 'mcf-data-explore1' || (matrix.account == 'testingd' && 'mcf-data-testingd' || (matrix.account == 'testinge' && 'mcf-data-testinge' || (matrix.account == 'testingf' && 'mcf-data-testingf' || 'mcf-data-testing')))))))) }}
-      MCF_WATCHDOG_MODE: ${{ inputs.mode || vars.MCF_WATCHDOG_MODE || 'dry' }}
+      # LR7 (owner 2026-11-11): Primary acts by default (cancel + flatten its mcf- orders/positions when triggered); the
+      # other accounts stay dry unless the repo variable MCF_WATCHDOG_MODE (or a manual run's input) says otherwise.
+      MCF_WATCHDOG_MODE: ${{ inputs.mode || vars.MCF_WATCHDOG_MODE || (matrix.account == 'primary' && 'act' || 'dry') }}
       # Market data: Testing D / E / F (owner 2026-11-11) can use their OWN account keys for data, so the shared SIP data key's
       # rate limit is not strained - switched by the repo variable MCF_DEF_OWN_DATA_KEYS ('true' = own keys). It stays unset
       # (shared keys) until those accounts have the SIP data plan: on 2026-11-11 their keys got 403 'subscription does not
@@ -68,7 +72,8 @@ jobs:
             # no state branch = the account never ran a session (e.g. Live Lab / Explore 1 / 2 before their first setups), so
             # no MCF position or order can exist there; skip without installing anything (owner 2026-11-03, runner load)
             echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT: no state branch $STATE_BRANCH yet: skipped"
-          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0935 ] && [ "$now" -lt 1555 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:35-15:55 ET weekdays: nothing to do"; fi
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0935 ] && [ "$now" -lt 1606 ]; }; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:35-16:05 ET weekdays: nothing to do"; fi
+          # (the Python decision narrows the window to the calendar close + 5 min, e.g. 13:05 on a 13:00 half day)
 
       - uses: actions/checkout@v4
         if: steps.window.outputs.run == 'true'

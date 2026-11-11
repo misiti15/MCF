@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from ..costs import with_cost_r
 from ..journal import Journal
 
 TEMPLATE = Path(__file__).with_name("template.html")
@@ -37,7 +38,7 @@ def build(journal_path: str | Path, out: str | Path, fragment: bool = False, kin
     for _, run in runs.sort_values("id", ascending=False).iterrows():
         if kinds and run["kind"] not in kinds:
             continue
-        tr = j.trades(run_id=int(run["id"]))
+        tr = with_cost_r(j.trades(run_id=int(run["id"])))   # LR2: R after costs (raw broker R stays in the journal)
         label = run["label"] or f"run {run['id']}"
         sources.append({
             "id": int(run["id"]), "kind": run["kind"], "label": label,
