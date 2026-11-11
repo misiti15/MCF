@@ -383,3 +383,11 @@ in-sample); corrected my two-stage claim (real +0.10R edges pass both stages ~16
 - Correct my own overstatements publicly and quickly; precision gains have a recall price — state both.
 **Next**
 - FWDCAL rule-21 table tonight; REGSW-2 ex-market follow-up; RCOMPASS v2 result.
+
+## Run 31 — 2026-11-11 18:42 ET (PROMO2 middle option simulation; on/off thread closure)
+**State:** PR #184 merged (memo, PROMO2 decision, GAP-U re-test). RCOMPASS v2 0/3. REGSW-2 counter-state = ~70% SPY
+reverting to its open (book-wide), residual below bar.
+**Did:** simulated stage-2 options: P>=0.80 -> zero-edge 2.4%, +0.10R 22%, precision 51% (vs strict 1.1% / 15% / 60%;
+one stage 10.7% / 40% / 29%). Recommended closing the market-state on/off thread.
+**Next**
+- FWDCAL rule-21 result; FAMC nightly; any owner reply on PROMO2.
