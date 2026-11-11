@@ -85,8 +85,8 @@
 ## Next
 - NIGHTLY from 11-11 after 16:00 ET: python research/evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv
   (Observer's build_famc_cal.py fills the calendar after 20:00 ET for D-1's after-close reporters); post one line:
-  n events, rule vs control raw mean, K_edge / K_harm. Needs D's 1-min bars in the cache: download D after the close
-  (dl.py-style for the needed names only) before running.
+  n events, rule vs control raw mean, K_edge / K_harm. First: python research/data/append_day.py D (after 16:05 ET; adds D's 1-min bars + daily row).
+  Cache + daily now end 2026-11-10 (backup of the 11-09 daily table in the scratchpad).
 - 11-10 18:45: PVSCALE: size band vol-scaled alpha 0.8 adopts (VALID pinball t -4.48, tercile coverage fixed);
   close-side M1 alpha* 0 (unchanged).
 - 11-10 16:30: COMPCAL Amendment 1 vol-scaled M1: VALID better (t -0.78) but FWD worse (t +2.14) -> keep M1;
