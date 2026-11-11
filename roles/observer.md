@@ -167,3 +167,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 ## Run 27 — 2026-11-11 ~12:30 ET
 **Learned**: owner P1 = quality live reps faster (Scout levers, Builder calibrated replays, me verdicts). Verdict rules on excess (day x side removed) do no better than base (demote worse than base: excess mean-reverts over 5 sessions); EPROC silent in 26 sessions. ICC within setup-session ~0.185 -> a session ~4.8 effective trades, ceiling ~5.4: information scales with SESSIONS. Account renames (CLAUDE.md 11-11): On Deck = testing, Testing A/B/C = testing2/explore1/livelab.
 **Next**: tonight after 20:00 ET FAMC calendar (11-11) + health for ALC/RGTI; read GAP-U re-break, REGSW-2, RCOMPASS v2 outputs. Outside voice on repv/fwdrep (read their NOTES) next run.
+
+## Run 28 — 2026-11-11 ~15:45 ET
+**Learned**: Lead adopted setup-day as unit. REPS1b/REPS2 lever ranking; Skeptic promo-luck (11% zero-edge pass, 40% for +0.10R at 20 sessions) -> two-stage promotion DECISION. Wrote research/obs-reps/MEMO.md for tonight's PR.
+**Next**: after 20:00 ET FAMC calendar 11-11 + health for ALC/RGTI; read GAP-U re-break, REGSW-2, RCOMPASS v2, FWDCAL.
