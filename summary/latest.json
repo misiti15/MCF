@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T15:00-05:00",
+ "updated": "2026-11-11T17:15-05:00",
  "session": "2026-11-11",
- "headline": "Reps plan taking shape: more setups live is the only lever that scales, but more setups also means more lucky promotions - so it comes paired with a two-stage confirmation rule for the owner to decide.",
+ "headline": "Owner gets the live-reps memo and a decision (PR #184): more setups live is the only lever that scales, paired with a two-stage promotion rule; the main session's GAP-U switch fails a fair re-test.",
  "bullets": [
-  "Levers by new setup-days/week: adding setups ~+1 each (scales); Gen halt +7.5 and buying power +4.7 (small, unproven); spread/twin/short-gate/cost filters stay - skipped signals do worse.",
-  "Skeptic's simulation: with today's promote flag, ~11% of zero-edge setups get flagged within 20 sessions and only ~40% of +0.10R setups; at 100 mostly-noise setups, ~70% of flags would be luck.",
-  "Proposed fix (owner decision tonight): On Deck as a confirmation stage scored only on sessions after the move (zero-edge passes ~11% -> ~1%), and the number of setups evaluated shown on every promotion suggestion.",
-  "Calibrated replay (FWDCAL) runs tonight with per-day configs; rule-21 result follows.",
-  "Tonight's PR: owner memo, REGSW switching results, the promotion DECISION."
+  "DECISION PROMO2: score On Deck only on sessions after the move and show K on every promotion suggestion - zero-edge passes ~11% -> ~1%, at the cost of real edges needing ~40 sessions.",
+  "Reps memo: a session is worth ~5 independent trades; new setup-days speed verdicts, more same-day trades don't; no verdict rule beats the base rate yet.",
+  "GAP-U (REGSW's only survivor) fails with a shared-day random baseline; REGSW-2 on a winning base 0 of 4; coil switch closed in two shapes.",
+  "FAMC forward session 1: 2 events, +0.61R vs control - one session, no reading.",
+  "Calibrated replay (FWDCAL) result still to come tonight."
  ],
  "progress": {
-  "ideas": 54,
-  "tested": 49,
-  "configs": 145,
+  "ideas": 56,
+  "tested": 53,
+  "configs": 154,
   "passed": 0,
   "forward": 1
  },
- "next": "After 16:00: FAMC, REGSW runs, FWDCAL; then the evening PR with the reps memo and a DECISION.",
+ "next": "FWDCAL rule-21 result; softer second-stage simulation; REGSW-2 ex-market check; FAMC nightly.",
  "by_role": {
-  "scout": "REPS1b: levers ranked by new setup-days; spread filters protect.",
-  "builder": "FWDCAL fixed per audit; runs tonight.",
-  "skeptic": "Promotion-luck simulation and the two-stage proposal.",
-  "observer": "Writing the owner reps memo.",
-  "lead": "Paired 'more setups' with a two-stage promotion rule for the owner."
+  "scout": "REPS2: setup-days per live slot by account; near-dead slots flagged.",
+  "builder": "GAP-U re-test, REGSW-2, FAMC session 1; FWDCAL running.",
+  "skeptic": "Settled GAP-U; corrected own two-stage recall claim.",
+  "observer": "Wrote the owner reps memo.",
+  "lead": "Shipped the memo and PROMO2 decision (PR #184)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
