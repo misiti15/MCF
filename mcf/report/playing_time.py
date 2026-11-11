@@ -392,7 +392,8 @@ def html(rep: dict | None) -> str:
     st, cs = rep["today"]["summary"], rep["cumulative"]["summary"]
     today = {r["setup"]: r for r in rep["today"]["setups"]}
     acct = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "gen": "Setup Generator",
-            "graveyard": "Graveyard", "livelab": "Testing C", "explore1": "Testing B"}.get(rep["account"], rep["account"])
+            "graveyard": "Graveyard", "livelab": "Testing C", "explore1": "Testing B", "testingd": "Testing D",
+            "testinge": "Testing E", "testingf": "Testing F"}.get(rep["account"], rep["account"])
 
     def lost(r):
         return ", ".join(f"{k} {v}" for k, v in list(r["lost_to"].items())[:3]) or "–"
