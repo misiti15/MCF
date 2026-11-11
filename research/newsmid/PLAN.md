@@ -1,4 +1,4 @@
-# NEWSMID — a mid-session analyst action (published 10:00-14:30 ET): does the name drift its way to 15:55? (DRAFT, not frozen)
+# NEWSMID — a mid-session analyst action (published 10:00-14:30 ET): does the name drift its way to 15:55? (FROZEN 11-11 07:30 ET with Amendment 1; score once on 11-12)
 Educational only — not financial advice. Tomorrow's (11-12) direction pilot. Freeze after Skeptic's pre-audit; one look.
 Outcomes NOT read yet: only headline counts (below) have been looked at.
 
@@ -61,3 +61,26 @@ with pre-move/ATR terciles; 12 n/a; 13 legs stratified; 14 control uses ALL no-n
 claim); 21 window fixed 10-08..11-09; 22 bars and prices both from the same split-adjusted SIP source; 23 n/a; 24 family 147;
 25 distinct name-days only; 26 cells shown are reporting only; 27 n/a; 28 n/a; 29 forward needs 40-60 sessions; 30 if all
 days one sign -> look-ahead hunt first.
+
+## Amendment 1 (Skeptic pre-audit skeptic-20261111-0655-1 / 0656-2; before any outcome; adds 0 configs) — FROZEN
+A1. Control names: no news item naming them from the previous session's 16:00 to the entry bar's start (later news allowed;
+    replaces "no news that day", which was a whole-day label, checklist 4).
+A2. Re-posts: drop an event if the same symbol had an analyst-lexicon item (either leg, any source) from D 04:00 to D 10:00.
+    The number removed is reported (it measures the re-post problem).
+A3. Also report excess inside the top signed pre-move tercile alone (analysts chasing a move).
+A4. Direction is picked by the sign of mean excess, and that pick is counted in the 2 configs. A fade pass is NOT a
+    pre-registered fade, and the output says so.
+A5. Output prints 20 random matched headlines per leg as a lexicon sanity table.
+A6. created_at sanity: for each event, the 5-min bar with the highest volume in [created_at - 30 min, created_at + 30 min].
+    Report the share of events where that bar starts before created_at - 5 min (a sign of back-dated stamps).
+Tercile edges (signed pre-move, ATR%) are computed over all events pooled. Control candidates are binned on those edges,
+at the same date and entry bar, using the event's s.
+Opposite-sign rule: drop the event if any opposite-leg item for the name has created_at <= the entry bar start that day.
+
+## Amendment 2 (11-11 07:50 ET, from the A5 lexicon sanity table of the DRY run; no outcome read; 0 configs) — FROZEN
+The dry run (`newsmid.py --dry` reads no price after the entry bar's open) printed 20 random headlines per leg. One an_up
+hit was not an analyst action ("... Contract To Upgrade Airport Checkpoint Security"). The lexicon now uses inflected forms
+only (`upgrade[sd]\b` / `downgrade[sd]\b`). It also excludes `moody|s&p global|fitch|dbrs|\bdebt\b|credit rating|guidance|
+outlook|top \d+ (up|down)grades` on both legs. Check on all 27,467 items: 527 of 573 headlines with an up/downgrade word now
+match. The 46 unmatched are credit-agency, guidance, list or "double upgrade" feature items. Selftest covers both kinds.
+Everything else is as frozen. Score once on 11-12 with `--score`.

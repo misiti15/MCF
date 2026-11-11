@@ -88,8 +88,11 @@
 - Run 24 (11-11 05:30 ET) NEWSMID prep: Alpaca news API gives ~1,200 RTH items/session (benzinga + fiscal.ai transcripts),
   created_at stamped; 27,467 items fetched 10-08..11-09 (scratchpad newsmid/). Draft plan + checklist walk; outcomes unread.
   Halts: no Alpaca halt endpoint -> parked.
+- Run 25 (11-11 07:50 ET) NEWSMID frozen (A1 Skeptic's six points; A2 lexicon fix from dry-run sanity table). Scorer
+  newsmid.py --selftest/--dry/--score; dry funnel 1,341 events / 23 days; re-posts 169. Lesson: a --dry mode that stops at the
+  entry bar lets lexicon/funnel bugs be fixed before any outcome is seen.
 ## Next
 - One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
   move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
-- 11-12 pilot: freeze NEWSMID after Skeptic's pre-audit (amend per audit), score once with research/newsmid/ script.
+- 11-12 pilot: score NEWSMID once: `python -I research/newsmid/newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` (slow loops; run in background).
 - Read FAMC's first nightly line (11-11) and Observer's live-vs-lab cost table for the 14 cost-killed setups.
