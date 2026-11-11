@@ -17,3 +17,12 @@
   stopped within 2 bars (share, ATR result); per setup better / worse; TRAIN / VALID; SPY up / down / quiet.
 - **Pass (both):** (1) C_k minus B, day-clustered t in ATR units >= 3.50, TRAIN and VALID > 0, w/o best day > 0, more setups
   better than worse; (2) C_k minus its mirror > 0 with t >= 2.
+
+## Amendment 1 (2026-11-11 ~02:20 ET, before any score; Skeptic skeptic-20261111-0050-1 / -0051-2, Lead lead-20261111-0100-1)
+- **Delta split:** timing part = sum over TRIGGERED signals of (C - B); skip part = sum over UNTRIGGERED signals of (-B).
+- **Skip part vs chance:** scored against a random skip of the same number of signals within each setup-day (200 draws;
+  excess_skip = skip part - mean random skip part), day-clustered t. Reported; a positive excess means the trigger selects.
+- **Pass (replaces the earlier rule):** timing part day-clustered t (ATR units) >= 3.50, TRAIN and VALID timing > 0,
+  timing w/o best day > 0, more setups better than worse on timing, **C's own net ATR per triggered trade > 0** (gross-first:
+  not merely less bad), and C minus its mirror > 0 with t >= 2. Also reported: share of C stops inside the trigger bar;
+  R-unit results carry less reward per unit risk by design (same target, later fill).

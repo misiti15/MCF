@@ -80,7 +80,7 @@ for sym, g in L.groupby("symbol"):
                 xp2, kd2, ix_ = walk2(o, h, l, c, i, fill, sd, stop, tgt)
                 ec = (SL + fill * BP) * mult + SX
                 row[f"{lab_}{k}"] = atr_res(fill, xp2, kd2, sd, atr, ec, tier); row[f"{lab_}{k}_t"] = 1
-                row[f"{lab_}{k}_w"] = int(kd2 == 1 and ix_ - i <= 1)
+                row[f"{lab_}{k}_w"] = int(kd2 == 1 and ix_ - i <= 1); row[f"{lab_}{k}_sb"] = int(kd2 == 1 and ix_ == i)
         out.append(row)
 X = pd.DataFrame(out); X.to_csv(HERE / "confirm_trades.csv.gz", index=False)
 D_ = lib.daily(); S = D_[D_.symbol == "SPY"].set_index("date"); oc = S.close / S.open - 1
@@ -88,21 +88,35 @@ dtype = pd.Series(np.where(oc > .0025, "up", np.where(oc < -.0025, "down", "quie
 print(f"signals walked {len(X)}; baseline (market) {X.B.mean():+.4f} ATR/signal; family N {N_FAM}, BAR90 {T90}")
 tt = lambda s_: round(s_.mean() / (s_.std(ddof=1) / np.sqrt(len(s_))), 2) if len(s_) > 2 and s_.std() > 0 else None
 rows = []
+rng = np.random.default_rng(20261111)
+X["sd"] = X.setup + "|" + X.date.astype(str)
 for k in KS:
-    c, mcol = f"C{k}", f"M{k}"; trg = X[f"{c}_t"] == 1
-    d = X.assign(x=X[c] - X.B, xm=X[c] - X[mcol]).groupby("date")[["x", "xm"]].sum()
-    dd = pd.Series(d.index, index=d.index); ty = d.x.groupby(d.index.map(dtype)).sum()
-    per = X.assign(x=X[c] - X.B).groupby("setup").x.mean()
-    rows.append(dict(config=f"CONFIRM-k{k}", trig=round(trg.mean(), 3), C_atr_trig=round(X.loc[trg, c].mean(), 4),
+    c, mcol = f"C{k}", f"M{k}"; trg = (X[f"{c}_t"] == 1).to_numpy()
+    tim = X.assign(x=np.where(trg, X[c] - X.B, 0.0)).groupby("date").x.sum()          # Amendment 1: timing part
+    skp = X.assign(x=np.where(~trg, -X.B, 0.0)).groupby("date").x.sum()               # skip part
+    B = X.B.to_numpy(); exs = {}
+    for key, ii in X.groupby("sd").indices.items():                                     # random same-share skip per setup-day
+        kk = int((~trg[ii]).sum())
+        if kk == 0: continue
+        rnd = np.mean([-B[rng.choice(ii, kk, replace=False)].sum() for _ in range(200)])
+        d0 = X.date.iloc[ii[0]]; exs[d0] = exs.get(d0, 0.0) + (-B[ii][~trg[ii]].sum() - rnd)
+    exs = pd.Series(exs).reindex(tim.index, fill_value=0.0)
+    mir = X.assign(x=X[c] - X[mcol]).groupby("date").x.sum()
+    dd = pd.Series(tim.index, index=tim.index); ty = tim.groupby(tim.index.map(dtype)).sum()
+    per = X[trg].assign(x=X[c] - X.B).groupby("setup").x.mean()
+    rows.append(dict(config=f"CONFIRM-k{k}", trig=round(trg.mean(), 3), C_net_atr_trig=round(X.loc[trg, c].mean(), 4),
                      B_on_trig=round(X.loc[trg, "B"].mean(), 4), B_on_untrig=round(X.loc[~trg, "B"].mean(), 4),
-                     whipsaw=round(X.loc[trg, f"{c}_w"].mean(), 3), whip_atr=round(X.loc[trg & (X[f"{c}_w"] == 1), c].mean(), 4),
-                     delta=round(d.x.sum(), 1), t=tt(d.x), train=round(d.x[dd <= SPLIT].sum(), 1), valid=round(d.x[dd > SPLIT].sum(), 1),
-                     valid_t=tt(d.x[dd > SPLIT]), wo_best=round(d.x.drop(d.x.idxmax()).sum(), 1),
+                     timing=round(tim.sum(), 1), timing_t=tt(tim), train=round(tim[dd <= SPLIT].sum(), 1), valid=round(tim[dd > SPLIT].sum(), 1),
+                     valid_t=tt(tim[dd > SPLIT]), wo_best=round(tim.drop(tim.idxmax()).sum(), 1),
                      up=round(ty.get("up", 0), 1), down=round(ty.get("down", 0), 1), quiet=round(ty.get("quiet", 0), 1),
-                     vs_mirror=round(d.xm.sum(), 1), vs_mirror_t=tt(d.xm), mirror_atr_trig=round(X.loc[X[f"{mcol}_t"] == 1, mcol].mean(), 4),
+                     skip_part=round(skp.sum(), 1), skip_excess=round(exs.sum(), 1), skip_excess_t=tt(exs),
+                     vs_mirror=round(mir.sum(), 1), vs_mirror_t=tt(mir), mirror_net_atr_trig=round(X.loc[X[f"{mcol}_t"] == 1, mcol].mean(), 4),
+                     whipsaw=round(X.loc[trg, f"{c}_w"].mean(), 3), stop_in_trigger_bar=round(X.loc[trg, f"{c}_sb"].mean(), 3),
                      better=int((per > 0).sum()), worse=int((per < 0).sum())))
 R = pd.DataFrame(rows)
-R["pass"] = (R.t >= T90) & (R.train > 0) & (R.valid > 0) & (R.wo_best > 0) & (R.better > R.worse) & (R.vs_mirror > 0) & (R.vs_mirror_t >= 2)
+R["pass"] = ((R.timing_t >= T90) & (R.train > 0) & (R.valid > 0) & (R.wo_best > 0) & (R.better > R.worse) & (R.C_net_atr_trig > 0)
+             & (R.vs_mirror > 0) & (R.vs_mirror_t >= 2))
 pd.set_option("display.width", 320); pd.set_option("display.max_columns", 40); print(R.to_string(index=False))
-print("\nunits: ATR per signal (untriggered = 0); delta = C - market entry; vs_mirror = C - opposite-side trigger.")
+print("\nunits: ATR. timing = sum over triggered signals of (C - market entry); skip_part = -market R of untriggered signals;"
+      "\nskip_excess = vs a random same-share skip per setup-day; vs_mirror = C - opposite-side trigger. R-unit reward/risk is lower by design.")
 R.to_csv(HERE / "confirm_results.csv", index=False); print("Educational only - not financial advice.")
