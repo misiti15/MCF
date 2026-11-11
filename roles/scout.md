@@ -85,8 +85,11 @@
   longs +0.145, shorts -0.134 R per 1% SPY. Builder's lab join had every WHATWORKS survivor negative over 2 years (a direction bet).
 - Run 23 (11-11 03:30 ET) DISP1 (Lead's within-sector split pilot): FAIL, -0.028 ATR t -0.70 (443 events/20 days); legs disagree.
   Sector/peer/laggard family now 94 configs, all closed. Corr-based sector map (formation-only) works if a sector map is needed again.
+- Run 24 (11-11 05:30 ET) NEWSMID prep: Alpaca news API gives ~1,200 RTH items/session (benzinga + fiscal.ai transcripts),
+  created_at stamped; 27,467 items fetched 10-08..11-09 (scratchpad newsmid/). Draft plan + checklist walk; outcomes unread.
+  Halts: no Alpaca halt endpoint -> parked.
 ## Next
 - One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
   move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
-- Next direction pilot (one per day): intraday news after 10:00, or halt/resume events; check data access first.
+- 11-12 pilot: freeze NEWSMID after Skeptic's pre-audit (amend per audit), score once with research/newsmid/ script.
 - Read FAMC's first nightly line (11-11) and Observer's live-vs-lab cost table for the 14 cost-killed setups.
