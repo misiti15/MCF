@@ -303,3 +303,14 @@ random same-share skip control, and C's own net > 0 in the pass. Timing clean.
 - Any "enter only if X" rule scored as delta vs "always enter" on a losing book contains a skip gain; always split it.
 **Next**
 - CONFIRM results with the split; FAMC rows; review Observer's DAY1-3.md numbers against sources before the PR.
+
+## Run 23 — 2026-11-11 02:41 ET (CONFIRM result; minute-10 exit pre-attack)
+**State:** CONFIRM fails as entry (own net -0.019 ATR, 0/10 better). BOTHDAYS: no live setup earns on both day types
+w/o best day; book = stack of beta bets (~±0.14R per 1% SPY).
+**Did:** flagged the skip-part t 19 as mechanical (outcome window overlaps the selection window); pre-attacked the
+minute-10 exit: measure post-10 continuation gross, random same-share exit control, family with sw-w4 + BEREPLAY.
+**Learned**
+- Selections defined on the trade's own early path are not foresight; only the continuation after the selection
+  time is tradable. Check overlap between selection window and outcome window every time.
+**Next**
+- Exit plan if Builder writes it; FAMC first rows (11-11 session).
