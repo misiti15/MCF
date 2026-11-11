@@ -35,3 +35,11 @@ events per day; per-sector counts.
 
 ## Kill line
 Fails 1 -> DISP1 closed, the family stays closed. Passes -> a counted forward shadow plan goes to Lead, nothing live.
+
+## RESULT (one look, 2026-11-11 03:30 ET) — FAIL, DISP1 closed
+`python -I research/disp1/disp1.py <hodsep dir>` -> `disp1_out.txt`. 908 of 1,214 names assigned a sector (corr >= 0.40).
+Test 10-08..11-09: 2,431 member events |rel| >= 0.5 ATR; 443 on flat-sector split mornings (20 days); control 1,831.
+- Events: c_sec -0.028 ATR (day-clustered t -0.70), c_spy +0.020 (t 0.33); cost 0.055 ATR. Follow net -0.074, fade net -0.035.
+- Legs disagree: up-split members -0.064 (t -1.42), down-split +0.005 (t 0.07). Control (non-flat): +0.038 (t 0.94).
+- No gate passes. A flat sector morning with a sharp member split carries no direction to 15:55, ex-sector or ex-market.
+Rule-change context: research on bars only; no live setup or ledger change involved.
