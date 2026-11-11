@@ -10,6 +10,10 @@ account:
   max_concurrent_positions: 77   # owner 2026-10-27 (was 160, briefly 61), = slots
   max_positions_per_strategy: 30  # per-setup sleeve so one setup can't use every slot (was 100 of 160; now 30 of 77)
   max_daily_loss_r: 20           # risk control (not a signal filter): stop new entries after -20R in a day
+  # LR3 (owner yes 2026-11-11, from 2026-11-12): in these accounts the -max_daily_loss_r halt and the per-setup latch
+  # count R after costs (pnl_adj / risk, mcf/costs.py), and the account halt also counts the open lots' marks (last bar,
+  # less a market-exit cost). Other accounts keep raw realized R (NOTES: Primary first; the Testing 120R backstop may follow).
+  loss_stops_cost_r_accounts: [primary]
   max_setup_daily_loss_r: 2.0    # owner 2026-10-28 ST-P (from 2026-10-29): a Primary setup takes no new entries for the rest of the
                                  # day once its net realized R <= -2 (latched). Live only (backtests ignore it); Testing 1/2 + Gen
                                  # set null in their overlays (owner: off there so it blocks no trades)
@@ -45,12 +49,41 @@ costs:
   extended_slippage_per_share: 0.03  # extended-tier names: wider spreads, so 3x the core assumption
   commission_per_share: 0.0      # Alpaca equities are commission-free
   min_price: 5.0                 # ignore sub-$5 names by default (spreads/halts)
+  # LR8 (owner yes 2026-11-11; research/live_ready/NOTES.md "Proposed cost model"): the live trades' pnl_adj (R after
+  # costs; dollars stay Alpaca) uses this model for trades dated on/after effective_from (mcf/costs.py). Earlier trades
+  # keep the flat stop_slippage_per_share above. Backtests (Costs above) are unchanged.
+  live_model:
+    effective_from: "2026-11-12"
+    stop_min_per_share: 0.02     # stop exits: extra max($0.02, 4 bps x price) per share (paper stop slip is ~4.6 bps)
+    stop_bps: 4.0
+    target_at_limit: true        # limit (target) exits fill AT the limit: paper price improvement is given back
+    market_exit_min_per_share: 0.01   # flatten / time stop / scale-out / unprotected close: max($0.01, 1 bp)
+    market_exit_bps: 1.0
+    entry_bps: 1.0               # entry latency / impact cushion
+    fees:
+      # SEC Section 31: $ per $1M of sale proceeds. $20.60 from 2026-04-04 (SEC fee rate advisory 2026-2,
+      # https://www.sec.gov/rules-regulations/fee-rate-advisories/2026-2; Release 34-104909); $0.00 before that.
+      sec_per_million:
+        - {from: "2025-05-14", rate: 0.0}
+        - {from: "2026-04-04", rate: 20.60}
+      # FINRA Trading Activity Fee, covered equity sales: $ per share sold, capped per trade. From 2026-01-01:
+      # $0.000195 / max $9.79 (FINRA By-Laws Schedule A Section 1; SR-FINRA-2024-019 fee adjustment schedule).
+      taf:
+        - {from: "2025-01-01", per_share: 0.000166, max_per_trade: 8.30}
+        - {from: "2026-01-01", per_share: 0.000195, max_per_trade: 9.79}
+      # CAT fee pass-through: ESTIMATE $0.00005 per share per side (not a published Alpaca figure; check the first
+      # real-money trade confirmation).
+      cat:
+        - {from: "2025-01-01", per_share_side: 0.00005}
 
 session:
   timezone: America/New_York
   open: "09:30"
   close: "16:00"
   flatten_by: "15:55"            # all intraday positions closed by this time
+  # LR1 (owner 2026-11-11): the runner flattens at min(flatten_by, calendar close - flatten_lead_min), so a half-day
+  # session (13:00 close, e.g. 2026-11-27, 2026-12-24) flattens at 12:55 (mcf/execution/market_calendar.py).
+  flatten_lead_min: 5
 
 universe:
   # Owner 2026-10-05: no fixed count — include every name with tradeable liquidity and movement.
@@ -487,6 +520,11 @@ live:
     flatten_min: 30
     watchdog_dead_min: 15
   status_every_min: 2            # dashboard refresh cadence
+  # LR5 (owner 2026-11-11): every poll, broker quantity per symbol vs the open journal lots (all accounts). A mismatch that
+  # persists persist_polls polls -> health.position_mismatch, no new entries in that symbol, alert; never an automatic close.
+  position_check:
+    enabled: true
+    persist_polls: 5
   log_poll_inputs: true          # owner 2026-10-21: each poll's inputs (latest bar / bar count per symbol, exceptions
                                  # only; poll wall time; stale flag) -> state polls/<date>/<HHMMSS>.jsonl.gz chunks
   poll_log_flush_min: 10         # a new chunk every 10 min and at handover/close (each chunk written + pushed once)

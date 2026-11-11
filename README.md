@@ -74,6 +74,27 @@ Display names only; the internal keys, state branches, `MCF_ACCOUNT` values and 
 
 Setups advance testing area → On Deck → Primary. On/off switch experiments are field-tested only in the testing areas.
 
+## Kill switch (LR4, owner 2026-11-11)
+
+Stops trading on one account or all of them within about a minute, without cancelling any GitHub run.
+
+1. Open the repository on github.com and click **Actions**.
+2. In the left list click **kill** (the workflow `.github/workflows/kill.yml`).
+3. Click **Run workflow** (top right of the run list).
+4. **Use workflow from**: leave the default branch.
+5. **Account**: `primary` (or another account, or `all`).
+6. **Mode**:
+   - `no-new-entries`: no new entries for the rest of the session; open trades keep their stops and targets, and the
+     normal flatten (15:55, or 5 min before an early close) still runs.
+   - `flatten`: no new entries, and every MCF order on the account is cancelled and every MCF position closed now
+     (the kill run does it itself and the trading run does it too).
+   - `resume`: clears the flag (with `all`: clears every account's flag); new entries resume on the next poll.
+7. Leave **dry_run** unticked (ticked = only log what would happen) and click the green **Run workflow**.
+
+The flag stays set, also for the next sessions, until you run `resume`. It is the file `HALT.json` on the branch
+`mcf-control`; each trading run checks it every poll and shows it in its status (`health.kill`). Only MCF's own orders
+(order prefix per account) are touched, never anything else on an account. Educational only — not financial advice.
+
 ## Setups (Phase 0)
 | name | basis | default |
 |---|---|---|

@@ -2,8 +2,10 @@
 
 Paper fills are optimistic (no queue, no size limit, limit orders fill on a touch). Each trade records:
   slip_bps  entry fill vs the price when the signal fired (latency + spread; MarcoFlow lost ~16 bps here)
-  pnl_adj   broker P/L minus the stop-exit slippage a real book adds (costs.stop_slippage_per_share);
-            target (limit) exits are kept but flagged `touch_fill` in meta when not verifiable.
+  pnl_adj   broker P/L minus the modelled real-book costs (R only; dollars stay Alpaca). From costs.live_model
+            .effective_from (2026-11-12, LR8) the live model in mcf/costs.py (stops max($0.02, 4 bps), targets at the
+            limit, market exits max($0.01, 1 bp), 1 bp entry, SEC/TAF/CAT fees; meta `costs=lr8`); before it, the flat
+            stop-exit allowance costs.stop_slippage_per_share. Target exits are flagged `touch_fill` in meta.
 
 Lots (live.max_lots_per_symbol > 1): several brackets can hold the same symbol, netted at the broker. An exit is
 paired to a lot only from orders that belong to it (its own stop/target legs, their replacements after a stop move,
@@ -93,12 +95,15 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         side = int(rec.side)
         risk = abs(entry - rec.stop) * qty
         pnl = sum(side * (px - entry) * q for q, px, _, _ in parts)
-        pnl_adj = pnl - stop_extra * stop_qty
-        meta = rec.meta + (";touch_fill" if "target" in by_reason else "")
+        tdate = _et_date(parent.filled_at, day)
+        tgt = None if rec.target is None or pd.isna(rec.target) else float(rec.target)
+        pnl_adj, model = _pnl_adj(pnl, side, entry, qty, [(q, px, why) for q, px, _, why in parts], tgt, tdate, cfg,
+                                  stop_extra, stop_qty)
+        meta = rec.meta + (";touch_fill" if "target" in by_reason else "") + (";costs=lr8" if model == "lr8" else "")
         if len(parts) > 1:
             meta += ";exit_parts=" + ",".join(f"{w}:{q:g}@{px:g}" for q, px, _, w in parts)
         rows.append(dict(
-            symbol=rec.symbol, strategy=rec.strategy, side=side, date=_et_date(parent.filled_at, day),
+            symbol=rec.symbol, strategy=rec.strategy, side=side, date=tdate,
             signal_time=rec.created_at, entry_time=parent.filled_at, entry=entry, stop=rec.stop,
             target=rec.target, exit_time=exit_t, exit=exit_px, exit_reason=reason,
             r_multiple=pnl / risk if risk else 0.0, mae_r=None, mfe_r=None, shares=qty, pnl=pnl,
@@ -110,6 +115,15 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
     out = pd.DataFrame(rows)
     out.attrs["residual"] = residual   # parent id -> {left, qty}: lots still open after a partial exit (status only)
     return out
+
+
+def _pnl_adj(pnl, side, entry, qty, parts, target, day, cfg, stop_extra, stop_qty) -> tuple[float, str]:
+    """pnl_adj of one lot (mcf.costs.pnl_adj); without a live model in cfg, the flat stop allowance as before."""
+    from ..costs import pnl_adj
+
+    if cfg is None:
+        return pnl - stop_extra * stop_qty, "flat"
+    return pnl_adj(pnl, side, entry, qty, parts, target, day, cfg)
 
 
 def _lot_exits(by_id: dict, journal_ids: set[str]) -> dict[str, dict]:

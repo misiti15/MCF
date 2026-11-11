@@ -143,7 +143,7 @@ def chart(bars: pd.DataFrame | None, trade, day: str, dpi: int = 100) -> bytes |
         y = lvl if last is None else max(lvl, last + gap)
         ax.text(n(hi), y, f" {txt}", color=c, fontsize=7, va="center", ha="left")
         last = y
-    rtxt = "" if r is None or pd.isna(r) else f"{float(r):+.2f}R · "
+    rtxt = "" if r is None or pd.isna(r) else f"{float(r):+.2f}R after costs · "
     ptxt = "" if pnl is None or pd.isna(pnl) else f"{'-' if float(pnl) < 0 else '+'}${abs(float(pnl)):,.2f} · "
     ax.set_title(f"{g('symbol')} {'long' if side > 0 else 'short'} · {setup_label(str(g('strategy')))}\n"
                  f"{rtxt}{ptxt}{pct:+.2f}% · exit: {g('exit_reason', '') or ''} · {day} (3-minute bars, ET)",
@@ -196,7 +196,7 @@ def html(items: list[dict], heading: str) -> str:
     for i, it in enumerate(items, start=1):
         r = it["trade"]
         side = "long" if float(r["side"]) > 0 else "short"
-        rr = "" if pd.isna(r.get("r_multiple")) else f" · {float(r['r_multiple']):+.2f}R"
+        rr = "" if pd.isna(r.get("r_multiple")) else f" · {float(r['r_multiple']):+.2f}R after costs"
         parts.append(f"<div style='font-size:13px;margin:8px 0 2px'><b>{i}. {r['symbol']}</b> {side} · {setup_label(r['strategy'])}"
                      f" · {float(r['pct']):+.2f}%{rr} · ${float(r['pnl']):,.2f}</div>")
         if it["png"]:

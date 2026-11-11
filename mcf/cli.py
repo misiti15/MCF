@@ -196,13 +196,14 @@ def cmd_live(args, cfg):
                          on_status=on_status)
     if cfg.get("live", {}).get("log_poll_inputs", True):
         runner.poll_log_dir = os.path.join(args.state_dir, "polls")
+    runner.kill_git_dir = args.state_dir   # LR4: the kill flag (mcf-control branch) is read through this checkout
     if eb is not None:
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
                              earnings_complete=eb["complete"])
     runner.run(until=until)
     paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls"]
     end = pd.Timestamp.now(tz=NY)
-    if end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():
+    if runner.session_done or end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():   # LR1: half days
         from .report.daily_review import write_review
 
         md = write_review(runner.journal, runner.run_id, str(end.date()), os.path.join(args.state_dir, "reviews"),
@@ -304,7 +305,10 @@ def cmd_eod(args, cfg):
             spy_hist = rth(normalize(df.droplevel(0))) if len(df) else spy
     except Exception as e:
         print(f"SPY history unavailable (Avg R ex-market blank): {e}")
-    card = scorecard.build(j.trades(run_id=rid), cfg.get("report", {}).get("scorecard_sessions", 4), playing_time=playing,
+    from .costs import with_cost_r
+
+    # LR2 (owner 2026-11-11): every R on the scorecard / leaderboard is R after costs (pnl_adj / risk); raw in r_raw
+    card = scorecard.build(with_cost_r(j.trades(run_id=rid)), cfg.get("report", {}).get("scorecard_sessions", 4), playing_time=playing,
                            cfg=cfg, account=cfg.get("account_name", "primary"), whatif=j.trades(kind="whatif"), spy=spy_hist)
     exmkt = {r["setup"]: r for r in card.get("leaderboard", []) if r.get("mkt_n")}
     rep = eod.build(j, rid, day, spy, review, intraday=intraday, bars=bars, playing=playing,

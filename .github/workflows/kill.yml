@@ -1,0 +1,93 @@
+# MCF kill switch (LR4, owner 2026-11-11). Manual only. Educational only - not financial advice.
+#
+# Run it from GitHub: Actions -> "kill" -> "Run workflow" -> pick account and mode -> "Run workflow" (README "Kill switch").
+#   mode no-new-entries : sets the HALT flag (HALT.json on the branch mcf-control). Every running trade job reads it on its
+#                         next poll (within ~1 minute) and takes no new entries for the rest of the session. Open lots keep
+#                         their broker-side stops / targets and the 15:55 flatten still runs.
+#   mode flatten        : sets the flag to "flatten" (the running job cancels + closes its MCF orders/positions once and
+#                         takes no new entries) AND this workflow itself cancels the account's open MCF orders and closes
+#                         its MCF positions right away (no trading job needed). Only the account's own order prefix
+#                         (mcf- / mct- / mt2- / ...) is touched; nothing else on the account.
+#   mode resume         : clears the flag ("all" clears every account's flag). New entries resume on the next poll.
+# The flag stays set (also for the next sessions) until "resume" is run.
+# dry_run: logs what it would write / flatten, changes nothing.
+name: kill
+
+on:
+  workflow_dispatch:
+    inputs:
+      account:
+        description: "Account (all = every account)"
+        type: choice
+        options: [all, primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]
+        default: primary
+      mode:
+        description: "no-new-entries = stop new entries; flatten = also close MCF positions now; resume = clear the flag"
+        type: choice
+        options: [no-new-entries, flatten, resume]
+        default: no-new-entries
+      dry_run:
+        description: "Only log what would happen"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mcf-kill
+  cancel-in-progress: false
+
+jobs:
+  flag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -q pandas pyyaml
+      - name: Set the HALT flag (mcf-control/HALT.json)
+        run: python -m mcf.execution.kill set --account "${{ inputs.account }}" --mode "${{ inputs.mode }}" ${{ inputs.dry_run && '--dry-run' || '' }}
+
+  flatten:
+    if: inputs.mode == 'flatten'
+    needs: flag
+    strategy:
+      fail-fast: false
+      matrix:
+        account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MCF_ACCOUNT: ${{ matrix.account }}
+      MCF_COID_PREFIX: ${{ matrix.account == 'primary' && 'mcf-' || (matrix.account == 'testing2' && 'mt2-' || (matrix.account == 'gen' && 'mcg-' || (matrix.account == 'graveyard' && 'mgy-' || (matrix.account == 'livelab' && 'mll-' || (matrix.account == 'explore1' && 'mx1-' || (matrix.account == 'testingd' && 'mtd-' || (matrix.account == 'testinge' && 'mte-' || (matrix.account == 'testingf' && 'mtf-' || 'mct-')))))))) }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_TRADE_API_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_API_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_API_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_API_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_API_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_API_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_API_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_API_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_API_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_API_KEY || '')))))))) }}
+      ALPACA_TRADE_SECRET_KEY: ${{ matrix.account == 'testing' && secrets.ALPACA_TESTING_SECRET_KEY || (matrix.account == 'testing2' && secrets.ALPACA_TESTING2_SECRET_KEY || (matrix.account == 'gen' && secrets.ALPACA_GEN_SECRET_KEY || (matrix.account == 'graveyard' && secrets.ALPACA_GRAVEYARD_SECRET_KEY || (matrix.account == 'livelab' && secrets.ALPACA_LIVELAB_SECRET_KEY || (matrix.account == 'explore1' && secrets.ALPACA_EXPLORE1_SECRET_KEY || (matrix.account == 'testingd' && secrets.ALPACA_TESTINGD_SECRET_KEY || (matrix.account == 'testinge' && secrets.ALPACA_TESTINGE_SECRET_KEY || (matrix.account == 'testingf' && secrets.ALPACA_TESTINGF_SECRET_KEY || '')))))))) }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Selected account?
+        id: sel
+        run: |
+          if { [ "${{ inputs.account }}" = "all" ] || [ "${{ inputs.account }}" = "$MCF_ACCOUNT" ]; } && \
+             { [ "$MCF_ACCOUNT" = "primary" ] || [ -n "$ALPACA_TRADE_API_KEY" ]; } && [ -n "$ALPACA_API_KEY" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "$MCF_ACCOUNT: not selected or no keys"; fi
+      - uses: actions/checkout@v4
+        if: steps.sel.outputs.run == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.sel.outputs.run == 'true'
+        with:
+          python-version: "3.11"
+      - name: Install
+        if: steps.sel.outputs.run == 'true'
+        run: pip install -q -e ".[alpaca]"
+      - name: Flatten this account's MCF orders and positions
+        if: steps.sel.outputs.run == 'true'
+        run: python -m mcf.execution.kill flatten ${{ inputs.dry_run && '--dry-run' || '' }}

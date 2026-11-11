@@ -207,7 +207,9 @@ def build(journal, run_id: int, day: str, spy: pd.DataFrame | None, review: dict
           chart_bars: dict | None = None, exmkt: dict | None = None):
     """chart_bars: 1-minute bars per symbol incl. pre-market (for the per-trade charts); defaults to `bars`.
     exmkt: setup -> scorecard leaderboard row (BETA1: exmkt_r / beta / mkt_n over all of the setup's sessions)."""
-    tr = journal.trades(run_id=run_id)
+    from ..costs import with_cost_r
+
+    tr = with_cost_r(journal.trades(run_id=run_id))   # LR2: r_multiple = R after costs; raw broker R in r_raw
     tr = tr[tr["date"].astype(str) == day].copy() if len(tr) else tr
     if len(tr):
         tr["pct"] = tr["side"] * (tr["exit"] / tr["entry"] - 1) * 100
@@ -274,10 +276,11 @@ P/L <b style="color:{'#0b8a3e' if pnl >= 0 else '#d03b3b'}">${pnl:,.2f}</b></p>
 {_quality(tr, bars or {})}
 {_time_of_day(tr)}
 <h3>By setup</h3>
-<table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R</th><th {td}>Adj R (net of SPY)</th><th {td}>Avg R ex-market (all sessions)</th><th {td}>P/L</th></tr>
+<table style="border-collapse:collapse;font-size:13px"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win</th><th {td}>Avg R after costs</th><th {td}>Adj R (net of SPY)</th><th {td}>Avg R ex-market (all sessions)</th><th {td}>P/L</th></tr>
 {by_setup or '<tr><td colspan=7>No trades.</td></tr>'}</table>
 <div style="font-size:12px;color:#52514e">Avg R ex-market = the setup's avg R over all its live sessions with SPY's
-same-window move regressed out (intercept of R on SPY %; beta = R per 1% SPY). Report only.</div>
+same-window move regressed out (intercept of R on SPY %; beta = R per 1% SPY). Report only. Every R here is R after
+costs (broker P/L less the modelled real-book costs, / planned risk; from 2026-11-12 the LR8 cost model).</div>
 {mkt_line}
 {_playing(playing)}
 <h3>Improvement candidates (daily review)</h3><ul>{findings}</ul>
