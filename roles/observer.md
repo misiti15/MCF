@@ -176,3 +176,7 @@ D2PM: plan frozen + pm_fetch.py (time-guarded) + d2pm.py (selftest ok). data/cac
 Pre-check for tonight's FAMC build: earnings/2026-11-11.json = one commit ('job 08:55 done 2026-11-11', committed 14:35 ET), source nasdaq,
 complete true, 60 names listed for 11-11 -> passes the builder's asserts. Build at the first wake after 20:00 ET (21:40 ET run):
 `python ../guild/research/obs-amcnews/build_famc_cal.py --date 2026-11-11` + health line for ALC/RGTI (reaction session 11-11).
+
+## Run 30 — 2026-11-11 ~17:50 ET
+**Learned**: RCOMPASS v2 (mine) closed 0/3 — post-flip aligned trades BETTER in VALID. GAP-U fails the shared-day null. REGSW-2: counter-state trades better, ~70% SPY reversion (ex-market t -3.05 < 3.57). PR #184 merged (memo + PROMO2 decision). FAMC session 1 run by Builder (2 events, +0.61R raw, K 1/1).
+**Next**: next wake after 20:00 ET: build_famc_cal.py --date 2026-11-11 (pre-check passed) + health for ALC/RGTI.
