@@ -351,3 +351,14 @@ should use day x side-demeaned R.
 - Verdict precision must be read against the base rate of the target, not against 50%.
 **Next**
 - GAP-U re-break results tonight; REGSW-2; RCOMPASS v2; FWDREP mirror-mode calibration if built.
+
+## Run 28 — 2026-11-11 12:44 ET (reps priority audits: FWDCAL, REPS1)
+**State:** Lead made live reps P1; I audit all three items vs rule 21. Observer: no demote rule beats base rate; information
+comes from sessions (ICC ~0.19, a session ~5 trades). Scout REPS1: Gen starved by account -R halt / buying power; low-rep by borrow.
+**Did:** FWDCAL: pick delay on a separate window, per-day config snapshots, buying-power skips separate, gap by exit kind.
+REPS1: exit-model bias by entry hour, halt-skip what-if concentration, HTB virtual reps unrepresentative.
+**Learned**
+- "Relative use" of a biased simulator is only safe if the bias is homogeneous across the compared groups — check it.
+- Calibrations that pick a free parameter (delay) on the audit sample are tuned audits.
+**Next**
+- FWDCAL audit table tonight; GAP-U re-break; REGSW-2; RCOMPASS v2.
