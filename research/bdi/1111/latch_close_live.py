@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np, pandas as pd
 S, D = Path(sys.argv[1]), sys.argv[2]; INS = "--in-sample" in sys.argv; TZ = "America/New_York"
 SW = Path(__file__).resolve().parents[1] / "swings"; HYP = "swing1111-L13"
-ACC = {"p": "Primary", "t1": "On Deck", "t2": "Testing A", "ex1": "Testing B", "ll": "Testing C", "gy": "Graveyard", "gen": "Gen"}
+ACC = {"p": "Primary", "od": "On Deck", "ta": "Testing A", "tb": "Testing B", "tc": "Testing C", "td": "Testing D", "te": "Testing E", "tf": "Testing F", "gy": "Graveyard", "gen": "Gen"}   # 2026-11-12: scratch codes for the 10 accounts
 bf = S / "cov" / "days" / D / "bars.parquet"
 B1 = pd.read_parquet(bf) if bf.exists() else pd.DataFrame(columns=["symbol", "close"])
 if len(B1): B1.index = pd.to_datetime(B1.index, utc=True).tz_convert(TZ)

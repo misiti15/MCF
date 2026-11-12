@@ -84,13 +84,15 @@ and every decision the owner answers is set to `answered` with the date and the 
 | COMPCAL | Compass card: show the "finishes this side of the open" chance as one calibrated line (display only; Guild 11-10, research/guild/1110/compcal/) | Claude (mcf/report) on yes | nightly brief | 2026-11-10 brief | open · **11-10 brief:** DECISION item 3 (docs/live/decisions.json open) |
 | TEAM-REVIEW | Review the TEAM-6 Primary trial (Wed 11-11..Fri 11-13, frozen, no rotation; owner Team yes 2026-11-10, ledger 2026-11-10-team6-primary): per-setup R after costs, avg R w/o best day, latch / account-stop hits, vs the 5 setups now in Testing 1/2; rule context: TEAM-6 effective 11-11 | Claude/BDI | nightly brief | 2026-11-13 after close | open |
 | OPS-EX1-RUNNER | Testing B (explore1) 11-11: first trade job (run 43032649308, job 130563372565) — hosted runner lost communication (GitHub annotation; log blob gone, Trade step never concluded) at 13:14 ET; poll log stops at 12:18:13 ET, next poll 14:30:49 ET after the 14:29 hand-over (132.6-min gap, ~130 polls / 26 decision bars missed; 188 polls = 50% of Primary). Likely CPU/memory starvation on the runner; other 6 accounts fine. Housekeeping: check runner memory on full-universe accounts (Testing D/E/F start 11-12) | Claude (ops) | nightly 1b | 2026-11-12 | open |
-| LATCH-CLOSE | On a −2R per-setup latch, also close that setup's open lots at the next 5-min bar (BDI 1111, 2-year PASS: VALID +1,684R, t 3.89 vs 2.89; 54 better / 32 worse) | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 1 (docs/live/decisions.json); forward shadow from 11-12 |
+| LATCH-CLOSE | On a −2R per-setup latch, also close that setup's open lots at the next 5-min bar (BDI 1111, 2-year PASS: VALID +1,684R, t 3.89 vs 2.89; 54 better / 32 worse) | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 1 (docs/live/decisions.json); forward shadow from 11-12: day 1 all accounts −34.23R (16 better / 14 worse; Primary 0 lots) |
 | LR6 | Entry execution LR6-A/B/C/D (research/lr6/NOTES.md; owner 11-11: LR6 → research) | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 2 |
 | CF-OD | ODX-2: CF cost filter off in On Deck? (recommend keep) | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 3 |
 | REDDIT | Reddit scout: pause or weekly (recommend pause) | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 4; skipped 11-11 (usage) |
 | MF4-OK | MF4 base/twin call on On Deck | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 6 |
 | SIP-DEF | SIP data subscription on Testing D/E/F (no data yet) | owner | nightly brief | when done ("SIP added D E F") | open · 11-11 brief DECISION 7 |
 | PROMO2 | Two-stage promotion (On Deck confirms; show K) — guild1111 | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 8 |
+| INACT-DEF | Inactive audit (research/ops/inactive1103/audit.py) does not cover Testing D/E/F yet (12 zero-signal D/E/F setups on 11-12 classified by hand: index gates, rare, weekday) | Claude | nightly inactive-check | next housekeeping | open (housekeeping) |
+| OPS-SCHED-0847 | Session scheduler missed the 08:47 ET start on 11-11 and 11-12 (manual dispatch 08:49 both days) | Claude | step 1b | next housekeeping | open (housekeeping) |
 
 ## Closed
 
