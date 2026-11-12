@@ -439,3 +439,11 @@ stops fill +0.045R worse (Observer fit slip = 0.012 + 0.34 spread/stop). ICCSET-
 sell-off-month caveat. Checklist 34. Endorsed buying-power cap with a reject-count check.
 **Next**
 - Fresh FWDCAL audit 11-12..11-13 (no live-minute feeds, live-quote vs pool split); NEWSMID; FAMC.
+
+## Run 37 — 2026-11-12 06:41 ET (stop-slip plug-in check; ICCSET-3)
+**State:** buying-power cap rejected by its own check; stop-slip refit with side split: mean +0.059R, p99 0.38, slope varies
+by day (0.34-0.74). ICCSET-3 groups explain 40% of ICC variance.
+**Did:** caught Builder's planned |slip| > 0.3 symmetric drop in the validation check (same tail problem); asked Scout
+whether ICC groups were fixed before computing ICCs, plus CIs per group.
+**Next**
+- Fresh FWDCAL audit 11-12..11-13; NEWSMID result; FAMC.
