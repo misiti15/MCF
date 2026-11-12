@@ -17,3 +17,17 @@ minute is unreachable by any replay with one D. Rule 21's "same entry minute" is
 spread-quote, caps cascade and no-signal causes (builder-20261111-2112-2) are real.
 Side fact: Gen fills ~2x slower than other accounts (many orders per poll); R cost not measured here.
 Repro: `python research/obs-fillclock/fillclock.py <dir of journals>` -> fillclock_out.txt. Educational only — not financial advice.
+
+## Correction + part 2 (late 11-11, after Scout's FILLCOST)
+- My "broker routing takes 0.5-1.2 min" was WRONG. Order -> fill is ~2 s in every account (Scout right). The delay is
+  decision (signals.ts, ~12-16 s after the bar closes) -> order created: median 31 s Primary, 26 s Testing A, 41 s
+  Graveyard, 73 s Gen (p90 142 s), on the holdout. It is inside the poll (signals processed one after another), not the broker.
+- Scout's "bar close to order ~1.25 min everywhere" reads bar_age_min, which is stamped at the DECISION (from the bar's
+  open stamp), not at order time; the order goes 24-79 s later (10-20..11-11 medians).
+- Does it cost R? lagcost.py, 14,615 trades 10-20..11-11: fill vs decision price is +0.033..+0.046R adverse in every account
+  (Gen +0.043, same as the rest). Drift on lag: slopes +0.002 / +0.020 / -0.010 / +0.013 / +0.006 R per minute
+  (day-t +0.07 / +1.94 / -3.50 / +1.20 / +0.99), mixed sign. So the poll lag costs ~nothing; Scout's conclusion stands.
+- Still true for FWDCAL: the fill minute lands +1/+2 after the decision bar, so decision-bar matching remains right.
+- New number: entry vs the decision price is ~0.04R, about 2-4x the slip vs the pre-order quote (Scout +0.009..+0.024R),
+  and it does not grow with lag, so most of it happens before the order is built. Lab cost (0.22R) still covers it.
+- Rule-change context: window 10-20..11-11 spans many config changes (see ledger); this is execution-level, pooled over setups.
