@@ -1,0 +1,14 @@
+afternoon trades on reading days 209678, setups 73, days 227 (TRAIN 84, VALID 143)
+  [TRAIN F1] aligned trades 40114, post-flip 8773 on 21 days | S_ex +0.0118 (gross +0.0255) | null p 0.608 (5th pct -0.0658) | book day-t +0.29, w/o worst post day +0.0270 | family-sides worse 15 of 29
+  [VALID F1] aligned trades 66937, post-flip 15845 on 34 days | S_ex +0.0586 (gross +0.0174) | null p 0.950 (5th pct -0.0491) | book day-t +2.09, w/o worst post day +0.0612 | family-sides worse 9 of 31
+  [TRAIN F2] aligned trades 40114, post-flip 3028 on 12 days | S_ex +0.0060 (gross +0.0088) | null p 0.534 (5th pct -0.0754) | book day-t -0.19, w/o worst post day +0.0173 | family-sides worse 9 of 21
+  [VALID F2] aligned trades 66937, post-flip 6916 on 18 days | S_ex +0.0142 (gross -0.0534) | null p 0.586 (5th pct -0.0774) | book day-t +0.01, w/o worst post day +0.0120 | family-sides worse 13 of 29
+  [TRAIN F3] aligned trades 40114, post-flip 22672 on 51 days | S_ex -0.0151 (gross +0.0271) | null p 0.292 (5th pct -0.0463) | book day-t -0.24, w/o worst post day -0.0014 | family-sides worse 20 of 33
+  [VALID F3] aligned trades 66937, post-flip 35252 on 85 days | S_ex +0.0545 (gross +0.0347) | null p 0.956 (5th pct -0.0458) | book day-t +3.22, w/o worst post day +0.0802 | family-sides worse 8 of 34
+
+verdict per look (PLAN_V2 pass rule: S<0 & gross<0 both periods, null p<0.05 both, >=60% family-sides worse both, VALID day-t <= -2.76, w/o worst day < 0):
+  F1: closed  (TRAIN S +0.0118 p 0.61 worse 52% | VALID S +0.0586 p 0.95 worse 29% t +2.09)
+  F2: closed  (TRAIN S +0.0060 p 0.53 worse 43% | VALID S +0.0142 p 0.59 worse 45% t +0.01)
+  F3: closed  (TRAIN S -0.0151 p 0.29 worse 61% | VALID S +0.0545 p 0.96 worse 24% t +3.22)
+Educational only - not financial advice.
+RC EXIT 0

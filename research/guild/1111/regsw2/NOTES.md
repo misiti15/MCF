@@ -19,3 +19,10 @@ Base (stage 1, committed 57911e03c before scoring): 11 setups with TRAIN gross >
   (TEAM-6 move on 11-11 is after the window).
 - PBO not computed: with every config's excess negative or below the null, selection among them is moot.
 - Live check: in-sample by construction (Skeptic), and moot after 0 of 4.
+
+## Follow-up (Skeptic 11-11 16:51): ex-market and full base (exmkt_out.txt; same 3 switches, reporting only)
+- Full 75-setup lab base: the "against the state is better" contrast is LARGER (VALID gross t -5.9 / -5.9 / -6.3),
+  so it is book-wide, not a product of how the 11 winners were chosen.
+- Ex-market (gross - TRAIN-fitted beta x SPY % over the trade's own hold) removes ~70% of it. On the full base VALID
+  ex-market t is -3.05 / -2.13 / -3.28; TRAIN -2.08 / -1.03 / -1.62; FWD mixed. It is mostly SPY mean-reverting after it
+  leaves its open. The residual is below the market-state family BAR90 3.57: nothing to pre-register yet.
