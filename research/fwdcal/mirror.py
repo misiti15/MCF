@@ -144,8 +144,41 @@ QUOTES = {"on": False, "table": None, "exact": 0, "near": 0, "pool": 0, "src": {
 LATCH = {"on": False, "table": None, "acc": None, "day": None, "now": None, "acct_block": 0, "setup_block": 0}
 
 
+BP = {"on": False, "mult": 4.0, "short_mult": 2.0, "rejects": 0}
+
+
 def variant(D) -> str:
-    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{D}"
+    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{'b' if BP['on'] else ''}{D}"
+
+
+def patch_bp() -> None:
+    """Buying power in the sim broker (live Gen fit, 11-05/06/09 rejects: open long + 2 x open short notional at cost
+    ~ 4 x equity when Alpaca starts rejecting, 355-449k vs 366k). An entry is rejected with Alpaca's message when
+    positions at cost (shorts x2) + pending entry orders + this order > 4 x equity. Closing frees it. Counted."""
+    from mcf.replay import broker as BR
+    if getattr(BR.SimTradingClient.submit_order, "_fwdcal", False):
+        return
+    orig = BR.SimTradingClient.submit_order
+
+    def w(side_buy):
+        return 1.0 if side_buy else BP["short_mult"]
+
+    def submit_order(self, req):
+        oc = BR._v(getattr(req, "order_class", None) or "simple")
+        if oc in ("bracket", "oto"):
+            k = self.mkt.minute(self.clock.now)
+            px = self.mkt.last_close(req.symbol, k) or 0.0
+            used = sum(abs(q) * self.avg.get(sym, 0.0) * w(q > 0) for sym, q in self.pos.items())
+            used += sum(abs(float(o.qty)) * (self.mkt.last_close(o.symbol, k) or 0.0) * w(o.side == "buy")
+                        for o in self.orders if o._role == "entry" and o.status in BR.OPEN)
+            new = abs(float(req.qty)) * px * w(BR._v(req.side) == "buy")
+            lim = BP["mult"] * float(self.equity)
+            if used + new > lim:
+                BP["rejects"] += 1
+                raise RuntimeError(f'{{"buying_power":"{max(0.0, lim - used):.2f}","code":40310000,"cost_basis":"{new:.2f}","message":"insufficient buying power"}}')
+        return orig(self, req)
+    submit_order._fwdcal = True
+    BR.SimTradingClient.submit_order = submit_order
 
 
 def book_path(day, acc, D):
@@ -270,6 +303,8 @@ def run_book(job):
         patch_quotes()
     if LATCH["on"]:
         patch_latch(); LATCH.update(acc=acc, day=day, now=None, acct_block=0, setup_block=0)
+    if BP["on"]:
+        patch_bp(); BP["rejects"] = 0
     cfg = mirror_cfg(acc, day)
     if cfg is None:
         rep = {"day": day, "acc": acc, "delay": D, "trades": [], "signals": [], "skipped": "no snapshot / nothing enabled"}
@@ -290,7 +325,8 @@ def run_book(job):
                                                                         if c in sg]].astype(str).to_dict("records")
         rep = {"day": day, "acc": acc, "delay": D, "setups": sorted(cfg["strategies"]), "fwdcal": cfg.get("_fwdcal"), "trades": sim["trades"],
                "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "quotes": {k: QUOTES[k] for k in ("exact", "near", "pool")} if QUOTES["on"] else None,
-               "latch": {k: LATCH[k] for k in ("acct_block", "setup_block")} if LATCH["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
+               "latch": {k: LATCH[k] for k in ("acct_block", "setup_block")} if LATCH["on"] else None,
+               "bp_rejects": BP["rejects"] if BP["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
     f.parent.mkdir(parents=True, exist_ok=True)
     f.with_suffix(".tmp").write_text(json.dumps(rep, default=str)); f.with_suffix(".tmp").replace(f)
     print(f"fwdcal d{D} {day} {acc}: {len(rep['trades'])} trades, {rep.get('seconds')} s", flush=True)
@@ -511,8 +547,9 @@ def main():
     ap.add_argument("--tag", default="")
     ap.add_argument("--quotes", action="store_true", help="replay the quotes live journaled (books under out/books/q<D>)")
     ap.add_argument("--live-latch", action="store_true", help="DIAGNOSTIC: halts follow live's halt / latch minutes")
+    ap.add_argument("--bp", action="store_true", help="buying-power cap in the sim broker (books under out/books/<v>b<D>)")
     a = ap.parse_args()
-    QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch
+    QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp
     if a.audit:
         audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
     now = pd.Timestamp.now(tz=NY)

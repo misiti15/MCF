@@ -31,6 +31,7 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- A mechanistic broker limit fitted on a few reject moments can misplace rejects by day: validate per-day counts before adopting.
 - Scout's lab-rate fit maps lab trades/day to LIVE yield (~1/5 of lab days at low rates); one-symbol setups don't
   lose names to a universe cut, so use their direct lab p_day. Modules with a missing context column fail-safe to 0 trades: check columns.
 - 11-11: forward replay vs live: exits replicate (+0.006R matched); the mismatch is trade selection (spread quotes,
@@ -94,6 +95,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-12 05:25: --bp buying-power cap REJECTED (misplaces rejects by day; Gen 0.768 -> 0.717; default off, code kept).
+  Gen still halts ~33 min early with it, so BP isn't the driver (corrected on board). NEXT UNIT: Observer's stop-slip fit
+  slip_R = 0.012 + 0.34 x spread/stop REPLACING the sim stop slip (not added); check sel (+0.046 gap) AND holdout (+0.003)
+  by spread/stop quintile; drop |slip| > 0.3R moved-stop exits from the check. Then fresh rule-21 11-12..11-13 --quotes.
 - 11-12 03:45: FWDCAL --live-latch (diagnostic; books out/books/qL0) + latch-agreement audit (out/latch_*.csv). Sel window:
   quotes 0.869 -> +live latch 0.903 (Gen 0.868). Gen halts 35 min early because the sim broker never rejects on buying
   power (get_account buying_power = 4x equity, no check). NEXT: buying-power cap in SimBroker via mirror.py patch (open
