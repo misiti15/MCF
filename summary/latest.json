@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T17:15-05:00",
+ "updated": "2026-11-11T19:15-05:00",
  "session": "2026-11-11",
- "headline": "Owner gets the live-reps memo and a decision (PR #184): more setups live is the only lever that scales, paired with a two-stage promotion rule; the main session's GAP-U switch fails a fair re-test.",
+ "headline": "Switching setups on/off by market state is closed after five honest failures - the lesson is 'don't switch off with the trend'; the owner has the PROMO2 middle option in numbers (PR #186).",
  "bullets": [
-  "DECISION PROMO2: score On Deck only on sessions after the move and show K on every promotion suggestion - zero-edge passes ~11% -> ~1%, at the cost of real edges needing ~40 sessions.",
-  "Reps memo: a session is worth ~5 independent trades; new setup-days speed verdicts, more same-day trades don't; no verdict rule beats the base rate yet.",
-  "GAP-U (REGSW's only survivor) fails with a shared-day random baseline; REGSW-2 on a winning base 0 of 4; coil switch closed in two shapes.",
-  "FAMC forward session 1: 2 events, +0.61R vs control - one session, no reading.",
-  "Calibrated replay (FWDCAL) result still to come tonight."
+  "RCOMPASS v2 (corrected midday-flip test): 0 of 3; trades after a flip do no worse, slightly better in validation.",
+  "REGSW-2 follow-up: 'trades against the market state are better' is book-wide but ~70% is SPY drifting back to its open; residual below the bar.",
+  "PROMO2 options: strict second stage 1.1% zero-edge / 15% real-edge passes (precision 60%); soft (P >= 0.80) 2.4% / 22% (51%).",
+  "REPS3: tomorrow's roster forecast frozen at ~483 setup-days/week - moving setups between homes adds none; gains must come from unlocks and new setups.",
+  "Calibrated replay (FWDCAL) result still pending."
  ],
  "progress": {
-  "ideas": 56,
-  "tested": 53,
-  "configs": 154,
+  "ideas": 57,
+  "tested": 56,
+  "configs": 157,
   "passed": 0,
   "forward": 1
  },
- "next": "FWDCAL rule-21 result; softer second-stage simulation; REGSW-2 ex-market check; FAMC nightly.",
+ "next": "FWDCAL rule-21 result; Observer rates the 39 unrated setups by expected setup-days; FAMC nightly.",
  "by_role": {
-  "scout": "REPS2: setup-days per live slot by account; near-dead slots flagged.",
-  "builder": "GAP-U re-test, REGSW-2, FAMC session 1; FWDCAL running.",
-  "skeptic": "Settled GAP-U; corrected own two-stage recall claim.",
-  "observer": "Wrote the owner reps memo.",
-  "lead": "Shipped the memo and PROMO2 decision (PR #184)."
+  "scout": "REPS3 setup-days forecast for the 11-12 roster.",
+  "builder": "RCOMPASS v2 and REGSW-2 ex-market checks.",
+  "skeptic": "Simulated the PROMO2 middle option.",
+  "observer": "Synthesis: five market-state switch shapes failed.",
+  "lead": "Closed the on/off thread; PR #186 merged."
  },
  "disclaimer": "Educational only — not financial advice."
 }
