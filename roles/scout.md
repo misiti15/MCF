@@ -104,9 +104,10 @@
 - Run 30 (11-11 17:30 ET) REPS3 frozen forecast for the 11-12 roster: 482.8 setup-days/week = baseline; restructure moves
   setups, adds none by itself; gains must come from unlocks / universe / unrated setups. Owner unlocked halt (300R), Gen x1.8.
 - Run 31 (11-11 19:15 ET) REPS3 score.py built + selftest (frozen before data). Asked Lead: NEWSMID one look on 11-12 or hold.
+- Run 32 (11-11 21:30 ET) NEWSMID scorer verified on synthetic data: planted +0.4 ATR found (both legs), null not flagged.
 ## Next
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
-- NEWSMID: run `--score` only if Lead says so.
+- 11-12 after 16:00 ET: NEWSMID one look (Lead approved): `cd research/newsmid && python3 -I newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` in background (slow loops), then post result + close/shadow per kill line.
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
   log / Gen candidate list is on a branch; check repv when pushed.

@@ -84,3 +84,11 @@ only (`upgrade[sd]\b` / `downgrade[sd]\b`). It also excludes `moody|s&p global|f
 outlook|top \d+ (up|down)grades` on both legs. Check on all 27,467 items: 527 of 573 headlines with an up/downgrade word now
 match. The 46 unmatched are credit-agency, guidance, list or "double upgrade" feature items. Selftest covers both kinds.
 Everything else is as frozen. Score once on 11-12 with `--score`.
+
+## Pre-score verification (11-11 21:30 ET; synthetic data only, no real outcome read; scorer unchanged)
+`newsmid.py --score` was run end to end on generated news + 5-min bars (scratch nmsynth/):
+- Planted drift ~+0.4 ATR after each analyst item (120 names, 92 events): recovered excess +0.37 ATR (t 26.9), an_up +0.35, an_dn
+  +0.40, control -0.02, all gates -> PASS. Both legs' signs, the control and the gates work.
+- Same news, pure random walk (no drift): excess +0.002 ATR (t 0.14) -> FAIL. The null is not flagged.
+- With only 30 names, most events lose their control cell (< 5 names). On real data (~1,200 names) cells hold ~100.
+The one look runs on 11-12 after the close (Lead lead-20261111-2100-1).
