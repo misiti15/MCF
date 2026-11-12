@@ -202,3 +202,13 @@ re-scores fresh 11-12..11-13. UNRATED14 ~7 days/week (Builder).
 **Failed**: called a cause (broker latency) from a timing gap without splitting it into its legs first. Rule for me:
 split any latency into legs (bar close -> decision -> order -> fill) using orders.created_at before naming the cause.
 **Next**: FAMC build for 11-12 after 20:00 ET on 11-12; repv/fwdrep/fastdec outside read.
+
+## Run 34 — 2026-11-12 ~01:40 ET
+**Learned**: Lead accepted the latency corrections; meta-parse trap = checklist #33 (parse meta.split(';')[0]). Scout ICCSET:
+per-setup ICC median 0.196, 10-90% 0.07-0.45, high-ICC 'survivors' have n_eff ~26-34. FWDCAL with live quotes: 5-min match
+0.743 -> 0.869 (diagnostic); next lever halt timing. OBS-HALTFLIP: Graveyard -2R latch = two full stop-outs; 25/89 latches
+within 0.10R of -2, 0 near-misses -> replay with slightly kinder stops skips latches (matches 182 replay-after-halt trades).
+Gen account halt 120 -> 300R from 11-12.
+**Failed**: first halt scan used regex 'daily_loss|loss_limit' and missed 'setup daily loss limit' / 'halted' (reported 0
+Graveyard halt days). Rule: list the distinct skip reasons first, then categorise.
+**Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
