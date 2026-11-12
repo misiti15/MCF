@@ -131,33 +131,11 @@ def test_harness_until_keep_signature():
 
 
 # --------------------------------------------------------------------------------------------- dashboard card
-def _card():
-    i = HTML.index('<div class="card" id="team-card"')
-    return HTML[i:HTML.index("</script>", i)]
-
-
-def test_team_card_present_and_labelled():
-    c = _card()
-    assert "<h2>Claude's Team (shadow)" in c
-    assert "Shadow — simulated independently; no orders" in c and "Educational only — not financial advice" in c
+def test_team_card_removed_from_dashboard():
+    """Owner 2026-11-12: all Claude's Team activity stopped; its dashboard card, loader script and header line are deleted."""
+    assert 'id="team-card"' not in HTML and "mcf-data-team/" not in HTML and "Claude's Team (shadow)</h2>" not in HTML
     for i in ("team-asof", "team-label", "team-tiles", "team-tab"):
-        assert f'id="{i}"' in c
-    for k in ("Team R today (after costs)", "Team P/L today (after costs)", "Primary R today", "Primary P/L today",
-              "Team R", "Account", "last update", "starts "):
-        assert k in c, k
-
-
-def test_team_card_reads_the_team_data_branch():
-    c = _card()
-    assert 'TEAM = RAW + "mcf-data-team/"' in c and '"team/latest.json"' in c and '"picks/latest.json"' in c
-    assert "research/shadow_primary/picks/" in c        # before the first push: the picks on the main branch
-    assert "localStorage" not in c
-
-
-def test_team_card_does_not_touch_other_cards():
-    # the card sits between the End of day card and the next script; the other cards keep their places
-    assert HTML.index('id="eod-card"') < HTML.index('id="team-card"') < HTML.index('<section id="live"')
-    assert HTML.count('id="team-card"') == 1
+        assert f'id="{i}"' not in HTML, i
 
 
 def test_intraday_applies_earnings_blackout_before_the_live_list_is_published(monkeypatch):

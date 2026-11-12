@@ -133,7 +133,7 @@ def test_dashboard_card():
     assert "Market Compass (live)" in card and "Display only — not a trading signal" in card
     assert "Educational only — not financial advice" in card
     assert '"mcf-data-compass/"' in card and '"compass/latest.json"' in card
-    assert html.index('id="team-card"') < i < html.index('id="live"')
+    assert html.index('id="eod-card"') < i < html.index('id="live"')   # Team card deleted 2026-11-12
 
 
 # ------------------------------------------------------------------ "In plain English" sub-card (owner 2026-11-10)
