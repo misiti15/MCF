@@ -50,7 +50,18 @@ live:
     - CWT05-flush-m075-v3-long   # ~3.31/session lab, 14 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
     - CWT12-flag-s1-long   # ~3.37/session lab, 17 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
     - CWT04-backside-vwaptest-a15-short   # ~4.76/session lab, 7 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - RW6-ns2-up3-short-FD   # moved from Graveyard 2026-11-12 (~8.48/day lab; owner GY-RW6/ST4 arena; from session 2026-11-13)
 strategies:
+  RW6-ns2-up3-short-FD:   # moved from Graveyard 2026-11-12 after the close (owner GY-RW6/ST4 arena); from session 2026-11-13
+    # moved to Graveyard 2026-10-21 (owner)
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW6-ns2-up3-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
   # ---- low-rep rotation (owner 2026-11-04, research/ops/lowrep1104/NOTES.md; ledger 2026-11-04-lowrep-explore1-livelab):
   #      setups with < 20 live trades in all accounts move here for reps; re-evaluated every ~2 sessions.
   IDX1-qqq100-0955-TQQQ-trail:

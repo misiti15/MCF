@@ -153,11 +153,9 @@
    "NS5-sma50-flush-oversold-long-FD",
    "RW2-exhaustion-noon-adv150-short-FD",
    "RW4-ns3-adv150-short-FD",
-   "RW6-ns2-up3-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "ST1-ordn-long-pm-t05s1-FD",
    "ST2-slope20up-long-am-t05s1-FD",
-   "ST4-emadn-long-am-t1s05-FD",
    "heat_fade_long",
    "heat_fade_long-FD",
    "heat_fade_short",
@@ -173,6 +171,7 @@
    "LD7-ns1-idxturn-holdtr-long",
    "NM-PM-gapdn-above-pdh-rvol-short",
    "NM-RWR3-ns3-qqqup-early-short",
+   "RW6-ns2-up3-short-FD",
    "ST3-rsi5up-short-pm-t1s1-FD",
    "ST5-pdbrkup-short-mid-t05s1-FD"
   ],
@@ -186,6 +185,7 @@
    "NM-RWN3-ns3-spyup-early-short",
    "NM-RWR4-ns2-up3-qqqup-slopedn-short",
    "NM1-cwt09-g10-vwaploss-short",
+   "ST4-emadn-long-am-t1s05-FD",
    "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
    "ST8-volspikedn-long-pm-t1s1-FD"
   ],
@@ -1883,14 +1883,15 @@
   },
   "RW6-ns2-up3-short-FD": {
    "accounts": [
+    "livelab"
+   ],
+   "since": "2026-11-12 16:13 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21"
+   "last_old_session": "2026-11-12",
+   "first_session": "2026-11-13",
+   "no_leaderboard": true
   },
   "RW6G1-ns2-up3-vwap2sd-short": {
    "accounts": [
@@ -1956,14 +1957,15 @@
   },
   "ST4-emadn-long-am-t1s05-FD": {
    "accounts": [
+    "explore1"
+   ],
+   "since": "2026-11-12 16:13 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-11-03 16:00 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-03",
-   "first_session": "2026-11-04"
+   "last_old_session": "2026-11-12",
+   "first_session": "2026-11-13",
+   "no_leaderboard": true
   },
   "ST5-pdbrkup-short-mid-t05s1-FD": {
    "accounts": [
@@ -2108,359 +2110,24 @@
   }
  },
  "last_change": {
-  "at": "2026-11-11 16:21 ET",
+  "at": "2026-11-12 16:13 ET",
   "changes": [
    {
-    "setup": "CWT04-backside-lh-a25-short",
+    "setup": "RW6-ns2-up3-short-FD",
     "from": [
+     "graveyard"
+    ],
+    "to": [
      "livelab"
-    ],
-    "to": [
-     "testinge"
     ]
    },
    {
-    "setup": "CWT04-backside-vwaptest-a25-short",
+    "setup": "ST4-emadn-long-am-t1s05-FD",
     "from": [
+     "graveyard"
+    ],
+    "to": [
      "explore1"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "CWT05-flush-m05-v3-long",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "CWT05-flush-m05-v5-long",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "CWT05-flush-m075-v5-long",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "CWT09-gapdn-bounce-g10-lowerhalf-short",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "CWT09-gapdn-vwaploss-g10-short",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "IDX2-spy075-0945-3x-trail",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "IDX3-spy075-0955-3x-trail",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "IDX5-spy050-0945-3x-trail",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "LD4-st4-breadthup-t1s05-long",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "LD5-st2-breadthup-t05s1-long",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "LIQ-pdl-sweep-open15-vwap-long",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "MF1-945-flowsell-vwapup",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "MF5-flowsell-vwapup-rsi5hi",
-    "from": [
-     "testing",
-     "testing2"
-    ],
-    "to": [
-     "testing2"
-    ]
-   },
-   {
-    "setup": "NM-AMS-N1-quiet-morning-short",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "NM-HL-T75-pm-long",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "NM-RWN4-ns2-spyup05-notfri-short",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "NM-RWN5-ns3-mon-weakrs-short",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "NM-RWR1-exh150-gapdn-spyup-pm-short",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "NS1-rsidip-rsi5pop-long",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "NS1-rsidip-rsi5pop-long-FD",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "NS3-failed-vwap-reclaim-short",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "NS4-pm-vwap-reclaim-oversold-short",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testingd"
-    ]
-   },
-   {
-    "setup": "NS4-pm-vwap-reclaim-oversold-short-FD",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "RW1-gapdn-bounce-flowsell-short-FD",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "RW3S-gapdn-flowsell-short-FD",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "RW6G1-ns2-up3-vwap2sd-short",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "testinge"
-    ]
-   },
-   {
-    "setup": "ST6-volspikeup-short-mid-t1s1-FD",
-    "from": [
-     "livelab"
-    ],
-    "to": [
-     "testing"
-    ]
-   },
-   {
-    "setup": "exhaustion_short",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testingf"
-    ]
-   },
-   {
-    "setup": "exhaustion_short-FD",
-    "from": [
-     "testing",
-     "testing2"
-    ],
-    "to": [
-     "testing2"
-    ]
-   },
-   {
-    "setup": "intraday_momentum",
-    "from": [
-     "testing"
-    ],
-    "to": [
-     "testingf"
     ]
    }
   ]
