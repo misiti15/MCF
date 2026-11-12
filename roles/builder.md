@@ -94,6 +94,12 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-12 01:20: FWDCAL --quotes built (mirror.py; replays live-logged bid/ask, books out/books/q0). Diagnostic sel window:
+  5-min match 0.743 -> 0.869; spread misses 32% -> 9%. Audit prints gap CI + exact rate/CI; rule21 = exact-minute (Lead 21:00).
+  NEXT: daily-loss halt mismatch (live-only 175, replay-only 192; Gen/Graveyard): compare halt times per account-day
+  (journal skip 'daily_loss' first ts vs replay). Fresh rule-21 window 11-12..11-13 with --quotes (after 16:05 ET 11-13;
+  scoring rule = decision bar if owner adopts RULE21-DB). Testing A with/without top-500: approved 'relative, uncalibrated'.
+  FAMC nightly 11-12 after 16:05 ET.
 - 11-11 22:25: UNRATED14 done (research/unrated14): 14 non-Gen unrated ~7.0 setup-days/wk (fit for multi-name, direct for
   one-symbol, CWT14-R2A regime-capped ~2.4 since 2y context lacks spy_prng). Offered Observer/Lead a decision-bar re-score
   of the FWDCAL holdout (diagnostic) + a fresh rule-21 window 11-12..11-13 if Lead adopts decision-bar matching.

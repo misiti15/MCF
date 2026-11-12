@@ -262,6 +262,23 @@ def live_signals(accs, days) -> pd.DataFrame:
     return S
 
 
+def _wilson(k, n, z=1.96):
+    if not n:
+        return (np.nan, np.nan)
+    p = k / n; d = 1 + z * z / n; c = (p + z * z / (2 * n)) / d; h = z * np.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return (c - h, c + h)
+
+
+def _gap_ci(a, b, z=1.96):
+    """95% CI of mean(a) - mean(b), independent samples (Welch SE); trades within a day are correlated, so it is a
+    lower bound on the width (Lead: the setup-day is the unit)."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    if len(a) < 2 or len(b) < 2:
+        return (np.nan, np.nan)
+    se = np.sqrt(a.var(ddof=1) / len(a) + b.var(ddof=1) / len(b)); g = a.mean() - b.mean()
+    return (g - z * se, g + z * se)
+
+
 def bucket(status, reason):
     from mcf.report.playing_time import classify
     b = classify(status, reason)
@@ -365,7 +382,10 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
                         rdiff_matched=round(m.rdiff.mean(), 4) if len(m) else np.nan,
                         replay_avgR=round(xl.R.mean(), 4), live_avgR=round(ll.R.mean(), 4),
                         gap_avgR=round(xl.R.mean() - ll.R.mean(), 4),
-                        rule21=bool(len(m) / max(len(ll), 1) >= 0.95 and abs(xl.R.mean() - ll.R.mean()) <= 0.03)))
+                        gap_ci95=f"[{_gap_ci(xl.R, ll.R)[0]:+.3f},{_gap_ci(xl.R, ll.R)[1]:+.3f}]",
+                        exact_match_rate=round((m.cause == "exact_minute").sum() / max(len(ll), 1), 3),
+                        exact_ci95=f"[{_wilson((m.cause == 'exact_minute').sum(), len(ll))[0]:.2f},{_wilson((m.cause == 'exact_minute').sum(), len(ll))[1]:.2f}]",
+                        rule21=bool((m.cause == "exact_minute").sum() / max(len(ll), 1) >= 0.95 and abs(xl.R.mean() - ll.R.mean()) <= 0.03)))
     A = pd.DataFrame(out)
     cz = C[C.kind != "matched"].groupby(["acct", "kind", "cause"]).agg(n=("R", "size"), avgR=("R", "mean")).round(3).reset_index()
     m = C[C.kind == "matched"]
@@ -377,7 +397,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     A.to_csv(OUT / f"audit{sfx}.csv", index=False); cz.to_csv(OUT / f"causes{sfx}.csv", index=False)
     xg.to_csv(OUT / f"exitkind{sfx}.csv", index=False)
     pd.set_option("display.width", 250)
-    print(f"FWDCAL mirror-live audit, delay {D} (rule 21: match >= 95% AND |avg R gap| <= 0.03):")
+    print(f"FWDCAL mirror-live audit, delay {D} (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):")
     print(A.to_string(index=False)); print("\nunmatched trades by cause:"); print(cz.to_string(index=False))
     print("\nmatched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):"); print(xg.to_string(index=False))
     print(f"\nbuying-power causes (config/live equity, Skeptic 3): {len(bp)} trades; matched rate if they are set aside: "
