@@ -98,7 +98,9 @@
   quotes 0.869 -> +live latch 0.903 (Gen 0.868). Gen halts 35 min early because the sim broker never rejects on buying
   power (get_account buying_power = 4x equity, no check). NEXT: buying-power cap in SimBroker via mirror.py patch (open
   gross notional + new order <= 4x live equity; freed on close), validate vs live Gen rejects (11-05 50, 11-06 349,
-  11-09 437 rejected rows). Then fresh rule-21 11-12..11-13 with --quotes (+bp) after 16:05 ET 11-13. FAMC 11-12 tonight.
+  11-09 437 rejected rows). Then fresh rule-21 11-12..11-13 with --quotes (+bp) after 16:05 ET 11-13; trades now carry
+  quote_src and the audit splits live-quote vs pool-priced (Lead 03:00: replays of untraded names usable only if rule 21
+  holds on the pool set). Live-latch = diagnostic only (latch is the owner rule). FAMC 11-12 tonight.
 - 11-12 01:20: FWDCAL --quotes built (mirror.py; replays live-logged bid/ask, books out/books/q0). Diagnostic sel window:
   5-min match 0.743 -> 0.869; spread misses 32% -> 9%. Audit prints gap CI + exact rate/CI; rule21 = exact-minute (Lead 21:00).
   NEXT: daily-loss halt mismatch (live-only 175, replay-only 192; Gen/Graveyard): compare halt times per account-day

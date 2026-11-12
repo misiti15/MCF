@@ -138,7 +138,7 @@ def mirror_cfg(acc: str, day: str) -> dict | None:
     return cfg
 
 
-QUOTES = {"on": False, "table": None, "exact": 0, "near": 0, "pool": 0}
+QUOTES = {"on": False, "table": None, "exact": 0, "near": 0, "pool": 0, "src": {}}
 
 
 LATCH = {"on": False, "table": None, "acc": None, "day": None, "now": None, "acct_block": 0, "setup_block": 0}
@@ -245,12 +245,14 @@ def patch_quotes() -> None:
                 dm = abs(best[0] - m0) / 6e10
             if best is not None and dm < 0.5:
                 out[s] = type(q)(bid_price=best[1], ask_price=best[2], timestamp=q.timestamp); QUOTES["exact"] += 1
+                QUOTES["src"][(s, m0)] = "exact"
             elif best is not None and dm <= 2:
                 px = (q.bid_price + q.ask_price) / 2; bps = (best[2] - best[1]) / ((best[1] + best[2]) / 2) * 1e4
                 half = max(0.005, px * bps / 2e4)
                 out[s] = type(q)(bid_price=round(px - half, 4), ask_price=round(px + half, 4), timestamp=q.timestamp); QUOTES["near"] += 1
+                QUOTES["src"][(s, m0)] = "near"
             else:
-                QUOTES["pool"] += 1
+                QUOTES["pool"] += 1; QUOTES["src"][(s, m0)] = "pool"
         return out
     gq._fwdcal = True
     BR.SimDataClient.get_stock_latest_quote = gq
@@ -274,10 +276,15 @@ def run_book(job):
     else:
         RUN.load_day(day, False, log=lambda *a: None)
         C = RUN._CTX; t0 = time.time(); MASK_ERR["n"] = 0
-        QUOTES.update(exact=0, near=0, pool=0)
+        QUOTES.update(exact=0, near=0, pool=0, src={})
         ss = set(C["syms"]) | pinned_symbols(cfg)
         sim = T.simulate(cfg, day, {s: b for s, b in C["bars"].items() if s in ss},
                          {s: p for s, p in C["priors"].items() if s in ss}, None, C["shortable"], C["spreads"], log=lambda *a: None)
+        if QUOTES["on"]:      # Lead 11-12 03:00: quote source of each trade's entry check (latest check <= entry minute)
+            for t in sim["trades"]:
+                em = pd.Timestamp(t["entry_time"]).tz_convert(NY).floor("min").value
+                ks = [k for k in QUOTES["src"] if k[0] == t["symbol"] and em - 3 * 60_000_000_000 <= k[1] <= em]
+                t["quote_src"] = QUOTES["src"][max(ks, key=lambda k: k[1])] if ks else "none"
         sg = sim["signals"]
         sig = [] if not hasattr(sg, "to_dict") or not len(sg) else sg[[c for c in ("ts", "symbol", "strategy", "side", "status", "reason")
                                                                         if c in sg]].astype(str).to_dict("records")
@@ -410,7 +417,8 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     if not reps:
         sys.exit("no books")
     X = pd.DataFrame([{"date": r["day"], "acct": r["acc"], "setup": t["strategy"], "symbol": t["symbol"], "side": int(t["side"]),
-                       "entry_time": t["entry_time"], "R": t["r"], "xk": xkind(t.get("exit_reason"))} for r in reps for t in r["trades"]])
+                       "entry_time": t["entry_time"], "R": t["r"], "xk": xkind(t.get("exit_reason")),
+                       "qsrc": t.get("quote_src", "untagged")} for r in reps for t in r["trades"]])
     X["et"] = pd.to_datetime(X.entry_time, utc=True, format="mixed")
     XS = pd.DataFrame([{"date": r["day"], "acct": r["acc"], **s} for r in reps for s in r["signals"]])
     if len(XS):
@@ -428,7 +436,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
         for i, j in pairs:
             causes.append(dict(date=d, acct=a, kind="matched", cause="exact_minute" if X.loc[i, "et"].floor("min") == L.loc[j, "et"].floor("min") else "within_5min",
                                rdiff=X.loc[i, "R"] - L.loc[j, "R"], xk_live=L.loc[j, "xk"], xk_rep=X.loc[i, "xk"],
-                               R=X.loc[i, "R"]))
+                               R=X.loc[i, "R"], qsrc=X.loc[i, "qsrc"]))
         xs = XS[(XS.date == d) & (XS.acct == a)] if len(XS) else XS
         ls = LS[(LS.date == d) & (LS.acct == a)] if len(LS) else LS
         for j in l.index.difference(list(li)):
@@ -444,7 +452,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
             r = X.loc[i]
             s = near(ls, r.setup, r.symbol, int(r.side), r.et, 5.0) if len(ls) else None
             cause = "live_no_signal" if s is None else "live_skip:" + bucket(s.status, s.reason)
-            causes.append(dict(date=d, acct=a, kind="replay_only", cause=cause, R=r.R, xk_rep=r.xk))
+            causes.append(dict(date=d, acct=a, kind="replay_only", cause=cause, R=r.R, xk_rep=r.xk, qsrc=r.qsrc))
     C = pd.DataFrame(causes)
     for a, g in list(C.groupby("acct")) + [("ALL", C)]:
         xl = X if a == "ALL" else X[X.acct == a]; ll = L if a == "ALL" else L[L.acct == a]
@@ -475,6 +483,15 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     print(f"FWDCAL mirror-live audit, delay {D} (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):")
     print(A.to_string(index=False)); print("\nunmatched trades by cause:"); print(cz.to_string(index=False))
     print("\nmatched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):"); print(xg.to_string(index=False))
+    rq = C[C.kind != "live_only"].copy()
+    if len(rq) and "qsrc" in rq:
+        rq["grp"] = np.where(rq.qsrc.isin(["exact", "near"]), "live-quote", rq.qsrc.fillna("untagged"))
+        QS = rq.groupby("grp").agg(replay_trades=("R", "size"), matched=("kind", lambda v: int((v == "matched").sum())),
+                                   replay_avgR=("R", "mean"), rdiff_matched=("rdiff", "mean")).reset_index()
+        QS["matched_share"] = (QS.matched / QS.replay_trades).round(3)
+        QS.round(4).to_csv(OUT / f"qsrc{sfx}.csv", index=False)
+        print("\nreplay trades by entry-quote source (Lead 11-12 03:00; pool-priced = names with no live quote that minute):")
+        print(QS.round(4).to_string(index=False))
     if len(LA):
         print("\nhalt / latch agreement per account (setup-days; Observer obs-haltflip): both, live only, replay only, median minutes replay - live")
         print(LA.groupby(["acct", "level"]).agg(both=("agree", lambda v: int((v == "both").sum())), live_only=("agree", lambda v: int((v == "live_only").sum())),
