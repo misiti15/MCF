@@ -30,3 +30,12 @@ Educational only — not financial advice.
 - Unstable by window: 10-20..11-03 mean +0.053 (slope 0.62), 11-04..11-06 sell-off +0.079 (0.74), 11-09 +0.057 (0.27),
   11-10..11-11 +0.044 (0.34). Per-day means 0.036..0.097. One fixed fit overcharges calm days by ~0.01-0.02R and
   undercharges fast tape: check by quintile on 11-12..11-13 before trusting, as Skeptic said.
+
+## Housekeeping flag (11-12 07:45 ET): 'stop' exits that are winners
+- r_multiple >= 0 among exit_reason='stop' (live, 10-20..11-11): Gen 7.8% of 1,419 (+82.4R), Testing A 0.4% (+1.8R),
+  Primary / On Deck / Graveyard 0.0%. Gen's trailing / breakeven stops exit in profit but keep the label 'stop'.
+- Consumers: mcf/report/live_status.py:32 and mcf/report/daily_review.py:30 report stop_exit_share = share of
+  exit_reason == 'stop', so Gen's stop-out share is overstated by ~8% of its stop exits. The other accounts' moved-stop
+  exits (6-10% better than the original stop by > 0.02R) are still losers, so 'stop' stays honest there.
+- Suggest (housekeeping, outside market hours): label profitable stop exits 'trail' (or report stop_exit_share on r < 0).
+Educational only — not financial advice.

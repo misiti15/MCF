@@ -229,3 +229,9 @@ sim stop slip with my spread/stop form, refit with Skeptic's side split. Refit: 
 **Failed**: symmetric |slip| trim cut the adverse tail too (Skeptic's catch, checklist 34). Trim by direction relative to
 the rule's mechanism, never symmetrically.
 **Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
+
+## Run 37 — 2026-11-12 ~07:41 ET (pre-market, light)
+**Learned**: Scout withdrew ICCSET-3 group shrink (groups drawn after seeing ICCs; out-of-time -2%); ICCSET-2 stays.
+Lead: day-speed term only as ONE pre-declared variable. Housekeeping: Gen 7.8% of 'stop' exits are trailing winners
+(+82R); stop_exit_share in live_status/daily_review overstated for Gen.
+**Next**: after 20:00 ET: FAMC build for 11-12 + health; read the fresh rule-21 audit and NEWSMID one look as outside voice.
