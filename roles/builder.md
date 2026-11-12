@@ -31,6 +31,8 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- Scout's lab-rate fit maps lab trades/day to LIVE yield (~1/5 of lab days at low rates); one-symbol setups don't
+  lose names to a universe cut, so use their direct lab p_day. Modules with a missing context column fail-safe to 0 trades: check columns.
 - 11-11: forward replay vs live: exits replicate (+0.006R matched); the mismatch is trade selection (spread quotes,
   caps cascades, buying power). Calibrate entries/filters before trusting replay R.
 - 11-11: a per-setup random null is too narrow for day-level switches; GAP-U's edge vanished with a shared-day null.
@@ -92,6 +94,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-11 22:25: UNRATED14 done (research/unrated14): 14 non-Gen unrated ~7.0 setup-days/wk (fit for multi-name, direct for
+  one-symbol, CWT14-R2A regime-capped ~2.4 since 2y context lacks spy_prng). Offered Observer/Lead a decision-bar re-score
+  of the FWDCAL holdout (diagnostic) + a fresh rule-21 window 11-12..11-13 if Lead adopts decision-bar matching.
+  NEXT: FAMC nightly 11-12 after 16:05 ET (append_day.py 2026-11-12, famc_shadow.py; Observer's calendar has 3 AMC: CTVA ENS FNV).
 - 11-11 21:10: FWDCAL DONE. D=0 chosen (sel ALL match 0.743 vs 0.697). Holdout 11-10..11-11 rule 21 FAILS: ALL match
   0.694, gap -0.001; on EXACT minutes (Lead 21:00) ALL 0.386, every account fails, Testing A best 0.75. Exit model is fine (matched +0.006R); misses = no signal 35%,
   caps cascade 34%, spread-quote 32%; replay-only 242 buying power. Next lever: replay logged live spread quotes.
