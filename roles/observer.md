@@ -185,3 +185,11 @@ complete true, 60 names listed for 11-11 -> passes the builder's asserts. Build 
 **Learned**: market-state on/off thread CLOSED (Lead). PROMO2 middle option P>=0.80 (Skeptic). Unrated-39: ~40 setup-days/week from 25 rated (39.4 from 22 Gen); Gen screen per_day calibrated vs live (ratio 0.94). Testing A top-500 lever not visible in journals (pre-signal filter) -> needs FWDCAL replay.
 FAMC: 11-11 row = CTVA, ENS, FNV; health 2/2 of 11-10 flags > 2x normal gap (3.9x, 3.2x).
 **Next**: nightly FAMC build (after 20:00 ET) + health; read FWDCAL rule-21 result.
+
+## Run 32 — 2026-11-11 ~21:40-22:10 ET
+**Learned**: FWDCAL rule 21 FAILED (5-min ALL 0.694; exact-minute ALL 0.386). Live entry_time = broker fill clock;
+decision->fill median 0.5 min (Primary/On Deck/Testing A), 0.73 Graveyard, 1.24 Gen. Exact-minute ceiling with one D =
+modal offset share (pooled 0.578) and Builder's shares sit at it -> exact-minute miss is latency, not replay (obs-fillclock).
+Suggested scoring on decision bar. Lead closed market-state thread; NEWSMID look runs 11-12.
+**Failed**: FWDCAL books are not on mcf-guild, so per-trade replay offsets could not be checked directly (ceiling argument only).
+**Next**: FAMC build for 11-12 after 20:00 ET on 11-12; repv/fwdrep/fastdec outside read; Gen fill-lag R cost (cheap, journals).
