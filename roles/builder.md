@@ -31,6 +31,8 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- 11-11: forward replay vs live: exits replicate (+0.006R matched); the mismatch is trade selection (spread quotes,
+  caps cascades, buying power). Calibrate entries/filters before trusting replay R.
 - 11-11: a per-setup random null is too narrow for day-level switches; GAP-U's edge vanished with a shared-day null.
   Against-the-market-state entries beat their setup-day peers book-wide, mostly SPY intraday reversion (ex-market ~30% left).
 - The 2-year lab book is negative (~-0.06R VALID), so gates/blocks get raw t for free: always score excess over a
@@ -90,6 +92,12 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-11 21:10: FWDCAL DONE. D=0 chosen (sel ALL match 0.743 vs 0.697). Holdout 11-10..11-11 rule 21 FAILS: ALL match
+  0.694, gap -0.001; only Testing C passes (12 trades). Exit model is fine (matched +0.006R); misses = no signal 35%,
+  caps cascade 34%, spread-quote 32%; replay-only 242 buying power. Next lever: replay logged live spread quotes.
+  mirror.py now routes module mask crashes (LD1-ns1-breadthup, 1-row frame) to the real generate(). Offered Observer a
+  'relative, uncalibrated' Testing A top-500 with/without replay (await Lead). NEXT RUN: rate Observer's 14 non-Gen
+  unrated setups (IDX, LD4-8, CWT04-a25, NM-RWR1, LIQ-pdl) from the 2y lists; FAMC nightly 11-12 after 16:05 ET.
 - 11-11 18:00: DONE tonight: FAMC s1 (2 events, +0.611R raw, K 1/1); GAP-U re-test (fails vs shared-day null, VALID
   +4,538 vs 95th +4,905; ETB off same; posted); REGSW-2 0/4 (base 11 frozen 57911e03c; S2-S4 negative = against-state
   better; full base t -6, ex-market removes ~70%, residual < 3.57); RCOMPASS v2 0/3 (VALID post-flip BETTER).

@@ -37,6 +37,29 @@ OUT = HERE / "out"
 UNI1_FROM = "2026-11-04"
 
 
+MASK_ERR = {"n": 0}
+
+
+def patch_mask_errors() -> None:
+    """fast.py's whole-session pre-mask runs a module on the whole day's frame; a module that fails on a frame shape
+    (LD1-ns1-breadthup: _shift(k=2) on a 1-row frame, a symbol with one 5-min bar) would crash the book. Fall back to
+    None = 'unknown here, let the real generate() decide', which is exactly the live code path. Counted, reported."""
+    from mcf.replay import fast as F
+    if getattr(F.FastSession.full_mask, "_fwdcal", False):
+        return
+    orig = F.FastSession.full_mask
+
+    def full_mask(self, name, sym):
+        try:
+            return orig(self, name, sym)
+        except (ValueError, IndexError):
+            MASK_ERR["n"] += 1
+            self.masks[(name, sym)] = None
+            return None
+    full_mask._fwdcal = True
+    F.FastSession.full_mask = full_mask
+
+
 def patch_delay(D: int) -> None:
     from mcf.replay import broker as B
     if D <= 0 or getattr(B.SimTradingClient, "_fwdcal_delay", None) == D:
@@ -126,13 +149,13 @@ def run_book(job):
         return json.loads(f.read_text())
     from mcf.report import team as T
     from mcf.backtest.engine import pinned_symbols
-    patch_delay(D)
+    patch_delay(D); patch_mask_errors()
     cfg = mirror_cfg(acc, day)
     if cfg is None:
         rep = {"day": day, "acc": acc, "delay": D, "trades": [], "signals": [], "skipped": "no snapshot / nothing enabled"}
     else:
         RUN.load_day(day, False, log=lambda *a: None)
-        C = RUN._CTX; t0 = time.time()
+        C = RUN._CTX; t0 = time.time(); MASK_ERR["n"] = 0
         ss = set(C["syms"]) | pinned_symbols(cfg)
         sim = T.simulate(cfg, day, {s: b for s, b in C["bars"].items() if s in ss},
                          {s: p for s, p in C["priors"].items() if s in ss}, None, C["shortable"], C["spreads"], log=lambda *a: None)
@@ -140,7 +163,7 @@ def run_book(job):
         sig = [] if not hasattr(sg, "to_dict") or not len(sg) else sg[[c for c in ("ts", "symbol", "strategy", "side", "status", "reason")
                                                                         if c in sg]].astype(str).to_dict("records")
         rep = {"day": day, "acc": acc, "delay": D, "setups": sorted(cfg["strategies"]), "fwdcal": cfg.get("_fwdcal"), "trades": sim["trades"],
-               "signals": sig, "seconds": round(time.time() - t0, 1), "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
+               "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
     f.parent.mkdir(parents=True, exist_ok=True)
     f.with_suffix(".tmp").write_text(json.dumps(rep, default=str)); f.with_suffix(".tmp").replace(f)
     print(f"fwdcal d{D} {day} {acc}: {len(rep['trades'])} trades, {rep.get('seconds')} s", flush=True)
