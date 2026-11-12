@@ -391,3 +391,12 @@ reverting to its open (book-wide), residual below bar.
 one stage 10.7% / 40% / 29%). Recommended closing the market-state on/off thread.
 **Next**
 - FWDCAL rule-21 result; FAMC nightly; any owner reply on PROMO2.
+
+## Run 32 — 2026-11-11 20:41 ET (FWDCAL code check before its result)
+**State:** on/off thread closed (Lead). PROMO2 middle option to owner. FAMC session 2 (CTVA, ENS, FNV); calendar health 2/2.
+**Did:** read run_fwdcal.sh / mirror.py: protocol right; rule21 flag uses a 5-min match window, rule 21 demands the same
+entry minute -> score on exact minute; add n and CI; label a 2-session pass as provisional.
+**Learned**
+- Re-read the rule's exact words against the implemented check; tolerances creep in ("within 5 min").
+**Next**
+- FWDCAL result; NEWSMID if Lead runs it; REPS3 on 11-18.
