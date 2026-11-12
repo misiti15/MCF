@@ -98,7 +98,8 @@
 - 11-12 05:25: --bp buying-power cap REJECTED (misplaces rejects by day; Gen 0.768 -> 0.717; default off, code kept).
   Gen still halts ~33 min early with it, so BP isn't the driver (corrected on board). NEXT UNIT: Observer's stop-slip fit
   slip_R = 0.012 + 0.34 x spread/stop REPLACING the sim stop slip (not added); check sel (+0.046 gap) AND holdout (+0.003)
-  by spread/stop quintile; drop |slip| > 0.3R moved-stop exits from the check. Then fresh rule-21 11-12..11-13 --quotes.
+  by spread/stop quintile; drop only exits BETTER than the original stop (moved stops), keep adverse tail (Skeptic 04:50,
+  checklist 34); report p95/p99. Fit window is a sell-off: audit on 11-12..11-13 before trusting. Then fresh rule-21 11-12..11-13 --quotes.
 - 11-12 03:45: FWDCAL --live-latch (diagnostic; books out/books/qL0) + latch-agreement audit (out/latch_*.csv). Sel window:
   quotes 0.869 -> +live latch 0.903 (Gen 0.868). Gen halts 35 min early because the sim broker never rejects on buying
   power (get_account buying_power = 4x equity, no check). NEXT: buying-power cap in SimBroker via mirror.py patch (open
