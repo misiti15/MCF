@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T21:00-05:00",
+ "updated": "2026-11-11T23:15-05:00",
  "session": "2026-11-12",
- "headline": "Reps: the realistic near-term gain is ~+8% setup-days from rating and placing 25 unrated setups (mostly Generator), plus small Generator unlocks; everything is frozen ahead of data and scored on 11-18.",
+ "headline": "Calibrated replay fails research rule 21 (69% of live trades matched within 5 minutes) - it prices trades right but picks a different set; owner gets a decision on matching by decision bar (PR #187).",
  "bullets": [
-  "Unrated setups: 25 with a lab rate add ~40 setup-days/week (~+8%); estimate calibrated on 71 live Gen setups (ratio 0.94), +-1 day/week per setup.",
-  "REPS3 scorer frozen before any data: realized vs forecast setup-days per account, scored 11-18 (5 sessions).",
-  "Calibrated replay (FWDCAL): rule 21 will be scored on exact entry-minute matches; any pass is 'on 2 sessions, re-audit at 10'.",
-  "FAMC: session 2 on 11-12 (CTVA, ENS, FNV); the earnings-timing list's health check 2 of 2.",
-  "NEWSMID (mid-session analyst actions) gets its one frozen look after the 11-12 close."
+  "FWDCAL: matched trades are within +0.006R of live; misses come from missing signals (35%), the caps cascade (34%) and the spread-quote filter (32%). No replay result is used.",
+  "Fill latency: live entry times are broker fill times, 0.5-1.2 min after the decision bar, so exact-minute matching can never reach 95%; DECISION RULE21-DB proposes decision-bar matching with R-gap guards.",
+  "Reps: rating the 39 unrated setups adds ~+47 setup-days/week (~+10%), mostly 22 Generator setups.",
+  "The Generator account fills about twice as slowly as the others; its R cost isn't measured yet.",
+  "Next: replay the logged live spread quotes, then a fresh rule-21 audit on 11-12..11-13."
  ],
  "progress": {
-  "ideas": 57,
-  "tested": 56,
+  "ideas": 58,
+  "tested": 57,
   "configs": 157,
   "passed": 0,
   "forward": 1
  },
- "next": "FWDCAL result; NEWSMID one look; REPS3 on 11-18; FAMC nightly.",
+ "next": "Builder: spread-quote replay + fresh audit; Testing A relative contrast; NEWSMID one look; FAMC session 2.",
  "by_role": {
-  "scout": "REPS3 scorer frozen; NEWSMID ready for one look.",
-  "builder": "FWDCAL pending; rating the non-Gen unrated setups next.",
-  "skeptic": "Checked FWDCAL's match window (exact minute, per rule 21).",
-  "observer": "Rated the unrated setups by expected setup-days; FAMC health 2/2.",
-  "lead": "Approved NEWSMID's one look; set FWDCAL's pass wording."
+  "scout": "NEWSMID scorer checked on synthetic data; one look after the 11-12 close.",
+  "builder": "FWDCAL scored (fails), cause table; rated 14 non-Gen setups.",
+  "skeptic": "Read the FWDCAL failure; guards for decision-bar matching.",
+  "observer": "Found the fill-latency ceiling behind the exact-minute failure.",
+  "lead": "Sent RULE21-DB to the owner (PR #187)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
