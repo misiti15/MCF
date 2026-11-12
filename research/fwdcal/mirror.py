@@ -141,8 +141,57 @@ def mirror_cfg(acc: str, day: str) -> dict | None:
 QUOTES = {"on": False, "table": None, "exact": 0, "near": 0, "pool": 0}
 
 
+LATCH = {"on": False, "table": None, "acc": None, "day": None, "now": None, "acct_block": 0, "setup_block": 0}
+
+
+def variant(D) -> str:
+    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{D}"
+
+
 def book_path(day, acc, D):
-    return OUT / "books" / f"{'q' if QUOTES['on'] else 'd'}{D}" / day / f"{acc}.json"
+    return OUT / "books" / variant(D) / day / f"{acc}.json"
+
+
+def latch_table(accs, days) -> dict:
+    """DIAGNOSTIC (Observer obs-haltflip): live's halt timing. (acct, day) -> {"_acct": minute ns of the first
+    account-halt skip, setup: minute ns of its first setup-latch skip}. Minute floor of the first logged skip."""
+    S = live_signals(accs, days); T = {}
+    if not len(S):
+        return T
+    r = S.reason.astype(str)
+    for (a, d), g in S[r.str.startswith("daily loss limit") | (r == "halted")].groupby(["acct", "date"]):
+        T.setdefault((a, d), {})["_acct"] = g.et.min().floor("min").value
+    for (a, d, st), g in S[r.str.startswith("setup daily loss limit")].groupby(["acct", "date", "setup"]):
+        T.setdefault((a, d), {})[st] = g.et.min().floor("min").value
+    return T
+
+
+def patch_latch() -> None:
+    """Replay halts follow live's: blocked from live's first halt / latch minute on, never before (the native -R
+    account halt and per-setup latch are bypassed). Diagnostic only: it feeds live outcomes into the replay."""
+    from mcf.execution import risk as RK, runner as RN
+    if getattr(RK.RiskManager.check, "_fwdcal", False):
+        return
+    orig_check, orig_step = RK.RiskManager.check, RN.PaperRunner.step
+
+    def step(self, now):
+        LATCH["now"] = pd.Timestamp(now).value
+        return orig_step(self, now)
+
+    def check(self, sig, ref_price):
+        t = (LATCH["table"] or {}).get((LATCH["acc"], LATCH["day"]), {}); now = LATCH["now"]
+        if now is not None and t.get("_acct") is not None and now >= t["_acct"]:
+            LATCH["acct_block"] += 1; return False, "halted"
+        if now is not None and t.get(sig.strategy) is not None and now >= t[sig.strategy]:
+            LATCH["setup_block"] += 1; return False, "setup daily loss limit"
+        a, lim = self.a.get("max_daily_loss_r"), self.setup_loss_limit
+        self.a["max_daily_loss_r"], self.setup_loss_limit, self.state.halted = 1e12, None, False
+        try:
+            return orig_check(self, sig, ref_price)
+        finally:
+            self.a["max_daily_loss_r"], self.setup_loss_limit = a, lim
+    check._fwdcal = True
+    RK.RiskManager.check = check; RN.PaperRunner.step = step
 
 
 def quote_table(days) -> dict:
@@ -217,6 +266,8 @@ def run_book(job):
     patch_delay(D); patch_mask_errors()
     if QUOTES["on"]:
         patch_quotes()
+    if LATCH["on"]:
+        patch_latch(); LATCH.update(acc=acc, day=day, now=None, acct_block=0, setup_block=0)
     cfg = mirror_cfg(acc, day)
     if cfg is None:
         rep = {"day": day, "acc": acc, "delay": D, "trades": [], "signals": [], "skipped": "no snapshot / nothing enabled"}
@@ -231,7 +282,8 @@ def run_book(job):
         sig = [] if not hasattr(sg, "to_dict") or not len(sg) else sg[[c for c in ("ts", "symbol", "strategy", "side", "status", "reason")
                                                                         if c in sg]].astype(str).to_dict("records")
         rep = {"day": day, "acc": acc, "delay": D, "setups": sorted(cfg["strategies"]), "fwdcal": cfg.get("_fwdcal"), "trades": sim["trades"],
-               "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "quotes": {k: QUOTES[k] for k in ("exact", "near", "pool")} if QUOTES["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
+               "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "quotes": {k: QUOTES[k] for k in ("exact", "near", "pool")} if QUOTES["on"] else None,
+               "latch": {k: LATCH[k] for k in ("acct_block", "setup_block")} if LATCH["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
     f.parent.mkdir(parents=True, exist_ok=True)
     f.with_suffix(".tmp").write_text(json.dumps(rep, default=str)); f.with_suffix(".tmp").replace(f)
     print(f"fwdcal d{D} {day} {acc}: {len(rep['trades'])} trades, {rep.get('seconds')} s", flush=True)
@@ -277,6 +329,28 @@ def _gap_ci(a, b, z=1.96):
         return (np.nan, np.nan)
     se = np.sqrt(a.var(ddof=1) / len(a) + b.var(ddof=1) / len(b)); g = a.mean() - b.mean()
     return (g - z * se, g + z * se)
+
+
+def latch_agreement(XS, LS, keys) -> pd.DataFrame:
+    """Per (date, acct, level, setup): did live / the replay halt (account) or latch (setup), and the minute gap."""
+    rows = []
+
+    def firsts(S):
+        if not len(S):
+            return {}
+        r = S.reason.astype(str); out = {}
+        for (d, a), g in S[r.str.startswith("daily loss limit") | (r == "halted")].groupby(["date", "acct"]):
+            out[(d, a, "account", "_acct")] = g.et.min()
+        for (d, a, st), g in S[r.str.startswith("setup daily loss limit")].groupby(["date", "acct", "setup"]):
+            out[(d, a, "setup", st)] = g.et.min()
+        return out
+    fl, fx = firsts(LS[[(d, a) in keys for d, a in zip(LS.date, LS.acct)]] if len(LS) else LS), firsts(XS)
+    for k in sorted(set(fl) | set(fx)):
+        tl, tx = fl.get(k), fx.get(k)
+        rows.append(dict(date=k[0], acct=k[1], level=k[2], setup=k[3],
+                         agree="both" if tl is not None and tx is not None else "live_only" if tl is not None else "replay_only",
+                         min_diff=round((tx - tl).total_seconds() / 60, 1) if tl is not None and tx is not None else np.nan))
+    return pd.DataFrame(rows)
 
 
 def bucket(status, reason):
@@ -328,7 +402,7 @@ def live_trades_x() -> pd.DataFrame:
 
 
 def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame:
-    fs = sorted((OUT / "books" / f"{'q' if QUOTES['on'] else 'd'}{D}").glob("*/*.json"))
+    fs = sorted((OUT / "books" / variant(D)).glob("*/*.json"))
     if dates:
         fs = [f for f in fs if f.parent.name in dates]
     reps = [json.loads(f.read_text()) for f in fs]
@@ -387,6 +461,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
                         exact_ci95=f"[{_wilson((m.cause == 'exact_minute').sum(), len(ll))[0]:.2f},{_wilson((m.cause == 'exact_minute').sum(), len(ll))[1]:.2f}]",
                         rule21=bool((m.cause == "exact_minute").sum() / max(len(ll), 1) >= 0.95 and abs(xl.R.mean() - ll.R.mean()) <= 0.03)))
     A = pd.DataFrame(out)
+    LA = latch_agreement(XS, LS, keys)
     cz = C[C.kind != "matched"].groupby(["acct", "kind", "cause"]).agg(n=("R", "size"), avgR=("R", "mean")).round(3).reset_index()
     m = C[C.kind == "matched"]
     xg = m.groupby(["xk_live", "xk_rep"]).agg(n=("rdiff", "size"), rdiff_mean=("rdiff", "mean"),
@@ -395,11 +470,16 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     OUT.mkdir(exist_ok=True)
     sfx = f"_d{D}{tag}"
     A.to_csv(OUT / f"audit{sfx}.csv", index=False); cz.to_csv(OUT / f"causes{sfx}.csv", index=False)
-    xg.to_csv(OUT / f"exitkind{sfx}.csv", index=False)
+    xg.to_csv(OUT / f"exitkind{sfx}.csv", index=False); LA.to_csv(OUT / f"latch{sfx}.csv", index=False)
     pd.set_option("display.width", 250)
     print(f"FWDCAL mirror-live audit, delay {D} (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):")
     print(A.to_string(index=False)); print("\nunmatched trades by cause:"); print(cz.to_string(index=False))
     print("\nmatched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):"); print(xg.to_string(index=False))
+    if len(LA):
+        print("\nhalt / latch agreement per account (setup-days; Observer obs-haltflip): both, live only, replay only, median minutes replay - live")
+        print(LA.groupby(["acct", "level"]).agg(both=("agree", lambda v: int((v == "both").sum())), live_only=("agree", lambda v: int((v == "live_only").sum())),
+                                                 replay_only=("agree", lambda v: int((v == "replay_only").sum())),
+                                                 med_min_diff=("min_diff", "median")).reset_index().to_string(index=False))
     print(f"\nbuying-power causes (config/live equity, Skeptic 3): {len(bp)} trades; matched rate if they are set aside: "
           f"{len(m) / max(len(L) - (bp.kind == 'live_only').sum(), 1):.3f}")
     print("FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.")
@@ -413,8 +493,9 @@ def main():
     ap.add_argument("--fetch", action="store_true"); ap.add_argument("--audit", action="store_true")
     ap.add_argument("--tag", default="")
     ap.add_argument("--quotes", action="store_true", help="replay the quotes live journaled (books under out/books/q<D>)")
+    ap.add_argument("--live-latch", action="store_true", help="DIAGNOSTIC: halts follow live's halt / latch minutes")
     a = ap.parse_args()
-    QUOTES["on"] = a.quotes
+    QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch
     if a.audit:
         audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
     now = pd.Timestamp.now(tz=NY)
@@ -432,6 +513,9 @@ def main():
             ok.append(d)
         except FileNotFoundError as e:
             print(f"fwdcal {d}: SKIPPED - {e}", flush=True)
+    if a.live_latch:
+        LATCH["table"] = latch_table(a.accounts.split(","), ok)
+        print(f"fwdcal live-latch: {sum(len(v) for v in LATCH['table'].values())} live halts/latches on {len(LATCH['table'])} account-days", flush=True)
     if a.quotes:
         QUOTES["table"] = quote_table(ok)
         print(f"fwdcal quotes: {sum(len(v) for v in QUOTES['table'].values())} logged quotes, {len(QUOTES['table'])} symbol-days", flush=True)

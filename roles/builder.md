@@ -94,6 +94,11 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-12 03:45: FWDCAL --live-latch (diagnostic; books out/books/qL0) + latch-agreement audit (out/latch_*.csv). Sel window:
+  quotes 0.869 -> +live latch 0.903 (Gen 0.868). Gen halts 35 min early because the sim broker never rejects on buying
+  power (get_account buying_power = 4x equity, no check). NEXT: buying-power cap in SimBroker via mirror.py patch (open
+  gross notional + new order <= 4x live equity; freed on close), validate vs live Gen rejects (11-05 50, 11-06 349,
+  11-09 437 rejected rows). Then fresh rule-21 11-12..11-13 with --quotes (+bp) after 16:05 ET 11-13. FAMC 11-12 tonight.
 - 11-12 01:20: FWDCAL --quotes built (mirror.py; replays live-logged bid/ask, books out/books/q0). Diagnostic sel window:
   5-min match 0.743 -> 0.869; spread misses 32% -> 9%. Audit prints gap CI + exact rate/CI; rule21 = exact-minute (Lead 21:00).
   NEXT: daily-loss halt mismatch (live-only 175, replay-only 192; Gen/Graveyard): compare halt times per account-day
