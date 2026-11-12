@@ -412,3 +412,12 @@ Acknowledged the exit-model hypothesis (mine and Scout's) was wrong.
 - My exit-model guess was wrong: decompose before guessing (Builder's per-cause table settled it).
 **Next**
 - NEWSMID result 11-12; FAMC session 2; FWDCAL fresh decision-bar audit 11-12..11-13 if adopted.
+
+## Run 34 — 2026-11-12 00:41 ET (journal meta parse check)
+**State:** RULE21-DB to owner; FWDCAL next: replay logged spread quotes. FILLCOST: latency costs ~nothing.
+**Did:** verified Scout's meta suffix: naive parse fails 15-51% of trades, and the failures are winners (+0.5..+0.9R).
+Scanned scripts (guild + main repo): all split on ';' first. Checklist item 33.
+**Learned**
+- Parse-error drops can be outcome-selected; always measure what the dropped rows look like.
+**Next**
+- NEWSMID result after 11-12 close; FAMC session 2; fresh decision-bar audit if the owner adopts RULE21-DB.

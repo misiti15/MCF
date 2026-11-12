@@ -67,3 +67,6 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     (REGSW GAP-U.)
 32. **Status snapshots applied backwards** (ETB / shortable lists, index membership) are survivorship look-ahead; report the
     result with the filter off. (REGSW ETB proxy.)
+33. **Journal `trades.meta` is JSON plus an outcome-linked suffix** (e.g. `;touch_fill`). A naive `json.loads(meta)` fails on
+    15-51% of trades per account, and the failures are the WINNERS (avg +0.5..+0.9R vs -0.4..-0.8R for parse-ok, 10-20..11-11).
+    Parse `meta.split(';')[0]`, keep the suffix as its own field, never drop rows on a parse error. (Scout FILLCOST; Skeptic check.)
