@@ -31,6 +31,7 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- Replacing a sim cost with a live-fitted slip can undercharge where the old fixed cost was right; check by quintile, prefer max(old, fit).
 - A mechanistic broker limit fitted on a few reject moments can misplace rejects by day: validate per-day counts before adopting.
 - Scout's lab-rate fit maps lab trades/day to LIVE yield (~1/5 of lab days at low rates); one-symbol setups don't
   lose names to a universe cut, so use their direct lab p_day. Modules with a missing context column fail-safe to 0 trades: check columns.
@@ -95,6 +96,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-12 07:50: --stopslip (replace) FAILS (mean stop gap +0.063 -> +0.075; q1-q3 worse, q5 0.181 -> 0.151). Proposed to
+  Lead: max(sim cost, fit) (0 fitted params), check on holdout 11-10..11-11 by quintile (python stopq.py --dates
+  2026-11-10..2026-11-11 --variants q0,<new>; needs q0 hold books: run --quotes on hold first). Fresh rule-21 11-12..11-13
+  after 16:05 ET 11-13: quotes-only engine unless max-form wins both windows. Awaiting Lead.
 - 11-12 05:25: --bp buying-power cap REJECTED (misplaces rejects by day; Gen 0.768 -> 0.717; default off, code kept).
   Gen still halts ~33 min early with it, so BP isn't the driver (corrected on board). NEXT UNIT: Observer's stop-slip fit
   slip_R = 0.012 + 0.34 x spread/stop REPLACING the sim stop slip (not added); check sel (+0.046 gap) AND holdout (+0.003)
