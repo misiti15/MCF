@@ -138,8 +138,73 @@ def mirror_cfg(acc: str, day: str) -> dict | None:
     return cfg
 
 
+QUOTES = {"on": False, "table": None, "exact": 0, "near": 0, "pool": 0}
+
+
 def book_path(day, acc, D):
-    return OUT / "books" / f"d{D}" / day / f"{acc}.json"
+    return OUT / "books" / f"{'q' if QUOTES['on'] else 'd'}{D}" / day / f"{acc}.json"
+
+
+def quote_table(days) -> dict:
+    """(day, symbol) -> [(minute epoch ns, bid, ask)] from the quotes the live runners journaled (signals.info) in ALL
+    seven accounts (a quote is market data, shared). Built once in the parent; forked workers inherit it."""
+    import json as _j
+    Q = {}
+    for acc in RUN.ACC_ORDER:
+        raw = RUN.git("show", f"origin/{RUN.BRANCH[acc]}:journal.db", text=False)
+        if not raw:
+            continue
+        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as fh:
+            fh.write(raw)
+        try:
+            c = sqlite3.connect(fh.name); q = ",".join("?" * len(days))
+            rows = c.execute(f"select day, ts, symbol, info from signals where day in ({q}) and info like '%\"bid\"%'", list(days)).fetchall()
+            c.close()
+        finally:
+            os.unlink(fh.name)
+        for day, ts, sym, info in rows:
+            try:
+                d = _j.loads(info[: info.rindex("}") + 1])
+                b, a = float(d["bid"]), float(d["ask"])
+            except Exception:
+                continue
+            if b > 0 and a >= b:
+                m = pd.Timestamp(ts).tz_convert(NY).floor("min").value
+                Q.setdefault((day, sym), []).append((m, b, a))
+    for k in Q:
+        Q[k].sort()
+    return Q
+
+
+def patch_quotes() -> None:
+    """Replay quote = the quote live logged for this symbol in this same minute (bid/ask as logged: the spread and
+    the quote-vs-bar cross-check both mirror live); else the nearest logged quote within 2 minutes gives the spread in
+    bps around the replay price; else the existing deterministic pool draw. Counted."""
+    from mcf.replay import broker as BR
+    if getattr(BR.SimDataClient.get_stock_latest_quote, "_fwdcal", False):
+        return
+    orig = BR.SimDataClient.get_stock_latest_quote
+
+    def gq(self, req):
+        out = orig(self, req)
+        now = self.clock.now; m0 = now.floor("min").value; day = str(now.date())
+        for s, q in out.items():
+            L = QUOTES["table"].get((day, s)) if QUOTES["table"] else None
+            best = None
+            if L:
+                best = min(L, key=lambda x: abs(x[0] - m0))
+                dm = abs(best[0] - m0) / 6e10
+            if best is not None and dm < 0.5:
+                out[s] = type(q)(bid_price=best[1], ask_price=best[2], timestamp=q.timestamp); QUOTES["exact"] += 1
+            elif best is not None and dm <= 2:
+                px = (q.bid_price + q.ask_price) / 2; bps = (best[2] - best[1]) / ((best[1] + best[2]) / 2) * 1e4
+                half = max(0.005, px * bps / 2e4)
+                out[s] = type(q)(bid_price=round(px - half, 4), ask_price=round(px + half, 4), timestamp=q.timestamp); QUOTES["near"] += 1
+            else:
+                QUOTES["pool"] += 1
+        return out
+    gq._fwdcal = True
+    BR.SimDataClient.get_stock_latest_quote = gq
 
 
 def run_book(job):
@@ -150,12 +215,15 @@ def run_book(job):
     from mcf.report import team as T
     from mcf.backtest.engine import pinned_symbols
     patch_delay(D); patch_mask_errors()
+    if QUOTES["on"]:
+        patch_quotes()
     cfg = mirror_cfg(acc, day)
     if cfg is None:
         rep = {"day": day, "acc": acc, "delay": D, "trades": [], "signals": [], "skipped": "no snapshot / nothing enabled"}
     else:
         RUN.load_day(day, False, log=lambda *a: None)
         C = RUN._CTX; t0 = time.time(); MASK_ERR["n"] = 0
+        QUOTES.update(exact=0, near=0, pool=0)
         ss = set(C["syms"]) | pinned_symbols(cfg)
         sim = T.simulate(cfg, day, {s: b for s, b in C["bars"].items() if s in ss},
                          {s: p for s, p in C["priors"].items() if s in ss}, None, C["shortable"], C["spreads"], log=lambda *a: None)
@@ -163,7 +231,7 @@ def run_book(job):
         sig = [] if not hasattr(sg, "to_dict") or not len(sg) else sg[[c for c in ("ts", "symbol", "strategy", "side", "status", "reason")
                                                                         if c in sg]].astype(str).to_dict("records")
         rep = {"day": day, "acc": acc, "delay": D, "setups": sorted(cfg["strategies"]), "fwdcal": cfg.get("_fwdcal"), "trades": sim["trades"],
-               "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
+               "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "quotes": {k: QUOTES[k] for k in ("exact", "near", "pool")} if QUOTES["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
     f.parent.mkdir(parents=True, exist_ok=True)
     f.with_suffix(".tmp").write_text(json.dumps(rep, default=str)); f.with_suffix(".tmp").replace(f)
     print(f"fwdcal d{D} {day} {acc}: {len(rep['trades'])} trades, {rep.get('seconds')} s", flush=True)
@@ -243,7 +311,7 @@ def live_trades_x() -> pd.DataFrame:
 
 
 def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame:
-    fs = sorted((OUT / "books" / f"d{D}").glob("*/*.json"))
+    fs = sorted((OUT / "books" / f"{'q' if QUOTES['on'] else 'd'}{D}").glob("*/*.json"))
     if dates:
         fs = [f for f in fs if f.parent.name in dates]
     reps = [json.loads(f.read_text()) for f in fs]
@@ -324,7 +392,9 @@ def main():
     ap.add_argument("--delay", type=int, default=1); ap.add_argument("--jobs", type=int, default=3)
     ap.add_argument("--fetch", action="store_true"); ap.add_argument("--audit", action="store_true")
     ap.add_argument("--tag", default="")
+    ap.add_argument("--quotes", action="store_true", help="replay the quotes live journaled (books under out/books/q<D>)")
     a = ap.parse_args()
+    QUOTES["on"] = a.quotes
     if a.audit:
         audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
     now = pd.Timestamp.now(tz=NY)
@@ -342,6 +412,9 @@ def main():
             ok.append(d)
         except FileNotFoundError as e:
             print(f"fwdcal {d}: SKIPPED - {e}", flush=True)
+    if a.quotes:
+        QUOTES["table"] = quote_table(ok)
+        print(f"fwdcal quotes: {sum(len(v) for v in QUOTES['table'].values())} logged quotes, {len(QUOTES['table'])} symbol-days", flush=True)
     jobs = [(d, acc, a.delay) for d in ok for acc in a.accounts.split(",") if not book_path(d, acc, a.delay).exists()]
     print(f"fwdcal: {len(ok)} sessions, {len(jobs)} books to run, delay {a.delay}", flush=True)
     if a.jobs > 1 and len(jobs) > 1:
