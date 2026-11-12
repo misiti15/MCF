@@ -42,14 +42,16 @@ LIVELAB = {"CWT04-backside-vwaptest-a15-short", "CWT05-flush-m075-v3-long", "CWT
 # 11-04 movers that qualified for On Deck at the 2026-11-11 build (OD-IN, or OD-FILL for CWT05-m05-v5)
 TO_ONDECK = {"CWT09-gapdn-vwaploss-g10-short", "CWT09-gapdn-bounce-g10-lowerhalf-short", "ST6-volspikeup-short-mid-t1s1-FD",
              "CWT05-flush-m05-v5-long"}
+# Graveyard -> arena 2026-11-12 after the close (owner GY-RW6/ST4 arena; from session 2026-11-13): no leaderboard (Graveyard origin)
+FROM_GY = {"ST4-emadn-long-am-t1s05-FD": "explore1", "RW6-ns2-up3-short-FD": "livelab"}
 TESTING_AREAS = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf")
 INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy075-0945-3x-trail",
           "IDX3-spy075-0955-3x-trail", "IDX5-spy050-0945-3x-trail", "LD4-st4-breadthup-t1s05-long",
           "LD5-st2-breadthup-t05s1-long"}
 # kept where they are: mid-observation by owner decision, or a Graveyard setup with >= 10 live trades
-# (RW3S-gapdn-flowsell-short-FD stayed on 11-04 and moved on to Testing E on 2026-11-12)
-STAY = {"testing2": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"},
-        "graveyard": {"ST4-emadn-long-am-t1s05-FD"}}
+# (RW3S-gapdn-flowsell-short-FD stayed on 11-04 and moved on to Testing E on 2026-11-12;
+#  ST4-emadn-long-am-t1s05-FD stayed on 11-04 and moved on to Testing B on 2026-11-13, see FROM_GY)
+STAY = {"testing2": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"}}
 
 
 def _cfg(monkeypatch, acct):
@@ -69,6 +71,7 @@ def test_moves_are_moves(monkeypatch):
     assert not (EXPLORE1 & LIVELAB) and not (MOVED_X1 & MOVED_LL) and INACT2 <= MOVED_X1 | MOVED_LL
     assert EXPLORE1 | LIVELAB <= MOVED_X1 | MOVED_LL and TO_ONDECK <= MOVED_X1 | MOVED_LL
     for acct, want in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
+        want = want | {k for k, a in FROM_GY.items() if a == acct}
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -111,8 +114,9 @@ def test_twin_groups_never_share_an_account(monkeypatch):
 
 def test_assignments_and_ledger():
     d = json.loads((ROOT / "docs/live/assignments.json").read_text())
-    assert set(d["accounts"]["explore1"]) == EXPLORE1 and set(d["accounts"]["livelab"]) == LIVELAB
-    assert not any(v.get("no_leaderboard") for v in d["setups"].values())     # nothing came from the Graveyard
+    for acct, base in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
+        assert set(d["accounts"][acct]) == base | {k for k, a in FROM_GY.items() if a == acct}, acct
+    assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")
     assert e["effective"] == "2026-11-05" and "owner" in e["approved_by"]

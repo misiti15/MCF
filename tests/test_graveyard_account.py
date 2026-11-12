@@ -28,6 +28,8 @@ MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
             "RW6-ns2-up3-short-FD", "NS2-sma50break-overbought-short-FD", "heat_fade_long-FD", "ST1-ordn-long-pm-t05s1-FD",
             "MF1-945-flowsell-vwapup-FD", "heat_fade_short-FD", "ST2-slope20up-long-am-t05s1-FD",
             "NS2-sma50break-overbought-short", "heat_fade_short"}
+# moved out of the Graveyard to the testing arena (owner GY-RW6/ST4 arena 2026-11-12, effective 2026-11-13): block kept, disabled
+MOVED_OUT = {"RW6-ns2-up3-short-FD": "livelab", "ST4-emadn-long-am-t1s05-FD": "explore1"}
 # combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1
 STAYED_T1 = {"L3-gap-slope-lowdist-FD", "exhaustion_short-FD"}   # L3-gap-slope-fromopen-FD: promoted to Primary 2026-10-21
 # exhaustion_short-FD: single home Testing A from 2026-11-12 (ONDECK dual-home fix) - still a testing account, never the Graveyard
@@ -69,7 +71,7 @@ def test_only_its_own_setups_run(monkeypatch):
     cfg = _cfg(monkeypatch)
     own = set(yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"])
     on = _on(cfg)
-    assert on == own == MOVED_T1 | MOVED_T2
+    assert own == MOVED_T1 | MOVED_T2 and on == own - set(MOVED_OUT)
     st = build_strategies(cfg)
     assert {s.name for s in st} == on
     assert sorted(cfg["live"]["setup_order"]) == sorted(on)                  # every setup has a priority
@@ -94,6 +96,8 @@ def test_moves_switched_off_at_source(monkeypatch):
     for acct, on in (("testing", t1), ("testing2", t2)):
         order = _cfg(monkeypatch, acct)["live"]["setup_order"]
         assert not ((MOVED_T1 | MOVED_T2) & set(order)), acct
+    for k, acct in MOVED_OUT.items():   # one home: on in the arena account, off in the Graveyard
+        assert k in _on(_cfg(monkeypatch, acct)) and k in _cfg(monkeypatch, acct)["live"]["setup_order"], k
     grave = yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"]
     for k in ("heat_fade_long", "heat_fade_short", "NS2-sma50break-overbought-short"):
         assert grave[k]["former_primary"]                                     # markers kept
@@ -136,4 +140,4 @@ def test_dashboard_and_assignments_know_the_graveyard():
     assert 'graveyard: ["Graveyard", "mcf-data-graveyard"], livelab:' in html   # leaderboard (+ 3 accounts 2026-11-03)
     assert A.ACCOUNTS.get("graveyard") == "Graveyard"
     d = json.loads(A.OUT.read_text())
-    assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == MOVED_T1 | MOVED_T2
+    assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == (MOVED_T1 | MOVED_T2) - set(MOVED_OUT)
