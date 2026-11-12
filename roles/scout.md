@@ -109,7 +109,9 @@
   (+0.01-0.02R). Bug: journal meta has outcome-linked suffix (';touch_fill') -> parse JSON prefix only. Owned exit-model error.
 - Run 34 (11-12 01:30 ET) ICCSET: per-setup ICC 0.07-0.45 (null 90th 0.09), not beta; survivors RW3/RW5/CWT09/MF2-FD
   high-ICC (n_eff ~0.25 x n). Bench/rotation log not live -> rotation unmeasurable from journals.
+- Run 35 (11-12 03:30 ET) ICCSET-2 shrunk ICC (tau 0.134 real; shrunk 0.09-0.32); table for owner on 11-18.
 ## Next
+- 11-18: refresh ICCSET (iccset.py + shrink.py on fresh journals) beside REPS3.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
 - 11-12 after 16:00 ET: NEWSMID one look (Lead approved): `cd research/newsmid && python3 -I newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` in background (slow loops), then post result + close/shadow per kill line.
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).

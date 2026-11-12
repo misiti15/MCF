@@ -19,3 +19,14 @@ For the reps / verdict work (Observer item 3): a fixed '20 sessions' or 'n trade
 Verdict stats should use each setup's n_eff (shrunk ICC), or day-level statistics, which are robust to ICC by construction.
 High-ICC setups need about as many DAYS as trades/2.4 to match a low-ICC setup's evidence. The setup-day currency already
 handles this. The new point is that the per-trade discount ranges from ~1x to ~4x by setup.
+
+## ICCSET-2 — shrunk ICC and n_eff for verdicts (Lead lead-20261112-0300-1) — `shrink.py` -> `shrink_out.txt`, `iccset_shrunk.csv`
+Empirical Bayes: se of each ICC(1) from the Fisher/Donner approximation (days, trades/day). The between-setup variance is
+tau^2 = var(raw ICC) - mean(se^2) = 0.0271 - 0.0093 = 0.0179 (tau 0.134), so the differences are real, not noise. Each setup's
+ICC is shrunk toward 0.19 with weight tau^2 / (tau^2 + se^2) (median weight 0.68).
+- Shrunk ICC 10th / 25th / 50th / 75th / 90th pct: 0.09 / 0.12 / 0.19 / 0.24 / 0.32. n_eff / n median 0.37.
+- Examples (n -> shrunk n_eff): CWT14-failbrk-pdl-p05-long 704 -> 169; CWT12-coil-k4-long 609 -> 138; RW7-FD 315 -> 89;
+  MF2-FD 113 -> 39; RW5-FD 141 -> 38; RW3-FD 110 -> 33; exhaustion_short 72 -> 25.
+- Setups with < 40 trades or < 8 days: use the prior 0.19 directly (their own ICC is too noisy to move it).
+Use: verdict statistics (mean R, t, P(>0)) computed with n_eff_s in place of n. Equivalently, day-clustered standard errors.
+The table goes to the owner with REPS3 on 11-18. Refresh it then with the extra sessions.
