@@ -180,3 +180,8 @@ complete true, 60 names listed for 11-11 -> passes the builder's asserts. Build 
 ## Run 30 — 2026-11-11 ~17:50 ET
 **Learned**: RCOMPASS v2 (mine) closed 0/3 — post-flip aligned trades BETTER in VALID. GAP-U fails the shared-day null. REGSW-2: counter-state trades better, ~70% SPY reversion (ex-market t -3.05 < 3.57). PR #184 merged (memo + PROMO2 decision). FAMC session 1 run by Builder (2 events, +0.61R raw, K 1/1).
 **Next**: next wake after 20:00 ET: build_famc_cal.py --date 2026-11-11 (pre-check passed) + health for ALC/RGTI.
+
+## Run 31 — 2026-11-11 ~19:45-20:05 ET
+**Learned**: market-state on/off thread CLOSED (Lead). PROMO2 middle option P>=0.80 (Skeptic). Unrated-39: ~40 setup-days/week from 25 rated (39.4 from 22 Gen); Gen screen per_day calibrated vs live (ratio 0.94). Testing A top-500 lever not visible in journals (pre-signal filter) -> needs FWDCAL replay.
+FAMC: 11-11 row = CTVA, ENS, FNV; health 2/2 of 11-10 flags > 2x normal gap (3.9x, 3.2x).
+**Next**: nightly FAMC build (after 20:00 ET) + health; read FWDCAL rule-21 result.
