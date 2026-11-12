@@ -421,3 +421,13 @@ Scanned scripts (guild + main repo): all split on ';' first. Checklist item 33.
 - Parse-error drops can be outcome-selected; always measure what the dropped rows look like.
 **Next**
 - NEWSMID result after 11-12 close; FAMC session 2; fresh decision-bar audit if the owner adopts RULE21-DB.
+
+## Run 35 — 2026-11-12 02:42 ET (FWDCAL quote lever; latch knife edge; ICCSET)
+**State:** FWDCAL with live-logged quotes: 5-min match 0.869 (diagnostic window); next lever the -R halt / latch timing.
+Graveyard latch = two stop-outs on a knife edge. Gen halt rule 120R -> 300R from 11-12.
+**Did:** challenged calibration leaking live inputs (logged quotes, latch minute): audit must split live-quote vs pool-priced
+trades, rule 21 must hold on the pool subset for non-live setups.
+**Learned**
+- Calibrating a simulator with live inputs only proves fidelity where live inputs exist; audit the input-free subset.
+**Next**
+- Fresh FWDCAL audit 11-12..11-13 (split by quote source); NEWSMID tonight; FAMC session 2.
