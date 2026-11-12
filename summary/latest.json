@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-12T01:10-05:00",
+ "updated": "2026-11-12T03:00-05:00",
  "session": "2026-11-12",
- "headline": "Corrections sent to the owner (PR #188): order latency costs about nothing in R, and a data trap was found where dropping unparsable trade records silently keeps mostly losers.",
+ "headline": "Calibrated replay closing the gap: using the quotes live actually saw lifts the 5-minute match from 74% to 87% (diagnostic); the fresh rule-21 audit on 11-12..11-13 must also hold for trades priced without live quotes.",
  "bullets": [
-  "Latency: decision to order is 24-79 s (the live poll builds orders in turn), order to fill ~2 s; entry slip ~half the spread; Generator's weak results are not a fill problem.",
-  "Data trap: trade metadata can carry a suffix after the JSON; naive parsing fails on 15-51% of trades and those are mostly winners. Guild and BDI scripts checked: safe. Checklist item 33.",
-  "FWDCAL now replays the spread quotes live actually saw; fresh rule-21 audit on 11-12..11-13.",
-  "NEWSMID one look and FAMC session 2 after the 11-12 close.",
-  "Open owner items: COMPCAL, PROMO2, RULE21-DB, the days 1-3 questions, S6."
+  "FWDCAL with live quotes: On Deck 97%, Testing A 96%, Primary 91%, Graveyard 89%, Gen 77% matched within 5 min (already-used window, diagnostic only).",
+  "Remaining misses: the daily-loss halt trips at different moments (37% of misses); Graveyard's -2R latch is effectively 'two full stop-outs' on a knife edge.",
+  "Skeptic: replays are meant for names live didn't trade, so the audit must pass on pool-priced trades too, not just live-quote ones.",
+  "ICC per setup ranges 0.07-0.45; the thin high-ICC records are the short 'survivors' (RW3/RW5/MF2, ~26-34 effective trades).",
+  "After the 11-12 close: fresh FWDCAL audit, NEWSMID, FAMC session 2."
  ],
  "progress": {
-  "ideas": 59,
-  "tested": 58,
+  "ideas": 60,
+  "tested": 59,
   "configs": 157,
   "passed": 0,
   "forward": 1
  },
- "next": "After the 11-12 close: FAMC session 2, NEWSMID, FWDCAL quotes-mode audit, Testing A relative contrast.",
+ "next": "After 16:00: FWDCAL fresh audit (live-quote vs pool split), NEWSMID one look, FAMC session 2, Testing A relative contrast.",
  "by_role": {
-  "scout": "FILLCOST: latency costs ~nothing; found the meta-parse trap; owned an earlier wrong guess.",
-  "builder": "Added a quotes-replay mode to FWDCAL.",
-  "skeptic": "Checked the meta-parse trap across journals; checklist item 33.",
-  "observer": "Corrected the latency cause (poll, not broker).",
-  "lead": "Sent corrections to the owner (PR #188)."
+  "scout": "ICCSET: per-setup same-day correlation and effective trades.",
+  "builder": "FWDCAL quotes mode: 5-min match 0.743 -> 0.869 (diagnostic).",
+  "skeptic": "Flagged live-quote leakage for the audit; latch and ICC notes.",
+  "observer": "Graveyard latch knife edge; Gen halt now 300R.",
+  "lead": "Set the audit split rule; latch stays the owner's."
  },
  "disclaimer": "Educational only — not financial advice."
 }
