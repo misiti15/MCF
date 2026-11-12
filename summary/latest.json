@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-12T03:00-05:00",
+ "updated": "2026-11-12T05:00-05:00",
  "session": "2026-11-12",
- "headline": "Calibrated replay closing the gap: using the quotes live actually saw lifts the 5-minute match from 74% to 87% (diagnostic); the fresh rule-21 audit on 11-12..11-13 must also hold for trades priced without live quotes.",
+ "headline": "Replay calibration night: the remaining gaps are understood (loss halts on a knife edge, stop fills ~0.045R worse live); a spread-based stop-slip model goes in next, then a fresh, unaided rule-21 audit after the 11-12 close.",
  "bullets": [
-  "FWDCAL with live quotes: On Deck 97%, Testing A 96%, Primary 91%, Graveyard 89%, Gen 77% matched within 5 min (already-used window, diagnostic only).",
-  "Remaining misses: the daily-loss halt trips at different moments (37% of misses); Graveyard's -2R latch is effectively 'two full stop-outs' on a knife edge.",
-  "Skeptic: replays are meant for names live didn't trade, so the audit must pass on pool-priced trades too, not just live-quote ones.",
-  "ICC per setup ranges 0.07-0.45; the thin high-ICC records are the short 'survivors' (RW3/RW5/MF2, ~26-34 effective trades).",
-  "After the 11-12 close: fresh FWDCAL audit, NEWSMID, FAMC session 2."
+  "Live stop exits fill a mean +0.045R past the stop in every account, driven by entry spread vs stop distance (slip = 0.012 + 0.34 x spread/stop).",
+  "Graveyard's -2R latch flips on hundredths of R, so replays only agree if stop fills match; the slip model should make that work for names live didn't trade too.",
+  "A buying-power cap in the simulator was tried and rejected - it put rejects on the wrong days.",
+  "Data trap: 'stop' exits after a moved (breakeven/trailing) stop keep the original stop price; checklist item 34 handles it.",
+  "Per-setup effective trades (shrunk ICC) table ready for the owner on 11-18."
  ],
  "progress": {
-  "ideas": 60,
-  "tested": 59,
+  "ideas": 61,
+  "tested": 60,
   "configs": 157,
   "passed": 0,
   "forward": 1
  },
- "next": "After 16:00: FWDCAL fresh audit (live-quote vs pool split), NEWSMID one look, FAMC session 2, Testing A relative contrast.",
+ "next": "Stop-slip model in the replay; after the 11-12 close: fresh rule-21 audit (no live feeds), NEWSMID, FAMC session 2.",
  "by_role": {
-  "scout": "ICCSET: per-setup same-day correlation and effective trades.",
-  "builder": "FWDCAL quotes mode: 5-min match 0.743 -> 0.869 (diagnostic).",
-  "skeptic": "Flagged live-quote leakage for the audit; latch and ICC notes.",
-  "observer": "Graveyard latch knife edge; Gen halt now 300R.",
-  "lead": "Set the audit split rule; latch stays the owner's."
+  "scout": "ICCSET-2: shrunk per-setup ICC and effective trades.",
+  "builder": "Halt/latch diagnostics; buying-power cap rejected; next: stop-slip model.",
+  "skeptic": "Refit rule for stop slip (keep adverse tails); checklist 34.",
+  "observer": "Live stop-slip model; moved-stop data trap.",
+  "lead": "Set the order: stop slip, then an unaided fresh audit."
  },
  "disclaimer": "Educational only — not financial advice."
 }

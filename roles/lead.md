@@ -172,6 +172,10 @@
 ## Run 35 (03:00 ET 11-12)
 - FWDCAL quotes diag 0.869; fresh audit must split live-quote vs pool. Latch = owner's. ICCSET -> owner with REPS3 11-18.
 
+## Run 36 (05:00 ET 11-12)
+- BP cap rejected; stop-slip model next (replace, side-split refit). Fresh audit after 11-12 close, no live feeds, split quote source.
+- Evening PR bundle: FWDCAL fresh audit result, NEWSMID, FAMC s2, stop-slip + ICCSET-2 FYI.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
