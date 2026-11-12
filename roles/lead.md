@@ -169,6 +169,9 @@
 - Corrections to owner (PR #188): latency = poll ordering, costs ~0 R; meta-parse trap (checklist 33). Lesson: verify mechanism claims before they reach the owner (I relayed 'broker routing' and 'Gen 2x slower' too fast).
 - After 11-12 close: FAMC s2, NEWSMID, FWDCAL quotes audit (fresh 11-12..13), Testing A relative contrast.
 
+## Run 35 (03:00 ET 11-12)
+- FWDCAL quotes diag 0.869; fresh audit must split live-quote vs pool. Latch = owner's. ICCSET -> owner with REPS3 11-18.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
