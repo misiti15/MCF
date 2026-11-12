@@ -75,6 +75,8 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 #lb-tab th.bd-replay, #lb-tab td.bd-replay { background: var(--band-replay); }
 #lb-tab thead tr.band th.bd-replay, #lb-tab thead tr.cols th.bd-replay { color: var(--band-replay-ink); background: linear-gradient(var(--band-replay), var(--band-replay)), var(--surface); }
 #lb-tab thead tr.band th.bd-live { color: var(--ink-2); border-bottom: 2px solid var(--axis); }
+/* owner 2026-11-12: the R columns sit side by side, framed so they read as one group */
+#lb-tab .rg0 { border-left: 2px solid var(--axis); } #lb-tab .rg9 { border-right: 2px solid var(--axis); }
 #lb-tab thead tr.band th.bd-last { border-bottom: 2px solid var(--s1); }
 #lb-tab thead tr.band th.bd-replay { border-bottom: 2px solid #d97706; }
 th.sorted { color: var(--s1); text-decoration: underline; }
@@ -132,7 +134,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 #qnav::-webkit-scrollbar { display: none; }
 #qnav a { flex: none; font-size: 13px; padding: 4px 11px; border-radius: 999px; color: var(--ink-2); text-decoration: none; border: 1px solid transparent; }
 #qnav a:hover, #qnav a.on { color: var(--ink); border-color: var(--border); background: var(--surface); }
-#acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #gl-card, #lh, #dec-card { scroll-margin-top: 52px; }
+#acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #tpd-card, #gl-card, #lh, #dec-card { scroll-margin-top: 52px; }
 #glance { margin: 12px 0 4px; padding: 10px 12px; }
 #glance h2 { font-size: 13px; margin: 0 0 6px; color: var(--ink-2); }
 #glance .gx { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px; }
@@ -157,6 +159,24 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
     <div><div class="gk">Primary green-day streak</div><div class="gv" id="gl-streak">…</div><div class="gn" id="gl-streak-n"></div></div>
     <div><div class="gk">Open decisions for you</div><div class="gv" id="gl-dec">…</div><div class="gn" id="gl-dec-n"></div><div class="gn"><a href="#dec-card">Your decisions ↓</a></div></div>
     <div><div class="gk">Alerts</div><div class="gv" id="gl-alerts">…</div><div class="gn" id="gl-alerts-n"></div></div></div>
+</div>
+<!-- Total trades per day, all accounts (owner 2026-11-12): moved out of the End of day grid into its own full-width card
+     near the top. Filled by the End of day script below (status.json history of every account). The old grid block was
+     ~277px wide at desktop (auto-fit minmax(260px, 1fr)) while its nowrap table needed ~300px, so the Total column
+     overflowed under the next block and was cut off; this card is full width and the table sits in a .tablewrap. -->
+<style>
+#tpd-card table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+#tpd-card th, #tpd-card td { padding: 4px 8px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid); }
+#tpd-card th.l, #tpd-card td.l { text-align: left; }
+#tpd-card .tot { border-left: 2px solid var(--axis); }
+#tpd-card tr.so td { color: var(--ink-2); font-style: italic; }
+#tpd-card .sid { font-size: 11px; color: var(--muted); font-style: normal; }
+@media (max-width: 480px) { #tpd-card table { font-size: 12.5px; } #tpd-card th, #tpd-card td { padding: 3px 3px; }
+  #tpd-card th, #tpd-card td.l { white-space: normal; vertical-align: bottom; } #tpd-card td.l .sid { display: block; } }
+</style>
+<div class="card" id="tpd-card" role="region" aria-label="Total trades per day (all accounts)"><h2>Total trades per day (all accounts)</h2>
+  <div class="why">Closed trades per session in every paper account, and their total.</div>
+  <div id="tpd-body"><div class="empty" style="padding:10px">Loading…</div></div>
 </div>
 <!-- Research Guild (owner 2026-11-09): what the five research bots (Scout, Builder, Skeptic, Observer, Lead) discussed,
      tested and learned. Source: the Lead's summary on the data branch mcf-guild (summary/latest.json, PROTOCOL.md). -->
@@ -304,7 +324,7 @@ window.MCF_TOTALS = (() => {
 <!-- End of day (owner 2026-10-27: "the decisions on the dashboard at EOD ... the location where all of my quick stats go,
      only at the end of the day"): built in the browser from each account's EOD scorecard (reports/scorecard.json) and
      status.json history, so it shows the last CLOSED session only (no intraday numbers). Setup Generator included,
-     long-hold S6 excluded. Sections: trades per day by account (last 5 sessions), green-day and red-day streaks per setup
+     long-hold S6 excluded. Sections: (trades per day moved to its own card #tpd-card, owner 2026-11-12), green-day and red-day streaks per setup
      (all accounts merged; a session the setup did not trade breaks the streak), and setups green / red on every day they
      traded (no-trade days skipped). Owner 2026-10-28: Graveyard setups only in green lists; trend lists ("7 of last 8");
      changes that started with the session (ledger `effective`). The owner adds more stats here over time. -->
@@ -350,20 +370,30 @@ window.MCF_TOTALS = (() => {
     sc.forEach(d => ((d || {}).leaderboard || []).forEach(r => (r.daily || []).forEach(([dt, n, rr, p]) => {
       const m = (daily[r.setup] = daily[r.setup] || {}), x = (m[dt] = m[dt] || [0, 0, 0]); x[0] += n; x[1] += (+rr || 0); x[2] += (+p || 0); if (dt > lastClosed) lastClosed = dt; })));
     const rfmt = v => (v < 0 ? "−" : "+") + Math.abs(v).toFixed(1) + "R";
+    // Total trades per day (owner 2026-11-12): its own full-width card near the top (#tpd-card), EVERY account in the total:
+    // Primary, On Deck, Testing (all) = Testing A-F summed (D/E/F once their status.json exists), Gen, Graveyard.
+    // Last 5 closed sessions from each account's status.json history, plus today's session so far while it is open.
+    // (Owner 2026-11-11 limits account P/L totals to Primary / On Deck / Testing (all); trade COUNTS here cover all accounts.)
+    {
+      const cnt = (i, d) => { const h = (((st[i] || {}).history) || []).find(x => x.date === d); return h ? (h.trades || 0) : 0; };
+      const TK = window.MCF_TOTALS.TESTING.map(x => x[0]);
+      const TPD = [["Primary", ["primary"]], ["On Deck", ["testing"]], ["Testing (all)", TK], ["Gen", ["gen"]], ["Grave\u00ADyard", ["graveyard"]]];
+      const ix = k => A.findIndex(a => a[0] === k);
+      const all = [...new Set(st.flatMap(s => ((s || {}).history || []).filter(h => h.trades).map(h => h.date)))].sort();
+      const closed = all.filter(d => !lastClosed || d <= lastClosed).slice(-5).reverse(), open = lastClosed ? all.filter(d => d > lastClosed) : [];
+      const days = [...open.reverse().map(d => [d, true]), ...closed.map(d => [d, false])];
+      let t = `<div class="tablewrap"><table><thead><tr><th class="l">Session</th>${TPD.map(c => `<th>${e(c[0])}</th>`).join("")}<th class="tot">Total</th></tr></thead><tbody>`;
+      days.forEach(([d, so]) => { const c = TPD.map(([, ks]) => ks.reduce((s, k) => s + (ix(k) < 0 ? 0 : cnt(ix(k), d)), 0));
+        t += `<tr${so ? ' class="so"' : ""}><td class="l">${d.slice(5)}${so ? ' <span class="sid">so far</span>' : ""}</td>${c.map(v => `<td>${v}</td>`).join("")}<td class="tot"><b>${c.reduce((a, b) => a + b, 0)}</b></td></tr>`; });
+      t += `</tbody></table></div>`;
+      const td = A.filter(a => ["testingd", "testinge", "testingf"].includes(a[0]) && !st[ix(a[0])]).map(a => a[1]);
+      if (q("#tpd-body")) q("#tpd-body").innerHTML = days.length ? t + `<div class="sid" style="margin-top:4px">Total = every account: Primary + On Deck + Testing (all) + Gen + Graveyard.
+        Testing (all) = Testing A–F summed${td.length ? ` (no status file yet: ${e(td.join(", "))})` : ""}. Closed trades per session from each account's status file; "so far" = today's session, still open.</div>`
+        : `<div class="empty" style="padding:10px">No sessions yet.</div>`;
+    }
     if (!lastClosed) { q("#eod-grid").innerHTML = `<div class="empty" style="padding:10px">No EOD reports yet.</div>`; return; }
     q("#eod-asof").textContent = "· last close " + lastClosed;
     const sess = [...new Set(st.flatMap(s => ((s || {}).history || []).filter(h => h.trades && h.date <= lastClosed).map(h => h.date)))].sort();
-    // trades per day by account. Owner 2026-11-11: account totals only for Primary, On Deck and Testing (all) = Testing A-F
-    // summed; Setup Generator and Graveyard columns are not shown (their setups still count in every streak list below).
-    const last5 = sess.slice(-5).reverse();
-    const cnt = (i, d) => { const h = (((st[i] || {}).history) || []).find(x => x.date === d); return h ? (h.trades || 0) : 0; };
-    const TK = window.MCF_TOTALS.TESTING.map(x => x[0]);
-    const COLS = [["Primary", ["primary"]], ["On Deck", ["testing"]], ["Testing (all)", TK]];
-    const ix = k => A.findIndex(a => a[0] === k);
-    let t = `<table><tr><th class="l">Session</th>${COLS.map(c => `<th>${e(c[0])}</th>`).join("")}<th>Total</th></tr>`;
-    last5.forEach(d => { const c = COLS.map(([, ks]) => ks.reduce((s, k) => s + (ix(k) < 0 ? 0 : cnt(ix(k), d)), 0));
-      t += `<tr><td class="l">${d.slice(5)}</td>${c.map(v => `<td>${v}</td>`).join("")}<td><b>${c.reduce((a, b) => a + b, 0)}</b></td></tr>`; });
-    t += `</table><div class="sid" style="margin-top:4px">Testing (all) = Testing A–F summed. Total = the three columns.</div>`;
     // streaks
     const consec = [], traded = [];
     Object.entries(daily).forEach(([s, m]) => {
@@ -400,7 +430,7 @@ window.MCF_TOTALS = (() => {
     // changes that started with this session (research/ledger.jsonl `effective` = the last closed session), owner 2026-10-28
     const chg = String(led || "").split("\n").map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(x => x && x.effective === lastClosed);
     const cblock = chg.length ? `<div class="eb"><h3>Changes that started this session (${chg.length})</h3>${chg.map(x => `<div class="sl">${e(x.plain || x.title)}</div>`).join("")}</div>` : "";
-    q("#eod-grid").innerHTML = `<div class="eb"><h3>Trades per day by account</h3>${t}</div>` + cblock +
+    q("#eod-grid").innerHTML = cblock +
       // owner 2026-11-03: green / red = the session's total R after costs (not P/L); every list shows total R; green list then its red twin
       block("Green streak — every session in a row", consec, 1, "Positive total R in each of the last N market sessions, no gaps. A session with no trades ends the streak.") +
       block("Red streak — every session in a row", consec, -1, "Negative total R in each of the last N market sessions, no gaps. A session with no trades ends the streak.") +
@@ -410,71 +440,10 @@ window.MCF_TOTALS = (() => {
       tblock("Trending down — mostly red, not all in a row", -1, "K of its last N traded sessions had negative total R (some green sessions in between). Shown only when that's unlikely by chance.");
   }
   run();
+  setInterval(run, 300000);   // owner 2026-11-12: the trades-per-day card shows today's session so far; refresh every 5 min
 })();
 </script>
-<!-- Claude's Team (shadow), owner 2026-11-05: an independent simulated Primary book (mcf/report/team.py,
-     research/shadow_primary/README.md). Reads team/latest.json + picks/latest.json from the mcf-data-team data branch
-     (pushed during the day by `python -m mcf.report.team --date D --push`, no PR); before the first push, the picks
-     on the main branch. It changes no account. -->
-<style>
-#team-card .tm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 8px; }
-#team-card .tm-t { border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; }
-#team-card .tm-t .k { font-size: 11px; color: var(--muted); } #team-card .tm-t .v { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
-#team-card .up { color: var(--good); } #team-card .down { color: var(--bad); }
-#team-card .tag { font-size: 11px; color: var(--muted); } #team-card .lbl { font-size: 12px; font-weight: 600; color: var(--ink-2); }
-</style>
-<div class="card" id="team-card" role="region" aria-label="Claude's Team (shadow)"><h2>Claude's Team (shadow) <span id="team-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
-  <div class="why">Claude's best-estimate Primary book: setups picked from any account, run by the Team itself on the full Primary universe under Primary's rules, next to the real Primary account.</div>
-  <div class="lbl" id="team-label">Shadow — simulated independently; no orders</div>
-  <div class="tm-grid" id="team-tiles"><div class="empty" style="padding:10px">Loading…</div></div>
-  <div class="tablewrap" id="team-tab"><div class="empty">–</div></div>
-  <div class="note">Team R and P/L are after costs (repo cost model; simulated fills from 1-minute bars, not broker fills); every Team trade is sized at Primary's 0.25% risk; open lots are marked at the last bar. Primary = the real account (journal R, Alpaca P/L). Educational only — not financial advice.</div>
-</div>
-<script>
-(() => {
-  const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", TEAM = RAW + "mcf-data-team/", q = s => document.querySelector(s);
-  const PICKS_MAIN = RAW + "claude/intraday-trading-system-witis4/research/shadow_primary/picks/";
-  const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const get = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
-  const R = v => v == null || isNaN(v) ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(+v).toFixed(2)}R</span>`;
-  const $ = v => v == null || isNaN(v) ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v < 0 ? "-$" : "+$"}${Math.abs(+v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
-  const TAG = { primary: "Primary", testing: "On Deck", testing2: "Testing A", gen: "Generator", graveyard: "Graveyard", livelab: "Testing C", explore1: "Testing B",
-    testingd: "Testing D", testinge: "Testing E", testingf: "Testing F" };
-  // owner rename 2026-11-11: Team data written before the rename still carries the old names; map them at display time
-  const RENAMED = { "Testing 1": "On Deck", "Testing 2": "Testing A", "Explore 1": "Testing B", "Live Lab": "Testing C" };
-  const tagOf = t => RENAMED[t] || t;
-  async function run() {
-    const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-    const [rep, pk0, names] = await Promise.all([get(TEAM + "team/latest.json"), get(TEAM + "picks/latest.json"), get("../live/setup_names.json")]);
-    const pk = pk0 || await get(PICKS_MAIN + today + ".json") || await get(PICKS_MAIN + "2026-11-06.json");
-    const nm = id => ((names || {})[id] || {}).name || id;
-    const live = rep && rep.date === today && rep.phase !== "pre-open";
-    const setups = live ? rep.setups : ((pk || {}).setups || []).map(s => ({ id: s.id, name: nm(s.id), account_tag: TAG[s.account] || s.account, side: s.side }));
-    if (!setups.length) { q("#team-tiles").innerHTML = `<div class="empty" style="padding:10px">No Team picks yet.</div>`; return; }
-    if (!live) {   // before the day's first run (and before 11-06 data exists): the picks, "starts <date>"
-      const start = rep && rep.date === today ? today : ((pk || {}).date > today ? pk.date : today);
-      q("#team-asof").textContent = `· starts ${start.slice(5)}`;
-      const last = rep && rep.phase !== "pre-open" ? `<div class="tm-t"><div class="k">Last run ${e(rep.date)}${rep.label ? " (" + e(rep.label) + ")" : ""}</div><div class="v">${R((rep.totals || {}).r)}</div><div class="k">vs Primary ${R((rep.primary || {}).r)}</div></div>` : "";
-      q("#team-tiles").innerHTML = `<div class="tm-t"><div class="k">Team today</div><div class="v">starts ${e(start.slice(5))}</div><div class="k">${setups.length} setups picked</div></div>` + last;
-      q("#team-tab").innerHTML = `<table><tr><th class="l">Setup</th><th>Account</th><th>Side</th><th>Team R</th></tr>${setups.map(s =>
-        `<tr><td class="l">${e(s.name || nm(s.id))}</td><td><span class="tag">${e(tagOf(s.account_tag))}</span></td><td>${e(s.side || "")}</td><td>starts ${e(start.slice(5))}</td></tr>`).join("")}</table>`;
-      return;
-    }
-    const t = rep.totals || {}, p = rep.primary || {};
-    q("#team-asof").textContent = `· ${rep.phase === "closed" ? "closed" : "intraday"} · last update ${rep.asof || rep.run_at}`;
-    q("#team-tiles").innerHTML =
-      `<div class="tm-t"><div class="k">Team R today (after costs)</div><div class="v">${R(t.r)}</div><div class="k">${t.trades ?? 0} trades · ${t.open ?? 0} open (marked)</div></div>` +
-      `<div class="tm-t"><div class="k">Team P/L today (after costs)</div><div class="v">${$(t.pnl)}</div><div class="k">simulated</div></div>` +
-      `<div class="tm-t"><div class="k">Primary R today</div><div class="v">${R(p.r)}</div><div class="k">${p.trades ?? 0} closed trades</div></div>` +
-      `<div class="tm-t"><div class="k">Primary P/L today</div><div class="v">${$(p.pnl_alpaca ?? p.pnl_journal)}</div><div class="k">${p.pnl_alpaca == null ? "journal" : "Alpaca"}</div></div>` +
-      `<div class="tm-t"><div class="k">Team − Primary</div><div class="v">${R(t.vs_primary_r)}</div><div class="k">run ${e(rep.run_at)}</div></div>`;
-    q("#team-tab").innerHTML = `<table><tr><th class="l">Setup</th><th>Account</th><th>Side</th><th>Trades</th><th>Open</th><th>Team R</th><th>Team P/L</th></tr>${setups.map(s =>
-      `<tr><td class="l">${e(s.name)}</td><td><span class="tag">${e(tagOf(s.account_tag))}</span></td><td>${e(s.side || "")}</td><td>${s.trades}</td><td>${s.open}</td><td>${R(s.r)}</td><td>${$(s.pnl)}</td></tr>`).join("")}</table>`;
-  }
-  run();
-  setInterval(run, 300000);
-})();
-</script>
+<!-- Claude's Team (shadow) card removed (owner 2026-11-12: all Claude's Team activity stopped). -->
 <!-- Market Compass (live), owner "Compass live: yes" 2026-11-09: the research compass recorded every 15 min from 09:45 ET
      (mcf/report/compass_live.py, .github/workflows/compass.yml). Reads compass/latest.json from the mcf-data-compass data
      branch. Display only — it feeds nothing to trading. -->
@@ -810,7 +779,7 @@ window.MCF = window.MCF || {};
       (LR2, from 2026-11-11; until then this table showed raw broker R, about 0.02R per trade higher; from 2026-11-12 new trades use the LR8 cost model). <b>Break-even win rate</b> = the win rate this setup needs to make money, given its own average win and loss size;
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
       <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
-      <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Avg R w/o best day</b> = avg R with its single best session removed; <b>Avg R ex-market</b> = avg R with SPY's same-window move regressed out (beta removed); the <b>1 day</b> tag = half or more of its total R came from one session (owner 2026-10-25: a record carried by 1-2 big days). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Avg R w/o best day</b> = avg R with its single best session removed; <b>Avg R ex-market</b> = avg R with SPY's same-window move regressed out (beta removed); the <b>1 day</b> tag = half or more of its total R came from one session (owner 2026-10-25: a record carried by 1-2 big days). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Last 10 sessions avg R</b> = avg R per trade over the setup's last 10 traded sessions (sessions with 1+ closed trade, all accounts merged); <b>Avg R per session</b> = total R ÷ traded sessions; <b>Best-day share</b> = its best session's share of total R. All R columns sit together (owner 2026-11-12). <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. <b>*</b> = long setup from the 2026-10-20 longs research, near-miss, observation only.
@@ -1361,6 +1330,7 @@ window.MCF = window.MCF || {};
       m.score = n ? avg * n / (n + 20) : null;
       // owner 2026-10-25: is the record carried by 1-2 big days? avg R without its single best session + that day's share of total R
       Object.assign(m, bestDay(tr.flatMap(r => r.daily || []), n, totR));
+      Object.assign(m, sessR(tr.flatMap(r => r.daily || []), totR));   // owner 2026-11-12: last-10 avg R, avg R per session
       Object.assign(m, exMkt(tr));   // BETA1 (owner 2026-11-03): avg R with SPY's same-window move regressed out
       if (pend) m.pending = `On Deck copy switches off tonight; Primary only from ${(asg.pending.effective || "").slice(0, 10)}`;
       const other = tr.filter(r => r.acct !== acct || !(c || []).includes(r.acct));
@@ -1417,6 +1387,15 @@ window.MCF = window.MCF || {};
     const sx = s("mkt_x_sum"), sy = s("mkt_y_sum"), v = s("mkt_xx_sum") - sx * sx / n;
     if (!(v > 1e-12)) return { exmkt_r: null, beta: null, mkt_n: n };
     const b = (s("mkt_xy_sum") - sx * sy / n) / v; return { exmkt_r: +(sy / n - b * sx / n).toFixed(3), beta: +b.toFixed(3), mkt_n: n }; };
+  // owner 2026-11-12: from the per-session record [[date, trades, R, P/L], ...] (same R after costs as Total R, LR2), all
+  // accounts merged by date. last10_avg_r = R per trade over its last 10 traded sessions (>= 1 closed trade);
+  // r_per_session = total R / traded sessions.
+  const sessR = (daily, totR) => {
+    const by = {}; daily.forEach(([d, c, r]) => { if (!c) return; const a = by[d] || (by[d] = [0, 0]); a[0] += c; a[1] += +r || 0; });
+    const ds = Object.keys(by).sort(), l10 = ds.slice(-10), n10 = l10.reduce((a, d) => a + by[d][0], 0);
+    return { last10_avg_r: n10 ? +(l10.reduce((a, d) => a + by[d][1], 0) / n10).toFixed(3) : null, last10_n: l10.length, last10_trades: n10,
+      r_per_session: ds.length ? +(totR / ds.length).toFixed(3) : null, r_sessions: ds.length };
+  };
   const bestDay = (daily, n, totR) => {   // daily: [[date, trades, R, P/L], ...] across accounts
     const by = {}; daily.forEach(([d, c, r]) => { const a = by[d] || (by[d] = [0, 0]); a[0] += c; a[1] += r; });
     const ds = Object.entries(by); if (ds.length < 2) return { exbest_r: null, best_share: null, best_day: ds[0] ? ds[0][0] : null };
@@ -1427,14 +1406,19 @@ window.MCF = window.MCF || {};
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["best_reg", "Best conditions"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
     ["trades", "Live trades"], ["sessions_traded", "Sessions"], ["per_session", "Trades/session"],   // owner 2026-10-25
-    ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["avg_r", "Avg R"], ["exbest_r", "Avg R w/o best day"], ["exmkt_r", "Avg R ex-market"], ["t_stat", "Confidence (t)"], ["total_r", "Total R"], ["pnl", "P/L"], ["profit_factor", "PF"], ["recent_avg_r", "Last 4 avg R"],
+    ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["t_stat", "Confidence (t)"], ["pnl", "P/L"], ["profit_factor", "PF"],
+    // owner 2026-11-12: every R column side by side (R after costs, LR2); the Last-session R column stays in its band
+    ["total_r", "Total R"], ["avg_r", "Avg R"], ["exbest_r", "Avg R w/o best day"], ["best_share", "Best-day share"], ["recent_avg_r", "Last 4 avg R"],
+    ["last10_avg_r", "Last 10 sessions avg R"], ["r_per_session", "Avg R per session"], ["exmkt_r", "Avg R ex-market"],
     ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
   const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
     avg_r: "live", exbest_r: "live", exmkt_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
+    best_share: "live", last10_avg_r: "live", r_per_session: "live",
     rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
   const LEFT = new Set(["name", "acctLabel", "best_reg", "pt", "flag"]);
+  const RGRP = new Set(["total_r", "avg_r", "exbest_r", "best_share", "recent_avg_r", "last10_avg_r", "r_per_session", "exmkt_r"]);   // owner 2026-11-12
   const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
       if (p && p.b === b) p.n++; else out.push({ b, n: 1 }); });
     const T = { last: [`Last session (${LS || "–"})`, ' id="lb-last-band"', "Most recent completed session, all accounts the setup traded in that day"],
@@ -1453,7 +1437,7 @@ window.MCF = window.MCF || {};
     q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
       (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
       ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
-    const th = COLS.map(([k, h]) => `<th class="${LEFT.has(k) ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const th = COLS.map(([k, h]) => `<th class="${LEFT.has(k) ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${RGRP.has(k) ? " rgrp" : ""}${k === "total_r" ? " rg0" : k === "exmkt_r" ? " rg9" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
@@ -1467,18 +1451,37 @@ window.MCF = window.MCF || {};
       // last-session numbers from the old account (session before the move): mark them with that account
       const lsOld = x.moved && x.movedFirst && LS && LS < x.movedFirst && x.ls_trades
         ? `<div style="font-size:11px;color:var(--muted)" title="${e(LS)} was traded in ${e(x.movedFrom)}, before the move">in ${e(x.movedFromShort)}</div>` : "";
-      return `<tr data-setup="${e(x.setup)}"><td>${x.rank ?? "–"}</td><td class="l nmc" title="${e(x.name)} · ${e(x.setup)}"><span class="nm">${e(x.name)}</span>${chips}<span class="sid">${e(x.setup)}</span></td>
-        <td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>
-        <td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>
-        <td class="bd-last">${x.ls_trades || "—"}${lsOld}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td><td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>
-        <td class="bd-live">${x.trades ?? 0}</td><td>${x.sessions_traded ?? 0}</td><td title="Average live trades per session it traded">${x.per_session ?? "–"}</td><td>${pc(x.win_rate)}</td>
-        <td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>
-        <td class="${cls(x.avg_r)}">${f(x.avg_r)}</td><td class="${cls(x.exbest_r)}" title="${x.best_day ? `Best session ${e(x.best_day)}: ${f(x.best_r, 1)}R` + (x.best_share != null ? ` = ${Math.round(x.best_share * 100)}% of total R` : "") : "One session only"}">${f(x.exbest_r)}${x.best_share != null && x.best_share >= 0.5 ?  ' <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="Half or more of its total R came from one session">1 day</span>' : ""}</td><td class="${cls(x.exmkt_r)}" title="${x.exmkt_r == null ? `Needs 5+ trades with SPY data (${x.mkt_n || 0} so far)` : `Beta ${f(x.beta)} R per 1% SPY move, ${x.mkt_n} trades`}">${f(x.exmkt_r)}</td><td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td><td class="${cls(x.total_r)}">${f(x.total_r, 1)}</td><td class="${cls(x.pnl)}">${money(x.pnl)}</td>
-        <td>${x.profit_factor ?? "–"}</td><td class="${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td>
-        <td class="bd-replay">${x.rp_trades ?? "—"}</td><td class="bd-replay">${x.rp_sessions ?? "—"}</td><td class="bd-replay">${x.rp_win_rate == null ? "—" : pc(x.rp_win_rate)}</td>
-        <td class="bd-replay ${cls(x.rp_avg_r)}">${x.rp_avg_r == null ? "—" : f(x.rp_avg_r)}</td><td class="bd-replay">${x.rp_t == null ? "—" : f(x.rp_t, 1, false)}</td><td class="bd-replay ${cls(x.rp_total_r)}">${x.rp_total_r == null ? "—" : f(x.rp_total_r, 1)}</td><td>${f(x.expected_r)}</td><td class="${cls(x.gap)}">${f(x.gap)}</td>
-        <td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>
-        <td class="l">${e(x.pt || "–")}</td><td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td></tr>`;
+      // owner 2026-11-12: one cell per column key, emitted in COLS order (so the column order lives in COLS only)
+      const C = {
+        rank: `<td>${x.rank ?? "–"}</td>`,
+        name: `<td class="l nmc" title="${e(x.name)} · ${e(x.setup)}"><span class="nm">${e(x.name)}</span>${chips}<span class="sid">${e(x.setup)}</span></td>`,
+        acctLabel: `<td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>`,
+        best_reg: `<td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>`,
+        ls_trades: `<td class="bd-last">${x.ls_trades || "—"}${lsOld}</td>`,
+        ls_r: `<td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td>`,
+        ls_pnl: `<td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>`,
+        trades: `<td class="bd-live">${x.trades ?? 0}</td>`, sessions_traded: `<td>${x.sessions_traded ?? 0}</td>`,
+        per_session: `<td title="Average live trades per session it traded">${x.per_session ?? "–"}</td>`, win_rate: `<td>${pc(x.win_rate)}</td>`,
+        breakeven_wr: `<td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>`,
+        t_stat: `<td title="t-stat of avg R: about 2+ = solid, under 1 = could be luck">${f(x.t_stat, 1, false)}</td>`,
+        pnl: `<td class="${cls(x.pnl)}">${money(x.pnl)}</td>`, profit_factor: `<td>${x.profit_factor ?? "–"}</td>`,
+        total_r: `<td class="rgrp rg0 ${cls(x.total_r)}">${f(x.total_r, 1)}</td>`,
+        avg_r: `<td class="rgrp ${cls(x.avg_r)}">${f(x.avg_r)}</td>`,
+        exbest_r: `<td class="rgrp ${cls(x.exbest_r)}" title="${x.best_day ? `Best session ${e(x.best_day)}: ${f(x.best_r, 1)}R` + (x.best_share != null ? ` = ${Math.round(x.best_share * 100)}% of total R` : "") : "One session only"}">${f(x.exbest_r)}${x.best_share != null && x.best_share >= 0.5 ?  ' <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="Half or more of its total R came from one session">1 day</span>' : ""}</td>`,
+        best_share: `<td class="rgrp" title="${x.best_day ? `Best session ${e(x.best_day)}: ${f(x.best_r, 1)}R` : "One session only"}${x.best_share == null && x.best_day ? " (share shown only when total R and the best day are both positive)" : ""}">${x.best_share == null ? "–" : Math.round(x.best_share * 100) + "%"}</td>`,
+        recent_avg_r: `<td class="rgrp ${cls(x.recent_avg_r)}">${f(x.recent_avg_r)}</td>`,
+        last10_avg_r: `<td class="rgrp ${cls(x.last10_avg_r)}" title="${x.last10_n ? `${x.last10_trades} trades over its last ${x.last10_n} traded session${x.last10_n === 1 ? "" : "s"}` : "No traded sessions"}">${f(x.last10_avg_r)}</td>`,
+        r_per_session: `<td class="rgrp ${cls(x.r_per_session)}" title="${x.r_sessions ? `Total R ÷ ${x.r_sessions} traded session${x.r_sessions === 1 ? "" : "s"}` : "No traded sessions"}">${f(x.r_per_session)}</td>`,
+        exmkt_r: `<td class="rgrp rg9 ${cls(x.exmkt_r)}" title="${x.exmkt_r == null ? `Needs 5+ trades with SPY data (${x.mkt_n || 0} so far)` : `Beta ${f(x.beta)} R per 1% SPY move, ${x.mkt_n} trades`}">${f(x.exmkt_r)}</td>`,
+        rp_trades: `<td class="bd-replay">${x.rp_trades ?? "—"}</td>`, rp_sessions: `<td class="bd-replay">${x.rp_sessions ?? "—"}</td>`,
+        rp_win_rate: `<td class="bd-replay">${x.rp_win_rate == null ? "—" : pc(x.rp_win_rate)}</td>`,
+        rp_avg_r: `<td class="bd-replay ${cls(x.rp_avg_r)}">${x.rp_avg_r == null ? "—" : f(x.rp_avg_r)}</td>`,
+        rp_t: `<td class="bd-replay">${x.rp_t == null ? "—" : f(x.rp_t, 1, false)}</td>`,
+        rp_total_r: `<td class="bd-replay ${cls(x.rp_total_r)}">${x.rp_total_r == null ? "—" : f(x.rp_total_r, 1)}</td>`,
+        expected_r: `<td>${f(x.expected_r)}</td>`, gap: `<td class="${cls(x.gap)}">${f(x.gap)}</td>`,
+        sim_avg_r: `<td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>`,
+        pt: `<td class="l">${e(x.pt || "–")}</td>`, flag: `<td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td>` };
+      return `<tr data-setup="${e(x.setup)}">${COLS.map(([k]) => C[k] ?? "<td>–</td>").join("")}</tr>`;
     };
     q("#lb-tab").innerHTML = r.length ? `<table><thead>${bandRow()}<tr class="cols">${th}</tr></thead><tbody>${r.map(td).join("")}</tbody></table>` : `<div class="empty">No setups match.</div>`;
     const lab = (COLS.find(c => c[0] === sortK) || [, "#"])[1];
@@ -1784,6 +1787,9 @@ window.MCF = window.MCF || {};
     "PF": "Profit factor: dollars won divided by dollars lost. Above 1 = profitable.",
     "Profit factor": "Dollars won divided by dollars lost. Above 1 = profitable.",
     "Last 4 avg R": "Average R over the account's last 4 sessions: is it getting better or worse lately?",
+    "Last 10 sessions avg R": "Average R per trade (after costs) over the setup's last 10 traded sessions — sessions with at least one closed trade, all accounts merged. Hover a cell for the trades and sessions it covers.",
+    "Avg R per session": "Total R (after costs) ÷ the sessions the setup traded: what a typical traded session adds.",
+    "Best-day share": "Share of the setup's total R that came from its single best session (shown when total R and that day are both positive). 50% or more = a record carried by one day.",
     "Backtest R": "Expected R per trade from the setup's backtest on history, after costs.",
     "Backtest expected R": "Expected R per trade from the setup's backtest on history, after costs.",
     "vs backtest": "Live Avg R minus backtest R. Negative = doing worse live than history suggested.",

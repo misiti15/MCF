@@ -13,7 +13,8 @@ from pathlib import Path
 
 HTML = (Path(__file__).resolve().parents[1] / "docs/live/index.html").read_text()
 
-# every element id (cards, tables, controls)
+# every element id (cards, tables, controls). Owner 2026-11-12: the Claude's Team (shadow) card was deleted on the owner's
+# instruction (all Team activity stopped); its ids, title and data source are no longer pinned here.
 IDS = [
     "acc-all", "dm-card", "dm-sum", "dm-tab", "gen-card", "gen-sorted", "gen-sum", "gen-tab", "gl-card", "gl-sum",
     "gl-trend", "lab-when", "lb-acct", "lb-asg", "lb-card", "lb-ctl", "lb-min", "lb-show", "lb-sorted", "lb-sum", "lb-tab",
@@ -29,11 +30,11 @@ IDS = [
     "gen-last-band",   # added 2026-10-22 (Last session band in the Generated card)
     "sd-reg",   # added 2026-10-22 (regime1022: market conditions in the drill-down)
     "dec-card", "dec-list", "dec-done", "dec-done-list", "dec-n",   # added 2026-10-22 (Your decisions card)
-    "team-card", "team-asof", "team-label", "team-tiles", "team-tab",   # added 2026-11-05 (Claude's Team (shadow))
     "cmp-card", "cmp-asof", "cmp-label", "cmp-tiles", "cmp-tab",   # added 2026-11-09 (Market Compass (live))
     "cmp-plain",   # added 2026-11-10 (Market Compass "In plain English")
     "guild-card", "guild-asof", "guild-head", "guild-bullets", "guild-progress", "guild-next", "guild-roles",
     "guild-roles-list", "guild-link",   # added 2026-11-09 (Research Guild)
+    "tpd-card", "tpd-body",   # added 2026-11-12 (Total trades per day, all accounts)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -46,9 +47,9 @@ TITLES = [
     "New setup pipeline",   # added 2026-10-21
     "At a glance",          # added 2026-10-21
     "Your decisions",       # added 2026-10-22
-    "Claude's Team (shadow)",   # added 2026-11-05
     "Market Compass (live)",    # added 2026-11-09
     "Research Guild",   # added 2026-11-09
+    "Total trades per day (all accounts)",   # added 2026-11-12
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -67,6 +68,8 @@ COLS = Counter({
     '["rp_avg_r", "Replay avg R"]': 1, '["rp_t", "Replay t"]': 1, '["rp_total_r", "Replay total R"]': 1,
     '["best_reg", "Best conditions"]': 1,   # added 2026-10-22 (regime1022: market conditions)
     '["exp_live", "Expected live /day"]': 1,   # added 2026-10-26 (GX5: realistic live expectation)
+    # added 2026-11-12 (R columns grouped; last-10 and per-session avg R)
+    '["best_share", "Best-day share"]': 1, '["last10_avg_r", "Last 10 sessions avg R"]': 1, '["r_per_session", "Avg R per session"]': 1,
 })
 
 # headers of the tables built in JS (table([...]) / head = [...]) and static <th> cells
@@ -113,7 +116,6 @@ SOURCES = [
     "claude/intraday-trading-system-witis4/research/owner_inbox/OPEN_ITEMS.md",   # added 2026-10-21 (UI-DASH 4)
     "../live/regimes.json",   # added 2026-10-22 (regime1022)
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
-    "mcf-data-team/", "team/latest.json", "picks/latest.json",   # added 2026-11-05 (Claude's Team (shadow))
     "mcf-data-compass/", "compass/latest.json",   # added 2026-11-09 (Market Compass (live))
     "https://raw.githubusercontent.com/misiti15/MCF/mcf-guild/", "summary/latest.json",   # added 2026-11-09 (Research Guild)
 ]
@@ -286,3 +288,45 @@ def test_account_totals_primary_ondeck_testing_all_only():
     assert '<span class="owner-hidden"> · ${lnk(x)}</span>' in HTML and "lv-totals-hidden" in HTML
     # setup-level views keep the new accounts' tags
     assert 'testingd: "TD", testinge: "TE", testingf: "TF"' in HTML
+
+
+def _lb_script():
+    i = HTML.index("// Setup leaderboard (owner 2026-10-12).")
+    return HTML[i:HTML.index("</script>", i)]
+
+
+def test_leaderboard_r_columns_grouped_with_last10_and_per_session():
+    """Owner 2026-11-12: two new columns (avg R over the last 10 traded sessions, total R / traded sessions) from the
+    per-session record (same R after costs as Total R); every R column side by side; last-session band unchanged."""
+    lb = _lb_script()
+    cols = re.findall(r'\["(\w+)", "[^"]+"\]', lb[lb.index("const COLS = ["):lb.index("const BAND = ")])
+    group = ["total_r", "avg_r", "exbest_r", "best_share", "recent_avg_r", "last10_avg_r", "r_per_session", "exmkt_r"]
+    i = cols.index("total_r")
+    assert cols[i:i + len(group)] == group, cols
+    assert cols[cols.index("ls_trades"):cols.index("ls_trades") + 3] == ["ls_trades", "ls_r", "ls_pnl"]
+    assert cols.index("ls_pnl") < cols.index("trades") < i
+    # every column has a cell renderer and the row is emitted in COLS order (sort / drill-down keep working)
+    for k in cols:
+        assert re.search(rf"\b{k}: `<td", lb), k
+    assert "COLS.map(([k]) => C[k]" in lb and '<tr data-setup="${e(x.setup)}">' in lb
+    assert "const sessR = (daily, totR) =>" in lb and "ds.slice(-10)" in lb and "totR / ds.length" in lb
+    assert "Object.assign(m, sessR(tr.flatMap(r => r.daily || []), totR));" in lb
+    for g in ("Last 10 sessions avg R", "Avg R per session", "Best-day share"):
+        assert f'"{g}":' in HTML, g
+
+
+def test_total_trades_per_day_card_counts_every_account():
+    """Owner 2026-11-12: full-width card near the top; Primary, On Deck, Testing (all) = Testing A-F, Gen, Graveyard columns;
+    Total = the sum of all of them; the table sits in a .tablewrap (the old grid block clipped its Total column)."""
+    i = HTML.index('id="tpd-card"')
+    assert HTML.index('id="glance"') < i < HTML.index('id="guild-card"') < HTML.index('id="eod-card"')
+    assert "Total trades per day (all accounts)</h2>" in HTML
+    eod = HTML[HTML.index('<div class="card" id="eod-card"'):]
+    eod = eod[:eod.index("</script>")]
+    assert ('const TPD = [["Primary", ["primary"]], ["On Deck", ["testing"]], ["Testing (all)", TK], ["Gen", ["gen"]], '
+            '["Grave\\u00ADyard", ["graveyard"]]];') in eod
+    assert "const TK = window.MCF_TOTALS.TESTING.map(x => x[0]);" in eod
+    assert "c.reduce((a, b) => a + b, 0)" in eod and '<div class="tablewrap"><table>' in eod
+    for k in ("primary", "testing", "testing2", "gen", "graveyard", "explore1", "livelab", "testingd", "testinge", "testingf"):
+        assert f'["{k}", ' in eod, k
+    assert "Trades per day by account</h3>" not in eod   # moved out of the End of day grid

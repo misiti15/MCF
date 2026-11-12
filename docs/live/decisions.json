@@ -675,8 +675,8 @@
   ],
   "why": "It was promoted on a record carried by one session; on Primary it has lost on 3 of 4 sessions (NRIX shorted three times into stops on 11-04).",
   "link": "research/bdi/nightly1105/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "decided in PREVAL (owner Team yes), 2026-11-10"
  },
  {
   "code": "DM-MF2",
@@ -690,8 +690,8 @@
   ],
   "why": "It sells after the index has already flushed; when a whole theme qualifies in one poll its tight stops go together (11-04, 11-06).",
   "link": "research/bdi/nightly1106/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "decided in PREVAL (owner Team yes), 2026-11-10"
  },
  {
   "code": "DM-MF4",
@@ -705,8 +705,8 @@
   ],
   "why": "Same failure as MF2: entries at the low of a washout, stopped together in the bounce; its +0.5R / -1R geometry needs a 67% win rate.",
   "link": "research/bdi/nightly1106/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "decided in PREVAL (owner Team yes), 2026-11-10"
  },
  {
   "code": "PREVAL",
@@ -866,7 +866,7 @@
   "code": "RW3S-GY",
   "title": "Move Gap-Down Heavy-Selling Short, no RSI condition (all day) from Testing 2 to the Graveyard",
   "what": "RW3S-gapdn-flowsell-short-FD leaves Testing 2 and trades in the Graveyard (a move, not a removal; assignments regenerated in the same change).",
-  "recommend": "Yes - below break-even on every cut of its 6-session observation",
+  "recommend": "No: drop this request (superseded: in Testing E from 11-12)",
   "numbers": [
    "Since 11-03: 204 trades / 6 sessions (1 green), 36.8% win vs 52.3% break-even, -0.281R, -0.291R without its best day, day-t -1.88, -$867.78",
    "Last 4 sessions -0.353R; 11-10: 61 trades -17.91R (29 lots open when it crossed -2R)",
@@ -943,5 +943,204 @@
   "link": "research/owner_inbox/2026-11-10.md",
   "status": "answered",
   "answered": "answered by the owner, 2026-11-10"
+ },
+ {
+  "code": "LATCH-CLOSE",
+  "title": "Close a setup's open lots when its -2R latch fires",
+  "what": "When the -2R per-setup latch fires, also close that setup's open lots at the next 5-min bar.",
+  "recommend": "Yes in testing accounts now (\"LATCH-CLOSE testing\"); Primary your call after the TEAM-6 trial",
+  "numbers": [
+   "2-yr VALID +1,684R, day-t 3.89 vs bar 2.89",
+   "54 setups better / 32 worse; 7 of 9 families better",
+   "11-11 Primary: -11.02R lost after the latch"
+  ],
+  "why": "Pre-registered, costs in; trims losing open books, not new edge.",
+  "link": "research/bdi/1111/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LR6",
+  "title": "Entry execution (LR6 A-D)",
+  "what": "A: collar on tight-spread entries; B: limit +-10 bps / 300 s on wide spreads; C: quote age 60 s; D: SIP fetch for sub-minute fills.",
+  "recommend": "Yes: LR6-A yes, LR6-B testing, LR6-C yes, LR6-D yes",
+  "numbers": [
+   "Entries cost 0.040R/trade",
+   "B: +0.027R per wide signal, ~0.6 reps/session lost"
+  ],
+  "why": "Only the by-spread rule held on the valid week.",
+  "link": "research/lr6/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "CF-OD",
+  "title": "Cost filter off in On Deck (match Primary)",
+  "what": "ODX-2: switch the 0.15R CF cost filter off in On Deck.",
+  "recommend": "No: keep (\"CF keep\"); CF forward test spans all testing accounts",
+  "numbers": [
+   "Gives back 3-7% of signals (RW1-FD, RW7-FD, orb20_a)"
+  ],
+  "why": "Keeps On Deck records comparable with the pool.",
+  "link": "research/ondeck_build/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "REDDIT",
+  "title": "Reddit setup scout: pause or weekly",
+  "what": "Nightly Reddit scout: pause it or run it weekly.",
+  "recommend": "Yes to pause (\"pause Reddit\")",
+  "numbers": [
+   "11-10: 346 posts, 1 idea, 0 of 8 configs passed"
+  ],
+  "why": "Owner 11-11: live reps, not setup ideas, are the bottleneck.",
+  "link": "research/bdi/reddit_1110/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "MF4-OK",
+  "title": "MF4 base/twin call on On Deck",
+  "what": "Confirm the MF4 base vs twin placement in the On Deck build.",
+  "recommend": "Yes (\"MF4 OK\")",
+  "numbers": [
+   "MF4 base signalled 14 of 16 days, submitted 0 (twin block)"
+  ],
+  "why": "Twin block starved the base slot.",
+  "link": "research/ondeck_build/PLAN.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "SIP-DEF",
+  "title": "SIP data for Testing D/E/F",
+  "what": "Add the SIP market-data subscription on the three new Alpaca accounts.",
+  "recommend": "Yes: add it, then reply \"SIP added D E F\"",
+  "numbers": [
+   "30 setups (10 each) wait on it"
+  ],
+  "why": "D/E/F have no data yet.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PROMO2",
+  "title": "Two-stage promotion via On Deck",
+  "what": "Score setups in On Deck only after they moved; require the promote flag again before Primary; show K on every suggestion.",
+  "recommend": "Yes (\"PROMO2 yes\"); second-stage bar your call",
+  "numbers": [
+   "Today ~11% of zero-edge setups pass the flag; two stages ~1%",
+   "Real +0.10R setup passes both only ~16%"
+  ],
+  "why": "Luck control matters more as the book grows.",
+  "link": "research/guild/1111/obs-reps/MEMO.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "TEAM6",
+  "title": "TEAM-6 Primary lineup",
+  "what": "Primary runs TEAM-6 from 11-11 (PR #180).",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-10.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "RENAME",
+  "title": "Account renames",
+  "what": "On Deck / Testing A-F names.",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "TDEF",
+  "title": "Testing D/E/F accounts",
+  "what": "Three new testing accounts (PR #182).",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "ONDECK",
+  "title": "On Deck build",
+  "what": "On Deck rebuilt (PR #183).",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/ondeck_build/PLAN.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "LR1-8",
+  "title": "Live rep unlocks LR1-5, 7, 8",
+  "what": "Rep unlocks and safety fixes (PR #185 merged).",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "GY-CAPS",
+  "title": "Graveyard caps",
+  "what": "Graveyard sizing/caps raised; -2R latch kept.",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "HALT300",
+  "title": "Account halt 300R",
+  "what": "Daily halt 120R -> 300R in On Deck, Testing A-F and Gen; Primary keeps 20R.",
+  "recommend": "Yes",
+  "numbers": [
+   "Applied from 2026-11-12"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "EB",
+  "title": "EB",
+  "what": "Owner answered no.",
+  "recommend": "No",
+  "numbers": [
+   "No change"
+  ],
+  "why": "Owner answered 2026-11-11.",
+  "link": "research/owner_inbox/2026-11-11.md",
+  "status": "answered",
+  "answered": "no, 2026-11-11 (owner, in chat)"
  }
 ]
