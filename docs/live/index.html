@@ -70,6 +70,7 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 #lb-tab thead tr.cols th { top: 24px; }
 #lb-tab thead tr.cols th.bd-last, #lb-tab thead tr.cols th.bd-replay { white-space: normal; min-width: 64px; max-width: 92px; line-height: 1.2; }
 #lb-tab th.bd-last, #lb-tab td.bd-last { background: var(--band-last); }
+#lb-tab th.bd-today, #lb-tab td.bd-today { border-left: 1px solid var(--grid); }   /* owner question 2026-11-12: Today so far band */
 #lb-tab thead tr.band th.bd-last { color: var(--band-last-ink); background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
 #lb-tab thead tr.cols th.bd-last { background: linear-gradient(var(--band-last), var(--band-last)), var(--surface); }
 #lb-tab th.bd-replay, #lb-tab td.bd-replay { background: var(--band-replay); }
@@ -1229,7 +1230,7 @@ window.MCF = window.MCF || {};
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + (Math.abs(v) >= 10000 ? (Math.abs(v) / 1000).toFixed(1) + "k" : Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0}));   // compact $ (owner 2026-10-22)
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   const isGen = c => /^GEN-/.test(String(c || ""));
-  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null, RG = null;
+  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null, RG = null, TD = null;
   const st = { acct: "all", show: "live", min: 0 };
   const dayOf = {}, lbOf = {};   // per account: latest completed session date, raw leaderboard rows
   function flag(r) {
@@ -1350,6 +1351,18 @@ window.MCF = window.MCF || {};
       Object.entries(by || {}).forEach(([sname, v]) => { const b = lsBy[sname] = lsBy[sname] || { trades: 0, r: 0, pnl: 0 };
         b.trades += v.trades; b.r += +v.r || 0; b.pnl += +v.pnl || 0; });
     }));
+    // Today so far (owner question 2026-11-12: "the leaderboard showed only one setup traded today"): the Last-session band
+    // is the last COMPLETED session from the EOD scorecards, so during the day it shows yesterday and nothing of today.
+    // These columns add today's closed trades per setup from every account's status.json (closed[]), summed over accounts,
+    // only for a session the scorecards do not cover yet (session_date > LS); after the EOD reports land they go blank.
+    const tdBy = {}; TD = null;
+    await Promise.all(Object.entries(ACC).map(async ([k, [, br]]) => {
+      let s = null; try { const r = await fetch(RAW + br + "/status.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) s = await r.json(); } catch (_) {}
+      if (!s || !s.session_date || (LS && s.session_date <= LS)) return;
+      TD = TD && TD > s.session_date ? TD : s.session_date;
+      (s.closed || []).forEach(c => { const b = tdBy[c.strategy] = tdBy[c.strategy] || { trades: 0, r: 0 }; b.trades++; b.r += +c.r || 0; });
+    }));
+    all.forEach(r => { const v = tdBy[r.setup]; r.td_trades = v ? v.trades : null; r.td_r = v ? +v.r.toFixed(3) : null; });
     const rps = (RP && RP.setups) || {};
     all.forEach(r => { const v = rps[r.setup] || null; r.replay = v;
       r.rp_trades = v ? v.trades ?? null : null; r.rp_sessions = v ? v.sessions ?? null : null; r.rp_win_rate = v ? v.win_rate ?? null : null;
@@ -1405,6 +1418,7 @@ window.MCF = window.MCF || {};
   };
   const COLS = [["rank", "#"], ["name", "Setup"], ["acctLabel", "Account"], ["best_reg", "Best conditions"],
     ["ls_trades", "Last-session trades"], ["ls_r", "Last-session R"], ["ls_pnl", "Last-session P/L"],
+    ["td_trades", "Today so far trades"], ["td_r", "Today so far R"],   // owner question 2026-11-12: intraday, from status.json
     ["trades", "Live trades"], ["sessions_traded", "Sessions"], ["per_session", "Trades/session"],   // owner 2026-10-25
     ["win_rate", "Win rate"], ["breakeven_wr", "Break-even win rate"], ["t_stat", "Confidence (t)"], ["pnl", "P/L"], ["profit_factor", "PF"],
     // owner 2026-11-12: every R column side by side (R after costs, LR2); the Last-session R column stays in its band
@@ -1413,7 +1427,7 @@ window.MCF = window.MCF || {};
     ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
-  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
+  const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", td_trades: "today", td_r: "today", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
     avg_r: "live", exbest_r: "live", exmkt_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
     best_share: "live", last10_avg_r: "live", r_per_session: "live",
     rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
@@ -1422,6 +1436,7 @@ window.MCF = window.MCF || {};
   const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
       if (p && p.b === b) p.n++; else out.push({ b, n: 1 }); });
     const T = { last: [`Last session (${LS || "–"})`, ' id="lb-last-band"', "Most recent completed session, all accounts the setup traded in that day"],
+      today: [TD ? `Today so far (${TD})` : "Today so far", ' id="lb-today-band"', TD ? "Closed trades today per setup, all accounts summed, from each account's live status file (R after costs). Replaced by the Last-session band once the EOD reports land." : "No open session: today's trades are in the Last-session band (EOD reports)."],
       live: ["Live — since start", "", "Live paper results since the setup started, all accounts merged"],
       replay: [`Replay${RP && RP.generated ? " (" + String(RP.generated).slice(0, 10) + ")" : " (no data yet)"}`, ' id="lb-replay-band"',
         RP && RP.generated ? `Replay of the setup's rules over past sessions with the live execution engine, generated ${RP.generated}${RP.window ? ", " + RP.window : ""}. Not live trades.` : "Replay results appear here once the replay engine writes docs/live/replay.json. Not live trades."] };
@@ -1460,6 +1475,8 @@ window.MCF = window.MCF || {};
         ls_trades: `<td class="bd-last">${x.ls_trades || "—"}${lsOld}</td>`,
         ls_r: `<td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td>`,
         ls_pnl: `<td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>`,
+        td_trades: `<td class="bd-today">${x.td_trades || "—"}</td>`,
+        td_r: `<td class="bd-today ${x.td_trades ? cls(x.td_r) : ""}">${x.td_trades ? f(x.td_r) : "—"}</td>`,
         trades: `<td class="bd-live">${x.trades ?? 0}</td>`, sessions_traded: `<td>${x.sessions_traded ?? 0}</td>`,
         per_session: `<td title="Average live trades per session it traded">${x.per_session ?? "–"}</td>`, win_rate: `<td>${pc(x.win_rate)}</td>`,
         breakeven_wr: `<td class="${cls(x.wr_edge)}" title="Win rate needed to break even at this setup's average win and loss size">${pc(x.breakeven_wr)}${x.wr_edge == null ? "" : ` <span style="font-size:11px">(${x.wr_edge >= 0 ? "+" : ""}${Math.round(x.wr_edge * 100)})</span>`}</td>`,
@@ -1838,6 +1855,8 @@ window.MCF = window.MCF || {};
     "ex-primary": "Was in the Primary account before being demoted.",
     "*": "* = long setup from the 2026-10-20 longs research, near-miss, observation only.",
     "Last session": "The most recent completed market session. Columns under this band are that one day only, all accounts the setup traded in combined.",
+    "Today so far trades": "Trades the setup closed so far in today's open session, all accounts combined (live status files). Blank once the EOD reports land.",
+    "Today so far R": "R after costs of today's closed trades so far, summed over accounts.",
     "Last-session trades": "Trades the setup closed in the most recent completed session, all accounts combined. — = it did not trade that day.",
     "Last-session R": "Sum of R over the setup's trades in the most recent completed session (all accounts). Green = made money in R terms, red = lost.",
     "Last-session P/L": "Dollar profit or loss after costs of the setup's trades in the most recent completed session (paper, all accounts).",

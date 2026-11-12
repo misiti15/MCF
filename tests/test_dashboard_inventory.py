@@ -330,3 +330,16 @@ def test_total_trades_per_day_card_counts_every_account():
     for k in ("primary", "testing", "testing2", "gen", "graveyard", "explore1", "livelab", "testingd", "testinge", "testingf"):
         assert f'["{k}", ' in eod, k
     assert "Trades per day by account</h3>" not in eod   # moved out of the End of day grid
+
+
+def test_leaderboard_today_so_far_band():
+    """Owner question 2026-11-12 ("the leaderboard showed only one setup traded today"): the Last-session band is the
+    last COMPLETED session (EOD scorecards), so intraday it showed yesterday only. A Today-so-far band sums each
+    account's status.json closed[] per setup, only for a session the scorecards do not cover yet."""
+    lb = _lb_script()
+    cols = re.findall(r'\["(\w+)", "[^"]+"\]', lb[lb.index("const COLS = ["):lb.index("const BAND = ")])
+    assert cols[cols.index("ls_pnl") + 1:cols.index("ls_pnl") + 3] == ["td_trades", "td_r"]
+    assert 'td_trades: "today", td_r: "today"' in lb and "lb-today-band" in lb
+    assert '"/status.json?t="' in lb and "s.session_date <= LS" in lb and "(s.closed || []).forEach" in lb
+    for g in ("Today so far trades", "Today so far R"):
+        assert f'"{g}":' in HTML, g

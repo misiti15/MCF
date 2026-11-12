@@ -333,8 +333,13 @@ def update(out: Path, day: str, now: pd.Timestamp, bars_fn=fetch, names: list[st
     rows.sort(key=lambda r: r["T"])
     path.parent.mkdir(parents=True, exist_ok=True)
     if new or not path.exists():
+        # header = COLS + any column an existing file already carries (owner 2026-11-12 fix: a run on code with an older
+        # COLS against a file written by newer code - e.g. the 'spy_px' column - raised "dict contains fields not in
+        # fieldnames" and stopped the day's marks; extra columns are now kept, missing ones are written blank)
+        cols = COLS + [k for r in have for k in r if k not in COLS and k is not None]
+        cols = list(dict.fromkeys(cols))
         with path.open("w", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=COLS)
+            w = csv.DictWriter(f, fieldnames=cols, restval="")
             w.writeheader()
             w.writerows(rows)
     lj = out / "compass" / "latest.json"

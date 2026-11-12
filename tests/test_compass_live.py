@@ -202,3 +202,18 @@ def test_dashboard_plain_subcard():
     card = html[i:html.index("</script>", i)]
     assert 'id="cmp-plain"' in card and "In plain English" in card and "d.plain" in card
     assert "P.next_hour" in card and "P.detail" in card and "Educational only — not financial advice" in card
+
+
+def test_update_keeps_columns_the_code_does_not_know(tmp_path, monkeypatch):
+    """2026-11-12: `compass_live --push` on a checkout with an older COLS failed on a file written by newer code
+    ("dict contains fields not in fieldnames: 'spy_px'"), so only the 09:45 mark landed. Extra columns are kept now."""
+    def fake(day, syms, now, log=print):
+        return {k: v[v.index < now] for k, v in sample().items()}
+    t1 = pd.Timestamp(f"{DAY} 10:01", tz=cl.NY)
+    assert cl.update(tmp_path, DAY, t1, bars_fn=fake, names=NAMES, log=lambda *_: None) == 2
+    monkeypatch.setattr(cl, "COLS", [c for c in cl.COLS if c != "spy_px"])          # older code, newer file
+    t2 = pd.Timestamp(f"{DAY} 10:31", tz=cl.NY)
+    assert cl.update(tmp_path, DAY, t2, bars_fn=fake, names=NAMES, log=lambda *_: None) == 2
+    rows = cl.read_rows(tmp_path / "compass" / f"{DAY}.csv")
+    assert [r["T"] for r in rows] == ["09:45", "10:00", "10:15", "10:30"] and "spy_px" in rows[0]
+    assert rows[0]["spy_px"] and rows[-1]["spy_px"] == ""

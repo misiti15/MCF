@@ -33,7 +33,8 @@ BOARD = HERE / "shadow_scoreboard.csv"
 NY = "America/New_York"; FORWARD_FROM = "2026-11-11"
 DT = [590, 600, 630, 660, 720, 780]
 ACCTS = {"mcf-data": "Primary", "mcf-data-testing": "Testing1", "mcf-data-testing2": "Testing2", "mcf-data-graveyard": "Graveyard",
-         "mcf-data-livelab": "LiveLab", "mcf-data-explore1": "Explore1", "mcf-data-gen": "Gen"}
+         "mcf-data-livelab": "LiveLab", "mcf-data-explore1": "Explore1", "mcf-data-gen": "Gen",
+         "mcf-data-testingd": "TestingD", "mcf-data-testinge": "TestingE", "mcf-data-testingf": "TestingF"}   # D/E/F from 2026-11-12
 CFGS = ("GAP-U", "IDX3-P", "SPYO-P")
 COLS = ["date", "cfg", "account", "kind", "n_trades", "base_R", "n_switched", "R_switched", "dR_off", "dR_half", "avgR_switched",
         "avgR_kept", "gap_pct", "states", "cum_base_R", "cum_dR_off", "cum_dR_half", "sessions", "updated_at"]
