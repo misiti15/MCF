@@ -220,3 +220,12 @@ ICCSET-2 shrunk table ready (tau 0.134). OBS-STOPSLIP: live stop slip +0.045R pe
 spread/stop; Gen 'stop' exits include moved stops (trades.stop = original stop) -> raw means misleading.
 **Failed**: first pass reported raw means (Gen -0.075R) before looking at the distribution; quantiles first next time.
 **Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
+
+## Run 36 — 2026-11-12 ~05:40 ET
+**Learned**: Builder's buying-power cap rejected by its own check; Gen early halt not BP-driven (moot at 300R). Lead: replace
+sim stop slip with my spread/stop form, refit with Skeptic's side split. Refit: mean +0.059R, p95 0.20, p99 0.38, fit
+-0.003 + 0.63 x spread/stop; window-unstable (sell-off 0.079 vs holdout 0.044). Scout ICCSET-3: group shrink targets
+(CWT 0.10, flow 0.18, heat 0.39, GEN 0.07).
+**Failed**: symmetric |slip| trim cut the adverse tail too (Skeptic's catch, checklist 34). Trim by direction relative to
+the rule's mechanism, never symmetrically.
+**Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
