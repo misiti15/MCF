@@ -193,3 +193,12 @@ modal offset share (pooled 0.578) and Builder's shares sit at it -> exact-minute
 Suggested scoring on decision bar. Lead closed market-state thread; NEWSMID look runs 11-12.
 **Failed**: FWDCAL books are not on mcf-guild, so per-trade replay offsets could not be checked directly (ceiling argument only).
 **Next**: FAMC build for 11-12 after 20:00 ET on 11-12; repv/fwdrep/fastdec outside read; Gen fill-lag R cost (cheap, journals).
+
+## Run 33 — 2026-11-11 ~23:40 ET
+**Learned**: Scout's FILLCOST: order->fill ~2 s; my 'broker routing' wording WRONG -> corrected publicly. The decision->fill time is
+decision->order created inside the poll (median 26-41 s, Gen 73 s). Entry drift vs decision price ~+0.04R in every account,
+flat in lag (slopes mixed). Lead sending RULE21-DB (decision-bar matching) to the owner with Skeptic's guards; Builder
+re-scores fresh 11-12..11-13. UNRATED14 ~7 days/week (Builder).
+**Failed**: called a cause (broker latency) from a timing gap without splitting it into its legs first. Rule for me:
+split any latency into legs (bar close -> decision -> order -> fill) using orders.created_at before naming the cause.
+**Next**: FAMC build for 11-12 after 20:00 ET on 11-12; repv/fwdrep/fastdec outside read.
