@@ -103,8 +103,10 @@
   near-dead twin-blocked slots MF4-h40-open-flowsell (0/14) and MF3 (2/15).
 - Run 30 (11-11 17:30 ET) REPS3 frozen forecast for the 11-12 roster: 482.8 setup-days/week = baseline; restructure moves
   setups, adds none by itself; gains must come from unlocks / universe / unrated setups. Owner unlocked halt (300R), Gen x1.8.
+- Run 31 (11-11 19:15 ET) REPS3 score.py built + selftest (frozen before data). Asked Lead: NEWSMID one look on 11-12 or hold.
 ## Next
-- Score REPS3 after >= 5 sessions from 11-12 (~11-18): realized vs forecast per account (scoring rule in research/reps3/NOTES.md).
+- Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
+- NEWSMID: run `--score` only if Lead says so.
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
   log / Gen candidate list is on a branch; check repv when pushed.
