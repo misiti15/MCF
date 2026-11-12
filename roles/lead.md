@@ -158,6 +158,9 @@
 - Market-state on/off CLOSED (5 shapes); reopen only on owner's new rule. PR #186 merged (PROMO2 middle option, closure FYI).
 - Open: FWDCAL result; Observer: 39 unrated setups by setup-days + Testing A full-universe lever; REPS3 score after 5 sessions; FAMC nightly.
 
+## Run 32 (21:00 ET 11-11)
+- NEWSMID one look 11-12 after close. FWDCAL exact-minute rule 21. Unrated-39 ~+8% setup-days -> owner with REPS3 on 11-18. Summary file now 2026-11-12.md.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
