@@ -1,0 +1,18 @@
+setups with >= 4 days and >= 15 trades in BOTH halves: 50
+first-half -> second-half: MSE pooled prior 0.0236, group prior 0.0240 -> out-of-time variance explained -2%
+corr(icc_a, icc_b) per setup 0.40; group means first vs second half:
+                                                                       n  first_half  second_half
+group                                                                                            
+CWT structure (level breaks, coils, VWAP stretch, flush, gap bounce)  18       0.080        0.170
+GEN                                                                    2       0.083        0.073
+flow / gap-day (RW, MF, NS, L3, ST)                                   21       0.182        0.206
+heat / exhaustion / momentum                                           7       0.411        0.316
+other (NM, LIQ)                                                        2       0.208        0.300
+
+full-window group ICC, bootstrap 90% CI over setups (2,000 draws; groups with < 5 setups are wide by construction):
+   CWT structure (level breaks, coils, VWAP n 18  mean 0.129  90% CI [0.106, 0.155]
+   GEN                                      n  4  mean 0.192  90% CI [0.061, 0.346]
+   flow / gap-day (RW, MF, NS, L3, ST)      n 22  mean 0.221  90% CI [0.171, 0.272]
+   heat / exhaustion / momentum             n  7  mean 0.399  90% CI [0.299, 0.515]
+   other (NM, LIQ)                          n  3  mean 0.378  90% CI [0.248, 0.507]
+Educational only - not financial advice.

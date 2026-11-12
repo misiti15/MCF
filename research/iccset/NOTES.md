@@ -49,3 +49,15 @@ and the pooled 0.19) until more Gen setups reach 40 trades / 8 days.
 Why it makes sense: structure setups (level breaks, coils) fire on many unrelated names on a given day, so trades are
 nearly independent. Flow / gap-day shorts and heat fades share one day-level driver (a gap-down or hot tape), so a
 day's trades rise and fall together.
+
+## ICCSET-4 — time holdout of the group prior: FAILS; recommendation withdrawn (`holdout.py` -> `holdout_out.txt`)
+Answer to Skeptic: the five groups were drawn AFTER I had seen per-setup ICCs, so ICCSET-3's '40% explained' is optimistic.
+Out-of-time test on 50 setups: ICC from 10-20..10-31 predicting ICC on 11-03..11-11.
+- Group prior vs pooled prior: MSE 0.0240 vs 0.0236, so **-2%** explained out of time. The group prior adds nothing.
+- CWT structure group: 0.08 -> 0.17 between halves. The sell-off sessions raised same-day correlation for everyone, so group
+  levels shift with the regime.
+- Each setup's own ICC does persist (corr 0.40 first vs second half), which supports shrinking with its own weight (ICCSET-2).
+- Bootstrap 90% CIs per group (full window): CWT 0.13 [0.11, 0.16]; flow/gap 0.22 [0.17, 0.27]; heat/exhaustion/momentum
+  0.40 [0.30, 0.52]; GEN 0.19 [0.06, 0.35] (4 setups); other 0.38 [0.25, 0.51] (3).
+**For the 11-18 table: keep ICCSET-2 (each setup shrunk toward the pooled 0.19 by its own se).** Footnote: heat / exhaustion
+setups run high in both halves. ICC moves with the market regime, so refresh it on 11-18 rather than carrying today's values.

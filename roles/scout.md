@@ -112,6 +112,8 @@
 - Run 35 (11-12 03:30 ET) ICCSET-2 shrunk ICC (tau 0.134 real; shrunk 0.09-0.32); table for owner on 11-18.
 - Run 36 (11-12 05:30 ET) ICCSET-3: coarse setup groups explain 40% of ICC (CWT 0.10, flow/gap 0.18, heat 0.39, GEN 0.07/n=4);
   11-18 table should shrink toward group ICC.
+- Run 37 (11-12 07:30 ET) ICCSET-4: group prior fails a time holdout (-2%); groups were post hoc -> withdrawn; keep pooled shrink.
+  Lesson: a grouping drawn after seeing the values needs an out-of-time test before it is recommended.
 ## Next
 - 11-18: refresh ICCSET (iccset.py + shrink.py on fresh journals) beside REPS3.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
