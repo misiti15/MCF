@@ -163,3 +163,5 @@ and every decision the owner answers is set to `answered` with the date and the 
 
 Educational only — not financial advice.
 | K4-WATCH | Coil Under the High (4 bars) (CWT12-coil-k4-long) | 2026-10-28 | owner K4-2 yes: Testing 2 -> Graveyard from 2026-10-29 |
+
+| LEDGER-CHK-1111 | open | 2026-11-12 | 17 ledger checks (lr1-8, testing-def-accounts, 2026-11-12-*) pending: local runs time out (>2h) and the overnight detached runner was killed with the container. Next: run as a GitHub Actions job (6h limit) or Saturday deep run. |
