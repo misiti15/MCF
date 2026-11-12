@@ -93,7 +93,7 @@
 
 ## Next
 - 11-11 21:10: FWDCAL DONE. D=0 chosen (sel ALL match 0.743 vs 0.697). Holdout 11-10..11-11 rule 21 FAILS: ALL match
-  0.694, gap -0.001; only Testing C passes (12 trades). Exit model is fine (matched +0.006R); misses = no signal 35%,
+  0.694, gap -0.001; on EXACT minutes (Lead 21:00) ALL 0.386, every account fails, Testing A best 0.75. Exit model is fine (matched +0.006R); misses = no signal 35%,
   caps cascade 34%, spread-quote 32%; replay-only 242 buying power. Next lever: replay logged live spread quotes.
   mirror.py now routes module mask crashes (LD1-ns1-breadthup, 1-row frame) to the real generate(). Offered Observer a
   Testing A top-500 replay: NOT run (Lead: no replay counts until rule 21 passes). NEXT RUN: rate Observer's 14 non-Gen
