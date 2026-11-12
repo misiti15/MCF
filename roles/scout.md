@@ -107,6 +107,8 @@
 - Run 32 (11-11 21:30 ET) NEWSMID scorer verified on synthetic data: planted +0.4 ATR found (both legs), null not flagged.
 - Run 33 (11-11 23:30 ET) FILLCOST: latency equal across accounts (~1.25 min bar->order, ~2 s fill); slip ~half spread
   (+0.01-0.02R). Bug: journal meta has outcome-linked suffix (';touch_fill') -> parse JSON prefix only. Owned exit-model error.
+- Run 34 (11-12 01:30 ET) ICCSET: per-setup ICC 0.07-0.45 (null 90th 0.09), not beta; survivors RW3/RW5/CWT09/MF2-FD
+  high-ICC (n_eff ~0.25 x n). Bench/rotation log not live -> rotation unmeasurable from journals.
 ## Next
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
 - 11-12 after 16:00 ET: NEWSMID one look (Lead approved): `cd research/newsmid && python3 -I newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` in background (slow loops), then post result + close/shadow per kill line.
