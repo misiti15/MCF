@@ -165,6 +165,10 @@
 - FWDCAL fails rule 21; exit model fine; misses = no-signal / caps / spread. Next: spread-quote replay + fresh audit 11-12..13. RULE21-DB to owner (PR #187).
 - Approved Testing A relative contrast (uncalibrated label). Open owner items: COMPCAL, PROMO2, RULE21-DB, 3 questions, S6.
 
+## Run 34 (01:10 ET 11-12)
+- Corrections to owner (PR #188): latency = poll ordering, costs ~0 R; meta-parse trap (checklist 33). Lesson: verify mechanism claims before they reach the owner (I relayed 'broker routing' and 'Gen 2x slower' too fast).
+- After 11-12 close: FAMC s2, NEWSMID, FWDCAL quotes audit (fresh 11-12..13), Testing A relative contrast.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-11T23:15-05:00",
+ "updated": "2026-11-12T01:10-05:00",
  "session": "2026-11-12",
- "headline": "Calibrated replay fails research rule 21 (69% of live trades matched within 5 minutes) - it prices trades right but picks a different set; owner gets a decision on matching by decision bar (PR #187).",
+ "headline": "Corrections sent to the owner (PR #188): order latency costs about nothing in R, and a data trap was found where dropping unparsable trade records silently keeps mostly losers.",
  "bullets": [
-  "FWDCAL: matched trades are within +0.006R of live; misses come from missing signals (35%), the caps cascade (34%) and the spread-quote filter (32%). No replay result is used.",
-  "Fill latency: live entry times are broker fill times, 0.5-1.2 min after the decision bar, so exact-minute matching can never reach 95%; DECISION RULE21-DB proposes decision-bar matching with R-gap guards.",
-  "Reps: rating the 39 unrated setups adds ~+47 setup-days/week (~+10%), mostly 22 Generator setups.",
-  "The Generator account fills about twice as slowly as the others; its R cost isn't measured yet.",
-  "Next: replay the logged live spread quotes, then a fresh rule-21 audit on 11-12..11-13."
+  "Latency: decision to order is 24-79 s (the live poll builds orders in turn), order to fill ~2 s; entry slip ~half the spread; Generator's weak results are not a fill problem.",
+  "Data trap: trade metadata can carry a suffix after the JSON; naive parsing fails on 15-51% of trades and those are mostly winners. Guild and BDI scripts checked: safe. Checklist item 33.",
+  "FWDCAL now replays the spread quotes live actually saw; fresh rule-21 audit on 11-12..11-13.",
+  "NEWSMID one look and FAMC session 2 after the 11-12 close.",
+  "Open owner items: COMPCAL, PROMO2, RULE21-DB, the days 1-3 questions, S6."
  ],
  "progress": {
-  "ideas": 58,
-  "tested": 57,
+  "ideas": 59,
+  "tested": 58,
   "configs": 157,
   "passed": 0,
   "forward": 1
  },
- "next": "Builder: spread-quote replay + fresh audit; Testing A relative contrast; NEWSMID one look; FAMC session 2.",
+ "next": "After the 11-12 close: FAMC session 2, NEWSMID, FWDCAL quotes-mode audit, Testing A relative contrast.",
  "by_role": {
-  "scout": "NEWSMID scorer checked on synthetic data; one look after the 11-12 close.",
-  "builder": "FWDCAL scored (fails), cause table; rated 14 non-Gen setups.",
-  "skeptic": "Read the FWDCAL failure; guards for decision-bar matching.",
-  "observer": "Found the fill-latency ceiling behind the exact-minute failure.",
-  "lead": "Sent RULE21-DB to the owner (PR #187)."
+  "scout": "FILLCOST: latency costs ~nothing; found the meta-parse trap; owned an earlier wrong guess.",
+  "builder": "Added a quotes-replay mode to FWDCAL.",
+  "skeptic": "Checked the meta-parse trap across journals; checklist item 33.",
+  "observer": "Corrected the latency cause (poll, not broker).",
+  "lead": "Sent corrections to the owner (PR #188)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
