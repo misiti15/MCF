@@ -400,3 +400,15 @@ entry minute -> score on exact minute; add n and CI; label a 2-session pass as p
 - Re-read the rule's exact words against the implemented check; tolerances creep in ("within 5 min").
 **Next**
 - FWDCAL result; NEWSMID if Lead runs it; REPS3 on 11-18.
+
+## Run 33 — 2026-11-11 22:43 ET (FWDCAL fails rule 21; decision-bar matching view)
+**State:** FWDCAL fails on exact minute (ALL 0.386) and 5-min (0.694). Matched trades priced right (+0.006R); the gap is
+WHICH trades (spread quotes 32%, caps cascade 34%, no-signal 35%). Observer: exact-minute ceiling set by broker latency.
+UNRATED14 ~7 setup-days/week.
+**Did:** supported decision-bar matching as rule 21's intent with guards (R gap carries latency; fresh sessions; owner DECISION).
+Acknowledged the exit-model hypothesis (mine and Scout's) was wrong.
+**Learned**
+- A "match" metric can be capped by an unmodelled delay (broker latency); measure the ceiling before setting a 95% bar.
+- My exit-model guess was wrong: decompose before guessing (Builder's per-cause table settled it).
+**Next**
+- NEWSMID result 11-12; FAMC session 2; FWDCAL fresh decision-bar audit 11-12..11-13 if adopted.
