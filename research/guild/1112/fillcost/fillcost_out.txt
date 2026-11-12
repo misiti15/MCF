@@ -1,0 +1,26 @@
+net R all trades -0.124, kept -0.120 (selection check)
+trades 14740; with bar_age / slip / spread in meta: 14685 (100%); window 10-20..11-11
+              n  bar_age_med_min  order_to_fill_med_s  spread_med_bps  slip_mean_bps  slip_mean_R  spread_mean_R  net_avg_R
+account                                                                                                                    
+Gen        2986             1.25                1.880             8.9          5.083        0.009          0.086     -0.198
+Graveyard  6349             1.25                1.705             7.4          4.790        0.022          0.092     -0.098
+On Deck    1934             1.28                1.373             7.1          5.364        0.024          0.080     -0.108
+Primary     799             1.26                1.716             6.8          3.594        0.011          0.083     -0.077
+Testing A  2492             1.26                1.465             8.1          5.080        0.011          0.083     -0.111
+Testing B    72             1.24                1.938             9.7          4.358       -0.020          0.098     -0.133
+Testing C    53             1.28                2.060             5.8          0.743       -0.001          0.055      0.030
+
+pooled OLS slip_R ~ bar_age + spread_R + account:
+   const     +0.1960 (se 0.0111, t +17.7)
+   bar_age   -0.1061 (se 0.0080, t -13.2)
+   spread_R  -0.5659 (se 0.0243, t -23.3)
+
+within-account slope of slip_R on bar_age (R per minute), controlling spread_R:
+   Gen        n  2986  -0.0967 R/min (t -4.2)
+   Graveyard  n  6349  -0.1603 R/min (t -15.3)
+   On Deck    n  1934  +0.0313 R/min (t +1.2)
+   Primary    n   799  +0.1262 R/min (t +1.9)
+   Testing A  n  2492  -0.0273 R/min (t -1.6)
+
+Gen median bar age 1.25 min vs others 1.26: at the pooled slope, Gen's extra latency costs ~+0.0011 R/trade
+Educational only - not financial advice.
