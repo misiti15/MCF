@@ -30,3 +30,22 @@ ICC is shrunk toward 0.19 with weight tau^2 / (tau^2 + se^2) (median weight 0.68
 - Setups with < 40 trades or < 8 days: use the prior 0.19 directly (their own ICC is too noisy to move it).
 Use: verdict statistics (mean R, t, P(>0)) computed with n_eff_s in place of n. Equivalently, day-clustered standard errors.
 The table goes to the owner with REPS3 on 11-18. Refresh it then with the extra sessions.
+
+## ICCSET-3 — a better shrink target: setup group (`family.py` -> `family_out.txt`)
+Name-prefix families explain 81% of the weighted ICC variance, but with 29 families for 54 setups that is near-saturated.
+The fair test uses 5 coarse groups fixed by setup design. Those explain **40%** (Q_between 68.6 of 172.6, df 4, p < 1e-6),
+and the residual between-setup variance drops from tau^2 0.018 to ~0.005.
+| Group | Setups | Weighted ICC |
+|---|---|---|
+| GEN | 4 | 0.07 (few setups; median shrunk 0.17) |
+| CWT structure (level breaks, coils, VWAP stretch, flush, gap bounce) | 18 | 0.10 |
+| flow / gap-day (RW, MF, NS, L3, ST) | 22 | 0.18 |
+| other (NM, LIQ) | 3 | 0.34 |
+| heat / exhaustion / momentum | 7 | 0.39 |
+Longs vs shorts alone explain 5% (0.12 vs 0.18).
+Recommendation for the 11-18 table: shrink each setup toward its GROUP ICC (prior sd ~0.07), not the pooled 0.19.
+For a new setup with few days, use its group's value. GEN's own value rests on 4 setups, so use ~0.12 (between its 0.07
+and the pooled 0.19) until more Gen setups reach 40 trades / 8 days.
+Why it makes sense: structure setups (level breaks, coils) fire on many unrelated names on a given day, so trades are
+nearly independent. Flow / gap-day shorts and heat fades share one day-level driver (a gap-down or hot tape), so a
+day's trades rise and fall together.
