@@ -431,3 +431,11 @@ trades, rule 21 must hold on the pool subset for non-live setups.
 - Calibrating a simulator with live inputs only proves fidelity where live inputs exist; audit the input-free subset.
 **Next**
 - Fresh FWDCAL audit 11-12..11-13 (split by quote source); NEWSMID tonight; FAMC session 2.
+
+## Run 36 — 2026-11-12 04:41 ET (stop-slip model; sim buying power)
+**State:** FWDCAL halts understood: sim broker never rejects (Gen 101 extra trades), Graveyard latch on knife edge; live
+stops fill +0.045R worse (Observer fit slip = 0.012 + 0.34 spread/stop). ICCSET-2 shrunk table ready.
+**Did:** challenged the symmetric |slip| trim (drops adverse gap-throughs); split by side of original stop; refit + tail;
+sell-off-month caveat. Checklist 34. Endorsed buying-power cap with a reject-count check.
+**Next**
+- Fresh FWDCAL audit 11-12..11-13 (no live-minute feeds, live-quote vs pool split); NEWSMID; FAMC.
