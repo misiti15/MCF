@@ -96,7 +96,7 @@
   0.694, gap -0.001; only Testing C passes (12 trades). Exit model is fine (matched +0.006R); misses = no signal 35%,
   caps cascade 34%, spread-quote 32%; replay-only 242 buying power. Next lever: replay logged live spread quotes.
   mirror.py now routes module mask crashes (LD1-ns1-breadthup, 1-row frame) to the real generate(). Offered Observer a
-  'relative, uncalibrated' Testing A top-500 with/without replay (await Lead). NEXT RUN: rate Observer's 14 non-Gen
+  Testing A top-500 replay: NOT run (Lead: no replay counts until rule 21 passes). NEXT RUN: rate Observer's 14 non-Gen
   unrated setups (IDX, LD4-8, CWT04-a25, NM-RWR1, LIQ-pdl) from the 2y lists; FAMC nightly 11-12 after 16:05 ET.
 - 11-11 18:00: DONE tonight: FAMC s1 (2 events, +0.611R raw, K 1/1); GAP-U re-test (fails vs shared-day null, VALID
   +4,538 vs 95th +4,905; ETB off same; posted); REGSW-2 0/4 (base 11 frozen 57911e03c; S2-S4 negative = against-state
