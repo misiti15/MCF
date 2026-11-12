@@ -145,10 +145,47 @@ LATCH = {"on": False, "table": None, "acc": None, "day": None, "now": None, "acc
 
 
 BP = {"on": False, "mult": 4.0, "short_mult": 2.0, "rejects": 0}
+SS = {"on": False, "a": -0.003, "b": 0.63, "last_spread": {}, "n_fit": 0, "n_gap": 0}
+
+
+def patch_stopslip() -> None:
+    """Observer stopslip2 (side-split refit, live 10-20..11-11): stop slip in R = -0.003 + 0.63 x spread/stop, i.e. in
+    price max(0, -0.003 x dist + 0.63 x entry spread). REPLACES the sim's stop cost on intrabar stop fills (raw = stop
+    price); gap-throughs (filled at the bar open beyond the stop) keep the open + the normal costs. Entry spread = the
+    quote the replay saw at the entry decision (live-logged in --quotes mode), else 2 x the pool half spread."""
+    from mcf.replay import broker as BR
+    if getattr(BR.SimTradingClient._fill, "_fwdcal", False):
+        return
+    orig = BR.SimTradingClient._fill
+
+    def _fill(self, o, px, k, kind):
+        if o._role == "entry":
+            sp = SS["last_spread"].get(o.symbol)
+            if sp is None and self.half_spread_bps is not None:
+                sp = 2 * self.half_spread_bps(o.symbol, k) / 1e4 * float(px)
+            o._entry_spread = sp
+        if kind == "stop" and o._role in ("stop", "ocoleg") and o._parent is not None and abs(float(px) - float(o.stop_price)) < 1e-9:
+            par = o._parent; spr = getattr(par, "_entry_spread", None)
+            ep = float(par.filled_avg_price or 0) if par._role == "entry" else None
+            if spr is not None and ep:
+                dist = abs(ep - float(o.stop_price))
+                slip = max(0.0, SS["a"] * dist + SS["b"] * spr)
+                side = self._side_sign(o); SS["n_fit"] += 1
+                save = self._cost
+                self._cost = lambda p_, sym, sd, kd: float(p_) + sd * slip     # buy stop pays up, sell stop sells lower
+                try:
+                    return orig(self, o, px, k, kind)
+                finally:
+                    self._cost = save
+        if kind == "stop":
+            SS["n_gap"] += 1
+        return orig(self, o, px, k, kind)
+    _fill._fwdcal = True
+    BR.SimTradingClient._fill = _fill
 
 
 def variant(D) -> str:
-    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{'b' if BP['on'] else ''}{D}"
+    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{'b' if BP['on'] else ''}{'s' if SS['on'] else ''}{D}"
 
 
 def patch_bp() -> None:
@@ -278,14 +315,14 @@ def patch_quotes() -> None:
                 dm = abs(best[0] - m0) / 6e10
             if best is not None and dm < 0.5:
                 out[s] = type(q)(bid_price=best[1], ask_price=best[2], timestamp=q.timestamp); QUOTES["exact"] += 1
-                QUOTES["src"][(s, m0)] = "exact"
+                QUOTES["src"][(s, m0)] = "exact"; SS["last_spread"][s] = best[2] - best[1]
             elif best is not None and dm <= 2:
                 px = (q.bid_price + q.ask_price) / 2; bps = (best[2] - best[1]) / ((best[1] + best[2]) / 2) * 1e4
                 half = max(0.005, px * bps / 2e4)
                 out[s] = type(q)(bid_price=round(px - half, 4), ask_price=round(px + half, 4), timestamp=q.timestamp); QUOTES["near"] += 1
-                QUOTES["src"][(s, m0)] = "near"
+                QUOTES["src"][(s, m0)] = "near"; SS["last_spread"][s] = 2 * half
             else:
-                QUOTES["pool"] += 1; QUOTES["src"][(s, m0)] = "pool"
+                QUOTES["pool"] += 1; QUOTES["src"][(s, m0)] = "pool"; SS["last_spread"][s] = q.ask_price - q.bid_price
         return out
     gq._fwdcal = True
     BR.SimDataClient.get_stock_latest_quote = gq
@@ -305,6 +342,8 @@ def run_book(job):
         patch_latch(); LATCH.update(acc=acc, day=day, now=None, acct_block=0, setup_block=0)
     if BP["on"]:
         patch_bp(); BP["rejects"] = 0
+    if SS["on"]:
+        patch_stopslip(); SS.update(last_spread={}, n_fit=0, n_gap=0)
     cfg = mirror_cfg(acc, day)
     if cfg is None:
         rep = {"day": day, "acc": acc, "delay": D, "trades": [], "signals": [], "skipped": "no snapshot / nothing enabled"}
@@ -326,7 +365,8 @@ def run_book(job):
         rep = {"day": day, "acc": acc, "delay": D, "setups": sorted(cfg["strategies"]), "fwdcal": cfg.get("_fwdcal"), "trades": sim["trades"],
                "signals": sig, "seconds": round(time.time() - t0, 1), "mask_errors": MASK_ERR["n"], "quotes": {k: QUOTES[k] for k in ("exact", "near", "pool")} if QUOTES["on"] else None,
                "latch": {k: LATCH[k] for k in ("acct_block", "setup_block")} if LATCH["on"] else None,
-               "bp_rejects": BP["rejects"] if BP["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
+               "bp_rejects": BP["rejects"] if BP["on"] else None,
+               "stopslip": {"fit": SS["n_fit"], "other_stop_fills": SS["n_gap"]} if SS["on"] else None, "notes": {k: str(v) for k, v in (C.get("notes") or {}).items()}}
     f.parent.mkdir(parents=True, exist_ok=True)
     f.with_suffix(".tmp").write_text(json.dumps(rep, default=str)); f.with_suffix(".tmp").replace(f)
     print(f"fwdcal d{D} {day} {acc}: {len(rep['trades'])} trades, {rep.get('seconds')} s", flush=True)
@@ -547,9 +587,10 @@ def main():
     ap.add_argument("--tag", default="")
     ap.add_argument("--quotes", action="store_true", help="replay the quotes live journaled (books under out/books/q<D>)")
     ap.add_argument("--live-latch", action="store_true", help="DIAGNOSTIC: halts follow live's halt / latch minutes")
-    ap.add_argument("--bp", action="store_true", help="buying-power cap in the sim broker (books under out/books/<v>b<D>)")
+    ap.add_argument("--bp", action="store_true", help="buying-power cap in the sim broker (REJECTED 11-12; kept for the record)")
+    ap.add_argument("--stopslip", action="store_true", help="Observer's spread/stop stop-slip model replaces the sim stop cost")
     a = ap.parse_args()
-    QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp
+    QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp; SS["on"] = a.stopslip
     if a.audit:
         audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
     now = pd.Timestamp.now(tz=NY)
