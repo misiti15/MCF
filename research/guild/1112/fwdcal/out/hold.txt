@@ -1,0 +1,89 @@
+fwdcal: 2 sessions, 12 books to run, delay 0
+fwdcal d0 2026-11-10 testing: 123 trades, 515.1 s
+fwdcal d0 2026-11-10 explore1: 12 trades, 586.6 s
+/home/user/guild/research/fwdcal/mirror.py:92: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+fwdcal d0 2026-11-10 livelab: 6 trades, 591.0 s
+fwdcal d0 2026-11-10 graveyard: 685 trades, 635.3 s
+fwdcal d0 2026-11-11 testing2: 75 trades, 211.5 s
+fwdcal d0 2026-11-11 primary: 33 trades, 466.4 s
+fwdcal d0 2026-11-11 testing: 46 trades, 558.1 s
+fwdcal d0 2026-11-11 explore1: 2 trades, 684.3 s
+fwdcal d0 2026-11-11 livelab: 7 trades, 729.4 s
+fwdcal d0 2026-11-11 graveyard: 442 trades, 778.8 s
+fwdcal d0 2026-11-10 gen: 335 trades, 1762.9 s
+fwdcal d0 2026-11-11 gen: 247 trades, 2286.6 s
+FWDCAL mirror-live audit, delay 0 (rule 21: match >= 95% AND |avg R gap| <= 0.03):
+     acct  sessions  live_trades  replay_trades  matched  match_rate  exact_min_share  replay_only_share  rdiff_matched  replay_avgR  live_avgR  gap_avgR  rule21
+Testing B         2            8             14        6       0.750            0.500              0.571         0.0923       0.4199     0.3398    0.0801   False
+Generator         2          476            582      289       0.607            0.246              0.503        -0.0051      -0.1567    -0.1085   -0.0482   False
+Graveyard         2         1023           1127      691       0.675            0.541              0.387         0.0099      -0.0418    -0.0289   -0.0129   False
+Testing C         2           12             13       12       1.000            0.167              0.077        -0.0372       0.2170     0.2311   -0.0141    True
+  Primary         2          142            135      108       0.761            0.620              0.200         0.0073      -0.3190    -0.4076    0.0886   False
+  On Deck         2          168            169      133       0.792            0.805              0.213        -0.0003      -0.4044    -0.4369    0.0325   False
+Testing A         2          226            236      188       0.832            0.904              0.203         0.0137      -0.1711    -0.1981    0.0270   False
+      ALL         2         2055           2276     1427       0.694            0.556              0.373         0.0062      -0.1237    -0.1225   -0.0011   False
+
+unmatched trades by cause:
+     acct        kind                     cause   n   avgR
+ explore1   live_only          replay_no_signal   1  0.945
+ explore1   live_only  replay_skip:spread_quote   1 -0.210
+ explore1 replay_only            live_no_signal   6  0.278
+ explore1 replay_only    live_skip:spread_quote   2  0.837
+      gen   live_only          replay_no_signal  54 -0.047
+      gen   live_only  replay_signal_other_time  66 -0.093
+      gen   live_only     replay_skip:setup_cap  15 -0.453
+      gen   live_only    replay_skip:slots_full  11 -0.453
+      gen   live_only  replay_skip:spread_quote  41 -0.227
+      gen replay_only            live_no_signal 127 -0.221
+      gen replay_only    live_skip:buying_power 129 -0.228
+      gen replay_only       live_skip:setup_cap  11 -0.671
+      gen replay_only    live_skip:spread_quote  26 -0.117
+graveyard   live_only          replay_no_signal  55  0.109
+graveyard   live_only  replay_signal_other_time  16  0.223
+graveyard   live_only    replay_skip:daily_loss  51 -0.342
+graveyard   live_only replay_skip:held_by_other   3  0.148
+graveyard   live_only     replay_skip:setup_cap  89 -0.302
+graveyard   live_only    replay_skip:slots_full  32  0.070
+graveyard   live_only  replay_skip:spread_quote  86  0.072
+graveyard replay_only            live_no_signal 119 -0.045
+graveyard replay_only    live_skip:buying_power 113  0.047
+graveyard replay_only      live_skip:daily_loss  13 -0.234
+graveyard replay_only   live_skip:held_by_other  21 -0.512
+graveyard replay_only       live_skip:setup_cap  46 -0.267
+graveyard replay_only    live_skip:spread_quote 124 -0.194
+  livelab replay_only    live_skip:spread_quote   1  0.493
+  primary   live_only          replay_no_signal   6  0.482
+  primary   live_only    replay_skip:daily_loss   7 -1.071
+  primary   live_only replay_skip:held_by_other   1  0.419
+  primary   live_only  replay_skip:spread_quote  20 -0.681
+  primary replay_only            live_no_signal  14 -0.351
+  primary replay_only   live_skip:held_by_other   1 -0.345
+  primary replay_only    live_skip:spread_quote  12  0.124
+  testing   live_only          replay_no_signal   8 -0.046
+  testing   live_only  replay_signal_other_time   1 -1.049
+  testing   live_only  replay_skip:spread_quote  26 -0.581
+  testing replay_only            live_no_signal  13 -0.392
+  testing replay_only      live_skip:split_gate   7 -0.619
+  testing replay_only    live_skip:spread_quote  16 -0.126
+ testing2   live_only          replay_no_signal   6 -0.422
+ testing2   live_only  replay_signal_other_time   5 -0.132
+ testing2   live_only replay_skip:held_by_other   3 -0.521
+ testing2   live_only  replay_skip:spread_quote  24 -0.176
+ testing2 replay_only            live_no_signal  17 -0.064
+ testing2 replay_only   live_skip:held_by_other   1  0.902
+ testing2 replay_only    live_skip:spread_quote  30 -0.233
+
+matched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):
+  xk_live    xk_rep   n  rdiff_mean  rdiff_sum
+     stop      stop 412      0.0034     1.4136
+     stop    target   2      2.0489     4.0979
+     stop time/flat   1      0.0247     0.0247
+   target    target 536      0.0201    10.7619
+   target time/flat  10     -0.2159    -2.1591
+time/flat      stop   2     -0.1436    -0.2871
+time/flat    target   7      0.4020     2.8142
+time/flat time/flat 457     -0.0173    -7.8893
+
+buying-power causes (config/live equity, Skeptic 3): 242 trades; matched rate if they are set aside: 0.694
+FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.

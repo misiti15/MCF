@@ -1,0 +1,518 @@
+# MCF default configuration. Copy to config/local.yaml to override (local.yaml is merged on top).
+
+account:
+  starting_equity: 100000        # paper account size used for sizing in backtests
+  slots: 77                      # owner 2026-10-27 (was 160, briefly 61): ~$4,000 per position now that Primary runs fewer setups
+  buying_power_multiple: 3.2     # capital per slot = equity x 3.2 / 77 (~$3,980 at $95.7k);
+                                 # 77 slots use ~$306k, inside Alpaca paper's ~$321k intraday buying power
+  risk_per_trade_pct: 0.25       # max % of equity lost if the stop is hit (sizing = min(risk, slot))
+  max_position_notional_pct: 10  # hard cap on any single position
+  max_concurrent_positions: 77   # owner 2026-10-27 (was 160, briefly 61), = slots
+  max_positions_per_strategy: 30  # per-setup sleeve so one setup can't use every slot (was 100 of 160; now 30 of 77)
+  max_daily_loss_r: 20           # risk control (not a signal filter): stop new entries after -20R in a day
+  max_setup_daily_loss_r: 2.0    # owner 2026-10-28 ST-P (from 2026-10-29): a Primary setup takes no new entries for the rest of the
+                                 # day once its net realized R <= -2 (latched). Live only (backtests ignore it); Testing 1/2 + Gen
+                                 # set null in their overlays (owner: off there so it blocks no trades)
+  max_trades_per_day: 1000
+
+gates:
+  # A setup goes live (paper -> funds) only when ALL hold out of sample, after costs.
+  # Owner decision 2026-10-05 (rev 2): 65%. Success = +1R reached before -1R (signal quality, checked first);
+  # win rate = trade closed green after exit management (checked second); expectancy must stay > 0.
+  min_success_rate: 0.65
+  min_win_rate: 0.65
+  min_expectancy_r: 0.0         # strictly above
+  min_trades: 200
+  min_profit_factor: 1.2
+  # Sustainability (owner 2026-10-05: win rate must come with *sustainable* profit):
+  min_months: 6                  # out-of-sample span long enough to see more than one regime
+  min_positive_month_rate: 0.67  # net-positive R in at least 2 of every 3 months
+
+exits:
+  # Scale-out: bank part of the position at +scale_out_r R, move the rest to breakeven.
+  # Raises win rate without capping runners. Applied to every setup unless a setup overrides it.
+  scale_out_r: 1.0
+  scale_out_frac: 0.5
+
+shorts:
+  enabled: true                  # owner decision: both directions
+  require_easy_to_borrow: true   # live: only short names the broker flags shortable + ETB
+
+costs:
+  slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
+  slippage_per_share: 0.01       # per side, against us — published ORB edges die at ~2c/share
+  stop_slippage_per_share: 0.02  # extra adverse fill on stop exits
+  extended_slippage_per_share: 0.03  # extended-tier names: wider spreads, so 3x the core assumption
+  commission_per_share: 0.0      # Alpaca equities are commission-free
+  min_price: 5.0                 # ignore sub-$5 names by default (spreads/halts)
+
+session:
+  timezone: America/New_York
+  open: "09:30"
+  close: "16:00"
+  flatten_by: "15:55"            # all intraday positions closed by this time
+
+universe:
+  # Owner 2026-10-05: no fixed count — include every name with tradeable liquidity and movement.
+  max_symbols: null                  # no cap; the filters below define the universe
+  min_avg_dollar_volume: 5000000     # core tier: 20d avg daily $ volume, consolidated (SIP) — not IEX
+  extended_min_avg_dollar_volume: 1000000  # extended tier: scanned, traded only when in play
+  extended_min_rvol: 3.0             # extended tier needs opening rvol >= 3x (its volume then ~= core)
+  min_atr_pct: 1.0                   # daily ATR(14) >= 1% of price; drops bond/T-bill ETFs
+  stocks_in_play_top_n: 20          # per-day top-N by opening relative volume (ORB-style selection)
+  earnings_blackout_days: 4         # owner 2026-10-07: no trades within 4 trading days of earnings (either side)
+  # 2026-10-16: no publicly traded partnerships. Selling a PTP (short sales too) makes the broker withhold
+  # 10% of gross proceeds (IRS 1446(f)): T2 lost -$374.72 (10-14) and -$178.63 (10-15) on ET/EPD this way.
+  # Primary rule: Alpaca asset attributes contain "ptp_*". The denylist applies only when attributes are
+  # unavailable. Commodity pools (USO, UNG, ...) are left off it: T1 sold UNG short on 10-12 with no withholding.
+  exclude_ptp: true
+  ptp_denylist: [ET, EPD, MPLX, PAA, WES, CQP, USAC, SUN, CAPL, BSM, DKL, GEL, NRP, KRP, DMLP, SPH, NGL, GLP,
+                 ENLC, NS, HEP]   # last three were acquired (kept so stale data cannot slip them in)
+
+strategies:
+  # ---- Promoted owner 2026-10-20 evening (first Primary session 2026-10-21); promotion = move.
+  L3-gap-slope-fromopen-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: true    # re-promoted from Testing 1 2026-10-30 (owner); promotion = move. Demoted 10-22 after 23 Primary trades -0.308R
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
+    min_adv: 0   # source had none (default 0)
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  CWT14-failbrk-pdl-p10-lowvol-long:
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    from_testing2: {batch: cwt-2026-10-12, source: "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full", fill: true}
+  L3-gap-slope-rsi5hi-FD:
+    # Gap-Down Rebound Overbought Short (all day): promoted from Testing 2 2026-10-30 (owner); promotion = move (off in Testing 2).
+    # 76 live trades +0.173R; w/o best day +0.089R (10-26 = 61% of total R: '1 day' tag).
+    enabled: true
+    refire: true
+    refire_cooldown: 6
+    type: lab
+    module: research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py
+    min_adv: 0
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+  ST7-rsi50dn-long-pm-t1s1-FD:
+    # RSI Collapse Dip Buy (all day): promoted from Testing 1 2026-10-25 (owner); promotion = move (off in Testing 1).
+    # Its variant ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD stays in Testing 1 (independent setup).
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  CWT13-vwapstretch-z05-long:
+    # Stretched Below VWAP Bounce: promoted from Testing 2 2026-10-25 (owner); demoted back to Testing 2 2026-10-26
+    # (owner Z05, effective 2026-10-27): 1 Primary session 11 trades -0.38R; live w/o best day -0.16R; 2-year -0.080R
+    enabled: false
+    type: lab
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z05-long.py
+    min_adv: 95000000
+    window: [1100, 1500]
+    scale_out_r: null
+    from_testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sidelong-t05s1-guest", fill: false}
+  # Each entry maps to a class in mcf/strategies. enabled=false keeps it out of runs.
+  orb:
+    enabled: false   # screen 2026-10-06: -0.33R/trade over 63 sessions (pre-09:50 entries -0.59R); paper off
+    min_atr: 0.50                 # daily ATR(14) in dollars (published ORB study filter)
+    range_minutes: 5
+    stop_atr_frac: 0.10
+    target_r: null                # null = hold to flatten time (as in the published ORB study)
+    min_rvol: 1.0
+  vwap_reclaim:
+    enabled: false               # experimental
+    earliest: "10:00"
+    latest: "14:30"
+    lookback_bars: 15
+    min_rvol: 1.5
+    target_r: 2.0
+  gap_and_go:
+    enabled: false               # experimental: vendor-only evidence
+    min_gap_pct: 4.0
+    range_minutes: 5
+    min_rvol: 2.0
+    target_r: 2.0
+    exit_by: "11:30"
+  gap_fade:
+    enabled: false               # experimental
+    min_gap_pct: 1.0
+    max_gap_pct: 3.0
+    range_minutes: 15
+    max_rvol: 1.5
+    exit_by: "12:00"
+  intraday_momentum:
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5) | was: screen 2026-10-06: +0.013R/trade, break-even; paper on for data (index ETFs, cheap)
+    symbols: [SPY, QQQ, IWM, DIA]
+    signal_time: "10:00"
+    entry_time: "15:30"
+    min_abs_return_pct: 0.25
+    stop_atr_frac: 0.25
+  noise_band_momentum:
+    enabled: false   # screen 2026-10-06: -0.49R/trade (simplified version, not the paper's full rules); paper off
+    symbols: [SPY, QQQ]
+    band_mult: 1.0
+    first_check: "10:00"
+    last_check: "15:30"
+  vwap_reversion:
+    enabled: false               # experimental: weak evidence, negative skew (see docs/RESEARCH.md)
+    band_std: 2.5
+    earliest: "10:00"
+    latest: "15:00"
+    max_rvol: 3.0
+    stop_std: 1.0
+
+  # ---- 2026-10-06 research sweep (research/setups_research.json). Paper-trade only after the screening
+  # backtest (research/setup_screen.md); funds only via the promotion gates. Exits as specced (no scale-out).
+  orb20_a:
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5) | was: screen 2026-10-06: PASSED (+0.021R, PF 1.11, 443 trades); thin edge, paper only
+    class: orb20
+    variant: A                   # stop 0.5 x range, target 0.75 x range (higher win rate)
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  orb20_b:
+    enabled: false
+    class: orb20
+    variant: B                   # stop 0.15 ATR, no target, hold to close (paper-style)
+    stop_atr: 0.15
+    min_rvol: 1.5
+    top_n: 20
+    entry_until: "11:30"
+    scale_out_r: null
+  gap_continuation:
+    enabled: false
+    min_gap_pct: 3.0
+    min_rvol: 3.0
+    target_r: 2.0
+    entry_until: "11:00"
+    scale_out_r: null
+  gap_sma20:
+    enabled: false
+    mirror: true                 # also test the long mirror (gap up through SMA20)
+    stop_atr: 0.05
+    scale_out_r: null
+  index_gap_fill:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    stop_gap_mult: 1.5
+    scale_out_r: null
+  close_momentum:
+    enabled: false
+    symbols: [SPY, QQQ, IWM]
+    gate_mult: 0.5
+    stop_atr: 0.5
+    scale_out_r: null
+  eod_reversal:
+    enabled: false
+    min_drop_pct: 2.0
+    min_adv: 20000000
+    scale_out_r: null
+  vwap_pullback:
+    enabled: false
+    min_rvol: 2.0
+    top_n: 20
+    entry_until: "12:00"
+    scale_out_r: null
+
+  # ---- Heat-score study 2026-10-06 (research/heat/HEAT_STUDY.md): MarcoFlow's heat re-weighted as a
+  # consistent mean-reversion score; positive on train, valid AND the locked test. Paper only.
+  heat_fade_short:
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
+    type: heat
+    formula: research/heat/candidates/regime_9.py
+    sides: short
+    min_adv: 125000000           # the study's population: top ~1,000 names by ADV
+    window: [950, 1030]
+    gate: fo-
+    scale_out_r: null
+  heat_fade_long:
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
+    type: heat
+    formula: research/heat/candidates/regime_5.py
+    sides: long
+    min_adv: 125000000
+    window: [1105, 1330]
+    gate: gap+
+    scale_out_r: null
+  # ---- Layered-setup swarm 2026-10-06 (research/setups2/SWARM.md): ~855,600 configurations, 9 finalists,
+  # one survived the locked test. Paper only.
+  exhaustion_short:
+    enabled: false   # DEMOTED to the Testing account 2026-10-11 (owner; ledger 2026-10-11-demote-5)
+    type: lab
+    module: research/setups2/candidates/volume_flip_1.py   # RSI5 > 90, > 1% above 5-min SMA20, bearish RSI divergence, 13:00-15:00
+    min_adv: 95000000            # the study's population: ~1,200 most liquid names
+    window: [1300, 1500]
+    prefilter: new_high_100m
+    scale_out_r: null
+
+  # ---- Owner-directed 2026-10-08 (PROBATION, primary account): MarcoFlow's top rule stacks re-scored in the MCF lab
+  # (research/primitives/marcoflow). Train/valid only; NOT scored on the locked holdouts; at production cost most are
+  # negative on train. Added at the owner's explicit request despite RESEARCH_RULES; ledger 2026-10-08-owner-mf5.
+  MF1-945-flowsell-vwapup:
+    enabled: false   # demoted to Testing 1 2026-10-25 (owner MF1-D); promotion = move
+    type: lab
+    module: research/primitives/marcoflow/MF-945-flowsell-vwapup.py
+    min_adv: 95000000
+    window: [950, 1030]
+    scale_out_r: null
+  MF2-open-rsimidhi-flowsell:
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
+    type: lab
+    module: research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  MF3-open-flowsell-rsi5hi:
+    enabled: false   # DEMOTED to Testing 1 2026-10-20 (owner 2026-10-19 evening; ledger 2026-10-20-demote-mf3-mf5); MF3-...-FD stays here
+    type: lab
+    module: research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  # ---- Promoted from Testing 1 (owner 2026-10-15, first Primary session 2026-10-16; ledger 2026-10-15-promote-3fd).
+  #      Live T1 10-12..15: RW5-FD 27 tr 70% +0.43R; RW3-FD 28 tr 64% +0.32R; MF3-FD 21 tr 67% +0.29R.
+  #      Two-year full-day backtests are negative (-0.058 / -0.068 / -0.071R): owner override of rule 19. They keep running in Testing 1.
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  RW3-gapdn-rsi5pop-flowsell-short-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  MF3-open-flowsell-rsi5hi-FD:
+    enabled: false   # demoted to Testing 1 2026-10-21 (owner 2026-10-20 evening)
+    type: lab
+    module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  # ---- Promoted from Testing 1 (owner 2026-10-19 evening, first Primary session 2026-10-20; ledger 2026-10-20-promote-3fd).
+  #      They keep running in Testing 1.
+  MF2-open-rsimidhi-flowsell-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  MF4-h40-open-flowsell-FD:
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  NS3-failed-vwap-reclaim-short-FD:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014), as in Testing 1
+    refire_cooldown: 1
+    enabled: false   # demoted to Testing 2 2026-10-22 (owner N5/R3); promotion = move
+    type: lab
+    module: research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  MF4-h40-open-flowsell:
+    enabled: true
+    type: lab
+    module: research/primitives/marcoflow/MF-h40-open-flowsell.py
+    min_adv: 95000000
+    window: [950, 1100]
+    scale_out_r: null
+  MF5-flowsell-vwapup-rsi5hi:
+    enabled: false   # DEMOTED to Testing 1 2026-10-20 (owner 2026-10-19 evening; ledger 2026-10-20-demote-mf3-mf5)
+    type: lab
+    module: research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+
+  # ---- Owner-directed 2026-10-08 (PROBATION, primary account): 5 new setups from the "obvious metrics before big
+  # moves" scan (research/owner1008: 7,374 configs, 33 positive on train+valid). Scored once on the locked holdouts
+  # for information (research/owner1008/holdouts.json): none clears the t >= 1.0 bar on both. Ledger 2026-10-08-owner-ns5.
+  NS1-rsidip-rsi5pop-long:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS1-rsidip-rsi5pop-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS2-sma50break-overbought-short:
+    enabled: false   # DEMOTED to Testing 1 2026-10-16 (owner; ledger 2026-10-16-demote-ns2): 52 live trades -0.50R, history ~flat
+    type: lab
+    module: research/owner1008/NS2-sma50break-overbought-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS3-failed-vwap-reclaim-short:
+    enabled: false   # DEMOTED to Testing 1 2026-10-14 (owner; ledger 2026-10-14-demote-ns3): 5 sessions -0.33R/trade (n 9), backtest -0.14R
+    type: lab
+    module: research/owner1008/NS3-failed-vwap-reclaim-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NS4-pm-vwap-reclaim-oversold-short:
+    # demoted to Testing 2 2026-10-27 (owner: gradual Primary rotation by a fixed yardstick; effective 2026-10-28)
+    enabled: false
+    type: lab
+    module: research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py
+    min_adv: 95000000
+    window: [1130, 1500]
+    scale_out_r: null
+  NS5-sma50-flush-oversold-long:
+    enabled: true
+    type: lab
+    module: research/owner1008/NS5-sma50-flush-oversold-long.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+
+  # ---- Owner-directed 2026-10-09 (PROBATION, primary account): RW6 + the owner's VWAP band guard (G1k2), the
+  # nearest miss of the trend-guard study (research/bdi/trendguard). Two-year history: n 424, +0.26R after costs, t 2.39
+  # (required 4.76), positive in up and down sessions. Not scored on the locked block. Ledger 2026-10-09-owner-rw6g1.
+  RW6G1-ns2-up3-vwap2sd-short:
+    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+    refire_cooldown: 1
+    enabled: false   # demoted to Testing 1 2026-10-22 (owner N2); promotion = move
+    type: lab
+    module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+
+discovery:
+  # Weekly layered-rule mining (mcf/discovery.py). Output = candidates; nothing trades automatically.
+  # Promote a replicated candidate by adding it under `strategies:` with type: rule, e.g.
+  #   rule_hot_short:
+  #     enabled: true
+  #     type: rule
+  #     side: short
+  #     layers: ["RSI14 > 65", "below 20 SMA"]
+  max_symbols: 1500              # top core names by ADV
+  sessions: 60                   # ~3 months of 5-minute SIP bars; older 2/3 = find, newest 1/3 = check
+  max_layers: 3                  # owner: more layers = more precise, "to a certain point"
+  min_train: 150                 # first-trigger samples needed in the find period
+  min_test: 60                   # and in the check period
+  r_atr_frac: 0.25               # R = 0.25 x daily ATR
+  report_top: 40
+
+research_queue:
+  # CAP1 (owner 2026-11-03): research/queue.jsonl running order; at most this many research jobs (matrix legs) a night
+  max_jobs_per_night: 6
+report:
+  email_to: misiti15@gmail.com   # daily brief recipient
+  email_enabled: false           # owner 2026-10-27: hold off on all notification emails (reports still built + saved)
+  scorecard_sessions: 4          # owner 2026-10-09: a setup's testing phase is 4 sessions before a removal decision
+  dashboard_url: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow   # private Claude artifact (free)
+
+data:
+  cache_dir: data/cache
+  journal_path: data/journal.db
+  feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
+
+live:
+  # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
+  # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
+  setup_order:
+    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
+    - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
+    - MF2-open-rsimidhi-flowsell-FD   # promoted 2026-10-20
+    - MF4-h40-open-flowsell-FD   # promoted 2026-10-20
+    - ST7-rsi50dn-long-pm-t1s1-FD   # promoted 2026-10-25 (~2.4/day: narrow, so early)
+    - L3-gap-slope-rsi5hi-FD   # promoted 2026-10-30 (~7/day live)
+    - L3-gap-slope-fromopen-FD   # re-promoted 2026-10-30 (~19/day live)
+    - intraday_momentum
+    - orb20_a
+    - NS1-rsidip-rsi5pop-long
+    - NS5-sma50-flush-oversold-long
+    - NS3-failed-vwap-reclaim-short
+    - NS2-sma50break-overbought-short
+    - MF4-h40-open-flowsell
+    - MF3-open-flowsell-rsi5hi
+    - exhaustion_short
+    - MF5-flowsell-vwapup-rsi5hi
+    - heat_fade_short
+    - heat_fade_long
+  # Paper fills anything the price touches. These checks keep paper results close to what a real
+  # order book would give, so paper P/L is evidence and not an upper bound.
+  no_entry_before: "09:50"       # owner: 9:30-9:50 is too fast for a polling system. Signals there are
+                                 # journaled as "shadow" and what-if simulated, so the window is measured.
+  max_spread_bps: 30             # live SIP quote at decision time
+  max_spread_risk_frac: 0.25     # spread must be <= 25% of the stop distance (else the spread eats R)
+  max_participation: 0.10        # order <= 10% of the symbol's average 1-minute volume (last 5 bars)
+  # Pre-entry cross-check (owner 2026-10-16, outage plan step 3): skip a new entry ("crosscheck: ..." in the journal)
+  # when the signal's reference price is more than max_dev_pct from the live SIP quote mid, the quote is older than
+  # max_age_s, or the decision bar is older than max_bar_age_min. Set above everything seen in normal operation
+  # (journal 10-06..10-16, 3,380 submitted entries: max |ref - mid| 1.73%, decision bar <= 3.6 min old). 0 disables.
+  quote_crosscheck_max_dev_pct: 2.0
+  quote_crosscheck_max_age_s: 300
+  quote_crosscheck_max_bar_age_min: 10
+  # Outage escalation (owner 2026-10-16, steps 4-5; docs/OPERATIONS.md "Outage plan"). Minutes of CONTINUOUS stale data
+  # (health.data_stale): enter_pause_min = no new entries (= data_stale_min); protect_min = stops of open lots in profit
+  # (broker's last price) move to breakeven; flatten_min = flatten every MCF position (also after flatten_min with the
+  # broker API unreachable). Actions in health.outage_actions; no emails. watchdog_dead_min: the independent watchdog
+  # (.github/workflows/watchdog.yml) treats status.json older than this during the session as a dead trading run.
+  outage:
+    enabled: true
+    enter_pause_min: 5
+    protect_min: 15
+    flatten_min: 30
+    watchdog_dead_min: 15
+  status_every_min: 2            # dashboard refresh cadence
+  log_poll_inputs: true          # owner 2026-10-21: each poll's inputs (latest bar / bar count per symbol, exceptions
+                                 # only; poll wall time; stale flag) -> state polls/<date>/<HHMMSS>.jsonl.gz chunks
+  poll_log_flush_min: 10         # a new chunk every 10 min and at handover/close (each chunk written + pushed once)
+  start_from: "08:00"            # CI jobs starting earlier (ET) exit at once
+  max_job_minutes: 340           # each CI job hands over after this (GitHub's job limit is 6h)
+  fetch_batch: 400
+  # Testing-account flags (owner 2026-10-13, research/bdi/longs1013 Q3): OFF here, so Primary is unchanged.
+  # retry_after_release: a market entry skipped "already in symbol" may take its setup's next fresh signal on that
+  # symbol (latest bar) after the holding position closes, once per setup/symbol/day (journal info retry_after_release).
+  # longs_first_on_ties: setups firing on one symbol in the same poll are tried longs first, then by setup_order.
+  retry_after_release: false
+  longs_first_on_ties: false
+  # Per-lot stacking (owner 2026-10-13): a lot = one setup's own bracket order on a symbol. 1 = one MCF position per
+  # symbol (a second setup is skipped "already in symbol"). N > 1: up to N setups may each hold a lot on the same symbol,
+  # SAME side only ("opposite side held" / "lot cap" otherwise); every lot keeps its own stop/target legs, trade
+  # management and journal row; slots and max positions count lots. A setup stacks on itself only on a new
+  # signal (same_setup_reentry below).
+  max_lots_per_symbol: 3   # per-lot stacking, all accounts (owner 2026-10-13); 1 = one position per symbol
+  # Owner 2026-10-16 (option B, paper): a lot left with < 25% of its original quantity after a partial target fill no
+  # longer counts toward max_lots_per_symbol (it still counts for opposite-side, slots and per-setup caps). 0 = off.
+  # REVIEW BEFORE REAL FUNDS (docs/DECISIONS.md).
+  lot_cap_ignore_residual_frac: 0.25
+  # Same-setup re-entry (owner 2026-10-14): "the same setup can not be used at the exact same moment in the exact same
+  # ticker, but can be used in the same ticker the same day at a different time - if a setup is great, let it ride."
+  # true: a setup may enter a symbol again on a NEW signal (a later decision bar than its previous entry there), as a
+  # new lot - also while its earlier lot is open (same side only, under max_lots_per_symbol and every other risk check).
+  # Client ids carry the decision-bar time (<prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM>), one per lot.
+  # false: one entry per setup/symbol/day (pre-2026-10-14 behaviour, ids without -HHMM).
+  same_setup_reentry: true
+  # Split-tape short gate (owner 2026-10-14; research/bdi/bdi1013/NOTES.md Part B, G7 "div0.50"): skip NEW short entries
+  # while QQQ's return from today's open minus IWM's return from today's open is >= spread_pct percentage points, on the
+  # latest completed 1-minute bars at decision time. Longs and open positions unaffected. Skips are journaled
+  # "split-tape short gate" with {qqq_ret, iwm_ret, spread} (what-if simulated). Missing/stale QQQ or IWM bars never
+  # block (health warning). OFF here (Primary, Testing 2); on in config/account_testing.yaml (Testing 1 forward test).
+  split_tape_short_gate:
+    enabled: false
+    spread_pct: 0.50
