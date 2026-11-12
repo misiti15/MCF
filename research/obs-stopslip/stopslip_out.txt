@@ -1,0 +1,45 @@
+stop exits 5453 (of 5461); spread parsed 100%
+ALL mean slip +0.0175R median +0.0308 share>0 81% day-t +3.49
+  Gen        n  1411 mean -0.0754 med +0.0287 day-t -2.20
+  Graveyard  n  2229 mean +0.0523 med +0.0331 day-t +13.18
+  On Deck    n   647 mean +0.0464 med +0.0293 day-t +9.43
+  Primary    n   290 mean +0.0475 med +0.0345 day-t +11.16
+  Testing A  n   833 mean +0.0460 med +0.0294 day-t +5.10
+  Testing B  n    32 mean +0.0717 med +0.0386 day-t +1.19
+  Testing C  n    11 mean +0.0738 med +0.0978 day-t +1.35
+by spread / risk (spread as share of stop distance):
+  (-0.001, 0.0376]       n  1091 mean -0.0313 med +0.0119
+  (0.0376, 0.0651]       n  1090 mean -0.0050 med +0.0227
+  (0.0651, 0.0992]       n  1091 mean +0.0112 med +0.0310
+  (0.0992, 0.15]         n  1090 mean +0.0276 med +0.0459
+  (0.15, 2.147]          n  1091 mean +0.0851 med +0.0744
+by risk_bps (stop distance, bps of price):
+  (2.3120000000000003, 51.101] n  1091 mean +0.0542 med +0.0370
+  (51.101, 75.872]       n  1090 mean +0.0358 med +0.0381
+  (75.872, 106.855]      n  1091 mean +0.0254 med +0.0391
+  (106.855, 157.711]     n  1090 mean +0.0063 med +0.0301
+  (157.711, 890.813]     n  1091 mean -0.0343 med +0.0176
+by exit hour:
+   9 n    64 mean +0.1032
+  10 n  1566 mean +0.0612
+  11 n  1121 mean +0.0011
+  12 n   844 mean +0.0263
+  13 n   545 mean +0.0214
+  14 n   704 mean -0.0043
+  15 n   609 mean -0.0642
+by side: {-1: np.float64(0.0237), 1: np.float64(0.0119)}
+by date (top 5 worst): {'2026-10-20': 0.086, '2026-10-22': 0.067, '2026-11-04': 0.042, '2026-10-21': 0.041, '2026-11-11': 0.036}
+one-big-day: worst day's share of total slip 22%
+slip distribution by account (quantiles 5/25/50/75/95) and share |slip|>0.3 (likely moved stop, not slippage):
+  Gen        [-1.183, 0.005, 0.029, 0.07, 0.195]  |slip|>0.3: 10.8%
+  Graveyard  [-0.025, 0.008, 0.033, 0.071, 0.186]  |slip|>0.3: 2.0%
+  On Deck    [-0.029, 0.008, 0.029, 0.066, 0.197]  |slip|>0.3: 1.9%
+  Primary    [-0.025, 0.008, 0.035, 0.071, 0.172]  |slip|>0.3: 0.7%
+  Testing A  [-0.029, 0.008, 0.029, 0.067, 0.184]  |slip|>0.3: 1.6%
+  Testing B  [-0.011, 0.016, 0.039, 0.101, 0.231]  |slip|>0.3: 3.1%
+  Testing C  [-0.017, 0.009, 0.098, 0.128, 0.17]  |slip|>0.3: 0.0%
+core (|slip|<=0.3, n 5228): mean +0.0446 med +0.0312 day-t +21.52; by acct {'Gen': np.float64(0.0472), 'Graveyard': np.float64(0.0444), 'On Deck': np.float64(0.0405), 'Primary': np.float64(0.045), 'Testing A': np.float64(0.043), 'Testing B': np.float64(0.063), 'Testing C': np.float64(0.0738)}
+core by spread/risk quintile: [np.float64(0.0181), np.float64(0.028), np.float64(0.0412), np.float64(0.0533), np.float64(0.0822)]
+core by hour: {9: np.float64(0.0501), 10: np.float64(0.0551), 11: np.float64(0.0435), 12: np.float64(0.0414), 13: np.float64(0.0372), 14: np.float64(0.0376), 15: np.float64(0.0373)}
+replay model (core): slip_R = +0.0124 + 0.338 x spread/stop-distance (clipped 0.5)
+share of stop exits with spread/stop > 0.15: 20%  > 0.25: 3%

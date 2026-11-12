@@ -212,3 +212,11 @@ Gen account halt 120 -> 300R from 11-12.
 **Failed**: first halt scan used regex 'daily_loss|loss_limit' and missed 'setup daily loss limit' / 'halted' (reported 0
 Graveyard halt days). Rule: list the distinct skip reasons first, then categorise.
 **Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
+
+## Run 35 — 2026-11-12 ~03:40 ET
+**Learned**: Builder's halt lever: latch-minute feed lifts sel-window match to 0.903; Gen's early replay halt = sim broker
+never rejects on buying power (101 extra trades). Skeptic/Lead: count-rule latch is owner's, not a replay fix (agreed, dropped).
+ICCSET-2 shrunk table ready (tau 0.134). OBS-STOPSLIP: live stop slip +0.045R per stop-out, all accounts, = 0.012 + 0.34 x
+spread/stop; Gen 'stop' exits include moved stops (trades.stop = original stop) -> raw means misleading.
+**Failed**: first pass reported raw means (Gen -0.075R) before looking at the distribution; quantiles first next time.
+**Next**: FAMC build for 11-12 after 20:00 ET; repv/fwdrep/fastdec outside read.
