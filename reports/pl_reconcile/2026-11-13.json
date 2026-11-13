@@ -3,27 +3,33 @@
   {
    "account": "gen",
    "date": "2026-11-13",
-   "alpaca_day_pl": 937.4,
-   "equity_close": 90079.13,
+   "alpaca_day_pl": 935.54,
+   "equity_close": 90077.27,
    "source": "alpaca",
    "journal_pnl": 910.21,
    "journal_pnl_adj": 833.22,
    "journal_trades": 326,
    "status_pnl": 909.81,
-   "tolerance": 18.75,
-   "journal_diff": -27.19,
-   "status_diff": -27.59,
+   "tolerance": 18.71,
+   "journal_diff": -25.33,
+   "status_diff": -25.73,
    "fills": {
-    "fills": 1397,
-    "fill_pnl": -1863.09,
-    "unmatched": [],
+    "fills": 1401,
+    "fill_pnl": -819.29,
+    "unmatched": [
+     {
+      "symbol": "VIAV",
+      "alpaca": 2.97,
+      "journal": 0.0,
+      "diff": 2.97
+     }
+    ],
     "not_flat": [
      "TTMI",
      "TWLO",
      "UMC",
      "UNM",
      "UPS",
-     "VIAV",
      "VMRK",
      "VRT",
      "VSAT",
@@ -35,14 +41,15 @@
     "fees": 0
    },
    "fees": 0,
-   "residual": 27.19,
+   "residual": 25.33,
    "flags": [
-    "journal -27.19 vs Alpaca",
-    "status -27.59 vs Alpaca"
+    "journal -25.33 vs Alpaca",
+    "status -25.73 vs Alpaca",
+    "1 symbols' fills differ from the journal"
    ],
    "ok": false
   }
  ],
- "fyi": "P/L reconcile 2026-11-13: 1 of 1 accounts off \u00b7 gen Alpaca +937.40 (journal -27.19 vs Alpaca; status -27.59 vs Alpaca)",
+ "fyi": "P/L reconcile 2026-11-13: 1 of 1 accounts off \u00b7 gen Alpaca +935.54 (journal -25.33 vs Alpaca; status -25.73 vs Alpaca; 1 symbols' fills differ from the journal)",
  "disclaimer": "Educational only \u2014 not financial advice."
 }
