@@ -91,6 +91,7 @@ and every decision the owner answers is set to `answered` with the date and the 
 | MF4-OK | MF4 base/twin call on On Deck | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 6 |
 | SIP-DEF | SIP data subscription on Testing D/E/F (no data yet) | owner | nightly brief | when done ("SIP added D E F") | open · 11-11 brief DECISION 7 |
 | PROMO2 | Two-stage promotion (On Deck confirms; show K) — guild1111 | owner | nightly brief | 2026-11-12 | open · 11-11 brief DECISION 8 |
+| RULE21-DB | Rule 21 replay audit on the decision bar instead of the fill minute, with guards (guild1112; research/guild/1112/obs-fillclock/NOTES.md) | owner | nightly brief | when owner decides | open · 11-12 brief DECISION 4 |
 | INACT-DEF | Inactive audit (research/ops/inactive1103/audit.py) does not cover Testing D/E/F yet (12 zero-signal D/E/F setups on 11-12 classified by hand: index gates, rare, weekday) | Claude | nightly inactive-check | next housekeeping | open (housekeeping) |
 | OPS-SCHED-0847 | Session scheduler missed the 08:47 ET start on 11-11 and 11-12 (manual dispatch 08:49 both days) | Claude | step 1b | next housekeeping | open (housekeeping) |
 
