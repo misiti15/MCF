@@ -1,7 +1,17 @@
 {
- "date": "2026-11-12",
+ "date": "2026-11-13",
  "disclaimer": "Educational only \u2014 not financial advice.",
  "today": {
+  "trades": 13,
+  "win_rate": 0.538,
+  "exp_r": -0.111,
+  "total_r": -1.44,
+  "pnl": -104.65,
+  "stop_exit_share": 0.154,
+  "pnl_adj": -132.31,
+  "slip_bps": 5.0
+ },
+ "yesterday": {
   "trades": 75,
   "win_rate": 0.893,
   "exp_r": 0.532,
@@ -11,29 +21,19 @@
   "pnl_adj": 2753.24,
   "slip_bps": 7.6
  },
- "yesterday": {
-  "trades": 43,
-  "win_rate": 0.14,
-  "exp_r": -0.619,
-  "total_r": -26.63,
-  "pnl": -670.08,
-  "stop_exit_share": 0.442,
-  "pnl_adj": -690.56,
-  "slip_bps": 4.2
- },
  "rolling5": {
-  "exp_r": -0.366,
-  "win_rate": 0.316,
-  "pnl": -474.426,
-  "slip_bps": 1.6,
-  "stop_exit_share": 0.513
+  "exp_r": -0.274,
+  "win_rate": 0.396,
+  "pnl": 166.86,
+  "slip_bps": 3.76,
+  "stop_exit_share": 0.422
  },
  "rolling20": {
-  "exp_r": -0.184,
-  "win_rate": 0.452,
-  "pnl": -161.755,
-  "slip_bps": 3.31,
-  "stop_exit_share": 0.434
+  "exp_r": -0.127,
+  "win_rate": 0.487,
+  "pnl": 23.492,
+  "slip_bps": 3.665,
+  "stop_exit_share": 0.399
  },
  "beat_rolling5": {
   "exp_r": true,
@@ -42,130 +42,78 @@
   "stop_exit_share": true
  },
  "by_setup": {
-  "L3-gap-slope-fromopen-FD": {
-   "trades": 52,
-   "win_rate": 0.923,
-   "exp_r": 0.595,
-   "total_r": 30.97,
-   "pnl": 2548.37,
-   "stop_exit_share": 0.038,
-   "pnl_adj": 2483.57,
-   "slip_bps": 8.0
-  },
   "NM-ETF-late-dip-di-long": {
-   "trades": 1,
-   "win_rate": 1.0,
-   "exp_r": 0.213,
-   "total_r": 0.21,
-   "pnl": 39.42,
-   "stop_exit_share": 0.0,
-   "pnl_adj": 38.27,
-   "slip_bps": -13.1
-  },
-  "NS5-sma50-flush-oversold-long": {
    "trades": 2,
    "win_rate": 0.5,
-   "exp_r": 0.128,
-   "total_r": 0.26,
-   "pnl": 90.39,
+   "exp_r": 0.219,
+   "total_r": 0.44,
+   "pnl": 102.15,
    "stop_exit_share": 0.0,
-   "pnl_adj": 88.58,
-   "slip_bps": 36.0
+   "pnl_adj": 92.75,
+   "slip_bps": -1.2
   },
   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
-   "trades": 12,
-   "win_rate": 0.917,
-   "exp_r": 0.467,
-   "total_r": 5.61,
-   "pnl": 133.98,
-   "stop_exit_share": 0.083,
-   "pnl_adj": 119.77,
-   "slip_bps": 5.3
+   "trades": 5,
+   "win_rate": 0.4,
+   "exp_r": -0.499,
+   "total_r": -2.5,
+   "pnl": -237.19,
+   "stop_exit_share": 0.4,
+   "pnl_adj": -246.1,
+   "slip_bps": 7.2
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
-   "trades": 7,
-   "win_rate": 0.857,
-   "exp_r": 0.559,
-   "total_r": 3.91,
-   "pnl": 87.79,
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.044,
+   "total_r": 0.09,
+   "pnl": 10.23,
    "stop_exit_share": 0.0,
-   "pnl_adj": 82.66,
-   "slip_bps": 5.6
+   "pnl_adj": 4.55,
+   "slip_bps": 6.7
   },
   "ST7-rsi50dn-long-pm-t1s1-FD": {
-   "trades": 1,
-   "win_rate": 0.0,
-   "exp_r": -1.072,
-   "total_r": -1.07,
-   "pnl": -56.84,
-   "stop_exit_share": 1.0,
-   "pnl_adj": -59.6,
-   "slip_bps": -6.9
+   "trades": 4,
+   "win_rate": 0.5,
+   "exp_r": 0.132,
+   "total_r": 0.53,
+   "pnl": 20.16,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 16.49,
+   "slip_bps": 4.4
   }
  },
  "decisions": [
   {
    "status": "skipped",
-   "reason": "crosscheck: ref # vs quote mid # (#% > #%)",
-   "signals": 2,
-   "whatif_exp_r": 0.842,
-   "whatif_total_r": 1.68,
-   "verdict": "rule cost us R today"
-  },
-  {
-   "status": "skipped",
-   "reason": "max positions for this setup",
-   "signals": 648,
-   "whatif_exp_r": 0.586,
-   "whatif_total_r": 379.53,
-   "verdict": "rule cost us R today"
-  },
-  {
-   "status": "skipped",
    "reason": "not shortable/ETB",
-   "signals": 555,
-   "whatif_exp_r": 0.361,
-   "whatif_total_r": 200.39,
-   "verdict": "rule cost us R today"
-  },
-  {
-   "status": "skipped",
-   "reason": "price below minimum",
-   "signals": 1,
-   "whatif_exp_r": 0.853,
-   "whatif_total_r": 0.85,
+   "signals": 42,
+   "whatif_exp_r": 0.454,
+   "whatif_total_r": 19.08,
    "verdict": "rule cost us R today"
   },
   {
    "status": "skipped",
    "reason": "spread #bps > max",
-   "signals": 42,
-   "whatif_exp_r": 0.657,
-   "whatif_total_r": 27.6,
-   "verdict": "rule cost us R today"
-  },
-  {
-   "status": "skipped",
-   "reason": "spread is #% of stop distance",
-   "signals": 1,
-   "whatif_exp_r": 0.665,
-   "whatif_total_r": 0.67,
-   "verdict": "rule cost us R today"
+   "signals": 6,
+   "whatif_exp_r": -0.228,
+   "whatif_total_r": -1.37,
+   "verdict": "rule saved R today"
   }
  ],
  "signals": {
-  "skipped": 1251,
-  "submitted": 75
+  "skipped": 48,
+  "submitted": 13
  },
  "health": {
-  "polls": 76,
-  "last_poll_s": 11.5,
-  "symbols_last_bar": 3341,
+  "polls": 21,
+  "last_poll_s": 5.5,
+  "symbols_last_bar": 3340,
   "last_bar": "15:53",
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
-  "earnings_excluded": 576,
+  "earnings_excluded": 547,
   "earnings_source": "nasdaq",
   "earnings_complete": true,
   "session_close": "16:00",
@@ -174,26 +122,26 @@
   "kill": null,
   "position_mismatch": [],
   "position_check": {
-   "at": "2026-11-12 15:54:18.417295-05:00",
-   "symbols": 20,
+   "at": "2026-11-13 15:54:10.533128-05:00",
+   "symbols": 10,
    "blocked": []
   },
   "partial_lots": [],
   "risk_state": {
    "halted": false,
-   "setup_stopped": [],
-   "trades_today": 75,
-   "realized_r": 39.882,
+   "setup_stopped": [
+    "RW3-gapdn-rsi5pop-flowsell-short-FD"
+   ],
+   "trades_today": 13,
+   "realized_r": -1.44,
    "r_basis": "R after costs",
    "open_r": 0.0,
    "halt_counts_open": true,
-   "realized_r_after_costs": 39.882
+   "realized_r_after_costs": -1.44
   },
   "flatten_failed": []
  },
  "findings": [
-  "'max positions for this setup' (skipped) blocked 648 signals that would have made +379.5R. Track it for 20 sessions before loosening it.",
-  "'not shortable/ETB' (skipped) blocked 555 signals that would have made +200.4R. Track it for 20 sessions before loosening it.",
-  "'spread #bps > max' (skipped) blocked 42 signals that would have made +27.6R. Track it for 20 sessions before loosening it."
+  "'not shortable/ETB' (skipped) blocked 42 signals that would have made +19.1R. Track it for 20 sessions before loosening it."
  ]
 }
