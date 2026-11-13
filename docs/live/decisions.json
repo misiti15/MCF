@@ -1142,5 +1142,19 @@
   "link": "research/owner_inbox/2026-11-11.md",
   "status": "answered",
   "answered": "no, 2026-11-11 (owner, in chat)"
+ },
+ {
+  "code": "RULE21-DB",
+  "title": "Rule 21 replay audit: match trades on the decision bar instead of the fill minute",
+  "what": "Score the replay-vs-live audit on the live signal's decision bar, with guards (>= 95% match, avg R gap within +/-0.03 and never optimistic, fresh sessions only).",
+  "recommend": "Yes, with guards (\"RULE21-DB yes\")",
+  "numbers": [
+   "Decision -> fill median 0.5-1.24 min by account",
+   "Tonight's FWDCAL replay still fails rule 21 (5-min match 0.694) on real causes"
+  ],
+  "why": "Fills land 1-2 minutes after the decision bar, so no single-delay replay can match 95% of fill minutes.",
+  "link": "research/guild/1112/obs-fillclock/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
