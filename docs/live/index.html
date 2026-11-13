@@ -1221,7 +1221,10 @@ window.MCF = window.MCF || {};
                 explore1: ["Testing B", "mcf-data-explore1"],
                 // Testing D/E/F (2026-11-11): optional; listed in the account filter only once their scorecard exists
                 testingd: ["Testing D", "mcf-data-testingd", true], testinge: ["Testing E", "mcf-data-testinge", true],
-                testingf: ["Testing F", "mcf-data-testingf", true] };
+                testingf: ["Testing F", "mcf-data-testingf", true],
+                // owner 2026-11-13: a GEN setup that graduated to a testing area keeps its Gen record on this leaderboard.
+                // Gen is a record SOURCE only (4th flag): never in the account filter; its non-graduated setups stay off (isGen/grad below).
+                gen: ["Setup Generator", "mcf-data-gen", true, "source"] };
   const q = s => document.querySelector(s);
   if (!q("#lb-card")) return;
   const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -1264,7 +1267,7 @@ window.MCF = window.MCF || {};
       } catch (_) {}
       if (!lb && seed.accounts && seed.accounts[k]) { lb = seed.accounts[k]; when[k] = "snapshot " + seed.generated; }
       lbOf[k] = lb || [];
-      if (ACC[k][2] && lb && q("#lb-acct") && !q(`#lb-acct option[value="${k}"]`)) q("#lb-acct").insertAdjacentHTML("beforeend", `<option value="${k}">${e(lab)}</option>`);
+      if (ACC[k][2] && !ACC[k][3] && lb && q("#lb-acct") && !q(`#lb-acct option[value="${k}"]`)) q("#lb-acct").insertAdjacentHTML("beforeend", `<option value="${k}">${e(lab)}</option>`);
       // generated setups have their own card (owner 2026-10-19): never in this leaderboard, EXCEPT a GEN setup that
       // graduated to a testing area (GEN-GRAD, owner 2026-11-11): it is a testing-area setup now, with its Gen record merged
       const grad = s => isGen(s) && !!(asg && asg.setups && asg.setups[s] && (asg.setups[s].accounts || []).some(a => a !== "gen"));
