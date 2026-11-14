@@ -92,3 +92,15 @@ Everything else is as frozen. Score once on 11-12 with `--score`.
 - Same news, pure random walk (no drift): excess +0.002 ATR (t 0.14) -> FAIL. The null is not flagged.
 - With only 30 names, most events lose their control cell (< 5 names). On real data (~1,200 names) cells hold ~100.
 The one look runs on 11-12 after the close (Lead lead-20261111-2100-1).
+
+## RESULT (one look, run 2026-11-13 23:05 ET; Lead had approved 11-12 after the close; the frozen data window is unchanged) — FAIL, closed
+`newsmid.py --score` -> `newsmid_out.txt`. 1,341 events on 23 sessions; control cells median 122 no-news names.
+- Excess (event minus same-bar matched control, ex-SPY, ATR): **-0.024 (day-t -1.83)**; raw c -0.021 (t -1.30); cost 0.033 ATR.
+- an_up (long): c +0.039 but control +0.042, so excess -0.010 (t -0.65). an_dn (short): excess -0.040 (t -1.90).
+- Same sign in both halves and both legs (a small fade lean), but far below 2.84. The direction picked by sign is FADE (A4: not
+  pre-registered), and it nets -0.015 ATR/trade after cost. PASS 1 fails (t and net); the long leg is negative net.
+- A3, top pre-move tercile (analysts chasing): -0.020 (t -0.85). Entry-time buckets: all slightly negative.
+- **A6 timestamps: in 46% of events the peak-volume 5-min bar came > 5 min BEFORE created_at.** The vendor stamp often lags
+  the market's reaction, so the 'new information' is largely priced at publication. That is why mid-session analyst headlines
+  carry no tradable drift for us.
+Family news now 147 configs, closed. Lesson: for intraday news, check the stamp lag (A6) on a sample BEFORE planning outcomes.

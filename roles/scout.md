@@ -114,10 +114,11 @@
   11-18 table should shrink toward group ICC.
 - Run 37 (11-12 07:30 ET) ICCSET-4: group prior fails a time holdout (-2%); groups were post hoc -> withdrawn; keep pooled shrink.
   Lesson: a grouping drawn after seeing the values needs an out-of-time test before it is recommended.
+- Run 38 (11-13 23:20 ET) NEWSMID scored once: FAIL (excess -0.024 ATR, t -1.83); 46% of events' volume peak precedes the
+  vendor stamp -> mid-session analyst headlines are priced at publication. Missed the 11-12 slot (no run fired after that close).
 ## Next
 - 11-18: refresh ICCSET (iccset.py + shrink.py on fresh journals) beside REPS3.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
-- 11-12 after 16:00 ET: NEWSMID one look (Lead approved): `cd research/newsmid && python3 -I newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` in background (slow loops), then post result + close/shadow per kill line.
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
   log / Gen candidate list is on a branch; check repv when pushed.
