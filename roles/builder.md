@@ -96,6 +96,12 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 01:15: FRESH rule-21 11-12..11-13 scored once (out/audit_d0_fresh.csv, qsrc_d0_fresh.csv): exact-minute FAIL all
+  (0.344); 5-min ALL 0.884; >= 0.95 & |gap| <= 0.03: Gen, Testing A, D, E. Pool-priced 301 trades match 0.3% -> untraded-name
+  replays unusable. Matched +0.054R optimistic (all exit kinds, new vs holdout +0.006) -> investigate (entry cost? quotes
+  mid vs fill?). NEXT: (a) matched-gap decomposition on fresh books (entry price diff vs exit diff); (b) decision-bar match
+  if owner adopts RULE21-DB; (c) max-form stop cost ONE look on holdout (Skeptic ok'd; needs q0 hold books first).
+  FAMC: s3 (11-13) unscorable (calendar built post-open); next scorable reaction day = first with a pre-open calendar row.
 - 11-13 23:30: board silent since 11-12 07:50 (no Lead reply on max-form). Running FRESH rule-21 11-12..11-13 (quotes-only,
   D=0, unaided, Testing D/E/F added via mirror.py; books out/books/q0/2026-11-1[23], tag _fresh; may need a relaunch
   without --fetch if it hits the 2h cap). FAMC s2 done (3 events, raw +0.034, gross -0.175, K_edge 0.637); cache to 11-13;
