@@ -77,3 +77,7 @@ first | 18 blackout removed | 19 fixed lab list | 24 family 186 | 26 cells count
   69.6% of entries before 12:00. gross and spy_move rebuilt exactly as compassbf/retag.py (bt_all cost inverted; SPY entry bar
   close -> exit bar close), code in build_full.py, no outcome statistic printed while building. Same definitions, controls,
   gates. Family unchanged at 187 (sample completed, no new config). Observer's live companion uses all hours as its primary.
+
+## Amendment 3 (2026-11-14 ~16:20 ET, BEFORE any score; reporting only, Skeptic skeptic-20261114-1450-1, Lead 15:00)
+- Per config in VALID also print the top-5 setups' share of the total ex-market excess (setups with >= 10 skips) and their
+  names (remedies rule: who carries it). No gate change.

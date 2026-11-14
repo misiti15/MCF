@@ -153,8 +153,14 @@ def run_score():
                     sk = s_[g.index.to_numpy()]
                     if sk.sum() >= 10:
                         v[su] = score(g.reset_index(drop=True), sk, "exm")["excess"] / len(g)
+                tot_s = {su: score(g.reset_index(drop=True), s_[g.index.to_numpy()], "exm")["excess"]
+                         for su, g in b.groupby("setup") if s_[g.index.to_numpy()].sum() >= 10}
+                ts = pd.Series(tot_s); pos = ts[ts > 0].sort_values(ascending=False)
+                top5 = pos.head(5).sum() / ts.sum() if ts.sum() > 0 else np.nan      # Skeptic/Lead 11-14: concentration
                 v = pd.Series(v); row.update(setups=len(v), better=int((v > 0).sum()), worse=int((v < 0).sum()),
-                                             worst=round(v.min(), 4) if len(v) else np.nan)
+                                             worst=round(v.min(), 4) if len(v) else np.nan,
+                                             top5_share=round(top5, 3) if np.isfinite(top5) else np.nan,
+                                             top5=",".join(pos.head(5).index))
                 ps.append(v.rename(c))
             row["by_side_exm"] = {sd: round(float(-(b.exm.to_numpy() * s_)[(b.side == sd).to_numpy()].sum()), 1) for sd in (1, -1)}
             out.append(row)
