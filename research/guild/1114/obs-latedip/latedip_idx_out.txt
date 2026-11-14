@@ -1,0 +1,14 @@
+
+SPY: triggers 52 of 510 days; control late-day drift (all 14:00-14:55 entries) -1.5bps
+  all          n  52 fwd -2.7bps t -0.30 win 50% | TRAIN n 40 -2.7 t -0.24 | VALID n 12 -2.7 t -0.27 | sofar down n 39 -5.3 t -0.52 | sofar up n 13 +5.1 t +0.28
+  no Apr-2025  n  39 fwd -7.9bps t -0.94 win 46% | TRAIN n 27 -10.2 t -0.90 | VALID n 12 -2.7 t -0.27 | sofar down n 32 -6.3 t -0.63 | sofar up n 7 -15.2 t -1.54
+
+QQQ: triggers 95 of 510 days; control late-day drift (all 14:00-14:55 entries) -1.4bps
+  all          n  95 fwd +1.3bps t +0.18 win 55% | TRAIN n 62 +7.2 t +0.73 | VALID n 33 -9.8 t -1.15 | sofar down n 67 +4.9 t +0.60 | sofar up n 28 -7.4 t -0.51
+  no Apr-2025  n  80 fwd -1.5bps t -0.22 win 54% | TRAIN n 47 +4.4 t +0.46 | VALID n 33 -9.8 t -1.15 | sofar down n 60 +2.2 t +0.27 | sofar up n 20 -12.6 t -1.56
+
+IWM: triggers 104 of 510 days; control late-day drift (all 14:00-14:55 entries) -1.8bps
+  all          n 104 fwd -4.1bps t -0.63 win 55% | TRAIN n 64 -10.2 t -1.11 | VALID n 40 +5.6 t +0.65 | sofar down n 72 -1.6 t -0.18 | sofar up n 32 -9.9 t -1.12
+  no Apr-2025  n  92 fwd -4.6bps t -0.66 win 54% | TRAIN n 52 -12.5 t -1.20 | VALID n 40 +5.6 t +0.65 | sofar down n 63 -0.3 t -0.03 | sofar up n 29 -14.0 t -1.54
+
+Reading: a positive fwd after the trigger, above the control drift, in TRAIN and VALID, = an index-level late-dip rebound (the setup would then be mostly index beta). Educational only - not financial advice.

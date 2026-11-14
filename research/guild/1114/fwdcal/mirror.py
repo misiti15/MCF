@@ -150,7 +150,7 @@ LATCH = {"on": False, "table": None, "acc": None, "day": None, "now": None, "acc
 
 
 BP = {"on": False, "mult": 4.0, "short_mult": 2.0, "rejects": 0}
-SS = {"on": False, "a": -0.003, "b": 0.63, "last_spread": {}, "n_fit": 0, "n_gap": 0}
+SS = {"on": False, "max": False, "a": -0.003, "b": 0.63, "last_spread": {}, "n_fit": 0, "n_gap": 0}
 
 
 def patch_stopslip() -> None:
@@ -176,6 +176,8 @@ def patch_stopslip() -> None:
                 dist = abs(ep - float(o.stop_price))
                 slip = max(0.0, SS["a"] * dist + SS["b"] * spr)
                 side = self._side_sign(o); SS["n_fit"] += 1
+                if SS["max"]:      # max-form (Builder 11-12 proposal, Skeptic/Lead one look): never below the sim's own stop cost
+                    slip = max(slip, abs(self._cost(float(px), o.symbol, side, "stop") - float(px)))
                 save = self._cost
                 self._cost = lambda p_, sym, sd, kd: float(p_) + sd * slip     # buy stop pays up, sell stop sells lower
                 try:
@@ -190,7 +192,7 @@ def patch_stopslip() -> None:
 
 
 def variant(D) -> str:
-    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{'b' if BP['on'] else ''}{'s' if SS['on'] else ''}{D}"
+    return f"{'q' if QUOTES['on'] else 'd'}{'L' if LATCH['on'] else ''}{'b' if BP['on'] else ''}{('m' if SS['max'] else 's') if SS['on'] else ''}{D}"
 
 
 def patch_bp() -> None:
@@ -594,7 +596,10 @@ def main():
     ap.add_argument("--live-latch", action="store_true", help="DIAGNOSTIC: halts follow live's halt / latch minutes")
     ap.add_argument("--bp", action="store_true", help="buying-power cap in the sim broker (REJECTED 11-12; kept for the record)")
     ap.add_argument("--stopslip", action="store_true", help="Observer's spread/stop stop-slip model replaces the sim stop cost")
+    ap.add_argument("--stopslip-max", action="store_true", help="stop cost = max(sim cost, Observer's fit) (one look on the holdout)")
     a = ap.parse_args()
+    if a.stopslip_max:
+        a.stopslip = True; SS["max"] = True
     QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp; SS["on"] = a.stopslip
     if a.audit:
         audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
