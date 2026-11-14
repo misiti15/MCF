@@ -1,0 +1,34 @@
+scored days 370 (2025-05-28..2026-11-13); marks per day 36
+
+pre: (target hit = share of marks whose close is on the same side of the reference)
+       brier      ll     hit     n  days
+ref                                     
+950   0.1519  0.4644  0.7737  3129    87
+open  0.1412  0.4276  0.7836  3128    87
+  per-day Brier (950 - open): +0.0106 (day-t +0.90) [targets differ: descriptive]
+
+VALID: (target hit = share of marks whose close is on the same side of the reference)
+       brier      ll     hit     n  days
+ref                                     
+950   0.1291  0.4033  0.8172  9206   256
+open  0.1241  0.3916  0.8272  9206   256
+  per-day Brier (950 - open): +0.0049 (day-t +0.54) [targets differ: descriptive]
+
+FWD: (target hit = share of marks whose close is on the same side of the reference)
+       brier      ll     hit    n  days
+ref                                    
+950   0.1368  0.4269  0.8035  972    27
+open  0.1116  0.3401  0.8260  971    27
+  per-day Brier (950 - open): +0.0248 (day-t +0.70) [targets differ: descriptive]
+
+Brier by time of day (VALID + FWD):
+ref             950    open
+tod                        
+10:00-11:50  0.1974  0.1758
+12:00-13:50  0.1218  0.1171
+14:00-15:50  0.0704  0.0760
+
+calibration (VALID + FWD), 10 bins of P: mean P vs hit rate (n)
+  M1-950: 0.28->1.00(1)  0.39->0.35(20)  0.47->0.51(434)  0.56->0.60(1058)  0.66->0.69(1545)  0.76->0.78(1568)  0.86->0.86(1831)  0.97->0.96(3721)
+  M1-open: 0.38->0.68(44)  0.47->0.53(344)  0.56->0.57(918)  0.66->0.68(1286)  0.76->0.76(1443)  0.86->0.85(1907)  0.97->0.96(4235)
+Educational only - not financial advice.

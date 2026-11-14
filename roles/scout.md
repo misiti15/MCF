@@ -131,6 +131,8 @@
   dividend-adjusted. Alpaca corporate-actions endpoint works (v1/corporate-actions, cash_dividend).
 - Run 45 (11-14 13:30 ET) ANCHOR950: index null re-run on the owner's 09:50 anchor (new CLAUDE.md rule): dip-then-turn, range
   position, early-range breaks all ~0 after 09:50 (40 cells, none |t| >= 2). Future direction work: reference 09:50 + early range.
+- Run 46 (11-14 15:40 ET) COMPCAL950: 09:50-referenced M1 line calibrated (slightly conservative), Brier ~ open-referenced
+  (VALID 0.129 vs 0.124, t 0.54); better after 14:00. Display option for the owner's COMPCAL decision.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
