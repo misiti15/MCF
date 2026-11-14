@@ -34,3 +34,10 @@ Family: 0 new configs (same tags as MOMSIDE; a check, not a candidate). Educatio
   best-day share; kept and control avg R printed. Raw R (r_multiple) gross first; ex-market = raw - beta_setup x side x SPY move
   over the hold (beta per setup by OLS on ALL live trades in the window); LR8-recomputed net beside.
 - Reading rule unchanged: agrees / disagrees (|t| >= 1, sign vs Builder's VALID C1) / uninformative. Still 0 configs.
+
+## Amendment 2 (2026-11-14 ~13:50 ET, before any live outcome is read)
+- C4 adopted verbatim from Builder's Amendment 1 (4c8a8487c): 6-1 = close(D_-21) / close(D_-126) - 1, < 127 prior sessions -> NaN,
+  counter = long in deciles 1-3 or short in 8-10. Reported like C2/C3.
+- Scope follows Builder's PRIMARY input (Lead lead-20261114-1300-1): if Builder scores the full-day lists, the live primary is all
+  entry times; if Builder keeps trades_tagged, the live primary is entries at or after 12:00 (Skeptic), all hours descriptive.
+  Set by --scope {all,pm} at run time to match Builder's posted scope; both are printed either way.

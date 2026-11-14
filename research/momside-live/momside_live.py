@@ -66,12 +66,19 @@ if __name__ == "__main__":
     t = pd.concat(F, ignore_index=True); lab = sorted(set(Path("research/lab_symbols.txt").read_text().split()) | {"SPY"})
     px = closes(lab); dates = sorted(t.date.unique())
     print(f"live trades {len(t)}; names traded not in lab list: {(~t.symbol.isin(lab)).mean():.1%}")
-    for lab_c, far in [("12-1", 252)]:
+    scope = next((a.split("=")[1] for a in sys.argv[2:] if a.startswith("--scope=")), "all")
+    tod = pd.to_datetime(t.entry_time, utc=True).dt.tz_convert("America/New_York")
+    t["pm"] = (tod.dt.hour * 100 + tod.dt.minute) >= 1200
+    print(f"primary scope: {scope} (pm = entries >= 12:00; Builder's posted scope decides)")
+    for lab_c, far in [("12-1", 252), ("6-1 (C4)", 126)]:
         dec = mom_deciles(px, dates, far); t["dec"] = [dec.get(d, pd.Series(dtype=float)).get(s, np.nan) for d, s in zip(t.date, t.symbol)]
         print(f"{lab_c}: tagged {t.dec.notna().mean():.1%}")
-        tt = t.dropna(subset=["dec"])
+      for sc in (["pm", "all"] if scope == "pm" else ["all", "pm"]):
+        tt = t.dropna(subset=["dec"]); tt = tt[tt.pm] if sc == "pm" else tt
+        print(f" scope {sc}{' (PRIMARY)' if sc == scope else ' (descriptive)'}: {len(tt)} tagged trades")
         for name, sk in [("C1", ((tt.side > 0) & (tt.dec <= 3)) | ((tt.side < 0) & (tt.dec >= 8))),
                          ("C2", ((tt.side > 0) & (tt.dec <= 2)) | ((tt.side < 0) & (tt.dec >= 9))),
                          ("C3", (tt.side > 0) & (tt.dec <= 3))]:
+            if lab_c.startswith("6-1") and name != "C1": continue
             summarize(excess_by_day(tt, sk.values), tt, sk.values, f"{lab_c} {name} raw R")
     print("ex-market and LR8 net columns: added in the run commit per Amendment 1. Educational only - not financial advice.")

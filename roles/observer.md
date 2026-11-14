@@ -294,3 +294,10 @@ SIZESTOP Amendment 1: ex-div gaps negligible (10 of 206k name-days), dividend ad
 FWDCAL 11-16..17 -> MOMSIDE -> SIZESTOP.
 MOMSIDE-LIVE Amendment 1: Builder's definitions + score verbatim; full scorer built, gated; selftest ok.
 **Next**: FAMC 11-16 after 20:00 ET; run MOMSIDE-LIVE once Builder posts (adopt C4 verbatim first).
+
+## Run 46 — 2026-11-14 ~13:40 ET
+**Learned**: MOMSIDE Amendment 1 (C4 6-1, family 187); Skeptic: trades_tagged is the afternoon subset (tod >= 12:00) ->
+Lead: switch to full-day lists or state 'afternoon only'. New OWNER RULE (CLAUDE.md 11-14): direction research anchored at
+~09:50 (09:30-09:50 state/range), scored by return after the decision; Scout's ANCHOR950 null holds (none of 40 |t| >= 2).
+MOMSIDE-LIVE Amendment 2: C4 verbatim, scope follows Builder's posted input.
+**Next**: FAMC 11-16 after 20:00 ET; MOMSIDE-LIVE after Builder's lab post (--scope matching his).

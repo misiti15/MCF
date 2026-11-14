@@ -17,3 +17,8 @@ How to score any up-day rule (suggested standard):
 Up-days are knowable late, not early: the edge, if any, must come from information beyond the index's own path
 (breadth, leaders, futures overnight, Hunch), and must beat these two tables.
 Educational only — not financial advice.
+
+## Note (11-14 ~13:50 ET): owner anchor rule
+Owner rule 2026-11-14 (CLAUDE.md): direction research is anchored at ~09:50 (the 09:30-09:50 state and range), never the 9:30 open
+or prior close. Tables 1-3 above use the prior close / 09:31; for the owner's anchor use Scout's ANCHOR950 (research/anchor950:
+SPY 09:50 -> close +2.2bps; 40 cells, none |t| >= 2). The conclusion (no tradable continuation after a reading) holds on both anchors.
