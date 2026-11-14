@@ -99,7 +99,8 @@
 ## Next
 - 11-14 16:40: MOMSIDE Amendment 3 (top-5 share reporting). SIZESTOP inputs: sizestop/data/cash_div.parquet (fetch_div.py);
   engine bereplay + stopw/stopw_sizectl.py; GEN hold lists scratchpad/hold/bt (rebuild via bereplay/bt_hold.py if fresh).
-  SIZESTOP scorer still to write (on the STOPW engine, per Scout's plan + Amendment 1) - do it Sunday/Monday pre-score.
+  SIZESTOP scorer core written (sizestop.py: leg/walk_ix, size_quintiles, cond_effect, null_draws; selftest ok). TODO before
+  its score: main() loop (per-symbol jobs as stopw.sym_job, BASE + k=1.5 legs, SPY hold per leg, beta, mechanism counts, gates).
 - 11-14 14:45: MOMSIDE Amendment 2 (58a8384e8): input = full-day lists (data/trades_full.parquet via build_full.py; rebuild if
   the container is fresh). Score order unchanged (after 11-17 close: FWDCAL fresh, MOMSIDE --score, SIZESTOP).
   Owner rule 11-14: direction research anchored after ~09:50 (Scout's ANCHOR950 = reference null).
