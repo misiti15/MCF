@@ -119,6 +119,8 @@
 - Run 39 (11-14 02:10 ET) LEAD20 (up-day track): top-20 leadership at 10:30 raises the hit rate (82 vs 72%) but not
   rest-of-day return (+6bps, t 0.37); closed. Up-day info that only describes the past move has no continuation value.
   Data cached: scratch lead20/m5.csv.gz (SPY QQQ SPXL TQQQ + 20 mega caps, 5-min, 2024-10..2026-11, locked block absent).
+- Run 40 (11-14 03:30 ET) ETFTIER: 3x ETF long on up readings, tiered vs plain: both negative net; tiered raises the median
+  (+0.09R) but lowers the mean (-0.02R vs plain). Prior held (exits can't create expectancy).
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).

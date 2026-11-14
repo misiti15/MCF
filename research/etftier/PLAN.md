@@ -20,3 +20,17 @@ Per instrument: avg net R and gross R for PLAIN and TIERED; TIERED minus PLAIN (
 Family: market-state 2,606 (LEAD20) + 2 = 2,608 -> BAR90 3.57.
 Pass (a lead for Testing A-F, owner decision): TIERED net avg R > 0 with t >= 3.57 on SPXL, > 0 in TRAIN and VALID, w/o best
 day > 0. Anything less -> closed, and the number goes to the owner.
+
+## RESULT (one look, 2026-11-14 03:30 ET) — FAIL, ETFTIER closed; the prior held
+`etftier.py` (selftest ok) -> `etftier_out.txt`. 240 SPXL / 242 TQQQ up-reading days.
+| | SPXL plain | SPXL tiered | TQQQ plain | TQQQ tiered |
+|---|---|---|---|---|
+| gross avg R | +0.057 | +0.035 | +0.072 | +0.054 |
+| net avg R (t) | -0.031 (-0.43) | -0.052 (-0.99) | -0.023 (-0.30) | -0.038 (-0.74) |
+| median net R | -0.083 | **+0.088** | -0.017 | **+0.075** |
+| TRAIN / VALID net | +0.067 / -0.090 | -0.015 / -0.074 | +0.043 / -0.062 | -0.056 / -0.026 |
+Tiered minus plain (paired): SPXL -0.021R (t -0.67), TQQQ -0.015R (t -0.40); tiered better on only 29-30% of days.
+Stop hit 37% / 33%; +0.5R reached 59% / 55%; +1R 35% / 32%.
+Reading for the owner: scale-outs make the TYPICAL trade look better (the median turns positive, the 'feels like winning' effect)
+while lowering the AVERAGE, because they cut the right tail that pays for the stops. Both versions lose after costs on a ~0
+drift, as the prior said.
