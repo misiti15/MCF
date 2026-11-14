@@ -97,6 +97,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 10:45: MOMSIDE plan FROZEN (b677425f7, research/momside/PLAN.md; scorer momside.py --selftest ok). Asked Lead about
+  strict-restart vs spanning 12-1 (TRAIN = 2024-10 only under strict). TODO in scoring run: implement --fetch (Alpaca 1Day,
+  lab symbols + SPY, 2023-09-01..2026-11-13, outside 07:30-16:05 ET) and --score per PLAN; post; then Observer runs momside-live.
+  After MOMSIDE: Scout's D1 sizestop plan (research/sizestop/PLAN.md). FWDCAL fresh 11-16..11-17 first on 11-17.
 - 11-14 08:45: exit_parts fix in (mirror.patch_keep_meta + lr8_r meta). ENGINE FROZEN for fresh 11-16..11-17:
   python mirror.py --dates 2026-11-16..2026-11-17 --delay 0 --quotes --stopslip-max --fetch --jobs 4 --tag _fresh2
   (after 16:05 ET 11-17; re-deepen data branches first, never --depth=1; Testing D/E/F included). Score once, split by
