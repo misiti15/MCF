@@ -189,6 +189,10 @@
 - Up-day night 1: all null (LEAD20, UPDAY-LONG, ETF live). Remaining: scale-out 3x look, NM-ETF late-dip 2y, FWDCAL drift fix.
 - Owner FYI next PR: up-day synthesis (can't time index; long selection not there yet).
 
+## Run 40 (05:15 ET 11-14)
+- ETFTIER closed; LATEDIP lead only; FWDCAL gap = LR8 basis; stop max-form adopted (conservative). PR #195 merged (up-day + LR8 FYIs).
+- Next: Scout short-hold up-day long; 11-18 tables on LR8 basis. test_poll_log timing test is flaky under load (note for main session if it recurs).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

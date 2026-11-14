@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-14T03:00-05:00",
+ "updated": "2026-11-14T05:15-05:00",
  "session": "2026-11-14",
- "headline": "Up-day thread, first night: every check agrees - the index shows no continuation after a morning reading, long stock selection on up days isn't there yet, and our live ETF trades simply track the index.",
+ "headline": "Up-day findings and a cost-basis warning sent to the owner (PR #195): scale-outs make the median trade look good while lowering the average, and every live record crossing 11-12 mixes two cost bases.",
  "bullets": [
-  "Leadership breadth (top-20 S&P weights above open) improves the up-day call (82% vs 72%) but not the return left (t 0.37) - closed.",
-  "Long lab setups on up-reading days (162k trades): no edge once SPY's move is removed (TRAIN -0.002, VALID -0.001 ATR); GEN, ST1, ST7 are weak leads.",
-  "Live leveraged/index ETF trades (739): R tracks the index (corr 0.82); bullish ones lost 83R, worst when entered with an up reading.",
-  "Replay: its +0.054R optimism is likely fills at the decision price vs the measured ~+0.04R live drift - being re-checked.",
-  "Next: one look at tiered 3x-ETF scale-outs vs the null; a 2-year look at the late-day ETF dip long (the one positive live shape)."
+  "Tiered 3x-ETF scale-outs: median trade +0.088R vs -0.083R plain, but average -0.052R vs -0.031R - closed.",
+  "Late-day ETF dip long: no index rebound; a small edge vs dipping ETF peers in validation (+0.058R, t 2.36), found after the fact - a lead at most.",
+  "Replay's +0.054R 'optimism' was the 11-12 live cost-model change (LR8), not fills; on one basis +0.022R. Stop cost: the conservative max-form engine adopted.",
+  "LR8: live trades from 11-12 use a costlier model (~-0.04R/trade) but older trades weren't rewritten - setups look worse after 11-12 for no reason of their own.",
+  "Next: short-hold up-day long (one look); 11-18 tables on one cost basis."
  ],
  "progress": {
-  "ideas": 66,
-  "tested": 65,
-  "configs": 159,
+  "ideas": 68,
+  "tested": 67,
+  "configs": 161,
   "passed": 0,
   "forward": 1
  },
- "next": "Scale-out look (Scout), FWDCAL drift re-check (Builder), NM-ETF late-dip 2-year look (Observer); owner FYI on the up-day synthesis.",
+ "next": "Scout's short-hold up-day long; REPS3/ICCSET on 11-18 on the LR8 basis; FAMC nightly from 11-16.",
  "by_role": {
-  "scout": "LEAD20 (leadership breadth): closed.",
-  "builder": "UPDAY-LONG: no cross-sectional long edge on up readings.",
-  "skeptic": "Traced replay optimism to decision-price fills; up-day synthesis.",
-  "observer": "Live ETF trades vs the null; pointers to the owner's restart brief.",
-  "lead": "Up-day synthesis; remaining tracks one look each."
+  "scout": "ETFTIER closed (scale-outs: median up, average down).",
+  "builder": "Explained replay optimism (LR8 basis); LATEDIP 2-year split; stop max-form look.",
+  "skeptic": "Owned a wrong guess; LR8 cost-basis warning (checklist 37).",
+  "observer": "Late-dip setup: no index rebound behind it.",
+  "lead": "Adopted the conservative stop engine; sent up-day findings and the LR8 warning (PR #195)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
