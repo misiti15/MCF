@@ -1,0 +1,7 @@
+names 489; sector-mapped (corr >= 0.40): 486; {'XLK': 129, 'XLI': 83, 'XLY': 63, 'XLF': 43, 'XLV': 38, 'XLP': 31, 'XLE': 28, 'XLU': 24, 'XLB': 23, 'XLRE': 12, 'XLC': 12}
+test days 388; up readings traded 210
+pick ex-mkt: +10.0bps gross (t +1.20), net +0.2bps; +0.0125 ATR
+control (top-decile movers, same minute): +0.0058 ATR; EXCESS +0.0067 ATR (day-t +0.30)
+top-3 picks +0.0071 ATR; strongest-sector ETF over the hour -3.1bps ex-SPY; pick raw +10.1bps
+TRAIN excess -0.0319 (t -0.85, n 95) | VALID +0.0386 (t +1.46, n 115)
+excess w/o best day +0.0017. PASS False -> SHORTUP closed (bar 3.57; family 2,609). Educational only - not financial advice.

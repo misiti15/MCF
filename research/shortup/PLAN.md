@@ -22,3 +22,14 @@ Family: market-state / up-day track 2,608 + 1 = 2,609 -> BAR90 3.57.
 Pass (all of): excess day-t >= 3.57; pick's gross ex-market c > 0 and NET c > 0; same sign in TRAIN and VALID; w/o best day > 0.
 Kill line: fails -> SHORTUP closed; no grid over time, hold or decile.
 Reported (not gates): top-3 picks average; strongest-sector ETF itself over the same hour; pick's raw (not ex-market) return.
+
+## RESULT (one look, 2026-11-14 06:30 ET) — FAIL, SHORTUP closed
+`fetch.py` (489 names + SPDRs + SPY; 3.6M 30-min bars) -> `shortup.py` -> `shortup_out.txt`, `shortup_days.csv`.
+486 names sector-mapped (formation 2025-03..04). Test 2025-05-01..2026-11-13: 388 sessions, 210 up readings traded.
+- Pick (strongest stock in the strongest sector), 10:30 -> 11:30 ex-SPY: +10.0bps gross (t 1.20), **+0.2bps net**; +0.013 ATR.
+- Same-minute control (top-decile movers, any sector): +0.006 ATR. **Excess +0.007 ATR (day-t 0.30)**.
+- TRAIN -0.032 (t -0.85) vs VALID +0.039 (t 1.46): signs disagree. Without the best day +0.002.
+- Top-3 picks +0.007 ATR. The strongest sector's ETF over the same hour is -3.1bps ex-SPY (no sector follow-through).
+Reading: first-hour strength on an up morning continues for an hour only as much as any strong stock does (~+0.01 ATR, about
+the cost). The 'strongest of the strongest' adds nothing. The up-day thread's last open track is closed: in index timing
+(LEAD20), exits (ETFTIER), cross-sectional selection (UPDAY-LONG, SHORTUP), all match Observer's null.

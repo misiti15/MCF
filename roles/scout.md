@@ -121,10 +121,12 @@
   Data cached: scratch lead20/m5.csv.gz (SPY QQQ SPXL TQQQ + 20 mega caps, 5-min, 2024-10..2026-11, locked block absent).
 - Run 40 (11-14 03:30 ET) ETFTIER: 3x ETF long on up readings, tiered vs plain: both negative net; tiered raises the median
   (+0.09R) but lowers the mean (-0.02R vs plain). Prior held (exits can't create expectancy).
+- Run 41 (11-14 06:30 ET) SHORTUP: strongest stock in strongest sector, 10:30->11:30 on up readings: excess +0.007 ATR (t 0.30),
+  net +0.2bps; closed. Up-day thread: all tracks = null. Data cached: scratch shortup/ (489 names 30-min + daily, 2025-03..2026-11).
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
-- 11-18: refresh ICCSET (iccset.py + shrink.py on fresh journals) beside REPS3.
+- 11-18: refresh ICCSET on the LR8 basis (scripts/recompute_pnl_adj.py on pre-11-12 trades; say so in the header) beside REPS3.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
