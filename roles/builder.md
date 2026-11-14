@@ -97,6 +97,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 08:45: exit_parts fix in (mirror.patch_keep_meta + lr8_r meta). ENGINE FROZEN for fresh 11-16..11-17:
+  python mirror.py --dates 2026-11-16..2026-11-17 --delay 0 --quotes --stopslip-max --fetch --jobs 4 --tag _fresh2
+  (after 16:05 ET 11-17; re-deepen data branches first, never --depth=1; Testing D/E/F included). Score once, split by
+  quote source, decision-bar match too if owner adopted RULE21-DB. Up-day thread CLOSED (Lead 07:00). FAMC nightly from 11-16.
 - 11-14 06:25: ENGINE DEFAULT now: --quotes --stopslip-max, D=0, audit replay R on LR8 basis from 11-12 (mirror.lr8_r).
   Fresh 11-12..11-13 on one basis: ALL gap -0.009; passes (5-min >= .95 & |gap| <= .03): Gen, On Deck, Testing A, Testing E.
   NEXT fresh rule-21 window: 11-16..11-17 (score after 16:05 ET 11-17, engine frozen as above, one look; decision-bar

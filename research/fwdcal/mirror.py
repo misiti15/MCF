@@ -65,6 +65,23 @@ def patch_mask_errors() -> None:
     F.FastSession.full_mask = full_mask
 
 
+LASTRES = {}
+
+
+def patch_keep_meta() -> None:
+    """Keep the replay journal's trade meta (exit_parts of scaled exits) for each simulate() row (Skeptic 11-14 06:50:
+    live costs a scaled exit part by part, so lr8_r must too). simulate() builds its rows from res['trades'] in order."""
+    from mcf.replay import harness as H
+    if getattr(H.run_session, "_fwdcal", False):
+        return
+    orig = H.run_session
+
+    def run_session(*a, **k):
+        res = orig(*a, **k); LASTRES["trades"] = res.get("trades"); return res
+    run_session._fwdcal = True
+    H.run_session = run_session
+
+
 def patch_delay(D: int) -> None:
     from mcf.replay import broker as B
     if D <= 0 or getattr(B.SimTradingClient, "_fwdcal_delay", None) == D:
@@ -342,7 +359,7 @@ def run_book(job):
         return json.loads(f.read_text())
     from mcf.report import team as T
     from mcf.backtest.engine import pinned_symbols
-    patch_delay(D); patch_mask_errors()
+    patch_delay(D); patch_mask_errors(); patch_keep_meta()
     if QUOTES["on"]:
         patch_quotes()
     if LATCH["on"]:
@@ -361,6 +378,11 @@ def run_book(job):
         ss = set(C["syms"]) | pinned_symbols(cfg)
         sim = T.simulate(cfg, day, {s: b for s, b in C["bars"].items() if s in ss},
                          {s: p for s, p in C["priors"].items() if s in ss}, None, C["shortable"], C["spreads"], log=lambda *a: None)
+        tr = LASTRES.get("trades")
+        if tr is not None and len(tr) and "meta" in tr:
+            metas = [str(m or "") for m in tr["meta"].tolist()]
+            for i, t in enumerate(sim["trades"][:len(metas)]):
+                t["meta"] = metas[i]
         if QUOTES["on"]:      # Lead 11-12 03:00: quote source of each trade's entry check (latest check <= entry minute)
             for t in sim["trades"]:
                 em = pd.Timestamp(t["entry_time"]).tz_convert(NY).floor("min").value
@@ -508,7 +530,8 @@ def lr8_r(t, day, acc):
     risk = abs(float(t["entry"]) - float(t["stop"])) * abs(float(t["shares"]))
     if not risk or cfg is None:
         return t["r"]
-    parts = parts_from_row({"exit_reason": t.get("exit_reason"), "shares": abs(float(t["shares"])), "exit": t["exit"], "meta": ""})
+    parts = parts_from_row({"exit_reason": t.get("exit_reason"), "shares": abs(float(t["shares"])), "exit": t["exit"],
+                            "meta": t.get("meta", "")})     # exit_parts from the replay journal when scaled (Skeptic)
     adj, _ = pnl_adj(float(t["pnl"]), int(t["side"]), float(t["entry"]), abs(float(t["shares"])), parts,
                      float(t["exit"]) if xkind(t.get("exit_reason")) == "target" else None, day, cfg)
     return adj / risk
