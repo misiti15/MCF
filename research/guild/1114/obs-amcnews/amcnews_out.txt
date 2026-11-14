@@ -1,0 +1,11 @@
+events 622 (2026-10-13..2026-11-07, lab names), API errors 0
+           n  covered  any_news
+session                        
+amc      209    0.813     0.856
+bmo      413    0.872     0.901
+AMC: earnings headline in window by time bucket of first headline: {'05': 1, '08': 1, '09': 1, '16': 155, '17': 9, '18': 2, '21': 1}
+Reading: 'covered' AMC share = how many AMC names a news-based nightly list would catch; the BMO row = how many BMO names would be wrongly flagged as 'AMC the evening before' by the same window. Educational only - not financial advice.
+amc 209 first earnings headline hour: {'05': 1, '08': 1, '09': 1, '16': 155, '17': 9, '18': 2, '21': 1}
+bmo 413 first earnings headline hour: {'00': 1, '01': 8, '02': 11, '03': 12, '04': 5, '05': 9, '06': 172, '07': 104, '08': 16, '09': 1, '15': 2, '16': 8, '17': 2, '18': 5, '19': 1, '22': 2, '23': 1}
+BMO with first earnings headline 16-20h on D-1 (would be false AMC flags): 16 of 413
+AMC caught by 16-20h rule: 166 of 209

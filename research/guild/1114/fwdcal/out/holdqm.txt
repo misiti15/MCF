@@ -1,0 +1,94 @@
+fwdcal quotes: 3841 logged quotes, 1661 symbol-days
+fwdcal: 2 sessions, 14 books to run, delay 0
+fwdcal d0 2026-11-10 testing2: 153 trades, 261.1 s
+fwdcal d0 2026-11-10 primary: 100 trades, 398.0 s
+fwdcal d0 2026-11-10 testing: 134 trades, 598.6 s
+fwdcal d0 2026-11-10 explore1: 11 trades, 685.4 s
+fwdcal d0 2026-11-10 livelab: 5 trades, 679.9 s
+fwdcal d0 2026-11-10 graveyard: 715 trades, 666.0 s
+fwdcal d0 2026-11-11 primary: 43 trades, 499.8 s
+fwdcal d0 2026-11-11 testing2: 77 trades, 230.8 s
+fwdcal d0 2026-11-11 testing: 43 trades, 589.2 s
+fwdcal d0 2026-11-11 explore1: 2 trades, 785.9 s
+fwdcal d0 2026-11-11 livelab: 7 trades, 739.6 s
+fwdcal d0 2026-11-11 graveyard: 416 trades, 859.3 s
+fwdcal d0 2026-11-10 gen: 334 trades, 1955.9 s
+fwdcal d0 2026-11-11 gen: 250 trades, 2236.5 s
+FWDCAL mirror-live audit, delay 0 (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):
+     acct  sessions  live_trades  replay_trades  matched  match_rate  exact_min_share  replay_only_share  rdiff_matched  replay_avgR  live_avgR  gap_avgR        gap_ci95  exact_match_rate  exact_ci95  rule21
+Testing B         2            8             13        7       0.875            0.571              0.462         0.1068       0.3180     0.3398   -0.0217 [-0.710,+0.667]             0.500 [0.22,0.78]   False
+Generator         2          476            584      326       0.685            0.242              0.442        -0.0083      -0.1340    -0.1085   -0.0255 [-0.135,+0.084]             0.166 [0.14,0.20]   False
+Graveyard         2         1023           1131      765       0.748            0.529              0.324         0.0121      -0.0382    -0.0289   -0.0093 [-0.073,+0.054]             0.396 [0.37,0.43]   False
+Testing C         2           12             12       12       1.000            0.167              0.000        -0.0399       0.1912     0.2311   -0.0399 [-0.523,+0.443]             0.167 [0.05,0.45]   False
+  Primary         2          142            143      128       0.901            0.625              0.105         0.0222      -0.3846    -0.4076    0.0230 [-0.144,+0.190]             0.563 [0.48,0.64]   False
+  On Deck         2          168            177      158       0.940            0.797              0.107        -0.0005      -0.4487    -0.4369   -0.0118 [-0.158,+0.135]             0.750 [0.68,0.81]   False
+Testing A         2          226            230      211       0.934            0.905              0.083         0.0083      -0.1750    -0.1981    0.0230 [-0.111,+0.157]             0.845 [0.79,0.89]   False
+      ALL         2         2055           2290     1607       0.782            0.552              0.298         0.0070      -0.1265    -0.1225   -0.0040 [-0.051,+0.043]             0.432 [0.41,0.45]   False
+
+unmatched trades by cause:
+     acct        kind                     cause   n   avgR
+ explore1   live_only          replay_no_signal   1  0.945
+ explore1 replay_only            live_no_signal   6  0.269
+      gen   live_only          replay_no_signal  54 -0.047
+      gen   live_only  replay_signal_other_time  66 -0.093
+      gen   live_only     replay_skip:setup_cap  20 -0.412
+      gen   live_only    replay_skip:slots_full   9 -0.490
+      gen   live_only  replay_skip:spread_quote   1  0.351
+      gen replay_only            live_no_signal 126 -0.223
+      gen replay_only    live_skip:buying_power 125 -0.092
+      gen replay_only       live_skip:setup_cap   7 -0.749
+graveyard   live_only          replay_no_signal  55  0.109
+graveyard   live_only  replay_signal_other_time  16  0.223
+graveyard   live_only    replay_skip:daily_loss  57 -0.001
+graveyard   live_only replay_skip:held_by_other   5 -0.041
+graveyard   live_only     replay_skip:setup_cap  73 -0.226
+graveyard   live_only    replay_skip:slots_full  45  0.046
+graveyard   live_only  replay_skip:spread_quote   7 -1.066
+graveyard replay_only            live_no_signal 123 -0.073
+graveyard replay_only    live_skip:buying_power 131 -0.010
+graveyard replay_only      live_skip:daily_loss  38  0.096
+graveyard replay_only   live_skip:held_by_other  16 -0.680
+graveyard replay_only       live_skip:setup_cap  55 -0.269
+graveyard replay_only    live_skip:spread_quote   3 -1.044
+  primary   live_only          replay_no_signal   6  0.482
+  primary   live_only    replay_skip:daily_loss   7 -1.071
+  primary   live_only replay_skip:held_by_other   1  0.419
+  primary replay_only            live_no_signal  14 -0.271
+  primary replay_only   live_skip:held_by_other   1 -0.345
+  testing   live_only          replay_no_signal   8 -0.046
+  testing   live_only  replay_signal_other_time   1 -1.049
+  testing   live_only  replay_skip:spread_quote   1 -1.061
+  testing replay_only            live_no_signal  13 -0.398
+  testing replay_only      live_skip:split_gate   6 -0.539
+ testing2   live_only          replay_no_signal   6 -0.422
+ testing2   live_only  replay_signal_other_time   5 -0.132
+ testing2   live_only  replay_skip:spread_quote   4 -0.243
+ testing2 replay_only            live_no_signal  17 -0.075
+ testing2 replay_only   live_skip:held_by_other   1  0.902
+ testing2 replay_only    live_skip:spread_quote   1 -1.035
+
+matched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):
+  xk_live    xk_rep   n  rdiff_mean  rdiff_sum
+     stop      stop 475     -0.0153    -7.2882
+     stop    target   4      2.0745     8.2980
+     stop time/flat   1      0.0247     0.0247
+   target    target 577      0.0237    13.6797
+   target time/flat   9     -0.2289    -2.0601
+time/flat      stop   2     -0.1855    -0.3710
+time/flat    target   7      0.4020     2.8142
+time/flat time/flat 532     -0.0071    -3.7967
+
+replay trades by entry-quote source (Lead 11-12 03:00; pool-priced = names with no live quote that minute):
+       grp  replay_trades  matched  replay_avgR  rdiff_matched  matched_share
+live-quote           1928     1602      -0.1110         0.0043          0.831
+      none              3        2       0.4515         0.1678          0.667
+      pool            359        3      -0.2144         1.3438          0.008
+
+halt / latch agreement per account (setup-days; Observer obs-haltflip): both, live only, replay only, median minutes replay - live
+     acct level  both  live_only  replay_only  med_min_diff
+graveyard setup    21          2            8          -0.2
+  primary setup     5          0            0          -0.2
+
+buying-power causes (config/live equity, Skeptic 3): 256 trades; matched rate if they are set aside: 0.782
+FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.
+HOLDQM EXIT 0

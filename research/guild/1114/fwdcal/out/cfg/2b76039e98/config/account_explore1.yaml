@@ -1,0 +1,299 @@
+# Explore 1 paper account (owner 2026-11-03). MCF_ACCOUNT=explore1 overlay on config/default.yaml; orders mx1-*, state branch
+# mcf-data-explore1, secrets ALPACA_EXPLORE1_API_KEY / ALPACA_EXPLORE1_SECRET_KEY (market data: the primary SIP keys). The trade,
+# watchdog and session-guard jobs skip this account until the owner adds both secrets; the trade job also skips it while
+# no setup is enabled here (no idle 6.5-hour session).
+#
+# Exploratory account (owner 2026-11-03; trimmed to 2 new accounts the same night: Explore 2 dropped). The 11-03 plan
+# (ground-up generation, research/bdi/ex30) is superseded by the 11-04 low-rep home plan below.
+# INACT2 (owner 2026-11-03): Explore 1 is also the home for setups trimmed for low activity - they move here for more
+# exposure, never just switched off. The 7 INACT2 setups (IDX1 trail, IDX1 hold, IDX2, IDX3, IDX5, LD4, LD5) moved
+# 2026-11-04, split between Explore 1 and Live Lab so twins do not sit together (CLAUDE.md "Trimmed setups").
+# Sizing (research/bdi/night1102/livelab NOTES "Exact pieces needed"): 200 slots and buying_power_multiple 2.0, so capital
+# per slot = equity x 2.0 / 200 = ~$1,000 constant notional per lot at $100k (mcf/backtest/engine.slot_notional, the
+# same rule as every account); up to 10 open lots per setup, so 20 seats x 10 never bind on slots.
+# max_setup_daily_loss_r: null = the per-setup daily stop is off (as Testing 1/2 since ST-A 2026-10-22); the account
+# daily stop is the Testing 120R catastrophe backstop. max_stop_cost_r 0.15 = the Testing cost filter (CF 2026-10-29).
+# block_twin_same_symbol false and no live scale-out (livelab PLAN).
+#
+# strategies_exclusive: only setups listed under `strategies` below run; every setup of config/default.yaml (Primary +
+# library) is switched off by the loader (mcf/config.py), including setups added there later. Each setup added here is a
+# setup move (promotion = move, assignments regenerated in the same commit, a ledger entry, outside 09:30-16:00 ET).
+# LOW-REP HOME (owner 2026-11-04, ledger 2026-11-04-lowrep-explore1-livelab, research/ops/lowrep1104/NOTES.md): Explore 1
+# and Live Lab both hold setups with low or no live trade history (< 20 live trades in all accounts from Testing 1/2,
+# < 10 from the Graveyard) so they get reps; first session 2026-11-05; re-evaluated every ~2 sessions. Their setups show
+# on the leaderboard with an account tag; the account totals stay out of the daily post. This supersedes the earlier
+# plans for this account (EX30 ground-up generation / Live Lab top-5 lane). Paper account. Educational only - not
+# financial advice.
+strategies_exclusive: true
+account:
+  starting_equity: 100000
+  slots: 200
+  buying_power_multiple: 2.0
+  max_concurrent_positions: 200
+  max_positions_per_strategy: 10
+  max_daily_loss_r: 120
+  max_setup_daily_loss_r: null
+  max_trades_per_day: 1500
+live:
+  max_stop_cost_r: 0.15
+  block_twin_same_symbol: false
+  scale_out_max_per_day: 0
+  retry_after_release: true
+  longs_first_on_ties: true
+  # Priority: narrowest (fewest expected trades/session) first, as in Testing 1/2.
+  setup_order:
+    - IDX2-spy075-0945-3x-trail   # ~0.01/session lab, 0 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - IDX1-qqq100-0955-TQQQ-hold   # ~0.02/session lab, 0 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - IDX5-spy050-0945-3x-trail   # ~0.04/session lab, 0 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - LD4-st4-breadthup-t1s05-long   # ~0.05/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # ~0.16/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - LD3-st2-idxturn-t05s1-long   # ~0.17/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - LD1-ns1-breadthup-t05s1-long   # ~0.31/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - RW6G1-ns2-up3-vwap2sd-short   # ~0.40/session lab, 4 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - NM1-cwt09-g10-vwaploss-short   # ~0.50/session lab, 4 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - CWT04-backside-vwaptest-a25-short   # ~0.56/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - NM-RWN5-ns3-mon-weakrs-short   # ~0.69/session lab, 7 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - NM-AMS-N1-quiet-morning-short   # ~0.83/session lab, 1 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - NM-RWN3-ns3-spyup-early-short   # ~0.91/session lab, 6 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - ST8-volspikedn-long-pm-t1s1-FD   # ~1.05/session lab, 11 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # ~1.25/session lab, 6 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
+    - MF2-open-rsimidhi-flowsell   # ~1.30/session lab, 5 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - CWT09-gapdn-bounce-g10-lowerhalf-short   # ~1.38/session lab, 17 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - NM-RWR4-ns2-up3-qqqup-slopedn-short   # ~1.50/session lab, 5 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - CWT04-backside-lh-a15-short   # ~2.85/session lab, 4 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - CWT05-flush-m05-v5-long   # ~2.93/session lab, 7 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    - CWT13-vwapstretch-z075-long   # ~9.23/session lab, 16 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+strategies:
+  # ---- low-rep rotation (owner 2026-11-04, research/ops/lowrep1104/NOTES.md; ledger 2026-11-04-lowrep-explore1-livelab):
+  #      setups with < 20 live trades in all accounts move here for reps; re-evaluated every ~2 sessions.
+  IDX2-spy075-0945-3x-trail:
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.01/session lab.
+    enabled: true
+    class: index_dip_bounce
+    trade_candidates: [SPXL, UPRO]
+    pick: max_dollar_volume
+    signal_symbol: SPY
+    dip_pct: 0.75
+    dip_by: "09:45"
+    entry_from: "09:50"
+    entry_until: "10:05"
+    trigger: recovery
+    recovery_frac: 0.20
+    stop_buffer_frac: 0.10
+    target: null
+    trail_r: 1.0
+    trail_after_r: 1.0
+    scale_out_r: null
+    testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V2, bar: "forward test (owner request); research bar not met"}
+  IDX1-qqq100-0955-TQQQ-hold:
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.02/session lab.
+    enabled: true
+    class: index_dip_bounce
+    symbols: [TQQQ]
+    signal_symbol: QQQ
+    dip_pct: 1.0
+    dip_by: "09:55"
+    entry_from: "09:50"
+    entry_until: "10:05"
+    trigger: recovery
+    recovery_frac: 0.20
+    stop_buffer_frac: 0.10
+    target: null
+    scale_out_r: null
+    testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V1, bar: "forward test (owner request); research bar not met"}
+  IDX5-spy050-0945-3x-trail:
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.04/session lab.
+    enabled: true
+    class: index_dip_bounce
+    trade_candidates: [SPXL, UPRO]
+    pick: max_dollar_volume
+    signal_symbol: SPY
+    dip_pct: 0.5
+    dip_by: "09:45"
+    entry_from: "09:50"
+    entry_until: "10:05"
+    trigger: recovery
+    recovery_frac: 0.20
+    stop_buffer_frac: 0.10
+    target: null
+    trail_r: 1.0
+    trail_after_r: 1.0
+    scale_out_r: null
+    testing: {added: "2026-10-16", source: "research/bdi/idxdip1015", variant: V5, bar: "forward test (owner request); research bar not met"}
+  LD4-st4-breadthup-t1s05-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.05/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD4-st4-breadthup-t1s05-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    tags: [observation, longs1020]
+  LD8-spy-dip030-breadthturn-spxl-holdtr-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.16/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD8-spy-dip030-breadthturn-spxl-holdtr-long.py
+    symbols: [SPXL]
+    pin_symbols: true          # keep SPXL in the universe (a lab symbols list only restricts)
+    context: [spy_fo, breadth]
+    min_adv: 0                 # Part A scored the ETF with no adv filter
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-SPXL
+    tags: [observation, longs1020]
+  LD3-st2-idxturn-t05s1-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.17/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD3-st2-idxturn-t05s1-long.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-ST2
+    tags: [observation, longs1020]
+  LD1-ns1-breadthup-t05s1-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.31/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/longs1020/modules/LD1-ns1-breadthup-t05s1-long.py
+    context: [breadth]
+    min_adv: 95000000
+    window: [950, 1130]
+    refire: false
+    scale_out_r: null
+    twin_group: LD-NS1
+    tags: [observation, longs1020]
+  RW6G1-ns2-up3-vwap2sd-short:   # demoted from Primary 2026-10-22 (owner N2); runs beside its all-day variant -FD (twin cap: never both on one symbol)
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 4 live trades so far; ~0.40/session lab.
+    refire: true
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+  NM1-cwt09-g10-vwaploss-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 4 live trades so far; ~0.50/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/NM1-cwt09-g10-vwaploss-fodn-slopeup-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  CWT04-backside-vwaptest-a25-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.56/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT1-t1s1-full", fill: false}
+  NM-RWN5-ns3-mon-weakrs-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~0.69/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN5-ns3-mon-weakrs-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1130]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, day-of-week]
+  NM-AMS-N1-quiet-morning-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 1 live trades so far; ~0.83/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/final/modules/AMS-N1-downtrend-quiet-bounce.py
+    min_adv: 95000000
+    window: [1000, 1100]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
+  NM-RWN3-ns3-spyup-early-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~0.91/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-ns/modules/RWN3-ns3-spyup-early-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [950, 1030]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  ST8-volspikedn-long-pm-t1s1-FD:
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 11 live trades so far; ~1.05/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/ST8-volspikedn-long-pm-t1s1-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+  ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD:
+    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~1.25/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/st7_1022/modules/ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD.py
+    context: [qqq_vwap]
+    min_adv: 95000000
+    window: [950, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [observation, st7_1022]
+    twin_group: ST7-T1   # with its parent ST7-rsi50dn-long-pm-t1s1-FD (same signal never held twice; ST7Q is first in setup_order)
+  MF2-open-rsimidhi-flowsell:   # back from Primary 2026-10-27 (owner rotation; effective 2026-10-28)
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 5 live trades so far; ~1.30/session lab.
+    enabled: true
+    former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
+  CWT09-gapdn-bounce-g10-lowerhalf-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 17 live trades so far; ~1.38/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT09-gapdn-bounce-g10-lowerhalf-short.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T2 S guest", fill: false}
+  NM-RWR4-ns2-up3-qqqup-slopedn-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 5 live trades so far; ~1.50/session lab.
+    enabled: true
+    type: lab
+    module: research/swarm1017/rework-rw/modules/RWR4-ns2-up3-qqqup-slopedn-am-short-t05s1.py
+    context: [qqq_fo]
+    min_adv: 95000000
+    window: [950, 1100]
+    refire: false
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8]
+  CWT04-backside-lh-a15-short:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 4 live trades so far; ~2.85/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT04-backside-lh-a15-short.py
+    min_adv: 95000000
+    window: [1030, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT2-t1s1-guest", fill: false}
+  CWT05-flush-m05-v5-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~2.93/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v5-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v5-Dnone-t05s1-full", fill: false}
+  CWT13-vwapstretch-z075-long:
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 16 live trades so far; ~9.23/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z075-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}

@@ -1,0 +1,23 @@
+                             n     raw  booked     lr8  booked_minus_lr8
+acct               post                                                 
+mcf-data           False  1149 -0.0863 -0.1106 -0.1505            0.0399
+                   True     88  0.4616  0.4368  0.4368            0.0000
+mcf-data-gen       False  3012 -0.1763 -0.2058 -0.2407            0.0349
+                   True    626  0.1506  0.1059  0.1059            0.0000
+mcf-data-graveyard False  6373 -0.0827 -0.1027 -0.1400            0.0373
+                   True   1637 -0.0336 -0.0780 -0.0780           -0.0000
+mcf-data-testing2  False  5093 -0.1189 -0.1420 -0.1815            0.0394
+                   True    263  0.0447  0.0197  0.0197           -0.0000
+post-11-12: share |booked - lr8| > 0.01R = 0.000
+                  n  lr8_cost     med
+kind    post                         
+flatten False  2964    0.0346  0.0259
+        True    842    0.0297  0.0213
+other   False    81    0.0217  0.0128
+        True     48    0.0088  0.0088
+stop    False  5895    0.1040  0.0751
+        True    604    0.0862  0.0662
+target  False  6687    0.0351  0.0254
+        True   1120    0.0285  0.0218
+exit mix pre/post: {'target': 0.428, 'stop': 0.377, 'flatten': 0.19, 'other': 0.005} {'target': 0.428, 'flatten': 0.322, 'stop': 0.231, 'other': 0.018}
+LR8 cost per trade: pre 0.0609; post 0.0418; post at PRE exit mix 0.0504
