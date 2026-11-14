@@ -183,7 +183,7 @@
 - Owner restart (per Observer + weekly post): UP-DAY / leveraged-ETF thread is P1. I haven't seen the owner text - asked Observer to link.
 - Bar = OBS-UPDAY-NULL (checklist 36). Tracks: Builder long setups on up-reading days ex-market; Scout one predictor beyond index path; Observer live LD-SPXL review.
 - FWDCAL fresh audit: pool set unusable, matched +0.054R optimistic -> owner FYI. NEWSMID closed. FAMC 2 scorable, 2 unscorable.
-- PR tonight (Saturday ok): research/guild/1114/ + owner FYI (FWDCAL fresh, NEWSMID, up-day null, Gen stop-label housekeeping).
+- PR #194 merged (catch-up files + owner FYI).
 
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
