@@ -264,3 +264,10 @@ mean). OBS-LATEDIP: no index late-dip rebound (SPY/QQQ/IWM to 15:55 ~0); late-di
 up over 88% of holds. 2y per-trade list for di-long not saved; history2y frames not in my container -> asked Builder.
 **Failed**: assumed trades_nm.csv was di-long; check row counts vs the NOTES (362/248 = ADX near-miss) before using a file.
 **Next**: read Builder's di-long split; FAMC 11-16 after 20:00 ET (build same night).
+
+## Run 42 — 2026-11-14 ~05:40 ET
+**Learned**: Builder LATEDIP: TRAIN +0.257 was April 2025 market-wide; vs dipping 3x peers VALID +0.058 t 2.36 (post-hoc
+lead, arena shadow at most). FWDCAL +0.054 = LR8 cost basis (same basis +0.022); max-form adopted as conservative engine.
+OBS-LR8: LR8 vs booked on old trades -0.035..-0.040R; cost is exit-linked (stops 0.10R, targets 0.03R); raw R
+(r_multiple) is basis-stable across 11-12 -> gross-first series need no fix.
+**Next**: FAMC 11-16 after 20:00 ET (build same night; note FAMC sessions mix cost bases); read up-day short-hold track.
