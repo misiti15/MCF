@@ -79,3 +79,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 36. **Index-direction rules are scored against the index's own sign-so-far** at the same decision time (SPY ~69% at the
     open, ~80% at 11:00), not the ~55% up-day base rate; value = return after the decision, gross first. (Observer
     OBS-UPDAY-NULL.)
+37. **Live R changed cost basis on 2026-11-12 (LR8).** pnl_adj from 11-12 uses the live cost model, about -0.04R per trade
+    vs the old allowance; earlier trades are NOT rewritten. Any live R series crossing 11-12 (setup records, verdicts,
+    FAMC, REPS3, replay-vs-live audits) must be put on one basis (scripts/recompute_pnl_adj.py) or split at 11-12.
+    (FWDCAL's +0.054R gap was this, not fills; ledger 2026-11-11-lr8-live-cost-model.)
