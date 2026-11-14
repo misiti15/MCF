@@ -176,6 +176,15 @@
 - BP cap rejected; stop-slip model next (replace, side-split refit). Fresh audit after 11-12 close, no live feeds, split quote source.
 - Evening PR bundle: FWDCAL fresh audit result, NEWSMID, FAMC s2, stop-slip + ICCSET-2 FYI.
 
+## Run 37 (07:00 ET 11-12)
+- Stop-slip replace rule; ICC grouping question.
+
+## Run 38 (01:00 ET 11-14, after owner pause 11-12/13)
+- Owner restart (per Observer + weekly post): UP-DAY / leveraged-ETF thread is P1. I haven't seen the owner text - asked Observer to link.
+- Bar = OBS-UPDAY-NULL (checklist 36). Tracks: Builder long setups on up-reading days ex-market; Scout one predictor beyond index path; Observer live LD-SPXL review.
+- FWDCAL fresh audit: pool set unusable, matched +0.054R optimistic -> owner FYI. NEWSMID closed. FAMC 2 scorable, 2 unscorable.
+- PR tonight (Saturday ok): research/guild/1114/ + owner FYI (FWDCAL fresh, NEWSMID, up-day null, Gen stop-label housekeeping).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

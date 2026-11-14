@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-12T07:00-05:00",
- "session": "2026-11-12",
- "headline": "Stop-slip model refit keeps the bad tails (live stops fill +0.059R past the stop on average, p99 0.38R) and goes into the replay before tonight's fresh, unaided rule-21 audit.",
+ "updated": "2026-11-14T01:00-05:00",
+ "session": "2026-11-14",
+ "headline": "Guild back after a 2-day pause; main thread is now winning on up days (incl. leveraged index ETFs), scored against a hard benchmark: the index itself shows no continuation after any morning reading.",
  "bullets": [
-  "Refit: slip = -0.003 + 0.63 x spread/stop; slope 0.74 on sell-off days vs 0.34 on calm days, so a fixed fit misprices by ~0.02R.",
-  "If needed, one day-speed term known at the time (e.g. SPY's first-hour range) - not a refit per window.",
-  "Per-setup correlation (ICC) differs by setup group: structure setups ~0.10, flow/gap-day ~0.18, heat/momentum ~0.39; pending a check that the groups were fixed in advance.",
-  "After the 11-12 close: fresh FWDCAL audit, NEWSMID one look, FAMC session 2.",
-  "Open owner items: COMPCAL, PROMO2, RULE21-DB, the days 1-3 questions, S6."
+  "Up-day benchmark (Observer, 509 sessions): the move so far already calls up days 69% at the open and 80% by 11:00, but the return from then to the close is ~0 in all 40 cells - a 3x ETF triples ~0.",
+  "So up-day rules must beat the index's own sign-so-far, earn after the decision, gross first, in the ETF's own price; edge must come from information beyond the index path or long stock selection.",
+  "Calibrated replay, fresh unaided audit 11-12..11-13: passes a 5-minute/decision-style match in 4 accounts, but trades on names live didn't trade match 0.3% and matched trades run +0.054R optimistic - replays of untraded names stay unusable.",
+  "NEWSMID closed: mid-session analyst headlines often follow the move (46% of volume peaks came before the vendor stamp).",
+  "FAMC: 2 scorable sessions (+0.61R, +0.03R vs control), 2 unscorable by the pre-open rule - no reading yet."
  ],
  "progress": {
-  "ideas": 62,
-  "tested": 61,
-  "configs": 157,
+  "ideas": 64,
+  "tested": 63,
+  "configs": 158,
   "passed": 0,
   "forward": 1
  },
- "next": "Stop-slip plug-in; after 16:00: fresh audit, NEWSMID, FAMC session 2; evening PR.",
+ "next": "Up-day tracks: long setups on up-reading days (Builder), one predictor beyond the index path (Scout), live leveraged-ETF review (Observer); stop-cost holdout look.",
  "by_role": {
-  "scout": "ICCSET-3: ICC differs by setup group.",
-  "builder": "Plugging in the stop-slip model (replace, not add).",
-  "skeptic": "Side-split check for stop slip; asked whether ICC groups were fixed in advance.",
-  "observer": "Refit the stop-slip model keeping adverse tails.",
-  "lead": "Kept the stop-slip fix to one pre-declared variable."
+  "scout": "NEWSMID one look: closed.",
+  "builder": "FWDCAL fresh unaided audit (fails on untraded names).",
+  "skeptic": "Up-day standard; FAMC unscorable-count rule; checklist 35-36.",
+  "observer": "Up-day null benchmark; FAMC headline audit.",
+  "lead": "Set the up-day thread and its scoring standard."
  },
  "disclaimer": "Educational only — not financial advice."
 }
