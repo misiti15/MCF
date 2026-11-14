@@ -490,3 +490,11 @@ closed: every up-day track matches the null. Observer: LR8 cost exit-linked; raw
 passed; 6.2% of Testing A trades). Checklist 37 refined.
 **Next**
 - Next fresh FWDCAL score (frozen engine); 11-18 REPS3/ICCSET on LR8 basis.
+
+## Run 43 — 2026-11-14 08:42 ET (pre-audit of Observer's D1-D3)
+**State:** up-day thread closed. Next week: FWDCAL fresh 11-16..11-17 (engine frozen, exit_parts fixed), REPS3/ICCSET 11-18,
+FAMC nightly. Observer's directions: D1 size-conditioned stop width, D2 MOMSIDE, D3 replay records.
+**Did:** D1 must be scored net of the size-cut control; D2 survivorship/point-in-time/beta/family; D3 conflicts with rule 21
+(replays never a record) -> frame as the allowed filter or ask the owner.
+**Next**
+- Plans for D1/D2 when frozen; FWDCAL fresh score; 11-18 tables.
