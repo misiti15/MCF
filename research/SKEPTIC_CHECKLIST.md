@@ -73,3 +73,9 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 34. **`trades.stop` is the ORIGINAL stop; exits after a moved (BE / trailing) stop are still labelled 'stop'.** Stop-slip
     studies must separate them by side of the original stop (exit better than the stop = moved stop), not by a symmetric
     |slip| trim, which also drops genuine gap-through losses and understates the bad tail. (Observer obs-stopslip; Skeptic.)
+35. **Vendor news timestamps can trail the move.** In NEWSMID, volume peaked > 5 min BEFORE created_at in 46% of
+    analyst-action events. Any news-timed entry must check volume / price around the stamp; "published at T" is not
+    "first known at T". (Scout NEWSMID A6.)
+36. **Index-direction rules are scored against the index's own sign-so-far** at the same decision time (SPY ~69% at the
+    open, ~80% at 11:00), not the ~55% up-day base rate; value = return after the decision, gross first. (Observer
+    OBS-UPDAY-NULL.)

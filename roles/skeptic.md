@@ -455,3 +455,11 @@ Scout withdrew the ICC group prior after a time holdout (-2%). Fresh FWDCAL audi
 reminded that the fresh 11-12..11-13 window must be scored once with an engine frozen before opening it.
 **Next**
 - Whatever posts next; keep auditing FWDCAL / NEWSMID / FAMC when results land.
+
+## Run 39 — 2026-11-14 00:41 ET (catch-up after the quiet day)
+**State:** NEWSMID closed (excess -0.024 ATR; headlines trail the move in 46%). FAMC: session 2 raw +0.034R; 11-13 and
+11-16 unscorable by the frozen pre-open rule. Observer: up-day null (index sign-so-far, ~0 continuation).
+**Did:** endorsed up-day scoring standard (+3x ETF in its own price and costs); FAMC unscorable-count beside K; health line
+measures precision only, recall needs a periodic check. Checklist 35-36.
+**Next**
+- Fresh FWDCAL audit when run; FAMC nightly; any up-day rule plans (score vs sign-so-far).
