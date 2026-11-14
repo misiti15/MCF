@@ -97,6 +97,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 06:25: ENGINE DEFAULT now: --quotes --stopslip-max, D=0, audit replay R on LR8 basis from 11-12 (mirror.lr8_r).
+  Fresh 11-12..11-13 on one basis: ALL gap -0.009; passes (5-min >= .95 & |gap| <= .03): Gen, On Deck, Testing A, Testing E.
+  NEXT fresh rule-21 window: 11-16..11-17 (score after 16:05 ET 11-17, engine frozen as above, one look; decision-bar
+  match if owner adopts RULE21-DB). FAMC unaffected by LR8. FAMC nightly resumes when Observer posts pre-open calendar rows.
 - 11-14 04:35: matched +0.054 = LR8 R-basis change (live pnl_adj live cost model from 11-12); replay on LR8 basis +0.022;
   fill prices match (entry -0.007). TODO: mirror.py audit to compute replay R on LR8 basis for days >= 11-12 (matchgap.lr8_r).
   LATEDIP done (research/latedip): vs dipping high-vol ETF peers VALID +0.058R t 2.36, TRAIN +0.044; Apr 2025 market-wide.
