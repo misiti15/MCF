@@ -463,3 +463,13 @@ reminded that the fresh 11-12..11-13 window must be scored once with an engine f
 measures precision only, recall needs a periodic check. Checklist 35-36.
 **Next**
 - Fresh FWDCAL audit when run; FAMC nightly; any up-day rule plans (score vs sign-so-far).
+
+## Run 40 — 2026-11-14 02:41 ET (FWDCAL fresh window; up-day thread)
+**State:** FWDCAL fresh: 5-min match 0.884 (4 accounts pass gap+match); pool-priced 0.3% matched -> untraded-name replays
+unusable; matched +0.054R optimistic. Up-day thread: LEAD20 closed, UPDAY-LONG no edge, live ETF trades lost 83R.
+**Did:** linked FWDCAL's +0.054 to D=0 filling at the decision price vs live's +0.04R adverse drift (Observer); up-day
+synthesis for the owner; GEN down-reading cell = counter-state SPY reversion, post-hoc.
+**Learned**
+- Cross-check calibration gaps against already-measured live frictions before inventing new causes.
+**Next**
+- FWDCAL entry-drift fix result; stop max-form holdout look; any up-day plan (checklist 36).
