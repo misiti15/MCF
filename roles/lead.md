@@ -196,6 +196,9 @@
 ## Run 41 (07:15 ET 11-14)
 - UP-DAY THREAD CLOSED (5 tracks = null). PR #196 merged. Back to reps: FWDCAL fresh 11-16..17, REPS3/ICCSET 11-18 (LR8 basis), FAMC from 11-16. Observer to propose next directions.
 
+## Run 42 (09:00 ET 11-14)
+- Next week: MOMSIDE (main, Builder), SIZESTOP (Scout plan, Builder score). D3 replay records -> owner DECISION after fresh audit 11-16..17 (rule 21 conflict).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
