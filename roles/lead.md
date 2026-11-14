@@ -185,6 +185,10 @@
 - FWDCAL fresh audit: pool set unusable, matched +0.054R optimistic -> owner FYI. NEWSMID closed. FAMC 2 scorable, 2 unscorable.
 - PR #194 merged (catch-up files + owner FYI).
 
+## Run 39 (03:00 ET 11-14)
+- Up-day night 1: all null (LEAD20, UPDAY-LONG, ETF live). Remaining: scale-out 3x look, NM-ETF late-dip 2y, FWDCAL drift fix.
+- Owner FYI next PR: up-day synthesis (can't time index; long selection not there yet).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-14T01:00-05:00",
+ "updated": "2026-11-14T03:00-05:00",
  "session": "2026-11-14",
- "headline": "Guild back after a 2-day pause; main thread is now winning on up days (incl. leveraged index ETFs), scored against a hard benchmark: the index itself shows no continuation after any morning reading.",
+ "headline": "Up-day thread, first night: every check agrees - the index shows no continuation after a morning reading, long stock selection on up days isn't there yet, and our live ETF trades simply track the index.",
  "bullets": [
-  "Up-day benchmark (Observer, 509 sessions): the move so far already calls up days 69% at the open and 80% by 11:00, but the return from then to the close is ~0 in all 40 cells - a 3x ETF triples ~0.",
-  "So up-day rules must beat the index's own sign-so-far, earn after the decision, gross first, in the ETF's own price; edge must come from information beyond the index path or long stock selection.",
-  "Calibrated replay, fresh unaided audit 11-12..11-13: passes a 5-minute/decision-style match in 4 accounts, but trades on names live didn't trade match 0.3% and matched trades run +0.054R optimistic - replays of untraded names stay unusable.",
-  "NEWSMID closed: mid-session analyst headlines often follow the move (46% of volume peaks came before the vendor stamp).",
-  "FAMC: 2 scorable sessions (+0.61R, +0.03R vs control), 2 unscorable by the pre-open rule - no reading yet."
+  "Leadership breadth (top-20 S&P weights above open) improves the up-day call (82% vs 72%) but not the return left (t 0.37) - closed.",
+  "Long lab setups on up-reading days (162k trades): no edge once SPY's move is removed (TRAIN -0.002, VALID -0.001 ATR); GEN, ST1, ST7 are weak leads.",
+  "Live leveraged/index ETF trades (739): R tracks the index (corr 0.82); bullish ones lost 83R, worst when entered with an up reading.",
+  "Replay: its +0.054R optimism is likely fills at the decision price vs the measured ~+0.04R live drift - being re-checked.",
+  "Next: one look at tiered 3x-ETF scale-outs vs the null; a 2-year look at the late-day ETF dip long (the one positive live shape)."
  ],
  "progress": {
-  "ideas": 64,
-  "tested": 63,
-  "configs": 158,
+  "ideas": 66,
+  "tested": 65,
+  "configs": 159,
   "passed": 0,
   "forward": 1
  },
- "next": "Up-day tracks: long setups on up-reading days (Builder), one predictor beyond the index path (Scout), live leveraged-ETF review (Observer); stop-cost holdout look.",
+ "next": "Scale-out look (Scout), FWDCAL drift re-check (Builder), NM-ETF late-dip 2-year look (Observer); owner FYI on the up-day synthesis.",
  "by_role": {
-  "scout": "NEWSMID one look: closed.",
-  "builder": "FWDCAL fresh unaided audit (fails on untraded names).",
-  "skeptic": "Up-day standard; FAMC unscorable-count rule; checklist 35-36.",
-  "observer": "Up-day null benchmark; FAMC headline audit.",
-  "lead": "Set the up-day thread and its scoring standard."
+  "scout": "LEAD20 (leadership breadth): closed.",
+  "builder": "UPDAY-LONG: no cross-sectional long edge on up readings.",
+  "skeptic": "Traced replay optimism to decision-price fills; up-day synthesis.",
+  "observer": "Live ETF trades vs the null; pointers to the owner's restart brief.",
+  "lead": "Up-day synthesis; remaining tracks one look each."
  },
  "disclaimer": "Educational only — not financial advice."
 }
