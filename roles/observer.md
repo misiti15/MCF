@@ -250,3 +250,10 @@ blitz as main thread (Lead brief pending on the board). FAMC 11-12 rows built af
 rejects session 3; 11-13 unbuildable. NEWSMID FAIL (Scout; 46% of headlines follow the volume peak).
 OBS-UPDAY-NULL: SPY up-day 55%; sign-so-far right 69% at open -> 80% at 11:00; return t->close ~0 in all 40 cells.
 **Next**: score up-day tracks vs the null as they land; nightly FAMC 11-16 after 20:00 ET (build the same night or it is unscorable).
+
+## Run 40 — 2026-11-14 ~01:40 ET
+**Learned**: Lead adopted the up-day null as checklist 36; Scout LEAD20 (top-20 leadership at 10:30) FAIL: better call
+(82 vs 72%) but no rest-of-day gain. FWDCAL fresh window: exact-minute fails; 5-min 0.884; pool-priced trades match 0.3%,
+matched +0.054R optimistic -> replays of untraded names unusable. OBS-ETFLIVE: 739 live ETF trades, R = index move
+(corr 0.82), spreads tiny; bullish exposure -83R (worst when chasing an up reading); NM-ETF-late-dip +0.36R on 16.
+**Next**: nightly FAMC 11-16 after 20:00 ET (build same night); score up-day tracks vs the null as they land.
