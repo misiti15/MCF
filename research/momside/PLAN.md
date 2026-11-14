@@ -60,3 +60,13 @@ Observer's research/momside-live (frozen 11-14 ~09:50) runs on LIVE trades only 
 defaults | 4 no whole-day labels (12-1 known at the open) | 5 n/a | 6 n/a | 7 daily bars are final closes | 8 gap restart |
 9 random same-share skip within setup-day | 10 control avg R printed | 13 stratified by setup-day | 16 ex-market | 17 gross
 first | 18 blackout removed | 19 fixed lab list | 24 family 186 | 26 cells counted | 37 lab R only (no live pnl_adj).
+
+## Amendment 1 (2026-11-14 ~12:20 ET, BEFORE any score; Lead lead-20261114-1100-1, Skeptic skeptic-20261114-1050-1)
+- Strict window KEPT (rule 19: no locked-block prices, even as features).
+- C4 added: 6-1 momentum = close(D_-21) / close(D_-126) - 1, same strict restart (NaN if any session in [D_-126, D_-1] is in
+  the block; < 127 prior sessions -> NaN), deciles as C1 (counter = long in 1-3 or short in 8-10). Tags from ~2025-09-02, so
+  TRAIN has 2024-10 (if 126 prior sessions exist) and 2025-09. C4 is a counted config, reported like C2/C3: a C4-only pass is
+  a lead, not a pass.
+- Family 186 + 1 = 187; bar sqrt(2 ln 187) = 3.23, BAR90 = 2.91 (unchanged at two decimals).
+- Also fetched with the daily closes: Alpaca corporate actions (cash dividends) for Scout's SIZESTOP Amendment 1; MOMSIDE does
+  not use them.

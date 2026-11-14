@@ -9,23 +9,24 @@ import numpy as np, pandas as pd
 assert not os.environ.get("MCF_HIST_ALLOW_LOCKED")
 HERE = Path(__file__).resolve().parent; R = HERE.parent; ROOT = Path("/home/user/MCF")
 DATA = HERE / "data"; TR_END, VA_END = "2025-09-30", "2026-10-07"; LB0, LB1 = "2024-11-01", "2025-02-28"
-CFG = {"C1": (3, 8, False), "C2": (2, 9, False), "C3": (3, 8, True)}     # (low decile max, high decile min, longs only)
+CFG = {"C1": (3, 8, False, 252), "C2": (2, 9, False, 252), "C3": (3, 8, True, 252), "C4": (3, 8, False, 126)}
+# (low decile max, high decile min, longs only, lookback sessions: 252 = 12-1, 126 = 6-1 [Amendment 1])
 
 
-def momentum(px: pd.DataFrame, dates) -> pd.DataFrame:
+def momentum(px: pd.DataFrame, dates, lb: int = 252) -> pd.DataFrame:
     """px: index = session dates (str, sorted), columns = symbols, values = close. Returns (date x symbol) decile table
     for each trade date: 12-1 from sessions strictly before D, NaN if the window touches the locked block or < 253 prior."""
     sess = np.array(px.index); out = {}
-    lb = (sess >= LB0) & (sess <= LB1)
+    blk = (sess >= LB0) & (sess <= LB1)
     for D in dates:
         i = int(np.searchsorted(sess, D, side="left"))          # sessions strictly before D: sess[:i]
-        if i - 252 < 0:
+        if i - lb < 0:
             continue
-        lo, hi = i - 252, i - 1                                  # window [D_-252, D_-1]
+        lo, hi = i - lb, i - 1                                   # window [D_-lb, D_-1]
         assert lo >= 0
-        if lb[lo:hi + 1].any():
+        if blk[lo:hi + 1].any():
             continue
-        m = px.iloc[i - 21] / px.iloc[i - 252] - 1
+        m = px.iloc[i - 21] / px.iloc[i - lb] - 1
         m = m.dropna()
         if len(m) < 50:
             continue
@@ -34,7 +35,7 @@ def momentum(px: pd.DataFrame, dates) -> pd.DataFrame:
 
 
 def tag(B, dec, cfg):
-    lo, hi, longs_only = CFG[cfg]
+    lo, hi, longs_only, _lb = CFG[cfg]
     d = np.array([dec.at[x, s] if (x in dec.index and s in dec.columns) else np.nan for x, s in zip(B.date, B.symbol)], float)
     side = B.side.to_numpy()
     counter = ((side > 0) & (d <= lo)) | (((side < 0) & (d >= hi)) if not longs_only else False)
@@ -78,6 +79,10 @@ def selftest():
                   ["2024-10-15", "2025-06-02", "2026-03-02", "2026-06-01"])
     print("selftest dates with a decile (2025-06-02 must be absent: its window touches the block; 2026-03-02's window starts after it):", list(dq.index))
     assert "2025-06-02" not in dq.index and "2024-10-15" in dq.index and "2026-06-01" in dq.index
+    d6 = momentum(pd.concat([px] + [px.rename(columns={"X": f"Y{i}"}) * (1 + i / 100) for i in range(60)], axis=1),
+                  ["2025-06-02", "2025-09-15", "2026-03-02"], lb=126)
+    print("selftest 6-1 dates (2025-06-02 absent: touches the block; 2025-09-15 present):", list(d6.index))
+    assert "2025-06-02" not in d6.index and "2025-09-15" in d6.index
     print("selftest ok. Educational only - not financial advice.")
 
 
