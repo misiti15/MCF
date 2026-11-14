@@ -193,6 +193,9 @@
 - ETFTIER closed; LATEDIP lead only; FWDCAL gap = LR8 basis; stop max-form adopted (conservative). PR #195 merged (up-day + LR8 FYIs).
 - Next: Scout short-hold up-day long; 11-18 tables on LR8 basis. test_poll_log timing test is flaky under load (note for main session if it recurs).
 
+## Run 41 (07:15 ET 11-14)
+- UP-DAY THREAD CLOSED (5 tracks = null). PR #196 merged. Back to reps: FWDCAL fresh 11-16..17, REPS3/ICCSET 11-18 (LR8 basis), FAMC from 11-16. Observer to propose next directions.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
