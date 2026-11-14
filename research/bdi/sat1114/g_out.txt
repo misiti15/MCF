@@ -1,0 +1,24 @@
+base latch replay: live base keeps 89.3% of live trades (live latch already acted; non-100% = timing/booking differences)
+bar 2.72; configs 4 (lineage 40)
+
+## G1_trail2: removed 14.9% of base 2y trades | PASS=False
+  TRAIN: delta +6739R (t 8.82) excess +500 (t 0.66) removed 65512 | setups better 54 (+7033R) worse 25 (-294R), worst GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short -124.8 | fam harmed [] | Primary book delta +228R, give-back/day 21.1->19.1 (p90 46.9->43.5)
+  VALID: delta +3758R (t 5.87) excess +141 (t 0.22) removed 47697 | setups better 44 (+4047R) worse 30 (-289R), worst RW7-gapdn-bounce-early-short-FD -92.6 | fam harmed [NM,ST] | Primary book delta +273R, give-back/day 19.6->16.4 (p90 48.0->38.1)
+  LIVE 11-09..13: removed 45 (2.7%) delta -23.4R by acct {'Primary': -27.1, 'Testing D': 1.0, 'Testing E': 0.6, 'Testing F': 2.2} | setups better 4 worse 1 | best MF2-open-rsimidhi-flowsell-FD +2.2 | worst L3-gap-slope-fromopen-FD -29.3
+
+## G2_trail3: removed 10.5% of base 2y trades | PASS=False
+  TRAIN: delta +4545R (t 7.16) excess +157 (t 0.25) removed 46202 | setups better 46 (+4869R) worse 16 (-323R), worst GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short -128.1 | fam harmed [] | Primary book delta -73R, give-back/day 21.1->20.8 (p90 46.9->45.7)
+  VALID: delta +2672R (t 4.90) excess -74 (t -0.14) removed 33755 | setups better 39 (+2904R) worse 14 (-232R), worst RW2-exhaustion-noon-adv150-short-FD -81.1 | fam harmed [ST] | Primary book delta +75R, give-back/day 19.6->18.2 (p90 48.0->44.1)
+  LIVE 11-09..13: removed 1 (0.1%) delta +1.1R by acct {'Primary': 1.1} | setups better 1 worse 0 | best MF2-open-rsimidhi-flowsell-FD +1.1 | worst MF2-open-rsimidhi-flowsell-FD +1.1
+
+## G3_acct10: removed 57.2% of base 2y trades | PASS=False
+  TRAIN: delta +18417R (t 9.05) excess -2454 (t -1.15) removed 253226 | setups better 57 (+21158R) worse 37 (-2741R), worst GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short -430.1 | fam harmed [GEN,NM] | Primary book delta +506R, give-back/day 21.1->18.1 (p90 46.9->38.2)
+  VALID: delta +11527R (t 8.43) excess -111 (t -0.08) removed 180725 | setups better 49 (+12968R) worse 45 (-1441R), worst GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long -184.8 | fam harmed [GEN,NM,exhaustion_short] | Primary book delta +223R, give-back/day 19.6->15.4 (p90 48.0->31.4)
+  LIVE 11-09..13: removed 215 (13.0%) delta +17.6R by acct {'On Deck': 11.8, 'Primary': 0.5, 'Testing A': 4.1, 'Testing E': 1.6, 'Testing F': -0.4} | setups better 16 worse 8 | best RW7-gapdn-bounce-early-short-FD +28.7 | worst L3-gap-slope-lowdist-FD -16.2
+
+## G4_acct15: removed 48.0% of base 2y trades | PASS=False
+  TRAIN: delta +15808R (t 8.46) excess -1637 (t -0.83) removed 211937 | setups better 55 (+18495R) worse 39 (-2688R), worst GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short -427.5 | fam harmed [GEN,NM] | Primary book delta +259R, give-back/day 21.1->19.6 (p90 46.9->43.6)
+  VALID: delta +10009R (t 8.36) excess +207 (t 0.17) removed 151966 | setups better 48 (+11180R) worse 46 (-1171R), worst GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short -138.2 | fam harmed [GEN,NM,exhaustion_short] | Primary book delta -114R, give-back/day 19.6->18.4 (p90 48.0->36.4)
+  LIVE 11-09..13: removed 110 (6.7%) delta +37.1R by acct {'On Deck': 37.5, 'Primary': 0.0, 'Testing A': -2.1, 'Testing E': 1.6} | setups better 11 worse 6 | best RW7-gapdn-bounce-early-short-FD +28.7 | worst NS4-pm-vwap-reclaim-oversold-short -3.0
+
+Educational only - not financial advice.
