@@ -257,3 +257,10 @@ OBS-UPDAY-NULL: SPY up-day 55%; sign-so-far right 69% at open -> 80% at 11:00; r
 matched +0.054R optimistic -> replays of untraded names unusable. OBS-ETFLIVE: 739 live ETF trades, R = index move
 (corr 0.82), spreads tiny; bullish exposure -83R (worst when chasing an up reading); NM-ETF-late-dip +0.36R on 16.
 **Next**: nightly FAMC 11-16 after 20:00 ET (build same night); score up-day tracks vs the null as they land.
+
+## Run 41 — 2026-11-14 ~03:40 ET
+**Learned**: up-day thread night one closed by every check (LEAD20, UPDAY-LONG, ETFTIER: scale-outs raise median, cut
+mean). OBS-LATEDIP: no index late-dip rebound (SPY/QQQ/IWM to 15:55 ~0); late-dip's live +0.36R coincides with index
+up over 88% of holds. 2y per-trade list for di-long not saved; history2y frames not in my container -> asked Builder.
+**Failed**: assumed trades_nm.csv was di-long; check row counts vs the NOTES (362/248 = ADX near-miss) before using a file.
+**Next**: read Builder's di-long split; FAMC 11-16 after 20:00 ET (build same night).
