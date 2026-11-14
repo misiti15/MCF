@@ -21,6 +21,8 @@ def summarize(x, t, skip, label):
     print(f"  {label}: skipped {int(skip.sum())} of {len(t)} ({skip.mean():.1%}); excess total {day.sum():+.2f}R, per day {day.mean():+.3f}, "
           f"day-t {tt:+.2f}, days {len(day)}; kept avg {t.r[~skip].mean():+.3f} vs all {t.r.mean():+.3f}; best-day share {best:.0%}; "
           f"setups better {int((per.pt > 0).sum())} / worse {int((per.pt <= 0).sum())}")
+    top = x.groupby("strategy").ex.sum().sort_values(ascending=False)
+    print(f"    top-5 setups' share of the excess: {top.head(5).sum() / day.sum():.0%}" if day.sum() != 0 else "    top-5 share: n/a")
 def selftest():
     rng = np.random.default_rng(3); rows = []
     for d in range(30):
@@ -58,10 +60,11 @@ def mom_deciles(px, dates, lag_far):
     return out
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]: selftest(); sys.exit()
-    if os.environ.get("MOMSIDE_LAB_POSTED") != "1": sys.exit("gated: set MOMSIDE_LAB_POSTED=1 only after Builder's MOMSIDE lab result is on the board")
+    cov = "--coverage" in sys.argv
+    if not cov and os.environ.get("MOMSIDE_LAB_POSTED") != "1": sys.exit("gated: set MOMSIDE_LAB_POSTED=1 only after Builder's MOMSIDE lab result is on the board")
     F = []
     for f in sorted(glob.glob(f"{sys.argv[1]}/*.db")):
-        F.append(pd.read_sql("select date, strategy, symbol, side, entry_time, exit_time, r_multiple r from trades where run_id=1 and exit_time "
+        F.append(pd.read_sql(f"select date, strategy, symbol, side, entry_time, exit_time{', r_multiple r' if not cov else ''} from trades where run_id=1 and exit_time "
                              "is not null and date between '2026-10-06' and '2026-11-13'", sqlite3.connect(f)))
     t = pd.concat(F, ignore_index=True); lab = sorted(set(Path("research/lab_symbols.txt").read_text().split()) | {"SPY"})
     px = closes(lab); dates = sorted(t.date.unique())
@@ -70,6 +73,14 @@ if __name__ == "__main__":
     tod = pd.to_datetime(t.entry_time, utc=True).dt.tz_convert("America/New_York")
     t["pm"] = (tod.dt.hour * 100 + tod.dt.minute) >= 1200
     print(f"primary scope: {scope} (pm = entries >= 12:00; Builder's posted scope decides)")
+    if cov:
+        for lab_c, far in [("12-1", 252), ("6-1 (C4)", 126)]:
+            dec = mom_deciles(px, dates, far); d = pd.Series([dec.get(a, pd.Series(dtype=float)).get(b, np.nan) for a, b in zip(t.date, t.symbol)])
+            c1 = ((t.side > 0) & (d <= 3)) | ((t.side < 0) & (d >= 8)); c2 = ((t.side > 0) & (d <= 2)) | ((t.side < 0) & (d >= 9)); c3 = (t.side > 0) & (d <= 3)
+            sd = t.assign(c1=c1.values).groupby(["date", "strategy"]).c1.any()
+            print(f"{lab_c}: tagged {d.notna().mean():.1%}; skipped C1 {int(c1.sum())} C2 {int(c2.sum())} C3 {int(c3.sum())}; "
+                  f"setup-days with a C1 skip {int(sd.sum())} of {len(sd)}; days {t.date.nunique()} (R never loaded)")
+        sys.exit()
     for lab_c, far in [("12-1", 252), ("6-1 (C4)", 126)]:
         dec = mom_deciles(px, dates, far); t["dec"] = [dec.get(d, pd.Series(dtype=float)).get(s, np.nan) for d, s in zip(t.date, t.symbol)]
         print(f"{lab_c}: tagged {t.dec.notna().mean():.1%}")

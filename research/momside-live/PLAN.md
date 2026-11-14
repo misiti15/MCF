@@ -41,3 +41,9 @@ Family: 0 new configs (same tags as MOMSIDE; a check, not a candidate). Educatio
 - Scope follows Builder's PRIMARY input (Lead lead-20261114-1300-1): if Builder scores the full-day lists, the live primary is all
   entry times; if Builder keeps trades_tagged, the live primary is entries at or after 12:00 (Skeptic), all hours descriptive.
   Set by --scope {all,pm} at run time to match Builder's posted scope; both are printed either way.
+
+## Amendment 3 (2026-11-14 ~15:50 ET, before any live outcome is read)
+- Builder's Amendment 2 (58a8384e8) scores the full-day lab lists -> live primary scope = ALL entry times (pm descriptive).
+- Reporting only (Skeptic skeptic-20261114-1450-1): print the top-5 setups' share of the live excess beside better/worse.
+- Outcome-free coverage run now (--coverage): daily closes fetched (Saturday), trades tagged; prints counts only (tagged
+  share, skipped counts per config, setup-days with a skip). R is never loaded in this mode.

@@ -302,3 +302,10 @@ Lead: switch to full-day lists or state 'afternoon only'. New OWNER RULE (CLAUDE
 MOMSIDE-LIVE Amendment 2: C4 verbatim, scope follows Builder's posted input.
 **Next**: FAMC 11-16 after 20:00 ET; MOMSIDE-LIVE after Builder's lab post (--scope matching his).
 **Failed**: committed an indentation-broken edit (string-replace patch); fixed in the next commit. Run ast.parse + selftest BEFORE commit.
+
+## Run 47 — 2026-11-14 ~15:40 ET
+**Learned**: MOMSIDE Amendment 2: full-day lab lists (1.18M trades, 95 setups, 70% before 12:00), audited clean; Lead
+adopted the owner's 09:50 anchor guild-wide (ANCHOR950 = reference null). COMPCAL950: 09:50-referenced line calibrated,
+reads 'staying' not 'heading'. MOMSIDE-LIVE Amendment 3 (scope all, top-5 share); coverage run (R never loaded):
+88% tagged, C1 skips 7,248 of 22,833 on 1,337 setup-days, 29 sessions.
+**Next**: FAMC 11-16 after 20:00 ET (Mon); MOMSIDE-LIVE after Builder's lab post (Mon/Tue).
