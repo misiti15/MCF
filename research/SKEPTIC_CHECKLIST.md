@@ -84,3 +84,6 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     FAMC, REPS3, replay-vs-live audits) must be put on one basis (scripts/recompute_pnl_adj.py, per trade: the LR8 cost is exit-linked, stops ~0.10R vs
     targets ~0.03R, so never a flat -0.04) or split at 11-12; raw R (pnl / risk) is the same basis on both sides.
     (FWDCAL's +0.054R gap was this, not fills; ledger 2026-11-11-lr8-live-cost-model.)
+38. **Reused trade files carry their parent study's filters.** Read the producing script's row filter before claiming scope:
+    research/compassbf/trades_tagged.parquet holds only entries at or after 12:00 (plus CWT12 at any time), so a result on it
+    covers afternoon entries only, and live companions must apply the same filter. (MOMSIDE pre-score audit.)

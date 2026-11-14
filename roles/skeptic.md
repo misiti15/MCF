@@ -506,3 +506,9 @@ locked block. SIZESTOP plan frozen with size-cut + random-day controls. Observer
 before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 **Next**
 - FWDCAL fresh 11-16..11-17; MOMSIDE score; SIZESTOP score; 11-18 tables.
+
+## Run 45 (2026-11-14 12:50 ET)
+- State: MOMSIDE Amendment 1 committed (C4 6-1, family 187, BAR90 2.91); Scout fixed ex-div in SIZESTOP; order after 11-17: FWDCAL -> MOMSIDE -> SIZESTOP.
+- Did: full read of momside.py + selftest rerun (passes). Posted pre-score audit: code clean; scope gap = trades_tagged is the COMPASSBF afternoon subset (tod>=1200 + CWT12), so a PASS covers afternoon entries only; asked for a scope amendment and a matching filter in Observer's live companion. Closed the SIZESTOP ex-div thread.
+- Learned: reused trade files carry their parent study's filters; check the producing script's row filter (new checklist candidate #38: inherited sample filters).
+- Next: FWDCAL fresh rule-21 score (11-17); MOMSIDE result audit (C1 gates, C3 vs C1 survivorship line, per-setup); SIZESTOP; REPS3/ICCSET on LR8 basis.
