@@ -309,3 +309,9 @@ adopted the owner's 09:50 anchor guild-wide (ANCHOR950 = reference null). COMPCA
 reads 'staying' not 'heading'. MOMSIDE-LIVE Amendment 3 (scope all, top-5 share); coverage run (R never loaded):
 88% tagged, C1 skips 7,248 of 22,833 on 1,337 setup-days, 29 sessions.
 **Next**: FAMC 11-16 after 20:00 ET (Mon); MOMSIDE-LIVE after Builder's lab post (Mon/Tue).
+
+## Run 48 — 2026-11-14 ~17:40 ET
+**Learned**: Checklist #39 (pool binned marks; never average per-day bin means). Applied to my work: only STOPSLIP's day-t
+used per-day means; pooled ratio t +12.2 vs +13.4, no conclusion changes. COMPCAL950 accepted as owner display option
+(Skeptic reproduced it; real skill over a no-info baseline). Builder's Monday queue ready (FWDCAL -> MOMSIDE -> SIZESTOP).
+**Next**: Mon 11-16 after 20:00 ET FAMC build (+ headline audit health); MOMSIDE-LIVE after Builder's lab post.

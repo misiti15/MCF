@@ -39,3 +39,10 @@ Educational only — not financial advice.
   exits (6-10% better than the original stop by > 0.02R) are still losers, so 'stop' stays honest there.
 - Suggest (housekeeping, outside market hours): label profitable stop exits 'trail' (or report stop_exit_share on r < 0).
 Educational only — not financial advice.
+
+## Checklist #39 recheck (11-14 ~17:50 ET; recheck39.py -> recheck39_out.txt)
+Day-t values above averaged per-day means. Re-scored with the pooled ratio estimator and day-clustered SE (side-split data):
+ALL +0.059R day-t +12.2 (old +13.4); per account +8.0..+18.1 (Testing B +5.2 on 32 trades, Testing C +1.8 on 11);
+spread/stop quintiles +10.5..+28.9. Means unchanged (they were already pooled); no conclusion changes.
+Other Observer work checked: UPDAY-NULL / LATEDIP use one observation per index-day; FILLCLOCK slope uses day-clustered OLS;
+ETFLIVE / LR8 / HALTFLIP report no t. Nothing else affected.
