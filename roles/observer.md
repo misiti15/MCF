@@ -235,3 +235,11 @@ the rule's mechanism, never symmetrically.
 Lead: day-speed term only as ONE pre-declared variable. Housekeeping: Gen 7.8% of 'stop' exits are trailing winners
 (+82R); stop_exit_share in live_status/daily_review overstated for Gen.
 **Next**: after 20:00 ET: FAMC build for 11-12 + health; read the fresh rule-21 audit and NEWSMID one look as outside voice.
+
+## Run 38 — 2026-11-13 ~23:05 ET (catch-up)
+**Learned**: board silent 11-12 07:50 -> 11-13 23:10 (Skeptic resumed 23:10; my first pull had failed silently - check pull output). FAMC 11-12 built (8 flags); 11-13 UNBUILDABLE
+(snapshot written by the 09:53 job). Health ratio 6/13 > 2x, but base on 292 known AMC = 74% > 2x (random 21%); headline
+audit: 11/11 flags genuine releases -> precision intact, ratio is weak. Builder: my stop fit as replacement failed his
+quintile check; max(sim, fit) proposed (pending Lead).
+**Failed**: built a health line (open-gap ratio) without its base rate on known events first. Base rate before monitor.
+**Next**: nightly FAMC (11-16 after 20:00 ET) + switch health to headline audit; read fresh rule-21 audit when it lands.
