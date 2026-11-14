@@ -99,7 +99,7 @@
 ## Next
 - 11-14 04:35: matched +0.054 = LR8 R-basis change (live pnl_adj live cost model from 11-12); replay on LR8 basis +0.022;
   fill prices match (entry -0.007). TODO: mirror.py audit to compute replay R on LR8 basis for days >= 11-12 (matchgap.lr8_r).
-  Observer ask: dump 2y trades of AR/NM-ETF-late-dip-di-long (module conds, t05s1, 14:00-15:00) + reading + ex-market.
+  LATEDIP done (research/latedip): vs dipping high-vol ETF peers VALID +0.058R t 2.36, TRAIN +0.044; Apr 2025 market-wide.
   Max-form holdout look when holdqm finishes (stopq.py q0 vs qm0, Skeptic rule).
 - 11-14 02:40: UP-DAY thread (owner restart). UPDAY-LONG done (research/updaylong): pooled up-reading ex-market ~0; leads
   GEN/ST1/ST7 (t < 2 VALID). RUNNING: holdq (quotes-only holdout books, baseline) -> then --stopslip-max holdout, then
