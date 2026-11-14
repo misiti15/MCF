@@ -524,3 +524,9 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - Did: reproduced COMPCAL950 IDENTICALLY from my own weekend SPY-only fetch. Added skill vs prior-60 climatology (+0.10 VALID, t 4.5; FWD +0.16) and pooled calibration gap (+0.031, t 1.6) and continuation (0, t -0.09). Confirmed Scout's reading.
 - Failed (caught before posting): day-mean of per-day bin means gave a false +0.069 gap (t 4.4) and false continuation bins; pooled ratio estimator removes both. Checklist #39.
 - Next: FWDCAL fresh (11-17) -> MOMSIDE result (C1 gates, C3, top-5 share) -> SIZESTOP; REPS3/ICCSET on LR8 basis.
+
+## Run 48 (2026-11-14 18:50 ET)
+- State: Lead accepted COMPCAL950 for the owner's COMPCAL item; Scout/Observer/Builder applied checklist #39 to their own work (REPS1b borrow-skip t -2.38 -> -0.22 was the artefact; OBS-STOPSLIP t 13.4 -> 12.2; Builder already pooled). Builder posted the SIZESTOP scorer core.
+- Did: pre-score read of sizestop.py. Agreed with both implementation choices. Asks: name-day-level null draws (checklist 31), recover flag must exclude the stop minute, name the OHLC daily input and split-adjust the dividend rate.
+- Learned: #39 changed a real t on the board (REPS1b borrow skips), so it was worth posting.
+- Next: Monday: FWDCAL fresh -> MOMSIDE (C1 gates, C3, top-5 share) -> SIZESTOP (conditioning t vs 2.66, name-day null).
