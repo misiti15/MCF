@@ -73,12 +73,12 @@ if __name__ == "__main__":
     for lab_c, far in [("12-1", 252), ("6-1 (C4)", 126)]:
         dec = mom_deciles(px, dates, far); t["dec"] = [dec.get(d, pd.Series(dtype=float)).get(s, np.nan) for d, s in zip(t.date, t.symbol)]
         print(f"{lab_c}: tagged {t.dec.notna().mean():.1%}")
-      for sc in (["pm", "all"] if scope == "pm" else ["all", "pm"]):
-        tt = t.dropna(subset=["dec"]); tt = tt[tt.pm] if sc == "pm" else tt
-        print(f" scope {sc}{' (PRIMARY)' if sc == scope else ' (descriptive)'}: {len(tt)} tagged trades")
-        for name, sk in [("C1", ((tt.side > 0) & (tt.dec <= 3)) | ((tt.side < 0) & (tt.dec >= 8))),
-                         ("C2", ((tt.side > 0) & (tt.dec <= 2)) | ((tt.side < 0) & (tt.dec >= 9))),
-                         ("C3", (tt.side > 0) & (tt.dec <= 3))]:
-            if lab_c.startswith("6-1") and name != "C1": continue
-            summarize(excess_by_day(tt, sk.values), tt, sk.values, f"{lab_c} {name} raw R")
+        for sc in (["pm", "all"] if scope == "pm" else ["all", "pm"]):
+            tt = t.dropna(subset=["dec"]); tt = tt[tt.pm] if sc == "pm" else tt
+            print(f" scope {sc}{' (PRIMARY)' if sc == scope else ' (descriptive)'}: {len(tt)} tagged trades")
+            for name, sk in [("C1", ((tt.side > 0) & (tt.dec <= 3)) | ((tt.side < 0) & (tt.dec >= 8))),
+                             ("C2", ((tt.side > 0) & (tt.dec <= 2)) | ((tt.side < 0) & (tt.dec >= 9))),
+                             ("C3", (tt.side > 0) & (tt.dec <= 3))]:
+                if lab_c.startswith("6-1") and name != "C1": continue
+                summarize(excess_by_day(tt, sk.values), tt, sk.values, f"{lab_c} {sc} {name} raw R")
     print("ex-market and LR8 net columns: added in the run commit per Amendment 1. Educational only - not financial advice.")

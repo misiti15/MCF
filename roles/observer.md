@@ -301,3 +301,4 @@ Lead: switch to full-day lists or state 'afternoon only'. New OWNER RULE (CLAUDE
 ~09:50 (09:30-09:50 state/range), scored by return after the decision; Scout's ANCHOR950 null holds (none of 40 |t| >= 2).
 MOMSIDE-LIVE Amendment 2: C4 verbatim, scope follows Builder's posted input.
 **Next**: FAMC 11-16 after 20:00 ET; MOMSIDE-LIVE after Builder's lab post (--scope matching his).
+**Failed**: committed an indentation-broken edit (string-replace patch); fixed in the next commit. Run ast.parse + selftest BEFORE commit.
