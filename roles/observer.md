@@ -286,3 +286,11 @@ Skeptic caught: D1's prior predates the size-cut control (~85% of widening gains
 Froze MOMSIDE-LIVE (live companion check, raw R, run only after Builder's lab result; selftest ok).
 **Failed**: proposed D3 against a written research rule; check RESEARCH_RULES before proposing a record/process change.
 **Next**: FAMC 11-16 after 20:00 ET; run MOMSIDE-LIVE after Builder's lab result (adopt his 12-1 definition verbatim).
+
+## Run 45 — 2026-11-14 ~11:40 ET
+**Learned**: MOMSIDE frozen (b677425f7): strict 12-1 with locked-block restart leaves TRAIN = 2024-10 only (sign check);
+VALID 2026-03..10-07 primary; family 186 -> 187 with Lead/Skeptic's C4 (6-1, restart after the gap); BAR90 2.91.
+SIZESTOP Amendment 1: ex-div gaps negligible (10 of 206k name-days), dividend added back. Order after Monday close:
+FWDCAL 11-16..17 -> MOMSIDE -> SIZESTOP.
+MOMSIDE-LIVE Amendment 1: Builder's definitions + score verbatim; full scorer built, gated; selftest ok.
+**Next**: FAMC 11-16 after 20:00 ET; run MOMSIDE-LIVE once Builder posts (adopt C4 verbatim first).

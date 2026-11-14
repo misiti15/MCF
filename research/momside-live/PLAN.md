@@ -22,3 +22,15 @@ Frozen definitions (no tuning after this commit):
 Reading rule (fixed): 'agrees with lab' if the sign of the live aligned-minus-random excess matches the lab's and |t| >= 1;
 'disagrees' if opposite sign with |t| >= 1; else 'uninformative'. No pass/fail; no setup/config changes.
 Family: 0 new configs (same tags as MOMSIDE; a check, not a candidate). Educational only — not financial advice.
+
+## Amendment 1 (2026-11-14 ~11:50 ET, before any live outcome is read): adopt Builder's frozen MOMSIDE definitions verbatim
+- 12-1: close(D_-21) / close(D_-252) - 1, sessions strictly before D (D_-1 = prior close), NaN with < 253 prior sessions;
+  locked-block restart rule applies (it never binds for live dates 10-06..11-13: their lookback starts ~2025-10).
+- Deciles across research/lab_symbols.txt names with a valid mom on D.
+- Configs as research/momside/PLAN.md: C1 skip longs in deciles 1-3 / shorts in 8-10 (primary); C2 1-2 / 9-10; C3 longs-only
+  leg of C1; C4 = Builder's dated 6-1 amendment, adopted verbatim when it is committed (not run before it exists).
+- Score (replaces my aligned-minus-random draw): per setup-day, delta = -sum(R of skipped trades), control = (k/n) x setup-day
+  total R, excess = delta - control, summed per day, day-clustered t; per-setup excess per trade (setups with >= 10 skipped);
+  best-day share; kept and control avg R printed. Raw R (r_multiple) gross first; ex-market = raw - beta_setup x side x SPY move
+  over the hold (beta per setup by OLS on ALL live trades in the window); LR8-recomputed net beside.
+- Reading rule unchanged: agrees / disagrees (|t| >= 1, sign vs Builder's VALID C1) / uninformative. Still 0 configs.

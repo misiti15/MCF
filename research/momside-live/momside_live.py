@@ -1,43 +1,77 @@
-"""MOMSIDE-LIVE scorer (frozen with PLAN.md). Usage (MCF checkout):
-  python ../guild/research/momside-live/momside_live.py --selftest       (synthetic data only)
-  python ../guild/research/momside-live/momside_live.py <journal dir>    (ONLY after Builder's MOMSIDE lab result)
+"""MOMSIDE-LIVE scorer (frozen with PLAN.md + Amendment 1: Builder's MOMSIDE definitions and score, on LIVE trades).
+  python ../guild/research/momside-live/momside_live.py --selftest
+  MOMSIDE_LAB_POSTED=1 python ../guild/research/momside-live/momside_live.py <journal dir>   (ONLY after Builder's lab result)
 Educational only - not financial advice."""
-import sys, numpy as np, pandas as pd
-def tag(side, dec):
-    if np.isnan(dec): return "untagged"
-    if (side > 0 and dec >= 8) or (side < 0 and dec <= 3): return "aligned"
-    if (side > 0 and dec <= 3) or (side < 0 and dec >= 8): return "counter"
-    return "neutral"
-def score(t, draws=1000, seed=7):
-    """t: columns date, strategy, r, tag. Returns pooled excess, day-t, per-setup better/worse, best-day share."""
-    rng = np.random.default_rng(seed); rows = []
+import os, sys, glob, time, sqlite3, requests, numpy as np, pandas as pd
+from pathlib import Path
+HERE = Path(__file__).resolve().parent; CACHE = HERE / "data"
+def excess_by_day(t, skip):
+    """Builder's score: per setup-day delta = -sum(R skipped); control = (k/n) * total; excess summed per day."""
+    t = t.assign(skip=skip); rows = []
     for (d, s), g in t.groupby(["date", "strategy"]):
-        a = g[g.tag == "aligned"].r.to_numpy(); o = g[g.tag != "aligned"].r.to_numpy()
-        if len(a) == 0 or len(o) == 0: continue
-        k = min(len(a), len(o)); base = np.mean([rng.choice(o, k, replace=False).mean() for _ in range(draws)])
-        rows.append(dict(date=d, strategy=s, ex=a.mean() - base, n=len(a)))
-    x = pd.DataFrame(rows)
-    if x.empty: return None
-    day = x.groupby("date").ex.mean(); tt = day.mean() / (day.std(ddof=1) / np.sqrt(len(day))) if len(day) > 2 else np.nan
-    per = x.groupby("strategy").ex.agg(["mean", "size"]); per = per[per["size"] >= 5]
-    pos = x.groupby("date").ex.sum(); best = pos.max() / pos.sum() if pos.sum() > 0 else np.nan
-    return dict(setup_days=len(x), excess=x.ex.mean(), day_t=tt, better=int((per["mean"] > 0).sum()), worse=int((per["mean"] <= 0).sum()), best_day_share=best)
+        n, k = len(g), int(g.skip.sum())
+        if k == 0: continue
+        delta = -g.r[g.skip].sum(); ctl = k / n * g.r.sum(); rows.append(dict(date=d, strategy=s, ex=delta - ctl, k=k))
+    return pd.DataFrame(rows)
+def summarize(x, t, skip, label):
+    if x.empty: print(f"  {label}: no skipped trades"); return
+    day = x.groupby("date").ex.sum(); tt = day.mean() / (day.std(ddof=1) / np.sqrt(len(day))) if len(day) > 2 else np.nan
+    per = x.groupby("strategy").agg(ex=("ex", "sum"), k=("k", "sum")); per = per[per.k >= 10]; per["pt"] = per.ex / per.k
+    best = day.max() / day.sum() if day.sum() > 0 else np.nan
+    print(f"  {label}: skipped {int(skip.sum())} of {len(t)} ({skip.mean():.1%}); excess total {day.sum():+.2f}R, per day {day.mean():+.3f}, "
+          f"day-t {tt:+.2f}, days {len(day)}; kept avg {t.r[~skip].mean():+.3f} vs all {t.r.mean():+.3f}; best-day share {best:.0%}; "
+          f"setups better {int((per.pt > 0).sum())} / worse {int((per.pt <= 0).sum())}")
 def selftest():
-    rng = np.random.default_rng(1); rows = []
+    rng = np.random.default_rng(3); rows = []
     for d in range(30):
-        for s in range(20):
-            for _ in range(8):
-                dec = rng.integers(1, 11); side = rng.choice([-1, 1]); tg = tag(side, dec)
-                r = rng.normal(0, 1) + (0.3 if tg == "aligned" else 0.0)
-                rows.append(dict(date=d, strategy=s, r=r, tag=tg))
-    planted = score(pd.DataFrame(rows))
-    null = score(pd.DataFrame(rows).assign(r=lambda z: rng.normal(0, 1, len(z))))
-    print("planted +0.30:", {k: round(v, 3) if isinstance(v, float) else v for k, v in planted.items()})
-    print("null:        ", {k: round(v, 3) if isinstance(v, float) else v for k, v in null.items()})
-    assert 0.2 < planted["excess"] < 0.4 and planted["day_t"] > 3, "planted effect not recovered"
-    assert abs(null["day_t"]) < 3, "null shows an effect"
-    print("selftest ok")
+        for s in range(15):
+            for _ in range(10):
+                dec = int(rng.integers(1, 11)); side = int(rng.choice([-1, 1]))
+                counter = (side > 0 and dec <= 3) or (side < 0 and dec >= 8)
+                rows.append(dict(date=d, strategy=s, side=side, dec=dec, r=rng.normal(0, 1) - (0.3 if counter else 0)))
+    t = pd.DataFrame(rows); skip = ((t.side > 0) & (t.dec <= 3)) | ((t.side < 0) & (t.dec >= 8))
+    x = excess_by_day(t, skip); day = x.groupby("date").ex.sum(); tt = day.mean() / (day.std(ddof=1) / np.sqrt(len(day)))
+    t0 = t.assign(r=rng.normal(0, 1, len(t))); x0 = excess_by_day(t0, skip); d0 = x0.groupby("date").ex.sum(); t0t = d0.mean() / (d0.std(ddof=1) / np.sqrt(len(d0)))
+    print(f"planted -0.30 on counter: day-t {tt:+.2f}; null day-t {t0t:+.2f}"); assert tt > 3 and abs(t0t) < 3; print("selftest ok")
+def closes(syms):
+    CACHE.mkdir(exist_ok=True); f = CACHE / "daily.parquet"
+    if f.exists(): return pd.read_parquet(f)
+    H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}; out = []
+    for i in range(0, len(syms), 100):
+        p = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": "2024-09-01", "end": "2026-11-14", "feed": "sip", "adjustment": "split", "limit": 10000}
+        while True:
+            r = requests.get("https://data.alpaca.markets/v2/stocks/bars", headers=H, params=p, timeout=60)
+            if r.status_code == 429: time.sleep(3); continue
+            r.raise_for_status(); j = r.json()
+            for s, bs in (j.get("bars") or {}).items(): out += [(s, b["t"][:10], b["c"]) for b in bs]
+            if not j.get("next_page_token"): break
+            p["page_token"] = j["next_page_token"]
+        time.sleep(0.3)
+    d = pd.DataFrame(out, columns=["symbol", "date", "c"]); d.to_parquet(f); return d
+def mom_deciles(px, dates, lag_far):
+    w = px.pivot_table(index="date", columns="symbol", values="c").sort_index(); idx = list(w.index); out = {}
+    for D in dates:
+        k = np.searchsorted(idx, D)            # sessions strictly before D: idx[k-1] = prior close
+        if k - lag_far < 0: continue
+        m = w.iloc[k - 21] / w.iloc[k - lag_far] - 1
+        out[D] = np.ceil(m.dropna().rank(method="first", pct=True) * 10).clip(1, 10)
+    return out
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--selftest": selftest(); sys.exit()
-    sys.exit("live run is gated: run only after Builder's MOMSIDE lab result is posted (PLAN.md). Not implemented past scoring "
-             "until then by design: the data fetch + tagging are added in the run commit, unchanged definitions.")
+    if sys.argv[1:] == ["--selftest"]: selftest(); sys.exit()
+    if os.environ.get("MOMSIDE_LAB_POSTED") != "1": sys.exit("gated: set MOMSIDE_LAB_POSTED=1 only after Builder's MOMSIDE lab result is on the board")
+    F = []
+    for f in sorted(glob.glob(f"{sys.argv[1]}/*.db")):
+        F.append(pd.read_sql("select date, strategy, symbol, side, entry_time, exit_time, r_multiple r from trades where run_id=1 and exit_time "
+                             "is not null and date between '2026-10-06' and '2026-11-13'", sqlite3.connect(f)))
+    t = pd.concat(F, ignore_index=True); lab = sorted(set(Path("research/lab_symbols.txt").read_text().split()) | {"SPY"})
+    px = closes(lab); dates = sorted(t.date.unique())
+    print(f"live trades {len(t)}; names traded not in lab list: {(~t.symbol.isin(lab)).mean():.1%}")
+    for lab_c, far in [("12-1", 252)]:
+        dec = mom_deciles(px, dates, far); t["dec"] = [dec.get(d, pd.Series(dtype=float)).get(s, np.nan) for d, s in zip(t.date, t.symbol)]
+        print(f"{lab_c}: tagged {t.dec.notna().mean():.1%}")
+        tt = t.dropna(subset=["dec"])
+        for name, sk in [("C1", ((tt.side > 0) & (tt.dec <= 3)) | ((tt.side < 0) & (tt.dec >= 8))),
+                         ("C2", ((tt.side > 0) & (tt.dec <= 2)) | ((tt.side < 0) & (tt.dec >= 9))),
+                         ("C3", (tt.side > 0) & (tt.dec <= 3))]:
+            summarize(excess_by_day(tt, sk.values), tt, sk.values, f"{lab_c} {name} raw R")
+    print("ex-market and LR8 net columns: added in the run commit per Amendment 1. Educational only - not financial advice.")
