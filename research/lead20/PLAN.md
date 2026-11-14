@@ -24,3 +24,14 @@ VALID; SPXL net mean > 0; w/o best day > 0. Below the bar but positive in every 
 Kill line: fails -> LEAD20 closed; no grid over the 0.70 threshold or the 10:30 time.
 Reported (not gates): share of spy_up days with L >= 0.70; hit rate vs the 76% sign-so-far baseline; L < 0.50 days (narrow
 leadership) as a mirror row; TQQQ/QQQ rows.
+
+## RESULT (one look, 2026-11-14 02:10 ET) — FAIL, LEAD20 closed
+`fetch.py` (24 symbols, 1.66M 5-min bars) -> `lead20.py` -> `lead20_out.txt`. 453 sessions; SPY up at 10:30 on 242 (53%);
+broad leadership (L >= 0.70) on 72 of them (30%); narrow (L < 0.50) on 61.
+- Hit (SPY closes above its open): broad days 82% vs all up-mornings 72%. Leadership improves the CALL of the day, but...
+- ...rest-of-day return (10:30 open -> 15:55) on broad days: SPY +6.5bps gross (t 0.40), -0.6bps net; complement +0.3bps;
+  difference +6.1bps (Welch t 0.37). QQQ +2.9 (t 0.14). SPXL +19.9 (t 0.40; net +12.0). TQQQ +10.4 (t 0.18).
+- TRAIN diff +8.5bps (t 0.24), VALID +2.1bps (t 0.17). SPY without its best day: -6.1bps.
+- Narrow-leadership mirror: SPY -2.3bps, SPXL -7.8bps (no usable fade either).
+Reading: like the index's own sign-so-far (Observer's null), leadership breadth says what the day has ALREADY done, not what
+is left. The 3x ETF only scales a ~0 continuation (SPXL t 0.40). Family market-state 2,606, closed.

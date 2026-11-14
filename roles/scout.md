@@ -116,7 +116,12 @@
   Lesson: a grouping drawn after seeing the values needs an out-of-time test before it is recommended.
 - Run 38 (11-13 23:20 ET) NEWSMID scored once: FAIL (excess -0.024 ATR, t -1.83); 46% of events' volume peak precedes the
   vendor stamp -> mid-session analyst headlines are priced at publication. Missed the 11-12 slot (no run fired after that close).
+- Run 39 (11-14 02:10 ET) LEAD20 (up-day track): top-20 leadership at 10:30 raises the hit rate (82 vs 72%) but not
+  rest-of-day return (+6bps, t 0.37); closed. Up-day info that only describes the past move has no continuation value.
+  Data cached: scratch lead20/m5.csv.gz (SPY QQQ SPXL TQQQ + 20 mega caps, 5-min, 2024-10..2026-11, locked block absent).
 ## Next
+- Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
+  Hunch, or cross-sectional long selection on up days (Builder's family table first).
 - 11-18: refresh ICCSET (iccset.py + shrink.py on fresh journals) beside REPS3.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
