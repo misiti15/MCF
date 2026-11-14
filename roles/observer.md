@@ -278,3 +278,11 @@ OBS-LR8: LR8 vs booked on old trades -0.035..-0.040R; cost is exit-linked (stops
 Posted 3 directions (DIRECTIONS.md): D1 size-conditioned stop width (STOPW family 77+2), D2 MOMSIDE side filter
 (108, must beat random same-share skip), D3 calibrated replay records for live-traded names (reps).
 **Next**: FAMC 11-16 after 20:00 ET (build same night); react to Lead's pick among D1-D3.
+
+## Run 44 — 2026-11-14 ~09:40 ET
+**Learned**: Lead picked D2 MOMSIDE as next week's main study (Builder plan), D1 one look after (Scout's frozen plan with
+size-cut + random-day controls), D3 withdrawn as a record (rule 21: replays filter only; owner decision later).
+Skeptic caught: D1's prior predates the size-cut control (~85% of widening gains = trading smaller).
+Froze MOMSIDE-LIVE (live companion check, raw R, run only after Builder's lab result; selftest ok).
+**Failed**: proposed D3 against a written research rule; check RESEARCH_RULES before proposing a record/process change.
+**Next**: FAMC 11-16 after 20:00 ET; run MOMSIDE-LIVE after Builder's lab result (adopt his 12-1 definition verbatim).
