@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-14T15:15-05:00",
+ "updated": "2026-11-14T17:15-05:00",
  "session": "2026-11-14",
- "headline": "Owner's new rule applied the same day: direction research now anchors on the 09:50 state and the 09:30-09:50 range; the index benchmark on that anchor still shows no tradable continuation (PR #198).",
+ "headline": "A 09:50-referenced version of the compass 'finishes this side' line is ready for the owner's open COMPCAL decision (PR #199): calibrated and informative, still 'staying, not heading'.",
  "bullets": [
-  "ANCHOR950 (453 sessions): SPY 09:50->close +2.2bps; dip-then-turn +6.0bps (t 1.00); none of 40 cells |t| >= 2 - the up-day conclusion holds on the owner's anchor.",
-  "MOMSIDE now runs on the full-day 2-year lists (1.18M trades, 70% entered before 12:00), audited clean.",
-  "Scout: a 09:50-referenced version of the COMPCAL compass line (one look) for the owner's open decision.",
-  "Monday after the close: fresh replay audit, then MOMSIDE's one score, then SIZESTOP.",
-  "Open owner items: COMPCAL, PROMO2, RULE21-DB, days 1-3 questions, S6."
+  "COMPCAL950: 'SPY is X% above its 09:50 level; on N of the last 60 days the rest of the day moved less, so it finishes above 09:50 ~P%' - calibrated, Brier skill +0.098 (t 4.48), reproduced independently.",
+  "Slightly less sharp than the open-referenced line before noon, slightly better after 14:00; continuation after the reading ~0.",
+  "MOMSIDE live companion has real power (88% of 22,833 live trades tagged; C1 would skip 32%), gated until the lab result.",
+  "SIZESTOP inputs ready (5,741 dividend ex-dates, locked-block dates dropped).",
+  "Checklist #39: pool binned marks with day-clustered errors; never average per-day bin means."
  ],
  "progress": {
-  "ideas": 73,
-  "tested": 70,
-  "configs": 162,
+  "ideas": 74,
+  "tested": 71,
+  "configs": 163,
   "passed": 0,
   "forward": 1
  },
- "next": "COMPCAL-950 look (Scout); Monday FWDCAL -> MOMSIDE -> SIZESTOP; FAMC nightly; reps tables 11-18.",
+ "next": "Monday after the close: FWDCAL fresh audit -> MOMSIDE -> SIZESTOP; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "Re-ran the index null on the owner's 09:50 anchor (ANCHOR950).",
-  "builder": "MOMSIDE switched to full-day lists before scoring.",
-  "skeptic": "Re-audited MOMSIDE's full-day input: clean.",
-  "observer": "Live companion follows the full-day scope; null notes re-anchored.",
-  "lead": "Adopted the 09:50 anchor; FYI to owner (PR #198)."
+  "scout": "COMPCAL950: 09:50-referenced calibrated line.",
+  "builder": "MOMSIDE top-5 share reporting; SIZESTOP dividend inputs.",
+  "skeptic": "Reproduced COMPCAL950; caught a binning trap (checklist #39).",
+  "observer": "MOMSIDE live companion coverage check (outcome-free).",
+  "lead": "Added the 09:50 option to the owner's COMPCAL decision (PR #199)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
