@@ -1,0 +1,32 @@
+setups with >= 40 trades on >= 8 days: 54 (of 185); pooled-style median ICC 0.196
+ICC quartiles: {0.1: 0.072, 0.25: 0.103, 0.5: 0.196, 0.75: 0.275, 0.9: 0.448}
+n_eff / n: median 0.35; setups whose n_eff < 2 x days: 7
+corr(ICC, |beta|) -0.01; corr(ICC, trades/day) -0.33; median ICC longs 0.141 vs shorts 0.211
+null (R shuffled across days within setup): median ICC -0.005, 90th pct +0.087
+
+lowest ICC (records worth the most per trade):
+                                                                           setup   n  days  per_day    icc   n_eff  side   beta   avgR
+                                                            RW6-ns2-up3-short-FD  75    15    5.000 -0.062  75.000   0.0 -0.237 -0.019
+GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long  86     8   10.750 -0.006  86.000   1.0  0.385  0.055
+                                                  RW6G1-ns2-up3-vwap2sd-short-FD  46    12    3.833  0.010  44.727   0.0 -0.122  0.026
+                                                      NS1-rsidip-rsi5pop-long-FD  83    16    5.188  0.057  67.066   1.0 -0.016 -0.097
+                                              CWT14-failbrk-pdh-p10-lowvol-short 175    17   10.294  0.071 105.614   0.0 -0.057 -0.202
+                                                      CWT14-failbrk-pdl-p05-long 704    17   41.412  0.072 179.734   1.0  0.160 -0.061
+                                                      CWT13-vwapstretch-z05-long 250    16   15.625  0.072 121.389   1.0 -0.029 -0.132
+                                              RW1-gapdn-bounce-flowsell-short-FD  85    16    5.312  0.074  64.478   0.0 -0.087  0.133
+                                               CWT14-failbrk-pdl-p05-lowvol-long 475    17   27.941  0.074 158.865   1.0  0.230 -0.111
+                 GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long  91     8   11.375  0.077  50.557   1.0  0.239 -0.179
+
+highest ICC (records worth ~one trade per day):
+                                                                     setup   n  days  per_day   icc  n_eff  side   beta   avgR
+                                     CWT09-gapdn-bounce-g5-lowerhalf-short 107    13    8.231 0.357 29.867 0.000 -0.354  0.129
+                                             MF2-open-rsimidhi-flowsell-FD 113    15    7.533 0.363 33.507 0.000 -0.121  0.014
+                                                            heat_fade_long  99    15    6.600 0.394 30.861 1.000  0.250 -0.008
+GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short  59     8    7.375 0.436 15.620 0.000 -0.663  0.100
+                                                MF5-flowsell-vwapup-rsi5hi  78    16    4.875 0.453 28.315 0.000 -0.122 -0.193
+                                RW5-heat30-flowsell-rsi5pop-gapdn-short-FD 141    17    8.294 0.480 31.337 0.000 -0.217  0.024
+                                       RW3-gapdn-rsi5pop-flowsell-short-FD 110    16    6.875 0.537 26.457 0.000 -0.196  0.191
+                                                          exhaustion_short  72    12    6.000 0.544 19.352 0.000  0.090 -0.062
+                                                         NM-HL-T75-pm-long  48    10    4.800 0.626 14.202 1.000  0.035 -0.005
+                                                         intraday_momentum  48    17    2.824 0.753 20.229 0.625  0.043 -0.381
+Educational only - not financial advice.

@@ -1,0 +1,77 @@
+FUNNEL
+  single-symbol benzinga items: 12275
+  lab name, 10:00-14:30, test session: 4049
+  one lexicon leg: 2399
+  first per name-day: 1733
+  entry bar <= 14:30: 1731
+  dropped: earnings D-1 16:00..D 16:00: 216
+  dropped: re-post (analyst item D 04:00-10:00), A2: 169
+  dropped: opposite leg before entry: 3
+  events after exclusions: 1343
+  per-day events: min 27, median 55, days 23
+
+LEXICON SANITY an_up (20 random of 629):
+    Keefe, Bruyette & Woods Maintains Market Perform on Arthur J. Gallagher, Raises Price Target to $275
+    Wells Fargo Maintains Equal-Weight on Sirius XM Holdings, Raises Price Target to $33
+    Wells Fargo Maintains Overweight on Host Hotels & Resorts, Raises Price Target to $27
+    Wells Fargo Maintains Overweight on Cloudflare, Raises Price Target to $400
+    Wells Fargo Maintains Equal-Weight on Hyatt Hotels, Raises Price Target to $189
+    Citigroup Maintains Buy on Procter & Gamble, Raises Price Target to $180
+    JP Morgan Maintains Neutral on Travelers Companies, Raises Price Target to $379
+    Pivotal Research Maintains Buy on Meta Platforms, Raises Price Target to $930
+    Piper Sandler Maintains Overweight on Nextpower, Raises Price Target to $115
+    TD Cowen Maintains Hold on Avantor, Raises Price Target to $17
+    Truist Securities Maintains Buy on EQT, Raises Price Target to $70
+    UBS Maintains Neutral on LyondellBasell Industries, Raises Price Target to $69
+    Morgan Stanley Maintains Equal-Weight on Automatic Data Processing, Raises Price Target to $288
+    B of A Securities Upgrades BorgWarner to Buy, Raises Price Target to $85
+    JP Morgan Maintains Overweight on Packaging Corp of America, Raises Price Target to $322
+    UBS Maintains Neutral on Snap, Raises Price Target to $7
+    Morgan Stanley Maintains Overweight on Chord Energy, Raises Price Target to $178
+    TD Cowen Maintains Buy on Fortinet, Raises Price Target to $225
+    Macquarie Initiates Coverage On Kratos Defense & Security with Outperform Rating, Announces Price Target of $7
+    Barclays Maintains Overweight on Devon Energy, Raises Price Target to $60
+
+LEXICON SANITY an_dn (20 random of 714):
+    Wells Fargo Maintains Overweight on Huntington Bancshares, Lowers Price Target to $19
+    Truist Securities Maintains Hold on Atmos Energy, Lowers Price Target to $174
+    Barclays Maintains Underweight on Southern Copper, Lowers Price Target to $165
+    RBC Capital Maintains Outperform on Carrier Global, Lowers Price Target to $70
+    Keybanc Maintains Overweight on Uber Technologies, Lowers Price Target to $95
+    TD Cowen Maintains Buy on Celsius Holdings, Lowers Price Target to $35
+    Raymond James Maintains Outperform on Martin Marietta Materials, Lowers Price Target to $640
+    Mizuho Maintains Outperform on Vertiv Holdings, Lowers Price Target to $280
+    Goldman Sachs Maintains Neutral on EMCOR Group, Lowers Price Target to $795
+    Mizuho Maintains Outperform on Stanley Black & Decker, Lowers Price Target to $105
+    Oppenheimer Maintains Outperform on Monolithic Power Systems, Lowers Price Target to $1500
+    RBC Capital Maintains Outperform on Graco, Lowers Price Target to $82
+    Wells Fargo Maintains Equal-Weight on Lennox International, Lowers Price Target to $355
+    TD Cowen Maintains Buy on Huntington Ingalls Indus, Lowers Price Target to $340
+    Piper Sandler Maintains Overweight on EastGroup Properties, Lowers Price Target to $246
+    JP Morgan Maintains Neutral on Amrize, Lowers Price Target to $48
+    RBC Capital Maintains Outperform on Kratos Defense & Security, Lowers Price Target to $55
+    Stifel Maintains Buy on Flutter Entertainment, Lowers Price Target to $125
+    Wells Fargo Maintains Overweight on Wynn Resorts, Lowers Price Target to $125
+    BNP Paribas Maintains Outperform on Innio, Lowers Price Target to $35
+
+  with entry bar / ATR / 09:30 open and price >= $5: 1341 (dropped 2)
+A6: share of events whose peak-volume bar (+-30 min) starts > 5 min BEFORE created_at: 0.462 (n 1341)
+control cell >= 5 names: 1341 of 1341; median control names 122
+
+ALL EVENTS: n 1341, days 23, excess -0.0241 ATR (t -1.83), c -0.0209 (t -1.30), median c -0.0060, control +0.0022, cost 0.0332, pre-move +0.035
+  an_up (long): n 628, days 23, excess -0.0099 ATR (t -0.65), c +0.0386 (t +1.56), median c +0.0189, control +0.0415, cost 0.0310, pre-move +0.062
+  an_dn (short): n 713, days 23, excess -0.0401 ATR (t -1.90), c -0.0770 (t -2.43), median c -0.0248, control -0.0324, cost 0.0351, pre-move +0.011
+  first half: n 819, days 12, excess -0.0311 ATR (t -2.52), c -0.0402 (t -3.13), median c -0.0173, control -0.0075, cost 0.0362, pre-move +0.022
+  second half: n 522, days 11, excess -0.0165 ATR (t -0.67), c +0.0000 (t +0.00), median c +0.0097, control +0.0175, cost 0.0284, pre-move +0.054
+  pre-move tercile 0 (A3: 2 = moved most their way): n 447, days 23, excess -0.0282 ATR (t -1.54), c -0.0194 (t -0.88), median c -0.0002, control +0.0057, cost 0.0322, pre-move -0.558
+  pre-move tercile 1 (A3: 2 = moved most their way): n 447, days 23, excess -0.0330 ATR (t -1.55), c -0.0300 (t -1.29), median c -0.0169, control -0.0020, cost 0.0328, pre-move +0.027
+  pre-move tercile 2 (A3: 2 = moved most their way): n 447, days 23, excess -0.0195 ATR (t -0.85), c -0.0141 (t -0.48), median c +0.0096, control +0.0030, cost 0.0345, pre-move +0.636
+  entry 10:00-11:00: n 306, days 23, excess -0.0449 ATR (t -1.42), c -0.0455 (t -1.23), median c -0.0389, control -0.0032, cost 0.0310, pre-move +0.015
+  entry 11:00-12:30: n 472, days 23, excess -0.0356 ATR (t -1.81), c -0.0288 (t -1.08), median c +0.0032, control +0.0055, cost 0.0334, pre-move -0.012
+  entry 12:30-14:30: n 563, days 23, excess -0.0121 ATR (t -1.14), c -0.0085 (t -0.60), median c -0.0031, control +0.0024, cost 0.0342, pre-move +0.084
+  SPY up days (reporting only): n 763, days 14, excess -0.0134 ATR (t -1.12), c -0.0110 (t -0.95), median c -0.0002, control +0.0012, cost 0.0325, pre-move +0.044
+  SPY down days (reporting only): n 578, days 9, excess -0.0409 ATR (t -1.44), c -0.0364 (t -0.96), median c -0.0148, control +0.0036, cost 0.0340, pre-move +0.023
+
+DIRECTION picked by sign (A4, counted): FADE (not pre-registered); net -0.0153 ATR/trade; w/o best day +0.0125; legs [np.True_, np.True_]; halves [np.True_, np.True_]; long leg net -0.0595
+PASS 1 False; PASS 2 True; PASS 3 False -> FAIL - NEWSMID closed (long leg flag)
+configs 2, family 147, BAR90 2.84. Educational only - not financial advice.

@@ -1,0 +1,50 @@
+fwdcal quotes: 6303 logged quotes, 2297 symbol-days
+fwdcal: 3 sessions, 3 books to run, delay 0
+fwdcal d0 2026-11-04 gen: 266 trades, 1935.8 s
+fwdcal d0 2026-11-05 gen: 340 trades, 2137.6 s
+fwdcal d0 2026-11-06 gen: 354 trades, 2226.0 s
+FWDCAL mirror-live audit, delay 0 (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):
+     acct  sessions  live_trades  replay_trades  matched  match_rate  exact_min_share  replay_only_share  rdiff_matched  replay_avgR  live_avgR  gap_avgR        gap_ci95  exact_match_rate  exact_ci95  rule21
+Generator         3         1069            960      767       0.717            0.206              0.201         0.0322      -0.2542    -0.2314   -0.0228 [-0.115,+0.070]             0.148 [0.13,0.17]   False
+      ALL         3         1069            960      767       0.717            0.206              0.201         0.0322      -0.2542    -0.2314   -0.0228 [-0.115,+0.070]             0.148 [0.13,0.17]   False
+
+unmatched trades by cause:
+acct        kind                     cause   n   avgR
+ gen   live_only          replay_no_signal  13 -0.244
+ gen   live_only  replay_signal_other_time   4  1.173
+ gen   live_only  replay_skip:buying_power  86 -0.498
+ gen   live_only    replay_skip:daily_loss 141  0.107
+ gen   live_only replay_skip:held_by_other   5  0.811
+ gen   live_only     replay_skip:setup_cap  51  0.109
+ gen   live_only  replay_skip:spread_quote   2 -0.889
+ gen replay_only            live_no_signal  40 -0.040
+ gen replay_only    live_skip:buying_power  56 -0.279
+ gen replay_only      live_skip:daily_loss  30 -0.248
+ gen replay_only   live_skip:held_by_other   5 -0.603
+ gen replay_only        live_skip:rejected  21 -0.789
+ gen replay_only       live_skip:setup_cap  35  0.080
+ gen replay_only    live_skip:spread_quote   5  0.137
+ gen replay_only           live_skip:taken   1  1.077
+
+matched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):
+  xk_live    xk_rep   n  rdiff_mean  rdiff_sum
+     stop      stop 468      0.0471    22.0518
+     stop    target   1      2.1423     2.1423
+     stop time/flat   6     -0.0045    -0.0269
+   target      stop   1     -2.2697    -2.2697
+   target    target 133      0.0480     6.3898
+time/flat      stop   3     -1.2775    -3.8324
+time/flat    target   2      1.1245     2.2490
+time/flat time/flat 153     -0.0131    -1.9979
+
+replay trades by entry-quote source (Lead 11-12 03:00; pool-priced = names with no live quote that minute):
+       grp  replay_trades  matched  replay_avgR  rdiff_matched  matched_share
+live-quote            848      765      -0.2754         0.0319          0.902
+      pool            112        2      -0.0936         0.1522          0.018
+
+halt / latch agreement per account (setup-days; Observer obs-haltflip): both, live only, replay only, median minutes replay - live
+acct   level  both  live_only  replay_only  med_min_diff
+ gen account     2          0            0        -32.65
+
+buying-power causes (config/live equity, Skeptic 3): 142 trades; matched rate if they are set aside: 0.780
+FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.
