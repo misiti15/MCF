@@ -123,6 +123,8 @@
   (+0.09R) but lowers the mean (-0.02R vs plain). Prior held (exits can't create expectancy).
 - Run 41 (11-14 06:30 ET) SHORTUP: strongest stock in strongest sector, 10:30->11:30 on up readings: excess +0.007 ATR (t 0.30),
   net +0.2bps; closed. Up-day thread: all tracks = null. Data cached: scratch shortup/ (489 names 30-min + daily, 2025-03..2026-11).
+- Run 42 (11-14 07:30 ET) SIZETREND: gap-predicted size raises afternoon range 14% but not path efficiency (0.452 flat) ->
+  no direction-free bracket edge from size. Breakout family = 169 backlog lines.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
