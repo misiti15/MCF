@@ -127,6 +127,8 @@
   no direction-free bracket edge from size. Breakout family = 169 backlog lines.
 - Run 43 (11-14 09:30 ET) D1 SIZESTOP plan frozen for Builder (after MOMSIDE): primary = conditioning effect vs random-day
   widening, net of size-cut control; family 79, BAR90 2.66.
+- Run 44 (11-14 11:30 ET) SIZESTOP Amendment 1: ex-div gaps negligible (1.1% of Q5; 10 of 206k days change Q4-5), gap now
+  dividend-adjusted. Alpaca corporate-actions endpoint works (v1/corporate-actions, cash_dividend).
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).

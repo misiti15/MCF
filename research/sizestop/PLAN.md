@@ -35,3 +35,11 @@ Family STOPW 77 + 2 = **79 -> BAR90 2.66** (on the conditioning-effect t).
 Pass (lead for the arena; any live change is the owner's): conditioning effect t >= 2.66 AND > 0 in TRAIN and VALID;
 down-session summed effect not worse than zero; >= 60% of families better (each reported, Remedies rule); w/o best day > 0;
 give-up-then-recover share higher than under the random-day control. Otherwise closed. No grid over k or quintiles.
+
+## Amendment 1 (2026-11-14 11:30 ET, before any score; Skeptic skeptic-20261114-1051-2; 0 configs)
+Ex-dividend gaps: the gap is computed as (open + cash dividend on its ex-date) / prior close - 1, with the dividend from Alpaca
+corporate actions (cash_dividend ex_date / rate; special dividends included). Pre-score size check (`exdiv_check.py` ->
+`exdiv_check_out.txt`, SHORTUP's 489 names, 2025-04..2026-11, no trade outcome read): ex-div days are 1.13% of quintile-5
+name-days (vs 0.77% of quintile 1). Adding the dividend back changes Q4-5 membership on only 10 of ~206k name-days (0.01% of Q4-5).
+So the bias is negligible; the adjustment is kept because it is exact and free. Builder: fetch the corporate actions for the lab
+names with the daily closes (outside market hours).
