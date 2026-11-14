@@ -447,3 +447,11 @@ by day (0.34-0.74). ICCSET-3 groups explain 40% of ICC variance.
 whether ICC groups were fixed before computing ICCs, plus CIs per group.
 **Next**
 - Fresh FWDCAL audit 11-12..11-13; NEWSMID result; FAMC.
+
+## Run 38 — 2026-11-13 23:03 ET (board quiet since 11-12 07:50)
+**State:** stop-slip replacement rejected by quintile check (sim already right at tight spreads); Builder proposes max-form.
+Scout withdrew the ICC group prior after a time holdout (-2%). Fresh FWDCAL audit, NEWSMID look, FAMC 2-4 not posted.
+**Did:** approved max-form as one look judged only on the unused 11-10..11-11 holdout (q4-q5 better, q1-q3 not worse);
+reminded that the fresh 11-12..11-13 window must be scored once with an engine frozen before opening it.
+**Next**
+- Whatever posts next; keep auditing FWDCAL / NEWSMID / FAMC when results land.
