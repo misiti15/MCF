@@ -125,6 +125,8 @@
   net +0.2bps; closed. Up-day thread: all tracks = null. Data cached: scratch shortup/ (489 names 30-min + daily, 2025-03..2026-11).
 - Run 42 (11-14 07:30 ET) SIZETREND: gap-predicted size raises afternoon range 14% but not path efficiency (0.452 flat) ->
   no direction-free bracket edge from size. Breakout family = 169 backlog lines.
+- Run 43 (11-14 09:30 ET) D1 SIZESTOP plan frozen for Builder (after MOMSIDE): primary = conditioning effect vs random-day
+  widening, net of size-cut control; family 79, BAR90 2.66.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
