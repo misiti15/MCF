@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEF = {"testingd": ("Testing D", "mtd-", "TESTINGD"), "testinge": ("Testing E", "mte-", "TESTINGE"),
        "testingf": ("Testing F", "mtf-", "TESTINGF")}
 ALL = {**EXPECT, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in DEF.items()}}
+# setups per account: 10 each from 11-12; from 11-16 RW3S leaves E (Graveyard) and RW7 joins F (owner 2026-11-13)
+N_SETUPS = {"testingd": 10, "testinge": 9, "testingf": 11}
 MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"
 WF = ROOT / ".github/workflows"
 
@@ -30,7 +32,7 @@ def test_overlay_loads_with_its_own_setups(monkeypatch, acct):
     raw = yaml.safe_load((ROOT / f"config/account_{acct}.yaml").read_text())
     assert raw["strategies_exclusive"] is True
     own = {k for k, v in raw["strategies"].items() if v.get("enabled")}
-    assert len(own) == 10 and sorted(raw["live"]["setup_order"]) == sorted(own)          # every setup has a priority
+    assert len(own) == N_SETUPS[acct] and sorted(raw["live"]["setup_order"]) == sorted(own)          # every setup has a priority
     cfg = _cfg(monkeypatch, acct)
     a, live = cfg["account"], cfg["live"]
     b = _cfg(monkeypatch, "explore1")                                             # Testing B: the base rules
@@ -112,7 +114,7 @@ def test_labels_reports_and_dashboard():
     post = {k: br for k, _, br, _ in P.ACCOUNTS}
     for acct, (label, _, s) in DEF.items():
         br = f"mcf-data-{acct}"
-        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and len(d["accounts"][acct]) == 10   # filled 11-12
+        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and len(d["accounts"][acct]) == N_SETUPS[acct]   # filled 11-12
         assert post[acct] == br and acct in P.LB_ACCOUNTS and acct in P.COLORS and acct in P.TOTALS_EXCLUDED
         assert team.ACCOUNT_TAG[acct] == label and team.ACCOUNT_BRANCH[acct] == br and allocate.LABEL[acct] == label
         assert br in inactive.BRANCHES and intraday.BRANCH[acct] == br

@@ -45,7 +45,6 @@ live:
     - L3-gap-slope-rsi5hi-FD   # 18 traded sessions to 11-11
     - orb20_a   # 18 traded sessions to 11-11
     - MF2-open-rsimidhi-flowsell-FD   # 20 traded sessions to 11-11
-    - RW7-gapdn-bounce-early-short-FD   # 21 traded sessions to 11-11
     - RW1-gapdn-bounce-flowsell-short-FD   # 22 traded sessions to 11-11
     - MF4-h40-open-flowsell-FD   # 23 traded sessions to 11-11
 strategies:
@@ -505,7 +504,7 @@ strategies:
     scale_out_r: null
   # from RW7-gapdn-bounce-early-short (testing; source window 950-1030); ~61.42/day full-day [timeofday results.csv full, exp -0.058R]
   RW7-gapdn-bounce-early-short-FD:
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-13 after the close (owner demote; Graveyard review after 3 sessions 11-16..11-18); from session 2026-11-16
     type: lab
     module: research/bdi/fullday/RW7-gapdn-bounce-early-short-FD.py
     min_adv: 95000000
