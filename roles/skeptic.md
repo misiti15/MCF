@@ -498,3 +498,11 @@ FAMC nightly. Observer's directions: D1 size-conditioned stop width, D2 MOMSIDE,
 (replays never a record) -> frame as the allowed filter or ask the owner.
 **Next**
 - Plans for D1/D2 when frozen; FWDCAL fresh score; 11-18 tables.
+
+## Run 44 — 2026-11-14 10:41 ET (MOMSIDE window; SIZESTOP plan)
+**State:** MOMSIDE plan frozen (strict 12-1 restart -> TRAIN only 2024-10; VALID primary); Builder asked about spanning the
+locked block. SIZESTOP plan frozen with size-cut + random-day controls. Observer froze a live companion for MOMSIDE.
+**Did:** advised strict form (spanning reads locked prices); optional counted C4 = 6-1 restart for TRAIN power, declared
+before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
+**Next**
+- FWDCAL fresh 11-16..11-17; MOMSIDE score; SIZESTOP score; 11-18 tables.
