@@ -1,0 +1,26 @@
+# LEAD20 — does leadership breadth at 10:30 raise rest-of-day continuation on SPY-up mornings? (FROZEN 2026-11-14 01:30 ET, before any fetch)
+Educational only — not financial advice. Lead lead-20261114-0100-3 (up-day track: information beyond the index's own path).
+Null to beat: Observer's OBS-UPDAY-NULL. SPY's return from the decision time to the close is ~0 in all 40 cells; at 10:30 the sign
+so far calls the day 76% of the time.
+
+## Data (Alpaca SIP 5-min bars, GET only; 2024-10-01..2026-11-13; locked block 2024-11-01..2025-02-28 never fetched)
+SPY, QQQ, SPXL, TQQQ and LEADERS = the 20 largest S&P 500 weights as of Oct 2024 (fixed at the window start, so no hindsight
+membership): AAPL MSFT NVDA AMZN META GOOGL GOOG BRK.B AVGO LLY TSLA JPM UNH XOM V MA PG JNJ COST HD.
+TRAIN <= 2025-09-30 < VALID.
+
+## Predictor (known at 10:30:00 ET, strict: uses bars closing at or before 10:30)
+spy_up = SPY close of the 10:25 bar > SPY 09:30 open. L = share of LEADERS whose 10:25-bar close > their own 09:30 open.
+## Rule (ONE config)
+On spy_up days with L >= 0.70 (broad leadership): long at the open of the 10:30 bar, exit at the close of the 15:50 bar.
+Instruments scored separately in their own prices: SPY, QQQ, SPXL, TQQQ.
+Comparison (the null at the same decision time): all spy_up days. Value = mean rest-of-day return on rule days minus mean on
+spy_up days with L < 0.70 (the complement), day-level Welch t. Also the rule days' own gross and net mean.
+Costs (per share, own price): entry 1c + 1bp x 1.4 + 4.4bp spread, exit 1c + 1bp.
+
+## Counting, bar, pass
+Family: market-state gates 2,605 (includes breadth / compass) + 1 = 2,606 -> BAR90 3.57.
+Pass (all of): SPY difference t >= 3.57 (full window); rule days' SPY GROSS mean > 0 and NET mean > 0; same sign in TRAIN and
+VALID; SPXL net mean > 0; w/o best day > 0. Below the bar but positive in every split -> 'shadow-worthy, not a pass' for Lead.
+Kill line: fails -> LEAD20 closed; no grid over the 0.70 threshold or the 10:30 time.
+Reported (not gates): share of spy_up days with L >= 0.70; hit rate vs the 76% sign-so-far baseline; L < 0.50 days (narrow
+leadership) as a mirror row; TQQQ/QQQ rows.
