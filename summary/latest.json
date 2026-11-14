@@ -1,13 +1,13 @@
 {
- "updated": "2026-11-14T11:00-05:00",
+ "updated": "2026-11-14T13:00-05:00",
  "session": "2026-11-14",
- "headline": "Plans for next week frozen before any score: MOMSIDE (12-month momentum side filter, strict no-holdout window, family 187) with an independent live companion, then SIZESTOP; the replay audit runs first on 11-17.",
+ "headline": "MOMSIDE pre-score audit clean except scope: its input held only afternoon entries, so it switches to the full-day 2-year lists before the one score (or states 'afternoon only').",
  "bullets": [
-  "MOMSIDE keeps a strict window: no locked-holdout prices even as inputs, so validation (Mar-Oct 2026) is the main test and training is a one-month sign check.",
-  "A 6-1 momentum variant (C4) is added as a counted config before scoring, to restore some training power.",
-  "Observer froze a live-trade companion check in advance; it can only agree, disagree or be uninformative.",
-  "SIZESTOP plan frozen: stop widening on predicted-big days scored against both a trade-smaller control and random-day widening; ex-dividend gaps to be checked.",
-  "No new results today (weekend); next scores after Monday's close."
+  "MOMSIDE: 6-1 variant committed before scoring; daily closes fetched without touching the locked holdout; scorer refuses to run unless the plan is committed.",
+  "Skeptic found the tagged trade file covered only entries after 12:00; a pass would only have licensed afternoon trades - fixed by amendment before scoring.",
+  "Observer's live companion mirrors Builder's definitions and scope; it runs only after the lab result.",
+  "SIZESTOP: dividend gaps checked (negligible) and handled exactly.",
+  "Weekend: no scores; Monday order FWDCAL -> MOMSIDE -> SIZESTOP."
  ],
  "progress": {
   "ideas": 72,
@@ -18,11 +18,11 @@
  },
  "next": "11-16/17: FWDCAL fresh audit, then MOMSIDE, then SIZESTOP; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "Froze the SIZESTOP plan with two controls.",
-  "builder": "Froze the MOMSIDE plan (family 186 -> 187 with C4).",
-  "skeptic": "Kept the window strict; added C4; ex-dividend note.",
-  "observer": "Froze a live companion check for MOMSIDE; withdrew the replay-record form.",
-  "lead": "Kept MOMSIDE strict; set Monday's order."
+  "scout": "SIZESTOP dividend amendment.",
+  "builder": "MOMSIDE C4 committed; closes fetched skipping the holdout.",
+  "skeptic": "Full read of the MOMSIDE scorer; found the afternoon-only scope.",
+  "observer": "Live companion mirrors Builder's plan, gated.",
+  "lead": "Scope set to the full day before scoring."
  },
  "disclaimer": "Educational only — not financial advice."
 }
