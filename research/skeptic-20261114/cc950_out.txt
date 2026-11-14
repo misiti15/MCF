@@ -1,0 +1,26 @@
+# COMPCAL950 Skeptic check (2026-11-14, weekend fetch of SPY 5-min only). Educational only - not financial advice.
+Repro: python -I cc950_fetch_spy.py spy5.csv.gz; then compcal950.py output is IDENTICAL to compcal950_out.txt.
+Bins are mark-level subsets, so means are POOLED marks with day-clustered SE (ratio estimator). A day-mean of per-day bin means
+over-weights days with 1-2 marks in a bin (first pass gave a false +0.069 calibration gap at t 4.4 and false 'continuation' bins).
+
+## cc950_skill_cal.py (skill vs prior-60-day climatology at the same mark; calibration gap)
+VALID M1-950: Brier 0.1291 vs clim 0.1431; skill +0.098; day-t +4.48; days 256
+VALID M1-open: Brier 0.1241 vs clim 0.1423; skill +0.127; day-t +4.70; days 256
+FWD M1-950: Brier 0.1368 vs clim 0.1634; skill +0.163; day-t +3.13; days 27
+FWD M1-open: Brier 0.1116 vs clim 0.1437; skill +0.223; day-t +3.70; days 27
+M1-950 calibration gap mean(y - P), pooled day-clustered:
+   P 0.5-0.8: +0.031 t +1.60 marks 4041 days 278
+   P 0.8-1.01: -0.005 t -0.43 marks 5793 days 277
+   P 0-0.5: +0.036 t +0.76 marks 344 days 151
+M1-open calibration gap mean(y - P), pooled day-clustered:
+   P 0.5-0.8: +0.016 t +0.73 marks 3477 days 260
+   P 0.8-1.01: -0.010 t -0.84 marks 6410 days 277
+   P 0-0.5: +0.084 t +1.55 marks 290 days 122
+
+## cc950_cont.py (descriptive, 4 post-hoc bins)
+pooled, day-clustered (ratio estimator); continuation = sign(f) x SPY move T->close, %
+  all: -0.0012 t -0.09 marks 10178 days 283
+  |f|/sd60 0-0.5: +0.0069 t +0.50 marks 3748 days 271
+  |f|/sd60 0.5-1: -0.0173 t -0.96 marks 2257 days 275
+  |f|/sd60 1-2: -0.0072 t -0.35 marks 2242 days 247
+  |f|/sd60 2-99: +0.0088 t +0.23 marks 1931 days 199

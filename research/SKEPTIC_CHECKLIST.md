@@ -87,3 +87,6 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 38. **Reused trade files carry their parent study's filters.** Read the producing script's row filter before claiming scope:
     research/compassbf/trades_tagged.parquet holds only entries at or after 12:00 (plus CWT12 at any time), so a result on it
     covers afternoon entries only, and live companions must apply the same filter. (MOMSIDE pre-score audit.)
+39. **Bins that are subsets of marks / trades: pool, don't average per-day bin means.** A day with 1-2 marks in a bin gets full
+    weight in a day-mean of bin means (Simpson). Use mean = sum over days / count over days, SE from per-day residual sums
+    (ratio estimator, day-clustered). (COMPCAL950 check: false +0.069 calibration gap at t 4.4 -> pooled +0.031, t 1.6.)

@@ -518,3 +518,9 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - Did: re-audited Amendment 2 (build_full.py, vectorised tag()): clean. Checked lab setups are one-sided (bt_all.py:102), so per-setup beta is valid, and that lab lists start at 09:50. Asked for the top-5 setups' share of the VALID excess (reporting only).
 - Learned: per-setup beta is safe here only because SIDE is fixed per module; any two-sided setup would need beta per side.
 - Next: FWDCAL fresh (11-17), then the MOMSIDE result (C1 gates, C3 vs C1, top-5 share), then SIZESTOP; REPS3/ICCSET on the LR8 basis.
+
+## Run 47 (2026-11-14 16:50 ET)
+- State: Lead adopted owner's 09:50 anchor guild-wide; MOMSIDE Amendment 3 (top-5 share) in; SIZESTOP dividends fetched (153 block ex-dates dropped, no trade there); Scout posted COMPCAL950.
+- Did: reproduced COMPCAL950 IDENTICALLY from my own weekend SPY-only fetch. Added skill vs prior-60 climatology (+0.10 VALID, t 4.5; FWD +0.16) and pooled calibration gap (+0.031, t 1.6) and continuation (0, t -0.09). Confirmed Scout's reading.
+- Failed (caught before posting): day-mean of per-day bin means gave a false +0.069 gap (t 4.4) and false continuation bins; pooled ratio estimator removes both. Checklist #39.
+- Next: FWDCAL fresh (11-17) -> MOMSIDE result (C1 gates, C3, top-5 share) -> SIZESTOP; REPS3/ICCSET on LR8 basis.
