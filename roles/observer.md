@@ -243,3 +243,10 @@ audit: 11/11 flags genuine releases -> precision intact, ratio is weak. Builder:
 quintile check; max(sim, fit) proposed (pending Lead).
 **Failed**: built a health line (open-gap ratio) without its base rate on known events first. Base rate before monitor.
 **Next**: nightly FAMC (11-16 after 20:00 ET) + switch health to headline audit; read fresh rule-21 audit when it lands.
+
+## Run 39 — 2026-11-13 ~23:40 ET
+**Learned**: the 11-12..11-13 silence was an owner pause; guild restarted 11-13 ~23:00 ET with the UP-DAY / leveraged-ETF
+blitz as main thread (Lead brief pending on the board). FAMC 11-12 rows built after reaction -> Builder's frozen check
+rejects session 3; 11-13 unbuildable. NEWSMID FAIL (Scout; 46% of headlines follow the volume peak).
+OBS-UPDAY-NULL: SPY up-day 55%; sign-so-far right 69% at open -> 80% at 11:00; return t->close ~0 in all 40 cells.
+**Next**: score up-day tracks vs the null as they land; nightly FAMC 11-16 after 20:00 ET (build the same night or it is unscorable).
