@@ -491,6 +491,29 @@ def live_trades_x() -> pd.DataFrame:
     return L
 
 
+_LR8CFG = {}
+LR8_FROM = "2026-11-12"
+
+
+def lr8_r(t, day, acc):
+    """Replay trade R on live's basis (LR8, ledger 2026-11-11-lr8-live-cost-model): for days >= LR8_FROM live R is
+    (pnl - live cost model) / risk, so the replay trade gets the same mcf.costs.pnl_adj with that day's mirrored config.
+    Earlier days keep the replay's own R (live then used the flat stop allowance; the sim's fill costs stand in)."""
+    if day < LR8_FROM:
+        return t["r"]
+    from mcf.costs import pnl_adj, parts_from_row
+    if (day, acc) not in _LR8CFG:
+        _LR8CFG[(day, acc)] = mirror_cfg(acc, day)
+    cfg = _LR8CFG[(day, acc)]
+    risk = abs(float(t["entry"]) - float(t["stop"])) * abs(float(t["shares"]))
+    if not risk or cfg is None:
+        return t["r"]
+    parts = parts_from_row({"exit_reason": t.get("exit_reason"), "shares": abs(float(t["shares"])), "exit": t["exit"], "meta": ""})
+    adj, _ = pnl_adj(float(t["pnl"]), int(t["side"]), float(t["entry"]), abs(float(t["shares"])), parts,
+                     float(t["exit"]) if xkind(t.get("exit_reason")) == "target" else None, day, cfg)
+    return adj / risk
+
+
 def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame:
     fs = sorted((OUT / "books" / variant(D)).glob("*/*.json"))
     if dates:
@@ -500,7 +523,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     if not reps:
         sys.exit("no books")
     X = pd.DataFrame([{"date": r["day"], "acct": r["acc"], "setup": t["strategy"], "symbol": t["symbol"], "side": int(t["side"]),
-                       "entry_time": t["entry_time"], "R": t["r"], "xk": xkind(t.get("exit_reason")),
+                       "entry_time": t["entry_time"], "R": lr8_r(t, r["day"], r["acc"]), "xk": xkind(t.get("exit_reason")),
                        "qsrc": t.get("quote_src", "untagged")} for r in reps for t in r["trades"]])
     X["et"] = pd.to_datetime(X.entry_time, utc=True, format="mixed")
     XS = pd.DataFrame([{"date": r["day"], "acct": r["acc"], **s} for r in reps for s in r["signals"]])
@@ -563,6 +586,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     A.to_csv(OUT / f"audit{sfx}.csv", index=False); cz.to_csv(OUT / f"causes{sfx}.csv", index=False)
     xg.to_csv(OUT / f"exitkind{sfx}.csv", index=False); LA.to_csv(OUT / f"latch{sfx}.csv", index=False)
     pd.set_option("display.width", 250)
+    print(f"replay R on live's basis: own sim R before {LR8_FROM}, LR8 live cost model from {LR8_FROM} (checklist 37)")
     print(f"FWDCAL mirror-live audit, delay {D} (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):")
     print(A.to_string(index=False)); print("\nunmatched trades by cause:"); print(cz.to_string(index=False))
     print("\nmatched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):"); print(xg.to_string(index=False))

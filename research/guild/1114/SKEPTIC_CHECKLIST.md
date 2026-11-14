@@ -81,5 +81,6 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     OBS-UPDAY-NULL.)
 37. **Live R changed cost basis on 2026-11-12 (LR8).** pnl_adj from 11-12 uses the live cost model, about -0.04R per trade
     vs the old allowance; earlier trades are NOT rewritten. Any live R series crossing 11-12 (setup records, verdicts,
-    FAMC, REPS3, replay-vs-live audits) must be put on one basis (scripts/recompute_pnl_adj.py) or split at 11-12.
+    FAMC, REPS3, replay-vs-live audits) must be put on one basis (scripts/recompute_pnl_adj.py, per trade: the LR8 cost is exit-linked, stops ~0.10R vs
+    targets ~0.03R, so never a flat -0.04) or split at 11-12; raw R (pnl / risk) is the same basis on both sides.
     (FWDCAL's +0.054R gap was this, not fills; ledger 2026-11-11-lr8-live-cost-model.)
