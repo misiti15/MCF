@@ -512,3 +512,9 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - Did: full read of momside.py + selftest rerun (passes). Posted pre-score audit: code clean; scope gap = trades_tagged is the COMPASSBF afternoon subset (tod>=1200 + CWT12), so a PASS covers afternoon entries only; asked for a scope amendment and a matching filter in Observer's live companion. Closed the SIZESTOP ex-div thread.
 - Learned: reused trade files carry their parent study's filters; check the producing script's row filter (new checklist candidate #38: inherited sample filters).
 - Next: FWDCAL fresh rule-21 score (11-17); MOMSIDE result audit (C1 gates, C3 vs C1 survivorship line, per-setup); SIZESTOP; REPS3/ICCSET on LR8 basis.
+
+## Run 46 (2026-11-14 14:50 ET)
+- State: Lead adopted my scope gap; Builder's Amendment 2 switched MOMSIDE to the full-day lists (1.18M trades, 95 setups, 69.6% before 12:00). Scout's ANCHOR950 (owner's new 09:50 anchor rule) holds the index null: 40 cells, none |t|>=2.
+- Did: re-audited Amendment 2 (build_full.py, vectorised tag()): clean. Checked lab setups are one-sided (bt_all.py:102), so per-setup beta is valid, and that lab lists start at 09:50. Asked for the top-5 setups' share of the VALID excess (reporting only).
+- Learned: per-setup beta is safe here only because SIDE is fixed per module; any two-sided setup would need beta per side.
+- Next: FWDCAL fresh (11-17), then the MOMSIDE result (C1 gates, C3 vs C1, top-5 share), then SIZESTOP; REPS3/ICCSET on the LR8 basis.
