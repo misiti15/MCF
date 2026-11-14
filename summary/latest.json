@@ -1,13 +1,13 @@
 {
- "updated": "2026-11-14T09:00-05:00",
+ "updated": "2026-11-14T11:00-05:00",
  "session": "2026-11-14",
- "headline": "Next week's plan set: test whether slow 12-month momentum (the only direction that clears costs) improves intraday setups as a side filter, then size-conditioned stop width; replay records wait for the owner.",
+ "headline": "Plans for next week frozen before any score: MOMSIDE (12-month momentum side filter, strict no-holdout window, family 187) with an independent live companion, then SIZESTOP; the replay audit runs first on 11-17.",
  "bullets": [
-  "SIZETREND: big-gap days have 14% more range but no cleaner trends, so predicted size helps risk sizing, not direction-free entries.",
-  "D2 MOMSIDE (main study): keep intraday longs on strong 12-1 names and shorts on weak ones, scored against random skips of the same size; survivorship and point-in-time checks built in.",
-  "D1: widen stops on predicted-big days at the same dollar risk, scored net of the trade-smaller effect; low prior.",
-  "D3 replay records conflict with research rule 21 (replays are a filter, never a record) - goes to the owner after the fresh 11-16..11-17 audit.",
-  "Replay engine frozen for that audit (live quotes, conservative stops, live cost basis incl. scaled exits)."
+  "MOMSIDE keeps a strict window: no locked-holdout prices even as inputs, so validation (Mar-Oct 2026) is the main test and training is a one-month sign check.",
+  "A 6-1 momentum variant (C4) is added as a counted config before scoring, to restore some training power.",
+  "Observer froze a live-trade companion check in advance; it can only agree, disagree or be uninformative.",
+  "SIZESTOP plan frozen: stop widening on predicted-big days scored against both a trade-smaller control and random-day widening; ex-dividend gaps to be checked.",
+  "No new results today (weekend); next scores after Monday's close."
  ],
  "progress": {
   "ideas": 72,
@@ -16,13 +16,13 @@
   "passed": 0,
   "forward": 1
  },
- "next": "MOMSIDE plan (Builder), size-stop plan (Scout), fresh replay audit after Monday's close, FAMC from 11-16, reps tables 11-18.",
+ "next": "11-16/17: FWDCAL fresh audit, then MOMSIDE, then SIZESTOP; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "SIZETREND: predicted size doesn't mean cleaner trends; writing the size-stop plan.",
-  "builder": "Replay engine frozen with part-by-part costing; MOMSIDE plan next.",
-  "skeptic": "Pre-audited D1-D3; flagged rule 21 for replay records.",
-  "observer": "Proposed three directions (size stops, momentum side filter, replay records).",
-  "lead": "Picked MOMSIDE as next week's main study."
+  "scout": "Froze the SIZESTOP plan with two controls.",
+  "builder": "Froze the MOMSIDE plan (family 186 -> 187 with C4).",
+  "skeptic": "Kept the window strict; added C4; ex-dividend note.",
+  "observer": "Froze a live companion check for MOMSIDE; withdrew the replay-record form.",
+  "lead": "Kept MOMSIDE strict; set Monday's order."
  },
  "disclaimer": "Educational only — not financial advice."
 }
