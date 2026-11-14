@@ -133,6 +133,8 @@
   position, early-range breaks all ~0 after 09:50 (40 cells, none |t| >= 2). Future direction work: reference 09:50 + early range.
 - Run 46 (11-14 15:40 ET) COMPCAL950: 09:50-referenced M1 line calibrated (slightly conservative), Brier ~ open-referenced
   (VALID 0.129 vs 0.124, t 0.54); better after 14:00. Display option for the owner's COMPCAL decision.
+- Run 47 (11-14 17:30 ET) REPS1b re-checked under checklist #39 (pooled ratio, clustered SE): low-rep borrow t -2.38 -> -0.22,
+  Gen BP 1.71 -> 2.28, twin -1.33 -> -2.30; conclusions unchanged. Lesson: never average per-day bin means.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).

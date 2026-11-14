@@ -68,3 +68,18 @@ the halt's quality rests on 2 days. Every other block is either protective (spre
 (borrow). The scalable source of setup-days is more setups live at once: more homes and accounts, and rotating idle setups in.
 That fits the playing-time rule (session rotation, no in-session throttling). Benched sessions produce no signals, so this
 journal table cannot measure rotation itself. That needs the bench log.
+
+## REPS1b re-check under checklist #39 (2026-11-14 17:30 ET) — `recheck39.py` -> `recheck39_out.txt`
+REPS1b's day_t averaged per-day group means, so days with one or two skips in a lever got full weight (Skeptic's trap #39).
+Re-scored with the pooled ratio estimator (sum over days / count over days) and day-clustered SE. Point estimates are unchanged
+in substance; t changes:
+| group / lever | estimate vs submitted | REPS1b t (per-day means) | pooled t |
+|---|---|---|---|
+| Gen buying power (5 days) | +0.126R | 1.71 | 2.28 |
+| Gen account halt (2 days) | +0.230R | n/a | 1.94 on 2 clusters: meaningless; unproven, as stated |
+| low-rep borrow / not shortable | -0.018R | **-2.38** | **-0.22** (the -2.4 was the averaging artefact) |
+| low-rep twin / opposite side | -0.290R | -1.33 | -2.30 (keep-the-block is better supported) |
+| low-rep spread filters (gross, pre-spread-cost) | +0.225R | 1.38 | 1.69 (after the logged spread it is negative; keep) |
+| other borrow | +0.188R | 2.83 | 2.73 |
+Conclusions unchanged: the ranking is by setup-days, not t; borrow stays virtual-only; keep the spread / twin / short-gate filters;
+Gen halt + buying power are the only good-quality blocks, and the halt rests on 2 days.
