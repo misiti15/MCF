@@ -129,6 +129,8 @@
   widening, net of size-cut control; family 79, BAR90 2.66.
 - Run 44 (11-14 11:30 ET) SIZESTOP Amendment 1: ex-div gaps negligible (1.1% of Q5; 10 of 206k days change Q4-5), gap now
   dividend-adjusted. Alpaca corporate-actions endpoint works (v1/corporate-actions, cash_dividend).
+- Run 45 (11-14 13:30 ET) ANCHOR950: index null re-run on the owner's 09:50 anchor (new CLAUDE.md rule): dip-then-turn, range
+  position, early-range breaks all ~0 after 09:50 (40 cells, none |t| >= 2). Future direction work: reference 09:50 + early range.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
