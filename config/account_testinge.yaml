@@ -42,7 +42,6 @@ live:
     - RW6G1-ns2-up3-vwap2sd-short   # 2 traded sessions to 11-11
     - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long   # 5 traded sessions to 11-11
     - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 6 traded sessions to 11-11
-    - RW3S-gapdn-flowsell-short-FD   # 7 traded sessions to 11-11
     - NS3-failed-vwap-reclaim-short   # 11 traded sessions to 11-11
     - NS1-rsidip-rsi5pop-long-FD   # 20 traded sessions to 11-11
 strategies:
@@ -59,7 +58,7 @@ strategies:
     enabled: true
     former_primary: {demoted: "2026-10-14", first_testing_session: "2026-10-15", review_after_sessions: 10}
   RW3S-gapdn-flowsell-short-FD:   # moved from Testing A 2026-11-11 after the close (D/E/F fill (busy)); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-13 after the close (owner RW3S-GY drop); from session 2026-11-16
     type: lab
     module: research/bdi/night1102/simple/modules/RW3S-gapdn-flowsell-short-FD.py
     min_adv: 95000000

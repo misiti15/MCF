@@ -21,7 +21,6 @@
    "NM-HL-T75-pm-long",
    "NS1-rsidip-rsi5pop-long",
    "RW1-gapdn-bounce-flowsell-short-FD",
-   "RW7-gapdn-bounce-early-short-FD",
    "ST6-volspikeup-short-mid-t1s1-FD",
    "orb20_a"
   ],
@@ -152,6 +151,7 @@
    "NS3-failed-vwap-reclaim-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
    "RW2-exhaustion-noon-adv150-short-FD",
+   "RW3S-gapdn-flowsell-short-FD",
    "RW4-ns3-adv150-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "ST1-ordn-long-pm-t05s1-FD",
@@ -210,7 +210,6 @@
    "LIQ-pdl-sweep-open15-vwap-long",
    "NS1-rsidip-rsi5pop-long-FD",
    "NS3-failed-vwap-reclaim-short",
-   "RW3S-gapdn-flowsell-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short"
   ],
   "testingf": [
@@ -222,6 +221,7 @@
    "NM-AMS-N1-quiet-morning-short",
    "NM-RWN4-ns2-spyup05-notfri-short",
    "NS4-pm-vwap-reclaim-oversold-short-FD",
+   "RW7-gapdn-bounce-early-short-FD",
    "exhaustion_short",
    "intraday_momentum"
   ]
@@ -1848,14 +1848,14 @@
   },
   "RW3S-gapdn-flowsell-short-FD": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-13 20:33 ET",
+   "from": [
     "testinge"
    ],
-   "since": "2026-11-11 16:21 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "last_old_session": "2026-11-13",
+   "first_session": "2026-11-16"
   },
   "RW4-ns3-adv150-short-FD": {
    "accounts": [
@@ -1917,10 +1917,14 @@
   },
   "RW7-gapdn-bounce-early-short-FD": {
    "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-13 20:33 ET",
+   "from": [
     "testing"
    ],
-   "since": null,
-   "from": null
+   "last_old_session": "2026-11-13",
+   "first_session": "2026-11-16"
   },
   "ST1-ordn-long-pm-t05s1-FD": {
    "accounts": [
@@ -2110,24 +2114,24 @@
   }
  },
  "last_change": {
-  "at": "2026-11-12 16:13 ET",
+  "at": "2026-11-13 20:33 ET",
   "changes": [
    {
-    "setup": "RW6-ns2-up3-short-FD",
+    "setup": "RW3S-gapdn-flowsell-short-FD",
     "from": [
-     "graveyard"
+     "testinge"
     ],
     "to": [
-     "livelab"
+     "graveyard"
     ]
    },
    {
-    "setup": "ST4-emadn-long-am-t1s05-FD",
+    "setup": "RW7-gapdn-bounce-early-short-FD",
     "from": [
-     "graveyard"
+     "testing"
     ],
     "to": [
-     "explore1"
+     "testingf"
     ]
    }
   ]

@@ -64,6 +64,7 @@ live:
     - MF5-flowsell-vwapup-rsi5hi-FD        # 74 live trades (moved from Testing 2 2026-11-02, DM-MF; from session 2026-11-03)
     - NS5-sma50-flush-oversold-long-FD     # 44 live trades (moved from Testing 1 + 2 2026-11-03, DM-N3; from session 2026-11-04)
     - RW6G1-ns2-up3-vwap2sd-short-FD       # 28 live trades (moved from Testing 1 2026-11-03, DM-N3; from session 2026-11-04)
+    - RW3S-gapdn-flowsell-short-FD         # 297 live trades (moved from Testing E 2026-11-13, RW3S-GY; from session 2026-11-16)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -444,3 +445,13 @@ strategies:
     scale_out_r: null
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
+  RW3S-gapdn-flowsell-short-FD:
+    # moved to Graveyard 2026-11-13 (owner RW3S-GY drop; earlier trades stay in Testing 2 / Testing E; the dashboard merges them). 297 trades / 9 sessions -0.289R (-0.352R w/o best day), 2 green.
+    enabled: true
+    type: lab
+    module: research/bdi/night1102/simple/modules/RW3S-gapdn-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [graveyard, "moved to Graveyard 2026-11-13 (owner)", night1102, RW3S]

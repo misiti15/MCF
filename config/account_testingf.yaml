@@ -45,7 +45,17 @@ live:
     - CWT05-flush-m05-v3-long   # 16 traded sessions to 11-11
     - exhaustion_short   # 20 traded sessions to 11-11
     - intraday_momentum   # 21 traded sessions to 11-11
+    - RW7-gapdn-bounce-early-short-FD   # moved from On Deck 2026-11-13 (23 traded sessions, 567 live trades; owner demote; from session 2026-11-16)
 strategies:
+  RW7-gapdn-bounce-early-short-FD:   # moved from On Deck 2026-11-13 after the close (owner demote; Graveyard review after 3 sessions 11-16..11-18); from session 2026-11-16
+    # from RW7-gapdn-bounce-early-short (testing; source window 950-1030); ~61.42/day full-day [timeofday results.csv full, exp -0.058R]
+    # On Deck record to 11-13: 567 trades / 23 sessions -12.06R (-0.021R; -0.051R w/o best day 11-05 +14.27R)
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW7-gapdn-bounce-early-short-FD.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
   CWT05-flush-m05-v3-long:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
     enabled: true
     type: lab
