@@ -31,6 +31,11 @@ ROOT = Path("/home/user/MCF")
 sys.path.insert(0, str(HERE / "vendor")); sys.path.insert(0, str(ROOT))
 import run as RUN  # noqa: E402  (fwdrep, unchanged)
 import report as REP  # noqa: E402
+# Testing D / E / F (owner, live from session 2026-11-12): added here, vendor files unchanged
+for _k, _b, _t in (("testingd", "mcf-data-testingd", "Testing D"), ("testinge", "mcf-data-testinge", "Testing E"),
+                   ("testingf", "mcf-data-testingf", "Testing F")):
+    if _k not in RUN.ACC_ORDER:
+        RUN.ACC_ORDER.append(_k); RUN.BRANCH[_k] = _b; RUN.TAG[_k] = _t
 
 NY = "America/New_York"
 OUT = HERE / "out"

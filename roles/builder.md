@@ -96,6 +96,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-13 23:30: board silent since 11-12 07:50 (no Lead reply on max-form). Running FRESH rule-21 11-12..11-13 (quotes-only,
+  D=0, unaided, Testing D/E/F added via mirror.py; books out/books/q0/2026-11-1[23], tag _fresh; may need a relaunch
+  without --fetch if it hits the 2h cap). FAMC s2 done (3 events, raw +0.034, gross -0.175, K_edge 0.637); cache to 11-13;
+  s3 needs Observer's calendar rows for 11-12 AMC. LESSON AGAIN: never `git fetch --depth=1` on data branches (caught it).
 - 11-12 07:50: --stopslip (replace) FAILS (mean stop gap +0.063 -> +0.075; q1-q3 worse, q5 0.181 -> 0.151). Proposed to
   Lead: max(sim cost, fit) (0 fitted params), check on holdout 11-10..11-11 by quintile (python stopq.py --dates
   2026-11-10..2026-11-11 --variants q0,<new>; needs q0 hold books: run --quotes on hold first). Fresh rule-21 11-12..11-13
