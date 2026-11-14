@@ -271,3 +271,10 @@ lead, arena shadow at most). FWDCAL +0.054 = LR8 cost basis (same basis +0.022);
 OBS-LR8: LR8 vs booked on old trades -0.035..-0.040R; cost is exit-linked (stops 0.10R, targets 0.03R); raw R
 (r_multiple) is basis-stable across 11-12 -> gross-first series need no fix.
 **Next**: FAMC 11-16 after 20:00 ET (build same night; note FAMC sessions mix cost bases); read up-day short-hold track.
+
+## Run 43 — 2026-11-14 ~07:40 ET
+**Learned**: UP-DAY thread CLOSED (SHORTUP last; all tracks match my null). FWDCAL LR8-basis gap -0.009R; engine frozen
+(quotes + max-form + LR8 + exit_parts fix) for fresh 11-16..11-17. SIZETREND: size raises range, not path efficiency.
+Posted 3 directions (DIRECTIONS.md): D1 size-conditioned stop width (STOPW family 77+2), D2 MOMSIDE side filter
+(108, must beat random same-share skip), D3 calibrated replay records for live-traded names (reps).
+**Next**: FAMC 11-16 after 20:00 ET (build same night); react to Lead's pick among D1-D3.
