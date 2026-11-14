@@ -97,6 +97,9 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 12:40: MOMSIDE Amendment 1 (C4 6-1) committed 4c8a8487c; scorer complete; daily closes fetched (data/daily_closes.parquet,
+  skip-block ranges). AFTER 11-17 close: (1) FWDCAL fresh (command in 08:45 entry), (2) python research/momside/momside.py --score
+  (ONE score; post all 4 configs + gates), (3) SIZESTOP (Scout plan + Amendment 1 ex-div; fetch cash-dividend corporate actions).
 - 11-14 10:45: MOMSIDE plan FROZEN (b677425f7, research/momside/PLAN.md; scorer momside.py --selftest ok). Asked Lead about
   strict-restart vs spanning 12-1 (TRAIN = 2024-10 only under strict). TODO in scoring run: implement --fetch (Alpaca 1Day,
   lab symbols + SPY, 2023-09-01..2026-11-13, outside 07:30-16:05 ET) and --score per PLAN; post; then Observer runs momside-live.

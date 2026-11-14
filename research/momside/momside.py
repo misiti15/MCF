@@ -86,12 +86,98 @@ def selftest():
     print("selftest ok. Educational only - not financial advice.")
 
 
+def fetch():
+    """Daily closes (Alpaca SIP 1Day, split-adjusted) for the lab list + SPY in TWO ranges that skip the locked block, so
+    its prices are never requested (rule 19). Refused 07:30-16:05 ET on weekdays."""
+    import requests
+    now = pd.Timestamp.now(tz="America/New_York"); hm = now.hour * 100 + now.minute
+    assert now.dayofweek >= 5 or not (730 <= hm < 1605), "refusing: weekday 07:30-16:05 ET (live jobs' rate budget)"
+    sys.path.insert(0, str(ROOT / "research/history2y")); import download as DL
+    syms = sorted(set((ROOT / "research/lab_symbols.txt").read_text().split()) | {"SPY"})
+    sess = requests.Session()
+    sess.headers.update({"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]})
+    rows = []
+    for a, b in (("2023-09-01", "2024-10-31"), ("2025-03-01", "2026-11-13")):
+        for i in range(0, len(syms), 100):
+            params = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": a, "end": b, "feed": "sip",
+                      "adjustment": "split", "limit": 10000}
+            while True:
+                j = DL._get(sess, params)
+                for sy, bl in (j.get("bars") or {}).items():
+                    rows += [(sy, x["t"][:10], float(x["c"])) for x in bl]
+                tok = j.get("next_page_token")
+                if not tok:
+                    break
+                params["page_token"] = tok
+        print(f"fetched {a}..{b}: {len(rows)} rows so far", flush=True)
+    D = pd.DataFrame(rows, columns=["symbol", "date", "close"]).drop_duplicates(["symbol", "date"])
+    assert not ((D.date >= LB0) & (D.date <= LB1)).any()
+    DATA.mkdir(exist_ok=True); D.to_parquet(DATA / "daily_closes.parquet", index=False)
+    print(f"saved {len(D)} rows, {D.symbol.nunique()} symbols, {D.date.min()}..{D.date.max()}. Educational only - not financial advice.")
+
+
+def run_score():
+    sys.path.insert(0, str(ROOT)); from mcf.research.generator import data as GD
+    D = pd.read_parquet(DATA / "daily_closes.parquet"); assert not ((D.date >= LB0) & (D.date <= LB1)).any()
+    px = D.pivot(index="date", columns="symbol", values="close").sort_index()
+    # sessions inside the block are absent from px; insert their dates (as NaN rows) so offsets count real sessions and
+    # the restart test sees them
+    # block session dates from the public NYSE calendar (no locked file is opened): business days minus NYSE closures
+    closed = {"2024-11-28", "2024-12-25", "2025-01-01", "2025-01-09", "2025-01-20", "2025-02-17"}
+    bd = [str(d.date()) for d in pd.bdate_range(LB0, LB1) if str(d.date()) not in closed]
+    px = pd.concat([px, pd.DataFrame(np.nan, index=bd, columns=px.columns)]).sort_index()
+    labs = set((ROOT / "research/lab_symbols.txt").read_text().split()); px = px[[c for c in px.columns if c in labs]]
+    B = pd.read_parquet(R / "compassbf/trades_tagged.parquet", columns=["setup", "side", "symbol", "date", "r", "gross", "spy_move"])
+    assert not ((B.date >= LB0) & (B.date <= LB1)).any()
+    B = B[~GD._blackout(B.symbol.to_numpy(), B.date.to_numpy())].dropna(subset=["spy_move"]).reset_index(drop=True)
+    B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))
+    beta = {s: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for s, g in B[B.per == "TRAIN"].groupby("setup")}
+    B["exm"] = B.gross - B.setup.map(beta).fillna(B.side.astype(float)) * B.spy_move
+    dates = sorted(B.date.unique()); DEC = {lb: momentum(px, dates, lb) for lb in (252, 126)}
+    out, ps = [], []
+    for c, (_, _, _, lb) in CFG.items():
+        skip_all, tagged = tag(B, DEC[lb], c)
+        for per in ("TRAIN", "VALID", "FWD"):
+            m = ((B.per == per).to_numpy()) & tagged
+            b = B[m].reset_index(drop=True); s_ = skip_all[m]
+            if not len(b):
+                out.append(dict(cfg=c, per=per, trades=0)); continue
+            row = dict(cfg=c, per=per, trades=len(b), days=b.date.nunique())
+            for col in ("gross", "exm", "r"):
+                res = score(b, s_, col); row.update({f"{col}_{k}": v for k, v in res.items()})
+            if per == "VALID":
+                v = {}
+                for su, g in b.groupby("setup"):
+                    sk = s_[g.index.to_numpy()]
+                    if sk.sum() >= 10:
+                        v[su] = score(g.reset_index(drop=True), sk, "exm")["excess"] / len(g)
+                v = pd.Series(v); row.update(setups=len(v), better=int((v > 0).sum()), worse=int((v < 0).sum()),
+                                             worst=round(v.min(), 4) if len(v) else np.nan)
+                ps.append(v.rename(c))
+            row["by_side_exm"] = {sd: round(float(-(b.exm.to_numpy() * s_)[(b.side == sd).to_numpy()].sum()), 1) for sd in (1, -1)}
+            out.append(row)
+    O = pd.DataFrame(out); O.to_csv(HERE / "momside_results.csv", index=False)
+    if ps:
+        pd.concat(ps, axis=1).to_csv(HERE / "momside_per_setup_valid.csv")
+    pd.set_option("display.width", 260); pd.set_option("display.max_columns", 50)
+    print(f"MOMSIDE (PLAN.md + Amendment 1, one score): {len(B)} trades after blackout; family 187, BAR90 2.91")
+    print(O.round(4).to_string(index=False))
+    c1v = O[(O.cfg == "C1") & (O.per == "VALID")].iloc[0]; c1t = O[(O.cfg == "C1") & (O.per == "TRAIN")].iloc[0]
+    gates = {"1 VALID exm excess > 0, t >= 2.91": bool(c1v.exm_excess > 0 and c1v.exm_t >= 2.91),
+             "2 TRAIN exm excess > 0 (sign)": bool(c1t.get("exm_excess", np.nan) > 0),
+             "3 >= 60% setups better (VALID)": bool(c1v.setups and c1v.better / c1v.setups >= 0.6),
+             "4 best day < 50% (VALID)": bool(c1v.exm_best_share < 0.5) if np.isfinite(c1v.exm_best_share) else False,
+             "5 VALID gross excess > 0": bool(c1v.gross_excess > 0)}
+    print("C1 gates:", gates); print("VERDICT C1:", "PASS" if all(gates.values()) else "CLOSED")
+    print("C2/C3/C4 are reported; a C2-C4-only pass is a lead. Survivorship: see PLAN. Educational only - not financial advice.")
+
+
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
         selftest(); sys.exit()
     if "--score" in sys.argv:
         st = subprocess.run(["git", "-C", str(HERE), "status", "--porcelain", "PLAN.md"], capture_output=True, text=True).stdout
         assert not st.strip(), "PLAN.md must be committed before the score"
-        sys.exit("score step: implemented in the scoring run (fetch first)")
+        run_score(); sys.exit()
     if "--fetch" in sys.argv:
-        sys.exit("fetch step: implemented in the scoring run")
+        fetch(); sys.exit()
