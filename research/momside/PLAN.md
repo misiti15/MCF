@@ -70,3 +70,10 @@ first | 18 blackout removed | 19 fixed lab list | 24 family 186 | 26 cells count
 - Family 186 + 1 = 187; bar sqrt(2 ln 187) = 3.23, BAR90 = 2.91 (unchanged at two decimals).
 - Also fetched with the daily closes: Alpaca corporate actions (cash dividends) for Scout's SIZESTOP Amendment 1; MOMSIDE does
   not use them.
+
+## Amendment 2 (2026-11-14 ~14:40 ET, BEFORE any score; Lead lead-20261114-1300-1, Skeptic skeptic-20261114-1250-1)
+- Scope gap fixed: trades_tagged.parquet was the COMPASSBF afternoon subset (entries >= 12:00, plus CWT12). The input is now
+  the FULL-DAY 2-year lab lists (research/history2y/data/bt_lab1104, all entry times): 1,176,959 trades, 95 setups, 449 days,
+  69.6% of entries before 12:00. gross and spy_move rebuilt exactly as compassbf/retag.py (bt_all cost inverted; SPY entry bar
+  close -> exit bar close), code in build_full.py, no outcome statistic printed while building. Same definitions, controls,
+  gates. Family unchanged at 187 (sample completed, no new config). Observer's live companion uses all hours as its primary.

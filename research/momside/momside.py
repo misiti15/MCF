@@ -36,7 +36,8 @@ def momentum(px: pd.DataFrame, dates, lb: int = 252) -> pd.DataFrame:
 
 def tag(B, dec, cfg):
     lo, hi, longs_only, _lb = CFG[cfg]
-    d = np.array([dec.at[x, s] if (x in dec.index and s in dec.columns) else np.nan for x, s in zip(B.date, B.symbol)], float)
+    st = dec.stack()                                         # (date, symbol) -> decile, vectorised lookup
+    d = st.reindex(pd.MultiIndex.from_arrays([B.date.to_numpy(), B.symbol.astype(str).to_numpy()])).to_numpy(float)
     side = B.side.to_numpy()
     counter = ((side > 0) & (d <= lo)) | (((side < 0) & (d >= hi)) if not longs_only else False)
     return counter & np.isfinite(d), np.isfinite(d)
@@ -127,7 +128,8 @@ def run_score():
     bd = [str(d.date()) for d in pd.bdate_range(LB0, LB1) if str(d.date()) not in closed]
     px = pd.concat([px, pd.DataFrame(np.nan, index=bd, columns=px.columns)]).sort_index()
     labs = set((ROOT / "research/lab_symbols.txt").read_text().split()); px = px[[c for c in px.columns if c in labs]]
-    B = pd.read_parquet(R / "compassbf/trades_tagged.parquet", columns=["setup", "side", "symbol", "date", "r", "gross", "spy_move"])
+    # Amendment 2 (Lead 11-14 13:00): FULL-DAY 2-year lab lists (all entry times), built by build_full.py
+    B = pd.read_parquet(HERE / "data/trades_full.parquet", columns=["setup", "side", "symbol", "date", "r", "gross", "spy_move"])
     assert not ((B.date >= LB0) & (B.date <= LB1)).any()
     B = B[~GD._blackout(B.symbol.to_numpy(), B.date.to_numpy())].dropna(subset=["spy_move"]).reset_index(drop=True)
     B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))
