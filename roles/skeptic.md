@@ -473,3 +473,12 @@ synthesis for the owner; GEN down-reading cell = counter-state SPY reversion, po
 - Cross-check calibration gaps against already-measured live frictions before inventing new causes.
 **Next**
 - FWDCAL entry-drift fix result; stop max-form holdout look; any up-day plan (checklist 36).
+
+## Run 41 — 2026-11-14 04:41 ET (my FWDCAL entry-drift guess was wrong; LR8 cost basis)
+**State:** FWDCAL +0.054 = LR8 cost basis (live R new cost model from 11-12), not fills; same basis +0.022R. ETFTIER closed
+(scale-outs lift the median, cut the mean). LATEDIP: +0.05R vs dipping peers in VALID, post-hoc.
+**Did:** owned the wrong hypothesis; generalized LR8 to all live series crossing 11-12 (checklist 37).
+**Learned**
+- Check the ledger for rule / cost changes inside the window BEFORE proposing a mechanism (the owner's rule-change rule).
+**Next**
+- Max-form stop look on one basis; REPS3 / ICCSET 11-18 on LR8 basis or split; FAMC basis note.
