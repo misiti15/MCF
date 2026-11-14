@@ -31,6 +31,7 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- A replay-vs-live R gap can be a rule change in the R definition (LR8 cost basis 11-12): decompose into price gaps first.
 - Replacing a sim cost with a live-fitted slip can undercharge where the old fixed cost was right; check by quintile, prefer max(old, fit).
 - A mechanistic broker limit fitted on a few reject moments can misplace rejects by day: validate per-day counts before adopting.
 - Scout's lab-rate fit maps lab trades/day to LIVE yield (~1/5 of lab days at low rates); one-symbol setups don't
@@ -96,6 +97,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 04:35: matched +0.054 = LR8 R-basis change (live pnl_adj live cost model from 11-12); replay on LR8 basis +0.022;
+  fill prices match (entry -0.007). TODO: mirror.py audit to compute replay R on LR8 basis for days >= 11-12 (matchgap.lr8_r).
+  Observer ask: dump 2y trades of AR/NM-ETF-late-dip-di-long (module conds, t05s1, 14:00-15:00) + reading + ex-market.
+  Max-form holdout look when holdqm finishes (stopq.py q0 vs qm0, Skeptic rule).
 - 11-14 02:40: UP-DAY thread (owner restart). UPDAY-LONG done (research/updaylong): pooled up-reading ex-market ~0; leads
   GEN/ST1/ST7 (t < 2 VALID). RUNNING: holdq (quotes-only holdout books, baseline) -> then --stopslip-max holdout, then
   python stopq.py --dates 2026-11-10..2026-11-11 --variants q0,qm0 (Skeptic adopt rule: q4-q5 better AND q1-q3 not worse).
