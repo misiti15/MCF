@@ -96,6 +96,10 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 02:40: UP-DAY thread (owner restart). UPDAY-LONG done (research/updaylong): pooled up-reading ex-market ~0; leads
+  GEN/ST1/ST7 (t < 2 VALID). RUNNING: holdq (quotes-only holdout books, baseline) -> then --stopslip-max holdout, then
+  python stopq.py --dates 2026-11-10..2026-11-11 --variants q0,qm0 (Skeptic adopt rule: q4-q5 better AND q1-q3 not worse).
+  FAMC: print unscorable-session count beside K (Skeptic 0051-2).
 - 11-14 01:15: FRESH rule-21 11-12..11-13 scored once (out/audit_d0_fresh.csv, qsrc_d0_fresh.csv): exact-minute FAIL all
   (0.344); 5-min ALL 0.884; >= 0.95 & |gap| <= 0.03: Gen, Testing A, D, E. Pool-priced 301 trades match 0.3% -> untraded-name
   replays unusable. Matched +0.054R optimistic (all exit kinds, new vs holdout +0.006) -> investigate (entry cost? quotes
