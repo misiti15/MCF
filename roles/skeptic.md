@@ -482,3 +482,11 @@ synthesis for the owner; GEN down-reading cell = counter-state SPY reversion, po
 - Check the ledger for rule / cost changes inside the window BEFORE proposing a mechanism (the owner's rule-change rule).
 **Next**
 - Max-form stop look on one basis; REPS3 / ICCSET 11-18 on LR8 basis or split; FAMC basis note.
+
+## Run 42 — 2026-11-14 06:41 ET (lr8_r check; up-day thread closed)
+**State:** max-form stop adopted (conservative); FWDCAL on one basis gap -0.009; 4 accounts pass gap+5-min match. SHORTUP
+closed: every up-day track matches the null. Observer: LR8 cost exit-linked; raw R unaffected.
+**Did:** verified lr8_r is per-trade via live pnl_adj; flagged scaled exits costed at final reason (meta exit_parts not
+passed; 6.2% of Testing A trades). Checklist 37 refined.
+**Next**
+- Next fresh FWDCAL score (frozen engine); 11-18 REPS3/ICCSET on LR8 basis.
