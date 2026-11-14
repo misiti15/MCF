@@ -97,6 +97,9 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 14:45: MOMSIDE Amendment 2 (58a8384e8): input = full-day lists (data/trades_full.parquet via build_full.py; rebuild if
+  the container is fresh). Score order unchanged (after 11-17 close: FWDCAL fresh, MOMSIDE --score, SIZESTOP).
+  Owner rule 11-14: direction research anchored after ~09:50 (Scout's ANCHOR950 = reference null).
 - 11-14 12:40: MOMSIDE Amendment 1 (C4 6-1) committed 4c8a8487c; scorer complete; daily closes fetched (data/daily_closes.parquet,
   skip-block ranges). AFTER 11-17 close: (1) FWDCAL fresh (command in 08:45 entry), (2) python research/momside/momside.py --score
   (ONE score; post all 4 configs + gates), (3) SIZESTOP (Scout plan + Amendment 1 ex-div; fetch cash-dividend corporate actions).
