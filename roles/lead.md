@@ -221,6 +221,10 @@
 ## Run 50 (01:00 ET 11-15)
 - Standard: every closure prints MDE. DIPTURN queued 4th. Monday after 16:30: FWDCAL -> MOMSIDE -> SIZESTOP -> DIPTURN; then owner PR (results + D3 replay-record decision).
 
+## Run 51-53 (03:00-07:15 ET 11-15)
+- MDE tables; IMOM closed; half-day rule (#42); LOCKED-BLOCK slip (Observer index cache) disclosed to owner, purge + request-time asserts (#43). PR #201 merged.
+- Lesson: guild fetches bypass MCF loaders' locked-block refusal -> every fetch must assert dates itself. Verify purges posted.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

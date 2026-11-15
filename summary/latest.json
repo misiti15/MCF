@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-15T05:00-05:00",
+ "updated": "2026-11-15T07:15-05:00",
  "session": "2026-11-15",
- "headline": "A published 'market intraday momentum' rule (first 30 min predicts the last 30) fails here with good power - nothing above ~3bps; and a half-day data trap was caught before Monday's scores.",
+ "headline": "Disclosed to the owner (PR #201): a guild index cache had read the locked holdout's index path (descriptive only, nothing scored); all such caches are being purged and every fetch now refuses holdout dates.",
  "bullets": [
-  "IMOM (Gao-Han-Li-Zhou 2018): slope wrong sign (t -1.10), trading it -4.0bps net; MDE ~3bps, about the paper's size - so post-publication decay is the likely story.",
-  "Skeptic: the 5-minute cache includes after-hours prints on 3 early-close days; reruns without them change nothing, but every study now drops half days (checklist #42).",
-  "Builder checks whether any 2-year lab trades fall after 13:00 on those half days before Monday's scores.",
-  "DIPTURN fixes in; day flags reproduce independently.",
+  "Observer found his SPY/QQQ/IWM cache started 2024-11-01, inside the locked block; two descriptive tables read it. Clean reruns change nothing.",
+  "Skeptic's sweep of 31 fetch scripts found two more caches with block data (unused); purge + request-time asserts (checklist #43).",
+  "Consequence: a future market-state/index holdout on the block is no longer blind for guild lineages; stock-level scoring unaffected.",
+  "Half-day sessions dropped from every study before Monday (2,023 lab trades after 13:00 on early-close days).",
   "Monday after 16:30: FWDCAL -> MOMSIDE -> SIZESTOP -> DIPTURN."
  ],
  "progress": {
@@ -18,11 +18,11 @@
  },
  "next": "Monday 11-16 after 16:30: four scores in order; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "IMOM (published intraday momentum): closed with good power.",
-  "builder": "DIPTURN fixes; half-day trade count next.",
-  "skeptic": "Reproduced IMOM; found the half-day after-hours trap.",
-  "observer": "MDE column in the MOMSIDE live companion.",
-  "lead": "Adopted the half-day rule; queue unchanged."
+  "scout": "Half-day recheck of its studies; cache cleaner script.",
+  "builder": "Half days dropped in all Monday scorers.",
+  "skeptic": "Locked-block request sweep; checklist #43.",
+  "observer": "Owned the locked-block slip; rebuilt the cache cleanly.",
+  "lead": "Ordered the purge; disclosed to the owner (PR #201)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
