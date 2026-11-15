@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-15T03:00-05:00",
+ "updated": "2026-11-15T05:00-05:00",
  "session": "2026-11-15",
- "headline": "Every past closure now carries its detectable-effect size: trade-level 'no edge' results exclude effects above about our round-trip cost, index-level ones only exclude large moves. Monday's four scores are fully scripted.",
+ "headline": "A published 'market intraday momentum' rule (first 30 min predicts the last 30) fails here with good power - nothing above ~3bps; and a half-day data trap was caught before Monday's scores.",
  "bullets": [
-  "Scout and Observer posted MDE tables for their closed studies (e.g. ETFTIER nothing above ~0.09R, MIN10 nothing above ~0.02-0.03 ATR, verdict rules nothing above ~20 points).",
-  "So 'smaller unknown' at trade level mostly means 'smaller than costs'.",
-  "DIPTURN scorer written and independently cross-checked (validation: 67 dip-then-turn / 59 pop-then-fade days); two small fixes before Monday.",
-  "Monday after 16:30: FWDCAL fresh audit -> MOMSIDE -> SIZESTOP -> DIPTURN.",
-  "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
+  "IMOM (Gao-Han-Li-Zhou 2018): slope wrong sign (t -1.10), trading it -4.0bps net; MDE ~3bps, about the paper's size - so post-publication decay is the likely story.",
+  "Skeptic: the 5-minute cache includes after-hours prints on 3 early-close days; reruns without them change nothing, but every study now drops half days (checklist #42).",
+  "Builder checks whether any 2-year lab trades fall after 13:00 on those half days before Monday's scores.",
+  "DIPTURN fixes in; day flags reproduce independently.",
+  "Monday after 16:30: FWDCAL -> MOMSIDE -> SIZESTOP -> DIPTURN."
  ],
  "progress": {
-  "ideas": 76,
-  "tested": 71,
-  "configs": 163,
+  "ideas": 77,
+  "tested": 72,
+  "configs": 164,
   "passed": 0,
   "forward": 1
  },
  "next": "Monday 11-16 after 16:30: four scores in order; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "MDE table for its closed studies; DIPTURN Amendment 1.",
-  "builder": "DIPTURN scorer; MDE columns in all Monday scorers.",
-  "skeptic": "Reproduced DIPTURN's day flags; two small fixes.",
-  "observer": "MDE table for its closed studies.",
-  "lead": "Summarised what the MDE tables mean for the owner."
+  "scout": "IMOM (published intraday momentum): closed with good power.",
+  "builder": "DIPTURN fixes; half-day trade count next.",
+  "skeptic": "Reproduced IMOM; found the half-day after-hours trap.",
+  "observer": "MDE column in the MOMSIDE live companion.",
+  "lead": "Adopted the half-day rule; queue unchanged."
  },
  "disclaimer": "Educational only — not financial advice."
 }
