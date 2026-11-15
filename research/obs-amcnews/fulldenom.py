@@ -8,6 +8,7 @@ Run outside 07:30-16:00 ET only. 0 configs (one frozen rule, two symbol strictne
 Reference note (found in look 1): Yahoo earnings_yf labels AMC events from 2026-11-02 on as 'dmh' placeholders (fetched 10-11, future
 events unlabelled), so only evenings <= 2026-10-30 have a usable AMC reference; later evenings are excluded from precision/recall.
 usage: python fulldenom.py <earnings_yf.parquet> <earnings_cal.parquet> D1 [D2 ...]"""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import os, re, sys, time
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -24,6 +25,7 @@ def items(D, h0=16, h1=19):
     a = datetime.fromisoformat(D).replace(hour=h0, tzinfo=ET); b = a.replace(hour=h1, minute=59, second=59)
     p = {"start": a.isoformat(), "end": b.isoformat(), "limit": 50, "sort": "asc"}; out, pages = [], 0
     while True:
+        _blockcheck(p)
         r = requests.get("https://data.alpaca.markets/v1beta1/news", headers=H, params=p, timeout=30)
         if r.status_code == 429: time.sleep(3); continue
         r.raise_for_status(); j = r.json(); out += j.get("news", []); pages += 1; time.sleep(0.3)

@@ -4,6 +4,7 @@ headlines on that symbol between D 15:30 ET and D+1 09:30 ET; 'covered' = at lea
 after 16:00 ET on D and before 09:30 ET on D+1. Also counts BMO events wrongly matched by the same window (false AMC flags) from
 the D-1 evening... (reported as BMO-on-D headlines between D-1 16:00 and D 09:30, which look 'AMC-like' for the previous day).
 Run only outside 07:30-16:00 ET. usage: python amcnews.py <earnings_yf.parquet> <start> <end>. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import os, re, sys, time
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -16,6 +17,7 @@ lab = set(open("research/lab_symbols.txt").read().split()); E = E[E.symbol.isin(
 H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}
 WORD = re.compile(r"earn|result|quarter|Q[1-4]\b|revenue|EPS|guidance|beats|misses|reports", re.I)
 def news(sym, a, b):
+    _blockcheck(p)
     r = requests.get("https://data.alpaca.markets/v1beta1/news", headers=H, timeout=20,
                      params={"symbols": sym, "start": a.isoformat(), "end": b.isoformat(), "limit": 50, "sort": "asc"})
     if r.status_code == 429: time.sleep(3); return news(sym, a, b)

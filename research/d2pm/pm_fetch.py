@@ -2,6 +2,7 @@
 Refuses to run 07:30-16:00 ET on weekdays (the live job's data budget). Keys from the environment, never printed.
 usage (from the MCF checkout): python pm_fetch.py <start YYYY-MM-DD> <end YYYY-MM-DD> <symbols.txt> [workers=3]
 Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import os, sys, time, multiprocessing as mp
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -21,7 +22,7 @@ def fetch(a):
     rows = []
     for _ in range(200):
         for k in range(6):
-            r = s.get(URL, params=prm, timeout=30)
+            _blockcheck(prm); r = s.get(URL, params=prm, timeout=30)
             if r.status_code == 429: time.sleep(2 ** k); continue
             break
         if r.status_code != 200: return sym, f"http {r.status_code}"

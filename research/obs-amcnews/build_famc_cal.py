@@ -9,6 +9,7 @@ query time; a label-free health line each night (share of earlier flags whose re
 Appends to research/evd1/famc_calendar.csv (symbol,report_date,timing,source,snapshot_at); re-running a date replaces its rows.
 Read-only GETs (Alpaca news + daily bars); refuses before 20:00 ET on D (evening news incomplete) and 07:30-16:00 ET on weekdays.
 usage (from the MCF checkout): python ../guild/research/obs-amcnews/build_famc_cal.py [--date YYYY-MM-DD]. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import argparse, json, os, re, subprocess, sys, time
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -23,6 +24,7 @@ def news(D, h0, h1):
     a = datetime.fromisoformat(D).replace(hour=h0, tzinfo=ET); b = a.replace(hour=h1, minute=59, second=59)
     p = {"start": a.isoformat(), "end": b.isoformat(), "limit": 50, "sort": "asc"}; out = []
     while True:
+        _blockcheck(p)
         r = requests.get("https://data.alpaca.markets/v1beta1/news", headers=H, params=p, timeout=30)
         if r.status_code == 429: time.sleep(3); continue
         r.raise_for_status(); j = r.json(); out += j.get("news", []); time.sleep(0.3)
@@ -51,6 +53,7 @@ def daily(syms, start, end):
     for i in range(0, len(syms), 100):
         p = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": start, "end": end, "feed": "sip", "adjustment": "split", "limit": 10000}
         while True:
+            _blockcheck(p)
             r = requests.get("https://data.alpaca.markets/v2/stocks/bars", headers=H, params=p, timeout=30)
             if r.status_code == 429: time.sleep(3); continue
             r.raise_for_status(); j = r.json()

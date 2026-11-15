@@ -3,6 +3,7 @@ minute bars (Alpaca SIP, split-adjusted; fetched outside 07:30-16:00 ET): P(clos
 given where the index stands at time t (move from prior close, in buckets), and the gap alone at the open. A rule that
 says 'up day' at time t is only adding information if it beats this table at the same t. 0 configs (descriptive).
 Educational only - not financial advice. usage (MCF checkout): python ../guild/research/obs-upday-null/upnull.py"""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import os, time, requests, pandas as pd, numpy as np
 from pathlib import Path
 H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}
@@ -14,6 +15,7 @@ def bars(sym, start="2025-03-01", end="2026-11-14"):
     assert start >= "2025-03-01", "rule 19: never request the locked block (2024-11-01..2025-02-28)"
     p = {"timeframe": "1Min", "start": start, "end": end, "feed": "sip", "adjustment": "split", "limit": 10000}; rows = []
     while True:
+        _blockcheck(p)
         r = requests.get(f"https://data.alpaca.markets/v2/stocks/{sym}/bars", headers=H, params=p, timeout=60)
         if r.status_code == 429: time.sleep(3); continue
         r.raise_for_status(); j = r.json(); rows += j.get("bars") or []

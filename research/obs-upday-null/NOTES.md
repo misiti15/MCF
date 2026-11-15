@@ -42,3 +42,7 @@ Clean rerun (426 sessions, 2025-03-04..2026-11-13; *_clean_out.txt): up days SPY
 11:00 (QQQ 73.9 / 84.0%); rest-of-day: no cell |t| >= 2 (largest QQQ 11:00 '-0.5..0' +11.2bps t +1.88); MDE all days 10-11bps.
 LATEDIP index analog: SPY n 43 +5.9bps (t 0.69), QQQ n 82 +5.7 (t 0.84), IWM n 87 -1.1 (t -0.19); TRAIN/VALID signs disagree.
 All conclusions unchanged ('no large continuation / no index late-dip rebound; small unknown').
+Outputs replaced (11-15 ~08:00 ET): upnull_out.txt / mde_out.txt / obs-latedip/latedip_idx_out.txt now hold the CLEAN run (no block,
+no half days); the block-including versions remain only in git history. Checklist #43: research/obs_blockguard.py guards every
+Observer fetch at request time (selftest 3 allowed / 4 refused); momside-live daily closes purged and refetched from 2025-03-01
+(coverage unchanged: 88.2% tagged, same skip counts -> the block closes were never used). Disk scan: no block-dated price rows left.

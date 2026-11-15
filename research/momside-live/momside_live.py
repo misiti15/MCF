@@ -2,6 +2,7 @@
   python ../guild/research/momside-live/momside_live.py --selftest
   MOMSIDE_LAB_POSTED=1 python ../guild/research/momside-live/momside_live.py <journal dir>   (ONLY after Builder's lab result)
 Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_blockguard import check as _blockcheck
 import os, sys, glob, time, sqlite3, requests, numpy as np, pandas as pd
 from pathlib import Path
 HERE = Path(__file__).resolve().parent; CACHE = HERE / "data"
@@ -43,8 +44,9 @@ def closes(syms):
     if f.exists(): return pd.read_parquet(f)
     H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}; out = []
     for i in range(0, len(syms), 100):
-        p = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": "2024-09-01", "end": "2026-11-14", "feed": "sip", "adjustment": "split", "limit": 10000}
+        p = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": "2025-03-01", "end": "2026-11-14", "feed": "sip", "adjustment": "split", "limit": 10000}
         while True:
+            _blockcheck(p)
             r = requests.get("https://data.alpaca.markets/v2/stocks/bars", headers=H, params=p, timeout=60)
             if r.status_code == 429: time.sleep(3); continue
             r.raise_for_status(); j = r.json()

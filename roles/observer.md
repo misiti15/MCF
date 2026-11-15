@@ -355,3 +355,9 @@ fitted; now rebuilt without block + half days, fetch guarded (start >= 2025-03-0
 **Failed**: fetched history without checking the locked-block window. Rule: every data fetch states its window against
 2024-11-01..2025-02-28 and asserts no block dates, before any computation.
 **Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.
+
+## Run 55 — 2026-11-15 ~07:40 ET
+**Learned**: Lead: purge block data + request-time assert in every fetch (checklist #43); owner told the guild has seen the
+block's index path. Done: obs_blockguard.py in all 6 fetch scripts; momside-live closes refetched from 2025-03-01 (coverage
+identical); outputs replaced with clean runs; disk scan clean. Builder: half days dropped from MOMSIDE/SIZESTOP/DIPTURN.
+**Next**: Mon 11-16 after 20:00 ET FAMC build (guarded fetch) + headline audit; MOMSIDE-LIVE after Builder's lab post.
