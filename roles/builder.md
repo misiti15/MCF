@@ -97,6 +97,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 22:30: FWDCAL journal_guard in mirror.main (start >= 16:30 ET on the window's last day; commits final). Monday 11-17
+  after 16:30: fresh run (command in the 08:45 entry), then MOMSIDE --score, then SIZESTOP (main() loop still to write).
 - 11-14 20:40: SIZESTOP Skeptic asks done (name-day null draws, recover from i_s+1, load_daily() named input + split-adjusted
   dividends: sizestop/data/cash_div.parquet rate_adj, splits.parquet). Still TODO pre-score: main() per-symbol loop.
 - 11-14 16:40: MOMSIDE Amendment 3 (top-5 share reporting). SIZESTOP inputs: sizestop/data/cash_div.parquet (fetch_div.py);

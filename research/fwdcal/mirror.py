@@ -633,6 +633,38 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     return A
 
 
+def journal_guard(days, accs) -> None:
+    """Skeptic 11-15 01:50 / Lead 11-14 21:00 timing guard (as Scout's reps3/refresh.py): live trades enter the journal only at
+    exit, so a run right after the close can score a short live day. When the window ends on TODAY's session: refuse before
+    16:30 ET and unless every account's last journal.db commit is from that session and >= 10 minutes old. Always prints each
+    account's last journal commit and its live trade count in the window."""
+    import datetime as dt, sqlite3 as sq
+    now = pd.Timestamp.now(tz=NY); last = days[-1]; today = last == now.strftime("%Y-%m-%d"); bad = []
+    if today and now.strftime("%H:%M") < "16:30":
+        sys.exit(f"fwdcal: window ends today ({last}); refusing before 16:30 ET")
+    for acc in accs:
+        br = RUN.BRANCH[acc]
+        ts = RUN.git("log", "-1", "--format=%cI", f"origin/{br}", "--", "journal.db").strip()
+        if not ts:
+            print(f"guard {acc:10s} no journal.db"); bad.append(acc); continue
+        t = pd.Timestamp(ts).tz_convert(NY); age = (now - t).total_seconds() / 60
+        raw = RUN.git("show", f"origin/{br}:journal.db", text=False); n = 0
+        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as fh:
+            fh.write(raw)
+        try:
+            c = sq.connect(fh.name); q = ",".join("?" * len(days))
+            n = c.execute(f"select count(*) from trades where run_id=1 and date in ({q})", list(days)).fetchone()[0]; c.close()
+        finally:
+            os.unlink(fh.name)
+        ok = (not today) or (t.strftime("%Y-%m-%d") == last and age >= 10)
+        print(f"guard {acc:10s} last journal commit {t:%Y-%m-%d %H:%M} ET ({age:6.0f} min ago)  live trades {days[0]}..{last}: {n}"
+              + ("" if ok else "  <-- NOT FINAL"), flush=True)
+        if not ok:
+            bad.append(acc)
+    if bad:
+        sys.exit(f"fwdcal: REFUSED, journals not final for {last}: {bad}; re-run later")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dates"); ap.add_argument("--accounts", default=",".join(RUN.ACC_ORDER))
@@ -655,6 +687,7 @@ def main():
         sys.exit("fwdcal: --fetch refused during market hours")
     RUN.git("fetch", "-q", "origin", *RUN.BRANCH.values())
     days = RUN.trading_days(*a.dates.split(".."))
+    journal_guard(days, a.accounts.split(","))
     ok = []
     for d in days:
         try:
