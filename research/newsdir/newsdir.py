@@ -2,6 +2,18 @@
     python newsdir.py <optflow_data_dir>          python newsdir.py --selftest
 Educational only - not financial advice."""
 import os, re, sys, json, time, urllib.request, urllib.parse
+# --- checklist #43 (Lead 2026-11-15): refuse any request whose date range touches the locked block 2024-11-01..2025-02-28 ---
+import urllib.parse as _lk_up, urllib.request as _lk_ur
+_lk_real_urlopen = _lk_ur.urlopen
+def _lk_guarded_urlopen(req, *a, **k):
+    u = req.full_url if hasattr(req, "full_url") else str(req)
+    q = dict(_lk_up.parse_qsl(_lk_up.urlsplit(u).query))
+    s, e = q.get("start", "")[:10], q.get("end", "")[:10]
+    if (s and e and not (e < "2024-11-01" or s > "2025-02-28")) or (s and not e and s <= "2025-02-28"):
+        raise RuntimeError(f"locked block: request {s}..{e or 'open'} overlaps 2024-11-01..2025-02-28 (checklist #43)")
+    return _lk_real_urlopen(req, *a, **k)
+_lk_ur.urlopen = _lk_guarded_urlopen
+# --- end checklist #43 ---
 import numpy as np, pandas as pd
 UP = r"upgrade|upgrades|upgraded|outperform|overweight|buy rating|raises price target|price target raised|approval|approved|wins|awarded|contract|partnership|record|buyback|repurchase|beats|expands|launches|acquired by|to be acquired"
 DN = r"downgrade|downgrades|downgraded|underperform|underweight|sell rating|cuts price target|price target cut|lowers price target|recall|lawsuit|sued|probe|investigation|subpoena|offering|dilution|delay|delays|halts|resigns|misses|warns|layoffs|fine|fined|rejects|rejected|short report"

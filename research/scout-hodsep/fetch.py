@@ -2,6 +2,18 @@
 SPDR sectors + SPY (Alpaca market-data GET only; keys from env, never printed). Open data only (no locked block).
     python fetch.py <out_dir>        Educational only - not financial advice."""
 import os, sys, time, json, gzip, urllib.request, urllib.parse
+# --- checklist #43 (Lead 2026-11-15): refuse any request whose date range touches the locked block 2024-11-01..2025-02-28 ---
+import urllib.parse as _lk_up, urllib.request as _lk_ur
+_lk_real_urlopen = _lk_ur.urlopen
+def _lk_guarded_urlopen(req, *a, **k):
+    u = req.full_url if hasattr(req, "full_url") else str(req)
+    q = dict(_lk_up.parse_qsl(_lk_up.urlsplit(u).query))
+    s, e = q.get("start", "")[:10], q.get("end", "")[:10]
+    if (s and e and not (e < "2024-11-01" or s > "2025-02-28")) or (s and not e and s <= "2025-02-28"):
+        raise RuntimeError(f"locked block: request {s}..{e or 'open'} overlaps 2024-11-01..2025-02-28 (checklist #43)")
+    return _lk_real_urlopen(req, *a, **k)
+_lk_ur.urlopen = _lk_guarded_urlopen
+# --- end checklist #43 ---
 OUT = sys.argv[1]; os.makedirs(OUT, exist_ok=True)
 syms = [s.strip() for s in open("/home/user/MCF/research/lab_symbols.txt") if s.strip()]
 syms = sorted(set(syms) | set("SPY XLB XLC XLE XLF XLI XLK XLP XLRE XLU XLV XLY".split()))

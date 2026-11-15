@@ -146,6 +146,8 @@
   MDE80 3.3bps ~ the paper's size). Published index anomalies: test with power first; decay likely.
 - Run 53 (11-15 05:30 ET) checklist #42: half days (07-03, 11-28, 12-24 2025) dropped from LEAD20/ETFTIER/SHORTUP/SIZETREND;
   no change. halfday_clean.py (afternoon/morning SPY volume < 0.2) for all future bar caches.
+- Run 54 (11-15 07:30 ET) checklist #43: purged scout-qp1 cache (only block-carrying cache); locked-block request guard
+  (urlopen wrapper) in all 11 Scout fetch scripts; qp1 fetch split in two ranges. Any NEW fetch script: copy the guard block.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
