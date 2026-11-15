@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np, pandas as pd
 HERE = Path(__file__).resolve().parent; ROOT = Path("/home/user/MCF")
 sys.path.insert(0, str(HERE.parent / "stopw")); import stopw as SW  # noqa: E402
+HALF_DAYS = {"2025-07-03", "2025-11-28", "2025-12-24"}     # Amendment 2: early-close sessions dropped (checklist 42)
 K = 1.5; NDRAW = 200; N_FAMILY = 79; SPLIT = "2025-09-30"; LB0, LB1 = "2024-11-01", "2025-02-28"
 CFGS = {"C1": (4, 5), "C2": (5,)}
 
@@ -214,7 +215,8 @@ def main():
     X = spy_moves(build(hold_dir, procs))
     q = size_quintiles(load_daily(), pd.read_parquet(HERE / "data/cash_div.parquet"))
     X["q"] = q.reindex(pd.MultiIndex.from_arrays([X.date, X.symbol])).to_numpy()
-    X = X[np.isfinite(X.q) & np.isfinite(X.spy_b) & np.isfinite(X.spy_v)].reset_index(drop=True)
+    nh = int(X.date.isin(HALF_DAYS).sum()); print(f"half-day sessions dropped: {nh} trades")
+    X = X[np.isfinite(X.q) & np.isfinite(X.spy_b) & np.isfinite(X.spy_v) & ~X.date.isin(HALF_DAYS)].reset_index(drop=True)
     X["family"] = np.where(X.setup.str.startswith("GEN"), "GEN", X.setup.str.split("-").str[0])
     X["per"] = np.where(X.date <= SPLIT, "TRAIN", "VALID")
     beta = {s: (np.polyfit(g.spy_b, g.base_gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for s, g in X[X.per == "TRAIN"].groupby("setup")}

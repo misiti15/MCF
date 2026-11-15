@@ -31,6 +31,7 @@
   GEN hold lists (scratchpad/hold/bt, rebuild with bereplay/bt_hold.py) exist.
 
 ## Learned
+- The 1-min cache has after-hours bars on early-close days; lab windows fill after the 13:00 close there. Drop half days (checklist 42).
 - A replay-vs-live R gap can be a rule change in the R definition (LR8 cost basis 11-12): decompose into price gaps first.
 - Replacing a sim cost with a live-fitted slip can undercharge where the old fixed cost was right; check by quintile, prefer max(old, fit).
 - A mechanistic broker limit fitted on a few reject moments can misplace rejects by day: validate per-day counts before adopting.
@@ -97,6 +98,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-15 06:40: half-day sessions (2025-07-03 / 11-28 / 12-24) dropped in MOMSIDE (A4), SIZESTOP (A2), DIPTURN (A2) before any
+  score (checklist 42). UPDAY-LONG rerun w/o them: unchanged. Monday queue unchanged.
 - 11-15 02:45: DIPTURN scorer written (dipturn.py --score; needs momside/data/trades_full.parquet). MDE columns in MOMSIDE /
   SIZESTOP. MONDAY 11-17 >= 16:30 ET, in order: (1) fwdcal mirror.py fresh 11-16..11-17 (guard on), (2) momside.py --score,
   (3) sizestop.py <scratchpad/hold/bt> 4, (4) dipturn.py --score. Each one look; post each with MDE and 'nothing above X' if closed.

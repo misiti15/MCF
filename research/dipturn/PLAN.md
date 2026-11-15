@@ -36,3 +36,9 @@ morning is not obviously good for longs. The honest expectation is ~0.
 2. The minimum detectable effect is printed beside the result (guild standard 2026-11-15): MDE80 = 2.8 x SE of the pooled day-clustered
    estimate, and MDE at the bar = (3.57 + 0.84) x SE. Expected size from Skeptic's scaling: ~65 DT days in VALID -> MDE ~0.08R per
    trade at the bar. A 'closed' result is worded 'nothing above X; smaller unknown'.
+
+## Amendment 2 (2026-11-15 ~06:25 ET, BEFORE any score; checklist #42, Skeptic skeptic-20261115-0951-2, Lead lead-20261115-0500-1; 0 configs)
+Early-close sessions dropped entirely: 2025-07-03, 2025-11-28, 2025-12-24 (the 2024 half days lie in the locked block). The 1-min
+cache carries after-hours prints after the 13:00 close (SPY 164 bars on 11-28), so the lab window (entries to 15:00, flat 15:55)
+placed fills after the close. Outcome-free count on the full-day lists: 4,843 trades on those days (0.41%), 2,023 with entry or
+exit after 13:00. Dropping the whole sessions is simpler and stricter than dropping only the after-13:00 trades.

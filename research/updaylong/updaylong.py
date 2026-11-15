@@ -19,6 +19,8 @@ B = pd.read_parquet(R / "compassbf/trades_tagged.parquet", columns=["setup", "si
 assert not ((B.date >= "2024-11-01") & (B.date <= "2025-02-28")).any()
 assert GD.EARN.exists()
 B = B[B.side > 0]
+HALF_DAYS = {"2025-07-03", "2025-11-28", "2025-12-24"}       # checklist 42 recheck (2026-11-15): early-close sessions dropped
+B = B[~B.date.isin(HALF_DAYS)]
 B = B[~GD._blackout(B.symbol.to_numpy(), B.date.to_numpy())].dropna(subset=["spy_move", "e_spy_fo"]).reset_index(drop=True)
 B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))
 beta = {s: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else 1.0) for s, g in B[B.per == "TRAIN"].groupby("setup")}

@@ -81,3 +81,9 @@ first | 18 blackout removed | 19 fixed lab list | 24 family 186 | 26 cells count
 ## Amendment 3 (2026-11-14 ~16:20 ET, BEFORE any score; reporting only, Skeptic skeptic-20261114-1450-1, Lead 15:00)
 - Per config in VALID also print the top-5 setups' share of the total ex-market excess (setups with >= 10 skips) and their
   names (remedies rule: who carries it). No gate change.
+
+## Amendment 4 (2026-11-15 ~06:25 ET, BEFORE any score; checklist #42, Skeptic skeptic-20261115-0951-2, Lead lead-20261115-0500-1; 0 configs)
+Early-close sessions dropped entirely: 2025-07-03, 2025-11-28, 2025-12-24 (the 2024 half days lie in the locked block). The 1-min
+cache carries after-hours prints after the 13:00 close (SPY 164 bars on 11-28), so the lab window (entries to 15:00, flat 15:55)
+placed fills after the close. Outcome-free count on the full-day lists: 4,843 trades on those days (0.41%), 2,023 with entry or
+exit after 13:00. Dropping the whole sessions is simpler and stricter than dropping only the after-13:00 trades.

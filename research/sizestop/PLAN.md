@@ -43,3 +43,9 @@ corporate actions (cash_dividend ex_date / rate; special dividends included). Pr
 name-days (vs 0.77% of quintile 1). Adding the dividend back changes Q4-5 membership on only 10 of ~206k name-days (0.01% of Q4-5).
 So the bias is negligible; the adjustment is kept because it is exact and free. Builder: fetch the corporate actions for the lab
 names with the daily closes (outside market hours).
+
+## Amendment 2 (2026-11-15 ~06:25 ET, BEFORE any score; checklist #42, Skeptic skeptic-20261115-0951-2, Lead lead-20261115-0500-1; 0 configs)
+Early-close sessions dropped entirely: 2025-07-03, 2025-11-28, 2025-12-24 (the 2024 half days lie in the locked block). The 1-min
+cache carries after-hours prints after the 13:00 close (SPY 164 bars on 11-28), so the lab window (entries to 15:00, flat 15:55)
+placed fills after the close. Outcome-free count on the full-day lists: 4,843 trades on those days (0.41%), 2,023 with entry or
+exit after 13:00. Dropping the whole sessions is simpler and stricter than dropping only the after-13:00 trades.

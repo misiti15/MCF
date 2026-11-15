@@ -15,6 +15,7 @@ import numpy as np, pandas as pd
 assert not os.environ.get("MCF_HIST_ALLOW_LOCKED")
 HERE = Path(__file__).resolve().parent; R = HERE.parent; ROOT = Path("/home/user/MCF")
 SPLIT = "2025-09-30"; BAR90 = 3.57; NDRAW = 500
+HALF_DAYS = {"2025-07-03", "2025-11-28", "2025-12-24"}     # Amendment 2: early-close sessions dropped (checklist 42)
 
 
 def day_flags(s: pd.DataFrame) -> pd.DataFrame:
@@ -90,10 +91,12 @@ def score():
     s = pds.dataset(str(ROOT / "data/cache_hist/1Min/SPY.parquet"), format="parquet").to_table(filter=(pds.field(ix) < TL0) | (pds.field(ix) >= TL1)).to_pandas()
     if ix in s.columns: s = s.set_index(ix)
     s.index = pd.DatetimeIndex(s.index).tz_convert(NY); s = s[~s.index.duplicated(keep="last")].sort_index()
-    F = day_flags(s)
+    F = day_flags(s); F = F[~F.index.isin(HALF_DAYS)]
     B = pd.read_parquet(R / "momside/data/trades_full.parquet")
     assert not ((B.date >= "2024-11-01") & (B.date <= "2025-02-28")).any()
     n0 = len(B); drop950 = int((B.tod < 955).sum()); dl, ds = int(((B.tod < 955) & (B.side > 0)).sum()), int(((B.tod < 955) & (B.side < 0)).sum())
+    nh = int(B.date.isin(HALF_DAYS).sum()); B = B[~B.date.isin(HALF_DAYS)]
+    print(f"half-day sessions dropped: {nh} trades")
     B = B[B.tod >= 955].dropna(subset=["spy_move"]).reset_index(drop=True)
     B["per"] = np.where(B.date <= SPLIT, "TRAIN", np.where(B.date <= "2026-10-07", "VALID", "FWD"))
     beta = {su: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for su, g in B[B.per == "TRAIN"].groupby("setup")}

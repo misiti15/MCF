@@ -9,6 +9,7 @@ import numpy as np, pandas as pd
 assert not os.environ.get("MCF_HIST_ALLOW_LOCKED")
 HERE = Path(__file__).resolve().parent; R = HERE.parent; ROOT = Path("/home/user/MCF")
 DATA = HERE / "data"; TR_END, VA_END = "2025-09-30", "2026-10-07"; LB0, LB1 = "2024-11-01", "2025-02-28"
+HALF_DAYS = {"2025-07-03", "2025-11-28", "2025-12-24"}     # early-close sessions outside the locked block (checklist 42)
 CFG = {"C1": (3, 8, False, 252), "C2": (2, 9, False, 252), "C3": (3, 8, True, 252), "C4": (3, 8, False, 126)}
 # (low decile max, high decile min, longs only, lookback sessions: 252 = 12-1, 126 = 6-1 [Amendment 1])
 
@@ -132,6 +133,7 @@ def run_score():
     B = pd.read_parquet(HERE / "data/trades_full.parquet", columns=["setup", "side", "symbol", "date", "r", "gross", "spy_move"])
     assert not ((B.date >= LB0) & (B.date <= LB1)).any()
     B = B[~GD._blackout(B.symbol.to_numpy(), B.date.to_numpy())].dropna(subset=["spy_move"]).reset_index(drop=True)
+    B = B[~B.date.isin(HALF_DAYS)].reset_index(drop=True)                 # Amendment 4: early-close sessions dropped (checklist 42)
     B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))
     beta = {s: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for s, g in B[B.per == "TRAIN"].groupby("setup")}
     B["exm"] = B.gross - B.setup.map(beta).fillna(B.side.astype(float)) * B.spy_move
