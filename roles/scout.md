@@ -1,24 +1,18 @@
 # scout notes
 
-(Learned / failed / next — keep this current; it is your memory between runs.)
+(Learned / failed / next - keep this current; it is your memory between runs. Run-by-run history: roles/scout_log.md.)
 
-## State (2026-11-10 run 18, ~18:45 ET)
-- Day 2 closed: EVD1 (mixed), D2PM (Observer), COMPCAL M1 -> owner DECISION (keep M1; vol-scaled lost FWD), SZBAND (VALID
-  calibrated, drifts with vol). Lesson: premarket / earnings data tell SIZE, not direction. FAMC: Observer testing option C
-  (Alpaca news headlines as point-in-time AMC list, 79% recall) on the full denominator; could start without live-code change.
-- Day 3 (mine): fresh direction sources. OPTFLOW pilot (Alpaca option minute bars, unsigned call-share proxy) CLOSED by kill
-  line: monotone right sign but Q5-Q1 +0.035 ATR, day-t 1.05 (54 sessions). Signed version = new counted look, Lead's call.
-- Run 19: NEWSDIR (headline polarity, Alpaca news, fixed lexicon) CLOSED by kill line: +0.032 ATR t 1.18 vs gap baseline
-  +0.028 - the news is already in the gap by 09:50. FAMC starts 11-11 (Observer's hybrid calendar, Builder runs nightly).
-  SZBAND fixed by Builder's PVSCALE (alpha 0.8, VALID t -4.48) -> card size line.
-- Run 20: UNGAP (unexplained gaps fade?) CLOSED, wrong sign: unexplained gaps drift WITH the gap (+0.039 ATR t 1.49) vs
-  explained flat; diff +0.041 t 1.75. Lead (21:00): main effort shifts to execution/sizing on the 14 cost-killed setups; I keep
-  ONE direction pilot per day. FAMC first reaction session 11-11 (ALC, RGTI); Builder runs nightly.
-- Run 21: Lead paused direction pilots for a day. WHATWORKS (descriptive): of 128 live setup x account rows (>= 20 trades),
-  only RW1-gapdn-bounce-flowsell-short-FD (Testing 2) is + after live costs, + w/o best day and best-day share < 50%;
-  all 11 near-misses are shorts (gap-down / flow-sell), best days mostly 11-04/11-05. Asked Builder for the 2y lab column.
-  CLOSED tonight (others): LIMEX (limits adversely selected), cost-killed execution remedy. Builder next: CONFIRM entries.
-- Closed (mine): QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1, OPTFLOW, NEWSDIR, UNGAP. Open: FAMC.
+## State (2026-11-15 run 56, Sunday ~11:15 ET)
+- Guild P1 = quality live reps faster (owner 11-11). Direction work only on a named new rule / new data (Lead).
+- Owner rules to remember: direction research anchored AFTER ~09:50 (reference = 09:50 state + 09:30-09:50 range); testing arena
+  = Testing A-F + Gen treated as one; account names Primary / On Deck / Testing A-F / Gen / Graveyard.
+- Queued (Builder runs, Monday 11-16 after 16:30 ET, in order): FWDCAL fresh 11-16..11-17 -> MOMSIDE -> SIZESTOP (my plan, D1)
+  -> DIPTURN (my plan). Half days dropped; LR8 basis; MDE printed; journal timing guard on.
+- Mine due: 11-18 after 16:30 ET REPS3 score + ICCSET refresh (commands in Next). FAMC nightly runs (Builder); my famc_shadow
+  reader is block-safe via guild_read.py (verified identical on 11-12).
+- Guild standards I must apply: checklist (research/SKEPTIC_CHECKLIST.md, now ~43 items), every close prints 'nothing above MDE;
+  smaller unknown' (research/SCOUT_MDE.md), pooled ratio estimator not per-day bin means (#39), half days dropped (#42),
+  locked block never requested or loaded (#43: guard block in every fetch script; read via research/guild_read.py).
 
 ## Learned
 - Journals: git fetch --depth=1 origin mcf-data*, git show FETCH_HEAD:journal.db; live paper = runs.kind 'paper';
@@ -77,88 +71,31 @@
   5-min took ~2 min. No pyarrow -> save CSV. Run scripts with `python3 -I` and use __file__ for output paths.
 - Guild worktree: `git fetch origin mcf-guild && git worktree add ../guild origin/mcf-guild`, then
   `git checkout -B mcf-guild origin/mcf-guild` inside it.
+- (11-11..11-15) Live journals: setup-day is the unit (ICC ~0.19; per-setup 0.07-0.45, shrink toward pooled 0.19 by own se;
+  a post-hoc grouping failed its time holdout). Journal meta strings carry outcome-linked suffixes (';touch_fill'): parse the
+  JSON prefix only. LR8 (11-12) moved live pnl_adj to a new cost basis: put every trade on one basis
+  (scripts/recompute_pnl_adj.py) before crossing 11-12. Journals are final only >= 10 min after the last 16:0x push.
+- (11-11..11-15) Direction: every up-day / market-state track matched the null (index continuation after any reading ~0;
+  scale-outs raise the median but lower the mean; published intraday momentum gone post-2018). Index-level tests only exclude
+  large effects; trade-level tests exclude down to ~costs. Plan with power in mind (MDE) before spending a look.
+- (11-11..11-15) Vendor news timestamps lag the market (46% of analyst-action events peak in volume > 5 min before created_at):
+  check stamp lag on a sample before any intraday-news plan. Alpaca also serves corporate actions (v1/corporate-actions).
+- Caches with extended hours: on half days the 'afternoon' is after-hours; detect half days by SPY afternoon/morning volume
+  < 0.2 (research/halfday_clean.py). Alpaca multi-name fetches > 30 min: run with a start index in parts, background.
 
-## Failed
-- QP1: 4 non-SPY quiet predictors, 0 pass (dispersion, VXX, crossings, combo).
+## Failed / closed (mine; each with its MDE in research/SCOUT_MDE.md where scored)
+- Day 1-3: QP1, SC2, SC1, NH1, STOPW, HODSEP, RCOMPASS-1, COILAM, SIZEBKT, EVD1 (mixed -> FAMC shadow), OPTFLOW, NEWSDIR, UNGAP.
+- 11-11..11-15: BOTHDAYS (0/74 all-weather), DISP1, COILGAP, NEWSMID, LEAD20, ETFTIER, SHORTUP, SIZETREND, ANCHOR950 (null
+  table), IMOM. Withdrawn: ICCSET-3 group prior (post hoc; failed time holdout).
+- Useful outputs kept: REPS1/1b lever table (Gen halt + buying power the only good blocks; borrow virtual-only), REPS2 slot yield
+  (median 2.7 setup-days/week; p_day = 1 - exp(-0.193 x lab trades/day)), REPS3 frozen forecast (482.8/week), ICCSET-2 shrunk
+  table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
-- Run 22 (11-11 01:20 ET) BOTHDAYS: 0/74 live setups earn on both SPY up and down days (w/o best day). Median beta
-  longs +0.145, shorts -0.134 R per 1% SPY. Builder's lab join had every WHATWORKS survivor negative over 2 years (a direction bet).
-- Run 23 (11-11 03:30 ET) DISP1 (Lead's within-sector split pilot): FAIL, -0.028 ATR t -0.70 (443 events/20 days); legs disagree.
-  Sector/peer/laggard family now 94 configs, all closed. Corr-based sector map (formation-only) works if a sector map is needed again.
-- Run 24 (11-11 05:30 ET) NEWSMID prep: Alpaca news API gives ~1,200 RTH items/session (benzinga + fiscal.ai transcripts),
-  created_at stamped; 27,467 items fetched 10-08..11-09 (scratchpad newsmid/). Draft plan + checklist walk; outcomes unread.
-  Halts: no Alpaca halt endpoint -> parked.
-- Run 25 (11-11 07:50 ET) NEWSMID frozen (A1 Skeptic's six points; A2 lexicon fix from dry-run sanity table). Scorer
-  newsmid.py --selftest/--dry/--score; dry funnel 1,341 events / 23 days; re-posts 169. Lesson: a --dry mode that stops at the
-  entry bar lets lexicon/funnel bugs be fixed before any outcome is seen.
-- Run 26 (11-11 09:45 ET) COILGAP (owner item 3): coil longs off on SPY gap <= -0.25% -> ex-mkt shared-day z -0.01; closed.
-  Coil switches from market state now 0/2 (COILAM checkpoint, COILGAP gap). Shared-day random switch code: research/coilgap/coilgap.py.
-- Run 27 (11-11 12:30 ET) REPS1 lever table (owner P1 item 1): Gen starved by account halt (66/session) + buying power (60),
-  what-if no worse than traded; low-rep starved by borrow (30.6/session vs 19.9 submitted). Simplified exit is +0.071R optimistic
-  vs live gross (corr 0.92) -> use relative only. Alpaca 5-min fetch of 2,236 names takes > 30 min: run it with a start index in parts.
-- Run 28 (11-11 13:30 ET) REPS1b in setup-days: blocks add <= ~12 good Gen setup-days/week (halt 7.5 on 2 days only, BP 4.7);
-  spread filters protective after logged spread (median 0.33R); low-rep limit = signal frequency (median 6/16 days) -> more setups
-  live is the scalable lever. Exit-model gap by hour 0.01-0.09R.
-- Run 29 (11-11 15:30 ET) REPS2 slot yield: median 2.7 setup-days/week per live slot; p_day = 1-exp(-0.193 x lab/day);
-  near-dead twin-blocked slots MF4-h40-open-flowsell (0/14) and MF3 (2/15).
-- Run 30 (11-11 17:30 ET) REPS3 frozen forecast for the 11-12 roster: 482.8 setup-days/week = baseline; restructure moves
-  setups, adds none by itself; gains must come from unlocks / universe / unrated setups. Owner unlocked halt (300R), Gen x1.8.
-- Run 31 (11-11 19:15 ET) REPS3 score.py built + selftest (frozen before data). Asked Lead: NEWSMID one look on 11-12 or hold.
-- Run 32 (11-11 21:30 ET) NEWSMID scorer verified on synthetic data: planted +0.4 ATR found (both legs), null not flagged.
-- Run 33 (11-11 23:30 ET) FILLCOST: latency equal across accounts (~1.25 min bar->order, ~2 s fill); slip ~half spread
-  (+0.01-0.02R). Bug: journal meta has outcome-linked suffix (';touch_fill') -> parse JSON prefix only. Owned exit-model error.
-- Run 34 (11-12 01:30 ET) ICCSET: per-setup ICC 0.07-0.45 (null 90th 0.09), not beta; survivors RW3/RW5/CWT09/MF2-FD
-  high-ICC (n_eff ~0.25 x n). Bench/rotation log not live -> rotation unmeasurable from journals.
-- Run 35 (11-12 03:30 ET) ICCSET-2 shrunk ICC (tau 0.134 real; shrunk 0.09-0.32); table for owner on 11-18.
-- Run 36 (11-12 05:30 ET) ICCSET-3: coarse setup groups explain 40% of ICC (CWT 0.10, flow/gap 0.18, heat 0.39, GEN 0.07/n=4);
-  11-18 table should shrink toward group ICC.
-- Run 37 (11-12 07:30 ET) ICCSET-4: group prior fails a time holdout (-2%); groups were post hoc -> withdrawn; keep pooled shrink.
-  Lesson: a grouping drawn after seeing the values needs an out-of-time test before it is recommended.
-- Run 38 (11-13 23:20 ET) NEWSMID scored once: FAIL (excess -0.024 ATR, t -1.83); 46% of events' volume peak precedes the
-  vendor stamp -> mid-session analyst headlines are priced at publication. Missed the 11-12 slot (no run fired after that close).
-- Run 39 (11-14 02:10 ET) LEAD20 (up-day track): top-20 leadership at 10:30 raises the hit rate (82 vs 72%) but not
-  rest-of-day return (+6bps, t 0.37); closed. Up-day info that only describes the past move has no continuation value.
-  Data cached: scratch lead20/m5.csv.gz (SPY QQQ SPXL TQQQ + 20 mega caps, 5-min, 2024-10..2026-11, locked block absent).
-- Run 40 (11-14 03:30 ET) ETFTIER: 3x ETF long on up readings, tiered vs plain: both negative net; tiered raises the median
-  (+0.09R) but lowers the mean (-0.02R vs plain). Prior held (exits can't create expectancy).
-- Run 41 (11-14 06:30 ET) SHORTUP: strongest stock in strongest sector, 10:30->11:30 on up readings: excess +0.007 ATR (t 0.30),
-  net +0.2bps; closed. Up-day thread: all tracks = null. Data cached: scratch shortup/ (489 names 30-min + daily, 2025-03..2026-11).
-- Run 42 (11-14 07:30 ET) SIZETREND: gap-predicted size raises afternoon range 14% but not path efficiency (0.452 flat) ->
-  no direction-free bracket edge from size. Breakout family = 169 backlog lines.
-- Run 43 (11-14 09:30 ET) D1 SIZESTOP plan frozen for Builder (after MOMSIDE): primary = conditioning effect vs random-day
-  widening, net of size-cut control; family 79, BAR90 2.66.
-- Run 44 (11-14 11:30 ET) SIZESTOP Amendment 1: ex-div gaps negligible (1.1% of Q5; 10 of 206k days change Q4-5), gap now
-  dividend-adjusted. Alpaca corporate-actions endpoint works (v1/corporate-actions, cash_dividend).
-- Run 45 (11-14 13:30 ET) ANCHOR950: index null re-run on the owner's 09:50 anchor (new CLAUDE.md rule): dip-then-turn, range
-  position, early-range breaks all ~0 after 09:50 (40 cells, none |t| >= 2). Future direction work: reference 09:50 + early range.
-- Run 46 (11-14 15:40 ET) COMPCAL950: 09:50-referenced M1 line calibrated (slightly conservative), Brier ~ open-referenced
-  (VALID 0.129 vs 0.124, t 0.54); better after 14:00. Display option for the owner's COMPCAL decision.
-- Run 47 (11-14 17:30 ET) REPS1b re-checked under checklist #39 (pooled ratio, clustered SE): low-rep borrow t -2.38 -> -0.22,
-  Gen BP 1.71 -> 2.28, twin -1.33 -> -2.30; conclusions unchanged. Lesson: never average per-day bin means.
-- Run 48 (11-14 19:30 ET) 11-18 staging: iccset.py takes the LR8 CSV (recompute_pnl_adj.py); 100% match; ICC 0.196 -> 0.201.
-  Agreed Builder's SIZESTOP choices.
-- Run 49 (11-14 21:30 ET) refresh.py: journal pull with Skeptic's timing guard (last commit from session, >= 10 min old); tested.
-- Run 50 (11-14 23:30 ET) DIPTURN plan frozen (owner dip-then-turn as a day condition on setup trades; shared-day null; family
-  2,611). ANCHOR950 power (Skeptic): rules out SPY > ~15-20bps only -> 'not large; small unknown'.
-- Run 51 (11-15 01:20 ET) DIPTURN Amendment 1 (tod >= 955; MDE printed). research/SCOUT_MDE.md: MDE for all my closures
-  (trade-level ~0.04-0.09 ~= costs; index-level only excludes tens of bps). Standard: every close prints 'nothing above X'.
-- Run 52 (11-15 03:40 ET) IMOM (published intraday momentum, JFE 2018): absent in 2024-26 (slope -0.016, t -1.10; C2 -0.9bps,
-  MDE80 3.3bps ~ the paper's size). Published index anomalies: test with power first; decay likely.
-- Run 53 (11-15 05:30 ET) checklist #42: half days (07-03, 11-28, 12-24 2025) dropped from LEAD20/ETFTIER/SHORTUP/SIZETREND;
-  no change. halfday_clean.py (afternoon/morning SPY volume < 0.2) for all future bar caches.
-- Run 54 (11-15 07:30 ET) checklist #43: purged scout-qp1 cache (only block-carrying cache); locked-block request guard
-  (urlopen wrapper) in all 11 Scout fetch scripts; qp1 fetch split in two ranges. Any NEW fetch script: copy the guard block.
-- Run 55 (11-15 09:15 ET) famc_shadow.py reader now pyarrow-filtered to the scored session (+ asserts); other Scout cache
-  readers already filter. Switch to Builder's research/guild_read.py when posted.
 ## Next
-- Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
-  Hunch, or cross-sectional long selection on up days (Builder's family table first).
-- 11-18 after 16:30 ET: `python3 -I research/reps3/refresh.py /home/user/MCF <scratch>/jr18 2026-11-18`, run REPS3 score.py, then the ICCSET LR8 commands in research/iccset/NOTES.md (end); header: 'LR8 basis, all trades'.
-- Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
-- P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
-- REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench
-  log / Gen candidate list is on a branch; check repv when pushed.
-- One direction pilot per day (Lead). Candidates where information arrives DURING the session: intraday news after 10:00 vs the
-  move that follows; halt / resume events; sector-ETF breaks spreading to members mid-session (careful: laggard family closed).
-- 11-12 pilot: score NEWSMID once: `python -I research/newsmid/newsmid.py --score <scratch>/newsmid/news_rth.csv.gz <scratch>/hodsep` (slow loops; run in background).
-- Read FAMC's first nightly line (11-11) and Observer's live-vs-lab cost table for the 14 cost-killed setups.
+- 11-16/17: read Builder's FWDCAL, MOMSIDE, SIZESTOP and DIPTURN results; answer anything about SIZESTOP / DIPTURN (my plans).
+- 11-18 after 16:30 ET: `python3 -I research/reps3/refresh.py /home/user/MCF <scratch>/jr18 2026-11-18` (refuses non-final
+  journals), then `python3 -I research/reps3/score.py <scratch>/jr18 research/reps3/forecast_setups.csv`, then the ICCSET LR8
+  commands at the end of research/iccset/NOTES.md (header 'LR8 basis, all trades'). Post realized vs forecast + shrunk table.
+- New fetch script? Copy the checklist-#43 guard block; new cache reader? use research/guild_read.py; bar cache? halfday_clean.py.
+- Direction ideas only with a named new rule or new data, frozen, powered (MDE stated), one look. Untested sources left:
+  overnight futures (not on Alpaca), Hunch, borrow/short-interest data, intraday halts (no Alpaca endpoint).
