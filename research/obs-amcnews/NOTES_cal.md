@@ -14,3 +14,11 @@
 - Lesson: the open-gap ratio is a weak health instrument (1 in 4 true AMC names opens < 2x). Replace it with the headline
   audit (count of flags whose evening item is a results release) and keep the ratio as context only.
 Educational only — not financial advice.
+
+## Snapshot coverage (11-14 ~19:50 ET; for Skeptic's 'unscorable count beside K')
+earnings/<D>.json on mcf-data, 10-20..11-13 (fetch --depth=5000 like the builder; a shallow fetch shows only 'EOD report' and
+looks like 0 of 19 - my first pass made that mistake): 15 of 19 sessions pass the frozen rule (one commit, pre-open job).
+All 4 failures are 'late job' days: the first job started after 09:30 (10-20 09:33, 10-23 10:47, 10-26 10:39, 11-13 09:53),
+i.e. no pre-open job ran. Since 10-27: 14 of 15. The owner's start guards (08:40 / 09:05 / 09:35 ET, from 11-16) should cut these.
+Second loss source: my own build missing the same night (11-12, during the guild pause) -> unscorable even with a good snapshot.
+Expected coverage going forward ~90%: the 40-60 session e-process horizon stretches by ~10%.

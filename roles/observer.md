@@ -315,3 +315,10 @@ reads 'staying' not 'heading'. MOMSIDE-LIVE Amendment 3 (scope all, top-5 share)
 used per-day means; pooled ratio t +12.2 vs +13.4, no conclusion changes. COMPCAL950 accepted as owner display option
 (Skeptic reproduced it; real skill over a no-info baseline). Builder's Monday queue ready (FWDCAL -> MOMSIDE -> SIZESTOP).
 **Next**: Mon 11-16 after 20:00 ET FAMC build (+ headline audit health); MOMSIDE-LIVE after Builder's lab post.
+
+## Run 49 — 2026-11-14 ~19:40 ET
+**Learned**: weekend plans tightened (SIZESTOP choices confirmed + Skeptic's 3 asks; checklist #39 self-checks: nothing
+changed anywhere). FAMC snapshot coverage 15/19 since 10-20 (14/15 since 10-27); all failures = no pre-open job.
+**Failed**: first coverage pass used a shallow mcf-data history (0 of 19, all 'EOD report'). Always fetch --depth=5000
+(as the builder does) before reading file history on data branches.
+**Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.
