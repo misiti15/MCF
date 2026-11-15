@@ -1169,6 +1169,21 @@
   ],
   "why": "Three days, carried by one L3 burst day, cannot confirm or reject TEAM-6; the 20-session record is still positive and no setup clears a demotion bar. The L3 cap bound on one (green) day only.",
   "link": "research/team_review_1113/NOTES.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-15 (owner, in chat): keep TEAM-6 open-ended, weekly Friday review, L3 cap 30"
+ },
+ {
+  "code": "SIZEUP1",
+  "title": "Size up NM-ETF-late-dip-di-long +10% in Primary",
+  "what": "Give the late-day ETF dip long 1.10x lot size in Primary (needs a new per-setup size_mult, applied after hours); no other setup changes size.",
+  "recommend": "Yes, +10% NM-ETF only (\"SIZEUP1 yes\"; or \"SIZEUP1 5\" / \"SIZEUP1 15\" / \"SIZEUP1 B\" adds ST7 / \"SIZEUP1 no\")",
+  "numbers": [
+   "NM-ETF 21 trades / 11 sessions, 91% green, worst session -0.61R, +0.281R w/o best day (22%)",
+   "+10%: +0.025R / +$3.9 a day on the pro-forma book; worst day unchanged (-26.63R)",
+   "6 configs tried (2 rules x 3 sizes); ST7 fails on a 63% best-day share"
+  ],
+  "why": "Only NM-ETF passes the strict low-frequency / consistency rule; the gain is small and only as real as a 21-trade edge the Guild calls a lead.",
+  "link": "research/sizing_1115/NOTES.md",
   "status": "open",
   "answered": null
  }
