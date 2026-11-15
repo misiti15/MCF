@@ -322,3 +322,9 @@ changed anywhere). FAMC snapshot coverage 15/19 since 10-20 (14/15 since 10-27);
 **Failed**: first coverage pass used a shallow mcf-data history (0 of 19, all 'EOD report'). Always fetch --depth=5000
 (as the builder does) before reading file history on data branches.
 **Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.
+
+## Run 50 — 2026-11-14 ~21:40 ET
+**Learned**: FWDCAL timing guard adopted (start after 16:30 ET; last journal commit from the session, >= 10 min old; Gen
+pushed 16:06 on 11-13); Scout's refresh.py implements it. SIZESTOP ready. Built FAMC headline_audit.py (13/13 rows pass;
+~1% false match on non-earnings items) = primary health line from 11-16.
+**Next**: Mon 11-16 after 20:00 ET: build_famc_cal.py --date 2026-11-16, then headline_audit.py; MOMSIDE-LIVE after Builder.

@@ -22,3 +22,10 @@ All 4 failures are 'late job' days: the first job started after 09:30 (10-20 09:
 i.e. no pre-open job ran. Since 10-27: 14 of 15. The owner's start guards (08:40 / 09:05 / 09:35 ET, from 11-16) should cut these.
 Second loss source: my own build missing the same night (11-12, during the guild pause) -> unscorable even with a good snapshot.
 Expected coverage going forward ~90%: the 40-60 session e-process horizon stretches by ~10%.
+
+## Headline audit = primary health line (11-14 ~21:55 ET; headline_audit.py -> famc_headline_audit.csv)
+Outcome-free, never writes the calendar. Strict RESULTS pattern (Q-EPS/Sales lines, 'Reports ... Results', 'Financial Results',
+guidance 'Sees Q/FY'). All 13 calendar rows so far (11-10: 2/2, 11-11: 3/3, 11-12: 8/8) carry a results release that evening.
+Discrimination check on other single-symbol evening items: non-earnings items match 3/277 (11-11) and 3/340 (11-12), ~1%;
+earnings-ish items 76-83% (the pattern is stricter than the builder's EARN filter). Nightly: run after build_famc_cal.py.
+Precision only; recall needs a late calendar.
