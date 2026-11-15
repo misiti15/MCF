@@ -367,3 +367,8 @@ identical); outputs replaced with clean runs; disk scan clean. Builder: half day
 found 5 unfiltered readers; 4 mine). Built research/obs_read.py (pyarrow predicate + assert; identical on block-free files;
 synthetic test drops block dates) and moved d2pm, extension, longcell, min10 onto it. Swap to guild_read.py when posted.
 **Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post; switch to guild_read.py.
+
+## Run 57 — 2026-11-15 ~11:40 ET
+**Learned**: checklist #43 closed (Lead): guild_read.py edge-tested by Skeptic; FAMC session 2 reproduces after Scout's read
+fix. Swapped: obs_read.read_bars delegates cache_hist to guild_read.read_1min (identical frames); cache_pm keeps own predicate.
+**Next**: Mon 11-16 after 20:00 ET: build_famc_cal.py --date 2026-11-16, then headline_audit.py; MOMSIDE-LIVE after Builder.
