@@ -9,9 +9,10 @@ import pandas as pd, pyarrow as pa, pyarrow.parquet as pq, pyarrow.dataset as ds
 B0, B1 = pd.Timestamp("2024-11-01", tz="America/New_York"), pd.Timestamp("2025-03-01", tz="America/New_York")
 def read_bars(path):
     p = Path(path)
-    if p.parent.name == "1Min" and p.parent.parent.name == "cache_hist":   # shared store -> the guild's shared reader (Lead 11-15)
-        import guild_read
+    import guild_read                                                     # one reader for every bar file (Lead 11-15)
+    if p.parent.name == "1Min" and p.parent.parent.name == "cache_hist":
         return guild_read.read_1min(p.stem)
+    return guild_read.read_1min(p.stem, path=p)                           # e.g. data/cache_pm, same block guarantees
     sch = pq.read_schema(path); idx = (sch.pandas_metadata or {}).get("index_columns", ["__index_level_0__"])[0]
     f = ds.field(idx); unit_tz = sch.field(idx).type
     lo, hi = pa.scalar(B0.to_pydatetime(), type=unit_tz), pa.scalar(B1.to_pydatetime(), type=unit_tz)

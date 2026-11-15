@@ -51,3 +51,14 @@ Family: 0 new configs (same tags as MOMSIDE; a check, not a candidate). Educatio
 ## Amendment 4 (2026-11-15 ~03:50 ET, before any live outcome is read): MDE column (guild standard, checklist #41)
 Each summary line also prints MDE80 = 2.8 x SE of the per-day excess (and per skipped trade); a 'disagrees/uninformative'
 reading is worded 'nothing above MDE80; smaller unknown'. No other change.
+
+## Pre-registered reading (2026-11-15 ~13:50 ET, before any live outcome is read; no gate, it fixes how results are read)
+| Lab C1 (Builder) | Live C1 (this) | Reading / next step |
+|---|---|---|
+| PASS | agrees (same sign, |t| >= 1) | Live supports the lab: the owner gets both; arena-only field test is the next step (never On Deck / Primary first). |
+| PASS | uninformative (|t| < 1) | Lab stands alone; say live has ~29 sessions (MDE printed); no extra weight either way. |
+| PASS | disagrees (opposite sign, |t| >= 1) | Flag to Lead before any owner note: lab-live gap on the same tags; check survivorship (C3) and the 2026 regime first. |
+| CLOSED | agrees / uninformative | Closed; print live MDE ('nothing above X; smaller unknown'). |
+| CLOSED | disagrees with a positive live effect | Closed stands (one-look rule); live is a 29-session lead only, logged, no re-score. |
+Also printed regardless: C1 by side (short-leg vs long-leg share of the excess), C3 beside C1, top-5 setups' share, per-setup
+better/worse, and the live window's rule-change context (11-12 restructure c64d75df0, LR8 from 11-12 - raw R is basis-stable).
