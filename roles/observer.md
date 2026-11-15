@@ -328,3 +328,10 @@ changed anywhere). FAMC snapshot coverage 15/19 since 10-20 (14/15 since 10-27);
 pushed 16:06 on 11-13); Scout's refresh.py implements it. SIZESTOP ready. Built FAMC headline_audit.py (13/13 rows pass;
 ~1% false match on non-earnings items) = primary health line from 11-16.
 **Next**: Mon 11-16 after 20:00 ET: build_famc_cal.py --date 2026-11-16, then headline_audit.py; MOMSIDE-LIVE after Builder.
+
+## Run 51 — 2026-11-14 ~23:40 ET
+**Learned**: Skeptic: ANCHOR950 null has power only for large effects (SPY MDE ~11-20bps; +6bps would need ~5,500
+sessions); Lead corrected the owner note ('not large; small unknown'); DIPTURN plan frozen (setup-level, family 2,611).
+Applied to my up-day null: MDE 7-12bps all days, 10-40bps per bucket -> corrected wording publicly.
+**Failed**: reported a null without its power. Rule: every null result carries its MDE at 80% power.
+**Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.

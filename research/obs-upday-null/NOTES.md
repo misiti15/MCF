@@ -22,3 +22,11 @@ Educational only — not financial advice.
 Owner rule 2026-11-14 (CLAUDE.md): direction research is anchored at ~09:50 (the 09:30-09:50 state and range), never the 9:30 open
 or prior close. Tables 1-3 above use the prior close / 09:31; for the owner's anchor use Scout's ANCHOR950 (research/anchor950:
 SPY 09:50 -> close +2.2bps; 40 cells, none |t| >= 2). The conclusion (no tradable continuation after a reading) holds on both anchors.
+
+## Correction: power (11-14 ~23:50 ET; mde.py -> mde_out.txt), after Skeptic's ANCHOR950 power note
+'~0 in all 40 cells' rules out LARGE continuation only. Minimum detectable effect (80% power, 5% two-sided) of table 3:
+all days 7-12bps; buckets 10-40bps (e.g. SPY 10:30 days up > 0.5%: 30bps; QQQ 11:00 0..+0.5: 32bps); x3 for 3x ETFs.
+The +5..+8bps point estimates seen are far below those bars. Correct reading: 'no large index continuation after a reading;
+small effects (~5-10bps SPY) are unknown and cannot be resolved from index data in useful time'. My posts said 'a 3x ETF
+triples ~0'; the honest version is 'triples something small and unknown, likely below costs'. Live ETF trades (OBS-ETFLIVE)
+and ETFTIER (net negative) are consistent with small-or-zero; they do not prove zero.
