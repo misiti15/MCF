@@ -214,6 +214,10 @@
 ## Run 48 (21:00 ET 11-14)
 - FWDCAL timing guard adopted (after 16:30, commit checks). Summary file 2026-11-15.md. Quiet until Monday's close.
 
+## Run 49 (23:15 ET 11-14)
+- Corrected owner wording: 'not large; small unknown' (PR #200). Lesson: state a null's power before calling it a negative.
+- Queue after SIZESTOP: dip-then-turn on long setup trades (Scout plan).
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-14T21:00-05:00",
+ "updated": "2026-11-14T23:15-05:00",
  "session": "2026-11-15",
- "headline": "Ready for Monday: replay audit gets a journal-timing guard (start after 16:30, last commits checked), SIZESTOP has all fixes, FAMC coverage is ~90%.",
+ "headline": "Correction sent to the owner (PR #200): the 09:50 index tests rule out large up-day effects, not small ones - 'not large; small unknown'. The owner's 'dip then turn' pattern will be tested on long setup trades, where there is more power.",
  "bullets": [
-  "FWDCAL: live journals finish pushing as late as 16:06, so the fresh run starts after 16:30 and checks each account's last commit.",
-  "SIZESTOP: name-day random control, same-minute recovery fixed, split-adjusted dividends; ready to score after MOMSIDE.",
-  "FAMC: 15 of 19 sessions pass the pre-open rule (failures = no pre-open job), so expect ~10% longer to reach 40-60 sessions.",
-  "11-18 tables staged on the LR8 cost basis (ICC barely moves: 0.196 -> 0.201).",
-  "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
+  "Skeptic reproduced ANCHOR950 exactly and computed its power: it can only detect SPY effects above ~15-20bps (SPXL ~50bps); the +6..+8bps seen would need ~5,500 sessions.",
+  "Lead had told the owner 'recognisable, not predictable'; corrected to 'not large; small unknown'.",
+  "Next: the 'dip in the first 20 min, then a turn' condition scored on long setup trades (day-clustered), after MOMSIDE and SIZESTOP.",
+  "FAMC headline audit is now the health line: 13 of 13 flagged rows are genuine results releases.",
+  "Timing guards in place for Monday's replay audit and the 11-18 tables."
  ],
  "progress": {
-  "ideas": 74,
+  "ideas": 75,
   "tested": 71,
   "configs": 163,
   "passed": 0,
   "forward": 1
  },
- "next": "Monday 11-16 after 16:30: FWDCAL fresh audit -> MOMSIDE -> SIZESTOP; FAMC nightly; reps tables 11-18.",
+ "next": "Monday after 16:30: FWDCAL fresh audit -> MOMSIDE -> SIZESTOP; then the dip-then-turn setup test; reps tables 11-18.",
  "by_role": {
-  "scout": "Staged the 11-18 ICC refresh on the LR8 basis.",
-  "builder": "SIZESTOP fixes in; scorer ready.",
-  "skeptic": "Journal-timing guard for the replay audit (checklist #40).",
-  "observer": "FAMC snapshot coverage check.",
-  "lead": "Adopted the timing guard; nothing else pending."
+  "scout": "Journal refresh with timing guard for 11-18; freezing the dip-then-turn plan.",
+  "builder": "FWDCAL timing guard in.",
+  "skeptic": "Power of the 09:50 null; corrected the framing.",
+  "observer": "FAMC headline audit (13/13).",
+  "lead": "Corrected the up-day wording to the owner (PR #200)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
