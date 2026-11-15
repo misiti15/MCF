@@ -142,6 +142,8 @@
   2,611). ANCHOR950 power (Skeptic): rules out SPY > ~15-20bps only -> 'not large; small unknown'.
 - Run 51 (11-15 01:20 ET) DIPTURN Amendment 1 (tod >= 955; MDE printed). research/SCOUT_MDE.md: MDE for all my closures
   (trade-level ~0.04-0.09 ~= costs; index-level only excludes tens of bps). Standard: every close prints 'nothing above X'.
+- Run 52 (11-15 03:40 ET) IMOM (published intraday momentum, JFE 2018): absent in 2024-26 (slope -0.016, t -1.10; C2 -0.9bps,
+  MDE80 3.3bps ~ the paper's size). Published index anomalies: test with power first; decay likely.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
