@@ -129,10 +129,141 @@ def selftest():
     print("selftest ok: stopw engine, conditioning effect (planted / null), size quintile restart after the gap")
 
 
+JOB = {}
+
+
+def sym_job(args):
+    """per symbol (as stopw.sym_job): BASE and k=1.5 legs for every trade, with each leg's exit minute for its SPY hold."""
+    sym, tr = args
+    import pyarrow.dataset as pds
+    if not JOB:
+        sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(HERE.parent / "bereplay"))
+        from mcf.research import gates as G
+        import bereplay as BR
+        JOB.update(G=G, BR=BR)
+    G, BR = JOB["G"], JOB["BR"]
+    p = ROOT / "data/cache_hist/1Min" / f"{sym}.parquet"
+    if not p.exists(): return None
+    ix = "__index_level_0__"
+    df = pds.dataset(str(p), format="parquet").to_table(filter=(pds.field(ix) < BR.TL0) | (pds.field(ix) >= BR.TL1)).to_pandas()
+    if ix in df.columns: df = df.set_index(ix)
+    df = df[~df.index.duplicated(keep="last")].sort_index()
+    assert not ((df.index >= BR.TL0) & (df.index < BR.TL1)).any()
+    mm = (df.index.hour * 60 + df.index.minute).to_numpy(); keep = (mm >= 570) & (mm < 955)
+    df = df[keep]; mm = mm[keep]; dd = df.index.date
+    O, H, L, C = (df[x].to_numpy(float) for x in ("open", "high", "low", "close"))
+    st = np.r_[0, np.flatnonzero(dd[1:] != dd[:-1]) + 1] if len(dd) else np.array([], int); en = np.r_[st[1:], len(dd)]
+    span = {dd[a]: (a, b) for a, b in zip(st, en)}
+    out = []
+    for r in tr.itertuples(index=False):
+        if r.date not in span: continue
+        a, b = span[r.date]; t0 = r.tod // 100 * 60 + r.tod % 100
+        j = a + int(np.searchsorted(mm[a:b], t0))
+        o, h, l, c = O[j:b], H[j:b], L[j:b], C[j:b]
+        if not len(c): continue
+        e = float(r.close); Rr = .25 * float(r.atr_d); up, dn = BR.GK[r.geom]; D = dn * Rr; U = up * Rr
+        if not (np.isfinite(e) and e > 0 and D > 0): continue
+        tier = 3.0 if (abs(r.gap) >= 20 or e < 5) else 1.0
+        ecost = (SW.SL + e * SW.BP) * float(G.tod_cost_mult(np.array([r.tod]))[0]); trail = r.geom == "holdtr"
+        nb, gb, kb, ib, rb = leg(o, h, l, c, e, r.side, D, U, trail, tier, ecost)
+        nv, gv, kv, iv, rv = leg(o, h, l, c, e, r.side, K * D, U, trail, tier, ecost)
+        out.append((r.setup, r.side, r.geom, sym, str(r.date), r.tod, int(mm[j]), int(mm[j + ib]), int(mm[j + iv]),
+                    nb, gb, kb, rb, nv, gv, kv, rv))
+    return out
+
+
+COLS = ["setup", "side", "geom", "symbol", "date", "tod", "m_entry", "m_xb", "m_xv",
+        "base_net", "base_gross", "base_kind", "base_rec", "var_net", "var_gross", "var_kind", "var_rec"]
+
+
+def build(hold_dir, procs):
+    from multiprocessing import Pool
+    sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "research/history2y")); sys.path.insert(0, str(HERE.parent / "bereplay"))
+    import bereplay as BR
+    t = BR.load_lists(hold_dir)
+    rows = []
+    with Pool(procs) as pool:
+        for k, res in enumerate(pool.imap_unordered(sym_job, list(t.groupby("symbol")), chunksize=4)):
+            if res: rows += res
+            if k % 200 == 0: print(f"symbols {k}", flush=True)
+    return pd.DataFrame(rows, columns=COLS)
+
+
+def spy_moves(X):
+    import pyarrow.dataset as pds
+    NY = "America/New_York"; ix = "__index_level_0__"
+    TL0, TL1 = pd.Timestamp(LB0, tz=NY), pd.Timestamp("2025-03-01", tz=NY)
+    s = pds.dataset(str(ROOT / "data/cache_hist/1Min/SPY.parquet"), format="parquet").to_table(
+        filter=(pds.field(ix) < TL0) | (pds.field(ix) >= TL1)).to_pandas()
+    if ix in s.columns: s = s.set_index(ix)
+    s.index = pd.DatetimeIndex(s.index).tz_convert(NY); s = s[~s.index.duplicated(keep="last")]
+    key = pd.Series(s.close.values, index=pd.MultiIndex.from_arrays([s.index.strftime("%Y-%m-%d"), s.index.hour * 60 + s.index.minute]))
+    a = key.reindex(pd.MultiIndex.from_arrays([X.date, X.m_entry])).to_numpy()
+    X["spy_b"] = (key.reindex(pd.MultiIndex.from_arrays([X.date, X.m_xb])).to_numpy() / a - 1) * 100
+    X["spy_v"] = (key.reindex(pd.MultiIndex.from_arrays([X.date, X.m_xv])).to_numpy() / a - 1) * 100
+    return X
+
+
 def main():
     st = subprocess.run(["git", "-C", str(HERE), "status", "--porcelain", "PLAN.md", "sizestop.py"], capture_output=True, text=True).stdout
     assert not st.strip(), "PLAN.md and sizestop.py must be committed before the score"
-    raise SystemExit("score body: written in the scoring run after MOMSIDE (inputs: BR.load_lists, size_quintiles, leg, cond_effect)")
+    hold_dir = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] != "-" else None
+    procs = int(sys.argv[2]) if len(sys.argv) > 2 else 4
+    sys.path.insert(0, str(ROOT)); from mcf.research import gates as G
+    T90 = round(max(1.35, 0.9 * G.t_required(N_FAMILY)), 2)
+    X = spy_moves(build(hold_dir, procs))
+    q = size_quintiles(load_daily(), pd.read_parquet(HERE / "data/cash_div.parquet"))
+    X["q"] = q.reindex(pd.MultiIndex.from_arrays([X.date, X.symbol])).to_numpy()
+    X = X[np.isfinite(X.q) & np.isfinite(X.spy_b) & np.isfinite(X.spy_v)].reset_index(drop=True)
+    X["family"] = np.where(X.setup.str.startswith("GEN"), "GEN", X.setup.str.split("-").str[0])
+    X["per"] = np.where(X.date <= SPLIT, "TRAIN", "VALID")
+    beta = {s: (np.polyfit(g.spy_b, g.base_gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for s, g in X[X.per == "TRAIN"].groupby("setup")}
+    b = X.setup.map(beta).fillna(X.side.astype(float)).to_numpy()
+    X["eff_net"] = X.var_net - X.base_net / K                               # size-cut CTRL = BASE x D/D'
+    X["eff_gross"] = X.var_gross - X.base_gross / K
+    X["eff_exm"] = (X.var_gross - b * X.spy_v / K) - (X.base_gross - b * X.spy_b) / K
+    D_ = load_daily(); S = D_[D_.symbol == "SPY"].set_index("date"); oc = S.close / S.open - 1
+    dtype = pd.Series(np.where(oc > .0025, "up", np.where(oc < -.0025, "down", "quiet")), index=S.index)
+    X.to_parquet(HERE / "data/sizestop_trades.parquet", index=False)
+    rng = np.random.default_rng(20261116); out = []
+    print(f"SIZESTOP (PLAN + Amendment 1, one score): {len(X)} trades with a size quintile, {X.setup.nunique()} setups, "
+          f"{X.family.nunique()} families, {X.date.nunique()} days; family N {N_FAMILY}, BAR90 {T90}")
+    for c, qs in CFGS.items():
+        rule = X.q.isin(qs).to_numpy()
+        row = dict(config=c, changed_share=round(rule.mean(), 3))
+        for col in ("eff_net", "eff_gross", "eff_exm"):
+            days, t = cond_effect(X, X[col].to_numpy(), rule)
+            row[f"{col}_cond"] = round(days.sum(), 1); row[f"{col}_t"] = round(t, 2) if np.isfinite(t) else np.nan
+        days, t = cond_effect(X, X.eff_net.to_numpy(), rule)
+        row["wo_best"] = round(days.sum() - days.max(), 1)
+        for p_ in ("TRAIN", "VALID"):
+            m = (X.per == p_).to_numpy(); dp, tp = cond_effect(X[m].reset_index(drop=True), X.eff_net.to_numpy()[m], rule[m])
+            row[f"{p_}_cond"] = round(dp.sum(), 1); row[f"{p_}_t"] = round(tp, 2) if np.isfinite(tp) else np.nan
+        bydt = days.groupby(days.index.map(dtype)).sum(); row.update({f"sess_{k}": round(bydt.get(k, 0.0), 1) for k in ("up", "down", "quiet")})
+        row["stop_effect_changed"] = round(X.eff_net[rule].mean(), 4)
+        fam = {}
+        for f_, g in X.groupby("family"):
+            ii = g.index.to_numpy(); dfm, _ = cond_effect(g.reset_index(drop=True), X.eff_net.to_numpy()[ii], rule[ii])
+            fam[f_] = dfm.sum() / len(g)
+        fam = pd.Series(fam); row.update(fam_better=int((fam > 0).sum()), fam_worse=int((fam < 0).sum()), worst_fam=round(fam.min(), 4))
+        stopped = X.base_kind.to_numpy() == 1
+        recr = X.base_rec.to_numpy()[rule & stopped].mean() if (rule & stopped).any() else np.nan
+        stv = (X.setup + "|" + X.date.str[:7]).to_numpy()
+        rec_s = pd.Series(np.where(stopped, X.base_rec.to_numpy().astype(float), np.nan)).groupby(stv).transform("mean").to_numpy()
+        recn = np.nanmean(rec_s[rule])          # random-day expectation: each rule trade's stratum recover share among BASE stop-outs
+        row.update(stopout_base=round(stopped[rule].mean(), 3), stopout_var=round((X.var_kind.to_numpy()[rule] == 1).mean(), 3),
+                   recover_rule=round(recr, 3), recover_random=round(recn, 3))
+        nd = null_draws(X, X.eff_net.to_numpy(), rule, rng)
+        row["null95"] = round(np.percentile(nd, 95), 1); row["rule_sum"] = round(X.eff_net[rule].sum(), 1)
+        row["pass"] = bool((row["eff_net_t"] or 0) >= T90 and row["TRAIN_cond"] > 0 and row["VALID_cond"] > 0 and row["sess_down"] >= 0
+                           and row["fam_better"] >= 0.6 * len(fam) and row["wo_best"] > 0 and (row["recover_rule"] or 0) > (row["recover_random"] or 1))
+        out.append(row)
+        fam.round(4).rename("cond_per_trade").to_csv(HERE / f"sizestop_family_{c}.csv")
+    R = pd.DataFrame(out); pd.set_option("display.width", 320); pd.set_option("display.max_columns", 40)
+    print(R.T.to_string()); R.to_csv(HERE / "sizestop_results.csv", index=False)
+    print("conditioning effect = sum over rule-widened trades of (VAR - BASE x D/D') minus its same-count random-name-day "
+          "expectation within setup x month; net R own-risk units; null95 = 95th pct of 200 name-day draws of the raw rule sum.")
+    print("Educational only - not financial advice.")
 
 
 if __name__ == "__main__":

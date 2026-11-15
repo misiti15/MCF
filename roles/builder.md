@@ -97,6 +97,9 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-15 00:55: SIZESTOP scorer COMPLETE (python sizestop.py <scratchpad/hold/bt> 4; ONE score). Queue after 11-17 16:30 ET:
+  FWDCAL fresh -> MOMSIDE --score -> SIZESTOP -> DIPTURN (Scout's research/dipturn/PLAN.md; scorer to write).
+  Framing (Lead/Skeptic 11-15): nulls rule out LARGE effects only; report MDE beside every null.
 - 11-14 22:30: FWDCAL journal_guard in mirror.main (start >= 16:30 ET on the window's last day; commits final). Monday 11-17
   after 16:30: fresh run (command in the 08:45 entry), then MOMSIDE --score, then SIZESTOP (main() loop still to write).
 - 11-14 20:40: SIZESTOP Skeptic asks done (name-day null draws, recover from i_s+1, load_daily() named input + split-adjusted
