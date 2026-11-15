@@ -3,6 +3,7 @@ For each live paper trade still open at entry+10 min: 'triggered' = price reache
 (1-min highs/lows, D = |entry - stop|), k in {0.10, 0.25} as CONFIRM. Quantity of interest (Skeptic): the gross move AFTER minute 10,
 cont = side x (live exit price - close of the 10th minute) / daily ATR. ~0 for untriggered trades = martingale -> a minute-10 exit only adds cost.
 Descriptive, 0 configs. Bars: data/cache_hist/1Min (RTH, through 11-10). usage: python min10.py <journal_dir>. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_read import read_bars
 import sys, glob, os, sqlite3, numpy as np, pandas as pd
 from pathlib import Path
 pd.set_option("display.width", 220); TZ = "America/New_York"; BARS = Path("data/cache_hist/1Min")
@@ -18,7 +19,7 @@ out, bad = [], []
 for sym, g in T.groupby("symbol"):
     p = BARS / f"{sym}.parquet"
     if not p.exists(): continue
-    b = pd.read_parquet(p).between_time("09:30", "15:59"); b["d"] = b.index.date
+    b = read_bars(p).between_time("09:30", "15:59"); b["d"] = b.index.date
     day = b.groupby("d").agg(h=("high", "max"), l=("low", "min"), c=("close", "last"))
     day["atr"] = (np.maximum(day.h, day.c.shift(1)) - np.minimum(day.l, day.c.shift(1))).shift(1).rolling(10, min_periods=5).mean()
     for i, r in g.iterrows():

@@ -361,3 +361,9 @@ fitted; now rebuilt without block + half days, fetch guarded (start >= 2025-03-0
 block's index path. Done: obs_blockguard.py in all 6 fetch scripts; momside-live closes refetched from 2025-03-01 (coverage
 identical); outputs replaced with clean runs; disk scan clean. Builder: half days dropped from MOMSIDE/SIZESTOP/DIPTURN.
 **Next**: Mon 11-16 after 20:00 ET FAMC build (guarded fetch) + headline audit; MOMSIDE-LIVE after Builder's lab post.
+
+## Run 56 — 2026-11-15 ~09:40 ET
+**Learned**: Lead kept data/cache_hist/1Min (MCF design, holds owner's holdout bars) but enforces 'readers filter' (Skeptic
+found 5 unfiltered readers; 4 mine). Built research/obs_read.py (pyarrow predicate + assert; identical on block-free files;
+synthetic test drops block dates) and moved d2pm, extension, longcell, min10 onto it. Swap to guild_read.py when posted.
+**Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post; switch to guild_read.py.

@@ -1,6 +1,7 @@
 """D2PM scorer, to the frozen PLAN.md (3 looks). Reads data/cache_pm (premarket) + data/cache_hist/1Min (RTH) + earnings_yf.
 usage (MCF checkout): python d2pm.py <earnings_yf.parquet|-> [--universe research/lab_symbols.txt] [--selftest]
 Reporting cuts (Skeptic 2026-11-10, no new looks): premarket $vol and trade-count terciles, SPY up/down/quiet day, fixed lab list.. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_read import read_bars
 import sys, numpy as np, pandas as pd
 from pathlib import Path
 ET = "America/New_York"; PM, RTH = Path("data/cache_pm"), Path("data/cache_hist/1Min")
@@ -18,7 +19,7 @@ def name_days(sym, spy):
     """one row per session: premarket features at 09:29:59 and RTH labels (09:35 decision, 09:51 entry)."""
     pp, rp = PM / f"{sym}.parquet", RTH / f"{sym}.parquet"
     if not (pp.exists() and rp.exists()): return []
-    pm, r = pd.read_parquet(pp), pd.read_parquet(rp)
+    pm, r = read_bars(pp), read_bars(rp)
     r = r.between_time("09:30", "15:59"); rd = r.groupby(r.index.date)
     day = rd.agg(h=("high", "max"), l=("low", "min"), c=("close", "last"))
     day["tr"] = np.maximum(day.h, day.c.shift(1)) - np.minimum(day.l, day.c.shift(1)); day["atr"] = day.tr.shift(1).rolling(10, min_periods=5).mean()
@@ -41,7 +42,7 @@ def name_days(sym, spy):
                         r1130=c1130 / o951 - 1 - s["r1130"], r1555=c1555 / o951 - 1 - s["r1555"], spy1130=s["r1130"], dtype=s["dtype"]))
     return out
 def spy_rets():
-    g = pd.read_parquet(RTH / "SPY.parquet").between_time("09:30", "15:59"); o = {}
+    g = read_bars(RTH / "SPY.parquet").between_time("09:30", "15:59"); o = {}
     for d, x in g.groupby(g.index.date):
         try:
             o951 = x.at_time("09:51").open.iloc[0]; oc = x.close.iloc[-1] / x.open.iloc[0] - 1

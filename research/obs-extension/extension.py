@@ -10,6 +10,7 @@ Definitions (pre-declared before scoring):
   gross R = net R + paper cost (entry slip vs signal, stop-exit slip, realism haircut); move_atr = side*(exit-entry)/ATR.
 Retention test (BDI charter): dropping EXT keeps >= 80% of trades and >= 90% of each family's top-decile winners?
 usage: python extension.py <journal_dir> [ext_atr=0.10]. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_read import read_bars
 import sys, glob, os, json, sqlite3, numpy as np, pandas as pd
 from pathlib import Path
 pd.set_option("display.width", 250)
@@ -33,7 +34,7 @@ out = []
 for sym, g in T.groupby("symbol"):
     p = BARS / f"{sym}.parquet"
     if not p.exists(): continue
-    b = pd.read_parquet(p)
+    b = read_bars(p)
     idx = b.index if isinstance(b.index, pd.DatetimeIndex) else pd.to_datetime(b["timestamp"] if "timestamp" in b else b.iloc[:, 0], utc=True)
     b.index = pd.DatetimeIndex(idx).tz_convert(TZ) if pd.DatetimeIndex(idx).tz is not None else pd.DatetimeIndex(idx).tz_localize("UTC").tz_convert(TZ)
     b.columns = [c.lower()[0] if c.lower() in ("open", "high", "low", "close", "volume") else c.lower() for c in b.columns]

@@ -3,11 +3,12 @@ reads extension.py's rows (EXT 0.10 ATR, written with: python extension.py <jdir
 gross_atr = gross R x risk/ATR (price terms, before paper costs); ex_spy_atr = (name return - SPY return over the same hold) in ATR
 (beta 1). SPY day type by SPY close vs 09:30 open: up > +0.30%, down < -0.30%, else quiet (hindsight label, descriptive only).
 usage: python longcell.py <rows.csv>. Educational only - not financial advice."""
+import sys as _sys; _sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parents[1])); from obs_read import read_bars
 import sys, numpy as np, pandas as pd
 pd.set_option("display.width", 220)
 X = pd.read_csv(sys.argv[1]); X["et"] = pd.to_datetime(X.et, utc=True).dt.tz_convert("America/New_York")
 X["xt"] = pd.to_datetime(X.exit_time, utc=True, format="mixed").dt.tz_convert("America/New_York")
-spy = pd.read_parquet("data/cache_hist/1Min/SPY.parquet"); spy = spy.between_time("09:30", "15:59")
+spy = read_bars("data/cache_hist/1Min/SPY.parquet"); spy = spy.between_time("09:30", "15:59")
 spy["d"] = spy.index.date; dd = spy.groupby("d").agg(o=("open", "first"), c=("close", "last"))
 dd["ret"] = dd.c / dd.o - 1; dd["dtype"] = np.select([dd.ret > 0.003, dd.ret < -0.003], ["up", "down"], "quiet")
 px = spy.close
