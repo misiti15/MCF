@@ -629,6 +629,20 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
                                                  med_min_diff=("min_diff", "median")).reset_index().to_string(index=False))
     print(f"\nbuying-power causes (config/live equity, Skeptic 3): {len(bp)} trades; matched rate if they are set aside: "
           f"{len(m) / max(len(L) - (bp.kind == 'live_only').sum(), 1):.3f}")
+    low = A[(A.acct != "ALL") & (A.exact_match_rate < 0.90)].acct.tolist()
+    opt = A[(A.acct != "ALL") & (A.gap_avgR > 0.03)].acct.tolist()
+    print(f"\nSkeptic pre-registered checks: accounts with exact-minute match < 90%: {low or 'none'}; "
+          f"OPTIMISTIC gap > +0.03R (the failure that matters): {opt or 'none'}; configs shown: 1 engine x {len(A) - 1} accounts")
+    try:                                   # rule-change context (owner 11-02): ledger entries effective inside / just before the window
+        import json as _j
+        d0, d1 = sorted({r["day"] for r in reps})[0], sorted({r["day"] for r in reps})[-1]
+        L8 = [_j.loads(l) for l in open("/home/user/MCF/research/ledger.jsonl") if l.strip()]
+        ch = [x for x in L8 if str(x.get("effective", "")) and (pd.Timestamp(d0) - pd.Timedelta(days=3)).strftime("%Y-%m-%d") <= str(x.get("effective")) <= d1]
+        print(f"rule changes effective {d0} - 3d .. {d1} (ledger): {len(ch)}")
+        for x in ch[:15]:
+            print(f"  {x.get('effective')} {x.get('id')}: {str(x.get('title', ''))[:110]}")
+    except Exception as e:
+        print(f"ledger context unavailable ({e.__class__.__name__})")
     print("FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.")
     return A
 

@@ -266,6 +266,13 @@ def main():
         fam.round(4).rename("cond_per_trade").to_csv(HERE / f"sizestop_family_{c}.csv")
     R = pd.DataFrame(out); pd.set_option("display.width", 320); pd.set_option("display.max_columns", 40)
     print(R.T.to_string()); R.to_csv(HERE / "sizestop_results.csv", index=False)
+    for r in out:                          # Skeptic's pre-registered red flag
+        if r["stop_effect_changed"] > 0 and abs(r["eff_net_t"] or 0) < 1.0:
+            print(f"{r['config']}: RED FLAG - stop effect positive ({r['stop_effect_changed']:+.4f}R/changed trade) but conditioning ~0 "
+                  f"(t {r['eff_net_t']}): known unconditional widening (STOPW), not the gap condition")
+        if not r["pass"]:
+            print(f"{r['config']}: CLOSED - nothing above {r['MDE_bar_per_changed']:.4f}R per changed trade at the bar (MDE80 {r['MDE80_per_changed']:.4f}R); smaller unknown")
+    print(f"configs shown: {len(out)} (family N {N_FAMILY})")
     print("conditioning effect = sum over rule-widened trades of (VAR - BASE x D/D') minus its same-count random-name-day "
           "expectation within setup x month; net R own-risk units; null95 = 95th pct of 200 name-day draws of the raw rule sum.")
     print("Educational only - not financial advice.")

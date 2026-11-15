@@ -52,9 +52,11 @@ def run(B, F, rng):
         for per in ("TRAIN", "VALID"):
             g = b[b.per == per]
             x = (g.exm - g.groupby("setup").exm.transform("mean")).to_numpy(); xn = (g.r - g.groupby("setup").r.transform("mean")).to_numpy()
+            xg = (g.gross - g.groupby("setup").gross.transform("mean")).to_numpy() if "gross" in g else x   # raw gross (index included)
             xa = x * 0.25 * g.dn.to_numpy()        # Skeptic: per-trade ATR = R x 0.25 x dn (t1s05 / t05s05: 1R = 0.125 ATR)
             days = g.date.to_numpy(); alld = np.array(sorted(set(days))); cd = np.array([d for d in alld if F[flag].get(d, False)])
             est, se, D, wob, n = pooled(x, days, cd); estn, sen, _, _, _ = pooled(xn, days, cd); esta, _, _, _, _ = pooled(xa, days, cd)
+            estg, _, _, _, _ = pooled(xg, days, cd)
             null = np.array([pooled(x, days, rng.choice(alld, len(cd), replace=False))[0] for _ in range(NDRAW)]) if len(cd) else np.array([np.nan])
             ps = {}
             for su, gg in g.groupby("setup"):
@@ -62,7 +64,7 @@ def run(B, F, rng):
                 if mi.sum() >= 10: ps[su] = xi[mi].mean()
             ps = pd.Series(ps); tot = pd.Series({su: (gg.exm - gg.exm.mean())[np.isin(gg.date.to_numpy(), cd)].sum() for su, gg in g.groupby("setup")})
             pos_ = tot[tot > 0].sort_values(ascending=False)
-            rows.append(dict(cfg=cfg, per=per, cond_days=D, days=len(alld), trades=int(n), exm_R=est, exm_ATR=esta,
+            rows.append(dict(cfg=cfg, per=per, cond_days=D, days=len(alld), trades=int(n), exm_R=est, exm_ATR=esta, raw_gross_R=estg,
                              t=est / se if se else np.nan, se=se, MDE80=2.8 * se, MDE_bar=(BAR90 + 0.84) * se, null95=np.nanpercentile(null, 95),
                              net_R=estn, net_t=estn / sen if sen else np.nan, wo_best=wob, setups=len(ps), better=int((ps > 0).sum()),
                              worse=int((ps < 0).sum()), top5_share=pos_.head(5).sum() / tot.sum() if tot.sum() > 0 else np.nan,
@@ -77,6 +79,7 @@ def selftest():
         n = 40000; d = rng.choice(days, n); su = rng.choice(["L1", "L2", "S1"], n); side = np.where(su == "S1", -1, 1)
         eff = np.where((side > 0) & F.DT.reindex(d).to_numpy(), planted, 0.0)
         B = pd.DataFrame(dict(setup=su, side=side, date=d, exm=rng.normal(0, 1, n) + eff, r=rng.normal(0, 1, n), per="VALID", dn=1.0))
+        B["gross"] = B.exm
         O = run(pd.concat([B, B.assign(per="TRAIN")]), F, rng); c1 = O[(O.cfg == "C1") & (O.per == "VALID")].iloc[0]
         print(f"selftest planted {planted}: est {c1.exm_R:+.3f} t {c1.t:+.2f} MDE80 {c1.MDE80:.3f} null95 {c1.null95:+.3f}")
         assert (c1.t > 4) if planted else abs(c1.t) < 3
@@ -116,6 +119,8 @@ def score():
                  "w/o best day > 0": bool(v.wo_best > 0)}
         print(c, gates, "->", "PASS (arena lead)" if all(gates.values()) else f"CLOSED: nothing above {v.MDE_bar:.3f}R per trade at the bar "
               f"(MDE80 {v.MDE80:.3f}R); smaller unknown")
+    print("index check (Skeptic): raw_gross_R includes the index move, exm_R removes beta x SPY over each hold; if raw >> exm, "
+          "the condition's 'edge' is index direction, not selection. configs shown: 2 x 2 periods")
     print("Educational only - not financial advice.")
 
 

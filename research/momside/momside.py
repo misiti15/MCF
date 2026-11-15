@@ -120,6 +120,13 @@ def fetch():
     print(f"saved {len(D)} rows, {D.symbol.nunique()} symbols, {D.date.min()}..{D.date.max()}. Educational only - not financial advice.")
 
 
+def load_spy_types():
+    sys.path.insert(0, str(R)); import guild_read as GR
+    d = GR.read_daily(columns=["symbol", "date", "open", "close"]); s = d[d.symbol == "SPY"].set_index("date")
+    oc = s.close / s.open - 1
+    return dict(zip(s.index, np.where(oc > .0025, "up", np.where(oc < -.0025, "down", "quiet"))))
+
+
 def run_score():
     sys.path.insert(0, str(ROOT)); from mcf.research.generator import data as GD
     D = pd.read_parquet(DATA / "daily_closes.parquet"); assert not ((D.date >= LB0) & (D.date <= LB1)).any()
@@ -135,7 +142,8 @@ def run_score():
     B = pd.read_parquet(HERE / "data/trades_full.parquet", columns=["setup", "side", "symbol", "date", "r", "gross", "spy_move"])
     assert not ((B.date >= LB0) & (B.date <= LB1)).any()
     B = B[~GD._blackout(B.symbol.to_numpy(), B.date.to_numpy())].dropna(subset=["spy_move"]).reset_index(drop=True)
-    B = B[~B.date.isin(HALF_DAYS)].reset_index(drop=True)                 # Amendment 4: early-close sessions dropped (checklist 42)
+    nh = int(B.date.isin(HALF_DAYS).sum()); B = B[~B.date.isin(HALF_DAYS)].reset_index(drop=True)   # Amendment 4 (checklist 42)
+    print(f"half-day sessions dropped: {nh} trades")
     B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))
     beta = {s: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for s, g in B[B.per == "TRAIN"].groupby("setup")}
     B["exm"] = B.gross - B.setup.map(beta).fillna(B.side.astype(float)) * B.spy_move
@@ -153,6 +161,10 @@ def run_score():
                 res = score(b, s_, col); row.update({f"{col}_{k}": v for k, v in res.items()})
                 se = abs(res["excess"] / res["t"]) if res["t"] and np.isfinite(res["t"]) and res["t"] != 0 else np.nan
                 row[f"{col}_MDE80_per_skip"] = 2.8 * se / max(int(s_.sum()), 1)          # guild standard 2026-11-15
+                row[f"{col}_MDEbar_per_skip"] = (2.91 + 0.84) * se / max(int(s_.sum()), 1)
+                # control's own avg R (checklist 10): a random same-count skip's expected R = its setup-day mean
+                sdm = pd.Series(b[col].to_numpy(float)).groupby((b.setup + "|" + b.date).to_numpy()).transform("mean").to_numpy()
+                row[f"{col}_ctrl_avg"] = float(sdm[s_].mean()) if s_.any() else np.nan
             if per == "VALID":
                 v = {}
                 for su, g in b.groupby("setup"):
@@ -168,6 +180,16 @@ def run_score():
                                              top5_share=round(top5, 3) if np.isfinite(top5) else np.nan,
                                              top5=",".join(pos.head(5).index))
                 ps.append(v.rename(c))
+            row["skip_share_long"] = float(s_[(b.side > 0).to_numpy()].mean()) if (b.side > 0).any() else np.nan
+            row["skip_share_short"] = float(s_[(b.side < 0).to_numpy()].mean()) if (b.side < 0).any() else np.nan
+            if per == "VALID":                     # Skeptic: is the excess one SPY-direction cell?
+                spy = load_spy_types()
+                ex, _ = None, None
+                Rv = b.exm.to_numpy(float); sd = (b.setup + "|" + b.date).to_numpy()
+                k = pd.Series(s_.astype(float)).groupby(sd).transform("sum").to_numpy(); n = pd.Series(1.0, index=range(len(b))).groupby(sd).transform("sum").to_numpy()
+                tot = pd.Series(Rv).groupby(sd).transform("sum").to_numpy()
+                exd = pd.Series(-Rv * s_ + (k / n) * tot / np.where(k > 0, k, 1) * s_).groupby(b.date.to_numpy()).sum()
+                row["exm_excess_by_spy"] = {kk: round(float(v), 1) for kk, v in exd.groupby(exd.index.map(lambda d: spy.get(d, "na"))).sum().items()}
             row["by_side_exm"] = {sd: round(float(-(b.exm.to_numpy() * s_)[(b.side == sd).to_numpy()].sum()), 1) for sd in (1, -1)}
             out.append(row)
     O = pd.DataFrame(out); O.to_csv(HERE / "momside_results.csv", index=False)
@@ -182,7 +204,14 @@ def run_score():
              "3 >= 60% setups better (VALID)": bool(c1v.setups and c1v.better / c1v.setups >= 0.6),
              "4 best day < 50% (VALID)": bool(c1v.exm_best_share < 0.5) if np.isfinite(c1v.exm_best_share) else False,
              "5 VALID gross excess > 0": bool(c1v.gross_excess > 0)}
-    print("C1 gates:", gates); print("VERDICT C1:", "PASS" if all(gates.values()) else "CLOSED")
+    c3v = O[(O.cfg == "C3") & (O.per == "VALID")].iloc[0]
+    verdict = "PASS" if all(gates.values()) else "CLOSED"
+    if verdict == "PASS" and not (c3v.exm_excess > 0):
+        verdict += " (short-leg-driven, survivorship-suspect: C3 longs-only <= 0)"
+    print("C1 gates:", gates); print("VERDICT C1:", verdict)
+    if verdict.startswith("CLOSED"):
+        print(f"C1: nothing above {c1v.exm_MDEbar_per_skip:.4f}R per skipped trade at the bar (MDE80 {c1v.exm_MDE80_per_skip:.4f}R); smaller unknown")
+    print(f"configs shown: {len(CFG)} x 3 periods x 3 R columns")
     print("C2/C3/C4 are reported; a C2-C4-only pass is a lead. Survivorship: see PLAN. Educational only - not financial advice.")
 
 
