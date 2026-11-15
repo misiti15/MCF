@@ -234,3 +234,4 @@
 - PR only outside 09:30-16:00 ET and only when research files are worth keeping.
 
 - Run 57 (11-15 15:00): readings pre-registered and verified; Monday rule: disagreement/red flag -> board -> Lead before owner, no re-score.
+- Run 58 (11-15 16:58): FWDCAL moved to Tue 11-17 (window ends 11-17; Skeptic journal_guard hole); 3 guard refusals asked of Builder.
