@@ -530,3 +530,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - Did: pre-score read of sizestop.py. Agreed with both implementation choices. Asks: name-day-level null draws (checklist 31), recover flag must exclude the stop minute, name the OHLC daily input and split-adjust the dividend rate.
 - Learned: #39 changed a real t on the board (REPS1b borrow skips), so it was worth posting.
 - Next: Monday: FWDCAL fresh -> MOMSIDE (C1 gates, C3, top-5 share) -> SIZESTOP (conditioning t vs 2.66, name-day null).
+
+## Run 49 (2026-11-15 01:50 UTC / 11-14 20:50 ET)
+- State: Lead confirmed SIZESTOP choices + my three asks; Builder implemented all three (name-day null, fav[i_s+1:], daily.parquet OHLC, 227 dividend rates split-adjusted). Observer: FAMC snapshot coverage 15/19 (14/15 since 10-27), missingness = job timing. Scout: ICCSET on LR8 basis, ICC 0.196 -> 0.201.
+- Did: pre-run audit of FWDCAL fresh (frozen command in roles/builder.md; book cache keyed by flags = ok). Found journals only hold exited trades and EOD pushes land up to 16:06 (Gen 16:03 had 324 vs 326 at 16:06 on 11-13), so a 16:05 run can score a partial live day. Asked for a >= 16:30 start + commit-time asserts. Checklist #40.
+- Next: Monday: FWDCAL fresh (check the guard + per-account counts) -> MOMSIDE -> SIZESTOP.

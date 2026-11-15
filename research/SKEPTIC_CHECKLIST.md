@@ -90,3 +90,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 39. **Bins that are subsets of marks / trades: pool, don't average per-day bin means.** A day with 1-2 marks in a bin gets full
     weight in a day-mean of bin means (Simpson). Use mean = sum over days / count over days, SE from per-day residual sums
     (ratio estimator, day-clustered). (COMPCAL950 check: false +0.069 calibration gap at t 4.4 -> pooled +0.031, t 1.6.)
+40. **'After the close' is not 16:05.** Live trades are written to journal.db only on exit, and EOD flatten pushes land up to
+    ~16:06 (11-13: Gen 16:06, Graveyard 16:05; usual 15:55-15:59). Scripts reading the same day's journals start >= 16:30 ET and
+    assert each account's last journal commit is from that session and >= 10 min old; 'exit is not null' cannot catch a
+    partial day. (FWDCAL fresh-run guard.)
