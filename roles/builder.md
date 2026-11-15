@@ -98,6 +98,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-15 10:40: research/guild_read.py (read_1min / read_daily, block predicate + assert) posted; famc_shadow verified identical
+  on 11-12 and moved onto it. New readers use guild_read. Monday queue unchanged.
 - 11-15 08:40: checklist 43: research/builder_blockguard.py wired into dl.py / append_day / momside fetch / fetch_div / mirror.
   My caches block-free. Asked Lead about data/cache_hist (MCF recipe holds block bars; readers filter). Monday queue unchanged.
 - 11-15 06:40: half-day sessions (2025-07-03 / 11-28 / 12-24) dropped in MOMSIDE (A4), SIZESTOP (A2), DIPTURN (A2) before any

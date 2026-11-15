@@ -97,12 +97,9 @@ def main():
     # (the 1-min store holds the locked block). Same rows as before for D1, so the frozen shadow's logic is unchanged.
     _d0 = pd.Timestamp(D1, tz="America/New_York"); _d1 = _d0 + pd.Timedelta(days=1)
     assert not (pd.Timestamp("2024-11-01").date() <= D1 <= pd.Timestamp("2025-02-28").date()), "session inside the locked block"
+    import sys as _s; _s.path.insert(0, str(HERE.parent)); import guild_read as GR      # shared block-safe reader (Lead 11-15)
     def _read_day(p):
-        ix = "__index_level_0__"
-        df = pds.dataset(str(p), format="parquet").to_table(filter=(pds.field(ix) >= _d0) & (pds.field(ix) < _d1)).to_pandas()
-        df = df.set_index(ix) if ix in df.columns else df
-        assert not ((df.index >= pd.Timestamp("2024-11-01", tz="America/New_York")) & (df.index < pd.Timestamp("2025-03-01", tz="America/New_York"))).any()
-        return df
+        return GR.read_1min(Path(p).stem, str(D1), str(D1))
     def m1(sym):
         p = ROOT / "data/cache_hist/1Min" / f"{sym}.parquet"
         if not p.exists(): return None
