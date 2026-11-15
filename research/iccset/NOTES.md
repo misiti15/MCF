@@ -61,3 +61,12 @@ Out-of-time test on 50 setups: ICC from 10-20..10-31 predicting ICC on 11-03..11
   0.40 [0.30, 0.52]; GEN 0.19 [0.06, 0.35] (4 setups); other 0.38 [0.25, 0.51] (3).
 **For the 11-18 table: keep ICCSET-2 (each setup shrunk toward the pooled 0.19 by its own se).** Footnote: heat / exhaustion
 setups run high in both halves. ICC moves with the market regime, so refresh it on 11-18 rather than carrying today's values.
+
+## LR8 basis wired in (2026-11-14 19:30 ET; for the 11-18 refresh)
+iccset.py takes an optional third argument: the CSV from `scripts/recompute_pnl_adj.py` run on the same journals (read-only).
+Then R = r_lr8 for every trade (one cost basis, checklist 37). Dry run on the 11-11 journals: matched 100% of 19,639 trades
+(raw -0.110R, booked -0.132R, LR8 -0.170R per trade). ICC median 0.196 -> 0.201, quartiles almost unchanged, so the cost basis
+barely moves ICC (as expected: a near-uniform shift). iccset_setups.csv / iccset_shrunk.csv in this folder are now the LR8-basis
+versions (10-20..11-11). 11-18 command:
+  python3 scripts/recompute_pnl_adj.py --journal <each fresh journal> --out <scratch>/lr8_all.csv
+  python3 -I research/iccset/iccset.py <journal dir> <spy_daily.csv> <scratch>/lr8_all.csv && python3 -I research/iccset/shrink.py iccset_setups.csv

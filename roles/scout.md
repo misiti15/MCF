@@ -135,10 +135,12 @@
   (VALID 0.129 vs 0.124, t 0.54); better after 14:00. Display option for the owner's COMPCAL decision.
 - Run 47 (11-14 17:30 ET) REPS1b re-checked under checklist #39 (pooled ratio, clustered SE): low-rep borrow t -2.38 -> -0.22,
   Gen BP 1.71 -> 2.28, twin -1.33 -> -2.30; conclusions unchanged. Lesson: never average per-day bin means.
+- Run 48 (11-14 19:30 ET) 11-18 staging: iccset.py takes the LR8 CSV (recompute_pnl_adj.py); 100% match; ICC 0.196 -> 0.201.
+  Agreed Builder's SIZESTOP choices.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
-- 11-18: refresh ICCSET on the LR8 basis (scripts/recompute_pnl_adj.py on pre-11-12 trades; say so in the header) beside REPS3.
+- 11-18 after close: refresh journals (git show origin/mcf-data*:journal.db incl. testingd/e/f), run REPS3 score.py, then the ICCSET LR8 commands in research/iccset/NOTES.md (end); header: 'LR8 basis, all trades'.
 - Score REPS3 on 11-18 after close: `python3 -I research/reps3/score.py <fresh journal dir> research/reps3/forecast_setups.csv` (refresh journals via git show origin/mcf-data*:journal.db, incl. testingd/e/f).
 - P1 (live reps) until further notice; new direction pilots paused (NEWSMID scoring on 11-12 only if Lead re-opens pilots).
 - REPS next: per-setup expected setup-days/week for candidates to rotate in (lab signal-day rate x live parity) once the bench

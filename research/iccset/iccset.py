@@ -2,15 +2,23 @@
 Live paper trades 10-20..11-11, 7 journals, net R (pnl_adj / risk). Per setup with >= 40 trades on >= 8 days: one-way random-effects
 ICC(1) with day as the group (ANOVA estimator, unbalanced k0); n_eff = n / (1 + (m - 1) x ICC), m = mean trades per day.
 Also: ICC vs the setup's market beta (daily mean R on SPY o->c, from BOTHDAYS' SPY file) and vs trades/day.
-    python -I iccset.py <journal dir> <spy_daily.csv>        Educational only - not financial advice."""
+    python -I iccset.py <journal dir> <spy_daily.csv> [lr8.csv]        Educational only - not financial advice.
+Optional lr8.csv (scripts/recompute_pnl_adj.py output for the same journals): R is then r_lr8 for EVERY trade (one cost basis,
+checklist 37 / Lead 11-14), matched on journal file name + date + symbol + strategy + entry."""
 import sys, glob, os, sqlite3, numpy as np, pandas as pd
 R = []
 for p in sorted(glob.glob(f"{sys.argv[1]}/mcf-data*.db")):
     if os.path.getsize(p) == 0: continue
     c = sqlite3.connect(p); pid = ",".join(str(r[0]) for r in c.execute("select id from runs where kind='paper'"))
-    t = pd.read_sql(f"select strategy, date, side, entry, stop, shares, pnl_adj from trades where run_id in ({pid}) and pnl_adj is not null "
+    t = pd.read_sql(f"select strategy, date, symbol, side, entry, stop, shares, pnl_adj from trades where run_id in ({pid}) and pnl_adj is not null "
                     f"and date >= '2026-10-20' and date <= '2026-11-11'", c); t["acct"] = os.path.basename(p)[:-3]; R.append(t)
 T = pd.concat(R, ignore_index=True); T["risk"] = (T.entry - T.stop).abs() * T.shares; T = T[T.risk > 0]; T["R"] = T.pnl_adj / T.risk
+if len(sys.argv) > 3:                                      # LR8 basis for every trade
+    L8 = pd.read_csv(sys.argv[3]); L8["acct"] = L8.journal.map(lambda j: os.path.basename(j)[:-3])
+    key = ["acct", "date", "symbol", "strategy"]; L8["e"] = L8.entry.round(4); T["e"] = T.entry.round(4)
+    T = T.merge(L8[key + ["e", "r_lr8"]].drop_duplicates(key + ["e"]), on=key + ["e"], how="left")
+    print(f"LR8 basis: matched {T.r_lr8.notna().mean():.1%} of trades; unmatched dropped")
+    T = T.dropna(subset=["r_lr8"]); T["R"] = T.r_lr8
 T["R"] = T.R.clip(-3, 6)                                   # winsorise a few extreme fills so one trade does not drive an ICC
 def icc1(g):
     d = g.groupby("date").R; n_i = d.size(); k = len(n_i); N = n_i.sum()
