@@ -347,3 +347,11 @@ DIPTURN Amendment 1 (tod >= 955, MDE printed). Wrote research/OBSERVER_MDE.md fo
 reproduced independently (VALID 67 DT / 59 PF). Scout IMOM (Gao et al. 2018 market intraday momentum) FAIL with good
 power (MDE80 ~3bps): consistent with post-publication decay. MOMSIDE-LIVE Amendment 4: MDE column; still gated.
 **Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.
+
+## Run 54 — 2026-11-15 ~05:40 ET
+**Learned**: checklist #42 (half days: drop early-close sessions / require RTH volume). Applying it exposed my own rule-19
+slip: the UPDAY-NULL / LATEDIP index cache started 2024-11-01 and read the locked block (80 sessions). Descriptive only, nothing
+fitted; now rebuilt without block + half days, fetch guarded (start >= 2025-03-01). Clean rerun: conclusions unchanged.
+**Failed**: fetched history without checking the locked-block window. Rule: every data fetch states its window against
+2024-11-01..2025-02-28 and asserts no block dates, before any computation.
+**Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.

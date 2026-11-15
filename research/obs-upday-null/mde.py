@@ -3,7 +3,8 @@
 Same data as upnull.py. Educational only - not financial advice."""
 import pandas as pd, numpy as np
 from pathlib import Path
-C = Path(__file__).with_name("cache")
+import os
+C = Path(os.environ.get("UPNULL_CACHE", Path(__file__).with_name("cache")))
 for sym in ["SPY", "QQQ"]:
     d = pd.read_parquet(C / f"{sym}_1m.parquet"); d = d[(d.t.dt.time >= pd.Timestamp("09:30").time()) & (d.t.dt.time < pd.Timestamp("16:00").time())].copy()
     d["day"] = d.t.dt.date; d["hm"] = d.t.dt.strftime("%H:%M"); g = d.groupby("day")

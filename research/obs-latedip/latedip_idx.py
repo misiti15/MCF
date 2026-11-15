@@ -7,7 +7,8 @@ minute, all other days (unconditional late-day drift). Day-level stats (one trad
 one pre-set threshold (setup's own, scaled). Educational only - not financial advice."""
 import pandas as pd, numpy as np
 from pathlib import Path
-C = Path(__file__).parents[1] / "obs-upday-null" / "cache"
+import os
+C = Path(os.environ.get("UPNULL_CACHE", Path(__file__).parents[1] / "obs-upday-null" / "cache"))
 def tstat(x): x = np.asarray(x, float); return x.mean() / (x.std(ddof=1) / np.sqrt(len(x))) if len(x) > 2 else np.nan
 for u in ["SPY", "QQQ", "IWM"]:
     d = pd.read_parquet(C / f"{u}_1m.parquet"); d = d[(d.t.dt.time >= pd.Timestamp("09:30").time()) & (d.t.dt.time < pd.Timestamp("16:00").time())]

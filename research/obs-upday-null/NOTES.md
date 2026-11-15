@@ -30,3 +30,15 @@ The +5..+8bps point estimates seen are far below those bars. Correct reading: 'n
 small effects (~5-10bps SPY) are unknown and cannot be resolved from index data in useful time'. My posts said 'a 3x ETF
 triples ~0'; the honest version is 'triples something small and unknown, likely below costs'. Live ETF trades (OBS-ETFLIVE)
 and ETFTIER (net negative) are consistent with small-or-zero; they do not prove zero.
+
+## CORRECTION (11-15 ~06:00 ET): locked block read + half days (checklists 19 and #42)
+My 2y SPY/QQQ/IWM minute cache was fetched from 2024-11-01, so it INCLUDED the locked block (2024-11-01..2025-02-28, 80 sessions)
+and the half days (2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; after-hours prints after 13:00). Rule 19 says the
+block is never read. Used only for these descriptive index tables (UPDAY-NULL, its MDE, LATEDIP index analog); no setup, config or
+selection was fitted on it, and nothing was scored on the block as a holdout. But the block's index path is now seen by me: any
+future study that uses the block as its locked holdout for INDEX/market-state questions should note Observer has seen SPY/QQQ/IWM
+minute bars there. Fixes: local cache rebuilt WITHOUT block and half days (asserted); upnull.py refuses start < 2025-03-01.
+Clean rerun (426 sessions, 2025-03-04..2026-11-13; *_clean_out.txt): up days SPY 54.5%; sign-so-far right 70.0% at 09:31, 80.8% at
+11:00 (QQQ 73.9 / 84.0%); rest-of-day: no cell |t| >= 2 (largest QQQ 11:00 '-0.5..0' +11.2bps t +1.88); MDE all days 10-11bps.
+LATEDIP index analog: SPY n 43 +5.9bps (t 0.69), QQQ n 82 +5.7 (t 0.84), IWM n 87 -1.1 (t -0.19); TRAIN/VALID signs disagree.
+All conclusions unchanged ('no large continuation / no index late-dip rebound; small unknown').

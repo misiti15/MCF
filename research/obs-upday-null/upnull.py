@@ -6,10 +6,12 @@ Educational only - not financial advice. usage (MCF checkout): python ../guild/r
 import os, time, requests, pandas as pd, numpy as np
 from pathlib import Path
 H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}
-OUT = Path(__file__).with_name("cache"); OUT.mkdir(exist_ok=True)
-def bars(sym, start="2024-11-01", end="2026-11-14"):
+import os
+OUT = Path(os.environ.get("UPNULL_CACHE", Path(__file__).with_name("cache"))); OUT.mkdir(exist_ok=True)
+def bars(sym, start="2025-03-01", end="2026-11-14"):
     f = OUT / f"{sym}_1m.parquet"
     if f.exists(): return pd.read_parquet(f)
+    assert start >= "2025-03-01", "rule 19: never request the locked block (2024-11-01..2025-02-28)"
     p = {"timeframe": "1Min", "start": start, "end": end, "feed": "sip", "adjustment": "split", "limit": 10000}; rows = []
     while True:
         r = requests.get(f"https://data.alpaca.markets/v2/stocks/{sym}/bars", headers=H, params=p, timeout=60)
