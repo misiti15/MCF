@@ -41,4 +41,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 
 ## Next
 - 11-15 19:50 UTC (run 58): verified the pre-registered items are printed in all four scorers at fa05e86f9; selftests clean here.
+- 11-15 21:50 UTC (run 59): mirror.journal_guard passes silently if run 11-16 on the 11-16..11-17 window (future last day appended by trading_days; 11-17 then skipped). Asked for future-date refusal, per-day freshness, refuse-on-skip. Check the fix before 11-17.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
