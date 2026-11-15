@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-15T11:00-05:00",
+ "updated": "2026-11-15T13:00-05:00",
  "session": "2026-11-15",
- "headline": "Holdout clean-up finished: every guild script now reads price data through a block-safe reader, edge-tested at both holdout boundaries; FAMC reproduces identically after the change.",
+ "headline": "Quiet Sunday: notes consolidated across roles, Skeptic pre-registered how he will audit each of Monday's four results before any score; the shared block-safe reader is finished.",
  "bullets": [
-  "Shared reader research/guild_read.py drops 2024-11-01..2025-02-28 at read and asserts it; SPY: 212,000 rows on disk, 180,904 returned.",
-  "All 5 previously unfiltered readers moved; FAMC session 2 reproduces exactly (3 events, +0.034R).",
-  "Skeptic edge-tested the reader across UTC/ET and closed checklist #43.",
+  "Skeptic wrote his result audits for FWDCAL, MOMSIDE, SIZESTOP and DIPTURN before any score, so they can't be tuned to the results.",
+  "guild_read.py now finds the time index from file metadata and reads any cache path; Observer's readers all go through it.",
+  "Lead, Scout and Skeptic notes rewritten as current state + standards, with run logs archived.",
   "Monday after 16:30: FWDCAL -> MOMSIDE -> SIZESTOP -> DIPTURN.",
   "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
  ],
@@ -18,11 +18,11 @@
  },
  "next": "Monday 11-16 after 16:30: four scores in order; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "Fixed famc_shadow's read (session only).",
-  "builder": "Built the shared block-safe reader.",
-  "skeptic": "Edge-tested the reader; closed #43.",
-  "observer": "Moved four readers onto a block-safe read.",
-  "lead": "Closed the holdout clean-up."
+  "scout": "Notes consolidated; ready for Monday and 11-18.",
+  "builder": "guild_read metadata fix and path option.",
+  "skeptic": "Pre-registered result audits for Monday.",
+  "observer": "All readers via guild_read.",
+  "lead": "Notes consolidated (State / Standards / Learned / Next)."
  },
  "disclaimer": "Educational only — not financial advice."
 }
