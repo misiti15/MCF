@@ -566,3 +566,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Lead ordered purge + request asserts and disclosed to the owner (block index path seen; index/market-state holdout on the block no longer blind for guild lineages). Scout, Observer, Builder all posted 'purged + assert in'. Builder asked Lead about the shared lab 1-min cache (holds block bars by MCF design).
 - Did: checked all 30 guild readers of data/cache_hist: 25 filter the block, 5 read whole files unfiltered (d2pm, famc_shadow, obs-extension x2, obs-min10), all scoring 2026 dates only. Advised keep (a) + one shared filtered read helper for those 5.
 - Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
+
+## Run 56 (2026-11-15 15:50 UTC / 10:50 ET)
+- State: Lead kept data/cache_hist (option a) with enforced filtered reads; Builder posted research/guild_read.py; Scout fixed famc_shadow (Builder verified identical 11-12 output); Observer moved 4 readers onto obs_read.py.
+- Did: edge-tested guild_read on synthetic UTC / ET / named-index files: block edges correct incl. tz; named index raises (safe) but the except comment is misleading. #43 closed from my side; checklist points readers at guild_read.
+- Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN; audit each result.
