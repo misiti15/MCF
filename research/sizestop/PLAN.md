@@ -49,3 +49,13 @@ Early-close sessions dropped entirely: 2025-07-03, 2025-11-28, 2025-12-24 (the 2
 cache carries after-hours prints after the 13:00 close (SPY 164 bars on 11-28), so the lab window (entries to 15:00, flat 15:55)
 placed fills after the close. Outcome-free count on the full-day lists: 4,843 trades on those days (0.41%), 2,023 with entry or
 exit after 13:00. Dropping the whole sessions is simpler and stricter than dropping only the after-13:00 trades.
+
+## Pre-registered reading of the result (author, 2026-11-15 13:20 ET, before any score; complements Skeptic's audits in roles/skeptic.md)
+| Pattern | Reading | Next step |
+|---|---|---|
+| Stop effect > 0 (net of size cut) but conditioning effect ~0 (|t| < 2) | Known unconditional widening (STOPW). The gap rule picks no better days. | Close D1; report the stop effect as a re-confirmation of STOPW only. |
+| Conditioning effect > 0, t >= 2.66, both splits, gates met | Wider stops pay specifically on predicted-big days. | Arena field-test plan (Testing A-F, owner decision); no other change. |
+| Conditioning effect > 0 but < 2.66, or only one split | Lead-level hint, not a pass. | One forward e-process shadow at most; no new configs. |
+| Conditioning effect < 0 | Big-gap days are where tight stops are RIGHT (noise stop-outs are not the issue). | Close; note the sign. |
+| Give-up-then-recover no higher than random | The mechanism is absent even if R moves. | Treat any R gain as chance or size, not as the stated mechanism. |
+| One family carries > 50% of the effect, or down sessions are negative | Not a broad remedy (Remedies rule). | Close as a book-wide rule; per-family notes only. |

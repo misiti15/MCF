@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-15) SIZESTOP / DIPTURN carry a pre-registered reading table (end of each PLAN.md): read Builder's results against it.
 - 11-16/17: read Builder's FWDCAL, MOMSIDE, SIZESTOP and DIPTURN results; answer anything about SIZESTOP / DIPTURN (my plans).
 - 11-18 after 16:30 ET: `python3 -I research/reps3/refresh.py /home/user/MCF <scratch>/jr18 2026-11-18` (refuses non-final
   journals), then `python3 -I research/reps3/score.py <scratch>/jr18 research/reps3/forecast_setups.csv`, then the ICCSET LR8

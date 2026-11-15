@@ -42,3 +42,14 @@ Early-close sessions dropped entirely: 2025-07-03, 2025-11-28, 2025-12-24 (the 2
 cache carries after-hours prints after the 13:00 close (SPY 164 bars on 11-28), so the lab window (entries to 15:00, flat 15:55)
 placed fills after the close. Outcome-free count on the full-day lists: 4,843 trades on those days (0.41%), 2,023 with entry or
 exit after 13:00. Dropping the whole sessions is simpler and stricter than dropping only the after-13:00 trades.
+
+## Pre-registered reading of the result (author, 2026-11-15 13:20 ET, before any score; complements Skeptic's audits in roles/skeptic.md)
+| Pattern | Reading | Next step |
+|---|---|---|
+| C1 excess ~0 (inside +-MDE) | The owner's dip-then-turn morning does not help long setups. Say 'nothing above X R'. | Close; give the owner the MDE line. |
+| C1 excess > 0 but it equals beta x SPY 09:50->close on those days (ex-market ~0) | Index direction, not selection: the same as ANCHOR950's +6bps. | Close; the index part is already reported. |
+| C1 ex-market excess > 0, t >= 3.57, VALID + TRAIN, >= 60% setups better | Long setups do better on dip-then-turn mornings beyond beta. | Arena field-test plan for a long-only 'DT-day' tag (owner decision). |
+| C1 > 0 below the bar but positive in every split | Hint only. | Forward e-process shadow tagging DT days live; no new configs. |
+| C2 (shorts on pop-then-fade) mirrors C1 | Symmetric early-swing effect. | Report both. Any plan must name both sides. |
+| C1 < 0 (longs worse on DT days) | Consistent with REGSW-2 / RCOMPASS v2 (counter-state trades do no worse; SPY reverts toward its open). | Close; note the sign. |
+| Top-5 setups carry > 50% of the excess | Not a book-wide condition. | Per-setup notes only. |
