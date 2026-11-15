@@ -148,6 +148,8 @@
   no change. halfday_clean.py (afternoon/morning SPY volume < 0.2) for all future bar caches.
 - Run 54 (11-15 07:30 ET) checklist #43: purged scout-qp1 cache (only block-carrying cache); locked-block request guard
   (urlopen wrapper) in all 11 Scout fetch scripts; qp1 fetch split in two ranges. Any NEW fetch script: copy the guard block.
+- Run 55 (11-15 09:15 ET) famc_shadow.py reader now pyarrow-filtered to the scored session (+ asserts); other Scout cache
+  readers already filter. Switch to Builder's research/guild_read.py when posted.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).

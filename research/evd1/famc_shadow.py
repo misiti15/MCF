@@ -93,18 +93,27 @@ def main():
     live = json.load(open(a.live_earnings)); assert live.get("day") == a.date, "live earnings snapshot is for another day"
     near = set(live.get("symbols", {})) | set(cal[(pd.to_datetime(cal.report_date) - pd.Timestamp(D1)).abs().dt.days <= 6].symbol)
     cuts = tuple(np.nanquantile(T.adv20.to_numpy(float), [1 / 3, 2 / 3]))                   # adv20 terciles that day (fix 4)
+    # checklist #43 (Skeptic skeptic-20261115-1350-1): read ONLY the scored session via a pyarrow predicate, never the whole file
+    # (the 1-min store holds the locked block). Same rows as before for D1, so the frozen shadow's logic is unchanged.
+    _d0 = pd.Timestamp(D1, tz="America/New_York"); _d1 = _d0 + pd.Timedelta(days=1)
+    assert not (pd.Timestamp("2024-11-01").date() <= D1 <= pd.Timestamp("2025-02-28").date()), "session inside the locked block"
+    def _read_day(p):
+        ix = "__index_level_0__"
+        df = pds.dataset(str(p), format="parquet").to_table(filter=(pds.field(ix) >= _d0) & (pds.field(ix) < _d1)).to_pandas()
+        df = df.set_index(ix) if ix in df.columns else df
+        assert not ((df.index >= pd.Timestamp("2024-11-01", tz="America/New_York")) & (df.index < pd.Timestamp("2025-03-01", tz="America/New_York"))).any()
+        return df
     def m1(sym):
         p = ROOT / "data/cache_hist/1Min" / f"{sym}.parquet"
         if not p.exists(): return None
-        df = pds.dataset(str(p), format="parquet").to_table().to_pandas()
+        df = _read_day(p)
         ix = "__index_level_0__"; df = df.set_index(ix) if ix in df.columns else df
         df = df[df.index.date == D1]; mm = df.index.hour * 60 + df.index.minute
         x = df[(mm >= 591) & (mm <= 955)][["open", "high", "low", "close"]]; x.columns = list("ohlc"); return x
     def day_gap(sym):
         p = ROOT / "data/cache_hist/1Min" / f"{sym}.parquet"
         if sym not in T.index or not p.exists(): return None
-        df = pds.dataset(str(p), format="parquet").to_table().to_pandas(); ix = "__index_level_0__"
-        df = df.set_index(ix) if ix in df.columns else df; df = df[df.index.date == D1]; mm = df.index.hour * 60 + df.index.minute
+        df = _read_day(p); df = df[df.index.date == D1]; mm = df.index.hour * 60 + df.index.minute
         o = df[mm == 570]
         return float(o.open.iloc[0]) / float(T.loc[sym, "pc"]) - 1 if len(o) else None
     spy = m1("SPY"); assert spy is not None and len(spy), "no SPY bars for the session"
