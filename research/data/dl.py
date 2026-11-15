@@ -7,14 +7,18 @@ sys.path.insert(0, "/home/user/MCF/research/history2y")
 import download as D
 D.STOP_UTC = datetime(2026, 11, 10, 12, 30, tzinfo=timezone.utc)
 a_start, a_end, workers, symf = sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4]
+sys.path.insert(0, "/home/user/guild/research"); import builder_blockguard as BG   # checklist 43: never request the block
+RANGES = BG.split(a_start, a_end)
 syms = Path(symf).read_text().split()
 D.OUT.mkdir(parents=True, exist_ok=True)
 t0 = time.time(); done = 0; failed = []
-args = {"start": f"{a_start}T00:00:00Z", "end": f"{a_end}T00:00:00Z"}
-with mp.get_context("fork").Pool(workers, initializer=D._init, initargs=(args,)) as pool:
-    for sym, status, n in pool.imap_unordered(D.fetch, syms):
-        done += 1
-        if status.startswith("failed") or status in ("empty", "stopped"): failed.append(f"{sym}\t{status}")
-        if done % 100 == 0: print(f"{done}/{len(syms)} ({time.time()-t0:.0f}s)", flush=True)
+for a_s, a_e in RANGES:
+    BG.check(a_s, a_e)
+    args = {"start": f"{a_s}T00:00:00Z", "end": f"{a_e}T23:59:59Z"}
+    with mp.get_context("fork").Pool(workers, initializer=D._init, initargs=(args,)) as pool:
+        for sym, status, n in pool.imap_unordered(D.fetch, syms):
+            done += 1
+            if status.startswith("failed") or status in ("empty", "stopped"): failed.append(f"{sym}\t{a_s}\t{status}")
+            if done % 100 == 0: print(f"{done}/{len(syms) * len(RANGES)} ({time.time()-t0:.0f}s)", flush=True)
 (D.OUT / "failed.txt").write_text("\n".join(failed) + ("\n" if failed else ""))
 print(f"finished {done} symbols, {len(failed)} not ok, {time.time()-t0:.0f}s", flush=True)

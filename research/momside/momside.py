@@ -99,7 +99,9 @@ def fetch():
     sess = requests.Session()
     sess.headers.update({"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]})
     rows = []
+    sys.path.insert(0, str(R)); import builder_blockguard as BG                     # checklist 43
     for a, b in (("2023-09-01", "2024-10-31"), ("2025-03-01", "2026-11-13")):
+        BG.check(a, b)
         for i in range(0, len(syms), 100):
             params = {"symbols": ",".join(syms[i:i + 100]), "timeframe": "1Day", "start": a, "end": b, "feed": "sip",
                       "adjustment": "split", "limit": 10000}

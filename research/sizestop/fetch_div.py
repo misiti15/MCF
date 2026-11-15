@@ -11,7 +11,9 @@ HERE = Path(__file__).resolve().parent
 syms = sorted(set(Path("/home/user/MCF/research/lab_symbols.txt").read_text().split()))
 H = {"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]}
 rows, splits = [], []
+import sys; sys.path.insert(0, str(HERE.parent)); import builder_blockguard as BG          # checklist 43
 for a, b in (("2024-09-01", "2024-10-31"), ("2025-03-01", "2026-11-13")):
+    BG.check(a, b)
     for i in range(0, len(syms), 50):
         tok = None
         while True:

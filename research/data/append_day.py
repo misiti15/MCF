@@ -17,6 +17,7 @@ D = pd.Timestamp(sys.argv[1]).date()
 assert not (730 <= hm < 1605), "refusing: 07:30-16:05 ET (live job's rate budget)"
 assert D <= now.date() and not (D == now.date() and hm < 1605), "day not closed yet"
 assert not (pd.Timestamp("2024-11-01").date() <= D <= pd.Timestamp("2025-02-28").date()), "locked block"
+sys.path.insert(0, "/home/user/guild/research"); import builder_blockguard as BG; BG.check(str(D), str(D))   # checklist 43
 syms = (ROOT / "research/lab_symbols.txt").read_text().split()
 sess = requests.Session(); sess.headers.update({"APCA-API-KEY-ID": os.environ["ALPACA_API_KEY"], "APCA-API-SECRET-KEY": os.environ["ALPACA_SECRET_KEY"]})
 start = pd.Timestamp(f"{D} 09:30", tz=NY).tz_convert("UTC").isoformat(); end = pd.Timestamp(f"{D} 16:00", tz=NY).tz_convert("UTC").isoformat()

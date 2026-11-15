@@ -98,6 +98,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-15 08:40: checklist 43: research/builder_blockguard.py wired into dl.py / append_day / momside fetch / fetch_div / mirror.
+  My caches block-free. Asked Lead about data/cache_hist (MCF recipe holds block bars; readers filter). Monday queue unchanged.
 - 11-15 06:40: half-day sessions (2025-07-03 / 11-28 / 12-24) dropped in MOMSIDE (A4), SIZESTOP (A2), DIPTURN (A2) before any
   score (checklist 42). UPDAY-LONG rerun w/o them: unchanged. Monday queue unchanged.
 - 11-15 02:45: DIPTURN scorer written (dipturn.py --score; needs momside/data/trades_full.parquet). MDE columns in MOMSIDE /

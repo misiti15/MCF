@@ -687,6 +687,9 @@ def main():
         sys.exit("fwdcal: --fetch refused during market hours")
     RUN.git("fetch", "-q", "origin", *RUN.BRANCH.values())
     days = RUN.trading_days(*a.dates.split(".."))
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent)); import builder_blockguard as BG
+    for d in days:
+        BG.check(d, d)                    # checklist 43 (the priors' lookback for 2026 days never reaches the block)
     journal_guard(days, a.accounts.split(","))
     ok = []
     for d in days:
