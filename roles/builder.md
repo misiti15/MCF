@@ -3,6 +3,7 @@
 Educational only — not financial advice.
 
 ## State (2026-11-15, quiet Sunday)
+- Readiness: `python research/check_monday.py` (outcome-free) -> READY on 11-15 16:30 ET; rerun it first on Monday.
 - MONDAY 11-17 >= 16:30 ET, in order, one look each, results posted failures first (Lead):
   1. FWDCAL fresh 11-16..11-17: `cd research/fwdcal && python mirror.py --dates 2026-11-16..2026-11-17 --delay 0 --quotes
      --stopslip-max --fetch --jobs 4 --tag _fresh2` (re-deepen data branches first: `git fetch -q --shallow-since=2026-11-02
