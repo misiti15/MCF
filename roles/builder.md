@@ -97,6 +97,8 @@
 - OD0950 (09:50 continuation, control -0.10R in every decile), GATE2 8 setup configs, SC2 12, SC1 8, NH1 8: 0 pass.
 
 ## Next
+- 11-14 20:40: SIZESTOP Skeptic asks done (name-day null draws, recover from i_s+1, load_daily() named input + split-adjusted
+  dividends: sizestop/data/cash_div.parquet rate_adj, splits.parquet). Still TODO pre-score: main() per-symbol loop.
 - 11-14 16:40: MOMSIDE Amendment 3 (top-5 share reporting). SIZESTOP inputs: sizestop/data/cash_div.parquet (fetch_div.py);
   engine bereplay + stopw/stopw_sizectl.py; GEN hold lists scratchpad/hold/bt (rebuild via bereplay/bt_hold.py if fresh).
   SIZESTOP scorer core written (sizestop.py: leg/walk_ix, size_quintiles, cond_effect, null_draws; selftest ok). TODO before

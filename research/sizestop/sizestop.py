@@ -33,7 +33,7 @@ def walk_ix(o, h, l, c, e, s, D, U, trail=False):
     hit = (l <= lev) if s > 0 else (h >= lev)
     i_s = SW.first(hit); i_t = SW.first(fav >= U) if np.isfinite(U) else 10 ** 9
     if i_s <= i_t and i_s < n:
-        rec = bool(np.isfinite(U) and (fav[i_s:] >= U).any())           # stopped, then the target price traded later
+        rec = bool(np.isfinite(U) and (fav[i_s + 1:] >= U).any())       # stopped, then the target traded in a LATER minute (Skeptic)
         return (o[i_s] if s * (o[i_s] - lev[i_s]) <= 0 else lev[i_s]), 1, i_s, rec
     if i_t < n: return e + s * U, 2, i_t, False
     return c[-1], 0, n - 1, False
@@ -48,7 +48,8 @@ def leg(o, h, l, c, e, s, D, U, trail, tier, ecost):
 def size_quintiles(daily, div):
     """(date, symbol) -> quintile 1-5 of g across all lab names that day; NaN where undefined (first sessions after the gap)."""
     d = daily.sort_values(["symbol", "date"]).copy()
-    d = d.merge(div.rename(columns={"rate": "div"})[["symbol", "date", "div"]], on=["symbol", "date"], how="left")
+    col = "rate_adj" if "rate_adj" in div.columns else "rate"            # split-adjusted dividend (Skeptic 11-14 18:50)
+    d = d.merge(div.rename(columns={col: "div"})[["symbol", "date", "div"]], on=["symbol", "date"], how="left")
     d["div"] = d["div"].fillna(0.0)
     g_ = d.groupby("symbol")
     pc = g_.close.shift(1); gapd = (pd.to_datetime(d.date) - pd.to_datetime(g_.date.shift(1))).dt.days
@@ -76,17 +77,28 @@ def cond_effect(T, eff, rule):
 
 
 def null_draws(T, eff, rule, rng):
-    st = (T.setup + "|" + T.date.str[:7]).to_numpy(); idx = pd.Series(range(len(T))).groupby(st)
-    ks = pd.Series(rule.astype(int)).groupby(st).sum()
+    """200 draws of NAME-DAYS (not trades; checklist 31, Skeptic): within each setup x month stratum pick as many of the
+    stratum's name-days as the rule widens, and widen every trade of that setup on them. Returns the drawn effect sums."""
+    st = (T.setup + "|" + T.date.str[:7]).to_numpy(); nd = (T.symbol.astype(str) + "|" + T.date).to_numpy()
+    df = pd.DataFrame(dict(st=st, nd=nd, eff=eff, rule=rule))
+    per = df.groupby(["st", "nd"]).agg(eff=("eff", "sum"), rule=("rule", "max")).reset_index()
+    groups = {s: (g.eff.to_numpy(), int(g.rule.sum())) for s, g in per.groupby("st")}
     out = np.empty(NDRAW)
-    groups = {s: g.to_numpy() for s, g in idx}
     for b in range(NDRAW):
-        tot = 0.0
-        for s, kk in ks.items():
-            if kk:
-                tot += eff[rng.choice(groups[s], kk, replace=False)].sum()
-        out[b] = tot
+        out[b] = sum(e[rng.choice(len(e), k, replace=False)].sum() for e, k in groups.values() if k)
     return out
+
+
+def load_daily():
+    """Named OHLC daily input (Skeptic ask 3): research/history2y/data/daily.parquet (lab list, Alpaca SIP, split-adjusted),
+    locked block filtered OUT at read with a pyarrow predicate (rule 19)."""
+    import pyarrow.dataset as pds, datetime as dt
+    t = pds.dataset(str(ROOT / "research/history2y/data/daily.parquet"), format="parquet")
+    f = (pds.field("date") < dt.date(2024, 11, 1)) | (pds.field("date") > dt.date(2025, 2, 28))
+    d = t.to_table(filter=f, columns=["symbol", "date", "open", "high", "low", "close"]).to_pandas()
+    d["date"] = pd.to_datetime(d.date).dt.strftime("%Y-%m-%d"); d["symbol"] = d.symbol.astype(str)
+    assert not ((d.date >= LB0) & (d.date <= LB1)).any()
+    return d
 
 
 def selftest():
@@ -99,6 +111,10 @@ def selftest():
         days, t = cond_effect(T, eff, rule)
         print(f"selftest conditioning planted {planted}: effect {days.sum():+.1f} t {t:+.2f}")
         assert (t > 5) if planted else abs(t) < 3
+    T2 = T.assign(symbol=rng.choice([f"N{i}" for i in range(40)], n))
+    nd_rule = (T2.symbol.str[1:].astype(int) % 3 == 0).to_numpy()          # rule set at the name level
+    dr = null_draws(T2, rng.normal(0, 0.3, n), nd_rule, np.random.default_rng(5))
+    print(f"selftest name-day null: {len(dr)} draws, mean {dr.mean():+.1f}, sd {dr.std():.1f}")
     # size quintiles: gap restart and dividend add-back
     dates = [str(x.date()) for x in pd.bdate_range("2024-09-02", "2024-10-31")] + [str(x.date()) for x in pd.bdate_range("2025-03-03", "2025-04-30")]
     rows = []
