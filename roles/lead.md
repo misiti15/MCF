@@ -211,6 +211,9 @@
 ## Run 47 (19:00 ET 11-14)
 - SIZESTOP choices confirmed + Skeptic's 3 fixes. #39 rechecks: nothing changed. Monday: FWDCAL -> MOMSIDE -> SIZESTOP. Then owner FYIs/DECISIONs: RULE21/replay records (D3), MOMSIDE result, 11-18 reps tables.
 
+## Run 48 (21:00 ET 11-14)
+- FWDCAL timing guard adopted (after 16:30, commit checks). Summary file 2026-11-15.md. Quiet until Monday's close.
+
 ## Next run
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.

@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-14T19:00-05:00",
- "session": "2026-11-14",
- "headline": "Weekend close: every plan for Monday is frozen and audited (replay audit, MOMSIDE, SIZESTOP); the team re-checked its own past statistics under the new binning rule and no conclusion changed.",
+ "updated": "2026-11-14T21:00-05:00",
+ "session": "2026-11-15",
+ "headline": "Ready for Monday: replay audit gets a journal-timing guard (start after 16:30, last commits checked), SIZESTOP has all fixes, FAMC coverage is ~90%.",
  "bullets": [
-  "Checklist #39 self-checks (Scout, Observer, Builder): estimates stand; a few t values moved (e.g. low-rep borrow skip t -2.38 -> -0.22), no ranking or decision changed.",
-  "SIZESTOP scorer written and pre-read: own-risk net R with the trade-smaller control, ATR restarted after the holdout gap; three fixes before scoring (name-day null, same-minute recovery flag, split-adjusted dividends).",
-  "MOMSIDE ready on the full-day lists with a gated live companion.",
-  "No scores this weekend; Monday after the close: replay audit -> MOMSIDE -> SIZESTOP.",
+  "FWDCAL: live journals finish pushing as late as 16:06, so the fresh run starts after 16:30 and checks each account's last commit.",
+  "SIZESTOP: name-day random control, same-minute recovery fixed, split-adjusted dividends; ready to score after MOMSIDE.",
+  "FAMC: 15 of 19 sessions pass the pre-open rule (failures = no pre-open job), so expect ~10% longer to reach 40-60 sessions.",
+  "11-18 tables staged on the LR8 cost basis (ICC barely moves: 0.196 -> 0.201).",
   "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
  ],
  "progress": {
@@ -16,13 +16,13 @@
   "passed": 0,
   "forward": 1
  },
- "next": "Monday 11-16 after the close: FWDCAL fresh audit, MOMSIDE score, SIZESTOP score; FAMC nightly; reps tables 11-18.",
+ "next": "Monday 11-16 after 16:30: FWDCAL fresh audit -> MOMSIDE -> SIZESTOP; FAMC nightly; reps tables 11-18.",
  "by_role": {
-  "scout": "Re-checked REPS1b under checklist #39.",
-  "builder": "SIZESTOP scorer core written and self-tested.",
-  "skeptic": "SIZESTOP pre-score read: three fixes.",
-  "observer": "Re-checked STOPSLIP under checklist #39.",
-  "lead": "Confirmed SIZESTOP choices; Monday order set."
+  "scout": "Staged the 11-18 ICC refresh on the LR8 basis.",
+  "builder": "SIZESTOP fixes in; scorer ready.",
+  "skeptic": "Journal-timing guard for the replay audit (checklist #40).",
+  "observer": "FAMC snapshot coverage check.",
+  "lead": "Adopted the timing guard; nothing else pending."
  },
  "disclaimer": "Educational only — not financial advice."
 }
