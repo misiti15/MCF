@@ -647,36 +647,84 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     return A
 
 
+def guard_decide(days, now, commits: dict) -> list[str]:
+    """Pure decision (testable): reasons to REFUSE, empty = ok. Skeptic 11-15 21:50 / Lead 16:58 fixes:
+    (1) refuse if the window's last date is after today; (2) freshness check when ANY window day is today: refuse before 16:30 ET
+    and unless every account's last journal.db commit is from today and >= 10 min old; a past window needs no freshness check
+    (a later commit proves the session closed). commits: acc -> pd.Timestamp (tz-aware) of the last journal.db commit, or None."""
+    td = now.tz_convert(NY).strftime("%Y-%m-%d"); out = []
+    if max(days) > td:
+        out.append(f"window ends {max(days)}, after today {td}")
+        return out
+    if td in days:
+        if now.tz_convert(NY).strftime("%H:%M") < "16:30":
+            out.append(f"window includes today ({td}); before 16:30 ET")
+        for acc, t in commits.items():
+            if t is None:
+                out.append(f"{acc}: no journal.db")
+            elif t.tz_convert(NY).strftime("%Y-%m-%d") != td or (now - t).total_seconds() / 60 < 10:
+                out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} not final for {td}")
+    return out
+
+
+def guard_selftest():
+    N = lambda x: pd.Timestamp(x, tz=NY)
+    c_ok = {"a": N("2026-11-17 16:06"), "b": N("2026-11-17 15:57")}
+    cases = [("future last date", ["2026-11-16", "2026-11-17"], N("2026-11-16 17:00"), c_ok, True),
+             ("today, before 16:30", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:20"), c_ok, True),
+             ("today, commit too fresh (< 10 min)", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 16:35")}, True),
+             ("today, stale commit (yesterday)", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-16 16:05")}, True),
+             ("one-day window today, one account stale", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 16:06"), "b": N("2026-11-16 15:57")}, True),
+             ("today, all final", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:40"), c_ok, False),
+             ("past window, later commits", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-13 16:06")}, False)]
+    for name, days, now, com, refuse in cases:
+        r = guard_decide(days, now, com)
+        assert bool(r) == refuse, (name, r)
+        print(f"guard selftest {'REFUSE' if r else 'ok    '} {name}: {r[:1]}")
+    assert skipped_refusal(["2026-11-16", "2026-11-17"], ["2026-11-16"]) and not skipped_refusal(["2026-11-16"], ["2026-11-16"])
+    assert calendar_gaps("2026-11-16", "2026-11-17", ["2026-11-17"]) == ["2026-11-16"]
+    assert calendar_gaps("2026-11-16", "2026-11-17", ["2026-11-16", "2026-11-17"]) == []
+    print("guard selftest: calendar-gap refusal ok (a missing snapshot day is caught)")
+    print("guard selftest: skipped-session refusal ok. all cases ok")
+
+
+NYSE_CLOSED = {"2026-11-26", "2026-12-25", "2027-01-01", "2027-01-18", "2027-02-15"}
+
+
+def calendar_gaps(a: str, b: str, days) -> list[str]:
+    """NYSE sessions between a and b (business days minus closures) missing from the requested days: vendor trading_days()
+    lists only sessions whose snapshot was published, so a missing snapshot would silently drop a day from the one look."""
+    exp = [str(x.date()) for x in pd.bdate_range(a, b) if str(x.date()) not in NYSE_CLOSED]
+    return [d for d in exp if d not in days]
+
+
+def skipped_refusal(days, ok) -> list[str]:
+    """(3) refuse if any requested session was skipped (no bars / priors): the one look must cover the whole window."""
+    return [d for d in days if d not in ok]
+
+
 def journal_guard(days, accs) -> None:
-    """Skeptic 11-15 01:50 / Lead 11-14 21:00 timing guard (as Scout's reps3/refresh.py): live trades enter the journal only at
-    exit, so a run right after the close can score a short live day. When the window ends on TODAY's session: refuse before
-    16:30 ET and unless every account's last journal.db commit is from that session and >= 10 minutes old. Always prints each
-    account's last journal commit and its live trade count in the window."""
-    import datetime as dt, sqlite3 as sq
-    now = pd.Timestamp.now(tz=NY); last = days[-1]; today = last == now.strftime("%Y-%m-%d"); bad = []
-    if today and now.strftime("%H:%M") < "16:30":
-        sys.exit(f"fwdcal: window ends today ({last}); refusing before 16:30 ET")
+    """Prints each account's last journal commit and live trade count for the window, then applies guard_decide."""
+    import sqlite3 as sq
+    now = pd.Timestamp.now(tz=NY); commits = {}
     for acc in accs:
         br = RUN.BRANCH[acc]
         ts = RUN.git("log", "-1", "--format=%cI", f"origin/{br}", "--", "journal.db").strip()
-        if not ts:
-            print(f"guard {acc:10s} no journal.db"); bad.append(acc); continue
-        t = pd.Timestamp(ts).tz_convert(NY); age = (now - t).total_seconds() / 60
-        raw = RUN.git("show", f"origin/{br}:journal.db", text=False); n = 0
-        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as fh:
-            fh.write(raw)
-        try:
-            c = sq.connect(fh.name); q = ",".join("?" * len(days))
-            n = c.execute(f"select count(*) from trades where run_id=1 and date in ({q})", list(days)).fetchone()[0]; c.close()
-        finally:
-            os.unlink(fh.name)
-        ok = (not today) or (t.strftime("%Y-%m-%d") == last and age >= 10)
-        print(f"guard {acc:10s} last journal commit {t:%Y-%m-%d %H:%M} ET ({age:6.0f} min ago)  live trades {days[0]}..{last}: {n}"
-              + ("" if ok else "  <-- NOT FINAL"), flush=True)
-        if not ok:
-            bad.append(acc)
-    if bad:
-        sys.exit(f"fwdcal: REFUSED, journals not final for {last}: {bad}; re-run later")
+        t = pd.Timestamp(ts).tz_convert(NY) if ts else None; commits[acc] = t; n = 0
+        if t is not None:
+            raw = RUN.git("show", f"origin/{br}:journal.db", text=False)
+            with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as fh:
+                fh.write(raw)
+            try:
+                c = sq.connect(fh.name); q = ",".join("?" * len(days))
+                n = c.execute(f"select count(*) from trades where run_id=1 and date in ({q})", list(days)).fetchone()[0]; c.close()
+            finally:
+                os.unlink(fh.name)
+        print(f"guard {acc:10s} last journal commit {('%s ET' % t.strftime('%Y-%m-%d %H:%M')) if t is not None else 'none'}"
+              f"  live trades {days[0]}..{days[-1]}: {n}", flush=True)
+    why = guard_decide(days, now, commits)
+    if why:
+        sys.exit("fwdcal: REFUSED - " + "; ".join(why))
 
 
 def main():
@@ -685,12 +733,15 @@ def main():
     ap.add_argument("--delay", type=int, default=1); ap.add_argument("--jobs", type=int, default=3)
     ap.add_argument("--fetch", action="store_true"); ap.add_argument("--audit", action="store_true")
     ap.add_argument("--tag", default="")
+    ap.add_argument("--guard-selftest", action="store_true")
     ap.add_argument("--quotes", action="store_true", help="replay the quotes live journaled (books under out/books/q<D>)")
     ap.add_argument("--live-latch", action="store_true", help="DIAGNOSTIC: halts follow live's halt / latch minutes")
     ap.add_argument("--bp", action="store_true", help="buying-power cap in the sim broker (REJECTED 11-12; kept for the record)")
     ap.add_argument("--stopslip", action="store_true", help="Observer's spread/stop stop-slip model replaces the sim stop cost")
     ap.add_argument("--stopslip-max", action="store_true", help="stop cost = max(sim cost, Observer's fit) (one look on the holdout)")
     a = ap.parse_args()
+    if a.guard_selftest:
+        guard_selftest(); return
     if a.stopslip_max:
         a.stopslip = True; SS["max"] = True
     QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp; SS["on"] = a.stopslip
@@ -701,6 +752,9 @@ def main():
         sys.exit("fwdcal: --fetch refused during market hours")
     RUN.git("fetch", "-q", "origin", *RUN.BRANCH.values())
     days = RUN.trading_days(*a.dates.split(".."))
+    gaps = calendar_gaps(*a.dates.split(".."), days)
+    if gaps and not a.audit:
+        sys.exit(f"fwdcal: REFUSED - NYSE session(s) missing from the window (no published snapshot): {gaps}")
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent)); import builder_blockguard as BG
     for d in days:
         BG.check(d, d)                    # checklist 43 (the priors' lookback for 2026 days never reaches the block)
@@ -721,6 +775,9 @@ def main():
     if a.quotes:
         QUOTES["table"] = quote_table(ok)
         print(f"fwdcal quotes: {sum(len(v) for v in QUOTES['table'].values())} logged quotes, {len(QUOTES['table'])} symbol-days", flush=True)
+    miss = skipped_refusal(days, ok)
+    if miss and not a.audit:
+        sys.exit(f"fwdcal: REFUSED - requested session(s) skipped {miss}; the one look must cover the whole window")
     jobs = [(d, acc, a.delay) for d in ok for acc in a.accounts.split(",") if not book_path(d, acc, a.delay).exists()]
     print(f"fwdcal: {len(ok)} sessions, {len(jobs)} books to run, delay {a.delay}", flush=True)
     if a.jobs > 1 and len(jobs) > 1:
