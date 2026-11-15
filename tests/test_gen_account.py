@@ -67,12 +67,13 @@ def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
 
 
 def test_other_accounts_unchanged_by_the_loader(monkeypatch):
-    for acct in ("primary", "testing", "testing2", "graveyard"):
+    for acct in ("primary", "testing", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
         assert not any(k.startswith("GEN-") for k in cfg["strategies"])
-    # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen
+    # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen;
+    # testing arena (owner 2026-11-12): Testing A-F + Gen are one arena, so Testing A (testing2) takes Gen moves too (ROT1)
     gen = _cfg(monkeypatch, "gen")["strategies"]
-    for acct in ("explore1", "livelab", "testingd", "testinge", "testingf"):
+    for acct in ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf"):
         for k, v in _cfg(monkeypatch, acct)["strategies"].items():
             if k.startswith("GEN-") and v.get("enabled"):
                 assert k in gen and not gen[k]["enabled"], (acct, k)
@@ -142,8 +143,8 @@ def test_gen_setups_have_generated_display_names():
             assert names[k]["name"].startswith("Generated: ") and names[k]["what"]
         sc = v["gen"]["screen"]
         assert {"train", "valid", "per_day"} <= set(sc)              # screen stats recorded, negative or not
-    others = set()   # GEN-GRAD graduates (testing areas B-F) keep their generated id and display name
-    for f in ("config/default.yaml", "config/account_testing.yaml", "config/account_testing2.yaml"):
+    others = set()   # GEN-GRAD graduates (testing arena A-F) keep their generated id and display name
+    for f in ("config/default.yaml", "config/account_testing.yaml"):
         others |= set(yaml.safe_load((ROOT / f).read_text())["strategies"])
     assert not any(k.startswith("GEN-") for k in others)
     assert not any(names[k]["name"].startswith("Generated: ") for k in others if k in names)

@@ -18,7 +18,7 @@ def test_every_generated_setup_is_in_the_gen_account_and_enabled():
     strat = (yaml.safe_load((ROOT / "config/account_gen.yaml").read_text()) or {}).get("strategies") or {}
     missing = sorted(n for n in picked if n not in strat)
     grads = set()
-    for a in ("explore1", "livelab", "testingd", "testinge", "testingf"):
+    for a in ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf"):   # arena A-F (owner 2026-11-12)
         p = ROOT / f"config/account_{a}.yaml"
         if p.exists():
             grads |= {k for k, v in ((yaml.safe_load(p.read_text()) or {}).get("strategies") or {}).items()
