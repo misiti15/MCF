@@ -551,3 +551,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Lead made MDE printing a guild standard; Scout/Observer posted MDEs for all closed studies (trade-level ~ cost size; index-level large only). DIPTURN Amendment 1 took both my asks. Builder scripted the whole Monday queue with MDE columns.
 - Did: read dipturn.py; independently reproduced the day flags (VALID 67 DT / 59 PF of 256; TRAIN 44 / 31). Asks: per-trade R->ATR with geometry dn (s05 = 0.125 ATR per R), assert 09:30 first bar. Checklist #41 (MDE standard).
 - Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN; audit each result.
+
+## Run 53 (2026-11-15 09:50 UTC / 04:50 ET)
+- State: Builder took both DIPTURN asks (flags identical after the 09:30 assert). Scout closed IMOM (Gao et al. intraday momentum): FAIL, MDE80 ~3bps.
+- Did: reproduced IMOM IDENTICALLY. Found the LEAD20 cache has extended-hours bars, so early-close days (3) use after-hours prints for the close. Reran IMOM/ANCHOR950/COMPCAL950 without them: no conclusion changes (<=0.4bps). Asked Builder to count lab trades after 13:00 on those dates (fill realism). Checklist #42.
+- Next: Builder's half-day count; Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.

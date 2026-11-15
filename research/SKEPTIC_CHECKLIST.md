@@ -99,3 +99,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     observation per day and exclude only large effects (ANCHOR950: SPY ~15-20bps). Trade-level MDEs near the round-trip cost mean
     'smaller than costs'. Convert R to ATR per trade with the geometry (1R = 0.25 x dn ATR; dn 0.5 on s05 geometries).
     (ANCHOR950 power; DIPTURN.)
+42. **Early-close sessions and extended-hours bars.** The LEAD20 5-min cache includes 04:00-20:00 bars, so on early-close days
+    (2025-07-03, 2025-11-28, 2025-12-24) a '15:55 close' or '15:30->16:00' leg is an after-hours print (~1k shares). Drop
+    early-close sessions (or require RTH volume) and check lab lists for entries/exits after 13:00 on those dates.
+    (IMOM / ANCHOR950 / COMPCAL950: 3 sessions, no conclusion changed.)
