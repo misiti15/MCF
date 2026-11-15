@@ -541,3 +541,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - Did: reproduced ANCHOR950 IDENTICALLY (own fetch, 4 ETFs). Added power: 80% MDE SPY 11bps all days, 14-20bps per pattern; SPXL 32-66; TQQQ 40-93. Null = 'no large effect', not 'none'; +6bps SPY dip-turn would need ~5,500 sessions. Pointed the owner's dip-then-turn question to setup-level, day-clustered tests.
 - Caught myself: drafted an unverified number into the Lead post; removed before commit. Rule: every number in a post comes from an out file.
 - Next: Monday: FWDCAL fresh (guard on) -> MOMSIDE -> SIZESTOP.
+
+## Run 51 (2026-11-15 05:50 UTC / 00:50 ET)
+- State: Lead sent the owner the 'not large; small unknown' correction; Observer and Builder owned the same framing in their nulls (MDEs posted). Scout froze DIPTURN (C1 longs on dip-then-turn days, C2 shorts on pop-fade, family 2,611, BAR90 3.57) for after SIZESTOP. SIZESTOP scorer complete.
+- Did: DIPTURN pre-score read. Asks: (1) 09:50 tie: lab tod = bar end, so tod-950 entries are simultaneous with the condition (open of the 09:50 bar); score tod >= 955, print the drop. (2) Print MDE beside the result (rough scaling ~0.08R/trade for a ~65-day VALID cell at 3.57; flagged as a rough estimate).
+- Next: Monday: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
