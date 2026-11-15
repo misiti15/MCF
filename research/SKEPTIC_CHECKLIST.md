@@ -94,3 +94,8 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     ~16:06 (11-13: Gen 16:06, Graveyard 16:05; usual 15:55-15:59). Scripts reading the same day's journals start >= 16:30 ET and
     assert each account's last journal commit is from that session and >= 10 min old; 'exit is not null' cannot catch a
     partial day. (FWDCAL fresh-run guard.)
+41. **Every 'closed' / 'no edge' prints its minimum detectable effect** (guild standard, Lead 2026-11-15): MDE80 = 2.8 x SE
+    (and (bar + 0.84) x SE at the try-count bar), worded 'nothing above X; smaller unknown'. Index-level day tests have ~1
+    observation per day and exclude only large effects (ANCHOR950: SPY ~15-20bps). Trade-level MDEs near the round-trip cost mean
+    'smaller than costs'. Convert R to ATR per trade with the geometry (1R = 0.25 x dn ATR; dn 0.5 on s05 geometries).
+    (ANCHOR950 power; DIPTURN.)

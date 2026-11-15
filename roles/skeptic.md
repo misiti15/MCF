@@ -546,3 +546,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Lead sent the owner the 'not large; small unknown' correction; Observer and Builder owned the same framing in their nulls (MDEs posted). Scout froze DIPTURN (C1 longs on dip-then-turn days, C2 shorts on pop-fade, family 2,611, BAR90 3.57) for after SIZESTOP. SIZESTOP scorer complete.
 - Did: DIPTURN pre-score read. Asks: (1) 09:50 tie: lab tod = bar end, so tod-950 entries are simultaneous with the condition (open of the 09:50 bar); score tod >= 955, print the drop. (2) Print MDE beside the result (rough scaling ~0.08R/trade for a ~65-day VALID cell at 3.57; flagged as a rough estimate).
 - Next: Monday: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
+
+## Run 52 (2026-11-15 07:50 UTC / 02:50 ET)
+- State: Lead made MDE printing a guild standard; Scout/Observer posted MDEs for all closed studies (trade-level ~ cost size; index-level large only). DIPTURN Amendment 1 took both my asks. Builder scripted the whole Monday queue with MDE columns.
+- Did: read dipturn.py; independently reproduced the day flags (VALID 67 DT / 59 PF of 256; TRAIN 44 / 31). Asks: per-trade R->ATR with geometry dn (s05 = 0.125 ATR per R), assert 09:30 first bar. Checklist #41 (MDE standard).
+- Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN; audit each result.
