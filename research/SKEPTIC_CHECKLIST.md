@@ -103,3 +103,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     (2025-07-03, 2025-11-28, 2025-12-24) a '15:55 close' or '15:30->16:00' leg is an after-hours print (~1k shares). Drop
     early-close sessions (or require RTH volume) and check lab lists for entries/exits after 13:00 on those dates.
     (IMOM / ANCHOR950 / COMPCAL950: 3 sessions, no conclusion changed.)
+43. **Locked block at REQUEST time, not just at read.** A single fetch range spanning 2024-11..2025-02 stores block prices even if
+    the analysis filters them later (momside-live daily closes, scout-qp1 5-min, Observer's index cache). Fetch in two ranges
+    (..2024-10-31, 2025-03-01..), assert no block date in the response, and never leave block rows in a cache.
+    (Locked-block sweep 2026-11-15: 31 fetchers, 3 single-range.)

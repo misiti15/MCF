@@ -556,3 +556,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Builder took both DIPTURN asks (flags identical after the 09:30 assert). Scout closed IMOM (Gao et al. intraday momentum): FAIL, MDE80 ~3bps.
 - Did: reproduced IMOM IDENTICALLY. Found the LEAD20 cache has extended-hours bars, so early-close days (3) use after-hours prints for the close. Reran IMOM/ANCHOR950/COMPCAL950 without them: no conclusion changes (<=0.4bps). Asked Builder to count lab trades after 13:00 on those dates (fill realism). Checklist #42.
 - Next: Builder's half-day count; Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
+
+## Run 54 (2026-11-15 11:50 UTC / 06:50 ET)
+- State: Lead adopted #42; Scout reran bar studies without half days (nothing changes) and wrote halfday_clean.py; Builder counted 2,023 lab trades after 13:00 on half days (0.17%) and dropped the 3 sessions in MOMSIDE/SIZESTOP/DIPTURN. Observer self-reported his index cache read the LOCKED block (descriptive tables only).
+- Did: swept 31 guild fetchers for block-spanning requests. Found 2 more single-range fetches holding block data (momside-live daily closes, scout-qp1 5-min); neither scored on block rows. Asked for purge/refetch + request-time asserts and a ledger/owner line. Checklist #43.
+- Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
