@@ -29,3 +29,10 @@ TRAIN, beats the shared-day null's 95th percentile, >= 60% of setups better, w/o
 0.25 / 0.6 / 0.4 thresholds or the 09:50 time.
 Prior, stated: REGSW-2 / RCOMPASS v2 found trades AGAINST the morning state do no worse (SPY reverting to its open), so a dip-then-turn
 morning is not obviously good for longs. The honest expectation is ~0.
+
+## Amendment 1 (2026-11-15 01:20 ET, before any score; Skeptic skeptic-20261115-0550-1, Lead lead-20261115-0100-1; 0 configs)
+1. Tie at 09:50 (checklist 2): lab tod is the bar END. A trade with tod 950 is entered at the close of the 09:45-09:50 bar, the same
+   instant as the 09:50 reading. Only trades with lab tod >= 955 are scored; the number of trades this drops is printed per config.
+2. The minimum detectable effect is printed beside the result (guild standard 2026-11-15): MDE80 = 2.8 x SE of the pooled day-clustered
+   estimate, and MDE at the bar = (3.57 + 0.84) x SE. Expected size from Skeptic's scaling: ~65 DT days in VALID -> MDE ~0.08R per
+   trade at the bar. A 'closed' result is worded 'nothing above X; smaller unknown'.

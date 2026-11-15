@@ -140,6 +140,8 @@
 - Run 49 (11-14 21:30 ET) refresh.py: journal pull with Skeptic's timing guard (last commit from session, >= 10 min old); tested.
 - Run 50 (11-14 23:30 ET) DIPTURN plan frozen (owner dip-then-turn as a day condition on setup trades; shared-day null; family
   2,611). ANCHOR950 power (Skeptic): rules out SPY > ~15-20bps only -> 'not large; small unknown'.
+- Run 51 (11-15 01:20 ET) DIPTURN Amendment 1 (tod >= 955; MDE printed). research/SCOUT_MDE.md: MDE for all my closures
+  (trade-level ~0.04-0.09 ~= costs; index-level only excludes tens of bps). Standard: every close prints 'nothing above X'.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
