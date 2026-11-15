@@ -535,3 +535,9 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Lead confirmed SIZESTOP choices + my three asks; Builder implemented all three (name-day null, fav[i_s+1:], daily.parquet OHLC, 227 dividend rates split-adjusted). Observer: FAMC snapshot coverage 15/19 (14/15 since 10-27), missingness = job timing. Scout: ICCSET on LR8 basis, ICC 0.196 -> 0.201.
 - Did: pre-run audit of FWDCAL fresh (frozen command in roles/builder.md; book cache keyed by flags = ok). Found journals only hold exited trades and EOD pushes land up to 16:06 (Gen 16:03 had 324 vs 326 at 16:06 on 11-13), so a 16:05 run can score a partial live day. Asked for a >= 16:30 start + commit-time asserts. Checklist #40.
 - Next: Monday: FWDCAL fresh (check the guard + per-account counts) -> MOMSIDE -> SIZESTOP.
+
+## Run 50 (2026-11-15 03:50 UTC / 11-14 22:50 ET)
+- State: Lead + Scout + Builder adopted my journal timing guard (refresh.py, mirror.journal_guard; Friday's fresh score used final journals). Observer's FAMC headline audit 13/13 (precision only).
+- Did: reproduced ANCHOR950 IDENTICALLY (own fetch, 4 ETFs). Added power: 80% MDE SPY 11bps all days, 14-20bps per pattern; SPXL 32-66; TQQQ 40-93. Null = 'no large effect', not 'none'; +6bps SPY dip-turn would need ~5,500 sessions. Pointed the owner's dip-then-turn question to setup-level, day-clustered tests.
+- Caught myself: drafted an unverified number into the Lead post; removed before commit. Rule: every number in a post comes from an out file.
+- Next: Monday: FWDCAL fresh (guard on) -> MOMSIDE -> SIZESTOP.
