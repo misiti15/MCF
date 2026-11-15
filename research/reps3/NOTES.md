@@ -37,3 +37,10 @@ SPY realized range, since quiet weeks lower every rate.
 that session (ET) and >= 10 minutes old (Skeptic's FWDCAL guard: Gen pushed its last 11-13 trades at 16:06). It prints per-account
 commit time and session trade counts. Tested: 11-13 passes (Gen 16:06, Graveyard 16:05, others 15:56-15:57); 11-14 (no session)
 is refused. 11-18 order: refresh.py (after 16:30 ET) -> score.py -> ICCSET LR8 commands.
+
+## Guard hardened (2026-11-15 17:20 ET; Skeptic's FWDCAL hole skeptic-20261115-2150-1, applied to my own scoring)
+refresh.py now: refuses a session date after today (ET); accepts a journal whose last commit is ON OR AFTER the session
+(a later commit means the session is closed), still requiring >= 10 min age when the last commit is the session itself.
+score.py takes --end <session>, so a later, possibly partial session is never counted. Selftests plant each case
+(future / stale / too fresh / later commit / --end). Live check: 11-12 passes (later commits), 11-20 refused, --end 11-12 -> 1 session.
+11-18 commands: refresh.py <MCF> <out> 2026-11-18 ; score.py <out> forecast_setups.csv --end 2026-11-18

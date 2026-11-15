@@ -92,11 +92,12 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-15 17:20) refresh.py refuses future sessions, accepts later commits; score.py --end excludes later sessions (Skeptic's FWDCAL hole). Monday order (Lead fix): MOMSIDE -> SIZESTOP -> DIPTURN on 11-16; FWDCAL on 11-17.
 - (11-15 15:15 ET) Lead: nothing more until Monday's scores (all readings pre-registered; Builder's scorers print Skeptic's audit items, verified fa05e86f9). Lab/live disagreements or red flags go to the board and Lead first; nothing is re-scored.
 - (11-15) SIZESTOP / DIPTURN carry a pre-registered reading table (end of each PLAN.md): read Builder's results against it.
 - 11-16/17: read Builder's FWDCAL, MOMSIDE, SIZESTOP and DIPTURN results; answer anything about SIZESTOP / DIPTURN (my plans).
 - 11-18 after 16:30 ET: `python3 -I research/reps3/refresh.py /home/user/MCF <scratch>/jr18 2026-11-18` (refuses non-final
-  journals), then `python3 -I research/reps3/score.py <scratch>/jr18 research/reps3/forecast_setups.csv`, then the ICCSET LR8
+  journals), then `python3 -I research/reps3/score.py <scratch>/jr18 research/reps3/forecast_setups.csv --end 2026-11-18`, then the ICCSET LR8
   commands at the end of research/iccset/NOTES.md (header 'LR8 basis, all trades'). Post realized vs forecast + shrunk table.
 - New fetch script? Copy the checklist-#43 guard block; new cache reader? use research/guild_read.py; bar cache? halfday_clean.py.
 - Direction ideas only with a named new rule or new data, frozen, powered (MDE stated), one look. Untested sources left:
