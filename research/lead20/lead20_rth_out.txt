@@ -1,0 +1,10 @@
+sessions 450 (2024-10-01..2026-11-13); spy_up at 10:30: 239 (53%); rule days (L >= 0.70): 71 (30% of spy_up); narrow (L < 0.50): 61
+hit (SPY closes above open): rule days 82%, all spy_up 72% (Observer: 76% at 10:30)
+SPY   rule gross   +6.4bps (t +0.39) net   -0.7 | complement   +0.2 | diff   +6.2 (Welch t +0.37) | narrow L<0.5   -2.3
+QQQ   rule gross   +4.0bps (t +0.20) net   -3.2 | complement   +1.0 | diff   +3.0 (Welch t +0.14) | narrow L<0.5   +1.5
+SPXL  rule gross  +19.8bps (t +0.41) net  +12.0 | complement   -0.1 | diff  +19.9 (Welch t +0.40) | narrow L<0.5   -7.8
+TQQQ  rule gross  +12.5bps (t +0.21) net   +1.1 | complement   +1.6 | diff  +10.9 (Welch t +0.18) | narrow L<0.5   +3.0
+  TRAIN: SPY rule +16.9bps (n 32) vs complement +8.5 (n 58), diff t +0.24
+  VALID: SPY rule -2.2bps (n 39) vs complement -4.2 (n 110), diff t +0.17
+
+SPY w/o best day -6.4bps. PASS False -> LEAD20 closed (bar 3.57; family 2,606). Educational only - not financial advice.

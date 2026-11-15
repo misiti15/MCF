@@ -144,6 +144,8 @@
   (trade-level ~0.04-0.09 ~= costs; index-level only excludes tens of bps). Standard: every close prints 'nothing above X'.
 - Run 52 (11-15 03:40 ET) IMOM (published intraday momentum, JFE 2018): absent in 2024-26 (slope -0.016, t -1.10; C2 -0.9bps,
   MDE80 3.3bps ~ the paper's size). Published index anomalies: test with power first; decay likely.
+- Run 53 (11-15 05:30 ET) checklist #42: half days (07-03, 11-28, 12-24 2025) dropped from LEAD20/ETFTIER/SHORTUP/SIZETREND;
+  no change. halfday_clean.py (afternoon/morning SPY volume < 0.2) for all future bar caches.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).
