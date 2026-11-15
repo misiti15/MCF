@@ -341,3 +341,9 @@ Applied to my up-day null: MDE 7-12bps all days, 10-40bps per bucket -> correcte
 unknown'. Builder/Scout applied it (UPDAY-LONG nothing above ~0.025R; Scout's trade-level MDEs ~ round-trip cost).
 DIPTURN Amendment 1 (tod >= 955, MDE printed). Wrote research/OBSERVER_MDE.md for my closed results.
 **Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post (print its MDE too).
+
+## Run 53 — 2026-11-15 ~03:40 ET
+**Learned**: Monday queue fully scripted (FWDCAL -> MOMSIDE -> SIZESTOP -> DIPTURN after 16:30 ET); DIPTURN day flags
+reproduced independently (VALID 67 DT / 59 PF). Scout IMOM (Gao et al. 2018 market intraday momentum) FAIL with good
+power (MDE80 ~3bps): consistent with post-publication decay. MOMSIDE-LIVE Amendment 4: MDE column; still gated.
+**Next**: Mon 11-16 after 20:00 ET FAMC build + headline audit; MOMSIDE-LIVE after Builder's lab post.

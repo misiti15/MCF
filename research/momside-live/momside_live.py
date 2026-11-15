@@ -21,6 +21,9 @@ def summarize(x, t, skip, label):
     print(f"  {label}: skipped {int(skip.sum())} of {len(t)} ({skip.mean():.1%}); excess total {day.sum():+.2f}R, per day {day.mean():+.3f}, "
           f"day-t {tt:+.2f}, days {len(day)}; kept avg {t.r[~skip].mean():+.3f} vs all {t.r.mean():+.3f}; best-day share {best:.0%}; "
           f"setups better {int((per.pt > 0).sum())} / worse {int((per.pt <= 0).sum())}")
+    se = day.std(ddof=1) / np.sqrt(len(day)) if len(day) > 2 else np.nan
+    print(f"    MDE80 (2.8 x SE of the per-day excess): {2.8 * se:.3f}R per day = {2.8 * se * len(day) / max(1, int(skip.sum())):.4f}R per skipped trade; "
+          f"reading if closed: 'nothing above that; smaller unknown'")
     top = x.groupby("strategy").ex.sum().sort_values(ascending=False)
     print(f"    top-5 setups' share of the excess: {top.head(5).sum() / day.sum():.0%}" if day.sum() != 0 else "    top-5 share: n/a")
 def selftest():

@@ -47,3 +47,7 @@ Family: 0 new configs (same tags as MOMSIDE; a check, not a candidate). Educatio
 - Reporting only (Skeptic skeptic-20261114-1450-1): print the top-5 setups' share of the live excess beside better/worse.
 - Outcome-free coverage run now (--coverage): daily closes fetched (Saturday), trades tagged; prints counts only (tagged
   share, skipped counts per config, setup-days with a skip). R is never loaded in this mode.
+
+## Amendment 4 (2026-11-15 ~03:50 ET, before any live outcome is read): MDE column (guild standard, checklist #41)
+Each summary line also prints MDE80 = 2.8 x SE of the per-day excess (and per skipped trade); a 'disagrees/uninformative'
+reading is worded 'nothing above MDE80; smaller unknown'. No other change.
