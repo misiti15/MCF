@@ -111,3 +111,115 @@ def test_spawn_rejects_no_change_and_unknown(tmp_path):
     with pytest.raises(KeyError):
         W.spawn(ST7, "no_such_param=1", out_dir=tmp_path)
     assert not (tmp_path / ST7 / "variants.jsonl").exists()
+
+
+# ------------------------------------------------------------------ Workbench v2: engine view + trade teardown (2026-11-15)
+from mcf.report import engine as E  # noqa: E402
+
+
+def test_engine_parts_numbering_and_roles_L3():
+    bp = B.extract(L3, with_record=False)
+    st = E.engine_parts(bp)
+    assert [s["key"] for s in st] == ["INTAKE", "TIMER", "SENSORS", "GATES", "ENTRY", "EXHAUST"]
+    pids = [p["pid"] for p in E.all_parts(st)]
+    assert pids == [f"P{i}" for i in range(1, len(pids) + 1)]
+    sens = {p["role"]: p["value"] for p in st[2]["parts"]}
+    assert sens == {"cond.fromOpen": "fromOpen > 3.4603", "cond.gap": "gap <= -2.6574",
+                    "cond.sma20_slope_pct": "sma20_slope_pct > 0.3724"}
+    roles = {p["role"] for p in E.all_parts(st)}
+    assert {"prefilter", "borrow", "window", "noentry", "refire", "cap_setup", "latch", "order", "risk", "stop", "target",
+            "time"} <= roles
+    assert E.pref(st, "stop") and E.pref(st, "time") != E.pref(st, "stop") and E.pref(st, "nope") == ""
+    assert int(E.pref(st, "time")[1:]) > int(E.pref(st, "cond.gap")[1:]) > int(E.pref(st, "window")[1:])   # left to right
+
+
+def test_engine_stack_sensor_checks_ST7():
+    bp = B.extract(ST7, with_record=False)
+    st = E.engine_parts(bp)
+    ck = [E.sensor_check(c, "long") for c in bp["module"]["conds"]]
+    assert [(c["col"], c["op"], c["thr"], c["cross"]) for c in ck] == [("rsi", "<", 50.0, True), ("rsi", "<=", 30.0, False),
+                                                                       ("fromOpen", "<", -1.0, False), ("buyPressure", ">", 0.0, False)]
+    assert st[2]["parts"][0]["label"].startswith("Trigger: RSI(14) crosses below 50")
+    assert "borrow" not in {p["role"] for p in E.all_parts(st)}          # long setup: no short-borrow part
+
+
+def test_heat_and_pick():
+    bp = B.extract(L3, with_record=False)
+    st = E.engine_parts(bp)
+    tr = [dict(id=i, r=r, exit_reason=x, acct="primary") for i, (r, x) in
+          enumerate([(-1.2, "stop"), (1.0, "target"), (0.3, "flatten"), (-1.7, "stop")])]
+    sig = [dict(status="submitted", reason="ok")] * 4 + [dict(status="skipped", reason="not shortable/ETB")] * 4 + \
+          [dict(status="skipped", reason="setup daily loss limit")] * 2
+    h = E.apply_heat(st, tr, sig)
+    parts = {p["role"]: p for p in E.all_parts(st)}
+    assert parts["stop"]["heat"] == 0.5 and parts["target"]["heat"] == 0.25 and parts["time"]["heat"] == 0.25
+    assert parts["borrow"]["heat"] == 0.4 and parts["latch"]["heat"] == 0.2 and parts["window"]["heat"] is None
+    assert h["exits"] == {"stop": 2, "target": 1, "time": 1}
+    assert [t["id"] for t in E.pick_trades(tr, "worst2")] == [3, 0] and E.pick_trades(tr, "best1")[0]["id"] == 1
+    assert E.pick_trades(tr, "id:primary:2")[0]["id"] == 2 and E.pick_trades(tr, "id:9") == []
+    with pytest.raises(ValueError):
+        E.pick_trades(tr, "median")
+
+
+def _synthetic_day(day="2026-11-10", n_days=25):
+    import numpy as np
+    import pandas as pd
+
+    rng = np.random.default_rng(7)
+    frames, px = [], 20.0
+    for d in pd.bdate_range(end=day, periods=n_days):
+        idx = pd.date_range(f"{d.date()} 09:30", periods=390, freq="1min", tz=E.TZ)
+        if str(d.date()) == day:
+            px *= 0.96                                                  # gap down, then a steady rally from the open
+            steps = np.r_[np.full(60, 0.0012), rng.normal(0, 0.0004, 330)]
+        else:
+            steps = rng.normal(0, 0.0008, 390)
+        c = px * np.exp(np.cumsum(steps))
+        o = np.r_[px, c[:-1]]
+        frames.append(pd.DataFrame({"open": o, "high": np.maximum(o, c) * 1.0005, "low": np.minimum(o, c) * 0.9995,
+                                    "close": c, "volume": 1000.0}, index=idx))
+        px = c[-1]
+    return pd.concat(frames)
+
+
+def test_teardown_synthetic_trade_cites_engine_parts(tmp_path):
+    bp = B.extract(L3, with_record=False)
+    st = E.engine_parts(bp)
+    m1 = _synthetic_day()
+    fr = E.lab_frame(m1)
+    day = m1[m1.index.date == m1.index[-1].date()]
+    ent = float(day["close"].iloc[61])
+    t = dict(id=1, acct="primary", symbol="SYN", side=-1, date="2026-11-10", signal_time="2026-11-10T15:31:10+00:00",
+             entry_time="2026-11-10 15:31:12+00:00", entry=ent, stop=ent * 1.01, target=ent * 0.99,
+             exit_time="2026-11-10 17:02:00+00:00", exit=ent * 1.011, exit_reason="stop", r=-1.1, mfe_r=0.2, mae_r=-1.05,
+             shares=100, slip_bps=1.0)
+    td = E.teardown_data(bp, st, t, m1, fr)
+    assert str(td["sb"].time()) == "10:25:00"                         # bucket 10:25-10:30 closed before the 10:31 signal
+    tags = [c["tag"] for c in td["callouts"]]
+    assert tags == ["A", "B", "C", "D", "E"]
+    txt = {c["tag"]: c["text"] for c in td["callouts"]}
+    assert E.pref(st, "stop") + " stop hit" in txt["E"] and txt["B"].startswith(E.pref(st, "order"))
+    assert E.pref(st, "window") in txt["A"]
+    sens = {x["pid"]: x for x in td["sensors"]}
+    assert set(sens) == {E.pref(st, k) for k in ("cond.fromOpen", "cond.gap", "cond.sma20_slope_pct")}
+    assert sens[E.pref(st, "cond.fromOpen")]["value"] > 3.46 and sens[E.pref(st, "cond.fromOpen")]["ok"]
+    out = tmp_path / "td.png"
+    E.render_teardown(bp, st, td, out)
+    assert out.stat().st_size > 20000
+    E.render_engine(bp, st, None, tmp_path / "eng.png")
+    assert (tmp_path / "eng.png").stat().st_size > 20000
+    md = "\n".join(E.engine_markdown(st, None) + E.teardown_markdown(td, "td.png"))
+    assert "| P1 | INTAKE |" in md and "stop hit" in md
+
+
+def test_daily_priors_override_gap():
+    import pandas as pd
+
+    m1 = _synthetic_day()
+    fr = E.lab_frame(m1)
+    days = sorted(set(m1.index.date))
+    daily = pd.DataFrame({"open": 1.0, "high": 30.0, "low": 10.0, "close": 25.0, "volume": 1.0}, index=days[:-1])
+    f2 = E.apply_daily(fr, daily, str(days[-1]))
+    row = f2[f2.index.date == days[-1]].iloc[0]
+    o = float(m1[m1.index.date == days[-1]]["open"].iloc[0])
+    assert abs(row["gap"] - (o / 25.0 - 1) * 100) < 1e-6 and abs(row["atr_d"] - 20.0) < 1e-9

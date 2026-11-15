@@ -1,13 +1,17 @@
 """Workbench blueprint (owner project WORKBENCH, 2026-11-13): put one live setup "on the Workbench" and draw every part it
 is built from, one labelled block per component, like a machine blueprint.
 
-    python -m mcf.report.blueprint L3-gap-slope-fromopen-FD [--out DIR] [--no-record] [--no-png]
+    python -m mcf.report.blueprint L3-gap-slope-fromopen-FD [--style engine|blocks] [--trades worst2|best1|id:<n>]
+                                   [--out DIR] [--no-record] [--no-png]
+
+Workbench v2 (owner 2026-11-15): the default style draws the setup as an engine (mcf/report/engine.py) and pairs it with
+a teardown PNG per picked live trade whose callouts cite the engine's part numbers; `--style blocks` keeps the v1 sheet.
 
 Reads (never writes) the setup's config block (config/default.yaml + the account overlay, exactly as the live runner
 loads it, mcf/config.py), its lab module (top-level constants + the comparisons inside mask(), parsed with `ast`; for
 Setup Generator setups also the CONDS / gen spec and the id's name tokens) and, unless --no-record, its live record from
 every account journal (git show origin/<data branch>:journal.db, run_id = 1, R = pnl_adj / (|entry - stop| x shares)).
-Writes <out>/<setup>.png (headless Chromium, phone width) and <out>/<setup>.md. Default out: reports/workbench.
+Writes <out>/<setup>_engine.png + <out>/<setup>_trade<k>_<sym>_<date>.png (matplotlib) or, --style blocks,\n<out>/<setup>.png (headless Chromium), plus <out>/<setup>.md. Default out: reports/workbench/<setup>/.
 
 OBSERVATION ONLY: nothing here changes a setup. Teardown variants are made with `python -m mcf.research.workbench spawn`
 (a brand-new research-only setup; the original is never edited). Educational only - not financial advice.
@@ -593,24 +597,67 @@ def render_png(h: str, path: Path) -> None:
         b.close()
 
 
-def build(setup_id: str, out: Path, with_record: bool = True, png: bool = True) -> dict:
+def build(setup_id: str, out: Path, with_record: bool = True, png: bool = True, style: str = "engine",
+          trades: str | None = "worst2", log=print) -> dict:
+    """Blueprint markdown + PNG(s). style engine (default, Workbench v2): engine view + one teardown PNG per picked live
+    trade (--trades worst2 | best1 | id:[acct:]<n>; needs the journals and read-only market data). style blocks: the v1
+    table blueprint."""
+    from . import engine as E
+
     bp = extract(setup_id, with_record=with_record)
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"{setup_id}.md").write_text(to_markdown(bp))
-    if png:
-        render_png(to_html(bp), out / f"{setup_id}.png")
+    md = to_markdown(bp).rstrip("\n").split("\n")
+    tail = md[-1]
+    md = md[:-1]
+    bp["files"] = []
+    if style == "blocks":
+        if png:
+            render_png(to_html(bp), out / f"{setup_id}.png")
+            bp["files"].append(out / f"{setup_id}.png")
+    else:
+        stages = E.engine_parts(bp)
+        tr, sigs = E.live_trades(setup_id) if with_record else ([], [])
+        heat = E.apply_heat(stages, tr, sigs) if (tr or sigs) else None
+        bp["stages"], bp["heat"] = stages, heat
+        md += E.engine_markdown(stages, heat)
+        if png:
+            E.render_engine(bp, stages, heat, out / f"{setup_id}_engine.png")
+            bp["files"].append(out / f"{setup_id}_engine.png")
+        picked = E.pick_trades(tr, trades) if trades else []
+        if picked:
+            md += ["## TRADE TEARDOWNS", ""]
+        for k, t in enumerate(picked, 1):
+            try:
+                m1 = E.fetch_bars(t["symbol"], t["date"])
+                fr = E.apply_daily(E.lab_frame(m1), E.fetch_daily(t["symbol"], t["date"]), t["date"])
+                td = E.teardown_data(bp, stages, t, m1, fr)
+            except Exception as ex:   # no bars / no network: the engine view still stands
+                log(f"  teardown {t['symbol']} {t['date']}: skipped ({ex})")
+                continue
+            name = f"{setup_id}_trade{k}_{t['symbol']}_{t['date']}.png"
+            if png:
+                E.render_teardown(bp, stages, td, out / name, rank=f"{trades} #{k} · ")
+                bp["files"].append(out / name)
+            md += E.teardown_markdown(td, name)
+    (out / f"{setup_id}.md").write_text("\n".join(md + ["", tail, ""]))
     return bp
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("setup")
-    ap.add_argument("--out", default=str(ROOT / "reports" / "workbench"))
+    ap.add_argument("--out", default=None, help="default reports/workbench/<setup>/")
+    ap.add_argument("--style", choices=("engine", "blocks"), default="engine")
+    ap.add_argument("--trades", default="worst2", help="worst<n> | best<n> | id:[acct:]<n> | none (engine style)")
     ap.add_argument("--no-record", action="store_true", help="skip the live record (no data branches available)")
-    ap.add_argument("--no-png", action="store_true", help="markdown only (no Chromium)")
+    ap.add_argument("--no-png", action="store_true", help="markdown only")
     a = ap.parse_args(argv)
-    bp = build(a.setup, Path(a.out), with_record=not a.no_record, png=not a.no_png)
-    print(f"{a.setup}: {Path(a.out) / (a.setup + '.md')}" + ("" if a.no_png else f", {Path(a.out) / (a.setup + '.png')}"))
+    out = Path(a.out) if a.out else ROOT / "reports" / "workbench" / a.setup
+    bp = build(a.setup, out, with_record=not a.no_record, png=not a.no_png, style=a.style,
+               trades=None if a.trades == "none" else a.trades)
+    print(f"{a.setup}: {out / (a.setup + '.md')}")
+    for f in bp["files"]:
+        print(f"  {f}")
     if bp["module"] and bp["module"]["unparsed"]:
         print(f"  note: {len(bp['module']['unparsed'])} module comparison(s) not parsed")
     print(DISCLAIMER)
