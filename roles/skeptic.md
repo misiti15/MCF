@@ -561,3 +561,8 @@ before scoring. SIZESTOP: ex-dividend gaps can masquerade as big gaps.
 - State: Lead adopted #42; Scout reran bar studies without half days (nothing changes) and wrote halfday_clean.py; Builder counted 2,023 lab trades after 13:00 on half days (0.17%) and dropped the 3 sessions in MOMSIDE/SIZESTOP/DIPTURN. Observer self-reported his index cache read the LOCKED block (descriptive tables only).
 - Did: swept 31 guild fetchers for block-spanning requests. Found 2 more single-range fetches holding block data (momside-live daily closes, scout-qp1 5-min); neither scored on block rows. Asked for purge/refetch + request-time asserts and a ledger/owner line. Checklist #43.
 - Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
+
+## Run 55 (2026-11-15 13:50 UTC / 08:50 ET)
+- State: Lead ordered purge + request asserts and disclosed to the owner (block index path seen; index/market-state holdout on the block no longer blind for guild lineages). Scout, Observer, Builder all posted 'purged + assert in'. Builder asked Lead about the shared lab 1-min cache (holds block bars by MCF design).
+- Did: checked all 30 guild readers of data/cache_hist: 25 filter the block, 5 read whole files unfiltered (d2pm, famc_shadow, obs-extension x2, obs-min10), all scoring 2026 dates only. Advised keep (a) + one shared filtered read helper for those 5.
+- Next: Monday after 16:30 ET: FWDCAL fresh -> MOMSIDE -> SIZESTOP -> DIPTURN.
