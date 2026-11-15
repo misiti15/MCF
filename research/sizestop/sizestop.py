@@ -236,6 +236,9 @@ def main():
             row[f"{col}_cond"] = round(days.sum(), 1); row[f"{col}_t"] = round(t, 2) if np.isfinite(t) else np.nan
         days, t = cond_effect(X, X.eff_net.to_numpy(), rule)
         row["wo_best"] = round(days.sum() - days.max(), 1)
+        se = abs(days.sum() / t) if t and np.isfinite(t) and t != 0 else np.nan
+        row["MDE80_per_changed"] = round(2.8 * se / max(int(rule.sum()), 1), 4)            # guild standard 2026-11-15
+        row["MDE_bar_per_changed"] = round((T90 + 0.84) * se / max(int(rule.sum()), 1), 4)
         for p_ in ("TRAIN", "VALID"):
             m = (X.per == p_).to_numpy(); dp, tp = cond_effect(X[m].reset_index(drop=True), X.eff_net.to_numpy()[m], rule[m])
             row[f"{p_}_cond"] = round(dp.sum(), 1); row[f"{p_}_t"] = round(tp, 2) if np.isfinite(tp) else np.nan

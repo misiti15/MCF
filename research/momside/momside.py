@@ -147,6 +147,8 @@ def run_score():
             row = dict(cfg=c, per=per, trades=len(b), days=b.date.nunique())
             for col in ("gross", "exm", "r"):
                 res = score(b, s_, col); row.update({f"{col}_{k}": v for k, v in res.items()})
+                se = abs(res["excess"] / res["t"]) if res["t"] and np.isfinite(res["t"]) and res["t"] != 0 else np.nan
+                row[f"{col}_MDE80_per_skip"] = 2.8 * se / max(int(s_.sum()), 1)          # guild standard 2026-11-15
             if per == "VALID":
                 v = {}
                 for su, g in b.groupby("setup"):
