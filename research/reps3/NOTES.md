@@ -31,3 +31,9 @@ After >= 5 sessions from 11-12: realized setup-days/week per account = 5 x (setu
 Report realized vs forecast per account and per setup source (live / lab / unrated). Also report the realized Gen halt /
 buying-power skip counts vs REPS1b, and Testing A's signals per session before vs after the universe change. Market context:
 SPY realized range, since quiet weeks lower every rate.
+
+## Journal refresh with the timing guard (2026-11-14 21:30 ET)
+`refresh.py <MCF repo> <out dir> <session>` pulls every account's journal.db and REFUSES unless each one's last commit is from
+that session (ET) and >= 10 minutes old (Skeptic's FWDCAL guard: Gen pushed its last 11-13 trades at 16:06). It prints per-account
+commit time and session trade counts. Tested: 11-13 passes (Gen 16:06, Graveyard 16:05, others 15:56-15:57); 11-14 (no session)
+is refused. 11-18 order: refresh.py (after 16:30 ET) -> score.py -> ICCSET LR8 commands.
