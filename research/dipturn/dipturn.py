@@ -25,6 +25,7 @@ def day_flags(s: pd.DataFrame) -> pd.DataFrame:
         mm = g.index.hour * 60 + g.index.minute
         e = g[(mm >= 570) & (mm < 590)]; p = g[mm == 590]; cl = g[mm < 960]
         if len(e) < 10 or not len(p): continue
+        if (e.index[0].hour, e.index[0].minute) != (9, 30): continue     # Skeptic: the open must be the 09:30 bar (else no flag)
         o = float(e.open.iloc[0]); H, L = float(e.high.max()), float(e.low.min()); rg = H - L; P = float(p.open.iloc[0])
         if rg <= 0: continue
         pos = (P - L) / rg
@@ -50,8 +51,9 @@ def run(B, F, rng):
         for per in ("TRAIN", "VALID"):
             g = b[b.per == per]
             x = (g.exm - g.groupby("setup").exm.transform("mean")).to_numpy(); xn = (g.r - g.groupby("setup").r.transform("mean")).to_numpy()
+            xa = x * 0.25 * g.dn.to_numpy()        # Skeptic: per-trade ATR = R x 0.25 x dn (t1s05 / t05s05: 1R = 0.125 ATR)
             days = g.date.to_numpy(); alld = np.array(sorted(set(days))); cd = np.array([d for d in alld if F[flag].get(d, False)])
-            est, se, D, wob, n = pooled(x, days, cd); estn, sen, _, _, _ = pooled(xn, days, cd)
+            est, se, D, wob, n = pooled(x, days, cd); estn, sen, _, _, _ = pooled(xn, days, cd); esta, _, _, _, _ = pooled(xa, days, cd)
             null = np.array([pooled(x, days, rng.choice(alld, len(cd), replace=False))[0] for _ in range(NDRAW)]) if len(cd) else np.array([np.nan])
             ps = {}
             for su, gg in g.groupby("setup"):
@@ -59,7 +61,7 @@ def run(B, F, rng):
                 if mi.sum() >= 10: ps[su] = xi[mi].mean()
             ps = pd.Series(ps); tot = pd.Series({su: (gg.exm - gg.exm.mean())[np.isin(gg.date.to_numpy(), cd)].sum() for su, gg in g.groupby("setup")})
             pos_ = tot[tot > 0].sort_values(ascending=False)
-            rows.append(dict(cfg=cfg, per=per, cond_days=D, days=len(alld), trades=int(n), exm_R=est, exm_ATR=est * 0.25 if np.isfinite(est) else np.nan,
+            rows.append(dict(cfg=cfg, per=per, cond_days=D, days=len(alld), trades=int(n), exm_R=est, exm_ATR=esta,
                              t=est / se if se else np.nan, se=se, MDE80=2.8 * se, MDE_bar=(BAR90 + 0.84) * se, null95=np.nanpercentile(null, 95),
                              net_R=estn, net_t=estn / sen if sen else np.nan, wo_best=wob, setups=len(ps), better=int((ps > 0).sum()),
                              worse=int((ps < 0).sum()), top5_share=pos_.head(5).sum() / tot.sum() if tot.sum() > 0 else np.nan,
@@ -73,7 +75,7 @@ def selftest():
     for planted in (0.10, 0.0):
         n = 40000; d = rng.choice(days, n); su = rng.choice(["L1", "L2", "S1"], n); side = np.where(su == "S1", -1, 1)
         eff = np.where((side > 0) & F.DT.reindex(d).to_numpy(), planted, 0.0)
-        B = pd.DataFrame(dict(setup=su, side=side, date=d, exm=rng.normal(0, 1, n) + eff, r=rng.normal(0, 1, n), per="VALID"))
+        B = pd.DataFrame(dict(setup=su, side=side, date=d, exm=rng.normal(0, 1, n) + eff, r=rng.normal(0, 1, n), per="VALID", dn=1.0))
         O = run(pd.concat([B, B.assign(per="TRAIN")]), F, rng); c1 = O[(O.cfg == "C1") & (O.per == "VALID")].iloc[0]
         print(f"selftest planted {planted}: est {c1.exm_R:+.3f} t {c1.t:+.2f} MDE80 {c1.MDE80:.3f} null95 {c1.null95:+.3f}")
         assert (c1.t > 4) if planted else abs(c1.t) < 3
@@ -96,6 +98,9 @@ def score():
     B["per"] = np.where(B.date <= SPLIT, "TRAIN", np.where(B.date <= "2026-10-07", "VALID", "FWD"))
     beta = {su: (np.polyfit(g.spy_move, g.gross, 1)[0] if len(g) >= 30 else float(g.side.iloc[0])) for su, g in B[B.per == "TRAIN"].groupby("setup")}
     B["exm"] = B.gross - B.setup.map(beta).fillna(B.side.astype(float)) * B.spy_move
+    sys.path.insert(0, str(ROOT)); from mcf.research.gates import GEOMK
+    GK = {**GEOMK, "hold": (np.inf, 1.0), "holdtr": (np.inf, 1.0)}
+    B["dn"] = B.geom.map(lambda gm: GK[gm][1]).astype(float)
     O = run(B[B.per != "FWD"], F, np.random.default_rng(20261116))
     pd.set_option("display.width", 300); pd.set_option("display.max_columns", 40)
     print(f"DIPTURN (PLAN + Amendment 1, one score): trades {n0}, dropped tod < 955: {drop950} (long {dl}, short {ds}); "
