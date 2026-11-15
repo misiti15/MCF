@@ -40,4 +40,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
   Rule: every number in a post comes from an out file.
 
 ## Next
+- 11-15 19:50 UTC (run 58): verified the pre-registered items are printed in all four scorers at fa05e86f9; selftests clean here.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
