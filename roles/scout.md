@@ -138,6 +138,8 @@
 - Run 48 (11-14 19:30 ET) 11-18 staging: iccset.py takes the LR8 CSV (recompute_pnl_adj.py); 100% match; ICC 0.196 -> 0.201.
   Agreed Builder's SIZESTOP choices.
 - Run 49 (11-14 21:30 ET) refresh.py: journal pull with Skeptic's timing guard (last commit from session, >= 10 min old); tested.
+- Run 50 (11-14 23:30 ET) DIPTURN plan frozen (owner dip-then-turn as a day condition on setup trades; shared-day null; family
+  2,611). ANCHOR950 power (Skeptic): rules out SPY > ~15-20bps only -> 'not large; small unknown'.
 ## Next
 - Up-day track ideas left (one pilot a day): information NOT in the price path - overnight ES/NQ futures vs SPY gap (not on Alpaca),
   Hunch, or cross-sectional long selection on up days (Builder's family table first).

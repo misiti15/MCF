@@ -1,0 +1,31 @@
+# DIPTURN — the owner's 'dip in the first 20 min, then a turn' as a day-level condition on setup trades (FROZEN 2026-11-14 23:30 ET, not scored)
+Educational only — not financial advice. Plan by Scout for Builder to score AFTER SIZESTOP (Lead lead-20261114-2300-1; owner anchor
+rule 2026-11-14; Skeptic skeptic-20261115-0351-2). Research only; no setup or live change.
+Why through setups: ANCHOR950 showed no LARGE index effect after 09:50 but cannot resolve small ones (SPY +6bps on dip-then-turn
+days would need ~5,500 sessions). Setup trades give many trades per day. They are still day-clustered (~5 trade-equivalents per
+session at ICC 0.19), so the day is the unit.
+
+## Day condition (ANCHOR950's definitions, unchanged; known at 09:50:00 ET)
+SPY 5-min bars: early range H20 / L20 = high / low of the 09:30..09:45 bars; P = open of the 09:50 bar; pos = (P - L20) / (H20 - L20).
+- **DT (dip-then-turn):** L20 <= open_0930 - 0.25 x (H20 - L20) AND pos >= 0.6.
+- **PF (pop-then-fade, mirror):** H20 >= open_0930 + 0.25 x (H20 - L20) AND pos <= 0.4.
+## Trades (2-year lab lists, all entry times, as MOMSIDE Amendment 2: bt_lab1104 full-day, build_full.py)
+Only trades whose entry bar starts AFTER 09:50 (the lab generator window already starts at 09:50; the assert stays).
+- **C1:** LONG setups' trades on DT days.   **C2:** SHORT setups' trades on PF days.   (2 configs)
+Locked block absent (asserted). TRAIN <= 2025-09-30 < VALID (VALID = the primary test; TRAIN is thin after the gap).
+
+## Score (the guild standard for a day-level condition)
+Unit = setup-day. For each config: the condition's trades vs a **shared-day random control**: draw the same NUMBER of days at random
+from that period's sessions, ONE day permutation shared by all setups per draw (Skeptic's GAP-U fix; the condition is index-level),
+500 draws. Statistic = mean ex-market GROSS R per trade on condition days minus the same on the random days, plus a day-clustered t of
+the per-day summed excess over each setup's own mean (pooled ratio estimator, checklist #39).
+Ex-market = gross - TRAIN beta per setup x side x SPY over each leg's own hold. Also print net, ATR beside R (checklist 15), per-setup /
+per-family better / worse with the top-5 setups' share, w/o best day, the number of condition days per period, and SPY's
+09:50 -> close on those days (ANCHOR950 row).
+## Counting, bar, pass
+Family market-state 2,605 + up-day track (LEAD20 1, ETFTIER 2, SHORTUP 1) + 2 = **2,611 -> BAR90 3.57**.
+Pass (a lead for an arena field test only; any change is the owner's): ex-market excess > 0 with day-clustered t >= 3.57 in VALID, > 0 in
+TRAIN, beats the shared-day null's 95th percentile, >= 60% of setups better, w/o best day > 0. Otherwise closed. No grid over the
+0.25 / 0.6 / 0.4 thresholds or the 09:50 time.
+Prior, stated: REGSW-2 / RCOMPASS v2 found trades AGAINST the morning state do no worse (SPY reverting to its open), so a dip-then-turn
+morning is not obviously good for longs. The honest expectation is ~0.
