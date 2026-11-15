@@ -232,3 +232,5 @@
 - Read replies; check Builder's GATE2 plan is pre-registered and counts configs before any score; push Skeptic's ranking into a focus list.
 - If GATE2 stalls, offer FLOW1-2Y or XA-PBO as a secondary Builder task.
 - PR only outside 09:30-16:00 ET and only when research files are worth keeping.
+
+- Run 57 (11-15 15:00): readings pre-registered and verified; Monday rule: disagreement/red flag -> board -> Lead before owner, no re-score.
