@@ -371,7 +371,8 @@ def test_st7q_and_ns3v1_configured(monkeypatch):
     assert b["min_adv"] == 95000000 and b["refire"] is False and b["scale_out_r"] is None
     assert not t1["strategies"]["ST7-rsi50dn-long-pm-t1s1-FD"]["enabled"]   # parent promoted to Primary 2026-10-25 (owner)
     o1 = x1["live"]["setup_order"]
-    assert o1.index("ST8-volspikedn-long-pm-t1s1-FD") < o1.index("ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD")
+    # ROT1 2026-11-15: arena setup_order = fewest traded sessions first (ST7Q 6 < ST8 14 to 11-13); both still listed
+    assert o1.index("ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD") < o1.index("ST8-volspikedn-long-pm-t1s1-FD")
     monkeypatch.setenv("MCF_ACCOUNT", "testing2")
     cfg = load_config()
     st = {s.name: s for s in build_strategies(cfg)}

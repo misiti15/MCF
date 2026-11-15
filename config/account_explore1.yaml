@@ -42,18 +42,29 @@ live:
   longs_first_on_ties: true
   # Priority: narrowest (fewest expected trades/session) first, as in Testing 1/2.
   setup_order:
-    - IDX1-qqq100-0955-TQQQ-hold   # ~0.02/session lab, 0 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
-    - LD3-st2-idxturn-t05s1-long   # ~0.17/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - LD1-ns1-breadthup-t05s1-long   # ~0.31/session lab, 0 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - NM1-cwt09-g10-vwaploss-short   # ~0.50/session lab, 4 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - NM-RWN3-ns3-spyup-early-short   # ~0.91/session lab, 6 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - ST8-volspikedn-long-pm-t1s1-FD   # ~1.05/session lab, 11 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
-    - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # ~1.25/session lab, 6 live trades (moved from Testing 1 2026-11-04, low-rep; from session 2026-11-05)
-    - MF2-open-rsimidhi-flowsell   # ~1.30/session lab, 5 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - NM-RWR4-ns2-up3-qqqup-slopedn-short   # ~1.50/session lab, 5 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - CWT04-backside-lh-a15-short   # ~2.85/session lab, 4 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
-    - ST4-emadn-long-am-t1s05-FD   # moved from Graveyard 2026-11-12 (~3.05/day lab, 15 live trades; owner GY-RW6/ST4 arena; from session 2026-11-13)
-    - CWT13-vwapstretch-z075-long   # ~9.23/session lab, 16 live trades (moved from Testing 2 2026-11-04, low-rep; from session 2026-11-05)
+    # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
+    - IDX1-qqq100-0955-TQQQ-hold   # 0 traded sessions / 0 trades
+    - LD3-st2-idxturn-t05s1-long   # 0 traded sessions / 0 trades
+    - LD1-ns1-breadthup-t05s1-long   # 2 traded sessions / 2 trades
+    - GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long   # 2 traded sessions / 52 trades
+    - CWT04-backside-lh-a15-short   # 3 traded sessions / 4 trades
+    - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # 3 traded sessions / 21 trades
+    - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short   # 3 traded sessions / 41 trades
+    - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short   # 3 traded sessions / 60 trades
+    - GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long   # 3 traded sessions / 64 trades
+    - NM1-cwt09-g10-vwaploss-short   # 4 traded sessions / 6 trades
+    - GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long   # 4 traded sessions / 25 trades
+    - GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long   # 4 traded sessions / 30 trades
+    - NM-RWR4-ns2-up3-qqqup-slopedn-short   # 4 traded sessions / 32 trades
+    - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # 6 traded sessions / 11 trades
+    - NM-RWN3-ns3-spyup-early-short   # 6 traded sessions / 13 trades
+    - GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long   # 6 traded sessions / 61 trades
+    - MF2-open-rsimidhi-flowsell   # 7 traded sessions / 17 trades
+    - GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short   # 7 traded sessions / 20 trades
+    - GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long   # 7 traded sessions / 40 trades
+    - CWT13-vwapstretch-z075-long   # 9 traded sessions / 40 trades
+    - ST8-volspikedn-long-pm-t1s1-FD   # 14 traded sessions / 30 trades
+    - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
 strategies:
   ST4-emadn-long-am-t1s05-FD:   # moved from Graveyard 2026-11-12 after the close (owner GY-RW6/ST4 arena); from session 2026-11-13
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 15 trades -0.578R (-0.737R w/o best day).
@@ -297,3 +308,674 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}
+  GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261019-07-volratio-hi-late-long.py
+    context:
+    - spy_fo
+    min_adv: 50000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: LATE
+        geom: t05s1
+        min_adv: 50000000.0
+        conds:
+        - - day_vs_prev_range
+          - '>='
+          - 1.5
+        - - spy_fo
+          - '>'
+          - 0.5
+        - - upper_wick
+          - '>='
+          - 0.59
+        - - volumeRatio
+          - '>='
+          - 2.0
+      key: 70ec895c21c1c754
+      screen:
+        train:
+          n: 739
+          exp_r: 0.0387
+          t: 0.65
+          win: 0.656
+          days: 58
+        valid:
+          n: 636
+          exp_r: 0.0097
+          t: 0.3
+          win: 0.616
+          days: 45
+        all:
+          n: 1375
+          exp_r: 0.0253
+          t: 0.7
+          win: 0.638
+          days: 103
+        per_day: 3.228
+        per_day_valid: 3.312
+        exp_up: 0.039
+        exp_down: null
+        exp_flat: -0.0827
+        excess_train: 0.0471
+        excess_valid: 0.0264
+        tier1: true
+        score: 0.55
+        max_overlap: 0.315
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261020-03-macdh-hi-mid-long.py
+    context:
+    - breadth
+    min_adv: 20000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-20
+    gen:
+      date: '2026-10-20'
+      spec:
+        side: long
+        window: MID
+        geom: t05s05
+        min_adv: 20000000.0
+        conds:
+        - - bars_since_lod
+          - <=
+          - 5.0
+        - - breadth
+          - <
+          - 0.3
+        - - macd_hist
+          - '>='
+          - 0.079
+      key: 466cc15de28859a2
+      screen:
+        train:
+          n: 875
+          exp_r: 0.0582
+          t: 0.72
+          win: 0.625
+          days: 72
+        valid:
+          n: 429
+          exp_r: 0.0098
+          t: 0.19
+          win: 0.571
+          days: 47
+        all:
+          n: 1304
+          exp_r: 0.0423
+          t: 0.72
+          win: 0.607
+          days: 119
+        per_day: 3.061
+        per_day_valid: 2.234
+        exp_up: 0.118
+        exp_down: 0.0351
+        exp_flat: 0.0682
+        excess_train: 0.0623
+        excess_valid: 0.0824
+        tier1: true
+        score: 0.94
+        max_overlap: 0.27
+        overlap_with: ST2-slope20up-long-am-t05s1-FD
+        n_tried_in_run: 3146
+  GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-05-macdh-hi-pm-short.py
+    context:
+    - breadth_open
+    min_adv: 150000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: PM
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.35
+        - - macd_hist
+          - '>='
+          - 0.079
+        - - or_high_dist_atr
+          - <=
+          - -0.38
+        - - upper_wick
+          - '>='
+          - 0.71
+      key: 3af9f5cc6ecbcec2
+      screen:
+        train:
+          n: 1823
+          exp_r: 0.0397
+          t: 0.21
+          win: 0.503
+          days: 69
+        valid:
+          n: 1001
+          exp_r: 0.0145
+          t: 0.16
+          win: 0.522
+          days: 35
+        all:
+          n: 2824
+          exp_r: 0.0308
+          t: 0.25
+          win: 0.51
+          days: 104
+        per_day: 6.629
+        per_day_valid: 5.214
+        exp_up: null
+        exp_down: 0.0448
+        exp_flat: -0.3938
+        excess_train: 0.0658
+        excess_valid: 0.0714
+        tier1: true
+        score: 0.41
+        max_overlap: 0.455
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261023-04-emadchg-lo-pm-long.py
+    context:
+    - qqq_fo
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-23
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: long
+        window: PM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - dist_pdh_atr
+          - <=
+          - 0.074
+        - - emaDiff
+          - <=
+          - -0.46
+        - - emaDiff_chg3
+          - <=
+          - -0.028
+        - - qqq_fo
+          - <
+          - -0.6
+      key: dfc44add58041678
+      screen:
+        train:
+          n: 338
+          exp_r: 0.1044
+          t: 0.82
+          win: 0.601
+          days: 53
+        valid:
+          n: 358
+          exp_r: 0.0498
+          t: 0.71
+          win: 0.564
+          days: 51
+        all:
+          n: 696
+          exp_r: 0.0763
+          t: 1.08
+          win: 0.582
+          days: 104
+        per_day: 1.634
+        per_day_valid: 1.865
+        exp_up: 0.0067
+        exp_down: -0.0503
+        exp_flat: 0.2606
+        excess_train: 0.1255
+        excess_valid: 0.0086
+        tier1: true
+        score: 0.96
+        max_overlap: 0.6
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-08-rsislope-hi-open-short.py
+    context:
+    - spy_fo
+    min_adv: 50000000
+    window:
+    - 950
+    - 1030
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: short
+        window: OPEN
+        geom: holdtr
+        min_adv: 50000000.0
+        conds:
+        - - day_vs_prev_range
+          - '>='
+          - 1.2
+        - - ret1
+          - '>='
+          - 0.063
+        - - rsiSlope
+          - '>='
+          - 19.0
+        - - spy_fo
+          - '>'
+          - 0.0
+      key: 3d5e94a926eb578e
+      screen:
+        train:
+          n: 1450
+          exp_r: 0.2345
+          t: 0.62
+          win: 0.492
+          days: 144
+        valid:
+          n: 1319
+          exp_r: -0.0409
+          t: -0.43
+          win: 0.462
+          days: 121
+        all:
+          n: 2769
+          exp_r: 0.1033
+          t: 0.5
+          win: 0.477
+          days: 265
+        per_day: 6.5
+        per_day_valid: 6.87
+        exp_up: 0.1174
+        exp_down: 0.353
+        exp_flat: -0.043
+        excess_train: 0.1246
+        excess_valid: 0.047
+        tier1: false
+        score: 0.32
+        max_overlap: 0.5
+        overlap_with: CWT04-backside-lh-a25-short
+        n_tried_in_run: 3000
+  GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261027-08-orbfaildn-lunch-short.py
+    context:
+    - qqq_fo
+    min_adv: 95000000
+    window:
+    - 1130
+    - 1400
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: short
+        window: LUNCH
+        geom: hold
+        min_adv: 95000000.0
+        conds:
+        - - from_pc_atr
+          - <=
+          - -0.96
+        - - orb_fail_dn
+          - ==
+          - 1.0
+        - - qqq_fo
+          - <
+          - -0.6
+      key: 3ff5cc36f1c208d1
+      screen:
+        train:
+          n: 890
+          exp_r: 0.0096
+          t: 0.04
+          win: 0.387
+          days: 58
+        valid:
+          n: 497
+          exp_r: 0.0085
+          t: 0.04
+          win: 0.427
+          days: 53
+        all:
+          n: 1387
+          exp_r: 0.0092
+          t: 0.06
+          win: 0.401
+          days: 111
+        per_day: 3.256
+        per_day_valid: 2.589
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: -0.6434
+        exp_down: 0.1241
+        exp_flat: -0.1431
+        excess_train: -0.1798
+        excess_valid: 0.1117
+        tier1: true
+        score: 0.04
+        max_overlap: 0.515
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3082
+  GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261028-05-emadchg-hi-lam-long.py
+    context:
+    - qqq_fo
+    min_adv: 50000000
+    window:
+    - 1030
+    - 1200
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-28
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: long
+        window: LAM
+        geom: holdtr
+        min_adv: 50000000.0
+        conds:
+        - - emaDiff_chg3
+          - '>='
+          - 0.093
+        - - or_low_dist_atr
+          - <=
+          - -0.42
+        - - qqq_fo
+          - '>'
+          - 0.6
+      key: 07d65345ea1874d2
+      screen:
+        train:
+          n: 297
+          exp_r: 0.0074
+          t: 0.08
+          win: 0.481
+          days: 49
+        valid:
+          n: 546
+          exp_r: 0.0168
+          t: 0.19
+          win: 0.505
+          days: 55
+        all:
+          n: 843
+          exp_r: 0.0135
+          t: 0.2
+          win: 0.497
+          days: 104
+        per_day: 1.979
+        per_day_valid: 2.844
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.1626
+        exp_down: -0.2893
+        exp_flat: -0.0646
+        excess_train: 0.094
+        excess_valid: 0.0859
+        tier1: true
+        score: 0.33
+        max_overlap: 0.316
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3000
+  GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261028-08-ret5m-hi-lunch-long.py
+    context:
+    - breadth_open
+    min_adv: 150000000
+    window:
+    - 1130
+    - 1400
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-28
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: long
+        window: LUNCH
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.35
+        - - compress6_atr
+          - <=
+          - 0.11
+        - - ret1
+          - '>='
+          - 0.21
+        - - sma20_dist_pct
+          - <=
+          - -0.16
+      key: bf0f86988563a1c4
+      screen:
+        train:
+          n: 1048
+          exp_r: 0.0568
+          t: 0.74
+          win: 0.548
+          days: 74
+        valid:
+          n: 749
+          exp_r: 0.0057
+          t: 0.06
+          win: 0.494
+          days: 46
+        all:
+          n: 1797
+          exp_r: 0.0355
+          t: 0.59
+          win: 0.525
+          days: 120
+        per_day: 4.218
+        per_day_valid: 3.901
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 1.49
+        exp_down: -0.0139
+        exp_flat: 0.2596
+        excess_train: 0.0664
+        excess_valid: 0.0628
+        tier1: true
+        score: 0.31
+        max_overlap: 0.349
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261029-02-rsi2-lo-mid-long.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-29
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: MID
+        geom: hold
+        min_adv: 150000000.0
+        conds:
+        - - breadth
+          - <
+          - 0.4
+        - - day_vs_prev_range
+          - <=
+          - 0.52
+        - - rsi2
+          - <=
+          - 0.0
+        - - vwap_cross_n
+          - '>='
+          - 9.0
+      key: 3c19e3c7d6771b25
+      screen:
+        train:
+          n: 1330
+          exp_r: 0.0542
+          t: 0.24
+          win: 0.423
+          days: 119
+        valid:
+          n: 768
+          exp_r: 0.0199
+          t: 0.11
+          win: 0.443
+          days: 89
+        all:
+          n: 2098
+          exp_r: 0.0417
+          t: 0.26
+          win: 0.43
+          days: 208
+        per_day: 4.925
+        per_day_valid: 4.0
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 1.7236
+        exp_down: -0.34
+        exp_flat: 0.0211
+        excess_train: 0.0327
+        excess_valid: 0.035
+        tier1: true
+        score: 0.36
+        max_overlap: 0.419
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261029-03-macdh-lo-pm-long.py
+    context:
+    - qqq_fo
+    min_adv: 50000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-29
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: PM
+        geom: hold
+        min_adv: 50000000.0
+        conds:
+        - - gap
+          - '>='
+          - 2.0
+        - - macd_hist
+          - <=
+          - -0.12
+        - - qqq_fo
+          - '>'
+          - 0.0
+        - - ret1
+          - <=
+          - -0.062
+      key: b3fc6947e29eb4eb
+      screen:
+        train:
+          n: 2221
+          exp_r: 0.0087
+          t: 0.19
+          win: 0.5
+          days: 151
+        valid:
+          n: 3767
+          exp_r: 0.0036
+          t: 0.05
+          win: 0.469
+          days: 118
+        all:
+          n: 5988
+          exp_r: 0.0055
+          t: 0.12
+          win: 0.48
+          days: 269
+        per_day: 14.056
+        per_day_valid: 19.62
+        per_day_median60: 4.0
+        expected_live_per_day: 4.4
+        exp_up: 0.1427
+        exp_down: -0.1679
+        exp_flat: -0.1113
+        excess_train: 0.032
+        excess_valid: 0.0745
+        tier1: true
+        score: 0.3
+        max_overlap: 0.522
+        overlap_with: ST5-pdbrkup-short-mid-t05s1-FD
+        n_tried_in_run: 3000

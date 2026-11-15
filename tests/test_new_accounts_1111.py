@@ -17,7 +17,8 @@ DEF = {"testingd": ("Testing D", "mtd-", "TESTINGD"), "testinge": ("Testing E", 
        "testingf": ("Testing F", "mtf-", "TESTINGF")}
 ALL = {**EXPECT, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in DEF.items()}}
 # setups per account: 10 each from 11-12; from 11-16 RW3S leaves E (Graveyard) and RW7 joins F (owner 2026-11-13)
-N_SETUPS = {"testingd": 10, "testinge": 9, "testingf": 11}
+N_SETUPS = {"testingd": 21, "testinge": 21, "testingf": 22}   # ROT1 arena rotation block 1 (ledger 2026-11-16-rot1-arena-block1)
+SPOTLIGHT_CAP = {"testingd": 50, "testinge": 50}   # ROT1 spotlight accounts 11-16..11-19: per-setup cap 50 (max exposure); others keep B's 30
 MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"
 WF = ROOT / ".github/workflows"
 
@@ -39,6 +40,9 @@ def test_overlay_loads_with_its_own_setups(monkeypatch, acct):
     assert cfg["account_name"] == acct
     for k in ("slots", "max_concurrent_positions", "buying_power_multiple", "max_positions_per_strategy", "max_daily_loss_r",
               "max_setup_daily_loss_r", "max_trades_per_day", "risk_per_trade_pct"):
+        if k == "max_positions_per_strategy" and acct in SPOTLIGHT_CAP:
+            assert a[k] == SPOTLIGHT_CAP[acct], k
+            continue
         assert a[k] == b["account"][k], k
     assert a["max_setup_daily_loss_r"] is None                                    # no -2R per-setup stop (testing areas)
     for k in ("max_stop_cost_r", "block_twin_same_symbol", "scale_out_max_per_day"):
