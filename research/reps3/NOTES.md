@@ -44,3 +44,6 @@ refresh.py now: refuses a session date after today (ET); accepts a journal whose
 score.py takes --end <session>, so a later, possibly partial session is never counted. Selftests plant each case
 (future / stale / too fresh / later commit / --end). Live check: 11-12 passes (later commits), 11-20 refused, --end 11-12 -> 1 session.
 11-18 commands: refresh.py <MCF> <out> 2026-11-18 ; score.py <out> forecast_setups.csv --end 2026-11-18
+
+Added 2026-11-15 19:20 ET (Skeptic's past-window hardening): a last commit ON the session day must be at or after 15:55 ET
+(a midday push or a dead EOD job is refused as 'pre-close commit'); selftest plants both. Live: 11-13 passes (commits 15:56-16:06).
