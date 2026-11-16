@@ -1,0 +1,25 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW7-gapdn-bounce-early-short-FD; SPY since 09:50 <= +0.10% + SPY last 30 min <= +0.20% + gap < -0.5% + window [950, 1300]. Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  RW7-gapdn-bounce-early-short-FD-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/RW7-gapdn-bounce-early-short-FD/modules/RW7-gapdn-bounce-early-short-FD-WB3.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1300
+    scale_out_r: null
+    context:
+    - spy_fo
+    tags:
+    - workbench
+    - parent:RW7-gapdn-bounce-early-short-FD
+    workbench:
+      parent: RW7-gapdn-bounce-early-short-FD
+      param: module clause + window
+      old: null
+      new: SPY since 09:50 <= +0.10% + SPY last 30 min <= +0.20% + gap < -0.5% + window
+        [950, 1300]
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''E3 D10 with 30-min gate 0.20'''
