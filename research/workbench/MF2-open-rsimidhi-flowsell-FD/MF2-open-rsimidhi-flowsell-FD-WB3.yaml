@@ -1,0 +1,25 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent MF2-open-rsimidhi-flowsell-FD; WB2 + heat floor (heat >= -40: skip the most extreme bearish heat). Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  MF2-open-rsimidhi-flowsell-FD-WB3:
+    refire: true
+    refire_cooldown: 1
+    enabled: false
+    type: lab
+    module: research/workbench/MF2-open-rsimidhi-flowsell-FD/modules/MF2-open-rsimidhi-flowsell-FD-WB3.py
+    min_adv: 150000000
+    window:
+    - 950
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:MF2-open-rsimidhi-flowsell-FD
+    workbench:
+      parent: MF2-open-rsimidhi-flowsell-FD
+      param: module clause + min_adv
+      old: null
+      new: sma20_slope_pct <= +0.05 + gap <= +2% + RSI(14) <= 62 + heat >= -40 + min_adv
+        150000000
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''C7 C4 + heat>=-40'''

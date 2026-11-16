@@ -1,0 +1,17 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT09-gapdn-vwaploss-g10-short; P9 sensor: the first-hour bounce needs a 5-min close above VWAP (Mechanic 2026-11-16). Educational only - not financial advice.
+strategies:
+  CWT09-gapdn-vwaploss-g10-short-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT09-gapdn-vwaploss-g10-short/modules/CWT09-gapdn-vwaploss-g10-short-WB2.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    tags: [workbench, "parent:CWT09-gapdn-vwaploss-g10-short"]
+    workbench:
+      parent: CWT09-gapdn-vwaploss-g10-short
+      param: 'P9 sensor: the first-hour bounce needs a 5-min close above VWAP'
+      old: null
+      new: 'a 5-minute CLOSE above VWAP in 09:35-10:30 (not only a wick)'
+      date: '2026-11-16'

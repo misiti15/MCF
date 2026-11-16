@@ -1,0 +1,13 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW3-gapdn-rsi5pop-flowsell-short-FD; combo D1 = WB1 (window 10:30-15:00) + WB2 (SPY gate) + daily ATR >= 1.6% of price (1R >= 0.40%). Set by hand (Mechanic 2026-11-16). Educational only - not financial advice.
+strategies:
+  RW3-gapdn-rsi5pop-flowsell-short-FD-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB3.py
+    min_adv: 95000000
+    window: [1030, 1500]
+    context: [spy_fo]        # the gate reads SPY since 09:50 from the runner's spy_fo column; without it the mask fires nothing
+    scale_out_r: null
+    tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
+    workbench: {parent: RW3-gapdn-rsi5pop-flowsell-short-FD, param: window, old: [950, 1500], new: [1030, 1500], date: '2026-11-16', note: 'Mechanic combo D1: + SPY gate (module, context spy_fo) + ATR >= 1.6% (module); set by hand'}

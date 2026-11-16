@@ -1,0 +1,27 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW3-gapdn-rsi5pop-flowsell-short-FD; one change: window [950, 1500] -> [1030, 1500]. Educational only - not financial advice.
+strategies:
+  RW3-gapdn-rsi5pop-flowsell-short-FD-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB1.py
+    min_adv: 95000000
+    window:
+    - 1030
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:RW3-gapdn-rsi5pop-flowsell-short-FD
+    workbench:
+      parent: RW3-gapdn-rsi5pop-flowsell-short-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 1030
+      - 1500
+      date: '2026-11-16'
+      note: 'Mechanic: entry window starts 10:30 (live 10:00-10:30 entries -0.19R;
+        replay 10:00-10:30 -0.47R)'

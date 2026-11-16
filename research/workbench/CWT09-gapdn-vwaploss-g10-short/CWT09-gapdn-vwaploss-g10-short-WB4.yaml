@@ -1,0 +1,17 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT09-gapdn-vwaploss-g10-short; combo: WB1 + WB2 + P2 min_adv 1M -> 20M (Mechanic 2026-11-16). Educational only - not financial advice.
+strategies:
+  CWT09-gapdn-vwaploss-g10-short-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT09-gapdn-vwaploss-g10-short/modules/CWT09-gapdn-vwaploss-g10-short-WB4.py
+    min_adv: 20000000
+    window: [1030, 1500]
+    scale_out_r: null
+    tags: [workbench, "parent:CWT09-gapdn-vwaploss-g10-short"]
+    workbench:
+      parent: CWT09-gapdn-vwaploss-g10-short
+      param: 'combo: WB1 + WB2 + P2 min_adv 1M -> 20M'
+      old: null
+      new: 'WB1 + WB2 + ADV >= $20M'
+      date: '2026-11-16'

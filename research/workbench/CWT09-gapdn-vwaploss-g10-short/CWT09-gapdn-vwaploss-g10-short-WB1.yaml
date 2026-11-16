@@ -1,0 +1,17 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT09-gapdn-vwaploss-g10-short; P9 sensor: + signal-bar close below today's open (Mechanic 2026-11-16). Educational only - not financial advice.
+strategies:
+  CWT09-gapdn-vwaploss-g10-short-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT09-gapdn-vwaploss-g10-short/modules/CWT09-gapdn-vwaploss-g10-short-WB1.py
+    min_adv: 1000000
+    window: [1030, 1500]
+    scale_out_r: null
+    tags: [workbench, "parent:CWT09-gapdn-vwaploss-g10-short"]
+    workbench:
+      parent: CWT09-gapdn-vwaploss-g10-short
+      param: 'P9 sensor: + signal-bar close below today's open'
+      old: null
+      new: 'below the day open at the signal bar (fromOpen < 0)'
+      date: '2026-11-16'
