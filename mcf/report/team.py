@@ -404,7 +404,7 @@ def actual_primary(day) -> dict:
         try:
             c = sqlite3.connect(f.name)
             t = pd.read_sql("SELECT t.strategy, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj FROM trades t JOIN runs r "
-                            "ON r.id = t.run_id WHERE r.kind != 'whatif' AND t.date = ? AND t.exit_time IS NOT NULL",
+                            "ON r.id = t.run_id WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? AND t.exit_time IS NOT NULL",
                             c, params=(d,))
             c.close()
         finally:
@@ -533,7 +533,7 @@ def crosscheck(picks: dict, day: str, team_trades: list[dict]) -> list[dict]:
                 try:
                     c = sqlite3.connect(f.name)
                     t = pd.read_sql("SELECT t.strategy, t.symbol, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj FROM trades t "
-                                    "JOIN runs r ON r.id = t.run_id WHERE r.kind != 'whatif' AND t.date = ? "
+                                    "JOIN runs r ON r.id = t.run_id WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? "
                                     "AND t.exit_time IS NOT NULL", c, params=(day,))
                     c.close()
                 except Exception:

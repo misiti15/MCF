@@ -315,6 +315,13 @@ def cmd_eod(args, cfg):
                     chart_bars=ext, exmkt=exmkt)
     eod.save(rep, Path(args.state_dir) / "reports", day)
     scorecard.save(card, args.state_dir)
+    try:   # shadow mode (owner 2026-11-16): per-setup shadow scorecard + this account's trust check, for the leaderboard
+        from .report import shadow_card
+
+        sc_path = shadow_card.save(shadow_card.build(j, cfg.get("account_name", "primary")), args.state_dir)
+        print(f"shadow scorecard: {sc_path}")
+    except Exception as e:
+        print(f"shadow scorecard unavailable: {type(e).__name__}: {e}")
     print(rep["subject"])
     try:   # owner 2026-11-05: dollar P/L lines up with Alpaca - Alpaca equity change vs journal vs status.json
         from .report import reconcile_pl

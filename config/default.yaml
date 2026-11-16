@@ -460,6 +460,32 @@ discovery:
   r_atr_frac: 0.25               # R = 0.25 x daily ATR
   report_top: 40
 
+# Shadow mode (owner 2026-11-16; mcf/execution/shadow.py). Evaluated on the live runner's own polls AFTER the real
+# decisions; records shadow lots in the journal (run kind "shadow", id 3) - never an order, slot, latch or halt of the
+# account, and it changes nothing for real orders. of_live = every live setup also runs in shadow (the nightly trust
+# check vs the real trades: mcf/research/shadow_calib.py). shadow_setups = extra setup names evaluated only in shadow in
+# this account (params from any config, or shadow_strategies: {name: params} for Workbench copies). budget_frac: when
+# shadow work averages more than this share of the live poll time, shadow-only setups run every other poll.
+# latency_bps: extra adverse entry slippage on top of the decision-time quote (0 = paper fills at the quote).
+shadow:
+  enabled: true
+  of_live: true
+  budget_frac: 0.10
+  latency_bps: 0.0
+  # Conservative fills (owner 2026-11-16: "slightly harder to fill than our current estimates"):
+  # entry = decision-time ask (bid for shorts) + max(entry_min_extra_ps, (entry_slip_mult - 1) x entry_median_slip_bps)
+  #   -> 1.5 x the live median entry slip in all (paper already fills about at the quote; research/live_ready/NOTES.md:
+  #   median slip vs signal +3.6 bps), floor 1 cent; targets / limit entries fill only when price trades THROUGH the
+  #   level by max(through_min_ps, through_bps); stops fill at the stop less half the spread less stop_extra_bps, and the
+  #   LR8 stop cost comes on top (mcf.costs). Recorded per shadow trade (meta fill_model=...).
+  entry_median_slip_bps: 3.6
+  entry_slip_mult: 1.5
+  entry_min_extra_ps: 0.01
+  through_min_ps: 0.01
+  through_bps: 1.0
+  stop_extra_bps: 1.0
+shadow_setups: []
+
 research_queue:
   # CAP1 (owner 2026-11-03): research/queue.jsonl running order; at most this many research jobs (matrix legs) a night
   max_jobs_per_night: 6

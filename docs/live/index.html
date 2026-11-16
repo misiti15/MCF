@@ -80,6 +80,14 @@ th { color: var(--ink-2); font-weight: 600; cursor: pointer; }
 #lb-tab .rg0 { border-left: 2px solid var(--axis); } #lb-tab .rg9 { border-right: 2px solid var(--axis); }
 #lb-tab thead tr.band th.bd-last { border-bottom: 2px solid var(--s1); }
 #lb-tab thead tr.band th.bd-replay { border-bottom: 2px solid #d97706; }
+/* Shadow / replay band (owner 2026-11-16): effective sessions from live + shadow + replay */
+:root { --band-shadow: rgba(13,148,136,0.08); --band-shadow-ink: #0f766e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band-shadow: rgba(45,212,191,0.12); --band-shadow-ink: #5eead4; } }
+:root[data-theme="dark"] { --band-shadow: rgba(45,212,191,0.12); --band-shadow-ink: #5eead4; }
+#lb-tab th.bd-shadow, #lb-tab td.bd-shadow { background: var(--band-shadow); }
+#lb-tab thead tr.band th.bd-shadow, #lb-tab thead tr.cols th.bd-shadow { color: var(--band-shadow-ink); background: linear-gradient(var(--band-shadow), var(--band-shadow)), var(--surface); }
+#lb-tab thead tr.band th.bd-shadow { border-bottom: 2px solid #0d9488; }
+#lb-tab thead tr.cols th.bd-shadow { white-space: normal; min-width: 64px; max-width: 96px; line-height: 1.2; }
 th.sorted { color: var(--s1); text-decoration: underline; }
 th[data-sortable] { user-select: none; }
 .card.gen { border: 2px solid var(--gen); background: linear-gradient(var(--gen-bg), var(--gen-bg)), var(--surface); }
@@ -782,6 +790,9 @@ window.MCF = window.MCF || {};
       green (+points) means it wins more often than it needs to, red means its winners are too small for its win rate. <b>Avg R</b> is the deciding number for promotion and demotion;
       <b>Confidence (t)</b> says how sure it is (about 2 or more = solid, under 1 = could be luck). <b>vs backtest</b> = live avg R minus the backtest's expected R (after costs) where one exists.
       <b>Trades/session</b> = live trades ÷ sessions it traded (how active it is). <b>Avg R w/o best day</b> = avg R with its single best session removed; <b>Avg R ex-market</b> = avg R with SPY's same-window move regressed out (beta removed); the <b>1 day</b> tag = half or more of its total R came from one session (owner 2026-10-25: a record carried by 1-2 big days). <b>Last 4</b> = avg R over the account's last 4 sessions. <b>Last 10 sessions avg R</b> = avg R per trade over the setup's last 10 traded sessions (sessions with 1+ closed trade, all accounts merged); <b>Avg R per session</b> = total R ÷ traded sessions; <b>Best-day share</b> = its best session's share of total R. All R columns sit together (owner 2026-11-12). <b>Playing time</b> = the account's verdict (silent, starved, crowded out, ok).
+      <b>Shadow / replay</b> (owner 2026-11-16) = how much evidence a setup has. <b>Live sessions</b> = sessions it ran live (or traded, before shadow mode); <b>Shadow sessions</b> = sessions it ran only in shadow (its rules on the live polls, no orders); <b>Replay sessions</b> = past sessions replayed through the live engine.
+      <b>Effective sessions</b> = 1 × live + w × shadow + w × replay, where w = 0.35 when that source matched live ≥ 98% on held-out days with no optimism, 0.2 at 95–98% or not yet calibrated, 0 below 95% (config/effective_sessions.json; owner 2026-11-16). Shadow fills are deliberately harder than paper (entry above the quote, targets only when traded through, stops 1 bp worse).
+      <b>Shadow avg R</b> is after costs and after a haircut (measured optimism + 0.02R). <b>Shadow vs live gap</b> = shadow R minus live R on the same trades (positive = shadow too optimistic). Shadow can move a setup up the testing queue; On Deck still needs 5+ real live sessions, and live wins any disagreement.
       <b>Sim. trades / sim avg R</b> = SIMULATED: what-if replays of the setup's signals that were not taken (blocked, skipped, shadow), with costs but no fill-realism checks; never counted in live trades, win rate, R, P/L or rank.
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. <b>*</b> = long setup from the 2026-10-20 longs research, near-miss, observation only.
@@ -1213,6 +1224,46 @@ window.MCF = window.MCF || {};
 })();
 </script>
 <script>
+// SHADOW-BAND-BEGIN (owner 2026-11-16): effective sessions per setup from each account's reports/shadow_scorecard.json
+// (mcf/report/shadow_card.py), the nightly trust check (research/shadow/summary.json) and config/effective_sessions.json.
+// Pure (no DOM): tests/test_shadow_mode.py runs it in node.
+window.MCF_SHADOW = (() => {
+  const DEF = { live_weight: 1.0, tiers: [{ name: "calibrated", min_match: 0.98, max_extra: 0.02, no_optimism: true, weight: 0.35 },
+    { name: "partial", min_match: 0.95, weight: 0.2 }], below_weight: 0, uncalibrated_weight: 0.2, bias_tolerance_r: 0.01, haircut_extra_r: 0.02,
+    replay: { match: null, extra: null, optimism_r: null } };
+  const tier = (eff, match, extra, opt) => { if (match == null) return ["uncalibrated", eff.uncalibrated_weight];
+    for (const t of eff.tiers) { if (match < t.min_match) continue; if (t.max_extra != null && (extra == null || extra > t.max_extra)) continue;
+      if (t.no_optimism && opt) continue; return [t.name, t.weight]; } return ["below", eff.below_weight]; };
+  const family = s => { s = String(s || ""); return s.includes("-") ? s.split("-")[0] : s.replace(/_[a-z]$/, ""); };
+  function apply(rows, cards, eff, summary) {
+    eff = Object.assign({}, DEF, eff || {}); cards = (cards || []).filter(Boolean);
+    const fams = (summary && summary.families) || {}, rp = eff.replay || {};
+    const [rpTier, wr] = tier(eff, rp.match, rp.extra, rp.optimism_r != null && rp.optimism_r > eff.bias_tolerance_r);
+    const rpHair = Math.max(0, +rp.optimism_r || 0) + eff.haircut_extra_r;
+    rows.forEach(r => {
+      const recs = cards.map(c => (c.setups || {})[r.setup]).filter(Boolean), liveD = new Set(), shD = new Set();
+      recs.forEach(x => { (x.live_days || []).forEach(d => liveD.add(d)); (x.shadow_days || []).forEach(d => shD.add(d)); });
+      liveD.forEach(d => shD.delete(d));
+      const live = Math.max(r.sessions_traded || 0, liveD.size), sh = shD.size, rps = r.rp_sessions || 0;
+      const g = fams[family(r.setup)];
+      let w, tn, hc;
+      if (g) { w = +g.weight; tn = g.tier; hc = +g.haircut_r; }
+      else if (recs.length) { w = Math.min(...recs.map(x => x.weight ?? eff.uncalibrated_weight)); tn = recs[0].tier || "uncalibrated";
+        hc = Math.max(...recs.map(x => x.haircut_r ?? eff.haircut_extra_r)); }
+      else { w = eff.uncalibrated_weight; tn = "uncalibrated"; hc = eff.haircut_extra_r; }
+      const n = recs.reduce((a, x) => a + (x.trades || 0), 0), tot = recs.reduce((a, x) => a + (+x.total_r || 0), 0);
+      const gn = recs.reduce((a, x) => a + (x.gap_n || 0), 0), gs = recs.reduce((a, x) => a + (x.gap_n ? (+x.gap_r || 0) * x.gap_n : 0), 0);
+      Object.assign(r, { sh_live_sess: live, sh_sess: sh, sh_rp_sess: r.rp_sessions ?? null,
+        sh_eff: +(eff.live_weight * live + w * sh + wr * rps).toFixed(2), sh_w: w, sh_tier: tn, sh_wr: wr, sh_rp_tier: rpTier, sh_rp_hc: rpHair,
+        sh_trades: recs.length ? n : null, sh_trades_only: recs.reduce((a, x) => a + (x.trades_only || 0), 0),
+        sh_avg_r: n ? +(tot / n - hc).toFixed(3) : null, sh_raw_avg_r: n ? +(tot / n).toFixed(3) : null, sh_hc: hc,
+        sh_gap: gn ? +(gs / gn).toFixed(3) : null, sh_gap_n: gn });
+    });
+    return rows;
+  }
+  return { apply, tier, family, DEF };
+})();
+// SHADOW-BAND-END
 // Setup leaderboard (owner 2026-10-12). Merges reports/scorecard.json -> leaderboard from each account's state branch,
 // falling back to docs/live/leaderboard.json (snapshot) for an account whose nightly scorecard has no leaderboard yet.
 (() => {
@@ -1234,7 +1285,7 @@ window.MCF = window.MCF || {};
   const money = v => v == null ? "–" : (v < 0 ? "-$" : "$") + (Math.abs(v) >= 10000 ? (Math.abs(v) / 1000).toFixed(1) + "k" : Math.abs(v).toLocaleString(undefined, {maximumFractionDigits: 0}));   // compact $ (owner 2026-10-22)
   const cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
   const isGen = c => /^GEN-/.test(String(c || ""));
-  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null, RG = null, TD = null;
+  let rows = [], when = {}, sortK = "rank", sortD = 1, LS = null, RP = null, RG = null, TD = null, SH = { cards: [], eff: null, sum: null };
   const st = { acct: "all", show: "live", min: 0 };
   const dayOf = {}, lbOf = {};   // per account: latest completed session date, raw leaderboard rows
   function flag(r) {
@@ -1257,6 +1308,13 @@ window.MCF = window.MCF || {};
     // market conditions (owner 2026-10-22): docs/live/regimes.json {generated, labels, definitions, setups: {setup: {best, worst,
     // by_regime, class, source}}} from the 2-year as-run backtest (research/bdi/regime1022); "—" for setups it could not score
     try { const r = await fetch("../live/regimes.json?t=" + Date.now(), { cache: "no-store" }); RG = r.ok ? await r.json() : null; } catch (_) { RG = null; }
+    // Shadow / replay band (owner 2026-11-16): per-account shadow scorecards, the effective-session weights (one config file)
+    // and the nightly trust check; every column shows "—" until the data exists
+    const gj = u => fetch(u + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const CODE = RAW + "claude/intraday-trading-system-witis4/";
+    const [shCards, shEff, shSum] = await Promise.all([Promise.all(Object.values(ACC).map(([, br]) => gj(RAW + br + "/reports/shadow_scorecard.json"))),
+      gj(CODE + "config/effective_sessions.json"), gj(CODE + "research/shadow/summary.json")]);
+    SH = { cards: shCards.filter(Boolean), eff: shEff, sum: shSum };
     const all = [];
     await Promise.all(Object.entries(ACC).map(async ([k, [lab, br]]) => {
       let lb = null, pt = {};
@@ -1372,6 +1430,7 @@ window.MCF = window.MCF || {};
       r.rp_trades = v ? v.trades ?? null : null; r.rp_sessions = v ? v.sessions ?? null : null; r.rp_win_rate = v ? v.win_rate ?? null : null;
       r.rp_avg_r = v ? v.avg_r ?? null : null; r.rp_t = v ? (v.t ?? v.t_stat ?? null) : null; r.rp_total_r = v ? v.total_r ?? null : null; });
     all.forEach(r => { const g = RG && RG.setups ? RG.setups[r.setup] : null; r.rg = g; r.best_reg = g ? g.best : null; });
+    window.MCF_SHADOW.apply(all, SH.cards, SH.eff, SH.sum);
     all.forEach(r => { const v = lsBy[r.setup]; r.ls_trades = v ? v.trades : null; r.ls_r = v ? +v.r.toFixed(3) : null; r.ls_pnl = v ? +v.pnl.toFixed(2) : null; });
     all.forEach(r => { const a = asg && asg.setups && asg.setups[r.setup];
       if (NM[r.setup] && NM[r.setup].name) r.name = NM[r.setup].name;
@@ -1434,12 +1493,24 @@ window.MCF = window.MCF || {};
     ["total_r", "Total R"], ["avg_r", "Avg R"], ["exbest_r", "Avg R w/o best day"], ["best_share", "Best-day share"], ["recent_avg_r", "Last 4 avg R"],
     ["last10_avg_r", "Last 10 sessions avg R"], ["r_per_session", "Avg R per session"], ["exmkt_r", "Avg R ex-market"],
     ["rp_trades", "Replay trades"], ["rp_sessions", "Replay sessions"], ["rp_win_rate", "Replay win rate"], ["rp_avg_r", "Replay avg R"], ["rp_t", "Replay t"], ["rp_total_r", "Replay total R"],
+    // owner 2026-11-16: Shadow / replay band (effective sessions)
+    ["sh_live_sess", "Live sessions"], ["sh_sess", "Shadow sessions"], ["sh_rp_sess", "Replay sessions"], ["sh_eff", "Effective sessions"],
+    ["sh_trades", "Shadow trades"], ["sh_avg_r", "Shadow avg R (after haircut)"], ["sh_gap", "Shadow vs live gap"],
     ["expected_r", "Backtest R"], ["gap", "vs backtest"], ["sim_avg_r", "Sim. trades / sim avg R (SIMULATED)"], ["pt", "Playing time"], ["flag", "Flag"]];
   // header bands (owner 2026-10-21): column groups shown as a tinted band above the column headers
   const BAND = { ls_trades: "last", ls_r: "last", ls_pnl: "last", td_trades: "today", td_r: "today", trades: "live", sessions_traded: "live", per_session: "live", win_rate: "live", breakeven_wr: "live",
     avg_r: "live", exbest_r: "live", exmkt_r: "live", t_stat: "live", total_r: "live", pnl: "live", profit_factor: "live", recent_avg_r: "live",
     best_share: "live", last10_avg_r: "live", r_per_session: "live",
-    rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay" };
+    rp_trades: "replay", rp_sessions: "replay", rp_win_rate: "replay", rp_avg_r: "replay", rp_t: "replay", rp_total_r: "replay",
+    sh_live_sess: "shadow", sh_sess: "shadow", sh_rp_sess: "shadow", sh_eff: "shadow", sh_trades: "shadow", sh_avg_r: "shadow", sh_gap: "shadow" };
+  // plain-English header tooltips (owner 2026-11-16, Shadow / replay band)
+  const TIP = { sh_live_sess: "Sessions the setup ran live with real paper orders (or traded, before shadow mode existed). Each counts 1.",
+    sh_sess: "Sessions the setup ran only in shadow: its rules on the live data with no orders. Days it was also live are not counted twice.",
+    sh_rp_sess: "Past sessions replayed through the live engine (replay band).",
+    sh_eff: "Effective sessions = 1 × live + weight × shadow + weight × replay. Weight 0.35 when that source matched live 98%+ on held-out days with no optimism, 0.2 at 95-98% or not yet checked, 0 below 95%. On Deck still needs 5+ real live sessions.",
+    sh_trades: "Trades the setup made in shadow (no orders), in every account.",
+    sh_avg_r: "Average R per shadow trade after costs, minus a safety haircut (measured optimism + 0.02R).",
+    sh_gap: "Shadow R minus live R on the same trades, for setups running both. Positive = shadow looks better than live (too optimistic). Live wins any disagreement." };
   const LEFT = new Set(["name", "acctLabel", "best_reg", "pt", "flag"]);
   const RGRP = new Set(["total_r", "avg_r", "exbest_r", "best_share", "recent_avg_r", "last10_avg_r", "r_per_session", "exmkt_r"]);   // owner 2026-11-12
   const bandRow = () => { const out = []; COLS.forEach(([k]) => { const b = BAND[k] || "", p = out[out.length - 1];
@@ -1447,6 +1518,8 @@ window.MCF = window.MCF || {};
     const T = { last: [`Last session (${LS || "–"})`, ' id="lb-last-band"', "Most recent completed session, all accounts the setup traded in that day"],
       today: [TD ? `Today so far (${TD})` : "Today so far", ' id="lb-today-band"', TD ? "Closed trades today per setup, all accounts summed, from each account's live status file (R after costs). Replaced by the Last-session band once the EOD reports land." : "No open session: today's trades are in the Last-session band (EOD reports)."],
       live: ["Live — since start", "", "Live paper results since the setup started, all accounts merged"],
+      shadow: [`Shadow / replay${SH.cards.length ? "" : " (no shadow data yet)"}`, ' id="lb-shadow-band"',
+        "Evidence per setup: live, shadow (rules on live data, no orders) and replay sessions, and the effective sessions they add up to. Shadow is not live trading."],
       replay: [`Replay${RP && RP.generated ? " (" + String(RP.generated).slice(0, 10) + ")" : " (no data yet)"}`, ' id="lb-replay-band"',
         RP && RP.generated ? `Replay of the setup's rules over past sessions with the live execution engine, generated ${RP.generated}${RP.window ? ", " + RP.window : ""}. Not live trades.` : "Replay results appear here once the replay engine writes docs/live/replay.json. Not live trades."] };
     return `<tr class="band">${out.map(({ b, n }) => b ? `<th colspan="${n}" class="bd-${b}"${T[b][1]} title="${e(T[b][2])}">${e(T[b][0])}</th>` : `<th colspan="${n}"></th>`).join("")}</tr>`; };
@@ -1461,7 +1534,7 @@ window.MCF = window.MCF || {};
     q("#lb-sum").innerHTML = `${live.length} live setups across 3 intraday accounts · ${traded.length} have live trades · ${rows.reduce((a, x) => a + (x.trades || 0), 0)} live trades in all` +
       (best ? ` · #1 now: <b>${e(best.name)}</b> (${e(best.acctLabel)}, ${best.trades} trades, ${f(best.avg_r)}R)` : "") +
       ` · <b>${rows.filter(x => x.live && x.flag[0] === "review").length}</b> flagged for review · data: ` + Object.entries(when).map(([k, w]) => `${ACC[k][0]} ${e(w)}`).join(", ");
-    const th = COLS.map(([k, h]) => `<th class="${LEFT.has(k) ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${RGRP.has(k) ? " rgrp" : ""}${k === "total_r" ? " rg0" : k === "exmkt_r" ? " rg9" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}">${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
+    const th = COLS.map(([k, h]) => `<th class="${LEFT.has(k) ? "l" : ""}${BAND[k] ? " bd-" + BAND[k] : ""}${RGRP.has(k) ? " rgrp" : ""}${k === "total_r" ? " rg0" : k === "exmkt_r" ? " rg9" : ""}${sortK === k ? " sorted" : ""}" data-k="${k}"${TIP[k] ? ` title="${e(TIP[k])}"` : ""}>${h}${sortK === k ? (sortD > 0 ? " ▲" : " ▼") : ""}</th>`).join("");
     const td = x => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
@@ -1504,6 +1577,13 @@ window.MCF = window.MCF || {};
         rp_avg_r: `<td class="bd-replay ${cls(x.rp_avg_r)}">${x.rp_avg_r == null ? "—" : f(x.rp_avg_r)}</td>`,
         rp_t: `<td class="bd-replay">${x.rp_t == null ? "—" : f(x.rp_t, 1, false)}</td>`,
         rp_total_r: `<td class="bd-replay ${cls(x.rp_total_r)}">${x.rp_total_r == null ? "—" : f(x.rp_total_r, 1)}</td>`,
+        sh_live_sess: `<td class="bd-shadow">${x.sh_live_sess ?? "—"}</td>`,
+        sh_sess: `<td class="bd-shadow">${x.sh_sess || "—"}</td>`,
+        sh_rp_sess: `<td class="bd-shadow">${x.sh_rp_sess ?? "—"}</td>`,
+        sh_eff: `<td class="bd-shadow" title="${e(`${(SH.eff || window.MCF_SHADOW.DEF).live_weight} × ${x.sh_live_sess ?? 0} live + ${x.sh_w ?? "–"} × ${x.sh_sess ?? 0} shadow (${x.sh_tier || "–"}) + ${x.sh_wr ?? "–"} × ${x.sh_rp_sess ?? 0} replay (${x.sh_rp_tier || "–"})`)}"><b>${x.sh_eff ?? "—"}</b></td>`,
+        sh_trades: `<td class="bd-shadow" title="${x.sh_trades ? e(`${x.sh_trades_only} shadow-only, ${x.sh_trades - x.sh_trades_only} alongside live`) : "No shadow trades yet"}">${x.sh_trades ?? "—"}</td>`,
+        sh_avg_r: `<td class="bd-shadow ${x.sh_avg_r == null ? "" : cls(x.sh_avg_r)}" title="${x.sh_avg_r == null ? "No shadow trades yet" : e(`${f(x.sh_raw_avg_r, 3)}R after costs, minus ${x.sh_hc}R haircut`)}">${x.sh_avg_r == null ? "—" : f(x.sh_avg_r)}</td>`,
+        sh_gap: `<td class="bd-shadow ${x.sh_gap > 0.01 ? "down" : ""}" title="${x.sh_gap == null ? "Needs trades in both live and shadow" : e(`${x.sh_gap_n} matched trades; positive = shadow more optimistic than live`)}">${x.sh_gap == null ? "—" : f(x.sh_gap, 3)}</td>`,
         expected_r: `<td>${f(x.expected_r)}</td>`, gap: `<td class="${cls(x.gap)}">${f(x.gap)}</td>`,
         sim_avg_r: `<td title="SIMULATED what-if of signals not taken; not live"><i>${x.sim_trades ?? "–"} / ${f(x.sim_avg_r)}</i></td>`,
         pt: `<td class="l">${e(x.pt || "–")}</td>`, flag: `<td class="l ${x.flag[1]}"><b>${x.flag[0]}</b></td>` };

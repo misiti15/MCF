@@ -227,7 +227,7 @@ def journal_day(acct: str, date: str, state_dir: str | None = None) -> dict:
     try:
         db = sqlite3.connect(f.name)
         rows = db.execute("SELECT t.symbol, t.pnl, t.pnl_adj FROM trades t JOIN runs r ON r.id = t.run_id "
-                          "WHERE r.kind != 'whatif' AND t.date = ? AND t.exit_time IS NOT NULL", (date,)).fetchall()
+                          "WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? AND t.exit_time IS NOT NULL", (date,)).fetchall()
     except Exception:
         return {}
     finally:

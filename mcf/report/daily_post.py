@@ -187,7 +187,7 @@ def journal_day(date: str, keys=None) -> dict:
             continue
         try:
             rows = db.execute("SELECT t.strategy, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj, t.r_multiple FROM trades t "
-                              "JOIN runs r ON r.id = t.run_id WHERE r.kind != 'whatif' AND t.date = ? AND t.exit_time IS NOT NULL",
+                              "JOIN runs r ON r.id = t.run_id WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? AND t.exit_time IS NOT NULL",
                               (date,)).fetchall()
         except Exception:
             continue
@@ -428,7 +428,8 @@ def why_missed(setup: str, day: str, cache: dict) -> str:
         db = cache.setdefault(("db", br), _journal(br))
         if db is None:
             continue
-        for st, rs, n in db.execute("SELECT status, reason, COUNT(*) FROM signals WHERE strategy=? AND day=? GROUP BY 1, 2",
+        for st, rs, n in db.execute("SELECT status, reason, COUNT(*) FROM signals WHERE strategy=? AND day=? "
+                                     "AND run_id IN (SELECT id FROM runs WHERE kind = 'paper') GROUP BY 1, 2",
                                     (setup, day)):
             reasons[(st, rs or "")] = reasons.get((st, rs or ""), 0) + n
     if not active:
