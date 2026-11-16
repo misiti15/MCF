@@ -1,0 +1,38 @@
+{
+  "_doc": "Effective sessions (owner 2026-11-16, corrected same day: live 1.0 not 1.25). ONE source for the leaderboard (docs/live/index.html) and reviews (mcf/research/effective.py). Educational only - not financial advice.",
+  "owner_date": "2026-11-16",
+  "live_weight": 1.0,
+  "tiers": [
+    {
+      "name": "calibrated",
+      "min_match": 0.98,
+      "max_extra": 0.02,
+      "no_optimism": true,
+      "weight": 0.35
+    },
+    {
+      "name": "partial",
+      "min_match": 0.95,
+      "weight": 0.2
+    }
+  ],
+  "below_weight": 0.0,
+  "uncalibrated_weight": 0.2,
+  "bias_tolerance_r": 0.01,
+  "optimism_t": 1.645,
+  "haircut_extra_r": 0.02,
+  "calibration_min_days": 3,
+  "calibration_min_live_entries": 30,
+  "calibration_fit_until": null,
+  "on_deck_min_live_sessions": 5,
+  "primary_needs": "full live record",
+  "live_wins": "if live and shadow/replay disagree beyond noise, live wins",
+  "replay": {
+    "match": null,
+    "extra": null,
+    "optimism_r": null,
+    "note": "replay not yet measured on held-out days under these rules: lower tier until it is"
+  },
+  "history_weight": 0.175,
+  "history_note": "1 session of the 2-year history (full-universe backtest, no live counterpart) = 0.175: screening / experience only, never counts toward the On Deck or Primary minimums"
+}
