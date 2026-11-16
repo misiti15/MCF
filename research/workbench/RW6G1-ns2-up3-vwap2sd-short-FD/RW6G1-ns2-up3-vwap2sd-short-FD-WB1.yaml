@@ -1,0 +1,29 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW6G1-ns2-up3-vwap2sd-short-FD; one change: window [950, 1500] -> [1100, 1500]. Educational only - not financial advice.
+strategies:
+  RW6G1-ns2-up3-vwap2sd-short-FD-WB1:
+    enabled: false
+    refire: true
+    refire_cooldown: 1
+    type: lab
+    module: research/workbench/RW6G1-ns2-up3-vwap2sd-short-FD/modules/RW6G1-ns2-up3-vwap2sd-short-FD-WB1.py
+    min_adv: 95000000
+    window:
+    - 1100
+    - 1500
+    scale_out_r: null
+    live_scale_out: false
+    tags:
+    - workbench
+    - parent:RW6G1-ns2-up3-vwap2sd-short-FD
+    workbench:
+      parent: RW6G1-ns2-up3-vwap2sd-short-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 1100
+      - 1500
+      date: '2026-11-16'
+      note: 'Mechanic 2026-11-16: bench config V04 (entries 09:50-11:00 lost in 2y/live)'
