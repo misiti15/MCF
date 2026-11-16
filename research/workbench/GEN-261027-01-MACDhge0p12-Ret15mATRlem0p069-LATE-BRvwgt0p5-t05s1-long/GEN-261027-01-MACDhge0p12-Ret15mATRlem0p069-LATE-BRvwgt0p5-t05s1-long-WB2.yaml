@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long; one change: min_adv 20000000 -> 100000000. Educational only - not financial advice.
+strategies:
+  GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long/modules/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB2.py
+    context:
+    - breadth
+    min_adv: 100000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+    workbench:
+      parent: GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+      param: min_adv
+      old: 20000000
+      new: 100000000
+      date: '2026-11-16'
+      note: 'Mechanic: P2 liquidity floor 20-day avg dollar volume $20M -> $100M'
+      display_name: "Generated: Late Pullback Buy (MACD rising) — WB2: ADV >= $100M"

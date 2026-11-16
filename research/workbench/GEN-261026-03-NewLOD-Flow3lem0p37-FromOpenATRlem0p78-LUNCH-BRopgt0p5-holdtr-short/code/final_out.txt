@@ -1,0 +1,63 @@
+                copy    test     n  days   win    avg  wobest  total  worst  bestshare   avgw   avgl   hold  pair_day  pair_t      T      V
+0             parent  replay    87     9  57.5  0.044  -0.132    3.8  -4.88       3.13  0.744 -0.902  137.0     0.000    0.00    NaN    NaN
+1             parent      2y  1180   230  46.5 -0.039  -0.055  -45.7  -9.58        NaN  0.954 -0.903  111.0     0.000    0.00 -0.025 -0.048
+2  WB1 from_pc<=-1.3  replay    41     8  58.5  0.175   0.080    7.2  -3.30       0.70  0.900 -0.847  132.0     0.223    0.33    NaN    NaN
+3  WB1 from_pc<=-1.3      2y   359   145  51.5  0.090   0.055   32.5  -8.72       0.40  1.091 -0.973   73.0     0.181    1.90  0.084  0.095
+4      WB2 end 13:00  replay    64     9  62.5  0.153  -0.016    9.8  -3.82       1.08  0.802 -0.929  176.5     0.395    1.15    NaN    NaN
+5      WB2 end 13:00      2y   795   202  48.2 -0.001  -0.022   -0.5  -9.49        NaN  1.003 -0.933  109.0     0.105    1.80 -0.016  0.010
+6      WB3 = WB1+WB2  replay    30     8  66.7  0.349   0.199   10.5  -3.30       0.56  1.025 -1.004  129.0     0.441    0.62    NaN    NaN
+7      WB3 = WB1+WB2      2y   237   112  52.7  0.101   0.049   23.8  -8.72       0.54  1.120 -1.038   70.0     0.161    1.49  0.164  0.052
+
+## parent 2y by day type {'count': {'down': 119, 'flat': 399, 'up': 662}, 'mean': {'down': 0.474, 'flat': -0.051, 'up': -0.123}} 
+ by tod {'count': {Interval(1125, 1200, closed='right'): 327, Interval(1200, 1230, closed='right'): 253, Interval(1230, 1300, closed='right'): 215, Interval(1300, 1330, closed='right'): 196, Interval(1330, 1400, closed='right'): 189}, 'mean': {Interval(1125, 1200, closed='right'): 0.011, Interval(1200, 1230, closed='right'): 0.022, Interval(1230, 1300, closed='right'): -0.045, Interval(1300, 1330, closed='right'): -0.031, Interval(1330, 1400, closed='right'): -0.207}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 76, Interval(50.0, 150.0, closed='right'): 449, Interval(150.0, 400.0, closed='right'): 471, Interval(400.0, 100000.0, closed='right'): 184}, 'mean': {Interval(0.0, 50.0, closed='right'): -0.16, Interval(50.0, 150.0, closed='right'): 0.005, Interval(150.0, 400.0, closed='right'): -0.031, Interval(400.0, 100000.0, closed='right'): -0.117}} 
+ exits {'count': {'gapstop': 3, 'stop': 440, 'time': 353, 'trail': 384}, 'mean': {'gapstop': -1.0, 'stop': -1.152, 'time': 0.481, 'trail': 0.766}} 
+ w/o best month -0.056
+
+## WB1 from_pc<=-1.3 2y by day type {'count': {'down': 49, 'flat': 109, 'up': 201}, 'mean': {'down': 0.864, 'flat': 0.126, 'up': -0.118}} 
+ by tod {'count': {Interval(1125, 1200, closed='right'): 102, Interval(1200, 1230, closed='right'): 67, Interval(1230, 1300, closed='right'): 68, Interval(1300, 1330, closed='right'): 66, Interval(1330, 1400, closed='right'): 56}, 'mean': {Interval(1125, 1200, closed='right'): 0.186, Interval(1200, 1230, closed='right'): 0.013, Interval(1230, 1300, closed='right'): 0.058, Interval(1300, 1330, closed='right'): 0.25, Interval(1330, 1400, closed='right'): -0.141}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 21, Interval(50.0, 150.0, closed='right'): 135, Interval(150.0, 400.0, closed='right'): 135, Interval(400.0, 100000.0, closed='right'): 68}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.123, Interval(50.0, 150.0, closed='right'): 0.19, Interval(150.0, 400.0, closed='right'): 0.106, Interval(400.0, 100000.0, closed='right'): -0.149}} 
+ exits {'count': {'gapstop': 3, 'stop': 139, 'time': 72, 'trail': 145}, 'mean': {'gapstop': -1.0, 'stop': -1.146, 'time': 0.96, 'trail': 0.867}} 
+ w/o best month 0.025
+
+## WB2 end 13:00 2y by day type {'count': {'down': 82, 'flat': 292, 'up': 421}, 'mean': {'down': 0.233, 'flat': 0.005, 'up': -0.05}} 
+ by tod {'count': {Interval(1125, 1200, closed='right'): 327, Interval(1200, 1230, closed='right'): 253, Interval(1230, 1300, closed='right'): 215}, 'mean': {Interval(1125, 1200, closed='right'): 0.011, Interval(1200, 1230, closed='right'): 0.022, Interval(1230, 1300, closed='right'): -0.045}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 49, Interval(50.0, 150.0, closed='right'): 316, Interval(150.0, 400.0, closed='right'): 305, Interval(400.0, 100000.0, closed='right'): 125}, 'mean': {Interval(0.0, 50.0, closed='right'): -0.104, Interval(50.0, 150.0, closed='right'): 0.057, Interval(150.0, 400.0, closed='right'): 0.002, Interval(400.0, 100000.0, closed='right'): -0.113}} 
+ exits {'count': {'gapstop': 3, 'stop': 302, 'time': 208, 'trail': 282}, 'mean': {'gapstop': -1.0, 'stop': -1.152, 'time': 0.573, 'trail': 0.82}} 
+ w/o best month -0.021
+
+## WB3 = WB1+WB2 2y by day type {'count': {'down': 26, 'flat': 77, 'up': 134}, 'mean': {'down': 0.828, 'flat': 0.198, 'up': -0.097}} 
+ by tod {'count': {Interval(1125, 1200, closed='right'): 102, Interval(1200, 1230, closed='right'): 67, Interval(1230, 1300, closed='right'): 68}, 'mean': {Interval(1125, 1200, closed='right'): 0.186, Interval(1200, 1230, closed='right'): 0.013, Interval(1230, 1300, closed='right'): 0.058}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 11, Interval(50.0, 150.0, closed='right'): 97, Interval(150.0, 400.0, closed='right'): 85, Interval(400.0, 100000.0, closed='right'): 44}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.134, Interval(50.0, 150.0, closed='right'): 0.232, Interval(150.0, 400.0, closed='right'): 0.108, Interval(400.0, 100000.0, closed='right'): -0.211}} 
+ exits {'count': {'gapstop': 2, 'stop': 97, 'time': 35, 'trail': 103}, 'mean': {'gapstop': -1.0, 'stop': -1.152, 'time': 1.385, 'trail': 0.866}} 
+ w/o best month 0.036
+
+WB1 removed (2y): 822 -0.132 kept 359 0.09 Welch t 2.92
+T removed {'count': 334.0, 'mean': -0.12} kept {'count': 146.0, 'mean': 0.084}
+V removed {'count': 488.0, 'mean': -0.14} kept {'count': 213.0, 'mean': 0.095}
+   symbol        date   tod     r exit_reason  mfe_r  from_pc_atr  fromOpen_atr  flow3  gap_atr  costR     CF    WB1    WB2
+15     JD  2026-11-03  1200 -1.14        stop   0.04         1.15         -0.90  -1.00     2.05   0.34  False  False   True
+1    FISV  2026-10-26  1345 -1.13        stop   0.12        -1.61         -1.20  -1.00    -0.41   0.17  False   True  False
+11   CCEP  2026-10-29  1155 -1.12        stop   0.19        -0.59         -1.08  -0.68     0.49   0.11   True  False   True
+3    TOST  2026-10-26  1230 -0.86     flatten   0.25        -0.80         -0.80  -0.46     0.00   0.17  False  False   True
+2    CAVA  2026-10-26  1230 -0.27        stop   0.61        -1.12         -1.28  -0.55     0.16   0.09   True  False   True
+12    XOP  2026-11-02  1310 -0.20        stop   0.57        -1.79         -0.92  -1.00    -0.87   0.06   True   True  False
+7     TJX  2026-10-27  1210 -0.07     flatten   0.56        -1.22         -0.81  -0.46    -0.40   0.11   True  False   True
+13    OXY  2026-11-02  1250  0.02     flatten   0.28        -2.01         -1.14  -1.00    -0.87   0.14   True   True   True
+20     DG  2026-11-03  1230  0.06     flatten   0.71        -1.07         -0.90  -0.58    -0.17   0.06   True  False   True
+9     MCK  2026-10-27  1255  0.06     flatten   0.66        -1.03         -0.86  -1.00    -0.17   0.04   True  False   True
+8    MSCI  2026-10-27  1215  0.27     flatten   0.41        -0.96         -1.30  -0.57     0.34   0.05   True  False   True
+6     STZ  2026-10-27  1210  0.36     flatten   0.48        -1.23         -0.84  -1.00    -0.39   0.07   True  False   True
+14    XLE  2026-11-02  1310  0.37     flatten   0.50        -1.68         -0.86  -1.00    -0.82   0.15  False   True  False
+16    LEN  2026-11-03  1145  0.43     flatten   0.44        -1.39         -1.07  -1.00    -0.33   0.07   True   True   True
+5    VRSK  2026-10-27  1150  0.44     flatten   1.35        -1.11         -0.92  -0.38    -0.18   0.05   True  False   True
+17    PPG  2026-11-03  1145  0.59     flatten   0.88        -0.91         -1.03  -1.00     0.12   0.07   True  False   True
+19    DKS  2026-11-03  1220  0.84     flatten   1.47        -1.06         -0.97  -0.38    -0.09   0.06   True  False   True
+18    XLB  2026-11-03  1145  0.88     flatten   0.88        -1.33         -1.09  -1.00    -0.23   0.28  False   True   True
+10     SU  2026-10-27  1255  1.49     flatten   1.50        -1.03         -0.84  -1.00    -0.19   0.10   True  False   True
+0    FICO  2026-10-26  1220  3.32        stop   4.58        -2.75         -0.94  -1.00    -1.80   0.02   True   True   True
+4    PAYX  2026-10-27  1150  3.59     flatten   3.86        -1.35         -1.09  -1.00    -0.26   0.09   True   True   True
+CF keeps {'count': 16.0, 'mean': 0.615, 'sum': 9.844} skips {'count': 5.0, 'mean': -0.376, 'sum': -1.88}
+WB1 keeps {'count': 8.0, 'mean': 0.91, 'sum': 7.282} skips {'count': 13.0, 'mean': 0.052, 'sum': 0.681}
+WB2 keeps {'count': 18.0, 'mean': 0.496, 'sum': 8.926} skips {'count': 3.0, 'mean': -0.321, 'sum': -0.962}
+{'2y all': [np.float64(-0.039), np.float64(-0.034), np.float64(-0.011), np.float64(0.042), np.float64(0.071), np.float64(0.09), np.float64(0.124), np.float64(0.102), np.float64(0.065), np.float64(0.021)], '2y train': [np.float64(-0.025), np.float64(0.009), np.float64(0.04), np.float64(0.086), np.float64(0.098), np.float64(0.084), np.float64(0.138), np.float64(0.071), np.float64(-0.01), np.float64(-0.159)], '2y valid': [np.float64(-0.048), np.float64(-0.064), np.float64(-0.043), np.float64(0.013), np.float64(0.054), np.float64(0.095), np.float64(0.114), np.float64(0.125), np.float64(0.124), np.float64(0.182)], 'replay': [np.float64(0.044), np.float64(0.099), np.float64(0.05), np.float64(0.084), np.float64(0.114), np.float64(0.175), np.float64(0.106), np.float64(0.185), np.float64(0.093), np.float64(0.128)]}
