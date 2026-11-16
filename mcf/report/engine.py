@@ -704,7 +704,7 @@ def render_teardown(bp: dict, stages: list[dict], td: dict, path: Path, rank: st
     lvl_labels = []
     for lvl, col, lab in ((t["entry"], INK, f"entry {t['entry']:.2f}"),
                           (t["stop"], DOWN, f"{pref(stages, 'stop')} stop {t['stop']:.2f}"),
-                          (t["target"], UP, f"{pref(stages, 'target')} target {t['target']:.2f}")):
+                          (t["target"], UP, f"{pref(stages, 'target')} target {t['target']:.2f}" if t["target"] is not None else "")):
         if lvl is None:
             continue
         ax.plot([ti, to], [lvl, lvl], color=col, lw=1.3, ls="-" if col == INK else (0, (5, 2)), zorder=5)
