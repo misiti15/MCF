@@ -143,6 +143,7 @@ End-of-day reports: <a href="report.html">open</a></div></div></header>
 #qnav::-webkit-scrollbar { display: none; }
 #qnav a { flex: none; font-size: 13px; padding: 4px 11px; border-radius: 999px; color: var(--ink-2); text-decoration: none; border: 1px solid transparent; }
 #qnav a:hover, #qnav a.on { color: var(--ink); border-color: var(--border); background: var(--surface); }
+#sim-tab .sim-scr { background: var(--band-replay); } #sim-tab tbody td:nth-child(13), #sim-tab thead tr:not(.band) th:nth-child(13) { border-left: 2px solid var(--axis); }   /* 2-year screen group (owner 2026-11-16) */
 #acc-all, #live, #lb-card, #pipe-card, #chg-card, #glance, #tpd-card, #gl-card, #lh, #dec-card { scroll-margin-top: 52px; }
 #glance { margin: 12px 0 4px; padding: 10px 12px; }
 #glance h2 { font-size: 13px; margin: 0 0 6px; color: var(--ink-2); }
@@ -797,6 +798,92 @@ window.MCF = window.MCF || {};
       Flags: <b>review</b> = 20+ trades and 0.15R or more below its backtest, or 20+ trades and negative; <b>promising</b> = 20+ trades, positive, at or above its backtest;
       <b>needs trades</b> = fewer than 10. <b>*</b> = long setup from the 2026-10-20 longs research, near-miss, observation only.
       Paper results; few trades prove nothing. Updated by each account's end-of-day report. Educational only — not financial advice.</div></div>
+  <!-- Simulated leaderboard (owner 2026-11-16, display only): the real leaderboard above stays exactly as it is; this card
+       re-ranks the same setups with replay / 2-year backtest reps added at the effective-session weights. Inputs:
+       docs/live/sim_inputs.json (python -m mcf.report.sim_board). Not live results - a what-if ranking. -->
+  <div class="card" id="sim-card"><h2>Simulated leaderboard — Live + weighted Session replay / Shadow</h2>
+    <div class="sub" id="sim-sum">Loading…</div>
+    <div class="controls" style="margin:8px 0" id="sim-ctl"><select id="sim-show" aria-label="Which setups"><option value="all">Real-board setups + Session-replay-only setups</option><option value="real">Real-board setups only</option></select></div>
+    <div class="tablewrap" id="sim-tab" style="max-height:max(480px, calc(100vh - 110px));overflow-y:auto"><div class="empty">Loading…</div></div>
+    <div class="note"><b>Effective sessions</b> = 1.0 × Live sessions + w × Session replay sessions + w × Shadow sessions; <b>Effective trades</b> the same with trades.
+      <b>Blended avg R</b> = (Live trades × Live avg R + w × Session replay trades × (Session replay avg R − haircut) + w × Shadow trades × Shadow avg R (already haircut)) ÷ effective trades.
+      Haircut = measured optimism + 0.02R. <b>2-year screen</b> = the Setup Generator's quick pass of the 2-year backtest (Alpaca 1-minute bars), shown as its own source and <b>never blended or ranked</b> (owner 2026-11-16: 2,000 screen trades are not 275 live trades);
+      <b>Screen vs live</b> = Live avg R − 2-year screen avg R (only with 10+ live trades), <b>agree</b> = same sign. <b>Rank</b> = blended avg R × eff. trades ÷ (eff. trades + 20), same as the real board; top 30 needs ≥ 15 effective trades and ≥ 5 effective sessions.
+      <b>Δ rank</b> = real-board rank minus simulated rank (▲ = higher here). Not live results — a what-if ranking; never used for promotion on its own. Educational only — not financial advice.</div></div>
+<script>
+// SIM-BOARD (owner 2026-11-16): reads window.MCF.lb (the real board's merged rows, untouched) + docs/live/sim_inputs.json.
+window.MCF = window.MCF || {};
+window.MCF.simBlend = (live, replay, shadow, w) => {   // mirror of mcf/report/sim_board.py blend(); the 2-year screen is never an input
+  let et = 0, es = 0, sr = 0;
+  const wsh = shadow && shadow.weight != null ? shadow.weight : (w.shadow ?? w.replay);
+  [[live, w.live, 0], [replay, w.replay, w.haircut_r], [shadow, wsh, 0]].forEach(([s, wt, hc]) => {
+    if (s && s.trades && s.avg_r != null && wt > 0) { et += wt * s.trades; es += wt * (s.sessions || 0); sr += wt * s.trades * (s.avg_r - hc); } });
+  const avg = et ? sr / et : null;
+  return { eff_trades: et, eff_sessions: es, avg_r: avg, score: avg == null ? null : avg * et / (et + 20) };
+};
+(() => {
+  const q = s => document.querySelector(s), e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const f3 = v => v == null ? "–" : (+v).toFixed(3), f1 = v => v == null ? "–" : (+v).toFixed(1), cls = v => v == null ? "" : v > 0 ? "up" : v < 0 ? "down" : "";
+  let SIM, NM = {}, show = "all";
+  fetch("../live/sim_inputs.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null).then(d => { SIM = d || false; draw(); });
+  fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})).then(d => { NM = d || {}; draw(); });
+  function draw() {
+    const lb = (window.MCF.lb || {}).rows;
+    if (SIM === false) { q("#sim-sum").textContent = "No simulated inputs yet (docs/live/sim_inputs.json missing — run python -m mcf.report.sim_board)."; q("#sim-tab").innerHTML = ""; return; }
+    if (!SIM || !lb) return;
+    const src = SIM.sources || {}, w = src.weights || { live: 1, replay: 0.2, backtest: 0.175, haircut_r: 0.02 }, rp = src.replay, bt = src.backtest, S = SIM.setups || {};
+    const ago = rp && rp.to ? Math.round((Date.now() - new Date(rp.to + "T16:00:00")) / 864e5) : null;
+    q("#sim-sum").innerHTML = `<b>Included:</b> Live trades (weight ${w.live}, from the real board above) · ` +
+      (rp ? `Session replay ${e(rp.from)} to ${e(rp.to)} (${rp.setups} setups, weight ${w.replay} — ${w.replay_tier === "uncalibrated" ? "0.2 until calibrated, 0.35 once calibrated" : "measured tier"})${ago != null && ago > 7 ? ` <b>stale: ${ago} days old</b>` : ""}` : "no Session replay data") + " · " +
+      `Shadow sessions (own labelled source, weight per config/effective_sessions.json; already haircut)` + " · " +
+      (bt ? `2-year screen (Setup Generator pass of the 2-year backtest on Alpaca 1-minute bars; ${bt.setups} Gen setups, runs ${e(bt.runs_from)} to ${e(bt.runs_to)}; weight ${w.backtest} kept in config — <b>screening only, not in blend</b>: own columns vs live, never moves the rank)` : "no 2-year screen data") +
+      `.<br>Session replay avg R gets the haircut (measured optimism + 0.02R = ${w.haircut_r}R). Built ${e(SIM.generated)}. <b>Not live results — a what-if ranking.</b>`;
+    const real = {}; lb.forEach(r => { real[r.setup] = r; });
+    const ids = new Set(lb.filter(r => r.live && r.score != null).map(r => r.setup));
+    if (show === "all") Object.keys(S).forEach(k => { if (!real[k] || real[k].live) ids.add(k); });
+    const rows = [...ids].map(k => {
+      const r = real[k], s = S[k] || {}, lv = r && r.trades ? { trades: r.trades, sessions: r.sessions_traded || 0, avg_r: r.avg_r } : null;
+      const sh = r && r.sh_trades && r.sh_avg_r != null ? { trades: r.sh_trades, sessions: r.sh_sess || 0, avg_r: r.sh_avg_r, weight: r.sh_w } : null;
+      const b = window.MCF.simBlend(lv, s.replay, sh, w);
+      // w/o best day: only when every blended source carries one (live exbest_r, replay wo_best; shadow has none yet)
+      let wo = null;
+      if (!sh && (!lv || r.exbest_r != null) && (!s.replay || s.replay.wo_best != null) && (lv || s.replay))
+        wo = window.MCF.simBlend(lv && { ...lv, avg_r: r.exbest_r }, s.replay && { ...s.replay, avg_r: s.replay.wo_best }, null, w).avg_r;
+      // 2-year screen: own source, fixed comparison vs live (never blended / ranked)
+      const bt = s.backtest, cmp = lv && bt && lv.trades >= 10 && lv.avg_r != null && bt.avg_r != null ? { diff: lv.avg_r - bt.avg_r, agree: (lv.avg_r > 0) === (bt.avg_r > 0) } : null;
+      return { setup: k, name: (NM[k] || {}).name || (r && r.name) || k, real_rank: r ? r.rank : null, live_avg_r: lv ? lv.avg_r : null, live_trades: lv ? lv.trades : 0,
+        rp: s.replay, sh, bt, cmp, wo, ...b };
+    }).filter(x => x.score != null);
+    const TOPN = 30, ok = x => x.eff_trades >= 15 && x.eff_sessions >= 5, by = (a, b) => b.score - a.score;
+    const q1 = rows.filter(ok).sort(by), rest = rows.filter(x => !ok(x)).sort(by);
+    const ranked = [...q1.slice(0, TOPN), ...[...q1.slice(TOPN), ...rest].sort(by)];
+    ranked.forEach((x, i) => { x.rank = i + 1; });
+    const delta = x => x.real_rank == null ? `<span title="Not ranked on the real board">new</span>` : x.real_rank === x.rank ? "=" :
+      x.real_rank > x.rank ? `<span class="up">▲${x.real_rank - x.rank}</span>` : `<span class="down">▼${x.rank - x.real_rank}</span>`;
+    const tipB = "Blended avg R = (Live trades × Live avg R + w × Session replay trades × (Session replay avg R − haircut) + w × Shadow trades × Shadow avg R) ÷ effective trades. The 2-year screen is not in it.";
+    const H = [["#", ""], ["Setup", ""], ["Real rank", "Rank on the real leaderboard above"], ["Δ rank vs real board", "▲ = ranks higher here than on the real board"],
+      ["Effective sessions", "1.0 × live + w × Session replay + w × Shadow sessions (2-year screen not included)"], ["Effective trades", "1.0 × live + w × Session replay + w × Shadow trades (2-year screen not included)"],
+      ["Blended avg R", tipB], ["Blended avg R w/o best day", "Same blend with live avg R w/o its best session and replay w/o its best session; – when a source has none"],
+      ["Live avg R", "From the real board"], ["Live trades", ""], ["Session replay trades / avg R", "Raw Session replay avg R, before the haircut"], ["Shadow trades / avg R", "Shadow (own source), avg R after its haircut"],
+      ["2-year screen trades", "Setup Generator pass of the 2-year backtest (train + valid): own source, not blended, never moves the rank"], ["2-year screen avg R", "Raw 2-year screen avg R after costs"],
+      ["Screen vs live", "Live avg R − 2-year screen avg R; – when Live trades < 10. agree = same sign"]];
+    const NB = 12;   // first NB columns = blend / rank; the last 3 = the 2-year screen group (own source)
+    q("#sim-tab").innerHTML = `<table><thead><tr class="band"><th colspan="${NB}">Live + Session replay + Shadow (ranked)</th><th colspan="3" class="sim-scr" style="border-left:2px solid var(--axis)">2-year screen (not in ranking)</th></tr>` +
+      `<tr>${H.map(([h, t], i) => `<th${i === 1 ? ' class="l"' : ""}${i >= NB ? ' class="sim-scr"' : ""}${t ? ` title="${e(t)}"` : ""}>${h}</th>`).join("")}</tr></thead><tbody>` +
+      ranked.map(x => `<tr data-setup="${e(x.setup)}"><td>${x.rank}</td><td class="l nmc" title="${e(x.name)} · ${e(x.setup)}"><span class="nm">${e(x.name)}</span><span class="sid" style="font-size:11px;color:var(--muted)">${e(x.setup)}</span></td>` +
+        `<td>${x.real_rank ?? "–"}</td><td>${delta(x)}</td><td>${f1(x.eff_sessions)}</td><td>${f1(x.eff_trades)}</td><td class="${cls(x.avg_r)}" title="${e(tipB)}">${f3(x.avg_r)}</td>` +
+        `<td class="${cls(x.wo)}">${f3(x.wo)}</td><td class="${cls(x.live_avg_r)}">${f3(x.live_avg_r)}</td><td>${x.live_trades}</td>` +
+        `<td>${x.rp ? x.rp.trades + " / " + f3(x.rp.avg_r) : "–"}</td><td>${x.sh ? x.sh.trades + " / " + f3(x.sh.avg_r) : "–"}</td>` +
+        `<td class="sim-scr">${x.bt ? x.bt.trades : "–"}</td><td class="sim-scr ${cls(x.bt && x.bt.avg_r)}">${x.bt ? f3(x.bt.avg_r) : "–"}</td>` +
+        `<td class="sim-scr">${x.cmp ? `<span class="${cls(x.cmp.diff)}">${x.cmp.diff > 0 ? "+" : ""}${f3(x.cmp.diff)}</span> <span class="tag" style="font-size:10.5px;padding:0 4px;border:1px solid var(--axis);border-radius:6px">${x.cmp.agree ? "agree" : "disagree"}</span>` : "–"}</td></tr>`).join("") + `</tbody></table>`;
+    const nReal = lb.filter(r => r.live && r.score != null).length;
+    q("#sim-tab").dataset.count = ranked.length;
+    q("#sim-sum").insertAdjacentHTML("beforeend", `<br>${ranked.length} setups here vs ${nReal} ranked on the real board.`);
+  }
+  q("#sim-show").onchange = ev => { show = ev.target.value; draw(); };
+  document.addEventListener("mcf:leaderboard", draw);
+})();
+</script>
   <!-- Generated setups leaderboard (owner 2026-10-19): the Setup Generator account's machine-generated GEN-* setups only.
        Deliberately distinct from the setup leaderboard above (violet accent, GENERATED badge). Script at the end of the page. -->
   <div class="card gen" id="gen-card"><h2><span class="genbadge">GENERATED</span> Generated setups leaderboard — Setup Generator account</h2>
