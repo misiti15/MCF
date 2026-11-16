@@ -1,0 +1,31 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long; one change: window [1400, 1500] -> [1400, 1430]. Educational only - not financial advice.
+strategies:
+  GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long/modules/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB1.py
+    context:
+    - breadth
+    min_adv: 20000000
+    window:
+    - 1400
+    - 1430
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+    workbench:
+      parent: GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+      param: window
+      old:
+      - 1400
+      - 1500
+      new:
+      - 1400
+      - 1430
+      date: '2026-11-16'
+      note: 'Mechanic: P5 entry window end 15:00 -> 14:30 (signals in the first 30
+        minutes of the late window only)'
+      display_name: "Generated: Late Pullback Buy (MACD rising) — WB1: window 14:00-14:30"
