@@ -1,0 +1,24 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent NM-ETF-late-dip-di-long; change: cond.ret3 + cond.ret12 (combo WB1+WB2) -> ret3 <= -0.90 AND ret12 >= 0.5. Educational only - not financial advice.
+strategies:
+  NM-ETF-late-dip-di-long-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB3.py
+    symbols: module
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:NM-ETF-late-dip-di-long
+    workbench:
+      parent: NM-ETF-late-dip-di-long
+      param: "cond.ret3 + cond.ret12 (combo WB1+WB2)"
+      old: -0.7977116525173187
+      new: "ret3 <= -0.90 AND ret12 >= 0.5"
+      date: '2026-11-16'
+      note: "Mechanic combo = WB1 + WB2 (each passed alone); counted as its own config; module set by hand"
+      display_name: "Late-Day ETF Dip Buy — WB3: up-hour + dip <= -0.90%"

@@ -1,0 +1,24 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent NM-ETF-late-dip-di-long; change: cond.ret12 (new sensor) -> >= 0.5. Educational only - not financial advice.
+strategies:
+  NM-ETF-late-dip-di-long-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB1.py
+    symbols: module
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:NM-ETF-late-dip-di-long
+    workbench:
+      parent: NM-ETF-late-dip-di-long
+      param: "cond.ret12 (new sensor)"
+      old: null
+      new: ">= 0.5"
+      date: '2026-11-16'
+      note: "Mechanic: new sensor P10b - 60-min return (ret12, incl. the dip) >= +0.5%: buy the dip only inside an up-hour (pullback in an uptrend)"
+      display_name: "Late-Day ETF Dip Buy — WB1: dip after a +0.5% hour"
