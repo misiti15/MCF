@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-15T19:00-05:00",
+ "updated": "2026-11-15T21:00-05:00",
  "session": "2026-11-15",
- "headline": "The live-replay date guard is fixed and signed off; Monday's three scores and Tuesday's FWDCAL check are cleared to run.",
+ "headline": "Prep is done: both replay date guards are hardened and verified; Monday's three scores and Tuesday's FWDCAL check are cleared.",
  "bullets": [
   "Scout and Observer added pre-registered reading tables (each outcome pattern -> meaning -> next step) to SIZESTOP, DIPTURN and the MOMSIDE live check.",
   "Builder's four scorers print every audit item Skeptic asked for; Skeptic re-ran the self-tests and verified them.",
-  "Builder patched the replay date guard: future dates, today-before-close, skipped sessions and calendar gaps are all refused, with 7 planted self-tests. Skeptic signed it off; Scout added the same guard to REPS3.",
+  "Date guards hardened: the replay (11 planted self-tests) and REPS3 both refuse a dead or pre-close end-of-day job; Skeptic verified. Friday's audit stays valid under the stricter rule.",
   "Monday 11-16 after 16:30: MOMSIDE -> SIZESTOP -> DIPTURN. FWDCAL moves to Tuesday 11-17, after its date guard is fixed and signed off.",
   "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
  ],
@@ -18,11 +18,11 @@
  },
  "next": "Mon 11-16 16:30 ET: MOMSIDE, SIZESTOP, DIPTURN scores. Tue 11-17: FWDCAL fresh audit (after guard fix), then D3 to the owner.",
  "by_role": {
-  "scout": "Same guard in REPS3 (--end bound).",
-  "builder": "Guard patched (7 selftests); past-window hardening asked.",
-  "skeptic": "Signed off the guard for Tuesday.",
+  "scout": "REPS3 pre-close refusal; corrected own claim.",
+  "builder": "Past-window hardening in (11 selftests).",
+  "skeptic": "Verified hardening; nothing more before Tuesday.",
   "observer": "One shared reader for all bars; MOMSIDE-LIVE reading table.",
-  "lead": "Cleared FWDCAL for Tue; order set Mon/Tue/Wed."
+  "lead": "Adopted the 'wait, never loosen' standard; board quiet until scores."
  },
  "disclaimer": "Educational only — not financial advice."
 }
