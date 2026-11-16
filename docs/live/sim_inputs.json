@@ -1,0 +1,1523 @@
+{
+ "generated": "2026-11-16 23:48 UTC",
+ "sources": {
+  "replay": {
+   "file": "docs/live/replay.json",
+   "label": "replay snapshot",
+   "from": "2026-09-01",
+   "to": "2026-10-21",
+   "generated": "2026-10-22 02:33 ET",
+   "setups": 84
+  },
+  "backtest": {
+   "label": "2-year screen (Setup Generator runs)",
+   "in_blend": false,
+   "note": "screening only, not in blend; shown separately vs live",
+   "runs_from": "2026-10-19",
+   "runs_to": "2026-10-29",
+   "history": "2-year open history (train + valid)",
+   "setups": 90
+  },
+  "weights": {
+   "file": "config/effective_sessions.json",
+   "owner_date": "2026-11-16",
+   "live": 1.0,
+   "replay": 0.2,
+   "replay_tier": "uncalibrated",
+   "backtest": 0.175,
+   "haircut_r": 0.02,
+   "backtest_in_blend": false
+  }
+ },
+ "setups": {
+  "CWT14-failbrk-pdl-p10-lowvol-long": {
+   "replay": {
+    "trades": 1071,
+    "sessions": 36,
+    "avg_r": -0.045
+   }
+  },
+  "L3-gap-slope-fromopen-FD": {
+   "replay": {
+    "trades": 591,
+    "sessions": 27,
+    "avg_r": -0.198
+   }
+  },
+  "MF1-945-flowsell-vwapup": {
+   "replay": {
+    "trades": 84,
+    "sessions": 26,
+    "avg_r": 0.364
+   }
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "replay": {
+    "trades": 165,
+    "sessions": 35,
+    "avg_r": -0.042
+   }
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "replay": {
+    "trades": 233,
+    "sessions": 35,
+    "avg_r": -0.023
+   }
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "replay": {
+    "trades": 35,
+    "sessions": 17,
+    "avg_r": 0.289
+   }
+  },
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "replay": {
+    "trades": 793,
+    "sessions": 35,
+    "avg_r": -0.015
+   }
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "replay": {
+    "trades": 49,
+    "sessions": 24,
+    "avg_r": 0.146
+   }
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "replay": {
+    "trades": 75,
+    "sessions": 22,
+    "avg_r": 0.083
+   }
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "replay": {
+    "trades": 211,
+    "sessions": 34,
+    "avg_r": 0.061
+   }
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "replay": {
+    "trades": 203,
+    "sessions": 36,
+    "avg_r": 0.144
+   }
+  },
+  "RW6G1-ns2-up3-vwap2sd-short": {
+   "replay": {
+    "trades": 7,
+    "sessions": 5,
+    "avg_r": 0.088
+   }
+  },
+  "CWT05-flush-m05-v3-long": {
+   "replay": {
+    "trades": 165,
+    "sessions": 34,
+    "avg_r": -0.055
+   }
+  },
+  "CWT12-coil-k6-long": {
+   "replay": {
+    "trades": 374,
+    "sessions": 36,
+    "avg_r": -0.281
+   }
+  },
+  "CWT14-failbrk-pdh-p05-lowvol-short": {
+   "replay": {
+    "trades": 1253,
+    "sessions": 33,
+    "avg_r": -0.057
+   }
+  },
+  "CWT14-failbrk-pdh-p10-short": {
+   "replay": {
+    "trades": 1051,
+    "sessions": 33,
+    "avg_r": -0.062
+   }
+  },
+  "CWT14-failbrk-pdl-p05-long": {
+   "replay": {
+    "trades": 2247,
+    "sessions": 36,
+    "avg_r": -0.105
+   }
+  },
+  "L3-gap-slope-lowdist-FD": {
+   "replay": {
+    "trades": 47,
+    "sessions": 17,
+    "avg_r": 0.067
+   }
+  },
+  "LIQ-pdl-sweep-open15-vwap-long": {
+   "replay": {
+    "trades": 2,
+    "sessions": 2,
+    "avg_r": -0.799
+   }
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "replay": {
+    "trades": 20,
+    "sessions": 6,
+    "avg_r": 0.088
+   }
+  },
+  "MF3-open-flowsell-rsi5hi-FD": {
+   "replay": {
+    "trades": 241,
+    "sessions": 33,
+    "avg_r": -0.005
+   }
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "replay": {
+    "trades": 88,
+    "sessions": 25,
+    "avg_r": 0.238
+   }
+  },
+  "NS1-rsidip-rsi5pop-long-FD": {
+   "replay": {
+    "trades": 133,
+    "sessions": 32,
+    "avg_r": -0.025
+   }
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "replay": {
+    "trades": 70,
+    "sessions": 18,
+    "avg_r": 0.042
+   }
+  },
+  "NS4-pm-vwap-reclaim-oversold-short-FD": {
+   "replay": {
+    "trades": 38,
+    "sessions": 20,
+    "avg_r": 0.171
+   }
+  },
+  "NS5-sma50-flush-oversold-long-FD": {
+   "replay": {
+    "trades": 58,
+    "sessions": 25,
+    "avg_r": -0.359
+   }
+  },
+  "RW4-ns3-adv150-short-FD": {
+   "replay": {
+    "trades": 149,
+    "sessions": 26,
+    "avg_r": -0.126
+   }
+  },
+  "RW6G1-ns2-up3-vwap2sd-short-FD": {
+   "replay": {
+    "trades": 33,
+    "sessions": 16,
+    "avg_r": 0.238
+   }
+  },
+  "RW7-gapdn-bounce-early-short-FD": {
+   "replay": {
+    "trades": 614,
+    "sessions": 32,
+    "avg_r": -0.055
+   }
+  },
+  "ST3-rsi5up-short-pm-t1s1-FD": {
+   "replay": {
+    "trades": 15,
+    "sessions": 9,
+    "avg_r": 0.279
+   }
+  },
+  "ST4-emadn-long-am-t1s05-FD": {
+   "replay": {
+    "trades": 65,
+    "sessions": 30,
+    "avg_r": -0.225
+   }
+  },
+  "ST5-pdbrkup-short-mid-t05s1-FD": {
+   "replay": {
+    "trades": 8,
+    "sessions": 6,
+    "avg_r": 0.067
+   }
+  },
+  "ST6-volspikeup-short-mid-t1s1-FD": {
+   "replay": {
+    "trades": 26,
+    "sessions": 16,
+    "avg_r": 0.255
+   }
+  },
+  "ST7-rsi50dn-long-pm-t1s1-FD": {
+   "replay": {
+    "trades": 74,
+    "sessions": 31,
+    "avg_r": 0.265
+   }
+  },
+  "ST8-volspikedn-long-pm-t1s1-FD": {
+   "replay": {
+    "trades": 35,
+    "sessions": 21,
+    "avg_r": -0.051
+   }
+  },
+  "exhaustion_short": {
+   "replay": {
+    "trades": 120,
+    "sessions": 23,
+    "avg_r": -0.035
+   }
+  },
+  "exhaustion_short-FD": {
+   "replay": {
+    "trades": 99,
+    "sessions": 26,
+    "avg_r": -0.158
+   }
+  },
+  "intraday_momentum": {
+   "replay": {
+    "trades": 79,
+    "sessions": 28,
+    "avg_r": 0.048
+   }
+  },
+  "orb20_a": {
+   "replay": {
+    "trades": 213,
+    "sessions": 36,
+    "avg_r": -0.06
+   }
+  },
+  "CWT04-backside-vwaptest-a15-short": {
+   "replay": {
+    "trades": 7,
+    "sessions": 5,
+    "avg_r": -0.343
+   }
+  },
+  "CWT05-flush-m05-v5-long": {
+   "replay": {
+    "trades": 5,
+    "sessions": 4,
+    "avg_r": 0.128
+   }
+  },
+  "CWT05-flush-m075-v3-long": {
+   "replay": {
+    "trades": 17,
+    "sessions": 6,
+    "avg_r": 0.446
+   }
+  },
+  "CWT05-flush-m075-v5-long": {
+   "replay": {
+    "trades": 4,
+    "sessions": 3,
+    "avg_r": 0.418
+   }
+  },
+  "CWT09-gapdn-bounce-g10-lowerhalf-short": {
+   "replay": {
+    "trades": 2,
+    "sessions": 2,
+    "avg_r": -1.046
+   }
+  },
+  "CWT09-gapdn-bounce-g5-lowerhalf-short": {
+   "replay": {
+    "trades": 45,
+    "sessions": 5,
+    "avg_r": -0.394
+   }
+  },
+  "CWT09-gapdn-vwaploss-g5-short": {
+   "replay": {
+    "trades": 39,
+    "sessions": 6,
+    "avg_r": -0.779
+   }
+  },
+  "CWT12-coil-k4-long": {
+   "replay": {
+    "trades": 334,
+    "sessions": 8,
+    "avg_r": -0.052
+   }
+  },
+  "CWT12-flag-s1-long": {
+   "replay": {
+    "trades": 11,
+    "sessions": 3,
+    "avg_r": -0.419
+   }
+  },
+  "CWT13-vwapstretch-z05-long": {
+   "replay": {
+    "trades": 50,
+    "sessions": 6,
+    "avg_r": -0.155
+   }
+  },
+  "CWT13-vwapstretch-z05-short": {
+   "replay": {
+    "trades": 126,
+    "sessions": 6,
+    "avg_r": -0.314
+   }
+  },
+  "CWT13-vwapstretch-z075-long": {
+   "replay": {
+    "trades": 10,
+    "sessions": 4,
+    "avg_r": -0.135
+   }
+  },
+  "CWT13-vwapstretch-z075-short": {
+   "replay": {
+    "trades": 20,
+    "sessions": 3,
+    "avg_r": -0.479
+   }
+  },
+  "CWT14-failbrk-orl-p05-long": {
+   "replay": {
+    "trades": 491,
+    "sessions": 7,
+    "avg_r": -0.165
+   }
+  },
+  "CWT14-failbrk-orl-p05-lowvol-long": {
+   "replay": {
+    "trades": 507,
+    "sessions": 7,
+    "avg_r": -0.159
+   }
+  },
+  "CWT14-failbrk-orl-p10-long": {
+   "replay": {
+    "trades": 317,
+    "sessions": 7,
+    "avg_r": -0.097
+   }
+  },
+  "CWT14-failbrk-orl-p10-lowvol-long": {
+   "replay": {
+    "trades": 258,
+    "sessions": 7,
+    "avg_r": -0.063
+   }
+  },
+  "CWT14-failbrk-pdh-p10-lowvol-short": {
+   "replay": {
+    "trades": 165,
+    "sessions": 8,
+    "avg_r": -0.151
+   }
+  },
+  "CWT14-failbrk-pdl-p05-lowvol-long": {
+   "replay": {
+    "trades": 306,
+    "sessions": 8,
+    "avg_r": -0.036
+   }
+  },
+  "CWT14-failbrk-pdl-p10-long": {
+   "replay": {
+    "trades": 277,
+    "sessions": 8,
+    "avg_r": 0.016
+   }
+  },
+  "MF4-h40-open-flowsell": {
+   "replay": {
+    "trades": 18,
+    "sessions": 6,
+    "avg_r": 0.046
+   }
+  },
+  "NS2-sma50break-overbought-short": {
+   "replay": {
+    "trades": 48,
+    "sessions": 5,
+    "avg_r": -0.459
+   }
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "replay": {
+    "trades": 3,
+    "sessions": 3,
+    "avg_r": -1.156
+   }
+  },
+  "heat_fade_long": {
+   "replay": {
+    "trades": 89,
+    "sessions": 6,
+    "avg_r": -0.439
+   }
+  },
+  "heat_fade_short": {
+   "replay": {
+    "trades": 102,
+    "sessions": 7,
+    "avg_r": -0.055
+   }
+  },
+  "L3-gap-slope-rsi5hi-FD": {
+   "replay": {
+    "trades": 26,
+    "sessions": 5,
+    "avg_r": -0.017
+   }
+  },
+  "LIQ-orl-sweep-open15-s25-long": {
+   "replay": {
+    "trades": 145,
+    "sessions": 5,
+    "avg_r": -0.16
+   }
+  },
+  "MF1-945-flowsell-vwapup-FD": {
+   "replay": {
+    "trades": 38,
+    "sessions": 7,
+    "avg_r": -0.388
+   }
+  },
+  "MF5-flowsell-vwapup-rsi5hi-FD": {
+   "replay": {
+    "trades": 45,
+    "sessions": 7,
+    "avg_r": -0.204
+   }
+  },
+  "NS2-sma50break-overbought-short-FD": {
+   "replay": {
+    "trades": 65,
+    "sessions": 7,
+    "avg_r": -0.476
+   }
+  },
+  "RW1-gapdn-bounce-flowsell-short-FD": {
+   "replay": {
+    "trades": 37,
+    "sessions": 7,
+    "avg_r": -0.033
+   }
+  },
+  "RW2-exhaustion-noon-adv150-short-FD": {
+   "replay": {
+    "trades": 140,
+    "sessions": 6,
+    "avg_r": -0.109
+   }
+  },
+  "RW6-ns2-up3-short-FD": {
+   "replay": {
+    "trades": 40,
+    "sessions": 6,
+    "avg_r": -0.516
+   }
+  },
+  "ST1-ordn-long-pm-t05s1-FD": {
+   "replay": {
+    "trades": 22,
+    "sessions": 5,
+    "avg_r": -0.503
+   }
+  },
+  "ST2-slope20up-long-am-t05s1-FD": {
+   "replay": {
+    "trades": 72,
+    "sessions": 6,
+    "avg_r": -0.225
+   }
+  },
+  "heat_fade_long-FD": {
+   "replay": {
+    "trades": 96,
+    "sessions": 7,
+    "avg_r": -0.145
+   }
+  },
+  "heat_fade_short-FD": {
+   "replay": {
+    "trades": 260,
+    "sessions": 7,
+    "avg_r": -0.013
+   }
+  },
+  "CWT04-backside-lh-a15-short": {
+   "replay": {
+    "trades": 1,
+    "sessions": 1,
+    "avg_r": 0.138
+   }
+  },
+  "CWT09-gapdn-vwaploss-g10-short": {
+   "replay": {
+    "trades": 1,
+    "sessions": 1,
+    "avg_r": -1.083
+   }
+  },
+  "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long": {
+   "replay": {
+    "trades": 1,
+    "sessions": 1,
+    "avg_r": 0.485
+   }
+  },
+  "LD5-st2-breadthup-t05s1-long": {
+   "replay": {
+    "trades": 1,
+    "sessions": 1,
+    "avg_r": 0.097
+   }
+  },
+  "NM-AR-AM-gapdown-capitulation-long": {
+   "replay": {
+    "trades": 3,
+    "sessions": 1,
+    "avg_r": -1.08
+   }
+  },
+  "NM-ETF-late-dip-di-long": {
+   "replay": {
+    "trades": 2,
+    "sessions": 2,
+    "avg_r": 0.326
+   }
+  },
+  "NM-HL-T75-pm-long": {
+   "replay": {
+    "trades": 6,
+    "sessions": 1,
+    "avg_r": 0.088
+   }
+  },
+  "NM-RWR3-ns3-qqqup-early-short": {
+   "replay": {
+    "trades": 10,
+    "sessions": 2,
+    "avg_r": 0.039
+   }
+  },
+  "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long": {
+   "backtest": {
+    "trades": 986,
+    "sessions": 105,
+    "avg_r": 0.0799,
+    "train_r": 0.1006,
+    "valid_r": 0.0612,
+    "per_day": 2.315
+   }
+  },
+  "GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long": {
+   "backtest": {
+    "trades": 560,
+    "sessions": 151,
+    "avg_r": 0.033,
+    "train_r": 0.0285,
+    "valid_r": 0.0364,
+    "per_day": 1.315
+   }
+  },
+  "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": {
+   "backtest": {
+    "trades": 1991,
+    "sessions": 220,
+    "avg_r": 0.0913,
+    "train_r": 0.1081,
+    "valid_r": 0.0635,
+    "per_day": 4.674
+   }
+  },
+  "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long": {
+   "backtest": {
+    "trades": 2006,
+    "sessions": 221,
+    "avg_r": 0.0708,
+    "train_r": 0.1353,
+    "valid_r": 0.0065,
+    "per_day": 4.709
+   }
+  },
+  "GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long": {
+   "backtest": {
+    "trades": 1668,
+    "sessions": 50,
+    "avg_r": 0.0984,
+    "train_r": 0.0687,
+    "valid_r": 0.1232,
+    "per_day": 3.915
+   }
+  },
+  "GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long": {
+   "backtest": {
+    "trades": 1572,
+    "sessions": 110,
+    "avg_r": 0.192,
+    "train_r": 0.1941,
+    "valid_r": 0.1896,
+    "per_day": 3.69
+   }
+  },
+  "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long": {
+   "backtest": {
+    "trades": 1375,
+    "sessions": 103,
+    "avg_r": 0.0253,
+    "train_r": 0.0387,
+    "valid_r": 0.0097,
+    "per_day": 3.228
+   }
+  },
+  "GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short": {
+   "backtest": {
+    "trades": 917,
+    "sessions": 183,
+    "avg_r": 0.0703,
+    "train_r": 0.0916,
+    "valid_r": 0.0498,
+    "per_day": 2.153
+   }
+  },
+  "GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short": {
+   "backtest": {
+    "trades": 758,
+    "sessions": 94,
+    "avg_r": 0.0196,
+    "train_r": 0.022,
+    "valid_r": 0.0158,
+    "per_day": 1.779
+   }
+  },
+  "GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short": {
+   "backtest": {
+    "trades": 5294,
+    "sessions": 266,
+    "avg_r": 0.0263,
+    "train_r": 0.0191,
+    "valid_r": 0.0311,
+    "per_day": 12.427
+   }
+  },
+  "GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long": {
+   "backtest": {
+    "trades": 1365,
+    "sessions": 201,
+    "avg_r": 0.0834,
+    "train_r": 0.0715,
+    "valid_r": 0.0934,
+    "per_day": 3.204
+   }
+  },
+  "GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short": {
+   "backtest": {
+    "trades": 1033,
+    "sessions": 75,
+    "avg_r": 0.1409,
+    "train_r": 0.1533,
+    "valid_r": 0.041,
+    "per_day": 2.425
+   }
+  },
+  "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long": {
+   "backtest": {
+    "trades": 1304,
+    "sessions": 119,
+    "avg_r": 0.0423,
+    "train_r": 0.0582,
+    "valid_r": 0.0098,
+    "per_day": 3.061
+   }
+  },
+  "GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short": {
+   "backtest": {
+    "trades": 610,
+    "sessions": 146,
+    "avg_r": 0.0242,
+    "train_r": 0.0005,
+    "valid_r": 0.0368,
+    "per_day": 1.432
+   }
+  },
+  "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long": {
+   "backtest": {
+    "trades": 4637,
+    "sessions": 200,
+    "avg_r": 0.0404,
+    "train_r": 0.0624,
+    "valid_r": 0.0232,
+    "per_day": 10.885
+   }
+  },
+  "GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long": {
+   "backtest": {
+    "trades": 514,
+    "sessions": 159,
+    "avg_r": 0.0811,
+    "train_r": 0.0091,
+    "valid_r": 0.1571,
+    "per_day": 1.207
+   }
+  },
+  "GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long": {
+   "backtest": {
+    "trades": 3835,
+    "sessions": 153,
+    "avg_r": 0.0294,
+    "train_r": 0.0321,
+    "valid_r": 0.0263,
+    "per_day": 9.002
+   }
+  },
+  "GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long": {
+   "backtest": {
+    "trades": 241,
+    "sessions": 80,
+    "avg_r": 0.1795,
+    "train_r": 0.2032,
+    "valid_r": 0.1048,
+    "per_day": 0.566
+   }
+  },
+  "GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long": {
+   "backtest": {
+    "trades": 2783,
+    "sessions": 163,
+    "avg_r": 0.0446,
+    "train_r": 0.1112,
+    "valid_r": -0.0162,
+    "per_day": 6.533
+   }
+  },
+  "GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short": {
+   "backtest": {
+    "trades": 2345,
+    "sessions": 81,
+    "avg_r": -0.0284,
+    "train_r": -0.0219,
+    "valid_r": -0.0428,
+    "per_day": 5.505
+   }
+  },
+  "GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short": {
+   "backtest": {
+    "trades": 441,
+    "sessions": 102,
+    "avg_r": 0.0705,
+    "train_r": 0.0576,
+    "valid_r": 0.0823,
+    "per_day": 1.035
+   }
+  },
+  "GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long": {
+   "backtest": {
+    "trades": 3090,
+    "sessions": 40,
+    "avg_r": 0.1729,
+    "train_r": 0.2194,
+    "valid_r": 0.1156,
+    "per_day": 7.254
+   }
+  },
+  "GEN-261021-03-RSI5le34-Ret15mATRge0p12-DayRngVsPrevge1p2-LUNCH-SPYltm0p25-t05s1-short": {
+   "backtest": {
+    "trades": 587,
+    "sessions": 105,
+    "avg_r": 0.0622,
+    "train_r": 0.0323,
+    "valid_r": 0.1117,
+    "per_day": 1.378
+   }
+  },
+  "GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p6-hold-short": {
+   "backtest": {
+    "trades": 905,
+    "sessions": 87,
+    "avg_r": 0.0161,
+    "train_r": 0.0147,
+    "valid_r": 0.0174,
+    "per_day": 2.124
+   }
+  },
+  "GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long": {
+   "backtest": {
+    "trades": 681,
+    "sessions": 106,
+    "avg_r": 0.0875,
+    "train_r": 0.1334,
+    "valid_r": 0.0048,
+    "per_day": 1.599
+   }
+  },
+  "GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long": {
+   "backtest": {
+    "trades": 7273,
+    "sessions": 279,
+    "avg_r": 0.0265,
+    "train_r": 0.0613,
+    "valid_r": 0.0047,
+    "per_day": 17.073
+   }
+  },
+  "GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long": {
+   "backtest": {
+    "trades": 2150,
+    "sessions": 56,
+    "avg_r": 0.0416,
+    "train_r": 0.0547,
+    "valid_r": 0.0211,
+    "per_day": 5.047
+   }
+  },
+  "GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long": {
+   "backtest": {
+    "trades": 205,
+    "sessions": 36,
+    "avg_r": 0.8685,
+    "train_r": 1.0285,
+    "valid_r": 0.3591,
+    "per_day": 0.481
+   }
+  },
+  "GEN-261021-09-RSIslopelem19-ORHdistlem0p73-AM-BRvwgt0p7-t1s1-long": {
+   "backtest": {
+    "trades": 550,
+    "sessions": 101,
+    "avg_r": 0.0277,
+    "train_r": -0.0083,
+    "valid_r": 0.0845,
+    "per_day": 1.291
+   }
+  },
+  "GEN-261021-10-MACDhge0p079-VWAPbarslem7-OPEN-QQQup-t1s05-long": {
+   "backtest": {
+    "trades": 97,
+    "sessions": 55,
+    "avg_r": 0.0978,
+    "train_r": 0.1279,
+    "valid_r": 0.0644,
+    "per_day": 0.228
+   }
+  },
+  "GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long": {
+   "backtest": {
+    "trades": 1671,
+    "sessions": 229,
+    "avg_r": 0.2514,
+    "train_r": 0.3093,
+    "valid_r": 0.2008,
+    "per_day": 3.923
+   }
+  },
+  "GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long": {
+   "backtest": {
+    "trades": 1349,
+    "sessions": 112,
+    "avg_r": 0.0251,
+    "train_r": 0.0041,
+    "valid_r": 0.0628,
+    "per_day": 3.167
+   }
+  },
+  "GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short": {
+   "backtest": {
+    "trades": 1323,
+    "sessions": 186,
+    "avg_r": 0.0283,
+    "train_r": 0.0399,
+    "valid_r": 0.0174,
+    "per_day": 3.106
+   }
+  },
+  "GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short": {
+   "backtest": {
+    "trades": 905,
+    "sessions": 195,
+    "avg_r": 0.049,
+    "train_r": 0.0824,
+    "valid_r": 0.0164,
+    "per_day": 2.124
+   }
+  },
+  "GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short": {
+   "backtest": {
+    "trades": 2824,
+    "sessions": 104,
+    "avg_r": 0.0308,
+    "train_r": 0.0397,
+    "valid_r": 0.0145,
+    "per_day": 6.629
+   }
+  },
+  "GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long": {
+   "backtest": {
+    "trades": 764,
+    "sessions": 83,
+    "avg_r": 0.0978,
+    "train_r": 0.1361,
+    "valid_r": 0.0157,
+    "per_day": 1.793
+   }
+  },
+  "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short": {
+   "backtest": {
+    "trades": 2631,
+    "sessions": 237,
+    "avg_r": 0.0199,
+    "train_r": 0.0315,
+    "valid_r": 0.0105,
+    "per_day": 6.176
+   }
+  },
+  "GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short": {
+   "backtest": {
+    "trades": 1041,
+    "sessions": 134,
+    "avg_r": 0.0333,
+    "train_r": 0.0615,
+    "valid_r": 0.01,
+    "per_day": 2.444
+   }
+  },
+  "GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short": {
+   "backtest": {
+    "trades": 1863,
+    "sessions": 67,
+    "avg_r": 0.0928,
+    "train_r": 0.0212,
+    "valid_r": 0.2195,
+    "per_day": 4.373
+   }
+  },
+  "GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short": {
+   "backtest": {
+    "trades": 955,
+    "sessions": 187,
+    "avg_r": 0.0074,
+    "train_r": 0.0055,
+    "valid_r": 0.0092,
+    "per_day": 2.242
+   }
+  },
+  "GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short": {
+   "backtest": {
+    "trades": 756,
+    "sessions": 37,
+    "avg_r": 0.3011,
+    "train_r": 0.3213,
+    "valid_r": 0.1732,
+    "per_day": 1.775
+   }
+  },
+  "GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long": {
+   "backtest": {
+    "trades": 1165,
+    "sessions": 116,
+    "avg_r": 0.1388,
+    "train_r": 0.119,
+    "valid_r": 0.1683,
+    "per_day": 2.735
+   }
+  },
+  "GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short": {
+   "backtest": {
+    "trades": 2315,
+    "sessions": 237,
+    "avg_r": 0.0403,
+    "train_r": 0.0417,
+    "valid_r": 0.0391,
+    "per_day": 5.434
+   }
+  },
+  "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long": {
+   "backtest": {
+    "trades": 696,
+    "sessions": 104,
+    "avg_r": 0.0763,
+    "train_r": 0.1044,
+    "valid_r": 0.0498,
+    "per_day": 1.634
+   }
+  },
+  "GEN-261023-05-NewLOD-SMA20dlem0p94-ORLdistlem0p24-PM-BRopgt0p65-hold-long": {
+   "backtest": {
+    "trades": 490,
+    "sessions": 103,
+    "avg_r": 0.1142,
+    "train_r": 0.0883,
+    "valid_r": 0.1413,
+    "per_day": 1.15
+   }
+  },
+  "GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p29-LAM-SPYltm0p25-t1s05-short": {
+   "backtest": {
+    "trades": 429,
+    "sessions": 119,
+    "avg_r": 0.0457,
+    "train_r": 0.0317,
+    "valid_r": 0.0554,
+    "per_day": 1.007
+   }
+  },
+  "GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long": {
+   "backtest": {
+    "trades": 5417,
+    "sessions": 164,
+    "avg_r": 0.1623,
+    "train_r": 0.2468,
+    "valid_r": 0.0367,
+    "per_day": 12.716
+   }
+  },
+  "GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long": {
+   "backtest": {
+    "trades": 871,
+    "sessions": 86,
+    "avg_r": 0.0827,
+    "train_r": 0.1247,
+    "valid_r": 0.0096,
+    "per_day": 2.045
+   }
+  },
+  "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short": {
+   "backtest": {
+    "trades": 5417,
+    "sessions": 123,
+    "avg_r": 0.0342,
+    "train_r": 0.0077,
+    "valid_r": 0.0832,
+    "per_day": 12.716
+   }
+  },
+  "GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long": {
+   "backtest": {
+    "trades": 498,
+    "sessions": 161,
+    "avg_r": 0.0221,
+    "train_r": 0.0474,
+    "valid_r": 0.003,
+    "per_day": 1.169
+   }
+  },
+  "GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short": {
+   "backtest": {
+    "trades": 1296,
+    "sessions": 213,
+    "avg_r": 0.0274,
+    "train_r": 0.0234,
+    "valid_r": 0.031,
+    "per_day": 3.042
+   }
+  },
+  "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long": {
+   "backtest": {
+    "trades": 1114,
+    "sessions": 94,
+    "avg_r": 0.0335,
+    "train_r": 0.0432,
+    "valid_r": 0.0156,
+    "per_day": 2.615
+   }
+  },
+  "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": {
+   "backtest": {
+    "trades": 1367,
+    "sessions": 228,
+    "avg_r": 0.0162,
+    "train_r": 0.0241,
+    "valid_r": 0.0103,
+    "per_day": 3.209
+   }
+  },
+  "GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short": {
+   "backtest": {
+    "trades": 1026,
+    "sessions": 235,
+    "avg_r": 0.0334,
+    "train_r": 0.0165,
+    "valid_r": 0.0419,
+    "per_day": 2.408
+   }
+  },
+  "GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short": {
+   "backtest": {
+    "trades": 2047,
+    "sessions": 246,
+    "avg_r": 0.0225,
+    "train_r": 0.0183,
+    "valid_r": 0.0255,
+    "per_day": 4.805
+   }
+  },
+  "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long": {
+   "backtest": {
+    "trades": 1399,
+    "sessions": 128,
+    "avg_r": 0.0016,
+    "train_r": 0.0011,
+    "valid_r": 0.0025,
+    "per_day": 3.284
+   }
+  },
+  "GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short": {
+   "backtest": {
+    "trades": 4300,
+    "sessions": 137,
+    "avg_r": -0.0088,
+    "train_r": -0.0031,
+    "valid_r": -0.0182,
+    "per_day": 10.094
+   }
+  },
+  "GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short": {
+   "backtest": {
+    "trades": 2769,
+    "sessions": 265,
+    "avg_r": 0.1033,
+    "train_r": 0.2345,
+    "valid_r": -0.0409,
+    "per_day": 6.5
+   }
+  },
+  "GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long": {
+   "backtest": {
+    "trades": 1096,
+    "sessions": 126,
+    "avg_r": 0.043,
+    "train_r": -0.0019,
+    "valid_r": 0.1424,
+    "per_day": 2.573
+   }
+  },
+  "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": {
+   "backtest": {
+    "trades": 14827,
+    "sessions": 121,
+    "avg_r": -0.0002,
+    "train_r": -0.0043,
+    "valid_r": 0.0085,
+    "per_day": 34.805
+   }
+  },
+  "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long": {
+   "backtest": {
+    "trades": 5152,
+    "sessions": 265,
+    "avg_r": 0.0504,
+    "train_r": 0.068,
+    "valid_r": 0.0226,
+    "per_day": 12.094
+   }
+  },
+  "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long": {
+   "backtest": {
+    "trades": 604,
+    "sessions": 183,
+    "avg_r": 0.0317,
+    "train_r": 0.0412,
+    "valid_r": 0.0268,
+    "per_day": 1.418
+   }
+  },
+  "GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long": {
+   "backtest": {
+    "trades": 1171,
+    "sessions": 85,
+    "avg_r": 0.1005,
+    "train_r": 0.2263,
+    "valid_r": 0.0099,
+    "per_day": 2.749
+   }
+  },
+  "GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short": {
+   "backtest": {
+    "trades": 1533,
+    "sessions": 176,
+    "avg_r": 0.0787,
+    "train_r": 0.1123,
+    "valid_r": 0.0249,
+    "per_day": 3.599
+   }
+  },
+  "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long": {
+   "backtest": {
+    "trades": 2128,
+    "sessions": 144,
+    "avg_r": 0.0298,
+    "train_r": 0.0518,
+    "valid_r": 0.0049,
+    "per_day": 4.995
+   }
+  },
+  "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": {
+   "backtest": {
+    "trades": 3112,
+    "sessions": 132,
+    "avg_r": 0.032,
+    "train_r": 0.0425,
+    "valid_r": 0.0084,
+    "per_day": 7.305
+   }
+  },
+  "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short": {
+   "backtest": {
+    "trades": 1158,
+    "sessions": 272,
+    "avg_r": 0.0499,
+    "train_r": 0.1164,
+    "valid_r": 0.0025,
+    "per_day": 2.718
+   }
+  },
+  "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short": {
+   "backtest": {
+    "trades": 1387,
+    "sessions": 111,
+    "avg_r": 0.0092,
+    "train_r": 0.0096,
+    "valid_r": 0.0085,
+    "per_day": 3.256
+   }
+  },
+  "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short": {
+   "backtest": {
+    "trades": 2404,
+    "sessions": 273,
+    "avg_r": 0.0086,
+    "train_r": 0.0293,
+    "valid_r": -0.006,
+    "per_day": 5.643
+   }
+  },
+  "GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long": {
+   "backtest": {
+    "trades": 4067,
+    "sessions": 131,
+    "avg_r": -0.0014,
+    "train_r": -0.0061,
+    "valid_r": 0.0061,
+    "per_day": 9.547
+   }
+  },
+  "GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long": {
+   "backtest": {
+    "trades": 1301,
+    "sessions": 107,
+    "avg_r": 0.0597,
+    "train_r": 0.0465,
+    "valid_r": 0.0703,
+    "per_day": 3.054
+   }
+  },
+  "GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long": {
+   "backtest": {
+    "trades": 1000,
+    "sessions": 80,
+    "avg_r": 0.0668,
+    "train_r": 0.0434,
+    "valid_r": 0.0841,
+    "per_day": 2.347
+   }
+  },
+  "GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long": {
+   "backtest": {
+    "trades": 527,
+    "sessions": 124,
+    "avg_r": 0.2477,
+    "train_r": 0.3944,
+    "valid_r": 0.0522,
+    "per_day": 1.237
+   }
+  },
+  "GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long": {
+   "backtest": {
+    "trades": 750,
+    "sessions": 161,
+    "avg_r": 0.0396,
+    "train_r": 0.0605,
+    "valid_r": 0.0265,
+    "per_day": 1.761
+   }
+  },
+  "GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long": {
+   "backtest": {
+    "trades": 843,
+    "sessions": 104,
+    "avg_r": 0.0135,
+    "train_r": 0.0074,
+    "valid_r": 0.0168,
+    "per_day": 1.979
+   }
+  },
+  "GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short": {
+   "backtest": {
+    "trades": 1278,
+    "sessions": 99,
+    "avg_r": 0.6405,
+    "train_r": 0.6895,
+    "valid_r": 0.4065,
+    "per_day": 3.0
+   }
+  },
+  "GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short": {
+   "backtest": {
+    "trades": 456,
+    "sessions": 124,
+    "avg_r": 0.02,
+    "train_r": 0.0224,
+    "valid_r": 0.0169,
+    "per_day": 1.07
+   }
+  },
+  "GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": {
+   "backtest": {
+    "trades": 1797,
+    "sessions": 120,
+    "avg_r": 0.0355,
+    "train_r": 0.0568,
+    "valid_r": 0.0057,
+    "per_day": 4.218
+   }
+  },
+  "GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long": {
+   "backtest": {
+    "trades": 2118,
+    "sessions": 75,
+    "avg_r": 0.0051,
+    "train_r": 0.0023,
+    "valid_r": 0.0103,
+    "per_day": 4.972
+   }
+  },
+  "GEN-261028-10-BarRngATRge0p18-Flow3lem0p54-FromPCATRge0p28-PM-SPYgt0p5-hold-long": {
+   "backtest": {
+    "trades": 2191,
+    "sessions": 110,
+    "avg_r": 0.1576,
+    "train_r": 0.2462,
+    "valid_r": 0.0213,
+    "per_day": 5.143
+   }
+  },
+  "GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long": {
+   "backtest": {
+    "trades": 8921,
+    "sessions": 197,
+    "avg_r": 0.2442,
+    "train_r": 0.4058,
+    "valid_r": 0.0708,
+    "per_day": 20.941
+   }
+  },
+  "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long": {
+   "backtest": {
+    "trades": 2098,
+    "sessions": 208,
+    "avg_r": 0.0417,
+    "train_r": 0.0542,
+    "valid_r": 0.0199,
+    "per_day": 4.925
+   }
+  },
+  "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long": {
+   "backtest": {
+    "trades": 5988,
+    "sessions": 269,
+    "avg_r": 0.0055,
+    "train_r": 0.0087,
+    "valid_r": 0.0036,
+    "per_day": 14.056
+   }
+  },
+  "GEN-261029-04-Ret15mge0p54-RVolDayle0p59-VWAPcrossesle1-LUNCH-SPYgt0p25-hold-long": {
+   "backtest": {
+    "trades": 1264,
+    "sessions": 165,
+    "avg_r": 0.0603,
+    "train_r": 0.1442,
+    "valid_r": 0.0071,
+    "per_day": 2.967
+   }
+  },
+  "GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long": {
+   "backtest": {
+    "trades": 134,
+    "sessions": 29,
+    "avg_r": 0.1859,
+    "train_r": 0.1898,
+    "valid_r": 0.1658,
+    "per_day": 0.315
+   }
+  },
+  "GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short": {
+   "backtest": {
+    "trades": 6603,
+    "sessions": 173,
+    "avg_r": 0.0489,
+    "train_r": 0.0469,
+    "valid_r": 0.0516,
+    "per_day": 15.5
+   }
+  },
+  "GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short": {
+   "backtest": {
+    "trades": 1006,
+    "sessions": 83,
+    "avg_r": 0.0092,
+    "train_r": 0.0106,
+    "valid_r": 0.0066,
+    "per_day": 2.362
+   }
+  },
+  "GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short": {
+   "backtest": {
+    "trades": 2243,
+    "sessions": 53,
+    "avg_r": 0.0157,
+    "train_r": 0.0272,
+    "valid_r": 0.0056,
+    "per_day": 5.265
+   }
+  },
+  "GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short": {
+   "backtest": {
+    "trades": 904,
+    "sessions": 202,
+    "avg_r": 0.0168,
+    "train_r": 0.0035,
+    "valid_r": 0.0323,
+    "per_day": 2.122
+   }
+  },
+  "GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short": {
+   "backtest": {
+    "trades": 123,
+    "sessions": 76,
+    "avg_r": 0.2746,
+    "train_r": 0.4039,
+    "valid_r": 0.1432,
+    "per_day": 0.289
+   }
+  }
+ },
+ "note": "Inputs for the Simulated leaderboard: replay / backtest per setup; not live results - a what-if ranking. Educational only - not financial advice."
+}
