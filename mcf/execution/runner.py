@@ -40,6 +40,7 @@ COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mc
 # Entry client order ids: <prefix><setup>-<symbol>-<YYYYMMDD> (one entry per setup/symbol/day, live.same_setup_reentry
 # false) or <prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM> (HHMM = the signal's decision bar, so every lot of a setup on a
 # symbol has its own id). A lot's own exit is <entry id>-x; a flatten close is <prefix>flatten-<symbol>-<YYYYMMDDHHMMSS>.
+_UNSET = object()   # _crosscheck: "no quote timestamp given" (read the one _quote recorded)
 _COID_RE = re.compile(r"^(?P<setup>.+)-(?P<symbol>[^-]+)-(?P<day>\d{8})(?:-(?P<hhmm>\d{4}))?$")
 
 
@@ -215,6 +216,21 @@ class PaperRunner:
         # Logging only: nothing here is read by any trading decision.
         self._mtm_lot: dict[str, tuple] = {}
         self._mtm_restored = False
+        # Shadow mode (owner 2026-11-16, mcf/execution/shadow.py): setups evaluated on the same polls, bars, quotes, gates
+        # and timing as live, recording shadow lots (journal run kind "shadow") - never an order, never a slot, never a
+        # latch or halt of this account. Runs AFTER the real decisions of each poll; any shadow error is printed and
+        # never reaches trading. _poll_quotes: quotes the live path fetched this poll (shadow reuses them; read only).
+        self._poll_quotes: dict[str, tuple] = {}
+        self._step_bars: dict | None = None
+        self._step_entries = False
+        self.ctxs: dict = {}
+        self.shadow = None
+        try:
+            from .shadow import make_shadow
+
+            self.shadow = make_shadow(self)
+        except Exception as e:   # never fatal: the live runner trades exactly as before without it
+            print(f"shadow mode off: {type(e).__name__}: {e}")
 
     # ---------------------------------------------------------------- state
     def restore(self, today):
@@ -274,6 +290,11 @@ class PaperRunner:
                 self.risk.latch_setup_losses({str(k): float(v) for k, v in low.items()})
         self._restore_latches(sig)
         self._sync_open()
+        if self.shadow is not None:                  # shadow lots / dedupe of today (own journal run; never live state)
+            try:
+                self.shadow.restore(today)
+            except Exception as e:
+                print(f"shadow restore failed: {type(e).__name__}: {e} (shadow starts empty)")
 
     # reasons risk.check() journals once a latch has fired; their presence in today's signals is the persisted record
     HALT_REASONS = ("daily loss limit", "halted")
@@ -971,9 +992,44 @@ class PaperRunner:
             print(f"alert email failed: {type(e).__name__}")
 
     def step(self, now: pd.Timestamp):
+        t0 = _time.perf_counter()
+        self._poll_quotes = {}
+        self._step_bars, self._step_entries = None, False
+        if self.shadow is not None:
+            self.shadow.begin_poll()
+        self._step(now)
+        if self.shadow is not None and self._step_bars is not None:
+            self._shadow_phase(now, (_time.perf_counter() - t0) * 1000)
+
+    def _shadow_phase(self, now: pd.Timestamp, live_ms: float):
+        """Shadow mode, after every real decision of this poll (mcf/execution/shadow.py). Errors never reach trading;
+        after 20 of them shadow mode switches itself off for the rest of the job."""
+        try:
+            self.shadow.poll(now, self._step_bars, self.ctxs if self._step_entries else None, live_ms)
+        except Exception as e:
+            sh = self.shadow
+            sh.errors += 1
+            print(f"shadow poll failed ({sh.errors}): {type(e).__name__}: {str(e)[:200]} (no effect on trading)")
+            if sh.errors >= 20:
+                self.health["shadow"] = {**(self.health.get("shadow") or {}), "off": "20 errors"}
+                self.shadow = None
+
+    def _tap(self, strat, ctx, sigs, last: int, px: float):
+        """Shadow-of-live: hand every signal the live loop draws to the shadow book (a copy), unchanged for live."""
+        sh = self.shadow
+        for sig in sigs:
+            if sh is not None:
+                try:
+                    sh.offer(strat, ctx, sig, last, px, mode="of_live")
+                except Exception as e:
+                    print(f"shadow offer failed: {type(e).__name__}: {e}")
+            yield sig
+
+    def _step(self, now: pd.Timestamp):
         today = now.date()
         self._now = now
         bars = self.fetch(now)
+        self._step_bars = bars
         self._open_marks(bars)                        # LR3: open lots' R after costs (the Primary halt counts it)
         self.manage(now, bars)
         self.scale_outs(now, bars)
@@ -986,6 +1042,7 @@ class PaperRunner:
         if self.kill is not None:
             return                                    # LR4 kill switch: no new entries (open lots keep their brackets)
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
+        self._step_entries = True
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
@@ -1003,7 +1060,7 @@ class PaperRunner:
                     continue
                 if self._bucket_done(strat, key, ctx):
                     continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
-                for sig in strat.signals(ctx):
+                for sig in self._tap(strat, ctx, strat.signals(ctx), last, px):
                     if retry:
                         # only a fresh market signal on the latest bar, later than the blocked one; never a stale price
                         if sig.entry_type != "market" or sig.bar_index != last or sig.bar_index <= self.blocked[key]["bar"]:
@@ -1132,21 +1189,28 @@ class PaperRunner:
             self._quote_ts[symbol] = pd.Timestamp(ts)
         else:
             self._quote_ts.pop(symbol, None)
-        return float(q.bid_price or 0), float(q.ask_price or 0)
+        out = float(q.bid_price or 0), float(q.ask_price or 0)
+        self._poll_quotes[symbol] = (*out, None if ts is None else pd.Timestamp(ts))   # shadow reuse (this poll only)
+        return out
 
-    def _realism(self, sig, ctx, px) -> tuple[bool, str, dict]:
-        """Paper fills anything the price touches; skip what a real order book would not give us."""
+    def _realism(self, sig, ctx, px, quote=None) -> tuple[bool, str, dict]:
+        """Paper fills anything the price touches; skip what a real order book would not give us.
+        quote: (bid, ask, timestamp) already fetched (shadow mode only); None = fetch the live quote (every real entry)."""
         info = {}
-        try:
-            bid, ask = self._quote(sig.symbol)
-        except Exception as e:
-            return False, f"no quote ({e.__class__.__name__})", info
+        qts = _UNSET
+        if quote is not None:
+            bid, ask, qts = quote
+        else:
+            try:
+                bid, ask = self._quote(sig.symbol)
+            except Exception as e:
+                return False, f"no quote ({e.__class__.__name__})", info
         if bid <= 0 or ask <= 0 or ask < bid:
             return False, "no two-sided quote", info
         mid = (bid + ask) / 2
         spread = ask - bid
         info.update(bid=bid, ask=ask, spread_bps=round(spread / mid * 1e4, 1))
-        ok, why = self._crosscheck(sig, ctx, px, mid, info)
+        ok, why = self._crosscheck(sig, ctx, px, mid, info, qts)
         if not ok:
             return False, why, info
         if info["spread_bps"] > self.live.get("max_spread_bps", 30):
@@ -1172,12 +1236,14 @@ class PaperRunner:
     def _utcnow() -> pd.Timestamp:
         return pd.Timestamp.now(tz="UTC")
 
-    def _crosscheck(self, sig, ctx, px, mid, info) -> tuple[bool, str]:
+    def _crosscheck(self, sig, ctx, px, mid, info, qts=_UNSET) -> tuple[bool, str]:
         """Before any new entry: the bars the signal used are fresh and agree with the broker's live quote (owner
-        2026-10-16, outage plan step 3). Rejections are journaled as skipped with a 'crosscheck:' reason."""
+        2026-10-16, outage plan step 3). Rejections are journaled as skipped with a 'crosscheck:' reason.
+        qts: the quote's timestamp when the caller has it (shadow mode); default = the one _quote recorded."""
         dev = abs(px - mid) / mid * 100
         info["quote_dev_pct"] = round(dev, 3)
-        qts = self._quote_ts.get(sig.symbol)
+        if qts is _UNSET:
+            qts = self._quote_ts.get(sig.symbol)
         if qts is not None:
             qts = qts if qts.tzinfo else qts.tz_localize("UTC")
             info["quote_age_s"] = round(max(0.0, (self._utcnow() - qts).total_seconds()), 1)
@@ -1371,6 +1437,7 @@ class PaperRunner:
             self._set_session_close(now, clock)
             if now.time() >= self.flatten:
                 self.flatten_mcf(retry_until=self._retry_deadline(now))
+                self._shadow_flatten(now)                 # shadow lots close at the same flatten, after the real one
                 self.session_done = True
                 if not self.health.get("flatten_failed"):
                     self.risk.state.open_r = 0.0          # flat: no open marks left (status only)
@@ -1386,9 +1453,22 @@ class PaperRunner:
                 last_status = now
             self._sleep(max(1, poll_seconds - now.second % poll_seconds + 3))
         self.reconcile(now.date())
+        if self.shadow is not None:                   # handover / close: shadow lot state for the next job
+            try:
+                self.shadow.flush(force=True)
+            except Exception as e:
+                print(f"shadow save failed: {type(e).__name__}: {e} (no effect on trading)")
         if now.time() >= self.flatten:
             self.what_if(now.date())
         self.write_status(now, "closed" if now.time() >= self.flatten else "handover")
+
+    def _shadow_flatten(self, now: pd.Timestamp):
+        if self.shadow is None:
+            return
+        try:
+            self.shadow.flatten(now)
+        except Exception as e:
+            print(f"shadow flatten failed: {type(e).__name__}: {e} (no effect on trading)")
 
     FLATTEN_RETRY_S = 20
 

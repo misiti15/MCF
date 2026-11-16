@@ -1,0 +1,25 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW6G1-ns2-up3-vwap2sd-short-FD; start 11:00 + close >= VWAP + 0.5 SD + ADV >= $150M + opening gap <= +2%. Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  RW6G1-ns2-up3-vwap2sd-short-FD-WB3:
+    enabled: false
+    refire: true
+    refire_cooldown: 1
+    type: lab
+    module: research/workbench/RW6G1-ns2-up3-vwap2sd-short-FD/modules/RW6G1-ns2-up3-vwap2sd-short-FD-WB3.py
+    min_adv: 150000000
+    window:
+    - 1100
+    - 1500
+    scale_out_r: null
+    live_scale_out: false
+    tags:
+    - workbench
+    - parent:RW6G1-ns2-up3-vwap2sd-short-FD
+    workbench:
+      parent: RW6G1-ns2-up3-vwap2sd-short-FD
+      param: module clause + window/min_adv
+      old: null
+      new: start 11:00 + close >= VWAP + 0.5 SD + ADV >= $150M + opening gap <= +2%
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''D2 C2 + gap <= +2%'''
