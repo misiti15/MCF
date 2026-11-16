@@ -1,0 +1,32 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-fromopen-FD; = WB3 (window 13:00 + gap <= -3.2) + max hold 75 min (P24). Mechanic RERUN 2026-11-16. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-fromopen-FD-WB4:
+    refire: true
+    refire_cooldown: 1
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-fromopen-FD/modules/L3-gap-slope-fromopen-FD-WB4.py
+    min_adv: 0
+    window:
+    - 950
+    - 1300
+    prefilter: gap_le:-3.2
+    scale_out_r: null
+    time_stop_min: 75        # max hold 75 min ...
+    time_stop_min_r: 99.0    # ... whatever the best excursion (unconditional; runner time stop)
+    tags:
+    - workbench
+    - parent:L3-gap-slope-fromopen-FD
+    workbench:
+      parent: L3-gap-slope-fromopen-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 950
+      - 1300
+      date: '2026-11-16'
+      note: 'Mechanic RERUN: WB3 + max hold 75 min (time_stop_min 75, time_stop_min_r
+        99); module gap, prefilter and time stop set by hand'
