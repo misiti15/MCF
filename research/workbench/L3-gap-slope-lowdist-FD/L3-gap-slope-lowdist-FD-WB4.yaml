@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-lowdist-FD; combo: cond.dist_lod_atr 0.7816761255264282 -> 0.82 + rsi5 >= 50 layer + max hold 75 min. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-lowdist-FD-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-lowdist-FD/modules/L3-gap-slope-lowdist-FD-WB4.py
+    min_adv: 0
+    window:
+    - 950
+    - 1500
+    prefilter: gap_le:-2.6573517322540283
+    scale_out_r: null
+    time_stop_min: 75        # max hold 75 min ...
+    time_stop_min_r: 99.0    # ... whatever the best excursion (unconditional; runner time stop)
+    tags:
+    - workbench
+    - parent:L3-gap-slope-lowdist-FD
+    workbench:
+      parent: L3-gap-slope-lowdist-FD
+      param: cond.dist_lod_atr
+      old: 0.7816761255264282
+      new: 0.82
+      date: '2026-11-16'
+      note: Mechanic combo R08 = WB1 + WB2 + WB3 (dist_lod > 0.82 AND rsi5 >= 50 AND
+        max hold 75 min; rsi5 layer and time stop set by hand)

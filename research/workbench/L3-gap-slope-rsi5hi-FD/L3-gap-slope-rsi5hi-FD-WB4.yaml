@@ -1,0 +1,25 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-rsi5hi-FD; combo of WB1 + WB2 + WB3 (config X10). Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-rsi5hi-FD-WB4:
+    refire: true
+    refire_cooldown: 6
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-rsi5hi-FD/modules/L3-gap-slope-rsi5hi-FD-WB4.py
+    min_adv: 0
+    window:
+    - 950
+    - 1500
+    prefilter: gap_le:-2.6573517322540283
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:L3-gap-slope-rsi5hi-FD
+    workbench:
+      parent: L3-gap-slope-rsi5hi-FD
+      param: module clause
+      old: null
+      new: cost/R <= 0.05 + RSI(5) <= 90 + slope <= 1.0
+      date: '2026-11-16'
+      note: 'Mechanic: combo of WB1 + WB2 + WB3 (config X10) (bench config X10)'

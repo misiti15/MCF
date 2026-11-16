@@ -288,6 +288,15 @@ def get_bars(syms: list[str], day, until: pd.Timestamp | None, log=print) -> dic
     if p.exists() and meta.exists():
         m = json.loads(meta.read_text())
         ok = pd.Timestamp(m["end"]) >= end and set(syms) <= set(m.get("asked", []))
+    if not ok and until is None and d < pd.Timestamp.now(tz=NY).date():
+        pk = store.fetch_pack(d, "1min", log=log)       # the full-universe session pack (store-bars workflow)
+        x = store.read_pack(pk, syms) if pk is not None else None
+        if x is not None and set(syms) <= set(store.pack_meta(pk).get("universe") or []) | set(x.symbol):
+            p.parent.mkdir(parents=True, exist_ok=True)
+            x.to_parquet(p, index=False)
+            meta.write_text(json.dumps({"end": str(end), "asked": sorted(syms), "source": pk.name,
+                                        "fetched_at": str(pd.Timestamp.now(tz=NY))}))
+            ok = True
     if not ok:
         log(f"team: fetching 1-minute bars for {len(syms)} symbols, {d} 09:30 -> {end:%H:%M} ET")
         df = store._fetch_bars(list(syms), pd.Timestamp(f"{d} 09:30", tz=NY).tz_convert("UTC").isoformat(),

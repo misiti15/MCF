@@ -4,7 +4,13 @@
     data/replay/daily.parquet               Alpaca SIP daily bars (split-adjusted), as the live prep reads them
     data/replay/priors/<YYYY-MM-DD>.pkl.gz  mcf.data.priors.build_priors output for that session (live code path)
 
-Sources, in order: data/cache_hist/1Min (the 2-year lab-universe history, research/history2y; ends 2026-10-16),
+Live sessions (2026-10-06 on): the session pack the nightly store-bars workflow publishes as a GitHub Release asset
+(release bars-<YYYY-MM>, assets 1min-<day>.parquet / 1day-<day>.parquet; mcf/replay/packs.py) holds RTH 1-minute bars of
+the FULL live universe of that day (~4,700 names, plus the lab list), so a replay sees every name the live system could
+trade. `pull_packs` downloads them into data/replay/packs/ (public release URL, no credentials); every reader below
+prefers a local pack over data/replay/1Min/<day>.parquet and falls back to the older sources when a session has none.
+
+Other sources, in order: data/cache_hist/1Min (the 2-year lab-universe history, research/history2y; ends 2026-10-16),
 data/cache/1Min, and a read-only Alpaca market-data fetch for sessions after the cache (`fetch_1min`). Only market data
 is read; no trading endpoint is ever called. Keys come from ALPACA_API_KEY / ALPACA_SECRET_KEY and are never logged.
 
@@ -65,8 +71,167 @@ def day_path(d) -> Path:
     return STORE / "1Min" / f"{_d(d)}.parquet"
 
 
+# ---------------------------------------------------------------------------------------------- live session packs
+PACKS = STORE / "packs"
+PACK_START = date(2026, 10, 6)          # first live session; packs exist only from here on
+PACK_COLS = ["symbol", "ts", "open", "high", "low", "close", "volume"]
+_PACK_MISS: set = set()
+
+
+def release_tag(d) -> str:
+    return f"bars-{_d(d):%Y-%m}"
+
+
+def pack_name(d, kind: str = "1min") -> str:
+    return f"{kind}-{_d(d)}.parquet"
+
+
+def pack_path(d, kind: str = "1min") -> Path:
+    return PACKS / pack_name(d, kind)
+
+
+def write_pack(df: pd.DataFrame, path: Path, meta: dict | None = None) -> Path:
+    """One session pack: long table (symbol, ts UTC, OHLCV) sorted by symbol/ts, zstd Parquet, metadata in the schema.
+    Refuses rows inside the locked block."""
+    import json
+
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    x = df.reset_index() if "ts" not in df.columns else df.copy()
+    x = x[PACK_COLS]
+    x["ts"] = pd.to_datetime(x["ts"], utc=True)
+    dd = x["ts"].dt.tz_convert(TZ).dt.date
+    if len(x) and ((dd >= LOCK_A) & (dd <= LOCK_B)).any():
+        raise ValueError(f"pack rows in the locked block {LOCK_A}..{LOCK_B} (rule 19)")
+    x["symbol"] = x["symbol"].astype(str)
+    x = x.sort_values(["symbol", "ts"], kind="mergesort").drop_duplicates(["symbol", "ts"], keep="last")
+    for c in ("open", "high", "low", "close"):
+        x[c] = x[c].astype("float64")
+    x["volume"] = x["volume"].astype("float64").round().astype("int64")
+    t = pa.Table.from_pandas(x, preserve_index=False)
+    t = t.set_column(0, "symbol", pa.compute.dictionary_encode(t.column("symbol")))
+    md = dict(t.schema.metadata or {})
+    md[b"mcf_pack"] = json.dumps({**(meta or {}), "rows": len(x), "symbols": int(x["symbol"].nunique())}).encode()
+    t = t.replace_schema_metadata(md)
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    pq.write_table(t, tmp, compression="zstd", compression_level=9, row_group_size=1_000_000)
+    tmp.replace(path)
+    return path
+
+
+def pack_meta(path: Path) -> dict:
+    import json
+
+    import pyarrow.parquet as pq
+
+    md = pq.read_schema(path).metadata or {}
+    return json.loads(md.get(b"mcf_pack", b"{}"))
+
+
+def read_pack(path: Path, syms=None) -> pd.DataFrame:
+    """A pack as a long table (symbol str, ts UTC, OHLCV float), rows of the locked block dropped."""
+    import pyarrow.parquet as pq
+
+    filt = [("symbol", "in", sorted(set(syms)))] if syms is not None else None
+    x = pq.read_table(path, filters=filt).to_pandas()
+    x["symbol"] = x["symbol"].astype(str)
+    x["ts"] = pd.to_datetime(x["ts"], utc=True)
+    dd = x["ts"].dt.tz_convert(TZ).dt.date
+    x = x[~((dd >= LOCK_A) & (dd <= LOCK_B))]
+    for c in ("open", "high", "low", "close", "volume"):
+        x[c] = x[c].astype(float)
+    return x.reset_index(drop=True)
+
+
+def _repo() -> str:
+    import subprocess
+
+    if os.environ.get("MCF_PACK_REPO"):
+        return os.environ["MCF_PACK_REPO"]
+    if os.environ.get("GITHUB_REPOSITORY"):
+        return os.environ["GITHUB_REPOSITORY"]
+    url = subprocess.run(["git", "-C", str(ROOT), "remote", "get-url", "origin"], capture_output=True,
+                         text=True).stdout.strip()
+    url = url.removesuffix(".git").rstrip("/")
+    return "/".join(url.split("/")[-2:]) if url else "misiti15/MCF"
+
+
+def pack_url(d, kind: str = "1min") -> str:
+    return f"https://github.com/{_repo()}/releases/download/{release_tag(d)}/{pack_name(d, kind)}"
+
+
+def fetch_pack(d, kind: str = "1min", log=print) -> Path | None:
+    """The local pack of session d, downloaded from its Release once (cached in data/replay/packs/). None when the
+    session has no pack (before PACK_START, not yet published, network off via MCF_REPLAY_PACKS=0)."""
+    d = _d(d)
+    p = pack_path(d, kind)
+    if p.exists():
+        return p
+    if d < PACK_START or (d, kind) in _PACK_MISS or os.environ.get("MCF_REPLAY_PACKS") == "0" or \
+            (LOCK_A <= d <= LOCK_B):
+        return None
+    import requests
+
+    try:
+        r = requests.get(pack_url(d, kind), timeout=120, stream=True)
+        if r.status_code != 200:
+            _PACK_MISS.add((d, kind))
+            return None
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_suffix(".part")
+        with open(tmp, "wb") as f:
+            for chunk in r.iter_content(1 << 20):
+                f.write(chunk)
+        tmp.replace(p)
+        log(f"packs: {p.name} {p.stat().st_size / 1e6:.1f} MB from {release_tag(d)}")
+        return p
+    except Exception as e:  # network trouble: fall back to the other sources
+        _PACK_MISS.add((d, kind))
+        log(f"packs: {d} {kind} not downloaded ({type(e).__name__})")
+        return None
+
+
+def pull_packs(days, daily: bool = True, log=print) -> list[date]:
+    """Download the packs of the live sessions among `days` (skips the rest); returns the sessions with a 1min pack."""
+    out = []
+    for d in check_dates(days):
+        if d >= PACK_START and fetch_pack(d, "1min", log=log) is not None:
+            out.append(d)
+            if daily:
+                fetch_pack(d, "1day", log=log)
+    return out
+
+
+def day_file(d) -> Path:
+    """The 1-minute file of session d: the local live pack when there is one, else data/replay/1Min/<day>.parquet."""
+    p = pack_path(d)
+    return p if p.exists() else day_path(d)
+
+
+def has_pack(d) -> bool:
+    return pack_path(d).exists()
+
+
+def pack_daily(days=None) -> pd.DataFrame | None:
+    """Daily bars of the local 1day packs (each holds ~80 calendar days of the session's universe up to the session),
+    newest pack wins per (symbol, ts). None when there is no local 1day pack."""
+    files = sorted(PACKS.glob("1day-*.parquet"))
+    if days is not None:
+        want = {f"1day-{_d(x)}.parquet" for x in days}
+        files = [f for f in files if f.name in want]
+    if not files:
+        return None
+    x = pd.concat([read_pack(f) for f in files])
+    return x.drop_duplicates(["symbol", "ts"], keep="last").sort_values(["symbol", "ts"]).reset_index(drop=True)
+
+
 def available_days() -> list[date]:
-    return sorted(_d(p.stem) for p in (STORE / "1Min").glob("*.parquet"))
+    have = {_d(p.stem) for p in (STORE / "1Min").glob("*.parquet")}
+    have |= {_d(p.stem[5:]) for p in PACKS.glob("1min-*.parquet")}
+    return sorted(have)
 
 
 # ---------------------------------------------------------------------------------------------- building the store
@@ -223,10 +388,10 @@ def fetch_daily(start, end, syms: list[str] | None = None, log=print) -> Path:
 def load_day(d, syms=None) -> dict[str, pd.DataFrame]:
     """symbol -> RTH 1-minute bars of session d (tz America/New_York, bar start)."""
     d = check_dates([d])[0]
-    p = day_path(d)
+    p = day_file(d)
     if not p.exists():
         return {}
-    x = pd.read_parquet(p)
+    x = read_pack(p, syms) if p.parent == PACKS else pd.read_parquet(p)
     if syms is not None:
         x = x[x.symbol.isin(set(syms))]
     out = {}
@@ -255,10 +420,10 @@ class StoreHistClient:
     def _day(self, d: date, minutes: int) -> pd.DataFrame | None:
         k = (d, minutes)
         if k not in self.cache:
-            if not day_path(d).exists() or (LOCK_A <= d <= LOCK_B):
+            if not day_file(d).exists() or (LOCK_A <= d <= LOCK_B):
                 self.cache[k] = None
             else:
-                x = pd.read_parquet(day_path(d))
+                x = pd.read_parquet(day_file(d))
                 x["ts"] = pd.DatetimeIndex(x["ts"]).tz_convert(TZ)
                 if minutes > 1:
                     x["ts"] = x["ts"].dt.floor(f"{minutes}min")
@@ -266,6 +431,8 @@ class StoreHistClient:
                         open=("open", "first"), high=("high", "max"), low=("low", "min"), close=("close", "last"),
                         volume=("volume", "sum")).reset_index()
                 x["symbol"] = x["symbol"].astype(str)
+                for c in ("open", "high", "low", "close", "volume"):
+                    x[c] = x[c].astype(float)
                 self.cache[k] = x
             if len(self.cache) > 80:
                 self.cache.pop(next(iter(self.cache)))
@@ -323,17 +490,23 @@ def priors_path(d) -> Path:
     return STORE / "priors" / f"{_d(d)}.pkl.gz"
 
 
-def build_priors_for(d, syms: list[str], exact_symbols=(), cache: dict | None = None, daily=None, log=print) -> dict:
-    """The live prep's priors (mcf.data.priors.build_priors, unchanged) for session d, from the store. Cached."""
+def build_priors_for(d, syms: list[str], exact_symbols=(), cache: dict | None = None, daily=None, log=print,
+                     tag: str | None = None) -> dict:
+    """The live prep's priors (mcf.data.priors.build_priors, unchanged) for session d, from the store. Cached
+    (priors/<day>.pkl.gz; with `tag`, priors/<day>.<tag>.pkl.gz, e.g. tag "live" for the full live universe).
+    Daily bars: data/replay/daily.parquet, overlaid by the session's 1day pack when there is one."""
     from ..data.priors import build_priors
 
     d = check_dates([d])[0]
-    p = priors_path(d)
+    p = priors_path(d) if not tag else STORE / "priors" / f"{d}.{tag}.pkl.gz"
     if p.exists():
         with gzip.open(p, "rb") as f:
             return pickle.load(f)
     if daily is None and (STORE / "daily.parquet").exists():
         daily = pd.read_parquet(STORE / "daily.parquet")
+    pd_ = pack_daily([d]) if pack_path(d, "1day").exists() else None
+    if pd_ is not None:
+        daily = pd_ if daily is None else pd.concat([daily, pd_]).drop_duplicates(["symbol", "ts"], keep="last")
     cl = StoreHistClient(d, daily, cache)
     pri = build_priors(list(syms), d, feed="sip", exact_symbols=list(exact_symbols), client=cl, log=lambda m: None)
     p.parent.mkdir(parents=True, exist_ok=True)

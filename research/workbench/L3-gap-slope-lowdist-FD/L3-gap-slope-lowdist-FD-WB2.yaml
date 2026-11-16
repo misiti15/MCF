@@ -1,0 +1,25 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-lowdist-FD; one change: time_stop_min None -> 75. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-lowdist-FD-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-lowdist-FD/modules/L3-gap-slope-lowdist-FD-WB2.py
+    min_adv: 0
+    window:
+    - 950
+    - 1500
+    prefilter: gap_le:-2.6573517322540283
+    scale_out_r: null
+    time_stop_min: 75        # max hold 75 min ...
+    time_stop_min_r: 99.0    # ... whatever the best excursion (unconditional; runner time stop)
+    tags:
+    - workbench
+    - parent:L3-gap-slope-lowdist-FD
+    workbench:
+      parent: L3-gap-slope-lowdist-FD
+      param: time_stop_min
+      old: null
+      new: 75
+      date: '2026-11-16'
+      note: 'Mechanic: max hold 75 min (P26), set by hand (runner time stop)'
