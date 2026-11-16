@@ -1,0 +1,27 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW1-gapdn-bounce-flowsell-short-FD; one change: window [950, 1500] -> [950, 1300]. Educational only - not financial advice.
+strategies:
+  RW1-gapdn-bounce-flowsell-short-FD-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/RW1-gapdn-bounce-flowsell-short-FD/modules/RW1-gapdn-bounce-flowsell-short-FD-WB1.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1300
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:RW1-gapdn-bounce-flowsell-short-FD
+    workbench:
+      parent: RW1-gapdn-bounce-flowsell-short-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 950
+      - 1300
+      date: '2026-11-16'
+      note: 'Mechanic: P6 entry window ends 13:00 (replay 13:00-15:00 entries -0.27R/trade;
+        live 13:00-15:00 ~0R)'
