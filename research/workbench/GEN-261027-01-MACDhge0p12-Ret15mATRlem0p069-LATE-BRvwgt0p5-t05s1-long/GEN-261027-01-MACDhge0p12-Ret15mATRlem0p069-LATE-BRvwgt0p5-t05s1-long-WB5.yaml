@@ -1,0 +1,30 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long; change: combo WB1 + WB2 + WB3: window 14:00-14:30 AND min_adv $100M AND breadth change since 09:50 <= +0.20. Educational only - not financial advice.
+strategies:
+  GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5:
+    enabled: false
+    type: lab
+    module: research/workbench/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long/modules/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5.py
+    context:
+    - breadth
+    min_adv: 100000000
+    window:
+    - 1400
+    - 1430
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+    workbench:
+      parent: GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long
+      param: window + min_adv + gate.br_chg (combo WB1+WB2+WB3)
+      old:
+      - 1400
+      - 1500
+      new: window [1400, 1430] AND min_adv 100000000 AND br_chg <= 0.20
+      date: '2026-11-16'
+      note: Mechanic combo = WB1 + WB2 + WB3 (each passed alone); counted as its own
+        config; module set by hand
+      display_name: 'Generated: Late Pullback Buy (MACD rising) — WB5: 14:00-14:30,
+        $100M ADV, breadth gate'

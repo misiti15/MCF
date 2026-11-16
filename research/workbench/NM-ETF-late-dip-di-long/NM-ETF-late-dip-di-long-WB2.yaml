@@ -1,0 +1,24 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent NM-ETF-late-dip-di-long; change: cond.ret3 -> -0.9. Educational only - not financial advice.
+strategies:
+  NM-ETF-late-dip-di-long-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB2.py
+    symbols: module
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:NM-ETF-late-dip-di-long
+    workbench:
+      parent: NM-ETF-late-dip-di-long
+      param: "cond.ret3"
+      old: -0.7977116525173187
+      new: -0.9
+      date: '2026-11-16'
+      note: "Mechanic: P10 deeper 15-min dip only (ret3 <= -0.90%)"
+      display_name: "Late-Day ETF Dip Buy — WB2: 15-min dip <= -0.90%"
