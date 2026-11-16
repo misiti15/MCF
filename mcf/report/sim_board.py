@@ -106,8 +106,8 @@ def build(root: Path = ROOT) -> dict:
     sources: dict[str, dict] = {}
 
     # replay: a future all-setups replay run (research/replay_all/latest.json) wins over the stale snapshot
-    for path, label in ((root / "research" / "replay_all" / "latest.json", "all-setups replay"),
-                        (live / "replay.json", "replay snapshot")):
+    for path, label in ((root / "research" / "replay_all" / "latest.json", "all-setups Session replay"),
+                        (live / "replay.json", "Session replay snapshot")):
         rp = _load(path)
         if rp and rp.get("setups"):
             win = str(rp.get("window") or "")
