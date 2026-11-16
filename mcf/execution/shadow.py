@@ -17,14 +17,13 @@ split-tape gate / easy-to-borrow (the broker's cached asset read), price below m
 target, the setup daily loss latch (shadow's OWN realized R), and the full fill-realism path of PaperRunner._realism
 (quote cross-check, spread, spread vs stop, LR8-era stop-cost filter, participation cap) on a live SIP quote.
 
-Fill model - CONSERVATIVE (owner 2026-11-16: "slightly harder to fill than our current estimates"; numbers in config
-shadow:). Paper entries fill about at the quote seen at decision time (measured entry slip vs signal: median +3.6 bps,
-research/live_ready/NOTES.md), so a shadow entry fills at the decision-time ask (long) / bid (short) PLUS
-max(1 cent, 0.5 x the median slip) - 1.5 x the live median slip in all - plus shadow.latency_bps. Exits on the completed
-1-minute bars after the entry, as the broker bracket does: stop first inside a bar (at the stop, or the open on a gap
-through it, less half the entry spread and less stop_extra_bps (1 bp); the LR8 stop cost comes on top in pnl_adj),
-then target ONLY when a bar trades THROUGH it by max(1 cent, 1 bp) - a touch is not a fill (at the limit, or the open on
-a gap through it), then the opt-in live scale-out (bank at that bar's close, rest to breakeven). Entries that would rest
+Fill model - CONSERVATIVE, owner "fills B" 2026-11-16 (profiles A / B / C in config shadow.fill_profiles; expected
+about -0.02 to -0.03R per trade vs current estimates). A shadow entry fills at the decision-time ask (long) / bid
+(short) PLUS max(2 cents, 2.0 x the live median entry slip of 3.6 bps, research/live_ready/NOTES.md) plus
+shadow.latency_bps. Exits on the completed 1-minute bars after the entry, as the broker bracket does: stop first inside
+a bar (at the stop, or the open on a gap through it, less 0.03% of price; the LR8 stop cost comes on top in pnl_adj),
+then target ONLY when a bar trades THROUGH it by max(2 cents, 0.03%) - a touch is not a fill (at the limit, or the open
+on a gap through it), then the opt-in live scale-out (bank at that bar's close, rest to breakeven). Entries that would rest
 as limits fill only when traded through the same way. The assumptions are written into each shadow trade's meta. Per poll, after the bars: the live
 trade management of PaperRunner.manage (time stop at the latest close, breakeven, trail). Every open lot closes at the
 runner's flatten time at the latest close less half the spread. Costs: the LR8 production model (mcf.costs.pnl_adj),
@@ -51,6 +50,11 @@ SHADOW_KIND = "shadow"
 SHADOW_LABEL = "MCF shadow (no orders)"
 SHADOW_RUN_ID = 3
 WHATIF_LABEL = "MCF what-if (signals not taken)"
+# owner "fills B" 2026-11-16 (default); A = ease, C = tighten - recommended by the nightly trust check, set by the owner only
+FILL_PROFILES = {
+    "A": {"through_min_ps": 0.02, "through_bps": 2.0, "entry_slip_mult": 1.75, "entry_min_extra_ps": 0.02, "stop_extra_bps": 2.0},
+    "B": {"through_min_ps": 0.02, "through_bps": 3.0, "entry_slip_mult": 2.0, "entry_min_extra_ps": 0.02, "stop_extra_bps": 3.0},
+    "C": {"through_min_ps": 0.03, "through_bps": 5.0, "entry_slip_mult": 2.5, "entry_min_extra_ps": 0.02, "stop_extra_bps": 5.0}}
 
 # live skip reasons that come from the ACCOUNT's resources (shadow ignores them; calibration does not call a shadow
 # trade "extra" when live skipped the same signal for one of these)
@@ -139,15 +143,16 @@ class ShadowBook:
         sc = runner.cfg.get("shadow") or {}
         self.of_live = bool(sc.get("of_live", True))
         self.latency_bps = float(sc.get("latency_bps", 0.0) or 0.0)
+        self.profile = str(sc.get("fill_profile", "B"))
+        fp = {**FILL_PROFILES["B"], **((sc.get("fill_profiles") or {}).get(self.profile) or FILL_PROFILES.get(self.profile, {}))}
         self.slip_bps = float(sc.get("entry_median_slip_bps", 3.6))
-        self.slip_mult = float(sc.get("entry_slip_mult", 1.5))
-        self.entry_min_ps = float(sc.get("entry_min_extra_ps", 0.01))
-        self.thru_ps = float(sc.get("through_min_ps", 0.01))
-        self.thru_bps = float(sc.get("through_bps", 1.0))
-        self.stop_bps = float(sc.get("stop_extra_bps", 1.0))
-        self.fill_tag = (f"cons:entry=quote+max({self.entry_min_ps:g},{self.slip_mult - 1:g}x{self.slip_bps:g}bp)"
-                         f"+{self.latency_bps:g}bp|thru=max({self.thru_ps:g},{self.thru_bps:g}bp)|stop=-half_spread"
-                         f"-{self.stop_bps:g}bp+LR8")
+        self.slip_mult = float(fp["entry_slip_mult"])
+        self.entry_min_ps = float(fp["entry_min_extra_ps"])
+        self.thru_ps = float(fp["through_min_ps"])
+        self.thru_bps = float(fp["through_bps"])
+        self.stop_bps = float(fp["stop_extra_bps"])
+        self.fill_tag = (f"{self.profile}:entry=quote+max({self.entry_min_ps:g},{self.slip_mult:g}x{self.slip_bps:g}bp)"
+                         f"+{self.latency_bps:g}bp|thru=max({self.thru_ps:g},{self.thru_bps:g}bp)|stop=-{self.stop_bps:g}bp+LR8")
         self.budget = float(sc.get("budget_frac", 0.10) or 0.10)
         self.extras = list(extras or [])
         self.extra_names = {getattr(s, "name", "") for s in self.extras}
@@ -497,7 +502,7 @@ class ShadowBook:
         bid, ask = q[0], q[1]
         side = int(sig.side)
         q0 = ask if side == 1 else bid
-        extra = max(self.entry_min_ps, (self.slip_mult - 1) * self.slip_bps * q0 / 1e4) + self.latency_bps * q0 / 1e4
+        extra = max(self.entry_min_ps, self.slip_mult * self.slip_bps * q0 / 1e4) + self.latency_bps * q0 / 1e4
         fill = q0 + side * extra
         sid = self._sid(sig, now, m)
         params = getattr(strat, "params", None) or {}
@@ -560,7 +565,7 @@ class ShadowBook:
             if side * (adverse - stop) <= 0:                                      # stop first inside a bar
                 px = o if side * (o - stop) <= 0 else stop
                 px = float(px)
-                self._close(lot, px - side * (hs + self.stop_bps * px / 1e4), "stop", idx[k])
+                self._close(lot, px - side * self.stop_bps * px / 1e4, "stop", idx[k])
                 return
             if tgt is not None and side * (fav - tgt) >= max(self.thru_ps, self.thru_bps * tgt / 1e4):   # through
                 px = o if side * (o - tgt) >= 0 else tgt

@@ -179,8 +179,8 @@ def test_shadow_lot_hits_target(tmp_path, monkeypatch):
     r, b, tr = _one_lot(tmp_path, monkeypatch, _path({"10:03": 102.5}), ["10:01", "10:02", "10:05"])
     assert len(tr) == 1 and tr.exit_reason.iloc[0] == "target"
     row = tr.iloc[0]
-    assert row.entry == pytest.approx(100.01 + 0.018, abs=1e-4)   # ask + 0.5 x 3.6 bp median slip (floor 1 cent)
-    assert "fill_model=cons:" in row.meta
+    assert row.entry == pytest.approx(100.01 + 0.072, abs=1e-4)   # fills B: ask + 2.0 x 3.6 bp median slip (min 2 cents)
+    assert "fill_model=B:" in row.meta
     assert row.exit == pytest.approx(102.5)                 # gap through the 102.0 target: the bar's open
     assert row.pnl_adj < row.pnl                            # LR8 costs in
     assert "mode=only" in row.meta and row.broker_order_id.startswith("shadow-S-AAA-20261116-")
@@ -367,8 +367,8 @@ console.log(JSON.stringify({ none, withd }));
 
 
 def test_conservative_fills_touch_is_not_a_target_fill(tmp_path, monkeypatch):
-    # target 102.0; the 10:03 bar's high only touches 102.005 (< 1 cent through): no fill; 10:04 trades through
-    path = _path({"10:03": 101.955, "10:04": 102.3})
+    # target 102.0; the 10:03 bar's high 102.015 is < max(2 cents, 0.03%) through: no fill; 10:04 trades through
+    path = _path({"10:03": 101.965, "10:04": 102.3})
     r, b, tr = _one_lot(tmp_path, monkeypatch, path, ["10:01", "10:04"])
     assert tr.empty and len(r.shadow.lots) == 1
     _poll(r, monkeypatch, _t("10:05"), {"AAA": _bars(n=390, path=path)})
@@ -379,4 +379,13 @@ def test_conservative_fills_touch_is_not_a_target_fill(tmp_path, monkeypatch):
 def test_conservative_stop_fill_is_worse_than_the_stop(tmp_path, monkeypatch):
     r, b, tr = _one_lot(tmp_path, monkeypatch, _path({"10:03": 99.02}), ["10:01", "10:04"])
     row = tr.iloc[0]
-    assert row.exit_reason == "stop" and row.exit == pytest.approx(99.0 - 0.01 - 99.0 * 1e-4, abs=1e-6)
+    assert row.exit_reason == "stop" and row.exit == pytest.approx(99.0 - 99.0 * 3e-4, abs=1e-6)   # stop - 0.03%
+
+
+def test_fill_advice_never_changes_the_profile():
+    assert C.fill_advice({"bias_r": 0.01, "r_pairs": 50, "days": 5})["advice"].startswith("tighten to C")
+    assert C.fill_advice({"bias_r": -0.02, "r_pairs": 50, "days": 5})["advice"] == "keep B"
+    assert C.fill_advice({"bias_r": -0.08, "r_pairs": 50, "days": 5})["advice"].startswith("ease to A")
+    assert C.fill_advice({"bias_r": 0.05, "r_pairs": 5, "days": 1})["advice"] == "keep B"
+    cfg = load_config()
+    assert cfg["shadow"]["fill_profile"] == "B" and cfg["shadow"]["fill_profiles"]["B"]["through_bps"] == 3.0

@@ -472,18 +472,19 @@ shadow:
   of_live: true
   budget_frac: 0.10
   latency_bps: 0.0
-  # Conservative fills (owner 2026-11-16: "slightly harder to fill than our current estimates"):
-  # entry = decision-time ask (bid for shorts) + max(entry_min_extra_ps, (entry_slip_mult - 1) x entry_median_slip_bps)
-  #   -> 1.5 x the live median entry slip in all (paper already fills about at the quote; research/live_ready/NOTES.md:
-  #   median slip vs signal +3.6 bps), floor 1 cent; targets / limit entries fill only when price trades THROUGH the
-  #   level by max(through_min_ps, through_bps); stops fill at the stop less half the spread less stop_extra_bps, and the
-  #   LR8 stop cost comes on top (mcf.costs). Recorded per shadow trade (meta fill_model=...).
+  # Conservative fills, owner "fills B" 2026-11-16 (expected about -0.02 to -0.03R per trade vs current estimates):
+  # entry = decision-time ask (bid for shorts) + max(entry_min_extra_ps, entry_slip_mult x entry_median_slip_bps)
+  #   (live median entry slip vs signal +3.6 bps, research/live_ready/NOTES.md); targets / limit entries fill only when
+  #   price trades THROUGH the level by max(through_min_ps, through_bps) - a touch is not a fill; stops fill at the stop
+  #   (or the open on a gap) less stop_extra_bps of price, and the LR8 stop cost comes on top (mcf.costs). Recorded per
+  #   shadow trade (meta fill_model=...). The nightly trust check recommends easing to A or tightening to C; the profile
+  #   is changed ONLY by the owner.
   entry_median_slip_bps: 3.6
-  entry_slip_mult: 1.5
-  entry_min_extra_ps: 0.01
-  through_min_ps: 0.01
-  through_bps: 1.0
-  stop_extra_bps: 1.0
+  fill_profile: B
+  fill_profiles:
+    A: {through_min_ps: 0.02, through_bps: 2.0, entry_slip_mult: 1.75, entry_min_extra_ps: 0.02, stop_extra_bps: 2.0}
+    B: {through_min_ps: 0.02, through_bps: 3.0, entry_slip_mult: 2.0, entry_min_extra_ps: 0.02, stop_extra_bps: 3.0}
+    C: {through_min_ps: 0.03, through_bps: 5.0, entry_slip_mult: 2.5, entry_min_extra_ps: 0.02, stop_extra_bps: 5.0}
 shadow_setups: []
 
 research_queue:

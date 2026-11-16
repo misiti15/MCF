@@ -224,6 +224,21 @@ def _agg(df: pd.DataFrame) -> dict:
             "bias_t": None if t is None else round(t, 2), "daily_r_corr": None if corr is None else round(corr, 3)}
 
 
+def fill_advice(o: dict | None, profile: str = "B", min_pairs: int = 30, min_days: int = 3) -> dict:
+    """Owner "fills B" 2026-11-16: shadow should come out SLIGHTLY below live. Advice only - the profile is changed by the
+    owner, never automatically. bias = mean (shadow - live) R per matched trade."""
+    b, n, d = (o or {}).get("bias_r"), (o or {}).get("r_pairs", 0), (o or {}).get("days", 0)
+    if b is None or n < min_pairs or d < min_days:
+        return {"profile": profile, "verdict": "not enough matched trades yet", "advice": f"keep {profile}"}
+    if b > 0:
+        return {"profile": profile, "verdict": f"shadow ABOVE live by {b:+.3f}R (optimistic)",
+                "advice": "tighten to C: through max(3c, 0.05%), entry 2.5x median slip (min 2c), stop +0.05% (owner decides)"}
+    if b < -0.04:
+        return {"profile": profile, "verdict": f"shadow below live by {b:+.3f}R (harsher than needed)",
+                "advice": "ease to A: through max(2c, 0.02%), entry 1.75x median slip, stop +0.02% (owner decides)"}
+    return {"profile": profile, "verdict": f"shadow slightly below live ({b:+.3f}R) - as desired", "advice": f"keep {profile}"}
+
+
 def summarize(rows: pd.DataFrame | list, cfg: dict | None = None) -> dict:
     """Held-out trust-check verdicts: overall, per family (tier + weight) and per setup (gap = bias)."""
     c = cfg or E.load()
@@ -233,6 +248,7 @@ def summarize(rows: pd.DataFrame | list, cfg: dict | None = None) -> dict:
     out = {"held_out_from": None if not fit else f"after {fit}", "targets": {
         "match": c["tiers"][0]["min_match"], "extra": c["tiers"][0]["max_extra"], "bias_r": c["bias_tolerance_r"]},
         "overall": _agg(held) if len(held) else None, "families": {}, "setups": {}}
+    out["fills"] = fill_advice(out["overall"])
     for fam, g in held.groupby("family") if len(held) else []:
         a = _agg(g)
         a["optimistic"] = E.optimism(a["bias_r"], a["bias_t"], c)
@@ -275,6 +291,7 @@ def write(rows: list[dict], out_dir: str | Path, cfg: dict | None = None) -> dic
              f"{o.get('resource_blocked', 0)} blocked live by account resources (not extra), "
              f"R bias {o.get('bias_r')} (t {o.get('bias_t')}, {o.get('r_pairs', 0)} pairs), "
              f"daily R corr {o.get('daily_r_corr')}.", "",
+             f"Fill profile {s['fills']['profile']}: {s['fills']['verdict']} -> {s['fills']['advice']}.", "",
              "| family | days | live | shadow | match | extra | bias R | t | corr | tier | weight | haircut R |",
              "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for k, a in sorted(s["families"].items()):
