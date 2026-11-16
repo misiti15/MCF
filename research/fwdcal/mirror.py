@@ -656,14 +656,16 @@ def guard_decide(days, now, commits: dict) -> list[str]:
     if max(days) > td:
         out.append(f"window ends {max(days)}, after today {td}")
         return out
-    if td in days:
-        if now.tz_convert(NY).strftime("%H:%M") < "16:30":
-            out.append(f"window includes today ({td}); before 16:30 ET")
-        for acc, t in commits.items():
-            if t is None:
-                out.append(f"{acc}: no journal.db")
-            elif t.tz_convert(NY).strftime("%Y-%m-%d") != td or (now - t).total_seconds() / 60 < 10:
-                out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} not final for {td}")
+    if td in days and now.tz_convert(NY).strftime("%H:%M") < "16:30":
+        out.append(f"window includes today ({td}); before 16:30 ET")
+    close = pd.Timestamp(f"{max(days)} 15:55", tz=NY)    # Skeptic 23:50 / Lead 19:00: last commit at or after the last day's close
+    for acc, t in commits.items():
+        if t is None:
+            out.append(f"{acc}: no journal.db"); continue
+        if t < close:
+            out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} is before {max(days)} 15:55 ET (dead EOD job / pre-close)")
+        elif td in days and (now - t).total_seconds() / 60 < 10:
+            out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} is < 10 min old")
     return out
 
 
@@ -676,7 +678,11 @@ def guard_selftest():
              ("today, stale commit (yesterday)", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-16 16:05")}, True),
              ("one-day window today, one account stale", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 16:06"), "b": N("2026-11-16 15:57")}, True),
              ("today, all final", ["2026-11-16", "2026-11-17"], N("2026-11-17 16:40"), c_ok, False),
-             ("past window, later commits", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-13 16:06")}, False)]
+             ("past window, later commits", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-13 16:06")}, False),
+             ("past window, dead EOD job (last commit 11:00)", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-13 16:06"), "b": N("2026-11-13 11:00")}, True),
+             ("past window, last commit the day before", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-12 16:01")}, True),
+             ("today, pre-close commit 15:40 (old enough)", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 15:40")}, True),
+             ("today, commit 15:56", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 15:56")}, False)]
     for name, days, now, com, refuse in cases:
         r = guard_decide(days, now, com)
         assert bool(r) == refuse, (name, r)
