@@ -1,0 +1,13 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW3-gapdn-rsi5pop-flowsell-short-FD; ONE added part (new gate): skip while SPY is up > +0.20% since the 09:50 bar close. Set by hand (Mechanic 2026-11-16). Educational only - not financial advice.
+strategies:
+  RW3-gapdn-rsi5pop-flowsell-short-FD-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB2.py
+    min_adv: 95000000
+    window: [950, 1500]
+    context: [spy_fo]        # the gate reads SPY since 09:50 from the runner's spy_fo column; without it the mask fires nothing
+    scale_out_r: null
+    tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
+    workbench: {parent: RW3-gapdn-rsi5pop-flowsell-short-FD, param: "gate (module)", old: null, new: "skip SPY > +0.20% since 09:50", date: '2026-11-16', note: 'Mechanic: new gate set by hand (module + context: [spy_fo])'}

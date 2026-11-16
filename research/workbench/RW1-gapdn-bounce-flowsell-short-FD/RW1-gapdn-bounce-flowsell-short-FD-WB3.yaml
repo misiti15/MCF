@@ -1,0 +1,30 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW1-gapdn-bounce-flowsell-short-FD; one change: window [950, 1500] -> [950, 1300]. Educational only - not financial advice.
+strategies:
+  RW1-gapdn-bounce-flowsell-short-FD-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/RW1-gapdn-bounce-flowsell-short-FD/modules/RW1-gapdn-bounce-flowsell-short-FD-WB3.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1300
+    scale_out_r: null
+    context:
+    - spy_fo
+    tags:
+    - workbench
+    - parent:RW1-gapdn-bounce-flowsell-short-FD
+    workbench:
+      parent: RW1-gapdn-bounce-flowsell-short-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 950
+      - 1300
+      date: '2026-11-16'
+      note: 'Mechanic combo D8: window end 13:00 + RSI(14) 55-60 + 1R >= 0.40% of
+        price (daily ATR >= 1.6%) + skip when SPY > +0.20% since 09:50; module clauses
+        + context: [spy_fo] set by hand'

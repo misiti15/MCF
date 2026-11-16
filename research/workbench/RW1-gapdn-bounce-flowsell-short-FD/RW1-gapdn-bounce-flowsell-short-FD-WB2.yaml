@@ -1,0 +1,23 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW1-gapdn-bounce-flowsell-short-FD; one change: P11 RSI(14) upper bound 65 -> 60. Educational only - not financial advice.
+strategies:
+  RW1-gapdn-bounce-flowsell-short-FD-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/RW1-gapdn-bounce-flowsell-short-FD/modules/RW1-gapdn-bounce-flowsell-short-FD-WB2.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:RW1-gapdn-bounce-flowsell-short-FD
+    workbench:
+      parent: RW1-gapdn-bounce-flowsell-short-FD
+      param: cond.rsi (upper bound)
+      old: 65
+      new: 60
+      date: '2026-11-16'
+      note: 'Mechanic: P11 RSI(14) band 55-60 (live RSI 60-65 entries 54 trades -6.9R;
+        replay 57-66 -0.06R/trade)'

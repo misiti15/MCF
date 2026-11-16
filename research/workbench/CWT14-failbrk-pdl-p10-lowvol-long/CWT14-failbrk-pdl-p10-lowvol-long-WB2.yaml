@@ -1,0 +1,15 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT14-failbrk-pdl-p10-lowvol-long; Mechanic 2026-11-16: intake: only names that gapped down >= 0.5% (gap <= -0.5%). Educational only - not financial advice.
+strategies:
+  CWT14-failbrk-pdl-p10-lowvol-long-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT14-failbrk-pdl-p10-lowvol-long/modules/CWT14-failbrk-pdl-p10-lowvol-long-WB2.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    tags: [workbench, "parent:CWT14-failbrk-pdl-p10-lowvol-long"]
+    workbench:
+      parent: CWT14-failbrk-pdl-p10-lowvol-long
+      change: 'intake: only names that gapped down >= 0.5% (gap <= -0.5%)'
+      date: '2026-11-16'

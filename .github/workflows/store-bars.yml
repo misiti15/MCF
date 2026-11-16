@@ -1,0 +1,116 @@
+# Live-session bar storage (owner "storage yes", 2026-11-16: "recreate as close to live replay sessions as possible").
+# After the close, fetch read-only Alpaca SIP 1-minute RTH bars (split-adjusted) for the FULL live universe of the session
+# (the universe.csv the live prep committed to mcf-data that day) + daily bars, write one zstd Parquet pack per session
+# (mcf/replay/packs.py) and upload it to the GitHub Release bars-<YYYY-MM> (created if missing). mcf/replay/store.py
+# reads the packs back for replays. Then refresh docs/live/storage.json (capacity). Market data only: no trading
+# endpoint. Keys come from secrets and are never printed. The locked block 2024-11-01..2025-02-28 is refused.
+# 2-year history (owner "2-year .175 yes" 2026-11-16): dispatch one month per run, start=end=YYYY-MM, for 2024-09 ..
+# 2026-10 (2024-09 starts 09-16; the locked months 2024-11..2025-02 are skipped; packs carry weight 0.175, screening only).
+# Runs go one at a time in the concurrency group (GitHub keeps only ONE pending run per group, so do not dispatch many
+# months at once): dispatch the first month with chain_to=<last month> and each run dispatches the next when it is done.
+# The nightly run (no inputs) stores every session of the last 7 days not yet on a release, so a nightly run that a
+# chained dispatch replaced is caught up the next night.
+# Uses its own concurrency group (one job slot) so a research dispatch can never replace the nightly pending run.
+# Educational only - not financial advice.
+name: store-bars
+
+on:
+  schedule:
+    - cron: "40 21 * * 1-5"      # 16:40 ET during EST (21:40 UTC); 17:40 ET during EDT
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "first session YYYY-MM-DD, or a whole month YYYY-MM (2-year history chunks); empty = today"
+        default: ""
+      end:
+        description: "last session YYYY-MM-DD or month YYYY-MM; empty = start"
+        default: ""
+      chain_to:
+        description: "2-year chunks: after this month, dispatch the next month until this one (YYYY-MM); empty = no chain"
+        default: ""
+      replace:
+        description: "re-fetch sessions already on the release (true/false)"
+        default: "false"
+
+permissions:
+  contents: write     # release assets + docs/live/storage.json
+  actions: write      # chain the next month (gh workflow run)
+
+concurrency:
+  group: mcf-store-bars
+  cancel-in-progress: false
+
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -e . requests
+      - name: Live universe history (mcf-data, blobs on demand)
+        run: git fetch -q --filter=blob:none origin "+refs/heads/mcf-data:refs/remotes/origin/mcf-data"
+      - name: Sessions
+        id: days
+        run: |
+          start="${{ inputs.start }}"; end="${{ inputs.end }}"
+          [ -n "$start" ] || start=$(TZ=America/New_York date -d "7 days ago" +%F)
+          [ -n "$end" ] || [ -n "${{ inputs.start }}" ] || end=$(TZ=America/New_York date +%F)
+          [ -n "$end" ] || end="$start"
+          echo "start=$start" >> "$GITHUB_OUTPUT"; echo "end=$end" >> "$GITHUB_OUTPUT"
+          # sessions already published are skipped unless replace=true
+          : > on_release.txt
+          if [ "${{ inputs.replace }}" != "true" ]; then
+            gh api --paginate "repos/${{ github.repository }}/releases?per_page=100" \
+              --jq '.[] | select(.tag_name|startswith("bars-")) | .assets[].name' \
+              | sed -n 's/^1min-\([0-9-]*\)\.parquet$/\1/p' > on_release.txt || true
+          fi
+          echo "sessions $start..$end; $(wc -l < on_release.txt) already on a release"
+      - name: Build and upload packs (one session at a time)
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: |
+          mkdir -p packs_out
+          # locked block 2024-11-01..2025-02-28 is never fetched (rule 19); YYYY-MM inputs expand to the whole month
+          for d in $(python -c "import sys; from mcf.replay import store, packs; lo, hi = packs.month_bounds(sys.argv[1], sys.argv[2]); [print(x) for x in store.sessions(lo, hi) if not store.LOCK_A <= x <= store.LOCK_B]" \
+                     "${{ steps.days.outputs.start }}" "${{ steps.days.outputs.end }}"); do
+            if grep -qx "$d" on_release.txt; then echo "$d already on the release"; continue; fi
+            python -m mcf.replay.packs build --start "$d" --end "$d" --out packs_out || { echo "::warning::$d build failed"; continue; }
+            [ -f "packs_out/1min-$d.parquet" ] || continue
+            tag="bars-${d:0:7}"
+            gh release view "$tag" > /dev/null 2>&1 || gh release create "$tag" --title "Live-session bars ${d:0:7}" \
+              --notes "RTH 1-minute SIP bars (split-adjusted) of the full live universe per session + daily bars (store-bars workflow, mcf/replay/packs.py). Research data. Educational only - not financial advice." \
+              --target "${{ github.sha }}" --latest=false
+            gh release upload "$tag" "packs_out/1min-$d.parquet" "packs_out/1day-$d.parquet" --clobber
+            rm -f "packs_out/1min-$d.parquet" "packs_out/1day-$d.parquet"
+          done
+      - name: Capacity file (docs/live/storage.json)
+        if: always()
+        run: |
+          gh api --paginate --slurp "repos/${{ github.repository }}/releases?per_page=100" > releases.json || echo "[]" > releases.json
+          git config user.name mcf-bot; git config user.email mcf-bot@users.noreply.github.com
+          for i in 1 2 3; do
+            git pull -q --rebase origin "${{ github.ref_name }}" || true
+            python -m mcf.replay.packs capacity --manifest packs_out/manifest.jsonl --releases releases.json --out docs/live/storage.json
+            git add docs/live/storage.json
+            git diff --cached --quiet && { echo "storage.json unchanged"; break; }
+            git commit -q -m "storage: bar packs $(TZ=America/New_York date +%F)" && git push -q origin "HEAD:${{ github.ref_name }}" && break
+            git reset -q --hard HEAD~1; sleep 10
+          done
+          python -c "import json; d=json.load(open('docs/live/storage.json')); [print(k, d[k]) for k in ('sessions_stored','symbols_per_session','mb_per_session','total_gb','largest_asset_mb')]"
+      - name: Chain the next month (2-year chunks)
+        if: always() && inputs.chain_to != ''
+        run: |
+          next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1][:7], 'M') + 1).strftime('%Y-%m'))" "${{ steps.days.outputs.end }}")
+          while [[ "$next" > "2024-10" && "$next" < "2025-03" ]]; do   # locked months: nothing to fetch
+            next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1], 'M') + 1).strftime('%Y-%m'))" "$next"); done
+          if [[ ! "$next" > "${{ inputs.chain_to }}" ]]; then
+            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}"
+            echo "dispatched $next (chain to ${{ inputs.chain_to }})"
+          else echo "chain done at ${{ steps.days.outputs.end }}"; fi
