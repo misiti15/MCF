@@ -1,0 +1,30 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-fromopen-FD; one change: window [950, 1500] -> [950, 1300]. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-fromopen-FD-WB3:
+    refire: true
+    refire_cooldown: 1
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-fromopen-FD/modules/L3-gap-slope-fromopen-FD-WB3.py
+    min_adv: 0
+    window:
+    - 950
+    - 1300
+    prefilter: gap_le:-3.2
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:L3-gap-slope-fromopen-FD
+    workbench:
+      parent: L3-gap-slope-fromopen-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 950
+      - 1300
+      date: '2026-11-16'
+      note: Mechanic combo C1 = WB1 + WB2 (window 13:00 AND gap <= -3.2; module gap
+        and prefilter set by hand)
