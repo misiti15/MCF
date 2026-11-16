@@ -4,6 +4,12 @@
 # (mcf/replay/packs.py) and upload it to the GitHub Release bars-<YYYY-MM> (created if missing). mcf/replay/store.py
 # reads the packs back for replays. Then refresh docs/live/storage.json (capacity). Market data only: no trading
 # endpoint. Keys come from secrets and are never printed. The locked block 2024-11-01..2025-02-28 is refused.
+# 2-year history (owner "2-year .175 yes" 2026-11-16): dispatch one month per run, start=end=YYYY-MM, for 2024-09 ..
+# 2026-10 (2024-09 starts 09-16; the locked months 2024-11..2025-02 are skipped; packs carry weight 0.175, screening only).
+# Runs go one at a time in the concurrency group (GitHub keeps only ONE pending run per group, so do not dispatch many
+# months at once): dispatch the first month with chain_to=<last month> and each run dispatches the next when it is done.
+# The nightly run (no inputs) stores every session of the last 7 days not yet on a release, so a nightly run that a
+# chained dispatch replaced is caught up the next night.
 # Uses its own concurrency group (one job slot) so a research dispatch can never replace the nightly pending run.
 # Educational only - not financial advice.
 name: store-bars
@@ -14,17 +20,21 @@ on:
   workflow_dispatch:
     inputs:
       start:
-        description: "first session (YYYY-MM-DD); empty = today"
+        description: "first session YYYY-MM-DD, or a whole month YYYY-MM (2-year history chunks); empty = today"
         default: ""
       end:
-        description: "last session (YYYY-MM-DD); empty = start"
+        description: "last session YYYY-MM-DD or month YYYY-MM; empty = start"
+        default: ""
+      chain_to:
+        description: "2-year chunks: after this month, dispatch the next month until this one (YYYY-MM); empty = no chain"
         default: ""
       replace:
         description: "re-fetch sessions already on the release (true/false)"
         default: "false"
 
 permissions:
-  contents: write
+  contents: write     # release assets + docs/live/storage.json
+  actions: write      # chain the next month (gh workflow run)
 
 concurrency:
   group: mcf-store-bars
@@ -49,7 +59,8 @@ jobs:
         id: days
         run: |
           start="${{ inputs.start }}"; end="${{ inputs.end }}"
-          [ -n "$start" ] || start=$(TZ=America/New_York date +%F)
+          [ -n "$start" ] || start=$(TZ=America/New_York date -d "7 days ago" +%F)
+          [ -n "$end" ] || [ -n "${{ inputs.start }}" ] || end=$(TZ=America/New_York date +%F)
           [ -n "$end" ] || end="$start"
           echo "start=$start" >> "$GITHUB_OUTPUT"; echo "end=$end" >> "$GITHUB_OUTPUT"
           # sessions already published are skipped unless replace=true
@@ -66,7 +77,8 @@ jobs:
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           mkdir -p packs_out
-          for d in $(python -c "import sys; from mcf.replay import store; [print(x) for x in store.sessions(sys.argv[1], sys.argv[2])]" \
+          # locked block 2024-11-01..2025-02-28 is never fetched (rule 19); YYYY-MM inputs expand to the whole month
+          for d in $(python -c "import sys; from mcf.replay import store, packs; lo, hi = packs.month_bounds(sys.argv[1], sys.argv[2]); [print(x) for x in store.sessions(lo, hi) if not store.LOCK_A <= x <= store.LOCK_B]" \
                      "${{ steps.days.outputs.start }}" "${{ steps.days.outputs.end }}"); do
             if grep -qx "$d" on_release.txt; then echo "$d already on the release"; continue; fi
             python -m mcf.replay.packs build --start "$d" --end "$d" --out packs_out || { echo "::warning::$d build failed"; continue; }
@@ -92,3 +104,13 @@ jobs:
             git reset -q --hard HEAD~1; sleep 10
           done
           python -c "import json; d=json.load(open('docs/live/storage.json')); [print(k, d[k]) for k in ('sessions_stored','symbols_per_session','mb_per_session','total_gb','largest_asset_mb')]"
+      - name: Chain the next month (2-year chunks)
+        if: always() && inputs.chain_to != ''
+        run: |
+          next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1][:7], 'M') + 1).strftime('%Y-%m'))" "${{ steps.days.outputs.end }}")
+          while [[ "$next" > "2024-10" && "$next" < "2025-03" ]]; do   # locked months: nothing to fetch
+            next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1], 'M') + 1).strftime('%Y-%m'))" "$next"); done
+          if [[ ! "$next" > "${{ inputs.chain_to }}" ]]; then
+            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}"
+            echo "dispatched $next (chain to ${{ inputs.chain_to }})"
+          else echo "chain done at ${{ steps.days.outputs.end }}"; fi
