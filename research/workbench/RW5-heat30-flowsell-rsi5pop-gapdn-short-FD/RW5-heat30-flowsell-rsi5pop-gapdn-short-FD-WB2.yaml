@@ -1,0 +1,22 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW5-heat30-flowsell-rsi5pop-gapdn-short-FD; P20/intake: stop-exit round-trip cost (2 x (1c + 1 bp) + 2c) <= 0.15 of 1R (1R = 0.25 x daily ATR). Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB2.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+    workbench:
+      parent: RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+      param: module clause
+      old: null
+      new: cost/R <= 0.15
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''V16 cost/R <= 0.15 (P20/intake)'''
