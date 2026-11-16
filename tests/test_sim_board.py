@@ -65,17 +65,17 @@ def test_builder(tmp_path):
     (tmp_path / "research/replay_all/latest.json").write_text(json.dumps({"window": "2026-01-02 to 2026-11-13", "setups": {
         "B": {"trades": 5, "sessions": 2, "avg_r": 0.1}}}))
     d = S.build(tmp_path)
-    assert "B" in d["setups"] and "A" not in d["setups"] and d["sources"]["replay"]["label"] == "all-setups replay"
+    assert "B" in d["setups"] and "A" not in d["setups"] and d["sources"]["replay"]["label"] == "all-setups Session replay"
 
 
 def test_dashboard_sim_card_below_real_board():
     html = (ROOT / "docs/live/index.html").read_text()
     real = html.index('id="lb-card"><h2>Setup leaderboard — all accounts, since start</h2>')
-    sim = html.index('id="sim-card"><h2>Simulated leaderboard — live + weighted replay / backtest</h2>')
+    sim = html.index('id="sim-card"><h2>Simulated leaderboard — Live + weighted Session replay / Shadow</h2>')
     assert real < sim < html.index('id="gen-card"')
     for needle in ("sim_inputs.json", "Not live results — a what-if ranking", "Δ rank vs real board", "Effective sessions",
                    "Blended avg R w/o best day", "No simulated inputs yet", "window.MCF.simBlend", "max-width: 640px",
-                   "2y screen trades", "Screen vs live", "screening only, not in blend", "Shadow trades / avg R"):
+                   "2-year screen trades", "2-year screen (not in ranking)", "Session replay trades / avg R", "Screen vs live", "screening only, not in blend", "Shadow trades / avg R"):
         assert needle in html, needle
     assert (ROOT / "docs/live/sim_inputs.json").exists()
     js = html[html.index("window.MCF.simBlend = "):html.index("(() => {", html.index("window.MCF.simBlend = "))]
