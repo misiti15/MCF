@@ -32,7 +32,7 @@ from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
 from .alpaca_broker import AlpacaBroker
 from .outage import outage_cfg, protect_open_lots
-from .risk import RiskManager
+from .risk import SETUP_LOT_CAP, RiskManager
 
 NY = TZ
 SPLIT_TAPE_SYMBOLS = ("QQQ", "IWM")
@@ -1291,6 +1291,8 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
+            if why == SETUP_LOT_CAP:                          # per-setup max_lots_per_symbol: it holds its own cap
+                held = {"held_by": [sig.strategy]}
             if why in ("opposite side held", "lot cap", "twin held"):                   # every setup holding a lot on the symbol
                 held = {"held_by": list(dict.fromkeys(lot.get("strategy", lid)
                                                       for lid, lot in self.lots.get(sig.symbol, {}).items()))}

@@ -474,7 +474,7 @@ def traded_streaks(date: str, accts: list[dict], min_run: int = 3) -> list[dict]
     return out
 
 
-INTENDED = ("not shortable", "spread", "twin held", "lot cap", "already in symbol", "max positions", "split-tape",
+INTENDED = ("not shortable", "spread", "twin held", "lot cap", "already in symbol", "max positions", "max lots per symbol", "split-tape",
             "halted", "setup daily loss", "daily loss")     # owner rules (blocked_audit.md); anything else = look into it
 
 

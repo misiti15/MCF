@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW7-gapdn-bounce-early-short-FD; one change: window [950, 1500] -> [950, 1300]. Educational only - not financial advice.
+strategies:
+  RW7-gapdn-bounce-early-short-FD-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/RW7-gapdn-bounce-early-short-FD/modules/RW7-gapdn-bounce-early-short-FD-WB1.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1300
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:RW7-gapdn-bounce-early-short-FD
+    workbench:
+      parent: RW7-gapdn-bounce-early-short-FD
+      param: window
+      old:
+      - 950
+      - 1500
+      new:
+      - 950
+      - 1300
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''V06 window end 15:00->13:00 (P6)'''

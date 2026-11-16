@@ -350,6 +350,17 @@ class Backtester:
                 print(f"  {d}: {len(candidates)} candidate trades")
         return self.allocate(candidates)
 
+    @staticmethod
+    def _symbol_room(tr: Trade, open_pos: list[Trade], caps: dict[str, int], acct_lots: int) -> bool:
+        held = [p for p in open_pos if p.symbol == tr.symbol]
+        if not held:
+            return True
+        cap = caps.get(tr.strategy)
+        if cap is None:
+            return False                       # default: one open position per symbol
+        return (all(p.strategy == tr.strategy and p.side == tr.side for p in held)
+                and len(held) < min(cap, acct_lots))
+
     def allocate(self, cands: list[Trade]) -> pd.DataFrame:
         a = self.cfg["account"]
         equity = float(a["starting_equity"])
@@ -361,6 +372,13 @@ class Backtester:
         open_pos: list[Trade] = []
         day, day_r, day_n = None, 0.0, 0
         closed_today: list[Trade] = []
+        # per-setup `max_lots_per_symbol` (owner 2026-11-16, opt-in; live: RiskManager "max lots per symbol for this
+        # setup"). A setup that sets it may stack its OWN same-side lots on a symbol up to min(its cap, the account's
+        # live.max_lots_per_symbol); any other setup's open position on the symbol still blocks, as before. Setups
+        # without it keep the one-position-per-symbol rule below (unchanged).
+        from ..execution.risk import setup_lot_caps
+        caps = setup_lot_caps(self.cfg)
+        acct_lots = max(1, int((self.cfg.get("live") or {}).get("max_lots_per_symbol", 1) or 1))
         for tr in cands:
             if tr.date != day:
                 day, day_n, open_pos, closed_today = tr.date, 0, [], []
@@ -374,7 +392,7 @@ class Backtester:
                 or sum(p.strategy == tr.strategy for p in open_pos) >= a.get("max_positions_per_strategy", 10**9)
                 or day_n >= a["max_trades_per_day"]
                 or day_r <= -a["max_daily_loss_r"]
-                or any(p.symbol == tr.symbol for p in open_pos)
+                or not self._symbol_room(tr, open_pos, caps, acct_lots)
             ):
                 continue
             per_share = abs(tr.entry - tr.stop)
