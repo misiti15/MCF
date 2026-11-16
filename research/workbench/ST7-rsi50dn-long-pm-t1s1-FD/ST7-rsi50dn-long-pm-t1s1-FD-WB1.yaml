@@ -1,0 +1,20 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent ST7-rsi50dn-long-pm-t1s1-FD (Primary); Mechanic 2026-11-16: + gate "skip while SPY is up > +0.10% since 09:50".
+# Educational only - not financial advice.
+strategies:
+  ST7-rsi50dn-long-pm-t1s1-FD-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/ST7-rsi50dn-long-pm-t1s1-FD/modules/ST7-rsi50dn-long-pm-t1s1-FD-WB1.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    context: [spy_fo]
+    tags: [workbench, "parent:ST7-rsi50dn-long-pm-t1s1-FD"]
+    workbench:
+      parent: ST7-rsi50dn-long-pm-t1s1-FD
+      param: 'gate (new layer): skip while SPY since its 09:50 close > +0.10%'
+      old: null
+      new: 'spy_since_0950 <= +0.10%'
+      date: '2026-11-16'
+      note: Mechanic (supervisor standard); recommended copy

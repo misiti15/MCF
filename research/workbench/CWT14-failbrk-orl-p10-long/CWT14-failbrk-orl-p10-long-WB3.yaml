@@ -1,0 +1,28 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT14-failbrk-orl-p10-long; change: atr_d / close >= 0.02. Educational only - not financial advice.
+strategies:
+  CWT14-failbrk-orl-p10-long-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT14-failbrk-orl-p10-long/modules/CWT14-failbrk-orl-p10-long-WB3.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1200
+    scale_out_r: 0.35
+    live_scale_out: false
+    testing2:
+      batch: cwt-2026-10-12
+      source: B3-LOR-p0.1-Vany-sidelong-t05s1-guest
+      fill: true
+    tags:
+    - workbench
+    - parent:CWT14-failbrk-orl-p10-long
+    workbench:
+      parent: CWT14-failbrk-orl-p10-long
+      param: cond.atr_pct (extra intake filter)
+      old: null
+      new: atr_d / close >= 0.02
+      date: '2026-11-16'
+      note: 'P1 intake: extra filter daily ATR >= 2.0% of price (thin-R names: costs
+        eat the +0.5R target)'

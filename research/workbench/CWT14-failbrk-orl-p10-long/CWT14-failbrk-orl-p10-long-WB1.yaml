@@ -1,0 +1,29 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT14-failbrk-orl-p10-long; one change: r_atr_frac 0.25 -> 0.3. Educational only - not financial advice.
+strategies:
+  CWT14-failbrk-orl-p10-long-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT14-failbrk-orl-p10-long/modules/CWT14-failbrk-orl-p10-long-WB1.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1200
+    scale_out_r: 0.35
+    live_scale_out: false
+    testing2:
+      batch: cwt-2026-10-12
+      source: B3-LOR-p0.1-Vany-sidelong-t05s1-guest
+      fill: true
+    tags:
+    - workbench
+    - parent:CWT14-failbrk-orl-p10-long
+    r_atr_frac: 0.3
+    workbench:
+      parent: CWT14-failbrk-orl-p10-long
+      param: r_atr_frac
+      old: 0.25
+      new: 0.3
+      date: '2026-11-16'
+      note: P15 1R 0.25 -> 0.30 x daily ATR (stop and +0.5R target both 20% wider;
+        fewer cost-eaten small-R trades)

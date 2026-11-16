@@ -1390,7 +1390,12 @@ window.MCF = window.MCF || {};
     all.forEach(r => { r.all_trades = r.trades; r.gap = r.avg_r == null || r.expected_r == null ? null : r.avg_r - r.expected_r; r.flag = flag(r);
       if (r.breakeven_wr == null && r.win_rate && r.profit_factor) r.breakeven_wr = r.win_rate / (r.win_rate + r.profit_factor * (1 - r.win_rate));
       r.wr_edge = r.win_rate == null || r.breakeven_wr == null ? null : r.win_rate - r.breakeven_wr; });
-    const ranked = all.filter(r => r.score != null && r.live).sort((a, b) => b.score - a.score);
+    // owner 2026-11-16 (hidden rule): a setup can't rank in the top 30 without >= 15 trades AND >= 5 traded sessions;
+    // the 30 top spots go to qualified setups by score first, everyone else ranks after them (still by score)
+    const TOPN = 30, okTop = r => (r.trades || 0) >= 15 && (r.sessions_traded || 0) >= 5;
+    const byScore = (a, b) => b.score - a.score, cand = all.filter(r => r.score != null && r.live);
+    const q1 = cand.filter(okTop).sort(byScore), rest = cand.filter(r => !okTop(r)).sort(byScore);
+    const ranked = [...q1.slice(0, TOPN), ...[...q1.slice(TOPN), ...rest].sort(byScore)];
     ranked.forEach((r, i) => { r.rank = i + 1; });
     rows = all;
     window.MCF.lb = { rows: all, LS, RP, dayOf };

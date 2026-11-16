@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-fromopen-FD; one change: cond.gap -2.6573517322540283 -> -3.2. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-fromopen-FD-WB2:
+    refire: true
+    refire_cooldown: 1
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-fromopen-FD/modules/L3-gap-slope-fromopen-FD-WB2.py
+    min_adv: 0
+    window:
+    - 950
+    - 1500
+    prefilter: gap_le:-3.2
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:L3-gap-slope-fromopen-FD
+    workbench:
+      parent: L3-gap-slope-fromopen-FD
+      param: cond.gap
+      old: -2.6573517322540283
+      new: -3.2
+      date: '2026-11-16'
+      note: 'Mechanic: deeper gap only; prefilter gap_le set to -3.2 too (kept consistent
+        by hand)'

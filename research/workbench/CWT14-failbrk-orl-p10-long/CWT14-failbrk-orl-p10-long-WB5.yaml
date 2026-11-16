@@ -1,0 +1,20 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT14-failbrk-orl-p10-long; built on WB4 (Mechanic rerun 2026-11-16): + cost/R <= 0.10 intake, + SPY since 09:50 >= -0.20% gate,
+# stop 0.45 ATR / target 0.15 ATR (GEOM "S" in the module). Educational only - not financial advice.
+strategies:
+  CWT14-failbrk-orl-p10-long-WB5:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT14-failbrk-orl-p10-long/modules/CWT14-failbrk-orl-p10-long-WB5.py
+    min_adv: 95000000
+    window: [950, 1200]
+    context: [spy_fo]
+    live_scale_out: false
+    tags: [workbench, "parent:CWT14-failbrk-orl-p10-long"]
+    workbench:
+      parent: CWT14-failbrk-orl-p10-long
+      param: 'layers on WB4: cost/R <= 0.10 (intake) + SPY since 09:50 >= -0.20% (gate) + stop 1.5 x 0.30 ATR, target 0.5 x 0.30 ATR (exits)'
+      old: null
+      new: WB4 + C1 + G3 + stop 1.5R
+      date: '2026-11-16'
+      note: Mechanic rerun (supervisor standard); recommended copy, replaces WB4 in the deploy plan

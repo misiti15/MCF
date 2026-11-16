@@ -33,6 +33,7 @@ def parse_dates(spec: str) -> list:
             out += store.sessions(a, b)
         else:
             out.append(pd.Timestamp(part).date())
+    store.pull_packs([d for d in out if d >= store.PACK_START and d <= pd.Timestamp.now().date()])
     have = set(store.available_days())
     return [d for d in out if d in have]
 
@@ -73,6 +74,7 @@ def _one(job: dict) -> dict:
 def cmd_prep(a):
     days = store.sessions(*a.dates.split("..")) if ".." in a.dates else [pd.Timestamp(a.dates).date()]
     store.check_dates(days)
+    store.pull_packs([d for d in days if store.PACK_START <= d <= pd.Timestamp.now().date()])
     have = set(store.available_days())
     if a.fetch:
         store.fetch_1min([d for d in days if d not in have and d <= pd.Timestamp.now().date()])
