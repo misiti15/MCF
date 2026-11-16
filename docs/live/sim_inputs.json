@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-16 23:34 UTC",
+ "generated": "2026-11-16 23:51 UTC",
  "sources": {
   "replay": {
    "file": "docs/live/replay.json",
-   "label": "replay snapshot",
+   "label": "Session replay snapshot",
    "from": "2026-09-01",
    "to": "2026-10-21",
    "generated": "2026-10-22 02:33 ET",
@@ -11,6 +11,8 @@
   },
   "backtest": {
    "label": "2-year screen (Setup Generator runs)",
+   "in_blend": false,
+   "note": "screening only, not in blend; shown separately vs live",
    "runs_from": "2026-10-19",
    "runs_to": "2026-10-29",
    "history": "2-year open history (train + valid)",
@@ -23,7 +25,8 @@
    "replay": 0.2,
    "replay_tier": "uncalibrated",
    "backtest": 0.175,
-   "haircut_r": 0.02
+   "haircut_r": 0.02,
+   "backtest_in_blend": false
   }
  },
  "setups": {

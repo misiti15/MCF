@@ -8,15 +8,19 @@ docs/live/index.html (right below the real setup leaderboard). It gathers the no
   backtest - the 2-year screen (Setup Generator run reports research/generator/runs/*.json -> picks[].screen.all;
              research/workbench/<setup>/sim_result.json when a workbench run writes one)
 
-and the weights from config/effective_sessions.json (ONE source): live 1.0, replay per tier (0.35 calibrated, 0.2
-until calibrated), 2-year history 0.175 (screening only). Replay/backtest avg R is haircut on the page by
-(measured optimism + haircut_extra_r). The blend (also in `blend` below, which the tests pin):
+and the weights from config/effective_sessions.json (ONE source): live 1.0, replay / shadow per tier (0.35 calibrated,
+0.2 until calibrated). Replay avg R is haircut by (measured optimism + haircut_extra_r); shadow avg R arrives already
+haircut from the real board. The blend (also in `blend` below, which the tests pin) uses live + replay + shadow ONLY:
 
-  effective trades   = 1.0 x live trades + w_rp x replay trades + w_bt x backtest trades
-  effective sessions = 1.0 x live sessions + w_rp x replay sessions + w_bt x backtest sessions
+  effective trades   = 1.0 x live trades + w_rp x replay trades + w_sh x shadow trades
+  effective sessions = 1.0 x live sessions + w_rp x replay sessions + w_sh x shadow sessions
   blended avg R      = (live trades x live avg R + w_rp x replay trades x (replay avg R - haircut)
-                        + w_bt x backtest trades x (backtest avg R - haircut)) / effective trades
+                        + w_sh x shadow trades x shadow avg R) / effective trades
   score              = blended avg R x eff. trades / (eff. trades + 20)  (same shrink as the real board)
+
+The 2-year screen is NOT blended and never moves the rank (owner 2026-11-16: 2,000 screen trades are not 275 live
+trades, whatever the weight). It is shown as its own source with a fixed comparison: screen vs live = live avg R -
+screen avg R (only with >= 10 live trades), agree = same sign. Its config weight (0.175) is kept for screening only.
 
 Not live results - a what-if ranking. Educational only - not financial advice.
 """
@@ -58,14 +62,25 @@ def weights(eff: dict | None) -> dict:
     return {"live": float(eff.get("live_weight", 1.0)), "replay": float(w),
             "replay_tier": "uncalibrated" if match is None else "measured",
             "backtest": float(eff.get("history_weight", 0.175)),
-            "haircut_r": round(max(0.0, float(opt or 0)) + extra, 4)}
+            "haircut_r": round(max(0.0, float(opt or 0)) + extra, 4), "backtest_in_blend": False}
 
 
-def blend(live: dict | None, replay: dict | None, backtest: dict | None, w: dict) -> dict:
-    """Blend live with haircut replay/backtest, weighted per trade (see module doc). Each source:
-    {trades, sessions, avg_r}; missing/empty sources drop out."""
+def screen_vs_live(live: dict | None, screen: dict | None, min_live: int = 10) -> dict | None:
+    """Fixed comparison of the 2-year screen against live (never blended): live avg R - screen avg R, agree = same sign.
+    None when live has < min_live trades or either side has no avg R."""
+    if not live or not screen or (live.get("trades") or 0) < min_live or live.get("avg_r") is None or screen.get("avg_r") is None:
+        return None
+    lv, sc = live["avg_r"], screen["avg_r"]
+    return {"diff": round(lv - sc, 4), "agree": (lv > 0) == (sc > 0)}
+
+
+def blend(live: dict | None, replay: dict | None, shadow: dict | None, w: dict) -> dict:
+    """Blend live with haircut replay and (already haircut) shadow, weighted per trade (see module doc). Each source:
+    {trades, sessions, avg_r}; shadow may carry its own "weight" (else w["shadow"], else w["replay"]). The 2-year
+    screen is never an input here."""
     parts = []
-    for src, wt, hc in ((live, w["live"], 0.0), (replay, w["replay"], w["haircut_r"]), (backtest, w["backtest"], w["haircut_r"])):
+    w_sh = (shadow or {}).get("weight", w.get("shadow", w["replay"]))
+    for src, wt, hc in ((live, w["live"], 0.0), (replay, w["replay"], w["haircut_r"]), (shadow, w_sh, 0.0)):
         if src and src.get("trades") and src.get("avg_r") is not None and wt > 0:
             parts.append((wt * src["trades"], wt * (src.get("sessions") or 0), src["avg_r"] - hc))
     et = sum(p[0] for p in parts)
@@ -91,8 +106,8 @@ def build(root: Path = ROOT) -> dict:
     sources: dict[str, dict] = {}
 
     # replay: a future all-setups replay run (research/replay_all/latest.json) wins over the stale snapshot
-    for path, label in ((root / "research" / "replay_all" / "latest.json", "all-setups replay"),
-                        (live / "replay.json", "replay snapshot")):
+    for path, label in ((root / "research" / "replay_all" / "latest.json", "all-setups Session replay"),
+                        (live / "replay.json", "Session replay snapshot")):
         rp = _load(path)
         if rp and rp.get("setups"):
             win = str(rp.get("window") or "")
@@ -128,6 +143,7 @@ def build(root: Path = ROOT) -> dict:
             wb += 1
     if n_bt or wb:
         sources["backtest"] = {"label": "2-year screen (Setup Generator runs" + (" + workbench" if wb else "") + ")",
+                               "in_blend": False, "note": "screening only, not in blend; shown separately vs live",
                                "runs_from": min(dates) if dates else None, "runs_to": max(dates) if dates else None,
                                "history": "2-year open history (train + valid)", "setups": n_bt + wb}
     sources["weights"] = {"file": "config/effective_sessions.json", "owner_date": (eff or {}).get("owner_date"), **weights(eff)}
