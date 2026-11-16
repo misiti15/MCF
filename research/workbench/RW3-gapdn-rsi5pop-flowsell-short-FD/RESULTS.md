@@ -326,13 +326,15 @@ Not spawned though passing: V08/V10/V16/V17/V01 (one-test gains or not deployabl
 ## Pending config change — "ready to deploy after close" (NOT applied; built during market hours)
 The main session applies this after 16:05 ET (`TZ=America/New_York date`), effective session 2026-11-17. One copy only:
 **WB3** (it contains WB1 and WB2; running them side by side would be near-twins). The parent stays in Primary, unchanged.
-Account: **Testing D** (`config/account_testingd.yaml`) — a testing account, not the parent's (Primary) and not On Deck;
-no RW/MF/L3 gap-down sister there (Testing A/B/C/E/F hold MF4/MF5, MF2, RW6, RW6G1, RW7-FD/MF1 — same gap-down names would
-compete for the per-symbol lot cap); today's CWT14-WB5 plan also targets Testing D but is a LONG setup appended last (an
-opposite-side hold can block a lot either way, rare). If another Mechanic job claims Testing D first, Testing B is the
-next choice. Twin check: `twin_key` strips only `-FD`, so `...-FD-WB3` is not the parent's twin key; different accounts.
+Account: **Testing C / Live Lab** (`config/account_livelab.yaml`) — a testing account, not the parent's (Primary) and not
+On Deck. Not Testing D: the sister Workbench copy RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3 (same gap-down RSI(5)-pop
+fade on heavy selling, also with a SPY-since-09:50 gate) is planned there tonight — the two would be near-twins competing for
+the same names and the 3-lot symbol cap; keep them in different accounts. Testing A/B/E/F take today's L3 / NM-ETF / L3-rsi5hi
+copies and hold MF4/MF5, MF2, RW6G1, RW7-FD/MF1 gap-down sisters. Live Lab holds RW6-ns2-up3-short-FD (a different trigger)
+and already runs `context: [spy_fo]` setups (cost filter CF 0.15, no −2R latch, 30 lots per setup — round 6 used 50; the cap
+rarely binds at ~7 trades/session). Twin check: `twin_key` strips only `-FD`, so `...-FD-WB3` is not the parent's twin key.
 Note the destination book differs from Primary (no −2R latch, 50 lots, CF 0.15 → round 6 numbers, not the main table).
-1. `config/account_testingd.yaml`, under `strategies:` add
+1. `config/account_livelab.yaml`, under `strategies:` add
    ```yaml
    RW3-gapdn-rsi5pop-flowsell-short-FD-WB3:
      # Workbench copy of RW3-gapdn-rsi5pop-flowsell-short-FD (Primary), Mechanic 2026-11-16: start 10:30 + skip while SPY
@@ -346,18 +348,17 @@ Note the destination book differs from Primary (no −2R latch, 50 lots, CF 0.15
      scale_out_r: null
      tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
    ```
-   and put `RW3-gapdn-rsi5pop-flowsell-short-FD-WB3` FIRST in `live.setup_order` (ahead of the ROT1 spotlight
-   CWT04-backside-vwaptest-a25-short; RULES 5).
+   and put `RW3-gapdn-rsi5pop-flowsell-short-FD-WB3` FIRST in `live.setup_order` (ahead of IDX1-qqq100-0955-TQQQ-trail; RULES 5).
 2. `config/setup_names.yaml`: `RW3-gapdn-rsi5pop-flowsell-short-FD-WB3: {name: "Gap-Down Pop Fade, Heavy Selling (all day) — WB3: from 10:30, SPY gate, ATR 1.6%+", side: short, what: "10:30-15:00: stock gapped down, bearish heat <= -20, heavy net selling, RSI(5) pops above 80, daily ATR >= 1.6% of price, and SPY not up more than 0.20% since 09:50; short the pop."}`
 3. `research/ledger.jsonl`: id `2026-11-16-wb-rw3-fd-wb3`, effective 2026-11-17, title "Workbench copy
-   RW3-gapdn-rsi5pop-flowsell-short-FD-WB3 added to Testing D, first in setup_order (Mechanic pass)", patch
-   `{"strategies.RW3-gapdn-rsi5pop-flowsell-short-FD-WB3 (testingd)": [null, "added, enabled"], "live.setup_order (testingd)": ["...", "WB3 first"]}`,
+   RW3-gapdn-rsi5pop-flowsell-short-FD-WB3 added to Testing C (Live Lab), first in setup_order (Mechanic pass)", patch
+   `{"strategies.RW3-gapdn-rsi5pop-flowsell-short-FD-WB3 (livelab)": [null, "added, enabled"], "live.setup_order (livelab)": ["...", "WB3 first"]}`,
    evidence this file, approved_by "owner rule research/workbench/RULES.md 5 (passes go to a testing account at once)";
    then `python -m mcf.research.ledger check`.
 4. Smoke test: load the account config and run the setup over one cached session (the module needs the `spy_fo` context
    column; without it the mask fires nothing — fail safe), `python -m mcf.report.assignments` (regenerates
    docs/live/assignments.json in the same commit), `pytest -q`, commit, push after 16:05 ET (setup-freeze).
-Low-rep note: WB3 is a new setup (< 20 live trades) — first in Testing D's order for exposure per RULES 5.
+Low-rep note: WB3 is a new setup (< 20 live trades) — first in Live Lab's order for exposure per RULES 5.
 
 ## Files
 `DIAGNOSIS.md`, blueprint `RW3-gapdn-rsi5pop-flowsell-short-FD.md` + `_engine.png`, trade charts `_worst1..5_*.png` /
