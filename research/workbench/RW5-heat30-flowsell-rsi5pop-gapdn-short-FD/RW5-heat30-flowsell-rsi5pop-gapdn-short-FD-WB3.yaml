@@ -1,0 +1,24 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW5-heat30-flowsell-rsi5pop-gapdn-short-FD; combo: SPY since 09:50 <= +0.20% gate + cost/R <= 0.15 + entry window starts 10:15. Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
+    enabled: false
+    type: lab
+    module: research/workbench/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3.py
+    min_adv: 95000000
+    window:
+    - 1015
+    - 1500
+    scale_out_r: null
+    context:
+    - spy_fo
+    tags:
+    - workbench
+    - parent:RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+    workbench:
+      parent: RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+      param: module clause + window
+      old: null
+      new: SPY since 09:50 <= +0.20% + cost/R <= 0.15 + window [1015, 1500]
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''D1 C2 with SPY gate 0.20'''
