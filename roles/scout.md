@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-15 21:10) Standard (Lead/Skeptic): if refresh.py refuses an account for a quiet day with no commit after 15:55 ET, WAIT or name the account in the post; never loosen the threshold or use --allow-stale for a scored run. Board quiet until Mon 16:30 ET.
 - (11-15 19:20) refresh.py: session-day commit must be >= 15:55 ET (pre-close commit refused). Order: Mon MOMSIDE/SIZESTOP/DIPTURN, Tue FWDCAL, Wed REPS3.
 - (11-15 17:20) refresh.py refuses future sessions, accepts later commits; score.py --end excludes later sessions (Skeptic's FWDCAL hole). Monday order (Lead fix): MOMSIDE -> SIZESTOP -> DIPTURN on 11-16; FWDCAL on 11-17.
 - (11-15 15:15 ET) Lead: nothing more until Monday's scores (all readings pre-registered; Builder's scorers print Skeptic's audit items, verified fa05e86f9). Lab/live disagreements or red flags go to the board and Lead first; nothing is re-scored.
