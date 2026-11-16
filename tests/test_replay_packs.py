@@ -102,3 +102,23 @@ def test_build_session_and_capacity(tmp_path, monkeypatch):
     assert "2 GB per file" in cap["headroom"] and cap["note"].startswith("Educational only")
     with pytest.raises(SystemExit):
         packs.main(["build", "--start", "2025-01-02", "--end", "2025-01-03", "--out", str(tmp_path)])
+
+
+def test_two_year_tier_months_and_lock(tmp_store, monkeypatch):
+    assert packs.tier("2026-10-06") == ("live", 1.0) and packs.tier("2025-06-02") == ("2y", 0.175)
+    assert store.pack_weight("2025-06-02") == 0.175
+    assert packs.month_bounds("2025-03", "2025-03") == (date(2025, 3, 1), date(2025, 3, 31))
+    assert packs.month_bounds("2024-09-16", "2024-10") == (date(2024, 9, 16), date(2024, 10, 31))
+    with pytest.raises(ValueError):
+        packs.build_session("2024-12-02", tmp_store)
+    asked = []
+    monkeypatch.setattr(store, "fetch_pack", lambda d, kind="1min", log=print: asked.append((d, kind)) or None)
+    store.pull_packs([date(2025, 6, 2), date(2024, 12, 2), date(2026, 11, 13)])
+    assert [d for d, k in asked if k == "1min"] == [date(2026, 11, 13)]           # 2-year packs only on request
+    asked.clear()
+    store.pull_packs([date(2025, 6, 2), date(2024, 12, 2)], hist=True)
+    assert [d for d, k in asked] == [date(2025, 6, 2)]                             # never the locked block
+    rows = [{"session": "2025-06-02", "symbols": 3, "mb_1min": 30.0, "mb_1day": 2.0, "tier": "2y", "weight": 0.175}]
+    cap = packs.capacity(rows, None)
+    assert cap["progress"]["2y"]["stored"] == 1 and cap["progress"]["2y"]["weight"] == 0.175
+    assert cap["progress"]["2y"]["weekdays"] > 300 and "2024-12" not in str(cap["progress"]["2y"]["months_done"])

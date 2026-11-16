@@ -73,7 +73,8 @@ def day_path(d) -> Path:
 
 # ---------------------------------------------------------------------------------------------- live session packs
 PACKS = STORE / "packs"
-PACK_START = date(2026, 10, 6)          # first live session; packs exist only from here on
+PACK_START = date(2026, 10, 6)          # first live session (tier "live"); 2-year history packs from PACK_FIRST
+PACK_FIRST = date(2024, 9, 16)          # owner 2026-11-16 "2-year .175 yes": history packs, weight 0.175
 PACK_COLS = ["symbol", "ts", "open", "high", "low", "close", "volume"]
 _PACK_MISS: set = set()
 
@@ -165,12 +166,12 @@ def pack_url(d, kind: str = "1min") -> str:
 
 def fetch_pack(d, kind: str = "1min", log=print) -> Path | None:
     """The local pack of session d, downloaded from its Release once (cached in data/replay/packs/). None when the
-    session has no pack (before PACK_START, not yet published, network off via MCF_REPLAY_PACKS=0)."""
+    session has no pack (before PACK_FIRST, not yet published, network off via MCF_REPLAY_PACKS=0)."""
     d = _d(d)
     p = pack_path(d, kind)
     if p.exists():
         return p
-    if d < PACK_START or (d, kind) in _PACK_MISS or os.environ.get("MCF_REPLAY_PACKS") == "0" or \
+    if d < PACK_FIRST or (d, kind) in _PACK_MISS or os.environ.get("MCF_REPLAY_PACKS") == "0" or \
             (LOCK_A <= d <= LOCK_B):
         return None
     import requests
@@ -194,11 +195,16 @@ def fetch_pack(d, kind: str = "1min", log=print) -> Path | None:
         return None
 
 
-def pull_packs(days, daily: bool = True, log=print) -> list[date]:
-    """Download the packs of the live sessions among `days` (skips the rest); returns the sessions with a 1min pack."""
+def pull_packs(days, daily: bool = True, hist: bool | None = None, log=print) -> list[date]:
+    """Download the packs of the live sessions among `days`; returns the sessions with a 1min pack. 2-year history packs
+    (PACK_FIRST..PACK_START, weight 0.175, ~25-40 MB each) only with hist=True or MCF_REPLAY_HIST_PACKS=1, so a long
+    lab replay never fills the disk by accident."""
+    hist = os.environ.get("MCF_REPLAY_HIST_PACKS") == "1" if hist is None else hist
     out = []
-    for d in check_dates(days):
-        if d >= PACK_START and fetch_pack(d, "1min", log=log) is not None:
+    for d in map(_d, days):
+        if LOCK_A <= d <= LOCK_B or d < (PACK_FIRST if hist else PACK_START):
+            continue
+        if fetch_pack(d, "1min", log=log) is not None:
             out.append(d)
             if daily:
                 fetch_pack(d, "1day", log=log)
@@ -209,6 +215,11 @@ def day_file(d) -> Path:
     """The 1-minute file of session d: the local live pack when there is one, else data/replay/1Min/<day>.parquet."""
     p = pack_path(d)
     return p if p.exists() else day_path(d)
+
+
+def pack_weight(d) -> float:
+    """1.0 for live sessions, 0.175 for the 2-year history packs (owner "2-year .175 yes", screening / experience)."""
+    return 1.0 if _d(d) >= PACK_START else 0.175
 
 
 def has_pack(d) -> bool:
