@@ -155,7 +155,11 @@ def main():
                     "D2_up15bp_off_wlow": newlow and c >= wlo * 1.0015,
                     "D3_above_vwap950": newlow and c > vw}
             r = {f"{sym}_{h}": fwd(x, e, h) for sym, x in (("SPY", a), ("QQQ", q)) for h in HOR}
-            sig.append(dict(day=d, split=split[d], win=s, wlo=wlo, newlow=newlow, **defs, **r))
+            # owner 2026-11-16: did price undercut the window low before the horizon exit? (turn failed)
+            ll = {f"{sym}_{h}_ll": bool(x[e:(385 if h == "1555" else e + h), 2].min() < x[s:e, 2].min())
+                  for sym, x in (("SPY", a), ("QQQ", q)) for h in HOR}
+            dip = (a[D0 - 1, 3] - wlo) / a[D0 - 1, 3] * 1e4          # bps below the 09:50 price
+            sig.append(dict(day=d, split=split[d], win=s, wlo=wlo, newlow=newlow, dip_bps=dip, **defs, **r, **ll))
     S = pd.DataFrame(sig)
     S.to_csv(HERE / "q2_panel.csv.gz", index=False)
 
@@ -185,10 +189,62 @@ def main():
     C.to_csv(HERE / "q2_cells.csv", index=False)
 
     N_q1 = len(groups) * len(WSTARTS)
+    # ---- owner 2026-11-16 "a failed look is not a failed setup": classify every day x window ----
+    # (a) NO-SETUP: W does not make a new 09:50+ low at least X bps below the 09:50 price -> excluded
+    # (b) SETUP + TURN WORKED: turn fired, no lower low than W's low before the exit, forward return > 0
+    # (c) SETUP + TURN FAILED: turn fired, then a lower low or a loss at the exit
+    # (d) SETUP, NO TURN: dip happened but the turn condition never fired by the decision minute (reported only)
+    # Pre-declared dip thresholds X = 10 and 25 bps (X = 0, "any new low", is the original Q2 above).
+    XS = [10, 25]
+    cells2 = []
+    for X in XS:
+        S[f"setup_X{X}"] = S.newlow & (S.dip_bps >= X)
+        for dn in DEFS:
+            S[f"{dn}_X{X}"] = S[dn] & S[f"setup_X{X}"]
+    for s_ in WSTARTS:
+        for X in XS:
+            for dn in DEFS:
+                for sym in ["SPY", "QQQ"]:
+                    for h in HOR:
+                        col = f"{sym}_{h}"
+                        for sp in ["TRAIN", "VALID", "ALL"]:
+                            P = S[S.win == s_] if sp == "ALL" else S[(S.win == s_) & (S.split == sp)]
+                            setup = P[P[f"setup_X{X}"]]
+                            turn = P[P[f"{dn}_X{X}"]]
+                            x = turn[col].values; n = len(x)
+                            worked = int(((~turn[f"{col}_ll"]) & (turn[col] > 0)).sum())
+                            ex = x.mean() - P[col].mean() if n else np.nan
+                            ex_s = x.mean() - setup[col].mean() if n else np.nan
+                            t = ex / (x.std(ddof=1) / math.sqrt(n)) if n > 2 else np.nan
+                            cells2.append(dict(win=f"{(M0+s_+25)//60:02d}:{(M0+s_+25)%60:02d}",
+                                               wstart=f"{(M0+s_)//60:02d}:{(M0+s_)%60:02d}", X_bps=X, defn=dn,
+                                               sym=sym, h=str(h), split=sp, days=len(P),
+                                               share_a_nosetup=round(1 - len(setup) / len(P), 3),
+                                               share_d_setup_no_turn=round((len(setup) - n) / len(P), 3),
+                                               n_turn=n, b_worked=worked, c_failed=n - worked,
+                                               hit_b_over_bc=round(worked / n, 3) if n else np.nan,
+                                               up_at_exit=round((x > 0).mean(), 3) if n else np.nan,
+                                               mean_bps=round(x.mean(), 2) if n else np.nan,
+                                               null_same_bps=round(P[col].mean(), 2),
+                                               null_setup_days_bps=round(setup[col].mean(), 2) if len(setup) else np.nan,
+                                               excess_bps=round(ex, 2), excess_vs_setup_bps=round(ex_s, 2),
+                                               t=round(t, 2)))
+    C2 = pd.DataFrame(cells2)
+    C2.to_csv(HERE / "q2_setup_cells.csv", index=False)
+    S.to_csv(HERE / "q2_panel.csv.gz", index=False)
+
     N_q2 = len(WSTARTS) * len(DEFS) * 2 * len(HOR)
-    N = N_q1 + N_q2
+    N_q2x = N_q2 * len(XS)
+    N = N_q1 + N_q2 + N_q2x
+    # also the b/(b+c) classification at X = 0 for the original cells
+    for X in [0]:
+        pass
     bar = max(1.5, math.sqrt(2 * math.log(N)))
-    print("N", N_q1, N_q2, N, "bar", round(bar, 2))
+    print("N", N_q1, N_q2, N_q2x, N, "bar", round(bar, 2))
+    tr2 = C2[(C2.split == "TRAIN") & (C2.n_turn >= 30)].dropna(subset=["t"]).sort_values("t", ascending=False)
+    best2 = tr2.iloc[0]
+    best2 = best2.copy(); best2["defn"] = f"{best2.defn}_X{best2.X_bps}"
+    print("best TRAIN setup-filtered cell", best2.to_dict())
 
     # ---------------- 3x trade on best TRAIN cell (SPY-signal cells only for SPXL; QQQ cells -> TQQQ) -------
     # pre-declared: best TRAIN t among cells with >= 30 TRAIN signal days (smaller cells are too noisy to pick from)
@@ -221,6 +277,7 @@ def main():
                     break
             cost = 0.01 + 1e-4 * ent + 0.01 + 1e-4 * exit_px + (0.02 if stopped else 0)
             out.append(dict(day=d, split=split[d], R=(exit_px - ent - cost) / risk, stopped=stopped,
+                            failed=bool(stopped or exit_px - ent - cost <= 0),
                             risk_pct=round(3 * udist * 100, 2)))
         return pd.DataFrame(out)
 
@@ -230,7 +287,13 @@ def main():
     # post-hoc (chosen with VALID in sight): the only window positive in both TRAIN and VALID; and the owner's 10:25 window
     lead = pick("11:20", "D1_reclaim_wstart", "SPY", "90")
     anec = pick("10:50", "D2_up15bp_off_wlow", "SPY", "60")
-    for label, cell in [("best_train", best), ("posthoc_1120", lead), ("owner_1025_window", anec)]:
+    def pickx(win, defn, X, sym, h):
+        c = C2[(C2.win == win) & (C2.defn == defn) & (C2.X_bps == X) & (C2.sym == sym) & (C2.h == h) & (C2.split == "ALL")].iloc[0].copy()
+        c["defn"] = f"{defn}_X{X}"
+        return c
+    for label, cell in [("best_train", best), ("posthoc_1120", lead), ("owner_1025_window", anec),
+                        ("best_train_setupX", best2), ("owner_1025_window_X10", pickx("10:50", "D2_up15bp_off_wlow", 10, "SPY", "60")),
+                        ("posthoc_1120_X10", pickx("11:20", "D1_reclaim_wstart", 10, "SPY", "90"))]:
         T = lev_trade(cell)
         T.to_csv(HERE / f"trade_{label}.csv", index=False)
         for sp in ["TRAIN", "VALID", "ALL"]:
@@ -244,14 +307,15 @@ def main():
                                                worstR=round(x.R.min(), 2), stop_rate=round(x.stopped.mean(), 3),
                                                avgR_wo_best=round(srt.iloc[1:].mean(), 3) if len(x) > 1 else None,
                                                best_share=round(srt.iloc[0] / tot, 2) if tot > 0 else None,
-                                               med_risk_pct=float(x.risk_pct.median()))
+                                               med_risk_pct=float(x.risk_pct.median()), b_worked=int((~x.failed).sum()),
+                                               c_failed=int(x.failed.sum()))
     print(json.dumps(trade_rows, indent=1, default=str))
     # anecdote check
     for d in [pd.Timestamp("2026-11-13").date(), pd.Timestamp("2026-11-16").date()]:
         if d in G["SPY_partial"]:
             a = G["SPY_partial"][d]; m = low_minute(a, D0, D1 if d.day != 16 else 116)
             print("anecdote", d, f"{(M0+m)//60}:{(M0+m)%60:02d}", a[m, 2])
-    json.dump(dict(sessions=len(full), first=str(full[0]), last=str(full[-1]), N_q1=N_q1, N_q2=N_q2, N=N,
+    json.dump(dict(sessions=len(full), first=str(full[0]), last=str(full[-1]), N_q1=N_q1, N_q2=N_q2, N_q2_setup=N_q2x, N=N, best_train_setupX=best2.to_dict(),
                    bar=round(bar, 3), best_train=best.to_dict(), trade=trade_rows),
               open(HERE / "summary.json", "w"), indent=1, default=str)
 
