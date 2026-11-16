@@ -1645,5 +1645,17 @@
   "name": "Afternoon VWAP Reclaim Fade (all day)",
   "side": "short",
   "what": "09:50-15:00: a stock up over 2% reclaims VWAP with RSI(14) at 30 or below; short. Full-day version of NS4-pm-vwap-reclaim-oversold-short."
+ },
+ "L3-gap-slope-fromopen-FD-WB4": {
+  "name": "Gap-Down Recovery Fade — WB4: earlier cut-off, deeper gap, 75-min hold",
+  "side": "short",
+  "what": "09:50-13:00: a stock that gapped down 3.2%+ has rallied more than 3.5% from its open with its 20-bar average turning up; short the rally; out at target, stop or 75 minutes.",
+  "account": "testing2"
+ },
+ "CWT14-failbrk-orl-p10-long-WB5": {
+  "name": "Failed Opening-Range-Low Break Long — WB5: cost filter, SPY gate, wider stop",
+  "side": "long",
+  "what": "as the parent; only names with ATR >= 2% and stop cost <= 10% of 1R; skipped while SPY is down > 0.20% since 09:50; stop 0.45 ATR under the signal close, target +0.15 ATR, flat 15:55.",
+  "account": "testingd"
  }
 }

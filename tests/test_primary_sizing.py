@@ -19,4 +19,4 @@ def test_primary_slot_about_4000(monkeypatch):
 
 def test_testing_accounts_unchanged(monkeypatch):
     assert _acct("testing", monkeypatch)["slots"] == 400
-    assert _acct("testing2", monkeypatch)["slots"] == 400
+    assert _acct("testing2", monkeypatch)["slots"] == 800   # TSZ1 2026-11-17 (ledger 2026-11-16-tsz1-testing-sizing); was 400
