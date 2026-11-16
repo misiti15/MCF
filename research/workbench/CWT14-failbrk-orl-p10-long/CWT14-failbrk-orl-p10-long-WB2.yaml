@@ -1,0 +1,31 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent CWT14-failbrk-orl-p10-long; one change: window [950, 1200] -> [1030, 1200]. Educational only - not financial advice.
+strategies:
+  CWT14-failbrk-orl-p10-long-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/CWT14-failbrk-orl-p10-long/modules/CWT14-failbrk-orl-p10-long-WB2.py
+    min_adv: 95000000
+    window:
+    - 1030
+    - 1200
+    scale_out_r: 0.35
+    live_scale_out: false
+    testing2:
+      batch: cwt-2026-10-12
+      source: B3-LOR-p0.1-Vany-sidelong-t05s1-guest
+      fill: true
+    tags:
+    - workbench
+    - parent:CWT14-failbrk-orl-p10-long
+    workbench:
+      parent: CWT14-failbrk-orl-p10-long
+      param: window
+      old:
+      - 950
+      - 1200
+      new:
+      - 1030
+      - 1200
+      date: '2026-11-16'
+      note: P5 window start 09:50 -> 10:30 (skips the 10:05-10:30 reclaim bars)
