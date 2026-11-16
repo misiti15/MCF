@@ -75,7 +75,7 @@ def classify(status: str, reason: str | None) -> str:
         return "held_by_other"
     if r.startswith("max concurrent positions"):
         return "slots_full"
-    if r.startswith("max positions for this setup"):
+    if r.startswith(("max positions for this setup", "max lots per symbol for this setup")):
         return "setup_cap"
     if r.startswith("max trades/day"):
         return "trades_cap"

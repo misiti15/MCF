@@ -45,7 +45,7 @@ STAGES = [  # key, title, subtitle, colour
 CONTEXT_COLS = {"spy_fo", "qqq_fo", "breadth", "breadth_open", "qqq_vwap", "spy_prng"}
 # journal signals.reason -> part role (what blocked the signal)
 BLOCK_RULES = [
-    (r"shortable|ETB|borrow", "borrow"), (r"max positions for this setup", "cap_setup"),
+    (r"shortable|ETB|borrow", "borrow"), (r"max positions for this setup|max lots per symbol for this setup", "cap_setup"),
     (r"lot cap|already in symbol|opposite side held", "cap_symbol"), (r"twin", "twin"),
     (r"setup daily loss", "latch"), (r"^daily loss limit|halted", "acct_stop"), (r"split.tape", "split_gate"),
     (r"stop cost|cost >", "cost_filter"), (r"spread|crosscheck|quote", "quote"), (r"price below minimum", "price"),
