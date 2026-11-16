@@ -124,7 +124,7 @@ def test_lr1_runner_flattens_before_the_half_day_close(tmp_path, monkeypatch, da
     monkeypatch.setattr(r, "step", lambda now: steps.append(now))
     r.run(poll_seconds=60)
     assert r.flatten == time(12, 55) and r.health["early_close"] and r.health["session_close"] == "13:00"
-    assert len(flat) == 1 and flat[0] == at(f"{day} 12:59")      # LR7 retries until close - 1 min
+    assert len(flat) == 1 and flat[0] == at(f"{day} 13:05")      # LR7 / HK-FLAT-1113: retries until close + 5 min
     assert r.session_done and len(steps) == 2
 
 

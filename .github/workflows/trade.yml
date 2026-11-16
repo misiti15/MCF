@@ -5,7 +5,7 @@
 #   * hourly standby runs keep one job queued behind the running one (same concurrency group), so a
 #     crash, a skipped trigger or the 6-hour job limit costs minutes, not the session
 #   * GitHub cron can stop for hours (11-05: no scheduled run 09:40-14:50 ET), so each job also dispatches its own
-#     successor 15 min before its 355-min limit when none is queued (mcf/execution/handover.py; actions: write)
+#     successor 28 min before its 355-min limit when none is queued (mcf/execution/handover.py; actions: write)
 #   * every run decides from the ET clock whether to work (mcf live exits at once outside 08:00-15:50 ET,
 #     on weekends and on market holidays); duplicate UTC lines cover both EDT and EST
 #
@@ -157,9 +157,11 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           # Hand-over (owner 2026-11-05; mcf/execution/handover.py): on 11-05 GitHub fired no scheduled run 09:40-14:50 ET,
-          # so no hourly standby was queued when this job hit its 355-min limit. 15 min before the limit (if that falls
+          # so no hourly standby was queued when this job hit its 355-min limit. 28 min before the limit (if the job stops
           # before 15:50 ET) the background helper dispatches trade.yml unless a successor is already queued for this
           # account; the new job waits in the concurrency group and starts when this one ends. Never fails the job.
+          # HK-FLAT-1113: mcf live stops new entries, reconciles and pushes journal + status by job start + 335 min (limit
+          # - 20, MCF_JOB_T0), so GitHub's 355-min kill never cuts off the final push; then this job ends and the successor runs.
           nohup python -m mcf.execution.handover trade --account "$MCF_ACCOUNT" --job-start "$MCF_JOB_T0" \
             --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.dry_run && 'dry' || 'act' }}" > handover.log 2>&1 &
           python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}
