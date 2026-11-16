@@ -1,0 +1,24 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent MF2-open-rsimidhi-flowsell-FD; skip a rising 20-SMA (slope > +0.05%/bar) + skip gap-ups > +2%. Mechanic 2026-11-16. Educational only - not financial advice.
+strategies:
+  MF2-open-rsimidhi-flowsell-FD-WB1:
+    refire: true
+    refire_cooldown: 1
+    enabled: false
+    type: lab
+    module: research/workbench/MF2-open-rsimidhi-flowsell-FD/modules/MF2-open-rsimidhi-flowsell-FD-WB1.py
+    min_adv: 95000000
+    window:
+    - 950
+    - 1500
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:MF2-open-rsimidhi-flowsell-FD
+    workbench:
+      parent: MF2-open-rsimidhi-flowsell-FD
+      param: module clause
+      old: null
+      new: sma20_slope_pct <= +0.05 + gap <= +2%
+      date: '2026-11-16'
+      note: 'Mechanic: bench config ''C1 slope<=0.05 + gap<=2%'''
