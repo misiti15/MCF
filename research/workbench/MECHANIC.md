@@ -17,3 +17,10 @@ Trigger: the owner says "Workbench <setup>" (display name or id). The main sessi
 7. **Report to the owner** (one message): the engine image, the trade images, the diagnosis table, the side-by-side table, and what was added where. Ask for feedback on the steps.
 
 Files: research/workbench/<parent>/ (blueprint, trades, DIAGNOSIS.md, variants.jsonl, results).
+
+## Supervisor standard (owner 2026-11-16)
+"Most setups coming to the workbench are tested already but unrefined. If the mechanic had a supervisor who inspected each result, the supervisor would want improvements without caveats, even if small tweaks or strategy changes. ... The finished outgoing setup needs to perform better OVERALL, even if it means a slight decrease under certain conditions. I don't want the workbench to be self-limiting ... if it needs to add other, maybe experimental, rules, layers, tweaks, conditions, and the results make a difference, then do so."
+- Aim for a clear OVERALL improvement (avg R after costs in both tests, plus avg R w/o best day), not a technical pass; a small give-up in one condition (e.g. up days) is fine if the whole is better.
+- Think outside the box: new layers / filters / exit logic / market-state gates / experimental conditions are allowed (each counted as a config; the parent is never edited).
+- Look at more evidence when needed: default the 5 worst + 5 best live trades (more if patterns are unclear), plus the all-trades component analysis.
+- Report like a supervisor sign-off: what changed, why, overall before/after, where it gives a little back.
