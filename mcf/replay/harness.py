@@ -115,6 +115,7 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
     day = pd.Timestamp(str(day)).date()
     cfg = json.loads(json.dumps(cfg, default=str))               # own copy (the runner and fast path keep refs)
     cfg["data"]["journal_path"] = ":memory:"
+    cfg["shadow"] = {**(cfg.get("shadow") or {}), "enabled": False}   # replay is its own source; no shadow book inside it
     market = SimMarket(day, bars)
     clock = SimClock(pd.Timestamp(f"{day} 09:29:50", tz=NY))
     ext = {s for s, p in priors.items() if p.adv < cfg["universe"]["min_avg_dollar_volume"]}
