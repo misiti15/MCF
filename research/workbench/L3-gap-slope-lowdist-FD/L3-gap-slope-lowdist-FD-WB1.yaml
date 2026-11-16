@@ -1,0 +1,23 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent L3-gap-slope-lowdist-FD; one change: cond.dist_lod_atr 0.7816761255264282 -> 0.82. Educational only - not financial advice.
+strategies:
+  L3-gap-slope-lowdist-FD-WB1:
+    enabled: false
+    type: lab
+    module: research/workbench/L3-gap-slope-lowdist-FD/modules/L3-gap-slope-lowdist-FD-WB1.py
+    min_adv: 0
+    window:
+    - 950
+    - 1500
+    prefilter: gap_le:-2.6573517322540283
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:L3-gap-slope-lowdist-FD
+    workbench:
+      parent: L3-gap-slope-lowdist-FD
+      param: cond.dist_lod_atr
+      old: 0.7816761255264282
+      new: 0.82
+      date: '2026-11-16'
+      note: 'Mechanic: bounce must be > 0.82 daily ATR off the low (was 0.78)'

@@ -339,7 +339,15 @@ def session_inputs(cfg: dict, day, universe: str = "lab", branch: str | None = N
     syms = set(store.symbols())
     notes = {"universe": "lab"}
     live_u = store.live_universe(day, branch or "origin/mcf-data") if universe == "live" else None
-    if live_u:
+    full = universe == "live" and bool(store.pull_packs([day], log=lambda m: None))
+    if full:   # the session pack holds the whole live universe of that day (store-bars workflow)
+        pack_u = set(store.pack_meta(store.pack_path(day)).get("universe") or [])
+        live_u = live_u or pack_u or None
+    if live_u and full:
+        notes["universe"] = f"full live universe.csv ({len(live_u)} live symbols, session pack)"
+        notes["live_not_in_lab"] = len(live_u - syms)
+        syms = live_u | pinned_symbols(cfg)
+    elif live_u:
         notes["universe"] = f"lab ∩ live universe.csv ({len(live_u)} live symbols)"
         notes["live_not_in_lab"] = len(live_u - syms)
         syms &= live_u | pinned_symbols(cfg)
@@ -353,7 +361,10 @@ def session_inputs(cfg: dict, day, universe: str = "lab", branch: str | None = N
     exact = sorted({s for st in cfg["strategies"].values() if (st or {}).get("enabled")
                     for s in (st.get("symbols") or []) if isinstance(st.get("symbols"), list)})
     bars = store.load_day(day, sorted(syms | set(exact)))
-    allp = store.build_priors_for(day, store.symbols(), exact_symbols=[])
+    if live_u and full:
+        allp = store.build_priors_for(day, sorted(syms), exact_symbols=[], tag="live")
+    else:
+        allp = store.build_priors_for(day, store.symbols(), exact_symbols=[])
     priors = {s: p for s, p in allp.items() if s in syms}
     notes["symbols"] = len(priors)
     return bars, priors, notes
