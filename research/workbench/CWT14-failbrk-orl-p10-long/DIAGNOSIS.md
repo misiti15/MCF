@@ -72,3 +72,49 @@ part (P15) is the only tested part that softens them.
 Shortlist (each one part): **WB1** P15 1R 0.25 -> 0.30 x ATR, **WB2** P5 window 09:50 -> 10:30 start, **WB3** P1
 extra intake filter ATR >= 2.0% of price; plus **WB4** = WB1 + WB3 (each passed alone; counted as its own config).
 Results: RESULTS.md.
+
+---
+# Rerun (supervisor standard, owner 2026-11-16): 5 worst + 5 best live trades, every part again
+Mechanic rerun, 2026-11-16 (during market hours; research files only). Educational only — not financial advice.
+Live record now (diagnosis only, not in the pass decision): 735 trades / 26 sessions 2026-10-12..11-16, avg -0.079R after
+costs, win 65%, w/o best day -0.101R. Rule changes in the window as above (Testing 2 scale-out 10-17, Graveyard move
+10-21, latch policy 10-23, Graveyard BP / caps + LR1 / LR5 / LR8 on 11-12); no rule change for this setup after 11-12.
+Engine: `CWT14-failbrk-orl-p10-long_engine.png` (refreshed). Trade teardowns `..._rerun_worst{1-5}_*.png`,
+`..._rerun_best{1-5}_*.png` (every price and time on the chart).
+
+## The 5 worst and 5 best live trades, and what WB5 does with each
+"1R" is the live R denominator |fill - stop|; drift = (fill - signal close) / 1R(0.25 ATR); cost/R = WB5's intake test
+(2 x (1c + 1 bp) + 2c) / (0.30 ATR); SPY = SPY since 09:50 at the decision bar (gate needs >= -0.20%).
+
+| Trade | Live R | What happened | Part | drift | cost/R | SPY since 09:50 | WB5 |
+|---|---|---|---|---|---|---|---|
+| W1 VXX 10-15 10:30 | -2.62 | filled 0.86R under the signal close, 1R shrank to $0.015, stop 30 s later | P14 / P15 | -0.86 | 0.33 | +0.16% | **skipped** (cost/R) |
+| W2 UVXY 10-15 10:30 | -2.24 | same minute, same mechanism | P14 / P15 | -0.89 | 0.23 | +0.16% | **skipped** (cost/R) |
+| W3 KEY 11-04 10:05 | -2.10 | $21 bank, ATR 2.0%: 1R $0.02 after drift, stop in 9 s | P1 / P14 | -0.81 | 0.35 | +0.11% | **skipped** (cost/R; WB4 ATR >= 2% also borderline) |
+| W4 ORCL 11-06 11:25 | -1.84 | real failure: the reclaim faded, stop 12:36, ORCL fell to 109 | P8 sensor | -0.16 | 0.03 | -0.05% | taken; stop 112.90 (0.45 ATR) also hit at 12:36 -> about -1.0R |
+| W5 FNB 11-04 10:05 | -1.80 | $18 bank, 1R $0.04, stop in 39 s | P1 / P14 | -0.61 | 0.37 | +0.11% | **skipped** (cost/R) |
+| B1 BABA 11-05 10:10 | +1.86 | target in 5 min (R inflated by a fill under the signal close) | P19 | -0.47 | 0.07 | -0.54% | **skipped** (gate) |
+| B2 VTWO 10-14 10:10 | +1.82 | target 10:44 | P19 | — | 0.15 | -0.41% | skipped (ATR 1.2% < 2%: already out in WB4) |
+| B3 TNA 10-14 10:10 | +1.74 | target 10:44 | P19 | — | 0.08 | -0.41% | **skipped** (gate) |
+| B4 TRGP 11-16 10:15 | +1.62 | target 10:31 | P19 | — | ~0.05 | n/a (today, no cached SPY) | intake passes; gate not checkable here |
+| B5 PLTR 10-16 10:05 | +1.55 | target in 8 min | P19 | — | 0.04 | -0.10% | taken; replay +0.96R (wider stop: smaller R on the same target) |
+
+Reading: 4 of the 5 worst are the same machine fault — a thin 1R on a cheap name, shrunk further by a fill under the
+signal close, so a few cents of noise is -2R. One intake part (cost-to-R) removes all four without touching the signal.
+The 5th (ORCL) is a genuine failed reclaim; the wider stop does not save it but halves its R. The gate gives back 2-3
+of the 5 best (they fired on mornings where SPY was falling after 09:50 and then turned) — that is where the copy gives
+something back.
+
+## All trades — every part again (2-year TRAIN split, on WB4's trade set unless noted)
+| Part [catalogue] | Evidence | Lead? |
+|---|---|---|
+| P1 intake: cost-to-R [Intake] | the R-shrink losers all have cost/R > 0.20; cost/R <= 0.10 vs WB4: train -0.096 -> -0.080, 2y -0.079 -> -0.061, replay -0.101 -> -0.080 (paired vs WB4 t 7.5 on 2y) | **Yes -> C1** |
+| Gates: SPY since 09:50 [Gates] | >= 0: replay +0.015 but 2y -0.079 (no gain); >= -0.10%: 2y -0.077; **>= -0.20%: 2y -0.072, replay -0.053, worst day 2y -151 -> -77R**; SPY range / VWAP / breadth gates weaker or inconsistent (RESULTS) | **Yes -> G3** (mainly a worst-day / down-day part) |
+| P14 entry drift [Entry] | in the backtest (1-minute fill) |drift| > 0.5R is rare: guard 0.5R changes avg R by +0.002; the runner's own cost filter at the fill (Testing max_stop_cost_r 0.15) does more (-0.063 2y) and C1 already contains it | covered by C1 (+ the Testing CF) |
+| P7 refire / lots [Refire / caps] | max 2 lots per symbol (2nd after a 10-min cooldown or after the 1st exits): -0.078 / -0.080 2y, worst day worse (-179R) | no |
+| P5 window [Timer] | 10:15 start: 2y -0.072 but replay -0.112; 10:30 start: replay -0.142; 09:50-11:00: -0.083; to 13:00: -0.079 | no (inconsistent across tests) |
+| P18 stop width [Stop] | stop 1.2R: 2y -0.062; on C1+G3: 1.0R -0.050, 1.2R -0.038, **1.5R -0.027**, 2.0R -0.020 (2y); per $ traded 2y -5.6 / -5.1 / -4.6 / -4.2 bps — part of the R gain is the bigger denominator, but the per-notional loss also shrinks | **Yes -> stop 1.5R** |
+| P19 target [Target] | 0.7R: -0.080 (worst day -191R); 0.4R with stop 1.5R: -0.028 (no better than 0.5R) | no |
+| Exit management [Time exit / Target] | breakeven after +0.3R -0.094; max hold 30 / 60 min -0.095 / -0.086; trail without target -0.118; levels from the fill -0.076 (all on WB4, 2y); on C1+G3: structural stop under the poke low -0.073 (replay -0.125), breakeven after +0.4R with stop 1.2R -0.045, stop 1.5R + max hold 60 -0.035 | no |
+| Day caps [Refire / caps] | -10R / -20R setup latch -0.081 / -0.080; first 40 trades/day -0.082 2y but replay -0.017 and worst day -40R | account-level idea (no per-setup trades/day knob) |
+| Sensors (poke, reclaim, RSI, VWAP, flow, gap, rel. strength, ADV, price) | quintiles on the C1+G3 set are flat within ±0.03R and flip sign between train and valid | no |
