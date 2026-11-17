@@ -60,7 +60,13 @@ def cmd_backtest(args, cfg):
         keep = set(args.only.split(","))
         strategies = [s for s in strategies if s.name in keep]
     print(f"backtesting {len(data)} symbols with {[s.name for s in strategies]}")
-    trades = Backtester(strategies, cfg).run(data, progress=True)
+    from .spy_exit import SPY, enabled as spy_exit_on
+    spy = None
+    if spy_exit_on(strategies) and SPY not in data:      # SPYEXIT: SPY bars as exit context only (never traded)
+        spy = store.load_many([SPY], args.start, args.end).get(SPY)
+        if spy is None or spy.empty:
+            print("SPY bars not cached: spy_exit_pct exits cannot fire in this backtest")
+    trades = Backtester(strategies, cfg).run(data, progress=True, spy=spy)
     _print_report(trades, cfg)
     j = Journal(cfg["data"]["journal_path"])
     run = j.new_run("backtest", args.label or f"bt {args.start}..{args.end or 'now'}", cfg)
