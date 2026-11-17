@@ -1,0 +1,52 @@
+{
+ "WB1": {
+  "param": "window",
+  "old": [
+   1400,
+   1500
+  ],
+  "new": [
+   1430,
+   1500
+  ],
+  "disp": "Generated: Late Failed-Breakdown Pop Short \u2014 WB1: window 14:30-15:00",
+  "note": "Mechanic: P6/P7 entry window start 14:00 -> 14:30",
+  "window": [
+   1430,
+   1500
+  ]
+ },
+ "WB2": {
+  "param": "cond.ret3_atr (new sensor)",
+  "old": null,
+  "new": ">= 0.20",
+  "disp": "Generated: Late Failed-Breakdown Pop Short \u2014 WB2: pop >= 0.20 daily ATR",
+  "note": "Mechanic: new sensor P11b - the 15-minute pop must also be >= 0.20 daily ATRs (size relative to the stock's own range, not only 0.54%)",
+  "window": [
+   1400,
+   1500
+  ]
+ },
+ "WB3": {
+  "param": "window + cond.ret3_atr (combo WB1+WB2)",
+  "old": null,
+  "new": "window 1430-1500 AND ret3_atr >= 0.20",
+  "disp": "Generated: Late Failed-Breakdown Pop Short \u2014 WB3: 14:30-15:00, pop >= 0.20 ATR",
+  "note": "Mechanic combo = WB1 + WB2 (each passed alone); counted as its own config; module set by hand",
+  "window": [
+   1430,
+   1500
+  ]
+ },
+ "WB4": {
+  "param": "window + cond.ret3_atr + cond.adx7 (combo WB3 + new layer)",
+  "old": null,
+  "new": "window 1430-1500 AND ret3_atr >= 0.20 AND adx7 >= 44",
+  "disp": "Generated: Late Failed-Breakdown Pop Short \u2014 WB4: 14:30-15:00, pop >= 0.20 ATR, ADX(7) >= 44",
+  "note": "Mechanic combo = WB3 + new layer P11c ADX(7) >= 44 (experimental layer; fails alone, helps on top of WB3); counted as its own config; module set by hand",
+  "window": [
+   1430,
+   1500
+  ]
+ }
+}

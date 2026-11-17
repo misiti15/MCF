@@ -1,0 +1,18 @@
+{"P6 window 14:30-15:00": {"lo": 1430}, "P6 window 14:35-15:00": {"lo": 1435}, "P6 window 14:25-15:00": {"lo": 1425}, "P6 window 14:45-15:00": {"lo": 1445},
+ "P6 window 14:15-15:00": {"lo": 1415}, "P6 window 14:00-14:45": {"hi": 1445},
+ "P11 ret3>=0.80": {"conds": [["breadth", ">", 0.7], ["ret3", ">=", 0.80]]}, "P11 ret3>=1.0": {"conds": [["breadth", ">", 0.7], ["ret3", ">=", 1.0]]},
+ "P11 ret3>=0.45": {"conds": [["breadth", ">", 0.7], ["ret3", ">=", 0.45]]},
+ "P11' ret3_atr>=0.20": {"conds": [["breadth", ">", 0.7], ["ret3", ">=", 0.54], ["ret3_atr", ">=", 0.20]]},
+ "P12 breadth>0.6": {"conds": [["breadth", ">", 0.6], ["ret3", ">=", 0.54]]}, "P12 breadth>0.8": {"conds": [["breadth", ">", 0.8], ["ret3", ">=", 0.54]]},
+ "P12 breadth>0.75": {"conds": [["breadth", ">", 0.75], ["ret3", ">=", 0.54]]},
+ "P2 adv>=100M": {"adv": 100e6}, "P2 adv>=300M": {"adv": 300e6}, "P3 price>=20": {"minpx": 20},
+ "P18 no cost filter": {"cf": null}, "P18 cf 0.10": {"cf": 0.10}, "P18 cf 0.05": {"cf": 0.05},
+ "P21 1R 0.20 ATR": {"rf": 0.20}, "P21 1R 0.30 ATR": {"rf": 0.30},
+ "P24 stop 0.75R": {"sk": 0.75}, "P24 stop 1.25R": {"sk": 1.25}, "P24 stop 1.5R": {"sk": 1.5},
+ "P25 target 1R": {"tk": 1.0}, "P25 target 1.5R": {"tk": 1.5}, "P25 target 2R": {"tk": 2.0},
+ "Trail 0.5R after 0.5R": {"trr": 0.5, "tra": 0.5}, "Trail 0.75R after 0.75R": {"trr": 0.75, "tra": 0.75}, "Trail 1R after 1.5R": {"tra": 1.5}, "No trail": {"trr": null},
+ "BE at +0.5R": {"be": 0.5}, "BE at +1R": {"be": 1.0},
+ "P27 max hold 30": {"mh": 30}, "P27 max hold 60": {"mh": 60}, "P27 flat 15:30": {"flat": 1530}, "P27 flat 15:45": {"flat": 1545},
+ "X exit 30min if MFE<0.25": {"cte": [30, 0.25]}, "X exit 45min if MFE<0.3": {"cte": [45, 0.3]},
+ "P15 day cap 20": {"daycap": 20}, "P15 day cap 10": {"daycap": 10}
+}

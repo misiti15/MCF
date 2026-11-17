@@ -1,0 +1,16 @@
+{"ra20 (full window)": {"extra": [["ret3_atr", ">=", 0.20]]}, "ra15 (full window)": {"extra": [["ret3_atr", ">=", 0.15]]},
+ "mh10 (full window)": {"extra": [["macd_hist", ">=", 0.10]]}, "ra20+mh10 (full window)": {"extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh08": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.08]]},
+ "W+ra20+mh12": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.12]]},
+ "W+ra18+mh10": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.18], ["macd_hist", ">=", 0.10]]},
+ "W+ra22+mh10": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.22], ["macd_hist", ">=", 0.10]]},
+ "W1425+ra20+mh10": {"lo": 1425, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W1435+ra20+mh10": {"lo": 1435, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh10 +br0.75": {"lo": 1430, "conds": [["breadth", ">", 0.75], ["ret3", ">=", 0.54]], "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh10 +tra1.5": {"lo": 1430, "tra": 1.5, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh10 +stop1.25": {"lo": 1430, "sk": 1.25, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh10 +nocf": {"lo": 1430, "cf": null, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]},
+ "W+ra20+mh10 +rvol0.8": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10], ["rvol_day", ">=", 0.8]]},
+ "W+ra20+mh10 +spy<=0.55": {"lo": 1430, "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10], ["spy950", "<=", 0.55]]},
+ "W+ra20+mh10 +ret3>=0.4": {"lo": 1430, "conds": [["breadth", ">", 0.7], ["ret3", ">=", 0.4]], "extra": [["ret3_atr", ">=", 0.20], ["macd_hist", ">=", 0.10]]}
+}
