@@ -401,3 +401,7 @@ Lesson: offsets across a data hole are position counts; a selftest must include 
 
 ## Run 63 — 2026-11-17 ~09:41 ET
 BLKOUT Amendment 1 signed off (Skeptic). Amendment 1b: half days kept as calendar sessions; selftest ok. Builder runs tonight after FWDCAL.
+
+## Run 64 — 2026-11-17 ~13:40 ET
+Board ts formats: 602 ET-offset, 54 UTC 'Z'. My string-compare filter over-includes UTC posts but never missed one (checked: 0 since 11-14).
+Added research/obs_board.py (parsed ts). HKS950 waits for Skeptic's re-sign of Scout's Amendment 2.

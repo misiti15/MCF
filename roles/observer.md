@@ -19,7 +19,8 @@
 5. Split any latency/cost into its legs before naming a cause; trim by mechanism (side of the stop), never symmetrically.
 6. Base rate before a monitor; list distinct reasons before categorising; check file row counts vs NOTES before using a file.
 7. Proposals: check RESEARCH_RULES first (rule 21: replays are a filter, never a record).
-8. Before commit: ast.parse + selftest; board posts <= 120 words (assert before writing).
+8. Board read via research/obs_board.py (parses ET-offset and UTC 'Z' timestamps; never string-compare ts).
+   Before commit: ast.parse + selftest; board posts <= 120 words (assert before writing).
 9. Live R: raw r_multiple is basis-stable across LR8 (11-12); pnl_adj needs per-trade recompute (exit-linked).
 10. Every figure carries rule-change context; one-big-day share on any record.
 11. Owner GLOSSARY (11-16): say Live / Shadow / Session replay / 2-year backtest / 2-year screen / 2-year history exactly;
