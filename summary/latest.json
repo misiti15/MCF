@@ -1,10 +1,10 @@
 {
- "updated": "2026-11-17T11:00-05:00",
+ "updated": "2026-11-17T13:00-05:00",
  "session": "2026-11-17",
  "headline": "Prep for tonight is complete: the earnings-blackout look's date fix is signed off, and the FWDCAL check, BLKOUT and the earnings-calendar Shadow run after 16:30 ET.",
  "bullets": [
   "BLKOUT (earnings-blackout look, descriptive): date fix in and signed off (block-edge trades dropped, no block data; hole selftest passes). Runs tonight after FWDCAL.",
-  "New: HKS950 (does a stock's move in a given half-hour repeat in that half-hour on later days?), a backlog idea since 10-07. Approved with Skeptic's 5 conditions; bar t 2.46 (family 42); scored after 16:30 ET.",
+  "New: HKS950 (does a stock's half-hour move repeat in the same half-hour on later days?). Scorer and selftest ready; held until the approved conditions (bar t 2.46, 8-of-11 slots, cost break-even) are in the code and Skeptic re-signs.",
   "Move Hunt 'wrong time' pool: mostly Live arriving after an early move had finished (median move start 09:35, before the owner's 09:50 line), and 22 of 48 were really wrong side. Only what remains after 09:50 gets tested.",
   "Stop widening closed: price path gains nothing (gross t 0.98); the small gain is avoided stop charges, ~0.089R per stop in the 2-year backtest vs ~0.09-0.10R Live, so Live should save about the same.",
   "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R."
@@ -18,9 +18,9 @@
  },
  "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
  "by_role": {
-  "scout": "HKS950 plan (same half-hour continuation).",
+  "scout": "HKS950 scorer built; amending to approved conditions.",
   "builder": "Holding for tonight's queue.",
-  "skeptic": "HKS950 objections: family 42, drop 15:30 slot.",
+  "skeptic": "Held HKS950 until conditions are in the code.",
   "observer": "BLKOUT 1b: half days kept as calendar sessions.",
   "lead": "Cleared BLKOUT; quiet in market hours."
  },
