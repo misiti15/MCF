@@ -58,9 +58,20 @@ def _one(job: dict) -> dict:
             cfg = harness.add_setup(cfg, job["setup"], job.get("module"), alone=job.get("alone", False), block=block)
         branch = harness.data_branch(job["account"])
         bars, priors, notes = harness.session_inputs(cfg, d, universe=job["universe"], branch=branch)
+        hook, short = None, None
+        if job.get("live_cal"):                     # calibrated replay (research/replay_cal)
+            from . import livecal
+
+            params = livecal.load_params(job["live_cal"])
+            hook = livecal.Calibrator(params, branch, d)
+            short = livecal.shortable_for(params, branch, d)
         res = harness.run_session(cfg, d, bars, priors, fills=job["fills"], limit_fill=job["limit_fill"],
-                                  exact=job["exact"], check=job["check"], log=lambda m: None)
+                                  exact=job["exact"], check=job["check"], log=lambda m: None, hook=hook,
+                                  shortable=short)
         res["stats"]["inputs"] = notes
+        if hook is not None:
+            res["stats"]["live_cal"] = {"params": job["live_cal"], **hook.notes,
+                                        "shortable": "session universe.csv" if short else "today's flags"}
         res["stats"]["missing_modules"] = cfg.get("_replay_missing_modules", [])
         harness.write(res, out)
         return res["stats"]
@@ -98,7 +109,7 @@ def cmd_run(a):
     out = Path(a.out or RUNS / label)
     jobs = [dict(day=str(d), account=a.account, as_live=a.as_live, setup=a.setup, module=a.module, alone=a.alone,
                  block=a.block, universe=a.universe, fills=a.fills, limit_fill=a.limit_fill, exact=a.exact,
-                 check=a.check, out=str(out), force=a.force) for d in days]
+                 check=a.check, out=str(out), force=a.force, live_cal=a.live_cal) for d in days]
     t0 = time.time()
     stats = []
     if a.jobs > 1:
@@ -196,6 +207,7 @@ def main(argv=None):
     p.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 2) - 1))
     p.add_argument("--exact", action="store_true", help="no fast path (slow; for spot checks)")
     p.add_argument("--check", type=int, default=24, help="fast-path fidelity samples per session (0 = off)")
+    p.add_argument("--live-cal", help="calibrated replay: params JSON from research/replay_cal/fit.py (mcf.replay.livecal)")
     p.add_argument("--label")
     p.add_argument("--out")
     p.add_argument("--force", action="store_true")
