@@ -141,10 +141,10 @@ def cmd_live(args, cfg):
     """One CI slot of the live paper session (see mcf/execution/session.py)."""
     load_dotenv()
     from .execution.runner import PaperRunner
-    from .execution.session import NY, Publisher, job_deadline, prep
+    from .execution.session import NY, Publisher, flatten_only, job_deadline, prep
 
     now = pd.Timestamp.now(tz=NY)
-    until = job_deadline(now, cfg.get("live", {}))
+    until = job_deadline(now, cfg.get("live", {}), os.environ.get("MCF_JOB_T0"))   # HK-FLAT-1113: by job limit - 20 min
     if until is None and not args.force:
         print(f"{now:%a %H:%M} ET is outside the trading-job window: nothing to do")
         return
@@ -162,7 +162,7 @@ def cmd_live(args, cfg):
     last = {"journal": None}
 
     def on_status(st):
-        paths = ["status.json"]
+        paths = ["status.json", "adopted"]
         ts = pd.Timestamp.now(tz=NY)
         if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=2) or st["phase"] in ("closed", "handover"):
             paths.append("journal.db")
@@ -170,6 +170,8 @@ def cmd_live(args, cfg):
         try:   # intraday attribution: total P/L (closed + open) by setup every status, for the EOD chart
             by: dict[str, float] = {}
             for p in st.get("positions") or []:
+                if p["strategy"] == PaperRunner.ADOPTED:   # HK-FLAT-1113: adopted lots are no setup's P/L
+                    continue
                 by[p["strategy"]] = by.get(p["strategy"], 0.0) + float(p.get("upl") or 0)
             for c in st.get("closed") or []:
                 by[c["strategy"]] = by.get(c["strategy"], 0.0) + float(c.get("pnl") or 0)
@@ -196,12 +198,15 @@ def cmd_live(args, cfg):
                          on_status=on_status)
     if cfg.get("live", {}).get("log_poll_inputs", True):
         runner.poll_log_dir = os.path.join(args.state_dir, "polls")
+    runner.flatten_only = flatten_only(now)   # HK-FLAT-1113b: 15:50-16:05 ET start: no entries, closing flatten only
+    if runner.flatten_only:
+        print(f"{slot}: started {now:%H:%M} ET (15:50 or later): no new entries, closing flatten only")
     runner.kill_git_dir = args.state_dir   # LR4: the kill flag (mcf-control branch) is read through this checkout
     if eb is not None:
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
                              earnings_complete=eb["complete"])
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls", "adopted"]
     end = pd.Timestamp.now(tz=NY)
     if runner.session_done or end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():   # LR1: half days
         from .report.daily_review import write_review
@@ -315,6 +320,13 @@ def cmd_eod(args, cfg):
                     chart_bars=ext, exmkt=exmkt)
     eod.save(rep, Path(args.state_dir) / "reports", day)
     scorecard.save(card, args.state_dir)
+    try:   # shadow mode (owner 2026-11-16): per-setup shadow scorecard + this account's trust check, for the leaderboard
+        from .report import shadow_card
+
+        sc_path = shadow_card.save(shadow_card.build(j, cfg.get("account_name", "primary")), args.state_dir)
+        print(f"shadow scorecard: {sc_path}")
+    except Exception as e:
+        print(f"shadow scorecard unavailable: {type(e).__name__}: {e}")
     print(rep["subject"])
     try:   # owner 2026-11-05: dollar P/L lines up with Alpaca - Alpaca equity change vs journal vs status.json
         from .report import reconcile_pl

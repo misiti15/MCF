@@ -24,10 +24,13 @@
 strategies_exclusive: true
 account:
   starting_equity: 100000
-  slots: 200
+  risk_per_trade_pct: 0.125   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 0.25 (default; slot cap binds on ~every lot)
+  min_shares: 3                  # TSZ1: a lot under 3 shares is raised to 3 if 3 fit in min_shares_notional_pct of equity (= the old slot) and the risk budget
+  min_shares_notional_pct: 1.0   # TSZ1: = old slot $ (equity x 2.0 / 200)
+  slots: 400   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 200 (slot ~$500 at $100k equity, was ~$1000)
   buying_power_multiple: 2.0
-  max_concurrent_positions: 200
-  max_positions_per_strategy: 30   # owner 2026-11-11 after close; from session 2026-11-12 (ODX-4 / REPV-7): generic cap was 10
+  max_concurrent_positions: 400   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 200
+  max_positions_per_strategy: 100   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 30 (comment: owner 2026-11-11 after close; from session 2026-11-12 (ODX-4 / REPV-7): generic cap was 10)
   max_daily_loss_r: 300   # owner 2026-11-11 after close; from session 2026-11-12: account catastrophe backstop (was 120)
   max_setup_daily_loss_r: null
   max_trades_per_day: 1500

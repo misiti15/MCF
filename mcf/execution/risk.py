@@ -48,6 +48,20 @@ def twin_groups(cfg: dict) -> dict[str, str]:
             if isinstance(v, dict) and v.get("twin_group")}
 
 
+def setup_lot_caps(cfg: dict) -> dict[str, int]:
+    """setup -> its own max_lots_per_symbol (owner 2026-11-16, "2-lot option"): the most lots THIS setup may hold on one
+    symbol at once. Opt-in per setup (`strategies.<id>.max_lots_per_symbol`); absent / null = no per-setup cap, only the
+    account rules (live.max_lots_per_symbol etc.) apply - the behaviour before this option."""
+    out = {}
+    for k, v in (cfg.get("strategies") or {}).items():
+        if isinstance(v, dict) and v.get("max_lots_per_symbol") is not None:
+            out[str(k)] = max(1, int(v["max_lots_per_symbol"]))
+    return out
+
+
+SETUP_LOT_CAP = "max lots per symbol for this setup"
+
+
 class RiskManager:
     def __init__(self, cfg: dict, equity: float):
         self.a = cfg["account"]
@@ -64,6 +78,7 @@ class RiskManager:
         # owner 2026-10-19 evening: no second lot on a symbol already held (or pending) by this setup's twin
         self.block_twin = bool(live.get("block_twin_same_symbol", True))
         self.twin_groups = twin_groups(cfg)      # optional per-setup `twin_group:` (owner 2026-10-20)
+        self.setup_lot_caps = setup_lot_caps(cfg)  # optional per-setup `max_lots_per_symbol:` (owner 2026-11-16)
         # owner 2026-10-19 evening: a setup takes no new entries today once its net realized R <= -limit (absent = off)
         lim = self.a.get("max_setup_daily_loss_r")
         self.setup_loss_limit = float(lim) if lim else None
@@ -90,11 +105,11 @@ class RiskManager:
         per_share = abs(ref_price - sig.stop)
         if per_share <= 0:
             return 0
-        from ..backtest.engine import slot_notional
+        from ..backtest.engine import lot_shares, slot_notional
 
         risk = self.equity * self.a["risk_per_trade_pct"] / 100
         cap = slot_notional({**self.a, "equity": self.equity})
-        return int(min(risk / per_share, cap / ref_price))
+        return lot_shares(self.a, self.equity, risk, per_share, ref_price, cap)
 
     def check(self, sig: Signal, ref_price: float) -> tuple[bool, str]:
         s = self.state
@@ -130,6 +145,9 @@ class RiskManager:
                 return False, "opposite side held"
             if len(lots) - s.residual.get(sig.symbol, 0) >= self.max_lots:
                 return False, "lot cap"
+            cap = self.setup_lot_caps.get(sig.strategy)
+            if cap is not None and sum(st == sig.strategy for st, _ in lots) >= cap:
+                return False, SETUP_LOT_CAP              # this setup's own lots on the symbol (other setups' do not count)
         if sig.side * (ref_price - sig.stop) <= 0:
             return False, "price already through stop"
         if sig.target is not None and sig.side * (sig.target - ref_price) <= 0:

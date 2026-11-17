@@ -452,6 +452,8 @@ def extract(setup_id: str, with_record: bool = True) -> dict:
     S["LIMITS"].append(("Per-setup daily latch", f"stops at {-lat:g}R net" if lat else "off", "max_setup_daily_loss_r"))
     S["LIMITS"].append(("Account daily stop", f"-{A.get('max_daily_loss_r')}R", "max_daily_loss_r"))
     S["LIMITS"].append(("Lots per symbol", f"{live.get('max_lots_per_symbol', 1)} (same side)", "same_setup_reentry: " + str(live.get("same_setup_reentry"))))
+    if blk.get("max_lots_per_symbol") is not None:
+        S["LIMITS"].append(("Lots per symbol (this setup)", f"{blk['max_lots_per_symbol']} of its own", "strategies.<id>.max_lots_per_symbol"))
     if blk.get("twin_group"):
         S["LIMITS"].append(("Twin group", str(blk["twin_group"]), "never both twins on one symbol"))
     if live.get("max_stop_cost_r") is not None:
@@ -528,7 +530,7 @@ def params(bp: dict) -> dict:
     """Spawnable parameters: config keys of the block + module conditions (cond.<col>)."""
     out = {k: v for k, v in bp["block"].items() if k not in ("enabled", "type", "module", "tags", "gen", "from_testing2",
                                                               "former_primary") and not isinstance(v, dict)}
-    for k in ("window", "min_adv", "refire", "refire_cooldown", "scale_out_r", "geom", "r_atr_frac"):
+    for k in ("window", "min_adv", "refire", "refire_cooldown", "scale_out_r", "geom", "r_atr_frac", "max_lots_per_symbol"):
         out.setdefault(k, {"geom": bp["geom"], "r_atr_frac": 0.25, "refire": False, "refire_cooldown": 1}.get(k))
     for c in (bp["module"] or {}).get("conds", []) + (bp["module"] or {}).get("time", []):
         out[c["key"]] = c["value"]

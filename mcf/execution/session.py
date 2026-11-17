@@ -23,11 +23,30 @@ from ..strategies.base import t
 NY = "America/New_York"
 
 
-def job_deadline(now: pd.Timestamp, live: dict) -> pd.Timestamp | None:
-    """When a job started at `now` (ET) must hand over, or None if it should not run at all."""
-    if now.weekday() >= 5 or not (t(live.get("start_from", "08:00")) <= now.time() < t("15:50")):
+JOB_LIMIT_MIN = 355          # trade.yml timeout-minutes: GitHub kills the job here
+FINAL_PUSH_LEAD_MIN = 20     # HK-FLAT-1113: stop new entries and push journal + status this long before the limit
+FLATTEN_ONLY_FROM = "15:50"  # HK-FLAT-1113b: a job started from here on takes no new entries, it only runs the close
+LATEST_START = "16:05"       # ... and may still start until close + 5 min (LR7 flatten retry deadline)
+
+
+def flatten_only(now: pd.Timestamp) -> bool:
+    return now.time() >= t(FLATTEN_ONLY_FROM)
+
+
+def job_deadline(now: pd.Timestamp, live: dict, job_t0: float | None = None) -> pd.Timestamp | None:
+    """When a job started at `now` (ET) must hand over, or None if it should not run at all.
+
+    HK-FLAT-1113: `max_job_minutes` counts from when `mcf live` starts, after install + prep (up to ~20 min), so the slot
+    could end after the job's 355-min limit and GitHub killed the job before its final journal/status push. With the
+    job's own start time (`job_t0`, epoch seconds; trade.yml MCF_JOB_T0) the slot also ends by
+    job start + JOB_LIMIT_MIN - FINAL_PUSH_LEAD_MIN, leaving 20 min to stop entries, reconcile, push and hand over."""
+    if now.weekday() >= 5 or not (t(live.get("start_from", "08:00")) <= now.time() < t(LATEST_START)):
         return None
-    return now + pd.Timedelta(minutes=live.get("max_job_minutes", 340))
+    until = now + pd.Timedelta(minutes=live.get("max_job_minutes", 340))
+    if job_t0:
+        cap = pd.Timestamp(float(job_t0) + (JOB_LIMIT_MIN - FINAL_PUSH_LEAD_MIN) * 60, unit="s", tz="UTC").tz_convert(now.tz)
+        until = min(until, cap)
+    return until
 
 
 SETUP_KEYS = ("strategies", "exits", "shorts", "live", "universe")

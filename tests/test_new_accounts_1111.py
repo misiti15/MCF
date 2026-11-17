@@ -17,8 +17,8 @@ DEF = {"testingd": ("Testing D", "mtd-", "TESTINGD"), "testinge": ("Testing E", 
        "testingf": ("Testing F", "mtf-", "TESTINGF")}
 ALL = {**EXPECT, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in DEF.items()}}
 # setups per account: 10 each from 11-12; from 11-16 RW3S leaves E (Graveyard) and RW7 joins F (owner 2026-11-13)
-N_SETUPS = {"testingd": 21, "testinge": 21, "testingf": 22}   # ROT1 arena rotation block 1 (ledger 2026-11-16-rot1-arena-block1)
-SPOTLIGHT_CAP = {"testingd": 50, "testinge": 50}   # ROT1 spotlight accounts 11-16..11-19: per-setup cap 50 (max exposure); others keep B's 30
+N_SETUPS = {"testingd": 22, "testinge": 21, "testingf": 22}   # ROT1 arena rotation block 1 (ledger 2026-11-16-rot1-arena-block1)
+SPOTLIGHT_CAP = {}   # TSZ1 2026-11-17: every Testing A-F account runs per-setup cap 100 (ledger 2026-11-16-tsz1-testing-sizing); ROT1 spotlight 50 superseded
 MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"
 WF = ROOT / ".github/workflows"
 
@@ -48,7 +48,7 @@ def test_overlay_loads_with_its_own_setups(monkeypatch, acct):
     for k in ("max_stop_cost_r", "block_twin_same_symbol", "scale_out_max_per_day"):
         assert live[k] == b["live"][k], k
     assert not (cfg.get("universe") or {}).get("top_n")                           # full universe (not Testing A's top-500)
-    assert abs(slot_notional(a) - 1_000) < 1e-6
+    assert abs(slot_notional(a) - 500) < 1e-6                                     # ~$500 per lot (TSZ1 2026-11-17 (ledger 2026-11-16-tsz1-testing-sizing); was $1,000)
     monkeypatch.setenv("MCF_ACCOUNT", acct)
     assert {s.name for s in build_strategies(cfg)} == own                         # nothing from default.yaml leaks in
     assert G.has_setups(acct) is True                                             # the session guard now chases it

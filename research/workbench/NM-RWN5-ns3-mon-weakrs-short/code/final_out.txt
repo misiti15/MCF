@@ -1,0 +1,104 @@
+                          copy    test    n  days   win    avg  wobest  total  worst  bestshare   avgw   avgl  hold  pair_day  pair_t      T      V  xApr25
+0                       parent  replay   51     4  56.9  0.078  -0.038    4.0  -2.29       1.21  0.851 -0.941  71.0     0.000    0.00    NaN    NaN     NaN
+1                       parent      2y  248    58  64.1  0.202   0.117   50.1  -3.48       0.48  0.860 -0.972  53.0     0.000    0.00  0.216  0.185   0.126
+2               WB1 volR>=0.45  replay   35     3  62.9  0.217   0.113    7.6  -1.12       0.81  0.880 -0.905  75.0     0.720    1.31    NaN    NaN     NaN
+3               WB1 volR>=0.45      2y  195    55  68.7  0.279   0.198   54.4  -3.48       0.35  0.841 -0.956  51.0     0.051    0.38  0.253  0.309   0.217
+4              WB2 start 10:05  replay   47     4  61.7  0.184   0.207    8.7  -1.12       0.57  0.860 -0.904  76.0     0.934    1.43    NaN    NaN     NaN
+5              WB2 start 10:05      2y  230    55  64.3  0.229   0.139   52.8  -3.48       0.46  0.895 -0.971  57.5     0.032    0.48  0.225  0.235   0.149
+6                WB3 = WB1+WB2  replay   34     3  64.7  0.258   0.213    8.8  -1.12       0.71  0.898 -0.914  80.5     0.959    1.35    NaN    NaN     NaN
+7                WB3 = WB1+WB2      2y  176    50  68.8  0.308   0.223   54.3  -3.48       0.35  0.882 -0.954  53.0     0.050    0.32  0.266  0.356   0.248
+8   exp WB3 + SPY>=09:50 close  replay   34     3  64.7  0.258   0.213    8.8  -1.12       0.71  0.898 -0.914  80.5     0.959    1.35    NaN    NaN     NaN
+9   exp WB3 + SPY>=09:50 close      2y  114    34  76.3  0.484   0.375   55.2  -3.48       0.34  0.909 -0.884  62.5     0.061    0.32  0.373  0.608   0.406
+10      exp WB3 + target 1.25R  replay   34     3  64.7  0.387   0.369   13.2  -1.12       0.66  1.097 -0.914  82.0     1.834    1.58    NaN    NaN     NaN
+11      exp WB3 + target 1.25R      2y  176    50  63.6  0.319   0.212   56.1  -3.21       0.40  1.039 -0.941  75.5     0.072    0.50  0.281  0.360   0.226
+
+## plateau around WB3 (start x volR): 2y avg / wob | replay avg / wob
+1000 0.35 0.251 0.165 | 0.161 0.103 209 44
+1000 0.45 0.3 0.216 | 0.203 0.1 182 35
+1000 0.55 0.245 0.157 | 0.352 0.265 152 28
+1005 0.35 0.277 0.188 | 0.204 0.182 202 43
+1005 0.45 0.308 0.223 | 0.258 0.213 176 34
+1005 0.55 0.25 0.161 | 0.336 0.265 146 27
+1010 0.35 0.25 0.177 | 0.264 0.345 187 41
+1010 0.45 0.29 0.225 | 0.339 0.463 157 32
+1010 0.55 0.227 0.163 | 0.388 0.41 129 26
+
+## parent 2y by day type {'count': {'down': 97, 'flat': 97, 'up': 54}, 'mean': {'down': 0.388, 'flat': 0.119, 'up': 0.018}} 
+ by tod {'count': {Interval(945, 1000, closed='right'): 37, Interval(1000, 1030, closed='right'): 122, Interval(1030, 1100, closed='right'): 58, Interval(1100, 1130, closed='right'): 31}, 'mean': {Interval(945, 1000, closed='right'): -0.04, Interval(1000, 1030, closed='right'): 0.352, Interval(1030, 1100, closed='right'): 0.199, Interval(1100, 1130, closed='right'): -0.092}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 76, Interval(50.0, 150.0, closed='right'): 87, Interval(150.0, 300.0, closed='right'): 48, Interval(300.0, 100000.0, closed='right'): 37}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.35, Interval(50.0, 150.0, closed='right'): 0.292, Interval(150.0, 300.0, closed='right'): 0.07, Interval(300.0, 100000.0, closed='right'): -0.14}} 
+ exits {'count': {'stop': 75, 'target': 141, 'time': 32}, 'mean': {'stop': -1.09, 'target': 0.923, 'time': 0.056}} 
+ w/o best month 0.126
+
+## WB1 volR>=0.45 2y by day type {'count': {'down': 76, 'flat': 72, 'up': 47}, 'mean': {'down': 0.417, 'flat': 0.238, 'up': 0.118}} 
+ by tod {'count': {Interval(945, 1000, closed='right'): 32, Interval(1000, 1030, closed='right'): 97, Interval(1030, 1100, closed='right'): 42, Interval(1100, 1130, closed='right'): 24}, 'mean': {Interval(945, 1000, closed='right'): -0.068, Interval(1000, 1030, closed='right'): 0.324, Interval(1030, 1100, closed='right'): 0.428, Interval(1100, 1130, closed='right'): 0.298}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 70, Interval(50.0, 150.0, closed='right'): 63, Interval(150.0, 300.0, closed='right'): 35, Interval(300.0, 100000.0, closed='right'): 27}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.402, Interval(50.0, 150.0, closed='right'): 0.38, Interval(150.0, 300.0, closed='right'): 0.171, Interval(300.0, 100000.0, closed='right'): -0.135}} 
+ exits {'count': {'stop': 51, 'target': 120, 'time': 24}, 'mean': {'stop': -1.094, 'target': 0.902, 'time': 0.083}} 
+ w/o best month 0.217
+
+## WB2 start 10:05 2y by day type {'count': {'down': 92, 'flat': 87, 'up': 51}, 'mean': {'down': 0.422, 'flat': 0.126, 'up': 0.057}} 
+ by tod {'count': {Interval(1000, 1030, closed='right'): 135, Interval(1030, 1100, closed='right'): 60, Interval(1100, 1130, closed='right'): 35}, 'mean': {Interval(1000, 1030, closed='right'): 0.342, Interval(1030, 1100, closed='right'): 0.19, Interval(1100, 1130, closed='right'): -0.137}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 70, Interval(50.0, 150.0, closed='right'): 81, Interval(150.0, 300.0, closed='right'): 44, Interval(300.0, 100000.0, closed='right'): 35}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.391, Interval(50.0, 150.0, closed='right'): 0.292, Interval(150.0, 300.0, closed='right'): 0.136, Interval(300.0, 100000.0, closed='right'): -0.121}} 
+ exits {'count': {'stop': 69, 'target': 130, 'time': 31}, 'mean': {'stop': -1.086, 'target': 0.968, 'time': 0.059}} 
+ w/o best month 0.149
+
+## WB3 = WB1+WB2 2y by day type {'count': {'down': 71, 'flat': 60, 'up': 45}, 'mean': {'down': 0.458, 'flat': 0.264, 'up': 0.132}} 
+ by tod {'count': {Interval(1000, 1030, closed='right'): 104, Interval(1030, 1100, closed='right'): 43, Interval(1100, 1130, closed='right'): 29}, 'mean': {Interval(1000, 1030, closed='right'): 0.282, Interval(1030, 1100, closed='right'): 0.442, Interval(1100, 1130, closed='right'): 0.205}} 
+ by price {'count': {Interval(0.0, 50.0, closed='right'): 64, Interval(50.0, 150.0, closed='right'): 56, Interval(150.0, 300.0, closed='right'): 31, Interval(300.0, 100000.0, closed='right'): 25}, 'mean': {Interval(0.0, 50.0, closed='right'): 0.441, Interval(50.0, 150.0, closed='right'): 0.419, Interval(150.0, 300.0, closed='right'): 0.17, Interval(300.0, 100000.0, closed='right'): -0.108}} 
+ exits {'count': {'stop': 46, 'target': 107, 'time': 23}, 'mean': {'stop': -1.087, 'target': 0.956, 'time': 0.089}} 
+ w/o best month 0.248
+
+WB3 removed parent trades (2y): 72 -0.067 parent trades kept 176 0.312 Welch t 2.83 | new later entries 0
+T removed {'count': 45.0, 'mean': 0.069} kept {'count': 92.0, 'mean': 0.289}
+V removed {'count': 27.0, 'mean': -0.293} kept {'count': 84.0, 'mean': 0.338}
+WB3 parts on dow 1 194 0.048
+WB3 parts on dow 2 248 -0.101
+WB3 parts on dow 3 231 -0.005
+WB3 parts on dow 4 172 -0.023
+       acct symbol        date      R exit_reason  mfe_r    entry   tod      r  volumeRatio  spy950  fromOpen    close  upper_wick    WB1    WB2    WB3
+0  testing2   LITE  2026-10-19 -1.107        stop  0.189  852.470  1020 -1.035        0.654   0.237    -2.381  851.730       0.313   True   True   True
+4  testing2    ARM  2026-10-19  0.528     flatten  0.840  232.590  1105  0.677        0.389   0.223    -2.104  232.365       0.339  False   True  False
+1  testing2   CIFR  2026-10-19  0.721      target  0.721    9.192  1000  0.792        1.043  -0.029    -2.634    9.240       0.526   True  False  False
+2  testing2   CRCL  2026-10-19  0.773      target  0.669   82.670  1105  0.844        0.418   0.223    -2.197   82.859       0.015  False   True  False
+3  testing2   COHR  2026-10-19  0.777     flatten  0.958  237.570  1020  0.715        0.759   0.237    -2.189  237.690       0.083   True   True   True
+6  testing2    HPE  2026-11-02  0.799      target  0.809   54.261  1010  0.728        0.618   0.061    -2.036   54.370       0.214   True   True   True
+5  testing2   FCEL  2026-11-02  0.865      target  0.865   11.150  1010  1.163        0.389   0.061    -2.018   11.170       0.333  False   True  False
+7  testingd   IONS  2026-11-16  0.989      target  1.088   29.200  1105  1.005        0.358  -0.302    -2.341   29.200       0.250  False   True  False
+WB1 keeps {'count': 4.0, 'mean': 0.297, 'sum': 1.19} skips {'count': 4.0, 'mean': 0.789, 'sum': 3.155}
+WB2 keeps {'count': 7.0, 'mean': 0.518, 'sum': 3.624} skips {'count': 1.0, 'mean': 0.721, 'sum': 0.721}
+WB3 keeps {'count': 3.0, 'mean': 0.156, 'sum': 0.469} skips {'count': 5.0, 'mean': 0.775, 'sum': 3.876}
+   symbol        date   tod      r     why  volumeRatio
+0    AAOI  2026-10-19  1045 -1.036    stop        0.477
+1    AAOX  2026-10-19  1025 -0.342    time        0.523
+2    AEHR  2026-10-19  1020 -1.039    stop        0.697
+3    AEHR  2026-11-02  1005 -1.040    stop        0.876
+4    ALAB  2026-10-19  1110  0.831  target        0.588
+5    AMKR  2026-10-19  1110  0.853  target        0.499
+6    ARKG  2026-11-02  1010  1.144  target        2.460
+7    AXTI  2026-11-02  1010 -1.037    stop        0.934
+8    CIFR  2026-10-19  1015  1.212  target        0.457
+9     CLS  2026-10-19  1025 -1.047    stop        0.606
+10   COHR  2026-10-19  1020  0.715    time        0.759
+11   CRDO  2026-10-19  1050  0.946  target        0.728
+12   CRDO  2026-11-02  1005 -1.034    stop        0.539
+13   CRWD  2026-10-19  1050  0.581    time        0.630
+14   CRWV  2026-10-19  1045  2.378  target        0.603
+15     EL  2026-11-02  1110  0.548  target        1.857
+16    EVR  2026-10-19  1115  0.887  target        1.732
+17     FN  2026-10-19  1120  0.943  target        0.980
+18    FPS  2026-10-19  1025  0.996  target        0.866
+19    HPE  2026-11-02  1010  0.728  target        0.618
+20   INTW  2026-11-02  1025  0.933  target        0.472
+21   LITE  2026-10-19  1020 -1.035    stop        0.654
+22   MULL  2026-11-02  1020  0.823  target        0.752
+23    MUU  2026-11-02  1020  0.847  target        0.723
+24    MXL  2026-11-02  1105  0.962  target        0.715
+25   NBIS  2026-10-19  1050 -0.092    time        0.720
+26    NXT  2026-10-19  1110  0.470  target        1.814
+27   OUST  2026-10-19  1015 -1.096    stop        0.494
+28   PENG  2026-10-19  1120  1.158  target        0.772
+29    RBA  2026-11-09  1050 -1.118    stop        2.440
+30   SITM  2026-10-19  1045 -1.053    stop        0.785
+31   SNXX  2026-11-02  1025  0.797  target        0.809
+32    TLN  2026-10-19  1120  0.041    time        1.156
+33    VRT  2026-10-19  1110  0.960  target        0.505
+{'2y all': [np.float64(0.202), np.float64(0.217), np.float64(0.236), np.float64(0.244), np.float64(0.279), np.float64(0.218), np.float64(0.23), np.float64(0.165), np.float64(0.197)], '2y train': [np.float64(0.216), np.float64(0.229), np.float64(0.236), np.float64(0.239), np.float64(0.253), np.float64(0.184), np.float64(0.175), np.float64(0.15), np.float64(0.161)], '2y valid': [np.float64(0.185), np.float64(0.202), np.float64(0.236), np.float64(0.251), np.float64(0.309), np.float64(0.255), np.float64(0.295), np.float64(0.183), np.float64(0.241)], 'replay': [np.float64(0.078), np.float64(0.111), np.float64(0.172), np.float64(0.191), np.float64(0.217), np.float64(0.27), np.float64(0.248), np.float64(0.23), np.float64(0.27)]}

@@ -17,12 +17,15 @@
 # Comments per setup: source configuration, open-history n / exp (R after costs, R = 0.25 x daily ATR) / trades per day.
 # Educational only - not financial advice.
 account:
-  slots: 400
+  risk_per_trade_pct: 0.125   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 0.25 (default; slot cap binds on ~every lot)
+  min_shares: 3                  # TSZ1: a lot under 3 shares is raised to 3 if 3 fit in min_shares_notional_pct of equity (= the old slot) and the risk budget
+  min_shares_notional_pct: 0.95   # TSZ1: = old slot $ (equity x 3.8 / 400)
+  slots: 800   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 400 (slot ~$475 at $100k equity, was ~$950)
   buying_power_multiple: 3.8
-  max_concurrent_positions: 400
+  max_concurrent_positions: 800   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 400
   # Playing time: a per-setup cap well below the slot count, so the busy setups (up to ~250 signals/day) cannot fill
   # the account and every setup gets entries (Testing 1 uses 150 with fewer busy setups).
-  max_positions_per_strategy: 50   # owner 2026-10-14 (was 25; it blocked 215 signals on 10-13 once stacking went live)
+  max_positions_per_strategy: 100   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 50 (comment: owner 2026-10-14 (was 25; it blocked 215 signals on 10-13 once stacking went live))
   max_daily_loss_r: 300          # owner 2026-11-11 after close; from session 2026-11-12: catastrophe backstop only (was 120; 60 before 2026-10-19)
   max_setup_daily_loss_r: null   # owner 2026-10-22 ST-A: off (was 2.0 from 2026-10-19) so testing runs as Primary + backtests
   max_trades_per_day: 3000
@@ -40,6 +43,7 @@ live:
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
+    - L3-gap-slope-fromopen-FD-WB4   # workbench copy, owner 2026-11-16 "L3 WB4 yes": FIRST
     - GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long   # 3 traded sessions / 7 trades
     - GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short   # 3 traded sessions / 11 trades
     - GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long   # 3 traded sessions / 18 trades
@@ -63,6 +67,22 @@ live:
     - CWT14-failbrk-pdl-p10-long   # 25 traded sessions / 678 trades
     - MF5-flowsell-vwapup-rsi5hi   # 26 traded sessions / 126 trades
 strategies:
+  L3-gap-slope-fromopen-FD-WB4:
+    # Workbench copy of L3-gap-slope-fromopen-FD (Primary), Mechanic RERUN 2026-11-16: window ends 13:00 + gap <= -3.2%
+    # + every lot closed 75 min after entry; research/workbench/L3-gap-slope-fromopen-FD/RESULTS.md (RERUN).
+    # Owner approval 2026-11-16 ("L3 WB4 yes"; WB3 not deployed). Effective session 2026-11-17.
+    refire: true
+    refire_cooldown: 1
+    enabled: true
+    type: lab
+    module: research/workbench/L3-gap-slope-fromopen-FD/modules/L3-gap-slope-fromopen-FD-WB4.py
+    min_adv: 0
+    window: [950, 1300]
+    prefilter: "gap_le:-3.2"
+    scale_out_r: null
+    time_stop_min: 75
+    time_stop_min_r: 99.0
+    tags: [workbench, "parent:L3-gap-slope-fromopen-FD"]
   # ---- owner RW3S 2026-11-03 (research/bdi/night1102/simple): RW3-FD without RSI(5) > 80; observation for 5 live sessions,
   #      then re-evaluate. Did NOT pass BAR90 or the twin bar; a down-day bet.
   RW3S-gapdn-flowsell-short-FD:

@@ -21,6 +21,7 @@ import os
 import re
 import time as _time
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -32,7 +33,7 @@ from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
 from .alpaca_broker import AlpacaBroker
 from .outage import outage_cfg, protect_open_lots
-from .risk import RiskManager
+from .risk import SETUP_LOT_CAP, RiskManager
 
 NY = TZ
 SPLIT_TAPE_SYMBOLS = ("QQQ", "IWM")
@@ -40,6 +41,7 @@ COID_PREFIX = os.environ.get("MCF_COID_PREFIX", "mcf-")   # Testing account: "mc
 # Entry client order ids: <prefix><setup>-<symbol>-<YYYYMMDD> (one entry per setup/symbol/day, live.same_setup_reentry
 # false) or <prefix><setup>-<symbol>-<YYYYMMDD>-<HHMM> (HHMM = the signal's decision bar, so every lot of a setup on a
 # symbol has its own id). A lot's own exit is <entry id>-x; a flatten close is <prefix>flatten-<symbol>-<YYYYMMDDHHMMSS>.
+_UNSET = object()   # _crosscheck: "no quote timestamp given" (read the one _quote recorded)
 _COID_RE = re.compile(r"^(?P<setup>.+)-(?P<symbol>[^-]+)-(?P<day>\d{8})(?:-(?P<hhmm>\d{4}))?$")
 
 
@@ -118,6 +120,9 @@ class PaperRunner:
         self.risk.include_open = self.cost_r_stops
         # LR4 kill switch / LR5 position check / LR7 alerts (see _kill_check, _check_positions, _notify)
         self.kill: dict | None = None
+        # HK-FLAT-1113b: a job started 15:50 ET or later (until close + 5 min) only closes: no new entries, the closing
+        # flatten (adopted lots included) still runs
+        self.flatten_only = False
         self.kill_git_dir: str | None = None             # set by `mcf live` to the state checkout (origin = this repo)
         self._kill_done: set[str] = set()
         pc = self.live.get("position_check") or {}
@@ -215,6 +220,21 @@ class PaperRunner:
         # Logging only: nothing here is read by any trading decision.
         self._mtm_lot: dict[str, tuple] = {}
         self._mtm_restored = False
+        # Shadow mode (owner 2026-11-16, mcf/execution/shadow.py): setups evaluated on the same polls, bars, quotes, gates
+        # and timing as live, recording shadow lots (journal run kind "shadow") - never an order, never a slot, never a
+        # latch or halt of this account. Runs AFTER the real decisions of each poll; any shadow error is printed and
+        # never reaches trading. _poll_quotes: quotes the live path fetched this poll (shadow reuses them; read only).
+        self._poll_quotes: dict[str, tuple] = {}
+        self._step_bars: dict | None = None
+        self._step_entries = False
+        self.ctxs: dict = {}
+        self.shadow = None
+        try:
+            from .shadow import make_shadow
+
+            self.shadow = make_shadow(self)
+        except Exception as e:   # never fatal: the live runner trades exactly as before without it
+            print(f"shadow mode off: {type(e).__name__}: {e}")
 
     # ---------------------------------------------------------------- state
     def restore(self, today):
@@ -252,6 +272,7 @@ class PaperRunner:
             self._restore_lots()
             self._restore_management()
             self._restore_scaling()
+            self._adopt_orphans(today)
         done = self.journal.trades(run_id=self.run_id)
         if len(done):
             td = done.loc[done.date == str(today)].copy()
@@ -274,6 +295,11 @@ class PaperRunner:
                 self.risk.latch_setup_losses({str(k): float(v) for k, v in low.items()})
         self._restore_latches(sig)
         self._sync_open()
+        if self.shadow is not None:                  # shadow lots / dedupe of today (own journal run; never live state)
+            try:
+                self.shadow.restore(today)
+            except Exception as e:
+                print(f"shadow restore failed: {type(e).__name__}: {e} (shadow starts empty)")
 
     # reasons risk.check() journals once a latch has fired; their presence in today's signals is the persisted record
     HALT_REASONS = ("daily loss limit", "halted")
@@ -445,6 +471,114 @@ class PaperRunner:
                 self.managed[(sym, lot_id)] = m
         if self.managed:
             print(f"re-armed trade management for {len(self.managed)} open lots")
+
+    ADOPTED = "_adopted"            # HK-FLAT-1113: pseudo-setup of adopted lots (no journal row, never in setup stats)
+    ADOPT_LOOKBACK_DAYS = 5         # prefixed orders this far back mark a held symbol as MCF's (overnight leftovers)
+
+    def _adopt_orphans(self, today):
+        """HK-FLAT-1113: a successor job adopts what the broker holds for this account's client-order prefix but the
+        journal has no lot for (a predecessor killed before its last journal push, or a position left from an earlier
+        day). Each one becomes an in-memory lot of the pseudo-setup ADOPTED, sized from the broker position, so the 15:55
+        flatten closes it and LR5 sees it as expected. It is never journaled as an order or trade, so it stays out of
+        every setup's stats. One alert per day (marker state/adopted/<date>.json). Never raises."""
+        try:
+            held = dict(self.broker.positions())
+            after = (pd.Timestamp(f"{today} 00:00", tz=NY) - pd.Timedelta(days=self.ADOPT_LOOKBACK_DAYS)).to_pydatetime()
+            orders = self.broker.orders_today_with_prefix(COID_PREFIX, after)
+        except Exception as e:
+            print(f"adopt check skipped: {type(e).__name__}: {e}")
+            return []
+        ours = {getattr(o, "symbol", None) for o in orders} - {None}
+        adopted = []
+        for sym in sorted(ours & set(held)):
+            if self.lots.get(sym):
+                continue
+            p = held[sym]
+            q = float(getattr(p, "qty", 0) or 0)
+            side = str(getattr(getattr(p, "side", None), "value", getattr(p, "side", "")) or "").lower()
+            sgn = -1 if (side == "short" or q < 0) else 1
+            coid = f"{COID_PREFIX}{self.ADOPTED}-{sym}"
+            self.lots.setdefault(sym, {})[coid] = {"strategy": self.ADOPTED, "side": sgn, "qty": int(abs(q)),
+                                                   "order_id": None, "coid": coid, "adopted": True}
+            self.open_strategy.setdefault(sym, self.ADOPTED)
+            adopted.append({"symbol": sym, "qty": sgn * abs(q)})
+        if not adopted:
+            return adopted
+        self.health["adopted"] = adopted
+        print(f"ADOPTED {len(adopted)} broker positions with no journal lot (flattened at the close, not in setup stats): "
+              + ", ".join(f"{a['symbol']} {a['qty']:+g}" for a in adopted))
+        marker = Path(self.status_path).parent / "adopted" / f"{today}.json" if self.status_path else None
+        try:
+            prior = set(json.loads(marker.read_text())) if marker is not None and marker.exists() else set()
+        except Exception:
+            prior = set()
+        new = sorted({a["symbol"] for a in adopted} - prior)
+        if new:
+            self._notify("adopted_positions", f"adopted broker positions with no journal lot: {new} "
+                         "(closed by the flatten, excluded from setup stats)", key=f"adopted:{today}")
+            if marker is not None:
+                try:
+                    marker.parent.mkdir(parents=True, exist_ok=True)
+                    marker.write_text(json.dumps(sorted(prior | set(new))))
+                except Exception as e:
+                    print(f"adopt marker not written: {e}")
+        return adopted
+
+    ADOPT_OPEN_TRIES = 3
+
+    def _close_adopted_at_open(self, now: pd.Timestamp):
+        """KILL-FLAT open (owner 2026-11-16): when account.close_adopted_at_open equals today's date, the adopted lots
+        (_adopt_orphans: broker positions with this account's prefix and no journal lot) are closed with market orders at
+        the first poll at/after 09:30 ET instead of waiting for the 15:55 flatten. A symbol that also holds a normal
+        journal lot is left alone (the flatten closes it). Nothing is journaled (never in setup stats); each close is
+        logged and one alert is raised. Up to ADOPT_OPEN_TRIES polls for a close that does not go through."""
+        acct = (self.cfg or {}).get("account") or {}
+        if self.dry_run or str(acct.get("close_adopted_at_open") or "") != str(now.date()) or now.time() < t("09:30"):
+            return
+        st = self.__dict__.setdefault("_adopt_open", {"tries": 0, "done": False, "log": []})
+        if st["done"]:
+            return
+        syms = sorted(s for s, lots in self.lots.items()
+                      if lots and all(lot.get("strategy") == self.ADOPTED for lot in lots.values()))
+        mixed = sorted(s for s, lots in self.lots.items() if any(lot.get("strategy") == self.ADOPTED for lot in lots.values())
+                       and s not in syms)
+        st["tries"] += 1
+        try:
+            held = dict(self.broker.positions())
+        except Exception as e:
+            print(f"adopted close at open: positions failed ({type(e).__name__}); retry next poll")
+            held = {}
+        left = []
+        for sym in syms:
+            p = held.get(sym)
+            if p is None and held:
+                ok = True
+            else:
+                try:
+                    ok = bool(self.broker.close_mcf_position(sym, COID_PREFIX))
+                except Exception as e:
+                    print(f"adopted close {sym} failed: {type(e).__name__}: {e}")
+                    ok = False
+            rec = {"symbol": sym, "qty": getattr(p, "qty", None), "side": str(getattr(p, "side", "") or ""),
+                   "last": getattr(p, "current_price", None), "at": str(now), "ok": ok}
+            print(f"ADOPTED CLOSE AT OPEN {sym}: qty {rec['qty']} {rec['side']} market, last {rec['last']} "
+                  f"-> {'closed' if ok else 'NOT closed'}")
+            if ok:
+                st["log"].append(rec)
+                self.lots.pop(sym, None)
+                if self.open_strategy.get(sym) == self.ADOPTED:
+                    self.open_strategy.pop(sym)
+            else:
+                left.append(sym)
+        if mixed:
+            print(f"adopted close at open: {mixed} also hold journal lots: left for the 15:55 flatten")
+        if not left or st["tries"] >= self.ADOPT_OPEN_TRIES:
+            st["done"] = True
+            self.health["adopted_closed_at_open"] = st["log"]
+            self._notify("adopted_closed_at_open", f"closed {len(st['log'])} adopted lots at the open "
+                         f"({', '.join(r['symbol'] for r in st['log']) or '-'})"
+                         + (f"; NOT closed (flatten at 15:55 retries): {left}" if left else ""),
+                         key=f"adopted_open:{now.date()}")
 
     def _mcf_symbols(self) -> set[str]:
         return set(self.open_strategy)
@@ -971,9 +1105,44 @@ class PaperRunner:
             print(f"alert email failed: {type(e).__name__}")
 
     def step(self, now: pd.Timestamp):
+        t0 = _time.perf_counter()
+        self._poll_quotes = {}
+        self._step_bars, self._step_entries = None, False
+        if self.shadow is not None:
+            self.shadow.begin_poll()
+        self._step(now)
+        if self.shadow is not None and self._step_bars is not None:
+            self._shadow_phase(now, (_time.perf_counter() - t0) * 1000)
+
+    def _shadow_phase(self, now: pd.Timestamp, live_ms: float):
+        """Shadow mode, after every real decision of this poll (mcf/execution/shadow.py). Errors never reach trading;
+        after 20 of them shadow mode switches itself off for the rest of the job."""
+        try:
+            self.shadow.poll(now, self._step_bars, self.ctxs if self._step_entries else None, live_ms)
+        except Exception as e:
+            sh = self.shadow
+            sh.errors += 1
+            print(f"shadow poll failed ({sh.errors}): {type(e).__name__}: {str(e)[:200]} (no effect on trading)")
+            if sh.errors >= 20:
+                self.health["shadow"] = {**(self.health.get("shadow") or {}), "off": "20 errors"}
+                self.shadow = None
+
+    def _tap(self, strat, ctx, sigs, last: int, px: float):
+        """Shadow-of-live: hand every signal the live loop draws to the shadow book (a copy), unchanged for live."""
+        sh = self.shadow
+        for sig in sigs:
+            if sh is not None:
+                try:
+                    sh.offer(strat, ctx, sig, last, px, mode="of_live")
+                except Exception as e:
+                    print(f"shadow offer failed: {type(e).__name__}: {e}")
+            yield sig
+
+    def _step(self, now: pd.Timestamp):
         today = now.date()
         self._now = now
         bars = self.fetch(now)
+        self._step_bars = bars
         self._open_marks(bars)                        # LR3: open lots' R after costs (the Primary halt counts it)
         self.manage(now, bars)
         self.scale_outs(now, bars)
@@ -985,7 +1154,10 @@ class PaperRunner:
             return                                    # stale data: no new entries (signals would use old bars)
         if self.kill is not None:
             return                                    # LR4 kill switch: no new entries (open lots keep their brackets)
+        if self.flatten_only:
+            return                                    # HK-FLAT-1113b: late successor, closing flatten only
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
+        self._step_entries = True
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
@@ -1003,7 +1175,7 @@ class PaperRunner:
                     continue
                 if self._bucket_done(strat, key, ctx):
                     continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
-                for sig in strat.signals(ctx):
+                for sig in self._tap(strat, ctx, strat.signals(ctx), last, px):
                     if retry:
                         # only a fresh market signal on the latest bar, later than the blocked one; never a stale price
                         if sig.entry_type != "market" or sig.bar_index != last or sig.bar_index <= self.blocked[key]["bar"]:
@@ -1132,21 +1304,28 @@ class PaperRunner:
             self._quote_ts[symbol] = pd.Timestamp(ts)
         else:
             self._quote_ts.pop(symbol, None)
-        return float(q.bid_price or 0), float(q.ask_price or 0)
+        out = float(q.bid_price or 0), float(q.ask_price or 0)
+        self._poll_quotes[symbol] = (*out, None if ts is None else pd.Timestamp(ts))   # shadow reuse (this poll only)
+        return out
 
-    def _realism(self, sig, ctx, px) -> tuple[bool, str, dict]:
-        """Paper fills anything the price touches; skip what a real order book would not give us."""
+    def _realism(self, sig, ctx, px, quote=None) -> tuple[bool, str, dict]:
+        """Paper fills anything the price touches; skip what a real order book would not give us.
+        quote: (bid, ask, timestamp) already fetched (shadow mode only); None = fetch the live quote (every real entry)."""
         info = {}
-        try:
-            bid, ask = self._quote(sig.symbol)
-        except Exception as e:
-            return False, f"no quote ({e.__class__.__name__})", info
+        qts = _UNSET
+        if quote is not None:
+            bid, ask, qts = quote
+        else:
+            try:
+                bid, ask = self._quote(sig.symbol)
+            except Exception as e:
+                return False, f"no quote ({e.__class__.__name__})", info
         if bid <= 0 or ask <= 0 or ask < bid:
             return False, "no two-sided quote", info
         mid = (bid + ask) / 2
         spread = ask - bid
         info.update(bid=bid, ask=ask, spread_bps=round(spread / mid * 1e4, 1))
-        ok, why = self._crosscheck(sig, ctx, px, mid, info)
+        ok, why = self._crosscheck(sig, ctx, px, mid, info, qts)
         if not ok:
             return False, why, info
         if info["spread_bps"] > self.live.get("max_spread_bps", 30):
@@ -1172,12 +1351,14 @@ class PaperRunner:
     def _utcnow() -> pd.Timestamp:
         return pd.Timestamp.now(tz="UTC")
 
-    def _crosscheck(self, sig, ctx, px, mid, info) -> tuple[bool, str]:
+    def _crosscheck(self, sig, ctx, px, mid, info, qts=_UNSET) -> tuple[bool, str]:
         """Before any new entry: the bars the signal used are fresh and agree with the broker's live quote (owner
-        2026-10-16, outage plan step 3). Rejections are journaled as skipped with a 'crosscheck:' reason."""
+        2026-10-16, outage plan step 3). Rejections are journaled as skipped with a 'crosscheck:' reason.
+        qts: the quote's timestamp when the caller has it (shadow mode); default = the one _quote recorded."""
         dev = abs(px - mid) / mid * 100
         info["quote_dev_pct"] = round(dev, 3)
-        qts = self._quote_ts.get(sig.symbol)
+        if qts is _UNSET:
+            qts = self._quote_ts.get(sig.symbol)
         if qts is not None:
             qts = qts if qts.tzinfo else qts.tz_localize("UTC")
             info["quote_age_s"] = round(max(0.0, (self._utcnow() - qts).total_seconds()), 1)
@@ -1225,6 +1406,8 @@ class PaperRunner:
         if not ok:
             # logging only (playing-time report, 2026-10-12): which setup holds the symbol. Same decision, same reason.
             held = {"held_by": self.open_strategy.get(sig.symbol)} if why == "already in symbol" else None
+            if why == SETUP_LOT_CAP:                          # per-setup max_lots_per_symbol: it holds its own cap
+                held = {"held_by": [sig.strategy]}
             if why in ("opposite side held", "lot cap", "twin held"):                   # every setup holding a lot on the symbol
                 held = {"held_by": list(dict.fromkeys(lot.get("strategy", lid)
                                                       for lid, lot in self.lots.get(sig.symbol, {}).items()))}
@@ -1325,6 +1508,7 @@ class PaperRunner:
             return
         try:
             mine = {o.symbol for o in self.broker.orders_today_with_prefix(COID_PREFIX, now.normalize().to_pydatetime())}
+            mine |= self._mcf_symbols()                   # HK-FLAT-1113b: adopted lots (earlier days) too
             held = sorted(mine & set(self.broker.positions()))
         except Exception as e:
             print(f"after-close check failed: {e}")
@@ -1367,8 +1551,10 @@ class PaperRunner:
                 self._sleep(min(30, max(1, (pd.Timestamp(clock.next_open).tz_convert(NY) - now).total_seconds())))
                 continue
             self._set_session_close(now, clock)
+            self._close_adopted_at_open(now)              # KILL-FLAT open: date-scoped, default off
             if now.time() >= self.flatten:
                 self.flatten_mcf(retry_until=self._retry_deadline(now))
+                self._shadow_flatten(now)                 # shadow lots close at the same flatten, after the real one
                 self.session_done = True
                 if not self.health.get("flatten_failed"):
                     self.risk.state.open_r = 0.0          # flat: no open marks left (status only)
@@ -1384,16 +1570,30 @@ class PaperRunner:
                 last_status = now
             self._sleep(max(1, poll_seconds - now.second % poll_seconds + 3))
         self.reconcile(now.date())
+        if self.shadow is not None:                   # handover / close: shadow lot state for the next job
+            try:
+                self.shadow.flush(force=True)
+            except Exception as e:
+                print(f"shadow save failed: {type(e).__name__}: {e} (no effect on trading)")
         if now.time() >= self.flatten:
             self.what_if(now.date())
         self.write_status(now, "closed" if now.time() >= self.flatten else "handover")
 
+    def _shadow_flatten(self, now: pd.Timestamp):
+        if self.shadow is None:
+            return
+        try:
+            self.shadow.flatten(now)
+        except Exception as e:
+            print(f"shadow flatten failed: {type(e).__name__}: {e} (no effect on trading)")
+
     FLATTEN_RETRY_S = 20
 
     def _retry_deadline(self, now: pd.Timestamp) -> pd.Timestamp:
-        """LR7: the closing flatten keeps retrying until 1 minute before the calendar close (15:59; 12:59 on a half day)."""
+        """LR7 / HK-FLAT-1113: the closing flatten keeps retrying until the calendar close + 5 min (16:05; 13:05 on a half
+        day; after the close close_mcf_position sends extended-hours limits)."""
         close = self.session_close or t("16:00")
-        return pd.Timestamp.combine(now.date(), close).tz_localize(NY) - pd.Timedelta(minutes=1)
+        return pd.Timestamp.combine(now.date(), close).tz_localize(NY) + pd.Timedelta(minutes=5)
 
     def _broker_now(self) -> pd.Timestamp:
         try:
@@ -1409,23 +1609,29 @@ class PaperRunner:
             except Exception as e:
                 print(f"close {sym} failed: {e}")
 
+    def _flatten_targets(self, base: set | None = None) -> set:
+        """Every symbol MCF holds or traded today (local lots + the broker's prefixed orders, in case local state missed
+        one). A failed order lookup keeps `base`."""
+        mine = set(base or ()) | set(self._mcf_symbols())
+        try:
+            mine |= {o.symbol for o in self.broker.orders_today_with_prefix(
+                COID_PREFIX, pd.Timestamp.now(tz=NY).normalize().to_pydatetime())}
+        except Exception as e:
+            print(f"order lookup failed: {e}")
+        return mine
+
     def flatten_mcf(self, retry_until: pd.Timestamp | None = None):
         """Close MCF's own positions/orders only — never anything else on the account.
 
         LR7 (owner 2026-11-11): when symbols are still open after the 3 passes and `retry_until` is given (the closing
-        flatten: calendar close - 1 min), every FLATTEN_RETRY_S seconds their orders are cancelled and the close is
-        retried until that time; then one more pass (after the close, close_mcf_position uses an extended-hours limit).
+        flatten: calendar close + 5 min, HK-FLAT-1113), every FLATTEN_RETRY_S seconds their orders are cancelled and the
+        close is retried for the full MCF position list until that time; then one more pass (after the close, close_mcf_position uses an extended-hours limit).
         Whatever is still open goes to health.flatten_failed and raises an alert (_notify); the watchdog (act on Primary
         until calendar close + 5 min) acts on health.flatten_failed too."""
         print("flatten time: closing MCF positions")
         if self.dry_run:
             return
-        mine = set(self._mcf_symbols())
-        try:   # also every symbol MCF traded today, in case local state missed one
-            mine |= {o.symbol for o in self.broker.orders_today_with_prefix(
-                COID_PREFIX, pd.Timestamp.now(tz=NY).normalize().to_pydatetime())}
-        except Exception as e:
-            print(f"order lookup failed: {e}")
+        mine = self._flatten_targets()
         try:
             self.broker.cancel_orders_with_prefix(COID_PREFIX)
         except Exception as e:
@@ -1449,7 +1655,8 @@ class PaperRunner:
                     self.broker.cancel_orders_with_prefix(COID_PREFIX)
                 except Exception as e:
                     print(f"cancel by prefix failed: {e}")
-                self._close_pass(left, f"retry {retries}")
+                mine = self._flatten_targets(mine)        # HK-FLAT-1113: the full MCF position list on every retry
+                self._close_pass(sorted(mine & set(self.broker.positions())), f"retry {retries}")
                 self._sleep(3)
                 left = sorted(mine & set(self.broker.positions()))
                 self.health["flatten_retry"] = {"retries": retries, "left": left, "until": str(retry_until)}
@@ -1459,6 +1666,14 @@ class PaperRunner:
                 left = sorted(mine & set(self.broker.positions()))
         self.health["flatten_failed"] = left
         if left:
+            try:
+                pos = self.broker.positions()
+            except Exception:
+                pos = {}
+            for sym in left:                             # HK-FLAT-1113: one line per leftover
+                p = pos.get(sym)
+                print(f"FLATTEN LEFTOVER {sym}: qty {getattr(p, 'qty', '?')} {getattr(p, 'side', '')} "
+                      f"(lot setups: {sorted({l.get('strategy') for l in self.lots.get(sym, {}).values()}) or '-'})")
             print(f"FLATTEN FAILED: still open after 3 passes{f' and {retries} retries' if retries else ''}: {left}")
             self._notify("flatten_failed", f"flatten failed: MCF positions still open: {left}")
         else:

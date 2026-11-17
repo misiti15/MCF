@@ -1,0 +1,22 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent orb20_a; change: combo of WB1 (top 10) + WB2 (price >= 20); own config. Needs class orb20_wb (modules/orb20_wb.py) or ORB20 min_price. Educational only - not financial advice.
+strategies:
+  orb20_a-WB3:
+    enabled: false
+    class: orb20_wb
+    variant: A
+    min_rvol: 1.5
+    top_n: 10
+    min_price: 20.0
+    entry_until: '11:30'
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:orb20_a
+    workbench:
+      parent: orb20_a
+      param: top_n+min_price
+      old: [20, 5.0]
+      new: [10, 20.0]
+      date: '2026-11-16'
+      note: 'combo of WB1 (top 10) + WB2 (price >= 20); own config'

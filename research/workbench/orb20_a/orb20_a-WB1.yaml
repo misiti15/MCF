@@ -1,0 +1,21 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent orb20_a; one change: top_n 20 -> 10. Educational only - not financial advice.
+strategies:
+  orb20_a-WB1:
+    enabled: false
+    class: orb20
+    variant: A
+    min_rvol: 1.5
+    top_n: 10
+    entry_until: '11:30'
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:orb20_a
+    workbench:
+      parent: orb20_a
+      param: top_n
+      old: 20
+      new: 10
+      date: '2026-11-16'
+      note: 'P4 stocks in play: top 20 -> top 10 by 09:30-09:49 rvol'
