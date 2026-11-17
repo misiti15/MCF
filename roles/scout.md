@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 07:20) Draft has try-counts (A2 N104 BAR90 2.74; A-WT N16 2.12). A-WT shrunk: CWT14 = CWT14SKIP closed, GEN = obs-genlate giveback. Lesson: grep research/ for prior studies BEFORE sizing a pool.
 - (11-17 05:20) A-WT: 'wrong time' = mostly late entries after early (09:35) moves, and half are really wrong-side; B dropped.
 - (11-17 03:20) Shortlist: A3 side x miss-reason counts in; B marked weak (stop-charge parity). Final after 11-18.
 - (11-17 01:30) Shortlist A detailed (Move Hunt: 62% blackout; ~13/day other movers, 14% caught, 80% start < 10:00). A2 needs per-decision rows (moves.py rows.parquet) or a Session replay. Use GLOSSARY names (Live / Shadow / Session replay / 2-year backtest).

@@ -51,6 +51,25 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  Owner-facing policy line (not ours to change): the earnings blackout hides ~60% of the day's biggest moves; FAMC is the
  guild's only measured window onto them.
 
+ **A-WT prior work (found 11-17 07:20 ET; it shrinks the row).** The two largest families in the pool already have answers:
+ - CWT14 (6 of 48): CWT14SKIP (Builder 11-09, research/cwt14skip) tested 'skip a failed-break long already >= X ATR below the
+   open'. It was CLOSED: half its skips were earnings days, and on the blackout-free pool t was 1.05 (lead-20261109-2100-1).
+ - GEN (10 of 48): obs-genlate (Observer 11-09) found that GEN's long loss is mostly giveback after +0.5R (49% of its long R).
+   Late buying is a slice owned by a few chase-conditioned GEN setups; it is an exits question first.
+ What is left that is new: RW7 (4), heat_fade (3) and the general 'entered after the extreme' pattern (25 vs 4).
+ So A-WT ranks BELOW A1/A2 unless A1 shows real moves remaining after 09:50.
+
+## Try-counts and bars (pre-registered here; Lead may reset a family before any look)
+BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln N))). MDE stated at score time as nothing above (bar + 0.84) x SE; smaller unknown.
+| row | configs | family (lineage) | N | BAR90 |
+|---|---|---|---|---|
+| A1 remaining move after 09:50 | 0 (descriptive) | none | - | - |
+| A2 09:50 precursors, 6 catalogue features x 2 sides | 12 | Move-Hunt / laggard catch-up 92 (incl. MH4, bdi1028) | 104 | 2.74 |
+| A3 setup-days estimate | 0 (descriptive) | none | - | - |
+| A-WT 'entered after the extreme' guard, 2 thresholds | 2 | entry-extension guards: CWT14 lineage 10 + obs-extension 4 | 16 | 2.12 |
+| C spotlight ranking input | 0 (descriptive) | none | - | - |
+Any scored row is checked against a same-minute random-name control and ex-market first, with gross before net.
+
 ## Candidate B — DROPPED (Lead lead-20261117-0500-2): stop-charge parity; the price path gains nothing.
 
 ## Candidate C — spotlight rotation input (keep only if it adds a ranking input rotation lacks: Lead) (owner arena rule, 2026-11-12; reps priority 1)
@@ -58,4 +77,4 @@ For the arena's every-4-session spotlight of the ~15 least-traded setups: rank c
 (REPS2: p_day = 1 - exp(-0.193 x lab trades/day)) x their lab quality (TRAIN / VALID ex-market, MDE). Descriptive, 0 configs;
 gives the rotation a list that maximises reps per spotlight slot.
 
-To finalise after 11-18: family try-counts and BAR90 per candidate, expected MDE, and REPS3's realised setup-days.
+To finalise after 11-18: REPS3's realised setup-days (try-counts and bars above).
