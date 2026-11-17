@@ -1771,5 +1771,11 @@
   "side": "short",
   "what": "10:30-15:00: a stock that gapped down 10%+ (no earnings within 4 days, 20-day ADV >= $20M) closed a 5-minute bar above VWAP during 09:35-10:30; from 10:30 the first close back below VWAP while below today's open; short, stop at the 09:30-10:30 high, hold to 15:55.",
   "account": "testingf"
+ },
+ "NM-ETF-late-dip-di-long-WB4": {
+  "name": "Late-Day ETF Dip Buy — WB4: more dips (refire, looser DI, falling-hour guard)",
+  "side": "long",
+  "what": "14:00-15:00: buy a sharp 15-min dip (3-bar drop of 0.75%+) in a volatile ETF when directional strength is not badly negative (DI diff >= -5) and the last hour is not falling more than 1%; re-fires after a 1-bar cooldown. Long, same exits as the parent.",
+  "account": "testinge"
  }
 }
