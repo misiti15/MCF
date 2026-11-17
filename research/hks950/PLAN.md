@@ -45,3 +45,11 @@ Lineage: IMOM (intraday time-of-day return prediction, 1 look) + these 2 = N 3. 
 Per-day SD of a random L-S: 2.92 bps in TRAIN and 3.27 in VALID, so SE is 0.19 / 0.22 bps. MDE80 is 0.54 / 0.62 bps, and the
 MDE at the bar is 0.42 / 0.48 bps. The test can see an effect far below cost, so power is not the risk; costs are.
 Null script (no signal): research/hks950/power_null.py.
+
+## Amendment 1 (2026-11-17 ~11:40 ET, before the real look; code only, no rule change)
+- Scorer: research/hks950/hks950.py. `--selftest` plants an 8 bps same-slot effect (found: VALID t +29.8, LEAD) and a 0 effect
+  (CLOSED, t +0.51), and checks that the first session has no signal (no look-ahead). Both the loop and the vectorized
+  versions give identical selftest numbers.
+- The shuffle control is drawn as iid random ranks within each (day, slot), which is equivalent to permuting the signal.
+- SPY up/down day = SPY close of the 15:30 bar / close of the 09:30 bar - 1 (from the 10:00 anchor). SPY is also one of the 512
+  names; it stays in the universe as written.
