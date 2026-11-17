@@ -28,9 +28,6 @@ on:
       chain_to:
         description: "2-year chunks: after this month, dispatch the next month until this one (YYYY-MM); empty = no chain"
         default: ""
-      replace:
-        description: "re-fetch sessions already on the release (true/false)"
-        default: "false"
 
 permissions:
   contents: write     # release assets + docs/live/storage.json
@@ -63,13 +60,9 @@ jobs:
           [ -n "$end" ] || [ -n "${{ inputs.start }}" ] || end=$(TZ=America/New_York date +%F)
           [ -n "$end" ] || end="$start"
           echo "start=$start" >> "$GITHUB_OUTPUT"; echo "end=$end" >> "$GITHUB_OUTPUT"
-          # sessions already published are skipped unless replace=true
-          : > on_release.txt
-          if [ "${{ inputs.replace }}" != "true" ]; then
-            gh api --paginate "repos/${{ github.repository }}/releases?per_page=100" \
-              --jq '.[] | select(.tag_name|startswith("bars-")) | .assets[].name' \
-              | sed -n 's/^1min-\([0-9-]*\)\.parquet$/\1/p' > on_release.txt || true
-          fi
+          # sessions already published (in their own tier's release) are skipped: nothing is ever overwritten or deleted
+          gh api --paginate --slurp "repos/${{ github.repository }}/releases?per_page=100" > rel0.json || echo "[]" > rel0.json
+          python -m mcf.replay.packs stored --releases rel0.json > on_release.txt
           echo "sessions $start..$end; $(wc -l < on_release.txt) already on a release"
       - name: Build and upload packs (one session at a time)
         env:
@@ -83,11 +76,14 @@ jobs:
             if grep -qx "$d" on_release.txt; then echo "$d already on the release"; continue; fi
             python -m mcf.replay.packs build --start "$d" --end "$d" --out packs_out || { echo "::warning::$d build failed"; continue; }
             [ -f "packs_out/1min-$d.parquet" ] || continue
-            tag="bars-${d:0:7}"
-            gh release view "$tag" > /dev/null 2>&1 || gh release create "$tag" --title "Live-session bars ${d:0:7}" \
-              --notes "RTH 1-minute SIP bars (split-adjusted) of the full live universe per session + daily bars (store-bars workflow, mcf/replay/packs.py). Research data. Educational only - not financial advice." \
+            tag=$(python -c "import sys; from mcf.replay import store; print(store.release_tag(sys.argv[1]))" "$d")
+            case "$tag" in bars2y-*) title="2-year history bars ${d:0:7} (point-in-time universe, weight 0.175)";;
+                           *) title="Live-session bars ${d:0:7}";; esac
+            gh release view "$tag" > /dev/null 2>&1 || gh release create "$tag" --title "$title" \
+              --notes "RTH 1-minute SIP bars (split-adjusted) per session + daily bars (store-bars workflow, mcf/replay/packs.py). Research data. Educational only - not financial advice." \
               --target "${{ github.sha }}" --latest=false
-            gh release upload "$tag" "packs_out/1min-$d.parquet" "packs_out/1day-$d.parquet" --clobber
+            gh release upload "$tag" "packs_out/1min-$d.parquet" "packs_out/1day-$d.parquet" \
+              || echo "::warning::$d upload refused (asset exists?) - nothing overwritten"   # never --clobber
             rm -f "packs_out/1min-$d.parquet" "packs_out/1day-$d.parquet"
           done
       - name: Capacity file (docs/live/storage.json)
@@ -115,22 +111,16 @@ jobs:
             # never share the Alpaca rate limit with the live keys around the session: the nightly run resumes
             echo "market-hours pause at $next: the 16:40 ET nightly run resumes the 2-year chain"
           elif [[ ! "$next" > "${{ inputs.chain_to }}" ]]; then
-            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}" -f replace="${{ inputs.replace }}"
+            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}"
             echo "dispatched $next (chain to ${{ inputs.chain_to }})"
           else echo "chain done at ${{ steps.days.outputs.end }}"; fi
       - name: Resume the 2-year history (nightly)
         if: (success() || failure()) && github.event_name == 'schedule'
         run: |
-          # first 2-year month (2024-09 .. 2026-10, locked months excluded) with no session on a release yet
-          gh api --paginate "repos/${{ github.repository }}/releases?per_page=100" \
-            --jq '.[] | select(.tag_name|startswith("bars-")) | .assets[].name' | sed -n 's/^1min-\([0-9-]*\)\.parquet$/\1/p' > have.txt || true
-          m=$(python -c "
-          import pandas as pd
-          have = {l[:7] for l in open('have.txt').read().split()}
-          for p in pd.period_range('2024-09', '2026-10', freq='M'):
-              m = p.strftime('%Y-%m')
-              if not ('2024-10' < m < '2025-03') and m not in have:
-                  print(m); break")
+          # first 2-year month (2024-09-16 .. 2026-10-05, locked block excluded) with a session missing (NYSE holidays aside)
+          gh api --paginate --slurp "repos/${{ github.repository }}/releases?per_page=100" > rel1.json || echo "[]" > rel1.json
+          python -m mcf.replay.packs stored --releases rel1.json > have.txt
+          m=$(python -m mcf.replay.packs resume --have have.txt)
           if [ -n "$m" ]; then
             s="$m"; [ "$m" = "2024-09" ] && s="2024-09-16"
             gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$s" -f end="$m" -f chain_to="2026-10"

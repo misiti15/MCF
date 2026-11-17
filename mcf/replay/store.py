@@ -80,7 +80,10 @@ _PACK_MISS: set = set()
 
 
 def release_tag(d) -> str:
-    return f"bars-{_d(d):%Y-%m}"
+    """bars-<YYYY-MM> for live sessions; bars2y-<YYYY-MM> for the "2-year history" tier (point-in-time universe).
+    (bars-2024-09 / bars-2024-10 hold 6 early packs built with today's universe before the point-in-time rebuild; they
+    are superseded, never read, and left in place - nothing is ever deleted or overwritten.)"""
+    return f"bars-{_d(d):%Y-%m}" if _d(d) >= PACK_START else f"bars2y-{_d(d):%Y-%m}"
 
 
 def pack_name(d, kind: str = "1min") -> str:
