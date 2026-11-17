@@ -15,6 +15,7 @@ def _testing_strategies(monkeypatch):
     from mcf.config import load_config
     from mcf.strategies.setups import build_strategies
 
+    monkeypatch.setenv("MCF_ASOF", "2026-11-17")     # the blocks as defined (outside the GY-BENCH 11-18..11-24 window)
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
     out = {s.name: s for s in build_strategies(load_config())}
     monkeypatch.setenv("MCF_ACCOUNT", "graveyard")   # LIQ-orl: Testing 2 2026-10-20, Graveyard account 2026-10-21 (owner)

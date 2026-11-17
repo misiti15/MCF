@@ -40,13 +40,26 @@ LOWREP_ACCOUNTS = ("explore1", "livelab")
 
 
 def no_leaderboard(entry: dict) -> bool:
-    """Owner 2026-11-04: a setup live only in Testing B / Testing C (explore1 / livelab) that came from the Graveyard stays off the leaderboard."""
+    """Owner 2026-11-04: a setup live only in Testing B / Testing C (explore1 / livelab) that came from the Graveyard stays off the leaderboard.
+    A Graveyard GUEST (GY-BENCH, entry "guest") coming home is not Graveyard-origin: it stays on the leaderboard."""
     here, came = entry.get("accounts") or [], entry.get("from") or []
+    if (entry.get("guest") or {}).get("account") == "graveyard":
+        return False
     return bool(here) and set(here) <= set(LOWREP_ACCOUNTS) and "graveyard" in came
 
 
-def _strategies() -> dict[str, dict]:
-    """account -> its merged `strategies` block, exactly as the live runner loads it (default.yaml + account overlay)."""
+def next_session(now: datetime | None = None) -> str:
+    """The session a change stamped `now` (ET) applies to: today before 16:00 on a weekday, else the next weekday."""
+    now = now or datetime.now(ZoneInfo("America/New_York"))
+    d = now.date()
+    if d.weekday() >= 5 or (now.hour, now.minute) >= (16, 0):
+        d = _wd(d, 1)
+    return d.isoformat()
+
+
+def _strategies(asof: str | None = None) -> dict[str, dict]:
+    """account -> its merged `strategies` block, exactly as the live runner loads it (default.yaml + account overlay),
+    with the date-scoped rotation (mcf/rotation.py: benched / guest windows) resolved for session `asof`."""
     from ..config import load_config
 
     old = os.environ.get("MCF_ACCOUNT")
@@ -54,7 +67,7 @@ def _strategies() -> dict[str, dict]:
     try:
         for a in ACCOUNTS:
             os.environ["MCF_ACCOUNT"] = a
-            out[a] = load_config().get("strategies") or {}
+            out[a] = load_config(asof=asof).get("strategies") or {}
     finally:
         if old is None:
             os.environ.pop("MCF_ACCOUNT", None)
@@ -63,9 +76,9 @@ def _strategies() -> dict[str, dict]:
     return out
 
 
-def current(strategies: dict | None = None) -> dict[str, list[str]]:
+def current(strategies: dict | None = None, asof: str | None = None) -> dict[str, list[str]]:
     """account -> sorted enabled setups, exactly as the live runner loads them (default.yaml + account overlay)."""
-    strategies = strategies if strategies is not None else _strategies()
+    strategies = strategies if strategies is not None else _strategies(asof)
     return {a: sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("enabled")) for a, st in strategies.items()}
 
 
@@ -104,17 +117,54 @@ def sessions_around(since: str | None) -> tuple[str | None, str | None]:
     return _wd(first, -1).isoformat(), first.isoformat()
 
 
-def build(prev: dict | None = None, now: datetime | None = None) -> dict:
+def windows(strategies: dict) -> dict[str, dict]:
+    """setup -> {"benched": {account, from, until, reason}} / {"guest": {account, home, from, until}} from the configs'
+    date-scoped rotation keys (whatever the date), so the dashboard can say "benched to <date>" / "guest until <date>"."""
+    out: dict[str, dict] = {}
+    for a, st in strategies.items():
+        for k, v in st.items():
+            if not isinstance(v, dict):
+                continue
+            b, g = v.get("benched"), v.get("guest")
+            if isinstance(b, dict) and not b.get("away"):
+                out.setdefault(k, {})["benched"] = {"account": a, "from": str(b.get("from")), "until": str(b.get("until")),
+                                                    "reason": b.get("reason")}
+            if isinstance(g, dict):
+                out.setdefault(k, {})["guest"] = {"account": a, "home": g.get("home"), "from": str(g.get("from")),
+                                                  "until": str(g.get("until"))}
+    return out
+
+
+def resting(strategies: dict, asof: str | None) -> dict[str, str]:
+    """setup -> its account, for setups benched (resting, not away) on session `asof`: still assigned there (record and
+    leaderboard row kept, shown with its `benched` window) though the runner leaves them out that session."""
+    from ..rotation import in_window, session_date
+
+    d = session_date(asof)
+    return {k: a for a, st in strategies.items() for k, v in st.items()
+            if isinstance(v, dict) and isinstance(v.get("benched"), dict) and not v["benched"].get("away")
+            and in_window(v["benched"], d)}
+
+
+def setup_accounts(acc: dict[str, list[str]], rest: dict[str, str], name: str) -> list[str]:
+    """Where `name` is assigned: the accounts that run it this session, plus its own account while it is benched."""
+    return sorted({a for a, v in acc.items() if name in v} | ({rest[name]} if name in rest else set()))
+
+
+def build(prev: dict | None = None, now: datetime | None = None, asof: str | None = None) -> dict:
     now = now or datetime.now(ZoneInfo("America/New_York"))
     stamp = now.strftime("%Y-%m-%d %H:%M ET")
-    strat = _strategies()
+    asof = asof or next_session(now)
+    strat = _strategies(asof)
+    win = windows(strat)
+    rest = resting(strat, asof)
     acc = current(strat)
     split = splits(strat)
     prev = prev or {}
     pset = {k: set(v.get("accounts", [])) for k, v in (prev.get("setups") or {}).items()}
     setups, changes = {}, []
-    for name in sorted({s for v in acc.values() for s in v} | set(pset)):
-        here = sorted(a for a, v in acc.items() if name in v)
+    for name in sorted({s for v in acc.values() for s in v} | set(pset) | set(rest)):
+        here = setup_accounts(acc, rest, name)
         before = pset.get(name)
         old = (prev.get("setups") or {}).get(name) or {}
         if before is None or before != set(here):
@@ -127,6 +177,7 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
         if setups[name].get("from") and setups[name].get("since"):
             lo, fi = sessions_around(setups[name]["since"])
             setups[name]["last_old_session"], setups[name]["first_session"] = lo, fi
+        setups[name].update(win.get(name) or {})
         if no_leaderboard(setups[name]):
             setups[name]["no_leaderboard"] = True
         if name in split:
@@ -137,12 +188,12 @@ def build(prev: dict | None = None, now: datetime | None = None) -> dict:
         last = {"at": stamp, "changes": changes}
     return {"note": "Live setup assignments from the configs; updated with every promotion / demotion / move. "
                     "Educational only - not financial advice.",
-            "accounts": acc, "labels": ACCOUNTS, "setups": setups, "last_change": last}
+            "asof_session": asof, "accounts": acc, "labels": ACCOUNTS, "setups": setups, "last_change": last}
 
 
-def write(seed: dict | None = None, now: datetime | None = None) -> dict:
+def write(seed: dict | None = None, now: datetime | None = None, asof: str | None = None) -> dict:
     prev = json.loads(OUT.read_text()) if OUT.exists() else None
-    d = build(prev, now)
+    d = build(prev, now, asof)
     if seed:
         d.update(seed.get("top", {}))
         for k, v in (seed.get("setups") or {}).items():
@@ -157,8 +208,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--at", help="effective time 'YYYY-MM-DD HH:MM' (ET) for the stamp; default now. A move stamped at "
                                  "or after 16:00 shows on the dashboard as taking effect the next session.")
+    ap.add_argument("--asof", help="session date YYYY-MM-DD the assignments are resolved for (benched / guest windows); "
+                                   "default: today before 16:00 ET on a weekday, else the next weekday")
     a = ap.parse_args()
     at = datetime.strptime(a.at, "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/New_York")) if a.at else None
-    d = write(now=at)
+    d = write(now=at, asof=a.asof)
     print(json.dumps(d.get("last_change"), indent=1))
     sys.exit(0)

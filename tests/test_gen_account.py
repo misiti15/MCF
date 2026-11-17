@@ -46,8 +46,10 @@ def test_only_gen_setups_run(monkeypatch):
     for f in ("config/default.yaml", *sorted(str(p.relative_to(ROOT)) for p in (ROOT / "config").glob("account_*.yaml")
                                                 if p.name != "account_gen.yaml")):
         other = yaml.safe_load((ROOT / f).read_text())["strategies"] or {}
-        assert not (on & {k for k, v in other.items() if (v or {}).get("enabled")}), f   # one home: graduates are off here
-    assert sorted(cfg["live"]["setup_order"]) == sorted(s.name for s in st)
+        # GY-BENCH guests (mcf/rotation.py) run elsewhere only inside their window, while benched away here
+        assert not (on & {k for k, v in other.items() if (v or {}).get("enabled") and not (v or {}).get("guest")}), f   # one home
+    away = set((cfg.get("rotation") or {}).get("away") or {})
+    assert sorted(cfg["live"]["setup_order"]) == sorted({s.name for s in st} | away)
 
 
 def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
@@ -69,7 +71,7 @@ def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
 def test_other_accounts_unchanged_by_the_loader(monkeypatch):
     for acct in ("primary", "testing", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
-        assert not any(k.startswith("GEN-") for k in cfg["strategies"])
+        assert not any(k.startswith("GEN-") and not (v or {}).get("guest") for k, v in cfg["strategies"].items())   # GY-BENCH guests only
     # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen;
     # testing arena (owner 2026-11-12): Testing A-F + Gen are one arena, so Testing A (testing2) takes Gen moves too (ROT1)
     gen = _cfg(monkeypatch, "gen")["strategies"]

@@ -59,6 +59,20 @@ def setup_lot_caps(cfg: dict) -> dict[str, int]:
     return out
 
 
+def setup_loss_limits(cfg: dict) -> dict[str, float | None]:
+    """setup -> its own daily loss stop in R (GY-BENCH, owner 2026-11-16): a block that sets `max_setup_daily_loss_r`
+    (a number, or null = no per-setup stop) overrides account.max_setup_daily_loss_r for that setup only. Used for
+    guests that keep their home account's rule (e.g. a Testing setup trading in the Graveyard)."""
+    return {str(k): (float(v["max_setup_daily_loss_r"]) if v["max_setup_daily_loss_r"] else None)
+            for k, v in (cfg.get("strategies") or {}).items() if isinstance(v, dict) and "max_setup_daily_loss_r" in v}
+
+
+def setup_cost_limits(cfg: dict) -> dict[str, float | None]:
+    """setup -> its own cost filter (live.max_stop_cost_r) when its block sets `max_stop_cost_r` (null = none)."""
+    return {str(k): (float(v["max_stop_cost_r"]) if v["max_stop_cost_r"] else None)
+            for k, v in (cfg.get("strategies") or {}).items() if isinstance(v, dict) and "max_stop_cost_r" in v}
+
+
 SETUP_LOT_CAP = "max lots per symbol for this setup"
 
 
@@ -82,18 +96,25 @@ class RiskManager:
         # owner 2026-10-19 evening: a setup takes no new entries today once its net realized R <= -limit (absent = off)
         lim = self.a.get("max_setup_daily_loss_r")
         self.setup_loss_limit = float(lim) if lim else None
+        self.setup_loss_limits = setup_loss_limits(cfg)   # per-setup override (guests keep their home rule)
+        self.setup_cost_limits = setup_cost_limits(cfg)   # per-setup live.max_stop_cost_r override (runner)
         # LR3: the account halt also counts the open lots' marks (state.open_r); set by the runner for the accounts in
         # account.loss_stops_cost_r_accounts (whose realized R is then R after costs too)
         self.include_open = False
         self.state = RiskState()
 
+    def loss_limit_for(self, setup: str) -> float | None:
+        """The daily loss stop (R) that applies to `setup`: its own block's, else the account's (None = off)."""
+        return self.setup_loss_limits.get(setup, self.setup_loss_limit)
+
     def latch_setup_losses(self, by: dict[str, float] | None = None):
         """Stop for the day every setup whose net realized R today is at or below -max_setup_daily_loss_r (`by`: a
         running total to check, e.g. after each restored trade; default the current totals). Latched: never undone."""
-        if self.setup_loss_limit is None:
+        if self.setup_loss_limit is None and not self.setup_loss_limits:
             return
         for k, v in (self.state.realized_r_by_strategy if by is None else by).items():
-            if v <= -self.setup_loss_limit:
+            lim = self.setup_loss_limits.get(k, self.setup_loss_limit)
+            if lim is not None and v <= -lim:
                 self.state.setup_stopped.add(k)
 
     def open_lots(self) -> int:
@@ -120,7 +141,7 @@ class RiskManager:
         if s.realized_r + (s.open_r if self.include_open else 0.0) <= -self.a["max_daily_loss_r"]:
             s.halted = True
             return False, "daily loss limit"
-        if self.setup_loss_limit is not None:
+        if self.setup_loss_limit is not None or self.setup_loss_limits:
             self.latch_setup_losses()
             if sig.strategy in s.setup_stopped:
                 return False, "setup daily loss limit"

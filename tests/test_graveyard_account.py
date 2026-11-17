@@ -72,12 +72,15 @@ def test_only_its_own_setups_run(monkeypatch):
     from mcf.strategies.setups import build_strategies
 
     cfg = _cfg(monkeypatch)
-    own = set(yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"])
+    raw = yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"]
+    guests = {k for k, v in raw.items() if v.get("guest")}                   # GY-BENCH guests (11-18..11-24 only)
+    own = set(raw) - guests
+    rot = cfg["rotation"]
     on = _on(cfg)
-    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE and on == own - set(MOVED_OUT)
+    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE and on == (own - set(MOVED_OUT) - set(rot["benched"])) | set(rot["guests"])
     st = build_strategies(cfg)
     assert {s.name for s in st} == on
-    assert sorted(cfg["live"]["setup_order"]) == sorted(on)                  # every setup has a priority
+    assert sorted(cfg["live"]["setup_order"]) == sorted((own - set(MOVED_OUT)) | guests)   # every setup has a priority
 
 
 def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
@@ -145,4 +148,8 @@ def test_dashboard_and_assignments_know_the_graveyard():
     assert 'graveyard: ["Graveyard", "mcf-data-graveyard"], livelab:' in html   # leaderboard (+ 3 accounts 2026-11-03)
     assert A.ACCOUNTS.get("graveyard") == "Graveyard"
     d = json.loads(A.OUT.read_text())
-    assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == (MOVED_T1 | MOVED_T2 | MOVED_TE) - set(MOVED_OUT)
+    st = A._strategies(d.get("asof_session"))["graveyard"]                   # GY-BENCH: resolved for the file's session
+    bench = set(A.resting({"graveyard": st}, d.get("asof_session")))
+    guests = {k for k, v in st.items() if isinstance(v, dict) and v.get("guest") and v.get("enabled")}
+    assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == \
+        ((MOVED_T1 | MOVED_T2 | MOVED_TE) - set(MOVED_OUT) - bench) | guests

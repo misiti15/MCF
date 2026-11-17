@@ -373,7 +373,7 @@ window.MCF_TOTALS = (() => {
     const ACC = { primary: "Primary", testing: "On Deck", testing2: "Testing A", gen: "Generator", graveyard: "Graveyard", livelab: "Testing C", explore1: "Testing B",
       testingd: "Testing D", testinge: "Testing E", testingf: "Testing F" };
     const where = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length ? a.map(x => ACC[x] || x).join(" + ") : "not running"; };
-    const gy = id => { const a = (((asg || {}).setups || {})[id] || {}).accounts || []; return a.length > 0 && a.every(x => x === "graveyard"); };
+    const gy = id => { const s = ((asg || {}).setups || {})[id] || {}; const a = s.accounts || []; return a.length > 0 && a.every(x => x === "graveyard") && !s.guest; };   // GY-BENCH guests are not Graveyard setups
     // closed sessions = dates the EOD scorecards cover (today's intraday numbers stay out until the report lands)
     const daily = {};   // setup -> date -> [trades, R, pnl]  (owner 2026-11-03: streaks / trends judged and shown in R, not P/L)
     let lastClosed = "";
