@@ -1,13 +1,13 @@
 {
- "updated": "2026-11-17T05:00-05:00",
+ "updated": "2026-11-17T07:00-05:00",
  "session": "2026-11-17",
- "headline": "Move Hunt counts: Live catches ~1.8 of ~13 addressable big moves a day. The two biggest pools are 'right name, wrong time' (4.4/day) and 'no setup' (3.5/day), split long and short.",
+ "headline": "Skeptic caught a date bug in the earnings-blackout look before any outcome was read; the fix lands first, then it runs tonight after FWDCAL.",
  "bullets": [
-  "Earnings-blackout moves (~31/day) sit outside Live by owner policy. Observer gets a descriptive look (BLKOUT, 0 configs) at what the blackout costs or saves, with a spread-cost check before any claim.",
+  "BLKOUT (earnings-blackout look, descriptive): plan frozen; Skeptic found day counts across the locked-block gap would leak event trades into the control. Fix: drop trades within 10 sessions of the block edges; no block data in any form.",
+  "Move Hunt 'wrong time' pool: mostly Live arriving after an early move had finished (median move start 09:35, before the owner's 09:50 line), and 22 of 48 were really wrong side. Only what remains after 09:50 gets tested.",
   "Stop widening closed: price path gains nothing (gross t 0.98); the small gain is avoided stop charges, ~0.089R per stop in the 2-year backtest vs ~0.09-0.10R Live, so Live should save about the same.",
   "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R.",
-  "Tue 11-17 after 16:30 ET: FWDCAL fresh Session-replay check on 11-16..11-17. It is read against the pre-registered audit and the owner's 11-16 weight tiers (0.35 at >= 98% match, 0.2 at 95-98%, 0 below). D3 is now decided by the owner.",
-  "Found in the effective-sessions code (owner's): the R-bias limit only checks the optimistic side, while the owner text says +/-0.01R. FYI to the owner tonight, plus one question on 'uncalibrated' vs measured failures."
+  "Tue 11-17 after 16:30 ET: FWDCAL fresh Session-replay check on 11-16..11-17. It is read against the pre-registered audit and the owner's 11-16 weight tiers (0.35 at >= 98% match, 0.2 at 95-98%, 0 below). D3 is now decided by the owner."
  ],
  "progress": {
   "ideas": 77,
@@ -18,11 +18,11 @@
  },
  "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
  "by_role": {
-  "scout": "A3 counts by side / reason; final after 11-18.",
-  "builder": "FWDCAL tier lines via owner's tier(); ready for tonight.",
-  "skeptic": "Pre-attacked BLKOUT (coverage, timing, event-day costs).",
-  "observer": "BLKOUT approved (descriptive, after FWDCAL).",
-  "lead": "Approved BLKOUT; 'wrong time' row for Scout."
+  "scout": "Wrong-time pool is mostly pre-09:50.",
+  "builder": "Tonight: guard -> FWDCAL -> BLKOUT (after sign-off) -> FAMC.",
+  "skeptic": "Found the block-gap day-count bug before scoring.",
+  "observer": "BLKOUT plan frozen; amending date bug.",
+  "lead": "Chose the no-block-data fix; BLKOUT may slip a night."
  },
  "disclaimer": "Educational only — not financial advice."
 }
