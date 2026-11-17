@@ -237,3 +237,4 @@
 - Run 58 (11-15 16:58): FWDCAL moved to Tue 11-17 (window ends 11-17; Skeptic journal_guard hole); 3 guard refusals asked of Builder.
 - Run 59 (11-15 19:00): guard signed off; FWDCAL cleared for Tue; past-window hardening asked (non-blocking).
 - Run 60 (11-15 21:00): guard hardening verified; never-loosen standard; quiet until Monday scores.
+- Run 61 (11-16 23:00): Monday three CLOSED; gross-R check asked; MOMSIDE-LIVE parked; Scout shortlist asked.

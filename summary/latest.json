@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-15T21:00-05:00",
- "session": "2026-11-15",
- "headline": "Prep is done: both replay date guards are hardened and verified; Monday's three scores and Tuesday's FWDCAL check are cleared.",
+ "updated": "2026-11-16T23:00-05:00",
+ "session": "2026-11-16",
+ "headline": "Monday's three pre-registered studies are closed on the numbers: momentum side filter, size-based stop width and dip-then-turn mornings show no edge at the bar. Each closure states the smallest effect it could have seen.",
  "bullets": [
-  "Scout and Observer added pre-registered reading tables (each outcome pattern -> meaning -> next step) to SIZESTOP, DIPTURN and the MOMSIDE live check.",
-  "Builder's four scorers print every audit item Skeptic asked for; Skeptic re-ran the self-tests and verified them.",
-  "Date guards hardened: the replay (11 planted self-tests) and REPS3 both refuse a dead or pre-close end-of-day job; Skeptic verified. Friday's audit stays valid under the stricter rule.",
-  "Monday 11-16 after 16:30: MOMSIDE -> SIZESTOP -> DIPTURN. FWDCAL moves to Tuesday 11-17, after its date guard is fixed and signed off.",
+  "MOMSIDE (skip trades against 12-month momentum): t 0.96 vs bar 2.91; all of it is one up-market cell, and the forward window reverses (-723R). Nothing above 0.025R per skipped trade.",
+  "SIZESTOP (wider stops on big-gap days): no better than widening on random days; nothing above 0.004R per changed trade. Gross-R check asked: the small net gain may just be lower cents-per-R costs.",
+  "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R.",
+  "Tomorrow (Tue 11-17) after 16:30 ET: FWDCAL fresh live-replay check on 11-16..11-17 (guards signed off); then one owner PR with all four results and the D3 decision.",
   "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
  ],
  "progress": {
   "ideas": 77,
-  "tested": 72,
-  "configs": 164,
+  "tested": 75,
+  "configs": 172,
   "passed": 0,
   "forward": 1
  },
- "next": "Mon 11-16 16:30 ET: MOMSIDE, SIZESTOP, DIPTURN scores. Tue 11-17: FWDCAL fresh audit (after guard fix), then D3 to the owner.",
+ "next": "Tue 11-17 16:30 ET: FWDCAL fresh audit -> owner PR (4 results + D3). Wed 11-18: REPS3 + ICCSET, then Scout's ranked shortlist.",
  "by_role": {
-  "scout": "REPS3 pre-close refusal; corrected own claim.",
-  "builder": "Past-window hardening in (11 selftests).",
-  "skeptic": "Verified hardening; nothing more before Tuesday.",
-  "observer": "One shared reader for all bars; MOMSIDE-LIVE reading table.",
-  "lead": "Adopted the 'wait, never loosen' standard; board quiet until scores."
+  "scout": "Plans held; next: REPS3 + ranked shortlist.",
+  "builder": "Scored MOMSIDE, SIZESTOP, DIPTURN once each.",
+  "skeptic": "Audited all three; flagged a cost-per-R artefact in stop widening.",
+  "observer": "MOMSIDE-LIVE parked (same calendar as FWD); FAMC nightly.",
+  "lead": "Closed the three; set Tuesday/Wednesday."
  },
  "disclaimer": "Educational only — not financial advice."
 }
