@@ -8,8 +8,9 @@ dispatch at 14:49 ET. Every safety net was a cron line, so one scheduler outage 
 This module lets a running job start its own successor with workflow_dispatch (GITHUB_TOKEN, `actions: write`; a
 workflow_dispatch made with GITHUB_TOKEN does start a run), so a hand-over no longer depends on cron:
 
-  * trade.yml - each account's job starts `handover trade --account X --wait-until <job start + 340 min>` in the
-    background of its Trade step. At that moment, if the job's own 355-min limit falls before 15:50 ET and no other
+  * trade.yml - each account's job starts `handover trade --account X --wait-until <job start + 327 min>` in the
+    background of its Trade step (HK-FLAT-1113: before `mcf live` stops entries and pushes at limit - 20 min). At
+    that moment, if the job stops (limit - 20 min) before 15:50 ET and no other
     trade run has a queued/pending job for this account, it dispatches trade.yml once. The new run's job waits in the
     account's concurrency group and starts the moment the old job ends. Accounts are staggered (30 s each) and re-check
     before dispatching, so 7 jobs ending together send one dispatch.
@@ -75,13 +76,16 @@ def account_covered(account: str, runs: list[dict], jobs: dict, own_run_id) -> b
 
 
 def decide_trade(now: pd.Timestamp, job_end: pd.Timestamp, account: str, runs: list[dict], jobs: dict, own_run_id,
-                 dispatches_today: int) -> dict:
-    """Pure: should this account's job dispatch its successor now? job_end = when the 355-min limit kills it."""
+                 dispatches_today: int, stop_lead_min: float = 0) -> dict:
+    """Pure: should this account's job dispatch its successor now? job_end = when the 355-min limit kills it;
+    stop_lead_min = how long before that the job stops trading (HK-FLAT-1113: 20 min, session.FINAL_PUSH_LEAD_MIN), so a
+    successor is needed whenever the job STOPS before 15:50 ET."""
     now, job_end = now.tz_convert(NY), job_end.tz_convert(NY)
+    stop = job_end - pd.Timedelta(minutes=stop_lead_min)
     out = {"at": str(now), "account": account, "job_end": str(job_end), "action": "none", "reasons": []}
     if now.weekday() >= 5:
         out["reasons"].append("weekend")
-    elif job_end.date() != now.date() or job_end.time() >= TRADE_END:
+    elif stop.date() != now.date() or stop.time() >= TRADE_END:
         out["reasons"].append("job limit falls after 15:50 ET: no successor needed")
     elif account_covered(account, runs, jobs, own_run_id):
         out["reasons"].append("a successor is already queued")
@@ -184,7 +188,10 @@ def run_trade(account: str, job_start: int, limit_min: int, lead_min: int, ref: 
     runs = _runs_today("trade.yml", now)
     jobs = {r["id"]: (sg._gh(f"/actions/runs/{r['id']}/jobs?per_page=50") or {}).get("jobs", [])
             for r in runs if r.get("status") in ACTIVE and r.get("id") != int(os.environ.get("GITHUB_RUN_ID", "0"))}
-    d = decide_trade(now, job_end, account, runs, jobs, int(os.environ.get("GITHUB_RUN_ID", "0")), bot_dispatches(runs))
+    from .session import FINAL_PUSH_LEAD_MIN
+
+    d = decide_trade(now, job_end, account, runs, jobs, int(os.environ.get("GITHUB_RUN_ID", "0")), bot_dispatches(runs),
+                     FINAL_PUSH_LEAD_MIN)
     d["mode"] = mode
     if d["action"] == "dispatch" and mode == "act":
         _dispatch("trade.yml", _ref(ref), {"dry_run": "false"})
@@ -244,7 +251,9 @@ def main(argv=None):
     t.add_argument("--account", required=True)
     t.add_argument("--job-start", type=int, required=True, help="epoch seconds when the job started")
     t.add_argument("--limit-min", type=int, default=355)
-    t.add_argument("--lead-min", type=int, default=15)
+    # HK-FLAT-1113: 28 min (+ up to 4.5 min stagger), so the successor is queued before the job stops entries and pushes at limit - 20 min (the
+    # job then ends early and GitHub kills this background helper with it)
+    t.add_argument("--lead-min", type=int, default=28)
     h = sub.add_parser("hunch", help="dispatch hunch.yml when no hunch run is queued / in progress")
     h.add_argument("--relay", action="store_true", help="called from a hunch run that is ending (ignore own run)")
     e = sub.add_parser("eod", help="after the closing trade run: dispatch eod.yml unless EOD already ran / is running")
