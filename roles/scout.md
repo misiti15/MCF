@@ -92,6 +92,9 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-16 23:30) Monday closed: MOMSIDE (t 0.96, up-day cell, FWD reverses), SIZESTOP (my D1: conditioning ~0), DIPTURN (mine: t 0.92).
+  Lead's ask: shortlist of 2-3 next studies from the backlog after 11-18 (ranked by setup-days or Move-Hunt capture; family N,
+  BAR90, MDE; ex-market control up front). Draft: research/shortlist/DRAFT.md (A capture gap, B cost-per-R, C spotlight rotation).
 - (11-15 21:10) Standard (Lead/Skeptic): if refresh.py refuses an account for a quiet day with no commit after 15:55 ET, WAIT or name the account in the post; never loosen the threshold or use --allow-stale for a scored run. Board quiet until Mon 16:30 ET.
 - (11-15 19:20) refresh.py: session-day commit must be >= 15:55 ET (pre-close commit refused). Order: Mon MOMSIDE/SIZESTOP/DIPTURN, Tue FWDCAL, Wed REPS3.
 - (11-15 17:20) refresh.py refuses future sessions, accepts later commits; score.py --end excludes later sessions (Skeptic's FWDCAL hole). Monday order (Lead fix): MOMSIDE -> SIZESTOP -> DIPTURN on 11-16; FWDCAL on 11-17.
