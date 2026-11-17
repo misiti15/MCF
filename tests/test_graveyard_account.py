@@ -58,7 +58,8 @@ def test_caps_lower_than_testing(monkeypatch):
     assert a["slots"] == a["max_concurrent_positions"] == 300 and a["buying_power_multiple"] == 1.6
     assert a["max_positions_per_strategy"] == 75
     assert a["max_trades_per_day"] < t2["max_trades_per_day"]
-    assert a["risk_per_trade_pct"] == _cfg(monkeypatch, "testing2")["account"]["risk_per_trade_pct"]
+    # TSZ1 2026-11-17: Testing A-F moved to 0.125% (ledger 2026-11-16-tsz1-testing-sizing); the Graveyard stays with On Deck
+    assert a["risk_per_trade_pct"] == _cfg(monkeypatch, "testing")["account"]["risk_per_trade_pct"] == 0.25
     assert a["max_setup_daily_loss_r"] == 2.0 and a["max_daily_loss_r"] == 120
     assert live["block_twin_same_symbol"] is True
     assert live["scale_out_max_per_day"] == 0
