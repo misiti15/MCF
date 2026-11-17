@@ -141,7 +141,7 @@ def cmd_live(args, cfg):
     """One CI slot of the live paper session (see mcf/execution/session.py)."""
     load_dotenv()
     from .execution.runner import PaperRunner
-    from .execution.session import NY, Publisher, job_deadline, prep
+    from .execution.session import NY, Publisher, flatten_only, job_deadline, prep
 
     now = pd.Timestamp.now(tz=NY)
     until = job_deadline(now, cfg.get("live", {}), os.environ.get("MCF_JOB_T0"))   # HK-FLAT-1113: by job limit - 20 min
@@ -198,6 +198,9 @@ def cmd_live(args, cfg):
                          on_status=on_status)
     if cfg.get("live", {}).get("log_poll_inputs", True):
         runner.poll_log_dir = os.path.join(args.state_dir, "polls")
+    runner.flatten_only = flatten_only(now)   # HK-FLAT-1113b: 15:50-16:05 ET start: no entries, closing flatten only
+    if runner.flatten_only:
+        print(f"{slot}: started {now:%H:%M} ET (15:50 or later): no new entries, closing flatten only")
     runner.kill_git_dir = args.state_dir   # LR4: the kill flag (mcf-control branch) is read through this checkout
     if eb is not None:
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],

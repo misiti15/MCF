@@ -25,6 +25,12 @@ NY = "America/New_York"
 
 JOB_LIMIT_MIN = 355          # trade.yml timeout-minutes: GitHub kills the job here
 FINAL_PUSH_LEAD_MIN = 20     # HK-FLAT-1113: stop new entries and push journal + status this long before the limit
+FLATTEN_ONLY_FROM = "15:50"  # HK-FLAT-1113b: a job started from here on takes no new entries, it only runs the close
+LATEST_START = "16:05"       # ... and may still start until close + 5 min (LR7 flatten retry deadline)
+
+
+def flatten_only(now: pd.Timestamp) -> bool:
+    return now.time() >= t(FLATTEN_ONLY_FROM)
 
 
 def job_deadline(now: pd.Timestamp, live: dict, job_t0: float | None = None) -> pd.Timestamp | None:
@@ -34,7 +40,7 @@ def job_deadline(now: pd.Timestamp, live: dict, job_t0: float | None = None) -> 
     could end after the job's 355-min limit and GitHub killed the job before its final journal/status push. With the
     job's own start time (`job_t0`, epoch seconds; trade.yml MCF_JOB_T0) the slot also ends by
     job start + JOB_LIMIT_MIN - FINAL_PUSH_LEAD_MIN, leaving 20 min to stop entries, reconcile, push and hand over."""
-    if now.weekday() >= 5 or not (t(live.get("start_from", "08:00")) <= now.time() < t("15:50")):
+    if now.weekday() >= 5 or not (t(live.get("start_from", "08:00")) <= now.time() < t(LATEST_START)):
         return None
     until = now + pd.Timedelta(minutes=live.get("max_job_minutes", 340))
     if job_t0:
