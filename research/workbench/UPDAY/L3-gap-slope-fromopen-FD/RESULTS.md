@@ -57,14 +57,30 @@ replay +0.167 / w/o best day +0.111 (−0.023 vs WB4: fails the guard), 2-year �
 - Replay has only 8 up sessions; the up-day gain there (−15.0R → −0.3R) rests on few days. The 2-year gain is broad (t 2.77).
 - The 09:50→16:00 day label is for reporting; every gate/exit uses only SPY data known at that minute (09:50 anchor, entry anchor).
 - The replay uses Primary's book (≤ 30 lots, ≤ 3 per symbol, −2R latch) for every config; testing accounts differ.
-- **Not deployable today without code:** the runner has no SPY-since-entry exit and lab context has no SPY-since-09:50 column
-  (only `spy_fo`, anchored to the open — owner direction rule forbids it). Build items (backlog, not done here): (1) lab
-  context column `spy_950` (SPY % since the 09:50 close, point-in-time), (2) a per-setup runner exit `spy_exit_pct: 0.30`
-  (market exit at the next poll once SPY is +x% above its price at entry, shorts). Then WB5 = parent + `spy_exit_pct: 0.30`
-  + module mask `not (spy_950 > 0.15 and tod > 1200)`.
+- **Not deployable today without code:** the runner has no SPY-since-entry exit (see "Runner spec" below). The entry part
+  does NOT need new code: SPY % since the 09:50 close can be derived in a lab module from the existing `spy_fo` context column
+  ((1 + spy_fo_now/100) / (1 + spy_fo_0950/100) − 1; the open anchor cancels — RW3-WB3's module already does this), so a
+  `spy_950` column is optional (convenience/clarity only).
 - Rule changes inside the replay window (ledger): LR1/LR3/LR5/LR7 + LR8 cost model (11-12), Primary −2R latch (10-29), Primary
   cap 30 (10-28), moves Testing 1 ↔ Primary (10-20, 10-22, 10-30), TEAM-6 (11-11). The replay applies today's rules to every
   session for every config, so they do not mix into the comparison.
+
+## Runner spec — what WB5 needs (UPDAY 2026-11-17; research spec, not built)
+1. **SPY-since-entry exit (required).** New optional per-setup keys `spy_exit_pct: float | null` (default null = off) and
+   `spy_exit_only_losing: bool` (default false). Signal → managed lot carries them like `time_stop_min` (mcf/strategies/base.py
+   `Signal`, LabStrategy config passthrough; runner `managed` dict keys at runner.py ~423 / ~1453). At entry fill the runner
+   stores `spy0` = SPY's last 1-min close at the entry minute. In the managed-lot loop (runner.py ~745, next to the time stop),
+   each poll: `move = (spy_last / spy0 − 1) × 100`; for a SHORT lot exit when `move ≥ spy_exit_pct` (for a LONG, mirror:
+   `move ≤ −spy_exit_pct`), and, if `spy_exit_only_losing`, only while the lot is under water. Exit = market close of that lot via
+   the time-stop path (`_lot_time_stop` / `close_mcf_position`), logged `SPY EXIT <sym>: SPY +x.xx% since entry`, exit_reason
+   `spy_exit`. SPY bars: add "SPY" to the polled watchlist whenever any enabled setup has `spy_exit_pct` (same mechanism as
+   `context_symbols`); stale/missing SPY → no exit (fail safe). Costs: LR8 market exit (max($0.01, 1 bp)).
+2. **Backtest parity.** `mcf/backtest/engine.py` exit walk gets the same rule on SPY 1-min closes (bar t−1 close vs entry-minute
+   close, exit at bar t open), so Session replay / 2-year replay match the bench (`code/sim3.py walk`).
+3. **Entry part (no new code).** Module mask on `context: [spy_fo]`: skip when SPY since 09:50 > +0.15% and the bar is after 12:00.
+4. Tests: managed-loop unit test (short exits at +0.30%, not at +0.29%; long mirror; only-losing flag; missing SPY → hold);
+   engine parity test on a synthetic SPY path. Config then: `spy_exit_pct: 0.30` on the copy.
+Used by: L3 WB5 (`spy_exit_pct: 0.30`, this file), RW3 WB4 (`0.30`, `../RW3-gapdn-rsi5pop-flowsell-short-FD/`), RW5 WB4 (`0.40`, `../RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/`).
 
 ## Method (identical for parent, WB4 and every copy)
 Engine = the RERUN bench (`../../L3-gap-slope-fromopen-FD/code/sim2.py`, reused) plus up-state layers (`code/sim3.py`, all off

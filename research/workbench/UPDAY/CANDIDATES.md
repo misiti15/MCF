@@ -34,3 +34,11 @@ Reading it (small samples; 6-10 sessions per day type):
 promotion-is-a-move (10-21), L3-rsi5hi Testing 2 → Primary (10-30), L3-fromopen Testing 1 → Primary (10-30), Primary
 TEAM-6 (11-11, open-ended 11-16), On Deck build (11-12), Testing rotation ROT1 (11-16). Account mixes and cost booking
 differ before/after these dates, so the per-day-type splits mix rule regimes.
+
+## Which ones go to the up-day Workbench (coordinator 2026-11-17)
+- **Reworked:** `L3-gap-slope-fromopen-FD` (`L3-gap-slope-fromopen-FD/`), and the two with the biggest live up-day losses —
+  `RW5-heat30-flowsell-rsi5pop-gapdn-short-FD` (up −0.231) and `RW3-gapdn-rsi5pop-flowsell-short-FD` (up −0.173) — each compared
+  with its parent AND its previous Workbench copy WB3 (`RW5-.../`, `RW3-.../`).
+- **Skipped:** `L3-gap-slope-rsi5hi-FD` (+0.200 on up days live) and `L3-gap-slope-lowdist-FD` (+0.197) — already positive on up
+  days, no up-day problem to fix (their records lean on one big day instead, 82% / 74%); `GEN-261026-07-...` — 0 trades on up
+  days (it gates itself on a weak market), so there is no up-day evidence to work on.
