@@ -388,3 +388,7 @@ charge 0.102R per stop (0.086R booked since 11-12), targets 0.034R. Adopted the 
 Stop charge closed at parity (backtest ~0.089R vs Live ~0.09-0.10R per stop). Skeptic found two gaps in the owner's effective.tier()
 (owner PR FYI / question). Suggested sizing the earnings-blackout policy gap (Scout's 31 moves/day) descriptively from 2-year backtest
 blackout-window trades; Live journals hold 0 earnings-skip rows (names leave the universe pre-signal).
+
+## Run 61 — 2026-11-17 ~05:40 ET
+BLKOUT approved (Lead). Plan + scorer frozen before any outcome with Skeptic's conditions; selftest ok after fixing an unrealistic
+synthetic (all names reporting the same week left no same-week controls). Data lives in Builder's container -> asked Builder to run.

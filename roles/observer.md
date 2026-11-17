@@ -7,6 +7,7 @@
   Coverage ~90% (snapshot must come from a pre-open job). 11-13 and 11-16 sessions unscorable (no row / late snapshot).
 - MOMSIDE-LIVE PARKED, never run (Lead 11-16: same calendar as lab FWD, which reversed). MOMSIDE / SIZESTOP / DIPTURN all
   CLOSED 11-16 with MDEs (tally 75 tested, 172 looks, 0 passes). Tue 11-17 after 16:30 ET: FWDCAL fresh (journal guard).
+- BLKOUT (research/blkout): frozen 11-17, awaiting Builder's run (trades_full in his container); read vs pre-registered table.
 - FAMC: 11-16 row INFQ (built same night, audit 1/1) -> session 11-17 scorable.
 
 ## Standards I follow (learned the hard way; each was a public correction)
