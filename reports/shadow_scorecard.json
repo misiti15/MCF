@@ -1,0 +1,572 @@
+{
+ "generated": "2026-11-17T15:58-05:00",
+ "account": "gen",
+ "weights": {
+  "live_weight": 1.0,
+  "tiers": [
+   {
+    "name": "calibrated",
+    "min_match": 0.98,
+    "max_extra": 0.02,
+    "no_optimism": true,
+    "weight": 0.35
+   },
+   {
+    "name": "partial",
+    "min_match": 0.95,
+    "weight": 0.2
+   }
+  ],
+  "below_weight": 0.0,
+  "uncalibrated_weight": 0.2,
+  "haircut_extra_r": 0.02,
+  "on_deck_min_live_sessions": 5
+ },
+ "calibration": {
+  "overall": {
+   "days": 1,
+   "live_entries": 200,
+   "shadow_entries": 203,
+   "matched": 200,
+   "missing": 0,
+   "extra": 0,
+   "resource_blocked": 3,
+   "match": 1.0,
+   "extra_rate": 0.0,
+   "r_pairs": 200,
+   "bias_r": -0.0109,
+   "bias_t": -0.74,
+   "daily_r_corr": 1.0
+  },
+  "families": {
+   "GEN": {
+    "days": 1,
+    "live_entries": 200,
+    "shadow_entries": 203,
+    "matched": 200,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 3,
+    "match": 1.0,
+    "extra_rate": 0.0,
+    "r_pairs": 200,
+    "bias_r": -0.0109,
+    "bias_t": -0.74,
+    "daily_r_corr": 1.0,
+    "optimistic": false,
+    "tier": "uncalibrated",
+    "weight": 0.2,
+    "haircut_r": 0.02
+   }
+  }
+ },
+ "setups": {
+  "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 7,
+   "trades_only": 0,
+   "trades_of_live": 7,
+   "total_r": 0.71,
+   "avg_r": 0.1015,
+   "n_win": 4,
+   "haircut_r": 0.02,
+   "avg_r_haircut": 0.0815,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.0676,
+   "gap_n": 6,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 20,
+   "trades_only": 0,
+   "trades_of_live": 20,
+   "total_r": 0.647,
+   "avg_r": 0.0323,
+   "n_win": 10,
+   "haircut_r": 0.02,
+   "avg_r_haircut": 0.0123,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.0231,
+   "gap_n": 18,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 17,
+   "trades_only": 0,
+   "trades_of_live": 17,
+   "total_r": 10.56,
+   "avg_r": 0.6212,
+   "n_win": 12,
+   "haircut_r": 0.02,
+   "avg_r_haircut": 0.6012,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.2227,
+   "gap_n": 17,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p6-hold-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261021-09-RSIslopelem19-ORHdistlem0p73-AM-BRvwgt0p7-t1s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 11,
+   "trades_only": 0,
+   "trades_of_live": 11,
+   "total_r": -7.702,
+   "avg_r": -0.7002,
+   "n_win": 2,
+   "haircut_r": 0.02,
+   "avg_r_haircut": -0.7202,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.0762,
+   "gap_n": 11,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 144,
+   "trades_only": 0,
+   "trades_of_live": 144,
+   "total_r": -131.327,
+   "avg_r": -0.912,
+   "n_win": 12,
+   "haircut_r": 0.02,
+   "avg_r_haircut": -0.932,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": 0.0227,
+   "gap_n": 144,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p29-LAM-SPYltm0p25-t1s05-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 1,
+   "trades_only": 0,
+   "trades_of_live": 1,
+   "total_r": -1.272,
+   "avg_r": -1.2724,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": -1.2924,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": 0.1756,
+   "gap_n": 1,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-POD1022-02-breadth-thrust-index-etf-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 2,
+   "trades_only": 0,
+   "trades_of_live": 2,
+   "total_r": -2.339,
+   "avg_r": -1.1695,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": -1.1895,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.0254,
+   "gap_n": 2,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  },
+  "GEN-POD1022-03-wt-bull-flag-bailout-S-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 1,
+   "trades_only": 0,
+   "trades_of_live": 1,
+   "total_r": 1.483,
+   "avg_r": 1.4825,
+   "n_win": 1,
+   "haircut_r": 0.02,
+   "avg_r_haircut": 1.4625,
+   "tier": "uncalibrated",
+   "weight": 0.2,
+   "gap_r": -0.1245,
+   "gap_n": 1,
+   "match": 1.0,
+   "first": "2026-11-17",
+   "last": "2026-11-17"
+  }
+ },
+ "note": "Shadow = the setup's rules on the live polls with no orders; not live trading. Live wins any disagreement. Educational only - not financial advice."
+}
