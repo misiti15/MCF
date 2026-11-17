@@ -45,4 +45,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-15 23:50 UTC (run 60): reran --guard-selftest (7/7 + gap/skip asserts), read the wiring; SIGNED OFF for Tuesday. Hardening asked: past windows should require last commit >= 15:55 ET on the last window day.
 - 11-16 01:50 UTC (run 61): past-window hardening verified (11/11 selftest). Scout fixed refresh.py the same way.
 - 11-17 03:50 UTC (run 62): audited MOMSIDE / SIZESTOP / DIPTURN (all CLOSED, verdicts stand). Flags: MOMSIDE-LIVE window == lab FWD calendar (not independent); SIZESTOP net > gross = cost-per-R from fewer shares, asked for gross stop effect (also STOPW). Next: FWDCAL fresh after 11-17 16:30 ET.
+- 11-17 05:50 UTC (run 63): Builder's gross split: widening = avoided stop-exit charges (gross t 0.98). Asked for the backtest's mean stop charge per stop in R vs live ~0.05R to size the live effect. Lead parked MOMSIDE-LIVE on my point. Next: FWDCAL fresh tonight.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
