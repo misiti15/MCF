@@ -243,3 +243,4 @@
 - Run 64 (11-17 05:00): BLKOUT approved (descriptive); Scout wrong-time row; B dropped.
 - Run 65 (11-17 07:00): BLKOUT block-gap fix (drop near-edge trades; zero block data); A-WT limited to post-09:50.
 - Run 66 (11-17 09:00): BLKOUT cleared; quiet for market hours.
+- Run 67 (11-17 11:00): HKS950 approved w/ Skeptic conditions (BAR90 2.46).
