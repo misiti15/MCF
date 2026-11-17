@@ -102,11 +102,12 @@ def shortable_flags() -> dict:
 def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, fills: str = "costs",
                 limit_fill: str = "through", exact: bool = False, check: int = 24, equity: float | None = None,
                 spread_bps: float = 2.0, spreads: dict | None = None, shortable: dict | None = None, out_dir: str | Path | None = None,
-                log=print, until: pd.Timestamp | None = None, keep: bool = False) -> dict:
+                log=print, until: pd.Timestamp | None = None, keep: bool = False, hook=None) -> dict:
     """Replay `day` for the account config `cfg` (already merged; strategies enabled as wanted). Returns a dict with
     signals / trades / what-if / per-setup summary DataFrames and run stats; writes them under out_dir when given.
     until (ET timestamp): stop the session there (an intraday run on the bars so far; open positions stay open, the
-    caller marks them). keep: also return the runner and the simulated broker (res["runner"], res["client"])."""
+    caller marks them). keep: also return the runner and the simulated broker (res["runner"], res["client"]).
+    hook: called with (r, client, quotes, feed, clock, day) right before the session runs (mcf.replay.livecal)."""
     from ..execution import runner as R
     from ..execution.alpaca_broker import AlpacaBroker
     from ..strategies.setups import build_strategies
@@ -142,6 +143,8 @@ def run_session(cfg: dict, day, bars: dict[str, pd.DataFrame], priors: dict, *, 
 
             fast = FastSession(r, feed.bars, day).install()
             feed.on_slice = fast.on_slice
+        if hook is not None:
+            hook(r=r, client=client, quotes=quotes, feed=feed, clock=clock, day=day)
         quiet = os.environ.get("MCF_REPLAY_VERBOSE") != "1"
         import contextlib
         import io
