@@ -39,6 +39,9 @@ live:
   # Priority: narrowest (fewest expected trades/session) first, as in the other testing areas.
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13); spotlight setups lead
+    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
+    - RW1-gapdn-bounce-flowsell-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
+    - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - CWT04-backside-vwaptest-a25-short   # SPOTLIGHT, 0 traded sessions / 0 trades
     - GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short   # SPOTLIGHT, 1 traded sessions / 1 trades
     - GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short   # SPOTLIGHT, 1 traded sessions / 2 trades
@@ -62,6 +65,40 @@ live:
     - CWT14-failbrk-pdl-p10-lowvol-long   # 25 traded sessions / 389 trades
     - CWT14-failbrk-orl-p10-long-WB5   # workbench copy, owner 2026-11-16 "CWT14 WB5 yes": normal priority, last (~58 trades/session isolated)
 strategies:
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
+    # Workbench copy of RW5-heat30-flowsell-rsi5pop-gapdn-short-FD (Primary), Mechanic 2026-11-16: + skip when SPY is up > +0.20% since 09:50 + stop cost <= 0.15R + window from 10:15;
+    # research/workbench/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3.py
+    min_adv: 95000000
+    window: [1015, 1500]
+    context: [spy_fo]
+    scale_out_r: null
+    tags: [workbench, "parent:RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"]
+  RW1-gapdn-bounce-flowsell-short-FD-WB3:
+    # Workbench copy of RW1-gapdn-bounce-flowsell-short-FD (On Deck), Mechanic 2026-11-16: RSI(14) 55-60 + 1R >= 0.40% of price + entries to 13:00 + skip when SPY is up > +0.20% since 09:50;
+    # research/workbench/RW1-gapdn-bounce-flowsell-short-FD/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/RW1-gapdn-bounce-flowsell-short-FD/modules/RW1-gapdn-bounce-flowsell-short-FD-WB3.py
+    min_adv: 95000000
+    window: [950, 1300]
+    context: [spy_fo]
+    scale_out_r: null
+    tags: [workbench, "parent:RW1-gapdn-bounce-flowsell-short-FD"]
+  GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5:
+    # Workbench copy of GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long (Testing E), Mechanic 2026-11-16: window 14:00-14:30 + ADV >= $100M + breadth change since 09:50 <= +0.20;
+    # research/workbench/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long/modules/GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5.py
+    context: [breadth]
+    min_adv: 100000000
+    window: [1400, 1430]
+    refire: false
+    scale_out_r: null
+    tags: [workbench, "parent:GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long"]
   CWT14-failbrk-orl-p10-long-WB5:
     # Workbench copy of CWT14-failbrk-orl-p10-long (Graveyard), Mechanic rerun 2026-11-16: WB4 (ATR >= 2%) + cost/R <= 0.10
     # + SPY since 09:50 >= -0.20% + stop 0.45 ATR / target 0.15 ATR (module GEOM "S");

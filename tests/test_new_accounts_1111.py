@@ -17,7 +17,7 @@ DEF = {"testingd": ("Testing D", "mtd-", "TESTINGD"), "testinge": ("Testing E", 
        "testingf": ("Testing F", "mtf-", "TESTINGF")}
 ALL = {**EXPECT, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in DEF.items()}}
 # setups per account: 10 each from 11-12; from 11-16 RW3S leaves E (Graveyard) and RW7 joins F (owner 2026-11-13)
-N_SETUPS = {"testingd": 22, "testinge": 21, "testingf": 22}   # ROT1 arena rotation block 1 (ledger 2026-11-16-rot1-arena-block1)
+N_SETUPS = {"testingd": 25, "testinge": 24, "testingf": 25}   # ROT1 block 1 + Workbench copies 2026-11-17 (3 each; ledger 2026-11-16-wb-*)
 SPOTLIGHT_CAP = {}   # TSZ1 2026-11-17: every Testing A-F account runs per-setup cap 100 (ledger 2026-11-16-tsz1-testing-sizing); ROT1 spotlight 50 superseded
 MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"
 WF = ROOT / ".github/workflows"

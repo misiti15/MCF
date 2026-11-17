@@ -75,7 +75,8 @@ def test_other_accounts_unchanged_by_the_loader(monkeypatch):
     gen = _cfg(monkeypatch, "gen")["strategies"]
     for acct in ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf"):
         for k, v in _cfg(monkeypatch, acct)["strategies"].items():
-            if k.startswith("GEN-") and v.get("enabled"):
+            # Workbench copies of graduates (`...-WB<n>`, tag workbench, owner 2026-11-16) are new setups, never in Gen
+            if k.startswith("GEN-") and v.get("enabled") and "workbench" not in (v.get("tags") or []):
                 assert k in gen and not gen[k]["enabled"], (acct, k)
 
 

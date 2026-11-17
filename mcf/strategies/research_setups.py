@@ -50,8 +50,10 @@ class ORB20(Strategy):
     name = "orb20"
 
     def eligible(self, ctx):
+        # min_price (Workbench orb20_a-WB3, owner 2026-11-16): prior close floor; default 5.0 = _liquid's own floor, so
+        # setups without it are unchanged
         return (ctx.rank_rvol20 is not None and ctx.rank_rvol20 <= self.params.get("top_n", 20)
-                and _liquid(ctx))
+                and _liquid(ctx) and ctx.prev_close >= float(self.params.get("min_price", 5.0)))
 
     def generate(self, ctx: DayContext):
         i = _idx_at(ctx, "09:49")
