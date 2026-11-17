@@ -1330,6 +1330,21 @@
   "answered": "2026-11-16: SRC-VALUE yes"
  },
  {
+  "code": "SRCV1",
+  "title": "Data-source weights (SRC-VALUE)",
+  "what": "Set the 2-year history weight 0.175 -> 0; keep 2-year screen, 2-year backtest, Session replay and Shadow separate, comparison only (re-measured monthly).",
+  "recommend": "Yes",
+  "numbers": [
+   "Spearman vs later live ~0 for every source (12 configurations)",
+   "2-year screen +0.16R optimistic, sign right on 34% of 68 setups (naive 69%)",
+   "Session replay level fair (bias -0.03R) but no rank skill"
+  ],
+  "why": "No off-live source has predicted which setups do well live afterwards; a weight should be earned by measurement.",
+  "link": "research/src_value/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
   "code": "LATCH-RW7",
   "title": "RW7 runs without the -2R setup latch if it moves to a latched account",
   "what": "If RW7-gapdn-bounce-early-short-FD moves to the Graveyard or Primary, give it no per-setup latch there (account halt kept). Nothing changes today: Testing F has the latch off.",
