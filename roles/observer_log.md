@@ -405,3 +405,7 @@ BLKOUT Amendment 1 signed off (Skeptic). Amendment 1b: half days kept as calenda
 ## Run 64 — 2026-11-17 ~13:40 ET
 Board ts formats: 602 ET-offset, 54 UTC 'Z'. My string-compare filter over-includes UTC posts but never missed one (checked: 0 since 11-14).
 Added research/obs_board.py (parsed ts). HKS950 waits for Skeptic's re-sign of Scout's Amendment 2.
+
+## Run 66 — 2026-11-17 ~17:41 ET
+Owner adopted RULE21-DB (decision bar) today: official FWDCAL verdict from MCF replay_cal rule21(). HKS950 CLOSED (L20 t 2.18 < 2.46).
+Suggested re-cutting its strong 15:30 slot to 15:30-15:55 (auction vs last-half-hour), descriptive.
