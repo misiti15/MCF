@@ -1,0 +1,20 @@
+{
+ "U8b ADV>=$40M": {"adv": 40e6},
+ "U8c ADV>=$60M": {"adv": 60e6},
+ "U8d ADV>=$70M": {"adv": 70e6},
+ "U8e ADV>=$80M": {"adv": 80e6},
+ "C1 ADV50 + refire cool1 lots3": {"adv": 50e6, "refire": true, "cool": 1, "lots": 3},
+ "C2 ADV50 + refire one lot": {"adv": 50e6, "refire": true, "cool": 1, "lots": 1},
+ "C3 ADV50 + refire cool2 lots2": {"adv": 50e6, "refire": true, "cool": 2, "lots": 2},
+ "C4 ADV50 + LEV50": {"adv": 50e6, "univ": ["PAR", "LEV50"]},
+ "C5 ADV50 + LEVIX": {"adv": 50e6, "univ": ["PAR", "LEVIX"]},
+ "C6 ADV50 + DI>=-5": {"adv": 50e6, "di": -5.0},
+ "C7 ADV50 + daycap 6": {"adv": 50e6, "daycap": 6},
+ "C8 ADV50 + ret12>=-0.5": {"adv": 50e6, "extra": [["ret12", ">=", -0.5]]},
+ "C9 ADV50 + ret12>=-1.0": {"adv": 50e6, "extra": [["ret12", ">=", -1.0]]},
+ "C10 ADV50 + refire1 lots3 + ret12>=-1.0": {"adv": 50e6, "refire": true, "cool": 1, "lots": 3, "extra": [["ret12", ">=", -1.0]]},
+ "C11 ADV40 + refire1 lots3": {"adv": 40e6, "refire": true, "cool": 1, "lots": 3},
+ "C12 ADV50 + LEV50 + refire1 lots3": {"adv": 50e6, "univ": ["PAR", "LEV50"], "refire": true, "cool": 1, "lots": 3},
+ "C13 refire1 lots3 + DI>=-5": {"refire": true, "cool": 1, "lots": 3, "di": -5.0},
+ "C14 ADV50 + ret3<=-0.70 + ret12>=0": {"adv": 50e6, "ret3": -0.70, "extra": [["ret12", ">=", 0.0]]}
+}
