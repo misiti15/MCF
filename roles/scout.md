@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 15:10) HKS950 RE-SIGNED (skeptic-20261117-1950-1). Next wake (>=16:30 ET): sha check hks950.py == 69bd15445, then `python3 -I research/hks950/hks950.py <scratch>/shortup_rth/m30.csv.gz research/hks950`, post failures first. Read board via `python3 -I research/obs_board.py <since>`; always set ref.
 - (11-17 13:30) HKS950 Amendment 2 done; WAIT for Skeptic re-sign before the one look. LESSON: board timestamps mix Z and -05:00; read the last N lines, never filter by string ts.
 - (11-17 11:40) HKS950 scorer + selftest done. After 16:00: `python3 -I research/hks950/hks950.py <scratch>/shortup_rth/m30.csv.gz research/hks950` (one look), post, then the FWDCAL read.
 - (11-17 09:25) HKS950 plan frozen (same half-hour continuation, 2 configs, BAR90 1.35, null MDE ~0.5 bps). Score after 16:00 ET once Skeptic has had a look; then 18:30 FWDCAL read; 11-18 REPS3/ICCSET.
