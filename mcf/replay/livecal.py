@@ -6,8 +6,12 @@ What it adds on top of mcf.replay.harness (each item closes a measured live-vs-r
              at the live poll times (outages and late polls = no decisions in between), the clock moves on by the
              poll's fetch time before any decision, quote or order, and a bar that had not arrived at that poll
              (poll log `late`: symbol -> its last bar at that poll) is hidden from that poll
-  quotes     spread per symbol and time of day from a table fitted on TRAIN sessions only (median, deterministic), so
-             the spread / spread-vs-stop checks fire where live mostly fired
+  quotes     the quote live actually used for a decision when the account recorded it (data branch
+             quotes/<day>/*.jsonl.gz, runner quote_log_dir, from 2026-11-18): same symbol and same poll (decision time to
+             the second) -> live's bid / ask / quote time; otherwise the spread per symbol and time of day from the
+             model fitted on TRAIN sessions only (median, deterministic), so the spread / spread-vs-stop checks fire
+             where live mostly fired. stats.live_cal.quotes_real / quotes_modelled count each source (params
+             "recorded_quotes": false turns the recorded quotes off)
   fills      market orders fill inside the minute bar at open + w x (close - open), w fitted on TRAIN live fills
   shortable  shortable / easy-to-borrow flags from that session's universe.csv on the data branch (not today's)
 Without a poll log for the day the session runs on the default cadence (and says so in stats.inputs).
@@ -54,6 +58,49 @@ def poll_log(branch: str, day: str) -> tuple:
             out.append((pd.Timestamp(f"{day} {x['t']}", tz=NY), float(x.get("ms") or 0) / 1000.0, late))
     out.sort(key=lambda p: p[0])
     return tuple(out)
+
+
+def _branch_chunks(branch: str, folder: str):
+    """Decompressed text of each gzip chunk under `folder` on `branch`, in name order."""
+    r = subprocess.run(["git", "-C", str(store.ROOT), "ls-tree", "-r", "--name-only", branch, folder],
+                       capture_output=True, text=True)
+    for f in sorted(r.stdout.split()):
+        b = subprocess.run(["git", "-C", str(store.ROOT), "show", f"{branch}:{f}"], capture_output=True).stdout
+        try:
+            yield gzip.decompress(b).decode()
+        except OSError:
+            continue
+
+
+def parse_quotes(lines) -> dict:
+    """(symbol, decision time ET to the second) -> (bid, ask, quote time UTC or None, spread bps) from recorded quote
+    lines (runner _record_quote). Decisions taken before any quote fetch (bid null) are left out."""
+    out = {}
+    for line in lines:
+        try:
+            x = json.loads(line)
+            bid, ask = x.get("bid"), x.get("ask")
+            if bid is None or ask is None or not (float(bid) > 0 and float(ask) >= float(bid)):
+                continue
+            t = pd.Timestamp(x["t"]).tz_convert(NY).floor("s")
+            qts = pd.Timestamp(x["qts"]) if x.get("qts") else None
+            bps = x.get("bps")
+            if bps is None:
+                mid = (float(bid) + float(ask)) / 2
+                bps = (float(ask) - float(bid)) / mid * 1e4
+            out[(str(x["sym"]), t.value)] = (float(bid), float(ask), qts, float(bps))
+        except (ValueError, KeyError, TypeError, AttributeError):
+            continue
+    return out
+
+
+@lru_cache(maxsize=64)
+def quote_log(branch: str, day: str) -> dict:
+    """The quotes the live runner of one account recorded at its decisions that day (see parse_quotes)."""
+    lines = []
+    for txt in _branch_chunks(branch, f"quotes/{day}"):
+        lines.extend(txt.splitlines())
+    return parse_quotes(lines)
 
 
 @lru_cache(maxsize=64)
@@ -149,7 +196,54 @@ class Calibrator:
     def __init__(self, params: dict, branch: str, day):
         self.p, self.branch, self.day = params, branch, str(pd.Timestamp(str(day)).date())
         self.polls = poll_log(branch, self.day) if params.get("polls", True) else ()
+        self.recorded = quote_log(branch, self.day) if params.get("recorded_quotes", True) else {}
         self.notes: dict = {}
+
+    def _recorded_at(self, r, sym: str):
+        """The quote live recorded for `sym` at the runner's current decision time (same poll, to the second)."""
+        now = getattr(r, "_now", None)
+        if not self.recorded or now is None:
+            return None
+        now = pd.Timestamp(now)
+        now = (now if now.tzinfo else now.tz_localize(NY)).tz_convert(NY).floor("s")
+        return self.recorded.get((sym, now.value))
+
+    def _install_recorded(self, r, quotes):
+        """Serve live's recorded quote where one exists for (symbol, decision time); the model otherwise. Fills of
+        that minute use the recorded spread too (quotes._bps is what the replay broker reads)."""
+        from types import SimpleNamespace as NS
+
+        orig_get, orig_bps = quotes.get_stock_latest_quote, quotes._bps
+        n = {"real": 0, "modelled": 0}
+        self.notes["quotes_real"] = self.notes["quotes_modelled"] = 0
+
+        def bps(s: str, k: int) -> float:
+            rec = self._recorded_at(r, s)
+            if rec is not None and quotes.mkt.minute(quotes.clock.now) == k:
+                return rec[3]
+            return orig_bps(s, k)
+
+        def get_quote(req):
+            syms = req.symbol_or_symbols
+            syms = [syms] if isinstance(syms, str) else list(syms)
+            out, rest = {}, []
+            for s in syms:
+                rec = self._recorded_at(r, s)
+                if rec is None:
+                    rest.append(s)
+                    continue
+                bid, ask, qts, _ = rec
+                ts = (qts if qts is not None else quotes.clock.now - pd.Timedelta(seconds=1))
+                out[s] = NS(bid_price=bid, ask_price=ask, timestamp=pd.Timestamp(ts).tz_convert("UTC").to_pydatetime())
+            if rest:
+                out.update(orig_get(NS(symbol_or_symbols=rest if len(rest) > 1 else rest[0])))
+            n["real"] += len(syms) - len(rest)
+            n["modelled"] += len(rest)
+            self.notes["quotes_real"], self.notes["quotes_modelled"] = n["real"], n["modelled"]
+            return out
+
+        quotes._bps = bps
+        quotes.get_stock_latest_quote = get_quote
 
     # quotes -----------------------------------------------------------------------------------------------------
     def _bps_fn(self, quotes, priors: dict | None = None):
@@ -268,6 +362,12 @@ class Calibrator:
     def __call__(self, r, client, quotes, feed, clock, **_):
         if self.p.get("spreads"):
             quotes._bps = self._bps_fn(quotes, getattr(r, "priors", None))
+        self.notes["quote_records"] = len(self.recorded)
+        if self.recorded:
+            self._install_recorded(r, quotes)
+        else:
+            self.notes["quotes_real"] = 0
+            self.notes["quotes_modelled"] = "all (no recorded quotes)"
         if "fill_w" in self.p:
             client._market_now = self._market_fn(client)
         if self.polls:
