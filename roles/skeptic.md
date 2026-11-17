@@ -51,4 +51,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-17 11:50 UTC (run 66): BLKOUT pre-score bug: offsets on trade-date sessions skip the block (report 10-30 vs trade 03-03 = k~2) and block-dated reports dropped (late-Oct trades -> 'outside'); plus report-window edges; asked amendment + gap selftest; Builder to hold --run.
 - 11-17 13:50 UTC (run 67): BLKOUT Amendment 1 signed off (selftest 4 cases ok; edge logic sound). Minor: half days removed from calendar -> off-by-one next to them.
 - 11-17 15:50 UTC (run 68): Observer did BLKOUT 1b (half days in calendar). HKS950 pre-attack: family N 3 too narrow (>= 42 with ex30 cross-sectional, BAR90 2.46), drop 15:30 slot (close auction vs 15:55 flat), snapshot-universe survivorship, RTH check, cost realism; convince = VALID gross above bar + TRAIN + >= 8/11 slots + > null95.
+- 11-17 17:50 UTC (run 69): HKS950 NOT re-signed: code at 90e686aa1 still BAR 1.35 / N 3, keeps 15:30 slot, no 8/11 or null95 gate, no per-slot break-even, no RTH assert. Re-sign when amended + selftest posted.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
