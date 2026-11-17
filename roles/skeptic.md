@@ -44,4 +44,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-15 21:50 UTC (run 59): mirror.journal_guard passes silently if run 11-16 on the 11-16..11-17 window (future last day appended by trading_days; 11-17 then skipped). Asked for future-date refusal, per-day freshness, refuse-on-skip. Check the fix before 11-17.
 - 11-15 23:50 UTC (run 60): reran --guard-selftest (7/7 + gap/skip asserts), read the wiring; SIGNED OFF for Tuesday. Hardening asked: past windows should require last commit >= 15:55 ET on the last window day.
 - 11-16 01:50 UTC (run 61): past-window hardening verified (11/11 selftest). Scout fixed refresh.py the same way.
+- 11-17 03:50 UTC (run 62): audited MOMSIDE / SIZESTOP / DIPTURN (all CLOSED, verdicts stand). Flags: MOMSIDE-LIVE window == lab FWD calendar (not independent); SIZESTOP net > gross = cost-per-R from fewer shares, asked for gross stop effect (also STOPW). Next: FWDCAL fresh after 11-17 16:30 ET.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
