@@ -248,6 +248,19 @@ def slot_notional(a: dict) -> float:
     return min(per_slot, equity * a["max_position_notional_pct"] / 100)
 
 
+def lot_shares(a: dict, equity: float, risk_dollars: float, per_share: float, price: float, cap: float) -> int:
+    """Whole shares of one lot: min(risk / stop distance, slot / price). Opt-in floor (testing-account sizing change,
+    owner 2026-11-16): with `min_shares` set, a lot smaller than that is raised to min(min_shares, what fits in
+    `min_shares_notional_pct` % of equity, what fits in the risk budget), so the smaller slot does not drop pricey names
+    or cut a lot to 1-2 shares. R is unaffected (each trade's R = P/L / its own risk); only its $ size changes."""
+    n = int(min(risk_dollars / per_share, cap / price))
+    m = int(a.get("min_shares") or 0)
+    if m and n < m:
+        ceil = equity * float(a.get("min_shares_notional_pct") or 0) / 100
+        n = max(n, min(m, int(ceil / price), int(risk_dollars / per_share)))
+    return n
+
+
 def is_extended(ctx: DayContext, cfg: dict) -> bool:
     """Extended tier: liquid enough to scan, too thin to trade on an ordinary day."""
     adv = ctx.avg_dollar_volume
@@ -350,6 +363,17 @@ class Backtester:
                 print(f"  {d}: {len(candidates)} candidate trades")
         return self.allocate(candidates)
 
+    @staticmethod
+    def _symbol_room(tr: Trade, open_pos: list[Trade], caps: dict[str, int], acct_lots: int) -> bool:
+        held = [p for p in open_pos if p.symbol == tr.symbol]
+        if not held:
+            return True
+        cap = caps.get(tr.strategy)
+        if cap is None:
+            return False                       # default: one open position per symbol
+        return (all(p.strategy == tr.strategy and p.side == tr.side for p in held)
+                and len(held) < min(cap, acct_lots))
+
     def allocate(self, cands: list[Trade]) -> pd.DataFrame:
         a = self.cfg["account"]
         equity = float(a["starting_equity"])
@@ -361,6 +385,13 @@ class Backtester:
         open_pos: list[Trade] = []
         day, day_r, day_n = None, 0.0, 0
         closed_today: list[Trade] = []
+        # per-setup `max_lots_per_symbol` (owner 2026-11-16, opt-in; live: RiskManager "max lots per symbol for this
+        # setup"). A setup that sets it may stack its OWN same-side lots on a symbol up to min(its cap, the account's
+        # live.max_lots_per_symbol); any other setup's open position on the symbol still blocks, as before. Setups
+        # without it keep the one-position-per-symbol rule below (unchanged).
+        from ..execution.risk import setup_lot_caps
+        caps = setup_lot_caps(self.cfg)
+        acct_lots = max(1, int((self.cfg.get("live") or {}).get("max_lots_per_symbol", 1) or 1))
         for tr in cands:
             if tr.date != day:
                 day, day_n, open_pos, closed_today = tr.date, 0, [], []
@@ -374,11 +405,11 @@ class Backtester:
                 or sum(p.strategy == tr.strategy for p in open_pos) >= a.get("max_positions_per_strategy", 10**9)
                 or day_n >= a["max_trades_per_day"]
                 or day_r <= -a["max_daily_loss_r"]
-                or any(p.symbol == tr.symbol for p in open_pos)
+                or not self._symbol_room(tr, open_pos, caps, acct_lots)
             ):
                 continue
             per_share = abs(tr.entry - tr.stop)
-            shares = int(min(risk_dollars / per_share, max_notional / tr.entry))
+            shares = lot_shares(a, equity, risk_dollars, per_share, tr.entry, max_notional)
             if shares < 1:
                 continue
             tr.shares = shares
