@@ -23,12 +23,27 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
      mh frames, or a Session replay over the Live session bar store from 10-06.
  A3. Setup-days estimate for a targeted setup: signal days per week x the Live parity from REPS2 (p_day = 1 - exp(-0.193 x lab
      trades/day)). A type that shows up most days could add ~3-5 setup-days/week per setup slot.
+
+ A3 counts (catalogue, non-ETF non-blackout, 11 sessions; per day in brackets). Read as the CEILING a targeted setup could reach
+ before precision: these are hindsight-best moves.
+ | miss reason | long | short | all |
+ |---|---|---|---|
+ | caught by Live | 11 (1.0) | 9 (0.8) | 20 (1.8) |
+ | traded the name outside the move window | 21 (1.9) | 27 (2.5) | 48 (4.4) |
+ | no setup signalled | 16 (1.5) | 22 (2.0) | 38 (3.5) |
+ | only the wrong side traded | 9 (0.8) | 11 (1.0) | 20 (1.8) |
+ | skipped by a filter (spread / borrow / caps) | 9 (0.8) | 10 (0.9) | 19 (1.7) |
+ | total | 66 (6.0) | 79 (7.2) | 145 (13.2) |
+ Earnings-blackout moves: 180 long / 161 short (31/day), outside our scope (policy). Median move 1.21 ATR long / 1.13 short.
+ Setup-days reading: 'no setup signalled' (3.5/day) and 'traded outside the move' (4.4/day) are the two addressable pools. A
+ setup that caught even one type in each on most days would add ~4-5 setup-days/week per slot. That is above REPS2's median slot
+ (2.7), before precision.
  Controls up front: ex-market (beta x SPY over the hold) and a same-minute random-name control, so a 'precursor' is not just
  market direction (MOMSIDE lesson). Family: new; any rule then scored on the 2-year backtest with its own count.
  Owner-facing policy line (not ours to change): the earnings blackout hides ~60% of the day's biggest moves; FAMC is the
  guild's only measured window onto them.
 
-## Candidate B — cost-per-R remedy (depends on Builder's gross-R print for SIZESTOP / STOPW, Lead lead-20261116-2300-2)
+## Candidate B — cost-per-R remedy [WEAK: Builder's stop-charge line shows 2-year backtest ~0.089R vs Live ~0.09-0.10R per stop, so parity, no extra Live upside; price path gains nothing (gross +0.0015R, t 0.98)] (depends on Builder's gross-R print for SIZESTOP / STOPW, Lead lead-20261116-2300-2)
 If widening is a cost artefact (gross ~0), the honest remedy is per-share cost relative to R: a minimum stop distance in bps
 (STOPW, 77-config family) or the proposed hf1027-costfloor-halfR skip (7 configs). It must be scored against a random same-share
 skip / size-cut control (checklist 9) and in gross beside net. Value: loss reduction on tight-stop setups; MDE expected ~0.01R
