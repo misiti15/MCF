@@ -594,6 +594,7 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
                         replay_avgR=round(xl.R.mean(), 4), live_avgR=round(ll.R.mean(), 4),
                         gap_avgR=round(xl.R.mean() - ll.R.mean(), 4),
                         gap_ci95=f"[{_gap_ci(xl.R, ll.R)[0]:+.3f},{_gap_ci(xl.R, ll.R)[1]:+.3f}]",
+                        gap_se=(_gap_ci(xl.R, ll.R)[1] - _gap_ci(xl.R, ll.R)[0]) / 3.92,
                         exact_match_rate=round((m.cause == "exact_minute").sum() / max(len(ll), 1), 3),
                         exact_ci95=f"[{_wilson((m.cause == 'exact_minute').sum(), len(ll))[0]:.2f},{_wilson((m.cause == 'exact_minute').sum(), len(ll))[1]:.2f}]",
                         rule21=bool((m.cause == "exact_minute").sum() / max(len(ll), 1) >= 0.95 and abs(xl.R.mean() - ll.R.mean()) <= 0.03)))
@@ -633,6 +634,26 @@ def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame
     opt = A[(A.acct != "ALL") & (A.gap_avgR > 0.03)].acct.tolist()
     print(f"\nSkeptic pre-registered checks: accounts with exact-minute match < 90%: {low or 'none'}; "
           f"OPTIMISTIC gap > +0.03R (the failure that matters): {opt or 'none'}; configs shown: 1 engine x {len(A) - 1} accounts")
+    try:                                   # effective-sessions tiers (owner 11-16; Lead 11-17): descriptive, verdict above is primary
+        import json as _j2
+        E = _j2.load(open("/home/user/MCF/config/effective_sessions.json"))
+        T1, T2 = E["tiers"][0], E["tiers"][1]; tol, ot = float(E["bias_tolerance_r"]), float(E["optimism_t"])
+        def tier(match, extra, bias, se):
+            t = bias / se if se and se > 0 else np.nan
+            optimistic = bool(np.isfinite(t) and bias > 0 and t >= ot)
+            if match >= T1["min_match"] and extra <= T1["max_extra"] and abs(bias) <= tol and not optimistic:
+                return T1["weight"], t, optimistic
+            if match >= T2["min_match"]:
+                return T2["weight"], t, optimistic
+            return E["below_weight"], t, optimistic
+        print("\neffective_sessions.json mapping (Session replay; held-out match / extra-trade share / R bias + t -> tier weight):")
+        for r in A.itertuples():
+            we, t, op = tier(r.exact_match_rate, r.replay_only_share, r.gap_avgR, r.gap_se)
+            w5, _, _ = tier(r.match_rate, r.replay_only_share, r.gap_avgR, r.gap_se)
+            print(f"  {r.acct:10s} match exact {r.exact_match_rate:.3f} / 5-min {r.match_rate:.3f}  extra {r.replay_only_share:.3f}  "
+                  f"bias {r.gap_avgR:+.4f}R (t {t:+.2f}{', OPTIMISTIC' if op else ''})  -> tier {we} on exact-minute, {w5} on 5-min (RULE21-DB proxy)")
+    except Exception as e:
+        print(f"effective-sessions mapping unavailable ({e.__class__.__name__}: {e})")
     try:                                   # rule-change context (owner 11-02): ledger entries effective inside / just before the window
         import json as _j
         d0, d1 = sorted({r["day"] for r in reps})[0], sorted({r["day"] for r in reps})[-1]
