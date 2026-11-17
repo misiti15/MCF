@@ -60,3 +60,5 @@ true distance is larger). (3) Calendar extended with NYSE business days in a +-3
 excluded; closures in the margins: 2024-09-02, 2026-11-26), so reports up to ~20 sessions beyond the span keep correct offsets.
 (4) Selftest adds a dense calendar with a 4-month hole and a report just before it (asserts: 20 edge trades dropped, no post-hole
 trade inside/buffer, no pre-hole inside trade kept near the edge) and a margin case (AMC report after the span -> k -3).
+- Amendment 1b (11-17 ~09:50 ET, before any run; Skeptic 1350-1 minor, Lead 0900-1): the 3 half-day dates stay in calendar() as
+  sessions (their trades are still dropped), so offsets next to them are not off by one. Selftest rerun ok.

@@ -14,7 +14,7 @@ def calendar(trade_dates, margin_days=30):
     td = sorted(set(trade_dates)); a = pd.Timestamp(td[0]) - pd.Timedelta(days=margin_days); b = pd.Timestamp(td[-1]) + pd.Timedelta(days=margin_days)
     extra = [str(d.date()) for d in pd.bdate_range(a, b) if str(d.date()) not in MARGIN_HOLIDAYS
              and not (LB0 <= str(d.date()) <= LB1) and (str(d.date()) < td[0] or str(d.date()) > td[-1])]
-    return sorted(set(td) | set(extra))
+    return sorted(set(td) | set(extra) | {h for h in HALF if td[0] <= h <= td[-1]})   # half days stay sessions (Skeptic 1350-1)
 def drop_block_edges(trades, sessions, n=10):
     """Amendment 1 (Skeptic 1150-1 (1)-(2), Lead 0700-1): drop trades within n sessions of either block edge, since offsets
     across the hole are not real session counts and reports inside the block are never read."""

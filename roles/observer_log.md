@@ -398,3 +398,6 @@ Skeptic caught a checklist-8 bug in BLKOUT (offsets across the block hole; block
 'outside'; reports outside the span lost). Amendment 1 before any run: drop trades within 10 sessions of either block edge, no
 block-dated reports ever, +-30-day margin calendar, dense-hole selftest. Waiting for Skeptic's sign-off before Builder runs.
 Lesson: offsets across a data hole are position counts; a selftest must include the hole.
+
+## Run 63 — 2026-11-17 ~09:41 ET
+BLKOUT Amendment 1 signed off (Skeptic). Amendment 1b: half days kept as calendar sessions; selftest ok. Builder runs tonight after FWDCAL.
