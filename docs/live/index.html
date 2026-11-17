@@ -474,7 +474,9 @@ window.MCF_TOTALS = (() => {
   <div class="why">Where the market stands today, read every 15 minutes from 09:45 ET with only the bars so far. Research says the side of the open SPY is on can be read (confirmed readings hold to the close ~80-90% of days); where it goes next is close to a coin flip.</div>
   <div class="lbl" id="cmp-label">Display only — not a trading signal</div>
   <!-- "In plain English" sub-card (owner 2026-11-10): what the compass expects for the REST OF TODAY (close vs open) with the
-       measured hit rate of the current state (latest.json "plain", mcf/report/compass_plain.json from research/compass_5m). -->
+       measured hit rate of the current state (latest.json "plain", mcf/report/compass_plain.json from research/compass_5m).
+       COMPCAL (owner 2026-11-17): the cell-table line is replaced by one calibrated line ("plain.calibrated", not a direction
+       forecast; research/guild/1110/compcal/PLAN.md). Display only. -->
   <div class="cp-plain" id="cmp-plain" hidden></div>
   <div class="cp-grid" id="cmp-tiles"><div class="empty" style="padding:10px">Loading…</div></div>
   <div class="tablewrap" id="cmp-tab"><div class="empty">–</div></div>
@@ -496,7 +498,7 @@ window.MCF_TOTALS = (() => {
       pb.hidden = false;
       pb.className = "cp-plain" + (/ABOVE/.test(P.headline) ? " up" : /BELOW/.test(P.headline) ? " down" : "");
       pb.innerHTML = `<div class="lbl">In plain English · window: ${e(P.window || "the rest of today")}${isToday ? "" : " · " + e(d.date)}</div>` +
-        `<div class="h">${e(P.headline)}</div><div>${e(P.detail)}</div>` + (P.cell ? `<div class="s">${e(P.cell)}</div>` : "") +
+        `<div class="h">${e(P.headline)}</div><div>${e(P.detail)}</div>` + (P.calibrated ? `<div class="s">${e(P.calibrated)}</div>` : "") +
         `<div class="s">${e(P.next_hour)}</div><div class="s">${e(P.disclaimer || "Educational only — not financial advice.")}</div>`;
     } else pb.hidden = true;
     q("#cmp-asof").textContent = isToday ? `· today · as of ${d.asof} ET${d.phase === "closed" ? " (closed)" : ""}` : `· last recorded session ${d.date} · today's first reading at 09:45 ET`;
@@ -2412,7 +2414,11 @@ window.MCF_SHADOW = (() => {
     merge();
   }
   const word = k => k === "up" ? "promo" : "demo";
-  const chip = w => `<span class="wchip ${w.kind}${w.shared ? "" : " local"}" title="Monitor for ${word(w.kind)} since ${e(w.since)}${w.shared ? "" : " (this browser only - not sent to Claude yet)"}">MONITOR ${w.kind === "up" ? "↑" : "↓"} ${e(LBL[w.to] || w.to)}</span>`;
+  // Promotion hold (owner 2026-11-17, PROMO2): no On Deck -> Primary promotions until the owner lifts it; promo marks to
+  // Primary still show but are tagged "on hold" (display only).
+  const HOLD = "Promotion hold (owner 2026-11-17): no On Deck → Primary promotions until the owner lifts it";
+  const held = w => w.kind === "up" && w.to === "primary";
+  const chip = w => `<span class="wchip ${w.kind}${w.shared ? "" : " local"}" title="Monitor for ${word(w.kind)} since ${e(w.since)}${w.shared ? "" : " (this browser only - not sent to Claude yet)"}${held(w) ? " · " + HOLD : ""}">MONITOR ${w.kind === "up" ? "↑" : "↓"} ${e(LBL[w.to] || w.to)}${held(w) ? " · on hold" : ""}</span>`;
   function decorate() {
     document.querySelectorAll("tr[data-setup]").forEach(tr => {
       const ws = W[tr.dataset.setup] || [], host = tr.querySelector(".nm") || tr.querySelector("td.l");
@@ -2432,13 +2438,13 @@ window.MCF_SHADOW = (() => {
     last = d; const box = document.getElementById("sd-watch"); if (!box) return;
     const from = (d.accounts || [])[0], mv = MOVES[from] || { up: [], dn: [] }, ws = W[d.code] || [];
     const has = (k, t) => ws.some(w => w.kind === k && w.to === t);
-    const btn = (k, t) => `<button data-k="${k}" data-t="${t}" ${has(k, t) ? "disabled" : ""}>Monitor for ${word(k)} → ${e(LBL[t])}</button>`;
+    const btn = (k, t) => `<button data-k="${k}" data-t="${t}" ${has(k, t) ? "disabled" : ""}${held({ kind: k, to: t }) ? ` title="${e(HOLD)}"` : ""}>Monitor for ${word(k)} → ${e(LBL[t])}${held({ kind: k, to: t }) ? " (on hold)" : ""}</button>`;
     const btns = [...mv.up.map(t => btn("up", t)), ...mv.dn.map(t => btn("dn", t))].join("");
     const pending = local();
     box.innerHTML = `<h4>Monitor for promo / demo</h4>` +
       ws.map(w => `<div class="wcur">${chip(w)} since ${e(w.since)} · ${w.shared ? `<a href="#" data-x="${w.kind}|${w.to}" data-shared="1" title="Copies a note asking Claude to drop it">Remove</a>` : `<a href="#" data-x="${w.kind}|${w.to}">Remove</a> · <span style="color:var(--muted)">not sent to Claude yet</span>`}</div>`).join("") +
       (btns ? `<div class="wbtns">${btns}</div>` : `<div class="wcur" style="color:var(--muted)">${from ? "No moves from " + e(LBL[from] || from) + "." : "Not in a live account."}</div>`) +
-      `<div class="wnote">One click marks it here. ${pending.length ? `<a href="#" id="sd-wcopy">Copy for Claude (${pending.length} new)</a> and paste it, or just tell Claude, so the nightly check and your other devices see it.` : "Claude's list is up to date."} A mark only flags a setup for review; the move itself is approved with Claude.</div>`;
+      `<div class="wnote">One click marks it here. ${pending.length ? `<a href="#" id="sd-wcopy">Copy for Claude (${pending.length} new)</a> and paste it, or just tell Claude, so the nightly check and your other devices see it.` : "Claude's list is up to date."} A mark only flags a setup for review; the move itself is approved with Claude.${mv.up.includes("primary") || ws.some(held) ? " <b>On hold:</b> " + e(HOLD) + "." : ""}</div>`;
     box.querySelectorAll("button[data-k]").forEach(b => b.onclick = () => {
       const l = local(); l.push({ code: d.code, kind: b.dataset.k, to: b.dataset.t, since: today() }); save(l); merge();
     });

@@ -63,3 +63,27 @@ def test_display_only():
     for bad in ("execution", "submit_order", "TradingClient", "paper-api"):
         assert bad not in src
     assert "store._fetch_bars" in src
+
+
+def test_calibrated_m1_matches_compcal_definition():
+    """COMPCAL M1: P = share of prior sessions' rest-of-day moves m with sign(fo) * (fo + m) > 0 (moves in % of the open)."""
+    obs = pd.DataFrame(dict(date=[f"2026-10-{d:02d}" for d in range(1, 71)], T="10:00", open=100.0, fo=0.001,
+                            close=[100.0 + (0.5 if i % 4 else -0.5) for i in range(70)]))
+    R = cc.remaining(obs)
+    assert list(R) == ["10:00"] and len(R["10:00"]) == 60                     # last 60 sessions only
+    j = dict(remaining=R)
+    c = cc.calibrated(j, 10 * 60 + 7, 0.002)
+    assert c["T"] == "10:00" and c["side"] == "above" and c["n"] == 60 and abs(c["p"] - 45 / 60) < 1e-9
+    c = cc.calibrated(j, 10 * 60 + 7, -0.002)                                 # below the open: m = -0.006 wins
+    assert c["side"] == "below" and abs(c["p"] - 15 / 60) < 1e-9
+    assert cc.calibrated(j, 600, 0.0) is None and cc.calibrated(j, 590, 0.002) is None
+    assert cc.calibrated(dict(remaining={"10:00": R["10:00"][:29]}), 600, 0.002) is None
+
+
+def test_cond_json_carries_remaining(tmp_path, monkeypatch):
+    monkeypatch.setattr(cc, "SEED", tmp_path / "none.csv.gz")
+    fn = lambda day, log=print: _spy(day, [(570, 0), (630, 0.3), (960, 0.6)])
+    cc.update(tmp_path, "2026-11-06", spy_fn=fn, log=lambda *_: None)
+    j = json.loads((tmp_path / "compass" / "cond_stats.json").read_text())
+    o = pd.read_csv(tmp_path / "compass" / "cond_obs.csv").query("T == '15:50'").iloc[0]
+    assert len(j["remaining"]) == 36 and abs(j["remaining"]["15:50"][0] - (o.close / o.open - 1 - o.fo)) < 1e-5

@@ -240,7 +240,8 @@ def _pct(x, sign=True) -> str:
 def plain(rows: list[dict], day: str, cond: dict | None = None, table: dict | None = None) -> dict | None:
     """The "In plain English" sub-card (owner 2026-11-10): what the compass expects, for which window, with the measured
     hit rate of that state (mcf/report/compass_plain.json, built by research/compass_5m/plain_table.py from TRAIN+VALID,
-    FWD shown) + the conditional-stats cell (mcf/report/compass_cond.py) when yesterday's close is known. Rows: typed."""
+    FWD shown) + one calibrated "finishes this side of its open" line (COMPCAL M1, mcf/report/compass_cond.calibrated)
+    when the nightly stats are current. Rows: typed."""
     if not rows:
         return None
     if table is None:
@@ -284,18 +285,18 @@ def plain(rows: list[dict], day: str, cond: dict | None = None, table: dict | No
     nh = table.get("next_hour", {})
     nxt = (f"Next hour: no reliable read — a confirmed compass called SPY's next 60 minutes right only "
            f"{pc(nh.get('hit', 0.5))} of the time ({pc(nh.get('fwd_hit', 0.5))} recently), about a coin flip.")
-    cell = None
-    try:
+    calib = None                                        # COMPCAL (owner "COMPCAL yes", 2026-11-17): one calibrated
+    try:                                                # line replaces the sparse cell-table line; display only
         from . import compass_cond as CC
         if cond and str(pd.Timestamp(day) - pd.offsets.BDay(1))[:10] == cond.get("asof_date"):
-            c = CC.lookup(cond, T, fo, L.get("spy_px"))
-            if c and c.get("n", 0) >= 15 and c.get("same_side_open") is not None and fo:
-                cell = (f"At {c['T']} with SPY {_pct(fo)} from its open and {c['side'].replace('prev close', 'yesterday’s close')}, "
-                        f"it finished on the same side of its open in {pc(c['same_side_open'])} of {c['n']} past days.")
+            c = CC.calibrated(cond, T, fo)
+            if c:
+                calib = (f"From {c['T']}, SPY finishes {c['side']} its open about {round(c['p'] * 100)}% of the time "
+                         f"(moves to the close on the last {c['n']} sessions) — not a direction forecast.")
     except Exception:                                   # display only: never fail the compass for the extra line
-        cell = None
+        calib = None
     return dict(window=table.get("window"), state=state, block=block, headline=head, detail=det, hit=hit,
-                days=st.get("days"), fwd_hit=fwd, next_hour=nxt, cell=cell, disclaimer=DISCLAIMER)
+                days=st.get("days"), fwd_hit=fwd, next_hour=nxt, calibrated=calib, disclaimer=DISCLAIMER)
 
 
 def latest(day: str, rows: list[dict], now: pd.Timestamp, cond: dict | None = None) -> dict:

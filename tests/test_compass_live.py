@@ -165,7 +165,7 @@ def test_plain_sentences():
     assert p["headline"] == "SPY is likely to finish today ABOVE its open."
     assert f"{round(t['states']['UP-confirmed']['late']['hit'] * 100)}%" in p["detail"]
     assert p["window"].startswith("the rest of today") and "coin flip" in p["next_hour"]
-    assert p["disclaimer"] == "Educational only — not financial advice." and p["cell"] is None   # no cond stats given
+    assert p["disclaimer"] == "Educational only — not financial advice." and p["calibrated"] is None   # no cond stats given
     # morning up >= 0.20% at 12:00, back below the open at 12:30 -> after a midday flip
     p = cl.plain(_rows([(570, 0), (700, 0.5), (720, 0.4), (750, -0.2), (960, -0.3)], "12:31"), DAY)
     assert p["state"] == "flipped down" and p["headline"].startswith("SPY has flipped back BELOW its open")
@@ -175,16 +175,18 @@ def test_plain_sentences():
     assert cl.plain([], DAY) is None
 
 
-def test_plain_cell_line_needs_yesterdays_close():
-    from mcf.report import compass_cond as cc
+def test_plain_calibrated_line_replaces_cell_table():
+    """COMPCAL (owner 2026-11-17): one calibrated line, with the not-a-forecast caveat; no cell-table line."""
     rows = _rows([(570, 0), (600, 0.4), (630, 0.6), (720, 0.8), (960, 1.0)], "11:31")
-    px = rows[-1]["spy_px"]
-    key = f"vs_prev|11:30|{cc.bucket(rows[-1]['spy_fo'])}|above prev close"
-    cond = dict(asof_date="2026-11-05", last_close=px * 0.99, cells={key: dict(n=40, same_side_open=0.875)})
+    fo = rows[-1]["spy_fo"]
+    mv = [-fo - 0.001] * 5 + [0.0] * 35                          # 5 of 40 prior days would end below the open
+    cond = dict(asof_date="2026-11-05", last_close=1.0, cells={}, remaining={"11:30": mv})
     p = cl.plain(rows, DAY, cond)                                 # 11-05 is the session before 11-06
-    assert p["cell"].startswith("At 11:30 with SPY +") and "above yesterday’s close" in p["cell"] and "88% of 40" in p["cell"]
-    assert cl.plain(rows, DAY, dict(cond, asof_date="2026-11-04"))["cell"] is None          # stale close -> no line
-    assert cl.plain(rows, DAY, dict(cond, cells={key: dict(n=5, same_side_open=1.0)}))["cell"] is None   # too few days
+    assert "cell" not in p
+    assert p["calibrated"] == ("From 11:30, SPY finishes above its open about 88% of the time "
+                               "(moves to the close on the last 40 sessions) — not a direction forecast.")
+    assert cl.plain(rows, DAY, dict(cond, asof_date="2026-11-04"))["calibrated"] is None     # stale stats -> no line
+    assert cl.plain(rows, DAY, dict(cond, remaining={"11:30": mv[:29]}))["calibrated"] is None   # < 30 prior moves
 
 
 def test_latest_json_carries_plain(tmp_path):

@@ -4,7 +4,8 @@
         --live-dir DIR_WITH_JOURNALS --out research/replay_cal/heldout [--tag heldout]
 
 Live trade = a filled live entry (trades run 1, one per broker order id); match = same setup + symbol + side + decision
-bar (from the client order id; exact minute, +-1 reported too). R per trade = LR8 live cost model on each side's own
+bar (from the client order id; exact minute, +-1 reported too). Also scores the rule-21 audit (R21 below: decision-bar
+match >= 95%, avg R gap within +-0.03R and never optimistic, fresh sessions after the replay's fit date only). R per trade = LR8 live cost model on each side's own
 fills (mcf.costs.lot_costs, every day). Writes scorecard.json, per_account.csv, per_setup.csv, daily.csv.
 Educational only - not financial advice."""
 
@@ -31,6 +32,13 @@ COID = re.compile(r'"coid": "[^"]*-(\d{8})-(\d{4})')
 BRANCH_DB = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing2": "mcf-data-testing2"}
 MODEL = yaml.safe_load((ROOT / "config" / "default.yaml").read_text())["costs"]["live_model"]
 T = {"match": 0.98, "extra": 0.02, "bias": 0.01, "z": 1.645, "corr": 0.95, "sign": 0.90, "skip": 0.95}
+# Rule 21 audit (docs/RESEARCH_RULES.md 21; owner "RULE21-DB yes", 2026-11-17): live trades are matched on the live
+# signal's DECISION bar (client order id HHMM = info.bar_time), never the broker fill minute (fills land +1/+2 min later,
+# research/guild/1112/obs-fillclock/NOTES.md). Guards: >= 95% match; avg R gap (replay - live) within +-0.03R on matched
+# pairs AND on all trades; never optimistic (matched-pair gap - 1.645 SE <= 0); fresh sessions only (after the replay's
+# fit date, so no session that tuned the replay is scored).
+R21 = {"match": 0.95, "gap": 0.03, "z": 1.645}
+PARAMS = ROOT / "research" / "replay_cal" / "params_v2.json"
 
 
 def _min_coid(meta) -> int | None:
@@ -92,6 +100,25 @@ def match(a: pd.DataFrame, b: pd.DataFrame, tol: int = 0) -> list[tuple[int, int
             used.add(best[1])
             out.append((i, best[1]))
     return out
+
+
+def fresh_days(days: list[str], fit_until: str | None) -> list[str]:
+    """Rule 21 'fresh sessions only': sessions strictly after the replay's fit date (none dropped if no fit date)."""
+    return [d for d in days if not fit_until or str(d) > str(fit_until)]
+
+
+def rule21(s: dict, fit_until: str | None) -> dict:
+    """Rule 21 audit verdict for one account (or pooled) summary scored on decision-bar matches."""
+    gap_all = s["replay_avg_r"] - s["live_avg_r"]
+    days = s.get("days") or []
+    v = dict(match=s["match"], gap_matched=s["bias"], gap_all=gap_all, fit_until=fit_until,
+             fresh=bool(days) and all(str(d) > str(fit_until) for d in days) if fit_until else bool(days))
+    ok = lambda x: x is not None and not math.isnan(x)  # noqa: E731
+    v["match_ok"] = s["match"] >= R21["match"]
+    v["gap_ok"] = ok(s["bias"]) and ok(gap_all) and abs(s["bias"]) <= R21["gap"] and abs(gap_all) <= R21["gap"]
+    v["no_optimism"] = ok(s["bias"]) and ok(s["bias_se"]) and s["bias"] - R21["z"] * s["bias_se"] <= 0 and gap_all <= R21["gap"]
+    v["pass"] = bool(v["match_ok"] and v["gap_ok"] and v["no_optimism"] and v["fresh"])
+    return v
 
 
 def reason_cat(status, reason) -> str:
@@ -192,11 +219,12 @@ def score_account(acct: str, run: Path, live_db: Path, days: list[str]) -> dict:
                        extra=(len(b) - int(b["m"].sum())) / len(a) if len(a) else np.nan,
                        live_avg_r=a["r"].mean() if len(a) else np.nan, replay_avg_r=b["r"].mean() if len(b) else np.nan,
                        bias=p["x"].mean() if len(p) else np.nan, live_total_r=a["r"].sum(), replay_total_r=b["r"].sum()))
-    res = dict(account=acct, sessions=len(have), live_trades=len(L), replay_trades=len(R), matched=len(pairs),
+    res = dict(account=acct, sessions=len(have), days=list(have), live_trades=len(L), replay_trades=len(R), matched=len(pairs),
                matched_pm1=len(pairs1), match=len(pairs) / max(1, len(L)), match_pm1=len(pairs1) / max(1, len(L)),
                extra=(len(R) - len(mj)) / max(1, len(L)), bias=m, bias_se=se, bias_n=n,
                bias_lo=m - 1.96 * se, bias_hi=m + 1.96 * se, live_r=float(L["r"].sum()), replay_r=float(R["r"].sum()),
-               daily_corr=corr, sign_agree=sign, skip_match=same / max(1, len(LS)), live_signals=len(LS),
+               live_avg_r=float(L["r"].mean()) if len(L) else float("nan"),
+               replay_avg_r=float(R["r"].mean()) if len(R) else float("nan"), daily_corr=corr, sign_agree=sign, skip_match=same / max(1, len(LS)), live_signals=len(LS),
                worst_day_live=wl, worst_day_replay=wr, worst_ok=worst_ok,
                top_mismatch=dict(sorted(mism.items(), key=lambda kv: -kv[1])[:12]))
     return dict(summary=res, pairs=pr, daily=daily, setups=pd.DataFrame(ps))
@@ -219,9 +247,15 @@ def main(argv=None):
     p.add_argument("--accounts", default="primary,testing,testing2")
     p.add_argument("--live-dir", required=True)
     p.add_argument("--out", required=True)
+    p.add_argument("--fit-until", default=None, help="replay fit date (default: params_v2.json fit_until); rule 21 "
+                   "scores only sessions after it")
     a = p.parse_args(argv)
     lo, hi = a.dates.split("..")
-    days = [str(d) for d in store.sessions(lo, hi)]
+    fit = a.fit_until or (json.loads(PARAMS.read_text()).get("fit_until") if PARAMS.exists() else None)
+    all_days = [str(d) for d in store.sessions(lo, hi)]
+    days = fresh_days(all_days, fit)
+    if len(days) < len(all_days):
+        print(f"rule 21: fresh sessions only - dropped {len(all_days) - len(days)} session(s) on or before {fit}")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     allp, alld, alls, summ = [], [], [], []
@@ -229,6 +263,7 @@ def main(argv=None):
         r = score_account(acct, Path(a.run), Path(a.live_dir) / f"{BRANCH_DB[acct]}.db", days)
         s = r["summary"]
         s["verdict"] = verdict(s)
+        s["rule21"] = rule21(s, fit)
         summ.append(s)
         allp.append(r["pairs"].assign(account=acct))
         alld.append(r["daily"])
@@ -238,20 +273,27 @@ def main(argv=None):
     m, se, n = clustered(P)
     LT, RT = sum(s["live_trades"] for s in summ), sum(s["replay_trades"] for s in summ)
     MT = sum(s["matched"] for s in summ)
-    pooled = dict(account="pooled", sessions=int(D["day"].nunique()), live_trades=LT, replay_trades=RT, matched=MT,
+    LR = sum(s["live_r"] for s in summ)
+    RR = sum(s["replay_r"] for s in summ)
+    pooled = dict(account="pooled", sessions=int(D["day"].nunique()), days=sorted(set(D["day"])), live_trades=LT, replay_trades=RT, matched=MT,
                   matched_pm1=sum(s["matched_pm1"] for s in summ), match=MT / max(1, LT),
                   match_pm1=sum(s["matched_pm1"] for s in summ) / max(1, LT), extra=(RT - MT) / max(1, LT),
                   bias=m, bias_se=se, bias_n=n, bias_lo=m - 1.96 * se, bias_hi=m + 1.96 * se,
                   live_r=float(D["live_r"].sum()), replay_r=float(D["replay_r"].sum()),
+                  live_avg_r=LR / LT if LT else float("nan"), replay_avg_r=RR / RT if RT else float("nan"),
                   daily_corr=float(np.corrcoef(D["live_r"], D["replay_r"])[0, 1]),
                   sign_agree=float((np.sign(D["live_r"]) == np.sign(D["replay_r"])).mean()),
                   skip_match=sum(s["skip_match"] * s["live_signals"] for s in summ) / max(1, sum(s["live_signals"] for s in summ)),
                   live_signals=sum(s["live_signals"] for s in summ), worst_ok=all(s["worst_ok"] for s in summ))
     pooled["verdict"] = verdict(pooled)
-    card = dict(run=a.run, dates=a.dates, targets=T, pooled=pooled, accounts=summ,
+    pooled["rule21"] = rule21(pooled, fit)
+    r21 = dict(targets=R21, fit_until=fit, matched_on="decision bar", per_account={s["account"]: s["rule21"]["pass"]
+               for s in summ}, pooled=pooled["rule21"]["pass"])
+    r21["pass"] = bool(r21["pooled"] and all(r21["per_account"].values()))
+    card = dict(run=a.run, dates=a.dates, targets=T, rule21=r21, pooled=pooled, accounts=summ,
                 note="Educational only - not financial advice.")
     (out / "scorecard.json").write_text(json.dumps(card, indent=1, default=str))
-    pd.DataFrame([{k: v for k, v in s.items() if k not in ("top_mismatch", "verdict")} for s in summ + [pooled]]) \
+    pd.DataFrame([{k: v for k, v in s.items() if k not in ("top_mismatch", "verdict", "rule21", "days")} for s in summ + [pooled]]) \
         .to_csv(out / "per_account.csv", index=False, float_format="%.4f")
     pd.concat(alls, ignore_index=True).to_csv(out / "per_setup.csv", index=False, float_format="%.4f")
     D.to_csv(out / "daily.csv", index=False, float_format="%.3f")
@@ -259,7 +301,8 @@ def main(argv=None):
         print(f"{s['account']:9s} n_live={s['live_trades']} n_rep={s['replay_trades']} match={s['match']:.3f} "
               f"(+-1 {s['match_pm1']:.3f}) extra={s['extra']:.3f} bias={s['bias']:+.4f} [{s['bias_lo']:+.4f},"
               f"{s['bias_hi']:+.4f}] corr={s['daily_corr']:.3f} sign={s['sign_agree']:.2f} skip={s['skip_match']:.3f} "
-              f"worst={s['worst_ok']} ALL={s['verdict']['all']}")
+              f"worst={s['worst_ok']} ALL={s['verdict']['all']} rule21={s['rule21']['pass']}")
+    print(f"rule 21 (decision bar, fresh sessions after {fit}): {'PASS' if r21['pass'] else 'FAIL'}")
     print("Educational only - not financial advice.")
 
 
