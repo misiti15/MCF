@@ -1,0 +1,1853 @@
+{
+ "strategies": {
+  "L3-gap-slope-fromopen-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/L3-gap-slope-fromopen-FD.py",
+   "min_adv": 0,
+   "window": [
+    950,
+    1500
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "CWT14-failbrk-pdl-p10-lowvol-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "from_testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B3-LPD-p0.1-Vlowvol-sidelong-t05s1-full",
+    "fill": true
+   }
+  },
+  "L3-gap-slope-rsi5hi-FD": {
+   "enabled": false,
+   "refire": true,
+   "refire_cooldown": 6,
+   "type": "lab",
+   "module": "research/bdi/fullday/L3-gap-slope-rsi5hi-FD.py",
+   "min_adv": 0,
+   "window": [
+    950,
+    1500
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null
+  },
+  "NM-ETF-late-dip-di-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py",
+   "symbols": "module",
+   "min_adv": 95000000,
+   "window": [
+    1400,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation",
+    "q8",
+    "etf",
+    "fragile"
+   ]
+  },
+  "ST7-rsi50dn-long-pm-t1s1-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "CWT13-vwapstretch-z05-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT13-vwapstretch-z05-long.py",
+   "min_adv": 95000000,
+   "window": [
+    1100,
+    1500
+   ],
+   "scale_out_r": null,
+   "from_testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B2-z0.5-Uall-sidelong-t05s1-guest",
+    "fill": false
+   }
+  },
+  "orb": {
+   "enabled": false,
+   "min_atr": 0.5,
+   "range_minutes": 5,
+   "stop_atr_frac": 0.1,
+   "target_r": null,
+   "min_rvol": 1.0
+  },
+  "vwap_reclaim": {
+   "enabled": false,
+   "earliest": "10:00",
+   "latest": "14:30",
+   "lookback_bars": 15,
+   "min_rvol": 1.5,
+   "target_r": 2.0
+  },
+  "gap_and_go": {
+   "enabled": false,
+   "min_gap_pct": 4.0,
+   "range_minutes": 5,
+   "min_rvol": 2.0,
+   "target_r": 2.0,
+   "exit_by": "11:30"
+  },
+  "gap_fade": {
+   "enabled": false,
+   "min_gap_pct": 1.0,
+   "max_gap_pct": 3.0,
+   "range_minutes": 15,
+   "max_rvol": 1.5,
+   "exit_by": "12:00"
+  },
+  "intraday_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA"
+   ],
+   "signal_time": "10:00",
+   "entry_time": "15:30",
+   "min_abs_return_pct": 0.25,
+   "stop_atr_frac": 0.25
+  },
+  "noise_band_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ"
+   ],
+   "band_mult": 1.0,
+   "first_check": "10:00",
+   "last_check": "15:30"
+  },
+  "vwap_reversion": {
+   "enabled": false,
+   "band_std": 2.5,
+   "earliest": "10:00",
+   "latest": "15:00",
+   "max_rvol": 3.0,
+   "stop_std": 1.0
+  },
+  "orb20_a": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "A",
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "orb20_b": {
+   "enabled": false,
+   "class": "orb20",
+   "variant": "B",
+   "stop_atr": 0.15,
+   "min_rvol": 1.5,
+   "top_n": 20,
+   "entry_until": "11:30",
+   "scale_out_r": null
+  },
+  "gap_continuation": {
+   "enabled": false,
+   "min_gap_pct": 3.0,
+   "min_rvol": 3.0,
+   "target_r": 2.0,
+   "entry_until": "11:00",
+   "scale_out_r": null
+  },
+  "gap_sma20": {
+   "enabled": false,
+   "mirror": true,
+   "stop_atr": 0.05,
+   "scale_out_r": null
+  },
+  "index_gap_fill": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "stop_gap_mult": 1.5,
+   "scale_out_r": null
+  },
+  "close_momentum": {
+   "enabled": false,
+   "symbols": [
+    "SPY",
+    "QQQ",
+    "IWM"
+   ],
+   "gate_mult": 0.5,
+   "stop_atr": 0.5,
+   "scale_out_r": null
+  },
+  "eod_reversal": {
+   "enabled": false,
+   "min_drop_pct": 2.0,
+   "min_adv": 20000000,
+   "scale_out_r": null
+  },
+  "vwap_pullback": {
+   "enabled": false,
+   "min_rvol": 2.0,
+   "top_n": 20,
+   "entry_until": "12:00",
+   "scale_out_r": null
+  },
+  "heat_fade_short": {
+   "enabled": false,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_9.py",
+   "sides": "short",
+   "min_adv": 125000000,
+   "window": [
+    950,
+    1030
+   ],
+   "gate": "fo-",
+   "scale_out_r": null
+  },
+  "heat_fade_long": {
+   "enabled": false,
+   "type": "heat",
+   "formula": "research/heat/candidates/regime_5.py",
+   "sides": "long",
+   "min_adv": 125000000,
+   "window": [
+    1105,
+    1330
+   ],
+   "gate": "gap+",
+   "scale_out_r": null
+  },
+  "exhaustion_short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/setups2/candidates/volume_flip_1.py",
+   "min_adv": 95000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "prefilter": "new_high_100m",
+   "scale_out_r": null
+  },
+  "MF1-945-flowsell-vwapup": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-945-flowsell-vwapup.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1030
+   ],
+   "scale_out_r": null
+  },
+  "MF2-open-rsimidhi-flowsell": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-rsimidhi-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null,
+   "former_primary": {
+    "demoted": "2026-10-27",
+    "first_testing_session": "2026-10-28",
+    "review_after_sessions": 10
+   }
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-open-flowsell-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF3-open-flowsell-rsi5hi-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/MF4-h40-open-flowsell-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS3-failed-vwap-reclaim-short-FD": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/fullday/NS3-failed-vwap-reclaim-short-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "MF4-h40-open-flowsell": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-h40-open-flowsell.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "scale_out_r": null
+  },
+  "MF5-flowsell-vwapup-rsi5hi": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS1-rsidip-rsi5pop-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS1-rsidip-rsi5pop-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS2-sma50break-overbought-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS2-sma50break-overbought-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS3-failed-vwap-reclaim-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS3-failed-vwap-reclaim-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NS4-pm-vwap-reclaim-oversold-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS4-pm-vwap-reclaim-oversold-short.py",
+   "min_adv": 95000000,
+   "window": [
+    1130,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "NS5-sma50-flush-oversold-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/owner1008/NS5-sma50-flush-oversold-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "RW6G1-ns2-up3-vwap2sd-short": {
+   "refire": true,
+   "refire_cooldown": 1,
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null
+  },
+  "NM-ETF-late-dip-di-long-WB1": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB1.py",
+   "symbols": "module",
+   "min_adv": 95000000,
+   "window": [
+    1400,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "workbench",
+    "parent:NM-ETF-late-dip-di-long"
+   ]
+  },
+  "L3-gap-slope-rsi5hi-FD-WB4": {
+   "enabled": true,
+   "refire": true,
+   "refire_cooldown": 6,
+   "type": "lab",
+   "module": "research/workbench/L3-gap-slope-rsi5hi-FD/modules/L3-gap-slope-rsi5hi-FD-WB4.py",
+   "min_adv": 0,
+   "window": [
+    950,
+    1500
+   ],
+   "prefilter": "gap_le:-2.6573517322540283",
+   "scale_out_r": null,
+   "tags": [
+    "workbench",
+    "parent:L3-gap-slope-rsi5hi-FD"
+   ]
+  },
+  "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/workbench/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short/modules/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4.py",
+   "context": [
+    "breadth"
+   ],
+   "min_adv": 150000000,
+   "window": [
+    1430,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "workbench",
+    "parent:GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short"
+   ]
+  },
+  "ST4-emadn-long-am-t1s05-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "live_scale_out": false
+  },
+  "IDX2-spy075-0945-3x-trail": {
+   "enabled": false,
+   "class": "index_dip_bounce",
+   "trade_candidates": [
+    "SPXL",
+    "UPRO"
+   ],
+   "pick": "max_dollar_volume",
+   "signal_symbol": "SPY",
+   "dip_pct": 0.75,
+   "dip_by": "09:45",
+   "entry_from": "09:50",
+   "entry_until": "10:05",
+   "trigger": "recovery",
+   "recovery_frac": 0.2,
+   "stop_buffer_frac": 0.1,
+   "target": null,
+   "trail_r": 1.0,
+   "trail_after_r": 1.0,
+   "scale_out_r": null,
+   "testing": {
+    "added": "2026-10-16",
+    "source": "research/bdi/idxdip1015",
+    "variant": "V2",
+    "bar": "forward test (owner request); research bar not met"
+   }
+  },
+  "IDX1-qqq100-0955-TQQQ-hold": {
+   "enabled": true,
+   "class": "index_dip_bounce",
+   "symbols": [
+    "TQQQ"
+   ],
+   "signal_symbol": "QQQ",
+   "dip_pct": 1.0,
+   "dip_by": "09:55",
+   "entry_from": "09:50",
+   "entry_until": "10:05",
+   "trigger": "recovery",
+   "recovery_frac": 0.2,
+   "stop_buffer_frac": 0.1,
+   "target": null,
+   "scale_out_r": null,
+   "testing": {
+    "added": "2026-10-16",
+    "source": "research/bdi/idxdip1015",
+    "variant": "V1",
+    "bar": "forward test (owner request); research bar not met"
+   }
+  },
+  "IDX5-spy050-0945-3x-trail": {
+   "enabled": false,
+   "class": "index_dip_bounce",
+   "trade_candidates": [
+    "SPXL",
+    "UPRO"
+   ],
+   "pick": "max_dollar_volume",
+   "signal_symbol": "SPY",
+   "dip_pct": 0.5,
+   "dip_by": "09:45",
+   "entry_from": "09:50",
+   "entry_until": "10:05",
+   "trigger": "recovery",
+   "recovery_frac": 0.2,
+   "stop_buffer_frac": 0.1,
+   "target": null,
+   "trail_r": 1.0,
+   "trail_after_r": 1.0,
+   "scale_out_r": null,
+   "testing": {
+    "added": "2026-10-16",
+    "source": "research/bdi/idxdip1015",
+    "variant": "V5",
+    "bar": "forward test (owner request); research bar not met"
+   }
+  },
+  "LD4-st4-breadthup-t1s05-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/longs1020/modules/LD4-st4-breadthup-t1s05-long.py",
+   "context": [
+    "breadth"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "observation",
+    "longs1020"
+   ]
+  },
+  "LD8-spy-dip030-breadthturn-spxl-holdtr-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/longs1020/modules/LD8-spy-dip030-breadthturn-spxl-holdtr-long.py",
+   "symbols": [
+    "SPXL"
+   ],
+   "pin_symbols": true,
+   "context": [
+    "spy_fo",
+    "breadth"
+   ],
+   "min_adv": 0,
+   "window": [
+    950,
+    1030
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "twin_group": "LD-SPXL",
+   "tags": [
+    "observation",
+    "longs1020"
+   ]
+  },
+  "LD3-st2-idxturn-t05s1-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/longs1020/modules/LD3-st2-idxturn-t05s1-long.py",
+   "context": [
+    "spy_fo"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "twin_group": "LD-ST2",
+   "tags": [
+    "observation",
+    "longs1020"
+   ]
+  },
+  "LD1-ns1-breadthup-t05s1-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/longs1020/modules/LD1-ns1-breadthup-t05s1-long.py",
+   "context": [
+    "breadth"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "twin_group": "LD-NS1",
+   "tags": [
+    "observation",
+    "longs1020"
+   ]
+  },
+  "NM1-cwt09-g10-vwaploss-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/swarm1017/final/modules/NM1-cwt09-g10-vwaploss-fodn-slopeup-short.py",
+   "min_adv": 1000000,
+   "window": [
+    1030,
+    1500
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation"
+   ]
+  },
+  "CWT04-backside-vwaptest-a25-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B1-a2.5-trigT1-t1s1-full",
+    "fill": false
+   }
+  },
+  "NM-RWN5-ns3-mon-weakrs-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/swarm1017/rework-ns/modules/RWN5-ns3-mon-weakrs-short.py",
+   "context": [
+    "spy_fo"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1130
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation",
+    "q8",
+    "day-of-week"
+   ]
+  },
+  "NM-AMS-N1-quiet-morning-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/swarm1017/final/modules/AMS-N1-downtrend-quiet-bounce.py",
+   "min_adv": 95000000,
+   "window": [
+    1000,
+    1100
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation"
+   ]
+  },
+  "NM-RWN3-ns3-spyup-early-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/swarm1017/rework-ns/modules/RWN3-ns3-spyup-early-short.py",
+   "context": [
+    "spy_fo"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1030
+   ],
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation",
+    "q8"
+   ]
+  },
+  "ST8-volspikedn-long-pm-t1s1-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/fullday/ST8-volspikedn-long-pm-t1s1-FD.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null
+  },
+  "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/st7_1022/modules/ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD.py",
+   "context": [
+    "qqq_vwap"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "observation",
+    "st7_1022"
+   ],
+   "twin_group": "ST7-T1"
+  },
+  "CWT09-gapdn-bounce-g10-lowerhalf-short": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT09-gapdn-bounce-g10-lowerhalf-short.py",
+   "min_adv": 1000000,
+   "window": [
+    1030,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "A7 gap<=-10 E=out T2 S guest",
+    "fill": false
+   }
+  },
+  "NM-RWR4-ns2-up3-qqqup-slopedn-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/swarm1017/rework-rw/modules/RWR4-ns2-up3-qqqup-slopedn-am-short-t05s1.py",
+   "context": [
+    "qqq_fo"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1100
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "near-miss",
+    "swarm1017",
+    "forward-observation",
+    "q8"
+   ]
+  },
+  "CWT04-backside-lh-a15-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT04-backside-lh-a15-short.py",
+   "min_adv": 95000000,
+   "window": [
+    1030,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B1-a1.5-trigT2-t1s1-guest",
+    "fill": false
+   }
+  },
+  "CWT05-flush-m05-v5-long": {
+   "enabled": false,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT05-flush-m05-v5-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B5-m0.5-v5-Dnone-t05s1-full",
+    "fill": false
+   }
+  },
+  "CWT13-vwapstretch-z075-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/bdi/cwt/live/CWT13-vwapstretch-z075-long.py",
+   "min_adv": 95000000,
+   "window": [
+    950,
+    1500
+   ],
+   "scale_out_r": null,
+   "testing2": {
+    "batch": "cwt-2026-10-12",
+    "source": "B2-z0.75-Uall-sidelong-t1s1-full",
+    "fill": false
+   }
+  },
+  "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261019-07-volratio-hi-late-long.py",
+   "context": [
+    "spy_fo"
+   ],
+   "min_adv": 50000000,
+   "window": [
+    1400,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-19"
+   ],
+   "gen": {
+    "date": "2026-10-19",
+    "spec": {
+     "side": "long",
+     "window": "LATE",
+     "geom": "t05s1",
+     "min_adv": 50000000.0,
+     "conds": [
+      [
+       "day_vs_prev_range",
+       ">=",
+       1.5
+      ],
+      [
+       "spy_fo",
+       ">",
+       0.5
+      ],
+      [
+       "upper_wick",
+       ">=",
+       0.59
+      ],
+      [
+       "volumeRatio",
+       ">=",
+       2.0
+      ]
+     ]
+    },
+    "key": "70ec895c21c1c754",
+    "screen": {
+     "train": {
+      "n": 739,
+      "exp_r": 0.0387,
+      "t": 0.65,
+      "win": 0.656,
+      "days": 58
+     },
+     "valid": {
+      "n": 636,
+      "exp_r": 0.0097,
+      "t": 0.3,
+      "win": 0.616,
+      "days": 45
+     },
+     "all": {
+      "n": 1375,
+      "exp_r": 0.0253,
+      "t": 0.7,
+      "win": 0.638,
+      "days": 103
+     },
+     "per_day": 3.228,
+     "per_day_valid": 3.312,
+     "exp_up": 0.039,
+     "exp_down": null,
+     "exp_flat": -0.0827,
+     "excess_train": 0.0471,
+     "excess_valid": 0.0264,
+     "tier1": true,
+     "score": 0.55,
+     "max_overlap": 0.315,
+     "overlap_with": "CWT14-failbrk-orl-p05-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261020-03-macdh-hi-mid-long.py",
+   "context": [
+    "breadth"
+   ],
+   "min_adv": 20000000,
+   "window": [
+    1100,
+    1300
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-20"
+   ],
+   "gen": {
+    "date": "2026-10-20",
+    "spec": {
+     "side": "long",
+     "window": "MID",
+     "geom": "t05s05",
+     "min_adv": 20000000.0,
+     "conds": [
+      [
+       "bars_since_lod",
+       "<=",
+       5.0
+      ],
+      [
+       "breadth",
+       "<",
+       0.3
+      ],
+      [
+       "macd_hist",
+       ">=",
+       0.079
+      ]
+     ]
+    },
+    "key": "466cc15de28859a2",
+    "screen": {
+     "train": {
+      "n": 875,
+      "exp_r": 0.0582,
+      "t": 0.72,
+      "win": 0.625,
+      "days": 72
+     },
+     "valid": {
+      "n": 429,
+      "exp_r": 0.0098,
+      "t": 0.19,
+      "win": 0.571,
+      "days": 47
+     },
+     "all": {
+      "n": 1304,
+      "exp_r": 0.0423,
+      "t": 0.72,
+      "win": 0.607,
+      "days": 119
+     },
+     "per_day": 3.061,
+     "per_day_valid": 2.234,
+     "exp_up": 0.118,
+     "exp_down": 0.0351,
+     "exp_flat": 0.0682,
+     "excess_train": 0.0623,
+     "excess_valid": 0.0824,
+     "tier1": true,
+     "score": 0.94,
+     "max_overlap": 0.27,
+     "overlap_with": "ST2-slope20up-long-am-t05s1-FD",
+     "n_tried_in_run": 3146
+    }
+   }
+  },
+  "GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261022-05-macdh-hi-pm-short.py",
+   "context": [
+    "breadth_open"
+   ],
+   "min_adv": 150000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-22"
+   ],
+   "gen": {
+    "date": "2026-10-22",
+    "spec": {
+     "side": "short",
+     "window": "PM",
+     "geom": "holdtr",
+     "min_adv": 150000000.0,
+     "conds": [
+      [
+       "breadth_open",
+       "<",
+       0.35
+      ],
+      [
+       "macd_hist",
+       ">=",
+       0.079
+      ],
+      [
+       "or_high_dist_atr",
+       "<=",
+       -0.38
+      ],
+      [
+       "upper_wick",
+       ">=",
+       0.71
+      ]
+     ]
+    },
+    "key": "3af9f5cc6ecbcec2",
+    "screen": {
+     "train": {
+      "n": 1823,
+      "exp_r": 0.0397,
+      "t": 0.21,
+      "win": 0.503,
+      "days": 69
+     },
+     "valid": {
+      "n": 1001,
+      "exp_r": 0.0145,
+      "t": 0.16,
+      "win": 0.522,
+      "days": 35
+     },
+     "all": {
+      "n": 2824,
+      "exp_r": 0.0308,
+      "t": 0.25,
+      "win": 0.51,
+      "days": 104
+     },
+     "per_day": 6.629,
+     "per_day_valid": 5.214,
+     "exp_up": null,
+     "exp_down": 0.0448,
+     "exp_flat": -0.3938,
+     "excess_train": 0.0658,
+     "excess_valid": 0.0714,
+     "tier1": true,
+     "score": 0.41,
+     "max_overlap": 0.455,
+     "overlap_with": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261023-04-emadchg-lo-pm-long.py",
+   "context": [
+    "qqq_fo"
+   ],
+   "min_adv": 20000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-23"
+   ],
+   "gen": {
+    "date": "2026-10-23",
+    "spec": {
+     "side": "long",
+     "window": "PM",
+     "geom": "t1s1",
+     "min_adv": 20000000.0,
+     "conds": [
+      [
+       "dist_pdh_atr",
+       "<=",
+       0.074
+      ],
+      [
+       "emaDiff",
+       "<=",
+       -0.46
+      ],
+      [
+       "emaDiff_chg3",
+       "<=",
+       -0.028
+      ],
+      [
+       "qqq_fo",
+       "<",
+       -0.6
+      ]
+     ]
+    },
+    "key": "dfc44add58041678",
+    "screen": {
+     "train": {
+      "n": 338,
+      "exp_r": 0.1044,
+      "t": 0.82,
+      "win": 0.601,
+      "days": 53
+     },
+     "valid": {
+      "n": 358,
+      "exp_r": 0.0498,
+      "t": 0.71,
+      "win": 0.564,
+      "days": 51
+     },
+     "all": {
+      "n": 696,
+      "exp_r": 0.0763,
+      "t": 1.08,
+      "win": 0.582,
+      "days": 104
+     },
+     "per_day": 1.634,
+     "per_day_valid": 1.865,
+     "exp_up": 0.0067,
+     "exp_down": -0.0503,
+     "exp_flat": 0.2606,
+     "excess_train": 0.1255,
+     "excess_valid": 0.0086,
+     "tier1": true,
+     "score": 0.96,
+     "max_overlap": 0.6,
+     "overlap_with": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261026-08-rsislope-hi-open-short.py",
+   "context": [
+    "spy_fo"
+   ],
+   "min_adv": 50000000,
+   "window": [
+    950,
+    1030
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-26"
+   ],
+   "gen": {
+    "date": "2026-10-26",
+    "spec": {
+     "side": "short",
+     "window": "OPEN",
+     "geom": "holdtr",
+     "min_adv": 50000000.0,
+     "conds": [
+      [
+       "day_vs_prev_range",
+       ">=",
+       1.2
+      ],
+      [
+       "ret1",
+       ">=",
+       0.063
+      ],
+      [
+       "rsiSlope",
+       ">=",
+       19.0
+      ],
+      [
+       "spy_fo",
+       ">",
+       0.0
+      ]
+     ]
+    },
+    "key": "3d5e94a926eb578e",
+    "screen": {
+     "train": {
+      "n": 1450,
+      "exp_r": 0.2345,
+      "t": 0.62,
+      "win": 0.492,
+      "days": 144
+     },
+     "valid": {
+      "n": 1319,
+      "exp_r": -0.0409,
+      "t": -0.43,
+      "win": 0.462,
+      "days": 121
+     },
+     "all": {
+      "n": 2769,
+      "exp_r": 0.1033,
+      "t": 0.5,
+      "win": 0.477,
+      "days": 265
+     },
+     "per_day": 6.5,
+     "per_day_valid": 6.87,
+     "exp_up": 0.1174,
+     "exp_down": 0.353,
+     "exp_flat": -0.043,
+     "excess_train": 0.1246,
+     "excess_valid": 0.047,
+     "tier1": false,
+     "score": 0.32,
+     "max_overlap": 0.5,
+     "overlap_with": "CWT04-backside-lh-a25-short",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261027-08-orbfaildn-lunch-short.py",
+   "context": [
+    "qqq_fo"
+   ],
+   "min_adv": 95000000,
+   "window": [
+    1130,
+    1400
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-27"
+   ],
+   "gen": {
+    "date": "2026-10-27",
+    "spec": {
+     "side": "short",
+     "window": "LUNCH",
+     "geom": "hold",
+     "min_adv": 95000000.0,
+     "conds": [
+      [
+       "from_pc_atr",
+       "<=",
+       -0.96
+      ],
+      [
+       "orb_fail_dn",
+       "==",
+       1.0
+      ],
+      [
+       "qqq_fo",
+       "<",
+       -0.6
+      ]
+     ]
+    },
+    "key": "3ff5cc36f1c208d1",
+    "screen": {
+     "train": {
+      "n": 890,
+      "exp_r": 0.0096,
+      "t": 0.04,
+      "win": 0.387,
+      "days": 58
+     },
+     "valid": {
+      "n": 497,
+      "exp_r": 0.0085,
+      "t": 0.04,
+      "win": 0.427,
+      "days": 53
+     },
+     "all": {
+      "n": 1387,
+      "exp_r": 0.0092,
+      "t": 0.06,
+      "win": 0.401,
+      "days": 111
+     },
+     "per_day": 3.256,
+     "per_day_valid": 2.589,
+     "per_day_median60": 0.0,
+     "expected_live_per_day": 0.0,
+     "exp_up": -0.6434,
+     "exp_down": 0.1241,
+     "exp_flat": -0.1431,
+     "excess_train": -0.1798,
+     "excess_valid": 0.1117,
+     "tier1": true,
+     "score": 0.04,
+     "max_overlap": 0.515,
+     "overlap_with": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+     "n_tried_in_run": 3082
+    }
+   }
+  },
+  "GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261028-05-emadchg-hi-lam-long.py",
+   "context": [
+    "qqq_fo"
+   ],
+   "min_adv": 50000000,
+   "window": [
+    1030,
+    1200
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-28"
+   ],
+   "gen": {
+    "date": "2026-10-28",
+    "spec": {
+     "side": "long",
+     "window": "LAM",
+     "geom": "holdtr",
+     "min_adv": 50000000.0,
+     "conds": [
+      [
+       "emaDiff_chg3",
+       ">=",
+       0.093
+      ],
+      [
+       "or_low_dist_atr",
+       "<=",
+       -0.42
+      ],
+      [
+       "qqq_fo",
+       ">",
+       0.6
+      ]
+     ]
+    },
+    "key": "07d65345ea1874d2",
+    "screen": {
+     "train": {
+      "n": 297,
+      "exp_r": 0.0074,
+      "t": 0.08,
+      "win": 0.481,
+      "days": 49
+     },
+     "valid": {
+      "n": 546,
+      "exp_r": 0.0168,
+      "t": 0.19,
+      "win": 0.505,
+      "days": 55
+     },
+     "all": {
+      "n": 843,
+      "exp_r": 0.0135,
+      "t": 0.2,
+      "win": 0.497,
+      "days": 104
+     },
+     "per_day": 1.979,
+     "per_day_valid": 2.844,
+     "per_day_median60": 0.0,
+     "expected_live_per_day": 0.0,
+     "exp_up": 0.1626,
+     "exp_down": -0.2893,
+     "exp_flat": -0.0646,
+     "excess_train": 0.094,
+     "excess_valid": 0.0859,
+     "tier1": true,
+     "score": 0.33,
+     "max_overlap": 0.316,
+     "overlap_with": "LD8-spy-dip030-breadthturn-spxl-holdtr-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261028-08-ret5m-hi-lunch-long.py",
+   "context": [
+    "breadth_open"
+   ],
+   "min_adv": 150000000,
+   "window": [
+    1130,
+    1400
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-28"
+   ],
+   "gen": {
+    "date": "2026-10-28",
+    "spec": {
+     "side": "long",
+     "window": "LUNCH",
+     "geom": "holdtr",
+     "min_adv": 150000000.0,
+     "conds": [
+      [
+       "breadth_open",
+       "<",
+       0.35
+      ],
+      [
+       "compress6_atr",
+       "<=",
+       0.11
+      ],
+      [
+       "ret1",
+       ">=",
+       0.21
+      ],
+      [
+       "sma20_dist_pct",
+       "<=",
+       -0.16
+      ]
+     ]
+    },
+    "key": "bf0f86988563a1c4",
+    "screen": {
+     "train": {
+      "n": 1048,
+      "exp_r": 0.0568,
+      "t": 0.74,
+      "win": 0.548,
+      "days": 74
+     },
+     "valid": {
+      "n": 749,
+      "exp_r": 0.0057,
+      "t": 0.06,
+      "win": 0.494,
+      "days": 46
+     },
+     "all": {
+      "n": 1797,
+      "exp_r": 0.0355,
+      "t": 0.59,
+      "win": 0.525,
+      "days": 120
+     },
+     "per_day": 4.218,
+     "per_day_valid": 3.901,
+     "per_day_median60": 0.0,
+     "expected_live_per_day": 0.0,
+     "exp_up": 1.49,
+     "exp_down": -0.0139,
+     "exp_flat": 0.2596,
+     "excess_train": 0.0664,
+     "excess_valid": 0.0628,
+     "tier1": true,
+     "score": 0.31,
+     "max_overlap": 0.349,
+     "overlap_with": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261029-02-rsi2-lo-mid-long.py",
+   "context": [
+    "breadth"
+   ],
+   "min_adv": 150000000,
+   "window": [
+    1100,
+    1300
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-29"
+   ],
+   "gen": {
+    "date": "2026-10-29",
+    "spec": {
+     "side": "long",
+     "window": "MID",
+     "geom": "hold",
+     "min_adv": 150000000.0,
+     "conds": [
+      [
+       "breadth",
+       "<",
+       0.4
+      ],
+      [
+       "day_vs_prev_range",
+       "<=",
+       0.52
+      ],
+      [
+       "rsi2",
+       "<=",
+       0.0
+      ],
+      [
+       "vwap_cross_n",
+       ">=",
+       9.0
+      ]
+     ]
+    },
+    "key": "3c19e3c7d6771b25",
+    "screen": {
+     "train": {
+      "n": 1330,
+      "exp_r": 0.0542,
+      "t": 0.24,
+      "win": 0.423,
+      "days": 119
+     },
+     "valid": {
+      "n": 768,
+      "exp_r": 0.0199,
+      "t": 0.11,
+      "win": 0.443,
+      "days": 89
+     },
+     "all": {
+      "n": 2098,
+      "exp_r": 0.0417,
+      "t": 0.26,
+      "win": 0.43,
+      "days": 208
+     },
+     "per_day": 4.925,
+     "per_day_valid": 4.0,
+     "per_day_median60": 0.0,
+     "expected_live_per_day": 0.0,
+     "exp_up": 1.7236,
+     "exp_down": -0.34,
+     "exp_flat": 0.0211,
+     "excess_train": 0.0327,
+     "excess_valid": 0.035,
+     "tier1": true,
+     "score": 0.36,
+     "max_overlap": 0.419,
+     "overlap_with": "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long",
+     "n_tried_in_run": 3000
+    }
+   }
+  },
+  "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long": {
+   "enabled": true,
+   "type": "lab",
+   "module": "research/generator/modules/GEN-261029-03-macdh-lo-pm-long.py",
+   "context": [
+    "qqq_fo"
+   ],
+   "min_adv": 50000000,
+   "window": [
+    1300,
+    1500
+   ],
+   "refire": false,
+   "scale_out_r": null,
+   "tags": [
+    "generated",
+    "gen-2026-10-29"
+   ],
+   "gen": {
+    "date": "2026-10-29",
+    "spec": {
+     "side": "long",
+     "window": "PM",
+     "geom": "hold",
+     "min_adv": 50000000.0,
+     "conds": [
+      [
+       "gap",
+       ">=",
+       2.0
+      ],
+      [
+       "macd_hist",
+       "<=",
+       -0.12
+      ],
+      [
+       "qqq_fo",
+       ">",
+       0.0
+      ],
+      [
+       "ret1",
+       "<=",
+       -0.062
+      ]
+     ]
+    },
+    "key": "b3fc6947e29eb4eb",
+    "screen": {
+     "train": {
+      "n": 2221,
+      "exp_r": 0.0087,
+      "t": 0.19,
+      "win": 0.5,
+      "days": 151
+     },
+     "valid": {
+      "n": 3767,
+      "exp_r": 0.0036,
+      "t": 0.05,
+      "win": 0.469,
+      "days": 118
+     },
+     "all": {
+      "n": 5988,
+      "exp_r": 0.0055,
+      "t": 0.12,
+      "win": 0.48,
+      "days": 269
+     },
+     "per_day": 14.056,
+     "per_day_valid": 19.62,
+     "per_day_median60": 4.0,
+     "expected_live_per_day": 4.4,
+     "exp_up": 0.1427,
+     "exp_down": -0.1679,
+     "exp_flat": -0.1113,
+     "excess_train": 0.032,
+     "excess_valid": 0.0745,
+     "tier1": true,
+     "score": 0.3,
+     "max_overlap": 0.522,
+     "overlap_with": "ST5-pdbrkup-short-mid-t05s1-FD",
+     "n_tried_in_run": 3000
+    }
+   }
+  }
+ },
+ "exits": {
+  "scale_out_r": 1.0,
+  "scale_out_frac": 0.5
+ },
+ "shorts": {
+  "enabled": true,
+  "require_easy_to_borrow": true
+ },
+ "live": {
+  "setup_order": [
+   "NM-ETF-late-dip-di-long-WB1",
+   "L3-gap-slope-rsi5hi-FD-WB4",
+   "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4",
+   "IDX1-qqq100-0955-TQQQ-hold",
+   "LD3-st2-idxturn-t05s1-long",
+   "LD1-ns1-breadthup-t05s1-long",
+   "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long",
+   "CWT04-backside-lh-a15-short",
+   "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long",
+   "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short",
+   "GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short",
+   "GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long",
+   "NM1-cwt09-g10-vwaploss-short",
+   "GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long",
+   "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long",
+   "NM-RWR4-ns2-up3-qqqup-slopedn-short",
+   "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
+   "NM-RWN3-ns3-spyup-early-short",
+   "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long",
+   "MF2-open-rsimidhi-flowsell",
+   "GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short",
+   "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long",
+   "CWT13-vwapstretch-z075-long",
+   "ST8-volspikedn-long-pm-t1s1-FD",
+   "ST4-emadn-long-am-t1s05-FD"
+  ],
+  "no_entry_before": "09:50",
+  "max_spread_bps": 30,
+  "max_spread_risk_frac": 0.25,
+  "max_participation": 0.1,
+  "quote_crosscheck_max_dev_pct": 2.0,
+  "quote_crosscheck_max_age_s": 300,
+  "quote_crosscheck_max_bar_age_min": 10,
+  "outage": {
+   "enabled": true,
+   "enter_pause_min": 5,
+   "protect_min": 15,
+   "flatten_min": 30,
+   "watchdog_dead_min": 15
+  },
+  "status_every_min": 2,
+  "position_check": {
+   "enabled": true,
+   "persist_polls": 5
+  },
+  "log_poll_inputs": true,
+  "poll_log_flush_min": 10,
+  "start_from": "08:00",
+  "max_job_minutes": 340,
+  "fetch_batch": 400,
+  "retry_after_release": true,
+  "longs_first_on_ties": true,
+  "max_lots_per_symbol": 3,
+  "lot_cap_ignore_residual_frac": 0.25,
+  "same_setup_reentry": true,
+  "split_tape_short_gate": {
+   "enabled": false,
+   "spread_pct": 0.5
+  },
+  "max_stop_cost_r": 0.15,
+  "block_twin_same_symbol": false,
+  "scale_out_max_per_day": 0
+ },
+ "universe": {
+  "max_symbols": null,
+  "min_avg_dollar_volume": 5000000,
+  "extended_min_avg_dollar_volume": 1000000,
+  "extended_min_rvol": 3.0,
+  "min_atr_pct": 1.0,
+  "stocks_in_play_top_n": 20,
+  "earnings_blackout_days": 4,
+  "exclude_ptp": true,
+  "ptp_denylist": [
+   "ET",
+   "EPD",
+   "MPLX",
+   "PAA",
+   "WES",
+   "CQP",
+   "USAC",
+   "SUN",
+   "CAPL",
+   "BSM",
+   "DKL",
+   "GEL",
+   "NRP",
+   "KRP",
+   "DMLP",
+   "SPH",
+   "NGL",
+   "GLP",
+   "ENLC",
+   "NS",
+   "HEP"
+  ]
+ }
+}
