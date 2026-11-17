@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short; change: window + cond.ret3_atr + cond.adx7 (combo WB3 + new layer) -> window 1430-1500 AND ret3_atr >= 0.20 AND adx7 >= 44. Educational only - not financial advice.
+strategies:
+  GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short/modules/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1430
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short
+    workbench:
+      parent: GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short
+      param: "window + cond.ret3_atr + cond.adx7 (combo WB3 + new layer)"
+      old: null
+      new: "window 1430-1500 AND ret3_atr >= 0.20 AND adx7 >= 44"
+      date: '2026-11-16'
+      note: "Mechanic combo = WB3 + new layer P11c ADX(7) >= 44 (experimental layer; fails alone, helps on top of WB3); counted as its own config; module set by hand"
+      display_name: "Generated: Late Failed-Breakdown Pop Short — WB4: 14:30-15:00, pop >= 0.20 ATR, ADX(7) >= 44"

@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent NM-RWN5-ns3-mon-weakrs-short; change: window -> [1005, 1130]. Educational only - not financial advice.
+strategies:
+  NM-RWN5-ns3-mon-weakrs-short-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/NM-RWN5-ns3-mon-weakrs-short/modules/NM-RWN5-ns3-mon-weakrs-short-WB2.py
+    context:
+    - spy_fo
+    min_adv: 95000000
+    window:
+    - 1005
+    - 1130
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:NM-RWN5-ns3-mon-weakrs-short
+    workbench:
+      parent: NM-RWN5-ns3-mon-weakrs-short
+      param: "window"
+      old: [950, 1130]
+      new: [1005, 1130]
+      date: '2026-11-16'
+      note: "Mechanic: P6/P14 entry window start 09:50 -> 10:05 (config window and the module's own tod bound)"
+      display_name: "Monday Weak-RS NS3 Short (near-miss) — WB2: entries from 10:05"

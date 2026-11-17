@@ -105,12 +105,12 @@ jobs:
           done
           python -c "import json; d=json.load(open('docs/live/storage.json')); [print(k, d[k]) for k in ('sessions_stored','symbols_per_session','mb_per_session','total_gb','largest_asset_mb')]"
       - name: Chain the next month (2-year chunks)
-        if: always() && inputs.chain_to != ''
+        if: (success() || failure()) && inputs.chain_to != ''     # a cancelled run does not chain
         run: |
           next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1][:7], 'M') + 1).strftime('%Y-%m'))" "${{ steps.days.outputs.end }}")
           while [[ "$next" > "2024-10" && "$next" < "2025-03" ]]; do   # locked months: nothing to fetch
             next=$(python -c "import pandas as pd, sys; print((pd.Period(sys.argv[1], 'M') + 1).strftime('%Y-%m'))" "$next"); done
           if [[ ! "$next" > "${{ inputs.chain_to }}" ]]; then
-            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}"
+            gh workflow run store-bars.yml --ref "${{ github.ref_name }}" -f start="$next" -f end="$next" -f chain_to="${{ inputs.chain_to }}" -f replace="${{ inputs.replace }}"
             echo "dispatched $next (chain to ${{ inputs.chain_to }})"
           else echo "chain done at ${{ steps.days.outputs.end }}"; fi

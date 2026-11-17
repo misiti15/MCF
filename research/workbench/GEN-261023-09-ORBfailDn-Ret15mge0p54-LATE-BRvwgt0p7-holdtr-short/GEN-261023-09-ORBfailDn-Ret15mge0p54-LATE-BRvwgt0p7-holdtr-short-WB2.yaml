@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short; change: cond.ret3_atr (new sensor) -> >= 0.20. Educational only - not financial advice.
+strategies:
+  GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB2:
+    enabled: false
+    type: lab
+    module: research/workbench/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short/modules/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB2.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - workbench
+    - parent:GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short
+    workbench:
+      parent: GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short
+      param: "cond.ret3_atr (new sensor)"
+      old: null
+      new: ">= 0.20"
+      date: '2026-11-16'
+      note: "Mechanic: new sensor P11b - the 15-minute pop must also be >= 0.20 daily ATRs (size relative to the stock's own range, not only 0.54%)"
+      display_name: "Generated: Late Failed-Breakdown Pop Short — WB2: pop >= 0.20 daily ATR"
