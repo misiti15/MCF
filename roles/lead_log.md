@@ -240,3 +240,4 @@
 - Run 61 (11-16 23:00): Monday three CLOSED; gross-R check asked; MOMSIDE-LIVE parked; Scout shortlist asked.
 - Run 62 (11-17 01:00): GLOSSARY adopted; D3 superseded by owner tiers; FWDCAL tier lines asked; stop-charge line asked; Scout steered to Move-Hunt gap.
 - Run 63 (11-17 03:00): stop thread closed (parity); one tier source; effective.tier gaps queued for owner PR; Scout A steered.
+- Run 64 (11-17 05:00): BLKOUT approved (descriptive); Scout wrong-time row; B dropped.

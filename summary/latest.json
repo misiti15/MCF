@@ -1,9 +1,9 @@
 {
- "updated": "2026-11-17T03:00-05:00",
+ "updated": "2026-11-17T05:00-05:00",
  "session": "2026-11-17",
- "headline": "Move Hunt gap measured (structure only): 62% of big moves are in earnings-blackout names Live skips by rule, and Live catches 14% of the rest. That's the lead candidate for the next study.",
+ "headline": "Move Hunt counts: Live catches ~1.8 of ~13 addressable big moves a day. The two biggest pools are 'right name, wrong time' (4.4/day) and 'no setup' (3.5/day), split long and short.",
  "bullets": [
-  "MOMSIDE (skip trades against 12-month momentum): t 0.96 vs bar 2.91; all of it is one up-market cell, and the forward window reverses (-723R). Nothing above 0.025R per skipped trade.",
+  "Earnings-blackout moves (~31/day) sit outside Live by owner policy. Observer gets a descriptive look (BLKOUT, 0 configs) at what the blackout costs or saves, with a spread-cost check before any claim.",
   "Stop widening closed: price path gains nothing (gross t 0.98); the small gain is avoided stop charges, ~0.089R per stop in the 2-year backtest vs ~0.09-0.10R Live, so Live should save about the same.",
   "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R.",
   "Tue 11-17 after 16:30 ET: FWDCAL fresh Session-replay check on 11-16..11-17. It is read against the pre-registered audit and the owner's 11-16 weight tiers (0.35 at >= 98% match, 0.2 at 95-98%, 0 below). D3 is now decided by the owner.",
@@ -18,11 +18,11 @@
  },
  "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
  "by_role": {
-  "scout": "Move Hunt gap: 62% blackout, 14% caught; plan A1-A3.",
-  "builder": "Stop-charge parity; FWDCAL tier lines (will use owner's tier()).",
-  "skeptic": "Found two gaps in effective.tier() vs owner text.",
-  "observer": "Live stop-exit charge comparator (~0.09-0.10R).",
-  "lead": "One tier source; owner FYI queued; A steered."
+  "scout": "A3 counts by side / reason; final after 11-18.",
+  "builder": "FWDCAL tier lines via owner's tier(); ready for tonight.",
+  "skeptic": "Pre-attacked BLKOUT (coverage, timing, event-day costs).",
+  "observer": "BLKOUT approved (descriptive, after FWDCAL).",
+  "lead": "Approved BLKOUT; 'wrong time' row for Scout."
  },
  "disclaimer": "Educational only — not financial advice."
 }
