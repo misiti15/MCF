@@ -20,10 +20,13 @@
 strategies_exclusive: true
 account:
   starting_equity: 100000
-  slots: 200
+  risk_per_trade_pct: 0.125   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 0.25 (default; slot cap binds on ~every lot)
+  min_shares: 3                  # TSZ1: a lot under 3 shares is raised to 3 if 3 fit in min_shares_notional_pct of equity (= the old slot) and the risk budget
+  min_shares_notional_pct: 1.0   # TSZ1: = old slot $ (equity x 2.0 / 200)
+  slots: 400   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 200 (slot ~$500 at $100k equity, was ~$1000)
   buying_power_multiple: 2.0
-  max_concurrent_positions: 200
-  max_positions_per_strategy: 50   # ROT1 spotlight account 2026-11-16..11-19 (arena rotation block 1, max-exposure setting; back to 30 after the 11-19 close unless the next block keeps it); was 30 (ODX-4 / REPV-7 2026-11-12), 10 before
+  max_concurrent_positions: 400   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 200
+  max_positions_per_strategy: 100   # TSZ1 owner 2026-11-16 (from session 2026-11-17): testing-account sizing change, R comparable, $ not; was 50 (comment: ROT1 spotlight account 2026-11-16..11-19 (arena rotation block 1, max-exposure setting; ba)
   max_daily_loss_r: 300   # owner 2026-11-11 after close; from session 2026-11-12: account catastrophe backstop (was 120)
   max_setup_daily_loss_r: null
   max_trades_per_day: 1500
@@ -57,7 +60,21 @@ live:
     - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # 8 traded sessions / 59 trades
     - NS4-pm-vwap-reclaim-oversold-short   # 15 traded sessions / 51 trades
     - CWT14-failbrk-pdl-p10-lowvol-long   # 25 traded sessions / 389 trades
+    - CWT14-failbrk-orl-p10-long-WB5   # workbench copy, owner 2026-11-16 "CWT14 WB5 yes": normal priority, last (~58 trades/session isolated)
 strategies:
+  CWT14-failbrk-orl-p10-long-WB5:
+    # Workbench copy of CWT14-failbrk-orl-p10-long (Graveyard), Mechanic rerun 2026-11-16: WB4 (ATR >= 2%) + cost/R <= 0.10
+    # + SPY since 09:50 >= -0.20% + stop 0.45 ATR / target 0.15 ATR (module GEOM "S");
+    # research/workbench/CWT14-failbrk-orl-p10-long/RESULTS.md "Rerun". Owner approval 2026-11-16. Effective session 2026-11-17.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long-WB5.py
+    min_adv: 95000000
+    window: [950, 1200]
+    context: [spy_fo]
+    scale_out_r: null
+    live_scale_out: false
+    tags: [workbench, "parent:CWT14-failbrk-orl-p10-long"]
   CWT14-failbrk-pdl-p10-lowvol-long:   # moved from Testing A 2026-11-11 after the close (D/E/F fill; twin pdl-p10-long stays in Testing A); from session 2026-11-12
     enabled: true
     former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}

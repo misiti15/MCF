@@ -248,6 +248,19 @@ def slot_notional(a: dict) -> float:
     return min(per_slot, equity * a["max_position_notional_pct"] / 100)
 
 
+def lot_shares(a: dict, equity: float, risk_dollars: float, per_share: float, price: float, cap: float) -> int:
+    """Whole shares of one lot: min(risk / stop distance, slot / price). Opt-in floor (testing-account sizing change,
+    owner 2026-11-16): with `min_shares` set, a lot smaller than that is raised to min(min_shares, what fits in
+    `min_shares_notional_pct` % of equity, what fits in the risk budget), so the smaller slot does not drop pricey names
+    or cut a lot to 1-2 shares. R is unaffected (each trade's R = P/L / its own risk); only its $ size changes."""
+    n = int(min(risk_dollars / per_share, cap / price))
+    m = int(a.get("min_shares") or 0)
+    if m and n < m:
+        ceil = equity * float(a.get("min_shares_notional_pct") or 0) / 100
+        n = max(n, min(m, int(ceil / price), int(risk_dollars / per_share)))
+    return n
+
+
 def is_extended(ctx: DayContext, cfg: dict) -> bool:
     """Extended tier: liquid enough to scan, too thin to trade on an ordinary day."""
     adv = ctx.avg_dollar_volume
@@ -396,7 +409,7 @@ class Backtester:
             ):
                 continue
             per_share = abs(tr.entry - tr.stop)
-            shares = int(min(risk_dollars / per_share, max_notional / tr.entry))
+            shares = lot_shares(a, equity, risk_dollars, per_share, tr.entry, max_notional)
             if shares < 1:
                 continue
             tr.shares = shares

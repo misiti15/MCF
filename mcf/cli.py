@@ -144,7 +144,7 @@ def cmd_live(args, cfg):
     from .execution.session import NY, Publisher, job_deadline, prep
 
     now = pd.Timestamp.now(tz=NY)
-    until = job_deadline(now, cfg.get("live", {}))
+    until = job_deadline(now, cfg.get("live", {}), os.environ.get("MCF_JOB_T0"))   # HK-FLAT-1113: by job limit - 20 min
     if until is None and not args.force:
         print(f"{now:%a %H:%M} ET is outside the trading-job window: nothing to do")
         return
@@ -162,7 +162,7 @@ def cmd_live(args, cfg):
     last = {"journal": None}
 
     def on_status(st):
-        paths = ["status.json"]
+        paths = ["status.json", "adopted"]
         ts = pd.Timestamp.now(tz=NY)
         if last["journal"] is None or ts - last["journal"] >= pd.Timedelta(minutes=2) or st["phase"] in ("closed", "handover"):
             paths.append("journal.db")
@@ -170,6 +170,8 @@ def cmd_live(args, cfg):
         try:   # intraday attribution: total P/L (closed + open) by setup every status, for the EOD chart
             by: dict[str, float] = {}
             for p in st.get("positions") or []:
+                if p["strategy"] == PaperRunner.ADOPTED:   # HK-FLAT-1113: adopted lots are no setup's P/L
+                    continue
                 by[p["strategy"]] = by.get(p["strategy"], 0.0) + float(p.get("upl") or 0)
             for c in st.get("closed") or []:
                 by[c["strategy"]] = by.get(c["strategy"], 0.0) + float(c.get("pnl") or 0)
@@ -201,7 +203,7 @@ def cmd_live(args, cfg):
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
                              earnings_complete=eb["complete"])
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls", "adopted"]
     end = pd.Timestamp.now(tz=NY)
     if runner.session_done or end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():   # LR1: half days
         from .report.daily_review import write_review
