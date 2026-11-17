@@ -13,17 +13,17 @@ from mcf.strategies.research_setups import ORB20
 
 ROOT = Path(__file__).resolve().parents[1]
 TESTING = ["testing2", "explore1", "livelab", "testingd", "testinge", "testingf"]
-COPIES = {   # copy -> (account, parent)
+COPIES = {   # copy -> (account, parent); RW3 / RW5 WB3 replaced by their WB4 (owner "SPYEXIT build yes" 2026-11-16)
     "MF2-open-rsimidhi-flowsell-FD-WB3": ("testing2", "MF2-open-rsimidhi-flowsell-FD"),
     "RW6G1-ns2-up3-vwap2sd-short-FD-WB3": ("testing2", "RW6G1-ns2-up3-vwap2sd-short-FD"),
     "NM-ETF-late-dip-di-long-WB1": ("explore1", "NM-ETF-late-dip-di-long"),
     "L3-gap-slope-rsi5hi-FD-WB4": ("explore1", "L3-gap-slope-rsi5hi-FD"),
     "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4":
         ("explore1", "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short"),
-    "RW3-gapdn-rsi5pop-flowsell-short-FD-WB3": ("livelab", "RW3-gapdn-rsi5pop-flowsell-short-FD"),
+    "RW3-gapdn-rsi5pop-flowsell-short-FD-WB4": ("livelab", "RW3-gapdn-rsi5pop-flowsell-short-FD"),
     "ST7-rsi50dn-long-pm-t1s1-FD-WB1": ("livelab", "ST7-rsi50dn-long-pm-t1s1-FD"),
     "orb20_a-WB3": ("livelab", "orb20_a"),
-    "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3": ("testingd", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"),
+    "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4": ("testingd", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"),
     "RW1-gapdn-bounce-flowsell-short-FD-WB3": ("testingd", "RW1-gapdn-bounce-flowsell-short-FD"),
     "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5":
         ("testingd", "GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long"),

@@ -237,3 +237,19 @@ def test_shadow_lot_spy_exit(tmp_path, monkeypatch):
     T._poll(r, monkeypatch, T._t("10:07"), bars)                         # SPY +0.40% since entry: exit
     tr = r.journal.trades(run_id=r.shadow.run_id)
     assert len(tr) == 1 and tr.exit_reason.iloc[0] == "spy_exit" and b.submitted == []
+
+
+# ------------------------------------------------------------------------------------------------ the 11-17 swap
+def test_rw3_rw5_wb4_replace_wb3_with_spy_exit():
+    """Owner "SPYEXIT build yes": WB4 in WB3's account and slot, WB3 off (promotion = move), spy_exit_pct set."""
+    from pathlib import Path
+
+    import yaml
+    root = Path(__file__).resolve().parents[1]
+    for acct, base, pct in (("livelab", "RW3-gapdn-rsi5pop-flowsell-short-FD", 0.30),
+                            ("testingd", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD", 0.40)):
+        c = yaml.safe_load((root / f"config/account_{acct}.yaml").read_text())
+        st, order = c["strategies"], c["live"]["setup_order"]
+        assert st[f"{base}-WB4"]["enabled"] and st[f"{base}-WB4"]["spy_exit_pct"] == pct
+        assert not st[f"{base}-WB3"]["enabled"] and f"{base}-WB3" not in order
+        assert order[0] == f"{base}-WB4"
