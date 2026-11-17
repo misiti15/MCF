@@ -994,6 +994,11 @@ RW3-gapdn-rsi5pop-flowsell-short-FD-WB3:
   side: "short"
   what: "10:30-15:00: stock gapped down, bearish heat <= -20, heavy net selling, RSI(5) pops above 80, daily ATR >= 1.6% of price, and SPY not up more than 0.20% since 09:50; short the pop."
   account: "livelab"
+RW3-gapdn-rsi5pop-flowsell-short-FD-WB4:
+  name: "Gap-Down Pop Fade, Heavy Selling (all day) — WB4: up-day entry cut + SPY exit 0.30%"
+  side: "short"
+  what: "10:30-15:00: stock gapped down, bearish heat <= -20, heavy net selling, RSI(5) pops above 80, daily ATR >= 1.6% of price; no new entries after 12:00 while SPY is more than 0.15% above its 09:50 close; short the pop and close at market once SPY is up 0.30% since entry."
+  account: "livelab"
 ST7-rsi50dn-long-pm-t1s1-FD-WB1:
   name: "RSI Collapse Dip Buy (all day) — WB1: skip when SPY up > 0.10% since 09:50"
   side: "long"
@@ -1008,6 +1013,11 @@ RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
   name: "Gap-Down Pop Fade (all day) — WB3: SPY-since-09:50 gate + stop cost <= 15% of 1R + start 10:15"
   side: "short"
   what: "10:15-15:00: a gapped-down stock with bearish heat and net selling pops to RSI(5) > 80; short the pop unless SPY is up more than 0.20% since 09:50 or the stop cost is over 15% of 1R; target / stop 1R (0.25 ATR), flat 15:55."
+  account: "testingd"
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4:
+  name: "Gap-Down Pop Fade (all day) — WB4: WB3 + SPY exit 0.40%"
+  side: "short"
+  what: "as WB3 (10:15-15:00, SPY-since-09:50 gate 0.20%, stop cost <= 15% of 1R); also close at market once SPY is up 0.40% since entry."
   account: "testingd"
 RW1-gapdn-bounce-flowsell-short-FD-WB3:
   name: "Gap-Down Bounce Short, Heavy Selling — WB3: RSI 55-60 + 1R >= 0.40% + to 13:00 + SPY-since-09:50 gate"

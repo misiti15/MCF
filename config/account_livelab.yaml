@@ -43,7 +43,7 @@ live:
   # Priority: narrowest (fewest expected trades/session) first, as in Testing 1/2.
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
-    - RW3-gapdn-rsi5pop-flowsell-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
+    - RW3-gapdn-rsi5pop-flowsell-short-FD-WB4   # replaces WB3 (owner "SPYEXIT build yes" 2026-11-16; same slot; WB3 off)
     - ST7-rsi50dn-long-pm-t1s1-FD-WB1   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - orb20_a-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - IDX1-qqq100-0955-TQQQ-trail   # 0 traded sessions / 0 trades
@@ -72,13 +72,26 @@ strategies:
   RW3-gapdn-rsi5pop-flowsell-short-FD-WB3:
     # Workbench copy of RW3-gapdn-rsi5pop-flowsell-short-FD (Primary), Mechanic 2026-11-16: start 10:30 + skip while SPY > +0.20% since 09:50 + daily ATR >= 1.6%;
     # research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
-    enabled: true
+    enabled: false   # owner "SPYEXIT build yes" 2026-11-16: replaced by WB4 from session 2026-11-17 (promotion = move)
     type: lab
     module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB3.py
     min_adv: 95000000
     window: [1030, 1500]
     context: [spy_fo]
     scale_out_r: null
+    tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
+  RW3-gapdn-rsi5pop-flowsell-short-FD-WB4:
+    # Workbench copy of RW3-gapdn-rsi5pop-flowsell-short-FD (Primary), UPDAY SW1: WB3 with its SPY-up skip gate swapped for no entries after 12:00
+    # while SPY > +0.15% above its 09:50 close + SPY exit +0.30%; start 10:30 and 1R >= 0.40% kept. research/workbench/UPDAY/RW3-gapdn-rsi5pop-flowsell-short-FD/RESULTS.md.
+    # owner 2026-11-16 ~22:20 ET "SPYEXIT build yes"; replaces WB3 (off) from session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB4.py
+    min_adv: 95000000
+    window: [1030, 1500]
+    context: [spy_fo]
+    scale_out_r: null
+    spy_exit_pct: 0.30           # SPYEXIT: close once SPY is up +0.30% since entry
     tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
   ST7-rsi50dn-long-pm-t1s1-FD-WB1:
     # Workbench copy of ST7-rsi50dn-long-pm-t1s1-FD (Primary), Mechanic 2026-11-16: + skip while SPY is up > +0.10% since 09:50;

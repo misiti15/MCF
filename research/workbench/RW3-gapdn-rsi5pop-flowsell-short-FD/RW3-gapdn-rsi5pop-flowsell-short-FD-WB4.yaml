@@ -1,0 +1,15 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW3-gapdn-rsi5pop-flowsell-short-FD; WB4 = UPDAY SW1: WB3 with its SPY-up skip gate swapped for the L3-WB5 up-day parts
+# (no entries after 12:00 while SPY > +0.15% above its 09:50 close + exit once SPY +0.30% since entry). Educational only - not financial advice.
+strategies:
+  RW3-gapdn-rsi5pop-flowsell-short-FD-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/RW3-gapdn-rsi5pop-flowsell-short-FD/modules/RW3-gapdn-rsi5pop-flowsell-short-FD-WB4.py
+    min_adv: 95000000
+    window: [1030, 1500]
+    context: [spy_fo]
+    scale_out_r: null
+    spy_exit_pct: 0.30
+    tags: [workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
+    workbench: {parent: RW3-gapdn-rsi5pop-flowsell-short-FD, param: "gate (module) + spy_exit_pct", old: "skip SPY > +0.20% since 09:50", new: "no entries after 12:00 while SPY > +0.15% since 09:50 + spy_exit_pct 0.30", date: '2026-11-17', note: 'UPDAY SW1 (research/workbench/UPDAY/RW3-gapdn-rsi5pop-flowsell-short-FD/RESULTS.md)'}

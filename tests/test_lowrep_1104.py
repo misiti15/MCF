@@ -51,7 +51,7 @@ FROM_GEN = {m.split(":")[0]: m.rsplit("(", 1)[1].split(")")[0] for m in _ROT1["m
 # Workbench copies added 2026-11-17 (owner "Yes to all 15 WB copies", ledger 2026-11-16-wb-*): new setups, not moves
 WB_1116 = {"NM-ETF-late-dip-di-long-WB1": "explore1", "L3-gap-slope-rsi5hi-FD-WB4": "explore1",
            "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4": "explore1",
-           "RW3-gapdn-rsi5pop-flowsell-short-FD-WB3": "livelab", "ST7-rsi50dn-long-pm-t1s1-FD-WB1": "livelab",
+           "RW3-gapdn-rsi5pop-flowsell-short-FD-WB4": "livelab", "ST7-rsi50dn-long-pm-t1s1-FD-WB1": "livelab",
            "orb20_a-WB3": "livelab"}
 TESTING_AREAS = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf")
 INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy075-0945-3x-trail",

@@ -1,0 +1,14 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent RW5-heat30-flowsell-rsi5pop-gapdn-short-FD; WB4 = UPDAY W-Y4: WB3 + exit once SPY +0.40% since entry. Educational only - not financial advice.
+strategies:
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/modules/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4.py
+    min_adv: 95000000
+    window: [1015, 1500]
+    scale_out_r: null
+    context: [spy_fo]
+    spy_exit_pct: 0.40
+    tags: [workbench, "parent:RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"]
+    workbench: {parent: RW5-heat30-flowsell-rsi5pop-gapdn-short-FD, param: spy_exit_pct, old: null, new: 0.40, date: '2026-11-17', note: 'UPDAY W-Y4 (research/workbench/UPDAY/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD/RESULTS.md)'}
