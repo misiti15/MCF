@@ -8,10 +8,11 @@
 - **Tue 11-17 after 16:30 ET:** FWDCAL fresh rule-21 audit 11-16..11-17 (frozen engine). journal_guard patched + hardened (11 selftests; last commit >= 15:55 ET on last window day) and SIGNED OFF by Skeptic.
 - **11-18:** REPS3 forecast scoring + ICCSET refresh on LR8 basis (Scout) -> owner note with reps tables.
 - **FAMC:** forward shadow, 2 scorable sessions (+0.61R, +0.03R vs control), coverage ~90%; nightly calendar (Observer) + shadow (Builder).
-- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), RULE21-DB, days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. After the fresh FWDCAL audit: raise D3 (replay records for rule-21-passing accounts) as a DECISION.
+- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), RULE21-DB, days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. D3 superseded by owner effective_sessions.json (11-16): replay 0.35 / 0.2 / 0 by held-out match.
 - **Tally since 11-09:** ~77 ideas, 75 tested, 172 configs/looks, 0 passes, 1 forward shadow.
 
 ## Standards the guild adopted (keep enforcing)
+- Use docs/GLOSSARY.md names (Live, Shadow, Session replay, 2-year backtest/screen/history); never mix sources in one number (owner 11-16).
 - Guard refusal on a quiet day (no commit after 15:55): wait or name the account; never loosen the threshold (11-15).
 - Excess over a matched control, not raw t (losing-book volume cut). Gross edge first. Kept avg R beside totals.
 - Family try-count governs Testing moves (market-state family 2,605; laggard 92; near-HOD 1,671...).
@@ -29,4 +30,4 @@
 - test_poll_log timing test is flaky under load; re-run alone, note in PR.
 
 ## Next run
-- Tue 11-17 after 16:30 ET: read FWDCAL fresh audit (failures first); then owner PR: MOMSIDE/SIZESTOP/DIPTURN/FWDCAL results + D3 DECISION (only if FWDCAL passes rule 21) + locked-block clean-up complete note. Wed: REPS3 + Scout shortlist.
+- Tue 11-17 after 16:30 ET: read FWDCAL (pre-registered verdict + effective_sessions tier lines); owner PR: MOMSIDE/SIZESTOP/DIPTURN closures, stop-widening wording (gross ~0, avoided stop charges), FWDCAL tier, locked-block clean-up done. Wed: REPS3 + Scout shortlist (Move-Hunt gap first).

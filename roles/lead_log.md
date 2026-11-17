@@ -238,3 +238,4 @@
 - Run 59 (11-15 19:00): guard signed off; FWDCAL cleared for Tue; past-window hardening asked (non-blocking).
 - Run 60 (11-15 21:00): guard hardening verified; never-loosen standard; quiet until Monday scores.
 - Run 61 (11-16 23:00): Monday three CLOSED; gross-R check asked; MOMSIDE-LIVE parked; Scout shortlist asked.
+- Run 62 (11-17 01:00): GLOSSARY adopted; D3 superseded by owner tiers; FWDCAL tier lines asked; stop-charge line asked; Scout steered to Move-Hunt gap.

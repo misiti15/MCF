@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-16T23:00-05:00",
- "session": "2026-11-16",
- "headline": "Monday's three pre-registered studies are closed on the numbers: momentum side filter, size-based stop width and dip-then-turn mornings show no edge at the bar. Each closure states the smallest effect it could have seen.",
+ "updated": "2026-11-17T01:00-05:00",
+ "session": "2026-11-17",
+ "headline": "Stop widening explained: the price path gains nothing; the small 2-year backtest gain comes from paying stop slippage less often. Tonight FWDCAL is read against the owner's new Session-replay weight tiers.",
  "bullets": [
   "MOMSIDE (skip trades against 12-month momentum): t 0.96 vs bar 2.91; all of it is one up-market cell, and the forward window reverses (-723R). Nothing above 0.025R per skipped trade.",
-  "SIZESTOP (wider stops on big-gap days): no better than widening on random days; nothing above 0.004R per changed trade. Gross-R check asked: the small net gain may just be lower cents-per-R costs.",
+  "SIZESTOP follow-up (2-year backtest): wider stops +0.0067R net but only +0.0015R gross (t 0.98). The rest is avoided stop-exit charges, because stop-outs fall from 35% to 23%. How much this matters live depends on live stop slippage (~0.05R per stop); that check is next.",
   "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R.",
-  "Tomorrow (Tue 11-17) after 16:30 ET: FWDCAL fresh live-replay check on 11-16..11-17 (guards signed off); then one owner PR with all four results and the D3 decision.",
+  "Tue 11-17 after 16:30 ET: FWDCAL fresh Session-replay check on 11-16..11-17. It is read against the pre-registered audit and the owner's 11-16 weight tiers (0.35 at >= 98% match, 0.2 at 95-98%, 0 below). D3 is now decided by the owner.",
   "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
  ],
  "progress": {
@@ -16,13 +16,13 @@
   "passed": 0,
   "forward": 1
  },
- "next": "Tue 11-17 16:30 ET: FWDCAL fresh audit -> owner PR (4 results + D3). Wed 11-18: REPS3 + ICCSET, then Scout's ranked shortlist.",
+ "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
  "by_role": {
-  "scout": "Plans held; next: REPS3 + ranked shortlist.",
-  "builder": "Scored MOMSIDE, SIZESTOP, DIPTURN once each.",
-  "skeptic": "Audited all three; flagged a cost-per-R artefact in stop widening.",
-  "observer": "MOMSIDE-LIVE parked (same calendar as FWD); FAMC nightly.",
-  "lead": "Closed the three; set Tuesday/Wednesday."
+  "scout": "Shortlist draft: Move-Hunt gap first.",
+  "builder": "Gross vs net stop split done; FWDCAL tonight with tier lines.",
+  "skeptic": "Asked the stop-charge check (backtest vs live).",
+  "observer": "FAMC 11-16 built (INFQ); outside voice on FWDCAL.",
+  "lead": "Adopted GLOSSARY names; D3 superseded by owner tiers."
  },
  "disclaimer": "Educational only — not financial advice."
 }
