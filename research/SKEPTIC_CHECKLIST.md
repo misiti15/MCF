@@ -108,3 +108,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     (..2024-10-31, 2025-03-01..), assert no block date in the response, and never leave block rows in a cache.
     (Locked-block sweep 2026-11-15: 31 fetchers, 3 single-range.) Readers of data/cache_hist use research/guild_read.py
     (block predicate at read + assert; edge-tested UTC / ET).
+44. **Shuffle nulls must keep the signal's persistence.** Re-drawing ranks within each (day, slot) destroys a selection that
+    keeps picking the same (volatile) names, so the null is far too narrow (HKS950: null SD 0.22 bps vs real day SE 0.83) and
+    'above null95' passes for free. Judge selection tests on the day-clustered t, or use a null that keeps each name's signal and
+    shifts it across days. (HKS950, Scout.)

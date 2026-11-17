@@ -54,4 +54,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-17 17:50 UTC (run 69): HKS950 NOT re-signed: code at 90e686aa1 still BAR 1.35 / N 3, keeps 15:30 slot, no 8/11 or null95 gate, no per-slot break-even, no RTH assert. Re-sign when amended + selftest posted.
 - 11-17 19:50 UTC (run 70): HKS950 Amendment 2 re-signed (selftest 5 cases ok). Tonight: FWDCAL -> BLKOUT -> FAMC; HKS950 (Scout). Audit all against pre-registered tables.
 - 11-17 21:50 UTC (run 71): owner adopted RULE21-DB 11-17 (decision bar, gap-1.645SE<=0, replay_cal/score.py rule21): asked FWDCAL to print the official verdict from that source beside the pre-registered exact-minute one. Window context: SPYEXIT (RW3/RW5-WB4), TSZ1 3-share floor, 17 WB copies + ROT1, KILL-FLAT adopted closes.
+- 11-17 23:50 UTC (run 72): FWDCAL fresh2 printed only exact-minute; official rule21() (decision bar) missing -> asked. My proxy estimate: 3/10 pass (B, Gen, C), pooled fail 0.932. HKS950 CLOSED; checklist #44 (persistent-selection nulls). BLKOUT ~0 (protective BMO k=0 cell, 1 of 18).
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
