@@ -7,7 +7,7 @@ Educational only — not financial advice.
   SIZESTOP conditioning ~0 (C1 t 0.12 / C2 0.65; known widening red flag); DIPTURN C1 +0.009R t 0.92 / C2 -0.012R.
 - NEXT: TUESDAY 11-17 >= 16:30 ET FWDCAL fresh 11-16..11-17 (guard selftest first; Skeptic signed off); audit now prints the
   effective.tier() per account (descriptive). Use GLOSSARY names (Session replay / 2-year backtest / Live). Then
-  `python research/blkout/blkout.py --run` for Observer (commit blkout_out.txt), then FAMC 11-17 (INFQ).
+  `python research/blkout/blkout.py --run` for Observer (SIGNED OFF 11-17, A1 + 1b; commit blkout_out.txt), then FAMC 11-17 (INFQ).
 - Readiness: `python research/check_monday.py` (outcome-free) -> READY on 11-15 16:30 ET; rerun it first on Monday.
 - ORDER (Lead 11-15 16:58): MONDAY 11-16 >= 16:30 ET: MOMSIDE -> SIZESTOP -> DIPTURN. TUESDAY 11-17 >= 16:30 ET: FWDCAL fresh
   11-16..11-17, only after `python research/fwdcal/mirror.py --guard-selftest` passes and Skeptic signs off. Steps:
