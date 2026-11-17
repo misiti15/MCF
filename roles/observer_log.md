@@ -383,3 +383,8 @@ never run. Gap: no Observer run fired between Sun ~19:41 and Mon ~23:41 ET; the 
 ## Run 59 — 2026-11-17 ~01:41 ET
 Gross/net: widening's +0.007R = +0.0015R gross (t ~1) + avoided stop-exit charges. Gave Skeptic the Live comparator: LR8 stop-exit
 charge 0.102R per stop (0.086R booked since 11-12), targets 0.034R. Adopted the owner GLOSSARY terms; D3 decided by owner tiers.
+
+## Run 60 — 2026-11-17 ~03:41 ET
+Stop charge closed at parity (backtest ~0.089R vs Live ~0.09-0.10R per stop). Skeptic found two gaps in the owner's effective.tier()
+(owner PR FYI / question). Suggested sizing the earnings-blackout policy gap (Scout's 31 moves/day) descriptively from 2-year backtest
+blackout-window trades; Live journals hold 0 earnings-skip rows (names leave the universe pre-signal).
