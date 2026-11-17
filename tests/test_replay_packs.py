@@ -122,3 +122,35 @@ def test_two_year_tier_months_and_lock(tmp_store, monkeypatch):
     cap = packs.capacity(rows, None)
     assert cap["progress"]["2y"]["stored"] == 1 and cap["progress"]["2y"]["weight"] == 0.175
     assert cap["progress"]["2y"]["weekdays"] > 300 and "2024-12" not in str(cap["progress"]["2y"]["months_done"])
+
+
+def test_pit_universe_filters_and_lock_edge():
+    days = pd.bdate_range("2025-03-03", "2025-04-30", tz="UTC")
+    rows = []
+    for s, px, vol, rng in [("LIQ", 20.0, 1e6, 1.0), ("CHEAP", 3.0, 1e7, .2), ("THIN", 20.0, 100, 1.0),
+                            ("FLAT", 100.0, 1e6, .1)]:
+        for t in days:
+            rows.append({"symbol": s, "ts": t, "open": px, "high": px + rng / 2, "low": px - rng / 2, "close": px,
+                         "volume": vol})
+    dl = pd.DataFrame(rows)
+    u, note = packs.pit_universe(dl, date(2025, 4, 28))
+    assert u == ["LIQ"] and note.startswith("point-in-time (last 20")
+    u, note = packs.pit_universe(dl, date(2025, 3, 4))               # look-back cut by the locked block
+    assert u == ["LIQ"] and "first 20 post-block" in note
+
+
+def test_build_session_two_year_tier(tmp_path, monkeypatch):
+    days = pd.bdate_range("2025-04-01", "2025-06-02", tz="UTC")
+    dl = pd.DataFrame([{"symbol": s, "ts": t, "open": 20.0, "high": 20.5, "low": 19.5, "close": 20.0, "volume": 1e6}
+                       for s in ("AAA", "GONE") for t in days])
+    cand = pd.DataFrame({"symbol": ["AAA", "GONE"], "status": ["active", "inactive"]})
+    monkeypatch.setattr(packs, "hist_month_daily", lambda d, log=print: (cand, dl))
+    monkeypatch.setattr(store, "symbols", lambda: ["AAA"])
+    monkeypatch.setattr(store, "_fetch_bars", lambda syms, a, b, tf, batch=100: _bars("2025-06-02", syms))
+    row = packs.build_session("2025-06-02", tmp_path, log=lambda m: None)
+    m = store.pack_meta(tmp_path / "1min-2025-06-02.parquet")
+    assert row["tier"] == "2y" and row["weight"] == 0.175 and row["inactive_now"] == 1 and row["symbols"] == 2
+    assert m["tier_name"] == "2-year history" and m["inactive_now"] == ["GONE"] and m["universe"] == ["AAA", "GONE"]
+    assert pd.DatetimeIndex(store.read_pack(tmp_path / "1day-2025-06-02.parquet").ts).date.max() == date(2025, 6, 2)
+    cap = packs.capacity([row], None)
+    assert cap["progress"]["2y"]["name"] == "2-year history" and cap["progress"]["2y"]["inactive_now_per_session"] == 1
