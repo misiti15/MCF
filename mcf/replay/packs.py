@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import re
 import subprocess
 from datetime import date, timedelta
 from pathlib import Path
@@ -234,6 +235,54 @@ def build_session(d, out: Path, branch: str = "origin/mcf-data", log=print) -> d
     return row
 
 
+def stored_assets(releases: list[dict] | None) -> list[dict]:
+    """Release assets that are valid packs: a session's assets count only in its own tier's release
+    (store.release_tag); superseded uploads elsewhere (bars-2024-09 / bars-2024-10) are ignored."""
+    out = []
+    for rel in releases or []:
+        tag = str(rel.get("tag_name", ""))
+        for a in rel.get("assets", []):
+            m = re.match(r"^(1min|1day)-(\d{4}-\d{2}-\d{2})\.parquet$", a.get("name", ""))
+            if m and store.release_tag(m.group(2)) == tag:
+                out.append({**a, "session": m.group(2), "kind": m.group(1)})
+    return out
+
+
+def superseded(releases: list[dict] | None) -> list[str]:
+    tags = {}
+    for rel in releases or []:
+        tag = str(rel.get("tag_name", ""))
+        if not tag.startswith("bars"):
+            continue
+        bad = [a["name"] for a in rel.get("assets", [])
+               if re.match(r"^1(min|day)-\d{4}-\d{2}-\d{2}\.parquet$", a["name"])
+               and store.release_tag(a["name"][5:15]) != tag]
+        if bad:
+            tags[tag] = len(bad)
+    return [f"{t} ({n} assets)" for t, n in sorted(tags.items())]
+
+
+# NYSE full-day closures inside the 2-year history window (weekdays with no session, so no pack)
+HOLIDAYS = {"2024-09-02", "2024-11-28", "2024-12-25", "2025-01-01", "2025-01-09", "2025-01-20", "2025-02-17",
+            "2025-04-18", "2025-05-26", "2025-06-19", "2025-07-04", "2025-09-01", "2025-11-27", "2025-12-25",
+            "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25", "2026-06-19", "2026-07-03",
+            "2026-09-07"}
+
+
+def hist_sessions() -> list[date]:
+    return [d for d in store.sessions(HIST_START, store.PACK_START - timedelta(days=1))
+            if not (store.LOCK_A <= d <= store.LOCK_B) and str(d) not in HOLIDAYS]
+
+
+def resume_month(have) -> str | None:
+    """First 2-year month with a session missing from the releases (the nightly run dispatches it)."""
+    have = set(have)
+    for d in hist_sessions():
+        if str(d) not in have:
+            return f"{d:%Y-%m}"
+    return None
+
+
 def capacity(rows: list[dict], releases: list[dict] | None, old: dict | None = None) -> dict:
     """The capacity file: per-session rows (newest wins), totals from the Release listing when given."""
     by = {r["session"]: r for r in (old or {}).get("sessions", [])}
@@ -241,8 +290,7 @@ def capacity(rows: list[dict], releases: list[dict] | None, old: dict | None = N
         by[r["session"]] = {k: r[k] for k in ("session", "symbols", "universe", "rows_1min", "mb_1min", "mb_1day",
                                               "release", "tier", "weight", "inactive_now") if k in r}
     sess = [by[k] for k in sorted(by)]
-    assets = [a for rel in (releases or []) if str(rel.get("tag_name", "")).startswith("bars-")
-              for a in rel.get("assets", [])]
+    assets = stored_assets(releases)
     if assets:
         total_mb = sum(a["size"] for a in assets) / 1e6
         biggest = max(a["size"] for a in assets) / 1e6
@@ -255,17 +303,16 @@ def capacity(rows: list[dict], releases: list[dict] | None, old: dict | None = N
     avg = sum(per) / len(per) if per else 0.0
     today = pd.Timestamp.now(tz=TZ).date()
     want = {"live": [d for d in store.sessions(store.PACK_START, today)],
-            "2y": [d for d in store.sessions(HIST_START, store.PACK_START - timedelta(days=1))
-                   if not (store.LOCK_A <= d <= store.LOCK_B)]}
+            "2y": hist_sessions()}
     have = set(on_release)
     progress = {}
-    for k, days in want.items():   # weekday counts (exchange holidays have no pack, so ~9 per year stay "missing")
+    for k, days in want.items():   # 2y: NYSE sessions (holidays removed); live: weekdays
         got = [d for d in days if str(d) in have]
         months = sorted({f"{d:%Y-%m}" for d in days})
         mine = [r for r in sess if r.get("tier", "live") == k]
         mb = [r["mb_1min"] + r.get("mb_1day", 0) for r in mine if "mb_1min" in r]
         progress[k] = {"name": TIER_NAMES[k], "weight": 1.0 if k == "live" else HIST_WEIGHT,
-                       "weekdays": len(days), "stored": len(got),
+                       "target": len(days), "stored": len(got),
                        "symbols_per_session": round(sum(r["symbols"] for r in mine) / len(mine)) if mine else None,
                        "inactive_now_per_session": round(sum(r.get("inactive_now", 0) for r in mine) / len(mine))
                        if mine and k == "2y" else None,
@@ -288,6 +335,7 @@ def capacity(rows: list[dict], releases: list[dict] | None, old: dict | None = N
                     f"to ~21 sessions (~{21 * avg / 1e3:.2f} GB/month at the current size); no total-size limit is "
                     f"documented for releases, ~{252 * avg / 1e3:.1f} GB/year.",
         "progress": progress,
+        "superseded_cleanup_candidates": superseded(releases),
         "locked_block": "2024-11-01..2025-02-28 never fetched or stored (rule 19)",
         "sessions": sess,
         "note": "Educational only - not financial advice.",
@@ -311,6 +359,10 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--branch", default="origin/mcf-data")
     b.add_argument("--skip", default="", help="file listing sessions already on the release (one per line)")
+    st = sub.add_parser("stored", help="print the sessions with a valid 1min pack on a release")
+    st.add_argument("--releases", required=True)
+    rs = sub.add_parser("resume", help="print the first 2-year month with a missing session")
+    rs.add_argument("--have", required=True)
     c = sub.add_parser("capacity")
     c.add_argument("--manifest", default=None)
     c.add_argument("--releases", default=None, help="JSON of GET /repos/{repo}/releases")
@@ -327,6 +379,13 @@ def main(argv=None):
                 print(f"packs: {d} already on the release")
                 continue
             build_session(d, Path(a.out), a.branch)
+    elif a.cmd == "resume":
+        print(resume_month(Path(a.have).read_text().split()) or "")
+    elif a.cmd == "stored":
+        rel = json.loads(Path(a.releases).read_text()) if Path(a.releases).exists() else []
+        if isinstance(rel, list) and rel and isinstance(rel[0], list):
+            rel = [x for page in rel for x in page]
+        print("\n".join(sorted({x["session"] for x in stored_assets(rel) if x["kind"] == "1min"})))
     else:
         rows = [json.loads(x) for x in Path(a.manifest).read_text().splitlines() if x.strip()] \
             if a.manifest and Path(a.manifest).exists() else []

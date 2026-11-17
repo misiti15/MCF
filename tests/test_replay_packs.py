@@ -121,7 +121,7 @@ def test_two_year_tier_months_and_lock(tmp_store, monkeypatch):
     rows = [{"session": "2025-06-02", "symbols": 3, "mb_1min": 30.0, "mb_1day": 2.0, "tier": "2y", "weight": 0.175}]
     cap = packs.capacity(rows, None)
     assert cap["progress"]["2y"]["stored"] == 1 and cap["progress"]["2y"]["weight"] == 0.175
-    assert cap["progress"]["2y"]["weekdays"] > 300 and "2024-12" not in str(cap["progress"]["2y"]["months_done"])
+    assert cap["progress"]["2y"]["target"] > 300 and "2024-12" not in str(cap["progress"]["2y"]["months_done"])
 
 
 def test_pit_universe_filters_and_lock_edge():
@@ -154,3 +154,18 @@ def test_build_session_two_year_tier(tmp_path, monkeypatch):
     assert pd.DatetimeIndex(store.read_pack(tmp_path / "1day-2025-06-02.parquet").ts).date.max() == date(2025, 6, 2)
     cap = packs.capacity([row], None)
     assert cap["progress"]["2y"]["name"] == "2-year history" and cap["progress"]["2y"]["inactive_now_per_session"] == 1
+
+
+def test_release_tiers_never_overwrite_and_resume():
+    assert store.release_tag("2026-10-06") == "bars-2026-10" and store.release_tag("2025-06-02") == "bars2y-2025-06"
+    rel = [{"tag_name": "bars-2024-09", "assets": [{"name": "1min-2024-09-16.parquet", "size": 1}]},     # superseded
+           {"tag_name": "bars2y-2024-09", "assets": [{"name": "1min-2024-09-17.parquet", "size": 2}]},
+           {"tag_name": "bars-2026-10", "assets": [{"name": "1min-2026-10-06.parquet", "size": 3}]}]
+    assert sorted(a["session"] for a in packs.stored_assets(rel)) == ["2024-09-17", "2026-10-06"]
+    assert packs.superseded(rel) == ["bars-2024-09 (1 assets)"]
+    hs = packs.hist_sessions()
+    assert hs[0] == date(2024, 9, 16) and date(2025, 1, 2) not in hs and date(2025, 4, 18) not in hs
+    assert len(hs) == 435           # 450 weekdays minus 15 NYSE holidays
+    assert packs.resume_month(["2024-09-17"]) == "2024-09"
+    assert packs.resume_month([str(d) for d in hs if d < date(2026, 10, 1)]) == "2026-10"
+    assert packs.resume_month([str(d) for d in hs]) is None
