@@ -1,0 +1,11 @@
+Gross vs net stop-widening effect (descriptive, no new look; 2-year backtest lists, costs as bt_all). Educational only - not financial advice.
+SIZESTOP sample: 1243214 trades with a size quintile (half days dropped), k = 1.5, stop effect = VAR - BASE x D/D' per trade
+  ALL trades (unconditional 1.5x widening)   n  1243214  NET +0.0067R (day-t +4.27)  GROSS +0.0015R (day-t +0.98)  cost part +0.0052R
+  C1 changed (q4-5)                          n   554176  NET +0.0069R (day-t +4.51)  GROSS +0.0014R (day-t +0.91)  cost part +0.0056R
+  C2 changed (q5)                            n   299354  NET +0.0077R (day-t +4.68)  GROSS +0.0016R (day-t +0.99)  cost part +0.0061R
+
+STOPW sample (2-year backtest lists, 11-09 run): 1309791 trades; gross ~= net + round-trip cost column (stop-exit extra 2c not in the column: an approximation)
+  W60   changed n   376854  NET +0.0067R (day-t +4.87)  GROSS +0.0067R (day-t +4.87)
+  W80   changed n   620521  NET +0.0063R (day-t +4.71)  GROSS +0.0063R (day-t +4.71)
+  W100  changed n   795735  NET +0.0056R (day-t +4.11)  GROSS +0.0056R (day-t +4.11)
+  W80S  changed n   620521  NET +0.0041R (day-t +1.71)  GROSS +0.0041R (day-t +1.71)
