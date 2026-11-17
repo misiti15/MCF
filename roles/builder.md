@@ -7,8 +7,10 @@ Educational only — not financial advice.
   offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
   BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
   FAMC 11-17 unscorable (0 AMC events); tally 2 scored / 3 unscorable, K_edge 0.637.
-- NEXT: whatever Lead slots. Candidate (ask first, not scored): exact-minute offset diagnosis (5-min 0.95 vs exact 0.34 in
-  arena accounts, Primary 0.85) - check the live entry-stamp minute vs the replay decision minute.
+- 11-17 18:30 minoff.py DONE (diagnostic): live entry_time = fill stamp, median 61s after the submitted signal (Primary 26s,
+  Gen 77s); exact match vs live SIGNAL minute 0.932 ALL (5/10 >= 0.95) vs 0.342 vs fill. Flagged to Lead/Skeptic: rule 21 on
+  the signal minute from the next window? fresh2 NOT re-scored.
+- NEXT: whatever Lead slots (rule-21 metric decision; if adopted, add signal-minute exact match to mirror.audit, selftest it).
 - FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
   <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
 - FWDCAL rerun recipe: re-deepen (--shallow-since=2026-11-02 for the 10 data branches, 2026-10-28 for the default; NEVER
