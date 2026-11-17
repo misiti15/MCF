@@ -34,6 +34,7 @@ COPIES = {   # copy -> (account, parent); RW3 / RW5 WB3 replaced by their WB4 (o
     "L3-gap-slope-lowdist-FD-WB4": ("testingf", "L3-gap-slope-lowdist-FD"),
     "CWT14-failbrk-pdl-p10-lowvol-long-WB3": ("testingf", "CWT14-failbrk-pdl-p10-lowvol-long"),
     "CWT09-gapdn-vwaploss-g10-short-WB4": ("testingf", "CWT09-gapdn-vwaploss-g10-short"),
+    "NM-ETF-late-dip-di-long-WB4": ("testinge", "NM-ETF-late-dip-di-long"),   # owner 2026-11-17 "WB ETFDIP-4 yes"
 }
 
 
@@ -98,3 +99,13 @@ def test_orb20_min_price_defaults_to_old_floor():
     assert base.eligible(_ctx(10.0)) and not base.eligible(_ctx(4.0))       # unchanged: $5 floor from _liquid
     wb = ORB20(top_n=10, min_price=20.0)
     assert not wb.eligible(_ctx(10.0)) and wb.eligible(_ctx(25.0))
+
+
+def test_etfdip_wb4_first_in_testing_e_with_no_opposite_side_etf_shorts():
+    """Owner 2026-11-17 "WB ETFDIP-4 yes ... no other setups disrupt its exposure": first in Testing E's order, and no
+    setup of the families seen short these ETFs 14:00-15:00 (FREQ/DIAGNOSIS.md Q1) is enabled beside it."""
+    cfg = _acct("testinge")
+    assert cfg["live"]["setup_order"][0] == "NM-ETF-late-dip-di-long-WB4"
+    on = [n for n, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("enabled")]
+    blockers = ("RW3", "RW5", "L3-", "MF2", "CWT09", "NM-ETF")
+    assert [n for n in on if n.startswith(blockers) and n != "NM-ETF-late-dip-di-long-WB4"] == []
