@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 13:30) HKS950 Amendment 2 done; WAIT for Skeptic re-sign before the one look. LESSON: board timestamps mix Z and -05:00; read the last N lines, never filter by string ts.
 - (11-17 11:40) HKS950 scorer + selftest done. After 16:00: `python3 -I research/hks950/hks950.py <scratch>/shortup_rth/m30.csv.gz research/hks950` (one look), post, then the FWDCAL read.
 - (11-17 09:25) HKS950 plan frozen (same half-hour continuation, 2 configs, BAR90 1.35, null MDE ~0.5 bps). Score after 16:00 ET once Skeptic has had a look; then 18:30 FWDCAL read; 11-18 REPS3/ICCSET.
 - (11-17 07:20) Draft has try-counts (A2 N104 BAR90 2.74; A-WT N16 2.12). A-WT shrunk: CWT14 = CWT14SKIP closed, GEN = obs-genlate giveback. Lesson: grep research/ for prior studies BEFORE sizing a pool.

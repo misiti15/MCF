@@ -23,8 +23,7 @@ not the full 3,000.
 - Configs: L in {20, 40} = **2 configs**.
 
 ## Family and bar
-Lineage: IMOM (intraday time-of-day return prediction, 1 look) + these 2 = N 3. BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln 3)))
-= **1.35**. Shown, never used: own-only N 2.
+SUPERSEDED by Amendment 2: family N 42, BAR90 2.46. (The original was N 3 / BAR90 1.35.)
 
 ## Scoring (one look per config, run after 16:00 ET)
 - Unit: per-day mean of the 12 slot spreads (equal-size bins, so this is not a #39 issue). t uses days as clusters.
@@ -53,3 +52,20 @@ Null script (no signal): research/hks950/power_null.py.
 - The shuffle control is drawn as iid random ranks within each (day, slot), which is equivalent to permuting the signal.
 - SPY up/down day = SPY close of the 15:30 bar / close of the 09:30 bar - 1 (from the 10:00 anchor). SPY is also one of the 512
   names; it stays in the universe as written.
+
+## Amendment 2 (2026-11-17 ~13:30 ET, before the real look; Skeptic skeptic-20261117-1550-1/-1551-2/-1750-1, Lead lead-20261117-1100-1/-1300-1)
+1. **Family N 42** (cross-sectional return prediction from own past returns, the same bet as the ex30 family 39 + these). Full bar
+   sqrt(2 ln 42) = 2.73 and **BAR90 2.46** are both printed; **BAR90 decides**.
+2. **Slot 15:30 is dropped from the main reading** (it ends at the 16:00 close; Live is flat by 15:55), so the main reading uses
+   11 slots (10:00..15:00). 15:30 is reported apart.
+3. **Pass needs all of the following:** VALID L-S t >= 2.46; TRAIN the same sign (positive); the same sign in >= 8 of 11 VALID
+   slots; and the observed VALID mean > the 95th percentile of the 200-draw shuffle null.
+4. Printed: break-even cost per leg round trip, per slot and overall; the LONG leg alone (gross and net of 6 bps), because a
+   tilt uses one side. If gross passes and net fails, the tilt plan is scored on Live setups' own entries, not on this portfolio.
+5. Universe: the fixed top-500 ADV list of the 2026-10-05 snapshot (512 names incl. ETFs), applied back to 2024 (checklist 32).
+   Inside one fixed list this mostly costs breadth (survivor names). It is stated with the result.
+6. **RTH (checklist 42): m30 is NOT RTH-only.** Raw bar starts run from 08:00 to 17:00 ET (pre 08:00-09:00: 226,555 bars;
+   post 16:00-17:00: 414,605). prep() drops them and asserts that every day runs 09:30..15:30. The selftest checks that the
+   assert fires on a day missing its 15:30 bar.
+Selftest (rerun): planted 8 bps gives LEAD (t +28.6, 11/11 slots); 3 bps gives TILT (t +5.9, net <= 0); 0 gives CLOSED
+(t +0.46, 6/11); 8 bps in ONE slot only gives CLOSED (t +3.71 but 6/11 slots). RTH assert ok.
