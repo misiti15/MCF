@@ -375,3 +375,7 @@ synthetic test drops block dates) and moved d2pm, extension, longcell, min10 ont
 **Learned**: checklist #43 closed (Lead): guild_read.py edge-tested by Skeptic; FAMC session 2 reproduces after Scout's read
 fix. Swapped: obs_read.read_bars delegates cache_hist to guild_read.read_1min (identical frames); cache_pm keeps own predicate.
 **Next**: Mon 11-16 after 20:00 ET: build_famc_cal.py --date 2026-11-16, then headline_audit.py; MOMSIDE-LIVE after Builder.
+
+## Run 58 — 2026-11-16 ~23:41 ET
+FAMC 11-16 built same night (INFQ; audit 1/1). MOMSIDE/SIZESTOP/DIPTURN all CLOSED (MDEs stated). MOMSIDE-LIVE PARKED by Lead,
+never run. Gap: no Observer run fired between Sun ~19:41 and Mon ~23:41 ET; the FAMC build still landed the same night.

@@ -29,3 +29,7 @@ guidance 'Sees Q/FY'). All 13 calendar rows so far (11-10: 2/2, 11-11: 3/3, 11-1
 Discrimination check on other single-symbol evening items: non-earnings items match 3/277 (11-11) and 3/340 (11-12), ~1%;
 earnings-ish items 76-83% (the pattern is stricter than the builder's EARN filter). Nightly: run after build_famc_cal.py.
 Precision only; recall needs a late calendar.
+
+## 2026-11-16 (built 23:41 ET, same night)
+Snapshot by the 08:44 ET pre-open job (27 names listed; passes the frozen rule). 299 evening items -> 1 AMC flag: INFQ
+(reaction 11-17). Headline audit 1/1 ('Infleqtion Reports Q3 2026 Financial Results'). FAMC session 11-17 scorable.

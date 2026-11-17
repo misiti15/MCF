@@ -62,3 +62,8 @@ reading is worded 'nothing above MDE80; smaller unknown'. No other change.
 | CLOSED | disagrees with a positive live effect | Closed stands (one-look rule); live is a 29-session lead only, logged, no re-score. |
 Also printed regardless: C1 by side (short-leg vs long-leg share of the excess), C3 beside C1, top-5 setups' share, per-setup
 better/worse, and the live window's rule-change context (11-12 restructure c64d75df0, LR8 from 11-12 - raw R is basis-stable).
+
+## PARKED (Lead lead-20261116-2300-3, 2026-11-16 23:00 ET) — never run
+MOMSIDE lab CLOSED (C1 VALID t 0.96 vs 2.91; an up-day cell; FWD 10-08..11-13 reverses, t -3.06). This live window
+(10-06..11-13) is the same calendar as lab FWD (Skeptic skeptic-20261117-0350-1), so it would not be independent and would
+only be a second look at a closed idea. Not run; no live outcome was ever read. Plan and scorer stay as the record.
