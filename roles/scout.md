@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 05:20) A-WT: 'wrong time' = mostly late entries after early (09:35) moves, and half are really wrong-side; B dropped.
 - (11-17 03:20) Shortlist: A3 side x miss-reason counts in; B marked weak (stop-charge parity). Final after 11-18.
 - (11-17 01:30) Shortlist A detailed (Move Hunt: 62% blackout; ~13/day other movers, 14% caught, 80% start < 10:00). A2 needs per-decision rows (moves.py rows.parquet) or a Session replay. Use GLOSSARY names (Live / Shadow / Session replay / 2-year backtest).
 - (11-16 23:30) Monday closed: MOMSIDE (t 0.96, up-day cell, FWD reverses), SIZESTOP (my D1: conditioning ~0), DIPTURN (mine: t 0.92).

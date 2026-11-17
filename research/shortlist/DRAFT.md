@@ -38,16 +38,20 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  Setup-days reading: 'no setup signalled' (3.5/day) and 'traded outside the move' (4.4/day) are the two addressable pools. A
  setup that caught even one type in each on most days would add ~4-5 setup-days/week per slot. That is above REPS2's median slot
  (2.7), before precision.
+
+ **A-WT row ('right name, wrong time', 4.4/day; Lead lead-20261117-0500-2).** Timing look at Live trades on those 48 symbol-days
+ (5 catalogue accounts; timing only, no R): only 23 had a SAME-side Live trade; 22 had opposite-side trades only, which is in effect
+ 'wrong side'. Of the same-side trades, **25 entered AFTER the move's extreme vs 4 before the window**; the moves' median decision
+ point is 09:35. Families involved: GEN 10, CWT14 6, RW7 4, heat_fade 3. So 'wrong time' mostly means **Live arrived after an
+ early move had finished**. Entering earlier conflicts with the owner's 09:50 anchor, so the fix to test is narrower: how much of
+ these early moves REMAINS after 09:50 (A1), and whether the setups that traded them late would have had their signal by then.
+ Control: ex-market (beta x SPY over the hold) and the same setups' late entries on non-move days.
  Controls up front: ex-market (beta x SPY over the hold) and a same-minute random-name control, so a 'precursor' is not just
  market direction (MOMSIDE lesson). Family: new; any rule then scored on the 2-year backtest with its own count.
  Owner-facing policy line (not ours to change): the earnings blackout hides ~60% of the day's biggest moves; FAMC is the
  guild's only measured window onto them.
 
-## Candidate B — cost-per-R remedy [WEAK: Builder's stop-charge line shows 2-year backtest ~0.089R vs Live ~0.09-0.10R per stop, so parity, no extra Live upside; price path gains nothing (gross +0.0015R, t 0.98)] (depends on Builder's gross-R print for SIZESTOP / STOPW, Lead lead-20261116-2300-2)
-If widening is a cost artefact (gross ~0), the honest remedy is per-share cost relative to R: a minimum stop distance in bps
-(STOPW, 77-config family) or the proposed hf1027-costfloor-halfR skip (7 configs). It must be scored against a random same-share
-skip / size-cut control (checklist 9) and in gross beside net. Value: loss reduction on tight-stop setups; MDE expected ~0.01R
-per changed trade (STOPW had ~1.3M trades).
+## Candidate B — DROPPED (Lead lead-20261117-0500-2): stop-charge parity; the price path gains nothing.
 
 ## Candidate C — spotlight rotation input (keep only if it adds a ranking input rotation lacks: Lead) (owner arena rule, 2026-11-12; reps priority 1)
 For the arena's every-4-session spotlight of the ~15 least-traded setups: rank candidate setups by expected setup-days/week
