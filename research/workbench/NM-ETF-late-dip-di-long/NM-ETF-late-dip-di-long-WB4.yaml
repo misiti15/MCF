@@ -1,0 +1,26 @@
+# Workbench variant stub (research only). NOT an account config: no account loads this file.
+# Parent NM-ETF-late-dip-di-long; change (FREQ job): ret3 <= -0.75, di_diff7 >= -5, ret12 >= -1.0, refire: true / refire_cooldown: 1. Educational only - not financial advice.
+strategies:
+  NM-ETF-late-dip-di-long-WB4:
+    enabled: false
+    type: lab
+    module: research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB4.py
+    symbols: module
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    scale_out_r: null
+    refire: true
+    refire_cooldown: 1
+    tags:
+    - workbench
+    - parent:NM-ETF-late-dip-di-long
+    workbench:
+      parent: NM-ETF-late-dip-di-long
+      param: "cond.ret3 + cond.di_diff7 + cond.ret12 (new) + refire (FREQ combo)"
+      old: -0.7977116525173187
+      new: "ret3 <= -0.75 AND di_diff7 >= -5 AND ret12 >= -1.0; refire true, cooldown 1"
+      date: '2026-11-17'
+      note: "Mechanic FREQ job (owner 2026-11-16: more active): looser dip + DI, falling-hour guard, refire; module set by hand; 114 configs counted"
+      display_name: "Late-Day ETF Dip Buy — WB4: more dips (refire, looser DI, falling-hour guard)"

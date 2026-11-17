@@ -23,7 +23,7 @@ import math
 import pandas as pd
 
 R_LABEL = "R after costs"
-MARKET_EXITS = ("flatten", "timestop", "scaleout", "unprotected")
+MARKET_EXITS = ("flatten", "timestop", "scaleout", "unprotected", "spy_exit")   # spy_exit: SPYEXIT 2026-11-16
 
 
 # ----------------------------------------------------------------------------------------------------- LR2: R after costs

@@ -145,6 +145,14 @@ class Journal:
         return pd.read_sql("SELECT * FROM orders WHERE run_id=? AND status NOT IN ('closed','rejected','expired')",
                            self.db, params=[run_id])
 
+    def tag_order(self, order_id: str, tag: str) -> None:
+        """Append a `;tag` token to an order's meta once (SPYEXIT: the lot was closed by the SPY-since-entry exit)."""
+        row = self.db.execute("SELECT meta FROM orders WHERE broker_order_id=?", (order_id,)).fetchone()
+        if row is None or tag in str(row[0] or ""):
+            return
+        self.db.execute("UPDATE orders SET meta=? WHERE broker_order_id=?", (str(row[0] or "") + tag, order_id))
+        self.db.commit()
+
     def update_order_status(self, order_id: str, status: str) -> None:
         self.db.execute("UPDATE orders SET status=? WHERE broker_order_id=?", (status, order_id))
         self.db.commit()

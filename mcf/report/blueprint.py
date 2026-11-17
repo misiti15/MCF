@@ -444,6 +444,10 @@ def extract(setup_id: str, with_record: bool = True) -> dict:
                    ("time_stop_min", "Time stop (min)"), ("time_stop_min_r", "Time stop needs")):
         if blk.get(k) is not None:
             S["RISK & EXIT"].append((lab, fmt_v(blk[k]) + ("R" if k.endswith("_r") else ""), k))
+    if blk.get("spy_exit_pct") is not None:      # SPYEXIT (owner 2026-11-16)
+        mv = "up" if side == "short" else "down"
+        S["RISK & EXIT"].append(("SPY exit", f"close at market once SPY is {mv} {fmt_v(blk['spy_exit_pct'])}% since entry"
+                                 + (" (only while losing)" if blk.get("spy_exit_only_losing") else ""), "spy_exit_pct"))
     S["RISK & EXIT"].append(("Time exit", f"flat at {cfg.get('session', {}).get('flatten_by', '15:55')} ET", "session.flatten_by"))
 
     # LIMITS
@@ -530,7 +534,8 @@ def params(bp: dict) -> dict:
     """Spawnable parameters: config keys of the block + module conditions (cond.<col>)."""
     out = {k: v for k, v in bp["block"].items() if k not in ("enabled", "type", "module", "tags", "gen", "from_testing2",
                                                               "former_primary") and not isinstance(v, dict)}
-    for k in ("window", "min_adv", "refire", "refire_cooldown", "scale_out_r", "geom", "r_atr_frac", "max_lots_per_symbol"):
+    for k in ("window", "min_adv", "refire", "refire_cooldown", "scale_out_r", "geom", "r_atr_frac", "max_lots_per_symbol",
+              "spy_exit_pct"):
         out.setdefault(k, {"geom": bp["geom"], "r_atr_frac": 0.25, "refire": False, "refire_cooldown": 1}.get(k))
     for c in (bp["module"] or {}).get("conds", []) + (bp["module"] or {}).get("time", []):
         out[c["key"]] = c["value"]
