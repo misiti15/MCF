@@ -231,6 +231,16 @@ class PaperRunner:
         # latch or halt of this account. Runs AFTER the real decisions of each poll; any shadow error is printed and
         # never reaches trading. _poll_quotes: quotes the live path fetched this poll (shadow reuses them; read only).
         self._poll_quotes: dict[str, tuple] = {}
+        # Recorded live quotes (owner 2026-11-17 "Yes if it enhances our replay efficiency"): for EVERY signal _log
+        # journals (taken, skipped with its reason, shadow-before-open), one record of the quote that decision used
+        # (bid, ask, sizes, quote time, decision time, spread bps; null when the decision came before any quote fetch).
+        # Built only from the quote _quote already fetched: no extra API call. Buffered and flushed with the poll log as
+        # <quote_log_dir>/<date>/<HHMMSS>.jsonl.gz (state branch quotes/, mcf.replay.livecal replays from it).
+        # Logging only: nothing here is read by any trading decision; any error is printed and swallowed.
+        self.quote_log_dir: str | None = None
+        self._quote_buf: list[str] = []
+        self._quote_buf_since: float | None = None
+        self._poll_quote_x: dict[str, tuple] = {}      # symbol -> (bid_size, ask_size) of this poll's quote
         self._step_bars: dict | None = None
         self._step_entries = False
         self.ctxs: dict = {}
@@ -1185,6 +1195,7 @@ class PaperRunner:
     def step(self, now: pd.Timestamp):
         t0 = _time.perf_counter()
         self._poll_quotes = {}
+        self._poll_quote_x = {}
         self._step_bars, self._step_entries = None, False
         if self.shadow is not None:
             self.shadow.begin_poll()
@@ -1384,6 +1395,10 @@ class PaperRunner:
             self._quote_ts.pop(symbol, None)
         out = float(q.bid_price or 0), float(q.ask_price or 0)
         self._poll_quotes[symbol] = (*out, None if ts is None else pd.Timestamp(ts))   # shadow reuse (this poll only)
+        try:                                                   # quote record only (sizes); never affects the decision
+            self._poll_quote_x[symbol] = (getattr(q, "bid_size", None), getattr(q, "ask_size", None))
+        except Exception:
+            pass
         return out
 
     def _realism(self, sig, ctx, px, quote=None) -> tuple[bool, str, dict]:
@@ -1457,6 +1472,58 @@ class PaperRunner:
             sig.target, sig.entry_type, sig.entry_price, int(sig.bar_index), status, why, qty, order_id,
             json.dumps({**(info or {}), **{k: (float(v) if isinstance(v, (np.floating, float)) else v)
                                            for k, v in sig.meta.items()}}, default=str))
+        self._record_quote(sig, status, why, ref, now, info)
+
+    def _record_quote(self, sig, status, why, ref, now, info):
+        """Buffer the quote record of one journaled decision (see quote_log_dir). Never raises."""
+        if not self.quote_log_dir:
+            return
+        try:
+            info = info or {}
+            rec = {"t": pd.Timestamp(now).isoformat(), "sym": sig.symbol, "strat": sig.strategy, "side": int(sig.side),
+                   "status": status, "why": str(why)[:120], "ref": _num(ref), "stop": _num(sig.stop)}
+            if "bid" in info and "ask" in info:
+                q = self._poll_quotes.get(sig.symbol)
+                qts = q[2] if q is not None and len(q) > 2 else None
+                bs, az = self._poll_quote_x.get(sig.symbol, (None, None))
+                rec.update(bid=_num(info["bid"]), ask=_num(info["ask"]), bs=_num(bs), az=_num(az),
+                           qts=None if qts is None else pd.Timestamp(qts).isoformat(),
+                           bps=_num(info.get("spread_bps")), age_s=_num(info.get("quote_age_s")))
+            else:
+                rec["bid"] = None                       # decided before any quote was fetched (no quote used)
+            if self._quote_buf_since is None:
+                self._quote_buf_since = _time.time()
+            self._quote_buf.append(json.dumps(rec, separators=(",", ":"), default=str))
+        except Exception as e:
+            print(f"quote record failed: {type(e).__name__}: {e}")
+
+    def flush_quote_log(self, now: pd.Timestamp | None = None, force: bool = False) -> str | None:
+        """Write the buffered quote records as one new gzip chunk <quote_log_dir>/<date>/<HHMMSS>.jsonl.gz (written
+        once, like the poll log). Returns the path or None. Never raises."""
+        if not self.quote_log_dir or not self._quote_buf:
+            return None
+        if not force and self._quote_buf_since is not None and \
+                _time.time() - self._quote_buf_since < self.poll_log_flush_min * 60:
+            return None
+        try:
+            import gzip
+
+            now = pd.Timestamp(now if now is not None else self._now or pd.Timestamp.now(tz=NY))
+            d = os.path.join(self.quote_log_dir, str(now.date()))
+            os.makedirs(d, exist_ok=True)
+            path = os.path.join(d, f"{now:%H%M%S}.jsonl.gz")
+            k = 1
+            while os.path.exists(path):
+                path = os.path.join(d, f"{now:%H%M%S}-{k}.jsonl.gz")
+                k += 1
+            with gzip.open(path + ".tmp", "wt", compresslevel=9) as f:
+                f.write("\n".join(self._quote_buf) + "\n")
+            os.replace(path + ".tmp", path)
+            self._quote_buf, self._quote_buf_since = [], None
+            return path
+        except Exception as e:
+            print(f"quote log flush failed: {type(e).__name__}: {e}")
+            return None
 
     def _enter(self, sig, px, key, ctx, now):
         coid = self._coid(sig, ctx, now)
@@ -2106,6 +2173,7 @@ class PaperRunner:
 
     def write_status(self, now, phase):
         self.flush_poll_log(now, force=phase in ("closed", "handover"))
+        self.flush_quote_log(now, force=phase in ("closed", "handover"))
         rs = self.risk.state      # visibility only (status health): the day's latches and counters a successor restores
         self.health["risk_state"] = {"halted": bool(rs.halted), "setup_stopped": sorted(rs.setup_stopped),
                                      "trades_today": int(rs.trades_today), "realized_r": round(float(rs.realized_r), 3),
