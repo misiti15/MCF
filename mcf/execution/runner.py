@@ -1429,6 +1429,9 @@ class PaperRunner:
         # owner 2026-10-29 CF (Testing 1/2 only, forward test of research/bdi/p3_1029 A3): skip an entry whose round-trip
         # cost if it is stopped out (entry + exit slippage + the extra stop-exit slippage) exceeds live.max_stop_cost_r of R
         lim = self.live.get("max_stop_cost_r")
+        own = self.risk.setup_cost_limits if hasattr(self, "risk") else {}
+        if sig.strategy in own:                       # a guest keeps its home account's cost filter (GY-BENCH)
+            lim = own[sig.strategy]
         if lim and risk_ps > 0:
             c = self.cfg.get("costs", {})
             one = float(c.get("slippage_per_share", 0.01)) + px * float(c.get("slippage_bps", 1.0)) / 1e4

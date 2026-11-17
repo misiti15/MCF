@@ -228,11 +228,12 @@ class ShadowBook:
             if len(td):
                 td["_rc"] = cost_r(td)
                 self.realized = {str(k): float(v) for k, v in td.groupby("strategy")["_rc"].sum().items()}
-                lim = self.r.risk.setup_loss_limit
-                if lim is not None:
+                rk = self.r.risk
+                if rk.setup_loss_limit is not None or getattr(rk, "setup_loss_limits", None):
                     low = td.sort_values("exit_time", kind="stable").groupby("strategy")["_rc"].cumsum() \
                         .groupby(td.sort_values("exit_time", kind="stable")["strategy"]).min()
-                    self.stopped |= {str(k) for k, v in low.items() if v <= -lim}
+                    self.stopped |= {str(k) for k, v in low.items()
+                                     if rk.loss_limit_for(str(k)) is not None and v <= -rk.loss_limit_for(str(k))}
 
     def _signal(self, sig, status, why, ref, now, info=None, qty=0, sid=None):
         self._sig_rows.append((self.run_id, str(now.date()), now.isoformat(), sig.symbol, sig.strategy, int(sig.side),
@@ -456,7 +457,7 @@ class ShadowBook:
                     return False, "not shortable/ETB"
         if px < r.risk.min_price:
             return False, "price below minimum"
-        lim = r.risk.setup_loss_limit
+        lim = r.risk.loss_limit_for(sig.strategy)
         if lim is not None and (sig.strategy in self.stopped or self.realized.get(sig.strategy, 0.0) <= -lim):
             self.stopped.add(sig.strategy)
             return False, "setup daily loss limit"
@@ -701,7 +702,7 @@ class ShadowBook:
         self._dirty.discard(lot["sid"])
         self._touched.discard(lot["sid"])
         self.realized[lot["strategy"]] = self.realized.get(lot["strategy"], 0.0) + (adj / risk if risk > 0 else 0.0)
-        lim = self.r.risk.setup_loss_limit
+        lim = self.r.risk.loss_limit_for(lot["strategy"])
         if lim is not None and self.realized[lot["strategy"]] <= -lim:
             self.stopped.add(lot["strategy"])
         self.stats["closed"] += 1

@@ -171,6 +171,7 @@ strategies:
   CWT04-backside-vwaptest-a25-short:   # moved from Testing B 2026-11-11 after the close (D/E/F fill (low-rep); twin a15 in Testing C); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 0 live trades so far; ~0.56/session lab.
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py
     min_adv: 95000000
@@ -199,6 +200,7 @@ strategies:
   NM-RWR1-exh150-gapdn-spyup-pm-short:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 1 live trades so far; ~1.36/session lab.
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/swarm1017/rework-rw/modules/RWR1-exh150-gapdn-spyup-pm-short-t05s1.py
     context: [spy_fo]
@@ -540,6 +542,7 @@ strategies:
         n_tried_in_run: 3000
   GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, spotlight); from session 2026-11-16
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/generator/modules/GEN-261023-01-vwapx-lam-short.py
     context:
@@ -821,6 +824,7 @@ strategies:
         n_tried_in_run: 3082
   GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, spotlight); from session 2026-11-16
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/generator/modules/GEN-261028-03-emadchg-hi-lunch-long.py
     context:
@@ -890,6 +894,7 @@ strategies:
         n_tried_in_run: 3000
   GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, spotlight); from session 2026-11-16
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/generator/modules/GEN-261028-06-rsi5-lo-mid-short.py
     context:
@@ -1025,6 +1030,7 @@ strategies:
         n_tried_in_run: 3000
   GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, spotlight); from session 2026-11-16
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
     type: lab
     module: research/generator/modules/GEN-261029-10-rsislope-hi-open-short.py
     context:

@@ -1328,5 +1328,48 @@
   "link": "docs/GLOSSARY.md",
   "status": "answered",
   "answered": "2026-11-16: SRC-VALUE yes"
+ },
+ {
+  "code": "SRCV1",
+  "title": "Data-source weights (SRC-VALUE)",
+  "what": "Set the 2-year history weight 0.175 -> 0; keep 2-year screen, 2-year backtest, Session replay and Shadow separate, comparison only (re-measured monthly).",
+  "recommend": "Yes",
+  "numbers": [
+   "Spearman vs later live ~0 for every source (12 configurations)",
+   "2-year screen +0.16R optimistic, sign right on 34% of 68 setups (naive 69%)",
+   "Session replay level fair (bias -0.03R) but no rank skill"
+  ],
+  "why": "No off-live source has predicted which setups do well live afterwards; a weight should be earned by measurement.",
+  "link": "research/src_value/NOTES.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LATCH-RW7",
+  "title": "RW7 runs without the -2R setup latch if it moves to a latched account",
+  "what": "If RW7-gapdn-bounce-early-short-FD moves to the Graveyard or Primary, give it no per-setup latch there (account halt kept). Nothing changes today: Testing F has the latch off.",
+  "recommend": "Yes (\"LATCH-RW7 yes\"), applies only on a move",
+  "numbers": [
+   "15 latch days: post-latch 359 trades +0.29R/trade, +105R; best day 48%",
+   "Latch-day R: -75R at -2 vs +28R with no latch (w/o best day -82 vs -17)"
+  ],
+  "why": "Owner 11-17: the -2R cap may hinder some setups. RW7 is the one setup where the evidence is clear.",
+  "link": "research/latch_review_1117/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LATCH-RW1",
+  "title": "RW1 runs without the -2R setup latch if it is ever promoted",
+  "what": "If RW1-gapdn-bounce-flowsell-short-FD leaves On Deck for Primary (promotions are on hold), give it no per-setup latch there (account halt kept).",
+  "recommend": "Optional (\"LATCH-RW1 yes/no\"): thinner evidence",
+  "numbers": [
+   "9 latch days: post-latch 35 trades +0.45R/trade, +15.6R; best day 45%",
+   "Latch-day R: -25.6R at -2 vs -12.2R with no latch; gain comes from 3 days"
+  ],
+  "why": "Passes the review's fixed gate, but the gain comes from 3 days.",
+  "link": "research/latch_review_1117/RESULTS.md",
+  "status": "open",
+  "answered": null
  }
 ]
