@@ -8,10 +8,11 @@ from mcf.report import assignments as A
 
 def test_assignments_file_matches_configs():
     d = json.loads((Path(A.OUT)).read_text())
-    cur = A.current()
+    st = A._strategies(d.get("asof_session"))   # resolved for the session the file was written for (GY-BENCH windows)
+    cur, rest = A.current(st), A.resting(st, d.get("asof_session"))
     assert d["accounts"] == cur, "docs/live/assignments.json is stale: run python -m mcf.report.assignments"
     for name, v in d["setups"].items():
-        assert v["accounts"] == sorted(a for a, s in cur.items() if name in s), name
+        assert v["accounts"] == A.setup_accounts(cur, rest, name), name
     assert d.get("last_change", {}).get("at")
 
 

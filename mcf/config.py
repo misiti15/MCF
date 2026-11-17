@@ -23,7 +23,9 @@ def _merge(base: dict, override: dict) -> dict:
     return out
 
 
-def load_config(path: str | Path | None = None) -> dict[str, Any]:
+def load_config(path: str | Path | None = None, asof=None) -> dict[str, Any]:
+    """default.yaml + account overlay + local.yaml (+ `path`), with date-scoped setup rotation (mcf/rotation.py:
+    `benched` / `guest` windows) resolved for session `asof` (default $MCF_ASOF, else today in New York)."""
     with open(CONFIG_DIR / "default.yaml") as f:
         cfg = yaml.safe_load(f)
     acct = os.environ.get("MCF_ACCOUNT", "primary")
@@ -41,6 +43,9 @@ def load_config(path: str | Path | None = None) -> dict[str, Any]:
                     if k not in own:
                         cfg["strategies"][k] = {**(cfg["strategies"][k] or {}), "enabled": False}
     cfg["account_name"] = acct
+    from .rotation import apply as _rotation
+
+    _rotation(cfg, asof)   # GY-BENCH (owner 2026-11-16): benched / guest windows for this session
     feed = os.environ.get("ALPACA_DATA_FEED")
     if feed:
         cfg["data"]["feed"] = feed

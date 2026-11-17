@@ -66,6 +66,26 @@ live:
     - NS5-sma50-flush-oversold-long-FD     # 44 live trades (moved from Testing 1 + 2 2026-11-03, DM-N3; from session 2026-11-04)
     - RW6G1-ns2-up3-vwap2sd-short-FD       # 28 live trades (moved from Testing 1 2026-11-03, DM-N3; from session 2026-11-04)
     - RW3S-gapdn-flowsell-short-FD         # 297 live trades (moved from Testing E 2026-11-13, RW3S-GY; from session 2026-11-16)
+    - GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long   # GY-BENCH guest (a) from Testing E, 11-18..11-24
+    - GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short   # GY-BENCH guest (a) from Setup Generator, 11-18..11-24
+    - GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long   # GY-BENCH guest (a) from Setup Generator, 11-18..11-24
+    - GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long   # GY-BENCH guest (a) from Setup Generator, 11-18..11-24
+    - CWT04-backside-vwaptest-a25-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261023-05-NewLOD-SMA20dlem0p94-ORLdistlem0p24-PM-BRopgt0p65-hold-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261021-10-MACDhge0p079-VWAPbarslem7-OPEN-QQQup-t1s05-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261028-10-BarRngATRge0p18-Flow3lem0p54-FromPCATRge0p28-PM-SPYgt0p5-hold-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long   # GY-BENCH guest (b) from Setup Generator, 11-18..11-24
+    - NM-RWR1-exh150-gapdn-spyup-pm-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long   # GY-BENCH guest (b) from Setup Generator, 11-18..11-24
+    - LIQ-pdl-sweep-open15-vwap-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261021-03-RSI5le34-Ret15mATRge0p12-DayRngVsPrevge1p2-LUNCH-SPYltm0p25-t05s1-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
+    - GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
+    - GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long   # GY-BENCH guest (b) from Testing F, 11-18..11-24
+    - GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -83,6 +103,7 @@ strategies:
   RW2-exhaustion-noon-adv150-short-FD:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
     min_adv: 150000000
@@ -92,6 +113,7 @@ strategies:
   LIQ-orl-sweep-open15-s25-long:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
     min_adv: 95000000
@@ -103,6 +125,7 @@ strategies:
   CWT14-failbrk-orl-p10-lowvol-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.139R/trade)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
     min_adv: 95000000
@@ -115,6 +138,7 @@ strategies:
   CWT14-failbrk-orl-p10-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.155R/trade)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
     min_adv: 95000000
@@ -127,6 +151,7 @@ strategies:
   CWT14-failbrk-orl-p05-lowvol-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.233R/trade)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
     min_adv: 95000000
@@ -139,6 +164,7 @@ strategies:
   CWT14-failbrk-orl-p05-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.141R/trade)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-long.py
     min_adv: 95000000
@@ -152,6 +178,7 @@ strategies:
   heat_fade_short:   # ex-primary "Morning Bounce Fade"
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: heat
     formula: research/heat/candidates/regime_9.py
     sides: short
@@ -177,6 +204,7 @@ strategies:
   NS2-sma50break-overbought-short-FD:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/fullday/NS2-sma50break-overbought-short-FD.py
     min_adv: 95000000
@@ -209,6 +237,7 @@ strategies:
   ST2-slope20up-long-am-t05s1-FD:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py
     min_adv: 95000000
@@ -231,6 +260,7 @@ strategies:
   heat_fade_short-FD:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: heat
     formula: research/bdi/fullday/heat_fade_short-FD.py
     sides: short
@@ -243,6 +273,7 @@ strategies:
   heat_fade_long-FD:
     # moved to Graveyard 2026-10-21 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: heat
     formula: research/bdi/fullday/heat_fade_long-FD.py
     sides: long
@@ -264,6 +295,7 @@ strategies:
   CWT14-failbrk-pdh-p05-lowvol-short:
     # moved to Graveyard 2026-10-22 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
     min_adv: 95000000
@@ -275,6 +307,7 @@ strategies:
   CWT14-failbrk-pdh-p10-lowvol-short:
     # moved to Graveyard 2026-10-22 (owner)
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
     min_adv: 95000000
@@ -286,6 +319,7 @@ strategies:
     # moved to Graveyard 2026-10-22 (owner P0, ~11:10 ET; effective session 2026-10-23 - its 10-22 trades stay in
     # Testing 1, the dashboard merges both records into one row under Graveyard). Rework pdh1022: 0 of 47 variants pass.
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-short.py
     min_adv: 95000000
@@ -322,6 +356,7 @@ strategies:
     # moved to Graveyard 2026-10-26 (owner D3; effective session 2026-10-27 - its earlier trades stay in Testing 1,
     # the dashboard merges both records into one row under Graveyard). 90 trades, 31% win vs 38% needed, -0.27R.
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k6-long.py
     min_adv: 95000000
@@ -334,6 +369,7 @@ strategies:
     # moved to Graveyard 2026-10-28 (owner K4-2; effective session 2026-10-29 - its earlier trades stay in Testing 2,
     # the dashboard merges both records into one row under Graveyard). 427 trades, -0.092R after costs (-0.118R w/o best day); 2-yr -0.075R.
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k4-long.py
     min_adv: 95000000
@@ -346,6 +382,7 @@ strategies:
     # moved to Graveyard 2026-10-30 (owner D1; its earlier trades stay in Testing 1, the dashboard merges both records).
     # 675 trades -0.085R after costs; 2-yr -0.068R (research/bdi/pdl_eval1029).
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-long.py
     min_adv: 95000000
@@ -358,6 +395,7 @@ strategies:
     # moved to Graveyard 2026-10-30 (owner D2; its earlier trades stay in Testing 2, the dashboard merges both records).
     # 433 trades -0.115R after costs; 2-yr -0.095R (research/bdi/pdl_eval1029).
     enabled: true
+    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-lowvol-long.py
     min_adv: 95000000
@@ -456,3 +494,779 @@ strategies:
     scale_out_r: null
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-13 (owner)", night1102, RW3S]
+
+  # ---- GY-BENCH guests (owner 2026-11-16 ~22:30 ET): sessions 2026-11-18..2026-11-24 ONLY (mcf/rotation.py `guest`).
+  # Not Graveyard setups: each keeps its own record (tagged Graveyard for these sessions), its home account's cost filter
+  # and per-setup loss rule (max_stop_cost_r / max_setup_daily_loss_r below), and goes home by itself on 2026-11-25.
+  # Graveyard totals in the daily post exclude them. Ledger 2026-11-18-gy-bench-guests.
+  # guest from Testing E (a), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (a: generated, no trades yet); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261026-09-bbpct-lo-late-long.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [1400, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-26, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: long
+        window: LATE
+        geom: t05s05
+        min_adv: 150000000.0
+        conds:
+        - [bb_pctb12, <=, 0.3]
+        - [breadth, '>', 0.6]
+        - [from_pc_atr, '>=', 0.45]
+        - [sma20_slope_pct, '>=', 0.46]
+      key: c781ee99994032d7
+      screen:
+        train: {n: 755, exp_r: -0.0019, t: -0.06, win: 0.55, days: 68}
+        valid: {n: 341, exp_r: 0.1424, t: 1.71, win: 0.669, days: 58}
+        all: {n: 1096, exp_r: 0.043, t: 0.87, win: 0.587, days: 126}
+        per_day: 2.573
+        per_day_valid: 1.776
+        exp_up: 0.0538
+        exp_down: -0.2426
+        exp_flat: -0.0621
+        excess_train: 0.015
+        excess_valid: 0.1097
+        tier1: false
+        score: 0.19
+        max_overlap: 0.556
+        overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
+        n_tried_in_run: 3000
+  # guest from Setup Generator (a), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: gen, reason: 'GY-BENCH (a: generated, no trades yet); back to Setup Generator 2026-11-25'}
+    max_stop_cost_r: null
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261020-02-rsislope-lo-late-short.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [1400, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-20, gy-guest, 'home:gen']
+    gen:
+      date: '2026-10-20'
+      spec:
+        side: short
+        window: LATE
+        geom: t05s1
+        min_adv: 150000000.0
+        conds:
+        - [bar_range_atr, '>=', 0.14]
+        - [breadth, '>', 0.7]
+        - [buyPressure, '>=', 0.17]
+        - [rsiSlope, <=, -19.0]
+      key: 2982ab525ee84809
+      screen:
+        train: {n: 919, exp_r: 0.1533, t: 2.52, win: 0.787, days: 49}
+        valid: {n: 114, exp_r: 0.041, t: 0.68, win: 0.702, days: 26}
+        all: {n: 1033, exp_r: 0.1409, t: 2.44, win: 0.777, days: 75}
+        per_day: 2.425
+        per_day_valid: 0.594
+        exp_up: 0.1309
+        exp_down: 0.0745
+        exp_flat: 0.2825
+        excess_train: 0.0858
+        excess_valid: 0.1051
+        tier1: true
+        score: 1.43
+        max_overlap: 0.574
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3146
+  # guest from Setup Generator (a), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: gen, reason: 'GY-BENCH (a: generated, no trades yet); back to Setup Generator 2026-11-25'}
+    max_stop_cost_r: null
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261021-08-rsi2-lo-lunch-long.py
+    context: [qqq_fo]
+    min_adv: 150000000
+    window: [1130, 1400]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-21, gy-guest, 'home:gen']
+    gen:
+      date: '2026-10-21'
+      spec:
+        side: long
+        window: LUNCH
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - [atr_d_pct, '>=', 3.6]
+        - [qqq_fo, '>', 0.6]
+        - [ret3_atr, '>=', 0.16]
+        - [rsi2, <=, 0.0]
+      key: 6c66bed2e739d09a
+      screen:
+        train: {n: 156, exp_r: 1.0285, t: 2.67, win: 0.814, days: 17}
+        valid: {n: 49, exp_r: 0.3591, t: 1.29, win: 0.714, days: 19}
+        all: {n: 205, exp_r: 0.8685, t: 2.28, win: 0.79, days: 36}
+        per_day: 0.481
+        per_day_valid: 0.255
+        exp_up: 0.9432
+        exp_down: null
+        exp_flat: 0.1166
+        excess_train: 0.3055
+        excess_valid: 0.1778
+        tier1: false
+        score: 0.54
+        max_overlap: 0.5
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  # guest from Setup Generator (a), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: gen, reason: 'GY-BENCH (a: generated, no trades yet); back to Setup Generator 2026-11-25'}
+    max_stop_cost_r: null
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/bdi/pod1022/live/pod-thrasher-intraday-breadth-thrust-stocks-long-live.py
+    context: [breadth, spy_fo]
+    min_adv: 500000000
+    window: [1015, 1400]
+    geom: holdtr
+    refire: false
+    scale_out_r: null
+    tags: [observation, pod1022, gy-guest, 'home:gen']
+    gen:
+      date: '2026-10-23'
+      source: 'pod1022 podcast/educator mining (research/bdi/pod1022), owner 2026-10-23: observation setup, not generated'
+      research_module: research/bdi/pod1022/modules/pod-thrasher-intraday-breadth-thrust-stocks-long.py
+      screen:
+        train: {n: 1273, exp_r: 0.102, t: 0.635, win: 0.57, days: 16}
+        valid: {n: 841, exp_r: 0.2872, t: 1.189, win: 0.597, days: 7}
+        all: {n: 2114, exp_r: 0.1757, t: 1.269, win: 0.58, days: 23}
+        per_day: 4.962
+        per_day_valid: 4.38
+        excess_train: 0.0303
+        excess_valid: 0.0649
+        best_day: '2026-06-11'
+        best_day_share: 0.327
+        avg_r_ex_best_day: 0.128
+        max_overlap_config: 0.381
+        overlap_with: account_graveyard:CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 452
+        merit_bar: failed (best-day share high; not significant on valid) - observation only
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  CWT04-backside-vwaptest-a25-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/bdi/cwt/live/CWT04-backside-vwaptest-a25-short.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B1-a2.5-trigT1-t1s1-full, fill: false}
+    tags: [gy-guest, 'home:testingd']
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261023-01-vwapx-lam-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [1030, 1200]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-23, gy-guest, 'home:testingd']
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: short
+        window: LAM
+        geom: t05s05
+        min_adv: 95000000.0
+        conds:
+        - [spy_fo, '>', 0.5]
+        - [vwapReclaim, ==, 1.0]
+        - [vwap_atr, '>=', 0.33]
+      key: 4b56ead1231c9960
+      screen:
+        train: {n: 653, exp_r: 0.3213, t: 9.94, win: 0.862, days: 17}
+        valid: {n: 103, exp_r: 0.1732, t: 1.52, win: 0.728, days: 20}
+        all: {n: 756, exp_r: 0.3011, t: 6.7, win: 0.844, days: 37}
+        per_day: 1.775
+        per_day_valid: 0.536
+        exp_up: 0.3059
+        exp_down: null
+        exp_flat: 0.0685
+        excess_train: 0.1027
+        excess_valid: 0.1172
+        tier1: true
+        score: 1.77
+        max_overlap: 0.552
+        overlap_with: GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261023-05-NewLOD-SMA20dlem0p94-ORLdistlem0p24-PM-BRopgt0p65-hold-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261023-05-newlod-pm-long.py
+    context: [breadth_open]
+    min_adv: 20000000
+    window: [1300, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-23, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: long
+        window: PM
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - [breadth_open, '>', 0.65]
+        - [new_lod, ==, 1.0]
+        - [or_low_dist_atr, <=, -0.24]
+        - [sma20_dist_pct, <=, -0.94]
+      key: 5d892cd07fe74b32
+      screen:
+        train: {n: 251, exp_r: 0.0883, t: 0.51, win: 0.458, days: 69}
+        valid: {n: 239, exp_r: 0.1413, t: 1.13, win: 0.494, days: 34}
+        all: {n: 490, exp_r: 0.1142, t: 1.06, win: 0.476, days: 103}
+        per_day: 1.15
+        per_day_valid: 1.245
+        exp_up: 0.0775
+        exp_down: null
+        exp_flat: 0.379
+        excess_train: 0.1762
+        excess_valid: 0.2012
+        tier1: true
+        score: 0.76
+        max_overlap: 0.325
+        overlap_with: CWT13-vwapstretch-z05-long
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261021-10-MACDhge0p079-VWAPbarslem7-OPEN-QQQup-t1s05-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261021-10-macdh-hi-open-long.py
+    context: [qqq_fo]
+    min_adv: 20000000
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-21, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-21'
+      spec:
+        side: long
+        window: OPEN
+        geom: t1s05
+        min_adv: 20000000.0
+        conds:
+        - [macd_hist, '>=', 0.079]
+        - [qqq_fo, '>', 0.0]
+        - [vwap_side_bars, <=, -7.0]
+      key: 6a7d9134528819d4
+      screen:
+        train: {n: 51, exp_r: 0.1279, t: 1.07, win: 0.49, days: 29}
+        valid: {n: 46, exp_r: 0.0644, t: 0.57, win: 0.435, days: 26}
+        all: {n: 97, exp_r: 0.0978, t: 1.19, win: 0.464, days: 55}
+        per_day: 0.228
+        per_day_valid: 0.24
+        exp_up: 0.1597
+        exp_down: 0.0013
+        exp_flat: 0.1602
+        excess_train: 0.3002
+        excess_valid: 0.1275
+        tier1: false
+        score: 0.32
+        max_overlap: 0.267
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261029-10-rsislope-hi-open-short.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [950, 1030]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-29, gy-guest, 'home:testingd']
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: short
+        window: OPEN
+        geom: t1s1
+        min_adv: 150000000.0
+        conds:
+        - [breadth, '>', 0.5]
+        - [emaDiff, '>=', 0.29]
+        - [ret1, <=, -0.21]
+        - [rsiSlope, '>=', 19.0]
+      key: 84dbe7e55f567c2b
+      screen:
+        train: {n: 62, exp_r: 0.4039, t: 3.21, win: 0.71, days: 35}
+        valid: {n: 61, exp_r: 0.1432, t: 1.08, win: 0.607, days: 41}
+        all: {n: 123, exp_r: 0.2746, t: 2.95, win: 0.659, days: 76}
+        per_day: 0.289
+        per_day_valid: 0.318
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.3058
+        exp_down: 0.3154
+        exp_flat: 0.1851
+        excess_train: 0.3117
+        excess_valid: 0.1503
+        tier1: false
+        score: 0.83
+        max_overlap: 0.122
+        overlap_with: GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long
+        n_tried_in_run: 3000
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261028-03-emadchg-hi-lunch-long.py
+    context: [spy_fo]
+    min_adv: 20000000
+    window: [1130, 1400]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-28, gy-guest, 'home:testingd']
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: long
+        window: LUNCH
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - [emaDiff_chg3, '>=', 0.15]
+        - [ret_since950_atr, <=, -0.43]
+        - [spy_fo, '>', 0.25]
+        - [vwapReclaim, ==, 1.0]
+      key: e035603312077d1d
+      screen:
+        train: {n: 301, exp_r: 0.3944, t: 1.79, win: 0.545, days: 60}
+        valid: {n: 226, exp_r: 0.0522, t: 0.41, win: 0.442, days: 64}
+        all: {n: 527, exp_r: 0.2477, t: 1.61, win: 0.501, days: 124}
+        per_day: 1.237
+        per_day_valid: 1.177
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.4347
+        exp_down: -0.3898
+        exp_flat: -0.2594
+        excess_train: 0.0612
+        excess_valid: 0.1008
+        tier1: true
+        score: 0.66
+        max_overlap: 0.208
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261028-10-BarRngATRge0p18-Flow3lem0p54-FromPCATRge0p28-PM-SPYgt0p5-hold-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261028-10-barrngatr-hi-pm-long.py
+    context: [spy_fo]
+    min_adv: 20000000
+    window: [1300, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-28, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: long
+        window: PM
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - [bar_range_atr, '>=', 0.18]
+        - [flow3, <=, -0.54]
+        - [from_pc_atr, '>=', 0.28]
+        - [spy_fo, '>', 0.5]
+      key: 3445adaf78d53180
+      screen:
+        train: {n: 1328, exp_r: 0.2462, t: 0.84, win: 0.493, days: 57}
+        valid: {n: 863, exp_r: 0.0213, t: 0.14, win: 0.453, days: 53}
+        all: {n: 2191, exp_r: 0.1576, t: 0.77, win: 0.477, days: 110}
+        per_day: 5.143
+        per_day_valid: 4.495
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.1944
+        exp_down: -0.4527
+        exp_flat: -0.2456
+        excess_train: -0.0729
+        excess_valid: 0.0371
+        tier1: true
+        score: 0.14
+        max_overlap: 0.346
+        overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261023-09-orbfaildn-late-short.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [1400, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-23, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: short
+        window: LATE
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - [breadth, '>', 0.7]
+        - [orb_fail_dn, ==, 1.0]
+        - [ret3, '>=', 0.54]
+      key: 88d8a42c36139341
+      screen:
+        train: {n: 3516, exp_r: 0.0077, t: 0.08, win: 0.523, days: 83}
+        valid: {n: 1901, exp_r: 0.0832, t: 0.48, win: 0.533, days: 40}
+        all: {n: 5417, exp_r: 0.0342, t: 0.38, win: 0.527, days: 123}
+        per_day: 12.716
+        per_day_valid: 9.901
+        exp_up: -0.1648
+        exp_down: 0.4466
+        exp_flat: 0.2316
+        excess_train: 0.0464
+        excess_valid: 0.0738
+        tier1: true
+        score: 0.33
+        max_overlap: 0.542
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3000
+  # guest from Setup Generator (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: gen, reason: 'GY-BENCH (b: low exposure); back to Setup Generator 2026-11-25'}
+    max_stop_cost_r: null
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261023-02-ret15matr-lo-pm-long.py
+    context: [breadth_open]
+    min_adv: 50000000
+    window: [1300, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-23, gy-guest, 'home:gen']
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: long
+        window: PM
+        geom: hold
+        min_adv: 50000000.0
+        conds:
+        - [atr_d_pct, '>=', 6.0]
+        - [breadth_open, '>', 0.65]
+        - [emaDiff_chg3, '>=', 0.028]
+        - [ret3_atr, <=, -0.068]
+      key: a0232d5528a12840
+      screen:
+        train: {n: 697, exp_r: 0.119, t: 1.23, win: 0.529, days: 80}
+        valid: {n: 468, exp_r: 0.1683, t: 1.38, win: 0.553, days: 36}
+        all: {n: 1165, exp_r: 0.1388, t: 1.81, win: 0.539, days: 116}
+        per_day: 2.735
+        per_day_valid: 2.438
+        exp_up: 0.1453
+        exp_down: null
+        exp_flat: -0.011
+        excess_train: 0.0509
+        excess_valid: 0.1972
+        tier1: true
+        score: 1.48
+        max_overlap: 0.284
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  NM-RWR1-exh150-gapdn-spyup-pm-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/swarm1017/rework-rw/modules/RWR1-exh150-gapdn-spyup-pm-short-t05s1.py
+    context: [spy_fo]
+    min_adv: 150000000
+    window: [1300, 1500]
+    scale_out_r: null
+    tags: [near-miss, swarm1017, forward-observation, q8, gy-guest, 'home:testingd']
+  # guest from Setup Generator (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: gen, reason: 'GY-BENCH (b: low exposure); back to Setup Generator 2026-11-25'}
+    max_stop_cost_r: null
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261022-02-orbfailup-late-long.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [1400, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-22, gy-guest, 'home:gen']
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: long
+        window: LATE
+        geom: t05s1
+        min_adv: 150000000.0
+        conds:
+        - [adx7, '>=', 57.0]
+        - [breadth, '>', 0.7]
+        - [emaDiff_chg3, <=, -0.094]
+        - [orb_fail_up, ==, 1.0]
+      key: 82043cb030bdfef9
+      screen:
+        train: {n: 867, exp_r: 0.0041, t: 0.1, win: 0.616, days: 75}
+        valid: {n: 482, exp_r: 0.0628, t: 1.32, win: 0.641, days: 37}
+        all: {n: 1349, exp_r: 0.0251, t: 0.79, win: 0.625, days: 112}
+        per_day: 3.167
+        per_day_valid: 2.51
+        exp_up: 0.0347
+        exp_down: 0.1427
+        exp_flat: -0.1189
+        excess_train: 0.0378
+        excess_valid: 0.0825
+        tier1: true
+        score: 0.85
+        max_overlap: 0.406
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  LIQ-pdl-sweep-open15-vwap-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/bdi/reddit1012liq/live/LIQ-pdl-sweep-open15-vwap-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    be_at_r: 1.0
+    time_stop_min: 15
+    time_stop_min_r: 0.25
+    testing: {added: '2026-10-12', source: LIQ-PD-long-x0.05-open-k15-a1-A-NL-BE+TS, bar: PLAN.md 5(b)}
+    tags: [gy-guest, 'home:testinge']
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261021-03-RSI5le34-Ret15mATRge0p12-DayRngVsPrevge1p2-LUNCH-SPYltm0p25-t05s1-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261021-03-rsi5-lo-lunch-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [1130, 1400]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-21, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-21'
+      spec:
+        side: short
+        window: LUNCH
+        geom: t05s1
+        min_adv: 95000000.0
+        conds:
+        - [day_vs_prev_range, '>=', 1.2]
+        - [ret3_atr, '>=', 0.12]
+        - [rsi5, <=, 34.0]
+        - [spy_fo, <, -0.25]
+      key: d21f37c917b9f9ab
+      screen:
+        train: {n: 366, exp_r: 0.0323, t: 0.34, win: 0.735, days: 59}
+        valid: {n: 221, exp_r: 0.1117, t: 1.14, win: 0.765, days: 46}
+        all: {n: 587, exp_r: 0.0622, t: 0.87, win: 0.746, days: 105}
+        per_day: 1.378
+        per_day_valid: 1.151
+        exp_up: 0.0686
+        exp_down: 0.0611
+        exp_flat: 0.064
+        excess_train: -0.002
+        excess_valid: 0.1328
+        tier1: true
+        score: 0.84
+        max_overlap: 0.517
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261028-06-rsi5-lo-mid-short.py
+    context: [breadth_open]
+    min_adv: 150000000
+    window: [1100, 1300]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-28, gy-guest, 'home:testingd']
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: short
+        window: MID
+        geom: hold
+        min_adv: 150000000.0
+        conds:
+        - [breadth_open, <, 0.35]
+        - [day_vs_prev_range, <=, 0.34]
+        - [rsi5, <=, 13.0]
+        - [vwap_atr, <=, -0.15]
+      key: cd7f17aa31365cbc
+      screen:
+        train: {n: 1057, exp_r: 0.6895, t: 0.75, win: 0.484, days: 62}
+        valid: {n: 221, exp_r: 0.4065, t: 0.97, win: 0.525, days: 37}
+        all: {n: 1278, exp_r: 0.6405, t: 0.84, win: 0.491, days: 99}
+        per_day: 3.0
+        per_day_valid: 1.151
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: -0.908
+        exp_down: 0.7661
+        exp_flat: 0.0957
+        excess_train: 0.146
+        excess_valid: 0.4831
+        tier1: true
+        score: 1.0
+        max_overlap: 0.31
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  # guest from Testing F (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testingf, reason: 'GY-BENCH (b: low exposure); back to Testing F 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261029-05-beardiv-am-long.py
+    context: [breadth_open]
+    min_adv: 50000000
+    window: [950, 1100]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-29, gy-guest, 'home:testingf']
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: AM
+        geom: t05s05
+        min_adv: 50000000.0
+        conds:
+        - [bear_div, ==, 1.0]
+        - [breadth_open, '>', 0.5]
+        - [compress6_atr, <=, 0.091]
+        - [rsi, '>=', 78.0]
+      key: 351f6d29b82e5bae
+      screen:
+        train: {n: 112, exp_r: 0.1898, t: 1.48, win: 0.75, days: 24}
+        valid: {n: 22, exp_r: 0.1658, t: 3.36, win: 0.727, days: 5}
+        all: {n: 134, exp_r: 0.1859, t: 1.71, win: 0.746, days: 29}
+        per_day: 0.315
+        per_day_valid: 0.115
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.2865
+        exp_down: null
+        exp_flat: null
+        excess_train: 0.0573
+        excess_valid: 0.2655
+        tier1: false
+        score: 0.73
+        max_overlap: 0.6
+        overlap_with: MF4-h40-open-flowsell-FD
+        n_tried_in_run: 3000
+  # guest from Testing E (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
+  GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short:
+    enabled: true
+    guest: {from: '2026-11-18', until: '2026-11-24', home: testinge, reason: 'GY-BENCH (b: low exposure); back to Testing E 2026-11-25'}
+    max_stop_cost_r: 0.15
+    max_setup_daily_loss_r: null
+    type: lab
+    module: research/generator/modules/GEN-261021-01-beardiv-lam-short.py
+    context: [spy_fo]
+    min_adv: 95000000
+    window: [1030, 1200]
+    refire: false
+    scale_out_r: null
+    tags: [generated, gen-2026-10-21, gy-guest, 'home:testinge']
+    gen:
+      date: '2026-10-21'
+      spec:
+        side: short
+        window: LAM
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - [bars_since_hod, <=, 0.0]
+        - [bear_div, ==, 1.0]
+        - [rvol_day, <=, 0.47]
+        - [spy_fo, <, -0.25]
+      key: f170bd69cb8c7769
+      screen:
+        train: {n: 211, exp_r: 0.0576, t: 0.67, win: 0.55, days: 53}
+        valid: {n: 230, exp_r: 0.0823, t: 1.1, win: 0.578, days: 49}
+        all: {n: 441, exp_r: 0.0705, t: 1.24, win: 0.565, days: 102}
+        per_day: 1.035
+        per_day_valid: 1.198
+        exp_up: -0.0835
+        exp_down: 0.1489
+        exp_flat: -0.0065
+        excess_train: 0.0981
+        excess_valid: 0.0948
+        tier1: true
+        score: 0.92
+        max_overlap: 0.316
+        overlap_with: CWT14-failbrk-pdh-p05-lowvol-short
+        n_tried_in_run: 3000

@@ -50,7 +50,8 @@ def test_overlay_loads_with_its_own_setups(monkeypatch, acct):
     assert not (cfg.get("universe") or {}).get("top_n")                           # full universe (not Testing A's top-500)
     assert abs(slot_notional(a) - 500) < 1e-6                                     # ~$500 per lot (TSZ1 2026-11-17 (ledger 2026-11-16-tsz1-testing-sizing); was $1,000)
     monkeypatch.setenv("MCF_ACCOUNT", acct)
-    assert {s.name for s in build_strategies(cfg)} == own                         # nothing from default.yaml leaks in
+    away = set((cfg.get("rotation") or {}).get("away") or {})                     # GY-BENCH guests away 11-18..11-24
+    assert {s.name for s in build_strategies(cfg)} == own - away                  # nothing from default.yaml leaks in
     assert G.has_setups(acct) is True                                             # the session guard now chases it
 
 
@@ -118,7 +119,9 @@ def test_labels_reports_and_dashboard():
     post = {k: br for k, _, br, _ in P.ACCOUNTS}
     for acct, (label, _, s) in DEF.items():
         br = f"mcf-data-{acct}"
-        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and len(d["accounts"][acct]) == N_SETUPS[acct]   # filled 11-12
+        away = {k for k, v in A._strategies(d.get("asof_session"))[acct].items() if isinstance(v, dict) and not v.get("enabled")
+                and (v.get("benched") or {}).get("away")}                  # GY-BENCH guests away in the Graveyard
+        assert A.ACCOUNTS[acct] == label and d["labels"][acct] == label and len(d["accounts"][acct]) + len(away) == N_SETUPS[acct]
         assert post[acct] == br and acct in P.LB_ACCOUNTS and acct in P.COLORS and acct in P.TOTALS_EXCLUDED
         assert team.ACCOUNT_TAG[acct] == label and team.ACCOUNT_BRANCH[acct] == br and allocate.LABEL[acct] == label
         assert br in inactive.BRANCHES and intraday.BRANCH[acct] == br

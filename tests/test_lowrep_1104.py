@@ -89,8 +89,9 @@ def test_moves_are_moves(monkeypatch):
     for acct in ("testing", "testing2", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
         back = TO_ONDECK if acct == "testing" else set()                       # On Deck from 2026-11-12
-        assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back), acct              # switched off where they came from
-        assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back), acct
+        guests = {k for k, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("guest")}   # GY-BENCH 11-18..11-24
+        assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back - guests), acct     # switched off where they came from
+        assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back - guests), acct
         assert back <= _on(cfg), acct
         assert STAY.get(acct, set()) <= _on(cfg), acct
     txt = (ROOT / "config/account_testing2.yaml").read_text()

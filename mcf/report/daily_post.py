@@ -99,6 +99,9 @@ def accounts(date: str, since: str = DAY1) -> list[dict]:
                 t = dict(t, pnl=row["pnl"], pnl_source="alpaca_close")
             full = [dict(h, pnl=t.get("pnl"), pnl_source=t.get("pnl_source")) if h.get("date") == date else h for h in full]
         full = [_adjust(k, h) for h in full]
+        if k == "graveyard":                 # GY-BENCH (owner 2026-11-16): guests' P/L is not the Graveyard's
+            gp = guest_pnl(br)
+            full = [_guest_out(h, gp) for h in full]
         row = next((h for h in full if h.get("date") == date), None)
         t = dict(t, **{x: row[x] for x in ("pnl", "pnl_source", "adjusted", "pnl_unadjusted") if x in row}) if sd == date and row else (row or {}) if sd != date else t
         hist = [h for h in full if since <= h.get("date", "") <= date]
@@ -118,6 +121,54 @@ PL_ADJUSTMENTS = (
     # 11-06: the phantom -183 sh marked from the 11-05 close $62.585 to the 15:55 flatten cover $63.59 = -$183.92.
     ("primary", "2026-11-06", "add", 183.92, "MTUM phantom marks removed (-183 sh, $62.585 -> $63.59 cover)"),
 )
+
+
+def guest_setups(account: str = "graveyard") -> dict[str, dict]:
+    """setup -> its guest window in `account` (config/account_<account>.yaml `guest:` blocks, mcf/rotation.py)."""
+    import yaml
+
+    from ..rotation import guests
+
+    f = ROOT / "config" / f"account_{account}.yaml"
+    if not f.exists():
+        return {}
+    return guests((yaml.safe_load(f.read_text()) or {}).get("strategies") or {})
+
+
+def guest_pnl(branch: str, account: str = "graveyard") -> dict[str, dict]:
+    """{date: {pnl, trades}} of the guest setups' closed live trades (broker fills) inside their guest windows."""
+    from ..rotation import in_window, _d
+
+    g = guest_setups(account)
+    db = _journal(branch) if g else None
+    if db is None:
+        return {}
+    out: dict[str, dict] = {}
+    try:
+        rows = db.execute("SELECT t.strategy, t.date, t.pnl FROM trades t JOIN runs r ON r.id = t.run_id WHERE "
+                          "r.kind NOT IN ('whatif', 'shadow') AND t.exit_time IS NOT NULL AND t.strategy IN (%s)"
+                          % ",".join("?" * len(g)), tuple(g)).fetchall()
+    except Exception:
+        return {}
+    for st, d, p in rows:
+        if in_window(g[st], _d(d)):
+            a = out.setdefault(str(d), {"pnl": 0.0, "trades": 0})
+            a["pnl"] += p or 0.0
+            a["trades"] += 1
+    return out
+
+
+def _guest_out(h: dict, gp: dict) -> dict:
+    """GY-BENCH: the Graveyard row without its guests' P/L (labelled like PL_ADJUSTMENTS; original in pnl_unadjusted),
+    so the Graveyard's totals keep meaning 'the Graveyard's own setups'."""
+    g = gp.get(h.get("date"))
+    if not g or h.get("pnl") is None:
+        return h
+    new = round(h["pnl"] - g["pnl"], 2)
+    return dict(h, pnl_unadjusted=h.get("pnl_unadjusted", h["pnl"]), pnl=new,
+                adjusted=dict(date=h["date"], delta=round(new - h["pnl"], 2),
+                              label=f"guest setups excluded ({g['trades']} trades, GY-BENCH)"),
+                trades=(h["trades"] - g["trades"]) if isinstance(h.get("trades"), int) else h.get("trades"))
 
 
 def _adjust(k: str, h: dict) -> dict:

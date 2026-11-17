@@ -65,10 +65,21 @@ def freeze_setups(cfg: dict, state_dir: str | Path, now: pd.Timestamp) -> str:
         frozen = json.loads(snap.read_text())
         changed = [k for k in SETUP_KEYS if cfg.get(k) != frozen.get(k)]
         cfg.update({k: frozen[k] for k in SETUP_KEYS if k in frozen})
+        if "rotation" in frozen:
+            cfg["rotation"] = frozen["rotation"]
         return (f"setups frozen for {now.date()} (snapshot {snap.name})"
                 + (f"; ignoring intraday edits to: {', '.join(changed)}" if changed else ""))
-    snap.write_text(json.dumps({k: cfg.get(k) for k in SETUP_KEYS}, indent=1, default=str))
-    return f"setups snapshot written for {now.date()} ({len([s for s in cfg['strategies'].values() if s.get('enabled')])} enabled)"
+    from ..rotation import apply as rotation
+
+    rot = cfg.get("rotation") or {}
+    if rot.get("session") != now.date().isoformat():   # load_config resolved another day: resolve for THIS session
+        rot = rotation(cfg, now.date())                 # benched / guest windows (logged in the snapshot)
+    snap.write_text(json.dumps({**{k: cfg.get(k) for k in SETUP_KEYS}, "rotation": rot}, indent=1, default=str))
+    extra = ""
+    if rot["benched"] or rot["away"] or rot["guests"]:
+        extra = (f"; benched {len(rot['benched'])}, away {len(rot['away'])}, guests {len(rot['guests'])}"
+                 + (f" (benched: {', '.join(rot['benched'])})" if rot["benched"] else ""))
+    return f"setups snapshot written for {now.date()} ({len([s for s in cfg['strategies'].values() if s.get('enabled')])} enabled{extra})"
 
 
 def priors_path(state_dir: str | Path, day) -> Path:

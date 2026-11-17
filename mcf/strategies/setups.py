@@ -683,6 +683,8 @@ def build_strategies(cfg: dict) -> list[Strategy]:
         params = {**exits, **params}
         if not params.pop("enabled", True):
             continue
+        for k in ("benched", "guest", "max_stop_cost_r", "max_setup_daily_loss_r"):   # account-side keys (rotation / limits)
+            params.pop(k, None)
         # split copy (owner 2026-10-20): ticker_split {part, of} -> this copy trades only its half of the tickers
         split = parse_ticker_split(params.pop("ticker_split", None))
         try:
