@@ -48,6 +48,11 @@ FROM_GY = {"ST4-emadn-long-am-t1s05-FD": "explore1", "RW6-ns2-up3-short-FD": "li
 _ROT1 = next(json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines()
              if x.strip() and json.loads(x)["id"] == "2026-11-16-rot1-arena-block1")
 FROM_GEN = {m.split(":")[0]: m.rsplit("(", 1)[1].split(")")[0] for m in _ROT1["moves"]}
+# Workbench copies added 2026-11-17 (owner "Yes to all 15 WB copies", ledger 2026-11-16-wb-*): new setups, not moves
+WB_1116 = {"NM-ETF-late-dip-di-long-WB1": "explore1", "L3-gap-slope-rsi5hi-FD-WB4": "explore1",
+           "GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4": "explore1",
+           "RW3-gapdn-rsi5pop-flowsell-short-FD-WB3": "livelab", "ST7-rsi50dn-long-pm-t1s1-FD-WB1": "livelab",
+           "orb20_a-WB3": "livelab"}
 TESTING_AREAS = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf")
 INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy075-0945-3x-trail",
           "IDX3-spy075-0955-3x-trail", "IDX5-spy050-0945-3x-trail", "LD4-st4-breadthup-t1s05-long",
@@ -76,6 +81,7 @@ def test_moves_are_moves(monkeypatch):
     assert EXPLORE1 | LIVELAB <= MOVED_X1 | MOVED_LL and TO_ONDECK <= MOVED_X1 | MOVED_LL
     for acct, want in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         want = want | {k for k, a in FROM_GY.items() if a == acct} | {k for k, a in FROM_GEN.items() if a == acct}
+        want = want | {k for k, a in WB_1116.items() if a == acct}
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -120,7 +126,8 @@ def test_assignments_and_ledger():
     d = json.loads((ROOT / "docs/live/assignments.json").read_text())
     for acct, base in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         assert set(d["accounts"][acct]) == (base | {k for k, a in FROM_GY.items() if a == acct}
-                                            | {k for k, a in FROM_GEN.items() if a == acct}), acct
+                                            | {k for k, a in FROM_GEN.items() if a == acct}
+                                            | {k for k, a in WB_1116.items() if a == acct}), acct
     assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")

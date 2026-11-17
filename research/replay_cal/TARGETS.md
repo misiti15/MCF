@@ -63,3 +63,23 @@ Per setup (≥ 10 live trades in held-out) the same numbers are reported, every 
 6. Caps / lots / twin cascade, halts, latches: the real runner code, account state starting flat (intraday accounts
    flatten 15:55).
 7. LR8 costs on actual fills (scoring, both sides).
+
+---
+
+## Addendum A (2026-11-17 ~04:05 UTC, after TRAIN, BEFORE any held-out replay was run)
+
+Found on TRAIN and fixed before the held-out run (each one a replay or scoring bug, not a tuning choice):
+1. **Priors without history:** a full-universe replay built the session's priors (5-minute volume profiles, warm-up
+   bars) from no prior-session bars, because only that day's pack was downloaded. `store.build_priors_for` now pulls
+   the 24 calendar days of session packs first. Packs start 10-06, so TRAIN days 10-22..10-26 still have a short
+   profile window (10-06 onward); held-out days have the full window.
+2. **Config as traded:** the shared clone was shallow (history from 10-22), so `config_at` fell back to today's account
+   limits for 10-22 (Primary's per-setup -2R latch from 10-29 and other later limits). History deepened to 09-28.
+3. **Scoring:** replay order ids repeat across sessions; lots are now keyed by (session, order id).
+Frozen held-out configuration = `research/replay_cal/params_v2.json`: v1 (`params.json`, the TRAIN run) + a spread
+regression (log spread on ADV, price, last-minute range and dollar volume, first-30-minutes flag, symbol median),
+fitted on TRAIN quotes only; chosen on a within-TRAIN split (fit 10-22..26, check 10-27..30: spread-check agreement
+86.6% vs 85.3% for known symbols, 68.4% vs 59.6% for symbols without TRAIN quotes).
+Configurations tried on TRAIN: 2 replay configurations run (v1 full; the uncalibrated replay started and stopped, not
+scored), 2 spread models compared offline, 1 fill-weight fit. Testing 2 TRAIN covers 4 sessions (a worker was killed by
+the memory limit on 10-28..30). The verdict stays the TARGETS table above, scored once on held-out with params_v2.

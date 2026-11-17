@@ -46,6 +46,9 @@ live:
   # Priority: narrowest (fewest expected trades/session) first, as in Testing 1/2.
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
+    - NM-ETF-late-dip-di-long-WB1   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
+    - L3-gap-slope-rsi5hi-FD-WB4   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
+    - GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - IDX1-qqq100-0955-TQQQ-hold   # 0 traded sessions / 0 trades
     - LD3-st2-idxturn-t05s1-long   # 0 traded sessions / 0 trades
     - LD1-ns1-breadthup-t05s1-long   # 2 traded sessions / 2 trades
@@ -69,6 +72,42 @@ live:
     - ST8-volspikedn-long-pm-t1s1-FD   # 14 traded sessions / 30 trades
     - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
 strategies:
+  NM-ETF-late-dip-di-long-WB1:
+    # Workbench copy of NM-ETF-late-dip-di-long (Primary), Mechanic 2026-11-16: + ret12 >= +0.5% (dip inside an up-hour);
+    # research/workbench/NM-ETF-late-dip-di-long/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/NM-ETF-late-dip-di-long/modules/NM-ETF-late-dip-di-long-WB1.py
+    symbols: module
+    min_adv: 95000000
+    window: [1400, 1500]
+    scale_out_r: null
+    tags: [workbench, "parent:NM-ETF-late-dip-di-long"]
+  L3-gap-slope-rsi5hi-FD-WB4:
+    # Workbench copy of L3-gap-slope-rsi5hi-FD (On Deck), Mechanic 2026-11-16: no thin-R names (1R >= 20x stop-exit cost) + RSI(5) <= 90 + slope <= 1.0;
+    # research/workbench/L3-gap-slope-rsi5hi-FD/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    refire: true
+    refire_cooldown: 6
+    type: lab
+    module: research/workbench/L3-gap-slope-rsi5hi-FD/modules/L3-gap-slope-rsi5hi-FD-WB4.py
+    min_adv: 0
+    window: [950, 1500]
+    prefilter: "gap_le:-2.6573517322540283"
+    scale_out_r: null
+    tags: [workbench, "parent:L3-gap-slope-rsi5hi-FD"]
+  GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4:
+    # Workbench copy of GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short (Testing E), Mechanic 2026-11-16: window 14:30-15:00 + pop >= 0.20 ATR + ADX(7) >= 44;
+    # research/workbench/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short/RESULTS.md. owner 2026-11-16 ~22:05 ET "Yes to all 15 WB copies"; effective session 2026-11-17; parent unchanged.
+    enabled: true
+    type: lab
+    module: research/workbench/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short/modules/GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4.py
+    context: [breadth]
+    min_adv: 150000000
+    window: [1430, 1500]
+    refire: false
+    scale_out_r: null
+    tags: [workbench, "parent:GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short"]
   ST4-emadn-long-am-t1s05-FD:   # moved from Graveyard 2026-11-12 after the close (owner GY-RW6/ST4 arena); from session 2026-11-13
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 15 trades -0.578R (-0.737R w/o best day).
     enabled: true

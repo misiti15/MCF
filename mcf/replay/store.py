@@ -516,6 +516,10 @@ def build_priors_for(d, syms: list[str], exact_symbols=(), cache: dict | None = 
     if p.exists():
         with gzip.open(p, "rb") as f:
             return pickle.load(f)
+    if tag == "live":   # the 5-minute profiles / warm-up read the 24 calendar days before d: their session packs first
+        # (without them the priors of a full-universe replay were built from no prior bars; research/replay_cal)
+        pull_packs([x for x in sessions(d - timedelta(days=24), d - timedelta(days=1)) if x >= PACK_START],
+                   daily=False, log=lambda m: None)
     if daily is None and (STORE / "daily.parquet").exists():
         daily = pd.read_parquet(STORE / "daily.parquet")
     pd_ = pack_daily([d]) if pack_path(d, "1day").exists() else None

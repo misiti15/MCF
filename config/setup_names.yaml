@@ -964,3 +964,88 @@ CWT14-failbrk-orl-p10-long-WB5:
   side: "long"
   what: "as the parent; only names with ATR >= 2% and stop cost <= 10% of 1R; skipped while SPY is down > 0.20% since 09:50; stop 0.45 ATR under the signal close, target +0.15 ATR, flat 15:55."
   account: "testingd"
+MF2-open-rsimidhi-flowsell-FD-WB3:
+  name: "Early Sellers, Mid-High RSI (all day) — WB3: skip rising 20-SMA / gap-ups > 2% + RSI 55-62 + heat -40..-30 + ADV $150M"
+  side: "short"
+  what: "09:50-15:00: bearish heat between -40 and -30, net selling, RSI(14) 55-62, on a stock whose 20-SMA is not rising and that did not gap up more than 2%; short; target 1R / stop 0.5R (1R = 0.25 ATR), flat 15:55."
+  account: "testing2"
+RW6G1-ns2-up3-vwap2sd-short-FD-WB3:
+  name: "Big Gainer Fade, VWAP Band Guard (all day) — WB3: from 11:00, stretched reclaim, liquid, no gap-up runners"
+  side: "short"
+  what: "11:00-15:00: a stock up over 3% from the open (opening gap no more than +2%, ADV >= $150M) closes back above its 5-min SMA50 with RSI(14) >= 60 while at least +0.5 SD above VWAP; short it unless a close above the +2 SD VWAP band is unresolved; target / stop 1R (0.25 ATR), flat 15:55."
+  account: "testing2"
+NM-ETF-late-dip-di-long-WB1:
+  name: "Late-Day ETF Dip Buy — WB1: dip inside an up-hour"
+  side: "long"
+  what: "14:00-15:00: buy a sharp 15-min dip in a volatile ETF only while it is still up 0.5%+ over the last hour (a pullback, not a falling hour)."
+  account: "explore1"
+L3-gap-slope-rsi5hi-FD-WB4:
+  name: "Gap-Down Rebound Overbought Short (all day) — WB4: no thin-R names, RSI(5) ≤ 90, slope ≤ 1.0"
+  side: "short"
+  what: "09:50-15:00: a stock that gapped down 2.7%+ is back above a rising 20-bar average (slope 0.6-1.0%) with RSI(5) 70-90, and 1R is at least 20x the stop-exit cost; short the pop. Target 0.5R, stop 1R, flat 15:55; re-fires after a 6-bar cooldown."
+  account: "explore1"
+GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4:
+  name: "Generated: Late Failed-Breakdown Pop Short — WB4: 14:30-15:00, pop >= 0.20 ATR, ADX(7) >= 44"
+  side: "short"
+  what: "As the parent (share of stocks above VWAP > 0.7, closed below the OR low earlier today and now back above, 15-min return >= 0.54%, ADV >= $150M), only 14:30-15:00, with the 15-min pop >= 0.20 daily ATR and ADX(7) >= 44. Stop 1R, no target, 1R trail once +1R, flat 15:55. Generated setup; not a tested edge."
+  account: "explore1"
+RW3-gapdn-rsi5pop-flowsell-short-FD-WB3:
+  name: "Gap-Down Pop Fade, Heavy Selling (all day) — WB3: from 10:30, SPY gate, ATR 1.6%+"
+  side: "short"
+  what: "10:30-15:00: stock gapped down, bearish heat <= -20, heavy net selling, RSI(5) pops above 80, daily ATR >= 1.6% of price, and SPY not up more than 0.20% since 09:50; short the pop."
+  account: "livelab"
+ST7-rsi50dn-long-pm-t1s1-FD-WB1:
+  name: "RSI Collapse Dip Buy (all day) — WB1: skip when SPY up > 0.10% since 09:50"
+  side: "long"
+  what: "as the parent; no buy while SPY is up more than 0.10% since its 09:50 close (dip with the market, not alone)"
+  account: "livelab"
+orb20_a-WB3:
+  name: "20-Minute Opening Range Breakout — WB3: top 10 in play + price >= $20"
+  side: "both"
+  what: "as the parent (until 11:30, break of the 09:30-09:49 high or low on above-average volume), only the 10 names with the highest 09:30-09:49 relative volume and a prior close of at least $20"
+  account: "livelab"
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
+  name: "Gap-Down Pop Fade (all day) — WB3: SPY-since-09:50 gate + stop cost <= 15% of 1R + start 10:15"
+  side: "short"
+  what: "10:15-15:00: a gapped-down stock with bearish heat and net selling pops to RSI(5) > 80; short the pop unless SPY is up more than 0.20% since 09:50 or the stop cost is over 15% of 1R; target / stop 1R (0.25 ATR), flat 15:55."
+  account: "testingd"
+RW1-gapdn-bounce-flowsell-short-FD-WB3:
+  name: "Gap-Down Bounce Short, Heavy Selling — WB3: RSI 55-60 + 1R >= 0.40% + to 13:00 + SPY-since-09:50 gate"
+  side: "short"
+  what: "09:50-13:00: stock gapped down, bearish heat <= -20, heavy net selling, RSI(14) bounces to 55-60 and 1R (0.25 x daily ATR) is at least 0.40% of price; short the bounce unless SPY is up more than 0.20% since 09:50; target / stop 1R, flat 15:55."
+  account: "testingd"
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5:
+  name: "Generated: Late Pullback Buy (MACD rising) — WB5: 14:00-14:30, $100M ADV, breadth gate"
+  side: "long"
+  what: "As the parent (share of stocks above VWAP > 0.5, MACD histogram >= 0.12, 15-min change <= -0.069 daily ATR), only 14:00-14:30, ADV >= $100M, and breadth not up more than 0.20 since 09:50. Target +0.5R / stop 1R, flat 15:55. Generated setup; not a tested edge."
+  account: "testingd"
+RW7-gapdn-bounce-early-short-FD-WB3:
+  name: "Gap-Down Early Bounce Short (all day) — WB3: SPY-after-09:50 gates + gap < -0.5% + end 13:00"
+  side: "short"
+  what: "09:50-13:00: a stock gapped down > 0.5% with bearish heat and net selling bounces to RSI(14) 55-65; short the bounce unless SPY is up more than 0.10% since 09:50 or more than 0.20% over the last 30 minutes; target / stop 1R (0.25 ATR), flat 15:55."
+  account: "testinge"
+NM-RWN5-ns3-mon-weakrs-short-WB3:
+  name: "Monday Weak-RS NS3 Short (near-miss) — WB3: reclaim volume >= 0.45x, from 10:05"
+  side: "short"
+  what: "Mondays 10:05-11:30: failed VWAP reclaim on a stock weaker than SPY, with reclaim-bar volume at least 0.45x normal; short. Target / stop 1R, flat 15:55."
+  account: "testinge"
+GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short-WB1:
+  name: "Generated: Lunch New-Low Short (selling) — WB1: down >= 1.3 ATR on the day"
+  side: "short"
+  what: "As the parent (11:30-14:00, share of stocks above their open > 0.5, new low of day, 3-bar flow <= -0.37, down >= 0.78 ATR from the open, ADV >= $150M), only names down at least 1.3 daily ATR from yesterday's close. Stop 1R, no target, 1R trail once +1R, flat 15:55. Generated setup; not a tested edge."
+  account: "testinge"
+L3-gap-slope-lowdist-FD-WB4:
+  name: "Gap-Down Bounce-off-Low Fade (all day) — WB4: bounce > 0.82 ATR, RSI5 ≥ 50, 75-min hold"
+  side: "short"
+  what: "09:50-15:00: a stock that gapped down 2.7%+ with its 20-bar average turning up has bounced 0.82-0.98 daily ATR off its low on a still-rising bar (5-bar RSI 50+); short the bounce; out at target, stop or 75 minutes."
+  account: "testingf"
+CWT14-failbrk-pdl-p10-lowvol-long-WB3:
+  name: "Failed Prior-Day-Low Break Long (0.1 ATR, low vol) — WB3: stop 0.45 ATR + gap-down >= 0.5%"
+  side: "long"
+  what: "as the parent, stop 0.45 x daily ATR under the signal close (target unchanged +0.125 ATR), only names that opened >= 0.5% below yesterday's close"
+  account: "testingf"
+CWT09-gapdn-vwaploss-g10-short-WB4:
+  name: "Gap-Down VWAP Loss Short (10% gap) — WB4: below open, real bounce, ADV 20M"
+  side: "short"
+  what: "10:30-15:00: a stock that gapped down 10%+ (no earnings within 4 days, 20-day ADV >= $20M) closed a 5-minute bar above VWAP during 09:35-10:30; from 10:30 the first close back below VWAP while below today's open; short, stop at the 09:30-10:30 high, hold to 15:55."
+  account: "testingf"
