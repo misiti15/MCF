@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 01:30) Shortlist A detailed (Move Hunt: 62% blackout; ~13/day other movers, 14% caught, 80% start < 10:00). A2 needs per-decision rows (moves.py rows.parquet) or a Session replay. Use GLOSSARY names (Live / Shadow / Session replay / 2-year backtest).
 - (11-16 23:30) Monday closed: MOMSIDE (t 0.96, up-day cell, FWD reverses), SIZESTOP (my D1: conditioning ~0), DIPTURN (mine: t 0.92).
   Lead's ask: shortlist of 2-3 next studies from the backlog after 11-18 (ranked by setup-days or Move-Hunt capture; family N,
   BAR90, MDE; ex-market control up front). Draft: research/shortlist/DRAFT.md (A capture gap, B cost-per-R, C spotlight rotation).
