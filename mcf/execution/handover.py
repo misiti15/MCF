@@ -10,7 +10,7 @@ workflow_dispatch made with GITHUB_TOKEN does start a run), so a hand-over no lo
 
   * trade.yml - each account's job starts `handover trade --account X --wait-until <job start + 327 min>` in the
     background of its Trade step (HK-FLAT-1113: before `mcf live` stops entries and pushes at limit - 20 min). At
-    that moment, if the job stops (limit - 20 min) before 15:50 ET and no other
+    that moment, if the job stops (limit - 20 min) before 15:55 ET and no other
     trade run has a queued/pending job for this account, it dispatches trade.yml once. The new run's job waits in the
     account's concurrency group and starts the moment the old job ends. Accounts are staggered (30 s each) and re-check
     before dispatching, so 7 jobs ending together send one dispatch.
@@ -43,7 +43,8 @@ from mcf.execution import session_guard as sg
 
 NY = sg.NY
 ACTIVE = sg.ACTIVE
-TRADE_END = time(15, 50)            # mcf live stops polling at 15:50 ET (trade.yml window check)
+TRADE_END = time(15, 55)            # HK-FLAT-1113b: a job that stops before the 15:55 flatten needs a successor (a
+                                    # successor may start until 16:05 ET; from 15:50 it only runs the closing flatten)
 HUNCH_WINDOW = (time(9, 45), time(15, 50))   # watchdog start check (owner 2026-11-05)
 HUNCH_RELAY_END = time(15, 55)      # after this a hunch successor has nothing left to guess
 HUNCH_MAX_DISPATCHES = 4
@@ -79,14 +80,14 @@ def decide_trade(now: pd.Timestamp, job_end: pd.Timestamp, account: str, runs: l
                  dispatches_today: int, stop_lead_min: float = 0) -> dict:
     """Pure: should this account's job dispatch its successor now? job_end = when the 355-min limit kills it;
     stop_lead_min = how long before that the job stops trading (HK-FLAT-1113: 20 min, session.FINAL_PUSH_LEAD_MIN), so a
-    successor is needed whenever the job STOPS before 15:50 ET."""
+    successor is needed whenever the job STOPS before the 15:55 ET flatten."""
     now, job_end = now.tz_convert(NY), job_end.tz_convert(NY)
     stop = job_end - pd.Timedelta(minutes=stop_lead_min)
     out = {"at": str(now), "account": account, "job_end": str(job_end), "action": "none", "reasons": []}
     if now.weekday() >= 5:
         out["reasons"].append("weekend")
     elif stop.date() != now.date() or stop.time() >= TRADE_END:
-        out["reasons"].append("job limit falls after 15:50 ET: no successor needed")
+        out["reasons"].append("job stops at/after the 15:55 flatten: no successor needed")
     elif account_covered(account, runs, jobs, own_run_id):
         out["reasons"].append("a successor is already queued")
     elif dispatches_today >= sg.MAX_DISPATCHES:

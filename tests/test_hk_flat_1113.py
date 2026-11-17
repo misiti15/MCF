@@ -105,3 +105,84 @@ def test_flatten_retries_full_list_and_logs_each_leftover(tmp_path, monkeypatch,
     out = capsys.readouterr().out
     assert r.health["flatten_failed"] == ["AAA", "BBB"] and r.health["flatten_retry"]["retries"] >= 25
     assert "FLATTEN LEFTOVER AAA" in out and "FLATTEN LEFTOVER BBB" in out
+
+
+# ------------------------------------------------------------------ 1b) a late successor (15:50 - 16:05 ET) only closes
+def test_late_start_window_is_flatten_only():
+    from mcf.execution.session import flatten_only
+
+    for hm in ("15:50", "15:54", "16:04"):
+        assert job_deadline(at(f"2026-11-13 {hm}"), {}) is not None and flatten_only(at(f"2026-11-13 {hm}"))
+    assert job_deadline(at("2026-11-13 16:05"), {}) is None and not flatten_only(at("2026-11-13 15:49"))
+    run = next(s for s in yaml.safe_load((ROOT / ".github/workflows/trade.yml").read_text())["jobs"]["session"]["steps"]
+               if s.get("name") == "Window check")["run"]
+    assert '-lt 1605' in run
+    # a job stopping at 15:52 (before the flatten) gets a successor; one stopping at 15:55 does not
+    own = [{"id": 1, "status": "in_progress"}]
+    assert ho.decide_trade(at("15:40"), at("16:12"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "dispatch"
+    assert ho.decide_trade(at("15:40"), at("16:15"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "none"
+
+
+def test_late_successor_takes_no_entries_but_flattens_adopted_lots(tmp_path, monkeypatch):
+    pre = R.COID_PREFIX
+    orders = [SimpleNamespace(symbol="BBB", client_order_id=f"{pre}S1-BBB-20261112")]
+    times = [at("2026-11-13 15:52"), at("2026-11-13 15:52"), at("2026-11-13 15:55:10")] + [at("2026-11-13 15:56")] * 20
+    b = PrefixBroker(orders, clock_times=times, held={"BBB": _pos(-4, side="short")})
+    r, _ = _runner(tmp_path, monkeypatch, b, account="testingd")
+    r.flatten_only = True
+    for name in ("reconcile", "what_if", "write_status", "_check_positions", "_kill_check", "fetch", "manage",
+                 "scale_outs", "_escalate"):
+        monkeypatch.setattr(r, name, lambda *a, **k: {})
+    monkeypatch.setattr(r, "_check_data", lambda now, bars: False)
+    monkeypatch.setattr(r, "_contexts", lambda *a: (_ for _ in ()).throw(AssertionError("evaluated entries")))
+    r.run(poll_seconds=60)
+    assert r.session_done and b.closes == ["BBB"] and not b.submitted and r.health["flatten_failed"] == []
+
+
+def test_after_close_start_flattens_adopted_lots_from_earlier_days(tmp_path, monkeypatch):
+    pre = R.COID_PREFIX
+    b = PrefixBroker([SimpleNamespace(symbol="BBB", client_order_id=f"{pre}S1-BBB-20261112")],
+                     clock_times=[at("2026-11-13 16:02")] * 10, held={"BBB": _pos(5)})
+    r, _ = _runner(tmp_path, monkeypatch, b, account="gen")
+    for name in ("reconcile", "what_if", "write_status"):
+        monkeypatch.setattr(r, name, lambda *a, **k: None)
+    real = b.orders_today_with_prefix
+    b.orders_today_with_prefix = lambda prefix, after: real(prefix, after) if after.day != 13 else []  # none today
+    r.run()
+    assert b.closes == ["BBB"]
+
+
+# ------------------------------------------------------------------ KILL-FLAT open (owner 2026-11-16): adopted lots at 09:30
+def test_adopted_lots_close_at_the_open_only_on_the_set_date(tmp_path, monkeypatch):
+    pre = R.COID_PREFIX
+    orders = [SimpleNamespace(symbol="UNM", client_order_id=f"{pre}S1-UNM-20261113"),
+              SimpleNamespace(symbol="AAA", client_order_id=f"{pre}S2-AAA-20261117")]
+    b = PrefixBroker(orders, held={"UNM": _pos(12), "AAA": _pos(5)})
+    r, _ = _runner(tmp_path, monkeypatch, b, account="graveyard")
+    r.restore(at("2026-11-17 08:50").date())
+    r.lots["AAA"] = {f"{pre}S2-AAA-20261117": {"strategy": "S2", "side": 1, "qty": 5, "order_id": "o1",
+                                                 "coid": f"{pre}S2-AAA-20261117"}}   # a normal journal lot
+    r.open_strategy["AAA"] = "S2"
+    r._close_adopted_at_open(at("2026-11-17 09:31"))           # option off: nothing
+    assert not b.closes
+    r.cfg["account"]["close_adopted_at_open"] = "2026-11-18"   # another date: nothing
+    r._close_adopted_at_open(at("2026-11-17 09:31"))
+    r.cfg["account"]["close_adopted_at_open"] = "2026-11-17"
+    r._close_adopted_at_open(at("2026-11-17 09:29"))           # before the open: nothing
+    assert not b.closes
+    r._close_adopted_at_open(at("2026-11-17 09:30"))
+    r._close_adopted_at_open(at("2026-11-17 09:31"))           # once
+    assert b.closes == ["UNM"] and "UNM" not in r.lots and "AAA" in r.lots and "AAA" in b.held
+    assert [a["kind"] for a in r.health["alerts"]].count("adopted_closed_at_open") == 1
+    assert r.health["adopted_closed_at_open"][0]["symbol"] == "UNM"
+    assert r.journal.trades(run_id=r.run_id).empty                      # never in setup stats
+
+
+def test_kill_flat_open_is_set_for_graveyard_and_gen_on_1117_only(monkeypatch):
+    from mcf.config import load_config
+
+    for acct in ("primary", "testing", "testing2", "graveyard", "gen", "livelab", "explore1", "testingd", "testinge",
+                 "testingf"):
+        monkeypatch.setenv("MCF_ACCOUNT", acct)
+        v = load_config()["account"].get("close_adopted_at_open")
+        assert v == ("2026-11-17" if acct in ("graveyard", "gen") else None), acct
