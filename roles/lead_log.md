@@ -242,3 +242,4 @@
 - Run 63 (11-17 03:00): stop thread closed (parity); one tier source; effective.tier gaps queued for owner PR; Scout A steered.
 - Run 64 (11-17 05:00): BLKOUT approved (descriptive); Scout wrong-time row; B dropped.
 - Run 65 (11-17 07:00): BLKOUT block-gap fix (drop near-edge trades; zero block data); A-WT limited to post-09:50.
+- Run 66 (11-17 09:00): BLKOUT cleared; quiet for market hours.
