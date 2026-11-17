@@ -1,0 +1,278 @@
+{
+ "date": "2026-11-17",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 120,
+  "win_rate": 0.367,
+  "exp_r": -0.332,
+  "total_r": -39.8,
+  "pnl": -522.83,
+  "stop_exit_share": 0.408,
+  "pnl_adj": -569.23,
+  "slip_bps": 2.0
+ },
+ "yesterday": {
+  "trades": 67,
+  "win_rate": 0.597,
+  "exp_r": 0.071,
+  "total_r": 4.73,
+  "pnl": 123.55,
+  "stop_exit_share": 0.134,
+  "pnl_adj": 98.0,
+  "slip_bps": 7.2
+ },
+ "rolling5": {
+  "exp_r": -0.213,
+  "win_rate": 0.417,
+  "pnl": -83.964,
+  "slip_bps": 7.06,
+  "stop_exit_share": 0.318
+ },
+ "rolling20": {
+  "exp_r": -0.113,
+  "win_rate": 0.492,
+  "pnl": -16.531,
+  "slip_bps": 5.93,
+  "stop_exit_share": 0.325
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "CWT05-flush-m05-v5-long": {
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.126,
+   "total_r": 0.25,
+   "pnl": 1.67,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 1.24,
+   "slip_bps": 23.5
+  },
+  "L3-gap-slope-lowdist-FD": {
+   "trades": 2,
+   "win_rate": 1.0,
+   "exp_r": 0.961,
+   "total_r": 1.92,
+   "pnl": 49.33,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 49.02,
+   "slip_bps": -8.3
+  },
+  "L3-gap-slope-rsi5hi-FD": {
+   "trades": 4,
+   "win_rate": 0.5,
+   "exp_r": -0.304,
+   "total_r": -1.21,
+   "pnl": -43.72,
+   "stop_exit_share": 0.5,
+   "pnl_adj": -50.69,
+   "slip_bps": -45.8
+  },
+  "MF2-open-rsimidhi-flowsell-FD": {
+   "trades": 33,
+   "win_rate": 0.152,
+   "exp_r": -0.758,
+   "total_r": -25.01,
+   "pnl": -231.67,
+   "stop_exit_share": 0.788,
+   "pnl_adj": -245.8,
+   "slip_bps": 2.3
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "trades": 5,
+   "win_rate": 1.0,
+   "exp_r": 0.727,
+   "total_r": 3.63,
+   "pnl": 28.62,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 27.1,
+   "slip_bps": 11.3
+  },
+  "MF4-h40-open-flowsell-FD": {
+   "trades": 32,
+   "win_rate": 0.344,
+   "exp_r": -0.41,
+   "total_r": -13.12,
+   "pnl": -242.43,
+   "stop_exit_share": 0.281,
+   "pnl_adj": -252.67,
+   "slip_bps": -2.6
+  },
+  "NM-HL-T75-pm-long": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.085,
+   "total_r": -1.09,
+   "pnl": -20.98,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -21.4,
+   "slip_bps": -8.5
+  },
+  "RW1-gapdn-bounce-flowsell-short-FD": {
+   "trades": 36,
+   "win_rate": 0.444,
+   "exp_r": -0.086,
+   "total_r": -3.1,
+   "pnl": -43.62,
+   "stop_exit_share": 0.278,
+   "pnl_adj": -54.71,
+   "slip_bps": 9.2
+  },
+  "ST6-volspikeup-short-mid-t1s1-FD": {
+   "trades": 4,
+   "win_rate": 0.25,
+   "exp_r": -0.204,
+   "total_r": -0.82,
+   "pnl": -17.05,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -17.9,
+   "slip_bps": 8.6
+  },
+  "orb20_a": {
+   "trades": 1,
+   "win_rate": 0.0,
+   "exp_r": -1.258,
+   "total_r": -1.26,
+   "pnl": -2.99,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -3.43,
+   "slip_bps": -6.0
+  }
+ },
+ "decisions": [
+  {
+   "status": "rejected",
+   "reason": "{\"base_price\":\"#\",\"code\":#,\"message\":\"stop_loss.stop_price must be \\u#e= base_price + #\"}",
+   "signals": 5,
+   "whatif_exp_r": -1.048,
+   "whatif_total_r": -5.24,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "cost filter: stop-exit cost #R > #R",
+   "signals": 39,
+   "whatif_exp_r": -0.05,
+   "whatif_total_r": -1.96,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "crosscheck: ref # vs quote mid # (#% > #%)",
+   "signals": 2,
+   "whatif_exp_r": -0.738,
+   "whatif_total_r": -1.48,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "lot cap",
+   "signals": 1,
+   "whatif_exp_r": -1.057,
+   "whatif_total_r": -1.06,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "missed: triggered at #:#",
+   "signals": 1,
+   "whatif_exp_r": 1.453,
+   "whatif_total_r": 1.45,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 44,
+   "whatif_exp_r": -0.072,
+   "whatif_total_r": -3.17,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "size < # share after liquidity cap",
+   "signals": 2,
+   "whatif_exp_r": 0.984,
+   "whatif_total_r": 1.97,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 39,
+   "whatif_exp_r": -0.542,
+   "whatif_total_r": -21.13,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 9,
+   "whatif_exp_r": 0.397,
+   "whatif_total_r": 3.57,
+   "verdict": "rule cost us R today"
+  }
+ ],
+ "signals": {
+  "skipped": 138,
+  "submitted": 120,
+  "rejected": 5
+ },
+ "health": {
+  "polls": 87,
+  "last_poll_s": 4.8,
+  "symbols_last_bar": 3688,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 329,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "session_close": "16:00",
+  "flatten_at": "15:55",
+  "early_close": false,
+  "kill": null,
+  "shadow": {
+   "run_id": 3,
+   "of_live": true,
+   "only_setups": 0,
+   "open_lots": 38,
+   "entered": 4,
+   "closed": 21,
+   "polls": 87,
+   "avg_ms": 28.7,
+   "live_avg_ms": 7226.9,
+   "share_of_poll": 0.004,
+   "only_every_n_polls": 1,
+   "quote_calls": 0,
+   "errors": 0
+  },
+  "position_mismatch": [],
+  "position_check": {
+   "at": "2026-11-17 15:54:13.708478-05:00",
+   "symbols": 33,
+   "blocked": []
+  },
+  "partial_lots": [],
+  "risk_state": {
+   "halted": false,
+   "setup_stopped": [],
+   "trades_today": 120,
+   "realized_r": -35.067,
+   "r_basis": "raw R",
+   "open_r": 0.0,
+   "halt_counts_open": false,
+   "realized_r_after_costs": -39.801
+  },
+  "flatten_failed": []
+ },
+ "findings": [
+  "1 signals were missed because their trigger traded before the runner saw it (job start or restart). Check job start times in the Actions log.",
+  "5 orders were rejected by the broker. Read the reasons in the journal."
+ ]
+}
