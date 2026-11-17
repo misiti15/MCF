@@ -29,6 +29,8 @@ import re
 
 import pandas as pd
 
+from ..spy_exit import REASON as SPY_REASON, TAG as SPY_TAG
+
 OPEN = {"new", "accepted", "held", "pending_new", "partially_filled", "pending_replace", "accepted_for_bidding",
         "pending_cancel", "calculated", "stopped", "pending_review"}
 
@@ -89,6 +91,8 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
             by_reason[why] = by_reason.get(why, 0.0) + q
         rest = {k: v for k, v in by_reason.items() if k != "scaleout"}
         reason = max(rest or by_reason, key=(rest or by_reason).get)   # the exit that closed most of the lot
+        if reason in ("timestop", "flatten") and SPY_TAG in str(rec.meta or ""):
+            reason = SPY_REASON                              # SPYEXIT: the runner closed this lot on the SPY move
         if "scaleout" in by_reason:                          # backtest naming: scaled+<how the remainder exited>
             reason = "scaled+" + ("breakeven" if reason == "stop" else reason)
         stop_qty = by_reason.get("stop", 0.0)

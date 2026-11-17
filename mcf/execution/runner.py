@@ -29,6 +29,7 @@ import pandas as pd
 from ..backtest.engine import Costs, in_play_filter, is_extended, rank_contexts, simulate, universe_ok
 from ..costs import cost_r
 from ..data.bars import TZ, normalize, rth
+from .. import spy_exit as _spy_exit
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
 from .alpaca_broker import AlpacaBroker
@@ -90,6 +91,11 @@ class PaperRunner:
         # Lab context (opt-in `context:` with spy_fo / qqq_fo, 2026-10-17): the index bars are polled like the split-tape
         # symbols - fetched every poll for the context columns, traded only when they are in priors.
         ctx_syms = set().union(*(getattr(s, "context_symbols", None) or set() for s in strategies))
+        # SPY-since-entry exit (opt-in spy_exit_pct, owner SPYEXIT 2026-11-16): SPY is polled whenever a setup uses it
+        self.spy_exit = _spy_exit.enabled(strategies)
+        if self.spy_exit:
+            ctx_syms = ctx_syms | {_spy_exit.SPY}
+        self._spy_warned: set = set()                     # lots whose missing / stale SPY was logged (once each)
         self.watchlist = sorted(set(priors) | (set(SPLIT_TAPE_SYMBOLS) if self.split_gate else set()) | ctx_syms)
         self._split_cache: tuple | None = None
         self.dry_run = dry_run
@@ -417,10 +423,16 @@ class PaperRunner:
             if not self.lots[sym]:
                 self.lots.pop(sym)
 
+    @staticmethod
+    def _needs_management(st) -> bool:
+        """A setup whose open positions the runner manages each poll: breakeven / trail / time stop / SPY exit."""
+        p = st.params
+        return any(p.get(k) is not None for k in ("be_at_r", "trail_r", "time_stop_min", "spy_exit_pct"))
+
     def _restore_management(self):
         """Re-arm time stops / breakeven / trailing for MCF positions still open after a restart."""
         by_name = {s.name: s for s in self.strategies}
-        keys = ("be_at_r", "trail_r", "trail_after_r", "time_stop_min", "time_stop_min_r")
+        keys = ("be_at_r", "trail_r", "trail_after_r", "time_stop_min", "time_stop_min_r", *_spy_exit.KEYS)
         try:
             held = self.broker.positions()
             orders = self.journal.open_orders(self.run_id)
@@ -431,7 +443,7 @@ class PaperRunner:
             return self._restore_lot_management(by_name, keys, held, orders)
         for sym, strat in self.open_strategy.items():
             st = by_name.get(strat)
-            if sym not in held or st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
+            if sym not in held or st is None or not self._needs_management(st):
                 continue
             rec = orders[orders.symbol == sym].tail(1)
             if rec.empty:
@@ -440,6 +452,7 @@ class PaperRunner:
             entry = float(getattr(held[sym], "avg_entry_price", rec.entry_ref) or rec.entry_ref)
             self.managed[sym] = {"side": int(rec.side), "entry": entry, "risk": abs(entry - float(rec.stop)),
                                  "stop": float(rec.stop), "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0,
+                                 "order_id": str(rec.broker_order_id), "spy0": None,
                                  **{k: st.params.get(k) for k in keys}}
             self.managed[sym]["trail_after_r"] = self.managed[sym]["trail_after_r"] or 1.0
             self.managed[sym]["time_stop_min_r"] = self.managed[sym]["time_stop_min_r"] or 0.0
@@ -456,7 +469,7 @@ class PaperRunner:
             for lot_id, lot in lots.items():
                 strat = lot.get("strategy")
                 st = by_name.get(strat)
-                if st is None or not any(st.params.get(k) is not None for k in keys[:2] + keys[3:4]):
+                if st is None or not self._needs_management(st):
                     continue
                 rec = orders[oids == str(lot.get("order_id"))].tail(1)   # this lot's own order, not its setup's last
                 if rec.empty:
@@ -465,7 +478,8 @@ class PaperRunner:
                 entry = self._fill_px.get(str(rec.broker_order_id)) or float(rec.entry_ref)
                 m = {"side": int(rec.side), "entry": entry, "risk": abs(entry - float(rec.stop)), "stop": float(rec.stop),
                      "t0": pd.Timestamp(rec.created_at).tz_convert(NY), "best": 0.0, "coid": lot.get("coid") or lot_id,
-                     "strategy": strat, **{k: st.params.get(k) for k in keys}}
+                     "strategy": strat, "order_id": str(rec.broker_order_id), "spy0": None,
+                     **{k: st.params.get(k) for k in keys}}
                 m["trail_after_r"] = m["trail_after_r"] or 1.0
                 m["time_stop_min_r"] = m["time_stop_min_r"] or 0.0
                 self.managed[(sym, lot_id)] = m
@@ -754,6 +768,19 @@ class PaperRunner:
             fav = since["high"].max() if m["side"] == 1 else since["low"].min()
             m["best"] = max(m["best"], m["side"] * (fav - m["entry"]) / m["risk"])
             mins = (now - m["t0"]).total_seconds() / 60
+            if m.get("spy_exit_pct") and self._spy_exit_due(key, m, now, bars, float(b["close"].iloc[-1])):
+                if lot:
+                    self._lot_time_stop(key, m, mins, label="SPY EXIT")
+                    continue
+                try:
+                    if not self.broker.close_mcf_position(sym, COID_PREFIX):
+                        raise RuntimeError("close not confirmed")
+                    print(f"SPY EXIT {sym}: SPY {m.get('spy_move', 0.0):+.2f}% since entry")
+                    self._tag_spy_exit(m)
+                except Exception as e:
+                    print(f"spy exit {sym} failed: {e}")
+                self.managed.pop(sym)
+                continue
             if m["time_stop_min"] and mins >= m["time_stop_min"] and m["best"] < m["time_stop_min_r"]:
                 if lot:
                     self._lot_time_stop(key, m, mins)
@@ -956,21 +983,72 @@ class PaperRunner:
         if self.scaling:
             print(f"re-armed live scale-out for {len(self.scaling)} open lots")
 
-    def _lot_time_stop(self, key, m, mins):
-        """Time stop for ONE lot: cancel its own legs and close exactly its quantity; other lots keep theirs."""
+    def _lot_time_stop(self, key, m, mins, label: str = "TIME STOP"):
+        """Time stop for ONE lot: cancel its own legs and close exactly its quantity; other lots keep theirs. The SPY
+        exit (label "SPY EXIT") closes through this same path and tags the lot's journal order (exit reason spy_exit)."""
         sym, lot_id = key
         strat = m.get("strategy", lot_id)
         try:
             ok = self.broker.close_mcf_lot(sym, m["coid"], COID_PREFIX)
         except Exception as e:
-            print(f"time stop {sym}/{strat} failed: {e}")
+            print(f"{label.lower()} {sym}/{strat} failed: {e}")
             ok = False
         if not ok:
-            print(f"time stop {sym}/{strat} not confirmed; retrying next poll")
+            print(f"{label.lower()} {sym}/{strat} not confirmed; retrying next poll")
             return
-        print(f"TIME STOP {sym}/{strat}: {mins:.0f} min, best {m['best']:.2f}R")
+        if label == "SPY EXIT":
+            print(f"SPY EXIT {sym}/{strat}: SPY {m.get('spy_move', 0.0):+.2f}% since entry, best {m['best']:.2f}R")
+            self._tag_spy_exit(m)
+        else:
+            print(f"TIME STOP {sym}/{strat}: {mins:.0f} min, best {m['best']:.2f}R")
         self.managed.pop(key, None)
         self.lots.get(sym, {}).pop(lot_id, None)
+
+    SPY_STALE_MIN = 3        # SPY's last completed bar older than this many minutes -> no SPY exit this poll
+
+    def _spy_last(self, now: pd.Timestamp, bars: dict) -> float | None:
+        """SPY's last completed 1-minute close when fresh (within SPY_STALE_MIN minutes), else None."""
+        b = bars.get(_spy_exit.SPY)
+        if b is None or b.empty:
+            return None
+        if b.index[-1] < now.floor("1min") - pd.Timedelta(minutes=self.SPY_STALE_MIN):
+            return None
+        return float(b["close"].iloc[-1])
+
+    def _spy_at_entry(self, m, bars: dict) -> float | None:
+        """spy0 of a lot whose entry poll had no SPY (or after a restart): SPY's close of the minute before the entry
+        minute (the last completed bar at the entry poll), once the feed has it."""
+        b = bars.get(_spy_exit.SPY)
+        if b is None or b.empty:
+            return None
+        ref = m["t0"].floor("1min") - pd.Timedelta(minutes=1)
+        row = b[b.index == ref]
+        return float(row["close"].iloc[-1]) if len(row) else None
+
+    def _spy_exit_due(self, key, m, now: pd.Timestamp, bars: dict, last_px: float) -> bool:
+        """SPY-since-entry exit check for one managed lot (mcf/spy_exit.py). Missing / stale SPY: hold, logged once."""
+        if m.get("spy0") is None:
+            m["spy0"] = self._spy_at_entry(m, bars)
+        spy = self._spy_last(now, bars)
+        if m.get("spy0") is None or spy is None:
+            if key not in self._spy_warned:
+                self._spy_warned.add(key)
+                print(f"spy exit {key}: SPY data missing or stale - no SPY exit while it is (logged once)")
+            return False
+        m["spy_move"] = _spy_exit.spy_move_pct(m["spy0"], spy) or 0.0
+        under = m["side"] * (last_px - m["entry"]) < 0
+        return _spy_exit.spy_exit_hit(m["side"], m["spy0"], spy, m["spy_exit_pct"],
+                                      bool(m.get("spy_exit_only_losing")), under)
+
+    def _tag_spy_exit(self, m):
+        """Mark the lot's journal order so reconcile books its market close as exit reason spy_exit."""
+        oid = m.get("order_id")
+        if not oid:
+            return
+        try:
+            self.journal.tag_order(str(oid), _spy_exit.TAG)
+        except Exception as e:                        # journal tagging is bookkeeping; never blocks the exit
+            print(f"spy exit tag {oid} failed: {e}")
 
     def _check_data(self, now: pd.Timestamp, bars: dict) -> bool:
         """True while the market data is stale: during the session (from data_stale_min after the open), fewer than
@@ -1450,11 +1528,14 @@ class PaperRunner:
         self._sync_open()
         self.journal.record_order(self.run_id, sig.symbol, sig.strategy, sig.side, qty, px, sig.stop,
                                   sig.target, str(o.id), "submitted", json.dumps(info, default=str))
-        if sig.be_at_r is not None or sig.trail_r is not None or sig.time_stop_min:
+        if sig.be_at_r is not None or sig.trail_r is not None or sig.time_stop_min or sig.spy_exit_pct:
             m = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": sig.stop,
                  "t0": now, "be_at_r": sig.be_at_r, "trail_r": sig.trail_r,
                  "trail_after_r": sig.trail_after_r, "time_stop_min": sig.time_stop_min,
                  "time_stop_min_r": sig.time_stop_min_r, "best": 0.0}
+            if sig.spy_exit_pct:                       # SPYEXIT: SPY's last completed close at the entry poll
+                m.update(spy_exit_pct=float(sig.spy_exit_pct), spy_exit_only_losing=bool(sig.spy_exit_only_losing),
+                         spy0=self._spy_last(now, getattr(self, "_step_bars", None) or {}), order_id=str(o.id))
             if self.max_lots <= 1:
                 self.managed[sig.symbol] = m
             else:
