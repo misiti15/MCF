@@ -246,3 +246,4 @@
 - Run 67 (11-17 11:00): HKS950 approved w/ Skeptic conditions (BAR90 2.46).
 - Run 68 (11-17 13:00): HKS950 held for amendment (conditions not in code).
 - Run 69 (11-17 15:00): HKS950 cleared; board reader adopted.
+- Run 70 (11-17 17:00): RULE21-DB approved by owner; FWDCAL official = owner rule21(); window context.

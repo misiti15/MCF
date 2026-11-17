@@ -8,7 +8,7 @@
 - **Tue 11-17 after 16:30 ET:** FWDCAL fresh rule-21 audit 11-16..11-17 (frozen engine). journal_guard patched + hardened (11 selftests; last commit >= 15:55 ET on last window day) and SIGNED OFF by Skeptic.
 - **11-18:** REPS3 forecast scoring + ICCSET refresh on LR8 basis (Scout) -> owner note with reps tables.
 - **FAMC:** forward shadow, 2 scorable sessions (+0.61R, +0.03R vs control), coverage ~90%; nightly calendar (Observer) + shadow (Builder).
-- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), RULE21-DB, days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. D3 superseded by owner effective_sessions.json (11-16): replay 0.35 / 0.2 / 0 by held-out match.
+- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. D3 superseded by owner effective_sessions.json (11-16): replay 0.35 / 0.2 / 0 by held-out match. RULE21-DB approved by owner 11-17 (ledger).
 - **Tally since 11-09:** ~77 ideas, 75 tested, 172 configs/looks, 0 passes, 1 forward shadow.
 
 ## Standards the guild adopted (keep enforcing)
