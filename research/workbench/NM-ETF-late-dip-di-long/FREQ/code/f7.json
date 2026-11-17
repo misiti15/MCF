@@ -1,0 +1,117 @@
+{
+"J1 H2 + refire one lot": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"refire": true,
+"cool": 1,
+"lots": 1
+},
+"J2 H2 + ret3<=-0.75": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"ret3": -0.75
+},
+"J3 H2 + CMDTY": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"univ": [
+"PAR",
+"CMDTY"
+]
+},
+"J4 H2 + window 13:45": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"lo": 1345
+},
+"J5 I3 + CMDTY (H6 + refire one lot + CMDTY)": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"univ": [
+"PAR",
+"LEVIX",
+"CMDTY"
+],
+"refire": true,
+"cool": 1,
+"lots": 1
+},
+"J6 I4 + CMDTY (H6 + ret3-0.75 + CMDTY)": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"univ": [
+"PAR",
+"LEVIX",
+"CMDTY"
+],
+"ret3": -0.75
+},
+"J7 H6 + refire one lot + ret3<=-0.75": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"univ": [
+"PAR",
+"LEVIX"
+],
+"refire": true,
+"cool": 1,
+"lots": 1,
+"ret3": -0.75
+},
+"J8 H2 + refire one lot + ret3<=-0.75": {
+"di": -5.0,
+"extra": [
+[
+"ret12",
+">=",
+-1.0
+]
+],
+"refire": true,
+"cool": 1,
+"lots": 1,
+"ret3": -0.75
+}
+}

@@ -93,7 +93,20 @@ def first_touch(h, l, j, fill, risk, side, times, until: time, k: float = 1.0) -
     return 0
 
 
-def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | float") -> Trade | None:
+def spy_close_lookup(spy: "pd.DataFrame | pd.Series | None"):
+    """SPY 1-minute bars (or a close Series) -> {bar start timestamp: close}; None when not given / empty."""
+    if spy is None or len(spy) == 0:
+        return None
+    s = spy["close"] if isinstance(spy, pd.DataFrame) else spy
+    return {ts: float(v) for ts, v in zip(s.index, s.to_numpy())}
+
+
+def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | float", spy=None) -> Trade | None:
+    """`spy`: SPY's 1-minute bars of the session (DataFrame with close, or a close Series), only read when the signal
+    has spy_exit_pct (SPYEXIT, mcf/spy_exit.py): at bar k the SPY close of the minute before bar k is compared with
+    spy0 (the SPY close of the minute before the market entry bar, the entry bar's own close for a stop entry); a hit
+    exits at bar k's open ("spy_exit", a market exit), before that bar's stop / target, as the UPDAY bench walk does.
+    Missing SPY minutes -> no exit."""
     if not isinstance(costs, Costs):
         costs = Costs(bps=costs * 1e4, per_share=0.0, stop_extra_per_share=0.0)
     o, h, l, c = (bars[k].to_numpy() for k in ("open", "high", "low", "close"))
@@ -132,12 +145,27 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
     exit_px, reason, k_exit = None, None, None
     mae, mfe = 0.0, 0.0
     stop = sig.stop
+    spyc, spy0, raw_fill = None, None, (o[j] if sig.entry_type == "market" else None)
+    if sig.spy_exit_pct:
+        from ..spy_exit import spy_exit_hit
+        spyc = spy_close_lookup(spy)
+        if spyc is not None:
+            ref_ts = bars.index[j] - pd.Timedelta(minutes=1) if sig.entry_type == "market" else bars.index[j]
+            spy0 = spyc.get(ref_ts)
+        if raw_fill is None:
+            raw_fill = fill                            # stop entry: the cost-adjusted fill is the closest reference
     scale_px = None if not sig.scale_out_r else fill + side * sig.scale_out_r * risk
     scaled, done_frac, done_value = False, 0.0, 0.0   # value = sum(frac * exit price)
     for k in range(j, n):
         if times[k] >= exit_t:
             exit_px, reason, k_exit = o[k], "time", k
             break
+        if spy0 is not None and (k > j or sig.entry_type == "market"):
+            prev_ts = bars.index[k] - pd.Timedelta(minutes=1)
+            under = k > j and side * (c[k - 1] - raw_fill) < 0
+            if spy_exit_hit(side, spy0, spyc.get(prev_ts), sig.spy_exit_pct, sig.spy_exit_only_losing, under):
+                exit_px, reason, k_exit = o[k], "spy_exit", k
+                break
         adverse = (l[k] if side == 1 else h[k])
         favorable = (h[k] if side == 1 else l[k])
         mae = min(mae, side * (adverse - fill) / risk)
@@ -178,7 +206,7 @@ def simulate(sig: Signal, bars: pd.DataFrame, flatten: time, costs: "Costs | flo
     success = first_touch(h, l, j, fill, risk, side, times, flatten)
     idx = bars.index
     # time exits fill at a bar open, so the exit timestamp is that bar's start; others at bar end
-    exit_ts = idx[k_exit] if reason.endswith("time") else idx[k_exit] + pd.Timedelta(minutes=1)
+    exit_ts = idx[k_exit] if (reason.endswith("time") or reason.endswith("spy_exit")) else idx[k_exit] + pd.Timedelta(minutes=1)
     return Trade(
         symbol=sig.symbol, strategy=sig.strategy, side=side, date=idx[0].date(),
         signal_time=idx[sig.bar_index] + pd.Timedelta(minutes=1),
@@ -331,8 +359,11 @@ class Backtester:
     def _universe_ok(self, ctx: DayContext) -> bool:
         return universe_ok(ctx, self.cfg)
 
-    def run(self, data: dict[str, pd.DataFrame], progress: bool = False) -> pd.DataFrame:
+    def run(self, data: dict[str, pd.DataFrame], progress: bool = False, spy: pd.DataFrame | None = None) -> pd.DataFrame:
+        """`spy`: SPY 1-minute bars used only for the SPY-since-entry exit (spy_exit_pct) when SPY is not in `data`
+        (context only, never traded)."""
         hist = {s: SymbolHistory(s, df) for s, df in data.items() if not df.empty}
+        spy_days = {} if spy is None or spy.empty else {d: g for d, g in spy.groupby(spy.index.date)}
         dates = sorted({d for h in hist.values() for d in h.by_day})
         need_idx = set().union(*(getattr(s, "daily_context_symbols", None) or set() for s in self.strategies))
         candidates: list[Trade] = []
@@ -356,7 +387,8 @@ class Backtester:
                     if not strat.eligible(c):
                         continue
                     for sig in strat.signals(c):
-                        tr = simulate(sig, c.bars, self.flatten, self.costs_ext if is_extended(c, self.cfg) else self.costs)
+                        tr = simulate(sig, c.bars, self.flatten, self.costs_ext if is_extended(c, self.cfg) else self.costs,
+                                      spy=(peers.get("SPY", spy_days.get(d)) if sig.spy_exit_pct else None))
                         if tr:
                             candidates.append(tr)
             if progress and n % 20 == 0:

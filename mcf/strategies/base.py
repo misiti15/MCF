@@ -40,6 +40,10 @@ class Signal:
     trail_after_r: float = 1.0            # ... once price has gone +trail_after_r R
     time_stop_min: int | None = None      # after this many minutes in the trade ...
     time_stop_min_r: float = 0.0          # ... exit if the best excursion is still below this many R
+    # SPY-since-entry exit (opt-in, owner SPYEXIT 2026-11-16; mcf/spy_exit.py): close a short once SPY is up >= this many %
+    # since the entry (a long: SPY down), at market; with spy_exit_only_losing only while the trade is under water
+    spy_exit_pct: float | None = None
+    spy_exit_only_losing: bool = False
     meta: dict[str, Any] = field(default_factory=dict)
 
 
@@ -156,6 +160,9 @@ class Strategy:
             for k in ("be_at_r", "trail_r", "trail_after_r", "time_stop_min", "time_stop_min_r"):
                 if self.params.get(k) is not None:
                     setattr(sig, k, self.params[k])
+            if self.params.get("spy_exit_pct") is not None:      # SPYEXIT (default off: setups without it unchanged)
+                sig.spy_exit_pct = float(self.params["spy_exit_pct"])
+                sig.spy_exit_only_losing = bool(self.params.get("spy_exit_only_losing", False))
         return out
 
     def eligible(self, ctx: DayContext) -> bool:

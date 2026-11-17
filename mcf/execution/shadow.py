@@ -178,6 +178,12 @@ class ShadowBook:
         self._touched: set[str] = set()        # lots with new bars only: persisted every PERSIST_EVERY polls
         self._closed: list[dict] = []
         self.stats = {"polls": 0, "entered": 0, "closed": 0, "skipped": 0, "quote_calls": 0}
+        self._poll_bars: dict = {}
+        # SPYEXIT: shadow-only setups with spy_exit_pct need SPY in the runner's poll too (fetched, never traded)
+        from .. import spy_exit as _sx
+        wl = getattr(runner, "watchlist", None)
+        if _sx.enabled(self.extras) and isinstance(wl, list) and _sx.SPY not in wl:
+            runner.watchlist = sorted(set(wl) | {_sx.SPY})
 
     # ------------------------------------------------------------------------------------------------ journal
     @property
@@ -507,7 +513,7 @@ class ShadowBook:
         sid = self._sid(sig, now, m)
         params = getattr(strat, "params", None) or {}
         scale = bool(params.get("live_scale_out")) and bool(sig.scale_out_r)
-        managed = sig.be_at_r is not None or sig.trail_r is not None or bool(sig.time_stop_min)
+        managed = sig.be_at_r is not None or sig.trail_r is not None or bool(sig.time_stop_min) or bool(sig.spy_exit_pct)
         lot = {"sid": sid, "day": str(now.date()), "mode": mode, "symbol": sig.symbol, "strategy": sig.strategy,
                "side": side, "qty": int(qty), "left": int(qty), "ref": float(px), "entry": float(fill),
                "half_spread": float(max(0.0, (ask - bid) / 2)), "quote": float(q0), "stop0": float(sig.stop), "stop": float(sig.stop),
@@ -516,6 +522,8 @@ class ShadowBook:
                "managed": managed, "be_at_r": _f(sig.be_at_r), "trail_r": _f(sig.trail_r),
                "trail_after_r": _f(sig.trail_after_r), "time_stop_min": _f(sig.time_stop_min),
                "time_stop_min_r": _f(sig.time_stop_min_r),
+               "spy_exit_pct": _f(sig.spy_exit_pct), "spy_exit_only_losing": bool(sig.spy_exit_only_losing),
+               "spy0": self._spy_now(now, getattr(self.r, "_step_bars", None) or self._poll_bars) if sig.spy_exit_pct else None,
                "scale_r": float(sig.scale_out_r) if scale else None, "scale_frac": float(sig.scale_out_frac or 0.5),
                "scaled": False, "spread_bps": _f(info.get("spread_bps"))}
         self.lots[sid] = lot
@@ -528,6 +536,7 @@ class ShadowBook:
         self._signal(sig, "shadow_entered", "ok", px, now, {**info, "fill": round(fill, 4)}, qty, sid)
 
     def manage(self, now: pd.Timestamp, bars: dict):
+        self._poll_bars = bars or {}
         arr: dict = {}                                    # symbol -> numpy views of its bars, built once per poll
         for sid, lot in list(self.lots.items()):
             sym = lot["symbol"]
@@ -599,6 +608,11 @@ class ShadowBook:
         if "t0_exact_ns" not in lot:
             lot["t0_exact_ns"] = int(_ts(lot["t0"]).value)
         mins = (now.value - lot["t0_exact_ns"]) / 6e10
+        if lot.get("spy_exit_pct") and self._spy_exit_due(lot, now, b):          # SPYEXIT (as PaperRunner.manage)
+            px = self._last_close(b, now)
+            if px is not None:
+                self._close(lot, px - side * lot["half_spread"], "spy_exit", now)
+                return
         if lot["time_stop_min"] and mins >= lot["time_stop_min"] and lot["best"] < (lot["time_stop_min_r"] or 0.0):
             px = self._last_close(b, now)
             if px is not None:
@@ -613,6 +627,33 @@ class ShadowBook:
         if side * (new - lot["stop"]) > 0.005:
             lot["stop"] = round(new, 2)
             self._dirty.add(lot["sid"])
+
+    def _spy_now(self, now: pd.Timestamp, bars: dict) -> float | None:
+        """SPY's latest completed close when fresh (the runner's own staleness rule), else None."""
+        from .. import spy_exit as _sx
+        b = (bars or {}).get(_sx.SPY)
+        if b is None or not len(b):
+            return None
+        done = b[b.index < now.floor("1min")]
+        if not len(done) or done.index[-1] < now.floor("1min") - pd.Timedelta(minutes=getattr(self.r, "SPY_STALE_MIN", 3)):
+            return None
+        return float(done["close"].iloc[-1])
+
+    def _spy_exit_due(self, lot, now: pd.Timestamp, b) -> bool:
+        from .. import spy_exit as _sx
+        bars = self._poll_bars
+        if lot.get("spy0") is None:                       # entry poll had no SPY / restart: the entry minute's close
+            sb = bars.get(_sx.SPY)
+            if sb is not None and len(sb):
+                ref = _ts(lot["t0"]).floor("1min") - pd.Timedelta(minutes=1)
+                row = sb[sb.index == ref]
+                lot["spy0"] = float(row["close"].iloc[-1]) if len(row) else None
+        spy = self._spy_now(now, bars)
+        last = self._last_close(b, now)
+        if lot.get("spy0") is None or spy is None or last is None:
+            return False                                  # missing / stale SPY: hold (fail safe)
+        under = lot["side"] * (last - lot["ref"]) < 0
+        return _sx.spy_exit_hit(lot["side"], lot["spy0"], spy, lot["spy_exit_pct"], lot.get("spy_exit_only_losing"), under)
 
     @staticmethod
     def _last_close(b, now) -> float | None:
