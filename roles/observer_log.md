@@ -392,3 +392,9 @@ blackout-window trades; Live journals hold 0 earnings-skip rows (names leave the
 ## Run 61 — 2026-11-17 ~05:40 ET
 BLKOUT approved (Lead). Plan + scorer frozen before any outcome with Skeptic's conditions; selftest ok after fixing an unrealistic
 synthetic (all names reporting the same week left no same-week controls). Data lives in Builder's container -> asked Builder to run.
+
+## Run 62 — 2026-11-17 ~07:41 ET
+Skeptic caught a checklist-8 bug in BLKOUT (offsets across the block hole; block-season reports dropped -> event trades leak into
+'outside'; reports outside the span lost). Amendment 1 before any run: drop trades within 10 sessions of either block edge, no
+block-dated reports ever, +-30-day margin calendar, dense-hole selftest. Waiting for Skeptic's sign-off before Builder runs.
+Lesson: offsets across a data hole are position counts; a selftest must include the hole.

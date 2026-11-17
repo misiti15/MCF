@@ -7,6 +7,20 @@ HERE = Path(__file__).resolve().parent; G = HERE.parents[1]; ROOT = Path("/home/
 EARN = ROOT / "research/bdi/earnings/data/earnings_yf.parquet"
 LB0, LB1 = "2024-11-01", "2025-02-28"; HALF = {"2025-07-03", "2025-11-28", "2025-12-24"}
 TR_END, VA_END = "2025-09-30", "2026-10-07"
+MARGIN_HOLIDAYS = {"2024-09-02", "2026-11-26"}            # NYSE closures inside the +-30-day margins (Labor Day 2024, Thanksgiving 2026)
+def calendar(trade_dates, margin_days=30):
+    """Sessions = the trade file's own dates, plus NYSE business days in the +-margin around the trade span (so reports up to
+    15+ sessions beyond the span get correct offsets). Block dates are never added (Lead 11-17: zero block reads in any form)."""
+    td = sorted(set(trade_dates)); a = pd.Timestamp(td[0]) - pd.Timedelta(days=margin_days); b = pd.Timestamp(td[-1]) + pd.Timedelta(days=margin_days)
+    extra = [str(d.date()) for d in pd.bdate_range(a, b) if str(d.date()) not in MARGIN_HOLIDAYS
+             and not (LB0 <= str(d.date()) <= LB1) and (str(d.date()) < td[0] or str(d.date()) > td[-1])]
+    return sorted(set(td) | set(extra))
+def drop_block_edges(trades, sessions, n=10):
+    """Amendment 1 (Skeptic 1150-1 (1)-(2), Lead 0700-1): drop trades within n sessions of either block edge, since offsets
+    across the hole are not real session counts and reports inside the block are never read."""
+    pre = [d for d in sessions if d < LB0]; post = [d for d in sessions if d > LB1]
+    bad = set(pre[-n:]) | set(post[:n]); keep = ~trades.date.isin(bad)
+    return trades[keep].reset_index(drop=True), int((~keep).sum())
 def offsets(trades, earn, sessions):
     """k = sessions from the nearest reaction session R0 to the trade date; NaN when the name has no report."""
     pos = {d: i for i, d in enumerate(sessions)}; sess = np.array(sessions)
@@ -57,6 +71,23 @@ def selftest():
         p = primary(t[t.grp != "buf"], "gross"); print(f"planted {planted:+.2f}: diff {p['diff']:+.3f} t {p['t']:+.2f} MDE80 {p['MDE80']:.3f} n_in {p['n_in']}")
         if planted: assert p["t"] < -3 and abs(p["diff"] - planted) < 0.08
         else: assert abs(p["t"]) < 3
+    # Amendment 1 (4): a 4-month hole (the block) with a report just before it; trades right after the hole must NOT be inside
+    global LB0, LB1
+    cal = [str(d.date()) for d in pd.bdate_range("2024-09-03", "2025-06-30") if not ("2024-11-01" <= str(d.date()) <= "2025-02-28")]
+    e2 = pd.DataFrame([dict(symbol="H", date="2024-10-30", session="bmo")])
+    t2 = pd.DataFrame(dict(setup="U", side=1, symbol="H", date=cal))                      # one trade every open session (dense, as real)
+    sess2 = calendar(t2.date.unique()); t2b, nd = drop_block_edges(t2, sess2)
+    k2, _, _ = offsets(t2b, e2, sess2); kept = dict(zip(t2b.date, k2))
+    post = {d: v for d, v in kept.items() if d > "2025-02-28"}; pre_in = {d: v for d, v in kept.items() if d < "2024-11-01" and abs(v) <= 4}
+    print(f"hole case: {len(cal)} sessions, dropped near edges {nd}; first kept post-hole {min(post)} k {post[min(post)]:+.0f}; "
+          f"pre-hole inside kept {sorted(pre_in)}")
+    assert nd == 20 and min(post) > "2025-03-14", "first 10 post-hole sessions (and last 10 pre-hole) must be dropped"
+    assert all(abs(v) >= 10 for v in post.values()), "post-hole trade counted as inside / buffer"
+    assert not pre_in, "pre-hole trades within 4 of a report that is within 10 of the edge must be dropped"
+    # Amendment 1 (3): report beyond the trade span still found (margin calendar)
+    e3 = pd.DataFrame([dict(symbol="M", date="2026-11-03", session="amc")]); sess3 = calendar(["2026-10-26", "2026-10-30"])
+    k3, _, _ = offsets(pd.DataFrame(dict(setup="U", side=1, symbol="M", date=["2026-10-30"])), e3, sess3)
+    print(f"margin case: trade 10-30 vs AMC report 11-03 (R0 11-04) -> k {k3[0]:+.0f}"); assert k3[0] == -3
     print("selftest ok")
 def run():
     sys.path.insert(0, str(ROOT)); assert EARN.exists(), f"missing {EARN}: blackout would silently be empty"
@@ -64,11 +95,14 @@ def run():
     assert not ((B.date >= LB0) & (B.date <= LB1)).any(), "locked block in trades"
     nh = int(B.date.isin(HALF).sum()); B = B[~B.date.isin(HALF)].dropna(subset=["spy_move"]).reset_index(drop=True)
     E = pd.read_parquet(EARN); E = E[E.symbol.isin(B.symbol.unique())]
-    ed = pd.to_datetime(E.date).dt.strftime("%Y-%m-%d"); E = E[(ed >= B.date.min()) & (ed <= B.date.max()) & ~((ed >= LB0) & (ed <= LB1))]
+    sessions = calendar(B.date.unique())
+    ed = pd.to_datetime(E.date).dt.strftime("%Y-%m-%d")
+    E = E[(ed >= sessions[0]) & (ed <= sessions[-1]) & ~((ed >= LB0) & (ed <= LB1))]   # Amendment 1 (3): reports kept ~+-15+ sessions beyond the span; block rows never used
     nrep = E.groupby("symbol").size(); good = set(nrep[nrep >= 6].index)
     print(f"trades {len(B)}; half-day dropped {nh}; names traded {B.symbol.nunique()}; with >= 6 reports {len(good)} "
           f"({len(good) / B.symbol.nunique():.0%}); trades on those names {B.symbol.isin(good).mean():.0%} (others excluded)")
-    B = B[B.symbol.isin(good)].reset_index(drop=True); sessions = sorted(B.date.unique())
+    B = B[B.symbol.isin(good)].reset_index(drop=True)
+    B, nedge = drop_block_edges(B, sessions); print(f"Amendment 1: trades within 10 sessions of a block edge dropped: {nedge}")
     k, tru, amc = offsets(B, E, sessions); B["k"], B["trusted"], B["amc"] = k, tru, amc
     B["grp"] = np.where(np.abs(B.k) <= 4, "in", np.where(np.abs(B.k) >= 10, "out", "buf"))
     B["per"] = np.where(B.date <= TR_END, "TRAIN", np.where(B.date <= VA_END, "VALID", "FWD"))

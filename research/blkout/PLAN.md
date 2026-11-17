@@ -51,3 +51,12 @@ trades re-charged by that ratio. If inside gross <= outside, the blackout is not
 | inside > outside, t >= 2 | possible cost of the blackout -> Phase 2 spread re-charge BEFORE any owner line. |
 TRAIN must agree in sign for either directional reading; FWD reported only.
 Run: after FWDCAL is read; light local job, outside market hours (Builder's container holds trades_full.parquet).
+
+## Amendment 1 (2026-11-17 ~07:55 ET, before any run; Skeptic skeptic-20261117-1150-1/1151-2, Lead lead-20261117-0700-1)
+(1)-(2) Block edge: trades within 10 sessions of EITHER block edge are dropped (count printed); block-dated report rows are never used,
+not even as metadata (zero block reads in any form). Across the hole, k is a position count, not a true session count, so it is
+understated for post-hole trades; after the 10-session drop every post-hole trade's |k| >= 10 (classified OUTSIDE, correctly — the
+true distance is larger). (3) Calendar extended with NYSE business days in a +-30-day margin around the trade span (block dates
+excluded; closures in the margins: 2024-09-02, 2026-11-26), so reports up to ~20 sessions beyond the span keep correct offsets.
+(4) Selftest adds a dense calendar with a 4-month hole and a report just before it (asserts: 20 edge trades dropped, no post-hole
+trade inside/buffer, no pre-hole inside trade kept near the edge) and a margin case (AMC report after the span -> k -3).
