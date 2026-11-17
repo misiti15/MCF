@@ -2,30 +2,18 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-16 22:35 ET)
-- MONDAY SCORES DONE (one look each, all CLOSED, MDE stated): MOMSIDE C1 VALID t 0.96 (up-day cell, C3 ~0, FWD -723R t -3.06);
-  SIZESTOP conditioning ~0 (C1 t 0.12 / C2 0.65; known widening red flag); DIPTURN C1 +0.009R t 0.92 / C2 -0.012R.
-- NEXT: TUESDAY 11-17 >= 16:30 ET FWDCAL fresh 11-16..11-17 (guard selftest first; Skeptic signed off); audit now prints the
-  effective.tier() per account (descriptive). Use GLOSSARY names (Session replay / 2-year backtest / Live). Then
-  `python research/blkout/blkout.py --run` for Observer (SIGNED OFF 11-17, A1 + 1b; commit blkout_out.txt), then FAMC 11-17 (INFQ).
-- Readiness: `python research/check_monday.py` (outcome-free) -> READY on 11-15 16:30 ET; rerun it first on Monday.
-- ORDER (Lead 11-15 16:58): MONDAY 11-16 >= 16:30 ET: MOMSIDE -> SIZESTOP -> DIPTURN. TUESDAY 11-17 >= 16:30 ET: FWDCAL fresh
-  11-16..11-17, only after `python research/fwdcal/mirror.py --guard-selftest` passes and Skeptic signs off. Steps:
-  1. FWDCAL fresh 11-16..11-17: `cd research/fwdcal && python mirror.py --dates 2026-11-16..2026-11-17 --delay 0 --quotes
-     --stopslip-max --fetch --jobs 4 --tag _fresh2` (re-deepen data branches first: `git fetch -q --shallow-since=2026-11-02
-     origin <10 data branches>` + `--shallow-since=2026-10-28 origin claude/intraday-trading-system-witis4`; NEVER --depth=1).
-     Journal guard + block guard built in; LR8-basis audit with exit_parts; split live-quote vs pool; Testing D/E/F included.
-  2. MOMSIDE: `python research/momside/momside.py --score` (needs data/daily_closes.parquet + data/trades_full.parquet; rebuild
-     with --fetch / build_full.py if the container is fresh). Plan + Amendments 1-4 (C4 6-1, full-day lists, top-5, half days).
-  3. SIZESTOP: `python research/sizestop/sizestop.py <scratchpad/hold/bt> 4` (GEN hold lists: rebuild via bereplay/bt_hold.py if
-     missing; dividends data/cash_div.parquet via fetch_div.py). Scout plan + A1 ex-div + A2 half days; Skeptic's 3 asks in.
-  4. DIPTURN: `python research/dipturn/dipturn.py --score` (uses momside trades_full). Scout plan + A1 tod >= 955 + A2 half days.
-  Each prints Skeptic's pre-registered audit items (roles/skeptic.md) and MDE / 'nothing above X; smaller unknown' on a close.
-- Then: Observer runs MOMSIDE-LIVE after my lab post; Lead takes FWDCAL to the owner with the replay-records (D3) decision.
-- Shared tools: research/guild_read.py (block-safe 1-min / daily reader; every new reader uses it), research/builder_blockguard.py
-  (request-time guard in all my fetchers), fwdcal/stopq.py + matchgap.py (replay-vs-live diagnostics).
-- FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D (needs Observer's pre-open calendar row; ~90% coverage).
-  Tally: s1 11-11 raw +0.611 / gross +0.424; s2 11-12 raw +0.034 / gross -0.175; 11-13 and 11-16 unscorable (calendar timing).
+## State (2026-11-17 17:30 ET)
+- TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
+  offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
+  BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
+  FAMC 11-17 unscorable (0 AMC events); tally 2 scored / 3 unscorable, K_edge 0.637.
+- NEXT: whatever Lead slots. Candidate (ask first, not scored): exact-minute offset diagnosis (5-min 0.95 vs exact 0.34 in
+  arena accounts, Primary 0.85) - check the live entry-stamp minute vs the replay decision minute.
+- FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
+  <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
+- FWDCAL rerun recipe: re-deepen (--shallow-since=2026-11-02 for the 10 data branches, 2026-10-28 for the default; NEVER
+  --depth=1), `mirror.py --guard-selftest`, then `mirror.py --dates A..B --delay 0 --quotes --stopslip-max --fetch --jobs 4 --tag _X`.
+- Shared tools: research/guild_read.py, research/builder_blockguard.py, fwdcal/stopq.py + matchgap.py.
 
 ## Standards I work to (guild)
 Frozen plan + checklist (research/SKEPTIC_CHECKLIST.md) before any score; one look; excess over a matched / shared-day control;
