@@ -1,33 +1,42 @@
 {
- "generated": "2026-11-16 18:58:00-05:00",
+ "generated": "2026-11-16 20:20:30-05:00",
  "what": "Live-session bar packs (RTH 1-minute SIP bars, full live universe + daily bars) on GitHub Releases bars-<YYYY-MM>, assets 1min-<day>.parquet / 1day-<day>.parquet (store-bars workflow)",
- "sessions_stored": 34,
+ "sessions_stored": 36,
  "first": "2024-09-16",
  "last": "2026-11-16",
- "symbols_per_session": 4814,
- "mb_per_session": 18.3,
- "total_gb": 0.621,
+ "symbols_per_session": 4781,
+ "mb_per_session": 17.9,
+ "total_gb": 0.644,
  "largest_asset_mb": 17.5,
- "headroom": "GitHub Release assets: 2 GB per file limit; largest asset 17 MB (0.9% of the limit). One release per month keeps each release to ~21 sessions (~0.38 GB/month at the current size); no total-size limit is documented for releases, ~4.6 GB/year.",
+ "headroom": "GitHub Release assets: 2 GB per file limit; largest asset 17 MB (0.9% of the limit). One release per month keeps each release to ~21 sessions (~0.38 GB/month at the current size); no total-size limit is documented for releases, ~4.5 GB/year.",
  "progress": {
   "live": {
+   "name": "Live session",
    "weight": 1.0,
    "weekdays": 30,
    "stored": 30,
+   "symbols_per_session": 4896,
+   "inactive_now_per_session": null,
+   "mb_per_session": 19.2,
    "months_done": [
     "2026-10",
     "2026-11"
    ],
-   "est_total_gb": 0.5
+   "est_total_gb": 0.6
   },
   "2y": {
+   "name": "2-year history",
    "weight": 0.175,
    "weekdays": 450,
-   "stored": 4,
+   "stored": 6,
+   "symbols_per_session": 4207,
+   "inactive_now_per_session": 0,
+   "mb_per_session": 11.5,
    "months_done": [
-    "2024-09"
+    "2024-09",
+    "2024-10"
    ],
-   "est_total_gb": 7.9
+   "est_total_gb": 5.0
   }
  },
  "locked_block": "2024-11-01..2025-02-28 never fetched or stored (rule 19)",
@@ -73,6 +82,28 @@
    "mb_1min": 11.76,
    "mb_1day": 0.0,
    "release": "bars-2024-09",
+   "tier": "2y",
+   "weight": 0.175
+  },
+  {
+   "session": "2024-10-01",
+   "symbols": 4215,
+   "universe": 4898,
+   "rows_1min": 960326,
+   "mb_1min": 11.94,
+   "mb_1day": 0.0,
+   "release": "bars-2024-10",
+   "tier": "2y",
+   "weight": 0.175
+  },
+  {
+   "session": "2024-10-02",
+   "symbols": 4211,
+   "universe": 4898,
+   "rows_1min": 902950,
+   "mb_1min": 11.14,
+   "mb_1day": 0.0,
+   "release": "bars-2024-10",
    "tier": "2y",
    "weight": 0.175
   },
