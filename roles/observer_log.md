@@ -379,3 +379,7 @@ fix. Swapped: obs_read.read_bars delegates cache_hist to guild_read.read_1min (i
 ## Run 58 — 2026-11-16 ~23:41 ET
 FAMC 11-16 built same night (INFQ; audit 1/1). MOMSIDE/SIZESTOP/DIPTURN all CLOSED (MDEs stated). MOMSIDE-LIVE PARKED by Lead,
 never run. Gap: no Observer run fired between Sun ~19:41 and Mon ~23:41 ET; the FAMC build still landed the same night.
+
+## Run 59 — 2026-11-17 ~01:41 ET
+Gross/net: widening's +0.007R = +0.0015R gross (t ~1) + avoided stop-exit charges. Gave Skeptic the Live comparator: LR8 stop-exit
+charge 0.102R per stop (0.086R booked since 11-12), targets 0.034R. Adopted the owner GLOSSARY terms; D3 decided by owner tiers.

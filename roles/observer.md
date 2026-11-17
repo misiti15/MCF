@@ -21,6 +21,8 @@
 8. Before commit: ast.parse + selftest; board posts <= 120 words (assert before writing).
 9. Live R: raw r_multiple is basis-stable across LR8 (11-12); pnl_adj needs per-trade recompute (exit-linked).
 10. Every figure carries rule-change context; one-big-day share on any record.
+11. Owner GLOSSARY (11-16): say Live / Shadow / Session replay / 2-year backtest / 2-year screen / 2-year history exactly;
+    never mix sources in one number. Session replay weight 0.35 / 0.2 / 0 by held-out accuracy (config/effective_sessions.json).
 
 ## Key findings to date (newest first)
 - Index nulls (clean, 426 sessions): no large continuation after a reading; small (5-10bps) unknown. Live ETF R = index move.
