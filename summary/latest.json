@@ -1,28 +1,28 @@
 {
- "updated": "2026-11-17T17:00-05:00",
+ "updated": "2026-11-17T19:00-05:00",
  "session": "2026-11-17",
- "headline": "Owner approved RULE21-DB today: replay-vs-live checks now match on the live decision bar. Tonight's FWDCAL check is judged on the owner's official rule, with our pre-registered reading beside it.",
+ "headline": "Tonight: half-hour continuation (HKS950) and the earnings-blackout look both closed; the blackout policy stands. FWDCAL's Session replay check fails on the guild's exact-minute reading. The owner's official decision-bar verdict comes next.",
  "bullets": [
-  "BLKOUT (earnings-blackout look, descriptive): date fix in and signed off (block-edge trades dropped, no block data; hole selftest passes). Runs tonight after FWDCAL.",
-  "New: HKS950 (does a stock's half-hour move repeat in the same half-hour on later days?). Amended and re-signed: bar t 2.46, needs 8 of 11 half-hours and to beat a shuffled control. One look tonight after 16:30 ET.",
-  "Move Hunt 'wrong time' pool: mostly Live arriving after an early move had finished (median move start 09:35, before the owner's 09:50 line), and 22 of 48 were really wrong side. Only what remains after 09:50 gets tested.",
-  "Stop widening closed: price path gains nothing (gross t 0.98); the small gain is avoided stop charges, ~0.089R per stop in the 2-year backtest vs ~0.09-0.10R Live, so Live should save about the same.",
-  "Rule changes inside tonight's window (11-16..11-17) get printed with the result: SPY-exit rule on two Workbench copies, Testing half-size lots with a 3-share floor, 17 new Workbench copies, the 11-16 spotlight rotation and KILL-FLAT."
+  "FWDCAL (Session replay vs Live, fresh 11-16..11-17): exact-minute match 0.342 (the live stamp lands ~1 min after the signal); against the signal minute 0.932. Five accounts read optimistic by > 0.03R, though every interval spans 0. Official owner rule-21 line pending.",
+  "HKS950 CLOSED: best config t 2.18 vs bar 2.46, and net -10 bps after costs. The 15:30 slot is strong, but it includes the closing auction Live never trades; a 15:30-15:55 re-cut will tell.",
+  "BLKOUT CLOSED (2-year backtest, descriptive): trades inside the earnings window are no better than outside (gross -0.003R, t -0.46; nothing above 0.021R). Report-day mornings are worse, so the owner's blackout policy stands.",
+  "FAMC earnings Shadow: 11-17 had no events; 2 sessions scored, 3 unscorable so far.",
+  "Rule changes in the window: owner rule 21 now matches on the decision bar (11-17); Testing half-size lots / 3-share floor; shadow mode; Workbench copies; 11-16 spotlight rotation; promotion hold (11-17)."
  ],
  "progress": {
-  "ideas": 77,
-  "tested": 75,
-  "configs": 172,
+  "ideas": 78,
+  "tested": 77,
+  "configs": 174,
   "passed": 0,
   "forward": 1
  },
- "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
+ "next": "Official rule21() line from Builder -> owner PR (MOMSIDE / SIZESTOP / DIPTURN / HKS950 / BLKOUT closures, stop wording, FWDCAL official verdict, effective.tier FYI). Wed 11-18: REPS3 + ICCSET, Scout's shortlist.",
  "by_role": {
-  "scout": "HKS950 amended and re-signed; runs tonight.",
-  "builder": "Tonight: guard -> FWDCAL (official + ours) -> BLKOUT -> FAMC.",
-  "skeptic": "Mapped FWDCAL to owner's new rule 21 + window rule changes.",
-  "observer": "Timestamp-safe board reader.",
-  "lead": "Official = owner's rule21(); context printed."
+  "scout": "HKS950 closed; null-width method note (#44).",
+  "builder": "FWDCAL, BLKOUT, FAMC run; minute-offset diagnostic.",
+  "skeptic": "Estimated official rule-21; audited HKS950/BLKOUT.",
+  "observer": "15:30 auction re-cut approved; BLKOUT to close.",
+  "lead": "Closed HKS950 and BLKOUT; PR waits on official line."
  },
  "disclaimer": "Educational only — not financial advice."
 }
