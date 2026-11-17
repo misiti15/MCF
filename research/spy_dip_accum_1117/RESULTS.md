@@ -175,3 +175,5 @@ Part A 720 (daily 360 scored on SEG-A and re-scored on SEG-B; minute 360 on SEG-
    first; `mcl-dip-` ids), $100k notional, rule as in section 6, scored against SPY B&H and static 40% SPXL weekly.
    Present it to the owner as "≈1.2x S&P with dip-timed entries", not as a hedge — the live data show no hedge yet.
 3. Before any real-money use, get pre-2016 data (2008) from an allowed host to size the crash drawdown.
+
+**Owner decision 2026-11-17:** DIPBOOK shadow no ("not worth the additional account. Intraday setups need the attention now."). Research only; not deployed.
