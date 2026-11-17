@@ -99,12 +99,15 @@ and every decision the owner answers is set to `answered` with the date and the 
 | STORAGE-CAP | Live-session bar storage capacity (owner "storage yes" 2026-11-16): the weekly review adds one line from docs/live/storage.json (sessions stored, symbols/session, MB/session, total GB, largest asset vs the 2 GB per-file Release limit). Packs: Releases bars-<YYYY-MM> (store-bars.yml nightly 16:40 ET; mcf/replay/packs.py) | Claude | weekly Friday review | each Friday from 2026-11-20 | live · backfill 2026-10-06..2026-11-16 dispatched after merge; 2-year history 2024-09-16..2026-10-05 (owner "2-year .175 yes", weight 0.175, locked block skipped) chained one month per run; progress in storage.json "progress" |
 | LIVE-PILOT | Live-funds pilot sizing: "LIVE500 plan" / "LIVE2K plan" (asked 11-16) | owner | nightly brief | when owner decides | open · 11-16 brief DECISION 2 |
 | INACT-1116 | Inactive check: `CWT13-vwapstretch-z075-long` (Explore 1) quiet 2 sessions (P 0.21%), blocked by spread / cost filter — change place in line / cap? (recommend no: 2 sessions only) | owner | nightly brief | when owner decides | open · 11-16 brief DECISION 3 ("INACT yes" / "no") |
-| SRC-VALUE | Data-source value study (owner "SRC-VALUE yes" 2026-11-16) | Claude | nightly brief | after the 11-17 close | approved, study queued |
+| GY-BENCH | Graveyard bench / rotation work (owner 2026-11-17) | Claude | nightly brief | next nightly | in progress |
 
 ## Closed
 
 | ID | Item | Closed | Outcome |
 |---|---|---|---|
+| SRC-VALUE | Data-source value study | 2026-11-17 | done after the close: 12 configs, no non-live source predicts later live results (Spearman ~0); DECISION SRCV1 (history_weight 0.175 → 0) open in docs/live/decisions.json (research/src_value/NOTES.md) |
+| LATCH-REVIEW | −2R per-setup latch review incl. 11-17 L3 BEZ squeeze (owner "LATCH review yes") | 2026-11-17 | done, research only: −2 kept for all Primary setups; both BEZ remedies lower R; DECISIONS LATCH-RW7 / LATCH-RW1 open (research/latch_review_1117/RESULTS.md) |
+| DIPBOOK | S&P dip-accumulation shadow account | 2026-11-17 | owner **no** (~14:00 ET): research only (research/spy_dip_accum_1117), no account |
 | GY-RW6-OD | Big Gainer SMA50 Cross Fade (all day) `RW6-ns2-up3-short-FD` (Testing C since 11-13) → On Deck? | 2026-11-16 | owner answered **"GY-RW6 wait"** (2026-11-16 ~22:20 ET): stays in Testing C for reps, no move; re-run OD-IN at the next re-tier |
 | KILL-FLAT | Kill flatten of the 11-13 leftovers (GY 10 + Gen 4 untracked lots) | 2026-11-16 | owner "KILL-FLAT open": market-close at the first poll ≥ 09:30 ET 11-17 (PR #213, ledger 2026-11-16-kill-flat-open) |
 | SIM-2Y | 2-year screen in the Simulated leaderboard blend | 2026-11-16 | owner: keep it out of the blend (PR #210) |
