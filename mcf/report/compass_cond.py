@@ -116,6 +116,36 @@ def cells(obs: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(out)
 
 
+CAL_DAYS, CAL_MIN = 60, 30                                   # COMPCAL M1: prior 60 sessions, >= 30 moves needed
+
+
+def remaining(obs: pd.DataFrame, days: int = CAL_DAYS) -> dict:
+    """COMPCAL M1 input (owner "COMPCAL yes", 2026-11-17): per 10-min mark, the rest-of-day SPY moves (close vs the price
+    at T, in fractions of the day's OPEN, as research/guild/1110/compcal/compcal.py) of the last `days` sessions."""
+    d = obs.copy()
+    for k in ("open", "close", "fo"):
+        d[k] = pd.to_numeric(d[k], errors="coerce")
+    d["m"] = d.close / d.open - 1 - d.fo
+    keep = sorted(d.date.unique())[-days:]
+    d = d[d.date.isin(keep) & d.m.notna()].sort_values(["date", "T"])
+    return {T: [round(float(x), 6) for x in g.m] for T, g in d.groupby("T", sort=True)}
+
+
+def calibrated(cond: dict | None, T: int, fo: float | None) -> dict | None:
+    """COMPCAL M1 (calibrated, beat the cell table out of sample: research/guild/1110/compcal/PLAN.md): the share of the
+    prior sessions whose move from the same mark to the close would leave SPY on today's side of its open. None when
+    SPY is at its open, before 10:00 or with < 30 prior moves. Display only - not a direction forecast."""
+    if not cond or fo is None or not np.isfinite(fo) or fo == 0 or T < 600:
+        return None
+    t10 = min(950, T - T % 10)
+    mv = np.asarray((cond.get("remaining") or {}).get(lab(t10)) or [], dtype=float)
+    mv = mv[np.isfinite(mv)]
+    if len(mv) < CAL_MIN:
+        return None
+    return dict(T=lab(t10), p=float(np.mean(np.sign(fo) * (fo + mv) > 0)), n=int(len(mv)),
+                side="above" if fo > 0 else "below")
+
+
 def to_json(C: pd.DataFrame, obs: pd.DataFrame) -> dict:
     last = obs.sort_values(["date", "T"]).iloc[-1]
     cl = {}
@@ -125,7 +155,7 @@ def to_json(C: pd.DataFrame, obs: pd.DataFrame) -> dict:
             for k, v in r._asdict().items() if k not in ("grouping", "T", "bucket", "key")}
     return dict(asof_date=str(last.date), last_close=float(last.close), sessions=int(obs.date.nunique()),
                 first_date=str(obs.date.min()), buckets=BUCKETS, edges_pct=[-0.4, -0.2, 0, 0.2, 0.4], gap_pct=GAP * 100,
-                cells=cl, label=CL.LABEL, disclaimer=CL.DISCLAIMER,
+                cells=cl, remaining=remaining(obs), label=CL.LABEL, disclaimer=CL.DISCLAIMER,
                 method="mcf/report/compass_cond.py; research/compass_5m/NOTES.md")
 
 

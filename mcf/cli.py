@@ -191,6 +191,8 @@ def cmd_live(args, cfg):
             print(f"intraday log failed: {e}")
         if runner.poll_log_dir:
             paths.append("polls")   # live.log_poll_inputs: new gzip chunks only (each chunk is written once)
+        if runner.quote_log_dir:
+            paths.append("quotes")  # recorded decision quotes (owner 2026-11-17): new gzip chunks only
         pub.push(paths, f"status {st['asof_et']} ({st['phase']})")
 
     eb = None
@@ -204,6 +206,8 @@ def cmd_live(args, cfg):
                          on_status=on_status)
     if cfg.get("live", {}).get("log_poll_inputs", True):
         runner.poll_log_dir = os.path.join(args.state_dir, "polls")
+    if cfg.get("live", {}).get("log_quotes", True):
+        runner.quote_log_dir = os.path.join(args.state_dir, "quotes")
     runner.flatten_only = flatten_only(now)   # HK-FLAT-1113b: 15:50-16:05 ET start: no entries, closing flatten only
     if runner.flatten_only:
         print(f"{slot}: started {now:%H:%M} ET (15:50 or later): no new entries, closing flatten only")
@@ -212,7 +216,7 @@ def cmd_live(args, cfg):
         runner.health.update(earnings_excluded=len(eb["symbols"]), earnings_source=eb["source"],
                              earnings_complete=eb["complete"])
     runner.run(until=until)
-    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls", "adopted"]
+    paths = ["status.json", "journal.db", "universe.csv", "setups", "earnings", "polls", "quotes", "adopted"]
     end = pd.Timestamp.now(tz=NY)
     if runner.session_done or end.time() >= pd.Timestamp(cfg["session"]["flatten_by"]).time():   # LR1: half days
         from .report.daily_review import write_review

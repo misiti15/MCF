@@ -28,10 +28,11 @@
   "primary_needs": "full live record",
   "live_wins": "if live and shadow/replay disagree beyond noise, live wins",
   "replay": {
-    "match": null,
-    "extra": null,
-    "optimism_r": null,
-    "note": "replay not yet measured on held-out days under these rules: lower tier until it is"
+    "match": 0.871,
+    "extra": 0.262,
+    "optimism_r": 0.005,
+    "measured": "2026-11-17 held-out 11-02..11-16 (Primary / Testing 1 / Testing 2), research/replay_cal/heldout/SCORECARD.md",
+    "note": "below the 95% tier -> weight 0 (below_weight); haircut 0.027R if shown. Re-score once live quotes are recorded (from 11-18)."
   },
   "history_weight": 0.175,
   "history_note": "1 session of the 2-year history (full-universe backtest, no live counterpart) = 0.175: screening / experience only, never counts toward the On Deck or Primary minimums. Owner 2026-11-16: the 2-year screen is shown separately (Simulated leaderboard: own columns, screen vs live) and is NOT blended into effective trades / sessions or the ranking; 0.175 is kept for screening only",

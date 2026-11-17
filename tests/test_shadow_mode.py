@@ -302,7 +302,7 @@ def test_effective_session_math():
     assert E.effective_sessions(2, 3, 0, cfg=c) == pytest.approx(2 + 0.6)      # uncalibrated shadow = lower tier
     assert E.effective_sessions(0, 0, 0, cfg=c, history=40) == pytest.approx(7.0)
     assert E.haircut(0.03, c) == pytest.approx(0.05) and E.haircut(-0.01, c) == pytest.approx(0.02)
-    assert E.replay_weight(c) == ("uncalibrated", 0.2)
+    assert E.replay_weight(c) == ("below", 0.0)   # held-out 2026-11-17: 87.1% match, 26.2% extra -> below the 95% tier
     assert not E.on_deck_ready(4, c) and E.on_deck_ready(5, c)
 
 
