@@ -1,13 +1,13 @@
 {
- "updated": "2026-11-17T01:00-05:00",
+ "updated": "2026-11-17T03:00-05:00",
  "session": "2026-11-17",
- "headline": "Stop widening explained: the price path gains nothing; the small 2-year backtest gain comes from paying stop slippage less often. Tonight FWDCAL is read against the owner's new Session-replay weight tiers.",
+ "headline": "Move Hunt gap measured (structure only): 62% of big moves are in earnings-blackout names Live skips by rule, and Live catches 14% of the rest. That's the lead candidate for the next study.",
  "bullets": [
   "MOMSIDE (skip trades against 12-month momentum): t 0.96 vs bar 2.91; all of it is one up-market cell, and the forward window reverses (-723R). Nothing above 0.025R per skipped trade.",
-  "SIZESTOP follow-up (2-year backtest): wider stops +0.0067R net but only +0.0015R gross (t 0.98). The rest is avoided stop-exit charges, because stop-outs fall from 35% to 23%. How much this matters live depends on live stop slippage (~0.05R per stop); that check is next.",
+  "Stop widening closed: price path gains nothing (gross t 0.98); the small gain is avoided stop charges, ~0.089R per stop in the 2-year backtest vs ~0.09-0.10R Live, so Live should save about the same.",
   "DIPTURN (owner's dip-then-turn morning, anchored at 09:50): long setups +0.009R/trade, t 0.92 vs 3.57; mirror for shorts negative. Nothing above ~0.045R.",
   "Tue 11-17 after 16:30 ET: FWDCAL fresh Session-replay check on 11-16..11-17. It is read against the pre-registered audit and the owner's 11-16 weight tiers (0.35 at >= 98% match, 0.2 at 95-98%, 0 below). D3 is now decided by the owner.",
-  "Open owner items: COMPCAL (open / 09:50), PROMO2, RULE21-DB, days 1-3 questions, S6."
+  "Found in the effective-sessions code (owner's): the R-bias limit only checks the optimistic side, while the owner text says +/-0.01R. FYI to the owner tonight, plus one question on 'uncalibrated' vs measured failures."
  ],
  "progress": {
   "ideas": 77,
@@ -18,11 +18,11 @@
  },
  "next": "Tue 16:30 ET: FWDCAL fresh -> owner PR (four results, stop-widening wording, FWDCAL tier). Wed 11-18: REPS3 + ICCSET, then Scout's shortlist led by the Move-Hunt capture gap.",
  "by_role": {
-  "scout": "Shortlist draft: Move-Hunt gap first.",
-  "builder": "Gross vs net stop split done; FWDCAL tonight with tier lines.",
-  "skeptic": "Asked the stop-charge check (backtest vs live).",
-  "observer": "FAMC 11-16 built (INFQ); outside voice on FWDCAL.",
-  "lead": "Adopted GLOSSARY names; D3 superseded by owner tiers."
+  "scout": "Move Hunt gap: 62% blackout, 14% caught; plan A1-A3.",
+  "builder": "Stop-charge parity; FWDCAL tier lines (will use owner's tier()).",
+  "skeptic": "Found two gaps in effective.tier() vs owner text.",
+  "observer": "Live stop-exit charge comparator (~0.09-0.10R).",
+  "lead": "One tier source; owner FYI queued; A steered."
  },
  "disclaimer": "Educational only — not financial advice."
 }

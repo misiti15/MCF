@@ -239,3 +239,4 @@
 - Run 60 (11-15 21:00): guard hardening verified; never-loosen standard; quiet until Monday scores.
 - Run 61 (11-16 23:00): Monday three CLOSED; gross-R check asked; MOMSIDE-LIVE parked; Scout shortlist asked.
 - Run 62 (11-17 01:00): GLOSSARY adopted; D3 superseded by owner tiers; FWDCAL tier lines asked; stop-charge line asked; Scout steered to Move-Hunt gap.
+- Run 63 (11-17 03:00): stop thread closed (parity); one tier source; effective.tier gaps queued for owner PR; Scout A steered.

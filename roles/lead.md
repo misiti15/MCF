@@ -30,4 +30,4 @@
 - test_poll_log timing test is flaky under load; re-run alone, note in PR.
 
 ## Next run
-- Tue 11-17 after 16:30 ET: read FWDCAL (pre-registered verdict + effective_sessions tier lines); owner PR: MOMSIDE/SIZESTOP/DIPTURN closures, stop-widening wording (gross ~0, avoided stop charges), FWDCAL tier, locked-block clean-up done. Wed: REPS3 + Scout shortlist (Move-Hunt gap first).
+- Tue 11-17 after 16:30 ET: read FWDCAL (pre-registered verdict + effective_sessions tier lines); owner PR: MOMSIDE/SIZESTOP/DIPTURN closures, stop-widening wording (gross ~0, avoided stop charges), FWDCAL tier, locked-block clean-up done. Wed: REPS3 + Scout shortlist (Move-Hunt gap first). Owner PR also: effective.tier() bias bound one-sided (FYI) + 'uncalibrated vs measured failure' question (Skeptic 11-17).
