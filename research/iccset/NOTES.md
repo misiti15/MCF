@@ -77,3 +77,15 @@ TSZ1 (11-17: testing half-size lots, 2x slots, cap 100) changes trades per setup
   ICC_TO=2026-11-18 ICC_TAG=_to1118  python3 -I research/iccset/iccset.py <jdir> <spy_daily.csv> <scratch>/lr8_all.csv && python3 -I research/iccset/shrink.py iccset_setups_to1118.csv
 Report both medians and quartiles beside the 11-11 LR8 value (0.201). Header 'LR8 basis, all trades'. The SPY daily file must reach 11-18.
 The defaults are unchanged (10-20..11-11), so the original outputs reproduce.
+
+## 11-18 result (LR8 basis, all trades; 100% matched; journals final per refresh.py; SPY daily refetched to 11-18)
+| window | setups (>= 40 trades, >= 8 days) | trades | ICC q25 / median / q75 | pooled n_eff / n |
+|---|---|---|---|---|
+| 10-20..11-11 (previous) | 54 | 11,061 | 0.106 / 0.201 / 0.274 | 0.31 |
+| 10-20..11-16 (pre-TSZ1) | 66 | 15,253 | 0.137 / 0.223 / 0.321 | 0.29 |
+| 10-20..11-18 (to date) | 72 | 17,448 | 0.139 / 0.219 / 0.339 | 0.27 |
+Null (R shuffled across days within setup): median -0.003, 90th pct +0.058. TSZ1 does not move the median (0.223 -> 0.219).
+Shorts run higher than longs (0.269 vs 0.166); corr(ICC, trades/day) -0.40. The heat/exhaustion/RW3/RW5 shorts stay the
+highest (0.44-0.52); intraday_momentum is 0.76. Shrunk tables: iccset_shrunk_pre1117.csv / iccset_shrunk_to1118.csv.
+Reading: a setup-day is still the evidence unit; the pooled prior moves 0.19 -> ~0.22.
+Rule-change context: TSZ1 11-17, GY-BENCH 11-18, ROT1 11-16, 17 Workbench copies 11-17 (full list in reps3_1118_out.txt line 5).
