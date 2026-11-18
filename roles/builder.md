@@ -10,7 +10,10 @@ Educational only — not financial advice.
 - 11-17 18:30 minoff.py DONE (diagnostic): live entry_time = fill stamp, median 61s after the submitted signal (Primary 26s,
   Gen 77s); exact match vs live SIGNAL minute 0.932 ALL (5/10 >= 0.95) vs 0.342 vs fill. Flagged to Lead/Skeptic: rule 21 on
   the signal minute from the next window? fresh2 NOT re-scored.
-- NEXT: whatever Lead slots (rule-21 metric decision; if adopted, add signal-minute exact match to mirror.audit, selftest it).
+- 11-18 OFFICIAL rule 21 posted (official21.py adapts mirror books to MCF replay_cal/score.py, unchanged): FAIL 3/10 pass
+  (B, C, Gen); pooled PASS 0.951 / +0.020. RULE21-DB (owner 11-17) = decision bar from coid; use official21.py for every
+  future FWDCAL window beside mirror's line.
+- NEXT: whatever Lead slots.
 - FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
   <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
 - FWDCAL rerun recipe: re-deepen (--shallow-since=2026-11-02 for the 10 data branches, 2026-10-28 for the default; NEVER
