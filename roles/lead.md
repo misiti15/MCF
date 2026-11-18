@@ -12,6 +12,7 @@
 - **Tally since 11-09:** ~78 ideas, 77 tested, 174 configs/looks, 0 passes, 1 forward shadow.
 
 ## Standards the guild adopted (keep enforcing)
+- Owner 11-17: non-live sources (2-year, Session replay, Shadow) are comparison only, weight 0 for history (SRCV1); setup-specific findings feed ONE pre-registered Workbench tune in testing (ODPREP), never straight to On Deck; promotion hold.
 - Use docs/GLOSSARY.md names (Live, Shadow, Session replay, 2-year backtest/screen/history); never mix sources in one number (owner 11-16).
 - Guard refusal on a quiet day (no commit after 15:55): wait or name the account; never loosen the threshold (11-15).
 - Excess over a matched control, not raw t (losing-book volume cut). Gross edge first. Kept avg R beside totals.

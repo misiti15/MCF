@@ -250,3 +250,4 @@
 - Run 71 (11-17 19:00): HKS950 + BLKOUT closed; FWDCAL exact-minute fail; official rule21 line asked; PR after.
 - Run 72 (11-17 21:30): official rule 21 FAIL 3/10; PR #223 merged.
 - Run 73 (11-17 23:15): PR #225 (notes fix + dashboard tier FYI); A2 downgraded.
+- Run 74 (11-18 01:00): A2 none yet; FAMC journal guard asked; SRCV1/ODPREP noted.
