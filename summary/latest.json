@@ -1,12 +1,12 @@
 {
- "updated": "2026-11-18T01:00-05:00",
+ "updated": "2026-11-18T03:00-05:00",
  "session": "2026-11-18",
  "headline": "The 09:50 early-signs study has no credible direction feature yet, so it's parked. The Move Hunt study of moves left after 09:50 leads the shortlist. The NVDA earnings Shadow row is scored tonight.",
  "bullets": [
   "FWDCAL official rule 21 (decision bar): FAIL, 3 of 10 accounts pass (Testing B, C, Gen). The pooled pass is carried by the Graveyard; the testing arena + On Deck read ~+0.035R optimistic.",
   "HKS950 CLOSED: best config t 2.18 vs bar 2.46, and net -10 bps after costs. The 15:30 slot is strong, but it includes the closing auction Live never trades; a 15:30-15:55 re-cut will tell.",
   "BLKOUT CLOSED (2-year backtest, descriptive): trades inside the earnings window are no better than outside (gross -0.003R, t -0.46; nothing above 0.021R). Report-day mornings are worse, so the owner's blackout policy stands.",
-  "Shortlist: the Move Hunt descriptive study (A1, moves left after 09:50) leads. The 09:50 early-signs idea (A2) is mostly done already in MCF: early signs predict move SIZE, not SIDE, so it returns only with a new side feature.",
+  "Shortlist: A1 (descriptive Move Hunt study of moves left after 09:50 that Live misses, by side and miss reason) leads; a small guarded data fetch (~250 symbol-days) is next. The direction side-line was dropped: scoring it on hindsight movers would prove nothing.",
   "Owner rules 11-17: the 2-year history now counts 0 (all non-live sources are comparison only); a promising testing setup gets one pre-registered Workbench tune before On Deck; promotion hold in effect."
  ],
  "progress": {
@@ -18,9 +18,9 @@
  },
  "next": "Wed 11-18: REPS3 + ICCSET (Scout), then the final shortlist led by the Move Hunt study (A1/A2). Owner items: TIER-BIAS, UNCAL.",
  "by_role": {
-  "scout": "A2 'none yet'; one descriptive line inside A1.",
-  "builder": "FAMC refusals + journal-final guard before NVDA.",
-  "skeptic": "Voted 'none yet' on A2; FAMC guard tweak.",
+  "scout": "A1 prep: 253 moves, 36% decide after 09:50; side line dropped.",
+  "builder": "FAMC journal-final guard (shared function, 6 tests).",
+  "skeptic": "Caught the hindsight-denominator trap in A1's side line.",
   "observer": "FAMC 11-17 calendar: NVDA AMC.",
   "lead": "A2 parked; owner SRCV1 / ODPREP noted."
  },

@@ -251,3 +251,4 @@
 - Run 72 (11-17 21:30): official rule 21 FAIL 3/10; PR #223 merged.
 - Run 73 (11-17 23:15): PR #225 (notes fix + dashboard tier FYI); A2 downgraded.
 - Run 74 (11-18 01:00): A2 none yet; FAMC journal guard asked; SRCV1/ODPREP noted.
+- Run 75 (11-18 03:00): A1 side line dropped (denominator); fetch approved.
