@@ -64,4 +64,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-18 13:50 UTC (run 79): A1 Amendment 1 signed off (selftest ok). Asked print of missing-extreme-bar count. Tonight: FAMC NVDA, REPS3+ICCSET, A1, final shortlist.
 - 11-18 15:50 UTC (run 80): REPS3 pre-score: match forecast by setup id (moves), new setups apart (17 WB copies), split pre/post TSZ1 11-17, full ledger context; ICCSET beside pre-11-17.
 - 11-18 17:50 UTC (run 81): REPS3: GY-BENCH benched 18 Graveyard setups 11-18 -> exclude benched (setup, day) pairs from realized + forecast (owner playing-time rule); per-setup eligible sessions. Observer caught split-setup flag gap.
+- 11-18 19:50 UTC (run 82): confirmed from ledger: 18 true benches + 20 guests (benched-away + guest patches); REPS3 excluded pairs must be 18; suggested assert.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
