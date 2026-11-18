@@ -59,6 +59,18 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  What is left that is new: RW7 (4), heat_fade (3) and the general 'entered after the extreme' pattern (25 vs 4).
  So A-WT ranks BELOW A1/A2 unless A1 shows real moves remaining after 09:50.
 
+ **A2 prior work (found 11-17 21:20 ET in the MCF repo; it changes A2).** The main session already ran A2's core:
+ research/bdi/moves/precursors.py on the full-denominator decision rows (rows.parquet, non-blackout, tod >= 09:50, 90-min labels;
+ days 10-29, 11-09, 11-10). It found that **in-play (vol_exp = 5-min ATR / daily ATR) and time of day predict move SIZE**:
+ q5/q1 spread ~40x for vol_exp, and early hours dominate. They do not predict SIDE. Seven Move-Hunt precursor lines were then
+ tested on the 2-year history and parked or sent back to rework: mh-1029-inplay-continuation (8 configs, all negative),
+ -earnings-sympathy (8, rework), -1030-open-pdh-pop-fade, -1102-open-group-move, -1105-gapup-vs-falling-tape (TRAIN +0.17 /
+ VALID -0.18), -1106-defensive-rotation and -1109-inplay-compass-side (precision +2 pts but avg R worse than base).
+ So A2 as drafted (6 catalogue features x 2 sides) would mostly repeat that work. The open part is narrower: **the side of the
+ move, given in-play**. That needs a feature family not yet tried there. News failed (NEWSMID) and sector peers are in rework,
+ so I have no strong candidate yet. **A2 is downgraded to 'only with a new side feature'.**
+ Family update for any A2-type rule: MH lineage = the 7 lines above plus the laggard family; N stays >= 104 (BAR90 >= 2.74).
+
 ## Try-counts and bars (pre-registered here; Lead may reset a family before any look)
 BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln N))). MDE stated at score time as nothing above (bar + 0.84) x SE; smaller unknown.
 | row | configs | family (lineage) | N | BAR90 |
