@@ -34,7 +34,7 @@
     "measured": "2026-11-17 held-out 11-02..11-16 (Primary / Testing 1 / Testing 2), research/replay_cal/heldout/SCORECARD.md",
     "note": "below the 95% tier -> weight 0 (below_weight); haircut 0.027R if shown. Re-score once live quotes are recorded (from 11-18)."
   },
-  "history_weight": 0.175,
-  "history_note": "1 session of the 2-year history (full-universe backtest, no live counterpart) = 0.175: screening / experience only, never counts toward the On Deck or Primary minimums. Owner 2026-11-16: the 2-year screen is shown separately (Simulated leaderboard: own columns, screen vs live) and is NOT blended into effective trades / sessions or the ranking; 0.175 is kept for screening only",
+  "history_weight": 0.0,
+  "history_note": "1 session of the 2-year history (full-universe backtest, no live counterpart) = 0 (owner SRCV1 2026-11-17, was 0.175): every non-live source (2-year screen, 2-year backtest, Session replay, Shadow) is kept separate, comparison only - never blended into effective trades / sessions or the ranking and never toward the On Deck or Primary minimums (research/src_value/NOTES.md: no off-live source predicted later live results, Spearman ~0). A weight is earned only by measurement: re-measure monthly (first Monday after the close) with `python research/src_value/score.py`",
   "history_in_blend": false
 }

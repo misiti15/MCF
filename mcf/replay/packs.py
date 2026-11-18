@@ -16,7 +16,7 @@ history is not limited to names that survived to today (survivorship). It writes
     1day-<day>.parquet   daily bars of the same symbols for the ~80 calendar days up to and including the session
 The store-bars workflow uploads both to the GitHub Release bars-<YYYY-MM> (mcf/replay/store.py reads them back).
 Two tiers (meta "tier" / "weight"): live sessions (2026-10-06 on, weight 1.0) and the 2-year history
-2024-09-16..2026-10-05 (owner "2-year .175 yes" 2026-11-16: weight 0.175, screening / experience only).
+2024-09-16..2026-10-05 (owner "2-year .175 yes" 2026-11-16; weight 0 since owner SRCV1 2026-11-17: comparison only).
 `capacity` writes the storage capacity file. The locked block 2024-11-01..2025-02-28 is never fetched or stored.
 Research/ops infrastructure only: no trading endpoint, no setup or exit logic. Educational only - not financial advice.
 """
@@ -40,7 +40,7 @@ from . import store
 DAILY_DAYS = store.LOOKBACK_DAYS + 30
 ASSET_LIMIT_MB = 2048            # GitHub Release asset limit: 2 GB per file
 HIST_START = date(2024, 9, 16)   # 2-year history packs start here (owner 2026-11-16)
-HIST_WEIGHT = 0.175              # 2-year sessions: screening / experience weight (owner "2-year .175 yes")
+HIST_WEIGHT = 0.0                # 2-year sessions: comparison only (owner SRCV1 2026-11-17; was 0.175, "2-year .175 yes")
 
 
 TIER_NAMES = {"live": "Live session", "2y": "2-year history"}     # docs/GLOSSARY.md

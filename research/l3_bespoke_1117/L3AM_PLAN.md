@@ -14,7 +14,7 @@ Owner 2026-11-17 ~19:35 ET: **"L3-AM yes"** (decision L3-AM, docs/live/decisions
   4,242 / −0.052R).
 - **Configurations counted: 1.** Lineage: 43 configs in l3_bespoke_1117 + this one = 44 → bar max(1.5, sqrt(2 ln 44))
   = **2.75**. Longer lineage (earlier L3 runs, N = 155) bar 3.18 is reported alongside, not used for pass.
-- Not the same as the Testing 2 copy `L3-gap-slope-fromopen-FD-WB4` (window to 13:00 **plus** gap ≤ −3.2%); this test
+- Not the same as the Testing A (key `testing2`) copy `L3-gap-slope-fromopen-FD-WB4` (window to 13:00 **plus** gap ≤ −3.2%); this test
   isolates the window alone.
 
 ## Data (unchanged from PLAN.md; the locked block 2024-11-01..2025-02-28 is never read, asserted in code)

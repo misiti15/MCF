@@ -20,7 +20,7 @@ haircut from the real board. The blend (also in `blend` below, which the tests p
 
 The 2-year screen is NOT blended and never moves the rank (owner 2026-11-16: 2,000 screen trades are not 275 live
 trades, whatever the weight). It is shown as its own source with a fixed comparison: screen vs live = live avg R -
-screen avg R (only with >= 10 live trades), agree = same sign. Its config weight (0.175) is kept for screening only.
+screen avg R (only with >= 10 live trades), agree = same sign. Its config weight is 0 (owner SRCV1 2026-11-17): comparison only.
 
 Not live results - a what-if ranking. Educational only - not financial advice.
 """
@@ -61,7 +61,7 @@ def weights(eff: dict | None) -> dict:
                 break
     return {"live": float(eff.get("live_weight", 1.0)), "replay": float(w),
             "replay_tier": "uncalibrated" if match is None else "measured",
-            "backtest": float(eff.get("history_weight", 0.175)),
+            "backtest": float(eff.get("history_weight", 0.0)),
             "haircut_r": round(max(0.0, float(opt or 0)) + extra, 4), "backtest_in_blend": False}
 
 
