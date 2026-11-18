@@ -61,4 +61,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-18 07:50 UTC (run 76): FAMC journal-final guard in (shared guard_decide). A1: side line must use the full in-play denominator at 09:50, not the hindsight mover set (#20).
 - 11-18 09:50 UTC (run 77): A1 fetch clean (guard, RTH-bounded requests, no half days); A1 measure should end at 15:55 (Live flat), not the close.
 - 11-18 11:50 UTC (run 78): A1 not signed: extreme times 1-min (217/253 off 5-min grid) -> left_to_extreme silently 0; asked fix + off-grid selftest; minors after950 label, ETF regex 'Trust'. Checklist #46.
+- 11-18 13:50 UTC (run 79): A1 Amendment 1 signed off (selftest ok). Asked print of missing-extreme-bar count. Tonight: FAMC NVDA, REPS3+ICCSET, A1, final shortlist.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
