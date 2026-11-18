@@ -1627,5 +1627,49 @@
   "link": "research/consultant_p3/RESULTS.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "U9-TGT",
+  "title": "Quote pre-check: skip entries already past target or stop",
+  "what": "Apply research/usage/u9_execleaks/fix.patch part (b), live.skip_passed_at_quote, after the close: skip an entry when the fill-side quote is at/through the target or the exit-side quote at/through the stop. No setup, exit or lineup change. Reply U9-TGT-YES.",
+  "recommend": "Yes (after the close)",
+  "numbers": [
+   "115 fills lost -65.3R (96 at target, 19 at stop)",
+   "Target part check t 2.32 (bar 1.67); 15 setups up, 4 down -0.5R",
+   "Stop part +56.9R, t 8.24, 11 up / 0 down"
+  ],
+  "why": "These fills have no upside; about -3.7 fills per session.",
+  "link": "research/usage/u9_execleaks/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "U9-ETB",
+  "title": "Bulk borrow list, ETB journaled once a day",
+  "what": "Apply fix.patch part (a), shorts.borrow_prefetch / borrow_refresh_min 60, after the close: one bulk borrow load instead of per-symbol checks, one ETB journal row per name per day. Housekeeping-grade. Reply U9-ETB-YES.",
+  "recommend": "Yes (after the close)",
+  "numbers": [
+   "Expected 0R, 0 reps: skips take no slot",
+   "09:08 flags matched every skip, 0 intraday flips",
+   "~300-650 fewer journal rows, up to ~640 fewer GETs per session"
+  ],
+  "why": "Cleaner journal and playing-time stats at no R cost.",
+  "link": "research/usage/u9_execleaks/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "ENG1",
+  "title": "Simulator retirement plan (S0-S8, 15 gates)",
+  "what": "ENG1-A now: label numbers by engine, no new one-off simulators. ENG1-B after close: move live-runner helpers out of the Backtester, nightly drift scoring, shared exit walker (no behaviour change). ENG1-C later, only when all gates are green. Reply 'ENG1 A', 'ENG1 A+B' or 'ENG1 no'.",
+  "recommend": "Yes (A now, B after close)",
+  "numbers": [
+   "6 engines; replay matches live 87.1% (target 98%), 44% for L3-fromopen",
+   "28 one-off simulators in 6 sessions; 0 of 15 gates green"
+  ],
+  "why": "Diverging simulators give conflicting numbers; no source ranks setups.",
+  "link": "research/usage/u11_engine/RESULTS.md",
+  "status": "open",
+  "answered": null
  }
 ]
