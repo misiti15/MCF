@@ -116,3 +116,6 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     with ~0 bias while the accounts that matter are optimistic (FWDCAL fresh2: pooled gap +0.017 PASS; ex-Graveyard +0.033;
     testing arena + On Deck +0.036R). Report the pool without its largest account, and the pool of the accounts the result
     will be used for.
+46. **Time-grid mismatch in lookups.** Event times on a 1-min grid looked up in 5-min bars (`if t in index else 0`) silently
+    zero most rows (A1: 217 of 253 extremes off-grid -> 'nothing left' for ~86%). Map each time to the bar that CONTAINS it,
+    assert the hit rate, and put an off-grid case in the selftest. (A1, Scout; cousin of #3.)
