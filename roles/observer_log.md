@@ -424,3 +424,6 @@ FAMC 11-18 (NVDA) guards added by Builder (unclosed / missing day / journal-fina
 
 ## Run 70 — 2026-11-18 ~03:41 ET
 Quiet. FAMC journal-final guard reuses fwdcal guard_decide (6 cases). A1 side line dropped (hindsight-mover denominator); A1 data fetched (244 symbol-days).
+
+## Run 71 — 2026-11-18 ~05:40 ET
+Quiet. A1 plan frozen with end at 15:55 (Skeptic). Tonight: FAMC 11-18 NVDA (Builder), REPS3 + ICCSET + shortlist (Scout); my FAMC build 11-18 after 20:00.
