@@ -257,3 +257,4 @@
 - Run 78 (11-18 09:00): A1 cleared for tonight.
 - Run 79 (11-18 11:00): REPS3 reporting fixes required.
 - Run 80 (11-18 13:00): REPS3 move/bench fixes; may slip a day.
+- Run 81 (11-18 15:00): REPS3 guest fix (assert 18).
