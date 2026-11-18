@@ -35,6 +35,7 @@ IDS = [
     "guild-card", "guild-asof", "guild-head", "guild-bullets", "guild-progress", "guild-next", "guild-roles",
     "guild-roles-list", "guild-link",   # added 2026-11-09 (Research Guild)
     "tpd-card", "tpd-body",   # added 2026-11-12 (Total trades per day, all accounts)
+    "skill-card", "skill-asof", "skill-body", "skill-rule",   # added 2026-11-18 (LEARN1 Model skill)
 ]
 
 # card / section titles (h2 text; a title may gain extra words, never lose these)
@@ -50,6 +51,7 @@ TITLES = [
     "Market Compass (live)",    # added 2026-11-09
     "Research Guild",   # added 2026-11-09
     "Total trades per day (all accounts)",   # added 2026-11-12
+    "Model skill (LEARN1)",   # added 2026-11-18
 ]
 
 # leaderboard COLS entries [key, header] and how many tables carry each (setup leaderboard + generated leaderboard)
@@ -118,6 +120,7 @@ SOURCES = [
     "../live/decisions.json",   # added 2026-10-22 (Your decisions card)
     "mcf-data-compass/", "compass/latest.json",   # added 2026-11-09 (Market Compass (live))
     "https://raw.githubusercontent.com/misiti15/MCF/mcf-guild/", "summary/latest.json",   # added 2026-11-09 (Research Guild)
+    "../live/skill.json",   # added 2026-11-18 (LEARN1 Model skill)
 ]
 
 

@@ -30,6 +30,14 @@ Features (all at bar b's close, using bars <= b only; ATR = Wilder 14-bar ATR of
   qqq_ret1, qqq_fo   QQQ the same
   sector_ret1        same-bar return (%) of the mapped sector ETF (SECTOR: SMH for semis, IBIT for crypto names);
                      unmapped names use SPY's (so for them it duplicates spy_ret1 - documented, not hidden)
+LEARN1 inputs (owner "LEARN1 yes" 2026-11-17; EXTRA, live shadow from 2026-11-19; the frozen 21-input replay keeps FEATURES)
+  breadth_open       share of the panel's names (the Hunch universe) above their session open at bar b's close
+  breadth_ret1       share of the panel's names whose same bar b closed up (cross-section at the same close: no look-ahead)
+  sector_fo          % from the open of the mapped sector ETF (SECTOR; SPY for unmapped names)
+  vol_tod            this bar's volume / mean volume of the same bar b over the previous 5 sessions (>= 3 needed)
+  roll_spread        Roll (1984) effective-spread proxy in bps from the last 20 3-min close changes,
+                     2 * sqrt(max(0, -cov(dc_t, dc_t-1))) / close (no historical quotes, so this is a proxy)
+  Time of day was already an input (tod + five time-of-day buckets in the learners).
   Winsorized at fixed limits (CLIP): ATR-unit distances, returns and pressure at +-20, vol20 at 20, gap at +-30%.
 Educational only - not financial advice.
 """
@@ -65,13 +73,17 @@ CONTEXT = ["SPY", "QQQ", "SMH", "IBIT"]
 
 FEATURES = ["ret1", "ret3", "ret5", "vwap_atr", "rsi14", "rsi5", "vol20", "pressure", "gap", "fo", "orh", "orl",
             "pdh", "pdl", "atr_pct", "tod", "spy_ret1", "spy_fo", "qqq_ret1", "qqq_fo", "sector_ret1"]
+# LEARN1 (owner 2026-11-17): cheap point-in-time inputs added to the live shadow (live.extend_model gives them zero
+# weight at first; the learners pick them up online). Research only - Hunch feeds nothing to trading.
+EXTRA = ["breadth_open", "breadth_ret1", "sector_fo", "vol_tod", "roll_spread"]
+ALL_FEATURES = FEATURES + EXTRA
 
 
 # winsor limits (fixed in advance): a near-zero ATR or an unadjusted split (e.g. UVXY / SOXS reverse splits) would
 # otherwise give distances of 10^5 ATR and swamp the running scaler
 CLIP = {**{k: (-20.0, 20.0) for k in ("ret1", "ret3", "ret5", "vwap_atr", "fo", "orh", "orl", "pdh", "pdl",
                                        "pressure")},
-        "vol20": (0.0, 20.0), "gap": (-30.0, 30.0), "atr_pct": (0.0, 10.0)}
+        "vol20": (0.0, 20.0), "vol_tod": (0.0, 20.0), "roll_spread": (0.0, 200.0), "gap": (-30.0, 30.0), "atr_pct": (0.0, 10.0)}
 
 
 def cache_dir(path: str | os.PathLike | None = None) -> Path:
@@ -191,6 +203,14 @@ def _own_segment(d: pd.DataFrame) -> pd.DataFrame:
     d["bret"] = (c / pc - 1) * 100  # same-bar return in % (context use)
     d["range"] = h - lo
     d["range_med20"] = d["range"].rolling(20, min_periods=20).median()
+    # LEARN1: volume vs the same bar of the previous 5 sessions; Roll spread proxy (bars <= b only)
+    gb = d.groupby("b", sort=False)["v"]
+    lag = pd.concat([gb.shift(k) for k in range(1, 6)], axis=1)
+    prev = lag.mean(axis=1).where(lag.notna().sum(axis=1) >= 3)
+    d["vol_tod"] = v / prev.replace(0, np.nan)
+    dc = c.diff()
+    cov = dc.rolling(20, min_periods=20).cov(dc.shift(1))
+    d["roll_spread"] = 2 * np.sqrt((-cov).clip(lower=0)) / c * 1e4
     first = d["date"] == d["date"].iloc[0]
     d["warmup"] = first.astype(np.int8)
     return d
@@ -224,16 +244,24 @@ def build_panel(symbols=None, cache=None, verbose: bool = False, loader=None) ->
             c = context(src)
             cf = c.reindex(key) if c is not None else pd.DataFrame(index=key, columns=["bret", "fo_pct"], dtype=float)
             f[f"{name}_ret1"] = cf["bret"].to_numpy()
-            if name != "sector":
-                f[f"{name}_fo"] = cf["fo_pct"].to_numpy()
+            f[f"{name}_fo"] = cf["fo_pct"].to_numpy()
+        live = (f["filled"] == 0).to_numpy()
+        f["_up_open"] = np.where(live & np.isfinite(f["fo_pct"]), (f["fo_pct"] > 0).astype(float), np.nan)
+        f["_up_bar"] = np.where(live & np.isfinite(f["bret"]), (f["bret"] > 0).astype(float), np.nan)
         for k, (lo, hi) in CLIP.items():
             f[k] = f[k].clip(lo, hi)
         f.insert(0, "symbol", s)
-        keep = ["symbol", "date", "b", "filled", "warmup", "o", "h", "l", "c", "v", "atr", "range_med20"] + FEATURES
-        f = f[keep]
+        own = [k for k in ALL_FEATURES if k not in ("breadth_open", "breadth_ret1")]
+        keep = ["symbol", "date", "b", "filled", "warmup", "o", "h", "l", "c", "v", "atr", "range_med20"] + own
+        f = f[keep + ["_up_open", "_up_bar"]]
         f[keep[5:]] = f[keep[5:]].astype(np.float32)  # memory at 100 / 200 tickers
         rows.append(f)
-    return pd.concat(rows, ignore_index=True)
+    out = pd.concat(rows, ignore_index=True)
+    # LEARN1 breadth: the cross-section of the panel's names at the SAME bar close (point in time)
+    g = out.groupby(["date", "b"], sort=False)
+    out["breadth_open"] = g["_up_open"].transform("mean").astype(np.float32)
+    out["breadth_ret1"] = g["_up_bar"].transform("mean").astype(np.float32)
+    return out.drop(columns=["_up_open", "_up_bar"])
 
 
 def period_of(dates) -> np.ndarray:
