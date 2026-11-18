@@ -409,3 +409,7 @@ Added research/obs_board.py (parsed ts). HKS950 waits for Skeptic's re-sign of S
 ## Run 66 — 2026-11-17 ~17:41 ET
 Owner adopted RULE21-DB (decision bar) today: official FWDCAL verdict from MCF replay_cal rule21(). HKS950 CLOSED (L20 t 2.18 < 2.46).
 Suggested re-cutting its strong 15:30 slot to 15:30-15:55 (auction vs last-half-hour), descriptive.
+
+## Run 67 — 2026-11-17 ~19:41 ET
+BLKOUT closed (NOTES.md): VALID ex-market -0.0009R t -0.14; negative in all periods; report-day k=0 weakest (BMO t -3.57). FWDCAL fresh:
+exact-minute 0/10 (stable offset); official RULE21-DB line pending from Builder. HKS950 15:30-15:55 re-cut: 84% reachable (not auction).
