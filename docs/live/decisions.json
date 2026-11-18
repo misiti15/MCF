@@ -1287,8 +1287,8 @@
   ],
   "why": "Owner asked for live-funds pilot sizing plans on 11-16.",
   "link": "research/owner_inbox/OPEN_ITEMS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-17 owner: no (neither LIVE500 nor LIVE2K plan)"
  },
  {
   "code": "INACT",
@@ -1355,8 +1355,8 @@
   ],
   "why": "Owner 11-17: the -2R cap may hinder some setups. RW7 is the one setup where the evidence is clear.",
   "link": "research/latch_review_1117/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-17 owner: leave the -2R latch as is (LATCH-RW7 not taken)"
  },
  {
   "code": "LATCH-RW1",
@@ -1369,6 +1369,35 @@
   ],
   "why": "Passes the review's fixed gate, but the gain comes from 3 days.",
   "link": "research/latch_review_1117/RESULTS.md",
+  "status": "answered",
+  "answered": "2026-11-17 owner: leave the -2R latch as is (covers RW1 too)"
+ },
+ {
+  "code": "ODPREP",
+  "title": "On Deck prep pass, then 10 sessions under Primary's exact rules before any promotion",
+  "what": "On Deck gets one Workbench prep pass (at most 2 changes), then runs at least 10 sessions under Primary's exact rules before a promotion is suggested; any Primary tuning goes back through testing copies first.",
+  "recommend": "Yes",
+  "numbers": [
+   "11-17: On Deck -39.8R on 120 trades vs Primary -2.46R on 22",
+   "Promotion hold in place since 11-17 (PROMO2)"
+  ],
+  "why": "A setup should reach Primary having already run under Primary's rules, so the record it brings is comparable.",
+  "link": "research/owner_inbox/2026-11-17.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "L3-AM",
+  "title": "One pre-registered test: L3-gap-slope-fromopen-FD with no entries after 13:00",
+  "what": "Run one pre-registered test of Gap-Down Recovery Fade (all day) with entries stopped at 13:00; research first, no live change until it passes.",
+  "recommend": "Yes",
+  "numbers": [
+   "Live AM entries +0.31R/trade (283 tr) vs PM +0.04R (95 tr)",
+   "13:00-15:00 live: 35 trades -12.8R",
+   "Replay AM +0.19R vs PM -0.17R; 2-year gap small and flips"
+  ],
+  "why": "The recent afternoon weakness is clear live and in the replay; a single locked test checks it before any change.",
+  "link": "research/l3_bespoke_1117/RESULTS.md",
   "status": "open",
   "answered": null
  }
