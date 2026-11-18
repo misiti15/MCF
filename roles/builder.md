@@ -2,7 +2,9 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-18 16:40 ET)
+## State (2026-11-18 18:30 ET)
+- famc_shadow.py prints tally() every run (+ --tally): raw net per session, mean with/without best session (11-11 is best:
+  +0.129 -> -0.112R), share; selftest exact. Fixed journal_final selftest (None looked up the real commit; sentinel now).
 - TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
   offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
   BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
@@ -41,6 +43,7 @@ live R on one basis across LR8 (#37). Every number in a post comes from an out f
 - Never `git stash` while jobs write into the worktree; never `git fetch --depth=1` on data branches; keep background jobs < 2 h.
 
 ## Failed (owned)
+- 11-18 famc journal_final selftest 'no journal' case used commit=None = live lookup; passed by luck until the 11-18 commit.
 - 11-12 03:45 claimed buying power drove Gen's early halt; the cap test disproved it (corrected the same night).
 - 11-13 nearly ran a --depth=1 fetch on a data branch mid-run (caught before it executed).
 - Rejected engine variants: --bp buying-power cap, --stopslip replacement (max-form adopted instead by Lead).

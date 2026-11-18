@@ -68,17 +68,37 @@ def selftest():
                                    ("no journal", N("2026-11-19 01:00"), None, True)]:
         assert bool(journal_final("2026-11-18", now, com)) == refuse, name
     print("selftest ok: journal-final guard (6 cases)")
+    T = pd.DataFrame(dict(date=["d1", "d1", "d2", "d3"], net=[0.5, 0.1, -1.0, 0.2], ex=[0.6, 0.2, -0.8, 0.3],
+                          ctl_ex=[0.1, 0.1, 0.0, -0.1]))
+    t = tally(T)   # deltas d1 +0.300, d2 -0.800, d3 +0.400 -> mean -0.033, without best (d3) -0.250, share 57%
+    assert "mean -0.033" in t and "(d3, +0.400) -0.250" in t and "57%" in t and "d1 +0.300" in t, t
+    print("selftest ok: tally (with / without best session)")
     print("selftest ok: fade trade (time exit, 1-ATR stop, gap-through fill, costs), gap buckets, e-process hook")
 
 
-def journal_final(day: str, now=None, commit=None) -> list[str]:
+def tally(F: pd.DataFrame) -> str:
+    """Lead 11-18 17:00 FAMC summary standard (Skeptic 21:50): raw net first; running mean per session with AND without its
+    best session (one-big-day rule) plus that session's share; K_edge < 1 = no evidence either way."""
+    G = F.dropna(subset=["ctl_ex"]).groupby("date")
+    net = G.net.mean(); x = G.apply(lambda g: g.ex.mean() - g.ctl_ex.mean())
+    b = x.idxmax(); xb = x.drop(b)
+    share = x[b] / x[x > 0].sum() if (x > 0).any() else float("nan")
+    return (f"FAMC tally: {len(x)} scored sessions; raw net per session " + ", ".join(f"{d} {v:+.3f}" for d, v in net.items()) +
+            f"; ex-market delta mean {x.mean():+.3f} R, without best session ({b}, {x[b]:+.3f}) {xb.mean() if len(xb) else float('nan'):+.3f} R; "
+            f"best session = {share:.0%} of positive delta. K_edge < 1 = no evidence either way.")
+
+
+_LOOKUP = object()
+
+
+def journal_final(day: str, now=None, commit=_LOOKUP) -> list[str]:
     """Skeptic 11-18 00:51 / Lead 01:00 (checklist #40): refuse unless origin/mcf-data journal.db's last commit is at or after
     <day> 15:55 ET and, when <day> is today, >= 10 min old. One source: fwdcal/mirror.guard_decide (not a copy)."""
     import subprocess
     _a = sys.argv; sys.argv = [sys.argv[0]]
     sys.path.insert(0, str(HERE.parent / "fwdcal")); import mirror as M  # noqa: E402
     sys.argv = _a
-    if commit is None:
+    if commit is _LOOKUP:
         ts = subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--format=%cI", "origin/mcf-data", "--", "journal.db"],
                             capture_output=True, text=True).stdout.strip()
         commit = pd.Timestamp(ts) if ts else None
@@ -177,8 +197,12 @@ def main():
           f"RAW mean delta {x.mean():+.3f} R (unclipped; fix 5) vs clipped at cap {CAP}: {np.clip(x, -CAP, CAP).mean():+.3f}; "
           f"gross mean {F.gross.mean():+.3f}" + (f"; K_edge {st['K_edge']} K_harm {st['K_harm']} "
           f"(alarms at 20: edge day {st['edge_alarm_day']}, harm day {st['harm_alarm_day']})" if st else ""))
+    print(tally(F))
     print("Journal-only shadow; nothing trades. Educational only - not financial advice.")
 
 
 if __name__ == "__main__":
-    selftest() if "--selftest" in sys.argv else main()
+    if "--tally" in sys.argv:
+        print(tally(pd.read_csv(HERE / "famc_forward.csv"))); print("Educational only - not financial advice.")
+    else:
+        selftest() if "--selftest" in sys.argv else main()
