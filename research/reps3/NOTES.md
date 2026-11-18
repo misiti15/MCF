@@ -47,3 +47,14 @@ score.py takes --end <session>, so a later, possibly partial session is never co
 
 Added 2026-11-15 19:20 ET (Skeptic's past-window hardening): a last commit ON the session day must be at or after 15:55 ET
 (a midday push or a dead EOD job is refused as 'pre-close commit'); selftest plants both. Live: 11-13 passes (commits 15:56-16:06).
+
+## 11-18 reporting fixes (code only, before the run; forecast unchanged)
+Skeptic -1550-1/-1551-2, Observer -1152-1, Skeptic -1750-1, Lead -1100-1/-1300-1. score.py prints:
+(1) forecast setups matched by setup id, any account; (2) non-forecast setups apart; (3) setups whose realized accounts != {home},
+which catches split setups such as the GY-BENCH guests; (4) 11-12..11-16 vs 11-17..end (TSZ1); (5) every ledger entry in the window;
+(6) eligibility-adjusted: realized only over sessions a setup was eligible, and its forecast scaled to those sessions. The excluded
+(setup, day) pairs are printed.
+Eligibility source: research/ledger.jsonl patches `strategies.<id>.benched` {from, until}, and `strategies.<id>.enabled`
+[true, false] from the effective date, unless the setup signals somewhere later (then it is enabled somewhere). Known limit: a
+setup disabled and re-enabled elsewhere that never signals afterwards counts as off. On the current ledger: 38 (setup, day) pairs
+are off, all on 11-18 (GY-BENCH). Selftests: a GY-BENCH guest pattern is flagged, and a benched case gives exactly 10/3 vs 10/3/wk.

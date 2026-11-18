@@ -36,8 +36,21 @@ def selftest():
     with contextlib.redirect_stdout(buf): report_fixes(S2, F2, 3)
     o = buf.getvalue()
     assert "realized 6.7/wk (2 of 2" in o and "1 setups, realized 1.7/wk" in o, o
-    assert "outside their forecast account: 1" in o and "On Deck, Testing F" in o and "y: forecast On Deck -> realized in Testing F" in o, o
+    assert "besides) their forecast account: 2" in o and "Gen, On Deck, Testing A, Testing F" in o and "y: forecast On Deck -> realized in Testing F" in o, o
     assert "11-12..11-16 (pre-TSZ1): 2 sessions" in o and "11-17..end" in o, o
+    # (a) GY-BENCH guest pattern: home 11-12/13, Graveyard 11-18 -> must be flagged
+    S3 = pd.DataFrame(dict(day=["2026-11-12", "2026-11-13", "2026-11-18"], strategy=["g"] * 3, status=["submitted"] * 3, reason=[None] * 3,
+                           account=["Testing E", "Testing E", "Graveyard"]))
+    F3 = pd.DataFrame(dict(account=["Testing E"], setup=["g"], p_day=[1.0], src=["live"]))
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf): report_fixes(S3, F3, 3)
+    assert "besides) their forecast account: 1" in buf.getvalue() and "g: forecast Testing E -> realized in Graveyard, Testing E" in buf.getvalue(), buf.getvalue()
+    # (b) benched on 11-18: forecast 1.0/day x 2 eligible of 3 sessions -> 5*2/3 = 3.3; realized 2 days -> 3.3; 1 pair excluded
+    L = [dict(id="t", effective="2026-11-18", patch={"strategies.b.benched (graveyard)": [None, {"from": "2026-11-18", "until": "2026-11-24"}]})]
+    S4 = pd.DataFrame(dict(day=["2026-11-12", "2026-11-13", "2026-11-18"], strategy=["b", "b", "z"], status=["submitted"] * 3, reason=[None] * 3, account=["Graveyard"] * 3))
+    F4 = pd.DataFrame(dict(account=["Graveyard"], setup=["b"], p_day=[1.0], src=["live"]))
+    with contextlib.redirect_stdout(io.StringIO()): fc, re_, exc = eligibility(S4, F4, S4, 3, L)
+    assert abs(fc - 10 / 3) < 1e-9 and abs(re_ - 10 / 3) < 1e-9 and exc == [("b", "2026-11-18")], (fc, re_, exc)
     print("selftest ok")
 def main(J, FC):
     S = load(J); F = pd.read_csv(FC); n, sd = realized(S)
@@ -61,6 +74,46 @@ def main(J, FC):
     print("Educational only - not financial advice.")
 
 TSZ1 = "2026-11-17"
+import re as _re
+def ledger_offdays(days, L=None):
+    """(setup, day) pairs a setup was NOT eligible (owner playing-time rule 11-03: benched sessions are excluded from per-session stats).
+    Source: research/ledger.jsonl patches 'strategies.<id>.benched (...)': {from, until} -> off on those days;
+    'strategies.<id>.enabled (...)': [true, false] -> off from the effective date (unless it signals somewhere later: then enabled somewhere)."""
+    if L is None:
+        import json as _j
+        L = [_j.loads(l) for l in open("/home/user/MCF/research/ledger.jsonl") if l.strip()]
+    off, disabled = set(), {}
+    for x in L:
+        eff = str(x.get("effective", x.get("date", "")))
+        for k, v in (x.get("patch") or {}).items():
+            m = _re.match(r"strategies\.(.+)\.benched\b", k)
+            if m and isinstance(v, list) and isinstance(v[-1], dict):
+                for d in days:
+                    if v[-1].get("from", "") <= d <= v[-1].get("until", "9999"): off.add((m.group(1), d))
+            m = _re.match(r"strategies\.(.+)\.enabled\b", k)
+            if m and isinstance(v, list) and v[:2] == [True, False]: disabled[m.group(1)] = eff
+    return off, disabled
+
+def eligibility(a, F, S, n, L=None):
+    """Lead lead-20261118-1300-1 (b): realized over eligible sessions only; forecast scaled to the same sessions."""
+    days = sorted(S[(S.day >= START) & (S.day <= END)].day.unique()); off, disabled = ledger_offdays(days, L)
+    last = a.groupby("strategy").day.max()
+    for k, eff in disabled.items():
+        if not (k in last.index and last[k] >= eff):
+            off |= {(k, d) for d in days if d >= eff}
+    fset = set(F.setup); sd = a.groupby(["strategy", "day"]).size().reset_index()[["strategy", "day"]]
+    keep = ~sd.apply(lambda r: (r.strategy, r.day) in off, axis=1) if len(sd) else pd.Series(dtype=bool)
+    sd = sd[keep] if len(sd) else sd
+    p = F.groupby("setup").p_day.sum()
+    el = {k: sum((k, d) not in off for d in days) for k in fset}
+    fc = 5 * sum(p.get(k, 0) * el[k] for k in fset) / n
+    re_ = 5 * len(sd[sd.strategy.isin(fset)]) / n
+    exc = sorted(x for x in off if x[0] in fset and x[1] in days)
+    print(f"(6) eligibility-adjusted (benched / disabled days excluded): forecast {fc:.1f}/wk vs realized {re_:.1f}/wk for forecast setups; "
+          f"excluded (setup, day) pairs: {len(exc)}")
+    for k, d in exc[:40]: print(f"      excluded {d} {k}")
+    if len(exc) > 40: print(f"      ... {len(exc) - 40} more")
+    return fc, re_, exc
 def report_fixes(S, F, n):
     """Skeptic skeptic-20261118-1550-1/-1551-2, Lead lead-20261118-1100-1: reporting only, the forecast is unchanged."""
     a = S[(S.day >= START) & (S.day <= END) & (S.status == "submitted")]
@@ -73,14 +126,15 @@ def report_fixes(S, F, n):
     for k, v in notF.sort_values(ascending=False).head(10).items(): print(f"      {k}: {5 * v / n:.1f}/wk")
     home = F.groupby("setup").account.first()
     now = a.groupby("strategy").account.agg(lambda x: ", ".join(sorted(set(x))))
-    mv = [(k, home[k], now[k]) for k in now.index if k in home.index and home[k] not in now[k].split(", ")]
+    mv = [(k, home[k], now[k]) for k in now.index if k in home.index and set(now[k].split(", ")) != {home[k]}]   # any account other than home (Observer 11-18: split setups)
     flagged = sorted({h for _, h, _ in mv} | {x for _, _, w in mv for x in w.split(", ")})
-    print(f"(3) setups that signalled outside their forecast account: {len(mv)}; per-account diffs are NOT like-for-like in: {', '.join(flagged) or 'none'}")
+    print(f"(3) setups that signalled in any account other than (or besides) their forecast account: {len(mv)}; per-account diffs are NOT like-for-like in: {', '.join(flagged) or 'none'}")
     for k, h, w in mv[:15]: print(f"      {k}: forecast {h} -> realized in {w}")
     for lab, lo, hi in (("11-12..11-16 (pre-TSZ1)", START, "2026-11-16"), ("11-17..end (TSZ1: testing half-size lots, cap 100)", TSZ1, END)):
         b = a[(a.day >= lo) & (a.day <= hi)]; m = b.day.nunique()
         if m: print(f"(4) {lab}: {m} sessions, realized {5 * b.groupby(['account', 'strategy']).day.nunique().sum() / m:.1f}/wk; "
                     f"forecast setups only {5 * b[b.strategy.isin(fset)].groupby(['account', 'strategy']).day.nunique().sum() / m:.1f}/wk")
+    eligibility(a, F, S, n)
     try:
         import json as _j
         L = [_j.loads(l) for l in open("/home/user/MCF/research/ledger.jsonl") if l.strip()]
