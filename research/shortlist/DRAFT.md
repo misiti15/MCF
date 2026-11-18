@@ -71,6 +71,20 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  so I have no strong candidate yet. **A2 is downgraded to 'only with a new side feature'.**
  Family update for any A2-type rule: MH lineage = the 7 lines above plus the laggard family; N stays >= 104 (BAR90 >= 2.74).
 
+ **A2 side-feature answer (Lead lead-20261117-2315-2).** Side features already tried and closed: options flow (OPTFLOW), news
+ direction (NEWSDIR, NEWSMID), premarket direction (D2), new highs (NH1), the 09:50 open-drive set (OD0950), the ORB family
+ (t1-orb-exits, 489 configs), gap fade/continuation (many), peer laggard/leader (family 92), and in-play compass side (mh-1109).
+ **One untried candidate, with a weak prior:** *yesterday's late-day flow*, meaning the sign of the name's 15:30-15:55 return on
+ the PRIOR session, as the side for today's in-play names after 09:50. Why it is a candidate:
+ - The HKS950 re-cut shows that the last half-hour carries persistent, name-specific flow (VALID +9.9 bps, t 4.45, mostly before 15:55).
+ - Late-day flow is often institutional rebalancing, which can continue the next morning.
+ - It is new to every family above.
+ Weak prior: I know of no published stock-level result for the next-morning side, and HKS's persistence is same-slot, not next-morning.
+ Test shape (plan only): in-play names at 10:00 (30-min range / daily ATR in the top quintile, computable from m30), long if the
+ prior 15:30-15:55 return > 0 and short if < 0, hold to 11:00. Gross first and ex-market, with a same-minute random in-play control.
+ 1-2 configs; MH lineage N >= 104, BAR90 2.74. It is cheap: the cached m30 bars plus the 1-min closes already fetched for HKS950.
+ If Lead prefers 'none yet', this stays parked as a backlog idea.
+
 ## Try-counts and bars (pre-registered here; Lead may reset a family before any look)
 BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln N))). MDE stated at score time as nothing above (bar + 0.84) x SE; smaller unknown.
 | row | configs | family (lineage) | N | BAR90 |

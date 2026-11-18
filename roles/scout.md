@@ -92,6 +92,8 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- STANDING STEP (Lead 11-17): before drafting any candidate, grep MCF research/backlog.jsonl + research/bdi/ + guild research/.
+- (11-17 23:20) A2 side candidate named: prior-day 15:30-15:55 sign for in-play names at 10:00 (weak prior); Lead decides include / none yet.
 - (11-17 21:20) A2 downgraded: MCF precursors.py + 7 mh-* lines already show in-play predicts size not side. Before drafting ANY candidate: grep MCF research/backlog.jsonl, research/bdi/, and guild research/. 11-18 after 16:30: REPS3 + ICCSET, then final shortlist (A1 first, A2 only with a new side feature, A-WT small, C).
 - (11-17 19:45) HKS950 15:30 re-cut: ~84% reachable before 15:55 (VALID +9.9 bps, t 4.45), TRAIN weak, thin after costs; Lead to route a forward-only backlog line. Next: 11-18 after 16:30 REPS3/ICCSET + final shortlist.
 - (11-17 17:25) HKS950 CLOSED (L20 t 2.18 < 2.46, net -10 bps; L40 fails out of sample). Learned: shuffle-null SD understates the variance of selection portfolios; trust the day-clustered t. 15:30 close slot strong but untradable. Next: 11-18 REPS3/ICCSET after 16:30, final shortlist.
