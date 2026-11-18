@@ -2,7 +2,7 @@
 
 _Educational only — not financial advice._
 
-Research files copied from branch `mcf-guild` (files < 200 kB; no data parquet, no caches). Each study was pre-registered (PLAN.md + reading table), pre-attacked by Skeptic, scored ONCE, and audited. Locked block 2024-11-01..2025-02-28 never read. Source names per docs/GLOSSARY.md.
+Research files copied from branch `mcf-guild` (files < 200 kB; no data parquet, no caches). Each study was pre-registered (PLAN.md + reading table), pre-attacked by Skeptic, scored ONCE, and audited. Locked block 2024-11-01..2025-02-28 never read by these studies (see the 11-15 disclosure in PR #201: an old Observer index cache had read the block's SPY/QQQ/IWM path; purged, guards added). Source names per docs/GLOSSARY.md.
 
 | Study | Source | Result | Bar | Verdict | Smallest effect it could see |
 |---|---|---|---|---|---|
