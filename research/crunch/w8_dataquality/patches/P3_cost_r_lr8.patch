@@ -1,0 +1,38 @@
+diff --git a/mcf/costs.py b/mcf/costs.py
+index 49fd2f235..e226b29be 100644
+--- a/mcf/costs.py
++++ b/mcf/costs.py
+@@ -143,3 +143,33 @@ def parts_from_row(row) -> list[tuple[float, float, str]]:
+     why = why.split("+", 1)[1] if why.startswith("scaled+") else why
+     why = "stop" if why == "breakeven" else why
+     return [(float(g("shares", 0) or 0), float(g("exit", 0) or 0), why)]
++
++
++# ------------------------------------------------------------------------- W8-DQ: one cost basis across the 11-12 change
++def cost_r_lr8(df: pd.DataFrame, cfg: dict | None) -> pd.Series:
++    """Per-row R after costs with the LR8 live model applied to EVERY live row, whatever its date (research / report
++    only; the journal's pnl_adj is never changed). Before costs.live_model.effective_from (2026-11-12) the journal booked
++    only the flat stop allowance, so a since-start average mixes two cost bases (~0.04R per trade apart on the live
++    journals, crunch W8). Rows on/after the effective date keep their booked pnl_adj; rows without pnl_adj (what-if /
++    backtest) keep r_multiple; rows without a risk keep cost_r. The model's fee rates are taken as of the effective date
++    for earlier rows (the rates in force then are the same dated entries)."""
++    out = cost_r(df)
++    model = live_model(cfg)
++    if model is None or df is None or not len(df) or "pnl_adj" not in df:
++        return out
++    eff = str(model.get("effective_from") or "0000")[:10]
++    for i, row in df.iterrows():
++        if pd.isna(row.get("pnl_adj")) or str(row.get("date"))[:10] >= eff:
++            continue
++        try:
++            risk = abs(float(row["entry"]) - float(row["stop"])) * abs(float(row["shares"]))
++            if not risk > 0:
++                continue
++            tgt = row.get("target")
++            tgt = None if tgt is None or pd.isna(tgt) else float(tgt)
++            c = lot_costs(int(row["side"]), float(row["entry"]), float(row["shares"]), parts_from_row(row), tgt,
++                          str(row.get("date"))[:10], model)["total"]
++            out[i] = (float(row["pnl"]) - c) / risk
++        except (TypeError, ValueError, KeyError):
++            continue
++    return out
