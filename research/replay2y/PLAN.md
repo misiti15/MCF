@@ -68,3 +68,23 @@ changed, so no locked holdout is scored. Every setup is reported, good or bad.
 
 SRCV1 (research/src_value) found that no non-live source predicted later live results so far. This replay is screening
 only (weight 0) until it earns trust via the overlap check and a later SRC-VALUE re-score.
+
+---
+
+## Addendum A (2026-11-18 18:30 UTC, after a timing test, before any 2-year result was scored)
+
+- **Compute:** one account-session takes ~500-800 s on one core (testing2 2025-06-02: 799 s; primary 494 s, testing
+  608 s; the per-symbol feature frames of the full ~4,200-name universe dominate, so running accounts together saves
+  little). All 76 replayable sessions × 10 accounts ≈ 34 h on this 4-core box — not possible in one sitting.
+- **Sample (fixed now, before results):** 13 sessions spread evenly over both stored periods —
+  2024-10-11, 10-17, 10-23, 10-29 and 2025-04-30, 05-07, 05-14, 05-21, 05-28, 06-02, 06-10, 06-18, 06-26 (2024-09
+  sessions skipped: < 24 days of prior packs). Jobs run in account tiers: (1) primary, testing, testing2, explore1,
+  livelab; (2) testingd, testinge, testingf; (3) gen; (4) graveyard. Whatever is not finished is reported as not run;
+  the nightly job (RESULTS.md) extends the sample to every replayable session.
+- **Overlap sample:** live sessions 2026-11-12, 11-13, 11-17 (+ 11-16 if time), all 10 accounts, `--as-live`,
+  params_2y.json (= params_v2 with poll logs and recorded quotes off).
+- **Fast-lane flag (REPS2), fixed now:** live trades < 20 (pooled over accounts, sessions to 2026-11-17) AND replay
+  trades ≥ 30 AND replay avg R after LR8 > +0.027R (the replay_cal haircut) AND avg R w/o best day > 0 AND best-day
+  share < 50% AND green-day % ≥ 50% AND avg R > 0 in both periods (2024-10 and 2025). Flag only, no move.
+- **Supports / contradicts:** setups with ≥ 30 replay trades and ≥ 20 live trades; supports = same sign, contradicts =
+  opposite sign; ranked by |replay avg R − live avg R| (contradicts) and by min(|replay|, |live|) (supports).
