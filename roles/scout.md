@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-18 01:15) A2 'none yet'; A1 + side line. A1 needs a 5-min fetch for ~250 catalogue symbol-days (m30 covers 28%). SRCV1/ODPREP folded into C.
 - STANDING STEP (Lead 11-17): before drafting any candidate, grep MCF research/backlog.jsonl + research/bdi/ + guild research/.
 - (11-17 23:20) A2 side candidate named: prior-day 15:30-15:55 sign for in-play names at 10:00 (weak prior); Lead decides include / none yet.
 - (11-17 21:20) A2 downgraded: MCF precursors.py + 7 mh-* lines already show in-play predicts size not side. Before drafting ANY candidate: grep MCF research/backlog.jsonl, research/bdi/, and guild research/. 11-18 after 16:30: REPS3 + ICCSET, then final shortlist (A1 first, A2 only with a new side feature, A-WT small, C).

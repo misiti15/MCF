@@ -85,12 +85,24 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  1-2 configs; MH lineage N >= 104, BAR90 2.74. It is cheap: the cached m30 bars plus the 1-min closes already fetched for HKS950.
  If Lead prefers 'none yet', this stays parked as a backlog idea.
 
+ **Decisions folded in (Lead lead-20261118-0100-1, Skeptic skeptic-20261118-0550-1):** A2 is 'none yet' as a scored candidate.
+ A1 gains ONE descriptive line, 0 configs: yesterday's 15:30-15:55 sign vs today's 09:30-09:50 side (the competitor; 09:50
+ anchor), side precision against 50% on the full denominator, gross and ex-market, day-clustered, MDE printed. It earns a plan
+ only if it beats 'today's early side'. Skeptic's prior: the usual next-morning finding is REVERSAL.
+ **A1 data check (descriptive prep, no outcome read):** the catalogue now holds 600 'all' rows; 253 are non-blackout, and 36% of
+ those have a decision point >= 09:50. The cached m30 list covers only 28% of the non-blackout catalogue symbols, so A1 needs a
+ small guarded 5-min fetch for the catalogue symbol-days (~250). The 512-name m30 list can serve as the full denominator for the
+ side line (fixed-list caveat, checklist 32).
+ **Owner rules since the draft (11-17):** SRCV1 gives the 2-year history 0 effective sessions, so every guild study informs rules
+ only and adds no record. ODPREP: a finding about a specific setup feeds its ONE testing-arena Workbench tune, never On Deck
+ directly. Candidate C's ranking must therefore use LIVE reps only; the lab quality is shown beside it, not blended.
+
 ## Try-counts and bars (pre-registered here; Lead may reset a family before any look)
 BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln N))). MDE stated at score time as nothing above (bar + 0.84) x SE; smaller unknown.
 | row | configs | family (lineage) | N | BAR90 |
 |---|---|---|---|---|
-| A1 remaining move after 09:50 | 0 (descriptive) | none | - | - |
-| A2 09:50 precursors, 6 catalogue features x 2 sides | 12 | Move-Hunt / laggard catch-up 92 (incl. MH4, bdi1028) | 104 | 2.74 |
+| A1 remaining move after 09:50 + 1 side line (yesterday's late sign vs today's early side) | 0 (descriptive) | none | - | - |
+| A2 09:50 precursors ('none yet'; Lead 11-18) | 0 | Move-Hunt / laggard catch-up 92 (incl. MH4, bdi1028) | 104 | 2.74 |
 | A3 setup-days estimate | 0 (descriptive) | none | - | - |
 | A-WT 'entered after the extreme' guard, 2 thresholds | 2 | entry-extension guards: CWT14 lineage 10 + obs-extension 4 | 16 | 2.12 |
 | C spotlight ranking input | 0 (descriptive) | none | - | - |
