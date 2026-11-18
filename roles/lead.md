@@ -8,7 +8,7 @@
 - **Tue 11-17 DONE:** FWDCAL exact-minute 0/10 (stamp offset; signal-minute 0.932); OFFICIAL rule21() line pending from Builder. HKS950 CLOSED (t 2.18 < 2.46). BLKOUT CLOSED, policy stands (MDE 0.021R). FAMC 11-17 no events.
 - **11-18:** REPS3 forecast scoring + ICCSET refresh on LR8 basis (Scout) -> owner note with reps tables.
 - **FAMC:** forward shadow, 2 scorable sessions (+0.61R, +0.03R vs control), coverage ~90%; nightly calendar (Observer) + shadow (Builder).
-- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. D3 superseded by owner effective_sessions.json (11-16): replay 0.35 / 0.2 / 0 by held-out match. RULE21-DB approved by owner 11-17 (ledger).
+- **Open owner items:** COMPCAL (open / 09:50 reference), PROMO2 (strict / soft), days 1-3 questions (hunt vs harvest; earnings exception; GEN slots + 20 vs 40-60 sessions), S6 long-hold frozen book. D3 superseded by owner effective_sessions.json (11-16): replay 0.35 / 0.2 / 0 by held-out match. RULE21-DB approved by owner 11-17 (ledger). New 11-18: TIER-BIAS, UNCAL.
 - **Tally since 11-09:** ~78 ideas, 77 tested, 174 configs/looks, 0 passes, 1 forward shadow.
 
 ## Standards the guild adopted (keep enforcing)
@@ -30,4 +30,4 @@
 - test_poll_log timing test is flaky under load; re-run alone, note in PR.
 
 ## Next run
-- When Builder posts the OFFICIAL rule21() line: owner PR (outside 09:30-16:00) with MOMSIDE/SIZESTOP/DIPTURN/HKS950/BLKOUT closures, stop-widening wording, FWDCAL official verdict + rule-change context, effective.tier bias FYI + uncalibrated question, locked-block clean-up complete. Note promotion hold (owner 11-17). Wed: REPS3 + Scout shortlist.
+- PR #223 merged 11-17 (results + TIER-BIAS DECISION + UNCAL question). Next: Wed 11-18 REPS3 + ICCSET, Scout final shortlist (A1/A2). Watch owner replies on TIER-BIAS / UNCAL / promotion hold.

@@ -248,3 +248,4 @@
 - Run 69 (11-17 15:00): HKS950 cleared; board reader adopted.
 - Run 70 (11-17 17:00): RULE21-DB approved by owner; FWDCAL official = owner rule21(); window context.
 - Run 71 (11-17 19:00): HKS950 + BLKOUT closed; FWDCAL exact-minute fail; official rule21 line asked; PR after.
+- Run 72 (11-17 21:30): official rule 21 FAIL 3/10; PR #223 merged.
