@@ -1,0 +1,129 @@
+== Q1 R by entry window x aligned with SPY move since prior close at entry (no look-ahead)
+al        False         True        
+half      check    fit  check    fit
+win                                 
+<10      -0.321 -0.189  0.009 -0.272
+10-11:30 -0.156 -0.153 -0.103 -0.156
+11:30-14 -0.142  0.001 -0.118 -0.016
+14-15    -0.049 -0.074 -0.047  0.019
+>=15     -0.038  0.338 -0.212 -0.212
+al        False  True 
+win                   
+<10        1395   1172
+10-11:30   8456   6105
+11:30-14   2730   3761
+14-15       957   1151
+>=15         68    126
+ skip against in <10: n 1395, R change +376.5 (fit +101.7, check +274.8), day-t 2.51, setups improve 32 / worsen 13
+   in Primary: n 67, R -17.2
+ skip aligned in >=15: n 126, R change +26.7 (fit +6.1, check +20.6), day-t 2.33, setups improve 20 / worsen 17
+   in Primary: n 0, R +0.0
+== Q2 Primary gap-fade trades (abs gap >= 2%, side against the gap) by setup
+n 121, R -58.0, fit -24.1, check -33.9, day-t of skipping 1.94, days 21
+ avg R saved per skipped trade w/o best day +0.394, best-day share 0.47
+                                                  count   mean     sum
+strategy                                   fade                       
+CWT13-vwapstretch-z05-long                 False     10 -0.462  -4.619
+                                           True       1  0.191   0.191
+CWT14-failbrk-pdl-p10-lowvol-long          False     70  0.072   5.024
+                                           True       8 -0.703  -5.624
+L3-gap-slope-fromopen-FD                   False    155  0.270  41.905
+                                           True       1 -1.303  -1.303
+L3-gap-slope-rsi5hi-FD                     False     22 -0.455 -10.005
+MF1-945-flowsell-vwapup                    False     24 -0.261  -6.272
+                                           True       1  1.525   1.525
+MF2-open-rsimidhi-flowsell                 False      4 -1.210  -4.838
+MF2-open-rsimidhi-flowsell-FD              False     83  0.249  20.698
+                                           True      28 -0.774 -21.680
+MF3-open-flowsell-rsi5hi                   False     28 -0.072  -2.012
+                                           True       1 -1.147  -1.147
+MF3-open-flowsell-rsi5hi-FD                False     42 -0.160  -6.738
+                                           True       3 -0.346  -1.039
+MF4-h40-open-flowsell                      False     18  0.107   1.931
+                                           True       3 -0.207  -0.621
+MF4-h40-open-flowsell-FD                   False    109 -0.332 -36.143
+                                           True      17 -0.539  -9.159
+MF5-flowsell-vwapup-rsi5hi                 False     30 -0.112  -3.359
+                                           True       1  0.574   0.574
+NM-ETF-late-dip-di-long                    False      7  0.159   1.112
+                                           True       2  0.412   0.824
+NS1-rsidip-rsi5pop-long                    False     11  0.301   3.306
+                                           True      12 -0.301  -3.612
+NS2-sma50break-overbought-short            False     54 -0.490 -26.472
+NS3-failed-vwap-reclaim-short              False      4 -0.648  -2.590
+                                           True       5 -0.104  -0.518
+NS3-failed-vwap-reclaim-short-FD           False     11 -0.109  -1.200
+                                           True      21 -0.513 -10.768
+NS4-pm-vwap-reclaim-oversold-short         False     20  0.025   0.508
+NS5-sma50-flush-oversold-long              False     37 -0.045  -1.652
+RW3-gapdn-rsi5pop-flowsell-short-FD        False    147  0.186  27.297
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD False    165  0.115  18.998
+RW6G1-ns2-up3-vwap2sd-short                False      3 -1.069  -3.206
+ST7-rsi50dn-long-pm-t1s1-FD                False     32  0.055   1.747
+                                           True       1  0.840   0.840
+exhaustion_short                           False     21 -0.308  -6.466
+                                           True       2 -0.158  -0.317
+heat_fade_long                             False     43 -0.120  -5.140
+heat_fade_short                            False     37 -0.228  -8.429
+                                           True      13 -0.459  -5.969
+orb20_a                                    False      8 -0.148  -1.183
+                                           True       1 -0.203  -0.203
+== Q3 same split, all accounts, setups with >=10 fade and >=10 non-fade trades: fade avg vs rest avg
+setups 62: fade worse in 36, better in 26, median delta -0.045R
+            count   mean      sum
+fam                              
+GEN          1018 -0.257 -261.661
+CWT14         876 -0.158 -138.534
+NS3           234 -0.175  -40.984
+MF2            48 -0.695  -33.379
+heat          303 -0.104  -31.529
+RW2            92 -0.229  -21.075
+RW4            89 -0.206  -18.306
+ST2            93 -0.114  -10.570
+CWT12         113 -0.074   -8.356
+NM            124 -0.000   -0.009
+CWT13         101  0.003    0.280
+exhaustion     89  0.086    7.636
+== Q4 early (<10:00) trades against SPY move-so-far: concentration and setups
+avg R saved per skipped trade w/o best day +0.234, best-day share 0.20, days 30
+ worst days {'2026-11-11': -75.2, '2026-10-14': -74.3, '2026-11-17': -62.6, '2026-11-09': -46.4, '2026-11-05': -44.6}
+ by side: {-1: {'count': 747, 'mean': -0.199}, 1: {'count': 648, 'mean': -0.352}} aligned by side: {-1: {'count': 554, 'mean': -0.089}, 1: {'count': 618, 'mean': -0.058}}
+                                                                                  count   mean     sum  count_al  mean_al
+strategy                                                                                                                 
+CWT14-failbrk-pdl-p05-long                                                          254 -0.384 -97.609     202.0   -0.044
+heat_fade_short                                                                     219 -0.220 -48.225      63.0   -0.260
+CWT14-failbrk-pdl-p10-long                                                          120 -0.385 -46.253      94.0   -0.107
+GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long     37 -1.011 -37.395       NaN      NaN
+heat_fade_long-FD                                                                    37 -0.750 -27.742      39.0   -0.359
+CWT14-failbrk-pdh-p10-short                                                         138 -0.196 -27.068     125.0   -0.086
+CWT14-failbrk-pdl-p05-lowvol-long                                                    57 -0.464 -26.457      50.0   -0.139
+MF3-open-flowsell-rsi5hi-FD                                                          38 -0.598 -22.715      15.0    0.287
+MF1-945-flowsell-vwapup-FD                                                           16 -0.938 -15.013      11.0    0.491
+GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long                                   30 -0.418 -12.533      14.0   -0.188
+MF5-flowsell-vwapup-rsi5hi-FD                                                        19 -0.635 -12.063       9.0    0.226
+heat_fade_short-FD                                                                   88 -0.103  -9.039      12.0   -1.344
+                                                                       count   mean     sum  count_al  mean_al
+strategy                                                                                                      
+CWT14-failbrk-pdl-p10-lowvol-long                                         16 -0.382  -6.107      13.0    0.059
+CWT14-failbrk-pdl-p05-R2A-long                                            20 -0.158  -3.166      15.0    0.005
+orb20_a                                                                   20 -0.139  -2.776      11.0   -0.198
+CWT14-failbrk-pdh-p10-lowvol-short                                        14  0.231   3.236      31.0   -0.184
+RW2-exhaustion-noon-adv150-short-FD                                       42  0.096   4.042      19.0   -0.368
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long     60  0.503  30.206     139.0    0.058
+ L3-gap-slope-fromopen-FD: early n 9, against n 4 avg -0.271, aligned avg -0.153
+ RW3-gapdn-rsi5pop-flowsell-short-FD: early n 5, against n 5 avg 0.041, aligned avg nan
+ RW5-heat30-flowsell-rsi5pop-gapdn-short-FD: early n 4, against n 4 avg -0.294, aligned avg nan
+ MF2-open-rsimidhi-flowsell-FD: early n 0, against n 0 avg nan, aligned avg nan
+ MF4-h40-open-flowsell-FD: early n 9, against n 5 avg -0.486, aligned avg -0.155
+ ST7-rsi50dn-long-pm-t1s1-FD: early n 0, against n 0 avg nan, aligned avg nan
+ NM-ETF-late-dip-di-long: early n 0, against n 0 avg nan, aligned avg nan
+           mean        count      
+al        False  True  False True 
+mag                               
+<0.2%    -0.320 -0.012   305   293
+0.2-0.5% -0.187 -0.157   502   334
+>0.5%    -0.320 -0.053   568   545
+== Q5 early-against excluding CWT12/CWT14 families (closed to new variants)
+ aligned=False: n 717 avg -0.233 fit -0.120 check -0.285
+ aligned=True: n 535 avg -0.068 fit -0.552 check 0.070
+ skip against: R change +166.9, day-t 1.47, improve 25 / worsen 11
