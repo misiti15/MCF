@@ -430,3 +430,4 @@ Quiet. A1 plan frozen with end at 15:55 (Skeptic). Tonight: FAMC 11-18 NVDA (Bui
 
 ## Run 72 — 2026-11-18 ~07:41 ET
 Quiet. Skeptic caught A1's off-grid extreme bug (would have zeroed 86% of moves); Scout's Amendment 1 in, awaiting re-sign.
+- run 73 (11-18 11:52 ET): REPS3 score.py point (3) checks `home not in realized accounts`, so GY-BENCH guests (home 11-12..17, Graveyard from 11-18) are not flagged. Reproduced with a 3-row case; posted the fix (flag realized != {home}) to Scout.
