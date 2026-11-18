@@ -32,8 +32,31 @@ MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
 MOVED_TE = {"RW3S-gapdn-flowsell-short-FD"}
 # moved out of the Graveyard to the testing arena (owner GY-RW6/ST4 arena 2026-11-12, effective 2026-11-13): block kept, disabled
 MOVED_OUT = {"RW6-ns2-up3-short-FD": "livelab", "ST4-emadn-long-am-t1s05-FD": "explore1"}
-# combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1
-STAYED_T1 = {"L3-gap-slope-lowdist-FD", "exhaustion_short-FD"}   # L3-gap-slope-fromopen-FD: promoted to Primary 2026-10-21
+# C3-EXIT100 (owner yes 2026-11-18, effective 2026-11-19; ledger 2026-11-19-c3-exit100): setup -> home it left
+MOVED_C3 = {
+    "GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short": "gen",
+    "CWT14-failbrk-pdl-p10-long": "testing2",
+    "GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short": "gen",
+    "GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long": "testingd",
+    "MF4-h40-open-flowsell-FD": "testing",
+    "CWT14-failbrk-pdl-p10-lowvol-long": "testingd",
+    "GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long": "testinge",
+    "GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long": "gen",
+    "CWT13-vwapstretch-z05-long": "testing2",
+    "MF2-open-rsimidhi-flowsell-FD": "testing",
+    "GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long": "testinge",
+    "GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long": "gen",
+    "GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": "explore1",
+    "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long": "livelab",
+    "GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long": "gen",
+    "GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long": "testingf",
+    "NS1-rsidip-rsi5pop-long-FD": "testinge",
+    "exhaustion_short-FD": "testing2",
+    "MF5-flowsell-vwapup-rsi5hi": "testing2",
+    "GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long": "gen",
+}
+# combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1 (exhaustion_short-FD later left by C3-EXIT100)
+STAYED_T1 = {"L3-gap-slope-lowdist-FD"}   # L3-gap-slope-fromopen-FD: promoted to Primary 2026-10-21
 # exhaustion_short-FD: single home Testing A from 2026-11-12 (ONDECK dual-home fix) - still a testing account, never the Graveyard
 
 
@@ -77,7 +100,7 @@ def test_only_its_own_setups_run(monkeypatch):
     own = set(raw) - guests
     rot = cfg["rotation"]
     on = _on(cfg)
-    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE and on == (own - set(MOVED_OUT) - set(rot["benched"])) | set(rot["guests"])
+    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) and on == (own - set(MOVED_OUT) - set(rot["benched"])) | set(rot["guests"])
     st = build_strategies(cfg)
     assert {s.name for s in st} == on
     assert sorted(cfg["live"]["setup_order"]) == sorted((own - set(MOVED_OUT)) | guests)   # every setup has a priority
@@ -104,6 +127,9 @@ def test_moves_switched_off_at_source(monkeypatch):
         assert not ((MOVED_T1 | MOVED_T2) & set(order)), acct
     te = _cfg(monkeypatch, "testinge")                                        # RW3S-GY: off in Testing E
     assert not (MOVED_TE & _on(te)) and not (MOVED_TE & set(te["live"]["setup_order"]))
+    for k, acct in MOVED_C3.items():    # C3-EXIT100: off at home, out of its order, on in the Graveyard
+        c = _cfg(monkeypatch, acct)
+        assert k not in _on(c) and k not in c["live"]["setup_order"], k
     for k, acct in MOVED_OUT.items():   # one home: on in the arena account, off in the Graveyard
         assert k in _on(_cfg(monkeypatch, acct)) and k in _cfg(monkeypatch, acct)["live"]["setup_order"], k
     grave = yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"]
@@ -152,4 +178,4 @@ def test_dashboard_and_assignments_know_the_graveyard():
     bench = set(A.resting({"graveyard": st}, d.get("asof_session")))
     guests = {k for k, v in st.items() if isinstance(v, dict) and v.get("guest") and v.get("enabled")}
     assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == \
-        ((MOVED_T1 | MOVED_T2 | MOVED_TE) - set(MOVED_OUT) - bench) | guests
+        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3)) - set(MOVED_OUT) - bench) | guests
