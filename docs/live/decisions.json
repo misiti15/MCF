@@ -1671,5 +1671,48 @@
   "link": "research/usage/u11_engine/RESULTS.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "GY-LIFE",
+  "title": "Standing Graveyard lifecycle rule (entry, review, archive, revival)",
+  "what": "Entry = C3-EXIT100. Friday after-close review. Archive when >= 100 Graveyard trades / >= 10 sessions, Graveyard avg <= -0.05 and w/o best day <= 0, whole record w/o best day <= -0.05, last-10 sessions <= 0, no pending family test. Revival only via a passed pre-registered tune, new mechanism evidence or owner request. Graduation at >= 15 Graveyard days, >= 30 trades, whole record w/o best day > 0 and best day < 50%. Archive = disabled + marker, record kept, never deleted.",
+  "recommend": "Yes",
+  "numbers": [
+   "Graveyard: 21 sessions, 9,330 resident trades, -1,095R, 2 green sessions",
+   "No resident positive w/o its best day over its whole record; 0 configurations tried"
+  ],
+  "why": "The Graveyard has no exit; C3-EXIT100 will send 31 more setups (-1,251R) into it.",
+  "link": "research/graveyard_review_1118/RULE.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GY-ARCHIVE-20",
+  "title": "Archive 20 Graveyard residents (disabled, record kept)",
+  "what": "Archive 9 CWT14 + 2 CWT12, heat_fade_short, heat_fade_short-FD, heat_fade_long-FD, RW2-FD, LIQ-orl-sweep, ST2-FD, CWT13-vwapstretch, CWT09-vwaploss, RW4-FD: enabled false + archived marker, record kept, re-testable, never deleted. 17 are benched to 11-24 already. Applied after a close with ledger + assignments.json.",
+  "recommend": "Yes",
+  "numbers": [
+   "-66.5R and 477 trades per session (82% of Graveyard trades), 10 sessions before GY-BENCH",
+   "Rest of the residents +4.0R/session (one-day: 11-12 = 186%)"
+  ],
+  "why": "Each meets every archive condition and no pending test covers it.",
+  "link": "research/graveyard_review_1118/TRIAGE.csv",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "USAGE1",
+  "title": "Usage redesign: Guild and Reddit aimed at mechanism gaps, leaner cadence",
+  "what": "Keep the Guild and Reddit scout, but feed both from one nightly gap list (Move Hunt missed categories + day types where Primary loses). Guild: Scout/Builder/Skeptic, one round per weeknight + Saturday (Lead/Observer disabled, kept). Reddit: weekly, only ideas on open gaps, tested by the Guild Builder. Top-5 Part B becomes the approved Workbench queue job (C3-WB/WB5); Part A weekly on Saturday. Session guard merged into the :51 glitch check. One scripted shadow/replay scorer. Parked review monthly. Safety checks, consultant, BDI, brief unchanged. No trigger changed yet.",
+  "recommend": "Yes",
+  "numbers": [
+   "~580 -> ~140 agent runs/week (-76%); ~1,150 -> ~290 cost units (-75%); Guild = 72% of runs now",
+   "Guild 78 ideas / 0 setups passed (3 process items approved); Reddit 26 / 0; Top-5 B 378 / 0",
+   "Usage limit hit 11-11 and 11-12: 13:21 monitor + 13:51 Primary glitch check missed"
+  ],
+  "why": "The Guild's 24/7 every-2-hour schedule is most of the bill and produced no setups; aiming it at gaps keeps it while protecting the cheap Primary safety checks from usage-limit days.",
+  "link": "research/usage_review_1118/PLAN.md",
+  "status": "open",
+  "answered": null
  }
 ]
