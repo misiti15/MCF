@@ -14,6 +14,7 @@ Educational only — not financial advice.
   (B, C, Gen); pooled PASS 0.951 / +0.020. RULE21-DB (owner 11-17) = decision bar from coid; use official21.py for every
   future FWDCAL window beside mirror's line.
 - 11-18 22:20 ET: mirror audit auto-runs official21 (per account + pooled all / ex-Graveyard / arena+On Deck); out/official21_<variant><tag>/.
+- 11-18 00:20 ET famc_shadow.py refuses unclosed sessions (< 16:30 ET) and days missing from daily data (no fake '0 events').
 - NEXT: WED 11-18 >= 16:30 ET FAMC 11-18 (Observer's NVDA AMC row, reaction 11-18): append_day 2026-11-18, earnings json from
   deepened origin/mcf-data, famc_shadow --date 2026-11-18. Then whatever Lead slots.
 - FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings

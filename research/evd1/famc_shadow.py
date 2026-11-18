@@ -68,10 +68,13 @@ def main():
     ap.add_argument("--live-earnings", required=True, help="mcf-data earnings/<D>.json (all names with earnings within +-4 sessions)")
     a = ap.parse_args(); D1 = pd.Timestamp(a.date).date()
     assert a.date >= START, "forward-only shadow: sessions from 2026-11-11"
+    _now = pd.Timestamp.now(tz="America/New_York"); _hm = _now.hour * 100 + _now.minute   # Builder 11-18: session-closed guard (cf. #40)
+    assert D1 <= _now.date() and not (D1 == _now.date() and _hm < 1630), "refusing: session not closed (run >= 16:30 ET)"
     sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "research/history2y")); sys.path.insert(0, str(HERE.parent / "xaeproc"))
     import lib
     from eproc import eprocess
     Dd = lib.daily().sort_values(["symbol", "date"]); Dd = Dd[Dd.date <= D1]
+    assert (Dd.date == D1).sum() > 100, f"refusing: daily data has no {D1} rows - run append_day.py {D1} first (a missing day must not read as 0 events)"
     pc = Dd.groupby("symbol").close.shift(1)
     tr = np.maximum(Dd.high - Dd.low, np.maximum((Dd.high - pc).abs(), (Dd.low - pc).abs()))
     Dd["pc"] = pc; Dd["atr"] = tr.groupby(Dd.symbol).transform(lambda s: s.shift(1).rolling(14, min_periods=10).mean())
