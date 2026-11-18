@@ -517,6 +517,54 @@ window.MCF_TOTALS = (() => {
   setInterval(run, 300000);
 })();
 </script>
+<!-- Model skill (LEARN1, owner "LEARN1 yes" 2026-11-17): per model, daily hit rate minus the base rate and the Brier skill
+     score vs the base-rate forecast, with the running trend (docs/live/skill.json, mcf/report/skill.py,
+     research/learn1/PLAN.md). Display only — it feeds nothing to trading. -->
+<style>
+#skill-card .sk-row { display: grid; grid-template-columns: minmax(130px, 1.2fr) minmax(120px, 1fr) minmax(0, 2fr); gap: 8px; align-items: center; padding: 4px 0; border-top: 1px solid var(--border); font-size: 13px; font-variant-numeric: tabular-nums; }
+#skill-card .sk-row .n { font-weight: 600; } #skill-card .sk-row .m { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+#skill-card svg { width: 100%; height: 30px; display: block; }
+@media (max-width: 560px) { #skill-card .sk-row { grid-template-columns: 1fr 1fr; } #skill-card .sk-row .m { grid-column: 1 / -1; } }
+</style>
+<div class="card" id="skill-card" role="region" aria-label="Model skill"><h2>Model skill (LEARN1) <span id="skill-asof" style="font-weight:400;color:var(--muted);font-size:13px"></span></h2>
+  <div class="why">Does each research model know more than the base rate? Per session: hit rate minus the base rate's hit rate, and the Brier skill score (above 0 = better calibrated than the base-rate forecast). The line is the running average of the daily skill. Hunch is measured against the base rate; the compass against "stays on its side of the open", the base a reader of the day has to beat.</div>
+  <div class="lbl">Display only — not a trading signal</div>
+  <div id="skill-body"><div class="empty" style="padding:10px">Loading…</div></div>
+  <div class="note" id="skill-rule"></div>
+</div>
+<script>
+(() => {
+  const q = s => document.querySelector(s), e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const pp = v => v == null ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v * 100).toFixed(1)} pts</span>`;
+  const n3 = v => v == null ? "–" : `<span class="${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(3)}</span>`;
+  function spark(vals) {
+    const v = vals.filter(x => x != null); if (v.length < 2) return `<div class="m">trend after 2 sessions</div>`;
+    const lo = Math.min(0, ...v), hi = Math.max(0, ...v), span = (hi - lo) || 1, W = 200, H = 30;
+    const x = i => (i / (v.length - 1)) * W, y = val => H - 2 - ((val - lo) / span) * (H - 4);
+    const last = v[v.length - 1];
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="running skill trend">` +
+      `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="var(--border)" stroke-dasharray="3 3"/>` +
+      `<polyline fill="none" stroke="${last > 0 ? "var(--good)" : last < 0 ? "var(--bad)" : "var(--muted)"}" stroke-width="1.6" vector-effect="non-scaling-stroke" points="${v.map((a, i) => x(i).toFixed(1) + "," + y(a).toFixed(1)).join(" ")}"/></svg>`;
+  }
+  async function run() {
+    let d = null;
+    try { const r = await fetch("../live/skill.json?t=" + Date.now(), { cache: "no-store" }); d = r.ok ? await r.json() : null; } catch (_) {}
+    if (!d || !d.models) { q("#skill-body").innerHTML = `<div class="empty" style="padding:10px">No skill file yet.</div>`; return; }
+    q("#skill-asof").textContent = "· " + (d.generated || "");
+    q("#skill-body").innerHTML = Object.values(d.models).map(m => {
+      const st = /stay/.test(m.rule_base || ""), t = m.today || {}, days = (m.days || []).slice(-40);
+      const sk = st ? t.skill_hit_stay : t.skill_hit, b = st ? t.bss_stay : t.bss, L = m.all_live || {}, c = L.bss || {};
+      return `<div class="sk-row"><div><div class="n">${e(m.name)}</div><div class="m">${e(t.date || "–")} · vs ${e(m.rule_base)}</div></div>` +
+        `<div>skill ${pp(sk)}<br>Brier skill ${n3(b)}</div>` +
+        `<div>${spark(days.map(x => x.running))}<div class="m">live ${L.sessions || 0} sessions: Brier skill ${n3(c.mean)} (95% ${c.lo == null ? "–" : c.lo.toFixed(3) + " to " + c.hi.toFixed(3)}) · ${e(m.verdict_all_live)}</div></div></div>`;
+    }).join("");
+    const R = d.rule || {};
+    q("#skill-rule").innerHTML = `Stop / continue rule: ${e(R.text)} Sessions since 2026-11-19: ${R.sessions_so_far ?? 0} of ${R.sessions_needed ?? 20} (decision ~${e(R.decision_due_est)}). ` +
+      `Rule changes in the window: ${(d.changes || []).map(c => e(c.date + " " + c.what)).join("; ")}. ${e(d.disclaimer)}`;
+  }
+  run();
+})();
+</script>
 <script>
 (() => {
   const RAW = "https://raw.githubusercontent.com/misiti15/MCF/", q = s => document.querySelector(s);

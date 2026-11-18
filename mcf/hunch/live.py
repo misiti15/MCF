@@ -67,6 +67,40 @@ def save_model(m: dict, path: Path, last_date: str) -> None:
     tmp.replace(path)
 
 
+def extend_model(m: dict, feats: list) -> dict:
+    """LEARN1 (owner 2026-11-17): append input columns the model does not have yet (D.EXTRA) with ZERO weight and an
+    empty running scaler, so today's guesses start exactly as before and the learners pick the new inputs up online
+    from the next scored bar. Existing columns, weights and order are unchanged. Returns a new dict (input unchanged)."""
+    new = [f for f in feats if f not in m["feats"]]
+    if not new:
+        return m
+    m = _copy_model(m)
+    k, F = len(new), len(m["feats"])
+    p, t = m["pooled"], m["ticker"]
+    p.w = np.r_[p.w[:F], np.zeros(k), p.w[F:]]
+    p.sc.mu, p.sc.m2, p.sc.n = (np.r_[a, np.zeros(k)] for a in (p.sc.mu, p.sc.m2, p.sc.n))
+    S = t.W.shape[0]
+    t.W = np.hstack([t.W[:, :F], np.zeros((S, k)), t.W[:, F:]])
+    t.mu, t.m2, t.n = (np.hstack([a, np.zeros((S, k))]) for a in (t.mu, t.m2, t.n))
+    t.F = F + k
+    m["feats"] = list(m["feats"]) + new
+    return m
+
+
+def catch_up(model: dict, panel: pd.DataFrame, today: str) -> tuple[dict, list]:
+    """Learn every session in `panel` after the model's last_date and before `today` that was never finalised (e.g. a
+    run that died before 16:00, as 2026-11-11): walk it as the live shadow would have, all bars closed. Point in time:
+    those sessions are complete before today's first guess. Returns (model, days learned)."""
+    days = sorted({str(d) for d in panel["date"].astype(str) if model["last_date"] < str(d) < today})
+    done = []
+    for d in days:
+        _, m2, complete = walk_day(model, panel, d, bar_close(d, D.GUESS_LAST + 2) + pd.Timedelta(minutes=5))
+        if complete and m2["tot_n"] > model["tot_n"]:
+            model = {**m2, "last_date": d}
+            done.append(d)
+    return model, done
+
+
 def _copy_model(m: dict) -> dict:
     import copy
 
@@ -289,6 +323,8 @@ def run_live(state: Path, seed: Path | None, do_push: bool = False, max_minutes:
         return "no model state (state/model.npz or --seed)"
     if model["last_date"] >= day:
         return f"day {day} already finalized"
+    model = extend_model(model, D.ALL_FEATURES)
+    caught = False
     bars = bars or Bars(model["symbols"])
     gpath = state / "guesses" / f"{day}.csv"
     gpath.parent.mkdir(parents=True, exist_ok=True)
@@ -308,6 +344,12 @@ def run_live(state: Path, seed: Path | None, do_push: bool = False, max_minutes:
             return "no SPY bars today after 10:15 ET (market holiday?)"
         syms = [s for s in model["symbols"] if s in bars.data]
         panel = D.build_panel(syms, loader=bars.loader)
+        if not caught:  # a missed day (job died before the close) is learned before today's first guess
+            model, missed = catch_up(model, panel, day)
+            caught = True
+            for d in missed:
+                save_model(model, state / "state" / f"model_{d}.npz", d)
+                print(f"  caught up {d}: learned the missed session before today", flush=True)
         g, m_after, complete = walk_day(model, panel, day, now)
         old = pd.read_csv(gpath) if gpath.exists() else None
         g = merge_frozen(old, g, now)
