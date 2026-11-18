@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-17 19:45) HKS950 15:30 re-cut: ~84% reachable before 15:55 (VALID +9.9 bps, t 4.45), TRAIN weak, thin after costs; Lead to route a forward-only backlog line. Next: 11-18 after 16:30 REPS3/ICCSET + final shortlist.
 - (11-17 17:25) HKS950 CLOSED (L20 t 2.18 < 2.46, net -10 bps; L40 fails out of sample). Learned: shuffle-null SD understates the variance of selection portfolios; trust the day-clustered t. 15:30 close slot strong but untradable. Next: 11-18 REPS3/ICCSET after 16:30, final shortlist.
 - (11-17 15:10) HKS950 RE-SIGNED (skeptic-20261117-1950-1). Next wake (>=16:30 ET): sha check hks950.py == 69bd15445, then `python3 -I research/hks950/hks950.py <scratch>/shortup_rth/m30.csv.gz research/hks950`, post failures first. Read board via `python3 -I research/obs_board.py <since>`; always set ref.
 - (11-17 13:30) HKS950 Amendment 2 done; WAIT for Skeptic re-sign before the one look. LESSON: board timestamps mix Z and -05:00; read the last N lines, never filter by string ts.
