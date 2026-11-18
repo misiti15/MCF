@@ -62,6 +62,9 @@ def build(journal, account: str = "primary", cfg_eff: dict | None = None, global
     if len(tr):
         tr = tr.assign(rc=cost_r(tr).astype(float), mode=tr["meta"].astype(str).str.extract(r"mode=(\w+)")[0].fillna("of_live"))
     names = set(days) | (set(tr["strategy"].astype(str)) if len(tr) else set())
+    # BASE1 baseline twin rows ("<baseline id>:<setup>", C3-EPOCH) are an epoch control, not setups: keep them off the
+    # leaderboard's shadow band and the simulated board (they are read by mcf/report/c3score.py epoch_pairs instead).
+    names = {s for s in names if ":" not in s}
     for s in sorted(names):
         g = tr[tr["strategy"].astype(str) == s] if len(tr) else tr
         fam = C.family_of(s)
