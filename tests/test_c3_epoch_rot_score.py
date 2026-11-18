@@ -175,6 +175,11 @@ def test_capture_buckets_and_epoch_pairs():
               ("2026-11-18", "Z", "BASE1:L3", 10.0, 9.0, 100, 900.0, 900.0)])
     e = C.epoch_pairs(sh, "BASE1", "2026-11-19")
     assert [r["diff"] for r in e["days"]] == [1.0, 0.0] and e["n"] == 2 and e["mean_diff"] == 0.5
+    # a shadow-ONLY (non-baseline) lot is not part of the current book: only of_live lots count as "current"
+    sh2 = sh.assign(meta="mode=of_live")
+    extra = sh2.iloc[[0]].assign(strategy="X-only", meta="mode=only", pnl=500.0, pnl_adj=500.0)
+    e2 = C.epoch_pairs(pd.concat([sh2, extra], ignore_index=True), "BASE1", "2026-11-19")
+    assert [r["diff"] for r in e2["days"]] == [1.0, 0.0]
 
 
 def test_day_type_tag_point_in_time():

@@ -29,3 +29,7 @@ Total dR, FIT/CHECK dR, EARLY dR, paired t, green-day % (before/after), median d
 
 ## Guardrails
 Not retested: giveback locks, halts, short caps, equity-curve gating, latch levels, re-entry pause, spike filters, morning-only L3, shared latches, RW3+RW5 open-lot caps, compass gate. L3-gap-slope-fromopen-FD is protected: any rule that costs it R is reported as such and can only be proposed with an L3 exemption scored separately (exemption variants count as extra configs).
+
+## Addendum A (written ~18:30 ET after the 24 rule scores above, before scoring this)
+The 12 rules x 2 books came to **24 configurations** (the four "+L3x" L3-exempt variants of STACK1/CLU5/CORR2/SECT3 were added as the plan's Guardrails allow); bar sqrt(2 ln 24) = 2.52.
+Descriptive finding to replicate (not a rule proposal): in Primary, RW3/RW5 entries at or after 13:00 ET lost -14.5R (13:00 hour). **H13**: RW3-FD / RW5-FD entries >= 13:00 ET have lower avg R than entries before 13:00, replicated on the **other accounts' journals** (run 1; exact names RW3-gapdn-rsi5pop-flowsell-short-FD, RW5-heat30-flowsell-rsi5pop-gapdn-short-FD and their non-FD bases), which Primary never traded. Secondary (descriptive only): whole RW* family. 2 configs -> total **26**, bar 2.55. Day-clustered t on the per-day difference (>=13:00 avg minus <13:00 avg) is reported; a pass would only make a backlog card (setup change), never a live change.

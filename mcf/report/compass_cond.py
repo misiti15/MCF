@@ -226,6 +226,27 @@ def update(out: Path, day: str, spy_fn=fetch_spy, log=print) -> int:
     return len(rows)
 
 
+def missing_days(out: Path, day: str, lookback: int = 10) -> list[str]:
+    """LEARN1 (owner 2026-11-17): weekdays before `day` (within `lookback` calendar days, after the last stored session)
+    that the nightly append missed - e.g. 2026-11-13 - so the table keeps learning on ALL sessions collected."""
+    obs = read_obs(out / "compass" / "cond_obs.csv")
+    if not len(obs):
+        return []
+    last = str(obs.date.max())
+    lo = max(pd.Timestamp(last) + pd.Timedelta(days=1), pd.Timestamp(day) - pd.Timedelta(days=lookback))
+    have = set(obs.date.astype(str))
+    return [str(d.date()) for d in pd.bdate_range(lo, pd.Timestamp(day) - pd.Timedelta(days=1)) if str(d.date()) not in have]
+
+
+def catch_up(out: Path, day: str, spy_fn=fetch_spy, log=print) -> int:
+    """Append every missed session before `day` (oldest first; a holiday adds nothing). Returns rows added."""
+    n = 0
+    for d in missing_days(out, day):
+        log(f"compass_cond: catching up missed session {d}")
+        n += update(out, d, spy_fn=spy_fn, log=log)
+    return n
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Compass conditional stats - display only, not a trading signal")
     ap.add_argument("--date", default=None, help="session date (default: today ET)")
@@ -240,9 +261,11 @@ def main(argv=None) -> int:
         wd = Path(a.state_dir) if a.state_dir else CL.WORK / "branch"
         if not CL.open_branch(wd):
             return 1
-        n = update(wd, day)
+        n = catch_up(wd, day) + update(wd, day)
         return 0 if CL.push(wd, f"compass cond stats {day} (+{n})") else 1
-    update(Path(a.state_dir) if a.state_dir else CL.WORK / "local", day)
+    wd = Path(a.state_dir) if a.state_dir else CL.WORK / "local"
+    catch_up(wd, day)
+    update(wd, day)
     return 0
 
 
