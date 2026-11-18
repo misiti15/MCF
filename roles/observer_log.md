@@ -421,3 +421,6 @@ optimistic (Skeptic). Owner PR #223 merged with the week's results. Scout downgr
 ## Run 69 — 2026-11-18 ~01:41 ET
 Quiet. Owner rules SRCV1 (non-live sources = 0 effective sessions) and ODPREP (one Workbench tune before On Deck) added to my standards.
 FAMC 11-18 (NVDA) guards added by Builder (unclosed / missing day / journal-final). A2 'none yet'; A1 carries one descriptive side line.
+
+## Run 70 — 2026-11-18 ~03:41 ET
+Quiet. FAMC journal-final guard reuses fwdcal guard_decide (6 cases). A1 side line dropped (hindsight-mover denominator); A1 data fetched (244 symbol-days).
