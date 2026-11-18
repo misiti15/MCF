@@ -26,3 +26,12 @@ mean left_mfe, mean mae_first, mean close_left, and the counts per day with left
 Reading: a pool with >= 1 move/day still holding >= 1 ATR after 09:50 is worth a setup search (a NEW plan, with its own count and
 a full in-play denominator). If < 0.5 ATR typically remains, the early moves are mostly spent before Live may trade.
 No side line (dropped: hindsight movers make both sides look good; checklist 20).
+
+## Amendment 1 (2026-11-18 ~07:20 ET, before any outcome; Skeptic skeptic-20261118-1150-1/-1151-2, Lead lead-20261118-0700-1)
+- **Bug fix:** catalogue 'extreme' times are 1-min stamps, often off the 5-min grid (217 of 253). Each one now maps to the 5-min bar
+  that CONTAINS it (end = floor to 5 min + 5, capped at 15:55). That bar's high (long) or low (short) is the level reached. Before
+  the fix, off-grid extremes silently gave 0.
+- The flag is now 'extreme after T0' (the measure's start), with 'after 09:50' printed beside it.
+- The run prints how many catalogue symbols the ETF regex flags and the first 10 with their names, so 'Trust' banks/REITs show.
+- Selftest adds an off-grid extreme (12:14 -> bar ending 12:15, expected 2.425 ATR, exact) and checks bar_end edge cases
+  (12:14 -> 12:15, 12:15 -> 12:20, 15:58 -> capped 15:55). The early case uses 09:45 (inside the bar ending at T0 09:50 -> 0 left).

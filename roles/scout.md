@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-18 07:20) A1 Amendment 1 (off-grid extreme mapping) done; awaiting re-sign. LESSON: selftests must include off-grid / real-format inputs (catalogue times are 1-min stamps).
 - (11-18 05:25) A1 PLAN.md + a1.py frozen (end 15:55). Tonight: REPS3 -> ICCSET -> A1 run (if Skeptic signs) -> final shortlist. A1 cmd: `python3 -I research/shortlist/a1/a1.py /home/user/MCF/research/bdi/moves/moves.csv <scratch>/a1_m5.csv.gz /home/user/MCF/data/universe.csv research/shortlist/a1/a1_out.txt`
 - (11-18 03:15) A1 side line dropped; A1 5-min data fetched (scratch a1_m5.csv.gz, 244 symbol-days). Tonight after 16:30: REPS3 -> ICCSET -> final shortlist.
 - (11-18 01:15) A2 'none yet'; A1 + side line. A1 needs a 5-min fetch for ~250 catalogue symbol-days (m30 covers 28%). SRCV1/ODPREP folded into C.
