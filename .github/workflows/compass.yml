@@ -14,6 +14,7 @@ on:
     - cron: "45 13 * * 1-5"          # 13:45-21:00 UTC weekdays covers 09:45-16:00 ET in EDT and EST;
     - cron: "0,15,30,45 14-20 * * 1-5"   # the ET window is checked inside (DST-safe)
     - cron: "0 21 * * 1-5"
+    - cron: "30 22 * * 1-5"          # LEARN1: after-close catch-up (marks + nightly table), 17:30 / 18:30 ET
   workflow_dispatch:
     inputs:
       date:
@@ -39,12 +40,15 @@ jobs:
       PYTHONUNBUFFERED: "1"
       DAY: ${{ github.event.inputs.date }}
     steps:
-      - name: Window check (09:45-16:15 ET weekdays; a dispatch with a date always runs)
+      - name: Window check (09:45-23:59 ET weekdays; a dispatch with a date always runs)
+        # LEARN1 (2026-11-18): GitHub fired the in-session crons only after the close on 11-16/17/18, and the old 16:15
+        # cut-off made those late runs no-ops, so only the 09:45 mark (watchdog dispatch) was recorded. A late run now
+        # backfills the missing marks (point in time, tagged backfilled) and appends the nightly table.
         id: window
         run: |
           now=$(TZ=America/New_York date +%H%M); dow=$(TZ=America/New_York date +%u)
-          if [ -n "$DAY" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0945 ] && [ "$now" -le 1615 ]; }; then
-            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:45-16:15 ET weekdays: nothing to do"; fi
+          if [ -n "$DAY" ] || { [ "$dow" -le 5 ] && [ "$now" -ge 0945 ]; }; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside 09:45-23:59 ET weekdays: nothing to do"; fi
 
       - name: Check secrets
         if: steps.window.outputs.run == 'true'
@@ -76,3 +80,14 @@ jobs:
         if: steps.window.outputs.run == 'true'
         run: |
           python -m mcf.report.compass_live ${DAY:+--date "$DAY"} --push --state-dir state
+
+      - name: Nightly conditional stats + COMPCAL refresh (from 16:00 ET; catches up missed sessions)
+        # LEARN1 (owner 2026-11-17): the cell table / COMPCAL moves were refreshed only by the nightly Claude routine
+        # (11-13 was missed). Any run from 16:00 ET now appends the session itself, idempotent with
+        # the routine. Display only - not a trading signal.
+        if: steps.window.outputs.run == 'true' && github.event.inputs.date == ''
+        run: |
+          now=$(TZ=America/New_York date +%H%M)
+          if [ "$now" -ge 1600 ]; then
+            python -m mcf.report.compass_cond --date "$(TZ=America/New_York date +%F)" --push --state-dir state
+          else echo "before 16:00 ET: the session is not complete yet"; fi

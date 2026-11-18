@@ -116,7 +116,7 @@ def test_workflow():
     w = yaml.safe_load((ROOT / ".github/workflows/compass.yml").read_text())
     on = w[True] if True in w else w["on"]
     crons = [c["cron"] for c in on["schedule"]]
-    assert crons == ["45 13 * * 1-5", "0,15,30,45 14-20 * * 1-5", "0 21 * * 1-5"] and "workflow_dispatch" in on
+    assert crons == ["45 13 * * 1-5", "0,15,30,45 14-20 * * 1-5", "0 21 * * 1-5", "30 22 * * 1-5"] and "workflow_dispatch" in on
     job = w["jobs"]["record"]
     assert job["timeout-minutes"] <= 10 and w["concurrency"]["group"] == "compass"
     assert job["env"]["ALPACA_API_KEY"] == "${{ secrets.ALPACA_API_KEY }}"
@@ -124,6 +124,8 @@ def test_workflow():
     assert "TZ=America/New_York" in text and "0945" in text and "mcf.report.compass_live" in text and "--push" in text
     assert "echo \"$ALPACA" not in text and "echo $ALPACA" not in text        # never print secrets
     assert "trade.yml" not in text.split("name: compass")[1]
+    # LEARN1: late runs backfill the day (no 16:15 cut-off) and append the nightly table from 16:00 ET
+    assert "-le 1615" not in text and "mcf.report.compass_cond" in text and '-ge 1600' in text
 
 
 def test_dashboard_card():
