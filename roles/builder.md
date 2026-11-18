@@ -2,7 +2,7 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-18 04:15 ET; idle wake, nothing due before the close)
+## State (2026-11-18 16:40 ET)
 - TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
   offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
   BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
@@ -16,7 +16,9 @@ Educational only — not financial advice.
 - 11-18 22:20 ET: mirror audit auto-runs official21 (per account + pooled all / ex-Graveyard / arena+On Deck); out/official21_<variant><tag>/.
 - 11-18 00:20 ET famc_shadow.py refuses unclosed sessions (< 16:30 ET) and days missing from daily data (no fake '0 events').
 - 11-18 02:20 ET famc_shadow.py also refuses a non-final mcf-data journal (mirror.guard_decide; selftest 6 cases).
-- NEXT: WED 11-18 >= 16:30 ET FAMC 11-18 (report as ONE event, not a sample) (Observer's NVDA AMC row, reaction 11-18): append_day 2026-11-18, earnings json from
+- 11-18 FAMC DONE: NVDA short fade net +0.220R vs control TER -0.121R (one event); tally 3 scored / 3 unscorable,
+  raw mean delta +0.129R, K_edge 0.663. NEXT: FAMC nightly once Observer posts each calendar row; whatever Lead slots.
+  (old line follows) FAMC 11-18 (Observer's NVDA AMC row, reaction 11-18): append_day 2026-11-18, earnings json from
   deepened origin/mcf-data, famc_shadow --date 2026-11-18. Then whatever Lead slots.
 - FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
   <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
