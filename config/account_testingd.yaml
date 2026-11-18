@@ -53,7 +53,6 @@ live:
     - LD4-st4-breadthup-t1s05-long   # 0 traded sessions / 0 trades
     - NM-RWR1-exh150-gapdn-spyup-pm-short   # 2 traded sessions / 2 trades
     - NM-RWN5-ns3-mon-weakrs-short   # 2 traded sessions / 7 trades
-    - GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long   # 3 traded sessions / 91 trades
     - CWT05-flush-m075-v5-long   # 4 traded sessions / 6 trades
     - GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long   # 5 traded sessions / 17 trades
     - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short   # 5 traded sessions / 21 trades
@@ -62,7 +61,6 @@ live:
     - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # 8 traded sessions / 28 trades
     - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # 8 traded sessions / 59 trades
     - NS4-pm-vwap-reclaim-oversold-short   # 15 traded sessions / 51 trades
-    - CWT14-failbrk-pdl-p10-lowvol-long   # 25 traded sessions / 389 trades
     - CWT14-failbrk-orl-p10-long-WB5   # workbench copy, owner 2026-11-16 "CWT14 WB5 yes": normal priority, last (~58 trades/session isolated)
 strategies:
   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
@@ -126,7 +124,7 @@ strategies:
     live_scale_out: false
     tags: [workbench, "parent:CWT14-failbrk-orl-p10-long"]
   CWT14-failbrk-pdl-p10-lowvol-long:   # moved from Testing A 2026-11-11 after the close (D/E/F fill; twin pdl-p10-long stays in Testing A); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     former_primary: {demoted: "2026-10-27", first_testing_session: "2026-10-28", review_after_sessions: 10}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
@@ -343,7 +341,7 @@ strategies:
         overlap_with: CWT13-vwapstretch-z05-long
         n_tried_in_run: 3000
   GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/generator/modules/GEN-261019-05-rsislope-lo-open-long.py
     context:

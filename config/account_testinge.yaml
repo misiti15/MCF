@@ -55,15 +55,12 @@ live:
     - LD8-spy-dip030-breadthturn-spxl-holdtr-long   # 0 traded sessions / 0 trades
     - LIQ-pdl-sweep-open15-vwap-long   # 2 traded sessions / 3 trades
     - RW6G1-ns2-up3-vwap2sd-short   # 3 traded sessions / 6 trades
-    - GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long   # 5 traded sessions / 95 trades
     - GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short   # 6 traded sessions / 16 trades
     - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long   # 6 traded sessions / 16 trades
     - GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short   # 6 traded sessions / 67 trades
-    - GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long   # 6 traded sessions / 126 trades
     - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 8 traded sessions / 50 trades
     - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 8 traded sessions / 92 trades
     - NS3-failed-vwap-reclaim-short   # 13 traded sessions / 75 trades
-    - NS1-rsidip-rsi5pop-long-FD   # 22 traded sessions / 98 trades
 strategies:
   NM-ETF-late-dip-di-long-WB4:
     # Workbench FREQ copy of NM-ETF-late-dip-di-long (Primary): ret3 <= -0.75 + di_diff7 >= -5 + ret12 >= -1.0 + refire (cooldown 1);
@@ -118,7 +115,7 @@ strategies:
   NS1-rsidip-rsi5pop-long-FD:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN); twin NS1 in On Deck); from session 2026-11-12
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 3
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py
     min_adv: 95000000
@@ -413,7 +410,7 @@ strategies:
         overlap_with: CWT13-vwapstretch-z05-short
         n_tried_in_run: 3000
   GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/generator/modules/GEN-261020-07-rsislope-hi-am-long.py
     context:
@@ -1016,7 +1013,7 @@ strategies:
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3000
   GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/generator/modules/GEN-261028-09-flowshift-lo-am-long.py
     context:

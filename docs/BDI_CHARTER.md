@@ -79,6 +79,12 @@ This is a standing Claude role. It runs every weekday after the close, after the
 - Run a rework round on the most promising failed ideas (rule 18).
 - Write the week's scorecard and a plan for next week.
 
+## Research direction C3-MECH (owner yes 2026-11-18; research/consultant_p3/RESULTS.md #8)
+- **Mechanism tag on every new setup card:** a day-type condition (known by 09:50) and a falsifiable reason why the move continues or reverses. Gap mechanisms made -0.008R/trade live vs -0.140R for the rest (7/20 vs 4/115 robust).
+- **~60% of new-setup work goes to day-type-conditioned candidates.** GEN output 1-2 setups a day inside those conditions (89 unconditioned GEN setups: -776R). Sibling variants keep <= 50% symbol-day overlap.
+- **First studies (research/queue.jsonl, ids mech-*):** (1) Move Hunt on the SPY gap-up sessions (Primary's current six lost -29.8R on 10 of them); (2) a 09:35-09:45 decision-frame harness (64% of tradable top moves decide by 09:45; entries stay >= 09:50 under the owner rule, so the harness studies what is knowable then and acted on at 09:50); (3) an easy-to-borrow short universe in backtests, the generator and promotion screens (L3 shorts 56-60% ETB-blocked live); (4) an L3/RW family lane in one testing account.
+- Guardrails (docs/RESEARCH_RULES.md rule 26) apply: no day-type on/off switches on live setups; a day-type condition is part of a NEW setup's entry, pre-registered.
+
 ## Guard rails
 - No setup or exit change during market hours (09:30–16:00 ET).
 - Two live days are a diagnosis, not evidence. Changes need the full backtest and the gates.

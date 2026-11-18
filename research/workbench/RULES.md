@@ -24,3 +24,11 @@ Owner: "while I don't want to lengthen our entire process too much, I do want to
 4. The tuned version must build its **own live record** in testing; its pre-tune record does not count toward On Deck / Primary.
 5. Primary tuning goes back through testing copies (never edited in Primary).
 6. The promotion hold (no On Deck → Primary, owner 2026-11-17) is still in effect.
+
+## C3-WB reform (owner yes 2026-11-18; research/consultant_p3/RESULTS.md #6) — supersedes the pass rule above where they differ
+1. **Tune type by parent record.** Proven parent (live avg R > 0 AND avg R w/o best day > 0): exit / frequency changes only (target, time stop, refire). Small losing parent (< 100 live trades): at most ONE threshold or gate step. **Losing parent with 100+ live trades: no tunes and no copies** — it goes to the EXIT100 review (docs/RESEARCH_RULES.md rule 24), not the Workbench.
+2. **At most 2 changed parts per copy** (pre-registered before any scoring; configs counted).
+3. **Split validation:** diagnose / choose on the EARLIER sessions of the live record (fit = first ceil(D/2) traded sessions); score ONLY on the LATER sessions (check) plus the 2-year backtest. A tune chosen and scored on the same sessions is not a pass (P4: 60/60 in-sample passes).
+4. **Pass on check:** the copy meets or exceeds the parent's avg R after costs on the check sessions (meets = within 0.01R or >= 95%), and is not worse on avg R w/o best day or worst day by more than 0.02R / 10%. Then a testing copy (twins apart). **Final pass = paired shadow A/B**: 40+ paired shadow trades over 5+ sessions, copy vs parent on the same polls.
+5. **No automatic -FD copies** (-294R over 14 pairs). **Refire only on setups with avg R > 0.**
+6. CWT12 / CWT14 are closed to new variants. Gates on proven setups are on the guardrail list (rule 26).

@@ -11,3 +11,4 @@ brand-new setup (new id, parent link); the original is never edited. Copies stay
 
 Sibling parts (L3-gap-slope-fromopen-FD WB4: 13:00 cut-off, 75-min max hold) tested here: FAIL on the 2-year. All 55 configurations
 (39 pass / 16 fail on meet-or-exceed; none clears the counted t bar 2.83): RESULTS.md. Diagnosis: DIAGNOSIS.md. Educational only — not financial advice.
+- 2026-11-18 `L3-gap-slope-rsi5hi-FD-WB5`: `refire` True -> False - C3-WB5 item 5: refire off (first entry per symbol-day); split check PASS on later sessions. Status: research only; next: backtest.
