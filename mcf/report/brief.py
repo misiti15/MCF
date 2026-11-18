@@ -71,6 +71,14 @@ def build_brief(journal: Journal, day: str | None = None, kind: str = "paper", d
     text += [f"  {k}: {int(v.trades)} trades, win {_fmt(v.win, 'pct')}, {_fmt(v.exp)}, {_fmt(v.pnl, 'usd')}"
              for k, v in by_setup.iterrows()]
     text += ["", "What to improve:"] + [f"  - {n}" for n in notes or ["Nothing flagged."]]
+    score = None
+    try:   # C3-SCORE (owner 2026-11-18): the Primary scorecard line, dashboard R next to account R
+        from . import c3score
+
+        score = c3score.line(c3score.from_journal(journal, day))
+        text += ["", score]
+    except Exception as e:
+        text += ["", f"Scorecard unavailable ({type(e).__name__})"]
     if dashboard_url:
         text += ["", f"Dashboard: {dashboard_url}"]
     text += ["", DISCLAIMER]
@@ -86,6 +94,7 @@ def build_brief(journal: Journal, day: str | None = None, kind: str = "paper", d
 <table style="border-collapse:collapse"><tr>{''.join(f'<th {td}>{h}</th>' for h in head)}</tr>{tbl}</table>
 <h3 style="font-size:15px">By setup today</h3>
 <table style="border-collapse:collapse"><tr><th {td}>Setup</th><th {td}>Trades</th><th {td}>Win %</th><th {td}>Avg</th><th {td}>P/L</th></tr>{setups}</table>
+{f'<p style="font-size:13px">{html.escape(score)}</p>' if score else ''}
 <h3 style="font-size:15px">What to improve</h3><ul>{''.join(f'<li>{html.escape(n)}</li>' for n in notes or ['Nothing flagged.'])}</ul>
 {f'<p><a href="{html.escape(dashboard_url)}">Open the dashboard</a></p>' if dashboard_url else ''}
 <p style="color:#52514e;font-size:12px">{DISCLAIMER}</p></div>"""

@@ -124,6 +124,35 @@ def extra_strategies(cfg: dict, live_names: set[str]) -> list:
     return out
 
 
+def baseline_strategies(cfg: dict) -> list:
+    """BASE1 (owner C3-EPOCH / BASE1 yes 2026-11-18): a journal-only twin of the Primary book FROZEN at the start of the
+    epoch scheme - config `baseline:` {enabled, id, account, setups: {name: block}, setup_order}. Built only in the
+    account it names (Primary), each setup renamed "<id>:<name>" so its shadow lots never mix with the of_live lots of
+    the setups Primary runs now. Same shadow path as every `only` setup: never an order, a slot, a latch or a halt of
+    the real account; the account's per-setup -2R rule applies to each BASE1 setup on its OWN shadow R. The nightly
+    scorecard (mcf/report/c3score.py epoch_pairs) compares, per session, Primary's of_live shadow R (the current book, resource-free)
+    with BASE1's shadow R (the frozen book, resource-free): same polls, same fill model, so the paired difference is the
+    effect of the epoch's changes. A block that cannot be built is reported and skipped."""
+    b = cfg.get("baseline") or {}
+    if not b.get("enabled") or not b.get("setups"):
+        return []
+    if str(b.get("account", "primary")) != str(cfg.get("account_name", "primary")):
+        return []
+    from ..strategies.setups import build_strategies
+
+    bid = str(b.get("id") or "BASE1")
+    sub = {**cfg, "strategies": {n: {**(p or {}), "enabled": True} for n, p in b["setups"].items()},
+           "live": {**(cfg.get("live") or {}), "setup_order": list(b.get("setup_order") or [])}}
+    try:
+        out = build_strategies(sub)
+    except Exception as e:
+        print(f"shadow: baseline {bid} failed to build: {type(e).__name__}: {e}")
+        return []
+    for st in out:
+        st.name = f"{bid}:{st.name}"
+    return out
+
+
 def make_shadow(runner):
     sc = runner.cfg.get("shadow") or {}
     if not sc.get("enabled", False):
@@ -156,6 +185,7 @@ class ShadowBook:
         self.budget = float(sc.get("budget_frac", 0.10) or 0.10)
         self.extras = list(extras or [])
         self.extra_names = {getattr(s, "name", "") for s in self.extras}
+        self.baseline: list = []              # BASE1 setups (also in extras): exempt from the every-other-poll budget guard
         self._run_id: int | None = None
         self.cands: list[tuple] = []          # (strat, ctx, sig, last, px, mode) of this poll
         self.lots: dict[str, dict] = {}       # shadow lot id -> state (JSON-serialisable)
@@ -191,6 +221,20 @@ class ShadowBook:
         if self._run_id is None:
             self._run_id = ensure_run(self.r.journal)
         return self._run_id
+
+    def add_extras(self, strategies: list, baseline: bool = False):
+        """Add `only` setups after construction (the live trade command adds the BASE1 baseline here, so replays and
+        tests that build a runner never get it)."""
+        new = [st for st in strategies or [] if getattr(st, "name", "") not in self.extra_names]
+        self.extras += new
+        if baseline:
+            self.baseline += new
+        self.extra_names |= {getattr(s, "name", "") for s in new}
+        from .. import spy_exit as _sx
+        wl = getattr(self.r, "watchlist", None)
+        if new and _sx.enabled(new) and isinstance(wl, list) and _sx.SPY not in wl:
+            self.r.watchlist = sorted(set(wl) | {_sx.SPY})
+        return len(new)
 
     def mode_of(self, name: str) -> str:
         return "only" if name in self.extra_names else "of_live"
@@ -306,6 +350,8 @@ class ShadowBook:
         if ctxs is not None:
             if self.extras and self._poll_n % self.every == 0:
                 self._scan_extras(ctxs)
+            elif self.baseline:     # BASE1 runs every poll (a throttled twin would not be a fair same-day control)
+                self._scan_extras(ctxs, self.baseline)
             self._process(now)
         self.cands = []
         self.flush()
@@ -331,12 +377,12 @@ class ShadowBook:
             "share_of_poll": round(share, 3), "only_every_n_polls": self.every, "quote_calls": self.stats["quote_calls"],
             "errors": self.errors}
 
-    def _scan_extras(self, ctxs: dict):
+    def _scan_extras(self, ctxs: dict, strategies: list | None = None):
         """`only` setups: the live loop's evaluation order and pre-filters, on their own strategy objects."""
         for ctx in ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
-            for strat in self.extras:
+            for strat in (self.extras if strategies is None else strategies):
                 if getattr(strat, "ticker_split", None) and not strat.trades_symbol(ctx.symbol):
                     continue
                 key = (ctx.symbol, strat.name)
