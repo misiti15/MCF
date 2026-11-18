@@ -13,7 +13,9 @@ Educational only — not financial advice.
 - 11-18 OFFICIAL rule 21 posted (official21.py adapts mirror books to MCF replay_cal/score.py, unchanged): FAIL 3/10 pass
   (B, C, Gen); pooled PASS 0.951 / +0.020. RULE21-DB (owner 11-17) = decision bar from coid; use official21.py for every
   future FWDCAL window beside mirror's line.
-- NEXT: whatever Lead slots.
+- 11-18 22:20 ET: mirror audit auto-runs official21 (per account + pooled all / ex-Graveyard / arena+On Deck); out/official21_<variant><tag>/.
+- NEXT: WED 11-18 >= 16:30 ET FAMC 11-18 (Observer's NVDA AMC row, reaction 11-18): append_day 2026-11-18, earnings json from
+  deepened origin/mcf-data, famc_shadow --date 2026-11-18. Then whatever Lead slots.
 - FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
   <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
 - FWDCAL rerun recipe: re-deepen (--shallow-since=2026-11-02 for the 10 data branches, 2026-10-28 for the default; NEVER

@@ -21,7 +21,7 @@ Inputs: data/team caches (bars/priors fetched read-only by the fwdrep code, --fe
 Educational only - not financial advice."""
 from __future__ import annotations
 
-import argparse, json, os, sqlite3, sys, tempfile, time
+import argparse, json, subprocess, os, sqlite3, sys, tempfile, time
 from pathlib import Path
 
 import numpy as np, pandas as pd
@@ -537,6 +537,16 @@ def lr8_r(t, day, acc):
     return adj / risk
 
 
+def official(a) -> None:
+    """OFFICIAL rule 21 (owner RULE21-DB 11-17) on the books just audited: official21.py -> MCF replay_cal/score.py rule21()
+    unchanged; per account + pooled all / ex-Graveyard / arena + On Deck. Runs with every audit (Lead 11-17 19:00)."""
+    if not a.dates:
+        return
+    out = OUT / f"official21_{variant(a.delay)}{a.tag}"
+    subprocess.run([sys.executable, str(Path(__file__).parent / "official21.py"), "--dates", a.dates, "--variant",
+                    variant(a.delay), "--out", str(out), "--accounts", a.accounts], check=True)
+
+
 def audit(D: int, dates: list[str] | None = None, tag: str = "") -> pd.DataFrame:
     fs = sorted((OUT / "books" / variant(D)).glob("*/*.json"))
     if dates:
@@ -767,7 +777,7 @@ def main():
         a.stopslip = True; SS["max"] = True
     QUOTES["on"] = a.quotes; LATCH["on"] = a.live_latch; BP["on"] = a.bp; SS["on"] = a.stopslip
     if a.audit:
-        audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); return
+        audit(a.delay, RUN.trading_days(*a.dates.split("..")) if a.dates else None, a.tag); official(a); return
     now = pd.Timestamp.now(tz=NY)
     if a.fetch and now.dayofweek < 5 and "09:25" <= now.strftime("%H:%M") < "16:05":
         sys.exit("fwdcal: --fetch refused during market hours")
@@ -809,6 +819,7 @@ def main():
         for j in jobs:
             run_book(j)
     audit(a.delay, ok, a.tag)
+    official(a)
 
 
 if __name__ == "__main__":

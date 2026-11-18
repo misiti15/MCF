@@ -13,7 +13,7 @@ ACC = ["primary", "testing", "testing2", "explore1", "livelab", "graveyard", "ge
 BR = {a: ("mcf-data" if a == "primary" else f"mcf-data-{a}") for a in ACC}
 NAME = {"primary": "Primary", "testing": "On Deck", "testing2": "Testing A", "explore1": "Testing B", "livelab": "Testing C",
         "graveyard": "Graveyard", "gen": "Generator", "testingd": "Testing D", "testinge": "Testing E", "testingf": "Testing F"}
-ap = argparse.ArgumentParser(); ap.add_argument("--dates"); ap.add_argument("--variant", default="qm0"); ap.add_argument("--out")
+ap = argparse.ArgumentParser(); ap.add_argument("--dates"); ap.add_argument("--variant", default="qm0"); ap.add_argument("--out"); ap.add_argument("--accounts", default=",".join(ACC))
 a = ap.parse_args(); lo, hi = a.dates.split("..")
 tmp = Path(tempfile.mkdtemp(prefix="off21_")); run, live = tmp / "run", tmp / "live"; live.mkdir(parents=True)
 for acc, br in BR.items():
@@ -33,5 +33,24 @@ for f in sorted((Path(__file__).parent / "out" / "books" / a.variant).glob("*/*.
     (d / "stats.json").write_text("{}"); n += 1
 print(f"books adapted: {n} (account-days) from {a.variant}, {lo}..{hi}")
 S.BRANCH_DB.update(BR)
-S.main(["--run", str(run), "--dates", a.dates, "--accounts", ",".join(ACC), "--live-dir", str(live), "--out", a.out])
-sc = json.loads((Path(a.out) / "scorecard.json").read_text())
+acc = a.accounts.split(",")
+GROUPS = {"all": acc, "ex_graveyard": [x for x in acc if x != "graveyard"],
+          "arena_ondeck": [x for x in acc if x not in ("graveyard", "primary")]}   # Skeptic 11-18 01:50, Lead-adopted wording
+lines = []
+for g, aa in GROUPS.items():
+    o = Path(a.out) / ("" if g == "all" else g); print(f"== OFFICIAL rule 21, group {g}: {','.join(aa)}")
+    S.main(["--run", str(run), "--dates", a.dates, "--accounts", ",".join(aa), "--live-dir", str(live), "--out", str(o)])
+    sc = json.loads((o / "scorecard.json").read_text())
+    if g == "all":
+        for x in sc["accounts"]:
+            r = x["rule21"]; f = [k for k in ("match_ok", "gap_ok", "no_optimism", "fresh") if not r[k]]
+            lines.append(f"{NAME[x['account']]:10s} match {r['match']:.3f} gap_m {r['gap_matched']:+.4f} gap_all {r['gap_all']:+.4f} "
+                         f"{'PASS' if r['pass'] else 'FAIL ' + ','.join(f)}")
+        nf = sum(not v for v in sc["rule21"]["per_account"].values())
+        lines.append(f"per-account FAIL in {nf} of {len(acc)}")
+    r = sc["pooled"]["rule21"]; f = [k for k in ("match_ok", "gap_ok", "no_optimism", "fresh") if not r[k]]
+    lines.append(f"pooled {g:13s} match {r['match']:.3f} gap_m {r['gap_matched']:+.4f} gap_all {r['gap_all']:+.4f} "
+                 f"{'PASS' if r['pass'] else 'FAIL ' + ','.join(f)}")
+txt = "\n".join(lines) + ("\nOFFICIAL rule 21 (owner RULE21-DB, decision-bar match; MCF research/replay_cal/score.py rule21() unchanged, on "
+       f"frozen books {a.variant} {a.dates}; a read, not a re-score). Educational only - not financial advice.")
+(Path(a.out) / "OFFICIAL.txt").write_text(txt + "\n"); print(txt)
