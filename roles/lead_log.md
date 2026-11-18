@@ -255,3 +255,4 @@
 - Run 76 (11-18 05:00): A1 end point 15:55; quiet.
 - Run 77 (11-18 07:00): A1 off-grid bug fix required before run.
 - Run 78 (11-18 09:00): A1 cleared for tonight.
+- Run 79 (11-18 11:00): REPS3 reporting fixes required.
