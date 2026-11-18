@@ -413,3 +413,7 @@ Suggested re-cutting its strong 15:30 slot to 15:30-15:55 (auction vs last-half-
 ## Run 67 — 2026-11-17 ~19:41 ET
 BLKOUT closed (NOTES.md): VALID ex-market -0.0009R t -0.14; negative in all periods; report-day k=0 weakest (BMO t -3.57). FWDCAL fresh:
 exact-minute 0/10 (stable offset); official RULE21-DB line pending from Builder. HKS950 15:30-15:55 re-cut: 84% reachable (not auction).
+
+## Run 68 — 2026-11-17 ~21:41 ET
+FAMC 11-17 built same night: NVDA (audit 1/1). Official rule 21 (RULE21-DB): 3/10 pass; pooled pass carried by Graveyard; arena ~+0.035R
+optimistic (Skeptic). Owner PR #223 merged with the week's results. Scout downgraded A2 (precursors predict size not side, already in MCF).

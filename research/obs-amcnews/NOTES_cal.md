@@ -33,3 +33,7 @@ Precision only; recall needs a late calendar.
 ## 2026-11-16 (built 23:41 ET, same night)
 Snapshot by the 08:44 ET pre-open job (27 names listed; passes the frozen rule). 299 evening items -> 1 AMC flag: INFQ
 (reaction 11-17). Headline audit 1/1 ('Infleqtion Reports Q3 2026 Financial Results'). FAMC session 11-17 scorable.
+
+## 2026-11-17 (built 21:41 ET, same night)
+Snapshot by the 08:45 ET pre-open job (32 names; passes). 267 evening items -> 1 AMC flag: NVDA (reaction 11-18). Headline audit 1/1
+('NVIDIA Reports Financial Results for Third Quarter Fiscal 2027'). Gap-ratio context: 11-16's INFQ opened < 2x normal (ratio is weak; audit 1/1).
