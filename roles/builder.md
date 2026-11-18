@@ -2,7 +2,7 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-17 17:30 ET)
+## State (2026-11-18 04:15 ET; idle wake, nothing due before the close)
 - TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
   offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
   BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
