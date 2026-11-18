@@ -833,12 +833,12 @@ window.MCF.simBlend = (live, replay, shadow, w) => {   // mirror of mcf/report/s
     const lb = (window.MCF.lb || {}).rows;
     if (SIM === false) { q("#sim-sum").textContent = "No simulated inputs yet (docs/live/sim_inputs.json missing — run python -m mcf.report.sim_board)."; q("#sim-tab").innerHTML = ""; return; }
     if (!SIM || !lb) return;
-    const src = SIM.sources || {}, w = src.weights || { live: 1, replay: 0.2, backtest: 0.175, haircut_r: 0.02 }, rp = src.replay, bt = src.backtest, S = SIM.setups || {};
+    const src = SIM.sources || {}, w = src.weights || { live: 1, replay: 0.2, backtest: 0, haircut_r: 0.02 }, rp = src.replay, bt = src.backtest, S = SIM.setups || {};
     const ago = rp && rp.to ? Math.round((Date.now() - new Date(rp.to + "T16:00:00")) / 864e5) : null;
     q("#sim-sum").innerHTML = `<b>Included:</b> Live trades (weight ${w.live}, from the real board above) · ` +
       (rp ? `Session replay ${e(rp.from)} to ${e(rp.to)} (${rp.setups} setups, weight ${w.replay} — ${w.replay_tier === "uncalibrated" ? "0.2 until calibrated, 0.35 once calibrated" : "measured tier"})${ago != null && ago > 7 ? ` <b>stale: ${ago} days old</b>` : ""}` : "no Session replay data") + " · " +
       `Shadow sessions (own labelled source, weight per config/effective_sessions.json; already haircut)` + " · " +
-      (bt ? `2-year screen (Setup Generator pass of the 2-year backtest on Alpaca 1-minute bars; ${bt.setups} Gen setups, runs ${e(bt.runs_from)} to ${e(bt.runs_to)}; weight ${w.backtest} kept in config — <b>screening only, not in blend</b>: own columns vs live, never moves the rank)` : "no 2-year screen data") +
+      (bt ? `2-year screen (Setup Generator pass of the 2-year backtest on Alpaca 1-minute bars; ${bt.setups} Gen setups, runs ${e(bt.runs_from)} to ${e(bt.runs_to)}; weight ${w.backtest} (owner SRCV1 2026-11-17: comparison only) — <b>not in blend</b>: own columns vs live, never moves the rank)` : "no 2-year screen data") +
       `.<br>Session replay avg R gets the haircut (measured optimism + 0.02R = ${w.haircut_r}R). Built ${e(SIM.generated)}. <b>Not live results — a what-if ranking.</b>`;
     const real = {}; lb.forEach(r => { real[r.setup] = r; });
     const ids = new Set(lb.filter(r => r.live && r.score != null).map(r => r.setup));

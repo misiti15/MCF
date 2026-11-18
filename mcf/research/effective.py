@@ -5,8 +5,8 @@ read. Rules:
   - 1 live session = live_weight (1.0) effective session (owner correction 2026-11-16; not 1.25).
   - 1 shadow or replay session = 0.35 when its source's held-out accuracy is >= 98% trade match, <= 2% extra trades and
     no optimism; 0.2 at 95-98% (or optimistic, or not yet calibrated = the lower tier); 0 below 95%.
-  - 1 session of the 2-year history (full-universe backtest, no live counterpart) = history_weight (0.175): screening /
-    experience only, never toward the On Deck or Primary minimums.
+  - 1 session of the 2-year history (full-universe backtest, no live counterpart) = history_weight (0 since owner SRCV1
+    2026-11-17, was 0.175): comparison only, never toward the On Deck or Primary minimums.
   - Shadow / replay R gets a haircut = measured optimism (mean shadow - live R per matched trade, when > 0) + 0.02R.
   - Shadow / replay can move a setup up the testing queue and toward On Deck; On Deck needs >= 5 real live sessions and
     Primary its full live record. If live and shadow disagree beyond noise, live wins.

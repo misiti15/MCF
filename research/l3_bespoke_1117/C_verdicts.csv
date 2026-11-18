@@ -1,0 +1,22 @@
+cfg,guard_trades_ge70,guard_top_decile_ge90,beats_parent_TRAIN,beats_VALID,beats_replay,t_2y,plan_verdict,workbench_rules_meets
+C01 target 1.25R,True,True,True,False,True,0.8,fails VALID/replay,True
+C02 target 1.5R,True,True,False,True,True,0.75,not selected on TRAIN,True
+C03 target 2.0R,True,False,False,True,True,0.82,fails a guard,True
+C04 stop 0.8R,True,True,True,True,False,0.57,fails VALID/replay,False
+C05 stop 1.25R,True,True,True,True,True,1.17,"promising, below the t bar",False
+C06 BE after +0.5R,True,True,True,True,False,0.79,fails VALID/replay,True
+C07 BE after +0.75R,True,True,True,True,False,1.28,fails VALID/replay,True
+C08 stop to -0.5R after +0.5R,True,True,True,True,False,0.84,fails VALID/replay,True
+C09 60-min stop if MFE<0.25R,True,True,True,True,False,1.01,fails VALID/replay,False
+C10 max hold 75 min,True,True,True,True,False,0.67,fails VALID/replay,False
+C11 30-min stop if MFE<0.25R,True,True,True,True,False,0.5,fails VALID/replay,False
+"C12 half +1R, half 2R, BE after 1R",True,True,False,True,True,0.94,not selected on TRAIN,True
+"C13 half +0.5R, half 1.5R, BE after 0.5R",True,True,True,True,False,1.77,fails VALID/replay,False
+"C14 trail 0.75R after MFE 1R, cap 3R",True,True,False,False,False,-0.07,not selected on TRAIN,False
+C15 fromOpen <= TRAIN p80,True,False,False,True,True,0.73,fails a guard,True
+C16 vwapDist <= TRAIN p80,True,False,True,True,True,1.03,fails a guard,True
+C17 volumeRatio <= TRAIN p80,True,False,True,True,False,0.64,fails a guard,False
+C18 rsi5 >= TRAIN p20,True,False,True,True,False,0.89,fails a guard,False
+C19 1R >= 0.5% of price,True,True,True,False,False,1.11,fails VALID/replay,True
+C20 no re-entry after a stop,True,False,False,True,True,0.42,fails a guard,True
+C21 <= 2 lots per symbol,True,False,False,True,True,0.83,fails a guard,True

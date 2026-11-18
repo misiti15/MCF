@@ -105,8 +105,8 @@ def test_build_session_and_capacity(tmp_path, monkeypatch):
 
 
 def test_two_year_tier_months_and_lock(tmp_store, monkeypatch):
-    assert packs.tier("2026-10-06") == ("live", 1.0) and packs.tier("2025-06-02") == ("2y", 0.175)
-    assert store.pack_weight("2025-06-02") == 0.175
+    assert packs.tier("2026-10-06") == ("live", 1.0) and packs.tier("2025-06-02") == ("2y", 0.0)
+    assert store.pack_weight("2025-06-02") == 0.0
     assert packs.month_bounds("2025-03", "2025-03") == (date(2025, 3, 1), date(2025, 3, 31))
     assert packs.month_bounds("2024-09-16", "2024-10") == (date(2024, 9, 16), date(2024, 10, 31))
     with pytest.raises(ValueError):
@@ -120,7 +120,7 @@ def test_two_year_tier_months_and_lock(tmp_store, monkeypatch):
     assert [d for d, k in asked] == [date(2025, 6, 2)]                             # never the locked block
     rows = [{"session": "2025-06-02", "symbols": 3, "mb_1min": 30.0, "mb_1day": 2.0, "tier": "2y", "weight": 0.175}]
     cap = packs.capacity(rows, None)
-    assert cap["progress"]["2y"]["stored"] == 1 and cap["progress"]["2y"]["weight"] == 0.175
+    assert cap["progress"]["2y"]["stored"] == 1 and cap["progress"]["2y"]["weight"] == 0.0
     assert cap["progress"]["2y"]["target"] > 300 and "2024-12" not in str(cap["progress"]["2y"]["months_done"])
 
 
@@ -149,7 +149,7 @@ def test_build_session_two_year_tier(tmp_path, monkeypatch):
     monkeypatch.setattr(store, "_fetch_bars", lambda syms, a, b, tf, batch=100: _bars("2025-06-02", syms))
     row = packs.build_session("2025-06-02", tmp_path, log=lambda m: None)
     m = store.pack_meta(tmp_path / "1min-2025-06-02.parquet")
-    assert row["tier"] == "2y" and row["weight"] == 0.175 and row["inactive_now"] == 1 and row["symbols"] == 2
+    assert row["tier"] == "2y" and row["weight"] == 0.0 and row["inactive_now"] == 1 and row["symbols"] == 2
     assert m["tier_name"] == "2-year history" and m["inactive_now"] == ["GONE"] and m["universe"] == ["AAA", "GONE"]
     assert pd.DatetimeIndex(store.read_pack(tmp_path / "1day-2025-06-02.parquet").ts).date.max() == date(2025, 6, 2)
     cap = packs.capacity([row], None)

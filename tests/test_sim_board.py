@@ -40,7 +40,7 @@ def test_blend_live_only_matches_real_board_and_zero_rep():
 
 def test_weights_from_config():
     w = S.weights(json.loads((ROOT / "config/effective_sessions.json").read_text()))
-    assert w["live"] == 1.0 and w["backtest"] == 0.175 and w["haircut_r"] >= 0.02
+    assert w["live"] == 1.0 and w["backtest"] == 0.0 and w["haircut_r"] >= 0.02
     cal = S.weights({"tiers": [{"min_match": 0.98, "max_extra": 0.02, "no_optimism": True, "weight": 0.35},
                                {"min_match": 0.95, "weight": 0.2}], "replay": {"match": 0.99, "extra": 0.01, "optimism_r": 0.0}})
     assert cal["replay"] == 0.35
@@ -59,7 +59,7 @@ def test_builder(tmp_path):
     assert d["sources"]["replay"]["from"] == "2026-09-01" and d["sources"]["replay"]["to"] == "2026-10-21"
     assert d["setups"]["A"]["replay"] == {"trades": 40, "sessions": 9, "avg_r": 0.05}
     assert d["setups"]["GEN-1"]["backtest"]["sessions"] == 105 and d["setups"]["GEN-1"]["backtest"]["valid_r"] == 0.03
-    assert d["sources"]["weights"]["backtest"] == 0.175 and d["sources"]["backtest"]["in_blend"] is False
+    assert d["sources"]["weights"]["backtest"] == 0.0 and d["sources"]["backtest"]["in_blend"] is False
     # hook: a fresh all-setups replay run wins over the stale snapshot
     (tmp_path / "research/replay_all").mkdir(parents=True)
     (tmp_path / "research/replay_all/latest.json").write_text(json.dumps({"window": "2026-01-02 to 2026-11-13", "setups": {
@@ -75,7 +75,7 @@ def test_dashboard_sim_card_below_real_board():
     assert real < sim < html.index('id="gen-card"')
     for needle in ("sim_inputs.json", "Not live results — a what-if ranking", "Δ rank vs real board", "Effective sessions",
                    "Blended avg R w/o best day", "No simulated inputs yet", "window.MCF.simBlend", "max-width: 640px",
-                   "2-year screen trades", "2-year screen (not in ranking)", "Session replay trades / avg R", "Screen vs live", "screening only, not in blend", "Shadow trades / avg R"):
+                   "2-year screen trades", "2-year screen (not in ranking)", "Session replay trades / avg R", "Screen vs live", "comparison only) — <b>not in blend", "Shadow trades / avg R"):
         assert needle in html, needle
     assert (ROOT / "docs/live/sim_inputs.json").exists()
     js = html[html.index("window.MCF.simBlend = "):html.index("(() => {", html.index("window.MCF.simBlend = "))]

@@ -74,7 +74,7 @@ def day_path(d) -> Path:
 # ---------------------------------------------------------------------------------------------- live session packs
 PACKS = STORE / "packs"
 PACK_START = date(2026, 10, 6)          # first live session (tier "live"); 2-year history packs from PACK_FIRST
-PACK_FIRST = date(2024, 9, 16)          # owner 2026-11-16 "2-year .175 yes": history packs, weight 0.175
+PACK_FIRST = date(2024, 9, 16)          # owner 2026-11-16 "2-year .175 yes": history packs (weight 0 since SRCV1 2026-11-17)
 PACK_COLS = ["symbol", "ts", "open", "high", "low", "close", "volume"]
 _PACK_MISS: set = set()
 
@@ -200,7 +200,7 @@ def fetch_pack(d, kind: str = "1min", log=print) -> Path | None:
 
 def pull_packs(days, daily: bool = True, hist: bool | None = None, log=print) -> list[date]:
     """Download the packs of the live sessions among `days`; returns the sessions with a 1min pack. 2-year history packs
-    (PACK_FIRST..PACK_START, weight 0.175, ~25-40 MB each) only with hist=True or MCF_REPLAY_HIST_PACKS=1, so a long
+    (PACK_FIRST..PACK_START, weight 0, ~25-40 MB each) only with hist=True or MCF_REPLAY_HIST_PACKS=1, so a long
     lab replay never fills the disk by accident."""
     hist = os.environ.get("MCF_REPLAY_HIST_PACKS") == "1" if hist is None else hist
     out = []
@@ -221,8 +221,8 @@ def day_file(d) -> Path:
 
 
 def pack_weight(d) -> float:
-    """1.0 for live sessions, 0.175 for the 2-year history packs (owner "2-year .175 yes", screening / experience)."""
-    return 1.0 if _d(d) >= PACK_START else 0.175
+    """1.0 for live sessions, 0 for the 2-year history packs (owner SRCV1 2026-11-17: comparison only; was 0.175)."""
+    return 1.0 if _d(d) >= PACK_START else 0.0
 
 
 def has_pack(d) -> bool:

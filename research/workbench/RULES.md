@@ -15,3 +15,12 @@ Educational only — not financial advice.
 - Parent and copy are scored with the IDENTICAL backtest pipeline: the replay of the live sessions (same days, same engine, same costs) and the 2-year backtest. The parent's live journal record is NOT part of the pass decision (live trades are still used to diagnose components).
 - PASS = the copy meets or exceeds the parent's avg R after costs in both tests. "Meets" includes close: within ~0.01R per trade or ≥ 95% of the parent's avg R. And not worse than the parent on avg R w/o best day / worst day by more than 0.02R / 10%.
 - No significance hurdle on the difference for passing; configs counted and the paired difference are still reported.
+
+## Tune in testing before On Deck (owner ODPREP 2026-11-17, standing rule)
+Owner: "while I don't want to lengthen our entire process too much, I do want to do everything correctly. Lets do setups in testing that look promising in raw form, do a workbench tune and stay in testing. I don't know if this means it should still produce a copy or modify the existing piece though. We could have both options too."
+1. A testing-arena setup (Testing A-F) that looks promising in raw form gets **ONE Workbench tune** (at most 2 changes, pre-registered, validated by the pass rule above) while it stays in the testing arena, **before** any On Deck move.
+2. **Default = COPY**: the tuned version `<parent>-WB<n>` runs beside the parent in a *different* testing account (twins apart). That gives a clean side-by-side comparison, and the parent's record is kept.
+3. **Option = MODIFY IN PLACE**: only when a copy would collide (twins / same symbols) or the setup has too few reps to split. The version change is logged in `research/ledger.jsonl`; stats restart for the new version and the old record is kept separately.
+4. The tuned version must build its **own live record** in testing; its pre-tune record does not count toward On Deck / Primary.
+5. Primary tuning goes back through testing copies (never edited in Primary).
+6. The promotion hold (no On Deck → Primary, owner 2026-11-17) is still in effect.

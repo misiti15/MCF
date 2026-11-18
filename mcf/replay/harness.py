@@ -347,7 +347,7 @@ def session_inputs(cfg: dict, day, universe: str = "lab", branch: str | None = N
     if full:   # the session pack holds the whole live universe of that day (store-bars workflow)
         pack_u = set(store.pack_meta(store.pack_path(day)).get("universe") or [])
         live_u = live_u or pack_u or None
-        notes["weight"] = store.pack_weight(day)      # 0.175 for 2-year history sessions (screening only)
+        notes["weight"] = store.pack_weight(day)      # 0 for 2-year history sessions (SRCV1: comparison only)
     if live_u and full:
         notes["universe"] = f"full live universe.csv ({len(live_u)} live symbols, session pack)"
         notes["live_not_in_lab"] = len(live_u - syms)

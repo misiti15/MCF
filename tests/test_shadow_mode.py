@@ -297,10 +297,10 @@ def test_calibration_tiers():
 def test_effective_session_math():
     c = E.load()
     assert c["live_weight"] == 1.0 and c["haircut_extra_r"] == 0.02 and c["on_deck_min_live_sessions"] == 5
-    assert c["history_weight"] == 0.175
+    assert c["history_weight"] == 0.0     # owner SRCV1 2026-11-17 (was 0.175)
     assert E.effective_sessions(4, 6, 10, 0.35, 0.2, c) == pytest.approx(4 + 0.35 * 6 + 0.2 * 10)
     assert E.effective_sessions(2, 3, 0, cfg=c) == pytest.approx(2 + 0.6)      # uncalibrated shadow = lower tier
-    assert E.effective_sessions(0, 0, 0, cfg=c, history=40) == pytest.approx(7.0)
+    assert E.effective_sessions(0, 0, 0, cfg=c, history=40) == pytest.approx(0.0)
     assert E.haircut(0.03, c) == pytest.approx(0.05) and E.haircut(-0.01, c) == pytest.approx(0.02)
     assert E.replay_weight(c) == ("below", 0.0)   # held-out 2026-11-17: 87.1% match, 26.2% extra -> below the 95% tier
     assert not E.on_deck_ready(4, c) and E.on_deck_ready(5, c)
@@ -308,7 +308,7 @@ def test_effective_session_math():
 
 def test_claude_md_records_effective_sessions():
     md = (ROOT / "CLAUDE.md").read_text()
-    assert "Effective sessions" in md and "config/effective_sessions.json" in md and "0.35" in md and "0.175" in md
+    assert "Effective sessions" in md and "config/effective_sessions.json" in md and "0.35" in md and "SRCV1" in md
 
 
 # --------------------------------------------------------------------------------------- shadow scorecard + dashboard
