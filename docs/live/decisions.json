@@ -1671,5 +1671,33 @@
   "link": "research/usage/u11_engine/RESULTS.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "GY-LIFE",
+  "title": "Standing Graveyard lifecycle rule (entry, review, archive, revival)",
+  "what": "Entry = C3-EXIT100. Friday after-close review. Archive when >= 100 Graveyard trades / >= 10 sessions, Graveyard avg <= -0.05 and w/o best day <= 0, whole record w/o best day <= -0.05, last-10 sessions <= 0, no pending family test. Revival only via a passed pre-registered tune, new mechanism evidence or owner request. Graduation at >= 15 Graveyard days, >= 30 trades, whole record w/o best day > 0 and best day < 50%. Archive = disabled + marker, record kept, never deleted.",
+  "recommend": "Yes",
+  "numbers": [
+   "Graveyard: 21 sessions, 9,330 resident trades, -1,095R, 2 green sessions",
+   "No resident positive w/o its best day over its whole record; 0 configurations tried"
+  ],
+  "why": "The Graveyard has no exit; C3-EXIT100 will send 31 more setups (-1,251R) into it.",
+  "link": "research/graveyard_review_1118/RULE.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GY-ARCHIVE-20",
+  "title": "Archive 20 Graveyard residents (disabled, record kept)",
+  "what": "Archive 9 CWT14 + 2 CWT12, heat_fade_short, heat_fade_short-FD, heat_fade_long-FD, RW2-FD, LIQ-orl-sweep, ST2-FD, CWT13-vwapstretch, CWT09-vwaploss, RW4-FD: enabled false + archived marker, record kept, re-testable, never deleted. 17 are benched to 11-24 already. Applied after a close with ledger + assignments.json.",
+  "recommend": "Yes",
+  "numbers": [
+   "-66.5R and 477 trades per session (82% of Graveyard trades), 10 sessions before GY-BENCH",
+   "Rest of the residents +4.0R/session (one-day: 11-12 = 186%)"
+  ],
+  "why": "Each meets every archive condition and no pending test covers it.",
+  "link": "research/graveyard_review_1118/TRIAGE.csv",
+  "status": "open",
+  "answered": null
  }
 ]
