@@ -51,6 +51,16 @@ def selftest():
     F4 = pd.DataFrame(dict(account=["Graveyard"], setup=["b"], p_day=[1.0], src=["live"]))
     with contextlib.redirect_stdout(io.StringIO()): fc, re_, exc = eligibility(S4, F4, S4, 3, L)
     assert abs(fc - 10 / 3) < 1e-9 and abs(re_ - 10 / 3) < 1e-9 and exc == [("b", "2026-11-18")], (fc, re_, exc)
+    # guest: '.benched (home)' with 'away' + '.guest (graveyard)' -> NOT excluded; its Graveyard day counts
+    Lg = L + [dict(id="g", effective="2026-11-18", patch={"strategies.g.benched (testinge)": [None, {"from": "2026-11-18", "until": "2026-11-24", "away": "graveyard"}],
+                                                          "strategies.g.guest (graveyard)": [None, {"from": "2026-11-18", "until": "2026-11-24", "home": "testinge"}]})]
+    S5 = pd.concat([S4, pd.DataFrame(dict(day=["2026-11-12", "2026-11-18"], strategy=["g", "g"], status=["submitted"] * 2, reason=[None] * 2, account=["Testing E", "Graveyard"]))])
+    F5 = pd.concat([F4, pd.DataFrame(dict(account=["Testing E"], setup=["g"], p_day=[1.0], src=["live"]))])
+    with contextlib.redirect_stdout(io.StringIO()): fc, re_, exc = eligibility(S5, F5, S5, 3, Lg)
+    assert exc == [("b", "2026-11-18")] and abs(re_ - 5 * 4 / 3) < 1e-9, (exc, re_)
+    # this ledger: exactly the 18 true benches on 11-18 (guests stay in)
+    off, _ = ledger_offdays(["2026-11-18"])
+    assert len(off) == 18, f"expected 18 benched pairs on 11-18, got {len(off)}" 
     print("selftest ok")
 def main(J, FC):
     S = load(J); F = pd.read_csv(FC); n, sd = realized(S)
@@ -88,6 +98,7 @@ def ledger_offdays(days, L=None):
         for k, v in (x.get("patch") or {}).items():
             m = _re.match(r"strategies\.(.+)\.benched\b", k)
             if m and isinstance(v, list) and isinstance(v[-1], dict):
+                if "away" in v[-1]: continue          # GY-BENCH guest: off at home but ELIGIBLE where it is a guest (Observer/Skeptic 11-18)
                 for d in days:
                     if v[-1].get("from", "") <= d <= v[-1].get("until", "9999"): off.add((m.group(1), d))
             m = _re.match(r"strategies\.(.+)\.enabled\b", k)

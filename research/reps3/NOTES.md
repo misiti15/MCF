@@ -58,3 +58,7 @@ Eligibility source: research/ledger.jsonl patches `strategies.<id>.benched` {fro
 [true, false] from the effective date, unless the setup signals somewhere later (then it is enabled somewhere). Known limit: a
 setup disabled and re-enabled elsewhere that never signals afterwards counts as off. On the current ledger: 38 (setup, day) pairs
 are off, all on 11-18 (GY-BENCH). Selftests: a GY-BENCH guest pattern is flagged, and a benched case gives exactly 10/3 vs 10/3/wk.
+Fix 11-18 15:15 ET (Observer -1350-1, Skeptic -1950-1, Lead -1500-1): a '.benched' patch carrying 'away' is a GY-BENCH guest, which
+is off at home but ELIGIBLE where it is a guest. It is skipped, so its Graveyard days count and the (3) flag marks the account change.
+The selftest adds a guest row and asserts that this ledger gives exactly 18 excluded pairs on 11-18 (the true bench), so a later
+patch shape cannot silently re-drop the guests.
