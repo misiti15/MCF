@@ -33,7 +33,7 @@ def measure(mv, bars):
         left_ext = 0.0
     return dict(t0=t0, ex_bar=exb, left_to_extreme=left_ext, share_left=left_ext / mv['move_atr'] if mv['move_atr'] > 0 else np.nan,
                 left_mfe=left_mfe, mae_first=mae_first, close_left=sg * (b.at['15:55', 'c'] - p0) / atr,
-                afterT0=exb > t0, after950=ex >= '09:50')
+                afterT0=exb > t0, after950=ex >= '09:50', ex_missing=(exb > t0) and (exb not in b.index))
 
 def run(m, bars, etfset):
     bars = bars.copy(); t = pd.to_datetime(bars.t, utc=True).dt.tz_convert('America/New_York')
@@ -82,5 +82,5 @@ if __name__ == '__main__':
     fl = sorted(set(m.symbol) & etfset)
     print(f"ETF regex flags {len(fl)} catalogue symbols; first 10: {fl[:10]} (names with 'Trust' may be banks/REITs)")
     o = run(m, pd.read_csv(sys.argv[2]), etfset)
-    L = table(o) + [f"ETF regex flagged {len(fl)} catalogue symbols; first 10: " + ', '.join(f"{x} ({u.set_index('symbol').name.get(x, '')[:30]})" for x in fl[:10]), f"unmeasured (no bar at T0 or 15:55): {len(m) - len(o)}", "Educational only - not financial advice."]
+    L = table(o) + [f"ETF regex flagged {len(fl)} catalogue symbols; first 10: " + ', '.join(f"{x} ({u.set_index('symbol').name.get(x, '')[:30]})" for x in fl[:10]), f"extreme bar MISSING from 5-min data (after T0; counted as 0 left, checklist 46): {int(o.ex_missing.sum())} of {len(o)}", "share_left can exceed 100%: the bar high/low vs the catalogue's close-based move_atr.", f"unmeasured (no bar at T0 or 15:55): {len(m) - len(o)}", "Educational only - not financial advice."]
     open(sys.argv[4], 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))

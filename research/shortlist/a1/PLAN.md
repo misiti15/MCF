@@ -35,3 +35,5 @@ No side line (dropped: hindsight movers make both sides look good; checklist 20)
 - The run prints how many catalogue symbols the ETF regex flags and the first 10 with their names, so 'Trust' banks/REITs show.
 - Selftest adds an off-grid extreme (12:14 -> bar ending 12:15, expected 2.425 ATR, exact) and checks bar_end edge cases
   (12:14 -> 12:15, 12:15 -> 12:20, 15:58 -> capped 15:55). The early case uses 09:45 (inside the bar ending at T0 09:50 -> 0 left).
+
+## Amendment 2 (2026-11-18 ~09:15 ET, Skeptic -1350-1 / Lead -0900-1): print the count of moves whose extreme bar is missing from the 5-min data (still 0 left; checklist 46), and note that share_left can exceed 100% (bar high/low vs the close-based move).
