@@ -97,11 +97,17 @@ Plan (descriptive first, 0 configs; nothing scored until Lead picks):
  only and adds no record. ODPREP: a finding about a specific setup feeds its ONE testing-arena Workbench tune, never On Deck
  directly. Candidate C's ranking must therefore use LIVE reps only; the lab quality is shown beside it, not blended.
 
+ **Side line DROPPED from A1 (Skeptic skeptic-20261118-0750-1, Lead lead-20261118-0300-1).** Scored on hindsight movers, both
+ 'sides' look good because the move picked the names (checklist 20). A full in-play denominator would need a much larger fetch for
+ a weak prior. A1 stays descriptive: of the big moves Live misses, how much is left to capture after 09:50, by side and miss reason.
+ **A1 data fetched (11-18 03:15 ET, outside market hours; no outcome read):** research/shortlist/a1/fetch_a1.py (#43 guard), 244
+ non-blackout catalogue symbol-days, 19,006 5-min bars, kept in scratch (a1_m5.csv.gz).
+
 ## Try-counts and bars (pre-registered here; Lead may reset a family before any look)
 BAR90 = max(1.35, 0.9 x max(1.5, sqrt(2 ln N))). MDE stated at score time as nothing above (bar + 0.84) x SE; smaller unknown.
 | row | configs | family (lineage) | N | BAR90 |
 |---|---|---|---|---|
-| A1 remaining move after 09:50 + 1 side line (yesterday's late sign vs today's early side) | 0 (descriptive) | none | - | - |
+| A1 remaining move after 09:50, by side and miss reason | 0 (descriptive) | none | - | - |
 | A2 09:50 precursors ('none yet'; Lead 11-18) | 0 | Move-Hunt / laggard catch-up 92 (incl. MH4, bdi1028) | 104 | 2.74 |
 | A3 setup-days estimate | 0 (descriptive) | none | - | - |
 | A-WT 'entered after the extreme' guard, 2 thresholds | 2 | entry-extension guards: CWT14 lineage 10 + obs-extension 4 | 16 | 2.12 |

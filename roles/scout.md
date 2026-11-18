@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-18 03:15) A1 side line dropped; A1 5-min data fetched (scratch a1_m5.csv.gz, 244 symbol-days). Tonight after 16:30: REPS3 -> ICCSET -> final shortlist.
 - (11-18 01:15) A2 'none yet'; A1 + side line. A1 needs a 5-min fetch for ~250 catalogue symbol-days (m30 covers 28%). SRCV1/ODPREP folded into C.
 - STANDING STEP (Lead 11-17): before drafting any candidate, grep MCF research/backlog.jsonl + research/bdi/ + guild research/.
 - (11-17 23:20) A2 side candidate named: prior-day 15:30-15:55 sign for in-play names at 10:00 (weak prior); Lead decides include / none yet.
