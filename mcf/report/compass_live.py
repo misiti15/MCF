@@ -20,7 +20,12 @@ by it), it records:
   * the 30-min checkpoint state (from 10:30): UP / DOWN when SPY is >= 0.30% from its open on that side at the latest
     30-min checkpoint ("strong move": holds its side of the open to the close 89% / 89% / 97% TRAIN / VALID / LIVE,
     research/bdi/gate1/NOTES.md), else UNCONFIRMED;
-  * the GATE1 state (UP / DOWN / MIXED, forward shadow `gate1-checkpoint-gate`) at the latest 30-min checkpoint.
+  * the GATE1 state (UP / DOWN / MIXED, forward shadow `gate1-checkpoint-gate`) at the latest 30-min checkpoint;
+  * LEARN1 inputs (owner "LEARN1 yes" 2026-11-17), RECORDED ONLY - they are not votes and change no reading:
+    breadth_vwap (share of the 200 names above their session VWAP), breadth_15 (share up over the last 15 min),
+    breadth_dvol (dollar-volume-weighted share above the open) and sector_up (share of the 11 SPDR sector ETFs above
+    their open), so later studies can test them on real recorded marks (COMPASS-LEARN found most extra inputs hurt as
+    votes, research/compass_learn/NOTES.md).
 Research evidence: "staying" (SPY closes on the same side of its open) is readable; "heading" (where it goes from here)
 is a coin flip on every clock. So the card shows where the day stands, not where it goes.
 
@@ -53,9 +58,11 @@ MARKS = list(range(585, 946, 15))                 # 09:45 .. 15:45, minutes sinc
 CPS = [585] + list(range(600, 931, 30))          # 30-min GATE1 clock: 09:45 (persistence input only), 10:00 .. 15:30
 STRONG = 0.003                                    # 30-min checkpoint state: |SPY from open| >= 0.30%
 NAMES = {2: "UP-confirmed", 1: "leaning up", 0: "mixed", -1: "leaning down", -2: "DOWN-confirmed"}
+SECTORS = ["XLK", "XLF", "XLE", "XLV", "XLI", "XLY", "XLP", "XLU", "XLB", "XLRE", "XLC"]   # LEARN1 sector_up
+EXTRA = ["breadth_vwap", "breadth_15", "breadth_dvol", "sector_up"]                     # LEARN1: recorded, not votes
 COLS = ["date", "T", "spy_fo", "qqq_fo", "iwm_fo", "spy_vwap", "breadth_open", "breadth_n", "v_fo", "v_vwap",
         "v_breadth", "v_agree", "v_persist", "votes", "w60", "w60_low_conf", "agreement", "c30", "c30_at", "checkpoint",
-        "checkpoint_at", "gate1_state", "computed_at", "backfilled", "spy_px"]
+        "checkpoint_at", "gate1_state", "computed_at", "backfilled", "spy_px"] + EXTRA
 PLAIN = Path(__file__).resolve().parent / "compass_plain.json"   # research/compass_5m/plain_table.py (state hit rates)
 
 lab = lambda T: f"{T // 60:02d}:{T % 60:02d}"
@@ -88,6 +95,29 @@ def breadth(bars: dict, names: list[str], T: int) -> tuple[float, int]:
         return 0.5, 0                              # no breadth row at 09:45 (GATE1 / COMP15 convention)
     up = [s["fo"] > 0 for s in (snap(bars.get(n), T) for n in names) if s is not None]
     return (float(np.mean(up)) if up else np.nan), len(up)
+
+
+def extras(bars: dict, names: list[str], T: int) -> dict:
+    """LEARN1 recorded inputs at mark T (bars closed by T only; display / research, never a vote). NaN when no data."""
+    above_vw, up15, dv_up, dv_all = [], [], 0.0, 0.0
+    for n in names:
+        b = bars.get(n)
+        now_, ago = snap(b, T), snap(b, T - 15)
+        if now_ is None:
+            continue
+        if np.isfinite(now_["vw"]):
+            above_vw.append(now_["vw"] > 0)
+        if ago is not None and T - 15 > 570:
+            up15.append(now_["px"] > ago["px"])
+        m = b.index.hour * 60 + b.index.minute
+        x = b[(m >= 570) & (m < T)]
+        dv = float((x.close * x.volume).sum())
+        dv_all += dv
+        dv_up += dv if now_["fo"] > 0 else 0.0
+    sec = [s["fo"] > 0 for s in (snap(bars.get(x), T) for x in SECTORS) if s is not None]
+    mean = lambda v: float(np.mean(v)) if v else np.nan
+    return dict(breadth_vwap=mean(above_vw), breadth_15=mean(up15), breadth_dvol=dv_up / dv_all if dv_all > 0 else np.nan,
+                sector_up=mean(sec))
 
 
 def base_votes(spy: dict, qqq: dict | None, iwm: dict | None, bo: float) -> dict:
@@ -183,7 +213,8 @@ def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = N
             votes=votes, w60=NAMES[w60], w60_low_conf=int(T == 585), agreement=agreement,
             c30=NAMES[c30] if c30 is not None else "", c30_at=lab(cp) if cp else "", checkpoint=chk,
             checkpoint_at=lab(kcp) if kcp else "", gate1_state=gate1(cp) if cp else "",
-            computed_at=f"{now:%Y-%m-%d %H:%M}", backfilled=int(t_now > T + 10), spy_px=r4(y["spy"]["px"])))
+            computed_at=f"{now:%Y-%m-%d %H:%M}", backfilled=int(t_now > T + 10), spy_px=r4(y["spy"]["px"]),
+            **{k: r4(v) for k, v in extras(bars, names, T).items()}))
     return rows
 
 
@@ -322,7 +353,7 @@ def update(out: Path, day: str, now: pd.Timestamp, bars_fn=fetch, names: list[st
     due = [T for T in MARKS if T not in done and t_now >= T + 1]
     new = []
     if due:
-        bars = bars_fn(day, list(dict.fromkeys(["SPY", "QQQ", "IWM"] + names)), now, log=log)
+        bars = bars_fn(day, list(dict.fromkeys(["SPY", "QQQ", "IWM"] + names + SECTORS)), now, log=log)
         if "SPY" not in bars:
             log(f"compass: no SPY bars for {day} (holiday / before the open?) - nothing written")
             return 0
