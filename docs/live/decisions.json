@@ -1400,5 +1400,232 @@
   "link": "research/l3_bespoke_1117/RESULTS.md",
   "status": "answered",
   "answered": "2026-11-17 ~19:35 ET owner: L3-AM yes - test run 11-17 night (research/l3_bespoke_1117/L3AM_RESULTS.md): FAIL on the 2-year VALID (avg R -0.047 vs -0.043, w/o best day -0.073 vs -0.064, t 0.36 vs bar 2.75; live consistent +0.338 vs +0.266R); no copy proposed, parent unchanged"
+ },
+ {
+  "code": "W1-BAR",
+  "title": "Primary admission and demotion bar (consultant W1)",
+  "what": "Admit to Primary only with >=30 testing trades after costs, >=8 sessions, avg R w/o best day >0 and >=50% green days; demote at -10R cumulative since admission only; no half-risk sizing.",
+  "recommend": "Yes - process rule only; the promotion hold stays",
+  "numbers": [
+   "Back-test +19.3R on 12 tested promotions; 18 of 27 setups improve, 7 worse",
+   "L3 +7.1R; fit half -11.1R, check half +30.4R",
+   "Draft w/o-best-day demotion would have cost L3 -36.8R"
+  ],
+  "why": "Testing records did not carry over (+0.23 to -0.08 R/trade); a hard -10R demotion protects one-big-day winners like L3.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W7-TUNE27-08",
+  "title": "One Workbench tune of GEN-261027-08 as a testing copy",
+  "what": "ODPREP tune of Lunch Failed-Breakdown Short as a copy in Testing A or C with one pre-registered exit change (1R target or breakeven after +0.5R).",
+  "recommend": "Yes - testing copy only, after hours",
+  "numbers": [
+   "64 trades, +0.212 avg R, +0.143 w/o best day",
+   "Positive in both halves (+0.20 -> +0.23)",
+   "53 of 64 trades exit at the 15:55 flatten; corr +0.81 with Primary"
+  ],
+  "why": "The only non-L3 contender positive in both halves; it has no WB copy yet.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W7-DRAIN",
+  "title": "Send 5 drains to arena / Graveyard review",
+  "what": "Review GEN-261022-09 first, then CWT14-failbrk-pdl-p10-long, GEN-261026-05, GEN-261029-08 and GEN-261019-05.",
+  "recommend": "Yes - testing/Gen only",
+  "numbers": [
+   "GEN-261022-09 -181.8R (-134.6R on 11-17)",
+   "CWT14-pdl-p10-long -93.9R on 809 trades",
+   "Others -57 to -62R each"
+  ],
+  "why": "They use slots the up-and-coming setups need.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W2-MTM",
+  "title": "Burst-aware open-R control for RW3/RW5, testing copies only",
+  "what": "Pre-register a control on open (mark-to-market) R per setup/family, tested on the RW WB copies in Testing C/D; Primary untouched.",
+  "recommend": "Optional",
+  "numbers": [
+   "Realized-R fixes all failed: -1.8 to -20.7R",
+   "RW3/RW5 corr 0.78; 46 lots open together on 10-22"
+  ],
+  "why": "The -2R latch acts on closed trades only, so it cannot stop a burst.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W3-GB5S",
+  "title": "Shadow flag: +5R peak giveback lock",
+  "what": "Log a +5R peak giveback lock as a shadow flag on open + realized marks; no live effect; re-check after 15+ sessions.",
+  "recommend": "Optional",
+  "numbers": [
+   "Today's lineup +11.3R, but -5.3R without 11-10",
+   "L3 -3.3R (11-12 cut 31.0 -> 26.7R)"
+  ],
+  "why": "Not robust on realized R; only a shadow can measure it on open marks.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-NS5",
+  "title": "Move Big Loser Flush Buy (NS5) out of Primary",
+  "what": "Demote NS5-sma50-flush-oversold-long to Testing 1 or 2 in the Friday after-close window; regenerate assignments.json and add a ledger entry; Primary runs 5 setups until a candidate clears C3-BAR2.",
+  "recommend": "Yes",
+  "numbers": [
+   "Book green days 62% -> 69% in both halves, +4.1R",
+   "NS5: 41 trades -0.9R, -4.0R w/o best day"
+  ],
+  "why": "The only one of 59 drops/adds that improved both the fit and check halves.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-BAR2",
+  "title": "Promotion standard: W1-BAR plus non-overlap and shrinkage",
+  "what": "W1-BAR thresholds + 15 active days, scored on trades not overlapping Primary members, shrunk estimate > 0, best-day share < 50%; demotion -10R only; never choose books by green %. Answers W1-BAR.",
+  "recommend": "Yes",
+  "numbers": [
+   "Green-% book search: fit 92% -> check 31% green, -75.6R",
+   "L3-lowdist non-overlap +9.8R, 95% one day (fails today)"
+  ],
+  "why": "Bad promotions cost -10 to -45R each; this keeps only setups that add new trades.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-EPOCH",
+  "title": "Weekly Primary change window with BASE1 twin",
+  "what": "Primary lineup/rule/sizing changes only Friday after close, each a numbered epoch judged by same-day paired difference against the BASE1 twin; promotion/demotion suggestions weekly. Answers BASE1.",
+  "recommend": "Yes",
+  "numbers": [
+   "200 ledger changes in 31 sessions",
+   "19.2R daily SD: ~164 sessions per verdict on totals"
+  ],
+  "why": "Changes are currently made faster than they can be measured.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-EARN",
+  "title": "EARN-GO earnings reaction-day setup in Testing",
+  "what": "Add the pre-registered EARN-GO setup to one Testing account at half size; narrow earnings-blackout exception for this setup only; forward test 20 sessions / 60 trades.",
+  "recommend": "Yes",
+  "numbers": [
+   "n 121, +0.346R after costs, t 3.6",
+   "+0.241R w/o best day; earlier half only +0.045R"
+  ],
+  "why": "58% of top moves are earnings names no setup can trade today.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-EXIT100",
+  "title": "Graveyard rule for persistent arena losers",
+  "what": "Friday review: setups in Testing/Gen/On Deck with 100+ trades, 15+ active days, avg R <= -0.05 and w/o best day <= 0 are proposed for the Graveyard; freed slots to the lowest-rep setups. Covers W7-DRAIN.",
+  "recommend": "Yes",
+  "numbers": [
+   "Flagged setups went on at -0.107R/trade (-585R in 8 sessions)",
+   "31 assigned setups qualify now (-1,251R)"
+  ],
+  "why": "Bad large records persist; only 6 of 30 recovered.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-WB",
+  "title": "Workbench reform",
+  "what": "Tune type by parent record; no tunes/copies for losing parents with 100+ trades; max 2 parts per copy; diagnose early sessions, score later sessions + 2-year, final pass by paired shadow A/B; no automatic -FD copies; refire only on setups with avg R > 0.",
+  "recommend": "Yes",
+  "numbers": [
+   "60 of 60 variants passed in-sample",
+   "-FD copies -294R over 14 pairs"
+  ],
+  "why": "Tunes help small losing parents and hurt proven ones; the current pass test is in-sample.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-WB5",
+  "title": "Next five Workbench tunes",
+  "what": "One copy each: CWT09-g10 to g15, NS3 gated early short, MF2/MF4 with the 2-part NM-MF3 gate, GEN-261027-08 one exit change (W7-TUNE27-08), L3-rsi5hi refire off.",
+  "recommend": "Yes",
+  "numbers": [
+   "CWT09 g5 -> g10: -0.366 -> +0.227R",
+   "L3-rsi5hi refires +0.219 -> -0.220 late"
+  ],
+  "why": "Single axes that already moved live results; two items are one-day-carried.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-MECH",
+  "title": "Mechanism-tagged research direction",
+  "what": "Mechanism tag on every setup card, ~60% of new work day-type-conditioned, GEN 1-2/day, gap-up Move Hunt, 09:35-09:45 decision-frame harness, easy-to-borrow short universe in research.",
+  "recommend": "Yes",
+  "numbers": [
+   "Gap mechanisms -0.008 vs -0.140R/trade",
+   "GEN: 89 setups, -776R"
+  ],
+  "why": "Mechanism class is the only research-stage trait that separated live results.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-ROT",
+  "title": "Arena reps by active days and family rotation",
+  "what": "Reps counted in active days; no verdicts before 15 active days and 30 trades; per-session rotation cap of 2 CWT14 and 6 GEN setups (benched, logged); shadow days as a separate rep column; triage of blocked and zero-signal setups.",
+  "recommend": "Yes",
+  "numbers": [
+   "CWT14 = 37% of arena trades since 11-12",
+   "30-trade record vs next 30: Spearman 0.03"
+  ],
+  "why": "Rep hogs starve 107 setups still under 30 trades.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-SCORE",
+  "title": "Scorecard, account R and corrected what-if",
+  "what": "Scorecard line in the brief and Friday review, account R next to dashboard R, SPY day-type tag, 3-bucket Move Hunt capture, deduplicated spread-net what-if (reporting only).",
+  "recommend": "Yes",
+  "numbers": [
+   "Top 2 days +105.7R vs -65.8R total",
+   "What-if max positions: +289R raw vs -22R deduplicated"
+  ],
+  "why": "Total R and raw what-if sums mislead decisions.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "C3-LEAN",
+  "title": "Pause idle research routines, housekeeping first",
+  "what": "Pause Guild and Reddit scout (answers REDDIT), drop nightly Top-5 Part B, one HK item per night, ROUTINE decisions default after 2 silent nights, lean daily cadence.",
+  "recommend": "Yes",
+  "numbers": [
+   "Guild 78 ideas, 0 passed; Reddit 26, 0",
+   "~480 ideas/variants, 0 reached Testing"
+  ],
+  "why": "Usage goes to fixes that cost real R.",
+  "link": "research/consultant_p3/RESULTS.md",
+  "status": "open",
+  "answered": null
  }
 ]
