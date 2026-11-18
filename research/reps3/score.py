@@ -29,6 +29,15 @@ def selftest():
                           status=["submitted", "submitted", "skipped", "submitted"], reason=[None, None, "halted", None], account=["Gen"] * 4))
     n, sd = realized(S); assert n == 2 and sd.to_dict() == {("Gen", "x"): 1}, (n, sd)
     global END; END = "2026-11-12"; n, sd = realized(S); assert n == 1, n; END = "9999-12-31"   # --end excludes later sessions
+    S2 = pd.DataFrame(dict(day=["2026-11-12", "2026-11-13", "2026-11-17", "2026-11-17", "2026-11-17"], strategy=["x", "x", "x-WB1", "x", "y"],
+                           status=["submitted"] * 5, reason=[None] * 5, account=["Gen", "Testing A", "Testing B", "Testing A", "Testing F"]))
+    F2 = pd.DataFrame(dict(account=["Gen", "On Deck"], setup=["x", "y"], p_day=[0.5, 0.0], src=["live", "live"]))
+    import io, contextlib; buf = io.StringIO()
+    with contextlib.redirect_stdout(buf): report_fixes(S2, F2, 3)
+    o = buf.getvalue()
+    assert "realized 6.7/wk (2 of 2" in o and "1 setups, realized 1.7/wk" in o, o
+    assert "outside their forecast account: 1" in o and "On Deck, Testing F" in o and "y: forecast On Deck -> realized in Testing F" in o, o
+    assert "11-12..11-16 (pre-TSZ1): 2 sessions" in o and "11-17..end" in o, o
     print("selftest ok")
 def main(J, FC):
     S = load(J); F = pd.read_csv(FC); n, sd = realized(S)
@@ -48,7 +57,38 @@ def main(J, FC):
     ta = S[S.account == "Testing A"]
     print(f"Testing A signals/session: before {len(ta[ta.day < START]) / max(1, ta[ta.day < START].day.nunique()):.1f}, "
           f"after {len(ta[(ta.day >= START) & (ta.day <= END)]) / max(1, n):.1f} (full universe from 11-12)")
-    print("Rule-change context: owner restructure c64d75df0 effective 11-12 (9 ledger entries 2026-11-12-*). Educational only - not financial advice.")
+    report_fixes(S, F.reset_index(), n)
+    print("Educational only - not financial advice.")
+
+TSZ1 = "2026-11-17"
+def report_fixes(S, F, n):
+    """Skeptic skeptic-20261118-1550-1/-1551-2, Lead lead-20261118-1100-1: reporting only, the forecast is unchanged."""
+    a = S[(S.day >= START) & (S.day <= END) & (S.status == "submitted")]
+    by_setup = a.groupby(["strategy", "account"]).day.nunique().groupby(level=0).sum()
+    fset = set(F.setup)
+    inF = by_setup[by_setup.index.isin(fset)]; notF = by_setup[~by_setup.index.isin(fset)]
+    print(f"\n(1) forecast setups matched by SETUP id, any account: forecast {5 * F.p_day.sum():.1f}/wk, realized {5 * inF.sum() / n:.1f}/wk "
+          f"({len(inF)} of {len(fset)} forecast setups signalled)")
+    print(f"(2) setups NOT in the frozen 11-11 forecast (Workbench copies, new or moved-in names): {len(notF)} setups, realized {5 * notF.sum() / n:.1f}/wk")
+    for k, v in notF.sort_values(ascending=False).head(10).items(): print(f"      {k}: {5 * v / n:.1f}/wk")
+    home = F.groupby("setup").account.first()
+    now = a.groupby("strategy").account.agg(lambda x: ", ".join(sorted(set(x))))
+    mv = [(k, home[k], now[k]) for k in now.index if k in home.index and home[k] not in now[k].split(", ")]
+    flagged = sorted({h for _, h, _ in mv} | {x for _, _, w in mv for x in w.split(", ")})
+    print(f"(3) setups that signalled outside their forecast account: {len(mv)}; per-account diffs are NOT like-for-like in: {', '.join(flagged) or 'none'}")
+    for k, h, w in mv[:15]: print(f"      {k}: forecast {h} -> realized in {w}")
+    for lab, lo, hi in (("11-12..11-16 (pre-TSZ1)", START, "2026-11-16"), ("11-17..end (TSZ1: testing half-size lots, cap 100)", TSZ1, END)):
+        b = a[(a.day >= lo) & (a.day <= hi)]; m = b.day.nunique()
+        if m: print(f"(4) {lab}: {m} sessions, realized {5 * b.groupby(['account', 'strategy']).day.nunique().sum() / m:.1f}/wk; "
+                    f"forecast setups only {5 * b[b.strategy.isin(fset)].groupby(['account', 'strategy']).day.nunique().sum() / m:.1f}/wk")
+    try:
+        import json as _j
+        L = [_j.loads(l) for l in open("/home/user/MCF/research/ledger.jsonl") if l.strip()]
+        ch = [x for x in L if START <= str(x.get("effective", x.get("date", ""))) <= (END if END != "9999-12-31" else "2100-01-01")]
+        print(f"(5) ledger entries effective {START}..{END if END != '9999-12-31' else 'now'} (owner rule 11-02): {len(ch)}")
+        for x in ch: print(f"      {x.get('effective', x.get('date'))} {x.get('id')}: {str(x.get('title', ''))[:100]}")
+    except Exception as e:
+        print(f"(5) ledger context unavailable ({e.__class__.__name__})")
 if __name__ == "__main__":
     if "--end" in sys.argv: END = sys.argv[sys.argv.index("--end") + 1]
     selftest() if sys.argv[1] == "--selftest" else main(sys.argv[1], sys.argv[2])

@@ -19,4 +19,4 @@ pd.set_option("display.width", 200)
 c = ["setup", "n", "days", "per_day", "icc", "se", "icc_s", "n_eff_s"]
 print("\nall setups by shrunk ICC (low = record worth more per trade):")
 print(D.sort_values("icc_s")[c].round(3).to_string(index=False))
-D.to_csv("iccset_shrunk.csv", index=False); print("Educational only - not financial advice.")
+D.to_csv(sys.argv[1].replace("iccset_setups", "iccset_shrunk"), index=False); print("Educational only - not financial advice.")

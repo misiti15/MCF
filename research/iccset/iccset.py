@@ -6,12 +6,16 @@ Also: ICC vs the setup's market beta (daily mean R on SPY o->c, from BOTHDAYS' S
 Optional lr8.csv (scripts/recompute_pnl_adj.py output for the same journals): R is then r_lr8 for EVERY trade (one cost basis,
 checklist 37 / Lead 11-14), matched on journal file name + date + symbol + strategy + entry."""
 import sys, glob, os, sqlite3, numpy as np, pandas as pd
+# window (Lead lead-20261118-1100-1): ICC_FROM / ICC_TO env, default the original 10-20..11-11; ICC_TAG suffixes the output csv
+D0, D1, TAG = os.environ.get("ICC_FROM", "2026-10-20"), os.environ.get("ICC_TO", "2026-11-11"), os.environ.get("ICC_TAG", "")
+assert not (D0 <= "2025-02-28" and D1 >= "2024-11-01")
+print(f"ICCSET window {D0}..{D1}")
 R = []
 for p in sorted(glob.glob(f"{sys.argv[1]}/mcf-data*.db")):
     if os.path.getsize(p) == 0: continue
     c = sqlite3.connect(p); pid = ",".join(str(r[0]) for r in c.execute("select id from runs where kind='paper'"))
     t = pd.read_sql(f"select strategy, date, symbol, side, entry, stop, shares, pnl_adj from trades where run_id in ({pid}) and pnl_adj is not null "
-                    f"and date >= '2026-10-20' and date <= '2026-11-11'", c); t["acct"] = os.path.basename(p)[:-3]; R.append(t)
+                    f"and date >= '{D0}' and date <= '{D1}'", c); t["acct"] = os.path.basename(p)[:-3]; R.append(t)
 T = pd.concat(R, ignore_index=True); T["risk"] = (T.entry - T.stop).abs() * T.shares; T = T[T.risk > 0]; T["R"] = T.pnl_adj / T.risk
 if len(sys.argv) > 3:                                      # LR8 basis for every trade
     L8 = pd.read_csv(sys.argv[3]); L8["acct"] = L8.journal.map(lambda j: os.path.basename(j)[:-3])
@@ -51,4 +55,4 @@ pd.set_option("display.width", 200)
 c = ["setup", "n", "days", "per_day", "icc", "n_eff", "side", "beta", "avgR"]
 print("\nlowest ICC (records worth the most per trade):"); print(D[c].head(10).round(3).to_string(index=False))
 print("\nhighest ICC (records worth ~one trade per day):"); print(D[c].tail(10).round(3).to_string(index=False))
-D.to_csv("iccset_setups.csv", index=False); print("Educational only - not financial advice.")
+D.to_csv(f"iccset_setups{TAG}.csv", index=False); print("Educational only - not financial advice.")

@@ -70,3 +70,10 @@ barely moves ICC (as expected: a near-uniform shift). iccset_setups.csv / iccset
 versions (10-20..11-11). 11-18 command:
   python3 scripts/recompute_pnl_adj.py --journal <each fresh journal> --out <scratch>/lr8_all.csv
   python3 -I research/iccset/iccset.py <journal dir> <spy_daily.csv> <scratch>/lr8_all.csv && python3 -I research/iccset/shrink.py iccset_setups.csv
+
+## 11-18 run plan (Lead lead-20261118-1100-1; Skeptic skeptic-20261118-1551-2): two windows, shown side by side
+TSZ1 (11-17: testing half-size lots, 2x slots, cap 100) changes trades per setup-day, and ICC can move with lots per day. So run:
+  ICC_TO=2026-11-16 ICC_TAG=_pre1117 python3 -I research/iccset/iccset.py <jdir> <spy_daily.csv> <scratch>/lr8_all.csv && python3 -I research/iccset/shrink.py iccset_setups_pre1117.csv
+  ICC_TO=2026-11-18 ICC_TAG=_to1118  python3 -I research/iccset/iccset.py <jdir> <spy_daily.csv> <scratch>/lr8_all.csv && python3 -I research/iccset/shrink.py iccset_setups_to1118.csv
+Report both medians and quartiles beside the 11-11 LR8 value (0.201). Header 'LR8 basis, all trades'. The SPY daily file must reach 11-18.
+The defaults are unchanged (10-20..11-11), so the original outputs reproduce.
