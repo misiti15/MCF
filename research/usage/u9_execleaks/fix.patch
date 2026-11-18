@@ -1,0 +1,328 @@
+diff --git a/config/default.yaml b/config/default.yaml
+index bf6b6927e..67fcff899 100644
+--- a/config/default.yaml
++++ b/config/default.yaml
+@@ -41,6 +41,11 @@ exits:
+ shorts:
+   enabled: true                  # owner decision: both directions
+   require_easy_to_borrow: true   # live: only short names the broker flags shortable + ETB
++  # U9-ETB (research/usage/u9_execleaks; proposal, owner decision after hours): load the broker's whole shortable/ETB
++  # list with one read-only GET at the first entry poll (refreshed every borrow_refresh_min; 0 = once). Short-only
++  # setups then journal a non-ETB name once per day and draw no further signals there. Same trades as before.
++  borrow_prefetch: true
++  borrow_refresh_min: 60
+ 
+ costs:
+   slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
+@@ -502,6 +507,10 @@ data:
+   feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
+ 
+ live:
++  # U9-TGT (research/usage/u9_execleaks; proposal, owner decision after hours): skip an entry whose fill-side quote is
++  # already at/through the target or whose exit-side quote is at/through the stop (no order sent; today the broker
++  # rejects most of these and fills the rest for <= 1 cent of upside).
++  skip_passed_at_quote: true
+   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
+   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
+   setup_order:
+diff --git a/mcf/execution/alpaca_broker.py b/mcf/execution/alpaca_broker.py
+index 5a9927a83..4f4b8e9e2 100644
+--- a/mcf/execution/alpaca_broker.py
++++ b/mcf/execution/alpaca_broker.py
+@@ -72,6 +72,25 @@ class AlpacaBroker:
+                     cache[symbol] = False
+         return cache[symbol]
+ 
++    def load_borrow(self) -> int:
++        """U9-ETB (research/usage/u9_execleaks): one read-only GET /v2/assets (active US equities) fills the can_short
++        cache for every listed symbol at once (shortable and easy_to_borrow, the same test as can_short). Returns the
++        number of symbols loaded. A symbol missing from the list still goes through can_short's own per-symbol GET.
++        Raises on failure; the caller keeps the per-symbol path then."""
++        rows = self.client.get("/assets", {"status": "active", "asset_class": "us_equity"}) or []
++        cache = self.__dict__.setdefault("_short_cache", {})
++        n = 0
++        for a in rows:
++            sym = a.get("symbol") if isinstance(a, dict) else None
++            if sym:
++                cache[sym] = bool(a.get("shortable") and a.get("easy_to_borrow"))
++                n += 1
++        return n
++
++    def borrow_known(self, symbol: str) -> bool | None:
++        """The cached shortable+ETB flag for `symbol` (None = not looked up yet). Never calls the broker."""
++        return self.__dict__.get("_short_cache", {}).get(symbol)
++
+     def equity(self) -> float:
+         return float(self.client.get_account().equity)
+ 
+diff --git a/mcf/execution/runner.py b/mcf/execution/runner.py
+index 2a8aceb71..e205dfb6f 100644
+--- a/mcf/execution/runner.py
++++ b/mcf/execution/runner.py
+@@ -100,6 +100,7 @@ class PaperRunner:
+         self._split_cache: tuple | None = None
+         self.dry_run = dry_run
+         self.broker = broker or AlpacaBroker(paper=True)
++        self._etb_logged: set = set()                    # U9-ETB: (symbol, setup, day) ETB skips already journaled
+         self.dc = data_client
+         # Daily index context (opt-in lab `context: [spy_prng]`, owner 2026-10-30 PDL-1a): the daily priors of the index
+         # symbols those setups read, loaded once per session (from priors when the symbol is in the universe, else
+@@ -1247,6 +1248,7 @@ class PaperRunner:
+             return                                    # HK-FLAT-1113b: late successor, closing flatten only
+         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
+         self._step_entries = True
++        self._refresh_borrow(now)                     # U9-ETB: bulk borrow list (off unless shorts.borrow_prefetch)
+         for ctx in self.ctxs.values():
+             last = len(ctx.bars) - 1
+             px = float(ctx.bars["close"].iloc[-1])
+@@ -1262,6 +1264,8 @@ class PaperRunner:
+                     retry = True
+                 if not strat.eligible(ctx):
+                     continue
++                if self._borrow_blocked(strat, ctx.symbol, today):
++                    continue   # U9-ETB: short-only setup, name not shortable/ETB, already journaled once today
+                 if self._bucket_done(strat, key, ctx):
+                     continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
+                 for sig in self._tap(strat, ctx, strat.signals(ctx), last, px):
+@@ -1439,6 +1443,17 @@ class PaperRunner:
+             info["stop_cost_r"] = round(cost_r, 3)
+             if cost_r > float(lim):
+                 return False, f"cost filter: stop-exit cost {cost_r:.2f}R > {float(lim):.2f}R", info
++        if self.live.get("skip_passed_at_quote"):
++            # U9-TGT (research/usage/u9_execleaks), after the spread / cost checks so their reasons keep priority: the
++            # fill side of the quote is already at/through the target (the take-profit would fill at once for <= 1 cent,
++            # or the broker rejects the bracket), or the exit side is at/through the stop (instant stop-out / broker
++            # reject). Skip without sending an order.
++            fill = ask if sig.side == 1 else bid
++            exit_px = bid if sig.side == 1 else ask
++            if sig.target is not None and sig.side * (sig.target - fill) <= 0.01:
++                return False, f"target passed at quote ({fill:.2f} vs target {sig.target:.2f})", info
++            if sig.side * (exit_px - sig.stop) <= 0.01:
++                return False, f"stop passed at quote ({exit_px:.2f} vs stop {sig.stop:.2f})", info
+         vol = ctx.bars["volume"].tail(5).mean()
+         info["cap_qty"] = int(self.live.get("max_participation", 0.10) * vol)
+         return True, "ok", info
+@@ -1528,6 +1543,41 @@ class PaperRunner:
+             print(f"quote log flush failed: {type(e).__name__}: {e}")
+             return None
+ 
++    # ---------------------------------------------------------------- U9-ETB borrow list
++    def _refresh_borrow(self, now) -> None:
++        """U9-ETB (research/usage/u9_execleaks): with shorts.borrow_prefetch, load the broker's whole shortable/ETB list
++        with one read-only GET at the first entry poll and again every shorts.borrow_refresh_min minutes (0 = once).
++        A failure is logged and the per-symbol can_short path is used as before. Never raises."""
++        sh = self.cfg.get("shorts", {})
++        if not sh.get("borrow_prefetch") or not hasattr(self.broker, "load_borrow"):
++            return
++        st = self.__dict__.setdefault("_borrow_state", {"at": None, "fails": 0})
++        every = float(sh.get("borrow_refresh_min", 0) or 0)
++        if st["at"] is not None and (every <= 0 or (now - st["at"]).total_seconds() < every * 60):
++            return
++        if st["fails"] >= 3:
++            return
++        try:
++            n = self.broker.load_borrow()
++            st["at"] = now
++            self.health["borrow_list"] = {"symbols": n, "at": str(now)}
++        except Exception as e:
++            st["fails"] += 1
++            print(f"borrow list load failed ({st['fails']}): {type(e).__name__}; per-symbol can_short used")
++
++    def _borrow_blocked(self, strat, symbol: str, today) -> bool:
++        """True for a short-only setup on a name the loaded borrow list marks not shortable/ETB once the skip has been
++        journaled today (so the setup draws no further signals there). Never calls the broker."""
++        if not self.cfg.get("shorts", {}).get("borrow_prefetch"):
++            return False
++        side = getattr(strat, "side", None)
++        if side not in (-1, "short"):
++            return False
++        known = getattr(self.broker, "borrow_known", None)
++        if known is None or known(symbol) is not False:
++            return False
++        return (symbol, strat.name, str(today)) in self.__dict__.get("_etb_logged", ())
++
+     def _enter(self, sig, px, key, ctx, now):
+         coid = self._coid(sig, ctx, now)
+         if self.same_setup_reentry:
+@@ -1549,6 +1599,11 @@ class PaperRunner:
+                 if gate is not None and gate["spread"] >= self.split_spread:
+                     return self._log(sig, "skipped", "split-tape short gate", px, now, gate)
+             if sh.get("require_easy_to_borrow", True) and not self.broker.can_short(sig.symbol):
++                k = (sig.symbol, sig.strategy, str(now.date()))
++                logged = self.__dict__.setdefault("_etb_logged", set())
++                if sh.get("borrow_prefetch") and k in logged:
++                    return None                       # U9-ETB: journaled once per setup/symbol/day
++                logged.add(k)
+                 return self._log(sig, "skipped", "not shortable/ETB", px, now)
+         ok, why = self.risk.check(sig, px)
+         if not ok:
+diff --git a/tests/test_u9_execleaks.py b/tests/test_u9_execleaks.py
+new file mode 100644
+index 000000000..586494f5d
+--- /dev/null
++++ b/tests/test_u9_execleaks.py
+@@ -0,0 +1,164 @@
++"""U9 execution leaks (research/usage/u9_execleaks): U9-ETB bulk borrow list + once-per-day ETB journaling for short-only
++setups, and U9-TGT quote pre-check (target / stop already passed at the quote). Proposal patch; educational only - not
++financial advice."""
++from types import SimpleNamespace as NS
++
++import pandas as pd
++
++import mcf.execution.runner as R
++from mcf.config import load_config
++from mcf.execution.alpaca_broker import AlpacaBroker
++from mcf.strategies.base import Signal
++from tests.test_outage import NOW, _xc_runner
++
++
++# ---------------------------------------------------------------- broker: bulk list
++class _Client:
++    def __init__(self, rows=None, exc=None):
++        self.rows, self.exc, self.calls = rows or [], exc, []
++
++    def get(self, path, data=None):
++        self.calls.append((path, data))
++        if self.exc:
++            raise self.exc
++        return self.rows
++
++    def get_asset(self, symbol):
++        self.calls.append(("get_asset", symbol))
++        return NS(shortable=True, easy_to_borrow=True)
++
++
++def _broker(c):
++    b = object.__new__(AlpacaBroker)
++    b.client = c
++    return b
++
++
++def test_load_borrow_fills_cache_one_call():
++    c = _Client([{"symbol": "AAPL", "shortable": True, "easy_to_borrow": True},
++                 {"symbol": "SOXS", "shortable": True, "easy_to_borrow": False},
++                 {"symbol": "UVIX", "shortable": False, "easy_to_borrow": False}])
++    b = _broker(c)
++    assert b.borrow_known("AAPL") is None
++    assert b.load_borrow() == 3
++    assert c.calls == [("/assets", {"status": "active", "asset_class": "us_equity"})]
++    assert (b.can_short("AAPL"), b.can_short("SOXS"), b.can_short("UVIX")) == (True, False, False)
++    assert len(c.calls) == 1                                  # no per-symbol GET for listed names
++    assert b.borrow_known("SOXS") is False and b.borrow_known("ZZZZ") is None
++    assert b.can_short("ZZZZ") is True and c.calls[-1] == ("get_asset", "ZZZZ")   # unlisted: per-symbol path as before
++
++
++# ---------------------------------------------------------------- runner: refresh + once-per-day journaling
++class _Brk:
++    def __init__(self, etb=frozenset(), fail=False):
++        self.etb, self.fail, self.loads, self.cache = set(etb), fail, 0, {}
++
++    def load_borrow(self):
++        self.loads += 1
++        if self.fail:
++            raise RuntimeError("down")
++        self.cache = {s: (s in self.etb) for s in ("AAA", "BBB")}
++        return len(self.cache)
++
++    def borrow_known(self, s):
++        return self.cache.get(s)
++
++    def can_short(self, s):
++        return self.cache.get(s, True)
++
++
++def _bare(cfg_shorts):
++    r = object.__new__(R.PaperRunner)
++    r.cfg = {"shorts": cfg_shorts}
++    r.health = {}
++    return r
++
++
++def test_refresh_off_by_flag_and_periodic_when_on():
++    r = _bare({"borrow_prefetch": False})
++    r.broker = _Brk()
++    r._refresh_borrow(NOW)
++    assert r.broker.loads == 0
++    r = _bare({"borrow_prefetch": True, "borrow_refresh_min": 60})
++    r.broker = _Brk(etb={"AAA"})
++    r._refresh_borrow(NOW)
++    r._refresh_borrow(NOW + pd.Timedelta(minutes=30))
++    assert r.broker.loads == 1 and r.health["borrow_list"]["symbols"] == 2
++    r._refresh_borrow(NOW + pd.Timedelta(minutes=61))
++    assert r.broker.loads == 2
++
++
++def test_refresh_failure_never_raises_and_gives_up_after_3():
++    r = _bare({"borrow_prefetch": True, "borrow_refresh_min": 0})
++    r.broker = _Brk(fail=True)
++    for k in range(5):
++        r._refresh_borrow(NOW + pd.Timedelta(minutes=k))
++    assert r.broker.loads == 3 and "borrow_list" not in r.health
++
++
++def test_borrow_blocked_only_short_only_setups_after_first_journal():
++    r = _bare({"borrow_prefetch": True})
++    r.broker = _Brk(etb={"AAA"})
++    r.broker.load_borrow()
++    short, long_, both = NS(name="S", side=-1), NS(name="L", side=1), NS(name="B")
++    day = NOW.date()
++    assert not r._borrow_blocked(short, "BBB", day)          # first time: the signal is drawn and journaled once
++    r._etb_logged = {("BBB", "S", str(day))}
++    assert r._borrow_blocked(short, "BBB", day)              # then no more signals there today
++    assert not r._borrow_blocked(short, "AAA", day)          # ETB name: unaffected
++    assert not r._borrow_blocked(long_, "BBB", day) and not r._borrow_blocked(both, "BBB", day)
++    assert not r._borrow_blocked(NS(name="S", side="short"), "BBB", NOW.date() + pd.Timedelta(days=1))
++    r.cfg["shorts"]["borrow_prefetch"] = False
++    assert not r._borrow_blocked(short, "BBB", day)          # flag off: today's behaviour
++
++
++def test_etb_skip_journaled_once_per_setup_symbol_day(tmp_path, monkeypatch):
++    r, c, ctx = _xc_runner(tmp_path, monkeypatch, 9.99, 10.01)
++    r.cfg.setdefault("shorts", {})["borrow_prefetch"] = True
++    r.broker.can_short = lambda s: False
++    for _ in range(3):
++        r._enter(Signal("XYZ", "S", -1, 10, stop=11.0, target=8.0), 10.0, ("XYZ", "S"), ctx, NOW)
++    s = r.journal.signals(r.run_id)
++    assert list(s.reason) == ["not shortable/ETB"] and len(c.orders) == 0
++    r.cfg["shorts"]["borrow_prefetch"] = False                # flag off: one line per signal, as today
++    r._enter(Signal("XYZ", "S", -1, 10, stop=11.0, target=8.0), 10.0, ("XYZ", "S"), ctx, NOW)
++    assert len(r.journal.signals(r.run_id)) == 2
++
++
++# ---------------------------------------------------------------- U9-TGT quote pre-check
++def _go(r, ctx, side, stop, target, ref=10.0):
++    r._enter(Signal("XYZ", "A", side, 10, stop=stop, target=target), ref, ("XYZ", "A"), ctx, NOW)
++    return r.journal.signals(r.run_id).iloc[-1]
++
++
++def test_target_passed_at_quote_skipped_without_order(tmp_path, monkeypatch):
++    r, c, ctx = _xc_runner(tmp_path, monkeypatch, 10.04, 10.05)
++    r.live["skip_passed_at_quote"] = True
++    s = _go(r, ctx, 1, stop=9.5, target=10.05)                # long: ask 10.05 already at the target
++    assert s.status == "skipped" and s.reason.startswith("target passed at quote") and len(c.orders) == 0
++    s = _go(r, ctx, 1, stop=9.5, target=10.20)                # target still ahead: submitted
++    assert s.status == "submitted" and len(c.orders) == 1
++
++
++def test_short_side_and_stop_passed(tmp_path, monkeypatch):
++    r, c, ctx = _xc_runner(tmp_path, monkeypatch, 9.95, 9.96)
++    r.live["skip_passed_at_quote"] = True
++    r.broker.can_short = lambda s: True
++    s = _go(r, ctx, -1, stop=10.5, target=9.96)               # short fills at bid 9.95: below the target already
++    assert s.status == "skipped" and s.reason.startswith("target passed at quote")
++    s = _go(r, ctx, 1, stop=9.95, target=11.0)                # long: bid 9.95 at the stop
++    assert s.status == "skipped" and s.reason.startswith("stop passed at quote")
++    assert len(c.orders) == 0
++
++
++def test_flag_off_keeps_todays_path(tmp_path, monkeypatch):
++    r, c, ctx = _xc_runner(tmp_path, monkeypatch, 10.04, 10.05)
++    r.live["skip_passed_at_quote"] = False
++    s = _go(r, ctx, 1, stop=9.5, target=10.05)
++    assert s.status == "submitted"                           # today: the order goes to the broker
++
++
++def test_default_config_turns_both_on():
++    cfg = load_config()
++    assert cfg["shorts"]["borrow_prefetch"] is True and cfg["shorts"]["borrow_refresh_min"] == 60
++    assert cfg["live"]["skip_passed_at_quote"] is True

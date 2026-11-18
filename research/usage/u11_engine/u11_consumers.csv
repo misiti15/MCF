@@ -1,0 +1,16 @@
+consumer,engine,where,plan
+Live runner (trade.yml),E1h + E1p,"mcf/execution/runner.py:29 imports Costs, in_play_filter, is_extended, rank_contexts, simulate, universe_ok; what-if of every untaken signal = simulate()","live code: helpers must move, not change (S2)"
+Risk / universe / prep,E1h,"mcf/execution/risk.py (lot_shares, slot_notional); mcf/data/universe.py (pinned_symbols)",as above
+"Ledger conflict check (RESEARCH_RULES 12, CLAUDE.md)",E1,"mcf/research/ledger.py portfolio()/check(): Backtester on data/cache with default config, each ledger entry reverted; research/ledger_check.json never committed in git history, no workflow runs it",mandated procedure on the legacy engine: port to E3 (S6)
+mcf.cli backtest / demo,E1,mcf/cli.py:53-90,redirect to E3 or retire (S6/S8)
+Setup screen / rescore_bt,E1,"research/setup_screen.py, research/history2y/rescore_bt.py (orb20_a, intraday_momentum)",archive (S8)
+Workbench orb20_a mechanic,E1 + E1p,"research/workbench/orb20_a/code/{ext,sim}.py",archive
+Setup Generator (Gen account),E2,"mcf/research/generator (screen/data/apply), seeds from Discovery; docs/live/generator_lab.json",keep as candidate generator; add E3 confirm before apply (S6)
+Backlog weekly re-test (discover.yml),E2,"python -m mcf.research.backlog run -> backlog_lab (lab frames, data/cache 1-min)",move to E3 replay on stored live sessions (S6)
+2-year backtest numbers (dashboard / reviews / Workbench rule),E2 (+E4),research/history2y/rescore.csv; sim_board backtest column; Workbench RULES.md '2-year backtest',replace by E3y (S5/S6)
+"Workbench tunes (C3-WB, ODPREP, U7)",E4,"per-setup code/sim*.py on lab frames ('replay' there = the Workbench engine on live sessions, NOT mcf/replay)",replace by E3 signals + shared walker (S4/S6)
+Dashboard replay columns / pipeline,E3,"mcf/replay/export.py -> docs/live/replay.json, pipeline.json; mcf/report/sim_board.py",stays
+Team / Exposure Lab / preval / playtime / fwdrep / repv,E3,"mcf.report.team -> harness.run_session (fills=costs, limit_fill=through)",stays
+Replay calibration / effective sessions,E3c,"research/replay_cal (score.py, fit.py), config/effective_sessions.json",stays; nightly drift (S3)
+SRC-VALUE monthly,reads E2/E1 outputs + E3 + E5,research/src_value/score.py,re-point the '2-year backtest' row to E3y once it exists
+Consultant usage items 4-8 (today),E4 mostly; E2 for FIT; E3 for CHECK in U5,research/usage/u4..u8,new studies use E3/walker after S4

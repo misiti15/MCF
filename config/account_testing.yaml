@@ -44,9 +44,8 @@ live:
     - L3-gap-slope-lowdist-FD   # 15 traded sessions to 11-11
     - L3-gap-slope-rsi5hi-FD   # 18 traded sessions to 11-11
     - orb20_a   # 18 traded sessions to 11-11
-    - MF2-open-rsimidhi-flowsell-FD   # 20 traded sessions to 11-11
     - RW1-gapdn-bounce-flowsell-short-FD   # 22 traded sessions to 11-11
-    - MF4-h40-open-flowsell-FD   # 23 traded sessions to 11-11
+    - NS5-sma50-flush-oversold-long   # from Primary 2026-11-18 (C3-NS5); 17 traded sessions in Primary
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -183,7 +182,9 @@ strategies:
     enabled: false   # moved to Graveyard 2026-10-21 (owner)
     former_primary: {demoted: "2026-10-16", first_testing_session: "2026-10-16", review_after_sessions: 10}
   NS4-pm-vwap-reclaim-oversold-short: {enabled: false}   # replaced by NS4-pm-vwap-reclaim-oversold-short-FD
-  NS5-sma50-flush-oversold-long: {enabled: false}   # replaced by NS5-sma50-flush-oversold-long-FD
+  NS5-sma50-flush-oversold-long:   # demoted from Primary 2026-11-18 after the close (owner C3-NS5 yes; Epoch 1); same form as in Primary (window/settings from default.yaml); its -FD twin runs in the Graveyard
+    enabled: true
+    former_primary: {demoted: "2026-11-18", first_testing_session: "2026-11-19", review_after_sessions: 10}
   NM-ETF-late-dip-di-long: {enabled: false}   # Primary only (promoted from Live Lab 2026-11-10, owner Team yes)
   RW6G1-ns2-up3-vwap2sd-short:   # demoted from Primary 2026-10-22 (owner N2); runs beside its all-day variant -FD (twin cap: never both on one symbol)
     refire: true
@@ -239,7 +240,7 @@ strategies:
   MF2-open-rsimidhi-flowsell-FD:
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true   # back from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11) (was Primary only from 2026-10-21)
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
     type: lab
     module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
@@ -256,7 +257,7 @@ strategies:
     scale_out_r: null
   # from MF4-h40-open-flowsell (primary; source window 950-1100); ~17.07/day full-day [timeofday results.csv full, exp -0.079R]
   MF4-h40-open-flowsell-FD:
-    enabled: true   # back from Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11) (was Primary only from 2026-10-21); twin MF4 base in Testing 2
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     former_primary: {demoted: "2026-11-10", first_testing_session: "2026-11-11", review_after_sessions: 10}
     type: lab
     module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py

@@ -67,6 +67,7 @@ NS5-sma50-flush-oversold-long:
   name: Big Loser Flush Buy
   side: long
   what: "09:50-11:30: a stock down over 2% breaks below its 50-bar average with RSI(14) at 30 or below; buy the flush."
+  former_primary: "demoted to On Deck 2026-11-18 (C3-NS5)"
 RW6G1-ns2-up3-vwap2sd-short:
   name: Big Gainer Fade with VWAP Band Guard
   side: short
@@ -1064,3 +1065,7 @@ NM-ETF-late-dip-di-long-WB4:
   side: "long"
   what: "14:00-15:00: buy a sharp 15-min dip (3-bar drop of 0.75%+) in a volatile ETF when directional strength is not badly negative (DI diff >= -5) and the last hour is not falling more than 1%; re-fires after a 1-bar cooldown. Long, same exits as the parent."
   account: "testinge"
+L3-gap-slope-rsi5hi-FD-WB5:
+  name: "Gap-Down Rebound Overbought Short (all day) — WB5: first entry per name-day (no refire)"
+  side: "short"
+  what: "09:50-15:00: a stock that gapped down 2.7%+ is back above a rising 20-bar average with RSI(5) above 70; short the pop, once per stock per day. Target 0.5R, stop 1R, flat 15:55."

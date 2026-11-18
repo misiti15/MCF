@@ -424,7 +424,7 @@ strategies:
     window: [1130, 1500]
     scale_out_r: null
   NS5-sma50-flush-oversold-long:
-    enabled: true
+    enabled: false   # moved to On Deck 2026-11-18 after the close (owner C3-NS5 yes; Epoch 1 from session 2026-11-19; promotion = move)
     type: lab
     module: research/owner1008/NS5-sma50-flush-oversold-long.py
     min_adv: 95000000
@@ -487,6 +487,79 @@ shadow:
     C: {through_min_ps: 0.03, through_bps: 5.0, entry_slip_mult: 2.5, entry_min_extra_ps: 0.02, stop_extra_bps: 5.0}
 shadow_setups: []
 
+# BASE1 baseline twin (owner C3-EPOCH + BASE1 yes 2026-11-18; research/consultant_p3/RESULTS.md #3, docs/RESEARCH_RULES.md
+# rule 25). The Primary book exactly as it ran in session 2026-11-18 (Epoch 0: TEAM-6 lineup incl. NS5, same blocks, same
+# priority order), FROZEN: evaluated in Primary's shadow book only (mcf/execution/shadow.py baseline_strategies; journal
+# run kind "shadow", setups named "BASE1:<name>") - never an order, slot, latch or halt of the account. Each Primary
+# epoch (a change made only in the Friday-after-close window; Epoch 1 = C3-NS5 from session 2026-11-19) is judged by the
+# same-day paired difference of Primary's of_live shadow R vs BASE1's shadow R (python -m mcf.report.epoch). Never edit
+# these blocks to follow Primary; a new baseline (BASE2) is a new owner decision.
+baseline:
+  enabled: true
+  id: BASE1
+  account: primary
+  epoch: 1
+  epoch_start: '2026-11-19'
+  frozen_from_session: '2026-11-18'
+  setup_order: [NM-ETF-late-dip-di-long, RW5-heat30-flowsell-rsi5pop-gapdn-short-FD, RW3-gapdn-rsi5pop-flowsell-short-FD, ST7-rsi50dn-long-pm-t1s1-FD, L3-gap-slope-fromopen-FD, NS5-sma50-flush-oversold-long]
+  setups:
+    NM-ETF-late-dip-di-long:
+      type: lab
+      module: research/swarm1017/arena-index-etf/modules/AR-ETF-late-dip-di-long.py
+      symbols: module
+      min_adv: 95000000
+      window: [1400, 1500]
+      scale_out_r: null
+      tags: [near-miss, swarm1017, forward-observation, q8, etf, fragile]
+    RW5-heat30-flowsell-rsi5pop-gapdn-short-FD:
+      type: lab
+      module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
+      min_adv: 95000000
+      window: [950, 1500]
+      scale_out_r: null
+    RW3-gapdn-rsi5pop-flowsell-short-FD:
+      type: lab
+      module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
+      min_adv: 95000000
+      window: [950, 1500]
+      scale_out_r: null
+    ST7-rsi50dn-long-pm-t1s1-FD:
+      type: lab
+      module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
+      min_adv: 95000000
+      window: [950, 1500]
+      scale_out_r: null
+    L3-gap-slope-fromopen-FD:
+      refire: true
+      refire_cooldown: 1
+      type: lab
+      module: research/bdi/fullday/L3-gap-slope-fromopen-FD.py
+      min_adv: 0
+      window: [950, 1500]
+      prefilter: gap_le:-2.6573517322540283
+      scale_out_r: null
+    NS5-sma50-flush-oversold-long:
+      type: lab
+      module: research/owner1008/NS5-sma50-flush-oversold-long.py
+      min_adv: 95000000
+      window: [950, 1130]
+      scale_out_r: null
+
+# C3-ROT arena rotation (owner yes 2026-11-18; research/consultant_p3/RESULTS.md #9; mcf/rotation.py family_caps, applied
+# when the session's setup snapshot is written). Per session at most `cap` members of a family play; the rest sit the
+# whole session out (benched, logged in the snapshot's rotation.family_benched, excluded from per-session stats - never
+# an in-session throttle). CWT14: 2 variants across the whole testing arena; GEN: 6 per arena account. Order: fewest
+# reps first (docs/live/arena_reps.json: live active days + shadow days; python -m mcf.report.arena_reps), then a
+# round-robin by session. Workbench copies (-WB<n>) are exempt. Never Primary, On Deck or the Graveyard.
+arena_rotation:
+  enabled: true
+  from: "2026-11-19"
+  accounts: [testing2, explore1, livelab, testingd, testinge, testingf, gen]
+  reps_file: docs/live/arena_reps.json
+  caps:
+    CWT14: {prefix: "CWT14-", cap: 2, scope: arena}
+    GEN: {prefix: "GEN-", cap: 6, scope: account}
+
 research_queue:
   # CAP1 (owner 2026-11-03): research/queue.jsonl running order; at most this many research jobs (matrix legs) a night
   max_jobs_per_night: 6
@@ -513,7 +586,6 @@ live:
     - L3-gap-slope-fromopen-FD   # re-promoted 2026-10-30 (~19/day live)
     - intraday_momentum
     - orb20_a
-    - NS5-sma50-flush-oversold-long
     - NS3-failed-vwap-reclaim-short
     - NS2-sma50break-overbought-short
     - MF3-open-flowsell-rsi5hi

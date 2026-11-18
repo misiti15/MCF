@@ -101,3 +101,107 @@ def window_violations(by_account: dict[str, dict]) -> list[str]:
                 if not isinstance(gst, dict) or gst.get("home") != acct:
                     bad.append(f"{k}: benched away to {b['away']} from {acct} but no guest block there")
     return bad
+
+
+# ------------------------------------------------------------------------------------------- C3-ROT family caps
+# Owner C3-ROT yes 2026-11-18 (research/consultant_p3/RESULTS.md #9): per-session rotation caps on the families that hog
+# arena reps - at most 2 CWT14 variants across the whole testing arena and at most 6 GEN setups per arena account in one
+# session. The rest of the family sits the session out (benched, logged in the setup snapshot's `rotation.family_benched`,
+# excluded from per-session stats exactly like a GY-BENCH bench). Never in Primary, On Deck or the Graveyard; never an
+# in-session throttle. Order: fewest reps first (docs/live/arena_reps.json: live active days + shadow days, refreshed by
+# `python -m mcf.report.arena_reps`), then a round-robin by session so every member plays even if the reps file is stale.
+# Applied by the live trade command (mcf/cli.py) for the session it trades; load_config() itself is unchanged.
+ARENA_ACCOUNTS = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf", "gen")
+
+
+def _bdays(a: date, b: date) -> int:
+    n, d = 0, a
+    step = 1 if b >= a else -1
+    while d != b:
+        d = date.fromordinal(d.toordinal() + step)
+        if d.weekday() < 5:
+            n += step
+    return n
+
+
+def _reps(path) -> dict:
+    import json
+    from pathlib import Path
+
+    try:
+        d = json.loads(Path(path).read_text())
+        return {k: float((v or {}).get("active_days", 0) or 0) + float((v or {}).get("shadow_days", 0) or 0)
+                for k, v in (d.get("setups") or {}).items()}
+    except Exception:
+        return {}
+
+
+def pick(members: list[str], cap: int, d: date, start: date, reps: dict | None = None) -> list[str]:
+    """The `cap` members that play session `d`: members ordered by reps (fewest first, then name), then a window of
+    `cap` that advances by `cap` every weekday since `start` (round-robin)."""
+    if cap <= 0 or len(members) <= cap:
+        return sorted(members)
+    reps = reps or {}
+    ring = sorted(members, key=lambda k: (reps.get(k, 0.0), k))
+    off = (max(0, _bdays(start, d)) * cap) % len(ring)
+    return sorted((ring + ring)[off:off + cap])
+
+
+def family_caps(cfg: dict, asof=None, members_by_account: dict | None = None, root=None) -> dict:
+    """Bench, for session `asof`, the family members over their cap in this account (cfg['account_name']); in place.
+    `members_by_account`: account -> enabled setup names after the date windows (default: loaded from the configs).
+    Returns {family: {"cap", "scope", "playing", "benched"}} and stores the benched names in cfg['rotation']."""
+    rc = cfg.get("arena_rotation") or {}
+    acct = cfg.get("account_name", "primary")
+    d = session_date(asof)
+    if not rc.get("enabled") or acct not in (rc.get("accounts") or ARENA_ACCOUNTS):
+        return {}
+    start = _d(rc.get("from") or d)
+    if d < start:
+        return {}
+    from pathlib import Path
+
+    base = Path(root) if root else Path(__file__).resolve().parents[1]
+    reps = _reps(base / str(rc.get("reps_file") or "docs/live/arena_reps.json"))
+    mine = [k for k, v in (cfg.get("strategies") or {}).items() if isinstance(v, dict) and v.get("enabled")]
+    out = {}
+    for fam, spec in (rc.get("caps") or {}).items():
+        prefix, cap, scope = str(spec.get("prefix", fam)), int(spec.get("cap", 0)), str(spec.get("scope", "account"))
+        import re as _re
+
+        skip = _re.compile(str(spec.get("exclude_regex") or r"-WB\d+$"))   # Workbench copies keep their priority exposure
+        if scope == "arena":
+            if members_by_account is None:
+                members_by_account = _arena_members(rc.get("accounts") or ARENA_ACCOUNTS, d)
+            pool = sorted({k for a, ks in members_by_account.items() for k in ks if k.startswith(prefix) and not skip.search(k)}
+                          | {k for k in mine if k.startswith(prefix) and not skip.search(k)})
+        else:
+            pool = [k for k in mine if k.startswith(prefix) and not skip.search(k)]
+        play = set(pick(pool, cap, d, start, reps))
+        bench = sorted(k for k in mine if k.startswith(prefix) and not skip.search(k) and k not in play)
+        for k in bench:
+            cfg["strategies"][k]["enabled"] = False
+        out[fam] = {"cap": cap, "scope": scope, "pool": len(pool), "playing": sorted(k for k in mine if k in play),
+                    "benched": bench}
+    log = cfg.setdefault("rotation", {"session": d.isoformat(), "benched": [], "away": {}, "guests": {}})
+    log["family_benched"] = {f: v["benched"] for f, v in out.items() if v["benched"]}
+    return out
+
+
+def _arena_members(accounts, d: date) -> dict[str, list[str]]:
+    """account -> enabled setups for session d (configs + date windows), for the arena-wide caps."""
+    from .config import load_config
+
+    old = os.environ.get("MCF_ACCOUNT")
+    out = {}
+    try:
+        for a in accounts:
+            os.environ["MCF_ACCOUNT"] = a
+            st = load_config(asof=d).get("strategies") or {}
+            out[a] = [k for k, v in st.items() if isinstance(v, dict) and v.get("enabled")]
+    finally:
+        if old is None:
+            os.environ.pop("MCF_ACCOUNT", None)
+        else:
+            os.environ["MCF_ACCOUNT"] = old
+    return out

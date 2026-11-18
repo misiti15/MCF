@@ -1,0 +1,33 @@
+fit sessions 168 quiet-cue days (OR30 <= q40) 67 up-cue days 100
+check sessions 31 quiet-cue days (OR30 <= q40) 12 up-cue days 18
+q40 = 0.2805  TBAR = 2.23
+sample setup           version  trades  days_traded   win     avg   total  t_day  avg_wo_best  best_day  best_share  worst_day  green_days  stop_pct  tgt_pct  med_r_atr
+   fit    S1      day-type cue     563           23 0.375 -0.2526  -142.2  -4.62      -0.2743       7.6         NaN      -23.9           4      0.61     0.33      0.142
+   fit    S1 no cue (all days)    9517          168 0.386 -0.1930 -1837.0  -7.59      -0.1974      28.7         NaN      -89.2          55      0.58     0.32      0.141
+   fit    S1    random entries    6294           23 0.416 -0.1475  -928.6  -2.63      -0.1708     110.2         NaN     -231.3           7      0.00     0.00        NaN
+   fit    S2      day-type cue     587           23 0.366 -0.2719  -159.6  -3.94      -0.2943       7.5         NaN      -32.6           5      0.61     0.33      0.146
+   fit    S2 no cue (all days)    9631          168 0.395 -0.1579 -1521.2  -6.22      -0.1627      38.9         NaN      -59.6          56      0.57     0.34      0.140
+   fit    S2    random entries    7155           23 0.364 -0.2608 -1866.2  -4.61      -0.2800      59.9         NaN     -392.6           4      0.00     0.00        NaN
+   fit    S3      day-type cue     388           20 0.260 -0.2154   -83.6  -1.36      -0.3135      25.2         NaN      -30.3           7      0.72     0.20      0.143
+   fit    S3 no cue (all days)    8500          168 0.260 -0.2572 -2185.9  -7.68      -0.2636      44.7         NaN      -76.1          54      0.71     0.15      0.128
+   fit    S3    random entries    1596           20 0.281 -0.2601  -415.2  -2.76      -0.3202      66.1         NaN     -114.2           5      0.00     0.00        NaN
+   fit    S4      day-type cue    2352           91 0.336 -0.1956  -460.0  -3.95      -0.2138      34.0         NaN      -28.0          28      0.64     0.28      0.144
+   fit    S4 no cue (all days)    5901          168 0.331 -0.2010 -1186.3  -6.73      -0.2095      41.6         NaN      -52.4          52      0.65     0.28      0.154
+   fit    S4    random entries   15147           91 0.365 -0.1455 -2204.5  -2.22      -0.1843     468.4         NaN     -571.5          30      0.00     0.00        NaN
+ check    S1      day-type cue      79            4 0.506  0.0488     3.9   0.23      -0.1764      14.3        3.70       -7.7           2      0.49     0.44      0.157
+ check    S1 no cue (all days)    1714           31 0.405 -0.1139  -195.2  -1.57      -0.1362      26.7         NaN      -82.7          15      0.56     0.34      0.139
+ check    S1    random entries    1299            4 0.512  0.1271   165.1   1.01       0.0269     136.5        0.83      -37.0           2      0.00     0.00        NaN
+ check    S2      day-type cue      85            4 0.259 -0.5019   -42.7  -5.72      -0.5019       0.0         NaN      -17.0           0      0.73     0.22      0.139
+ check    S2 no cue (all days)    1686           31 0.388 -0.1678  -282.9  -2.49      -0.1960      36.6         NaN      -43.5           7      0.58     0.33      0.137
+ check    S2    random entries     891            4 0.290 -0.4431  -394.8  -8.52      -0.4431       0.0         NaN     -162.9           0      0.00     0.00        NaN
+ check    S3      day-type cue      37            4 0.514  0.7323    27.1   3.42       0.4534      20.7        0.77       -3.5           3      0.46     0.32      0.140
+ check    S3 no cue (all days)    1477           31 0.301 -0.0909  -134.3  -1.10      -0.1149      30.0         NaN      -71.1          15      0.68     0.17      0.130
+ check    S3    random entries     180            4 0.433  0.3333    60.0   3.75       0.5389      37.4        0.62       -1.1           3      0.00     0.00        NaN
+ check    S4      day-type cue     509           18 0.338 -0.2114  -107.6  -1.41      -0.2839      25.5         NaN      -51.6           5      0.64     0.26      0.147
+ check    S4 no cue (all days)    1132           31 0.349 -0.1432  -162.2  -1.74      -0.1719      25.5         NaN      -44.3          10      0.63     0.29      0.154
+ check    S4    random entries    3876           18 0.359 -0.1784  -691.3  -1.64      -0.2340     108.4         NaN     -443.7           4      0.00     0.00        NaN
+setup                   name  fit_ok  check_ok verdict
+   S1         DT-QD-FBD-long   False     False    FAIL
+   S2        DT-QD-FBO-short   False     False    FAIL
+   S3 DT-QD-VWAPSTRETCH-long   False     False    FAIL
+   S4      DT-UP-VWAPPB-long   False     False    FAIL

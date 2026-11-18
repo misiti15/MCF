@@ -1,0 +1,15 @@
+feature,E1 old backtester,E2 lab frames,E3 session replay,E4 bespoke,live
+"signals = live code (eligible/signals, refire, re-entry, dedupe)","no (strategy.signals, no runner dedupe/re-entry)","no (mask, first bar per symbol-day)",yes,no (re-implemented),yes
+"full live universe, point-in-time","no (old 1,226 cache)","no (1,226 survivorship)",yes (packs from 10-06),partial,yes
+poll timing / outages / late bars,no,no,only --live-cal (poll logs from 10-22),no,yes
+spread / spread-vs-stop quote checks,no,no,modelled (no real quotes before 11-18),no,yes
+cost filter (P17),no,no,yes,some (L3-lowdist),yes
+account caps / slots / lots / twin / opposite side,"partial (concurrent, per-setup, 1 per symbol, lot caps)",no,yes,"partial (cap, symcap)",yes
+setup daily loss latch in cost R (LR3) / account halt,account daily R only,no,yes,L3 benches only,yes
+shortable / ETB / split-tape short gate,no,no (E90 proxy in some studies),today's flags (2-year) / session universe.csv (livecal),proxy,yes
+earnings blackout,no,yes (generator data),yes (team),varies,yes
+entry fill,next bar open (+slip),signal-bar close,submit-minute open (+0.64 x bar move + half spread with livecal),signal-bar close or next 1-min open,Alpaca paper
+target fill,touch,first touch,trade-through (or touch),through by $0.01,Alpaca paper
+R definition,|entry-stop| x shares,0.25 x daily ATR,|entry-stop| x shares,varies,|entry-stop| x shares
+cost model,config Costs,production 1c+1bp (+2c stops),production; scored LR8,LR8 / production,LR8 (from 11-12)
+"trade management (BE, trail, time stop, scale-out, SPY exit)",simulate() (live mirrors it),geometry only,live code,partial,live code

@@ -1,0 +1,16 @@
+gate,what,target,today,status,source
+G1a,"Session replay (calibrated) held-out trade match, pooled",>= 98%,"87.1% (2,516 / 2,889; 11-02..11-16)",FAIL,research/replay_cal/heldout/SCORECARD.md
+G1b,"extra replay trades, pooled",<= 2%,26.2%,FAIL,same
+G1c,"matched-pair R bias, session-clustered",|mean| <= 0.01R and not optimistic,"+0.005R [-0.008, +0.018]; Testing 2 +0.017 [+0.000, +0.033] optimistic",PASS pooled / FAIL Testing 2,same
+G1d,per account match (Primary / Testing 1 / Testing 2),>= 98% each,73.9% / 91.0% / 89.7%,FAIL,same
+G1e,daily R corr / sign agreement,>= 0.95 / >= 90%,0.945 / 94%,FAIL (just),same
+G1f,skip-reason match,>= 95%,77.7%,FAIL,same
+G1g,protected setup L3-gap-slope-fromopen-FD (Primary) match,>= 95% (added here),"44% match, 27% extra; live avg R 0.388 vs replay 0.099",FAIL,same
+G1h,held-out sessions scored WITH recorded live quotes,>= 10 sessions,"0 (quote recording effective 2026-11-18, ledger 2026-11-17-record-live-quotes)",NOT YET,research/ledger.jsonl
+G2a,2-year live-code replay running (research/replay2y),"all replayable stored sessions x all accounts, nightly increment",PLAN.md only; 0 sessions replayed,NOT YET,research/replay2y/PLAN.md
+G2b,"2-year replay overlap check on live sessions (no poll logs, no quotes)",>= 98% / <= 2% / |bias| <= 0.01R,not run,NOT YET,research/replay2y/PLAN.md
+G3,throughput: a parent + copy tune over all live sessions + replayable 2-year sessions,<= 1 night on the runner,"unmeasured (Primary alone 133 s/session; Testing 2 ~1,070 s)",NOT YET,research/replay/VALIDATION.md
+G4,helper extraction is behaviour-neutral,golden replay outputs byte-identical on 3 sessions x 3 accounts; full pytest,not started,NOT YET,this plan S2
+G5,shared exit walker = full replay exits,"same exit on >= 99% of trades, |mean R diff| <= 0.005R",not started,NOT YET,this plan S4
+G6,"every E1/E2 decision consumer ported (ledger check, cli backtest/demo, setup_screen, rescore_bt, backlog re-test, Workbench 2-year, Generator confirm)",7 of 7,0 of 7,NOT YET,u11_consumers.csv
+G7,shadow vs replay on the same sessions (forward cross-check),replay not rosier than shadow beyond the 0.02-0.03R fills-B margin,shadow from 11-17; not measured,NOT YET,mcf/research/shadow_calib.py

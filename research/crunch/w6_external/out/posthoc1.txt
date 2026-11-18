@@ -1,0 +1,43 @@
+== P1 trade R by relation to the open gap
+               mean         count      
+half          check    fit  check   fit
+gk                                     
+fade gap     -0.187 -0.157   2580   920
+no gap (<2%) -0.149 -0.123  11443  6486
+with gap      0.008 -0.058   2974  1388
+primary
+               mean        count     
+half          check    fit check  fit
+gk                                   
+fade gap     -0.596 -0.376    57   64
+no gap (<2%) -0.175 -0.006   274  458
+with gap      0.120  0.065   281  171
+setups with >=20 gap-fade trades: 46; positive avg 7
+                                                                                  count   mean     sum
+strategy                                                                                              
+GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long                        55  0.039   2.130
+exhaustion_short-FD                                                                  61  0.119   7.255
+NM-HL-T75-pm-long                                                                    22  0.393   8.642
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long     54  0.242  13.083
+GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long               156  0.111  17.273
+== P2 late (>=15:00) trades aligned with SPY 09:30-10:00 incl overnight: n 181, R -39.6; skipping them: day-t 2.36, fit +9.0 check +30.7, days 26
+   worst days {'2026-10-30': -11.3, '2026-11-02': -9.8, '2026-10-29': -5.1, '2026-11-13': -3.8} share of worst day 0.28
+   by setup: {'intraday_momentum': {'count': 63, 'sum': -19.7}, 'NS3-failed-vwap-reclaim-short-FD': {'count': 6, 'sum': -3.9}, 'GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short': {'count': 6, 'sum': -3.9}, 'GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short': {'count': 5, 'sum': -3.7}, 'RW7-gapdn-bounce-early-short-FD': {'count': 5, 'sum': -2.2}, 'CWT14-failbrk-orl-p10-lowvol-long': {'count': 5, 'sum': -2.1}}
+   by account: {('gen', False): {'count': 8, 'mean': 0.136}, ('gen', True): {'count': 25, 'mean': -0.21}, ('graveyard', False): {'count': 26, 'mean': 0.023}, ('graveyard', True): {'count': 32, 'mean': -0.178}, ('ondeck', False): {'count': 16, 'mean': 0.185}, ('ondeck', True): {'count': 76, 'mean': -0.305}, ('primary', False): {'count': 6, 'mean': -0.304}, ('primary', True): {'count': 4, 'mean': -0.072}, ('testA', False): {'count': 32, 'mean': 0.305}, ('testA', True): {'count': 23, 'mean': -0.254}, ('testB', False): {'count': 3, 'mean': -0.291}, ('testB', True): {'count': 4, 'mean': 0.407}, ('testC', False): {'count': 2, 'mean': -0.688}, ('testC', True): {'count': 4, 'mean': 0.02}, ('testD', False): {'count': 4, 'mean': -0.112}, ('testE', True): {'count': 1, 'mean': -0.214}, ('testF', False): {'count': 3, 'mean': -0.085}, ('testF', True): {'count': 12, 'mean': -0.07}}
+   early (<10:00) trades against SPY move-so-far: n 1209, avg -0.321; fit -0.318 check -0.323; aligned early avg -0.001
+== P3 R per trade by SPY prior-10-session realized vol tercile
+          n    avg  days
+rvb                     
+low    5246 -0.140    11
+mid    7831 -0.134    10
+high  12714 -0.110    10
+        n    avg   dayR
+rvb                    
+low   424 -0.186 -7.184
+mid   411  0.135  5.544
+high  470 -0.086 -4.051
+side     -1      1
+rvb               
+low  -0.146 -0.136
+mid  -0.125 -0.141
+high -0.083 -0.132
