@@ -1,0 +1,105 @@
+== X1 PBO (CSCV, S=8)
+total: setups=135 PBO=0.24 median OOS pct-rank of IS-best=0.87 mean OOS value IS-best=10.073 vs OOS median setup -4.241
+avg: setups=135 PBO=0.74 median OOS pct-rank of IS-best=0.13 mean OOS value IS-best=-0.323 vs OOS median setup -0.116
+  (descriptive) IS top-decile basket OOS total R minus all-setup mean: mean 3.48R, share>0 0.71
+== X2 try-count-scaled bar
+distinct setups=210 bar=3.27; setups>=30 trades=114; t>=bar: 0; t>=2: 0; t>=1.5: 2
+  null expectation: of 114 null setups ~7.6 would show t>=1.5 by chance (one-sided)
+                                                                           setup   n  days   totR  avgR  t_day  avg_wobd  bestshare  fit_avg  check_avg
+                                                        L3-gap-slope-fromopen-FD 378    23 90.293 0.239  1.695     0.190      0.372    0.140      0.350
+             GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short  64     5 13.582 0.212  1.610     0.143      0.505      NaN      0.212
+                                                         L3-gap-slope-lowdist-FD 108    18 26.489 0.245  1.231     0.109      0.687    0.066      0.389
+                                             RW3-gapdn-rsi5pop-flowsell-short-FD 185    26 37.303 0.202  1.084     0.081      0.651    0.444      0.004
+                                                NM-RWN4-ns2-spyup05-notfri-short  40     2  9.103 0.228  0.962    -0.043      1.038   -0.043      0.295
+                                      RW5-heat30-flowsell-rsi5pop-gapdn-short-FD 198    26 30.028 0.152  0.933     0.061      0.655    0.381     -0.048
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long 174     6 67.059 0.385  0.908    -0.056      1.082      NaN      0.385
+                                                     ST7-rsi50dn-long-pm-t1s1-FD  49    17  5.770 0.118  0.850     0.038      0.702    0.199      0.078
+                                                          L3-gap-slope-rsi5hi-FD 152    22 14.814 0.097  0.798     0.014      0.889    0.123      0.081
+        GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short 132     6  4.794 0.036  0.679    -0.007      1.126      NaN      0.036
+                                             NM-RWR4-ns2-up3-qqqup-slopedn-short  32     4  3.520 0.110  0.624    -0.205      1.465   -0.339      0.193
+                                                           NM-MF3-qqqdn-gapdn-FD  47     9  7.139 0.152  0.517    -0.158      1.643    0.652     -0.158
+== X3 gap-fade cells
+gap-fade trades n=3500 (13.5% of all), avgR -0.179; ADV tercile cuts $195.0M/$491.7M; rv10 median 3.38e-05
+       mean          count       
+unc highVol lowVol highVol lowVol
+liq                              
+low  -0.233 -0.187     856    122
+mid  -0.220 -0.205     846     91
+top  -0.124 -0.151    1460    125
+       mean        count     
+half  check    fit check  fit
+liq                          
+low  -0.226 -0.232   731  247
+mid  -0.239 -0.160   693  244
+top  -0.131 -0.112  1156  429
+          mean          count       
+half     check    fit   check    fit
+unc                                 
+highVol -0.187 -0.145  2580.0  582.0
+lowVol     NaN -0.178     NaN  338.0
+F3 skip gap-fade in top ADV tercile: skipped 1585 trades in 118 setups; R change +199.6 (fit +48.2, check +151.4); day-t 1.56; setups improve 75 / worsen 43; worst-hit setups: GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long -17.8, CWT12-coil-k6-long -5.6, NM-RWN3-ns3-spyup-early-short -4.8, GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short -4.3
+   avg R change per skipped trade w/o best day +0.086, best-day share 0.37
+== X4 shorts
+shorts n=11418 avgR -0.109, tail rate 0.006, tail R share 0.03 of short losses
+          n   avgR   tail   fitR   chkR
+px                                     
+<5        0    NaN    NaN    NaN    NaN
+5-10    474  0.001  0.013  0.108 -0.128
+10-20   917 -0.022  0.007 -0.024 -0.020
+>20    9969 -0.122  0.006 -0.131 -0.117
+            n   avgR   tail   fitR   chkR
+run                                      
+<10%    10486 -0.102  0.007 -0.102 -0.102
+10-25%    744 -0.174  0.003 -0.160 -0.177
+>=25%     130 -0.261  0.000 -0.034 -0.298
+           n   avgR   tail   fitR   chkR
+gup                                     
+<3%    10432 -0.107  0.007 -0.111 -0.106
+3-10%    854 -0.115  0.000 -0.013 -0.163
+>=10%     74 -0.199  0.014  0.084 -0.238
+F4 skip shorts with prior-5-session return >= +25%: skipped 130 trades in 43 setups; R change +34.0 (fit +0.6, check +33.4); day-t 1.32; setups improve 30 / worsen 13; worst-hit setups: L3-gap-slope-fromopen-FD -3.1, GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short -2.5, CWT13-vwapstretch-z05-short -2.1, CWT09-gapdn-vwaploss-g5-short -1.6
+   avg R change per skipped trade w/o best day +0.145, best-day share 0.67
+   protected L3-gap-slope-fromopen-FD trades hit by F4: 8, R +3.1
+== X5 SPY first-half-hour sign vs late trades
+late trades n=281, aligned 181 avgR -0.219, against 100 avgR 0.096
+        mean        count    
+half   check    fit check fit
+al                           
+False  0.090  0.132    85  15
+True  -0.213 -0.242   144  37
+  (descriptive, all entry windows) aligned-minus-against avgR:
+al        False  True 
+win                   
+<10      -0.325 -0.017
+10-11:30 -0.180 -0.092
+11:30-14 -0.152 -0.040
+14-15    -0.034 -0.049
+>=15      0.120 -0.247
+F5 after 15:00 take only SPY-aligned trades: skipped 100 trades in 36 setups; R change -9.6 (fit -2.0, check -7.7); day-t -0.79; setups improve 18 / worsen 18; worst-hit setups: CWT13-vwapstretch-z05-long -5.3, CWT13-vwapstretch-z075-long -3.9, exhaustion_short -2.0, CWT14-failbrk-pdl-p10-long -1.4
+   avg R change per skipped trade w/o best day -0.122, best-day share nan
+== X6 vol-managed daily weights
+current Primary setups (>=3 Primary trades since 11-04): ['L3-gap-slope-fromopen-FD', 'RW3-gapdn-rsi5pop-flowsell-short-FD', 'MF4-h40-open-flowsell-FD', 'RW5-heat30-flowsell-rsi5pop-gapdn-short-FD', 'MF2-open-rsimidhi-flowsell-FD', 'ST7-rsi50dn-long-pm-t1s1-FD', 'NS5-sma50-flush-oversold-long', 'L3-gap-slope-rsi5hi-FD', 'NS1-rsidip-rsi5pop-long', 'NM-ETF-late-dip-di-long']
+Primary journal L=10: fit: R -17.6->-30.2, daySharpe -0.056->-0.113, worst -29.1->-27.1, mean w 1.00; check: R -48.2->-11.1, daySharpe -0.167->-0.224, worst -31.2->-7.1, mean w 0.28
+Primary journal L=5: fit: R -17.6->-33.1, daySharpe -0.056->-0.145, worst -29.1->-22.8, mean w 1.00; check: R -48.2->-5.4, daySharpe -0.167->-0.131, worst -31.2->-5.2, mean w 0.26
+Primary journal L=20: fit: R -17.6->+0.1, daySharpe -0.056->0.000, worst -29.1->-26.3, mean w 1.00; check: R -48.2->-18.8, daySharpe -0.167->-0.212, worst -31.2->-10.8, mean w 0.48
+All accounts pooled (per-trade R) L=10: fit: R -1026.6->-1026.7, daySharpe -0.813->-0.802, worst -279.9->-260.3, mean w 1.00; check: R -2164.2->-639.3, daySharpe -1.229->-1.006, worst -458.1->-127.9, mean w 0.28
+All accounts pooled (per-trade R) L=5: fit: R -1026.6->-940.7, daySharpe -0.813->-0.769, worst -279.9->-251.2, mean w 1.00; check: R -2164.2->-643.2, daySharpe -1.229->-0.944, worst -458.1->-135.9, mean w 0.26
+All accounts pooled (per-trade R) L=20: fit: R -1026.6->-1010.4, daySharpe -0.813->-0.828, worst -279.9->-252.4, mean w 1.00; check: R -2164.2->-1109.6, daySharpe -1.229->-1.076, worst -458.1->-215.5, mean w 0.48
+Current Primary setups pooled across accounts L=10: fit: R +169.4->+152.5, daySharpe 0.479->0.499, worst -13.8->-12.8, mean w 1.00; check: R -62.6->-0.5, daySharpe -0.176->-0.010, worst -41.8->-5.2, mean w 0.28
+Current Primary setups pooled across accounts L=5: fit: R +169.4->+136.7, daySharpe 0.479->0.513, worst -13.8->-10.8, mean w 1.00; check: R -62.6->-5.3, daySharpe -0.176->-0.094, worst -41.8->-9.5, mean w 0.26
+Current Primary setups pooled across accounts L=20: fit: R +169.4->+195.0, daySharpe 0.479->0.461, worst -13.8->-12.4, mean w 1.00; check: R -62.6->-4.3, daySharpe -0.176->-0.045, worst -41.8->-8.7, mean w 0.48
+  per setup (>=30 trades) total R change under L=10 weights: improve 87, worsen 27, median +6.95R, sum +1453.7R
+  weights by date: 10-06:1.13 10-07:1.03 10-08:1.30 10-09:1.16 10-12:1.14 10-13:1.62 10-14:1.71 10-15:0.93 10-16:0.92 10-19:0.74 10-20:0.81 10-21:0.87 10-22:0.79 10-23:0.60 10-26:0.67 10-27:0.56 10-28:0.52 10-29:0.63 10-30:0.62 11-02:0.44 11-03:0.45 11-04:0.45 11-05:0.32 11-06:0.11 11-09:0.11 11-10:0.09 11-11:0.09 11-12:0.08 11-13:0.08 11-16:0.09 11-17:0.08
+== X7 implied breadth
+current Primary setups n=10, avg pairwise corr of daily R 0.091, implied breadth 5.50
+                                            L3-gap-slope-fromopen-FD  RW3-gapdn-rsi5pop-flowsell-short-FD  MF4-h40-open-flowsell-FD  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD  MF2-open-rsimidhi-flowsell-FD  ST7-rsi50dn-long-pm-t1s1-FD  NS5-sma50-flush-oversold-long  L3-gap-slope-rsi5hi-FD  NS1-rsidip-rsi5pop-long  NM-ETF-late-dip-di-long
+L3-gap-slope-fromopen-FD                                        1.00                                 0.74                      0.05                                        0.17                          -0.08                        -0.01                          -0.34                    0.07                    -0.07                    -0.01
+RW3-gapdn-rsi5pop-flowsell-short-FD                             0.74                                 1.00                      0.09                                        0.19                          -0.10                         0.01                           0.02                    0.09                     0.05                    -0.25
+MF4-h40-open-flowsell-FD                                        0.05                                 0.09                      1.00                                        0.46                           0.12                         0.04                           0.18                    0.55                     0.39                     0.04
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                      0.17                                 0.19                      0.46                                        1.00                          -0.45                        -0.05                           0.32                    0.03                     0.23                    -0.03
+MF2-open-rsimidhi-flowsell-FD                                  -0.08                                -0.10                      0.12                                       -0.45                           1.00                         0.01                          -0.20                    0.55                     0.35                    -0.09
+ST7-rsi50dn-long-pm-t1s1-FD                                    -0.01                                 0.01                      0.04                                       -0.05                           0.01                         1.00                           0.31                   -0.09                    -0.08                    -0.07
+NS5-sma50-flush-oversold-long                                  -0.34                                 0.02                      0.18                                        0.32                          -0.20                         0.31                           1.00                   -0.04                     0.13                    -0.04
+L3-gap-slope-rsi5hi-FD                                          0.07                                 0.09                      0.55                                        0.03                           0.55                        -0.09                          -0.04                    1.00                     0.76                     0.13
+NS1-rsidip-rsi5pop-long                                        -0.07                                 0.05                      0.39                                        0.23                           0.35                        -0.08                           0.13                    0.76                     1.00                    -0.02
+NM-ETF-late-dip-di-long                                        -0.01                                -0.25                      0.04                                       -0.03                          -0.09                        -0.07                          -0.04                    0.13                    -0.02                     1.00

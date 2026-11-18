@@ -178,7 +178,11 @@ def epoch_pairs(shadow: pd.DataFrame, baseline_id: str = "BASE1", start: str | N
     t["R"] = trade_r(t)
     pre = f"{baseline_id}:"
     is_b = t["strategy"].astype(str).str.startswith(pre)
-    cur = t[~is_b].groupby("date")["R"].sum()
+    cur_t = t[~is_b]
+    if "meta" in cur_t.columns:     # current book = of_live lots only (a future shadow-only setup is not the book)
+        mode = cur_t["meta"].astype(str).str.extract(r"mode=(\w+)")[0].fillna("of_live")
+        cur_t = cur_t[mode == "of_live"]
+    cur = cur_t.groupby("date")["R"].sum()
     base = t[is_b].groupby("date")["R"].sum()
     days = sorted(set(base.index))           # sessions the baseline ran
     rows = [{"date": d, "current": round(float(cur.get(d, 0.0)), 2), "baseline": round(float(base.get(d, 0.0)), 2),
