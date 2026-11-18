@@ -59,7 +59,31 @@ def selftest():
         e = eprocess(np.full(30, 0.2), CAP); assert e["edge_alarm_day"] is not None and e["harm_alarm_day"] is None
     except ImportError:
         pass
+    N = lambda x: pd.Timestamp(x, tz="America/New_York")
+    for name, now, com, refuse in [("today, final 15:56 commit", N("2026-11-18 16:40"), N("2026-11-18 15:56"), False),
+                                   ("today, commit < 10 min old", N("2026-11-18 16:40"), N("2026-11-18 16:35"), True),
+                                   ("today, early push 14:00 only", N("2026-11-18 16:40"), N("2026-11-18 14:00"), True),
+                                   ("today, before 16:30", N("2026-11-18 16:20"), N("2026-11-18 15:56"), True),
+                                   ("past day, later commit", N("2026-11-19 01:00"), N("2026-11-18 16:05"), False),
+                                   ("no journal", N("2026-11-19 01:00"), None, True)]:
+        assert bool(journal_final("2026-11-18", now, com)) == refuse, name
+    print("selftest ok: journal-final guard (6 cases)")
     print("selftest ok: fade trade (time exit, 1-ATR stop, gap-through fill, costs), gap buckets, e-process hook")
+
+
+def journal_final(day: str, now=None, commit=None) -> list[str]:
+    """Skeptic 11-18 00:51 / Lead 01:00 (checklist #40): refuse unless origin/mcf-data journal.db's last commit is at or after
+    <day> 15:55 ET and, when <day> is today, >= 10 min old. One source: fwdcal/mirror.guard_decide (not a copy)."""
+    import subprocess
+    _a = sys.argv; sys.argv = [sys.argv[0]]
+    sys.path.insert(0, str(HERE.parent / "fwdcal")); import mirror as M  # noqa: E402
+    sys.argv = _a
+    if commit is None:
+        ts = subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--format=%cI", "origin/mcf-data", "--", "journal.db"],
+                            capture_output=True, text=True).stdout.strip()
+        commit = pd.Timestamp(ts) if ts else None
+    now = now if now is not None else pd.Timestamp.now(tz="America/New_York")
+    return M.guard_decide([day], now, {"mcf-data": commit})
 
 
 def main():
@@ -74,6 +98,8 @@ def main():
     import lib
     from eproc import eprocess
     Dd = lib.daily().sort_values(["symbol", "date"]); Dd = Dd[Dd.date <= D1]
+    why = journal_final(a.date); print(f"guard mcf-data journal: {'ok' if not why else why}")
+    assert not why, "refusing: journal not final - " + "; ".join(why)
     assert (Dd.date == D1).sum() > 100, f"refusing: daily data has no {D1} rows - run append_day.py {D1} first (a missing day must not read as 0 events)"
     pc = Dd.groupby("symbol").close.shift(1)
     tr = np.maximum(Dd.high - Dd.low, np.maximum((Dd.high - pc).abs(), (Dd.low - pc).abs()))
