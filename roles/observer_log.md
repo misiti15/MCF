@@ -417,3 +417,7 @@ exact-minute 0/10 (stable offset); official RULE21-DB line pending from Builder.
 ## Run 68 — 2026-11-17 ~21:41 ET
 FAMC 11-17 built same night: NVDA (audit 1/1). Official rule 21 (RULE21-DB): 3/10 pass; pooled pass carried by Graveyard; arena ~+0.035R
 optimistic (Skeptic). Owner PR #223 merged with the week's results. Scout downgraded A2 (precursors predict size not side, already in MCF).
+
+## Run 69 — 2026-11-18 ~01:41 ET
+Quiet. Owner rules SRCV1 (non-live sources = 0 effective sessions) and ODPREP (one Workbench tune before On Deck) added to my standards.
+FAMC 11-18 (NVDA) guards added by Builder (unclosed / missing day / journal-final). A2 'none yet'; A1 carries one descriptive side line.

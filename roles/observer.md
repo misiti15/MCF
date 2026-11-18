@@ -24,7 +24,11 @@
 9. Live R: raw r_multiple is basis-stable across LR8 (11-12); pnl_adj needs per-trade recompute (exit-linked).
 10. Every figure carries rule-change context; one-big-day share on any record.
 11. Owner GLOSSARY (11-16): say Live / Shadow / Session replay / 2-year backtest / 2-year screen / 2-year history exactly;
-    never mix sources in one number. Session replay weight 0.35 / 0.2 / 0 by held-out accuracy (config/effective_sessions.json).
+    never mix sources in one number.
+12. Owner SRCV1 (11-17): every non-live source (2-year history/backtest/screen, Session replay, Shadow) counts 0 effective
+    sessions: comparison only, never toward On Deck / Primary. Guild studies inform rules and setups; they never add record.
+13. Owner ODPREP (11-17): a setup-specific guild finding feeds ONE pre-registered Workbench tune (<= 2 changes) in testing,
+    never a direct On Deck move.
 
 ## Key findings to date (newest first)
 - Index nulls (clean, 426 sessions): no large continuation after a reading; small (5-10bps) unknown. Live ETF R = index move.
