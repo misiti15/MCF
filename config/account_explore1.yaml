@@ -57,7 +57,6 @@ live:
     - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # 3 traded sessions / 21 trades
     - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short   # 3 traded sessions / 41 trades
     - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short   # 3 traded sessions / 60 trades
-    - GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long   # 3 traded sessions / 64 trades
     - NM1-cwt09-g10-vwaploss-short   # 4 traded sessions / 6 trades
     - GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long   # 4 traded sessions / 25 trades
     - GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long   # 4 traded sessions / 30 trades
@@ -815,7 +814,7 @@ strategies:
         overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
         n_tried_in_run: 3000
   GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/generator/modules/GEN-261028-08-ret5m-hi-lunch-long.py
     context:

@@ -70,6 +70,11 @@ def _cfg(monkeypatch, acct):
     return load_config()
 
 
+# C3 2026-11-18 (effective 2026-11-19): C3-EXIT100 moved these to the Graveyard; C3-WB5 added a Workbench copy
+C3_OUT = {"GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": "explore1", "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long": "livelab"}
+C3_IN = {"L3-gap-slope-rsi5hi-FD-WB5": "livelab"}
+
+
 def _on(cfg):
     return {k for k, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("enabled")}
 
@@ -82,6 +87,7 @@ def test_moves_are_moves(monkeypatch):
     for acct, want in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         want = want | {k for k, a in FROM_GY.items() if a == acct} | {k for k, a in FROM_GEN.items() if a == acct}
         want = want | {k for k, a in WB_1116.items() if a == acct}
+        want = (want - set(C3_OUT)) | {k for k, a in C3_IN.items() if a == acct}
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -126,9 +132,10 @@ def test_twin_groups_never_share_an_account(monkeypatch):
 def test_assignments_and_ledger():
     d = json.loads((ROOT / "docs/live/assignments.json").read_text())
     for acct, base in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
-        assert set(d["accounts"][acct]) == (base | {k for k, a in FROM_GY.items() if a == acct}
-                                            | {k for k, a in FROM_GEN.items() if a == acct}
-                                            | {k for k, a in WB_1116.items() if a == acct}), acct
+        assert set(d["accounts"][acct]) == ((base | {k for k, a in FROM_GY.items() if a == acct}
+                                             | {k for k, a in FROM_GEN.items() if a == acct}
+                                             | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
+                                            | {k for k, a in C3_IN.items() if a == acct}), acct
     assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")

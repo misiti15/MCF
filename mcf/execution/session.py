@@ -74,10 +74,20 @@ def freeze_setups(cfg: dict, state_dir: str | Path, now: pd.Timestamp) -> str:
     rot = cfg.get("rotation") or {}
     if rot.get("session") != now.date().isoformat():   # load_config resolved another day: resolve for THIS session
         rot = rotation(cfg, now.date())                 # benched / guest windows (logged in the snapshot)
+    try:   # C3-ROT (owner 2026-11-18): family caps (2 CWT14 arena-wide, 6 GEN per arena account) for THIS session
+        from ..rotation import family_caps
+
+        family_caps(cfg, now.date())
+        rot = cfg.get("rotation") or rot
+    except Exception as e:     # never fatal: the session trades its configured setups without the caps
+        print(f"family caps skipped: {type(e).__name__}: {e}")
     snap.write_text(json.dumps({**{k: cfg.get(k) for k in SETUP_KEYS}, "rotation": rot}, indent=1, default=str))
     extra = ""
+    fb = sum(len(v) for v in (rot.get("family_benched") or {}).values())
+    if fb:
+        extra += f"; family-capped {fb} (C3-ROT)"
     if rot["benched"] or rot["away"] or rot["guests"]:
-        extra = (f"; benched {len(rot['benched'])}, away {len(rot['away'])}, guests {len(rot['guests'])}"
+        extra += (f"; benched {len(rot['benched'])}, away {len(rot['away'])}, guests {len(rot['guests'])}"
                  + (f" (benched: {', '.join(rot['benched'])})" if rot["benched"] else ""))
     return f"setups snapshot written for {now.date()} ({len([s for s in cfg['strategies'].values() if s.get('enabled')])} enabled{extra})"
 

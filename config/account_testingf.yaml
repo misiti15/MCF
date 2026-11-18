@@ -56,7 +56,6 @@ live:
     - GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long   # 5 traded sessions / 8 trades
     - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short   # 5 traded sessions / 11 trades
     - GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short   # 6 traded sessions / 14 trades
-    - GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long   # 9 traded sessions / 123 trades
     - GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short   # 10 traded sessions / 85 trades
     - MF1-945-flowsell-vwapup   # 14 traded sessions / 31 trades
     - NS4-pm-vwap-reclaim-oversold-short-FD   # 15 traded sessions / 50 trades
@@ -186,7 +185,7 @@ strategies:
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation, q8, day-of-week]
   GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long:   # moved from Setup Generator 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19)
     type: lab
     module: research/generator/modules/GEN-261020-05-orbfaildn-lunch-long.py
     context:
