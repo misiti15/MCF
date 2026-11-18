@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-17 08:01:52-05:00",
+ "generated": "2026-11-17 22:09:14-05:00",
  "what": "Live-session bar packs (RTH 1-minute SIP bars, full live universe + daily bars) on GitHub Releases bars-<YYYY-MM>, assets 1min-<day>.parquet / 1day-<day>.parquet (store-bars workflow)",
- "sessions_stored": 147,
+ "sessions_stored": 148,
  "first": "2024-09-16",
- "last": "2026-11-16",
- "symbols_per_session": 4369,
+ "last": "2026-11-17",
+ "symbols_per_session": 4375,
  "mb_per_session": 16.4,
- "total_gb": 2.404,
+ "total_gb": 2.423,
  "largest_asset_mb": 17.5,
  "headroom": "GitHub Release assets: 2 GB per file limit; largest asset 17 MB (0.9% of the limit). One release per month keeps each release to ~21 sessions (~0.34 GB/month at the current size); no total-size limit is documented for releases, ~4.1 GB/year.",
  "progress": {
@@ -14,8 +14,8 @@
    "name": "Live session",
    "weight": 1.0,
    "target": 31,
-   "stored": 30,
-   "symbols_per_session": 4896,
+   "stored": 31,
+   "symbols_per_session": 4904,
    "inactive_now_per_session": null,
    "mb_per_session": 19.2,
    "months_done": [
@@ -26,7 +26,7 @@
   },
   "2y": {
    "name": "2-year history",
-   "weight": 0.175,
+   "weight": 0.0,
    "target": 435,
    "stored": 117,
    "symbols_per_session": 4235,
@@ -43,10 +43,7 @@
    "est_total_gb": 6.5
   }
  },
- "superseded_cleanup_candidates": [
-  "bars-2024-09 (8 assets)",
-  "bars-2024-10 (4 assets)"
- ],
+ "superseded_cleanup_candidates": [],
  "locked_block": "2024-11-01..2025-02-28 never fetched or stored (rule 19)",
  "sessions": [
   {
@@ -1782,6 +1779,18 @@
    "release": "bars-2026-11",
    "tier": "live",
    "weight": 1.0
+  },
+  {
+   "session": "2026-11-17",
+   "symbols": 5142,
+   "universe": 5117,
+   "rows_1min": 1236193,
+   "mb_1min": 15.57,
+   "mb_1day": 4.26,
+   "release": "bars-2026-11",
+   "tier": "live",
+   "weight": 1.0,
+   "inactive_now": 0
   }
  ],
  "note": "Educational only - not financial advice."
