@@ -88,3 +88,13 @@ only (weight 0) until it earns trust via the overlap check and a later SRC-VALUE
   share < 50% AND green-day % ≥ 50% AND avg R > 0 in both periods (2024-10 and 2025). Flag only, no move.
 - **Supports / contradicts:** setups with ≥ 30 replay trades and ≥ 20 live trades; supports = same sign, contradicts =
   opposite sign; ranked by |replay avg R − live avg R| (contradicts) and by min(|replay|, |live|) (supports).
+
+## Addendum B (2026-11-18 18:40 UTC, before any 2-year result was scored)
+
+storage.json (generated 2026-11-18 09:19 ET, merged in after addendum A) now shows the 2-year history stored through
+2026-01 (265 of 435 sessions). To cover the second half of 2025 as well, a **batch 2** of one session per month is
+added after batch 1 (tier-1 accounts first, same engine): 2025-07-15, 2025-08-14, 2025-09-16, 2025-10-15,
+2025-11-13, 2025-12-11, 2026-01-14. Periods for the both-periods test become: 2024-10, 2025 H1 (04-30..06-26),
+2025 H2 + 2026-01; the fast-lane rule then requires avg R > 0 in at least 2 of the 3 periods with trades (and none
+below −0.10R). Base commit of the config and code replayed: 8a9a0cb6c (the merge brought only research files and
+storage.json; no config or code changed).
