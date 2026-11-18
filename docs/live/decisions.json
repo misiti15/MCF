@@ -1714,5 +1714,20 @@
   "link": "research/usage_review_1118/PLAN.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "REPS2-LANE",
+  "title": "Low-rep fast lane: rare-trigger setups get shadow-only reps in Testing A",
+  "what": "Each night research/reps2/fastlane.py lists current setups with 0-10 live trades and routes them. The 'full-universe' (rare trigger, < 0.5 signals/session) setups go into Testing A's shadow_setups (full universe, shadow only: no orders, no slots), re-picked nightly. Shadow reps stay a separate column (SRCV1, weight 0) and never count toward On Deck / Primary minimums; a strong shadow record earns a live slot (spotlight / C3-EXIT100 freed slots), where live decides. After the close only; no setup/exit logic changes.",
+  "recommend": "Yes",
+  "numbers": [
+   "65 setups with 0-10 live trades; 25 rare-trigger, 17 just moved, 12 gate-blocked, 9 as-is, 2 check-wiring, 0 slot-starved",
+   "Shadow vs live 11-17/18: match 98.6%, extra 0.0%, bias -0.049R (pessimistic), daily corr 0.993",
+   "SPRT early decisions: 0 of 65 low-rep setups decidable; v1 not fit (bootstrap false-FAIL 10.4%)"
+  ],
+  "why": "The low-rep setups mostly do not fire, so slots and spotlight barely help; shadow gives every rare signal a conservative, high-fidelity preview from the next session at no risk, so promising ones are spotted in days, not a month.",
+  "link": "research/reps2/NOTES.md",
+  "status": "open",
+  "answered": null
  }
 ]
