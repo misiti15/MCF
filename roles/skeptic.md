@@ -65,4 +65,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-18 15:50 UTC (run 80): REPS3 pre-score: match forecast by setup id (moves), new setups apart (17 WB copies), split pre/post TSZ1 11-17, full ledger context; ICCSET beside pre-11-17.
 - 11-18 17:50 UTC (run 81): REPS3: GY-BENCH benched 18 Graveyard setups 11-18 -> exclude benched (setup, day) pairs from realized + forecast (owner playing-time rule); per-setup eligible sessions. Observer caught split-setup flag gap.
 - 11-18 19:50 UTC (run 82): confirmed from ledger: 18 true benches + 20 guests (benched-away + guest patches); REPS3 excluded pairs must be 18; suggested assert.
+- 11-18 21:50 UTC (run 83): REPS3 guest fix in (excluded == 18 asserted; Observer re-checked). FAMC 11-18 NVDA one event +0.220R net: cautioned (one-big-day, single-name control noise, K_edge 0.663; ~80-120 calendar sessions to any alarm).
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
