@@ -1400,5 +1400,78 @@
   "link": "research/l3_bespoke_1117/RESULTS.md",
   "status": "answered",
   "answered": "2026-11-17 ~19:35 ET owner: L3-AM yes - test run 11-17 night (research/l3_bespoke_1117/L3AM_RESULTS.md): FAIL on the 2-year VALID (avg R -0.047 vs -0.043, w/o best day -0.073 vs -0.064, t 0.36 vs bar 2.75; live consistent +0.338 vs +0.266R); no copy proposed, parent unchanged"
+ },
+ {
+  "code": "W1-BAR",
+  "title": "Primary admission and demotion bar (consultant W1)",
+  "what": "Admit to Primary only with >=30 testing trades after costs, >=8 sessions, avg R w/o best day >0 and >=50% green days; demote at -10R cumulative since admission only; no half-risk sizing.",
+  "recommend": "Yes - process rule only; the promotion hold stays",
+  "numbers": [
+   "Back-test +19.3R on 12 tested promotions; 18 of 27 setups improve, 7 worse",
+   "L3 +7.1R; fit half -11.1R, check half +30.4R",
+   "Draft w/o-best-day demotion would have cost L3 -36.8R"
+  ],
+  "why": "Testing records did not carry over (+0.23 to -0.08 R/trade); a hard -10R demotion protects one-big-day winners like L3.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W7-TUNE27-08",
+  "title": "One Workbench tune of GEN-261027-08 as a testing copy",
+  "what": "ODPREP tune of Lunch Failed-Breakdown Short as a copy in Testing A or C with one pre-registered exit change (1R target or breakeven after +0.5R).",
+  "recommend": "Yes - testing copy only, after hours",
+  "numbers": [
+   "64 trades, +0.212 avg R, +0.143 w/o best day",
+   "Positive in both halves (+0.20 -> +0.23)",
+   "53 of 64 trades exit at the 15:55 flatten; corr +0.81 with Primary"
+  ],
+  "why": "The only non-L3 contender positive in both halves; it has no WB copy yet.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W7-DRAIN",
+  "title": "Send 5 drains to arena / Graveyard review",
+  "what": "Review GEN-261022-09 first, then CWT14-failbrk-pdl-p10-long, GEN-261026-05, GEN-261029-08 and GEN-261019-05.",
+  "recommend": "Yes - testing/Gen only",
+  "numbers": [
+   "GEN-261022-09 -181.8R (-134.6R on 11-17)",
+   "CWT14-pdl-p10-long -93.9R on 809 trades",
+   "Others -57 to -62R each"
+  ],
+  "why": "They use slots the up-and-coming setups need.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W2-MTM",
+  "title": "Burst-aware open-R control for RW3/RW5, testing copies only",
+  "what": "Pre-register a control on open (mark-to-market) R per setup/family, tested on the RW WB copies in Testing C/D; Primary untouched.",
+  "recommend": "Optional",
+  "numbers": [
+   "Realized-R fixes all failed: -1.8 to -20.7R",
+   "RW3/RW5 corr 0.78; 46 lots open together on 10-22"
+  ],
+  "why": "The -2R latch acts on closed trades only, so it cannot stop a burst.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "W3-GB5S",
+  "title": "Shadow flag: +5R peak giveback lock",
+  "what": "Log a +5R peak giveback lock as a shadow flag on open + realized marks; no live effect; re-check after 15+ sessions.",
+  "recommend": "Optional",
+  "numbers": [
+   "Today's lineup +11.3R, but -5.3R without 11-10",
+   "L3 -3.3R (11-12 cut 31.0 -> 26.7R)"
+  ],
+  "why": "Not robust on realized R; only a shadow can measure it on open marks.",
+  "link": "research/consultant_p2/RESULTS.md",
+  "status": "open",
+  "answered": null
  }
 ]
