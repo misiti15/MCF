@@ -253,3 +253,4 @@
 - Run 74 (11-18 01:00): A2 none yet; FAMC journal guard asked; SRCV1/ODPREP noted.
 - Run 75 (11-18 03:00): A1 side line dropped (denominator); fetch approved.
 - Run 76 (11-18 05:00): A1 end point 15:55; quiet.
+- Run 77 (11-18 07:00): A1 off-grid bug fix required before run.
