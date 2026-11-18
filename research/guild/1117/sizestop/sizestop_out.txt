@@ -1,0 +1,47 @@
+trades 1309791, setups 143, frame-join missing 0.00%
+symbols 0
+symbols 200
+symbols 400
+symbols 600
+symbols 800
+symbols 1000
+symbols 1200
+half-day sessions dropped: 5197 trades
+SIZESTOP (PLAN + Amendment 1, one score): 1243214 trades with a size quintile, 143 setups, 32 families, 427 days; family N 79, BAR90 2.66
+                          0       1
+config                   C1      C2
+changed_share         0.446   0.241
+eff_net_cond           45.6   204.6
+eff_net_t              0.12    0.65
+eff_gross_cond       -131.9   -13.1
+eff_gross_t           -0.35   -0.04
+eff_exm_cond          -56.6   -46.1
+eff_exm_t             -0.18   -0.17
+wo_best               -34.3   133.2
+MDE80_per_changed    0.0019  0.0029
+MDE_bar_per_changed  0.0024  0.0037
+TRAIN_cond            -75.4   -40.0
+TRAIN_t               -0.38   -0.24
+VALID_cond            121.0   244.6
+VALID_t                0.37    0.91
+sess_up               -40.3     7.7
+sess_down             -63.8    91.6
+sess_quiet            149.7   105.3
+stop_effect_changed  0.0069  0.0077
+fam_better               21      23
+fam_worse                11       9
+worst_fam           -0.0025 -0.0043
+stopout_base          0.349   0.362
+stopout_var           0.226   0.238
+recover_rule          0.208   0.219
+recover_random        0.202   0.199
+null95               4096.8  2383.0
+rule_sum             3846.3  2303.7
+pass                  False   False
+C1: RED FLAG - stop effect positive (+0.0069R/changed trade) but conditioning ~0 (t 0.12): known unconditional widening (STOPW), not the gap condition
+C1: CLOSED - nothing above 0.0024R per changed trade at the bar (MDE80 0.0019R); smaller unknown
+C2: RED FLAG - stop effect positive (+0.0077R/changed trade) but conditioning ~0 (t 0.65): known unconditional widening (STOPW), not the gap condition
+C2: CLOSED - nothing above 0.0037R per changed trade at the bar (MDE80 0.0029R); smaller unknown
+configs shown: 2 (family N 79)
+conditioning effect = sum over rule-widened trades of (VAR - BASE x D/D') minus its same-count random-name-day expectation within setup x month; net R own-risk units; null95 = 95th pct of 200 name-day draws of the raw rule sum.
+Educational only - not financial advice.

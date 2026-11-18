@@ -1,0 +1,38 @@
+trades 1172116; half-day dropped 4843; names traded 1226; with >= 6 reports 976 (80%); trades on those names 81% (others excluded)
+Amendment 1: trades within 10 sessions of a block edge dropped: 42154
+groups: {'out': 623148, 'in': 151302, 'buf': 138084} | inside with trusted BMO/AMC time: 96%
+
+PRIMARY (within setup x ISO-week; day-clustered; gross first):
+  TRAIN gross: inside-outside -0.0170R t -1.79 MDE80 0.0266 n_in 36832 days 149 best-week nan%
+  TRAIN exm  : inside-outside -0.0139R t -1.55 MDE80 0.0251 n_in 36832 days 149 best-week nan%
+  TRAIN r    : inside-outside -0.0232R t -2.21 MDE80 0.0294 n_in 36832 days 149 best-week nan%
+  VALID gross: inside-outside -0.0034R t -0.46 MDE80 0.0209 n_in 93839 days 252 best-week nan%
+  VALID exm  : inside-outside -0.0009R t -0.14 MDE80 0.0179 n_in 93839 days 252 best-week nan%
+  VALID r    : inside-outside -0.0062R t -0.81 MDE80 0.0217 n_in 93839 days 252 best-week nan%
+  FWD   gross: inside-outside -0.0341R t -1.84 MDE80 0.0519 n_in 18797 days 23 best-week nan%
+  FWD   exm  : inside-outside -0.0288R t -2.09 MDE80 0.0385 n_in 18797 days 23 best-week nan%
+  FWD   r    : inside-outside -0.0380R t -1.94 MDE80 0.0548 n_in 18797 days 23 best-week nan%
+
+SECONDARY (descriptive; cells counted):
+  per setup (>= 30 inside, VALID, ex-market): 90 setups; inside better 49 / worse 41
+  side -1: +0.0026 t +0.21
+  side +1: -0.0037 t -0.50
+  BMO k=-4: +0.0026 t +0.12 n_in 4257
+  BMO k=-3: +0.0351 t +1.98 n_in 4113
+  BMO k=-2: +0.0098 t +0.52 n_in 4361
+  BMO k=-1: -0.0028 t -0.17 n_in 4438
+  BMO k=+0: -0.0636 t -3.57 n_in 9813
+  BMO k=+1: +0.0305 t +1.78 n_in 5649
+  BMO k=+2: +0.0304 t +1.56 n_in 4874
+  BMO k=+3: +0.0059 t +0.31 n_in 4273
+  BMO k=+4: +0.0050 t +0.33 n_in 4553
+  AMC k=-4: +0.0292 t +1.47 n_in 4297
+  AMC k=-3: +0.0085 t +0.46 n_in 4416
+  AMC k=-2: +0.0065 t +0.30 n_in 4393
+  AMC k=-1: -0.0059 t -0.32 n_in 4414
+  AMC k=+0: -0.0216 t -1.45 n_in 9684
+  AMC k=+1: +0.0013 t +0.07 n_in 5612
+  AMC k=+2: +0.0287 t +1.63 n_in 5097
+  AMC k=+3: +0.0062 t +0.32 n_in 4578
+  AMC k=+4: -0.0349 t -1.94 n_in 4689
+  cells printed: 18 offset x time + side 2 + per-setup 1. Net r is OPTIMISTIC inside (x3 costs only at |gap| >= 20%): no 'blackout costs R' claim before the Phase 2 spread re-charge. Educational only - not financial advice.

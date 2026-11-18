@@ -1,0 +1,13 @@
+guard selftest REFUSE future last date: ['window ends 2026-11-17, after today 2026-11-16']
+guard selftest REFUSE today, before 16:30: ['window includes today (2026-11-17); before 16:30 ET']
+guard selftest REFUSE today, commit too fresh (< 10 min): ['a: last journal commit 2026-11-17 16:35 is < 10 min old']
+guard selftest REFUSE today, stale commit (yesterday): ['a: last journal commit 2026-11-16 16:05 is before 2026-11-17 15:55 ET (dead EOD job / pre-close)']
+guard selftest REFUSE one-day window today, one account stale: ['b: last journal commit 2026-11-16 15:57 is before 2026-11-17 15:55 ET (dead EOD job / pre-close)']
+guard selftest ok     today, all final: []
+guard selftest ok     past window, later commits: []
+guard selftest REFUSE past window, dead EOD job (last commit 11:00): ['b: last journal commit 2026-11-13 11:00 is before 2026-11-13 15:55 ET (dead EOD job / pre-close)']
+guard selftest REFUSE past window, last commit the day before: ['a: last journal commit 2026-11-12 16:01 is before 2026-11-13 15:55 ET (dead EOD job / pre-close)']
+guard selftest REFUSE today, pre-close commit 15:40 (old enough): ['a: last journal commit 2026-11-17 15:40 is before 2026-11-17 15:55 ET (dead EOD job / pre-close)']
+guard selftest ok     today, commit 15:56: []
+guard selftest: calendar-gap refusal ok (a missing snapshot day is caught)
+guard selftest: skipped-session refusal ok. all cases ok

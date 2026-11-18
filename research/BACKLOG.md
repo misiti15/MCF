@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1089 · coded: 163 · parked: 439 · holdout failed: 23 · configurations tried (all lineages): 32896909
+Total ideas: 1090 · coded: 163 · parked: 440 · holdout failed: 23 · configurations tried (all lineages): 32896911
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -406,7 +406,6 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | wi-vwap-first-pullback | First pullback to VWAP in a trending stock | https://daytradingtoolkit.com/strategies/first-pullback-to-vwap-trend-strategy | – | – | – | – | – | – |
 | idea | wi-red-to-green | Red-to-green / green-to-red through prior close | https://fr.tradingview.com/script/wSvTh08f-Red-to-Green-Green-to-Red-Tracker | – | – | – | – | – | – |
 | idea | wi-eod-reversal | End-of-day reversal of intraday losers | https://www3.nd.edu/~zda/EOD.pdf | – | – | – | – | – | – |
-| idea | wi-same-halfhour | Same half-hour continuation (Heston-Korajczyk-Sadka) | https://ar5iv.arxiv.org/html/1005.3535 | – | – | – | – | – | – |
 | idea | wi-vwap-trend-etf | VWAP trend on QQQ/SPY (Zarattini-Aziz) | https://concretumgroup.com/volume-weighted-average-price-vwap-the-holy-grail-for-day-trading-systems/ | – | – | – | – | – | – |
 | idea | wi-lunch-reversal | Lunch-hour reversal of the morning move | https://quantpedia.com/lunch-effect-in-the-u-s-stock-market-indices | – | – | – | – | – | – |
 | idea | wi-williams-volbo | Larry Williams volatility breakout | https://www.whselfinvest.de/en/trading_strategies_56_volatility_break_out_larry_williams_free.php | – | – | – | – | – | – |
@@ -603,6 +602,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | top20-1110-CWT09-vwaploss-g5-skip-price-lt20 | CWT09-gapdn-vwaploss-g5-short: skip price < $20 (2-year cost drag) | BDI top-20 conditions 2026-11-10 (research/bdi/top5_1110/NOTES.md, Part A) | – | – | – | – | – | – |
 | idea | bdi-1112-l3-fromopen-cap-overflow | L3-gap-slope-fromopen-FD: on days its 30-lot sleeve is full, let extra first-signal lots (new symbols only) use free slots, half size | BDI daily 2026-11-12 (research/bdi/1112/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1117-etp-twin-groups | ETP twin groups: one lot per setup per bar across near-identical ETPs (KBE~KRE, SOXL~TECL~TQQQ) | nightly learning loop 2026-11-17 (Primary autopsy) | – | – | – | – | – | – |
+| idea | guild-1117-lasthalfhour-continuation | Last-half-hour (15:30-15:55) same-slot continuation: forward-only Shadow test | guild HKS950 re-cut 2026-11-17 (research/guild/1117/hks950/recut_out.txt) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -639,6 +639,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | rw-wg1_pdl_fade | gap-down fade near prior-day low | rule-18 rework | – | – | – | – | – | – |
 | parked | rw-t4_long_vwapmf | RS long + SPY>VWAP | rule-18 rework | – | – | – | – | – | – |
 | parked | rw-t4_both_sectormf | RS both sides, sector-ETF filter | rule-18 rework | – | – | – | – | – | – |
+| parked | wi-same-halfhour | Same half-hour continuation (Heston-Korajczyk-Sadka) | https://ar5iv.arxiv.org/html/1005.3535 | – | – | – | – | – | – |
 | parked | nl-1007-0950-stopout | Delay or filter heat_fade_short's 09:50 entries | nightly loop 2026-10-07 | – | – | – | – | – | – |
 | parked | nl-1007-opposite-side | No opposite-side entry on a symbol after a same-day stop | nightly loop 2026-10-07 | – | – | – | – | – | – |
 | parked | nl-1007-late-holds | Entry cutoffs so 1R targets can still be reached | nightly loop 2026-10-07 | – | – | – | – | – | – |

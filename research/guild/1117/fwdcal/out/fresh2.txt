@@ -1,0 +1,172 @@
+guard primary    last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 79
+guard testing    last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 187
+guard testing2   last journal commit 2026-11-17 15:57 ET  live trades 2026-11-16..2026-11-17: 517
+guard explore1   last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 174
+guard livelab    last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 126
+guard graveyard  last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 1123
+guard gen        last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 266
+guard testingd   last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 210
+guard testinge   last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 103
+guard testingf   last journal commit 2026-11-17 15:56 ET  live trades 2026-11-16..2026-11-17: 270
+team: building priors for 4735 symbols (Alpaca market data, before 2026-11-16)
+priors: daily stats for 4735/4735 symbols (10s)
+priors: 5-min volume profiles for 4735 symbols (110s)
+packs: 1min-2026-11-16.parquet 15.5 MB from bars-2026-11
+team: building priors for 4786 symbols (Alpaca market data, before 2026-11-17)
+priors: daily stats for 4786/4786 symbols (10s)
+priors: 5-min volume profiles for 4786 symbols (113s)
+team: fetching 1-minute bars for 4786 symbols, 2026-11-17 09:30 -> 16:00 ET
+fwdcal quotes: 8510 logged quotes, 1984 symbol-days
+fwdcal: 2 sessions, 20 books to run, delay 0
+/home/user/guild/research/fwdcal/mirror.py:114: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+/home/user/guild/research/fwdcal/mirror.py:114: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+/home/user/guild/research/fwdcal/mirror.py:114: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+/home/user/guild/research/fwdcal/mirror.py:114: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+fwdcal d0 2026-11-16 primary: 56 trades, 424.5 s
+fwdcal d0 2026-11-16 testing: 71 trades, 537.4 s
+fwdcal d0 2026-11-16 testing2: 213 trades, 833.3 s
+fwdcal d0 2026-11-16 explore1: 84 trades, 932.8 s
+fwdcal d0 2026-11-16 graveyard: 779 trades, 707.3 s
+fwdcal d0 2026-11-16 livelab: 66 trades, 831.1 s
+fwdcal d0 2026-11-16 gen: 71 trades, 711.4 s
+/home/user/guild/research/fwdcal/mirror.py:114: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  d.mkdir(parents=True, exist_ok=True); tarfile.open(fileobj=io.BytesIO(raw)).extractall(d)
+fwdcal d0 2026-11-16 testinge: 32 trades, 767.6 s
+fwdcal d0 2026-11-17 primary: 23 trades, 476.9 s
+fwdcal d0 2026-11-16 testingf: 82 trades, 826.6 s
+fwdcal d0 2026-11-16 testingd: 101 trades, 1269.0 s
+fwdcal d0 2026-11-17 testing: 129 trades, 626.3 s
+fwdcal d0 2026-11-17 testing2: 311 trades, 803.1 s
+fwdcal d0 2026-11-17 explore1: 93 trades, 1081.0 s
+fwdcal d0 2026-11-17 livelab: 67 trades, 1102.1 s
+fwdcal d0 2026-11-17 graveyard: 389 trades, 771.0 s
+fwdcal d0 2026-11-17 gen: 203 trades, 993.5 s
+fwdcal d0 2026-11-17 testingd: 113 trades, 985.4 s
+fwdcal d0 2026-11-17 testinge: 79 trades, 947.2 s
+fwdcal d0 2026-11-17 testingf: 193 trades, 873.0 s
+replay R on live's basis: own sim R before 2026-11-12, LR8 live cost model from 2026-11-12 (checklist 37)
+FWDCAL mirror-live audit, delay 0 (rule 21 since Lead 11-11 21:00: EXACT-minute match >= 95% AND |avg R gap| <= 0.03; 5-min match diagnostic):
+     acct  sessions  live_trades  replay_trades  matched  match_rate  exact_min_share  replay_only_share  rdiff_matched  replay_avgR  live_avgR  gap_avgR        gap_ci95   gap_se  exact_match_rate  exact_ci95  rule21
+Testing B         2          174            177      173       0.994            0.295              0.023         0.0027      -0.0530    -0.0636    0.0105 [-0.160,+0.181] 0.087129             0.293 [0.23,0.36]   False
+Generator         2          266            274      265       0.996            0.302              0.033        -0.0186      -0.4290    -0.4200   -0.0090 [-0.229,+0.211] 0.112133             0.301 [0.25,0.36]   False
+Graveyard         2         1123           1168     1017       0.906            0.290              0.129        -0.0014      -0.2598    -0.2512   -0.0087 [-0.079,+0.062] 0.036074             0.263 [0.24,0.29]   False
+Testing C         2          126            133      125       0.992            0.408              0.060         0.0074      -0.0908    -0.1043    0.0135 [-0.160,+0.187] 0.088548             0.405 [0.32,0.49]   False
+  Primary         2           79             79       77       0.975            0.870              0.025        -0.0233       0.2523     0.2892   -0.0369 [-0.244,+0.170] 0.105434             0.848 [0.75,0.91]   False
+  On Deck         2          187            200      183       0.979            0.432              0.085         0.0389      -0.1320    -0.1876    0.0555 [-0.111,+0.222] 0.084938             0.422 [0.35,0.49]   False
+Testing A         2          517            524      492       0.952            0.376              0.061         0.0553      -0.0873    -0.1397    0.0525 [-0.026,+0.131] 0.039966             0.358 [0.32,0.40]   False
+Testing D         2          210            214      206       0.981            0.544              0.037         0.0596      -0.1130    -0.1558    0.0427 [-0.094,+0.180] 0.069952             0.533 [0.47,0.60]   False
+Testing E         2          103            111      101       0.981            0.356              0.090         0.1221      -0.0138    -0.1107    0.0969 [-0.119,+0.313] 0.110368             0.350 [0.26,0.45]   False
+Testing F         2          270            275      267       0.989            0.333              0.029         0.0246       0.0431     0.0108    0.0324 [-0.099,+0.164] 0.067172             0.330 [0.28,0.39]   False
+      ALL         2         3055           3155     2906       0.951            0.360              0.079         0.0202      -0.1612    -0.1780    0.0168 [-0.026,+0.059] 0.021752             0.342 [0.33,0.36]   False
+
+unmatched trades by cause:
+     acct        kind                     cause  n   avgR
+ explore1   live_only  replay_skip:spread_quote  1 -1.181
+ explore1 replay_only            live_no_signal  4  0.007
+      gen   live_only          replay_no_signal  1  0.186
+      gen replay_only            live_no_signal  8  0.056
+      gen replay_only    live_skip:spread_quote  1 -1.172
+graveyard   live_only    replay_skip:daily_loss 11  0.039
+graveyard   live_only replay_skip:held_by_other  9 -0.297
+graveyard   live_only    replay_skip:slots_full 75 -0.177
+graveyard   live_only  replay_skip:spread_quote 11 -0.503
+graveyard replay_only            live_no_signal 25  0.012
+graveyard replay_only      live_skip:daily_loss 83 -0.479
+graveyard replay_only   live_skip:held_by_other 16 -0.005
+graveyard replay_only           live_skip:other  6 -0.380
+graveyard replay_only        live_skip:rejected  1  0.476
+graveyard replay_only      live_skip:slots_full 13  0.025
+graveyard replay_only    live_skip:spread_quote  7 -0.005
+  livelab   live_only  replay_skip:spread_quote  1 -1.179
+  livelab replay_only            live_no_signal  5 -0.664
+  livelab replay_only        live_skip:rejected  1  0.392
+  livelab replay_only    live_skip:spread_quote  2  0.947
+  primary   live_only replay_skip:held_by_other  1  0.785
+  primary   live_only  replay_skip:spread_quote  1 -0.218
+  primary replay_only            live_no_signal  1  0.547
+  primary replay_only    live_skip:spread_quote  1 -1.097
+  testing   live_only  replay_skip:spread_quote  4 -0.615
+  testing replay_only            live_no_signal  5  0.140
+  testing replay_only  live_skip:missed_trigger  1  1.831
+  testing replay_only        live_skip:rejected  5 -1.134
+  testing replay_only    live_skip:spread_quote  6  0.372
+ testing2   live_only replay_skip:held_by_other  6 -0.215
+ testing2   live_only     replay_skip:setup_cap  2 -0.509
+ testing2   live_only  replay_skip:spread_quote 17 -0.237
+ testing2 replay_only            live_no_signal 17 -0.367
+ testing2 replay_only   live_skip:held_by_other  1 -0.101
+ testing2 replay_only        live_skip:rejected  2 -1.141
+ testing2 replay_only    live_skip:spread_quote 12  0.133
+ testingd   live_only  replay_skip:spread_quote  4 -0.325
+ testingd replay_only            live_no_signal  5 -0.947
+ testingd replay_only    live_skip:spread_quote  3 -0.108
+ testinge   live_only  replay_skip:spread_quote  2 -0.410
+ testinge replay_only            live_no_signal  7 -0.381
+ testinge replay_only   live_skip:held_by_other  1 -0.000
+ testinge replay_only        live_skip:rejected  1  0.502
+ testinge replay_only    live_skip:spread_quote  1 -1.110
+ testingf   live_only replay_skip:held_by_other  1 -0.298
+ testingf   live_only  replay_skip:spread_quote  2 -1.359
+ testingf replay_only            live_no_signal  4 -0.136
+ testingf replay_only        live_skip:rejected  2 -0.332
+ testingf replay_only    live_skip:spread_quote  2  0.296
+
+matched trades: replay - live R by exit kind (live kind x replay kind; Skeptic 4):
+  xk_live    xk_rep   n  rdiff_mean  rdiff_sum
+     stop      stop 970     -0.0166   -16.1097
+     stop    target  18      1.5874    28.5739
+     stop time/flat   9      0.1939     1.7449
+   target    target 879      0.0634    55.6883
+   target time/flat  26     -0.1569    -4.0790
+time/flat      stop   7     -0.6034    -4.2236
+time/flat    target  32      0.4101    13.1216
+time/flat time/flat 965     -0.0166   -16.0252
+
+replay trades by entry-quote source (Lead 11-12 03:00; pool-priced = names with no live quote that minute):
+       grp  replay_trades  matched  replay_avgR  rdiff_matched  matched_share
+live-quote           3020     2906      -0.1602         0.0202          0.962
+      pool            135        0      -0.1827            NaN          0.000
+
+halt / latch agreement per account (setup-days; Observer obs-haltflip): both, live only, replay only, median minutes replay - live
+     acct   level  both  live_only  replay_only  med_min_diff
+graveyard account     1          0            0         -0.20
+graveyard   setup    15          1            0         -0.20
+  primary   setup     2          0            0         -0.25
+
+buying-power causes (config/live equity, Skeptic 3): 0 trades; matched rate if they are set aside: 0.951
+
+Skeptic pre-registered checks: accounts with exact-minute match < 90%: ['Testing B', 'Generator', 'Graveyard', 'Testing C', 'Primary', 'On Deck', 'Testing A', 'Testing D', 'Testing E', 'Testing F']; OPTIMISTIC gap > +0.03R (the failure that matters): ['On Deck', 'Testing A', 'Testing D', 'Testing E', 'Testing F']; configs shown: 1 engine x 10 accounts
+
+mcf.research.effective.tier() (owner's single source; descriptive - the rule-21 verdict above is primary), 2 held-out day(s):
+  Testing B  match exact 0.293 / 5-min 0.994  extra 0.023  bias +0.0105R (t 0.12)  live 174  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Generator  match exact 0.301 / 5-min 0.996  extra 0.033  bias -0.0090R (t -0.08)  live 266  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Graveyard  match exact 0.263 / 5-min 0.906  extra 0.129  bias -0.0087R (t -0.24)  live 1123  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Testing C  match exact 0.405 / 5-min 0.992  extra 0.060  bias +0.0135R (t 0.15)  live 126  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Primary    match exact 0.848 / 5-min 0.975  extra 0.025  bias -0.0369R (t -0.35)  live 79  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  On Deck    match exact 0.422 / 5-min 0.979  extra 0.085  bias +0.0555R (t 0.65)  live 187  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Testing A  match exact 0.358 / 5-min 0.952  extra 0.061  bias +0.0525R (t 1.31)  live 517  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Testing D  match exact 0.533 / 5-min 0.981  extra 0.037  bias +0.0427R (t 0.61)  live 210  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Testing E  match exact 0.350 / 5-min 0.981  extra 0.090  bias +0.0969R (t 0.88)  live 103  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  Testing F  match exact 0.330 / 5-min 0.989  extra 0.029  bias +0.0324R (t 0.48)  live 270  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+  ALL        match exact 0.342 / 5-min 0.951  extra 0.079  bias +0.0168R (t 0.77)  live 3055  -> uncalibrated 0.2 (exact) | uncalibrated 0.2 (5-min)
+rule changes effective 2026-11-16 - 3d .. 2026-11-17 (ledger): 30
+  2026-11-13 2026-11-13-gy-rw6-st4-arena: Graveyard -> testing arena: RW6-ns2-up3-short-FD to Testing C (livelab), ST4-emadn-long-am-t1s05-FD to Testing
+  2026-11-16 2026-11-16-rw7-ondeck-to-testingf: On Deck -> Testing F: RW7-gapdn-bounce-early-short-FD (owner demote; Graveyard review after 3 sessions) (move)
+  2026-11-16 2026-11-16-rw3s-testinge-to-graveyard: Testing E -> Graveyard: RW3S-gapdn-flowsell-short-FD (owner RW3S-GY drop) (move)
+  2026-11-16 2026-11-15-team6-open-ended: Owner TEAM6-1116: Primary keeps TEAM-6 open-ended (no end date), weekly Friday review; L3-fromopen cap stays 3
+  2026-11-16 2026-11-16-rot1-arena-block1: Testing-arena rotation block 1 (ROT1, sessions 2026-11-16..11-19): spotlight 15 least-traded setups in Testing
+  2026-11-17 2026-11-16-shadow-mode: Shadow mode in the live runner + trust check + effective sessions (owner 2026-11-16)
+  2026-11-17 2026-11-16-wb-l3-fromopen-wb4: Workbench copy L3-gap-slope-fromopen-FD-WB4 added to Testing A, first in setup_order (Mechanic RERUN pass; rep
+  2026-11-17 2026-11-16-wb-cwt14-orl-p10-wb5: Workbench copy CWT14-failbrk-orl-p10-long-WB5 added to Testing D at normal priority (last in setup_order; Mech
+  2026-11-17 2026-11-16-tsz1-testing-sizing: testing-account sizing change — R comparable, $ not (TSZ1: Testing A-F half-size lots, 2x slots, per-setup cap
+  2026-11-17 2026-11-16-kill-flat-open: KILL-FLAT open: Graveyard and Gen close their adopted lots (broker positions with the account prefix and no jo
+  2026-11-17 2026-11-16-wb-mf2-wb3: Workbench copy MF2-open-rsimidhi-flowsell-FD-WB3 added to Testing A, at the top of setup_order (Mechanic pass;
+  2026-11-17 2026-11-16-wb-rw6g1-wb3: Workbench copy RW6G1-ns2-up3-vwap2sd-short-FD-WB3 added to Testing A, at the top of setup_order (Mechanic pass
+  2026-11-17 2026-11-16-wb-nmetf-latedip-wb1: Workbench copy NM-ETF-late-dip-di-long-WB1 added to Testing B, at the top of setup_order (Mechanic pass; owner
+  2026-11-17 2026-11-16-wb-l3-rsi5hi-wb4: Workbench copy L3-gap-slope-rsi5hi-FD-WB4 added to Testing B, at the top of setup_order (Mechanic pass; owner 
+  2026-11-17 2026-11-16-wb-gen26102309-wb4: Workbench copy GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4 added to Testing B, at the
+FORWARD REPLAY = simulated; never mixed with live records. Educational only - not financial advice.

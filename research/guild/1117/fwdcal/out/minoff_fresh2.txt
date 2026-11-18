@@ -1,0 +1,80 @@
+matched pairs 2906; exact-minute 0.360
+replay - live entry, whole minutes (rounded):
+dmin
+-4      11
+-3     152
+-2     831
+-1    1685
+ 0     216
+ 1       7
+ 2       3
+ 3       1
+by account: share at -1 / 0 / +1 min, median seconds diff, live seconds-past-minute median, replay seconds median
+              n     m1      z     p1  med_dsec  live_sec  rep_sec  exact
+acct                                                                    
+explore1    173  0.555  0.064  0.000   -80.214    32.669      3.0  0.295
+gen         265  0.457  0.072  0.004   -86.791    33.222      3.0  0.302
+graveyard  1017  0.538  0.040  0.002   -80.825    32.526      3.0  0.290
+livelab     125  0.664  0.032  0.000   -67.407    38.284      3.0  0.408
+primary      77  0.701  0.273  0.000   -38.031    35.027      3.0  0.870
+testing     183  0.639  0.115  0.000   -64.217    30.981      3.0  0.432
+testing2    492  0.624  0.083  0.006   -67.204    33.666      3.0  0.376
+testingd    206  0.728  0.214  0.005   -50.629    28.557      3.0  0.544
+testinge    101  0.604  0.030  0.000   -71.131    34.931      3.0  0.356
+testingf    267  0.558  0.041  0.000   -77.897    36.059      3.0  0.333
+live seconds-past-minute deciles: [ 0.   7.4 15.1 22.1 28.3 33.2 37.6 43.2 48.6 54.3 60. ]
+Diagnostic only (Session replay vs Live, matched pairs). Educational only - not financial advice.
+signal statuses: {'skipped': 214, 'submitted': 79}
+live trades with a signal row <=10 min before entry: 0 of 3055
+Traceback (most recent call last):
+  File "<stdin>", line 16, in <module>
+  File "/usr/local/lib/python3.13/site-packages/pandas/util/_decorators.py", line 336, in wrapper
+    return func(*args, **kwargs)
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/frame.py", line 10835, in groupby
+    return DataFrameGroupBy(
+        obj=self,
+    ...<6 lines>...
+        dropna=dropna,
+    )
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 1095, in __init__
+    grouper, exclusions, obj = get_grouper(
+                               ~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<4 lines>...
+        dropna=self.dropna,
+        ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.13/site-packages/pandas/core/groupby/grouper.py", line 901, in get_grouper
+    raise KeyError(gpr)
+KeyError: 'acct'
+live trades paired to a submitted signal: 3055 of 3055
+              n  signal_to_entry_med  signal_sec_med
+acct                                                
+explore1    174                 66.8            17.0
+gen         266                 76.9            13.0
+graveyard  1123                 70.5            15.0
+livelab     126                 49.7            16.5
+primary      79                 25.6            13.0
+testing     187                 51.6            15.0
+testing2    517                 56.4            15.0
+testingd    210                 42.6            12.0
+testinge    103                 57.8            18.0
+testingf    270                 67.1            17.0
+signal seconds-past-minute deciles: [ 4. 11. 13. 13. 14. 15. 15. 16. 18. 29. 58.]
+exact-minute match rate (per live trade): replay entry minute vs live ENTRY(fill) minute | vs live SIGNAL minute
+           ex_fill  ex_sig
+acct                      
+explore1     0.293   0.977
+gen          0.301   0.992
+graveyard    0.263   0.895
+livelab      0.405   0.984
+primary      0.848   0.924
+testing      0.422   0.952
+testing2     0.358   0.934
+testingd     0.533   0.938
+testinge     0.350   0.942
+testingf     0.330   0.948
+ALL          0.342   0.932
+Note: diagnostic after the one look; fresh2 rule-21 verdict stands (not re-scored). Educational only - not financial advice.
