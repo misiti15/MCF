@@ -112,3 +112,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
     keeps picking the same (volatile) names, so the null is far too narrow (HKS950: null SD 0.22 bps vs real day SE 0.83) and
     'above null95' passes for free. Judge selection tests on the day-clustered t, or use a null that keeps each name's signal and
     shifts it across days. (HKS950, Scout.)
+45. **Pooled audits can hide offsetting account biases.** A pooled replay-vs-live pass can be carried by one large account
+    with ~0 bias while the accounts that matter are optimistic (FWDCAL fresh2: pooled gap +0.017 PASS; ex-Graveyard +0.033;
+    testing arena + On Deck +0.036R). Report the pool without its largest account, and the pool of the accounts the result
+    will be used for.
