@@ -46,10 +46,8 @@ live:
     - L3-gap-slope-fromopen-FD-WB4   # workbench copy, owner 2026-11-16 "L3 WB4 yes": FIRST
     - MF2-open-rsimidhi-flowsell-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - RW6G1-ns2-up3-vwap2sd-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
-    - GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long   # 3 traded sessions / 7 trades
     - GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short   # 3 traded sessions / 11 trades
     - GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long   # 3 traded sessions / 18 trades
-    - GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long   # 3 traded sessions / 29 trades
     - GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short   # 4 traded sessions / 75 trades
     - GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short   # 5 traded sessions / 10 trades
     - GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long   # 5 traded sessions / 14 trades
@@ -67,6 +65,7 @@ live:
     - ULT-13-st7-sharp-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
     - ULT-HV1-etf-late-pop-fade-short-X   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - ULT-07-pm-volatile-dip-long   # NEW 2026-11-20 ultimate_1119 (Tier B); moved from Testing F 2026-11-19 BATCH trim, siblings apart from ULT-14; appended last so existing setups keep their priority
+    - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
 # REPS2-LANE (owner yes 2026-11-18, research/reps2/NOTES.md section 3): the low-rep fast lane's rare-trigger setups
 # (< 0.5 signals/session where they live) run SHADOW-ONLY in Testing A (full universe since 11-12): no orders, slots,
 # latch or halt, never counted as live reps or toward On Deck / Primary minimums (SRCV1 weight 0). The list is
@@ -1296,7 +1295,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261027-10-flowshift-lo-lunch-long.py
     context:
@@ -1365,7 +1364,7 @@ strategies:
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3082
   GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261028-01-macdh-hi-late-long.py
     context:
@@ -1615,3 +1614,70 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:NM-ETF-late-dip (loose"]
+  GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:   # moved from Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); from session 2026-11-20
+    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: setup-count rebalance (D/E take the spotlight) (moved from Testing D, block copied unchanged)
+    type: lab
+    module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: PM
+        geom: t05s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.5
+        - - fromOpen_atr
+          - <=
+          - -0.34
+        - - ret3_atr
+          - <=
+          - -0.12
+        - - sma20_slope_pct
+          - '>='
+          - 0.29
+      key: ee345e097b08c6e9
+      screen:
+        train:
+          n: 1238
+          exp_r: 0.1081
+          t: 0.78
+          win: 0.76
+          days: 108
+        valid:
+          n: 753
+          exp_r: 0.0635
+          t: 1.1
+          win: 0.701
+          days: 112
+        all:
+          n: 1991
+          exp_r: 0.0913
+          t: 0.99
+          win: 0.738
+          days: 220
+        per_day: 4.674
+        per_day_valid: 3.922
+        exp_up: -0.1695
+        exp_down: 0.1142
+        exp_flat: -0.0036
+        excess_train: 0.0617
+        excess_valid: 0.0799
+        tier1: true
+        score: 1.03
+        max_overlap: 0.346
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
