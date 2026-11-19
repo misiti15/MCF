@@ -37,3 +37,4 @@ Snapshot by the 08:44 ET pre-open job (27 names listed; passes the frozen rule).
 ## 2026-11-17 (built 21:41 ET, same night)
 Snapshot by the 08:45 ET pre-open job (32 names; passes). 267 evening items -> 1 AMC flag: NVDA (reaction 11-18). Headline audit 1/1
 ('NVIDIA Reports Financial Results for Third Quarter Fiscal 2027'). Gap-ratio context: 11-16's INFQ opened < 2x normal (ratio is weak; audit 1/1).
+- 2026-11-18 (built 20:02 ET): evening 279 items, pre-open snapshot 08:44 ET (27 listed), AMC flags 3: P, PANW, WWD. Headline audit 3/3 results releases. Health (gap > 2x normal) 40% of 15 cumulative; 11-16 (INFQ) and 11-17 (NVDA) each 0/1. One flag per day is too few to read; the audit (now 18/18 since it started) is the better precision check. Base rate: known AMC 74%, random 21%.
