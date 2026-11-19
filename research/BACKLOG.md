@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1091 · coded: 163 · parked: 441 · holdout failed: 23 · configurations tried (all lineages): 32896912
+Total ideas: 1092 · coded: 163 · parked: 443 · holdout failed: 23 · configurations tried (all lineages): 32896914
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -602,7 +602,6 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | bdi-1112-l3-fromopen-cap-overflow | L3-gap-slope-fromopen-FD: on days its 30-lot sleeve is full, let extra first-signal lots (new symbols only) use free slots, half size | BDI daily 2026-11-12 (research/bdi/1112/NOTES.md) | – | – | – | – | – | – |
 | idea | nightly-1117-etp-twin-groups | ETP twin groups: one lot per setup per bar across near-identical ETPs (KBE~KRE, SOXL~TECL~TQQQ) | nightly learning loop 2026-11-17 (Primary autopsy) | – | – | – | – | – | – |
 | idea | guild-1117-lasthalfhour-continuation | Last-half-hour (15:30-15:55) same-slot continuation: forward-only Shadow test | guild HKS950 re-cut 2026-11-17 (research/guild/1117/hks950/recut_out.txt) | – | – | – | – | – | – |
-| idea | nightly-1119-near-target-breakeven | Near-target break-even: once a lot's MFE reaches >= 80% of its target distance, move its stop to entry (+ costs) | nightly 2026-11-19 autopsy (Primary ST7-FD near-miss targets) | – | – | – | – | – | – |
 | holdout_failed | obos-levels | Overbought/oversold at PDH/PDL/HOD/round numbers | layered swarm | – | – | – | – | – | – |
 | holdout_failed | trend-pullback | Dips/rips within a trend (3 variants) | layered swarm | – | – | – | – | – | – |
 | holdout_failed | win-geometry | High-win-rate geometry search | layered swarm | – | – | – | – | – | – |
@@ -1067,6 +1066,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | guild-1111-regsw2-winning-base | REGSW-2: 4 market-state switches on an 11-setup winning base | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1111-disp1-sector-split | DISP1: follow/fade member split on flat sector-ETF mornings | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1111-confirm-stop-entry | CONFIRM: stop entry at signal + k x stop distance within 10 min | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | nightly-1119-near-target-breakeven | Near-target break-even: once a lot's MFE reaches >= 80% of its target distance, move its stop to entry (+ costs) | nightly 2026-11-19 autopsy (Primary ST7-FD near-miss targets) | – | – | – | – | – | – |
+| parked | mech-1119-gud1-gapup-gapdn-reclaim-long | GUD1 (C3-MECH, COVERAGE): on SPY gap-up opens, buy stocks that gapped down against the index and are reclaiming (fromOpen >= +0.5%, above VWAP), 09:50-11:00, t1s1 | BDI 2026-11-19 (queue mech-gapup-movehunt, priority 1; Primary loses on up / gap-up days: P2 current six -29.8R on 10 SPY gap-up opens) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |

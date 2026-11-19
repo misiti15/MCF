@@ -1,0 +1,16 @@
+GUD1 | E2 2-year screen (lab frames + gates), production + TOD costs | configs 1 | Testing bar t 1.35 | SPY gap-up sessions per split {'TRAIN': 60, 'VALID': 58, 'LATE': 6}
+== RULE (SPY gap-up sessions)
+  ALL: n 2887 days 124 avg -0.0418 t -0.7 win 0.5168 w/o best -0.0832
+  TRAIN: n 878 days 60 avg -0.1199 t -2.09 w/o best -0.1421
+  VALID: n 1830 days 58 avg 0.0224 t 0.27 w/o best -0.0395
+  LATE: n 179 days 6 avg -0.3146 t -2.23 w/o best -0.3528
+  by SPY open->close day type: down n 914 -0.002, quiet n 673 -0.098, up n 1300 -0.041
+== CONTROL (other sessions)
+  ALL: n 19683 days 321 avg -0.0288 t -0.6 win 0.5154 w/o best -0.0574
+  TRAIN: n 8093 days 173 avg 0.0545 t 0.68 w/o best -0.0113
+  VALID: n 10087 days 132 avg -0.0841 t -1.34 w/o best -0.1256
+  LATE: n 1503 days 16 avg -0.1062 t -0.82 w/o best -0.1889
+  by SPY open->close day type: down n 5217 -0.448, quiet n 6323 -0.082, up n 8143 +0.281
+trades per gap-up session: 23.28
+PASS False
+Educational only - not financial advice.
