@@ -1,0 +1,163 @@
+{
+ "note": "Educational only - not financial advice. ULT-29 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T08:53:34Z",
+ "pick": null,
+ "cfg": null,
+ "eligible_2_per_session": [],
+ "configs_with_trades": [],
+ "base_open": {
+  "EB-L": {
+   "H": false,
+   "X": false
+  },
+  "EB-S": {
+   "H": false,
+   "X": false
+  }
+ },
+ "survivors": {},
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session (PLAN sec. 5)",
+ "fit": null,
+ "sha256_bt": "3f21c813eff09352f2fea2b1dff4833224e11074e90b0d4bc62e31ce73dc43a9",
+ "sha256_module_at_freeze": "9fffaae9b794839e3d37ef6b10a11e46c5477b088d202425d9a226678fe561ed",
+ "sha256_earnings": "b80cdc46f4508312f53822b5785b249673085aa6aee645c3637f9fb3c597e0dc",
+ "configs_counted_this_candidate": 21,
+ "configs_note": "8 grid + 4 base-gate + 8 trigger-gate evaluations (PLAN sec. 4: 20) + 1 bias diagnostic",
+ "partly_check_informed": true,
+ "needs_owner_blackout_exception": true,
+ "n_cumulative": 996,
+ "diagnostic_ungated_pick": null,
+ "diagnostic_ungated_cfg": null,
+ "diagnostic_ungated_survivors": {
+  "EB-L": [
+   "L4"
+  ],
+  "EB-S": []
+ },
+ "diagnostic_ungated_eligible": [],
+ "diagnostic_ungated_fit": null,
+ "diagnostic_frozen_utc": "2026-11-19T08:53:35Z",
+ "diagnostic_note": "Added because the pre-registered FIT gates left nothing to trade, BEFORE any check data: the same trigger gate and selection rule with the base gate ignored, frozen here, scored once on check as a DIAGNOSTIC (counted +1 config and the trigger-gate evaluations it ran). It cannot change the tier.",
+ "sha256_bt_at_diag_freeze": "3f21c813eff09352f2fea2b1dff4833224e11074e90b0d4bc62e31ce73dc43a9",
+ "diagnostic_nogates_pick": "29b",
+ "diagnostic_nogates_cfg": {
+  "W": 1,
+  "C": 2,
+  "exit": "X",
+  "label": "W1-C2-TX45"
+ },
+ "diagnostic_nogates_survivors": {
+  "EB-L": [
+   "L1",
+   "L2",
+   "L3",
+   "L4"
+  ],
+  "EB-S": [
+   "S1",
+   "S2",
+   "S3",
+   "S4"
+  ]
+ },
+ "diagnostic_nogates_eligible": [
+  "29a",
+  "29b",
+  "29e",
+  "29f"
+ ],
+ "diagnostic_nogates_fit": {
+  "trades": 376,
+  "sessions": 170,
+  "sessions_traded": 84,
+  "trades_per_session": 2.212,
+  "win": 0.497,
+  "avg_r": -0.0035,
+  "avg_r_u025": -0.0069,
+  "avg_r_wo_best_day": -0.0216,
+  "best_day": "2024-10-31",
+  "best_day_r": 6.5,
+  "best_day_share": null,
+  "total_r": -1.31,
+  "total_r_wo_best_day": -7.81,
+  "total_r_per_session": -0.0077,
+  "worst_day": -3.96,
+  "worst_day_date": "2025-07-29",
+  "worst_day_per_trade_session": -0.884,
+  "t_day_clustered": -0.1,
+  "avg_r_spy_up": 0.0146,
+  "n_spy_up": 154,
+  "avg_r_spy_flat": 0.0139,
+  "n_spy_flat": 86,
+  "avg_r_spy_down": -0.035,
+  "n_spy_down": 136,
+  "avg_r_ex_0403_0409": -0.0023,
+  "n_ex_0403_0409": 375,
+  "median_hold_min": 45.0,
+  "exit_mix": {
+   "time": 333,
+   "stop": 43
+  },
+  "first_half_avg_r": 0.0069,
+  "second_half_avg_r": -0.0262,
+  "season": {
+   "sessions_season": 63,
+   "n_season": 334,
+   "avg_r_season": 0.0042,
+   "n_off": 42,
+   "avg_r_off": -0.0642
+  },
+  "long": {
+   "trades": 170,
+   "trades_per_session": 1.0,
+   "win": 0.541,
+   "avg_r": 0.024,
+   "avg_r_wo_best_day": 0.0023,
+   "best_day_share": 0.907,
+   "total_r": 4.09,
+   "worst_day": -3.63,
+   "t_day_clustered": 0.46,
+   "avg_r_ex_0403_0409": 0.0268,
+   "first_half_avg_r": 0.0327,
+   "second_half_avg_r": 0.009
+  },
+  "short": {
+   "trades": 206,
+   "trades_per_session": 1.212,
+   "win": 0.461,
+   "avg_r": -0.0262,
+   "avg_r_wo_best_day": -0.0432,
+   "best_day_share": null,
+   "total_r": -5.39,
+   "worst_day": -2.82,
+   "t_day_clustered": -0.63,
+   "avg_r_ex_0403_0409": -0.0262,
+   "first_half_avg_r": -0.018,
+   "second_half_avg_r": -0.0411
+  },
+  "A_avg_r": -0.0053,
+  "A_n": 276,
+  "B_avg_r": 0.0016,
+  "B_n": 100,
+  "by_base": {
+   "EB-L": {
+    "trades": 170,
+    "avg_r": 0.024
+   },
+   "EB-S": {
+    "trades": 206,
+    "avg_r": -0.0262
+   }
+  },
+  "cfg": {
+   "W": 1,
+   "C": 2,
+   "exit": "X",
+   "label": "W1-C2-TX45"
+  }
+ },
+ "diagnostic_nogates_frozen_utc": "2026-11-19T08:54:04Z",
+ "diagnostic_nogates_note": "No-gates diagnostic (base gate and trigger gate ignored), frozen BEFORE any check data; scored once on check; counted +1 config; cannot set the tier.",
+ "sha256_bt_at_diag2_freeze": "784b01542ff3fcade646823994c619f720290e7c0f648c7f0f85c55bdfffd93e",
+ "sha256_module_at_diag2_freeze": "9fffaae9b794839e3d37ef6b10a11e46c5477b088d202425d9a226678fe561ed"
+}

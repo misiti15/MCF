@@ -1,0 +1,132 @@
+{
+ "note": "Educational only - not financial advice. ULT-25 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T08:04:46Z",
+ "pick": "25l",
+ "cfg": {
+  "m": 0.5,
+  "exit": "X",
+  "window": "1300",
+  "key": "50X",
+  "label": "m0.5-TX45-1300"
+ },
+ "eligible_2_per_session": [
+  "25a",
+  "25b",
+  "25c",
+  "25d",
+  "25e",
+  "25f",
+  "25g",
+  "25h",
+  "25i",
+  "25j",
+  "25k",
+  "25l"
+ ],
+ "any_eligible": true,
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session (PLAN sec. 5)",
+ "pick_by_plain_total_r": "25l",
+ "fit": {
+  "trades": 1127,
+  "sessions": 170,
+  "sessions_traded": 131,
+  "trades_per_session": 6.629,
+  "win": 0.48,
+  "avg_r": -0.0023,
+  "avg_r_wo_best_day": -0.0087,
+  "best_day": "2025-04-09",
+  "best_day_r": 6.95,
+  "best_day_share": null,
+  "total_r": -2.6,
+  "total_r_wo_best_day": -9.55,
+  "total_r_per_session": -0.0153,
+  "worst_day": -5.9,
+  "worst_day_per_trade_session": -0.686,
+  "t_day_clustered": -0.2,
+  "avg_r_spy_up": -0.0045,
+  "n_spy_up": 215,
+  "avg_r_spy_flat": -0.0088,
+  "n_spy_flat": 366,
+  "avg_r_spy_down": 0.0029,
+  "n_spy_down": 546,
+  "avg_r_ex_0403_0409": -0.0128,
+  "n_ex_0403_0409": 1049,
+  "avg_r_u025": -0.0092,
+  "median_hold_min": 45.0,
+  "exit_mix": {
+   "time": 1127
+  },
+  "first_half_avg_r": -0.0012,
+  "second_half_avg_r": -0.0037,
+  "A_avg_r": -0.0016,
+  "A_n": 634,
+  "B_avg_r": -0.0032,
+  "B_n": 493,
+  "by_side": {
+   "long": {
+    "trades": 104,
+    "trades_per_session": 0.612,
+    "win": 0.712,
+    "avg_r": 0.1157,
+    "avg_r_wo_best_day": 0.0686,
+    "total_r": 12.03,
+    "t_day_clustered": 3.17,
+    "avg_r_ex_0403_0409": 0.0672,
+    "avg_r_u025": 0.4626
+   },
+   "short": {
+    "trades": 1023,
+    "trades_per_session": 6.018,
+    "win": 0.457,
+    "avg_r": -0.0143,
+    "avg_r_wo_best_day": -0.0191,
+    "total_r": -14.63,
+    "t_day_clustered": -1.36,
+    "avg_r_ex_0403_0409": -0.0177,
+    "avg_r_u025": -0.0572
+   }
+  },
+  "by_trigger": {
+   "coll": {
+    "n": 36,
+    "avg_r": 0.065
+   },
+   "dip": {
+    "n": 68,
+    "avg_r": 0.1425
+   },
+   "ts1": {
+    "n": 25,
+    "avg_r": 0.0357
+   },
+   "ts2": {
+    "n": 1015,
+    "avg_r": -0.0118
+   }
+  },
+  "uncapped_trades": 1370,
+  "cfg": {
+   "m": 0.5,
+   "exit": "X",
+   "window": "1300",
+   "key": "50X",
+   "label": "m0.5-TX45-1300"
+  }
+ },
+ "sha256_bt": "d11233b23c034075ebf1781ee8bb271b948eb48d842accfa94fa1a3a87ae9800",
+ "sha256_module_at_freeze": "86bc869ada5461a124e9b6390d9696b829795e3ba6de3cae7d273f165f553e27",
+ "sha256_symbols": "b3e26f4fb3c1c7428217e53dc4c86af19b5f3774793781d24785195bf2cb7051",
+ "configs_counted_this_candidate": 13,
+ "configs_note": "12 grid + 1 bias diagnostic (PLAN sec. 4)",
+ "check_informed": true,
+ "n_cumulative": 880,
+ "sha256_module_frozen_constants": "9132c0b051779dc1e7b93e8f735ace61cc230b987ec6fef27dd8c991ebebc5ce",
+ "module_constants": {
+  "M": 0.5,
+  "EXIT": "X",
+  "WINDOW": [
+   1300,
+   1500
+  ]
+ }
+}
