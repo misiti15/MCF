@@ -94,6 +94,37 @@ def splits(strategies: dict | None = None) -> dict[str, dict[str, dict]]:
     return out
 
 
+def archived(strategies: dict | None = None) -> dict[str, dict]:
+    """setup -> {account, from, code} for setups archived under GY-LIFE (owner GY-ARCHIVE-20 yes 2026-11-18): disabled
+    with an `archived` marker; record kept, re-testable, never deleted. The dashboard tags them "archived"."""
+    strategies = strategies if strategies is not None else _strategies()
+    out: dict[str, dict] = {}
+    for a, st in strategies.items():
+        for k, v in st.items():
+            m = v.get("archived") if isinstance(v, dict) else None
+            if isinstance(m, dict) and not v.get("enabled"):
+                out[k] = {"account": a, "from": str(m.get("from")), "code": m.get("code")}
+    return out
+
+
+def shadow_lane() -> dict[str, str]:
+    """setup -> account for the REPS2-LANE shadow-only setups (owner yes 2026-11-18): the file each account config names
+    in `shadow_setups_from`. One dashboard tag ("shadow lane"), no new column. Never raises."""
+    from ..config import CONFIG_DIR
+    from ..execution.shadow import lane_setups
+    import yaml
+
+    out: dict[str, str] = {}
+    for a in ACCOUNTS:
+        try:
+            cfg = yaml.safe_load((CONFIG_DIR / f"account_{a}.yaml").read_text()) or {}
+        except Exception:
+            continue
+        for n in lane_setups(cfg):
+            out.setdefault(n, a)
+    return out
+
+
 def _wd(d: date, step: int) -> date:
     d += timedelta(days=step)
     while d.weekday() >= 5:
@@ -160,10 +191,12 @@ def build(prev: dict | None = None, now: datetime | None = None, asof: str | Non
     rest = resting(strat, asof)
     acc = current(strat)
     split = splits(strat)
+    arch = archived(strat)
+    lane = shadow_lane()
     prev = prev or {}
     pset = {k: set(v.get("accounts", [])) for k, v in (prev.get("setups") or {}).items()}
     setups, changes = {}, []
-    for name in sorted({s for v in acc.values() for s in v} | set(pset) | set(rest)):
+    for name in sorted({s for v in acc.values() for s in v} | set(pset) | set(rest) | set(arch)):
         here = setup_accounts(acc, rest, name)
         before = pset.get(name)
         old = (prev.get("setups") or {}).get(name) or {}
@@ -180,6 +213,10 @@ def build(prev: dict | None = None, now: datetime | None = None, asof: str | Non
         setups[name].update(win.get(name) or {})
         if no_leaderboard(setups[name]):
             setups[name]["no_leaderboard"] = True
+        if name in arch and not here:
+            setups[name]["archived"] = arch[name]
+        if name in lane:
+            setups[name]["shadow_lane"] = lane[name]
         if name in split:
             # split copies: one setup in both testing accounts, each on its own half of the tickers (stats combined)
             setups[name]["split"] = split[name]

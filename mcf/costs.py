@@ -7,7 +7,8 @@ whose r_multiple already carries the engine's costs) keep r_multiple. The raw br
 (owner rule 2026-11-05): the cost model lives in R only.
 
 Live cost model (LR8, research/live_ready/NOTES.md "Proposed cost model"), applied to trades dated on/after
-costs.live_model.effective_from (2026-11-12); earlier trades keep the flat stop allowance (costs.stop_slippage_per_share):
+costs.live_model.effective_from (2026-11-12); earlier trades were BOOKED with the flat stop allowance
+(costs.stop_slippage_per_share), and every report re-costs them with LR8 (DQ-P3, with_cost_r / cost_r_lr8: one basis):
   stop exits          max($0.02, 4 bps x price) per share on top of the paper fill (replaces the flat $0.02)
   target (limit)      filled AT the limit: any paper price improvement is given back
   market exits        max($0.01, 1 bp x price) per share (flatten, time stop, scale-out, unprotected close)
@@ -43,8 +44,28 @@ def cost_r(df: pd.DataFrame) -> pd.Series:
     return out
 
 
-def with_cost_r(df: pd.DataFrame | None) -> pd.DataFrame | None:
-    """A copy whose r_multiple is R after costs; the raw broker R moves to r_raw. Idempotent."""
+_LR8_CFG: dict = {}
+
+
+def _report_cfg() -> dict | None:
+    """The config whose costs.live_model the reports use for the one LR8 basis (DQ-P3), loaded once per process."""
+    if "cfg" not in _LR8_CFG:
+        try:
+            from .config import load_config
+
+            _LR8_CFG["cfg"] = {"costs": (load_config().get("costs") or {})}
+        except Exception:
+            _LR8_CFG["cfg"] = None
+    return _LR8_CFG["cfg"]
+
+
+def with_cost_r(df: pd.DataFrame | None, cfg: dict | None = None, lr8_basis: bool = True) -> pd.DataFrame | None:
+    """A copy whose r_multiple is R after costs; the raw broker R moves to r_raw. Idempotent.
+
+    DQ-P3 (owner yes 2026-11-18, "we want to underestimate potential, not overestimate"): every report reads ONE cost
+    basis - rows dated before costs.live_model.effective_from (2026-11-12) are re-costed with the LR8 model
+    (cost_r_lr8), so a record spanning 11-12 no longer mixes the old flat stop allowance with LR8 (pre-11-12 rows
+    ~0.04R lower per trade). The journal's pnl_adj is never changed. lr8_basis=False gives the booked basis."""
     if df is None:
         return df
     if "r_raw" in df.columns:
@@ -52,7 +73,7 @@ def with_cost_r(df: pd.DataFrame | None) -> pd.DataFrame | None:
     out = df.copy()
     out["r_raw"] = out["r_multiple"] if "r_multiple" in out else float("nan")
     if len(out):
-        out["r_multiple"] = cost_r(df)
+        out["r_multiple"] = cost_r_lr8(df, cfg if cfg is not None else _report_cfg()) if lr8_basis else cost_r(df)
     return out
 
 
@@ -143,3 +164,33 @@ def parts_from_row(row) -> list[tuple[float, float, str]]:
     why = why.split("+", 1)[1] if why.startswith("scaled+") else why
     why = "stop" if why == "breakeven" else why
     return [(float(g("shares", 0) or 0), float(g("exit", 0) or 0), why)]
+
+
+# ------------------------------------------------------------------------- W8-DQ: one cost basis across the 11-12 change
+def cost_r_lr8(df: pd.DataFrame, cfg: dict | None) -> pd.Series:
+    """Per-row R after costs with the LR8 live model applied to EVERY live row, whatever its date (research / report
+    only; the journal's pnl_adj is never changed). Before costs.live_model.effective_from (2026-11-12) the journal booked
+    only the flat stop allowance, so a since-start average mixes two cost bases (~0.04R per trade apart on the live
+    journals, crunch W8). Rows on/after the effective date keep their booked pnl_adj; rows without pnl_adj (what-if /
+    backtest) keep r_multiple; rows without a risk keep cost_r. The model's fee rates are taken as of the effective date
+    for earlier rows (the rates in force then are the same dated entries)."""
+    out = cost_r(df)
+    model = live_model(cfg)
+    if model is None or df is None or not len(df) or "pnl_adj" not in df:
+        return out
+    eff = str(model.get("effective_from") or "0000")[:10]
+    for i, row in df.iterrows():
+        if pd.isna(row.get("pnl_adj")) or str(row.get("date"))[:10] >= eff:
+            continue
+        try:
+            risk = abs(float(row["entry"]) - float(row["stop"])) * abs(float(row["shares"]))
+            if not risk > 0:
+                continue
+            tgt = row.get("target")
+            tgt = None if tgt is None or pd.isna(tgt) else float(tgt)
+            c = lot_costs(int(row["side"]), float(row["entry"]), float(row["shares"]), parts_from_row(row), tgt,
+                          str(row.get("date"))[:10], model)["total"]
+            out[i] = (float(row["pnl"]) - c) / risk
+        except (TypeError, ValueError, KeyError):
+            continue
+    return out

@@ -63,9 +63,7 @@
   "graveyard": [
    "CWT04-backside-vwaptest-a25-short",
    "CWT09-gapdn-bounce-g5-lowerhalf-short",
-   "CWT09-gapdn-vwaploss-g5-short",
    "CWT13-vwapstretch-z05-long",
-   "CWT13-vwapstretch-z05-short",
    "CWT14-failbrk-pdl-p10-long",
    "CWT14-failbrk-pdl-p10-lowvol-long",
    "GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long",
@@ -110,7 +108,6 @@
    "NS3-failed-vwap-reclaim-short-FD",
    "NS5-sma50-flush-oversold-long-FD",
    "RW3S-gapdn-flowsell-short-FD",
-   "RW4-ns3-adv150-short-FD",
    "RW6G1-ns2-up3-vwap2sd-short-FD",
    "ST1-ordn-long-pm-t05s1-FD",
    "exhaustion_short-FD",
@@ -252,7 +249,8 @@
     "testing2"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "CWT04-backside-lh-a25-short": {
    "accounts": [
@@ -263,7 +261,8 @@
     "livelab"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "CWT04-backside-vwaptest-a15-short": {
    "accounts": [
@@ -375,51 +374,49 @@
     "testingf"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "CWT09-gapdn-vwaploss-g5-short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-25 21:05 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-23",
-   "first_session": "2026-10-26"
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
+    "account": "graveyard",
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
+   }
   },
   "CWT12-coil-k4-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-28 18:00 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-28",
-   "first_session": "2026-10-29",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT12-coil-k6-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-26 22:55 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-26",
-   "first_session": "2026-10-27",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT12-flag-s1-long": {
@@ -445,15 +442,18 @@
    "first_session": "2026-11-19"
   },
   "CWT13-vwapstretch-z05-short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-22 21:40 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-22",
-   "first_session": "2026-10-23"
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
+    "account": "graveyard",
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
+   }
   },
   "CWT13-vwapstretch-z075-long": {
    "accounts": [
@@ -491,37 +491,31 @@
    }
   },
   "CWT14-failbrk-orl-p05-lowvol-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 22:16 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-orl-p10-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 22:16 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-orl-p10-long-WB5": {
@@ -532,71 +526,59 @@
    "from": null
   },
   "CWT14-failbrk-orl-p10-lowvol-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 20:50 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdh-p05-lowvol-short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-22 07:49 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-21",
-   "first_session": "2026-10-22",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdh-p10-lowvol-short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-22 07:49 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-21",
-   "first_session": "2026-10-22",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdh-p10-short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-22 16:00 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-22",
-   "first_session": "2026-10-23",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdl-p05-R2A-long": {
@@ -614,37 +596,31 @@
    "from": null
   },
   "CWT14-failbrk-pdl-p05-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-30 00:20 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-29",
-   "first_session": "2026-10-30",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdl-p05-lowvol-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-30 00:20 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-29",
-   "first_session": "2026-10-30",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "CWT14-failbrk-pdl-p10-long": {
@@ -1248,7 +1224,8 @@
     "explore1"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long": {
    "accounts": [
@@ -1299,7 +1276,8 @@
     "testinge"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short": {
    "accounts": [
@@ -1400,7 +1378,8 @@
     "testingd"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long": {
    "accounts": [
@@ -1769,14 +1748,16 @@
     "gen"
    ],
    "since": "2026-10-23 16:00 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "GEN-POD1022-03-wt-bull-flag-bailout-S-long": {
    "accounts": [
     "gen"
    ],
    "since": "2026-10-23 16:00 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "IDX1-qqq100-0955-TQQQ-hold": {
    "accounts": [
@@ -1787,7 +1768,8 @@
     "testing"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "IDX1-qqq100-0955-TQQQ-trail": {
    "accounts": [
@@ -1798,7 +1780,8 @@
     "testing"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "IDX2-spy075-0945-3x-trail": {
    "accounts": [
@@ -1809,7 +1792,8 @@
     "explore1"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "IDX3-spy075-0955-3x-trail": {
    "accounts": [
@@ -1820,7 +1804,8 @@
     "livelab"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "IDX5-spy050-0945-3x-trail": {
    "accounts": [
@@ -1831,7 +1816,8 @@
     "explore1"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "L3-gap-slope-fromopen-FD": {
    "accounts": [
@@ -1888,7 +1874,8 @@
     "livelab"
    ],
    "since": "2026-11-18 20:00 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "LD1-ns1-breadthup-t05s1-long": {
    "accounts": [
@@ -1910,7 +1897,8 @@
     "testing2"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "LD3-st2-idxturn-t05s1-long": {
    "accounts": [
@@ -1932,7 +1920,8 @@
     "explore1"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "LD5-st2-breadthup-t05s1-long": {
    "accounts": [
@@ -1954,7 +1943,8 @@
     "testing2"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "LD7-ns1-idxturn-holdtr-long": {
    "accounts": [
@@ -1976,23 +1966,21 @@
     "explore1"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "LIQ-orl-sweep-open15-s25-long": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "LIQ-pdl-sweep-open15-vwap-long": {
@@ -2163,7 +2151,8 @@
     "explore1"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "NM-ETF-late-dip-di-long-WB4": {
    "accounts": [
@@ -2199,7 +2188,8 @@
     "testing2"
    ],
    "last_old_session": "2026-11-04",
-   "first_session": "2026-11-05"
+   "first_session": "2026-11-05",
+   "shadow_lane": "testing2"
   },
   "NM-RWN3-ns3-spyup-early-short": {
    "accounts": [
@@ -2232,14 +2222,16 @@
     "explore1"
    ],
    "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "first_session": "2026-11-12",
+   "shadow_lane": "testing2"
   },
   "NM-RWN5-ns3-mon-weakrs-short-WB3": {
    "accounts": [
     "testinge"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "NM-RWR1-exh150-gapdn-spyup-pm-short": {
    "accounts": [
@@ -2434,20 +2426,17 @@
    "from": null
   },
   "RW2-exhaustion-noon-adv150-short-FD": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing2"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
@@ -2490,16 +2479,18 @@
    "first_session": "2026-11-16"
   },
   "RW4-ns3-adv150-short-FD": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-11-01 23:34 ET",
-   "from": [
-    "testing",
-    "testing2"
-   ],
-   "last_old_session": "2026-10-30",
-   "first_session": "2026-11-02"
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
+    "account": "graveyard",
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
+   }
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
    "accounts": [
@@ -2568,7 +2559,8 @@
     "testing2"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "RW7-gapdn-bounce-early-short-FD": {
    "accounts": [
@@ -2600,20 +2592,17 @@
    "first_session": "2026-10-21"
   },
   "ST2-slope20up-long-am-t05s1-FD": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "ST3-rsi5up-short-pm-t1s1-FD": {
@@ -2678,7 +2667,8 @@
     "livelab"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   },
   "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD": {
    "accounts": [
@@ -2736,37 +2726,31 @@
    "first_session": "2026-10-21"
   },
   "heat_fade_long-FD": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "heat_fade_short": {
-   "accounts": [
+   "accounts": [],
+   "since": "2026-11-18 20:42 ET",
+   "from": [
     "graveyard"
    ],
-   "since": "2026-10-20 17:45 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-10-20",
-   "first_session": "2026-10-21",
-   "benched": {
+   "last_old_session": "2026-11-18",
+   "first_session": "2026-11-19",
+   "archived": {
     "account": "graveyard",
-    "from": "2026-11-18",
-    "until": "2026-11-24",
-    "reason": "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"
+    "from": "2026-11-19",
+    "code": "GY-ARCHIVE-20"
    }
   },
   "heat_fade_short-FD": {
@@ -2809,18 +2793,138 @@
     "livelab"
    ],
    "since": "2026-11-16 22:21 ET",
-   "from": null
+   "from": null,
+   "shadow_lane": "testing2"
   }
  },
  "last_change": {
-  "at": "2026-11-18 20:00 ET",
+  "at": "2026-11-18 20:42 ET",
   "changes": [
    {
-    "setup": "L3-gap-slope-rsi5hi-FD-WB5",
-    "from": [],
-    "to": [
-     "livelab"
-    ]
+    "setup": "CWT09-gapdn-vwaploss-g5-short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT12-coil-k4-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT12-coil-k6-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT13-vwapstretch-z05-short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-orl-p05-lowvol-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-orl-p10-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-orl-p10-lowvol-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-pdh-p05-lowvol-short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-pdh-p10-lowvol-short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-pdh-p10-short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-pdl-p05-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "CWT14-failbrk-pdl-p05-lowvol-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "LIQ-orl-sweep-open15-s25-long",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "RW2-exhaustion-noon-adv150-short-FD",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "RW4-ns3-adv150-short-FD",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "ST2-slope20up-long-am-t05s1-FD",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "heat_fade_long-FD",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
+   },
+   {
+    "setup": "heat_fade_short",
+    "from": [
+     "graveyard"
+    ],
+    "to": []
    }
   ]
  }

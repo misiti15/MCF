@@ -86,6 +86,10 @@ def scorecard(days: pd.DataFrame, day: str | None = None, stale: int | None = No
         "week": week_wo_best(week),
         "dash_r_week": round(float(week.sum()), 2) if len(week) else 0.0,
         "acct_r_week": round(float(d["acct_r"].tail(5).sum()), 2) if len(d) else 0.0,
+        # UNIT1 (owner yes 2026-11-18, display only: setups and days are still judged by trade R): the day's trade R
+        # with account R beside it, and a flag when the two disagree in sign
+        "dash_r_day": round(float(r.iloc[-1]), 2) if len(d) else None,
+        "acct_r_day": round(float(d["acct_r"].iloc[-1]), 2) if len(d) else None,
         "stale_decisions": stale,
     }
 
@@ -100,6 +104,9 @@ def line(sc: dict, tag: str | None = None) -> str:
              f"worst {sc['worst_day_20']:+.1f}R, {sc['days_le_m10_20']} days <= -10R (20)" if sc["worst_day_20"] is not None else "worst –",
              f"week {w['total']:+.1f}R, w/o best day {w['wo_best']:+.1f}R (best {share})",
              f"dashboard {sc['dash_r_week']:+.1f}R vs account {sc['acct_r_week']:+.1f}R (week)"]
+    if sc.get("dash_r_day") is not None and sc.get("acct_r_day") is not None:   # UNIT1: display only
+        flip = (sc["dash_r_day"] > 0) != (sc["acct_r_day"] > 0) and sc["dash_r_day"] != 0 and sc["acct_r_day"] != 0
+        parts.insert(0, f"day {sc['dash_r_day']:+.2f} trade R / {sc['acct_r_day']:+.2f} account R" + (" (signs differ)" if flip else ""))
     if sc.get("stale_decisions") is not None:
         parts.append(f"{sc['stale_decisions']} owner decisions > 3 nights")
     return head + " · ".join(parts) + ". " + DISCLAIMER
@@ -133,9 +140,16 @@ def whatif_corrected(w: pd.DataFrame, key=("symbol", "date"), haircut: float = H
         return {"raw_n": 0, "raw_r": 0.0, "n": 0, "r": 0.0, "dropped_unfillable": 0, "dropped_dupes": 0}
     t = w.copy()
     t["R"] = trade_r(t)
+    if "r_multiple" in t:   # W8-DQ: journal what-if rows carry shares 0 / pnl 0 - their R is r_multiple (engine costs)
+        t["R"] = t["R"].fillna(pd.to_numeric(t["r_multiple"], errors="coerce"))
     t = t[t["R"].notna()]
     raw_n, raw_r = len(t), float(t["R"].sum())
-    reason = t["reason"].fillna("").astype(str) if "reason" in t else pd.Series("", index=t.index)
+    if "reason" in t:
+        reason = t["reason"].fillna("").astype(str)
+    elif "meta" in t:       # W8-DQ: the journal keeps the skip reason in meta ("status=..;why=..")
+        reason = t["meta"].fillna("").astype(str).str.extract(r"why=(.*)$")[0].fillna("")
+    else:
+        reason = pd.Series("", index=t.index)
     keep = ~reason.str.contains(UNFILLABLE)
     unf = int((~keep).sum())
     t = t[keep]

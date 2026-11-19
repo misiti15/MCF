@@ -90,11 +90,34 @@ def shadow_run_id(journal) -> int | None:
     return None if row is None or row[0] is None else int(row[0])
 
 
+def lane_setups(cfg: dict) -> list[str]:
+    """REPS2-LANE (owner yes 2026-11-18): the low-rep fast lane's rare-trigger setups, read once at session start from
+    the file named by `shadow_setups_from` (JSON {"setups": [...]} or a list; research/reps2/fastlane/lane.json,
+    re-picked nightly by research/reps2/fastlane.py). Shadow only: no orders, slots, latch or halt. Missing or bad file
+    -> no lane setups (the account trades exactly as before). Never raises."""
+    src = cfg.get("shadow_setups_from")
+    if not src:
+        return []
+    try:
+        import json
+        from pathlib import Path
+
+        p = Path(src)
+        if not p.is_absolute():
+            p = Path(__file__).resolve().parents[2] / p
+        d = json.loads(p.read_text())
+        names = d.get("setups") if isinstance(d, dict) else d
+        return [str(n) for n in (names or []) if isinstance(n, str) and n]
+    except Exception as e:
+        print(f"shadow lane: {src} not read ({type(e).__name__}); no lane setups this session")
+        return []
+
+
 def extra_strategies(cfg: dict, live_names: set[str]) -> list:
     """Strategies for `shadow_setups` (names) not live in this account. Params from this account's config (enabled or
     not), else from another account overlay (config/account_*.yaml), else from `shadow_strategies` (a name -> params
     map for Workbench copies). A name that cannot be built is reported and skipped."""
-    names = [n for n in (cfg.get("shadow_setups") or []) if n not in live_names]
+    names = [n for n in list(cfg.get("shadow_setups") or []) + lane_setups(cfg) if n not in live_names]
     if not names:
         return []
     import yaml

@@ -1,0 +1,18 @@
+{
+ "note": "TAGS1 frozen rules (owner yes 2026-11-18; research/crunch/WAVE1.md #4). Journal-only would-skip tags: NO order, slot, latch or halt changes. Frozen 2026-11-18 before any fresh session; scored ONCE after 20 fresh sessions (2026-11-19 .. 2026-12-17, 11-26 closed). Thresholds are copied from the Wave 1 sources and must not be edited before the score. Educational only - not financial advice.",
+ "frozen": "2026-11-18",
+ "first_session": "2026-11-19",
+ "sessions_to_score": 20,
+ "score_on_or_after": "2026-12-17",
+ "conditions": ["tod", "gap", "spy10", "spy_now", "atr_pct", "price", "adv", "etf", "withday", "vwap", "open", "pday", "or30"],
+ "rules": {
+  "FLAT25": {"desc": "skip while |SPY from its open| < 0.25% at the decision", "scope": "primary", "source": "research/crunch/w7_primaryday/RESULTS.md (in-sample +35.9R, t 1.76 vs 2.55; EARLY -36.7R)"},
+  "STACK1_L3X": {"desc": "skip a new RW3-FD / RW5-FD lot while another Primary lot is open on the same symbol (L3-gap-slope-fromopen-FD exempt)", "scope": "primary", "setups": ["RW3-gapdn-rsi5pop-flowsell-short-FD", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"], "source": "research/crunch/w7_primaryday/RESULTS.md (+4.9R, t 0.67; EARLY -12.2R)"},
+  "MFGAP": {"desc": "MF-family (open-flowsell) short on a stock whose open gapped up >= 2%", "scope": "all", "prefix": "MF", "gap_min": 2.0, "source": "research/crunch/w6_external/RESULTS.md W6-MFGAP (127 tr -0.558R, t 2.14 vs 2.67)"},
+  "W4_HFL_VWAP": {"desc": "heat_fade_long*: skip if side-adjusted (price - VWAP) / ATR > -0.209", "scope": "all", "prefix": "heat_fade_long", "vwap_max": -0.2094640759006999, "source": "research/crunch/w4_conditions/data/results.csv"},
+  "W4_NS3_PDAY": {"desc": "NS3*: skip if the prior day's return > +1.357%", "scope": "all", "prefix": "NS3", "pday_max": 1.3572299543627653, "source": "research/crunch/w4_conditions/data/results.csv"},
+  "W4_L3_PM": {"desc": "L3-gap-slope*: record tag for entries 13:30-15:00 ET (tod 240-330 min)", "scope": "all", "prefix": "L3-gap-slope", "tod": [240, 330], "source": "research/crunch/w4_conditions/RESULTS.md W4-WATCH"},
+  "W4_RW3_GAP2": {"desc": "RW3*: record tag for a gap below -2%", "scope": "all", "prefix": "RW3", "gap_lt": -2.0, "source": "research/crunch/w4_conditions/RESULTS.md W4-WATCH"}
+ },
+ "score": {"configs": 7, "bar_t": "max(1.5, sqrt(2 ln 7)) = 1.97", "method": "per rule: R after costs (LR8 basis) of the would-skip trades; excess over random removal of the same number of trades from the same setups (>= 95th percentile of 2,000 draws); day-clustered t; avg R w/o best day; per-setup better / worse counts; Primary scope uses Primary live trades, 'all' uses every account de-duplicated (setup|symbol|date|minute)"}
+}

@@ -41,6 +41,11 @@ exits:
 shorts:
   enabled: true                  # owner decision: both directions
   require_easy_to_borrow: true   # live: only short names the broker flags shortable + ETB
+  # U9-ETB (research/usage/u9_execleaks; proposal, owner decision after hours): load the broker's whole shortable/ETB
+  # list with one read-only GET at the first entry poll (refreshed every borrow_refresh_min; 0 = once). Short-only
+  # setups then journal a non-ETB name once per day and draw no further signals there. Same trades as before.
+  borrow_prefetch: true
+  borrow_refresh_min: 60
 
 costs:
   slippage_bps: 1.0              # per side, against us (limit/target exits excluded)
@@ -559,6 +564,13 @@ arena_rotation:
   caps:
     CWT14: {prefix: "CWT14-", cap: 2, scope: arena}
     GEN: {prefix: "GEN-", cap: 6, scope: account}
+  # ROT2 (owner yes 2026-11-18, amends C3-ROT; research/crunch/w3_reps): a cap applies only in an account whose resource
+  # skips exceed 5% of its signals (resource_file, refreshed by the Mon/Thu blocked-signal audit; missing -> no cap),
+  # and rare / day-gated setups (< 0.5 signals per active day, arena_reps.json) are never benched. Today every arena
+  # account is at 0.2-2.4% (Gen 1.0%), so no family cap binds and no setup is benched by C3-ROT.
+  min_resource_skip_frac: 0.05
+  resource_file: docs/live/arena_resources.json
+  never_bench_below_signals: 0.5
 
 research_queue:
   # CAP1 (owner 2026-11-03): research/queue.jsonl running order; at most this many research jobs (matrix legs) a night
@@ -575,6 +587,10 @@ data:
   feed: sip                      # owner subscribed to Algo Trader Plus (SIP) 2026-10-05
 
 live:
+  # U9-TGT (research/usage/u9_execleaks; proposal, owner decision after hours): skip an entry whose fill-side quote is
+  # already at/through the target or whose exit-side quote is at/through the stop (no order sent; today the broker
+  # rejects most of these and fills the rest for <= 1 cent of upside).
+  skip_passed_at_quote: true
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:

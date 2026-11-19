@@ -136,6 +136,38 @@ def _reps(path) -> dict:
         return {}
 
 
+def _resource_frac(path, acct: str):
+    """ROT2: this account's resource-skip share of signals from the resource file ({accounts: {acct: {resource_skip_frac}}}),
+    or None when there is no file / row."""
+    import json
+    from pathlib import Path
+
+    try:
+        v = ((json.loads(Path(path).read_text()).get("accounts") or {}).get(acct) or {}).get("resource_skip_frac")
+        return None if v is None else float(v)
+    except Exception:
+        return None
+
+
+def _rare(path, below) -> set:
+    """ROT2: setups whose signals per active day (arena_reps.json) are under `below` (rare or day/index-gated)."""
+    if below is None:
+        return set()
+    import json
+    from pathlib import Path
+
+    try:
+        d = json.loads(Path(path).read_text()).get("setups") or {}
+    except Exception:
+        return set()
+    out = set()
+    for k, v in d.items():
+        days, sig = float((v or {}).get("active_days") or 0), float((v or {}).get("signals") or 0)
+        if days > 0 and sig / days < float(below):
+            out.add(k)
+    return out
+
+
 def pick(members: list[str], cap: int, d: date, start: date, reps: dict | None = None) -> list[str]:
     """The `cap` members that play session `d`: members ordered by reps (fewest first, then name), then a window of
     `cap` that advances by `cap` every weekday since `start` (round-robin)."""
@@ -164,6 +196,18 @@ def family_caps(cfg: dict, asof=None, members_by_account: dict | None = None, ro
     base = Path(root) if root else Path(__file__).resolve().parents[1]
     reps = _reps(base / str(rc.get("reps_file") or "docs/live/arena_reps.json"))
     mine = [k for k, v in (cfg.get("strategies") or {}).items() if isinstance(v, dict) and v.get("enabled")]
+    # ROT2 (owner yes 2026-11-18, amends C3-ROT): caps apply only in an account whose resource skips (slots, buying
+    # power, per-setup cap, halt, crowding) exceed min_resource_skip_frac of its signals in the resource file (refreshed
+    # by the blocked-signal audit); no file / no row / at or under the line -> no family cap in this account today.
+    gate = rc.get("min_resource_skip_frac")
+    if gate is not None:
+        frac = _resource_frac(base / str(rc.get("resource_file") or "docs/live/arena_resources.json"), acct)
+        if frac is None or frac <= float(gate):
+            log = cfg.setdefault("rotation", {"session": d.isoformat(), "benched": [], "away": {}, "guests": {}})
+            log["family_benched"] = {}
+            log["family_caps_off"] = {"resource_skip_frac": frac, "line": float(gate)}
+            return {}
+    rare = _rare(base / str(rc.get("reps_file") or "docs/live/arena_reps.json"), rc.get("never_bench_below_signals"))
     out = {}
     for fam, spec in (rc.get("caps") or {}).items():
         prefix, cap, scope = str(spec.get("prefix", fam)), int(spec.get("cap", 0)), str(spec.get("scope", "account"))
@@ -177,8 +221,11 @@ def family_caps(cfg: dict, asof=None, members_by_account: dict | None = None, ro
                           | {k for k in mine if k.startswith(prefix) and not skip.search(k)})
         else:
             pool = [k for k in mine if k.startswith(prefix) and not skip.search(k)]
+        # ROT2: rare / day-gated setups (signals per active day under never_bench_below_signals) are never benched;
+        # they keep every session and take no place in the capped pool
+        pool = [k for k in pool if k not in rare]
         play = set(pick(pool, cap, d, start, reps))
-        bench = sorted(k for k in mine if k.startswith(prefix) and not skip.search(k) and k not in play)
+        bench = sorted(k for k in mine if k.startswith(prefix) and not skip.search(k) and k not in play and k not in rare)
         for k in bench:
             cfg["strategies"][k]["enabled"] = False
         out[fam] = {"cap": cap, "scope": scope, "pool": len(pool), "playing": sorted(k for k in mine if k in play),

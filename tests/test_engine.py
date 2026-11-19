@@ -230,7 +230,10 @@ def test_daily_review_compares_days(tmp_path):
     j.add_trades(rid, pd.DataFrame([{**row, "date": "2026-10-05", "r_multiple": 2.0, "pnl": 20.0},
                                     {**row, "date": "2026-10-06", "r_multiple": -1.0, "pnl": -10.0, "pnl_adj": -10.0, "slip_bps": 25.0}]))
     rv = build_review(j, rid, "2026-10-06")
-    assert rv["today"]["trades"] == 1 and rv["yesterday"]["exp_r"] == 2.0
+    # DQ-P3 (2026-11-18): a pre-11-12 row is re-costed on the LR8 basis in reports (market exit $0.01 + entry 1 bp +
+    # fees on 100 sh): 2.0R booked -> 1.885R; the journal row is unchanged
+    assert rv["today"]["trades"] == 1 and rv["yesterday"]["exp_r"] == 1.885
+    assert float(j.trades(run_id=rid).query("date == '2026-10-05'").pnl_adj.iloc[0]) == 20.0
     assert rv["beat_rolling5"]["exp_r"] is False
     assert any("slippage" in f for f in rv["findings"])
     assert "daily review" in to_markdown(rv)

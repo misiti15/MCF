@@ -122,8 +122,8 @@ strategies:
     tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
   RW2-exhaustion-noon-adv150-short-FD:
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/fullday/RW2-exhaustion-noon-adv150-short-FD.py
     min_adv: 150000000
@@ -132,8 +132,8 @@ strategies:
     tags: [graveyard, "moved from Testing 1 2026-10-20 (owner)", "moved to Graveyard 2026-10-21 (owner)"]
   LIQ-orl-sweep-open15-s25-long:
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/reddit1012liq/live/LIQ-orl-sweep-open15-s25-long.py
     min_adv: 95000000
@@ -144,8 +144,8 @@ strategies:
   # Failed Opening-Range-Low Break Long (low volume): CWT package B B3-LOR-p0.1-Vlowvol-sidelong-t05s1-full (id 190); open history n 31676, exp -0.0891R, t -7.82, 74.36/day; verdict retire
   CWT14-failbrk-orl-p10-lowvol-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.139R/trade)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-lowvol-long.py
     min_adv: 95000000
@@ -157,8 +157,8 @@ strategies:
   # Failed Opening-Range-Low Break Long (0.1 ATR) [fill]: CWT package B B3-LOR-p0.1-Vany-sidelong-t05s1-guest (id 179); open history n 39989, exp -0.0906R, t -7.05, 93.87/day; verdict retire
   CWT14-failbrk-orl-p10-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.155R/trade)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p10-long.py
     min_adv: 95000000
@@ -170,8 +170,8 @@ strategies:
   # Failed Opening-Range-Low Break Long (0.05 ATR, low volume) [fill]: CWT package B B3-LOR-p0.05-Vlowvol-sidelong-t05s1-full (id 166); open history n 74014, exp -0.0905R, t -9.35, 173.74/day; verdict rework
   CWT14-failbrk-orl-p05-lowvol-long:
     # moved to Graveyard 2026-10-21 (owner 2026-10-20 N4: all 4 CWT14 orl longs moved; live -0.233R/trade)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-orl-p05-lowvol-long.py
     min_adv: 95000000
@@ -197,8 +197,8 @@ strategies:
   # ---- from Testing 1: former primary (windowed, primary form = default.yaml block)
   heat_fade_short:   # ex-primary "Morning Bounce Fade"
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: heat
     formula: research/heat/candidates/regime_9.py
     sides: short
@@ -256,8 +256,8 @@ strategies:
   # from ST2-slope20up-long-am-t05s1 (testing; source window 950-1130); ~25.72/day full-day [exp -0.015R]
   ST2-slope20up-long-am-t05s1-FD:
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/fullday/ST2-slope20up-long-am-t05s1-FD.py
     min_adv: 95000000
@@ -292,8 +292,8 @@ strategies:
   # from heat_fade_long (primary; source window 1105-1330); ~55.18/day full-day [exp -0.031R]
   heat_fade_long-FD:
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: heat
     formula: research/bdi/fullday/heat_fade_long-FD.py
     sides: long
@@ -314,8 +314,8 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
   CWT14-failbrk-pdh-p05-lowvol-short:
     # moved to Graveyard 2026-10-22 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p05-lowvol-short.py
     min_adv: 95000000
@@ -326,8 +326,8 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-10-22 (owner)"]
   CWT14-failbrk-pdh-p10-lowvol-short:
     # moved to Graveyard 2026-10-22 (owner)
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-lowvol-short.py
     min_adv: 95000000
@@ -338,8 +338,8 @@ strategies:
   CWT14-failbrk-pdh-p10-short:
     # moved to Graveyard 2026-10-22 (owner P0, ~11:10 ET; effective session 2026-10-23 - its 10-22 trades stay in
     # Testing 1, the dashboard merges both records into one row under Graveyard). Rework pdh1022: 0 of 47 variants pass.
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdh-p10-short.py
     min_adv: 95000000
@@ -351,7 +351,8 @@ strategies:
   CWT13-vwapstretch-z05-short:
     # moved to Graveyard 2026-10-22 evening (owner D1; effective session 2026-10-23 - its earlier trades stay in
     # Testing 2, the dashboard merges both records into one row under Graveyard). 61 trades -0.40R, t_day -2.06.
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z05-short.py
     min_adv: 95000000
@@ -363,7 +364,8 @@ strategies:
   CWT09-gapdn-vwaploss-g5-short:
     # moved to Graveyard 2026-10-25 (owner D2; effective session 2026-10-26 - its earlier trades stay in Testing 2,
     # the dashboard merges both records into one row under Graveyard). 33 trades, 15% win vs 40% needed, -0.70R.
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT09-gapdn-vwaploss-g5-short.py
     min_adv: 1000000
@@ -375,8 +377,8 @@ strategies:
   CWT12-coil-k6-long:
     # moved to Graveyard 2026-10-26 (owner D3; effective session 2026-10-27 - its earlier trades stay in Testing 1,
     # the dashboard merges both records into one row under Graveyard). 90 trades, 31% win vs 38% needed, -0.27R.
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k6-long.py
     min_adv: 95000000
@@ -388,8 +390,8 @@ strategies:
   CWT12-coil-k4-long:
     # moved to Graveyard 2026-10-28 (owner K4-2; effective session 2026-10-29 - its earlier trades stay in Testing 2,
     # the dashboard merges both records into one row under Graveyard). 427 trades, -0.092R after costs (-0.118R w/o best day); 2-yr -0.075R.
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT12-coil-k4-long.py
     min_adv: 95000000
@@ -401,8 +403,8 @@ strategies:
   CWT14-failbrk-pdl-p05-long:
     # moved to Graveyard 2026-10-30 (owner D1; its earlier trades stay in Testing 1, the dashboard merges both records).
     # 675 trades -0.085R after costs; 2-yr -0.068R (research/bdi/pdl_eval1029).
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-long.py
     min_adv: 95000000
@@ -414,8 +416,8 @@ strategies:
   CWT14-failbrk-pdl-p05-lowvol-long:
     # moved to Graveyard 2026-10-30 (owner D2; its earlier trades stay in Testing 2, the dashboard merges both records).
     # 433 trades -0.115R after costs; 2-yr -0.095R (research/bdi/pdl_eval1029).
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-lowvol-long.py
     min_adv: 95000000
@@ -440,7 +442,8 @@ strategies:
   RW4-ns3-adv150-short-FD:
     # moved to Graveyard 2026-11-01 (owner DM-NS3; was split across Testing 1 + 2 by ticker half, one full copy here).
     # 104 trades -0.246R after costs (-0.354R w/o best day); 2-yr +0.054R (t 1.13).
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-18 after the close (owner GY-ARCHIVE-20 yes; from session 2026-11-19): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-19", code: GY-ARCHIVE-20, reason: "GY-LIFE archive rule 1-5 met (research/graveyard_review_1118/TRIAGE.csv); not exempt under the owner high-volume / big-day-cluster exception (research/od1118/gy_exempt_out.txt)"}
     refire: true
     refire_cooldown: 1
     type: lab

@@ -442,3 +442,20 @@ def test_glitch_checks_doc_lists_ten_checks():
     import re
 
     assert sum(1 for line in txt.splitlines() if re.match(r"^\d+\. ", line)) == 10
+
+
+def test_dq_p4_open_marks_use_the_entry_fill_and_read_lower(tmp_path, monkeypatch):
+    """DQ-P4 (owner yes 2026-11-18, conservative): once the reconcile has seen the lot's entry fill, open marks (and so
+    the Primary -20R halt's open term) use the fill, not the signal reference. An adverse fill marks lower."""
+    r, b = _runner(tmp_path, monkeypatch)
+    r.restore(at("2026-11-12 11:00").date())
+    r.lots = {"AAA": {"c1": {"strategy": "S1", "side": 1, "qty": 10, "order_id": "o1", "coid": "c1"}}}
+    r._mtm_lot["c1"] = (100.0, 99.0)                     # signal reference 100.00, stop 99.00
+    r._mtm_restored = True
+    bars = {"AAA": pd.DataFrame({"close": [100.50]})}
+    by_ref = r._open_marks(bars)
+    r._fill_px["o1"] = 100.20                            # filled 20 cents worse than the signal
+    by_fill = r._open_marks(bars)
+    assert by_ref == pytest.approx((100.50 - 100.0 - 0.01005) / 1.0)
+    assert by_fill == pytest.approx((100.50 - 100.20 - 0.01005) / 1.20)
+    assert by_fill < by_ref and r.risk.state.open_r == pytest.approx(by_fill)

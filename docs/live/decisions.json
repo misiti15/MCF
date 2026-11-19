@@ -1638,10 +1638,10 @@
    "Target part check t 2.32 (bar 1.67); 15 setups up, 4 down -0.5R",
    "Stop part +56.9R, t 8.24, 11 up / 0 down"
   ],
-  "why": "These fills have no upside; about -3.7 fills per session.",
+  "why": "Owner 2026-11-18: \"Yes if the data supports that we are better off to do this.\" Evidence confirmed (target 15 better / 4 worse, +8.5R; stop 11 / 0, +56.9R, small in $); applied with skip logging; re-check on recorded quotes 2026-12-03.",
   "link": "research/usage/u9_execleaks/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "U9-ETB",
@@ -1653,10 +1653,10 @@
    "09:08 flags matched every skip, 0 intraday flips",
    "~300-650 fewer journal rows, up to ~640 fewer GETs per session"
   ],
-  "why": "Cleaner journal and playing-time stats at no R cost.",
+  "why": "Owner 2026-11-18: \"Yes\". Bulk borrow list + one ETB skip row per setup/symbol/day.",
   "link": "research/usage/u9_execleaks/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "ENG1",
@@ -1667,10 +1667,10 @@
    "6 engines; replay matches live 87.1% (target 98%), 44% for L3-fromopen",
    "28 one-off simulators in 6 sessions; 0 of 15 gates green"
   ],
-  "why": "Diverging simulators give conflicting numbers; no source ranks setups.",
+  "why": "Owner 2026-11-18: \"Yes\" (A): engine labels, no new one-off simulators (rule 31). ENG1-B/C not approved.",
   "link": "research/usage/u11_engine/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "ENG1 A, 2026-11-18"
  },
  {
   "code": "GY-LIFE",
@@ -1681,10 +1681,10 @@
    "Graveyard: 21 sessions, 9,330 resident trades, -1,095R, 2 green sessions",
    "No resident positive w/o its best day over its whole record; 0 configurations tried"
   ],
-  "why": "The Graveyard has no exit; C3-EXIT100 will send 31 more setups (-1,251R) into it.",
+  "why": "Owner 2026-11-18: \"Yes\". Rule 29 + CLAUDE.md.",
   "link": "research/graveyard_review_1118/RULE.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "GY-ARCHIVE-20",
@@ -1695,10 +1695,10 @@
    "-66.5R and 477 trades per session (82% of Graveyard trades), 10 sessions before GY-BENCH",
    "Rest of the residents +4.0R/session (one-day: 11-12 = 186%)"
   ],
-  "why": "Each meets every archive condition and no pending test covers it.",
+  "why": "Owner 2026-11-18: \"Unless any graveyard setups have high volume trades daily with potential huge gain clusters per day in which case our market compass can help switch that on/off in the future.\" 18 archived from 11-19; 2 exempt (CWT14-failbrk-orl-p05-long, heat_fade_short-FD: high volume + big-day clusters), research/od1118/gy_exempt_out.txt.",
   "link": "research/graveyard_review_1118/TRIAGE.csv",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes with exception, 2026-11-18"
  },
  {
   "code": "USAGE1",
@@ -1710,10 +1710,10 @@
    "Guild 78 ideas / 0 setups passed (3 process items approved); Reddit 26 / 0; Top-5 B 378 / 0",
    "Usage limit hit 11-11 and 11-12: 13:21 monitor + 13:51 Primary glitch check missed"
   ],
-  "why": "The Guild's 24/7 every-2-hour schedule is most of the bill and produced no setups; aiming it at gaps keeps it while protecting the cheap Primary safety checks from usage-limit days.",
+  "why": "Owner 2026-11-18: \"Yes or find a better use for the guild that offers better use to mcf in general.\" Plan + Guild gap-team redesign: research/usage_review_1118/APPLY_1118.md (task edits by the parent session).",
   "link": "research/usage_review_1118/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes or better Guild, 2026-11-18"
  },
  {
   "code": "UNIT1",
@@ -1725,10 +1725,10 @@
    "since start: -71.3 trade R vs about -3.8 account R",
    "system 11-12..11-18: -145R/session but +$21/session"
   ],
-  "why": "Small capped lots (median risk $24 vs nominal $212) decide the day's sign in trade R but barely move dollars.",
+  "why": "Owner 2026-11-18: \"I judge by total r or average r per trade in primary and on deck. Not sure if this is relevant.\" Applied as display only: account R ($ / 0.25% equity) next to trade R in the brief scorecard, status files and dashboard; judging unchanged (trade R).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "display only, 2026-11-18"
  },
  {
   "code": "DQ-P4",
@@ -1740,10 +1740,10 @@
    "per-lot error mean +0.016R, p90 0.16R",
    "patch + tests: 778 passed"
   ],
-  "why": "The halt and latch should read the risk actually taken.",
+  "why": "Owner 2026-11-18: \"Yes if it ultimately benefits our observations and adds to the conservative view of how we view stats. We want to underestimate potential not overestimate.\" Verified conservative: fills averaged +0.041R worse than the signal on 1,441 Primary lots, so marks read lower and the halt trips earlier. Built (PR, skeptic review before merge).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "DQ-P3",
@@ -1755,10 +1755,10 @@
    "194 of 219 setups worse, 5 sign flips (NS5, RW7-FD)",
    "L3-fromopen +0.221 -> +0.204"
   ],
-  "why": "Records that mix two cost bases mislead promotion and demotion.",
+  "why": "Owner 2026-11-18: \"Yes - again underestimate potential is better, right?\" Yes: every report reads one LR8 basis (pre-11-12 rows ~0.04R lower); journals unchanged.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "TAGS1",
@@ -1770,10 +1770,10 @@
    "MF gap-up skip: 127 trades -0.558R, t 2.14 vs 2.67",
    "0 of 31 bespoke rules passed (bar 3.94)"
   ],
-  "why": "The only clean route to a Primary entry rule: fresh unseen sessions, no live risk.",
+  "why": "Owner 2026-11-18: \"Yes\". Frozen rules research/tags1/rules.json; nightly tagger; scored once on/after 2026-12-17.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "W4-FRAME",
@@ -1785,10 +1785,10 @@
    "excess over random removal +31.8R vs +550R promised",
    "condition effects keep sign between halves 56% of the time"
   ],
-  "why": "In-sample condition rules mostly re-discover random trade removal.",
+  "why": "Owner 2026-11-18: \"Yes\". docs/BESPOKE_ENTRY_RULES.md, rule 30.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "STOP2",
@@ -1800,10 +1800,10 @@
    "earlier exits on 5 gap-down shorts: -0.025 to -0.030R/trade, 14 of 15 worse",
    "per-setup filters: 8 of 31 worsened their setup"
   ],
-  "why": "Avoids re-spending on categories that failed with clear harm.",
+  "why": "Owner 2026-11-18: \"Yes depending on what you mean\". Meaning written into rule 26: the three items are not built or proposed again without new evidence and the owner's yes, each with its evidence line.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "RT-NS5",
@@ -1815,10 +1815,10 @@
    "W1: green 8/16, +0.12R with 11-18",
    "both reviews: indistinguishable from zero"
   ],
-  "why": "Flag on an approved decision; reversing would churn Epoch 1 for a noise-level difference.",
+  "why": "Owner 2026-11-18 housekeeping bundle \"Yes\" to the recommendation: C3-NS5 stays (NS5 out of Primary).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "no - keep the move, 2026-11-18"
  },
  {
   "code": "RT-EARN",
@@ -1830,10 +1830,10 @@
    "BLKOUT: report-day BMO -0.064R (t -3.57)",
    "test: 1 config"
   ],
-  "why": "Flag on an approved decision.",
+  "why": "Owner 2026-11-18 (bundle): EARN-GO held until one 2-year earnings-season test (Wave 2).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "W3-PSHADOW",
@@ -1845,10 +1845,10 @@
    "testing misses ~10% of Primary-rule trades (136 cost-filter skips vs 1,180 fills)",
    "overlap with Primary only measurable in Primary"
   ],
-  "why": "Promotion evidence under the rules the setup would actually trade.",
+  "why": "Owner 2026-11-18: \"Yes but after on deck trading\". Rule only (34): candidates run as Primary shadow setups only after their On Deck stage; the shadow_setups mechanism exists; no candidate qualifies yet.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes after On Deck, 2026-11-18"
  },
  {
   "code": "WB2",
@@ -1860,10 +1860,10 @@
    "17 chosen tunes: fit +63.6R -> check -45.3R",
    "40 paired trades give SE ~0.05R"
   ],
-  "why": "The old pass rule lets a null tune through about half the time.",
+  "why": "Owner 2026-11-18: \"We have been only tweaking setups recently. I want to give them time to breathe. Further limiting their new tweaks might be premature. Also, these would be copies, right? So new setups completely with their own testing.\" HELD: not applied; copies stay separate setups with their own testing.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "hold, 2026-11-18"
  },
  {
   "code": "WB2-OVERLAY",
@@ -1875,10 +1875,10 @@
    "+0.05R: 255-320 paired vs 5,000-10,400 unpaired trades",
    "frees arena slots"
   ],
-  "why": "Verdicts in 30-150 sessions instead of never.",
+  "why": "Held with WB2 (owner 2026-11-18, same answer): not applied.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "hold, 2026-11-18"
  },
  {
   "code": "ROT2",
@@ -1890,10 +1890,10 @@
    "14 up-gated GEN setups: 0 signals in 3 sessions",
    "IDX/LD setups 0-0.6 signals/session"
   ],
-  "why": "Testing accounts are short of signals, not slots.",
+  "why": "Owner 2026-11-18 (bundle). Built: caps only above 5% resource skips (none today), rare setups never benched.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "WBQ1",
@@ -1905,10 +1905,10 @@
    "L3-rsi5hi-WB5 refire-off paired: +0.003R, t 0.11",
    "halves flip sign"
   ],
-  "why": "Removes contradictions between open codes (E7/E8).",
+  "why": "Owner 2026-11-18 (bundle): W7-TUNE27-08 closed; no MF1-FD/MF3-FD/NS3-FD tunes; L3-rsi5hi-WB5 not counted without a paired read-out.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "W3-NOGUEST",
@@ -1920,10 +1920,10 @@
    "Graveyard halted 11-17 10:50, 1,531 signals skipped",
    "testing accounts use <= 29% of slots"
   ],
-  "why": "Guests gain nothing and inherit the Graveyard's halts.",
+  "why": "Owner 2026-11-18 (bundle): no new guest rounds; current guests home 11-25.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "DQ-P1",
@@ -1935,10 +1935,10 @@
    "Primary raw +531.9R vs corrected +56.0R; 11 of 51 verdicts flip",
    "approved whatif_corrected returns 0 on journal rows"
   ],
-  "why": "The approved function does not work on real rows.",
+  "why": "Owner 2026-11-18 (bundle): built (whatif_corrected reads journal rows; review verdicts on the corrected sum).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "RT-UNCAL",
@@ -1950,10 +1950,10 @@
    "SRCV1: no non-live source counts",
    "an unmeasured source currently outranks a measured failure"
   ],
-  "why": "Config and approved text disagree.",
+  "why": "Owner 2026-11-18 (bundle): uncalibrated_weight 0.2 -> 0.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "DQ-P2",
@@ -1965,10 +1965,10 @@
    "MTUM glitch -$11,456 + phantom marks -$184",
    "trading-only about +$134.66"
   ],
-  "why": "The daily post already adjusts; the dashboard does not.",
+  "why": "Owner 2026-11-18 (bundle): dashboard since-start $ excludes the labelled MTUM glitch.",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "W6-PBO",
@@ -1980,10 +1980,10 @@
    "0 of 114 setups reach t 3.27",
    "best: L3-fromopen t 1.70"
   ],
-  "why": "Ranking by avg R per trade picks lucky small records.",
+  "why": "Owner 2026-11-18 (bundle): rule 33; PBO + try-count t in the Friday review packet (Wave 2).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "W3-BENCHSHADOW",
@@ -2036,10 +2036,10 @@
    "144 positions on 11-17, -134.6R",
    "median stop exit -1.18R; Gen per-setup cap 150"
   ],
-  "why": "May reveal a cap or slippage problem affecting other setups.",
+  "why": "Owner 2026-11-18 (bundle): diagnosed, research/od1118/GEN09.md (one 5-min bucket fired on 144 symbols = one index bet; no cap/reconcile bug).",
   "link": "research/crunch/WAVE1.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  },
  {
   "code": "DQ-B4b",
@@ -2078,9 +2078,9 @@
    "Shadow vs live 11-17/18: match 98.6%, extra 0.0%, bias -0.049R (pessimistic), daily corr 0.993",
    "SPRT early decisions: 0 of 65 low-rep setups decidable; v1 not fit (bootstrap false-FAIL 10.4%)"
   ],
-  "why": "The low-rep setups mostly do not fire, so slots and spotlight barely help; shadow gives every rare signal a conservative, high-fidelity preview from the next session at no risk, so promising ones are spotted in days, not a month.",
+  "why": "Owner 2026-11-18: \"Yes but it should be noted somehow. We also have many many columns on the setup leaderboard...\" 25 rare-trigger setups shadow-only in Testing A from 11-19; one tag 'shadow lane', no new column.",
   "link": "research/reps2/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-18"
  }
 ]

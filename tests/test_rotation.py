@@ -75,7 +75,11 @@ def test_graveyard_bench_list_and_rules_untouched():
     finally:
         os.environ.pop("MCF_ACCOUNT", None)
     benched = sorted(k for k, v in st.items() if isinstance(v, dict) and isinstance(v.get("benched"), dict))
-    assert len(benched) == 18
+    # GY-ARCHIVE-20 (owner yes 2026-11-18, from 11-19): 15 of the 18 benched setups were archived (enabled false, bench
+    # window dropped); the 3 left keep their 11-18..11-24 rest (incl. the two owner-exception exempt setups)
+    archived = sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("archived"))
+    assert len(benched) == 3 and len(archived) == 18
+    assert {"CWT14-failbrk-orl-p05-long", "heat_fade_short-FD"} <= set(benched)
     for k in benched:
         assert st[k]["benched"]["from"] == "2026-11-18" and st[k]["benched"]["until"] == "2026-11-24"
         assert "guest" not in st[k] and "max_stop_cost_r" not in st[k] and "max_setup_daily_loss_r" not in st[k]

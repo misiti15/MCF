@@ -64,6 +64,12 @@ live:
     - MF4-h40-open-flowsell   # 8 traded sessions / 25 trades
     - NS3V1-am-widestop-short   # 9 traded sessions / 56 trades
     - NM-AR-AM-gapdown-capitulation-long   # 12 traded sessions / 64 trades
+# REPS2-LANE (owner yes 2026-11-18, research/reps2/NOTES.md section 3): the low-rep fast lane's rare-trigger setups
+# (< 0.5 signals/session where they live) run SHADOW-ONLY in Testing A (full universe since 11-12): no orders, slots,
+# latch or halt, never counted as live reps or toward On Deck / Primary minimums (SRCV1 weight 0). The list is
+# re-picked nightly by research/reps2/fastlane.py into lane.json and read once at session start (mcf/execution/shadow.py
+# lane_setups). Dashboard tag: "shadow lane". Their live homes are unchanged.
+shadow_setups_from: research/reps2/fastlane/lane.json
 strategies:
   MF2-open-rsimidhi-flowsell-FD-WB3:
     # Workbench copy of MF2-open-rsimidhi-flowsell-FD (On Deck), Mechanic 2026-11-16: skip rising 20-SMA / gap-ups > 2% + RSI(14) 55-62 + heat -40..-30 + ADV $150M;

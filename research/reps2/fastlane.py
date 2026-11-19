@@ -166,6 +166,21 @@ def write(df: pd.DataFrame, out: Path, asof: str) -> None:
                      f"{r.shadow_trades} ({_f(r.shadow_r)}) | {_f(r.evidence_r)} ({_f(r.evidence_src)}) | {r.score} | "
                      f"{r.route} |")
     (out / "LIST.md").write_text("\n".join(lines) + "\n\nEducational only — not financial advice.\n")
+    write_lane(df, out, asof)
+
+
+def write_lane(df, out: Path, asof: str) -> None:
+    """REPS2-LANE (owner yes 2026-11-18): the 'full-universe' route (rare trigger) -> lane.json, which Testing A reads
+    at session start as shadow-only setups (config shadow_setups_from; mcf/execution/shadow.py lane_setups)."""
+    import json
+
+    names = sorted(df.loc[df["route"] == "full-universe", "setup"].astype(str)) if len(df) else []
+    (out / "lane.json").write_text(json.dumps({
+        "note": "REPS2-LANE shadow-only lane for Testing A (owner yes 2026-11-18): current setups with 0-10 live trades "
+                "whose route is 'full-universe' (rare trigger, < 0.5 signals/session where they live). Re-picked nightly "
+                "by research/reps2/fastlane.py. Shadow reps are a separate column (SRCV1 weight 0), never live reps. "
+                "Educational only - not financial advice.",
+        "asof": asof, "account": "testing2", "route": "full-universe", "setups": names}, indent=1) + "\n")
 
 
 def main(argv=None):
