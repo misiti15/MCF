@@ -119,3 +119,7 @@ plan or script BEFORE scoring; each line names where it happened so the reason i
 46. **Time-grid mismatch in lookups.** Event times on a 1-min grid looked up in 5-min bars (`if t in index else 0`) silently
     zero most rows (A1: 217 of 253 extremes off-grid -> 'nothing left' for ~86%). Map each time to the bar that CONTAINS it,
     assert the hit rate, and put an off-grid case in the selftest. (A1, Scout; cousin of #3.)
+47. **Rolling features that cross the overnight gap.** A 'first 20 minutes' feature built as a rolling window over bars that is
+    not reset by day mostly measures yesterday at the open (heat.py buyPressure: 19 x 5-min bars, not grouped by day -> at
+    09:50, 15 of 19 bars are yesterday's last 75 min). Check groupby(day) or rebuild day-reset before naming a feature by its
+    window. (SIDEHUNT #2.)

@@ -67,4 +67,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-18 19:50 UTC (run 82): confirmed from ledger: 18 true benches + 20 guests (benched-away + guest patches); REPS3 excluded pairs must be 18; suggested assert.
 - 11-18 21:50 UTC (run 83): REPS3 guest fix in (excluded == 18 asserted; Observer re-checked). FAMC 11-18 NVDA one event +0.220R net: cautioned (one-big-day, single-name control noise, K_edge 0.663; ~80-120 calendar sessions to any alarm).
 - 11-18 23:50 UTC (run 84): REPS3 missing market context: SPY range 1.46% vs 1.23% baseline (busier) -> part of +12% may be market; TSZ1 added nothing to forecast setups (527->513). Owned FAMC best-day error (11-11, w/o -0.112R). ICCSET/A1 fine; Observer arcsine baseline 85%.
+- 11-19 01:50 UTC (run 85): SIDEHUNT #2 buyPressure is 19x5-min rolling NOT day-reset (at 09:50 mostly yesterday's flow); live RW flow-sell reads it (owner FYI). Backed Observer step 0 (discordant N sets MDE). Checklist #47.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
