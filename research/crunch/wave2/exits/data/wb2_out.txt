@@ -1,0 +1,44 @@
+parent eligibility (live R through 11-17):
+  L3-rsi5hi: n 152 days 22 avg +0.085 w/o best -0.003 share 102%
+  RW1: n 195 days 26 avg -0.011 w/o best -0.038 share nan%
+  RW3: n 185 days 26 avg +0.172 w/o best +0.052 share 74%
+  RW5: n 198 days 26 avg +0.116 w/o best +0.025 share 81%
+  RW7: n 715 days 25 avg +0.002 w/o best -0.022 share 1204%
+Y1 target 1.25x halves (RW3+RW5): early +0.0553 (183 tr), late +0.0363 (200 tr)
+Y1 target 1.25x weekly mean delta: {'2026-10-12/2026-10-18': 0.027, '2026-10-19/2026-10-25': 0.071, '2026-10-26/2026-11-01': 0.057, '2026-11-02/2026-11-08': 0.073, '2026-11-09/2026-11-15': 0.01, '2026-11-16/2026-11-22': 0.068}
+Y2 trail after +1R halves (RW3+RW5): early +0.0223 (183 tr), late -0.0190 (200 tr)
+Y2 trail after +1R weekly mean delta: {'2026-10-12/2026-10-18': 0.011, '2026-10-19/2026-10-25': 0.026, '2026-10-26/2026-11-01': 0.026, '2026-11-02/2026-11-08': -0.077, '2026-11-09/2026-11-15': 0.003, '2026-11-16/2026-11-22': 0.01}
+Y3 target from fill halves (RW3+RW5): early +0.0562 (183 tr), late -0.0099 (200 tr)
+Y3 target from fill weekly mean delta: {'2026-10-12/2026-10-18': 0.052, '2026-10-19/2026-10-25': 0.049, '2026-10-26/2026-11-01': 0.072, '2026-11-02/2026-11-08': -0.058, '2026-11-09/2026-11-15': 0.0, '2026-11-16/2026-11-22': 0.046}
+                                              cls    n  days      mu   se_re     tau    d_cl   se_cl       t    perm  lowo_same_sign  nshr_pos  worst_shr  par_wob  var_wob  var_sh  gain_bestday_sh     dtot                                  verdict
+0                                 Y1 target 1.25x  383    27  0.0438  0.0170  0.0146  0.0454  0.0153  2.5814  0.0023          1.0000         2     0.0376   0.0510   0.0873  0.6265           0.3133  17.3835                                     PASS
+1               Y1 target 1.25x [calibrated only]  319    27  0.0560  0.0166  0.0075  0.0574  0.0177  3.1564  0.0019          1.0000         2     0.0543   0.1131   0.1611  0.5357           0.2974  18.3075                                     PASS
+2      Y1 target 1.25x [3 setups incl. L3-rsi5hi]  535    27  0.0528  0.0132  0.0133  0.0521  0.0124  4.0126  0.0006          1.0000         3     0.0439   0.0637   0.1101  0.4813           0.2030  27.8901                                     PASS
+3                              Y2 trail after +1R  383    27  0.0051  0.0101  0.0000  0.0007  0.0123  0.4150  0.4725          0.3333         2     0.0051   0.0510   0.0501  0.7244           5.4540   0.2864         FAIL (t,perm,lowo,wob,gainshare)
+4            Y2 trail after +1R [calibrated only]  319    27 -0.0015  0.0133  0.0000 -0.0045  0.0147 -0.1017  0.4039          0.8333         0    -0.0015   0.1131   0.1056  0.6137              NaN  -1.4227  FAIL (t,perm,lowo,shrunk,wob,gainshare)
+5   Y2 trail after +1R [3 setups incl. L3-rsi5hi]  535    27 -0.0018  0.0078  0.0000 -0.0028  0.0096 -0.1884  0.3945          0.8333         0    -0.0018   0.0637   0.0594  0.6068              NaN  -1.5009  FAIL (t,perm,lowo,shrunk,wob,gainshare)
+6                             Y3 target from fill  383    27  0.0259  0.0119  0.0000  0.0217  0.0164  1.5804  0.0940          1.0000         2     0.0259   0.0510   0.0752  0.6353           0.3709   8.3056                            FAIL (t,perm)
+7           Y3 target from fill [calibrated only]  319    27  0.0240  0.0124  0.0000  0.0213  0.0183  1.3137  0.1339          1.0000         2     0.0240   0.1131   0.1372  0.5489           0.2812   6.8006                            FAIL (t,perm)
+8  Y3 target from fill [3 setups incl. L3-rsi5hi]  535    27  0.0252  0.0110  0.0000  0.0215  0.0146  1.7269  0.0831          1.0000         3     0.0252   0.0637   0.0862  0.5163           0.3558  11.5196                            FAIL (t,perm)
+                                  cls setup    n  days     par  par_wob  par_sh     var  var_wob  var_sh       d      se       t     dtot   up  dn  gain_bestday_sh  changed  shrunk
+0                     Y1 target 1.25x   RW3  185    26  0.1764   0.0573  0.7192  0.2394   0.1104  0.6010  0.0631  0.0211  2.9822  11.6677   69  13           0.2835   0.4432  0.0500
+1                     Y1 target 1.25x   RW5  198    26  0.1357   0.0451  0.7165  0.1645   0.0654  0.6610  0.0289  0.0173  1.6733   5.7158   68  16           0.4002   0.4242  0.0376
+2       Y1 target 1.25x [descriptive]   RW1  195    26 -0.0105      NaN     NaN  0.0064      NaN     NaN  0.0169  0.0124  1.3580   3.2922   46  16              NaN      NaN     NaN
+3       Y1 target 1.25x [descriptive]   RW7  715    25  0.0067      NaN     NaN  0.0226      NaN     NaN  0.0159  0.0075  2.1062  11.3563  178  45              NaN      NaN     NaN
+4                  Y2 trail after +1R   RW3  185    26  0.1764   0.0573  0.7192  0.1700   0.0511  0.7399 -0.0064  0.0247 -0.2588  -1.1833   14  13              NaN   0.1459  0.0051
+5                  Y2 trail after +1R   RW5  198    26  0.1357   0.0451  0.7165  0.1431   0.0491  0.7072  0.0074  0.0111  0.6691   1.4697   18  14           0.7453   0.1616  0.0051
+6    Y2 trail after +1R [descriptive]   RW1  195    26 -0.0105      NaN     NaN -0.0110      NaN     NaN -0.0005  0.0155 -0.0294  -0.0888    8  13              NaN      NaN     NaN
+7    Y2 trail after +1R [descriptive]   RW7  715    25  0.0067      NaN     NaN -0.0035      NaN     NaN -0.0102  0.0078 -1.3027  -7.2688   21  38              NaN      NaN     NaN
+8                 Y3 target from fill   RW3  185    26  0.1764   0.0573  0.7192  0.1912   0.0765  0.6540  0.0149  0.0295  0.5046   2.7541   53  30           0.7465   0.4486  0.0259
+9                 Y3 target from fill   RW5  198    26  0.1357   0.0451  0.7165  0.1637   0.0739  0.6148  0.0280  0.0130  2.1565   5.5514   53  32           0.3153   0.4293  0.0259
+10  Y3 target from fill [descriptive]   RW1  195    26 -0.0105      NaN     NaN  0.0146      NaN     NaN  0.0251  0.0245  1.0246   4.8897   45  23              NaN      NaN     NaN
+11  Y3 target from fill [descriptive]   RW7  715    25  0.0067      NaN     NaN  0.0127      NaN     NaN  0.0060  0.0089  0.6724   4.2903  159  73              NaN      NaN     NaN
+P {'target': 166, 'flatten': 141, 'stop': 76}
+Y1 {'flatten': 183, 'target': 124, 'stop': 76}
+Y2 {'flatten': 138, 'target': 116, 'stop': 74, 'trail': 55}
+Y3 {'flatten': 155, 'target': 154, 'stop': 74}
+                                          cls    n  days      mu   se_re  tau    d_cl   se_cl       t    perm  lowo_same_sign  nshr_pos  worst_shr  par_wob  var_wob  var_sh  gain_bestday_sh    dtot                  verdict
+0  SPY-since-entry exit (RW3 0.30 / RW5 0.40)  383    27  0.0152  0.0097  0.0  0.0088  0.0183  0.8312  0.3781          0.8333         2     0.0152   0.0383   0.0522  0.7047           1.7427  3.3587  FAIL (t,perm,gainshare)
+                                          cls setup    n  days     par  par_wob  par_sh     var  var_wob  var_sh       d      se       t    dtot  up  dn  gain_bestday_sh  changed  shrunk
+0  SPY-since-entry exit (RW3 0.30 / RW5 0.40)   RW3  185    26  0.1718   0.0520  0.7384  0.1716   0.0594  0.7009 -0.0002  0.0289 -0.0058 -0.0312  16  17              NaN   0.1784  0.0152
+1  SPY-since-entry exit (RW3 0.30 / RW5 0.40)   RW5  198    26  0.1162   0.0253  0.8139  0.1333   0.0454  0.7094  0.0171  0.0103  1.6669  3.3899  17  11           0.5304   0.1414  0.0152
