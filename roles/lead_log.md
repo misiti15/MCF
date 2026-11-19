@@ -260,3 +260,4 @@
 - Run 81 (11-18 15:00): REPS3 guest fix (assert 18).
 - Run 82 (11-18 17:00): FAMC reading standard; REPS3 tonight.
 - Run 83 (11-18 19:30): REPS3/ICCSET/A1 read; SIDEHUNT opened; PR #229 merged.
+- Run 84 (11-18 21:30): rule-26 footing; GUILD-MECH decision; PR #231 merged.

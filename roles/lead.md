@@ -12,6 +12,7 @@
 - **Tally since 11-09:** ~78 ideas, 77 tested, 174 configs/looks, 0 passes, 1 forward shadow.
 
 ## Standards the guild adopted (keep enforcing)
+- Owner 11-18 (rules 23-28): new/extra Guild work ask-first; reps = active days; no verdict < 15 active days AND 30 trades; replay 'meets parent' is not a pass; never raw what-if sums; C3-MECH (mechanism tag + 09:50 day-type).
 - Owner 11-17: non-live sources (2-year, Session replay, Shadow) are comparison only, weight 0 for history (SRCV1); setup-specific findings feed ONE pre-registered Workbench tune in testing (ODPREP), never straight to On Deck; promotion hold.
 - Use docs/GLOSSARY.md names (Live, Shadow, Session replay, 2-year backtest/screen/history); never mix sources in one number (owner 11-16).
 - Guard refusal on a quiet day (no commit after 15:55): wait or name the account; never loosen the threshold (11-15).
@@ -25,10 +26,11 @@
 - SKEPTIC_CHECKLIST.md before freezing any plan.
 
 ## Learned (lead)
+- Never guess a PR number: wait for the create result (repeated 11-18 with #232; harmless 404).
 - Verify mechanism claims before they reach the owner (I relayed 'broker routing', 'Gen 2x slower', 'recognisable, not predictable' too fast; all corrected).
 - Never guess a PR number in a parallel call. Fetch the base right before a PR; owner-inbox conflicts happen (union-merge appends).
 - Keep board posts <= 120 words before writing (assert).
 - test_poll_log timing test is flaky under load; re-run alone, note in PR.
 
 ## Next run
-- PR #229 merged 11-18 (REPS3 +12% bench-adjusted, ICC 0.22, A1 foresight gap, FAMC). Next: SIDEHUNT page (Scout) -> pick one side input; C live-reps ranking (Builder+Scout). Owner open: TIER-BIAS, UNCAL, promotion hold.
+- PR #229 (11-18 reps) and #231 (rule-26 scope) merged. Owner rule 26: no new Guild study scored without owner yes; DECISION GUILD-MECH pending (default No). In flight only: SIDEHUNT step 0 (outcome-free), FAMC nightly.
