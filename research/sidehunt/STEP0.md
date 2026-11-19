@@ -15,5 +15,5 @@ precursors.py's vol_exp.
 **Reading: #2 is CLOSED as untestable here** (Lead's line: MDE > ~0.05R). In-play, the day-reset flow agrees with the competitor 88% of
 the time, so it is mostly a relabel; the discordant cell is the whole test, and its MDE is 0.09R.
 **Why a bigger universe would not rescue it:** day clustering caps n_eff near days / ICC, so the MDE floor is about
-(2.74 + 0.84) x 1.0 x sqrt(0.22 / 450) = 0.075R however many names are added. Only more sessions (or a lower per-trade SD) lower it.
-Method note for the guild: with ICC ~0.2, any 09:50 side test on ~450 days has an MDE floor near 0.075R per trade.
+(2.74 + 0.84) x 1.0 x sqrt(0.22 / 450) = 0.079R however many names are added. Only more sessions (or a lower per-trade SD) lower it.
+Method note for the guild: with ICC ~0.2, any 09:50 side test on ~450 days has an MDE floor near 0.08R per trade.
