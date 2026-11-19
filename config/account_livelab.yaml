@@ -53,11 +53,9 @@ live:
     - NM-PM-gapdn-above-pdh-rvol-short   # 3 traded sessions / 3 trades
     - GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short   # 3 traded sessions / 19 trades
     - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long   # 3 traded sessions / 35 trades
-    - GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long   # 4 traded sessions / 18 trades
     - GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long   # 4 traded sessions / 41 trades
     - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long   # 4 traded sessions / 55 trades
     - ST5-pdbrkup-short-mid-t05s1-FD   # 5 traded sessions / 6 trades
-    - CWT04-backside-vwaptest-a15-short   # 5 traded sessions / 8 trades
     - GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short   # 5 traded sessions / 26 trades
     - LD2-qqq-dip015-breadthturn-tqqq-t05s1-long   # 6 traded sessions / 6 trades
     - NM-RWR3-ns3-qqqup-early-short   # 6 traded sessions / 11 trades
@@ -363,7 +361,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B4-partb-k1-t05s1-full", fill: false}
   CWT04-backside-vwaptest-a15-short:
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~4.76/session lab.
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/bdi/cwt/live/CWT04-backside-vwaptest-a15-short.py
     min_adv: 95000000
@@ -371,7 +369,7 @@ strategies:
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT1-t1s05-full", fill: false}
   GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261019-06-vwapx-pm-long.py
     context:

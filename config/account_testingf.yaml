@@ -46,14 +46,10 @@ live:
     - LD5-st2-breadthup-t05s1-long   # 0 traded sessions / 0 trades
     - GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long   # 2 traded sessions / 9 trades
     - GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long   # 2 traded sessions / 10 trades
-    - NM-RWN4-ns2-spyup05-notfri-short   # 2 traded sessions / 40 trades
     - NM-AMS-N1-quiet-morning-short   # 3 traded sessions / 3 trades
-    - GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short   # 3 traded sessions / 6 trades
     - GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long   # 4 traded sessions / 7 trades
-    - GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long   # 4 traded sessions / 8 trades
     - GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long   # 4 traded sessions / 11 trades
     - GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long   # 4 traded sessions / 19 trades
-    - GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long   # 5 traded sessions / 8 trades
     - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short   # 5 traded sessions / 11 trades
     - GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short   # 6 traded sessions / 14 trades
     - GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short   # 10 traded sessions / 85 trades
@@ -65,6 +61,7 @@ live:
     - RW7-gapdn-bounce-early-short-FD   # 23 traded sessions / 567 trades
     - ULT-14-snap-long   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
+    - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
 strategies:
   L3-gap-slope-lowdist-FD-WB4:
     # Workbench copy of L3-gap-slope-lowdist-FD (On Deck), Mechanic 2026-11-16: dist from low > 0.82 ATR + rsi5 >= 50 + every lot closed 75 min after entry;
@@ -178,7 +175,7 @@ strategies:
     tags: [observation, longs1020]
   NM-RWN4-ns2-spyup05-notfri-short:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 8 live trades so far; ~2.11/session lab.
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/swarm1017/rework-ns/modules/RWN4-ns2-spyup05-notfri-t05s1-short.py
     context: [spy_fo]
@@ -254,7 +251,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3146
   GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; contender spread (F held 5 of 23 contenders, E 1)); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261019-02-bbpct-lo-pm-long.py
     context:
@@ -781,7 +778,7 @@ strategies:
         overlap_with: exhaustion_short-FD
         n_tried_in_run: 3000
   GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261028-04-orbfailup-late-long.py
     context:
@@ -920,7 +917,7 @@ strategies:
         overlap_with: MF4-h40-open-flowsell-FD
         n_tried_in_run: 3000
   GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261029-09-rangeexp-hi-open-short.py
     context:
@@ -1017,3 +1014,70 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:WB4 (loose"]
+  GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short:   # moved from Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); from session 2026-11-20
+    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: setup-count rebalance (D/E take the spotlight) (moved from Testing D, block copied unchanged)
+    type: lab
+    module: research/generator/modules/GEN-261022-07-z12-lo-am-short.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - atr_d_pct
+          - '>='
+          - 3.6
+        - - breadth_open
+          - '>'
+          - 0.5
+        - - flow_shift
+          - <=
+          - -0.96
+        - - z12
+          - <=
+          - -1.9
+      key: 8b3511f59fe2c427
+      screen:
+        train:
+          n: 1175
+          exp_r: 0.0315
+          t: 0.41
+          win: 0.543
+          days: 135
+        valid:
+          n: 1456
+          exp_r: 0.0105
+          t: 0.12
+          win: 0.536
+          days: 102
+        all:
+          n: 2631
+          exp_r: 0.0199
+          t: 0.34
+          win: 0.539
+          days: 237
+        per_day: 6.176
+        per_day_valid: 7.583
+        exp_up: -0.2794
+        exp_down: 0.4525
+        exp_flat: 0.1385
+        excess_train: 0.0612
+        excess_valid: -0.0137
+        tier1: true
+        score: 0.12
+        max_overlap: 0.206
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3000
