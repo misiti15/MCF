@@ -259,3 +259,4 @@
 - Run 80 (11-18 13:00): REPS3 move/bench fixes; may slip a day.
 - Run 81 (11-18 15:00): REPS3 guest fix (assert 18).
 - Run 82 (11-18 17:00): FAMC reading standard; REPS3 tonight.
+- Run 83 (11-18 19:30): REPS3/ICCSET/A1 read; SIDEHUNT opened; PR #229 merged.

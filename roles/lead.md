@@ -31,4 +31,4 @@
 - test_poll_log timing test is flaky under load; re-run alone, note in PR.
 
 ## Next run
-- PR #223 merged 11-17 (results + TIER-BIAS DECISION + UNCAL question). Next: Wed 11-18 REPS3 + ICCSET, Scout final shortlist (A1/A2). Watch owner replies on TIER-BIAS / UNCAL / promotion hold.
+- PR #229 merged 11-18 (REPS3 +12% bench-adjusted, ICC 0.22, A1 foresight gap, FAMC). Next: SIDEHUNT page (Scout) -> pick one side input; C live-reps ranking (Builder+Scout). Owner open: TIER-BIAS, UNCAL, promotion hold.
