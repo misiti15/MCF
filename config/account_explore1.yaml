@@ -54,13 +54,10 @@ live:
     - LD1-ns1-breadthup-t05s1-long   # 2 traded sessions / 2 trades
     - GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long   # 2 traded sessions / 52 trades
     - CWT04-backside-lh-a15-short   # 3 traded sessions / 4 trades
-    - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # 3 traded sessions / 21 trades
     - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short   # 3 traded sessions / 41 trades
     - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short   # 3 traded sessions / 60 trades
     - NM1-cwt09-g10-vwaploss-short   # 4 traded sessions / 6 trades
-    - GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long   # 4 traded sessions / 25 trades
     - GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long   # 4 traded sessions / 30 trades
-    - NM-RWR4-ns2-up3-qqqup-slopedn-short   # 4 traded sessions / 32 trades
     - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # 6 traded sessions / 11 trades
     - NM-RWN3-ns3-spyup-early-short   # 6 traded sessions / 13 trades
     - GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long   # 6 traded sessions / 61 trades
@@ -71,6 +68,7 @@ live:
     - ST8-volspikedn-long-pm-t1s1-FD   # 14 traded sessions / 30 trades
     - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
     - ULT-09-failed-vwap-reclaim-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
+    - GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
 strategies:
   NM-ETF-late-dip-di-long-WB1:
     # Workbench copy of NM-ETF-late-dip-di-long (Primary), Mechanic 2026-11-16: + ret12 >= +0.5% (dip inside an up-hour);
@@ -314,7 +312,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T2 S guest", fill: false}
   NM-RWR4-ns2-up3-qqqup-slopedn-short:
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 5 live trades so far; ~1.50/session lab.
-    enabled: true
+    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/swarm1017/rework-rw/modules/RWR4-ns2-up3-qqqup-slopedn-am-short-t05s1.py
     context: [qqq_fo]
@@ -351,7 +349,7 @@ strategies:
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}
   GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261019-07-volratio-hi-late-long.py
     context:
@@ -749,7 +747,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3082
   GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     type: lab
     module: research/generator/modules/GEN-261028-05-emadchg-hi-lam-long.py
     context:
@@ -1037,3 +1035,70 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:CWT09-g10 (loose"]
+  GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short:   # moved from Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); from session 2026-11-20
+    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: setup-count rebalance (D/E take the spotlight) (moved from Testing E, block copied unchanged)
+    type: lab
+    module: research/generator/modules/GEN-261019-08-newhod-am-short.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: short
+        window: AM
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - - day_vs_prev_range
+          - '>='
+          - 1.5
+        - - new_hod
+          - ==
+          - 1.0
+        - - slope6_atr
+          - '>='
+          - 0.03
+        - - spy_fo
+          - <
+          - 0.0
+      key: b78b8046cb68427b
+      screen:
+        train:
+          n: 450
+          exp_r: 0.0916
+          t: 0.74
+          win: 0.404
+          days: 92
+        valid:
+          n: 467
+          exp_r: 0.0498
+          t: 0.3
+          win: 0.418
+          days: 91
+        all:
+          n: 917
+          exp_r: 0.0703
+          t: 0.67
+          win: 0.411
+          days: 183
+        per_day: 2.153
+        per_day_valid: 2.432
+        exp_up: -0.4168
+        exp_down: 0.4463
+        exp_flat: 0.0274
+        excess_train: 0.1596
+        excess_valid: 0.1308
+        tier1: true
+        score: 0.55
+        max_overlap: 0.155
+        overlap_with: CWT13-vwapstretch-z05-short
+        n_tried_in_run: 3000
