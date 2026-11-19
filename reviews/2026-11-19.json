@@ -1,0 +1,190 @@
+{
+ "date": "2026-11-19",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 32,
+  "win_rate": 0.25,
+  "exp_r": -0.507,
+  "total_r": -16.21,
+  "pnl": -760.48,
+  "stop_exit_share": 0.531,
+  "pnl_adj": -825.29,
+  "slip_bps": -5.6
+ },
+ "yesterday": {
+  "trades": 49,
+  "win_rate": 0.49,
+  "exp_r": -0.113,
+  "total_r": -5.52,
+  "pnl": 299.32,
+  "stop_exit_share": 0.204,
+  "pnl_adj": 213.32,
+  "slip_bps": 5.7
+ },
+ "rolling5": {
+  "exp_r": 0.128,
+  "win_rate": 0.667,
+  "pnl": 810.278,
+  "slip_bps": 5.02,
+  "stop_exit_share": 0.159
+ },
+ "rolling20": {
+  "exp_r": -0.114,
+  "win_rate": 0.519,
+  "pnl": 117.141,
+  "slip_bps": 3.58,
+  "stop_exit_share": 0.361
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "L3-gap-slope-fromopen-FD": {
+   "trades": 6,
+   "win_rate": 0.0,
+   "exp_r": -1.081,
+   "total_r": -6.49,
+   "pnl": -336.16,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -350.99,
+   "slip_bps": -8.2
+  },
+  "NM-ETF-late-dip-di-long": {
+   "trades": 3,
+   "win_rate": 0.0,
+   "exp_r": -0.298,
+   "total_r": -0.9,
+   "pnl": -104.78,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -107.71,
+   "slip_bps": -18.8
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 8,
+   "win_rate": 0.625,
+   "exp_r": 0.254,
+   "total_r": 2.03,
+   "pnl": 170.28,
+   "stop_exit_share": 0.125,
+   "pnl_adj": 150.86,
+   "slip_bps": 5.0
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 7,
+   "win_rate": 0.429,
+   "exp_r": -0.315,
+   "total_r": -2.21,
+   "pnl": 53.2,
+   "stop_exit_share": 0.286,
+   "pnl_adj": 43.2,
+   "slip_bps": 0.1
+  },
+  "ST7-rsi50dn-long-pm-t1s1-FD": {
+   "trades": 8,
+   "win_rate": 0.0,
+   "exp_r": -1.082,
+   "total_r": -8.66,
+   "pnl": -543.02,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -560.66,
+   "slip_bps": -14.3
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 74,
+   "whatif_exp_r": -0.713,
+   "whatif_raw_total_r": -52.75,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "setup daily loss limit",
+   "signals": 30,
+   "whatif_exp_r": -0.653,
+   "whatif_raw_total_r": -19.6,
+   "whatif_total_r": -1.31,
+   "whatif_n": 3,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 4,
+   "whatif_exp_r": 0.064,
+   "whatif_raw_total_r": 0.26,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  }
+ ],
+ "signals": {
+  "skipped": 108,
+  "submitted": 32
+ },
+ "health": {
+  "polls": 98,
+  "last_poll_s": 6.3,
+  "symbols_last_bar": 3687,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 209,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "session_close": "16:00",
+  "flatten_at": "15:55",
+  "early_close": false,
+  "kill": null,
+  "borrow_list": {
+   "symbols": 14437,
+   "at": "2026-11-19 15:18:11.614311-05:00"
+  },
+  "shadow": {
+   "run_id": 3,
+   "of_live": true,
+   "only_setups": 6,
+   "open_lots": 24,
+   "entered": 6,
+   "closed": 4,
+   "polls": 98,
+   "avg_ms": 138.2,
+   "live_avg_ms": 6045.1,
+   "share_of_poll": 0.023,
+   "only_every_n_polls": 1,
+   "quote_calls": 0,
+   "errors": 0
+  },
+  "position_mismatch": [],
+  "position_check": {
+   "at": "2026-11-19 15:54:08.670257-05:00",
+   "symbols": 10,
+   "blocked": []
+  },
+  "partial_lots": [],
+  "risk_state": {
+   "halted": false,
+   "setup_stopped": [
+    "L3-gap-slope-fromopen-FD",
+    "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
+    "ST7-rsi50dn-long-pm-t1s1-FD"
+   ],
+   "trades_today": 32,
+   "realized_r": -16.211,
+   "r_basis": "R after costs",
+   "open_r": 0.0,
+   "halt_counts_open": true,
+   "realized_r_after_costs": -16.211
+  },
+  "flatten_failed": []
+ },
+ "findings": []
+}
