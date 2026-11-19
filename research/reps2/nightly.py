@@ -14,6 +14,8 @@ Steps
                     recorded-quote session in research/reps2/replay_quotes/rolling.json.
   3. FAST LANE      research/reps2/fastlane.py -> research/reps2/fastlane/
   4. EARLY DECISIONS research/reps2/sprt.py --verdicts-only -> research/reps2/sprt/
+  5. GY FOOT RACE   python -m mcf.report.arena_reps, then python -m mcf.report.footrace --asof <day> ->
+                    docs/live/arena_reps.json + docs/live/footrace.json (owner FOOTRACE 2026-11-19; commit both)
 Writes research/reps2/nightly/<day>.md (the block) and appends research/reps2/nightly/history.jsonl. Alerts (in the
 block) when the rolling numbers miss the targets. Research only: never edits config, setups or accounts.
 Educational only - not financial advice."""
@@ -172,6 +174,27 @@ def block(day: str, sh: dict, rq: dict | None, roll: dict | None, fl: pd.DataFra
     return "\n".join(lines) + "\n\nEducational only — not financial advice.\n"
 
 
+def footrace_step(day: str) -> str:
+    """Step 5 (owner FOOTRACE 2026-11-19): refresh docs/live/arena_reps.json, then the GY foot race plan for the next 3
+    sessions + the FOOTRACE-EXIT / GY-LIFE archive watch lists -> docs/live/footrace.json (the Graveyard trade run reads
+    it before the open; commit it with the nightly block). Never fatal: a missing plan means every Graveyard setup plays."""
+    try:
+        from mcf.report import arena_reps as AR
+        from mcf.report import footrace as FR
+
+        AR.main([])
+        FR.main(["--asof", day])
+        d = json.loads(FR.OUT.read_text())
+        g = d["gy"]
+        nxt = min(g["schedule"]) if g.get("schedule") else None
+        e = g["estimate"].get(nxt) or {}
+        return (f"- FYI | GY foot race (FOOTRACE): {len(g['leaders'])} leaders, {len(g['rotation'])} rotating; {nxt}: "
+                f"{e.get('playing')} play, {e.get('benched')} benched, ~{e.get('est_slot_pct')}% of slots. Friday watch: "
+                f"FOOTRACE-EXIT {len(d['exit_review'])}, GY-LIFE archive {len(d['archive_review'])} (docs/live/footrace.json).")
+    except Exception as e:   # the plan file stays as it was; past its last session the Graveyard plays every setup
+        return f"- ALERT | GY foot race plan not refreshed ({type(e).__name__}: {e})."
+
+
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("--day")
@@ -190,6 +213,7 @@ def main(argv=None):
     fastlane.write(fl, HERE / "fastlane", day)
     sp = sprt.main(["--verdicts-only"])
     txt = block(day, sh, rq, roll, fl, sp)
+    txt = txt.replace("\n\nEducational only", "\n" + footrace_step(day) + "\n\nEducational only", 1)
     nd = HERE / "nightly"
     nd.mkdir(exist_ok=True)
     (nd / f"{day}.md").write_text(txt)

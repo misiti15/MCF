@@ -65,10 +65,8 @@ live:
     - NS3V1-am-widestop-short   # 9 traded sessions / 56 trades
     - NM-AR-AM-gapdown-capitulation-long   # 12 traded sessions / 64 trades
     - ULT-13-st7-sharp-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
-    - ULT-01-gapdn-pop-fade-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from RW3 / RW5; meets the top-10 standard by the letter (negative)); appended last so existing setups keep their priority
-    - ULT-19-lrlite-long   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
-    - ULT-19-lrlite-short   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
     - ULT-HV1-etf-late-pop-fade-short-X   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
+    - ULT-07-pm-volatile-dip-long   # NEW 2026-11-20 ultimate_1119 (Tier B); moved from Testing F 2026-11-19 BATCH trim, siblings apart from ULT-14; appended last so existing setups keep their priority
 # REPS2-LANE (owner yes 2026-11-18, research/reps2/NOTES.md section 3): the low-rep fast lane's rare-trigger setups
 # (< 0.5 signals/session where they live) run SHADOW-ONLY in Testing A (full universe since 11-12): no orders, slots,
 # latch or halt, never counted as live reps or toward On Deck / Primary minimums (SRCV1 weight 0). The list is
@@ -1583,54 +1581,6 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierA, "parent:ST7-FD"]
-  ULT-01-gapdn-pop-fade-short:
-    # NEW setup (ultimate_1119 variant ULT-01), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). debatable / derived from RW3 / RW5; meets the top-10 standard by the letter (negative).
-    # Normal-way backtest (LR8, testing book): T1 comb -0.006, check -0.014, T2 -0.008 (235). research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-01-gapdn-pop-fade-short.py
-    min_adv: 20000000
-    window: [1100, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierB_debatable, "parent:RW3 / RW5"]
-  ULT-19-lrlite-long:
-    # NEW setup (ultimate_1119 variant ULT-19), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (no parent; negative).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.012 (t -1.89), check -0.012, T2 -0.015. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-19.py
-    min_adv: 200000000
-    window: [950, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA]
-  ULT-19-lrlite-short:
-    # NEW setup (ultimate_1119 variant ULT-19), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (no parent; negative).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.012 (t -1.89), check -0.012, T2 -0.015. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-19.py
-    min_adv: 200000000
-    window: [950, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA]
   ULT-HV1-etf-late-pop-fade-short-X:
     # NEW setup (ultimate_1119 variant H-V1), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
     # testing-admission rule (ledger 2026-11-19-testing-admission). Tier B: debatable / derived from NM-ETF-late-dip / WB4 (mirror, short).
@@ -1648,3 +1598,20 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:NM-ETF-late-dip / WB4 (mirror, short"]
+  ULT-07-pm-volatile-dip-long:
+    # Placed in Testing A (not Testing F) by the BATCH trim (owner 2026-11-19): keeps it apart from ULT-14-snap (same 14:00-15:00 long window, WB4 / NM-ETF-late-dip descendants).
+    # NEW setup (ultimate_1119 variant ULT-07), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier B: debatable / derived from NM-ETF-late-dip (loose).
+    # Normal-way backtest (LR8, testing book): T1 comb -0.082, fit -0.230, check -0.030, T2 -0.063 (335); escapes REALLY BAD by 0.0001R. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-07-pm-volatile-dip-long.py
+    min_adv: 20000000
+    window: [1400, 1500]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierB, "parent:NM-ETF-late-dip (loose"]

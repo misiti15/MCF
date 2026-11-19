@@ -65,9 +65,6 @@ live:
     - RW7-gapdn-bounce-early-short-FD   # 23 traded sessions / 567 trades
     - ULT-14-snap-long   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
-    - ULT-25-ultracheap-long   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
-    - ULT-25-ultracheap-short   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
-    - ULT-07-pm-volatile-dip-long   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
 strategies:
   L3-gap-slope-lowdist-FD-WB4:
     # Workbench copy of L3-gap-slope-lowdist-FD (On Deck), Mechanic 2026-11-16: dist from low > 0.82 ATR + rsi5 >= 50 + every lot closed 75 min after entry;
@@ -1020,52 +1017,3 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:WB4 (loose"]
-  ULT-25-ultracheap-long:
-    # NEW setup (ultimate_1119 variant ULT-25), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (no parent; zero edge).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.001, check -0.004, T2 +0.003; long side +0.070. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-25.py
-    min_adv: 300000000
-    window: [1300, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA]
-  ULT-25-ultracheap-short:
-    # NEW setup (ultimate_1119 variant ULT-25), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (no parent; zero edge).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.001, check -0.004, T2 +0.003; short side -0.006. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-25.py
-    symbols: module
-    min_adv: 300000000
-    window: [1300, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA]
-  ULT-07-pm-volatile-dip-long:
-    # NEW setup (ultimate_1119 variant ULT-07), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier B: debatable / derived from NM-ETF-late-dip (loose).
-    # Normal-way backtest (LR8, testing book): T1 comb -0.082, fit -0.230, check -0.030, T2 -0.063 (335); escapes REALLY BAD by 0.0001R. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-07-pm-volatile-dip-long.py
-    min_adv: 20000000
-    window: [1400, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierB, "parent:NM-ETF-late-dip (loose"]

@@ -61,8 +61,6 @@ live:
     - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 8 traded sessions / 50 trades
     - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 8 traded sessions / 92 trades
     - NS3-failed-vwap-reclaim-short   # 13 traded sessions / 75 trades
-    - ULT-16-costgeo-long   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
-    - ULT-16-costgeo-short   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
     - ULT-05-withgap-cont-long   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - ULT-05-withgap-cont-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
 strategies:
@@ -1152,38 +1150,6 @@ strategies:
         max_overlap: 0.346
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3000
-  ULT-16-costgeo-long:
-    # NEW setup (ultimate_1119 variant ULT-16), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (derived from ST7, loose; zero edge; market-entry twin).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.002, check -0.002, T2 -0.002. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-16.py
-    min_adv: 150000000
-    window: [1015, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA, "parent:ST7, loose"]
-  ULT-16-costgeo-short:
-    # NEW setup (ultimate_1119 variant ULT-16), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
-    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (zero edge; market-entry twin).
-    # Normal-way backtest (LR8, testing book): variant T1 comb -0.002, check -0.002, T2 -0.002. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
-    enabled: true
-    type: lab
-    module: research/ultimate_1119/modules/ULT-16.py
-    min_adv: 150000000
-    window: [1100, 1500]
-    context: [spy_fo]
-    refire: true
-    refire_cooldown: 0
-    time_stop_min: 45
-    time_stop_min_r: 99
-    scale_out_r: null
-    tags: [ultimate_1119, tierA]
   ULT-05-withgap-cont-long:
     # NEW setup (ultimate_1119 variant ULT-05), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
     # testing-admission rule (ledger 2026-11-19-testing-admission). Tier B: debatable / derived from the L3-gap-slope family (loose).

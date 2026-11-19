@@ -1094,71 +1094,11 @@ ULT-14-snap-short:
   side: "short"
   what: "14:00-15:00: a 15-min pop of 0.2+ daily ATR while -DI still leads and sellers dominate; short; +0.5R / -1R, out after 45 min."
   account: "testingf"
-ULT-20-evr-ranker-long:
-  name: "Event Ranker, Long"
-  side: "long"
-  what: "09:50-15:00: a frozen learned ranker on event bars picks the top longs; buy; 2R catastrophic stop, out after 45 min."
-  account: "explore1"
-ULT-20-evr-ranker-short:
-  name: "Event Ranker, Short"
-  side: "short"
-  what: "09:50-15:00: a frozen learned ranker on event bars picks the top shorts; short; 2R catastrophic stop, out after 45 min."
-  account: "explore1"
-ULT-21-etf-rank-long:
-  name: "Basket-ETF Ranker, Long"
-  side: "long"
-  what: "10:30-15:00: a frozen learned ranker inside equity-basket ETFs picks the top longs; buy; 2R catastrophic stop, out after 45 min."
-  account: "livelab"
 ULT-13-st7-sharp-long:
   name: "RSI Collapse Buy, Down-Tape Guard"
   side: "long"
   what: "09:50-15:00: ST7's one-bar RSI(14) collapse with a down-tape guard; buy; 2R catastrophic stop, out after 45 min."
   account: "testing2"
-ULT-25-ultracheap-long:
-  name: "Low-Cost Relative-Edge, Long"
-  side: "long"
-  what: "13:00-15:00: the strongest relative-edge triggers only on very liquid names (ADV $300M+) where cost per R is lowest; buy; catastrophic stop 1 daily ATR, out after 45 min."
-  account: "testingf"
-ULT-25-ultracheap-short:
-  name: "Low-Cost Relative-Edge, Short"
-  side: "short"
-  what: "13:00-15:00: as the long side, mirrored, non-leveraged names only; short; catastrophic stop 1 daily ATR, out after 45 min."
-  account: "testingf"
-ULT-16-costgeo-long:
-  name: "Wide-Unit RSI Collapse Buy"
-  side: "long"
-  what: "10:15-15:00: the ULT-03 RSI-collapse dip trigger on liquid names (ADV $150M+) with a wider risk unit; buy; catastrophic stop, out after 45 min."
-  account: "testinge"
-ULT-16-costgeo-short:
-  name: "Wide-Unit Gap-Down Pop Fade"
-  side: "short"
-  what: "11:00-15:00: the ULT-01 gap-down pop-fade trigger on liquid names (ADV $150M+) with a wider risk unit; short; catastrophic stop, out after 45 min."
-  account: "testinge"
-ULT-01-gapdn-pop-fade-short:
-  name: "Gap-Down Pop Fade (midday)"
-  side: "short"
-  what: "11:00-15:00: a gap-down stock pops 1.5%+ away from its 20-bar average while SPY is not running; short; 2R catastrophic stop, out after 45 min."
-  account: "testing2"
-ULT-19-lrlite-long:
-  name: "Linear Factor Score, Long"
-  side: "long"
-  what: "09:50-15:00: a frozen shrunk linear score on persistent factors, liquid names (ADV $200M+); buy; 2R catastrophic stop, out after 45 min."
-  account: "testing2"
-ULT-19-lrlite-short:
-  name: "Linear Factor Score, Short"
-  side: "short"
-  what: "09:50-15:00: the same frozen linear score, mirrored; short; 2R catastrophic stop, out after 45 min."
-  account: "testing2"
-ULT-26-withgap-trend-long:
-  name: "With-the-Gap Trend Continuation, Long"
-  side: "long"
-  what: "10:30-14:30: a gap-up name keeps trending with the gap on a trending SPY tape; buy; +1R / -1R, out after 45 min."
-  account: "testingd"
-ULT-26-withgap-trend-short:
-  name: "With-the-Gap Trend Continuation, Short"
-  side: "short"
-  what: "10:30-14:30: a gap-down non-leveraged name keeps falling with the gap on a trending SPY tape; short; +1R / -1R, out after 45 min."
-  account: "testingd"
 ULT-HV1-etf-late-pop-fade-short-X:
   name: "Late-Day ETF Pop Fade (WB4 mirror)"
   side: "short"
@@ -1183,4 +1123,4 @@ ULT-07-pm-volatile-dip-long:
   name: "Afternoon Volatile Dip Buy (broad)"
   side: "long"
   what: "14:00-15:00: the NM-ETF late-dip chassis broadened to volatile stocks (ADV $20M+) with a SPY 60-min guard; buy; +0.5R / -1R, out after 45 min."
-  account: "testingf"
+  account: "testing2"
