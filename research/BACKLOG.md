@@ -4,7 +4,7 @@
 
 Every setup / strategy idea lives here until it passes the pre-declared gates (see mcf/research/backlog.py) or is parked. Costs are always in; holdouts are scored once; parked ideas stay listed and are re-tested at the biweekly parked review (PARK1, owner 2026-11-03).
 
-Total ideas: 1090 · coded: 163 · parked: 440 · holdout failed: 23 · configurations tried (all lineages): 32896911
+Total ideas: 1092 · coded: 163 · parked: 443 · holdout failed: 23 · configurations tried (all lineages): 32896914
 
 A failed idea is reworked (parameter neighbourhood, swapped indicator lengths, one condition added or removed, paired tweaks) before it is dropped; reworked versions may be scored on the locked holdouts again, with a higher bar for each extra look (t >= 1.0 / 1.5 / 2.0 / 2.5, max 4 per lineage); a pass on a re-look goes to paper as probation and is confirmed or retired on forward data.
 
@@ -405,7 +405,6 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | idea | window-open-cluster | Cap simultaneous entries when a setup's window opens (heat_fade_long 11:05) | EOD 2026-10-06 (one day, observation only) | – | – | – | – | – | – |
 | idea | wi-vwap-first-pullback | First pullback to VWAP in a trending stock | https://daytradingtoolkit.com/strategies/first-pullback-to-vwap-trend-strategy | – | – | – | – | – | – |
 | idea | wi-red-to-green | Red-to-green / green-to-red through prior close | https://fr.tradingview.com/script/wSvTh08f-Red-to-Green-Green-to-Red-Tracker | – | – | – | – | – | – |
-| idea | wi-eod-reversal | End-of-day reversal of intraday losers | https://www3.nd.edu/~zda/EOD.pdf | – | – | – | – | – | – |
 | idea | wi-vwap-trend-etf | VWAP trend on QQQ/SPY (Zarattini-Aziz) | https://concretumgroup.com/volume-weighted-average-price-vwap-the-holy-grail-for-day-trading-systems/ | – | – | – | – | – | – |
 | idea | wi-lunch-reversal | Lunch-hour reversal of the morning move | https://quantpedia.com/lunch-effect-in-the-u-s-stock-market-indices | – | – | – | – | – | – |
 | idea | wi-williams-volbo | Larry Williams volatility breakout | https://www.whselfinvest.de/en/trading_strategies_56_volatility_break_out_larry_williams_free.php | – | – | – | – | – | – |
@@ -639,6 +638,7 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | rw-wg1_pdl_fade | gap-down fade near prior-day low | rule-18 rework | – | – | – | – | – | – |
 | parked | rw-t4_long_vwapmf | RS long + SPY>VWAP | rule-18 rework | – | – | – | – | – | – |
 | parked | rw-t4_both_sectormf | RS both sides, sector-ETF filter | rule-18 rework | – | – | – | – | – | – |
+| parked | wi-eod-reversal | End-of-day reversal of intraday losers | https://www3.nd.edu/~zda/EOD.pdf | – | – | – | – | – | – |
 | parked | wi-same-halfhour | Same half-hour continuation (Heston-Korajczyk-Sadka) | https://ar5iv.arxiv.org/html/1005.3535 | – | – | – | – | – | – |
 | parked | nl-1007-0950-stopout | Delay or filter heat_fade_short's 09:50 entries | nightly loop 2026-10-07 | – | – | – | – | – | – |
 | parked | nl-1007-opposite-side | No opposite-side entry on a symbol after a same-day stop | nightly loop 2026-10-07 | – | – | – | – | – | – |
@@ -1066,6 +1066,8 @@ Forward re-test: lab entries scored weekly on the 1-minute research cache (open 
 | parked | guild-1111-regsw2-winning-base | REGSW-2: 4 market-state switches on an 11-setup winning base | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1111-disp1-sector-split | DISP1: follow/fade member split on flat sector-ETF mornings | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
 | parked | guild-1111-confirm-stop-entry | CONFIRM: stop entry at signal + k x stop distance within 10 min | Research Guild 2026-11-11 (research/guild/1111/NOTES.md) | – | – | – | – | – | – |
+| parked | nightly-1119-near-target-breakeven | Near-target break-even: once a lot's MFE reaches >= 80% of its target distance, move its stop to entry (+ costs) | nightly 2026-11-19 autopsy (Primary ST7-FD near-miss targets) | – | – | – | – | – | – |
+| parked | mech-1119-gud1-gapup-gapdn-reclaim-long | GUD1 (C3-MECH, COVERAGE): on SPY gap-up opens, buy stocks that gapped down against the index and are reclaiming (fromOpen >= +0.5%, above VWAP), 09:50-11:00, t1s1 | BDI 2026-11-19 (queue mech-gapup-movehunt, priority 1; Primary loses on up / gap-up days: P2 current six -29.8R on 10 SPY gap-up opens) | – | – | – | – | – | – |
 | retired | t2-orb15 | 15-min ORB, 5-min close trigger, 50% OR target | tradethatswing blog (web sweep) | – | – | – | – | – | – |
 | retired | t3-rvol-cons | Relative-volume breakout from 5-min consolidation | tradingsim (web sweep) | – | – | – | – | – | – |
 | retired | t5-inside-bar | 5-min inside-bar breakout | r/algotrading 1sromc0 (snippet) | – | – | – | – | – | – |
