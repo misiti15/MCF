@@ -32,7 +32,7 @@ from ..data.bars import TZ, normalize, rth
 from .. import spy_exit as _spy_exit
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
-from .alpaca_broker import AlpacaBroker
+from .alpaca_broker import AlpacaBroker, stop_px
 from .outage import outage_cfg, protect_open_lots
 from .risk import SETUP_LOT_CAP, RiskManager
 
@@ -821,9 +821,9 @@ class PaperRunner:
             if m["side"] * (new - m["stop"]) > 0.005:
                 try:
                     if lot:
-                        self.broker.move_lot_stop(sym, m["coid"], round(new, 2), COID_PREFIX)
+                        self.broker.move_lot_stop(sym, m["coid"], stop_px(new, m["side"] == 1), COID_PREFIX)
                     else:
-                        self.broker.move_stop(sym, round(new, 2), COID_PREFIX)
+                        self.broker.move_stop(sym, stop_px(new, m["side"] == 1), COID_PREFIX)
                     print(f"STOP {sym} {m['stop']:.2f} -> {new:.2f} (best {m['best']:.2f}R)")
                     m["stop"] = new
                 except Exception as e:

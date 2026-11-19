@@ -10,6 +10,30 @@ import pandas as pd
 from ..strategies.base import Signal
 
 
+def _cent(px: float, down: bool) -> float:
+    """`px` to the cent, floored (down=True) or ceiled; a value already on the cent (within 1e-6 cent of float
+    noise) is kept as it is."""
+    import math
+
+    c = float(px) * 100.0
+    c = math.floor(c + 1e-6) if down else math.ceil(c - 1e-6)
+    return round(c / 100.0, 2)
+
+
+def stop_px(stop: float, long: bool) -> float:
+    """Broker stop price on the cent, never tighter than the modelled stop: a long's stop rounds DOWN, a short's UP.
+    (2026-11-19 ETHA: round(39.5366, 2) = 39.54 moved a long stop up, closer to price, so it could trigger where the
+    model's stop had not been touched.)"""
+    return _cent(stop, down=long)
+
+
+def target_px(target: float, long: bool) -> float:
+    """Broker take-profit limit on the cent, rounded toward the entry (a long's target DOWN, a short's UP). The
+    backtest fills a target at exactly sig.target as soon as a bar touches it (no slippage), so the live limit must
+    fill whenever that touch happens; rounding away from the entry could leave it unfilled. Cost: < 1 cent/share."""
+    return _cent(target, down=long)
+
+
 class _RetryGets:
     """Retry the client's read-only get_* calls on a dropped connection or timeout (2026-10-19: one
     RemoteDisconnected on get_all_positions ended the gen account's job). Orders, cancels and replaces are never
@@ -107,11 +131,11 @@ class AlpacaBroker:
             side=OrderSide.BUY if sig.side == 1 else OrderSide.SELL,
             time_in_force=TimeInForce.DAY,
             client_order_id=client_order_id,
-            stop_loss=StopLossRequest(stop_price=round(sig.stop, 2)),
+            stop_loss=StopLossRequest(stop_price=stop_px(sig.stop, sig.side == 1)),
         )
         if sig.target is not None:
             kw["order_class"] = OrderClass.BRACKET
-            kw["take_profit"] = TakeProfitRequest(limit_price=round(sig.target, 2))
+            kw["take_profit"] = TakeProfitRequest(limit_price=target_px(sig.target, sig.side == 1))
         else:
             kw["order_class"] = OrderClass.OTO
         return self.client.submit_order(MarketOrderRequest(**kw))
@@ -585,9 +609,9 @@ class AlpacaBroker:
         kw = dict(symbol=symbol, qty=int(qty), side=side, time_in_force=TimeInForce.DAY, client_order_id=coid)
         if target is not None and (1 if long else -1) * (float(target) - float(stop)) > 0:
             return self.client.submit_order(LimitOrderRequest(
-                **kw, order_class=OrderClass.OCO, take_profit=TakeProfitRequest(limit_price=round(float(target), 2)),
-                stop_loss=StopLossRequest(stop_price=round(float(stop), 2))))
-        return self.client.submit_order(StopOrderRequest(**kw, stop_price=round(float(stop), 2)))
+                **kw, order_class=OrderClass.OCO, take_profit=TakeProfitRequest(limit_price=target_px(target, long)),
+                stop_loss=StopLossRequest(stop_price=stop_px(stop, long))))
+        return self.client.submit_order(StopOrderRequest(**kw, stop_price=stop_px(stop, long)))
 
     def _submit_lot_exit(self, symbol: str, qty: float, long: bool, coid: str):
         from alpaca.trading.enums import OrderSide, TimeInForce
