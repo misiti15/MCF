@@ -1,0 +1,2838 @@
+{
+ "n_job": 1882,
+ "t_bar": 3.883,
+ "books": {
+  "BOOK-EM": {
+   "ungated": {
+    "W1": {
+     "n": 270,
+     "per_sess": 0.632,
+     "avg_r": -0.0402,
+     "wo_best": -0.0666,
+     "best_share": null,
+     "t": -0.73,
+     "total_r": -10.86
+    },
+    "W2": {
+     "n": 270,
+     "per_sess": 1.588,
+     "avg_r": 0.1879,
+     "wo_best": 0.1484,
+     "best_share": 0.298,
+     "t": 3.58,
+     "total_r": 50.74
+    },
+    "W3": {
+     "n": 341,
+     "per_sess": 1.236,
+     "avg_r": 0.1148,
+     "wo_best": 0.0992,
+     "best_share": 0.154,
+     "t": 3.29,
+     "total_r": 39.15
+    },
+    "pooled": {
+     "n": 881,
+     "per_sess": 1.009,
+     "avg_r": 0.0897,
+     "wo_best": 0.0751,
+     "best_share": 0.191,
+     "t": 3.02,
+     "total_r": 79.03
+    }
+   },
+   "gates": {
+    "rv20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 28,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 270,
+       "per_sess": 0.632,
+       "avg_r": -0.0402,
+       "wo_best": -0.0666,
+       "best_share": null,
+       "t": -0.73,
+       "total_r": -10.86,
+       "kept_share": 1.0,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.0,
+       "train_min_avg_r": 0.1148,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 46.4543
+       },
+       "by_leg": {
+        "E": -0.04,
+        "M": -0.0429
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 204,
+       "per_sess": 1.2,
+       "avg_r": 0.2282,
+       "wo_best": 0.1806,
+       "best_share": 0.325,
+       "t": 3.88,
+       "total_r": 46.55,
+       "kept_share": 0.843,
+       "ungated_known": {
+        "n": 242,
+        "per_sess": 1.424,
+        "avg_r": 0.1899,
+        "wo_best": 0.1454,
+        "best_share": 0.329,
+        "t": 3.4,
+        "total_r": 45.95
+       },
+       "delta_vs_ungated": 0.0383,
+       "train_min_avg_r": 0.0366,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": 12.6332
+       },
+       "by_leg": {
+        "E": 0.254,
+        "M": -0.0971
+       },
+       "by_leg_ungated": {
+        "E": 0.2186,
+        "M": -0.0488
+       }
+      },
+      "W3": {
+       "n": 37,
+       "per_sess": 0.134,
+       "avg_r": -0.1583,
+       "wo_best": -0.1914,
+       "best_share": null,
+       "t": -2.16,
+       "total_r": -5.86,
+       "kept_share": 0.109,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.2731,
+       "train_min_avg_r": 0.1981,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": 16.5326
+       },
+       "by_leg": {
+        "E": -0.252,
+        "M": 0.0633
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 511,
+      "per_sess": 0.585,
+      "avg_r": 0.0584,
+      "wo_best": 0.0306,
+      "best_share": 0.507,
+      "t": 1.25,
+      "total_r": 29.83
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "tr20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 27,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 205,
+       "per_sess": 0.48,
+       "avg_r": -0.0626,
+       "wo_best": -0.0765,
+       "best_share": null,
+       "t": -1.08,
+       "total_r": -12.84,
+       "kept_share": 0.759,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.0224,
+       "train_min_avg_r": 0.1451,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.7,
+        "thr": -1.6779
+       },
+       "by_leg": {
+        "E": -0.0608,
+        "M": -0.0808
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 159,
+       "per_sess": 0.935,
+       "avg_r": 0.2577,
+       "wo_best": 0.2004,
+       "best_share": 0.369,
+       "t": 3.79,
+       "total_r": 40.98,
+       "kept_share": 0.654,
+       "ungated_known": {
+        "n": 243,
+        "per_sess": 1.429,
+        "avg_r": 0.1912,
+        "wo_best": 0.1471,
+        "best_share": 0.326,
+        "t": 3.45,
+        "total_r": 46.46
+       },
+       "delta_vs_ungated": 0.0665,
+       "train_min_avg_r": 0.0849,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.1821
+       },
+       "by_leg": {
+        "E": 0.2814,
+        "M": -0.1372
+       },
+       "by_leg_ungated": {
+        "E": 0.2199,
+        "M": -0.0488
+       }
+      },
+      "W3": {
+       "n": 123,
+       "per_sess": 0.446,
+       "avg_r": 0.0766,
+       "wo_best": 0.0476,
+       "best_share": 0.419,
+       "t": 1.35,
+       "total_r": 9.42,
+       "kept_share": 0.361,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0382,
+       "train_min_avg_r": 0.1055,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": -0.3604
+       },
+       "by_leg": {
+        "E": 0.0444,
+        "M": 0.1325
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 487,
+      "per_sess": 0.558,
+      "avg_r": 0.0771,
+      "wo_best": 0.0491,
+      "best_share": 0.403,
+      "t": 1.69,
+      "total_r": 37.56
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "tr50": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 219,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 149,
+       "per_sess": 0.349,
+       "avg_r": 0.042,
+       "wo_best": 0.0001,
+       "best_share": 0.997,
+       "t": 0.66,
+       "total_r": 6.26,
+       "kept_share": 0.552,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.0822,
+       "train_min_avg_r": 0.081,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 2.4696
+       },
+       "by_leg": {
+        "E": 0.0335,
+        "M": 0.1488
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 0,
+       "kept_share": 0.0,
+       "ungated_known": {
+        "n": 51,
+        "per_sess": 0.3,
+        "avg_r": -0.0064,
+        "wo_best": -0.0314,
+        "best_share": null,
+        "t": -0.09,
+        "total_r": -0.33
+       },
+       "delta_vs_ungated": null,
+       "train_min_avg_r": 0.0718,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.6,
+        "thr": 1.7723
+       },
+       "by_leg": {
+        "E": null,
+        "M": null
+       },
+       "by_leg_ungated": {
+        "E": -0.0213,
+        "M": 0.0261
+       }
+      },
+      "W3": {
+       "n": 275,
+       "per_sess": 0.996,
+       "avg_r": 0.1102,
+       "wo_best": 0.0987,
+       "best_share": 0.13,
+       "t": 3.1,
+       "total_r": 30.3,
+       "kept_share": 0.806,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0046,
+       "train_min_avg_r": 0.0338,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 2.6196
+       },
+       "by_leg": {
+        "E": 0.1271,
+        "M": 0.0785
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 424,
+      "per_sess": 0.486,
+      "avg_r": 0.0862,
+      "wo_best": 0.0738,
+      "best_share": 0.171,
+      "t": 2.7,
+      "total_r": 36.56
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "ret1": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 5,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 103,
+       "per_sess": 0.241,
+       "avg_r": -0.0539,
+       "wo_best": -0.1311,
+       "best_share": null,
+       "t": -0.48,
+       "total_r": -5.55,
+       "kept_share": 0.381,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.0137,
+       "train_min_avg_r": 0.156,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.2823
+       },
+       "by_leg": {
+        "E": -0.0463,
+        "M": -0.1446
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 146,
+       "per_sess": 0.859,
+       "avg_r": 0.175,
+       "wo_best": 0.0899,
+       "best_share": 0.592,
+       "t": 2.22,
+       "total_r": 25.55,
+       "kept_share": 0.551,
+       "ungated_known": {
+        "n": 265,
+        "per_sess": 1.559,
+        "avg_r": 0.1824,
+        "wo_best": 0.1413,
+        "best_share": 0.313,
+        "t": 3.39,
+        "total_r": 48.33
+       },
+       "delta_vs_ungated": -0.0074,
+       "train_min_avg_r": -0.0044,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.7,
+        "thr": -0.4184
+       },
+       "by_leg": {
+        "E": 0.2471,
+        "M": -0.3373
+       },
+       "by_leg_ungated": {
+        "E": 0.2134,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 141,
+       "per_sess": 0.511,
+       "avg_r": 0.0899,
+       "wo_best": 0.0656,
+       "best_share": 0.312,
+       "t": 1.79,
+       "total_r": 12.67,
+       "kept_share": 0.413,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0249,
+       "train_min_avg_r": -0.0277,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 0.0938
+       },
+       "by_leg": {
+        "E": 0.1462,
+        "M": -0.0385
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 390,
+      "per_sess": 0.447,
+      "avg_r": 0.0838,
+      "wo_best": 0.0487,
+      "best_share": 0.463,
+      "t": 1.67,
+      "total_r": 32.67
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "ret5": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 15,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 189,
+       "per_sess": 0.443,
+       "avg_r": -0.0316,
+       "wo_best": -0.0694,
+       "best_share": null,
+       "t": -0.54,
+       "total_r": -5.96,
+       "kept_share": 0.7,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.0086,
+       "train_min_avg_r": 0.1189,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 1.4723
+       },
+       "by_leg": {
+        "E": -0.0327,
+        "M": -0.0211
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 158,
+       "per_sess": 0.929,
+       "avg_r": 0.2201,
+       "wo_best": 0.1535,
+       "best_share": 0.435,
+       "t": 2.96,
+       "total_r": 34.77,
+       "kept_share": 0.62,
+       "ungated_known": {
+        "n": 255,
+        "per_sess": 1.5,
+        "avg_r": 0.171,
+        "wo_best": 0.1266,
+        "best_share": 0.347,
+        "t": 3.04,
+        "total_r": 43.61
+       },
+       "delta_vs_ungated": 0.0491,
+       "train_min_avg_r": 0.0656,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.3343
+       },
+       "by_leg": {
+        "E": 0.2388,
+        "M": -0.0084
+       },
+       "by_leg_ungated": {
+        "E": 0.2018,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 155,
+       "per_sess": 0.562,
+       "avg_r": 0.0721,
+       "wo_best": 0.0491,
+       "best_share": 0.353,
+       "t": 1.47,
+       "total_r": 11.17,
+       "kept_share": 0.455,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0427,
+       "train_min_avg_r": 0.0707,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": -0.2032
+       },
+       "by_leg": {
+        "E": 0.0838,
+        "M": 0.0467
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 502,
+      "per_sess": 0.575,
+      "avg_r": 0.0796,
+      "wo_best": 0.0527,
+      "best_share": 0.378,
+      "t": 1.89,
+      "total_r": 39.98
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "vxx10": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 22,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 106,
+       "per_sess": 0.248,
+       "avg_r": -0.0936,
+       "wo_best": -0.1296,
+       "best_share": null,
+       "t": -0.98,
+       "total_r": -9.92,
+       "kept_share": 0.393,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.0534,
+       "train_min_avg_r": 0.1441,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": 0.454
+       },
+       "by_leg": {
+        "E": -0.116,
+        "M": 0.1473
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 63,
+       "per_sess": 0.371,
+       "avg_r": 0.0827,
+       "wo_best": 0.0353,
+       "best_share": 0.62,
+       "t": 1.1,
+       "total_r": 5.21,
+       "kept_share": 0.254,
+       "ungated_known": {
+        "n": 248,
+        "per_sess": 1.459,
+        "avg_r": 0.1851,
+        "wo_best": 0.1411,
+        "best_share": 0.33,
+        "t": 3.35,
+        "total_r": 45.9
+       },
+       "delta_vs_ungated": -0.1024,
+       "train_min_avg_r": 0.0005,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -2.2375
+       },
+       "by_leg": {
+        "E": 0.1407,
+        "M": -0.1918
+       },
+       "by_leg_ungated": {
+        "E": 0.2152,
+        "M": -0.052
+       }
+      },
+      "W3": {
+       "n": 54,
+       "per_sess": 0.196,
+       "avg_r": 0.0466,
+       "wo_best": 0.0231,
+       "best_share": 0.531,
+       "t": 0.59,
+       "total_r": 2.52,
+       "kept_share": 0.158,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0682,
+       "train_min_avg_r": 0.0113,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 3.0193
+       },
+       "by_leg": {
+        "E": 0.0667,
+        "M": 0.0028
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 223,
+      "per_sess": 0.255,
+      "avg_r": -0.0099,
+      "wo_best": -0.0251,
+      "best_share": null,
+      "t": -0.17,
+      "total_r": -2.2
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "disp": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 5,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 36,
+       "per_sess": 0.084,
+       "avg_r": 0.1859,
+       "wo_best": 0.1218,
+       "best_share": 0.454,
+       "t": 1.93,
+       "total_r": 6.69,
+       "kept_share": 0.133,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.2261,
+       "train_min_avg_r": 0.1619,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 3.1274
+       },
+       "by_leg": {
+        "E": 0.2223,
+        "M": -0.4339
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 166,
+       "per_sess": 0.976,
+       "avg_r": 0.2378,
+       "wo_best": 0.179,
+       "best_share": 0.383,
+       "t": 3.6,
+       "total_r": 39.47,
+       "kept_share": 0.626,
+       "ungated_known": {
+        "n": 265,
+        "per_sess": 1.559,
+        "avg_r": 0.1824,
+        "wo_best": 0.1413,
+        "best_share": 0.313,
+        "t": 3.39,
+        "total_r": 48.33
+       },
+       "delta_vs_ungated": 0.0554,
+       "train_min_avg_r": 0.1147,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": 2.579
+       },
+       "by_leg": {
+        "E": 0.2532,
+        "M": -0.0027
+       },
+       "by_leg_ungated": {
+        "E": 0.2134,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 245,
+       "per_sess": 0.888,
+       "avg_r": 0.118,
+       "wo_best": 0.0962,
+       "best_share": 0.208,
+       "t": 2.62,
+       "total_r": 28.91,
+       "kept_share": 0.718,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": 0.0032,
+       "train_min_avg_r": 0.1524,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 2.6438
+       },
+       "by_leg": {
+        "E": 0.1222,
+        "M": 0.1081
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 447,
+      "per_sess": 0.512,
+      "avg_r": 0.1679,
+      "wo_best": 0.1437,
+      "best_share": 0.202,
+      "t": 4.37,
+      "total_r": 75.07
+     },
+     "pass": {
+      "all3_pos": true,
+      "all3_wo_best_pos": true,
+      "kept40": false,
+      "t_bar": true,
+      "PROMISING": false
+     }
+    },
+    "breadth20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 28,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 202,
+       "per_sess": 0.473,
+       "avg_r": -0.06,
+       "wo_best": -0.0972,
+       "best_share": null,
+       "t": -0.88,
+       "total_r": -12.13,
+       "kept_share": 0.748,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.0198,
+       "train_min_avg_r": 0.1221,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 0.6998
+       },
+       "by_leg": {
+        "E": -0.0567,
+        "M": -0.1042
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 164,
+       "per_sess": 0.965,
+       "avg_r": 0.2364,
+       "wo_best": 0.1765,
+       "best_share": 0.39,
+       "t": 3.41,
+       "total_r": 38.78,
+       "kept_share": 0.678,
+       "ungated_known": {
+        "n": 242,
+        "per_sess": 1.424,
+        "avg_r": 0.1899,
+        "wo_best": 0.1454,
+        "best_share": 0.329,
+        "t": 3.4,
+        "total_r": 45.95
+       },
+       "delta_vs_ungated": 0.0465,
+       "train_min_avg_r": 0.0387,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": 0.4841
+       },
+       "by_leg": {
+        "E": 0.2581,
+        "M": -0.1372
+       },
+       "by_leg_ungated": {
+        "E": 0.2186,
+        "M": -0.0488
+       }
+      },
+      "W3": {
+       "n": 89,
+       "per_sess": 0.322,
+       "avg_r": 0.0274,
+       "wo_best": 0.0107,
+       "best_share": 0.626,
+       "t": 0.45,
+       "total_r": 2.44,
+       "kept_share": 0.261,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0874,
+       "train_min_avg_r": 0.0973,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 0.4354
+       },
+       "by_leg": {
+        "E": 0.0451,
+        "M": -0.0013
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 455,
+      "per_sess": 0.521,
+      "avg_r": 0.0639,
+      "wo_best": 0.0328,
+      "best_share": 0.52,
+      "t": 1.27,
+      "total_r": 29.09
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "gap": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 5,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 200,
+       "per_sess": 0.468,
+       "avg_r": -0.0944,
+       "wo_best": -0.1093,
+       "best_share": null,
+       "t": -1.61,
+       "total_r": -18.87,
+       "kept_share": 0.741,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.0542,
+       "train_min_avg_r": 0.1286,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 0.4849
+       },
+       "by_leg": {
+        "E": -0.1055,
+        "M": 0.0427
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 58,
+       "per_sess": 0.341,
+       "avg_r": -0.0164,
+       "wo_best": -0.1606,
+       "best_share": null,
+       "t": -0.16,
+       "total_r": -0.95,
+       "kept_share": 0.219,
+       "ungated_known": {
+        "n": 265,
+        "per_sess": 1.559,
+        "avg_r": 0.1824,
+        "wo_best": 0.1413,
+        "best_share": 0.313,
+        "t": 3.39,
+        "total_r": 48.33
+       },
+       "delta_vs_ungated": -0.1988,
+       "train_min_avg_r": 0.0949,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 0.2602
+       },
+       "by_leg": {
+        "E": 0.1087,
+        "M": -0.496
+       },
+       "by_leg_ungated": {
+        "E": 0.2134,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 173,
+       "per_sess": 0.627,
+       "avg_r": 0.139,
+       "wo_best": 0.1238,
+       "best_share": 0.129,
+       "t": 3.27,
+       "total_r": 24.04,
+       "kept_share": 0.507,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": 0.0242,
+       "train_min_avg_r": 0.0514,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 0.1476
+       },
+       "by_leg": {
+        "E": 0.1172,
+        "M": 0.1661
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 431,
+      "per_sess": 0.494,
+      "avg_r": 0.0098,
+      "wo_best": -0.0011,
+      "best_share": 1.107,
+      "t": 0.27,
+      "total_r": 4.22
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "spy_fo": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 0,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 77,
+       "per_sess": 0.18,
+       "avg_r": -0.0036,
+       "wo_best": -0.0319,
+       "best_share": null,
+       "t": -0.05,
+       "total_r": -0.27,
+       "kept_share": 0.285,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.0366,
+       "train_min_avg_r": 0.1741,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.2157
+       },
+       "by_leg": {
+        "E": -0.0389,
+        "M": 0.6411
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 126,
+       "per_sess": 0.741,
+       "avg_r": 0.2069,
+       "wo_best": 0.158,
+       "best_share": 0.357,
+       "t": 3.3,
+       "total_r": 26.07,
+       "kept_share": 0.467,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 1.588,
+        "avg_r": 0.1879,
+        "wo_best": 0.1484,
+        "best_share": 0.298,
+        "t": 3.58,
+        "total_r": 50.74
+       },
+       "delta_vs_ungated": 0.019,
+       "train_min_avg_r": 0.0122,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": -0.0201
+       },
+       "by_leg": {
+        "E": 0.1868,
+        "M": 0.3975
+       },
+       "by_leg_ungated": {
+        "E": 0.219,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 171,
+       "per_sess": 0.62,
+       "avg_r": 0.0757,
+       "wo_best": 0.0589,
+       "best_share": 0.24,
+       "t": 1.76,
+       "total_r": 12.95,
+       "kept_share": 0.501,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0391,
+       "train_min_avg_r": 0.0061,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": -0.0412
+       },
+       "by_leg": {
+        "E": 0.0832,
+        "M": 0.0648
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 374,
+      "per_sess": 0.428,
+      "avg_r": 0.1036,
+      "wo_best": 0.0831,
+      "best_share": 0.24,
+      "t": 2.82,
+      "total_r": 38.75
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "spy30": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 0,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 186,
+       "per_sess": 0.436,
+       "avg_r": -0.0082,
+       "wo_best": -0.0246,
+       "best_share": null,
+       "t": -0.18,
+       "total_r": -1.53,
+       "kept_share": 0.689,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": 0.032,
+       "train_min_avg_r": 0.1298,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 0.1307
+       },
+       "by_leg": {
+        "E": 0.0049,
+        "M": -0.1309
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 119,
+       "per_sess": 0.7,
+       "avg_r": 0.1081,
+       "wo_best": 0.0732,
+       "best_share": 0.379,
+       "t": 1.69,
+       "total_r": 12.86,
+       "kept_share": 0.441,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 1.588,
+        "avg_r": 0.1879,
+        "wo_best": 0.1484,
+        "best_share": 0.298,
+        "t": 3.58,
+        "total_r": 50.74
+       },
+       "delta_vs_ungated": -0.0798,
+       "train_min_avg_r": 0.0599,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.0094
+       },
+       "by_leg": {
+        "E": 0.1554,
+        "M": -0.1755
+       },
+       "by_leg_ungated": {
+        "E": 0.219,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 156,
+       "per_sess": 0.565,
+       "avg_r": 0.1253,
+       "wo_best": 0.096,
+       "best_share": 0.258,
+       "t": 2.51,
+       "total_r": 19.54,
+       "kept_share": 0.457,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": 0.0105,
+       "train_min_avg_r": 0.0686,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.0032
+       },
+       "by_leg": {
+        "E": 0.044,
+        "M": 0.236
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 461,
+      "per_sess": 0.528,
+      "avg_r": 0.067,
+      "wo_best": 0.0566,
+      "best_share": 0.163,
+      "t": 2.18,
+      "total_r": 30.87
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "dow": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 0,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 212,
+       "per_sess": 0.496,
+       "avg_r": -0.0672,
+       "wo_best": -0.103,
+       "best_share": null,
+       "t": -1.0,
+       "total_r": -14.25,
+       "kept_share": 0.785,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 0.632,
+        "avg_r": -0.0402,
+        "wo_best": -0.0666,
+        "best_share": null,
+        "t": -0.73,
+        "total_r": -10.86
+       },
+       "delta_vs_ungated": -0.027,
+       "train_min_avg_r": 0.1526,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 3,
+        "thr": null
+       },
+       "by_leg": {
+        "E": -0.0664,
+        "M": -0.0782
+       },
+       "by_leg_ungated": {
+        "E": -0.04,
+        "M": -0.0429
+       }
+      },
+      "W2": {
+       "n": 229,
+       "per_sess": 1.347,
+       "avg_r": 0.1622,
+       "wo_best": 0.1106,
+       "best_share": 0.407,
+       "t": 2.77,
+       "total_r": 37.13,
+       "kept_share": 0.848,
+       "ungated_known": {
+        "n": 270,
+        "per_sess": 1.588,
+        "avg_r": 0.1879,
+        "wo_best": 0.1484,
+        "best_share": 0.298,
+        "t": 3.58,
+        "total_r": 50.74
+       },
+       "delta_vs_ungated": -0.0257,
+       "train_min_avg_r": -0.0105,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 0,
+        "thr": null
+       },
+       "by_leg": {
+        "E": 0.1985,
+        "M": -0.163
+       },
+       "by_leg_ungated": {
+        "E": 0.219,
+        "M": -0.0514
+       }
+      },
+      "W3": {
+       "n": 298,
+       "per_sess": 1.08,
+       "avg_r": 0.1124,
+       "wo_best": 0.0944,
+       "best_share": 0.18,
+       "t": 2.92,
+       "total_r": 33.5,
+       "kept_share": 0.874,
+       "ungated_known": {
+        "n": 341,
+        "per_sess": 1.236,
+        "avg_r": 0.1148,
+        "wo_best": 0.0992,
+        "best_share": 0.154,
+        "t": 3.29,
+        "total_r": 39.15
+       },
+       "delta_vs_ungated": -0.0024,
+       "train_min_avg_r": -0.0105,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 0,
+        "thr": null
+       },
+       "by_leg": {
+        "E": 0.1119,
+        "M": 0.1138
+       },
+       "by_leg_ungated": {
+        "E": 0.1101,
+        "M": 0.124
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 739,
+      "per_sess": 0.847,
+      "avg_r": 0.0763,
+      "wo_best": 0.0582,
+      "best_share": 0.268,
+      "t": 2.29,
+      "total_r": 56.38
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    }
+   }
+  },
+  "ST7-FD": {
+   "ungated": {
+    "W1": {
+     "n": 477,
+     "per_sess": 1.117,
+     "avg_r": -0.0216,
+     "wo_best": -0.0455,
+     "best_share": null,
+     "t": -0.34,
+     "total_r": -10.29
+    },
+    "W2": {
+     "n": 250,
+     "per_sess": 1.471,
+     "avg_r": -0.1323,
+     "wo_best": -0.1803,
+     "best_share": null,
+     "t": -1.02,
+     "total_r": -33.07
+    },
+    "W3": {
+     "n": 864,
+     "per_sess": 3.13,
+     "avg_r": 0.0836,
+     "wo_best": 0.0734,
+     "best_share": 0.134,
+     "t": 2.0,
+     "total_r": 72.2
+    },
+    "pooled": {
+     "n": 1591,
+     "per_sess": 1.822,
+     "avg_r": 0.0181,
+     "wo_best": 0.0116,
+     "best_share": 0.367,
+     "t": 0.49,
+     "total_r": 28.84
+    }
+   },
+   "gates": {
+    "rv20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 38,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 242,
+       "per_sess": 0.567,
+       "avg_r": -0.0858,
+       "wo_best": -0.1067,
+       "best_share": null,
+       "t": -0.96,
+       "total_r": -20.77,
+       "kept_share": 0.507,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.0642,
+       "train_min_avg_r": 0.0936,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 12.2115
+       }
+      },
+      "W2": {
+       "n": 101,
+       "per_sess": 0.594,
+       "avg_r": -0.3936,
+       "wo_best": -0.4652,
+       "best_share": null,
+       "t": -1.8,
+       "total_r": -39.75,
+       "kept_share": 0.476,
+       "ungated_known": {
+        "n": 212,
+        "per_sess": 1.247,
+        "avg_r": -0.1686,
+        "wo_best": -0.1964,
+        "best_share": null,
+        "t": -1.24,
+        "total_r": -35.74
+       },
+       "delta_vs_ungated": -0.225,
+       "train_min_avg_r": 0.05,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 13.2084
+       }
+      },
+      "W3": {
+       "n": 716,
+       "per_sess": 2.594,
+       "avg_r": 0.0919,
+       "wo_best": 0.0802,
+       "best_share": 0.141,
+       "t": 2.06,
+       "total_r": 65.78,
+       "kept_share": 0.829,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0083,
+       "train_min_avg_r": -0.0276,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 15.603
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1059,
+      "per_sess": 1.213,
+      "avg_r": 0.005,
+      "wo_best": -0.0038,
+      "best_share": 1.758,
+      "t": 0.1,
+      "total_r": 5.26
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "tr20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 37,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 282,
+       "per_sess": 0.66,
+       "avg_r": -0.0466,
+       "wo_best": -0.0637,
+       "best_share": null,
+       "t": -0.67,
+       "total_r": -13.13,
+       "kept_share": 0.591,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.025,
+       "train_min_avg_r": -0.0222,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": 0.2907
+       }
+      },
+      "W2": {
+       "n": 123,
+       "per_sess": 0.724,
+       "avg_r": -0.1944,
+       "wo_best": -0.2442,
+       "best_share": null,
+       "t": -0.93,
+       "total_r": -23.91,
+       "kept_share": 0.577,
+       "ungated_known": {
+        "n": 213,
+        "per_sess": 1.253,
+        "avg_r": -0.1637,
+        "wo_best": -0.1912,
+        "best_share": null,
+        "t": -1.2,
+        "total_r": -34.86
+       },
+       "delta_vs_ungated": -0.0307,
+       "train_min_avg_r": 0.0396,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 1.2686
+       }
+      },
+      "W3": {
+       "n": 767,
+       "per_sess": 2.779,
+       "avg_r": 0.085,
+       "wo_best": 0.0735,
+       "best_share": 0.148,
+       "t": 2.02,
+       "total_r": 65.18,
+       "kept_share": 0.888,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0014,
+       "train_min_avg_r": -0.0313,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.8,
+        "thr": -1.384
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1172,
+      "per_sess": 1.342,
+      "avg_r": 0.024,
+      "wo_best": 0.0159,
+      "best_share": 0.343,
+      "t": 0.58,
+      "total_r": 28.14
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "tr50": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 108,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 332,
+       "per_sess": 0.778,
+       "avg_r": -0.0153,
+       "wo_best": -0.0499,
+       "best_share": null,
+       "t": -0.19,
+       "total_r": -5.08,
+       "kept_share": 0.696,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0063,
+       "train_min_avg_r": 0.0918,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 3.4304
+       }
+      },
+      "W2": {
+       "n": 0,
+       "kept_share": 0.0,
+       "ungated_known": {
+        "n": 142,
+        "per_sess": 0.835,
+        "avg_r": -0.0349,
+        "wo_best": -0.063,
+        "best_share": null,
+        "t": -0.33,
+        "total_r": -4.95
+       },
+       "delta_vs_ungated": null,
+       "train_min_avg_r": 0.0601,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 1.2889
+       }
+      },
+      "W3": {
+       "n": 766,
+       "per_sess": 2.775,
+       "avg_r": 0.0927,
+       "wo_best": 0.0814,
+       "best_share": 0.136,
+       "t": 2.01,
+       "total_r": 71.03,
+       "kept_share": 0.887,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0091,
+       "train_min_avg_r": 0.0195,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 3.9621
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1098,
+      "per_sess": 1.258,
+      "avg_r": 0.0601,
+      "wo_best": 0.0513,
+      "best_share": 0.16,
+      "t": 1.48,
+      "total_r": 65.95
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "ret1": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 7,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 400,
+       "per_sess": 0.937,
+       "avg_r": -0.0142,
+       "wo_best": -0.0425,
+       "best_share": null,
+       "t": -0.2,
+       "total_r": -5.67,
+       "kept_share": 0.839,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0074,
+       "train_min_avg_r": -0.0488,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 0.9612
+       }
+      },
+      "W2": {
+       "n": 156,
+       "per_sess": 0.918,
+       "avg_r": -0.1084,
+       "wo_best": -0.1857,
+       "best_share": null,
+       "t": -0.56,
+       "total_r": -16.91,
+       "kept_share": 0.642,
+       "ungated_known": {
+        "n": 243,
+        "per_sess": 1.429,
+        "avg_r": -0.1121,
+        "wo_best": -0.1603,
+        "best_share": null,
+        "t": -0.85,
+        "total_r": -27.24
+       },
+       "delta_vs_ungated": 0.0037,
+       "train_min_avg_r": 0.0254,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.6,
+        "thr": 0.2563
+       }
+      },
+      "W3": {
+       "n": 332,
+       "per_sess": 1.203,
+       "avg_r": 0.1617,
+       "wo_best": 0.1376,
+       "best_share": 0.18,
+       "t": 2.53,
+       "total_r": 53.69,
+       "kept_share": 0.384,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0781,
+       "train_min_avg_r": -0.0538,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": -0.1677
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 888,
+      "per_sess": 1.017,
+      "avg_r": 0.035,
+      "wo_best": 0.0236,
+      "best_share": 0.34,
+      "t": 0.63,
+      "total_r": 31.11
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "ret5": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 11,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 310,
+       "per_sess": 0.726,
+       "avg_r": -0.0549,
+       "wo_best": -0.0717,
+       "best_share": null,
+       "t": -0.69,
+       "total_r": -17.0,
+       "kept_share": 0.65,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.0333,
+       "train_min_avg_r": -0.0515,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 1.1845
+       }
+      },
+      "W2": {
+       "n": 81,
+       "per_sess": 0.476,
+       "avg_r": -0.1376,
+       "wo_best": -0.1754,
+       "best_share": null,
+       "t": -0.83,
+       "total_r": -11.14,
+       "kept_share": 0.339,
+       "ungated_known": {
+        "n": 239,
+        "per_sess": 1.406,
+        "avg_r": -0.1302,
+        "wo_best": -0.1804,
+        "best_share": null,
+        "t": -0.98,
+        "total_r": -31.13
+       },
+       "delta_vs_ungated": -0.0074,
+       "train_min_avg_r": 0.0506,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 0.804
+       }
+      },
+      "W3": {
+       "n": 598,
+       "per_sess": 2.167,
+       "avg_r": 0.0792,
+       "wo_best": 0.0649,
+       "best_share": 0.195,
+       "t": 1.56,
+       "total_r": 47.34,
+       "kept_share": 0.692,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": -0.0044,
+       "train_min_avg_r": -0.0515,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 1.2188
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 989,
+      "per_sess": 1.133,
+      "avg_r": 0.0194,
+      "wo_best": 0.0102,
+      "best_share": 0.482,
+      "t": 0.45,
+      "total_r": 19.19
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "vxx10": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 27,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 422,
+       "per_sess": 0.988,
+       "avg_r": -0.0,
+       "wo_best": -0.0262,
+       "best_share": null,
+       "t": -0.0,
+       "total_r": -0.0,
+       "kept_share": 0.885,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0216,
+       "train_min_avg_r": -0.0663,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 7.1223
+       }
+      },
+      "W2": {
+       "n": 188,
+       "per_sess": 1.106,
+       "avg_r": -0.1948,
+       "wo_best": -0.2269,
+       "best_share": null,
+       "t": -1.31,
+       "total_r": -36.61,
+       "kept_share": 0.843,
+       "ungated_known": {
+        "n": 223,
+        "per_sess": 1.312,
+        "avg_r": -0.1818,
+        "wo_best": -0.2084,
+        "best_share": null,
+        "t": -1.41,
+        "total_r": -40.53
+       },
+       "delta_vs_ungated": -0.013,
+       "train_min_avg_r": 0.0269,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.8,
+        "thr": -4.5481
+       }
+      },
+      "W3": {
+       "n": 761,
+       "per_sess": 2.757,
+       "avg_r": 0.0732,
+       "wo_best": 0.0615,
+       "best_share": 0.173,
+       "t": 1.64,
+       "total_r": 55.72,
+       "kept_share": 0.881,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": -0.0104,
+       "train_min_avg_r": -0.052,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 3.4846
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1371,
+      "per_sess": 1.57,
+      "avg_r": 0.0139,
+      "wo_best": 0.0063,
+      "best_share": 0.554,
+      "t": 0.36,
+      "total_r": 19.1
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "disp": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 7,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 64,
+       "per_sess": 0.15,
+       "avg_r": -0.0653,
+       "wo_best": -0.1339,
+       "best_share": null,
+       "t": -0.44,
+       "total_r": -4.18,
+       "kept_share": 0.134,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.0437,
+       "train_min_avg_r": -0.0011,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.6,
+        "thr": 2.5758
+       }
+      },
+      "W2": {
+       "n": 147,
+       "per_sess": 0.865,
+       "avg_r": -0.0138,
+       "wo_best": -0.0865,
+       "best_share": null,
+       "t": -0.07,
+       "total_r": -2.03,
+       "kept_share": 0.605,
+       "ungated_known": {
+        "n": 243,
+        "per_sess": 1.429,
+        "avg_r": -0.1121,
+        "wo_best": -0.1603,
+        "best_share": null,
+        "t": -0.85,
+        "total_r": -27.24
+       },
+       "delta_vs_ungated": 0.0983,
+       "train_min_avg_r": 0.0991,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.6,
+        "thr": 2.3517
+       }
+      },
+      "W3": {
+       "n": 693,
+       "per_sess": 2.511,
+       "avg_r": 0.1,
+       "wo_best": 0.0876,
+       "best_share": 0.139,
+       "t": 2.16,
+       "total_r": 69.31,
+       "kept_share": 0.802,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0164,
+       "train_min_avg_r": -0.0331,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 2.3099
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 904,
+      "per_sess": 1.036,
+      "avg_r": 0.0698,
+      "wo_best": 0.0599,
+      "best_share": 0.153,
+      "t": 1.37,
+      "total_r": 63.1
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "breadth20": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 38,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 203,
+       "per_sess": 0.475,
+       "avg_r": -0.0798,
+       "wo_best": -0.1047,
+       "best_share": null,
+       "t": -1.02,
+       "total_r": -16.2,
+       "kept_share": 0.426,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.0582,
+       "train_min_avg_r": -0.0025,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": 0.5692
+       }
+      },
+      "W2": {
+       "n": 152,
+       "per_sess": 0.894,
+       "avg_r": -0.2787,
+       "wo_best": -0.3215,
+       "best_share": null,
+       "t": -1.63,
+       "total_r": -42.36,
+       "kept_share": 0.717,
+       "ungated_known": {
+        "n": 212,
+        "per_sess": 1.247,
+        "avg_r": -0.1686,
+        "wo_best": -0.1964,
+        "best_share": null,
+        "t": -1.24,
+        "total_r": -35.74
+       },
+       "delta_vs_ungated": -0.1101,
+       "train_min_avg_r": 0.0402,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.8,
+        "thr": 0.6498
+       }
+      },
+      "W3": {
+       "n": 699,
+       "per_sess": 2.533,
+       "avg_r": 0.0834,
+       "wo_best": 0.0708,
+       "best_share": 0.166,
+       "t": 1.83,
+       "total_r": 58.31,
+       "kept_share": 0.809,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": -0.0002,
+       "train_min_avg_r": -0.0355,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.7,
+        "thr": 0.3815
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1054,
+      "per_sess": 1.207,
+      "avg_r": -0.0002,
+      "wo_best": -0.0095,
+      "best_share": null,
+      "t": -0.01,
+      "total_r": -0.25
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "gap": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 7,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 175,
+       "per_sess": 0.41,
+       "avg_r": -0.0068,
+       "wo_best": -0.025,
+       "best_share": null,
+       "t": -0.09,
+       "total_r": -1.2,
+       "kept_share": 0.367,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0148,
+       "train_min_avg_r": 0.065,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.4,
+        "thr": 0.1423
+       }
+      },
+      "W2": {
+       "n": 123,
+       "per_sess": 0.724,
+       "avg_r": 0.0982,
+       "wo_best": 0.0689,
+       "best_share": 0.321,
+       "t": 1.06,
+       "total_r": 12.08,
+       "kept_share": 0.506,
+       "ungated_known": {
+        "n": 243,
+        "per_sess": 1.429,
+        "avg_r": -0.1121,
+        "wo_best": -0.1603,
+        "best_share": null,
+        "t": -0.85,
+        "total_r": -27.24
+       },
+       "delta_vs_ungated": 0.2103,
+       "train_min_avg_r": 0.0316,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 0.279
+       }
+      },
+      "W3": {
+       "n": 471,
+       "per_sess": 1.707,
+       "avg_r": 0.0618,
+       "wo_best": 0.0423,
+       "best_share": 0.332,
+       "t": 1.36,
+       "total_r": 29.09,
+       "kept_share": 0.545,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": -0.0218,
+       "train_min_avg_r": 0.0233,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.5,
+        "thr": 0.2958
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 769,
+      "per_sess": 0.881,
+      "avg_r": 0.052,
+      "wo_best": 0.04,
+      "best_share": 0.242,
+      "t": 1.44,
+      "total_r": 39.97
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": false,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "spy_fo": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 0,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 194,
+       "per_sess": 0.454,
+       "avg_r": 0.0696,
+       "wo_best": 0.0475,
+       "best_share": 0.335,
+       "t": 0.9,
+       "total_r": 13.51,
+       "kept_share": 0.407,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0912,
+       "train_min_avg_r": 0.0544,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.5,
+        "thr": -0.0909
+       }
+      },
+      "W2": {
+       "n": 179,
+       "per_sess": 1.053,
+       "avg_r": -0.2023,
+       "wo_best": -0.2362,
+       "best_share": null,
+       "t": -1.3,
+       "total_r": -36.2,
+       "kept_share": 0.716,
+       "ungated_known": {
+        "n": 250,
+        "per_sess": 1.471,
+        "avg_r": -0.1323,
+        "wo_best": -0.1803,
+        "best_share": null,
+        "t": -1.02,
+        "total_r": -33.07
+       },
+       "delta_vs_ungated": -0.07,
+       "train_min_avg_r": 0.0613,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.8,
+        "thr": -0.4317
+       }
+      },
+      "W3": {
+       "n": 452,
+       "per_sess": 1.638,
+       "avg_r": 0.0395,
+       "wo_best": 0.02,
+       "best_share": 0.507,
+       "t": 0.69,
+       "total_r": 17.84,
+       "kept_share": 0.523,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": -0.0441,
+       "train_min_avg_r": 0.0653,
+       "cfg": {
+        "dir": "high",
+        "frac_or_dow": 0.4,
+        "thr": -0.084
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 825,
+      "per_sess": 0.945,
+      "avg_r": -0.0059,
+      "wo_best": -0.0171,
+      "best_share": null,
+      "t": -0.11,
+      "total_r": -4.86
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "spy30": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 2,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 437,
+       "per_sess": 1.023,
+       "avg_r": -0.0248,
+       "wo_best": -0.0512,
+       "best_share": null,
+       "t": -0.37,
+       "total_r": -10.85,
+       "kept_share": 0.916,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": -0.0032,
+       "train_min_avg_r": -0.0472,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 0.1976
+       }
+      },
+      "W2": {
+       "n": 186,
+       "per_sess": 1.094,
+       "avg_r": -0.0784,
+       "wo_best": -0.1398,
+       "best_share": null,
+       "t": -0.5,
+       "total_r": -14.57,
+       "kept_share": 0.75,
+       "ungated_known": {
+        "n": 248,
+        "per_sess": 1.459,
+        "avg_r": -0.1289,
+        "wo_best": -0.1771,
+        "best_share": null,
+        "t": -0.99,
+        "total_r": -31.98
+       },
+       "delta_vs_ungated": 0.0505,
+       "train_min_avg_r": 0.0435,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.7,
+        "thr": 0.0406
+       }
+      },
+      "W3": {
+       "n": 796,
+       "per_sess": 2.884,
+       "avg_r": 0.0888,
+       "wo_best": 0.0779,
+       "best_share": 0.137,
+       "t": 2.0,
+       "total_r": 70.72,
+       "kept_share": 0.921,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0052,
+       "train_min_avg_r": -0.0622,
+       "cfg": {
+        "dir": "low",
+        "frac_or_dow": 0.9,
+        "thr": 0.2027
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1419,
+      "per_sess": 1.625,
+      "avg_r": 0.0319,
+      "wo_best": 0.0248,
+      "best_share": 0.234,
+      "t": 0.82,
+      "total_r": 45.3
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    },
+    "dow": {
+     "nan_trades": {
+      "W1": 0,
+      "W2": 0,
+      "W3": 0
+     },
+     "rot": {
+      "W1": {
+       "n": 415,
+       "per_sess": 0.972,
+       "avg_r": -0.0002,
+       "wo_best": -0.0269,
+       "best_share": null,
+       "t": -0.0,
+       "total_r": -0.08,
+       "kept_share": 0.87,
+       "ungated_known": {
+        "n": 477,
+        "per_sess": 1.117,
+        "avg_r": -0.0216,
+        "wo_best": -0.0455,
+        "best_share": null,
+        "t": -0.34,
+        "total_r": -10.29
+       },
+       "delta_vs_ungated": 0.0214,
+       "train_min_avg_r": -0.0546,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 1,
+        "thr": null
+       }
+      },
+      "W2": {
+       "n": 185,
+       "per_sess": 1.088,
+       "avg_r": -0.0546,
+       "wo_best": -0.1145,
+       "best_share": null,
+       "t": -0.49,
+       "total_r": -10.1,
+       "kept_share": 0.74,
+       "ungated_known": {
+        "n": 250,
+        "per_sess": 1.471,
+        "avg_r": -0.1323,
+        "wo_best": -0.1803,
+        "best_share": null,
+        "t": -1.02,
+        "total_r": -33.07
+       },
+       "delta_vs_ungated": 0.0777,
+       "train_min_avg_r": -0.0002,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 1,
+        "thr": null
+       }
+      },
+      "W3": {
+       "n": 712,
+       "per_sess": 2.58,
+       "avg_r": 0.0874,
+       "wo_best": 0.0751,
+       "best_share": 0.155,
+       "t": 1.84,
+       "total_r": 62.2,
+       "kept_share": 0.824,
+       "ungated_known": {
+        "n": 864,
+        "per_sess": 3.13,
+        "avg_r": 0.0836,
+        "wo_best": 0.0734,
+        "best_share": 0.134,
+        "t": 2.0,
+        "total_r": 72.2
+       },
+       "delta_vs_ungated": 0.0038,
+       "train_min_avg_r": -0.0546,
+       "cfg": {
+        "dir": "drop",
+        "frac_or_dow": 1,
+        "thr": null
+       }
+      }
+     },
+     "pooled_heldout": {
+      "n": 1312,
+      "per_sess": 1.503,
+      "avg_r": 0.0396,
+      "wo_best": 0.032,
+      "best_share": 0.203,
+      "t": 1.07,
+      "total_r": 52.02
+     },
+     "pass": {
+      "all3_pos": false,
+      "all3_wo_best_pos": false,
+      "kept40": true,
+      "t_bar": false,
+      "PROMISING": false
+     }
+    }
+   }
+  }
+ }
+}

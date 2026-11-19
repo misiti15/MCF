@@ -1,0 +1,70 @@
+{
+ "note": "Educational only - not financial advice. ULT-13 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T06:46:28Z",
+ "pick": "13f",
+ "cfg": {
+  "rmax": 35.0,
+  "guard": "G0",
+  "exit": "X",
+  "label": "RMAX35-G0-TX45"
+ },
+ "eligible_2_per_session": [
+  "13e",
+  "13f",
+  "13g",
+  "13h"
+ ],
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session",
+ "fit": {
+  "trades": 571,
+  "sessions": 170,
+  "sessions_traded": 150,
+  "trades_per_session": 3.359,
+  "win": 0.482,
+  "avg_r": -0.0224,
+  "avg_r_wo_best_day": -0.0412,
+  "best_day": "2025-04-07",
+  "best_day_r": 9.67,
+  "best_day_share": null,
+  "total_r": -12.81,
+  "total_r_wo_best_day": -22.48,
+  "total_r_per_session": -0.0754,
+  "worst_day": -21.38,
+  "worst_day_per_trade_session": -5.616,
+  "t_day_clustered": -0.51,
+  "avg_r_spy_up": 0.0711,
+  "n_spy_up": 171,
+  "avg_r_spy_flat": -0.0085,
+  "n_spy_flat": 184,
+  "avg_r_spy_down": -0.1083,
+  "n_spy_down": 216,
+  "avg_r_ex_0403_0409": -0.0018,
+  "n_ex_0403_0409": 506,
+  "avg_r_u025": -0.0449,
+  "median_hold_min": 45.0,
+  "exit_mix": {
+   "time": 553,
+   "stop": 18
+  },
+  "first_half_avg_r": -0.0523,
+  "second_half_avg_r": 0.0202,
+  "A_avg_r": -0.0541,
+  "A_n": 330,
+  "B_avg_r": 0.0209,
+  "B_n": 241,
+  "uncapped_trades": 579,
+  "cfg": {
+   "rmax": 35.0,
+   "guard": "G0",
+   "exit": "X",
+   "label": "RMAX35-G0-TX45"
+  }
+ },
+ "sha256_bt": "b95b02729a1566e8fd12d9cddba3089bab90bb99c760a10a9fddf19dd9f7926a",
+ "sha256_module_at_freeze": "901086613eac7a42798650febdf4e11cf9751d6f52b4b2ee8afd1891fc4955ec",
+ "configs_counted_this_candidate": 9,
+ "configs_note": "8 grid + 1 bias diagnostic (PLAN sec. 4)",
+ "n_cumulative": 774,
+ "sha256_module_final": "c9dd634934bb4ac12feddc526e572f8aaff3ac233c00e162dea26c03bfafe418",
+ "module_final_note": "module constants set to the pick (RMAX 35, G0, EXIT X) after the fit grid, before any check data"
+}

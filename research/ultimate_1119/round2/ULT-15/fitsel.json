@@ -1,0 +1,44 @@
+{
+ "note": "Educational only - not financial advice. ULT-15 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T07:05:07Z",
+ "pick": null,
+ "cfg": null,
+ "sides_on": [],
+ "eligible_2_per_session": [],
+ "configs_with_any_side_open": [],
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session whose base passed (PLAN sec. 5)",
+ "fit": null,
+ "sha256_bt": "edd16a2d437084ddb57703bd89e84fd5c311857cdc5cb5283fb530a626685c3c",
+ "sha256_module_at_freeze": "72312699576cbe16ac84155b6e2f1e687ba4ffd04fdde840766f4b36d63d4f2c",
+ "configs_counted_this_candidate": 14,
+ "configs_note": "8 grid + 4 base-gate evaluations + 1 bias diagnostic (PLAN sec. 4) + 1 ungated diagnostic check score",
+ "n_cumulative": 774,
+ "diagnostic_ungated_pick": "15c",
+ "diagnostic_ungated_cfg": {
+  "conf": 2,
+  "exit": "X45",
+  "liq": "L1",
+  "label": "C2of3-TX45-L1"
+ },
+ "diagnostic_ungated_fit": {
+  "trades_per_session": 3.959,
+  "avg_r": -0.0152,
+  "avg_r_wo_best_day": -0.03,
+  "total_r": -10.26,
+  "total_r_wo_best_day": -20.07,
+  "A_avg_r": -0.0676,
+  "B_avg_r": 0.0526,
+  "avg_r_ex_0403_0409": 0.0022,
+  "long": {
+   "trades": 448,
+   "avg_r": -0.0174,
+   "total_r": -7.81
+  },
+  "short": {
+   "trades": 225,
+   "avg_r": -0.0109,
+   "total_r": -2.45
+  }
+ },
+ "diagnostic_note": "Added 2026-11-19 after the base gate closed every side and BEFORE any check data: the same selection rule applied with the base gate ignored, frozen here, scored once on check as a DIAGNOSTIC (counted, +1 config). It cannot change the tier: the pre-registered rule says a config whose bases fail scores nothing."
+}

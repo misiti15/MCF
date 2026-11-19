@@ -1,0 +1,111 @@
+{
+ "note": "Educational only - not financial advice. ULT-14 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T06:55:47Z",
+ "pick": "14a",
+ "cfg": {
+  "window": [
+   1400,
+   1500
+  ],
+  "d": 0.2,
+  "exit": "A",
+  "label": "W1400-1500-D0.20-t05s1cap45"
+ },
+ "eligible_2_per_session": [
+  "14a",
+  "14b",
+  "14e",
+  "14f",
+  "14g",
+  "14h"
+ ],
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session (PLAN sec. 5)",
+ "fit": {
+  "trades": 459,
+  "sessions": 170,
+  "sessions_traded": 105,
+  "trades_per_session": 2.7,
+  "win": 0.601,
+  "avg_r": -0.038,
+  "avg_r_wo_best_day": -0.0743,
+  "best_day": "2025-04-10",
+  "best_day_r": 14.46,
+  "best_day_share": null,
+  "total_r": -17.42,
+  "total_r_wo_best_day": -31.89,
+  "total_r_per_session": -0.1025,
+  "worst_day": -17.86,
+  "worst_day_date": "2025-04-04",
+  "worst_day_per_trade_session": -4.086,
+  "t_day_clustered": -0.61,
+  "avg_r_spy_up": 0.0464,
+  "n_spy_up": 103,
+  "avg_r_spy_flat": -0.098,
+  "n_spy_flat": 134,
+  "avg_r_spy_down": -0.0409,
+  "n_spy_down": 222,
+  "avg_r_ex_0403_0409": -0.0244,
+  "n_ex_0403_0409": 343,
+  "median_hold_min": 18.0,
+  "exit_mix": {
+   "target": 245,
+   "time": 128,
+   "stop": 86
+  },
+  "first_half_avg_r": 0.0005,
+  "second_half_avg_r": -0.082,
+  "long": {
+   "trades": 250,
+   "trades_per_session": 1.471,
+   "win": 0.64,
+   "avg_r": -0.0107,
+   "avg_r_wo_best_day": -0.0779,
+   "best_day_share": null,
+   "total_r": -2.68,
+   "worst_day": -18.49,
+   "t_day_clustered": -0.1,
+   "avg_r_spy_up": 0.1036,
+   "avg_r_spy_flat": -0.088,
+   "avg_r_spy_down": -0.0648,
+   "avg_r_ex_0403_0409": 0.059,
+   "first_half_avg_r": 0.0208,
+   "second_half_avg_r": -0.0817
+  },
+  "short": {
+   "trades": 209,
+   "trades_per_session": 1.229,
+   "win": 0.555,
+   "avg_r": -0.0705,
+   "avg_r_wo_best_day": -0.085,
+   "best_day_share": null,
+   "total_r": -14.74,
+   "worst_day": -8.96,
+   "t_day_clustered": -1.34,
+   "avg_r_spy_up": -0.2892,
+   "avg_r_spy_flat": -0.1051,
+   "avg_r_spy_down": -0.019,
+   "avg_r_ex_0403_0409": -0.087,
+   "first_half_avg_r": 0.0114,
+   "second_half_avg_r": -0.1256
+  },
+  "A_avg_r": 0.0005,
+  "A_n": 245,
+  "B_avg_r": -0.082,
+  "B_n": 214,
+  "uncapped_trades": 922,
+  "cfg": {
+   "window": [
+    1400,
+    1500
+   ],
+   "d": 0.2,
+   "exit": "A",
+   "label": "W1400-1500-D0.20-t05s1cap45"
+  }
+ },
+ "sha256_bt": "f6367b4b05865d695821ca9722b6383c772f025652b12b465668862dcf81d84e",
+ "sha256_module_at_freeze": "17caf17ab638c6ba129a19743ab570c0771703d3dfc3467204a077169afb5a69",
+ "configs_counted_this_candidate": 9,
+ "configs_note": "8 grid + 1 bias diagnostic (PLAN sec. 4)",
+ "n_cumulative": 774
+}

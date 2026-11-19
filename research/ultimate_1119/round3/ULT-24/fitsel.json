@@ -1,0 +1,148 @@
+{
+ "note": "Educational only - not financial advice. ULT-24 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T08:07:38Z",
+ "pick": null,
+ "cfg": null,
+ "eligible_2_per_session": [],
+ "configs_with_trades": [],
+ "base_open": {
+  "BQ-L": {
+   "H": false,
+   "X": false
+  },
+  "BM-L": {
+   "H": false,
+   "X": false
+  },
+  "BM-S": {
+   "H": false,
+   "X": false
+  }
+ },
+ "survivors": {},
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session (PLAN sec. 5)",
+ "fit": null,
+ "sha256_bt": "4cb1be551f80a41d8a886413fff132787a0b5bf68f7d4620f8a917d40668ea32",
+ "sha256_module_at_freeze": "7ece32a29cea58fbf228325f473da871dd85c3ae7504dcafadb948d957f61c26",
+ "sha256_symbols": "41cdf38663c5de839c2a384ce72ef1a371db818c69664956fec4b7eba13196ce",
+ "configs_counted_this_candidate": 25,
+ "configs_note": "8 grid + 3 base-gate + 12 trigger-gate evaluations + 1 bias diagnostic (PLAN sec. 4)",
+ "check_informed": true,
+ "n_cumulative": 880,
+ "diagnostic_ungated_pick": "24b",
+ "diagnostic_ungated_cfg": {
+  "W": 3,
+  "C": 2,
+  "exit": "X",
+  "label": "W3-C2-TX45"
+ },
+ "diagnostic_ungated_survivors": {
+  "BQ-L": [],
+  "BM-L": [
+   "TL-A",
+   "TL-C",
+   "TL-D"
+  ],
+  "BM-S": [
+   "TS-1",
+   "TS-2",
+   "TS-4"
+  ]
+ },
+ "diagnostic_ungated_eligible": [
+  "24a",
+  "24b",
+  "24e",
+  "24f"
+ ],
+ "diagnostic_ungated_fit": {
+  "trades": 1846,
+  "sessions": 170,
+  "sessions_traded": 164,
+  "trades_per_session": 10.859,
+  "win": 0.48,
+  "avg_r": -0.0066,
+  "avg_r_u025": -0.0131,
+  "avg_r_wo_best_day": -0.0092,
+  "best_day": "2025-03-10",
+  "best_day_r": 4.6,
+  "best_day_share": null,
+  "total_r": -12.11,
+  "total_r_wo_best_day": -16.71,
+  "total_r_per_session": -0.0712,
+  "worst_day": -9.05,
+  "worst_day_date": "2025-04-10",
+  "worst_day_per_trade_session": -0.804,
+  "t_day_clustered": -0.62,
+  "avg_r_spy_up": -0.0262,
+  "n_spy_up": 451,
+  "avg_r_spy_flat": -0.0272,
+  "n_spy_flat": 664,
+  "avg_r_spy_down": 0.0243,
+  "n_spy_down": 731,
+  "avg_r_ex_0403_0409": -0.0077,
+  "n_ex_0403_0409": 1789,
+  "median_hold_min": 45.0,
+  "exit_mix": {
+   "time": 1833,
+   "stop": 13
+  },
+  "first_half_avg_r": -0.0055,
+  "second_half_avg_r": -0.0074,
+  "long": {
+   "trades": 249,
+   "trades_per_session": 1.465,
+   "win": 0.494,
+   "avg_r": -0.0127,
+   "avg_r_wo_best_day": -0.0225,
+   "best_day_share": null,
+   "total_r": -3.15,
+   "worst_day": -3.82,
+   "t_day_clustered": -0.45,
+   "avg_r_ex_0403_0409": -0.0077,
+   "first_half_avg_r": -0.0063,
+   "second_half_avg_r": -0.0174
+  },
+  "short": {
+   "trades": 1597,
+   "trades_per_session": 9.394,
+   "win": 0.478,
+   "avg_r": -0.0056,
+   "avg_r_wo_best_day": -0.009,
+   "best_day_share": null,
+   "total_r": -8.96,
+   "worst_day": -9.05,
+   "t_day_clustered": -0.49,
+   "avg_r_ex_0403_0409": -0.0077,
+   "first_half_avg_r": -0.015,
+   "second_half_avg_r": 0.0021
+  },
+  "by_base": {
+   "BQ-L": {
+    "trades": 0,
+    "avg_r": null
+   },
+   "BM-L": {
+    "trades": 249,
+    "avg_r": -0.0127
+   },
+   "BM-S": {
+    "trades": 1597,
+    "avg_r": -0.0056
+   }
+  },
+  "A_avg_r": -0.0057,
+  "A_n": 788,
+  "B_avg_r": -0.0072,
+  "B_n": 1058,
+  "cfg": {
+   "W": 3,
+   "C": 2,
+   "exit": "X",
+   "label": "W3-C2-TX45"
+  }
+ },
+ "diagnostic_frozen_utc": "2026-11-19T08:07:55Z",
+ "diagnostic_note": "Added after the FIT base gate closed all three bases and BEFORE any check data: the same trigger gate and selection rule with the base gate ignored, frozen here, scored once on check as a DIAGNOSTIC (counted: +1 config, plus the 12 trigger-gate evaluations it ran). It cannot change the tier: the pre-registered rule says a closed base trades nothing.",
+ "sha256_bt_at_diag_freeze": "5f46c73037e912935674f285559efbc3e55b74b665cbffc9484e6fbddad9c36d"
+}

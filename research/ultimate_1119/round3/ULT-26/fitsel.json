@@ -1,0 +1,113 @@
+{
+ "note": "Educational only - not financial advice. ULT-26 fit pick, frozen BEFORE any check data is built.",
+ "frozen_utc": "2026-11-19T08:13:14Z",
+ "pick": "26g",
+ "cfg": {
+  "g": 3.0,
+  "t": 0.5,
+  "exit": "T",
+  "key": "25T",
+  "label": "G3-T0.50-t1s1cap45"
+ },
+ "eligible_2_per_session": [
+  "26a",
+  "26b",
+  "26c",
+  "26d",
+  "26e",
+  "26f",
+  "26g",
+  "26h"
+ ],
+ "any_eligible": true,
+ "rule": "max fit total R minus best fit day among configs >= 2.0/session (PLAN sec. 5)",
+ "pick_by_plain_total_r": "26g",
+ "fit": {
+  "trades": 972,
+  "sessions": 170,
+  "sessions_traded": 94,
+  "trades_per_session": 5.718,
+  "win": 0.529,
+  "avg_r": 0.0681,
+  "avg_r_wo_best_day": 0.0538,
+  "best_day": "2025-04-03",
+  "best_day_r": 15.53,
+  "best_day_share": 0.235,
+  "total_r": 66.22,
+  "total_r_wo_best_day": 50.69,
+  "total_r_per_session": 0.3896,
+  "worst_day": -7.79,
+  "worst_day_per_trade_session": -0.753,
+  "t_day_clustered": 2.11,
+  "avg_r_spy_up": 0.1236,
+  "n_spy_up": 439,
+  "avg_r_spy_flat": -0.0313,
+  "n_spy_flat": 74,
+  "avg_r_spy_down": 0.0311,
+  "n_spy_down": 459,
+  "avg_r_ex_0403_0409": 0.0473,
+  "n_ex_0403_0409": 894,
+  "avg_r_u025": 0.0681,
+  "median_hold_min": 45.0,
+  "exit_mix": {
+   "time": 685,
+   "target": 177,
+   "stop": 110
+  },
+  "first_half_avg_r": 0.102,
+  "second_half_avg_r": 0.0098,
+  "A_avg_r": 0.0838,
+  "A_n": 795,
+  "B_avg_r": -0.0022,
+  "B_n": 177,
+  "by_side": {
+   "long": {
+    "trades": 547,
+    "trades_per_session": 3.218,
+    "win": 0.519,
+    "avg_r": 0.082,
+    "avg_r_wo_best_day": 0.0589,
+    "total_r": 44.85,
+    "t_day_clustered": 2.23,
+    "avg_r_ex_0403_0409": 0.0846,
+    "avg_r_u025": 0.082
+   },
+   "short": {
+    "trades": 425,
+    "trades_per_session": 2.5,
+    "win": 0.541,
+    "avg_r": 0.0503,
+    "avg_r_wo_best_day": 0.0148,
+    "total_r": 21.37,
+    "t_day_clustered": 0.86,
+    "avg_r_ex_0403_0409": -0.0067,
+    "avg_r_u025": 0.0503
+   }
+  },
+  "by_gap": {
+   "gap_2_3": {
+    "n": 0,
+    "avg_r": null
+   },
+   "gap_3_plus": {
+    "n": 972,
+    "avg_r": 0.0681
+   }
+  },
+  "uncapped_trades": 2489,
+  "cfg": {
+   "g": 3.0,
+   "t": 0.5,
+   "exit": "T",
+   "key": "25T",
+   "label": "G3-T0.50-t1s1cap45"
+  }
+ },
+ "sha256_bt": "f04669b90ff77310158c4c7796155728cde0f58b62a03ba321f1e434e4da5f3d",
+ "sha256_module_at_freeze": "94070eb60133c46ee2b0f285daa8f2539b1009584d63eb00870fb0593f2a38b5",
+ "sha256_symbols": "f590e984a797ff7021a13b50e7d4c73f704befa4e12b3eb1b81d820f49fb175d",
+ "configs_counted_this_candidate": 9,
+ "configs_note": "8 grid + 1 bias diagnostic (PLAN sec. 4)",
+ "check_informed": false,
+ "n_cumulative": 880
+}

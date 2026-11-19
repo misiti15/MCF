@@ -1,0 +1,237 @@
+{
+ "note": "Educational only - not financial advice. Round-5 VOLUME-TRACK hunt freeze (H5V): candidates for the FRESH_PLAN sec. 4 slot, frozen on the open 2-year data BEFORE any fresh byte exists. The lead merges these entries into round5/FREEZE_HUNT.json (this file deliberately does not create FREEZE_HUNT.json, which unlocks the download).",
+ "frozen_utc": "2026-11-19T10:12:15Z",
+ "fresh_data_exists_at_freeze": false,
+ "fitsel_frozen_utc": "2026-11-19T10:07:21Z",
+ "check_scored_utc": "2026-11-19T10:10:43Z",
+ "files": {
+  "H5V.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/H5V.py",
+   "sha256": "1aba95f091c37af60debfbb711cf48f5386b06f599dac8350da0fc79ecf7a2f4"
+  },
+  "H5V_symbols.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/H5V_symbols.json",
+   "sha256": "03d20f57847505d4fa9c25eccd3c1553822ad370d8aab717200080cc5a99bbb1"
+  },
+  "hunt.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/hunt.py",
+   "sha256": "cf0c7974afc7de5c8800ce7be55fe315507e63fc261a53fccb7a4738c9ca15ce"
+  },
+  "test_module.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/test_module.py",
+   "sha256": "3475d95b922ee1b19d923309d04acc261ad44d653e9b0b5a8aca133a47886e93"
+  },
+  "fitsel.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/fitsel.json",
+   "sha256": "3f849fd6245ced5d4e3dbc658303e4a875b3e78d3c2a0c2a8a3ae06104d76959"
+  },
+  "fit_grid.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/fit_grid.json",
+   "sha256": "f5e4a78982ab1d926a81e90948a2a9c07a875a3fd2e1dab650e3529d789b470a"
+  },
+  "check_once.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/check_once.json",
+   "sha256": "1d2a36e35e966ee4dc40f5fc019c2ecc1d2d53dc8a98dde2e45ce05608d7df21"
+  },
+  "PLAN.md": {
+   "path": "research/ultimate_1119/round5/hunt_volume/PLAN.md",
+   "sha256": "f9f5eb40c972864b0ce6054ee91bdc38ab96e2813b3667309fe518c238de92cc"
+  }
+ },
+ "deps": {
+  "round4/ULT-28/bt.py": "c960a487de50f58ff2f498f00b082a98eb12a861b06667820ba1c37fbeb1bbeb",
+  "round4/ULT-32/bt.py": "ec32b6439d25449a438e4250321345a1b42f9a58bdb3085deda2fb7289b974b3",
+  "round3/ULT-23/bt.py": "c3d625f1f811929796626c33a8cbadf7a56ae5409b59950c5d6ff1df137282e3",
+  "modules/ULT-32.py": "548796c8a7d4081a079744731ce11bdc0ba1f23d9d7556889e05574952614ca8",
+  "modules/ULT-32_symbols.json": "5d200e9a54f1b96b6b8e029031539a81af0fb9239482765d0f0e02b687f67ff8",
+  "round4/data/earnings_yf.parquet": "b80cdc46f4508312f53822b5785b249673085aa6aee645c3637f9fb3c597e0dc"
+ },
+ "common": {
+  "chassis": "round4/ULT-28/bt.py walk + cost_R (EXITS T=(1,1), H=(0.5,1) in u = 0.25 x atr_d; R per u): entry at the OPEN of the 1-minute bar starting at the decision-bar close, brackets around the decision close, stop first then target, stop gap-through at the worse of open/stop, target at the limit with no exit cost, +2c on stops, 45-min time exit, flat by 15:50 (15:49 minute); LR8 costs (entry 1c+1bp x tod mult, exit 1c+1bp except target fills); shorts pay borrow 1.2 bp of entry notional (3 bp under $20), evt = 0",
+  "selection": "round5/hunt_volume/hunt.py select(): rows = H5V.leg_mask(features(frame), leg) with the frozen H5V.P; stock legs drop the +-4-session earnings blackout (none kept here); then round4/ULT-32/bt.py chain(): one lot per symbol, max 2 per symbol-session, refire >= 30 min after the exit, day cap 30 ordered by (date, tod, adv20 desc)",
+  "fresh_overrides_allowed": "the same as FRESH_PLAN sec. 2.5 (paths, halves, holiday list, streamed frames instead of lib.load_month, blackout_set date range); shorts limited to today's easy-to-borrow flag (data/universe.csv) as in the hunt; no threshold, window, exit, cost, refire, cap or universe change",
+  "frame_columns_needed": [
+   "symbol",
+   "date",
+   "tod",
+   "close",
+   "high",
+   "low",
+   "rsi",
+   "buyPressure",
+   "fromOpen",
+   "atr_d",
+   "adv20",
+   "gap",
+   "vol_climax",
+   "lower_wick",
+   "spy_fo"
+  ]
+ },
+ "candidates": {
+  "H-V1": {
+   "name": "H5V-X WB4-mirror late-afternoon ETF pop fade (SHORT)",
+   "leg": "X",
+   "side": "short",
+   "pick": "X-r0.75-t05s1",
+   "params": {
+    "ret3": 0.75,
+    "geom": "t05s1"
+   },
+   "rule": "W list (100 ETFs in the download list), adv20 >= $95M (point in time), decision bar close 14:00-15:00, ret3 >= +0.75%, di_diff7 <= +5, ret12 <= +1.0%, atr_d_pct >= 3.5967583179473883, cost_r <= 0.10; intake price >= $10, |gap| < 20%, atr_d > 0, spy_fo present; easy-to-borrow only; exit t05s1",
+   "universe": "H5V_symbols.json W (100)",
+   "check_2025_10_01_to_2026_11_04": {
+    "trades": 159,
+    "trades_per_session": 0.576,
+    "win": 0.629,
+    "avg_r": 0.1048,
+    "avg_r_wo_best_day": 0.0779,
+    "best_day": "2026-06-17",
+    "best_day_share": 0.317,
+    "total_r": 16.67,
+    "total_r_per_session": 0.0604,
+    "worst_day": -4.79,
+    "worst_day_per_trade_session": -2.292,
+    "t_day_clustered": 1.77,
+    "first_half_avg_r": 0.0975,
+    "second_half_avg_r": 0.1127,
+    "median_hold_min": 37.0,
+    "exit_mix": {
+     "target": 83,
+     "time": 67,
+     "stop": 9
+    },
+    "avg_r_spy_up": 0.0448,
+    "avg_r_spy_flat": -0.0319,
+    "avg_r_spy_down": 0.2365,
+    "overlap_EM_symbol_session": 0.119,
+    "random": {
+     "random_avg_r": 0.0191,
+     "signal_minus_random": 0.0858,
+     "random_n": 159
+    }
+   },
+   "fit_2024_10_plus_2025_03_to_09": {
+    "trades": 70,
+    "trades_per_session": 0.412,
+    "win": 0.629,
+    "avg_r": 0.0951,
+    "avg_r_wo_best_day": 0.0483,
+    "best_day": "2025-04-16",
+    "best_day_share": 0.551,
+    "total_r": 6.66,
+    "total_r_per_session": 0.0392,
+    "worst_day": -2.21,
+    "worst_day_per_trade_session": -0.948,
+    "t_day_clustered": 1.04,
+    "first_half_avg_r": 0.2103,
+    "second_half_avg_r": -0.0136,
+    "median_hold_min": 35.5,
+    "exit_mix": {
+     "target": 39,
+     "time": 25,
+     "stop": 6
+    },
+    "avg_r_spy_up": -0.0037,
+    "avg_r_spy_flat": -0.2088,
+    "avg_r_spy_down": 0.2619,
+    "overlap_EM_symbol_session": 0.214
+   },
+   "fit_random": {
+    "random_avg_r": 0.0227,
+    "signal_minus_random": 0.0724,
+    "random_n": 70
+   }
+  },
+  "H-V2": {
+   "name": "H5V-K one-bar shock snap in liquid ETFs (LONG)",
+   "leg": "K",
+   "side": "long",
+   "pick": "K-EQB-k0.2-t1s1",
+   "params": {
+    "univ": "EQB",
+    "k": 0.2,
+    "geom": "t1s1"
+   },
+   "rule": "EQB ETFs (143 in the download list), adv20 >= $300M (point in time), decision bar close 10:15-15:00, 5-min return ret1 <= -0.2 x atr_d% (atr_d / close x 100), vol_climax >= 2, cost_r <= 0.10; intake price >= $10, |gap| < 20%, atr_d > 0, spy_fo present; universal SPY long filter (skip while SPY -0.30..-0.75% from open AND its 30-min change < 0); exit t1s1",
+   "universe": "H5V_symbols.json EQB (143)",
+   "warning": "1 day: check best-day share 54% (2026-06-17, 28 trades); the top-2 days (2026-06-17, 2025-10-29) carry 90% of check total R; avg R without them +0.022. Fit best-day share 106% (2025-04-09). A shock-day edge: lumpy, correlated ETFs fire together (day cap binds on shock days).",
+   "check_2025_10_01_to_2026_11_04": {
+    "trades": 276,
+    "trades_per_session": 1.0,
+    "win": 0.583,
+    "avg_r": 0.1867,
+    "avg_r_wo_best_day": 0.0951,
+    "best_day": "2026-06-17",
+    "best_day_share": 0.542,
+    "total_r": 51.53,
+    "total_r_per_session": 0.1867,
+    "worst_day": -8.34,
+    "worst_day_per_trade_session": -1.873,
+    "t_day_clustered": 1.46,
+    "first_half_avg_r": 0.1424,
+    "second_half_avg_r": 0.2379,
+    "median_hold_min": 17.0,
+    "exit_mix": {
+     "target": 141,
+     "stop": 80,
+     "time": 55
+    },
+    "avg_r_spy_up": 0.0424,
+    "avg_r_spy_flat": 0.1522,
+    "avg_r_spy_down": 0.2837,
+    "overlap_EM_symbol_session": 0.033,
+    "random": {
+     "random_avg_r": -0.1554,
+     "signal_minus_random": 0.3421,
+     "random_n": 276
+    }
+   },
+   "fit_2024_10_plus_2025_03_to_09": {
+    "trades": 133,
+    "trades_per_session": 0.782,
+    "win": 0.571,
+    "avg_r": 0.1158,
+    "avg_r_wo_best_day": -0.0084,
+    "best_day": "2025-04-09",
+    "best_day_share": 1.061,
+    "total_r": 15.4,
+    "total_r_per_session": 0.0906,
+    "worst_day": -13.21,
+    "worst_day_per_trade_session": -3.675,
+    "t_day_clustered": 0.59,
+    "first_half_avg_r": 0.1451,
+    "second_half_avg_r": 0.0233,
+    "median_hold_min": 11.0,
+    "exit_mix": {
+     "target": 67,
+     "stop": 49,
+     "time": 17
+    },
+    "avg_r_spy_up": 0.4507,
+    "avg_r_spy_flat": -0.066,
+    "avg_r_spy_down": -0.2368,
+    "overlap_EM_symbol_session": 0.15
+   },
+   "fit_random": {
+    "random_avg_r": -0.1831,
+    "signal_minus_random": 0.2988,
+    "random_n": 133
+   }
+  }
+ },
+ "hunt_configs": 40,
+ "hunt_legs_scored_on_check": 7,
+ "legs_kept": [
+  "X",
+  "K"
+ ],
+ "legs_dropped_on_check": {
+  "F": "w/o best day -0.022",
+  "S": "w/o best day -0.022",
+  "C": "avg -0.037",
+  "V": "avg -0.053",
+  "Q": "avg -0.038"
+ },
+ "n_cumulative_after_hunt": "1,036 (up to 1,052)"
+}
