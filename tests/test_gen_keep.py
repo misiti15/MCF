@@ -23,6 +23,9 @@ def test_every_generated_setup_is_in_the_gen_account_and_enabled():
         if p.exists():
             grads |= {k for k, v in ((yaml.safe_load(p.read_text()) or {}).get("strategies") or {}).items()
                       if k.startswith("GEN-") and (v or {}).get("enabled")}
+    # C3-EXIT100 (owner yes 2026-11-18): persistent losers keep trading in the Graveyard (tag "C3-EXIT100")
+    gy = (yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text()) or {}).get("strategies") or {}
+    grads |= {k for k, v in gy.items() if (v or {}).get("enabled") and any("C3-EXIT100" in str(t) for t in (v or {}).get("tags") or [])}
     disabled = sorted(n for n in picked if n in strat and not (strat[n] or {}).get("enabled") and n not in grads)
     assert picked, "registry has no generated setups"
     assert not missing, f"generated setups missing from the gen account (owner consent needed): {missing}"

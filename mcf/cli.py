@@ -204,6 +204,15 @@ def cmd_live(args, cfg):
     print(f"{slot}: {len(priors)} symbols, until {until or 'close'}, dry_run={args.dry_run}")
     runner = PaperRunner(cfg, build_strategies(cfg), priors, dry_run=args.dry_run, status_path=status,
                          on_status=on_status)
+    if runner.shadow is not None:   # BASE1 baseline twin (owner C3-EPOCH 2026-11-18): Primary only, journal-only shadow
+        try:
+            from .execution.shadow import baseline_strategies
+
+            nb = runner.shadow.add_extras(baseline_strategies(cfg), baseline=True)
+            if nb:
+                print(f"{slot}: baseline {(cfg.get('baseline') or {}).get('id', 'BASE1')} shadow twin on ({nb} setups, no orders)")
+        except Exception as e:     # never fatal: live trades exactly as before without it
+            print(f"baseline shadow off: {type(e).__name__}: {e}")
     if cfg.get("live", {}).get("log_poll_inputs", True):
         runner.poll_log_dir = os.path.join(args.state_dir, "polls")
     if cfg.get("live", {}).get("log_quotes", True):

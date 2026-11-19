@@ -1,0 +1,70 @@
+
+== mcf-data-explore1
+  integrity: {'trades': 330, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -14.4 | uniform LR8 -17.1 | $-weighted R 12.4 | median risk/trade $11
+  Alpaca - journal $: total -4, days |gap|>$20: {}
+  what-if: rows 569, repeat share 0.01, raw R -19.7, corrected R -52.01 on 248 (unfillable dropped 321)
+  entry fill vs signal ref, in R: mean +0.002, p90 +0.162
+
+== mcf-data-gen
+  integrity: {'trades': 4052, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -676.6 | uniform LR8 -781.8 | $-weighted R -565.2 | median risk/trade $16
+  Alpaca - journal $: total -122, days |gap|>$20: {'2026-11-05': -25}
+  what-if: rows 5546, repeat share 0.00, raw R -604.0, corrected R -179.61 on 853 (unfillable dropped 4693)
+  entry fill vs signal ref, in R: mean -0.055, p90 +0.201
+
+== mcf-data-graveyard
+  integrity: {'trades': 9332, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -1097.5 | uniform LR8 -1335.4 | $-weighted R -697.0 | median risk/trade $12
+  Alpaca - journal $: total -253, days |gap|>$20: {'2026-11-05': -29, '2026-11-06': -22, '2026-11-10': -22, '2026-11-13': 26, '2026-11-17': -45}
+  what-if: rows 20441, repeat share 0.03, raw R -894.8, corrected R -1315.13 on 11469 (unfillable dropped 8627)
+  entry fill vs signal ref, in R: mean +0.006, p90 +0.191
+
+== mcf-data-livelab
+  integrity: {'trades': 272, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -21.4 | uniform LR8 -22.8 | $-weighted R 8.3 | median risk/trade $12
+  Alpaca - journal $: total -3, days |gap|>$20: {}
+  what-if: rows 301, repeat share 0.05, raw R -12.5, corrected R -6.56 on 71 (unfillable dropped 229)
+  entry fill vs signal ref, in R: mean +0.045, p90 +0.176
+
+== mcf-data-testing
+  integrity: {'trades': 4346, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -497.4 | uniform LR8 -645.1 | $-weighted R -352.0 | median risk/trade $10
+  Alpaca - journal $: total -1903, days |gap|>$20: {'2026-10-13': -29, '2026-10-19': 78, '2026-10-20': -92, '2026-11-05': -1585, '2026-11-06': -57, '2026-11-09': -124, '2026-11-10': -29}
+  what-if: rows 6252, repeat share 0.28, raw R -829.3, corrected R -185.14 on 1703 (unfillable dropped 4395)
+  entry fill vs signal ref, in R: mean -0.011, p90 +0.170
+
+== mcf-data-testing2
+  integrity: {'trades': 6139, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -847.3 | uniform LR8 -1048.0 | $-weighted R -733.5 | median risk/trade $8
+  Alpaca - journal $: total -601, days |gap|>$20: {'2026-10-12': 58, '2026-10-14': -387, '2026-10-15': -185}
+  what-if: rows 6161, repeat share 0.04, raw R -455.7, corrected R -308.99 on 1769 (unfillable dropped 4369)
+  entry fill vs signal ref, in R: mean -0.022, p90 +0.198
+
+== mcf-data-testingd
+  integrity: {'trades': 451, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -15.6 | uniform LR8 -15.6 | $-weighted R 6.9 | median risk/trade $8
+  Alpaca - journal $: total -4, days |gap|>$20: {}
+  what-if: rows 504, repeat share 0.00, raw R 0.0, corrected R -0.25 on 225 (unfillable dropped 279)
+  entry fill vs signal ref, in R: mean +0.024, p90 +0.166
+
+== mcf-data-testinge
+  integrity: {'trades': 266, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -63.3 | uniform LR8 -63.3 | $-weighted R -84.3 | median risk/trade $11
+  Alpaca - journal $: total -2, days |gap|>$20: {}
+  what-if: rows 328, repeat share 0.00, raw R -30.2, corrected R -13.47 on 71 (unfillable dropped 257)
+  entry fill vs signal ref, in R: mean +0.043, p90 +0.202
+
+== mcf-data-testingf
+  integrity: {'trades': 499, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -20.0 | uniform LR8 -20.0 | $-weighted R -14.6 | median risk/trade $8
+  Alpaca - journal $: total -4, days |gap|>$20: {}
+  what-if: rows 553, repeat share 0.00, raw R 2.4, corrected R -11.97 on 294 (unfillable dropped 258)
+  entry fill vs signal ref, in R: mean +0.031, p90 +0.165
+
+== mcf-data
+  integrity: {'trades': 1365, 'r_multiple != pnl/risk': 0, 'pnl != side*(exit-entry)*shares': 0, 'dup broker ids': 0, 'post-LR8 rows not tagged lr8': 0, 'pnl_adj re-cost mismatch': 0}
+  sum R after costs (booked) -71.3 | uniform LR8 -117.2 | $-weighted R -22.6 | median risk/trade $24
+  Alpaca - journal $: total -11664, days |gap|>$20: {'2026-10-08': 35, '2026-11-05': -11461, '2026-11-06': -185}
+  what-if: rows 4264, repeat share 0.62, raw R 531.9, corrected R 55.95 on 457 (unfillable dropped 3183)
+  entry fill vs signal ref, in R: mean +0.016, p90 +0.162

@@ -1,0 +1,76 @@
+diff --git a/docs/live/index.html b/docs/live/index.html
+index 5cf27b2f1..686450e62 100644
+--- a/docs/live/index.html
++++ b/docs/live/index.html
+@@ -705,7 +705,7 @@ window.MCF = window.MCF || {};
+       if (!r.ok) throw 0;
+       const s = await r.json(), t = s.today || {}, all = s.since_start || {};
+       put(a, money((s.account || {}).equity), [`Today ${pl(alp(t))} (Alpaca) · ${rf(window.MCF_TOTALS.dayR(s))} · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
+-        `Since start ${pl(all.alpaca_pnl ?? all.pnl)} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
++        `Since start ${pl(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}${all.alpaca_pnl_trading != null ? " (excl. broker glitch)" : ""} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
+         s.asof, m => s.phase === "trading" && m > 10);
+       ok.add(a.k);
+     } catch (_) {
+@@ -1005,7 +1005,7 @@ window.MCF.simBlend = (live, replay, shadow, w) => {   // mirror of mcf/report/s
+     $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>${ACCOUNTS[ACCT][0]} today</th><th>${ACCOUNTS[ACCT][0]} since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
+       row("Trades", t.trades ?? 0, all.trades ?? 0, `${m.trades ?? "–"} (${m.trades_per_day ?? "–"}/day)`),
+       row("Win rate", pc(t.win_rate), pc(all.win_rate), pc(m.win_rate)),
+-      row("P/L (Alpaca)", `<span class="${cls(alp(t))}">${money(alp(t))}</span>`, `<span class="${cls(all.alpaca_pnl ?? all.pnl)}">${money(all.alpaca_pnl ?? all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
++      row("P/L (Alpaca)", `<span class="${cls(alp(t))}">${money(alp(t))}</span>`, `<span class="${cls(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}">${money(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
+       row("Adj. (incl. modelled stop slippage)", money(t.pnl_adj), money(all.pnl_adj), "–"),
+       row("Avg P/L per trade", money(t.avg_pnl), money(all.avg_pnl), money(m.avg_pnl)),
+       row("Profit factor", t.profit_factor ?? "–", all.profit_factor ?? "–", m.profit_factor ?? "–"),
+diff --git a/mcf/report/live_status.py b/mcf/report/live_status.py
+index b7b70364c..e7218cbef 100644
+--- a/mcf/report/live_status.py
++++ b/mcf/report/live_status.py
+@@ -67,14 +67,38 @@ def equity_history(prior: dict, acct: str, day: str, account: dict) -> dict:
+     return eqh
+ 
+ 
+-def _since_alpaca(by_day: list[dict]) -> dict:
++def _since_alpaca(by_day: list[dict], account: str | None = None) -> dict:
+     """Since-start dollars from the broker: the sum of each session's Alpaca day P/L (journal pnl for a session with no
+     stored equity; alpaca_days says how many sessions are broker-measured)."""
+     if not by_day:
+         return {}
+     n = sum(h.get("alpaca_day_pl") is not None for h in by_day)
+     tot = sum(h["alpaca_day_pl"] if h.get("alpaca_day_pl") is not None else (h.get("pnl") or 0.0) for h in by_day)
+-    return {"alpaca_pnl": round(tot, 2), "alpaca_days": n, "sessions": len(by_day)}
++    out = {"alpaca_pnl": round(tot, 2), "alpaca_days": n, "sessions": len(by_day)}
++    adj = _glitch_adjustments(account, by_day)
++    if adj:   # W8-DQ: broker glitches that are not trading (PL1109 list), labelled; alpaca_pnl stays the raw broker sum
++        out["alpaca_pnl_trading"] = round(tot + sum(a["delta"] for a in adj), 2)
++        out["alpaca_adjustments"] = adj
++    return out
++
++
++def _glitch_adjustments(account: str | None, by_day: list[dict]) -> list[dict]:
++    """The labelled broker-glitch dollar adjustments (mcf.report.daily_post.PL_ADJUSTMENTS) that fall on this account's
++    sessions, as {date, delta, label}: "set" replaces the day's Alpaca P/L, "add" adds to it. Never a trading loss."""
++    if not account:
++        return []
++    try:
++        from .daily_post import PL_ADJUSTMENTS
++    except Exception:
++        return []
++    day_pl = {h.get("date"): h.get("alpaca_day_pl") for h in by_day}
++    out = []
++    for acct, d, kind, val, label in PL_ADJUSTMENTS:
++        if acct != account or d not in day_pl or day_pl[d] is None:
++            continue
++        delta = (float(val) - float(day_pl[d])) if kind == "set" else float(val)
++        out.append({"date": d, "delta": round(delta, 2), "label": label})
++    return out
+ 
+ 
+ def _f(x, nd=2):
+@@ -152,7 +176,7 @@ def build_status(runner, now, phase: str) -> dict:
+         "signals": recent,
+         "history": by_day[-30:],
+         "equity_history": dict(sorted(eqh.items())[-60:]),
+-        "since_start": {**_stats(trades), **_since_alpaca(by_day)},
++        "since_start": {**_stats(trades), **_since_alpaca(by_day, acct_name)},
+         "marcoflow": json.loads(REF.read_text()) if REF.exists() else None,
+         "validation": json.loads(VALIDATION.read_text()) if VALIDATION.exists() else None,
+     }

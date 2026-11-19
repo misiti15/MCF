@@ -1,0 +1,88 @@
+A1 U7 eligible candidates with check: 250
+  all: n=250 spearman=-0.257 OLS slope check~fit=0.145 mean fit gain=-0.12 mean check gain=-1.23 share check>0=0.35
+  exit: n=21 spearman=0.208 OLS slope check~fit=1.617 mean fit gain=-3.19 mean check gain=-11.91 share check>0=0.05
+  gate: n=229 spearman=-0.373 OLS slope check~fit=-0.539 mean fit gain=0.16 mean check gain=-0.25 share check>0=0.38
+  chosen (best fit per setup, fit gain>0): n=17 fit gain sum=63.6 check gain sum=-45.3
+  top-decile fit gains: n=26 mean fit=4.88 mean check=-3.35
+  parent fit avg vs check avg (20 setups) spearman: -0.468  mean fit avg 0.023  mean check avg 0.085
+  gates: spearman(check gain, -parent check avg) = 0.401  (gate gain is mostly 'removing trades from a loser')
+
+A2 classes (k>=4 setups):
+                                    k    fit     chk  fit_pos  chk_pos
+cls                                                                   
+rvol >= # (drop bottom third)      15  22.82  -15.35     0.80     0.20
+stopcost >= # (drop bottom third)  15  22.36  -17.80     0.73     0.33
+ext >= # (drop bottom third)       15   7.64   -0.32     0.53     0.53
+vwd <= # (drop top third)          15   6.78   -1.25     0.60     0.47
+emin >= # (drop bottom third)      15   5.57    1.46     0.53     0.47
+stopcost <= # (drop top third)     15   4.23   13.19     0.53     0.47
+risk_pct <= # (drop top third)     15   2.59   -4.81     0.53     0.47
+gap >= # (drop bottom third)       15   0.12   26.57     0.67     0.53
+refire off                         19   0.00    1.88     0.00     0.11
+risk_pct >= # (drop bottom third)  15  -0.68    0.76     0.40     0.40
+ext <= # (drop top third)          15  -2.03    1.95     0.40     0.33
+gap <= # (drop top third)          15  -3.18  -38.18     0.33     0.33
+vwd >= # (drop bottom third)       15  -5.07   -3.17     0.40     0.33
+emin <= # (drop top third)         15  -6.35  -25.06     0.47     0.27
+rvol <= # (drop top third)         15 -17.86    1.87     0.27     0.53
+time stop # min                     4 -45.25 -173.94     0.17     0.00
+  spearman class fit vs check (summed): 0.132  n classes 16
+  class-level choice: best pooled-fit class = 'rvol >= # (drop bottom third)' -> check sum -15.4 over 15 setups (vs per-setup choice -45.3 over 17); class median check sum -0.8
+  classes where pooled fit sign == pooled check sign: 7 of 16
+
+A3 L3 21 variants, spearman of dR vs parent between segments:
+key         replay:ALL  2y:TRAIN  2y:VALID  2y:FWD
+key                                               
+replay:ALL        1.00      0.02      0.32    0.41
+2y:TRAIN          0.02      1.00     -0.32   -0.46
+2y:VALID          0.32     -0.32      1.00   -0.04
+2y:FWD            0.41     -0.46     -0.04    1.00
+key                                       replay:ALL  2y:TRAIN  2y:VALID  2y:FWD
+cfg                                                                             
+C01 target 1.25R                                 5.7      36.7      -2.3    19.8
+C02 target 1.5R                                 11.1     -26.5      56.2    11.2
+C03 target 2.0R                                 -1.1     -17.4      53.4    21.1
+C04 stop 0.8R                                   -3.8      11.4      24.8   -10.3
+C05 stop 1.25R                                   4.2      25.6      54.4    10.6
+C06 BE after +0.5R                               3.5      16.4      27.3    -5.3
+C07 BE after +0.75R                              1.4      49.8       1.9     0.5
+C08 stop to -0.5R after +0.5R                   -1.9      15.2      20.9    -4.7
+C09 60-min stop if MFE<0.25R                   -13.6      11.9       8.5     3.0
+C10 max hold 75 min                            -25.5      32.2      15.3    -4.2
+C11 30-min stop if MFE<0.25R                   -22.1       6.7      11.5    -1.2
+C12 half +1R, half 2R, BE after 1R              -1.7       9.0      22.5    11.1
+C13 half +0.5R, half 1.5R, BE after 0.5R        -3.9      68.4      52.6   -10.5
+C14 trail 0.75R after MFE 1R, cap 3R           -12.1     -14.0      -5.0    15.0
+C15 fromOpen <= TRAIN p80                       -4.1       0.9      24.4     3.0
+C16 vwapDist <= TRAIN p80                        9.0       0.4      33.2     8.4
+C17 volumeRatio <= TRAIN p80                   -10.3      13.7      23.3    -6.0
+C18 rsi5 >= TRAIN p20                          -13.3       7.6      26.7    -0.6
+C19 1R >= 0.5% of price                          0.0      34.0      -9.7     2.4
+C20 no re-entry after a stop                    -4.7      16.5      11.2     0.9
+C21 <= 2 lots per symbol                        -0.4       6.2      17.0     6.3
+
+A5 expected max of K null t (approx E[max N(0,1)]) vs sqrt(2 ln K):
+  K=3: E[max]=0.84  95th pct=2.09  sqrt(2lnK)=1.48
+  K=5: E[max]=1.15  95th pct=2.34  sqrt(2lnK)=1.79
+  K=15: E[max]=1.74  95th pct=2.70  sqrt(2lnK)=2.33
+  K=20: E[max]=1.86  95th pct=2.79  sqrt(2lnK)=2.45
+  K=68: E[max]=2.36  95th pct=3.19  sqrt(2lnK)=2.90
+  K=265: E[max]=2.84  95th pct=3.56  sqrt(2lnK)=3.34
+  K=1100: E[max]=3.27  95th pct=3.95  sqrt(2lnK)=3.74setups with >=30 trades: 122  median per-trade SD: 0.836  IQR [0.725, 0.97]
+trades per traded day: median 9.77  IQR [5.62, 20.12]
+ICC within setup (by day): median 0.223  IQR [0.118, 0.312]
+design effect (empirical, cluster SE^2 / iid SE^2): median 3.66  IQR [2.1, 5.44]  by trades/day bucket: {Interval(2, 5, closed='right'): 1.64, Interval(5, 10, closed='right'): 3.84, Interval(10, 100, closed='right'): 4.99}
+common day factor: corr(setup daily avg R, other same-side setups' daily avg R): median 0.367  IQR [0.166, 0.527]  setups 59  median R^2 0.135
+setup avg R fit-half vs check-half (own sessions): 71 setups; spearman -0.215  mean fit -0.109  mean check -0.081  sign agree 0.62
+all-account avg R by week:
+                        mean  size
+wk                                
+2026-10-05/2026-10-11 -0.147   224
+2026-10-12/2026-10-18 -0.169  3865
+2026-10-19/2026-10-25 -0.053  3287
+2026-10-26/2026-11-01 -0.150  4081
+2026-11-02/2026-11-08 -0.139  5161
+2026-11-09/2026-11-15 -0.073  6248
+2026-11-16/2026-11-22 -0.162  4186
+per-trade SD by exit reason share: target-exit setups vs hold setups
+{Interval(-0.01, 0.05, closed='right'): 0.931, Interval(0.05, 0.4, closed='right'): 0.891, Interval(0.4, 1.0, closed='right'): 0.763}

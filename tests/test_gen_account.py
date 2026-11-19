@@ -71,7 +71,10 @@ def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
 def test_other_accounts_unchanged_by_the_loader(monkeypatch):
     for acct in ("primary", "testing", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
-        assert not any(k.startswith("GEN-") and not (v or {}).get("guest") for k, v in cfg["strategies"].items())   # GY-BENCH guests only
+        # GY-BENCH guests, and C3-EXIT100 moves to the Graveyard (owner yes 2026-11-18, tag "C3-EXIT100")
+        assert not any(k.startswith("GEN-") and not (v or {}).get("guest")
+                       and not (acct == "graveyard" and any("C3-EXIT100" in str(t) for t in (v or {}).get("tags") or []))
+                       for k, v in cfg["strategies"].items()), acct
     # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen;
     # testing arena (owner 2026-11-12): Testing A-F + Gen are one arena, so Testing A (testing2) takes Gen moves too (ROT1)
     gen = _cfg(monkeypatch, "gen")["strategies"]

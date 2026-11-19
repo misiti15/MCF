@@ -1,0 +1,16 @@
+EODREV1 end-of-day reversal long | configs 1 | Testing bar t 1.35 | universe name-days 400652 on 446 sessions
+SIGNAL (fromOpen <= -2.0% at 15:30): n 50404 on 446 days, avg -0.0413R, win 47%, stopped 8%, day-t (daily mean) -5.24, total -2079.4R
+  w/o best day (2026-09-16, share nan%): avg -0.0467R
+BASELINE (all universe names, same entry/exit): n 400652, avg -0.0727R | signal - baseline +0.0315R
+  TRAIN: n 20764 days 234 avg -0.0831R day-t -4.67
+  VALID: n 26647 days 190 avg -0.0106R day-t -2.61
+  LATE: n 2993 days 22 avg -0.0237R day-t -0.50
+  SPY up sessions: n 10203 on 162 days avg -0.0476R (baseline -0.0513), sum/day -3.00R
+  SPY quiet sessions: n 14025 on 148 days avg -0.0158R (baseline -0.0748), sum/day -1.50R
+  SPY down sessions: n 26176 on 136 days avg -0.0524R (baseline -0.0955), sum/day -10.09R
+  fromOpen (-99,-6]: n 6235 avg -0.0176R
+  fromOpen (-6,-4]: n 9702 avg -0.0500R
+  fromOpen (-4,-3]: n 11278 avg -0.0387R
+  fromOpen (-3,-2]: n 23189 avg -0.0452R
+PASS False
+Educational only - not financial advice.
