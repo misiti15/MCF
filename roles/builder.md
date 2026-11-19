@@ -2,7 +2,10 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-18 18:30 ET)
+## State (2026-11-18 20:30 ET)
+- C DONE (research/spotc/spotc.py): bottom 15 arena setups by live setup-days per eligible week (arena_reps.json); < 5 active
+  days listed apart; 5 zero-signal, 3 blocked, 7 rare. 2-year column 1/15 (guild file lacks IDX/LD/GEN/WB). Rerun: python spotc.py.
+- FAMC 11-19: Observer's row has 3 AMC flags (P, PANW, WWD) -> run Thu >= 16:30 ET.
 - famc_shadow.py prints tally() every run (+ --tally): raw net per session, mean with/without best session (11-11 is best:
   +0.129 -> -0.112R), share; selftest exact. Fixed journal_final selftest (None looked up the real commit; sentinel now).
 - TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
