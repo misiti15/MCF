@@ -1,92 +1,87 @@
 Educational only — not financial advice
 
-# Round 5 summary: fresh-window test NOT RUN yet, so nothing deployed (2026-11-19)
+# Round 5 summary: fresh 2023-24 test scored once, 0 of 8 rules beat, nothing deployed (2026-11-19)
 
 ## In plain words
-- Rounds 1-4 tried 35 candidate setups (about 1,000 configurations). None beat our current best setup (ST7-FD,
-  +0.084R per trade after costs, +0.073R without its best day).
-- Two narrow ideas did hold up on the check data: a late-afternoon dip-buy in a fixed list of ETFs ("leg E", about
-  +0.10R) and a buy after a one-bar RSI collapse in very liquid stocks ("leg M", about +0.12R). Both look a lot like the
-  two setups we already run (NM-ETF-late-dip and ST7-FD).
-- Those ideas were partly designed using the check data, so a fair test needs data nobody has looked at. We set aside
-  2023-01-03..2024-09-13 (427 sessions) for that, and each frozen rule gets exactly one score on it.
-- **That score has not happened yet.** The plan has safety checks that must pass in a fixed order before any fresh data
-  is downloaded. Three of them are not done, so the scorer stopped on purpose and read nothing. That was the right call:
-  scoring now would have used up the one clean test without the safeguards in place.
-- The one-score-per-rule budget is still unused for all 8 rules. Nothing was downloaded. The locked block
-  2024-11-01..2025-02-28 was not touched.
-- **Nothing was deployed.** The deploy rule needs a fresh-window BEAT that the skeptic upholds, and there are no fresh
-  results at all.
+- Rounds 1-4 tried 35 candidate setups. None beat our current best setup, ST7-FD (+0.084R per trade after costs on
+  the check data, +0.073R without its best day).
+- A few ideas looked good on the check data, but they had partly been shaped by that data. A fair test needs data no
+  one has looked at, so we kept 2023-01-03..2024-09-13 (427 sessions) unseen and froze 8 rules before downloading it.
+- All safety checks passed first: plan hash, both freeze manifests, the 2025-10 parity check, freeze files older than
+  every fresh data file, the locked block untouched, enough disk. Then each rule was scored exactly once (11:12:10Z).
+- **Result: none of the 8 rules beat.** Seven lose money or break even after costs. The only positive one (H-V2, an
+  ETF snap-back buy) makes +0.042R per trade, half the bar, and 72% of its profit comes from one day.
+- **Our own benchmark also failed on this window.** ST7-FD came in at −0.016R per trade (it was +0.084R on the check
+  half). 2023-24 was a hard period for "buy the dip" setups, mainly on days the market fell.
+- The entries themselves are not random: 6 of 8 rules beat a random entry time in the same stock and day. The edge is
+  just too small to pay the costs in this period.
+- A skeptic re-scored every rule from the saved trade rows, matched the numbers, and upheld the fail on every row.
+- **Nothing was deployed.** No setup, account, display name, assignments file or ledger entry was changed.
 
-## Every row (all 8 rules waiting for their single fresh score)
-Check-half (2025-10-01..2026-11-04) figures are reference only. That data has been seen, so it is not evidence.
-
-| Rule | What it is | Check trades/session | Check avg R | Check w/o best day | Best-day share | Fresh result |
-|---|---|---|---|---|---|---|
-| R1 BOOK-EM | ULT-32 config 32e (leg E + leg M) | 1.24 | +0.115 | +0.099 | 15% | not scored |
-| R2 leg E | WB4 late-afternoon ETF dip, long | 0.82 | +0.110 | +0.096 | n/a | not scored |
-| R3 leg M | one-bar RSI collapse, ADV >= $500M, long | 0.42 | +0.124 | +0.084 | n/a | not scored |
-| R4 ST7-FD | benchmark, the current best | 3.13 | +0.084 | +0.073 | 13% | not scored |
-| R5 NM-ETF-late-dip | benchmark | 0.95 | +0.052 | +0.039 | 28% | not scored |
-| R6 ST7-base | ST7 on the round-4 chassis | 2.23 | +0.094 | +0.078 | 18% | not scored |
-| H-V1 | leg X, WB4 mirror, short (borrow fee in) | 0.58 | +0.105 | +0.078 | 32% | not scored |
-| H-V2 | leg K, one-bar shock snap in ETFs, long | 1.00 | +0.187 | +0.095 | **54% (1 day)** | not scored |
-
-H-V2's check record leans on one or two big days: its top two days carry 90% of its check R. H-V1 and H-V2 move
-together (daily R correlation 0.43), and H-V1 is concentrated in SOXL, NUGT and TECL (66% of its trades).
-
-Fresh pass bar (pre-registered, FRESH_PLAN sec. 5): avg R > +0.0836, avg R w/o best day > +0.0734, R/session > 0,
+## Every row (fresh window, costs in, one score each)
+Pass bar (pre-registered, FRESH_PLAN sec. 5): avg R > +0.0836, avg R w/o best day > +0.0734, R/session > 0,
 day-clustered t >= 2.039 (M = 8), and positive on the check half.
 
-## Why it is blocked (checked independently by the skeptic, read-only)
-1. `FREEZE_HUNT.json` and `HUNT_FREEZE.md` are missing (FRESH_PLAN sec. 4.7 / 7.2), so M and the t bar are not formally
-   fixed. With 8 rules, M = 8 and the bar is t >= 2.039.
-2. `FRESH_PLAN.md` no longer matches `FRESH_PLAN.sha256` (now e52de481…, recorded b54e69c5…). Section 4-V was appended
-   at 10:13Z, after the hash was taken at 09:59Z, and nobody re-hashed. `download_fresh.py` correctly refuses to run.
-   The re-hash needs a dated note, plus a check that the append changed nothing in sections 1-4.
-3. The `fresh_bt.py` harness does not exist, so the 2025-10 parity check has not run (sec. 2.5 / 2.6).
-4. Because of 1-3, there are no fresh bars, and `/home/user/MCF/data/cache_fresh/` does not exist.
+| Rule | What it is | Trades | /session | Avg R | W/o best day | R/session | t | 2023 / 2024 | Signal − random | Check avg R | Beats? |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| R1 BOOK-EM | leg E + leg M combined (ULT-32e) | 270 | 0.63 | −0.040 | −0.067 | −0.025 | −0.73 | −0.033 / −0.048 | +0.021 | +0.115 | no |
+| R2 leg E | late-afternoon ETF dip, long | 249 | 0.58 | −0.040 | −0.069 | −0.023 | −0.69 | −0.024 / −0.057 | +0.027 | +0.110 | no |
+| R3 leg M | one-bar RSI collapse, ADV >= $500M, long | 21 | 0.05 | −0.043 | −0.118 | −0.002 | −0.27 | −0.144 / +0.049 | −0.044 | +0.124 | no |
+| R4 ST7-FD | benchmark, current best | 481 | 1.13 | −0.016 | −0.039 | −0.018 | −0.25 | +0.008 / −0.046 | +0.230 | +0.084 | no (bench) |
+| R5 NM-ETF-late-dip | benchmark | 256 | 0.60 | −0.044 | −0.063 | −0.026 | −0.69 | −0.038 / −0.052 | +0.087 | +0.052 | no (bench) |
+| R6 ST7-base | ST7 on the round-4 chassis | 256 | 0.60 | −0.001 | −0.015 | −0.000 | −0.01 | +0.004 / −0.006 | +0.164 | +0.094 | no |
+| H-V1 leg X | late ETF rip, short (borrow fee in) | 88 | 0.21 | −0.141 | −0.193 | −0.029 | −1.38 | −0.194 / −0.107 | −0.108 | +0.105 | no |
+| H-V2 leg K | one-bar shock snap in ETFs, long | 192 | 0.45 | +0.042 | +0.012 | +0.019 | +0.43 | +0.056 / +0.030 | +0.159 | +0.187 | no |
 
-What passed: all 31 FREEZE_CORE files match their hashes, and all 8 FREEZE_VOLUME files match theirs. The scorer had
-said "14"; the manifest lists 8 files plus 6 deps, and FRESH_RESULTS.md now says 8. Both freezes record that no fresh
-data existed when they were made.
+Notes on the rows:
+- **H-V2, one big day:** 2024-08-23 carries 72% of its total R (`1 day` tag). That day was six index longs (MDY, QQQ,
+  TQQQ, SPXL, UPRO, QQQM) all hitting target within 30 minutes: one market bet, not six wins. Counted as one exposure,
+  its record is about flat. Its check record also leaned on one or two days (54% best-day share).
+- **Best-day share** is "n/a" for the seven rules with a negative total.
+- **R4 row count:** the trade file has 483 R4 rows. Two (CFG and FIS, 2024-07-03 at 13:35 and 13:45) have no R value
+  because they were signalled after that day's 13:00 early close, so there were no bars to exit on; they are
+  excluded, leaving 481. The deploy-stage review also found 4 more R4 entries after an early close (2023-11-24 x3,
+  2024-07-03 x1) that did get an R, +2.7R together. Dropping them puts R4 at −0.022R over 477 trades. This is a small
+  harness flaw that flatters only the benchmark and changes no verdict; any future harness should block entries after
+  an early close.
+- **Day cap** never bound, so R2 and R3 are exactly the two legs of R1 run alone.
+- **Earnings blackout:** R1 without it had 280 trades at −0.032R, still a fail.
+- **Volume** was far below the check half (R4 1.13 vs 3.13 trades per session; R6 0.60 vs 2.23), in line with fewer
+  names clearing the ADV gates in 2023-24 (median 624 names a day at >= $95M, 121 at >= $500M).
 
-## Next steps, in order
-1. Write FREEZE_HUNT.json and HUNT_FREEZE.md.
-2. Re-hash FRESH_PLAN.md, with a note on the 4-V append.
-3. Build fresh_bt.py and pass the 2025-10 parity check.
-4. Run download_fresh.py, then verify_fresh.py.
-5. Score each rule once.
-
-Things the eventual scoring must handle (skeptic carry-forward):
-- Survivorship: the symbol list is today's, so names delisted in 2023-24 are missing. This likely flatters R3/R4 more
-  than the ETF legs, and the effect needs an estimate.
-- Compute ADV >= $500M point-in-time from fresh bars.
-- Check earnings-date coverage before 2024-09.
-- Charge the borrow fee on H-V1 shorts.
-- Report w/o-best-day, best-day share and day-clustered t for every rule.
-- De-duplicate R2/R3 against R4/R5, which overlap by design.
+## Biases (all favour the candidates, so true figures are likely at or below these)
+- Today's symbol list: names delisted in 2023-24 (e.g. SIVB, FRC, SBNY) are missing; 54 later listings are empty and
+  25 cover under half the sessions; renamed tickers lose early history.
+- Today's easy-to-borrow flag and a flat borrow fee flatter H-V1 only (it fails anyway).
+- yfinance earnings dates are thinner before 2024, so the blackout is weaker in 2023.
+- Signal minus random is the read survivorship does not distort.
 
 ## Configurations counted
-No configurations were tried at this stage. Cumulative N stays at **1,036 (up to 1,052)**: 996 (up to 1,012) before
-round 5, plus the round-5 volume hunt.
+Cumulative N is **1,044 (up to 1,060)**: 996 (up to 1,012) before round 5, plus 40 in the round-5 volume hunt, plus
+8 fresh scorings.
 
 ## Honest read
-We have not yet learned whether anything beats ST7-FD. Round 5 is not a fail. It is an untaken test with the
-safeguards intact. The candidates that look best on the check half (R1 BOOK-EM, R2 leg E) are close relatives of
-setups we already run. Even if they pass, they would add modest volume (about 1.2 trades per session) at an edge
-similar to what we have, not a step change. The known biases (today's symbol list, a flat borrow fee) all favour the
-candidates, so expect fresh numbers to come in lower than the check figures. Following "don't force weak setups",
-nothing goes live until a fresh, skeptic-upheld BEAT exists.
+This was a clean, one-time test and every candidate failed it. The ideas that looked best on the check half (R1
+BOOK-EM, R2 leg E, R3 leg M) lost money after costs on fresh data. The benchmark ST7-FD also lost slightly, so part of
+this is a hostile period for long dip-buying setups (the damage sits on SPY-down days), not only weak candidates. But
+"the benchmark failed too" does not make any candidate a winner: none came close to the bar, and the one positive rule
+rests on one correlated day. The useful lesson for the next step is that entry timing keeps beating random entries
+(6 of 8 rules); what is missing is an edge big enough to survive costs across market regimes, possibly via a
+market-direction filter, which would need its own pre-registered test. Following "don't force weak setups", nothing
+goes live. The fresh window is now used and cannot serve as a clean test again.
 
 ## Rule-change context
 All figures are backtests on 1-minute bars with one fixed rule set (LR8 costs, next-minute-open fill, borrow fee for
-shorts). No live-account window is quoted, so no `research/ledger.jsonl` rule change is mixed into them. For
-reference: WB4 went live 2026-11-17 (Testing E), ST7-FD was promoted 2026-10-26, and NM-ETF runs in Primary. All of
-these dates fall after every backtest window used here. The 2026-11-19 ledger entries are process-only. No ledger entry
-was added for round 5, because nothing was deployed.
+shorts). No live-account window is quoted, so no `research/ledger.jsonl` rule change falls inside
+2023-01-03..2024-09-13. For reference: WB4 went live 2026-11-17 (Testing E), ST7-FD was promoted 2026-10-26, NM-ETF
+runs in Primary; all after every backtest window here. No ledger entry was added for round 5, because nothing was
+deployed.
 
 ## Deployment
-None. No setup, YAML, account, display name, assignments file or ledger entry was changed.
+None. No rule beat on the fresh window, so no setup, YAML, account, display name, assignments file or ledger entry was
+changed.
+
+Files: FRESH_PLAN.md (binding plan), FRESH_RESULTS.md (full results), fresh_once.json (the single score),
+fresh_trades.csv.gz (trade rows), FREEZE_HUNT.json / HUNT_FREEZE.md, PARITY_2025-10.json, coverage_fresh.*.
 
 Educational only — not financial advice.

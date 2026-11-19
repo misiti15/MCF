@@ -321,3 +321,60 @@ Signal minus random is reported as the survivorship-neutral read.
 - The 2026-11-19 ledger entries (process bundle, usage1 plan, tweaked copies) are process only.
 
 Educational only — not financial advice.
+
+## 10. Amendment log (appended 2026-11-19 ~10:40Z by the harness stage; still before any fresh byte existed)
+`/home/user/MCF/data/cache_fresh` did not exist when this section was written (checked). No fresh-window bar, frame,
+signal or trade had been downloaded or read.
+
+### A1. The 4-V edit and the re-hash
+- Section 4-V was inserted at 10:13Z, between sec. 4 and sec. 5. That was after `FRESH_PLAN.sha256` was taken at
+  09:59Z (b54e69c5…) and before any fresh data existed.
+- The edit was checked by removing the 4-V block, from "### 4-V." up to "## 5. FRESH pass bar". The remainder hashes to
+  exactly b54e69c55800f4a0fd779fbb801264221441f9f43ab7742c7740ff290570ebf4, the recorded hash. So sec. 0-4 and 5-9
+  are byte-for-byte unchanged, and 4-V only adds the volume-track entries.
+- `FRESH_PLAN.sha256` is re-written once, after this section was appended, to the hash of this whole file.
+
+### A2. Hunt freeze (sec. 4.7 / 7.2)
+- `FREEZE_HUNT.json` + `HUNT_FREEZE.md` were written at 2026-11-19T10:28:39Z from `hunt_volume/FREEZE_VOLUME.json`.
+- Slots: H1 = H-V1, H2 = H-V2. H3-H6 are **empty**; no other track delivered a freeze.
+- **M = 8**, so the **t bar is 2.039**. Every hash was re-checked first: FREEZE_CORE 31/31, FREEZE_VOLUME 14/14.
+
+### A3. Harness implementation notes (`fresh_bt.py`, fixed before the parity check). No rule parameter changes.
+- **One pass.** `fresh_bt.py stream` is the single download + stream pass. It uses `download_fresh.py` only as a library
+  (`fetch_bars`, `daily_table`: same request, format and range guard). The `download_fresh.py` CLI is not run, so
+  `cache_fresh` is empty before the harness's first byte (asserted).
+  - SPY and QQQ come first. Their frames give spy_fo / qqq_fo / qqq_vwap via `context_from_frames`, and SPY's daily
+    dates are checked against the session calendar (427 FRESH sessions; any mismatch aborts).
+  - Every symbol's 1-minute bars are written to `cache_fresh/1Min`, so the frozen walks can read them. Each batch of 25
+    symbols is walked, then the bars are deleted unless the symbol is in `symbols_retained.txt`. Daily tables stay in
+    `cache_fresh/daily` (as `download_fresh.py` writes them), so `verify_fresh.py` runs unchanged afterwards.
+  - The pass stops at `--stop-utc` (Alpaca data quota) and resumes from `cache_fresh/stream_state.json`.
+- **Frame source.** `research.history2y.lib.load_month` / `load_context` are replaced, inside the worker processes
+  only, by the symbol's streamed frame, so the frozen month jobs run unchanged: ULT-32 `month_job`, hunt.py
+  `month_job` and bench.py `month_job`.
+  - The frame is built over the whole download range, with warm-up from 2022-10-03.
+  - Only rows dated 2023-01-03..2024-09-13 are kept for signals.
+- **bench.py.** `SETUPS` is narrowed to R4 / R5; the other benchmark setups are simply not run. HT is set to an empty
+  table (the 5-min headtail cross-check is removed; r1, the 1-minute walk, is the scored column).
+- **Random control (diagnostic, not a pass condition).** The frozen `random_control()` draws per selected trade after
+  the cross-symbol selection, which needs bars that the stream has already deleted. So the harness pre-draws randoms
+  during the stream:
+  - Every candidate symbol-session gets two pre-drawn random decision bars per (rule window, side), using
+    sha256("1119|sym|date|lo-hi|k").
+  - The k-th trade of a symbol-session (k = 0, 1) is paired with draw k.
+  - Windows: E / D / X use 14:00-15:00; M / K use 10:15-15:00; R6 uses 09:50-15:00. These are walked on the same
+    chassis and exits.
+  - R4 / R5 use their YAML windows. Entry is at the random bar's close, walked by bench.py walk1.
+- **Parity references (2025-10, open data).** No stored 32e trade list exists: round4/ULT-32/check_trades.csv.gz is the
+  32f fit pick. So the references are:
+  - **R1-R3, R6:** the frozen ULT-32 pipeline (`month_job` on the stored lab frames, then the frozen walk, `book` /
+    `dissect_sel`) run on 2025-10. That reference must itself reproduce the stored 32f check trades for 2025-10.
+  - **R4 / R5:** bench.py's own output `scratchpad/bench_w/trades.parquet` (2025-10 rows, r1).
+  - **H-V1 / H-V2:** `hunt_volume/check_trades.csv.gz` (2025-10 rows).
+  - The parity frames use a 3-month warm-up from 2025-07-01, as FRESH does.
+  - Match means the same (symbol, date, tod) set and R within 1e-6.
+  - `PARITY_2025-10.json` pins the sha256 of `fresh_bt.py`, this file, FREEZE_HUNT / FREEZE_CORE, `download_fresh.py`,
+    `mcf/research/heat.py`, `data/universe.csv` and the symbol list. The stream and the score refuse to run if any of
+    them changes after a PASS.
+
+Educational only — not financial advice.

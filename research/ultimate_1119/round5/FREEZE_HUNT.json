@@ -1,0 +1,256 @@
+{
+ "note": "Educational only - not financial advice. Round-5 FREEZE_HUNT (FRESH_PLAN sec. 4.7 / 7.2): the hunt-stage rules scored once on FRESH 2023-01-03..2024-09-13. Written by the harness stage from hunt_volume/FREEZE_VOLUME.json, BEFORE any fresh byte exists. Its existence is one of the download preconditions.",
+ "frozen_utc": "2026-11-19T10:28:39Z",
+ "fresh_data_exists_at_freeze": false,
+ "cache_fresh_path": "/home/user/MCF/data/cache_fresh",
+ "cache_fresh_exists_at_freeze": false,
+ "source_freezes": {
+  "FREEZE_CORE.json": {
+   "frozen_utc": "2026-11-19T09:57:28Z",
+   "files_verified": 31
+  },
+  "hunt_volume/FREEZE_VOLUME.json": {
+   "frozen_utc": "2026-11-19T10:12:15Z",
+   "files_verified": 14
+  }
+ },
+ "tracks": {
+  "volume (H5V)": {
+   "configs": 40,
+   "legs_scored_on_check": 7,
+   "kept": [
+    "H-V1 (leg X)",
+    "H-V2 (leg K)"
+   ],
+   "dropped_on_check": {
+    "F": "w/o best day -0.022",
+    "S": "w/o best day -0.022",
+    "C": "avg -0.037",
+    "V": "avg -0.053",
+    "Q": "avg -0.038"
+   }
+  }
+ },
+ "other_tracks": "none frozen; no other hunt track delivered a freeze file before this one was written",
+ "slots": {
+  "H1": "H-V1",
+  "H2": "H-V2",
+  "H3": null,
+  "H4": null,
+  "H5": null,
+  "H6": null
+ },
+ "slots_note": "H3..H6 are EMPTY. They stay empty for round 5: candidates not in this file are not scored on FRESH (plan sec. 4). We never force weak setups.",
+ "candidates": {
+  "H-V1": {
+   "name": "H5V-X WB4-mirror late-afternoon ETF pop fade (SHORT)",
+   "track": "volume (H5V)",
+   "leg": "X",
+   "side": "short",
+   "pick": "X-r0.75-t05s1",
+   "module": {
+    "path": "research/ultimate_1119/round5/hunt_volume/H5V.py",
+    "sha256": "1aba95f091c37af60debfbb711cf48f5386b06f599dac8350da0fc79ecf7a2f4",
+    "P_key": "X",
+    "P_value": {
+     "ret3": 0.75,
+     "geom": "t05s1"
+    }
+   },
+   "exact_parameters": {
+    "ret3": 0.75,
+    "geom": "t05s1"
+   },
+   "rule": "W list (100 ETFs in the download list), adv20 >= $95M (point in time), decision bar close 14:00-15:00, ret3 >= +0.75%, di_diff7 <= +5, ret12 <= +1.0%, atr_d_pct >= 3.5967583179473883, cost_r <= 0.10; intake price >= $10, |gap| < 20%, atr_d > 0, spy_fo present; easy-to-borrow only; exit t05s1",
+   "universe": "H5V_symbols.json W (100)",
+   "exit": "t05s1 (round-4 chassis: R per u = 0.25 x atr_d, 45-min time exit, flat by 15:50)",
+   "selection": "hunt.py select(): H5V.leg_mask(features(frame), leg) with frozen P; then round4/ULT-32/bt.py chain(): one lot per symbol, max 2 per symbol-session, refire >= 30 min after exit, day cap 30 (date, tod, adv20 desc)",
+   "costs": "LR8 (entry 1c+1bp x tod mult; exit 1c+1bp except target fills; +2c on stops); borrow 1.2 bp of entry notional (3 bp under $20), easy-to-borrow only (data/universe.csv, today's flag)",
+   "check_2025_10_01_to_2026_11_04": {
+    "trades": 159,
+    "trades_per_session": 0.576,
+    "avg_r": 0.1048,
+    "avg_r_wo_best_day": 0.0779,
+    "best_day": "2026-06-17",
+    "best_day_share": 0.317,
+    "total_r": 16.67,
+    "total_r_per_session": 0.0604,
+    "worst_day_per_trade_session": -2.292,
+    "t_day_clustered": 1.77,
+    "median_hold_min": 37.0,
+    "exit_mix": {
+     "target": 83,
+     "time": 67,
+     "stop": 9
+    },
+    "random": {
+     "random_avg_r": 0.0191,
+     "signal_minus_random": 0.0858,
+     "random_n": 159
+    }
+   },
+   "fit_2024_10_plus_2025_03_to_09": {
+    "trades": 70,
+    "avg_r": 0.0951,
+    "avg_r_wo_best_day": 0.0483,
+    "best_day_share": 0.551,
+    "t_day_clustered": 1.04
+   },
+   "warnings": [
+    "concentrated: SOXL, NUGT, TECL = 66% of check trades",
+    "fit w/o best day +0.048 with 55% best-day share (1 day on fit)",
+    "daily R correlation 0.43 with H-V2; shares best check day 2026-06-17 with H-V2 and leg E"
+   ]
+  },
+  "H-V2": {
+   "name": "H5V-K one-bar shock snap in liquid ETFs (LONG)",
+   "track": "volume (H5V)",
+   "leg": "K",
+   "side": "long",
+   "pick": "K-EQB-k0.2-t1s1",
+   "module": {
+    "path": "research/ultimate_1119/round5/hunt_volume/H5V.py",
+    "sha256": "1aba95f091c37af60debfbb711cf48f5386b06f599dac8350da0fc79ecf7a2f4",
+    "P_key": "K",
+    "P_value": {
+     "univ": "EQB",
+     "k": 0.2,
+     "geom": "t1s1"
+    }
+   },
+   "exact_parameters": {
+    "univ": "EQB",
+    "k": 0.2,
+    "geom": "t1s1"
+   },
+   "rule": "EQB ETFs (143 in the download list), adv20 >= $300M (point in time), decision bar close 10:15-15:00, 5-min return ret1 <= -0.2 x atr_d% (atr_d / close x 100), vol_climax >= 2, cost_r <= 0.10; intake price >= $10, |gap| < 20%, atr_d > 0, spy_fo present; universal SPY long filter (skip while SPY -0.30..-0.75% from open AND its 30-min change < 0); exit t1s1",
+   "universe": "H5V_symbols.json EQB (143)",
+   "exit": "t1s1 (round-4 chassis: R per u = 0.25 x atr_d, 45-min time exit, flat by 15:50)",
+   "selection": "hunt.py select(): H5V.leg_mask(features(frame), leg) with frozen P; then round4/ULT-32/bt.py chain(): one lot per symbol, max 2 per symbol-session, refire >= 30 min after exit, day cap 30 (date, tod, adv20 desc)",
+   "costs": "LR8 (entry 1c+1bp x tod mult; exit 1c+1bp except target fills; +2c on stops); long: universal SPY long filter, no borrow",
+   "check_2025_10_01_to_2026_11_04": {
+    "trades": 276,
+    "trades_per_session": 1.0,
+    "avg_r": 0.1867,
+    "avg_r_wo_best_day": 0.0951,
+    "best_day": "2026-06-17",
+    "best_day_share": 0.542,
+    "total_r": 51.53,
+    "total_r_per_session": 0.1867,
+    "worst_day_per_trade_session": -1.873,
+    "t_day_clustered": 1.46,
+    "median_hold_min": 17.0,
+    "exit_mix": {
+     "target": 141,
+     "stop": 80,
+     "time": 55
+    },
+    "random": {
+     "random_avg_r": -0.1554,
+     "signal_minus_random": 0.3421,
+     "random_n": 276
+    }
+   },
+   "fit_2024_10_plus_2025_03_to_09": {
+    "trades": 133,
+    "avg_r": 0.1158,
+    "avg_r_wo_best_day": -0.0084,
+    "best_day_share": 1.061,
+    "t_day_clustered": 0.59
+   },
+   "warnings": [
+    "1 day: check best-day share 54% (2026-06-17, 28 trades); the top-2 days (2026-06-17, 2025-10-29) carry 90% of check total R; avg R without them +0.022. Fit best-day share 106% (2025-04-09). A shock-day edge: lumpy, correlated ETFs fire together (day cap binds on shock days).",
+    "daily R correlation 0.43 with H-V1"
+   ]
+  }
+ },
+ "rules_scored_on_fresh": [
+  "R1 BOOK-EM (ULT-32 32e)",
+  "R2 leg E",
+  "R3 leg M",
+  "R4 ST7-FD (bench)",
+  "R5 NM-ETF-late-dip (bench)",
+  "R6 ST7-base (chassis)",
+  "H-V1",
+  "H-V2"
+ ],
+ "M": 8,
+ "t_bar": 2.039,
+ "t_bar_formula": "max(1.5, sqrt(2 ln M))",
+ "t_bar_exact": 2.039333980337618,
+ "pass_bar": {
+  "avg_r_gt": 0.0836,
+  "avg_r_wo_best_day_gt": 0.0734,
+  "total_r_per_session_gt": 0,
+  "t_day_clustered_ge": 2.039,
+  "positive_on_check_half": true
+ },
+ "n_cumulative": "1,036 (up to 1,052) before the M fresh scorings",
+ "configs_added_by_this_file": 0,
+ "files": {
+  "H5V.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/H5V.py",
+   "sha256": "1aba95f091c37af60debfbb711cf48f5386b06f599dac8350da0fc79ecf7a2f4"
+  },
+  "H5V_symbols.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/H5V_symbols.json",
+   "sha256": "03d20f57847505d4fa9c25eccd3c1553822ad370d8aab717200080cc5a99bbb1"
+  },
+  "hunt.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/hunt.py",
+   "sha256": "cf0c7974afc7de5c8800ce7be55fe315507e63fc261a53fccb7a4738c9ca15ce"
+  },
+  "test_module.py": {
+   "path": "research/ultimate_1119/round5/hunt_volume/test_module.py",
+   "sha256": "3475d95b922ee1b19d923309d04acc261ad44d653e9b0b5a8aca133a47886e93"
+  },
+  "fitsel.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/fitsel.json",
+   "sha256": "3f849fd6245ced5d4e3dbc658303e4a875b3e78d3c2a0c2a8a3ae06104d76959"
+  },
+  "fit_grid.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/fit_grid.json",
+   "sha256": "f5e4a78982ab1d926a81e90948a2a9c07a875a3fd2e1dab650e3529d789b470a"
+  },
+  "check_once.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/check_once.json",
+   "sha256": "1d2a36e35e966ee4dc40f5fc019c2ecc1d2d53dc8a98dde2e45ce05608d7df21"
+  },
+  "PLAN.md": {
+   "path": "research/ultimate_1119/round5/hunt_volume/PLAN.md",
+   "sha256": "f9f5eb40c972864b0ce6054ee91bdc38ab96e2813b3667309fe518c238de92cc"
+  },
+  "dep:round4/ULT-28/bt.py": {
+   "path": "research/ultimate_1119/round4/ULT-28/bt.py",
+   "sha256": "c960a487de50f58ff2f498f00b082a98eb12a861b06667820ba1c37fbeb1bbeb"
+  },
+  "dep:round4/ULT-32/bt.py": {
+   "path": "research/ultimate_1119/round4/ULT-32/bt.py",
+   "sha256": "ec32b6439d25449a438e4250321345a1b42f9a58bdb3085deda2fb7289b974b3"
+  },
+  "dep:round3/ULT-23/bt.py": {
+   "path": "research/ultimate_1119/round3/ULT-23/bt.py",
+   "sha256": "c3d625f1f811929796626c33a8cbadf7a56ae5409b59950c5d6ff1df137282e3"
+  },
+  "dep:modules/ULT-32.py": {
+   "path": "research/ultimate_1119/modules/ULT-32.py",
+   "sha256": "548796c8a7d4081a079744731ce11bdc0ba1f23d9d7556889e05574952614ca8"
+  },
+  "dep:modules/ULT-32_symbols.json": {
+   "path": "research/ultimate_1119/modules/ULT-32_symbols.json",
+   "sha256": "5d200e9a54f1b96b6b8e029031539a81af0fb9239482765d0f0e02b687f67ff8"
+  },
+  "dep:round4/data/earnings_yf.parquet": {
+   "path": "research/ultimate_1119/round4/data/earnings_yf.parquet",
+   "sha256": "b80cdc46f4508312f53822b5785b249673085aa6aee645c3637f9fb3c597e0dc"
+  },
+  "FREEZE_VOLUME.json": {
+   "path": "research/ultimate_1119/round5/hunt_volume/FREEZE_VOLUME.json",
+   "sha256": "bb2ffe107ffa1919e9c9680ff1dc3de4ccee8a15133bf5d557ae99c1cd41b6cf"
+  },
+  "FREEZE_CORE.json": {
+   "path": "research/ultimate_1119/round5/FREEZE_CORE.json",
+   "sha256": "69196425c1dbe9ef4075fb8fe391a9c00f893deb3e5846a8b361b168c3bae39e"
+  }
+ }
+}

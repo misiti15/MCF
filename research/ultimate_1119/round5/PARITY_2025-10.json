@@ -1,0 +1,279 @@
+{
+ "note": "Educational only - not financial advice. FRESH harness parity check on 2025-10 (open data, data/cache_hist). Harness: 1-minute bars -> streamed frames -> frozen month jobs -> frozen walks -> frozen selection. References: the earlier pipelines' outputs.",
+ "run_utc": "2026-11-19T10:37:18Z",
+ "fresh_data_exists": false,
+ "checks": {
+  "blackout_set_equal_to_ULT32_blackout_set": {
+   "PASS": true,
+   "n": 75397
+  },
+  "blackout_set_with_extra_holidays_same_on_2024_26": {
+   "PASS": true
+  },
+  "calendar_2025_10_vs_SPY_bar_dates": {
+   "PASS": true,
+   "n": 23
+  },
+  "spy_day_types_vs_benchmark_stats": {
+   "PASS": true
+  },
+  "ULT-32 superset rows": {
+   "n_harness": 17004,
+   "n_reference": 17004,
+   "matched": 17004,
+   "max_abs_diff_T_H": 0.0,
+   "PASS": true
+  },
+  "H5V superset rows": {
+   "n_harness": 404,
+   "n_reference": 404,
+   "matched": 404,
+   "max_abs_diff_T_H": 0.0,
+   "PASS": true
+  },
+  "R1 BOOK-EM 32e vs frozen ULT-32 pipeline": {
+   "n_harness": 23,
+   "n_reference": 23,
+   "matched": 23,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "R2 leg E": {
+   "n_harness": 14,
+   "n_reference": 14,
+   "matched": 14,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "R3 leg M": {
+   "n_harness": 9,
+   "n_reference": 9,
+   "matched": 9,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "R6 ST7-base vs frozen ULT-32 dissect_sel": {
+   "n_harness": 35,
+   "n_reference": 35,
+   "matched": 35,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "reference reproduces stored ULT-32 check_trades (32f, 2025-10)": {
+   "n_harness": 38,
+   "n_reference": 38,
+   "matched": 38,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 2.220446049250313e-16,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "harness 32f vs stored ULT-32 check_trades (2025-10)": {
+   "n_harness": 38,
+   "n_reference": 38,
+   "matched": 38,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 2.220446049250313e-16,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "R4 ST7-FD vs benchmark pipeline trades.parquet": {
+   "n_harness": 49,
+   "n_reference": 49,
+   "matched": 49,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "R5 NM-ETF vs benchmark pipeline trades.parquet": {
+   "n_harness": 22,
+   "n_reference": 22,
+   "matched": 22,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "H-V1 vs stored H5V check_trades (2025-10)": {
+   "n_harness": 18,
+   "n_reference": 18,
+   "matched": 18,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 8.326672684688674e-17,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "H-V2 vs stored H5V check_trades (2025-10)": {
+   "n_harness": 47,
+   "n_reference": 47,
+   "matched": 47,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 1.1102230246251565e-16,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "H-V1 vs frozen hunt pipeline": {
+   "n_harness": 18,
+   "n_reference": 18,
+   "matched": 18,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  },
+  "H-V2 vs frozen hunt pipeline": {
+   "n_harness": 47,
+   "n_reference": 47,
+   "matched": 47,
+   "only_harness": [],
+   "only_reference": [],
+   "max_abs_r_diff": 0.0,
+   "nan_mismatch": 0,
+   "PASS": true
+  }
+ },
+ "symbols": {
+  "requested": 1201,
+  "ok": 1172,
+  "not_ok": {
+   "AAOX": "empty",
+   "AXTX": "empty",
+   "BLCR": "no_frame",
+   "CBRS": "empty",
+   "CORO": "no_frame",
+   "DRAM": "empty",
+   "FDXF": "empty",
+   "FPS": "empty",
+   "FRVO": "empty",
+   "GOOGM": "empty",
+   "HONA": "empty",
+   "INIO": "empty",
+   "MDLN": "empty",
+   "NAVN": "no_frame",
+   "PURR": "empty",
+   "Q": "empty",
+   "QNT": "empty",
+   "RAM": "empty",
+   "SKHY": "empty",
+   "SNDQ": "empty",
+   "SNDU": "empty",
+   "SNXX": "empty",
+   "SOLS": "no_frame",
+   "SPCH": "empty",
+   "SPCX": "empty",
+   "SSPC": "empty",
+   "SUNB": "empty",
+   "TEVA": "empty",
+   "XE": "empty"
+  }
+ },
+ "required": [
+  "R1 BOOK-EM 32e vs frozen ULT-32 pipeline",
+  "R2 leg E",
+  "R3 leg M",
+  "R4 ST7-FD vs benchmark pipeline trades.parquet",
+  "R5 NM-ETF vs benchmark pipeline trades.parquet",
+  "R6 ST7-base vs frozen ULT-32 dissect_sel",
+  "reference reproduces stored ULT-32 check_trades (32f, 2025-10)",
+  "H-V1 vs stored H5V check_trades (2025-10)",
+  "H-V2 vs stored H5V check_trades (2025-10)",
+  "blackout_set_equal_to_ULT32_blackout_set",
+  "blackout_set_with_extra_holidays_same_on_2024_26",
+  "calendar_2025_10_vs_SPY_bar_dates",
+  "spy_day_types_vs_benchmark_stats"
+ ],
+ "PASS": true,
+ "random_pairing_smoke": {
+  "R1": {
+   "random_avg_r": -0.2064,
+   "signal_minus_random": 0.3682,
+   "random_n": 23,
+   "random_missing": 0
+  },
+  "R4": {
+   "random_avg_r": -0.2262,
+   "signal_minus_random": 0.3283,
+   "random_n": 49,
+   "random_missing": 0
+  },
+  "R5": {
+   "random_avg_r": -0.1118,
+   "signal_minus_random": 0.242,
+   "random_n": 22,
+   "random_missing": 0
+  },
+  "R6": {
+   "random_avg_r": -0.1138,
+   "signal_minus_random": 0.2226,
+   "random_n": 35,
+   "random_missing": 0
+  },
+  "H-V1": {
+   "random_avg_r": -0.2634,
+   "signal_minus_random": 0.5199,
+   "random_n": 18,
+   "random_missing": 0
+  },
+  "H-V2": {
+   "random_avg_r": -0.3397,
+   "signal_minus_random": 1.1083,
+   "random_n": 47,
+   "random_missing": 0
+  }
+ },
+ "pins": {
+  "fresh_bt.py": {
+   "path": "research/ultimate_1119/round5/fresh_bt.py",
+   "sha256": "189b138665c6e39046fcea1417912ec770c2e3dc9fabf03eb37a47845810e89b"
+  },
+  "FRESH_PLAN.md": {
+   "path": "research/ultimate_1119/round5/FRESH_PLAN.md",
+   "sha256": "6bc5fb4213079da3f5380b9774feacd39420edee39c870e1811b2acaebdc7163"
+  },
+  "FREEZE_HUNT.json": {
+   "path": "research/ultimate_1119/round5/FREEZE_HUNT.json",
+   "sha256": "57652b84771a3560a01f666ff98a091e0f97fa2be1062507f051ce6833de140f"
+  },
+  "FREEZE_CORE.json": {
+   "path": "research/ultimate_1119/round5/FREEZE_CORE.json",
+   "sha256": "69196425c1dbe9ef4075fb8fe391a9c00f893deb3e5846a8b361b168c3bae39e"
+  },
+  "download_fresh.py": {
+   "path": "research/ultimate_1119/round5/download_fresh.py",
+   "sha256": "bb8a1bfe77da96e19288f3c7101edbd1a8c59cc9c0e44bf11ec4feb3a1fe4124"
+  },
+  "mcf/research/heat.py": {
+   "path": "mcf/research/heat.py",
+   "sha256": "f12e8bdab9c0f406bec67723a9c176fc7caebc04e6193db5a9b55133112318d0"
+  },
+  "data/universe.csv (ETB flag)": {
+   "path": "data/universe.csv",
+   "sha256": "144962b9b2099d276a6a054a8501c15e9dddbba4098a4b1411a8ab51a2ced64a"
+  },
+  "symbols_download_all.txt": {
+   "path": "research/ultimate_1119/round5/symbols_download_all.txt",
+   "sha256": "9771da105e4930ad5fcf4c9e6d044ea508c19b653e24b3f9cdaea99918b804b2"
+  }
+ },
+ "seconds": 242
+}
