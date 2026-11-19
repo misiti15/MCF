@@ -168,3 +168,28 @@ def test_status_shows_risk_state(tmp_path, monkeypatch):
     r.risk.state.setup_stopped = {"X"}
     r.write_status(pd.Timestamp("2026-11-05 14:00", tz=NY), "trading")
     assert r.health["risk_state"]["halted"] is True and r.health["risk_state"]["setup_stopped"] == ["X"]
+
+
+def test_etb_once_per_day_survives_restart(tmp_path, monkeypatch):
+    """Blocked audit 2026-11-19: the U9-ETB once-per-setup/symbol/day skip set was memory only, so the 14:15 hand-over
+    job journaled every ETB skip again (Primary 33 duplicate rows). The successor rebuilds it from the journal."""
+    now = pd.Timestamp("2026-11-19 11:20:00", tz=NY)
+    day = now.date()
+    cfg = _cfg(tmp_path)
+    cfg.setdefault("shorts", {})["borrow_prefetch"] = True
+    cfg["shorts"]["require_easy_to_borrow"] = True
+    r1, b1 = _runner(cfg, monkeypatch)
+    r1.broker.can_short = lambda s: False
+    r1.restore(day)
+    r1._enter(_sig("SOXS", "L3"), 54.45, ("SOXS", "L3"), CTX, now)
+    r1._enter(_sig("SOXS", "L3"), 54.45, ("SOXS", "L3"), CTX, now + pd.Timedelta(minutes=5))
+    assert list(r1.journal.signals(r1.run_id, str(day)).reason) == ["not shortable/ETB"]
+
+    r2, b2 = _runner(cfg, monkeypatch)             # hand-over job, same day
+    r2.broker.can_short = lambda s: False
+    r2.restore(day)
+    r2._enter(_sig("SOXS", "L3"), 54.45, ("SOXS", "L3"), CTX, now + pd.Timedelta(hours=3))
+    r2._enter(_sig("SOXS", "L3b"), 54.45, ("SOXS", "L3b"), CTX, now + pd.Timedelta(hours=3))   # other setup: journaled
+    s = r2.journal.signals(r2.run_id, str(day))
+    assert list(zip(s.strategy, s.reason)) == [("L3", "not shortable/ETB"), ("L3b", "not shortable/ETB")]
+    assert b2.submitted == []
