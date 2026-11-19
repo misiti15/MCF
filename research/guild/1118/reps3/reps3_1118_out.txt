@@ -1,0 +1,129 @@
+sessions since 2026-11-12: 5
+           forecast_wk  realized_wk  diff
+account                                  
+Gen              152.4         78.0 -74.4
+Graveyard        149.7        132.0 -17.7
+On Deck           43.4         54.0  10.6
+Primary           22.1         27.0   4.9
+Testing A         33.0         56.0  23.0
+Testing B         13.9         45.0  31.1
+Testing C         16.0         41.0  25.0
+Testing D         13.8         32.0  18.2
+Testing E         17.1         31.0  13.9
+Testing F         21.7         49.0  27.3
+TOTAL forecast 482.8 realized 545.0
+
+by forecast source (setups, forecast/week, realized/week):
+   live     165    482.8    399.0
+   unknown   39      0.0     28.0
+Gen account halt skips/session: 0.0 (REPS1b 10-20..11-10: 66.3)
+Gen buying power skips/session: 0.0 (REPS1b 10-20..11-10: 60.4)
+Testing A signals/session: before 264.7, after 452.8 (full universe from 11-12)
+
+(1) forecast setups matched by SETUP id, any account: forecast 482.8/wk, realized 521.0/wk (177 of 204 forecast setups signalled)
+(2) setups NOT in the frozen 11-11 forecast (Workbench copies, new or moved-in names): 15 setups, realized 24.0/wk
+      CWT14-failbrk-orl-p10-long-WB5: 2.0/wk
+      CWT14-failbrk-pdl-p10-lowvol-long-WB3: 2.0/wk
+      L3-gap-slope-fromopen-FD-WB4: 2.0/wk
+      MF2-open-rsimidhi-flowsell-FD-WB3: 2.0/wk
+      RW7-gapdn-bounce-early-short-FD-WB3: 2.0/wk
+      RW1-gapdn-bounce-flowsell-short-FD-WB3: 2.0/wk
+      RW3-gapdn-rsi5pop-flowsell-short-FD-WB4: 2.0/wk
+      ST7-rsi50dn-long-pm-t1s1-FD-WB1: 2.0/wk
+      RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4: 2.0/wk
+      GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short-WB1: 1.0/wk
+(3) setups that signalled in any account other than (or besides) their forecast account: 46; per-account diffs are NOT like-for-like in: Gen, Graveyard, On Deck, Testing A, Testing B, Testing C, Testing D, Testing E, Testing F
+      GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long: forecast Gen -> realized in Testing A
+      GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long: forecast Gen -> realized in Gen, Testing F
+      GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long: forecast Gen -> realized in Gen, Testing D
+      GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short: forecast Gen -> realized in Gen, Testing E
+      GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short: forecast Gen -> realized in Testing D
+      GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short: forecast Gen -> realized in Gen, Testing F
+      GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long: forecast Gen -> realized in Testing B
+      GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long: forecast Gen -> realized in Gen, Testing F
+      GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long: forecast Gen -> realized in Testing E
+      GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short: forecast Gen -> realized in Gen, Testing E
+      GEN-261021-03-RSI5le34-Ret15mATRge0p12-DayRngVsPrevge1p2-LUNCH-SPYltm0p25-t05s1-short: forecast Gen -> realized in Graveyard, Testing E
+      GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long: forecast Gen -> realized in Testing F
+      GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short: forecast Gen -> realized in Gen, Testing F
+      GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short: forecast Gen -> realized in Gen, Testing C
+      GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short: forecast Gen -> realized in Gen, Testing B
+(4) 11-12..11-16 (pre-TSZ1): 3 sessions, realized 526.7/wk; forecast setups only 526.7/wk
+(4) 11-17..end (TSZ1: testing half-size lots, cap 100): 2 sessions, realized 572.5/wk; forecast setups only 512.5/wk
+(6) eligibility-adjusted (benched / disabled days excluded): forecast 465.1/wk vs realized 521.0/wk for forecast setups; excluded (setup, day) pairs: 18
+      excluded 2026-11-18 CWT12-coil-k4-long
+      excluded 2026-11-18 CWT12-coil-k6-long
+      excluded 2026-11-18 CWT14-failbrk-orl-p05-long
+      excluded 2026-11-18 CWT14-failbrk-orl-p05-lowvol-long
+      excluded 2026-11-18 CWT14-failbrk-orl-p10-long
+      excluded 2026-11-18 CWT14-failbrk-orl-p10-lowvol-long
+      excluded 2026-11-18 CWT14-failbrk-pdh-p05-lowvol-short
+      excluded 2026-11-18 CWT14-failbrk-pdh-p10-lowvol-short
+      excluded 2026-11-18 CWT14-failbrk-pdh-p10-short
+      excluded 2026-11-18 CWT14-failbrk-pdl-p05-long
+      excluded 2026-11-18 CWT14-failbrk-pdl-p05-lowvol-long
+      excluded 2026-11-18 LIQ-orl-sweep-open15-s25-long
+      excluded 2026-11-18 NS2-sma50break-overbought-short-FD
+      excluded 2026-11-18 RW2-exhaustion-noon-adv150-short-FD
+      excluded 2026-11-18 ST2-slope20up-long-am-t05s1-FD
+      excluded 2026-11-18 heat_fade_long-FD
+      excluded 2026-11-18 heat_fade_short
+      excluded 2026-11-18 heat_fade_short-FD
+(5) ledger entries effective 2026-11-12..2026-11-18 (owner rule 11-02): 56
+      2026-11-12 2026-11-11-testing-def-accounts: Testing D / E / F paper accounts wired (testingd / testinge / testingf; orders mtd- / mte- / mtf-; b
+      2026-11-12 2026-11-11-lr1-half-day-flatten: LR1: flatten at min(15:55, calendar close - 5 min) on every account (half days 11-27 / 12-24 flatten
+      2026-11-12 2026-11-11-lr2-r-after-costs-everywhere: LR2: one R after costs (pnl_adj / risk) on the dashboard scorecard / leaderboard, trade lists, EOD e
+      2026-11-12 2026-11-11-lr3-primary-loss-stops-cost-r: LR3: Primary's -20R account halt and -2R per-setup latch count R after costs; the account halt also 
+      2026-11-12 2026-11-11-lr4-kill-switch: LR4: kill switch - HALT flag (mcf-control/HALT.json) read every poll (no new entries / flatten) and 
+      2026-11-12 2026-11-11-lr5-position-check: LR5: broker position vs journal lot check every poll on all accounts; a persistent mismatch is flagg
+      2026-11-12 2026-11-11-lr7-flatten-failure: LR7: closing flatten retries every 20 s until close - 1 min, then an extended-hours close, alerts on
+      2026-11-12 2026-11-11-lr8-live-cost-model: LR8: pnl_adj uses the live cost model for trades from 2026-11-12 (stops max($0.02, 4 bps); targets a
+      2026-11-12 2026-11-12-ondeck-build: On Deck build (ONDECK): OD-IN / OD-OUT rules; 14 setups in On Deck (11 qualifiers - MF4 base + OD-FI
+      2026-11-12 2026-11-12-ondeck-split-tape-off: ODX-1: split-tape short gate OFF in On Deck (testing) (config)
+      2026-11-12 2026-11-12-gen-graduation: GEN-GRAD: 5 Setup Generator setups graduate to Testing D / E / F (rule: >= 4 traded sessions, >= 10 
+      2026-11-12 2026-11-12-testing-a-full-universe: Testing A (testing2) trades the full universe again: UNI1 top-500 pool removed (REPV #2) (config)
+      2026-11-12 2026-11-12-testing-generic-cap-30: Generic per-setup cap 10 -> 30 open lots in Testing B / C / D / E / F (ODX-4 / REPV #7) (config)
+      2026-11-12 2026-11-12-gen-sizing-cap: Gen: buying_power_multiple 3.8 -> 1.8, slots 200 -> 300 (REPV-1); per-setup cap 48 -> 150 (REPV #5) 
+      2026-11-12 2026-11-12-graveyard-sizing-cap: Graveyard: buying_power_multiple 3.8 -> 1.6, slots 200 -> 300 (REPV-11); per-setup cap 25 -> 75 (REP
+      2026-11-12 2026-11-12-account-halt-300: Account daily halt 120R -> 300R in On Deck, Testing A-F and Gen (REPV #9); Primary keeps 20R; Gravey
+      2026-11-12 2026-11-12-testing-areas-fill: Testing D / E / F filled (10 setups each) and the testing areas rebalanced: A 11 / B 11 / C 11 / D 1
+      2026-11-13 2026-11-13-gy-rw6-st4-arena: Graveyard -> testing arena: RW6-ns2-up3-short-FD to Testing C (livelab), ST4-emadn-long-am-t1s05-FD 
+      2026-11-16 2026-11-16-rw7-ondeck-to-testingf: On Deck -> Testing F: RW7-gapdn-bounce-early-short-FD (owner demote; Graveyard review after 3 sessio
+      2026-11-16 2026-11-16-rw3s-testinge-to-graveyard: Testing E -> Graveyard: RW3S-gapdn-flowsell-short-FD (owner RW3S-GY drop) (move)
+      2026-11-16 2026-11-15-team6-open-ended: Owner TEAM6-1116: Primary keeps TEAM-6 open-ended (no end date), weekly Friday review; L3-fromopen c
+      2026-11-16 2026-11-16-rot1-arena-block1: Testing-arena rotation block 1 (ROT1, sessions 2026-11-16..11-19): spotlight 15 least-traded setups 
+      2026-11-17 2026-11-16-shadow-mode: Shadow mode in the live runner + trust check + effective sessions (owner 2026-11-16)
+      2026-11-17 2026-11-16-wb-l3-fromopen-wb4: Workbench copy L3-gap-slope-fromopen-FD-WB4 added to Testing A, first in setup_order (Mechanic RERUN
+      2026-11-17 2026-11-16-wb-cwt14-orl-p10-wb5: Workbench copy CWT14-failbrk-orl-p10-long-WB5 added to Testing D at normal priority (last in setup_o
+      2026-11-17 2026-11-16-tsz1-testing-sizing: testing-account sizing change — R comparable, $ not (TSZ1: Testing A-F half-size lots, 2x slots, per
+      2026-11-17 2026-11-16-kill-flat-open: KILL-FLAT open: Graveyard and Gen close their adopted lots (broker positions with the account prefix
+      2026-11-17 2026-11-16-wb-mf2-wb3: Workbench copy MF2-open-rsimidhi-flowsell-FD-WB3 added to Testing A, at the top of setup_order (Mech
+      2026-11-17 2026-11-16-wb-rw6g1-wb3: Workbench copy RW6G1-ns2-up3-vwap2sd-short-FD-WB3 added to Testing A, at the top of setup_order (Mec
+      2026-11-17 2026-11-16-wb-nmetf-latedip-wb1: Workbench copy NM-ETF-late-dip-di-long-WB1 added to Testing B, at the top of setup_order (Mechanic p
+      2026-11-17 2026-11-16-wb-l3-rsi5hi-wb4: Workbench copy L3-gap-slope-rsi5hi-FD-WB4 added to Testing B, at the top of setup_order (Mechanic pa
+      2026-11-17 2026-11-16-wb-gen26102309-wb4: Workbench copy GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4 added to Testing
+      2026-11-17 2026-11-16-wb-rw3-fd-wb3: Workbench copy RW3-gapdn-rsi5pop-flowsell-short-FD-WB3 added to Testing C, at the top of setup_order
+      2026-11-17 2026-11-16-wb-st7-wb1: Workbench copy ST7-rsi50dn-long-pm-t1s1-FD-WB1 added to Testing C, at the top of setup_order (Mechan
+      2026-11-17 2026-11-16-wb-orb20a-wb3: Workbench copy orb20_a-WB3 added to Testing C, at the top of setup_order (Mechanic pass; owner yes t
+      2026-11-17 2026-11-16-wb-rw5-wb3: Workbench copy RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3 added to Testing D, at the top of setu
+      2026-11-17 2026-11-16-wb-rw1-wb3: Workbench copy RW1-gapdn-bounce-flowsell-short-FD-WB3 added to Testing D, at the top of setup_order 
+      2026-11-17 2026-11-16-wb-gen26102701-wb5: Workbench copy GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long-WB5 added to Te
+      2026-11-17 2026-11-16-wb-rw7-wb3: Workbench copy RW7-gapdn-bounce-early-short-FD-WB3 added to Testing E, at the top of setup_order (Me
+      2026-11-17 2026-11-16-wb-nmrwn5-wb3: Workbench copy NM-RWN5-ns3-mon-weakrs-short-WB3 added to Testing E, at the top of setup_order (Mecha
+      2026-11-17 2026-11-16-wb-gen26102603-wb1: Workbench copy GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short-WB1
+      2026-11-17 2026-11-16-wb-l3-lowdist-wb4: Workbench copy L3-gap-slope-lowdist-FD-WB4 added to Testing F, at the top of setup_order (Mechanic p
+      2026-11-17 2026-11-16-wb-cwt14-pdl-p10-lowvol-wb3: Workbench copy CWT14-failbrk-pdl-p10-lowvol-long-WB3 added to Testing F, at the top of setup_order (
+      2026-11-17 2026-11-16-wb-cwt09g10-wb4: Workbench copy CWT09-gapdn-vwaploss-g10-short-WB4 added to Testing F, at the top of setup_order (Mec
+      2026-11-17 2026-11-16-spyexit-engine: SPYEXIT engine: optional per-setup SPY-since-entry exit (spy_exit_pct, spy_exit_only_losing) in the 
+      2026-11-17 2026-11-16-spyexit-rw3-wb4: Live Lab: RW3-gapdn-rsi5pop-flowsell-short-FD-WB4 replaces WB3 in the same setup_order slot (WB3 off
+      2026-11-17 2026-11-16-spyexit-rw5-wb4: Testing D: RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4 replaces WB3 in the same setup_order slot 
+      2026-11-17 2026-11-17-wb-etfdip-wb4: Workbench copy NM-ETF-late-dip-di-long-WB4 added to Testing E, first in setup_order (owner WB ETFDIP
+      2026-11-18 2026-11-17-record-live-quotes: Record live quotes: every journaled decision (taken, skipped with reason, shadow-before-open) writes
+      2026-11-17 2026-11-17-promotion-hold: Promotion hold: no On Deck -> Primary promotions until the owner lifts it (answers PROMO2; the two-s
+      2026-11-17 2026-11-17-rule21-decision-bar: Rule 21 replay-vs-live audit matches trades on the live signal's decision bar instead of the fill mi
+      2026-11-17 2026-11-17-compcal-display: Market Compass card: one calibrated 'finishes this side of its open' line (COMPCAL M1) replaces the 
+      2026-11-18 2026-11-18-gy-bench: GY-BENCH: 18 Graveyard setups with > 150 Graveyard trades benched for 5 sessions (2026-11-18..11-24)
+      2026-11-18 2026-11-18-gy-bench-guests: GY-BENCH guests: 20 setups (4 never-traded Setup Generator setups + 16 lowest-exposure testing-arena
+      2026-11-18 2026-11-18-srcv1-history-weight-0: SRCV1: 2-year history / screen weight 0.175 -> 0; every non-live source (2-year screen, 2-year backt
+      2026-11-18 2026-11-18-odprep-tune-in-testing: ODPREP (as modified by the owner): a promising testing setup gets ONE Workbench tune while it stays 
+Educational only - not financial advice.
