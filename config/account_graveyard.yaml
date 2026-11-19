@@ -26,6 +26,19 @@ account:
   max_daily_loss_r: 120           # catastrophe backstop only (as Testing 1/2)
   max_setup_daily_loss_r: 2.0     # a setup stops for the day at net -2R realized (kept: ST-A 2026-10-22 covered Testing 1/2 + Gen only)
   max_trades_per_day: 1500        # Testing 2: 3000
+# GY foot race (owner FOOTRACE 2026-11-19, effective 2026-11-20): "GY should also have a similar footrace mentality ... the
+# top 10-20 of setups who are best performing, they can get the majority of the exposure while lower performing setups
+# can be on a rotation." The nightly job (research/reps2/nightly.py step 5 = python -m mcf.report.footrace) ranks the
+# Graveyard's setups by the shrunk live score (total R and avg R, both w/o best day) and writes the next 3 sessions'
+# plan to `file`. The trade run applies it once before the open (mcf/execution/session.py): the top 15 LEADERS play every
+# session and come first in setup_order; low-rep (< 10 live trades), rare and new setups always play; the rest rotate by
+# WHOLE sessions (logged in the snapshot's rotation.footrace, excluded from per-session stats; owner playing-time rule,
+# never an in-session throttle) up to ~85% of the slots, never benched more than 2 sessions in a row (>= 1 in 3).
+# Missing / stale file (no entry for the session) -> every enabled setup plays, as before.
+gy_footrace:
+  enabled: true
+  from: "2026-11-20"
+  file: docs/live/footrace.json
 live:
   block_twin_same_symbol: true    # no second lot on a symbol already held (or pending) by this setup's twin
   scale_out_max_per_day: 0        # no live scale-out here (no setup sets live_scale_out either)

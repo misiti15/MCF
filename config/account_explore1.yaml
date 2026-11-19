@@ -70,6 +70,7 @@ live:
     - CWT13-vwapstretch-z075-long   # 9 traded sessions / 40 trades
     - ST8-volspikedn-long-pm-t1s1-FD   # 14 traded sessions / 30 trades
     - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
+    - ULT-09-failed-vwap-reclaim-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
 strategies:
   NM-ETF-late-dip-di-long-WB1:
     # Workbench copy of NM-ETF-late-dip-di-long (Primary), Mechanic 2026-11-16: + ret12 >= +0.5% (dip inside an up-hour);
@@ -1020,3 +1021,19 @@ strategies:
         max_overlap: 0.522
         overlap_with: ST5-pdbrkup-short-mid-t05s1-FD
         n_tried_in_run: 3000
+  ULT-09-failed-vwap-reclaim-short:
+    # NEW setup (ultimate_1119 variant ULT-09), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier B: debatable / derived from CWT09-g10 (loose).
+    # Normal-way backtest (LR8, testing book): T1 comb -0.036, fit +0.174 but check -0.198, T2 -0.234 (82): sign flip, weakest admission. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-09-failed-vwap-reclaim-short.py
+    min_adv: 20000000
+    window: [1030, 1500]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierB, "parent:CWT09-g10 (loose"]

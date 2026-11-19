@@ -81,11 +81,22 @@ def freeze_setups(cfg: dict, state_dir: str | Path, now: pd.Timestamp) -> str:
         rot = cfg.get("rotation") or rot
     except Exception as e:     # never fatal: the session trades its configured setups without the caps
         print(f"family caps skipped: {type(e).__name__}: {e}")
+    try:   # GY foot race (owner FOOTRACE 2026-11-19): Graveyard leaders first, the rest rotate by whole sessions
+        from ..report.footrace import apply_gy
+
+        apply_gy(cfg, now.date())
+        rot = cfg.get("rotation") or rot
+    except Exception as e:     # never fatal: every Graveyard setup plays (today's behaviour)
+        print(f"GY foot race skipped: {type(e).__name__}: {e}")
     snap.write_text(json.dumps({**{k: cfg.get(k) for k in SETUP_KEYS}, "rotation": rot}, indent=1, default=str))
     extra = ""
     fb = sum(len(v) for v in (rot.get("family_benched") or {}).values())
     if fb:
         extra += f"; family-capped {fb} (C3-ROT)"
+    fr = rot.get("footrace") or {}
+    if fr:
+        extra += (f"; GY foot race: {len(fr.get('leaders') or [])} leaders, {len(fr.get('benched') or [])} benched"
+                  if fr.get("applied") else f"; GY foot race not applied ({fr.get('why')})")
     if rot["benched"] or rot["away"] or rot["guests"]:
         extra += (f"; benched {len(rot['benched'])}, away {len(rot['away'])}, guests {len(rot['guests'])}"
                  + (f" (benched: {', '.join(rot['benched'])})" if rot["benched"] else ""))

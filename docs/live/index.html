@@ -1437,6 +1437,7 @@ window.MCF_SHADOW = (() => {
     try { const r = await fetch("../live/leaderboard.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) seed = await r.json(); } catch (_) {}
     // live assignments straight from the configs (owner 2026-10-20): a promotion / demotion shows at once
     try { const r = await fetch("../live/assignments.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) asg = await r.json(); } catch (_) {}
+    window.MCF_LB_ASG = asg;   // leaderboard row tags (td) run outside load(); fix 2026-11-19
     let NM = {};
     try { const r = await fetch("../live/setup_names.json?t=" + Date.now(), { cache: "no-store" }); if (r.ok) NM = await r.json(); } catch (_) {}
     // replay results (owner 2026-10-21): docs/live/replay.json {generated, window?, setups: {setup: {trades, sessions,
@@ -1677,8 +1678,8 @@ window.MCF_SHADOW = (() => {
         (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
         // GY-ARCHIVE-20 / REPS2-LANE (owner 2026-11-18): one short tag each from assignments.json, no new column
-        ((((asg || {}).setups || {})[x.setup] || {}).archived ? ` <span class="chip" title="${e("Archived " + asg.setups[x.setup].archived.from + " (" + (asg.setups[x.setup].archived.code || "GY-LIFE") + "): disabled, record frozen and kept, re-testable, never deleted")}">archived</span>` : "") +
-        ((((asg || {}).setups || {})[x.setup] || {}).shadow_lane ? ' <span class="chip" title="Low-rep fast lane: also runs shadow-only (no orders) on the full universe in Testing A; shadow trades are a separate record, never live reps (REPS2-LANE)">shadow lane</span>' : "") +
+        ((((window.MCF_LB_ASG || {}).setups || {})[x.setup] || {}).archived ? ` <span class="chip" title="${e("Archived " + window.MCF_LB_ASG.setups[x.setup].archived.from + " (" + (window.MCF_LB_ASG.setups[x.setup].archived.code || "GY-LIFE") + "): disabled, record frozen and kept, re-testable, never deleted")}">archived</span>` : "") +
+        ((((window.MCF_LB_ASG || {}).setups || {})[x.setup] || {}).shadow_lane ? ' <span class="chip" title="Low-rep fast lane: also runs shadow-only (no orders) on the full universe in Testing A; shadow trades are a separate record, never live reps (REPS2-LANE)">shadow lane</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.movedFrom ? "Moved here " + e(x.moved) + " from " + e(x.movedFrom) +

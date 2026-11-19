@@ -107,6 +107,9 @@ class PaperRunner:
         # fetched). They only feed DayContext.index_priors: they never join the watchlist or the tradable contexts.
         # None until loaded; empty set = no setup asks (nothing changes for any other setup).
         self.index_syms: set[str] = set().union(*(getattr(s, "daily_context_symbols", None) or set() for s in strategies))
+        # Daily MARKET context (opt-in lab `context: [disp_prev]`, owner 2026-11-19 ETFDISP): computed once per session
+        # from the universe priors (self.priors) and carried in index_priors under lab_context.MARKET_KEY.
+        self.market_cols: tuple = tuple(dict.fromkeys(c for s in strategies for c in (getattr(s, "market_daily_cols", None) or ())))
         self.index_priors: dict | None = None
         self.index_priors_client = None   # replay: a store-backed history client (mcf.replay.store.StoreHistClient)
         self._index_tries = 0
@@ -704,11 +707,16 @@ class PaperRunner:
         """Daily priors of self.index_syms (see __init__): from self.priors, the rest via build_priors on the data
         client. Retried on the next polls (3 tries) while one is missing; a missing prior gives a NaN context column,
         so the setups that need it fire nothing (fail safe)."""
-        if not self.index_syms:
+        if not self.index_syms and not self.market_cols:
             return None
         if self.index_priors is not None and (set(self.index_priors) >= self.index_syms or self._index_tries >= 3):
             return self.index_priors
         out = {s: self.priors[s] for s in self.index_syms if s in self.priors}
+        if self.market_cols:   # ETFDISP: universe-wide pre-open values (NaN when the priors cannot give them)
+            from ..strategies.lab_context import MARKET_KEY, market_daily
+
+            out[MARKET_KEY] = market_daily(self.priors, self.market_cols)
+            self.health["market_daily"] = {k: (None if v != v else round(v, 4)) for k, v in out[MARKET_KEY].items()}
         miss = sorted(self.index_syms - set(out))
         if miss:
             self._index_tries += 1

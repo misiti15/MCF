@@ -366,6 +366,10 @@ class Backtester:
         spy_days = {} if spy is None or spy.empty else {d: g for d, g in spy.groupby(spy.index.date)}
         dates = sorted({d for h in hist.values() for d in h.by_day})
         need_idx = set().union(*(getattr(s, "daily_context_symbols", None) or set() for s in self.strategies))
+        need_mkt = tuple(dict.fromkeys(c for s in self.strategies for c in (getattr(s, "market_daily_cols", None) or ())))
+        if need_mkt:   # lab `context: [disp_prev]` (ETFDISP): prior-session return + ADV of every symbol, by date
+            from ..strategies.lab_context import MARKET_KEY, cross_dispersion
+            mret = {s: h.daily["close"].pct_change(fill_method=None).shift(1) for s, h in hist.items()}
         candidates: list[Trade] = []
         for n, d in enumerate(dates):
             ctxs = [c for h in hist.values() if (c := h.context(d)) is not None and self._universe_ok(c)]
@@ -380,6 +384,11 @@ class Backtester:
             ipri = None
             if need_idx:   # lab `context: [spy_prng]` (owner 2026-10-30 PDL-1a): the index's own daily prior
                 ipri = {s: x for s in need_idx if s in hist and (x := hist[s].context(d)) is not None}
+            if need_mkt:
+                ts = pd.Timestamp(d)
+                rr = [(mret[s].get(ts, np.nan), h.adv.get(ts, np.nan)) for s, h in hist.items()]
+                ipri = dict(ipri or {})
+                ipri[MARKET_KEY] = {"disp_prev": cross_dispersion((x for x, _ in rr), (y for _, y in rr))}
             for c in ctxs:
                 c.peers = peers
                 c.index_priors = ipri

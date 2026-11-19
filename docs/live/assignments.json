@@ -1,6 +1,6 @@
 {
  "note": "Live setup assignments from the configs; updated with every promotion / demotion / move. Educational only - not financial advice.",
- "asof_session": "2026-11-19",
+ "asof_session": "2026-11-20",
  "accounts": {
   "primary": [
    "L3-gap-slope-fromopen-FD",
@@ -44,7 +44,10 @@
    "NM-AR-AM-gapdown-capitulation-long",
    "NM-MF3-qqqdn-gapdn-FD",
    "NS3V1-am-widestop-short",
-   "RW6G1-ns2-up3-vwap2sd-short-FD-WB3"
+   "RW6G1-ns2-up3-vwap2sd-short-FD-WB3",
+   "ULT-07-pm-volatile-dip-long",
+   "ULT-13-st7-sharp-long",
+   "ULT-HV1-etf-late-pop-fade-short-X"
   ],
   "gen": [
    "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long",
@@ -138,6 +141,7 @@
    "ST3-rsi5up-short-pm-t1s1-FD",
    "ST5-pdbrkup-short-mid-t05s1-FD",
    "ST7-rsi50dn-long-pm-t1s1-FD-WB1",
+   "ULT-22-wb4-wide-etf-long",
    "orb20_a-WB3"
   ],
   "explore1": [
@@ -164,11 +168,13 @@
    "NM1-cwt09-g10-vwaploss-short",
    "ST4-emadn-long-am-t1s05-FD",
    "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
-   "ST8-volspikedn-long-pm-t1s1-FD"
+   "ST8-volspikedn-long-pm-t1s1-FD",
+   "ULT-09-failed-vwap-reclaim-short"
   ],
   "testingd": [
    "CWT05-flush-m075-v5-long",
    "CWT14-failbrk-orl-p10-long-WB5",
+   "ETFDISP-late-dip-hidisp-long",
    "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
    "GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short",
    "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short",
@@ -183,7 +189,8 @@
    "NM-RWN5-ns3-mon-weakrs-short",
    "NS4-pm-vwap-reclaim-oversold-short",
    "RW1-gapdn-bounce-flowsell-short-FD-WB3",
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4"
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4",
+   "ULT-HV2-shock-snap-etf-long-K"
   ],
   "testinge": [
    "CWT04-backside-lh-a25-short",
@@ -199,7 +206,9 @@
    "NM-RWN5-ns3-mon-weakrs-short-WB3",
    "NS3-failed-vwap-reclaim-short",
    "RW6G1-ns2-up3-vwap2sd-short",
-   "RW7-gapdn-bounce-early-short-FD-WB3"
+   "RW7-gapdn-bounce-early-short-FD-WB3",
+   "ULT-05-withgap-cont-long",
+   "ULT-05-withgap-cont-short"
   ],
   "testingf": [
    "CWT05-flush-m05-v3-long",
@@ -223,6 +232,8 @@
    "NM-RWN4-ns2-spyup05-notfri-short",
    "NS4-pm-vwap-reclaim-oversold-short-FD",
    "RW7-gapdn-bounce-early-short-FD",
+   "ULT-14-snap-long",
+   "ULT-14-snap-short",
    "exhaustion_short",
    "intraday_momentum"
   ]
@@ -650,6 +661,13 @@
     "testingf"
    ],
    "since": "2026-11-16 22:21 ET",
+   "from": null
+  },
+  "ETFDISP-late-dip-hidisp-long": {
+   "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-19 16:05 ET",
    "from": null
   },
   "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long": {
@@ -2692,6 +2710,76 @@
    "last_old_session": "2026-11-04",
    "first_session": "2026-11-05"
   },
+  "ULT-05-withgap-cont-long": {
+   "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-05-withgap-cont-short": {
+   "accounts": [
+    "testinge"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-07-pm-volatile-dip-long": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-09-failed-vwap-reclaim-short": {
+   "accounts": [
+    "explore1"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-13-st7-sharp-long": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-14-snap-long": {
+   "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-14-snap-short": {
+   "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-22-wb4-wide-etf-long": {
+   "accounts": [
+    "livelab"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-HV1-etf-late-pop-fade-short-X": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
+  "ULT-HV2-shock-snap-etf-long-K": {
+   "accounts": [
+    "testingd"
+   ],
+   "since": "2026-11-19 16:05 ET",
+   "from": null
+  },
   "exhaustion_short": {
    "accounts": [
     "testingf"
@@ -2798,133 +2886,84 @@
   }
  },
  "last_change": {
-  "at": "2026-11-18 20:42 ET",
+  "at": "2026-11-19 16:05 ET",
   "changes": [
    {
-    "setup": "CWT09-gapdn-vwaploss-g5-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ETFDISP-late-dip-hidisp-long",
+    "from": [],
+    "to": [
+     "testingd"
+    ]
    },
    {
-    "setup": "CWT12-coil-k4-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-05-withgap-cont-long",
+    "from": [],
+    "to": [
+     "testinge"
+    ]
    },
    {
-    "setup": "CWT12-coil-k6-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-05-withgap-cont-short",
+    "from": [],
+    "to": [
+     "testinge"
+    ]
    },
    {
-    "setup": "CWT13-vwapstretch-z05-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-07-pm-volatile-dip-long",
+    "from": [],
+    "to": [
+     "testing2"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-orl-p05-lowvol-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-09-failed-vwap-reclaim-short",
+    "from": [],
+    "to": [
+     "explore1"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-orl-p10-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-13-st7-sharp-long",
+    "from": [],
+    "to": [
+     "testing2"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-orl-p10-lowvol-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-14-snap-long",
+    "from": [],
+    "to": [
+     "testingf"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-pdh-p05-lowvol-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-14-snap-short",
+    "from": [],
+    "to": [
+     "testingf"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-pdh-p10-lowvol-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-22-wb4-wide-etf-long",
+    "from": [],
+    "to": [
+     "livelab"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-pdh-p10-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-HV1-etf-late-pop-fade-short-X",
+    "from": [],
+    "to": [
+     "testing2"
+    ]
    },
    {
-    "setup": "CWT14-failbrk-pdl-p05-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p05-lowvol-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "LIQ-orl-sweep-open15-s25-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "RW2-exhaustion-noon-adv150-short-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "RW4-ns3-adv150-short-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "ST2-slope20up-long-am-t05s1-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "heat_fade_long-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "heat_fade_short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
+    "setup": "ULT-HV2-shock-snap-etf-long-K",
+    "from": [],
+    "to": [
+     "testingd"
+    ]
    }
   ]
  }
