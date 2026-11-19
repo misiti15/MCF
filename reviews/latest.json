@@ -230,10 +230,10 @@
   "skipped": 153
  },
  "health": {
-  "polls": 86,
-  "last_poll_s": 4.9,
-  "symbols_last_bar": 3687,
-  "last_bar": "15:53",
+  "polls": 0,
+  "last_poll_s": null,
+  "symbols_last_bar": 0,
+  "last_bar": null,
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
@@ -243,35 +243,7 @@
   "session_close": "16:00",
   "flatten_at": "15:55",
   "early_close": false,
-  "kill": null,
-  "index_priors": [
-   "SPY"
-  ],
-  "borrow_list": {
-   "symbols": 14437,
-   "at": "2026-11-19 15:19:10.411507-05:00"
-  },
-  "shadow": {
-   "run_id": 3,
-   "of_live": true,
-   "only_setups": 24,
-   "open_lots": 51,
-   "entered": 21,
-   "closed": 27,
-   "polls": 86,
-   "avg_ms": 235.2,
-   "live_avg_ms": 8056.7,
-   "share_of_poll": 0.029,
-   "only_every_n_polls": 1,
-   "quote_calls": 0,
-   "errors": 0
-  },
-  "position_mismatch": [],
-  "position_check": {
-   "at": "2026-11-19 15:54:18.548347-05:00",
-   "symbols": 49,
-   "blocked": []
-  },
+  "flatten_failed": [],
   "partial_lots": [],
   "risk_state": {
    "halted": false,
@@ -282,118 +254,7 @@
    "open_r": 0.0,
    "halt_counts_open": false,
    "realized_r_after_costs": -5.297
-  },
-  "scale_outs": [
-   {
-    "symbol": "FNV",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-FNV-20261119-1209",
-    "qty": 1,
-    "left": 2,
-    "stop": 232.62,
-    "at": "2026-11-19 14:52:31.945183-05:00"
-   },
-   {
-    "symbol": "ZTS",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-ZTS-20261119-1324",
-    "qty": 2,
-    "left": 3,
-    "stop": 82.07,
-    "at": "2026-11-19 14:52:31.945183-05:00"
-   },
-   {
-    "symbol": "XHB",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-XHB-20261119-1209",
-    "qty": 2,
-    "left": 2,
-    "stop": 98.11,
-    "at": "2026-11-19 14:54:11.590697-05:00"
-   },
-   {
-    "symbol": "AME",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-AME-20261119-1444",
-    "qty": 1,
-    "left": 2,
-    "stop": 233.24,
-    "at": "2026-11-19 14:54:11.590697-05:00"
-   },
-   {
-    "symbol": "EWY",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-EWY-20261119-1209",
-    "qty": 1,
-    "left": 2,
-    "stop": 135.49,
-    "at": "2026-11-19 15:02:29.299322-05:00"
-   },
-   {
-    "symbol": "ONTO",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-ONTO-20261119-1324",
-    "qty": 1,
-    "left": 2,
-    "stop": 198.35,
-    "at": "2026-11-19 15:02:29.299322-05:00"
-   },
-   {
-    "symbol": "PCTY",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-PCTY-20261119-1304",
-    "qty": 1,
-    "left": 2,
-    "stop": 173.8,
-    "at": "2026-11-19 15:04:15.334503-05:00"
-   },
-   {
-    "symbol": "SOLV",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-SOLV-20261119-1330",
-    "qty": 2,
-    "left": 3,
-    "stop": 85.16,
-    "at": "2026-11-19 15:04:15.334503-05:00"
-   },
-   {
-    "symbol": "MOH",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-MOH-20261119-1428",
-    "qty": 1,
-    "left": 2,
-    "stop": 203.44,
-    "at": "2026-11-19 15:04:15.334503-05:00"
-   },
-   {
-    "symbol": "NUE",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-NUE-20261119-1244",
-    "qty": 1,
-    "left": 2,
-    "stop": 249.16,
-    "at": "2026-11-19 15:38:14.016787-05:00"
-   },
-   {
-    "symbol": "TRGP",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-TRGP-20261119-1329",
-    "qty": 1,
-    "left": 2,
-    "stop": 286.93,
-    "at": "2026-11-19 15:42:16.175919-05:00"
-   },
-   {
-    "symbol": "STZ",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-short",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-short-STZ-20261119-1429",
-    "qty": 1,
-    "left": 2,
-    "stop": 141.5,
-    "at": "2026-11-19 15:43:12.084118-05:00"
-   }
-  ],
-  "flatten_failed": []
+  }
  },
  "findings": []
 }
