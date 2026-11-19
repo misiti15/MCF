@@ -20,6 +20,15 @@ Daily (pre-open) index context, opt-in by name only (`context: true` does NOT in
                 prior comes from DayContext.index_priors (live: the runner loads SPY's prior once per session, also
                 when SPY is not in the tradable universe; it is never traded because of this). Missing -> NaN.
 
+Daily (pre-open) MARKET context, opt-in by name only (owner 2026-11-19, research/ultimate_1119/etfdisp):
+
+  disp_prev     cross-sectional dispersion of the PRIOR session: the standard deviation (ddof 1, in %) of every
+                universe name's prior close-to-close return (clipped to +-50%) over the names whose ADV20 through the
+                prior session is >= $95M (DISP_MIN_ADV); NaN when fewer than DISP_MIN_NAMES qualify. One constant
+                value for the whole session. Live: from the runner's universe priors (Prior.prev_ret / Prior.adv),
+                computed once per session; backtester: from every symbol's daily history. It travels inside
+                DayContext.index_priors under the reserved key MARKET_KEY (no new plumbing); missing -> NaN.
+
 These are the frame definitions the swarm1017 near-misses were scored with: spy_fo / qqq_fo are the SPY / QQQ frame
 `fromOpen` at the same (date, tod); qqq_vwap is the QQQ frame `vwapDistPct` at the same (date, tod); breadth is the mean of `vwapDistPct > 0` (breadth_open: `fromOpen > 0`) over the
 symbols that have a frame row at that (date, tod) - mcf.research.heat.heat_frame on RTH 5-minute bars.
@@ -44,6 +53,10 @@ BREADTH_COLS = ("breadth", "breadth_open")
 INDEX_VWAP_COLS = {"qqq_vwap": "QQQ"}   # owner 2026-10-22 (S1): index close vs its session VWAP, %
 CONTEXT_COLS = (*INDEX_COLS, *BREADTH_COLS, *INDEX_VWAP_COLS)
 DAILY_COLS = {"spy_prng": "SPY"}   # owner 2026-10-30 PDL-1a: pre-open daily index context (by name only)
+MARKET_DAILY_COLS = ("disp_prev",)   # owner 2026-11-19 ETFDISP: pre-open market-wide daily context (by name only)
+MARKET_KEY = "__market__"           # reserved index_priors key holding {column: value} for MARKET_DAILY_COLS
+DISP_MIN_ADV = 95e6
+DISP_MIN_NAMES = 100
 
 _CACHE: dict = {}
 
@@ -55,9 +68,9 @@ def parse_context(spec) -> tuple[str, ...]:
     if spec is True:
         return CONTEXT_COLS
     names = [spec] if isinstance(spec, str) else list(spec)
-    bad = [n for n in names if n not in CONTEXT_COLS and n not in DAILY_COLS]
+    bad = [n for n in names if n not in CONTEXT_COLS and n not in DAILY_COLS and n not in MARKET_DAILY_COLS]
     if bad:
-        raise ValueError(f"unknown lab context columns {bad}; known: {[*CONTEXT_COLS, *DAILY_COLS]}")
+        raise ValueError(f"unknown lab context columns {bad}; known: {[*CONTEXT_COLS, *DAILY_COLS, *MARKET_DAILY_COLS]}")
     return tuple(dict.fromkeys(names))
 
 
@@ -70,6 +83,34 @@ def context_symbols(cols) -> set[str]:
 def daily_context_symbols(cols) -> set[str]:
     """Index symbols whose DAILY prior (prev_high / prev_low / atr) these columns need (DayContext.index_priors)."""
     return {DAILY_COLS[c] for c in cols if c in DAILY_COLS}
+
+
+def market_daily_cols(cols) -> tuple[str, ...]:
+    """The market-wide daily columns (MARKET_DAILY_COLS) among these columns."""
+    return tuple(c for c in cols if c in MARKET_DAILY_COLS)
+
+
+def cross_dispersion(rets, advs, min_adv: float = DISP_MIN_ADV, min_names: int = DISP_MIN_NAMES) -> float:
+    """disp_prev: std (ddof 1, %) of the prior-session returns (fractions, clipped to +-50%) of the names with
+    ADV >= min_adv; NaN when fewer than min_names have both values (fail safe)."""
+    r = np.asarray(list(rets), dtype=float)
+    a = np.asarray(list(advs), dtype=float)
+    with np.errstate(invalid="ignore"):
+        ok = np.isfinite(r) & np.isfinite(a) & (a >= min_adv)
+    if int(ok.sum()) < min_names:
+        return float("nan")
+    return float(np.std(np.clip(r[ok], -0.5, 0.5), ddof=1) * 100)
+
+
+def market_daily(priors: dict | None, cols=MARKET_DAILY_COLS) -> dict:
+    """{column: value} for the market-wide daily columns, from daily priors (symbol -> mcf.data.priors.Prior or any
+    object with prev_ret / adv). Priors pickled before prev_ret existed read the class default NaN -> NaN column."""
+    out = {}
+    if "disp_prev" in cols:
+        ps = [p for p in (priors or {}).values() if p is not None and not isinstance(p, dict)]
+        out["disp_prev"] = cross_dispersion((getattr(p, "prev_ret", float("nan")) for p in ps),
+                                            (getattr(p, "adv", float("nan")) for p in ps))
+    return out
 
 
 def prior_range_atr(p) -> float:
@@ -147,7 +188,7 @@ def context_table(peers: dict | None, cols) -> pd.DataFrame:
     """Context columns per 5-minute bar start (index), from today's 1-minute bars of every peer. Cached per poll /
     session: the key is the peers' identity-free state (symbol count and latest bar), so every lab setup and symbol of
     one poll shares one build."""
-    cols = tuple(c for c in cols if c not in DAILY_COLS)   # daily columns are not per-bar (add_context sets them)
+    cols = tuple(c for c in cols if c not in DAILY_COLS and c not in MARKET_DAILY_COLS)   # daily columns: add_context
     if not peers:
         return pd.DataFrame(columns=list(cols))
     key = _peers_key(peers)
@@ -202,7 +243,11 @@ def add_context(f: pd.DataFrame, peers: dict | None, cols, index_priors: dict | 
         if c in DAILY_COLS:
             p = (index_priors or {}).get(DAILY_COLS[c])
             g[c] = prior_range_atr(p) if p is not None else float("nan")
-    cols = [c for c in cols if c not in DAILY_COLS]
+        elif c in MARKET_DAILY_COLS:
+            mk = (index_priors or {}).get(MARKET_KEY) or {}
+            v = mk.get(c, float("nan"))
+            g[c] = float(v) if v is not None else float("nan")
+    cols = [c for c in cols if c not in DAILY_COLS and c not in MARKET_DAILY_COLS]
     if not cols:
         return g
     tab = context_table(peers, cols)

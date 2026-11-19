@@ -68,6 +68,8 @@ live:
     - CWT05-flush-m075-v3-long   # 12 traded sessions / 24 trades
     - CWT12-flag-s1-long   # 14 traded sessions / 23 trades
     - RW6-ns2-up3-short-FD   # 22 traded sessions / 189 trades
+    - ULT-22-wb4-wide-etf-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
+    - ULT-21-etf-rank-long   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
 strategies:
   L3-gap-slope-rsi5hi-FD-WB5:
     # Workbench copy of L3-gap-slope-rsi5hi-FD (On Deck), C3-WB5 item 5 (owner yes 2026-11-18): ONE change, refire off (first
@@ -1043,3 +1045,37 @@ strategies:
         max_overlap: 0.385
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
+  ULT-22-wb4-wide-etf-long:
+    # NEW setup (ultimate_1119 variant ULT-22), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A: meets the top-10 standard; debatable / derived from NM-ETF-late-dip / WB4 (check flat).
+    # Normal-way backtest (LR8, testing book): T1 comb +0.063 (w/o +0.037), check +0.002 (1 day), T2 -0.050 (599). research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-22.py
+    symbols: module
+    min_adv: 95000000
+    window: [1230, 1500]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierA, "parent:NM-ETF-late-dip / WB4 (check flat"]
+  ULT-21-etf-rank-long:
+    # NEW setup (ultimate_1119 variant ULT-21), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (no parent; check negative).
+    # Normal-way backtest (LR8, testing book): T1 comb +0.011 (1 day), check -0.016, T2 +0.021 (1,579). research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-21.py
+    symbols: module
+    min_adv: 30000000
+    window: [1030, 1500]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierA]

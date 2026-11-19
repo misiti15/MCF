@@ -73,6 +73,7 @@ def _cfg(monkeypatch, acct):
 # C3 2026-11-18 (effective 2026-11-19): C3-EXIT100 moved these to the Graveyard; C3-WB5 added a Workbench copy
 C3_OUT = {"GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": "explore1", "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long": "livelab"}
 C3_IN = {"L3-gap-slope-rsi5hi-FD-WB5": "livelab"}
+from tests.test_ult1119_deploy import ULT_1120  # noqa: E402  ultimate_1119 admissions, effective 2026-11-20
 
 
 def _on(cfg):
@@ -88,6 +89,7 @@ def test_moves_are_moves(monkeypatch):
         want = want | {k for k, a in FROM_GY.items() if a == acct} | {k for k, a in FROM_GEN.items() if a == acct}
         want = want | {k for k, a in WB_1116.items() if a == acct}
         want = (want - set(C3_OUT)) | {k for k, a in C3_IN.items() if a == acct}
+        want = want | {k for k, a in ULT_1120.items() if a == acct}
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -135,7 +137,8 @@ def test_assignments_and_ledger():
         assert set(d["accounts"][acct]) == ((base | {k for k, a in FROM_GY.items() if a == acct}
                                              | {k for k, a in FROM_GEN.items() if a == acct}
                                              | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
-                                            | {k for k, a in C3_IN.items() if a == acct}), acct
+                                            | {k for k, a in C3_IN.items() if a == acct}
+                                            | {k for k, a in ULT_1120.items() if a == acct}), acct
     assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")

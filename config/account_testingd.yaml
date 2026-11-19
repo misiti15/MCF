@@ -62,6 +62,10 @@ live:
     - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # 8 traded sessions / 59 trades
     - NS4-pm-vwap-reclaim-oversold-short   # 15 traded sessions / 51 trades
     - CWT14-failbrk-orl-p10-long-WB5   # workbench copy, owner 2026-11-16 "CWT14 WB5 yes": normal priority, last (~58 trades/session isolated)
+    - ETFDISP-late-dip-hidisp-long   # NEW 2026-11-20 ultimate_1119 (owner decision); appended last so existing setups keep their priority
+    - ULT-HV2-shock-snap-etf-long-K   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
+    - ULT-26-withgap-trend-long   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
+    - ULT-26-withgap-trend-short   # NEW 2026-11-20 ultimate_1119 (Tier A by the letter); appended last so existing setups keep their priority
 strategies:
   RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3:
     # Workbench copy of RW5-heat30-flowsell-rsi5pop-gapdn-short-FD (Primary), Mechanic 2026-11-16: + skip when SPY is up > +0.20% since 09:50 + stop cost <= 0.15R + window from 10:15;
@@ -1096,3 +1100,71 @@ strategies:
         max_overlap: 0.122
         overlap_with: GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long
         n_tried_in_run: 3000
+  ETFDISP-late-dip-hidisp-long:
+    # NEW setup, owner 2026-11-19 ~07:50 ET "Added to testing as a new setup for live sessions" (owner decision (1)); meets the top-10 standard;
+    # in-sample gate. Leg E of ULT-32 (= WB4 ETF late dip) only after high prior-day dispersion (disp_prev >= 2.6438, frozen).
+    # T1 comb +0.191 (w/o best day +0.143, n 383), check +0.125, T2 +0.142 (44); 100% of its symbol-sessions also WB4's. research/ultimate_1119/etfdisp/RESULTS.md. Effective session 2026-11-20 (ledger 2026-11-20-ult1119-testing-admissions).
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ETFDISP-late-dip-hidisp-long.py
+    symbols: module
+    min_adv: 95000000
+    window: [1400, 1500]
+    geom: t05s1
+    context: [spy_fo, disp_prev]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, etf, owner_decision, "parent:NM-ETF-late-dip-di-long"]
+  ULT-HV2-shock-snap-etf-long-K:
+    # NEW setup (ultimate_1119 variant H-V2), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A: meets the top-10 standard (derived from ST7-FD, loose).
+    # Normal-way backtest (LR8, testing book): T1 comb +0.171 (w/o best day +0.115), check +0.196, T2 +0.005 (197; 1 day). research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/round5/hunt_volume/H5V.py
+    symbols: module
+    min_adv: 300000000
+    window: [1015, 1500]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierA, "parent:ST7-FD, loose"]
+  ULT-26-withgap-trend-long:
+    # NEW setup (ultimate_1119 variant ULT-26), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (derived from L3, loose; negative).
+    # Normal-way backtest (LR8, testing book): variant T1 comb -0.014, check -0.018, T2 -0.016; long side +0.004. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-26.py
+    min_adv: 50000000
+    window: [1030, 1430]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierA, "parent:L3, loose"]
+  ULT-26-withgap-trend-short:
+    # NEW setup (ultimate_1119 variant ULT-26), owner 2026-11-19 "if the new setups meet or exceed those benchmark standards ... add them" +
+    # testing-admission rule (ledger 2026-11-19-testing-admission). Tier A by the letter: meets the top-10 standard (derived from L3, loose; negative).
+    # Normal-way backtest (LR8, testing book): variant T1 comb -0.014, check -0.018, T2 -0.016; short side -0.033. research/ultimate_1119/top10/VARIANTS.md. Effective session 2026-11-20.
+    enabled: true
+    type: lab
+    module: research/ultimate_1119/modules/ULT-26.py
+    symbols: module
+    min_adv: 50000000
+    window: [1030, 1430]
+    context: [spy_fo]
+    refire: true
+    refire_cooldown: 0
+    time_stop_min: 45
+    time_stop_min_r: 99
+    scale_out_r: null
+    tags: [ultimate_1119, tierA, "parent:L3, loose"]
