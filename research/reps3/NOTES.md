@@ -62,3 +62,9 @@ Fix 11-18 15:15 ET (Observer -1350-1, Skeptic -1950-1, Lead -1500-1): a '.benche
 is off at home but ELIGIBLE where it is a guest. It is skipped, so its Graveyard days count and the (3) flag marks the account change.
 The selftest adds a guest row and asserts that this ledger gives exactly 18 excluded pairs on 11-18 (the true bench), so a later
 patch shape cannot silently re-drop the guests.
+
+## Owned miss (Skeptic skeptic-20261118-2350-1): the frozen rule's market-context line (SPY realized range) was not printed
+Skeptic's read-only fetch: the REPS3 window's SPY high-low range averaged 1.46% (median 1.57%) vs 1.23% (median 0.91%) in the
+10-20..11-10 forecast baseline. A busier tape lifts signal rates, so part of the +12% eligibility-adjusted uplift may be market.
+Clean readings: Gen halt / buying-power skips went 66 / 60 -> 0 per session; forecast setups ran 527 -> 513/wk pre vs post TSZ1
+(TSZ1 added no setup-days to existing setups; the 11-17 uplift is the Workbench copies). Next refresh prints the SPY range line.

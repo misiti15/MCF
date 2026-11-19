@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-18 19:25) SIDEHUNT ranked (RS-vs-SPY = owner PK1 queue; guild pick = signed volume share). Owned: REPS3 SPY-range line missing. Next: Lead picks; then a frozen plan on the full in-play denominator. LESSON: re-read the FROZEN rule's report list before posting a scored result.
 - (11-18 17:55) DONE: REPS3 (+8% id-matched, +12% eligibility-adj; halt/BP skips 0), ICCSET (median 0.22), A1 (77% of missed moves left after 09:50; 4.5/day >= 1 ATR non-ETF), FINAL shortlist. Next: whatever Lead picks; A1-next needs a NEW side input. LESSON: SHORTUP's ETF regex mis-flags ADRs ('Shares') - use the strict pattern.
 - (11-18 15:15) REPS3 guest fix done (18 benched pairs asserted). LESSON: ledger patches have shapes (benched+away = guest); check every patch shape for a key before using it.
 - (11-18 11:40) REPS3 score.py (5 reporting fixes) + ICCSET window env done. Tonight: refresh.py guard -> score.py --end 2026-11-18 -> recompute_pnl_adj -> ICCSET x2 windows (NOTES.md) -> A1 -> final shortlist. Note GY-BENCH 11-18 in context.
