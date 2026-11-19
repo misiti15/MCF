@@ -60,11 +60,22 @@ def build_review(journal, run_id: int, day: str, health: dict | None = None) -> 
     if len(wi):
         wi = wi.assign(status=wi.meta.str.extract(r"status=([^;]+)")[0], why=wi.meta.str.extract(r"why=(.*)$")[0])
         wi["why"] = wi["why"].str.replace(r"\d+(\.\d+)?", "#", regex=True)
+        from .c3score import whatif_corrected
+
         for (st, why), g in wi.groupby(["status", "why"]):
+            # W8-DQ / C3-SCORE: the verdict uses the corrected what-if (unfillable skips dropped, first signal per
+            # name-day, spread + 0.05R haircut); the raw sum (repeat signals of one name counted each bar) is shown
+            # only next to it. An unfillable reason (no borrow, spread, halt, ...) has no corrected R: "not tradable".
+            c = whatif_corrected(g.assign(reason=g["meta"].str.extract(r"why=(.*)$")[0]),
+                                 key=("symbol", "date", "strategy"))
+            fillable = c["n"] > 0
             decisions.append({"status": st, "reason": why, "signals": int(len(g)),
                               "whatif_exp_r": round(float(g.r_multiple.mean()), 3),
-                              "whatif_total_r": round(float(g.r_multiple.sum()), 2),
-                              "verdict": "rule cost us R today" if g.r_multiple.sum() > 0 else "rule saved R today"})
+                              "whatif_raw_total_r": round(float(g.r_multiple.sum()), 2),
+                              "whatif_total_r": c["r"] if fillable else None,
+                              "whatif_n": c["n"],
+                              "verdict": ("not tradable (unfillable skip)" if not fillable else
+                                          "rule cost us R today" if c["r"] > 0 else "rule saved R today")})
     by_setup = {s: _day_stats(g) for s, g in today.groupby("strategy")} if len(today) else {}
 
     findings = []
@@ -72,9 +83,9 @@ def build_review(journal, run_id: int, day: str, health: dict | None = None) -> 
         findings.append(f"Entry slippage averaged {t['slip_bps']} bps against the signal price. Candidates: resting stop-entry "
                         "orders at the broker, or streaming bars to cut polling latency.")
     for d in decisions:
-        if d["signals"] >= 10 and d["whatif_total_r"] > 0:
-            findings.append(f"'{d['reason']}' ({d['status']}) blocked {d['signals']} signals that would have made "
-                            f"{d['whatif_total_r']:+.1f}R. Track it for 20 sessions before loosening it.")
+        if d["whatif_n"] >= 10 and (d["whatif_total_r"] or 0) > 0:
+            findings.append(f"'{d['reason']}' ({d['status']}) blocked {d['whatif_n']} names that would have made "
+                            f"{d['whatif_total_r']:+.1f}R (corrected what-if). Track it for 20 sessions before loosening it.")
     miss = int(sig.reason.str.startswith("missed").sum()) if len(sig) else 0
     if miss:
         findings.append(f"{miss} signals were missed because their trigger traded before the runner saw it "
@@ -116,7 +127,9 @@ def to_markdown(rv: dict) -> str:
              f"| Entry slippage (bps) | {f(t.get('slip_bps'))} | {f(y.get('slip_bps'))} | {f(r5.get('slip_bps'))} |",
              f"| Stop-exit share | {f(t.get('stop_exit_share'))} | {f(y.get('stop_exit_share'))} | {f(r5.get('stop_exit_share'))} |",
              "", "## Rules and filters: what they cost or saved today (what-if)", ""]
-    lines += [f"- {d['status']} · {d['reason']}: {d['signals']} signals, {d['whatif_total_r']:+.1f}R ({d['verdict']})"
+    lines += [f"- {d['status']} · {d['reason']}: {d['signals']} signals"
+              + (f", corrected {d['whatif_total_r']:+.1f}R on {d['whatif_n']} names" if d.get("whatif_total_r") is not None else "")
+              + f" (raw {d.get('whatif_raw_total_r', 0.0):+.1f}R; {d['verdict']})"
               for d in rv["decisions"]] or ["- No signals were held back today."]
     lines += ["", "## Improvement candidates", ""] + ([f"- {x}" for x in rv["findings"]] or ["- None today."])
     return "\n".join(lines) + "\n"

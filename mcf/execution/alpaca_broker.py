@@ -72,6 +72,25 @@ class AlpacaBroker:
                     cache[symbol] = False
         return cache[symbol]
 
+    def load_borrow(self) -> int:
+        """U9-ETB (research/usage/u9_execleaks): one read-only GET /v2/assets (active US equities) fills the can_short
+        cache for every listed symbol at once (shortable and easy_to_borrow, the same test as can_short). Returns the
+        number of symbols loaded. A symbol missing from the list still goes through can_short's own per-symbol GET.
+        Raises on failure; the caller keeps the per-symbol path then."""
+        rows = self.client.get("/assets", {"status": "active", "asset_class": "us_equity"}) or []
+        cache = self.__dict__.setdefault("_short_cache", {})
+        n = 0
+        for a in rows:
+            sym = a.get("symbol") if isinstance(a, dict) else None
+            if sym:
+                cache[sym] = bool(a.get("shortable") and a.get("easy_to_borrow"))
+                n += 1
+        return n
+
+    def borrow_known(self, symbol: str) -> bool | None:
+        """The cached shortable+ETB flag for `symbol` (None = not looked up yet). Never calls the broker."""
+        return self.__dict__.get("_short_cache", {}).get(symbol)
+
     def equity(self) -> float:
         return float(self.client.get_account().equity)
 

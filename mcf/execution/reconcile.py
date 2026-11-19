@@ -118,6 +118,11 @@ def reconcile_day(broker, journal, run_id: int, day, cfg: dict | None = None) ->
         journal.update_order_status(rec.broker_order_id, "closed")
     out = pd.DataFrame(rows)
     out.attrs["residual"] = residual   # parent id -> {left, qty}: lots still open after a partial exit (status only)
+    # W8-DQ (crunch 2026-11-18): entry fill price of every filled lot seen this pass, open or closed, so the runner's
+    # open marks (status open_r, poll mtm) use the fill, not the signal's reference price (fills were only learned on
+    # a restart before). Read-only: nothing here changes what is booked.
+    mine = set(orders.broker_order_id.astype(str))
+    out.attrs["fills"] = {i: float(lot["entry"]) for i, lot in lots.items() if i in mine}
     return out
 
 

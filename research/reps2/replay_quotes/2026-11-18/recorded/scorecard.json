@@ -1,0 +1,240 @@
+{
+ "run": "../runs/rq",
+ "dates": "2026-11-18..2026-11-18",
+ "targets": {
+  "match": 0.98,
+  "extra": 0.02,
+  "bias": 0.01,
+  "z": 1.645,
+  "corr": 0.95,
+  "sign": 0.9,
+  "skip": 0.95
+ },
+ "rule21": {
+  "targets": {
+   "match": 0.95,
+   "gap": 0.03,
+   "z": 1.645
+  },
+  "fit_until": "2026-10-30",
+  "matched_on": "decision bar",
+  "per_account": {
+   "primary": false,
+   "testing": false,
+   "testing2": false
+  },
+  "pooled": true,
+  "pass": false
+ },
+ "pooled": {
+  "account": "pooled",
+  "sessions": 1,
+  "days": [
+   "2026-11-18"
+  ],
+  "live_trades": 377,
+  "replay_trades": 381,
+  "matched": 377,
+  "matched_pm1": 377,
+  "match": 1.0,
+  "match_pm1": 1.0,
+  "extra": 0.010610079575596816,
+  "bias": 0.017800643480803666,
+  "bias_se": 0.013471755903434303,
+  "bias_n": 377,
+  "bias_lo": -0.008603998089927567,
+  "bias_hi": 0.0442052850515349,
+  "live_r": -69.95777069872305,
+  "replay_r": -62.39201309656554,
+  "live_avg_r": -0.18556437851120172,
+  "replay_avg_r": -0.16375856455791485,
+  "daily_corr": 0.9999519320680017,
+  "sign_agree": 1.0,
+  "skip_match": 0.9960629921259843,
+  "live_signals": 1016,
+  "worst_ok": false,
+  "verdict": {
+   "T1_match": true,
+   "T2_extra": true,
+   "T3_bias": false,
+   "T3_no_optimism": true,
+   "T4_daily": true,
+   "T5_skip": true,
+   "T6_worst": false,
+   "all": false
+  },
+  "rule21": {
+   "match": 1.0,
+   "gap_matched": 0.017800643480803666,
+   "gap_all": 0.021805813953286873,
+   "fit_until": "2026-10-30",
+   "fresh": true,
+   "match_ok": true,
+   "gap_ok": true,
+   "no_optimism": true,
+   "pass": true
+  }
+ },
+ "accounts": [
+  {
+   "account": "primary",
+   "sessions": 1,
+   "days": [
+    "2026-11-18"
+   ],
+   "live_trades": 49,
+   "replay_trades": 49,
+   "matched": 49,
+   "matched_pm1": 49,
+   "match": 1.0,
+   "match_pm1": 1.0,
+   "extra": 0.0,
+   "bias": -0.022934344220398684,
+   "bias_se": NaN,
+   "bias_n": 49,
+   "bias_lo": NaN,
+   "bias_hi": NaN,
+   "live_r": -5.5232446340323325,
+   "replay_r": -6.647027500831869,
+   "live_avg_r": -0.1127192782455578,
+   "replay_avg_r": -0.1356536224659565,
+   "daily_corr": NaN,
+   "sign_agree": 1.0,
+   "skip_match": 1.0,
+   "live_signals": 233,
+   "worst_day_live": "2026-11-18",
+   "worst_day_replay": "2026-11-18",
+   "worst_ok": true,
+   "top_mismatch": {},
+   "verdict": {
+    "T1_match": true,
+    "T2_extra": true,
+    "T3_bias": false,
+    "T3_no_optimism": false,
+    "T4_daily": false,
+    "T5_skip": true,
+    "T6_worst": true,
+    "all": false
+   },
+   "rule21": {
+    "match": 1.0,
+    "gap_matched": -0.022934344220398684,
+    "gap_all": -0.022934344220398695,
+    "fit_until": "2026-10-30",
+    "fresh": true,
+    "match_ok": true,
+    "gap_ok": true,
+    "no_optimism": false,
+    "pass": false
+   }
+  },
+  {
+   "account": "testing",
+   "sessions": 1,
+   "days": [
+    "2026-11-18"
+   ],
+   "live_trades": 62,
+   "replay_trades": 62,
+   "matched": 62,
+   "matched_pm1": 62,
+   "match": 1.0,
+   "match_pm1": 1.0,
+   "extra": 0.0,
+   "bias": -0.00430543574996104,
+   "bias_se": NaN,
+   "bias_n": 62,
+   "bias_lo": NaN,
+   "bias_hi": NaN,
+   "live_r": -7.58819333045031,
+   "replay_r": -7.855130346947895,
+   "live_avg_r": -0.12239021500726306,
+   "replay_avg_r": -0.1266956507572241,
+   "daily_corr": NaN,
+   "sign_agree": 1.0,
+   "skip_match": 1.0,
+   "live_signals": 157,
+   "worst_day_live": "2026-11-18",
+   "worst_day_replay": "2026-11-18",
+   "worst_ok": true,
+   "top_mismatch": {},
+   "verdict": {
+    "T1_match": true,
+    "T2_extra": true,
+    "T3_bias": false,
+    "T3_no_optimism": false,
+    "T4_daily": false,
+    "T5_skip": true,
+    "T6_worst": true,
+    "all": false
+   },
+   "rule21": {
+    "match": 1.0,
+    "gap_matched": -0.00430543574996104,
+    "gap_all": -0.004305435749961048,
+    "fit_until": "2026-10-30",
+    "fresh": true,
+    "match_ok": true,
+    "gap_ok": true,
+    "no_optimism": false,
+    "pass": false
+   }
+  },
+  {
+   "account": "testing2",
+   "sessions": 1,
+   "days": [
+    "2026-11-18"
+   ],
+   "live_trades": 266,
+   "replay_trades": 270,
+   "matched": 266,
+   "matched_pm1": 266,
+   "match": 1.0,
+   "match_pm1": 1.0,
+   "extra": 0.015037593984962405,
+   "bias": 0.030457001787819928,
+   "bias_se": NaN,
+   "bias_n": 266,
+   "bias_lo": NaN,
+   "bias_hi": NaN,
+   "live_r": -56.84633273424041,
+   "replay_r": -47.88985524878579,
+   "live_avg_r": -0.21370801779789628,
+   "replay_avg_r": -0.1773698342547622,
+   "daily_corr": NaN,
+   "sign_agree": 1.0,
+   "skip_match": 0.9936102236421726,
+   "live_signals": 626,
+   "worst_day_live": "2026-11-18",
+   "worst_day_replay": "2026-11-18",
+   "worst_ok": false,
+   "top_mismatch": {
+    "skipped:size < # share after liquidity cap -> submitted:ok": 2,
+    "rejected:{\"base_price\" -> submitted:ok": 2
+   },
+   "verdict": {
+    "T1_match": true,
+    "T2_extra": true,
+    "T3_bias": false,
+    "T3_no_optimism": false,
+    "T4_daily": false,
+    "T5_skip": true,
+    "T6_worst": false,
+    "all": false
+   },
+   "rule21": {
+    "match": 1.0,
+    "gap_matched": 0.030457001787819928,
+    "gap_all": 0.03633818354313409,
+    "fit_until": "2026-10-30",
+    "fresh": true,
+    "match_ok": true,
+    "gap_ok": false,
+    "no_optimism": false,
+    "pass": false
+   }
+  }
+ ],
+ "note": "Educational only - not financial advice."
+}

@@ -752,8 +752,8 @@ window.MCF = window.MCF || {};
       const r = await fetch(RAW + a.br + "/status.json?t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw 0;
       const s = await r.json(), t = s.today || {}, all = s.since_start || {};
-      put(a, money((s.account || {}).equity), [`Today ${pl(alp(t))} (Alpaca) · ${rf(window.MCF_TOTALS.dayR(s))} · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
-        `Since start ${pl(all.alpaca_pnl ?? all.pnl)} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
+      put(a, money((s.account || {}).equity), [`Today ${pl(alp(t))} (Alpaca) · ${rf(window.MCF_TOTALS.dayR(s))}${t.account_r != null ? ` (account ${t.account_r > 0 ? "+" : ""}${(+t.account_r).toFixed(2)}R)` : ""} · ${t.trades ?? 0} trades · ${t.open_positions ?? 0} open`,
+        `Since start ${pl(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}${all.alpaca_pnl_trading != null ? " (excl. broker glitch)" : ""} · ${s.phase === "trading" ? "trading" : e(s.phase || "–")}`],
         s.asof, m => s.phase === "trading" && m > 10);
       ok.add(a.k);
     } catch (_) {
@@ -1053,7 +1053,7 @@ window.MCF.simBlend = (live, replay, shadow, w) => {   // mirror of mcf/report/s
     $l("#lv-cmp").innerHTML = `<table class="cmp"><thead><tr><th class="l">Metric</th><th>${ACCOUNTS[ACCT][0]} today</th><th>${ACCOUNTS[ACCT][0]} since start</th><th>MarcoFlow</th></tr></thead><tbody>${[
       row("Trades", t.trades ?? 0, all.trades ?? 0, `${m.trades ?? "–"} (${m.trades_per_day ?? "–"}/day)`),
       row("Win rate", pc(t.win_rate), pc(all.win_rate), pc(m.win_rate)),
-      row("P/L (Alpaca)", `<span class="${cls(alp(t))}">${money(alp(t))}</span>`, `<span class="${cls(all.alpaca_pnl ?? all.pnl)}">${money(all.alpaca_pnl ?? all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
+      row("P/L (Alpaca)", `<span class="${cls(alp(t))}">${money(alp(t))}</span>`, `<span class="${cls(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}">${money(all.alpaca_pnl_trading ?? all.alpaca_pnl ?? all.pnl)}</span>`, `<span class="${cls(m.total_pnl)}">${money(m.total_pnl)}</span>`),
       row("Adj. (incl. modelled stop slippage)", money(t.pnl_adj), money(all.pnl_adj), "–"),
       row("Avg P/L per trade", money(t.avg_pnl), money(all.avg_pnl), money(m.avg_pnl)),
       row("Profit factor", t.profit_factor ?? "–", all.profit_factor ?? "–", m.profit_factor ?? "–"),
@@ -1676,6 +1676,9 @@ window.MCF_SHADOW = (() => {
       const chips = (x.former_primary ? ' <span class="chip" title="Was in the primary account">ex-primary</span>' : "") +
         (x.split ? ` <span class="chip" title="${e(Object.entries(x.split).map(([k, v]) => `${(ACC[k] || [k])[0]}: ticker half ${v.part} of ${v.of}`).join("; "))}">split copies</span>` : "") +
         (!x.live ? ' <span class="chip" title="Not enabled in this account now; past trades only">off</span>' : "") +
+        // GY-ARCHIVE-20 / REPS2-LANE (owner 2026-11-18): one short tag each from assignments.json, no new column
+        ((((asg || {}).setups || {})[x.setup] || {}).archived ? ` <span class="chip" title="${e("Archived " + asg.setups[x.setup].archived.from + " (" + (asg.setups[x.setup].archived.code || "GY-LIFE") + "): disabled, record frozen and kept, re-testable, never deleted")}">archived</span>` : "") +
+        ((((asg || {}).setups || {})[x.setup] || {}).shadow_lane ? ' <span class="chip" title="Low-rep fast lane: also runs shadow-only (no orders) on the full universe in Testing A; shadow trades are a separate record, never live reps (REPS2-LANE)">shadow lane</span>' : "") +
         (x.all_trades > x.trades ? ` <span class="chip" title="Live trades in all accounts">${x.all_trades} total</span>` : "") +
         (x.pending ? ` <span class="chip" style="color:var(--warn,#b45309);border-color:currentColor" title="${e(x.pending)}">move tonight → Primary only</span>` : "") +
         (x.moved ? ` <span class="chip" style="color:var(--s1);border-color:currentColor" title="${x.movedFrom ? "Moved here " + e(x.moved) + " from " + e(x.movedFrom) +

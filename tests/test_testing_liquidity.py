@@ -19,7 +19,9 @@ def _testing_strategies(monkeypatch):
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
     out = {s.name: s for s in build_strategies(load_config())}
     monkeypatch.setenv("MCF_ACCOUNT", "graveyard")   # LIQ-orl: Testing 2 2026-10-20, Graveyard account 2026-10-21 (owner)
-    t2 = {s.name: s for s in build_strategies(load_config())}
+    gy = load_config()   # GY-ARCHIVE-20 (2026-11-19): LIQ-orl archived (enabled false); its block stays re-testable
+    gy["strategies"]["LIQ-orl-sweep-open15-s25-long"] = {**gy["strategies"]["LIQ-orl-sweep-open15-s25-long"], "enabled": True}
+    t2 = {s.name: s for s in build_strategies(gy)}
     assert "LIQ-orl-sweep-open15-s25-long" not in out
     out["LIQ-orl-sweep-open15-s25-long"] = t2["LIQ-orl-sweep-open15-s25-long"]
     monkeypatch.setenv("MCF_ACCOUNT", "testinge")    # LIQ-pdl: Live Lab 2026-11-05 (low-rep rotation), Testing E from 2026-11-12

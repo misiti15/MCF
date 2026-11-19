@@ -100,6 +100,7 @@ class PaperRunner:
         self._split_cache: tuple | None = None
         self.dry_run = dry_run
         self.broker = broker or AlpacaBroker(paper=True)
+        self._etb_logged: set = set()                    # U9-ETB: (symbol, setup, day) ETB skips already journaled
         self.dc = data_client
         # Daily index context (opt-in lab `context: [spy_prng]`, owner 2026-10-30 PDL-1a): the daily priors of the index
         # symbols those setups read, loaded once per session (from priors when the symbol is in the universe, else
@@ -1247,6 +1248,7 @@ class PaperRunner:
             return                                    # HK-FLAT-1113b: late successor, closing flatten only
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         self._step_entries = True
+        self._refresh_borrow(now)                     # U9-ETB: bulk borrow list (off unless shorts.borrow_prefetch)
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
@@ -1262,6 +1264,8 @@ class PaperRunner:
                     retry = True
                 if not strat.eligible(ctx):
                     continue
+                if self._borrow_blocked(strat, ctx.symbol, today):
+                    continue   # U9-ETB: short-only setup, name not shortable/ETB, already journaled once today
                 if self._bucket_done(strat, key, ctx):
                     continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
                 for sig in self._tap(strat, ctx, strat.signals(ctx), last, px):
@@ -1439,6 +1443,22 @@ class PaperRunner:
             info["stop_cost_r"] = round(cost_r, 3)
             if cost_r > float(lim):
                 return False, f"cost filter: stop-exit cost {cost_r:.2f}R > {float(lim):.2f}R", info
+        if self.live.get("skip_passed_at_quote"):
+            # U9-TGT (research/usage/u9_execleaks), after the spread / cost checks so their reasons keep priority: the
+            # fill side of the quote is already at/through the target (the take-profit would fill at once for <= 1 cent,
+            # or the broker rejects the bracket), or the exit side is at/through the stop (instant stop-out / broker
+            # reject). Skip without sending an order.
+            fill = ask if sig.side == 1 else bid
+            exit_px = bid if sig.side == 1 else ask
+            # Re-check (owner U9-TGT yes 2026-11-18, ledger re-check 2026-12-03): every skip carries `u9_skip` (target /
+            # stop), the quote side used and the signal's reference price in the journal meta and the quote log, so
+            # research/usage/u9_execleaks/RECHECK.md can re-score it on 10 recorded-quote sessions.
+            if sig.target is not None and sig.side * (sig.target - fill) <= 0.01:
+                info.update(u9_skip="target", u9_fill_side=round(fill, 4), u9_ref=round(float(px), 4))
+                return False, f"target passed at quote ({fill:.2f} vs target {sig.target:.2f})", info
+            if sig.side * (exit_px - sig.stop) <= 0.01:
+                info.update(u9_skip="stop", u9_exit_side=round(exit_px, 4), u9_ref=round(float(px), 4))
+                return False, f"stop passed at quote ({exit_px:.2f} vs stop {sig.stop:.2f})", info
         vol = ctx.bars["volume"].tail(5).mean()
         info["cap_qty"] = int(self.live.get("max_participation", 0.10) * vol)
         return True, "ok", info
@@ -1494,6 +1514,8 @@ class PaperRunner:
                            bps=_num(info.get("spread_bps")), age_s=_num(info.get("quote_age_s")))
             else:
                 rec["bid"] = None                       # decided before any quote was fetched (no quote used)
+            if info.get("u9_skip"):                     # U9-TGT re-check: which side of the quote decided the skip
+                rec["u9"] = info["u9_skip"]
             if self._quote_buf_since is None:
                 self._quote_buf_since = _time.time()
             self._quote_buf.append(json.dumps(rec, separators=(",", ":"), default=str))
@@ -1528,6 +1550,41 @@ class PaperRunner:
             print(f"quote log flush failed: {type(e).__name__}: {e}")
             return None
 
+    # ---------------------------------------------------------------- U9-ETB borrow list
+    def _refresh_borrow(self, now) -> None:
+        """U9-ETB (research/usage/u9_execleaks): with shorts.borrow_prefetch, load the broker's whole shortable/ETB list
+        with one read-only GET at the first entry poll and again every shorts.borrow_refresh_min minutes (0 = once).
+        A failure is logged and the per-symbol can_short path is used as before. Never raises."""
+        sh = self.cfg.get("shorts", {})
+        if not sh.get("borrow_prefetch") or not hasattr(self.broker, "load_borrow"):
+            return
+        st = self.__dict__.setdefault("_borrow_state", {"at": None, "fails": 0})
+        every = float(sh.get("borrow_refresh_min", 0) or 0)
+        if st["at"] is not None and (every <= 0 or (now - st["at"]).total_seconds() < every * 60):
+            return
+        if st["fails"] >= 3:
+            return
+        try:
+            n = self.broker.load_borrow()
+            st["at"] = now
+            self.health["borrow_list"] = {"symbols": n, "at": str(now)}
+        except Exception as e:
+            st["fails"] += 1
+            print(f"borrow list load failed ({st['fails']}): {type(e).__name__}; per-symbol can_short used")
+
+    def _borrow_blocked(self, strat, symbol: str, today) -> bool:
+        """True for a short-only setup on a name the loaded borrow list marks not shortable/ETB once the skip has been
+        journaled today (so the setup draws no further signals there). Never calls the broker."""
+        if not self.cfg.get("shorts", {}).get("borrow_prefetch"):
+            return False
+        side = getattr(strat, "side", None)
+        if side not in (-1, "short"):
+            return False
+        known = getattr(self.broker, "borrow_known", None)
+        if known is None or known(symbol) is not False:
+            return False
+        return (symbol, strat.name, str(today)) in self.__dict__.get("_etb_logged", ())
+
     def _enter(self, sig, px, key, ctx, now):
         coid = self._coid(sig, ctx, now)
         if self.same_setup_reentry:
@@ -1549,6 +1606,11 @@ class PaperRunner:
                 if gate is not None and gate["spread"] >= self.split_spread:
                     return self._log(sig, "skipped", "split-tape short gate", px, now, gate)
             if sh.get("require_easy_to_borrow", True) and not self.broker.can_short(sig.symbol):
+                k = (sig.symbol, sig.strategy, str(now.date()))
+                logged = self.__dict__.setdefault("_etb_logged", set())
+                if sh.get("borrow_prefetch") and k in logged:
+                    return None                       # U9-ETB: journaled once per setup/symbol/day
+                logged.add(k)
                 return self._log(sig, "skipped", "not shortable/ETB", px, now)
         ok, why = self.risk.check(sig, px)
         if not ok:
@@ -1970,6 +2032,7 @@ class PaperRunner:
         from .reconcile import reconcile_day
 
         trades = reconcile_day(self.broker, self.journal, self.run_id, day, self.cfg)
+        self._fill_px.update(trades.attrs.get("fills") or {})   # W8-DQ: open marks at the entry fill (status only)
         self._note_residuals(trades.attrs.get("residual") or {})
         self._excursions(trades)
         self.journal.add_trades(self.run_id, trades)

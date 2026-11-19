@@ -67,14 +67,51 @@ def equity_history(prior: dict, acct: str, day: str, account: dict) -> dict:
     return eqh
 
 
-def _since_alpaca(by_day: list[dict]) -> dict:
+def _since_alpaca(by_day: list[dict], account: str | None = None) -> dict:
     """Since-start dollars from the broker: the sum of each session's Alpaca day P/L (journal pnl for a session with no
     stored equity; alpaca_days says how many sessions are broker-measured)."""
     if not by_day:
         return {}
     n = sum(h.get("alpaca_day_pl") is not None for h in by_day)
     tot = sum(h["alpaca_day_pl"] if h.get("alpaca_day_pl") is not None else (h.get("pnl") or 0.0) for h in by_day)
-    return {"alpaca_pnl": round(tot, 2), "alpaca_days": n, "sessions": len(by_day)}
+    out = {"alpaca_pnl": round(tot, 2), "alpaca_days": n, "sessions": len(by_day)}
+    adj = _glitch_adjustments(account, by_day)
+    if adj:   # W8-DQ: broker glitches that are not trading (PL1109 list), labelled; alpaca_pnl stays the raw broker sum
+        out["alpaca_pnl_trading"] = round(tot + sum(a["delta"] for a in adj), 2)
+        out["alpaca_adjustments"] = adj
+    return out
+
+
+def _glitch_adjustments(account: str | None, by_day: list[dict]) -> list[dict]:
+    """The labelled broker-glitch dollar adjustments (mcf.report.daily_post.PL_ADJUSTMENTS) that fall on this account's
+    sessions, as {date, delta, label}: "set" replaces the day's Alpaca P/L, "add" adds to it. Never a trading loss."""
+    if not account:
+        return []
+    try:
+        from .daily_post import PL_ADJUSTMENTS
+    except Exception:
+        return []
+    day_pl = {h.get("date"): h.get("alpaca_day_pl") for h in by_day}
+    out = []
+    for acct, d, kind, val, label in PL_ADJUSTMENTS:
+        if acct != account or d not in day_pl or day_pl[d] is None:
+            continue
+        delta = (float(val) - float(day_pl[d])) if kind == "set" else float(val)
+        out.append({"date": d, "delta": round(delta, 2), "label": label})
+    return out
+
+
+ACCOUNT_R_PCT = 0.25   # UNIT1 (owner yes 2026-11-18): account R = $ P/L after costs / 0.25% of equity (display only)
+
+
+def _account_r(stats: dict, equity) -> float | None:
+    """UNIT1: account R of a stats block ($ after costs = pnl_adj) on `equity`; None without equity. Display only:
+    setups and days are still judged by trade R (owner)."""
+    try:
+        eq = float(equity)
+        return round(float(stats.get("pnl_adj", 0.0) or 0.0) / (eq * ACCOUNT_R_PCT / 100.0), 2) if eq > 0 else None
+    except (TypeError, ValueError):
+        return None
 
 
 def _f(x, nd=2):
@@ -145,14 +182,18 @@ def build_status(runner, now, phase: str) -> dict:
                   "strategies": [s.name for s in runner.strategies]},
         "health": {"universe": len(runner.watchlist), **runner.health},
         "account": account,
-        "today": {**_stats(today), "alpaca_day_pl": account.get("day_pl"), "signals": int(len(sig)), "by_status": counts, "skip_reasons": reasons,
-                  "open_positions": len(positions)},
+        "today": {**(st_today := _stats(today)), "alpaca_day_pl": account.get("day_pl"), "signals": int(len(sig)), "by_status": counts, "skip_reasons": reasons,
+                  "open_positions": len(positions),
+                  "account_r": _account_r(st_today, account.get("last_equity") or account.get("equity"))},
         "positions": positions,
         "closed": closed,
         "signals": recent,
         "history": by_day[-30:],
         "equity_history": dict(sorted(eqh.items())[-60:]),
-        "since_start": {**_stats(trades), **_since_alpaca(by_day)},
+        "since_start": {**(st_all := _stats(trades)), **_since_alpaca(by_day, acct_name),
+                        "account_r": _account_r(st_all, ((runner.cfg or {}).get("account") or {}).get("starting_equity")
+                                                or account.get("equity"))},
+        "account_r_basis": f"UNIT1: $ P/L after costs / {ACCOUNT_R_PCT}% of equity (display only; trade R judges setups)",
         "marcoflow": json.loads(REF.read_text()) if REF.exists() else None,
         "validation": json.loads(VALIDATION.read_text()) if VALIDATION.exists() else None,
     }
