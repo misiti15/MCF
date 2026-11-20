@@ -50,15 +50,12 @@ live:
     - NM-AMS-N1-quiet-morning-short   # 3 traded sessions / 3 trades
     - GEN-261020-06-VWAPxDn-Slope6lem0p011-BarsSinceHODge35-MID-BRoplt0p5-holdtr-long   # 4 traded sessions / 7 trades
     - GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long   # 4 traded sessions / 11 trades
-    - GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long   # 4 traded sessions / 19 trades
     - GEN-261022-03-NewHOD-Ret15mATRge0p12-SMA20dge0p59-LATE-QQQdn-t05s1-short   # 5 traded sessions / 11 trades
     - GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short   # 6 traded sessions / 14 trades
     - GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short   # 10 traded sessions / 85 trades
     - MF1-945-flowsell-vwapup   # 14 traded sessions / 31 trades
     - NS4-pm-vwap-reclaim-oversold-short-FD   # 15 traded sessions / 50 trades
     - CWT05-flush-m05-v3-long   # 18 traded sessions / 79 trades
-    - exhaustion_short   # 22 traded sessions / 125 trades
-    - intraday_momentum   # 23 traded sessions / 61 trades
     - RW7-gapdn-bounce-early-short-FD   # 23 traded sessions / 567 trades
     - ULT-14-snap-long   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
@@ -128,12 +125,13 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   exhaustion_short:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN); twin -FD in Testing A); from session 2026-11-12
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 26 sessions, 158 trades, avg R w/o best day -0.109 (<= -0.10), last-10-session R -1.2 (<= 0)"}
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   intraday_momentum:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
   NM-AMS-N1-quiet-morning-short:   # moved from Testing B 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 1 live trades so far; ~0.83/session lab.
@@ -579,7 +577,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261022-06-newlod-pm-long.py
     context:

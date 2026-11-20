@@ -2783,5 +2783,35 @@
   "link": "research/st7_review_1120/REVIEW.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "ETF-BURST",
+  "title": "Study a per-setup limit on correlated ETF lots per bar (NM-ETF burst)",
+  "what": "NM-ETF-late-dip opened 12 leveraged / sector ETF longs on the 14:10-14:15 bars (one market bet x12); all stopped. Study (research only, after hours): a targeted per-setup limit on correlated ETF lots per bar (e.g. one lot per correlated ETF group per setup per bar), scored per setup on the 2-year data, costs in. Not a general stacking cap (owner rule); NM-ETF itself stays unchanged (PROT-29).",
+  "recommend": "Yes (study only; no live change)",
+  "numbers": [
+   "Primary 11-20: 12 lots, 0 wins, MFE 0.02-0.13R, -12.57R after costs (latched)",
+   "same bar in Testing E (WB4 copy, 15 lots -15.8R) and Testing C (ULT-22, 11 lots -10.1R)",
+   "all accounts 11-20: 98 ETF longs -75.0R; backlog nightly-1117-etp-twin-groups"
+  ],
+  "why": "Targeted at the failure mode (same-bar correlated ETF lots in one setup), not tailored to one setup and not a book-wide cap.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "G261019-04-GY",
+  "title": "Midday Oversold Buy (Gen): move to the Graveyard after its -99R day?",
+  "what": "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long lost -99.1R on 100 trades on 11-20 (46 entries 11:00-11:10). Your 11-18 keep was conditional on positive total R; on 11-19 you said keep in Gen. FOOTRACE-EXIT does not fire (day t -1.08 > -1.5). Reply 'G261019-04-GY yes' to move it Gen -> Graveyard after a close, or 'no' to keep it in Gen.",
+  "recommend": "No - keep in Gen under the agreed rules; BRAKE-BURST (30 entries / 10 min, from 11-23) caps the burst that made today's loss",
+  "numbers": [
+   "230 trades / 13 traded sessions, avg -0.434R, w/o best day -0.524R, w/o top 2 -0.626R, day t -1.08",
+   "before 11-20: 130 trades -0.006R (total -0.76R); 11-20: 100 trades -99.06R (87 stops, MFE avg 0.31R)",
+   "last-4 sessions -107.6R; busiest-3 sessions avg -0.581R"
+  ],
+  "why": "The record was flat until one runaway burst day; the burst brake already approved for 11-23 targets that failure mode, and FOOTRACE-EXIT is the agreed exit rule (consistency over churn).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
  }
 ]

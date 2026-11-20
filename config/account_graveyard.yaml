@@ -50,9 +50,7 @@ live:
     - ST1-ordn-long-pm-t05s1-FD             # ~3.81/day full-day
     - NS2-sma50break-overbought-short-FD    # ~19.13/day
     - NS2-sma50break-overbought-short       # former primary (windowed 09:50-11:30)
-    - MF1-945-flowsell-vwapup-FD            # ~24.74/day
     - ST2-slope20up-long-am-t05s1-FD        # ~25.72/day
-    - heat_fade_long                        # former primary (windowed 11:05-13:30)
     - LIQ-orl-sweep-open15-s25-long         # ~31.3/day
     - RW2-exhaustion-noon-adv150-short-FD   # ~52.08/day
     - heat_fade_long-FD                     # ~55.18/day
@@ -62,7 +60,6 @@ live:
     - CWT14-failbrk-orl-p05-lowvol-long     # ~173.74/day (moved from Testing 2 2026-10-21)
     - heat_fade_short-FD                    # ~176.38/day
     - CWT14-failbrk-orl-p05-long            # ~246.53/day (moved from Testing 2 2026-10-21)
-    - CWT09-gapdn-bounce-g5-lowerhalf-short   # moved 2026-10-21
     - CWT14-failbrk-pdh-p05-lowvol-short   # moved 2026-10-22
     - CWT14-failbrk-pdh-p10-lowvol-short   # moved 2026-10-22
     - CWT14-failbrk-pdh-p10-short          # ~42.71/day (moved from Testing 1 2026-10-22, P0; from session 2026-10-23)
@@ -72,10 +69,7 @@ live:
     - CWT12-coil-k4-long                   # ~35/day live (moved from Testing 2 2026-10-28, K4-2; from session 2026-10-29)
     - CWT14-failbrk-pdl-p05-long           # 675 live trades (moved from Testing 1 2026-10-30, D1; from session 2026-10-30)
     - CWT14-failbrk-pdl-p05-lowvol-long    # 433 live trades (moved from Testing 2 2026-10-30, D2; from session 2026-10-30)
-    - NS3-failed-vwap-reclaim-short-FD     # 112 live trades (moved from Testing 2 2026-11-01, DM-NS3; from session 2026-11-02)
     - RW4-ns3-adv150-short-FD              # 104 live trades (moved from Testing 1 + 2 2026-11-01, DM-NS3; from session 2026-11-02)
-    - MF3-open-flowsell-rsi5hi-FD          # 141 live trades (moved from Testing 1 2026-11-02, DM-MF; from session 2026-11-03)
-    - MF5-flowsell-vwapup-rsi5hi-FD        # 74 live trades (moved from Testing 2 2026-11-02, DM-MF; from session 2026-11-03)
     - NS5-sma50-flush-oversold-long-FD     # 44 live trades (moved from Testing 1 + 2 2026-11-03, DM-N3; from session 2026-11-04)
     - RW6G1-ns2-up3-vwap2sd-short-FD       # 28 live trades (moved from Testing 1 2026-11-03, DM-N3; from session 2026-11-04)
     - RW3S-gapdn-flowsell-short-FD         # 297 live trades (moved from Testing E 2026-11-13, RW3S-GY; from session 2026-11-16)
@@ -100,15 +94,10 @@ live:
     - GEN-261029-05-BearDiv-RSI14ge78-Compress6le0p091-AM-BRopgt0p5-t05s05-long   # GY-BENCH guest (b) from Testing F, 11-18..11-24
     - GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
     - GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short   # 211 live trades, -181.8R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - CWT14-failbrk-pdl-p10-long   # 870 live trades, -105.3R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short   # 169 live trades, -61.7R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long   # 103 live trades, -57.2R (moved from Testing D 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - MF4-h40-open-flowsell-FD   # 214 live trades, -55.5R (moved from On Deck 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - CWT14-failbrk-pdl-p10-lowvol-long   # 514 live trades, -44.1R (moved from Testing D 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long   # 129 live trades, -42.3R (moved from Testing E 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long   # 237 live trades, -41.6R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - CWT13-vwapstretch-z05-long   # 345 live trades, -35.9R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - MF2-open-rsimidhi-flowsell-FD   # 185 live trades, -30.9R (moved from On Deck 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long   # 136 live trades, -30.7R (moved from Testing E 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long   # 143 live trades, -27.6R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long   # 132 live trades, -27.2R (moved from Testing B 2026-11-18, C3-EXIT100; from session 2026-11-19)
@@ -119,11 +108,24 @@ live:
     - exhaustion_short-FD   # 248 live trades, -12.7R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - MF5-flowsell-vwapup-rsi5hi   # 140 live trades, -9.9R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long   # 131 live trades, -8.8R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
+    - GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long   # 103 live trades, -41.5R (moved from Testing B 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - CWT14-failbrk-pdl-p05-R2A-long   # 433 live trades, -65.1R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long   # 79 live trades, -27.3R (moved from Testing B 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long   # 57 live trades, -24.2R (moved from Testing F 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - intraday_momentum   # 74 live trades, -20.3R (moved from Testing F 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short   # 46 live trades, -17.3R (moved from Testing C 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long   # 55 live trades, -15.9R (moved from Setup Generator 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - CWT13-vwapstretch-z075-short   # 30 live trades, -3.9R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - CWT14-failbrk-pdl-p05-R2A-short   # 267 live trades, -2.0R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long   # 41 live trades, -9.2R (moved from Testing C 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # 61 live trades, -10.5R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 92 live trades, -24.5R (moved from Testing E 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 31 sessions, 307 trades, avg R w/o best day -0.268 (<= -0.10), last-10-session R -6.0 (<= 0)"}
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: heat
     formula: research/heat/candidates/regime_5.py
     sides: long
@@ -246,8 +248,9 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
   # from MF1-945-flowsell-vwapup (primary; source window 950-1030); ~24.74/day full-day [exp -0.074R]
   MF1-945-flowsell-vwapup-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 30 sessions, 167 trades, avg R w/o best day -0.232 (<= -0.10), last-10-session R -14.5 (<= 0)"}
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/MF1-945-flowsell-vwapup-FD.py
     min_adv: 95000000
@@ -316,8 +319,9 @@ strategies:
     scale_out_r: null
     tags: [graveyard, "moved to Graveyard 2026-10-21 (owner)"]
   CWT09-gapdn-bounce-g5-lowerhalf-short:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 23 sessions, 202 trades, avg R w/o best day -0.171 (<= -0.10), last-10-session R -5.2 (<= 0)"}
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/cwt/live/CWT09-gapdn-bounce-g5-lowerhalf-short.py
     min_adv: 1000000
@@ -440,9 +444,10 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: B3-LPD-p0.05-Vlowvol-sidelong-t05s1-full, fill: true}
     tags: [graveyard, "moved to Graveyard 2026-10-30 (owner)"]
   NS3-failed-vwap-reclaim-short-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 26 sessions, 290 trades, avg R w/o best day -0.146 (<= -0.10), last-10-session R -0.0 (<= 0)"}
     # moved to Graveyard 2026-11-01 (owner DM-NS3; its earlier trades stay in Primary / Testing, the dashboard merges them).
     # 112 trades -0.147R after costs (-0.270R w/o best day); 2-yr +0.056R (t 1.26).
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     refire: true
     refire_cooldown: 1
     type: lab
@@ -467,9 +472,10 @@ strategies:
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-01 (owner)"]
   MF3-open-flowsell-rsi5hi-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 30 sessions, 328 trades, avg R w/o best day -0.151 (<= -0.10), last-10-session R -17.9 (<= 0)"}
     # moved to Graveyard 2026-11-02 (owner DM-MF; its earlier trades stay in Primary / Testing 1, the dashboard merges them).
     # 141 trades -0.225R after costs (-0.265R w/o best day; 3 busiest sessions -0.261R); 2-yr -0.074R.
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/MF3-open-flowsell-rsi5hi-FD.py
     min_adv: 95000000
@@ -478,9 +484,10 @@ strategies:
     live_scale_out: false
     tags: [graveyard, "moved to Graveyard 2026-11-02 (owner)"]
   MF5-flowsell-vwapup-rsi5hi-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 29 sessions, 190 trades, avg R w/o best day -0.175 (<= -0.10), last-10-session R -9.6 (<= 0)"}
     # moved to Graveyard 2026-11-02 (owner DM-MF; its earlier trades stay in Primary / Testing 2, the dashboard merges them).
     # 74 trades -0.284R after costs (-0.361R w/o best day; 3 busiest sessions -0.454R); 2-yr -0.052R.
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/MF5-flowsell-vwapup-rsi5hi-FD.py
     min_adv: 95000000
@@ -1350,8 +1357,9 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
   CWT14-failbrk-pdl-p10-long:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 30 sessions, 934 trades, avg R w/o best day -0.173 (<= -0.10), last-10-session R -90.0 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 870 trades, 28 live sessions (28 traded), -105.3R, avg -0.121R, w/o best day -0.143R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-long.py
     min_adv: 95000000
@@ -1442,8 +1450,9 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   MF4-h40-open-flowsell-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 30 sessions, 290 trades, avg R w/o best day -0.192 (<= -0.10), last-10-session R -29.7 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 214 trades, 28 live sessions (28 traded), -55.5R, avg -0.259R, w/o best day -0.294R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/MF4-h40-open-flowsell-FD.py
     min_adv: 95000000
@@ -1452,8 +1461,9 @@ strategies:
     former_primary: {demoted: '2026-11-10', first_testing_session: '2026-11-11', review_after_sessions: 10}
     tags: [graveyard, moved from On Deck 2026-11-18 (owner C3-EXIT100)]
   CWT14-failbrk-pdl-p10-lowvol-long:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 30 sessions, 544 trades, avg R w/o best day -0.160 (<= -0.10), last-10-session R -47.9 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 514 trades, 28 live sessions (28 traded), -44.1R, avg -0.086R, w/o best day -0.114R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p10-lowvol-long.py
     min_adv: 95000000
@@ -1543,8 +1553,9 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   CWT13-vwapstretch-z05-long:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 27 sessions, 397 trades, avg R w/o best day -0.228 (<= -0.10), last-10-session R -36.4 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 345 trades, 28 live sessions (25 traded), -35.9R, avg -0.104R, w/o best day -0.135R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z05-long.py
     min_adv: 95000000
@@ -1555,10 +1566,11 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: B2-z0.5-Uall-sidelong-t05s1-guest, fill: false}
     tags: [graveyard, moved from Testing A 2026-11-18 (owner C3-EXIT100)]
   MF2-open-rsimidhi-flowsell-FD:
+    retired: {from: "2026-11-23", code: RETIRE-R3, reason: "whole live record to 11-20: 26 sessions, 217 trades, avg R w/o best day -0.358 (<= -0.10), last-10-session R -78.4 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 185 trades, 28 live sessions (25 traded), -30.9R, avg -0.167R, w/o best day -0.371R
     refire: true
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # RETIRED 2026-11-20 after the close (owner RETIRE-R3, Friday review; from session 2026-11-23): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/MF2-open-rsimidhi-flowsell-FD.py
     min_adv: 95000000
@@ -1881,4 +1893,596 @@ strategies:
         score: 0.7
         max_overlap: 0.13
         overlap_with: GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long
+        n_tried_in_run: 3000
+  # ---- FOOTRACE-EXIT 2026-11-20 (Friday review, after the close; from session 2026-11-23): arena setups moved here
+  #      (>= 15 active days, >= 30 trades, avg R <= 0, w/o best day <= 0, day t <= -1.5; ledger 2026-11-23-friday-review-1120)
+  GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing B, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 103 trades, 24 active days, -41.5R, avg -0.403R, w/o best day -0.745R, day t -2.93
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261020-03-macdh-hi-mid-long.py
+    context:
+    - breadth
+    min_adv: 20000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing B 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-20
+    gen:
+      date: '2026-10-20'
+      spec:
+        side: long
+        window: MID
+        geom: t05s05
+        min_adv: 20000000.0
+        conds:
+        - - bars_since_lod
+          - <=
+          - 5.0
+        - - breadth
+          - <
+          - 0.3
+        - - macd_hist
+          - '>='
+          - 0.079
+      key: 466cc15de28859a2
+      screen:
+        train:
+          n: 875
+          exp_r: 0.0582
+          t: 0.72
+          win: 0.625
+          days: 72
+        valid:
+          n: 429
+          exp_r: 0.0098
+          t: 0.19
+          win: 0.571
+          days: 47
+        all:
+          n: 1304
+          exp_r: 0.0423
+          t: 0.72
+          win: 0.607
+          days: 119
+        per_day: 3.061
+        per_day_valid: 2.234
+        exp_up: 0.118
+        exp_down: 0.0351
+        exp_flat: 0.0682
+        excess_train: 0.0623
+        excess_valid: 0.0824
+        tier1: true
+        score: 0.94
+        max_overlap: 0.27
+        overlap_with: ST2-slope20up-long-am-t05s1-FD
+        n_tried_in_run: 3146
+  CWT14-failbrk-pdl-p05-R2A-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing A, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 433 trades, 15 active days, -65.1R, avg -0.150R, w/o best day -0.158R, day t -2.88
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-long.py
+    context: [spy_prng]
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.08333333333333333   # research level (+0.25 R1); NOT traded live here: no live_scale_out and scale_out_max_per_day 0 (Graveyard rule); Testing A ran the live half-off (SO-1A)
+    tags: [graveyard, moved from Testing A 2026-11-20 (FOOTRACE-EXIT), owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
+  GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing B, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 79 trades, 17 active days, -27.3R, avg -0.346R, w/o best day -0.393R, day t -2.63
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261029-02-rsi2-lo-mid-long.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing B 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-29
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: MID
+        geom: hold
+        min_adv: 150000000.0
+        conds:
+        - - breadth
+          - <
+          - 0.4
+        - - day_vs_prev_range
+          - <=
+          - 0.52
+        - - rsi2
+          - <=
+          - 0.0
+        - - vwap_cross_n
+          - '>='
+          - 9.0
+      key: 3c19e3c7d6771b25
+      screen:
+        train:
+          n: 1330
+          exp_r: 0.0542
+          t: 0.24
+          win: 0.423
+          days: 119
+        valid:
+          n: 768
+          exp_r: 0.0199
+          t: 0.11
+          win: 0.443
+          days: 89
+        all:
+          n: 2098
+          exp_r: 0.0417
+          t: 0.26
+          win: 0.43
+          days: 208
+        per_day: 4.925
+        per_day_valid: 4.0
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 1.7236
+        exp_down: -0.34
+        exp_flat: 0.0211
+        excess_train: 0.0327
+        excess_valid: 0.035
+        tier1: true
+        score: 0.36
+        max_overlap: 0.419
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing F, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 57 trades, 22 active days, -24.2R, avg -0.425R, w/o best day -0.533R, day t -2.27
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-06-newlod-pm-long.py
+    context:
+    - spy_fo
+    min_adv: 95000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing F 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: long
+        window: PM
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - - buyPressure
+          - <=
+          - -0.49
+        - - new_lod
+          - ==
+          - 1.0
+        - - orb_fail_up
+          - ==
+          - 1.0
+        - - spy_fo
+          - <
+          - -0.5
+      key: 52eedd9f9a1c507f
+      screen:
+        train:
+          n: 521
+          exp_r: 0.1361
+          t: 1.81
+          win: 0.608
+          days: 50
+        valid:
+          n: 243
+          exp_r: 0.0157
+          t: 0.12
+          win: 0.523
+          days: 33
+        all:
+          n: 764
+          exp_r: 0.0978
+          t: 1.5
+          win: 0.581
+          days: 83
+        per_day: 1.793
+        per_day_valid: 1.266
+        exp_up: null
+        exp_down: 0.0095
+        exp_flat: 0.4737
+        excess_train: 0.105
+        excess_valid: 0.105
+        tier1: true
+        score: 0.37
+        max_overlap: 0.415
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  intraday_momentum:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing F, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 74 trades, 33 active days, -20.3R, avg -0.274R, w/o best day -0.293R, day t -2.10
+    enabled: true
+    former_primary: {demoted: "2026-10-11", first_testing_session: "2026-10-12", review_after_sessions: 10}
+    tags: [graveyard, moved from Testing F 2026-11-20 (FOOTRACE-EXIT)]
+  GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing C, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 46 trades, 19 active days, -17.3R, avg -0.376R, w/o best day -0.544R, day t -1.94
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261027-09-orbfaildn-lam-short.py
+    context:
+    - breadth
+    min_adv: 95000000
+    window:
+    - 1030
+    - 1200
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing C 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: short
+        window: LAM
+        geom: t05s05
+        min_adv: 95000000.0
+        conds:
+        - - breadth
+          - <
+          - 0.5
+        - - gap
+          - '>='
+          - 2.0
+        - - orb_fail_dn
+          - ==
+          - 1.0
+        - - slope6_atr
+          - '>='
+          - 0.03
+      key: 0ec26a3ca545be3b
+      screen:
+        train:
+          n: 996
+          exp_r: 0.0293
+          t: 0.55
+          win: 0.59
+          days: 136
+        valid:
+          n: 1408
+          exp_r: -0.006
+          t: -0.23
+          win: 0.552
+          days: 137
+        all:
+          n: 2404
+          exp_r: 0.0086
+          t: 0.32
+          win: 0.568
+          days: 273
+        per_day: 5.643
+        per_day_valid: 7.333
+        per_day_median60: 4.0
+        expected_live_per_day: 4.4
+        exp_up: 0.0289
+        exp_down: 0.0352
+        exp_flat: -0.0318
+        excess_train: 0.0692
+        excess_valid: 0.0805
+        tier1: false
+        score: 0.52
+        max_overlap: 0.386
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3082
+  GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Setup Generator, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 55 trades, 24 active days, -15.9R, avg -0.289R, w/o best day -0.305R, day t -1.80
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261020-01-macdh-hi-pm-long.py
+    context:
+    - breadth
+    min_adv: 95000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Setup Generator 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-20
+    gen:
+      date: '2026-10-20'
+      spec:
+        side: long
+        window: PM
+        geom: t1s05
+        min_adv: 95000000.0
+        conds:
+        - - breadth
+          - '>'
+          - 0.6
+        - - macd_hist
+          - '>='
+          - 0.12
+        - - rsi5
+          - <=
+          - 25.0
+      key: 2521f549435e2fa2
+      screen:
+        train:
+          n: 626
+          exp_r: 0.0715
+          t: 0.83
+          win: 0.473
+          days: 110
+        valid:
+          n: 739
+          exp_r: 0.0934
+          t: 0.68
+          win: 0.475
+          days: 91
+        all:
+          n: 1365
+          exp_r: 0.0834
+          t: 0.98
+          win: 0.474
+          days: 201
+        per_day: 3.204
+        per_day_valid: 3.849
+        exp_up: 0.1128
+        exp_down: 0.1376
+        exp_flat: -0.0199
+        excess_train: 0.0959
+        excess_valid: 0.125
+        tier1: true
+        score: 1.43
+        max_overlap: 0.496
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3146
+  CWT13-vwapstretch-z075-short:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing A, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 30 trades, 30 active days, -3.9R, avg -0.131R, w/o best day -0.288R, day t -1.70
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z075-short.py
+    min_adv: 95000000
+    window: [1100, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sideshort-t1s1-guest", fill: false}
+    tags: [graveyard, moved from Testing A 2026-11-20 (FOOTRACE-EXIT)]
+  CWT14-failbrk-pdl-p05-R2A-short:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing A, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 267 trades, 15 active days, -2.0R, avg -0.007R, w/o best day -0.057R, day t -1.70
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-short.py
+    context: [spy_prng]
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: 0.08333333333333333   # research level (+0.25 R1); NOT traded live here: no live_scale_out and scale_out_max_per_day 0 (Graveyard rule); Testing A ran the live half-off (SO-1A)
+    tags: [graveyard, moved from Testing A 2026-11-20 (FOOTRACE-EXIT), owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
+  GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing C, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 41 trades, 20 active days, -9.2R, avg -0.224R, w/o best day -0.425R, day t -1.62
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-10-orbfaildn-pm-long.py
+    context:
+    - breadth_open
+    min_adv: 50000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing C 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: long
+        window: PM
+        geom: t1s1
+        min_adv: 50000000.0
+        conds:
+        - - breadth_open
+          - '>'
+          - 0.65
+        - - emaDiff_chg3
+          - <=
+          - -0.051
+        - - orb_fail_dn
+          - ==
+          - 1.0
+      key: 931b0785e8b67d63
+      screen:
+        train:
+          n: 10036
+          exp_r: -0.0043
+          t: -0.09
+          win: 0.507
+          days: 84
+        valid:
+          n: 4791
+          exp_r: 0.0085
+          t: 0.13
+          win: 0.512
+          days: 37
+        all:
+          n: 14827
+          exp_r: -0.0002
+          t: -0.0
+          win: 0.509
+          days: 121
+        per_day: 34.805
+        per_day_valid: 24.953
+        exp_up: 0.0516
+        exp_down: -0.7282
+        exp_flat: -0.5589
+        excess_train: 0.0282
+        excess_valid: 0.0411
+        tier1: false
+        score: 0.16
+        max_overlap: 0.494
+        overlap_with: NM-RWR1-exh150-gapdn-spyup-pm-short
+        n_tried_in_run: 3000
+  GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing A, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 61 trades, 25 active days, -10.5R, avg -0.172R, w/o best day -0.369R, day t -1.61
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing A 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: PM
+        geom: t05s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.5
+        - - fromOpen_atr
+          - <=
+          - -0.34
+        - - ret3_atr
+          - <=
+          - -0.12
+        - - sma20_slope_pct
+          - '>='
+          - 0.29
+      key: ee345e097b08c6e9
+      screen:
+        train:
+          n: 1238
+          exp_r: 0.1081
+          t: 0.78
+          win: 0.76
+          days: 108
+        valid:
+          n: 753
+          exp_r: 0.0635
+          t: 1.1
+          win: 0.701
+          days: 112
+        all:
+          n: 1991
+          exp_r: 0.0913
+          t: 0.99
+          win: 0.738
+          days: 220
+        per_day: 4.674
+        per_day_valid: 3.922
+        exp_up: -0.1695
+        exp_down: 0.1142
+        exp_flat: -0.0036
+        excess_train: 0.0617
+        excess_valid: 0.0799
+        tier1: true
+        score: 1.03
+        max_overlap: 0.346
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short:
+    # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing E, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 92 trades, 22 active days, -24.5R, avg -0.266R, w/o best day -0.503R, day t -1.59
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261022-08-emadchg-lo-am-short.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing E 2026-11-20 (FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-22
+    gen:
+      date: '2026-10-22'
+      spec:
+        side: short
+        window: AM
+        geom: holdtr
+        min_adv: 20000000.0
+        conds:
+        - - emaDiff_chg3
+          - <=
+          - -0.094
+        - - flow3
+          - '>='
+          - 1.0
+        - - rvol_day
+          - <=
+          - 0.59
+        - - spy_fo
+          - '>'
+          - 0.25
+      key: d281c0d6151dc0ff
+      screen:
+        train:
+          n: 471
+          exp_r: 0.0615
+          t: 0.26
+          win: 0.461
+          days: 67
+        valid:
+          n: 570
+          exp_r: 0.01
+          t: 0.1
+          win: 0.537
+          days: 67
+        all:
+          n: 1041
+          exp_r: 0.0333
+          t: 0.27
+          win: 0.502
+          days: 134
+        per_day: 2.444
+        per_day_valid: 2.969
+        exp_up: -0.3304
+        exp_down: 1.0265
+        exp_flat: 0.1054
+        excess_train: 0.0319
+        excess_valid: -0.0042
+        tier1: true
+        score: 0.1
+        max_overlap: 0.186
+        overlap_with: CWT14-failbrk-pdh-p05-lowvol-short
         n_tried_in_run: 3000

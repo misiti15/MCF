@@ -53,7 +53,6 @@ live:
     - NM-PM-gapdn-above-pdh-rvol-short   # 3 traded sessions / 3 trades
     - GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short   # 3 traded sessions / 19 trades
     - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long   # 3 traded sessions / 35 trades
-    - GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long   # 4 traded sessions / 41 trades
     - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long   # 4 traded sessions / 55 trades
     - ST5-pdbrkup-short-mid-t05s1-FD   # 5 traded sessions / 6 trades
     - GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short   # 5 traded sessions / 26 trades
@@ -62,7 +61,6 @@ live:
     - GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short   # 6 traded sessions / 25 trades
     - ST3-rsi5up-short-pm-t1s1-FD   # 7 traded sessions / 15 trades
     - GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short   # 7 traded sessions / 25 trades
-    - GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short   # 7 traded sessions / 31 trades
     - CWT05-flush-m075-v3-long   # 12 traded sessions / 24 trades
     - CWT12-flag-s1-long   # 14 traded sessions / 23 trades
     - RW6-ns2-up3-short-FD   # 22 traded sessions / 189 trades
@@ -628,7 +626,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261026-10-orbfaildn-pm-long.py
     context:
@@ -908,7 +906,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3082
   GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261027-09-orbfaildn-lam-short.py
     context:
