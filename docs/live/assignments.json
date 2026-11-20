@@ -43,6 +43,7 @@
    "NM-AR-AM-gapdown-capitulation-long",
    "NM-MF3-qqqdn-gapdn-FD",
    "NS3V1-am-widestop-short",
+   "RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230",
    "RW6G1-ns2-up3-vwap2sd-short-FD-WB3",
    "ULT-07-pm-volatile-dip-long",
    "ULT-13-st7-sharp-long",
@@ -162,6 +163,7 @@
    "NM-ETF-late-dip-di-long-WB1",
    "NM-RWN3-ns3-spyup-early-short",
    "NM1-cwt09-g10-vwaploss-short",
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230",
    "ST4-emadn-long-am-t1s05-FD",
    "ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD",
    "ST8-volspikedn-long-pm-t1s1-FD",
@@ -228,6 +230,7 @@
    "GEN-261022-10-EMAdChgge0p15-ORLdistge0p41-PDLdistle0p14-PM-BRoplt0p5-holdtr-short",
    "GEN-261023-10-MACDhge0p12-VWAPcrossesle0-EMAdiffge0p16-LUNCH-BRvwlt0p4-hold-long",
    "IDX3-spy075-0955-3x-trail",
+   "L3-gap-slope-fromopen-FD-RQa-1230",
    "L3-gap-slope-lowdist-FD-WB4",
    "LD5-st2-breadthup-t05s1-long",
    "MF1-945-flowsell-vwapup",
@@ -1864,6 +1867,13 @@
    "last_old_session": "2026-10-29",
    "first_session": "2026-10-30"
   },
+  "L3-gap-slope-fromopen-FD-RQa-1230": {
+   "accounts": [
+    "testingf"
+   ],
+   "since": "2026-11-20 16:05 ET",
+   "from": null
+  },
   "L3-gap-slope-fromopen-FD-WB4": {
    "accounts": [
     "testing2"
@@ -2485,6 +2495,13 @@
    "last_old_session": "2026-10-20",
    "first_session": "2026-10-21"
   },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230": {
+   "accounts": [
+    "testing2"
+   ],
+   "since": "2026-11-20 16:05 ET",
+   "from": null
+  },
   "RW3-gapdn-rsi5pop-flowsell-short-FD-WB3": {
    "accounts": [],
    "since": "2026-11-16 23:07 ET",
@@ -2537,6 +2554,13 @@
    ],
    "last_old_session": "2026-10-20",
    "first_session": "2026-10-21"
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230": {
+   "accounts": [
+    "explore1"
+   ],
+   "since": "2026-11-20 16:05 ET",
+   "from": null
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB3": {
    "accounts": [],
@@ -2905,17 +2929,24 @@
   "at": "2026-11-20 16:05 ET",
   "changes": [
    {
-    "setup": "BEG-GNG-gap-and-go-long",
-    "from": [],
-    "to": [
-     "explore1"
-    ]
-   },
-   {
-    "setup": "BEG-ORB-orb15-inplay-stopOR",
+    "setup": "L3-gap-slope-fromopen-FD-RQa-1230",
     "from": [],
     "to": [
      "testingf"
+    ]
+   },
+   {
+    "setup": "RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230",
+    "from": [],
+    "to": [
+     "testing2"
+    ]
+   },
+   {
+    "setup": "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230",
+    "from": [],
+    "to": [
+     "explore1"
     ]
    }
   ]

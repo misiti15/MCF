@@ -43,6 +43,7 @@ live:
   # starved by supersets (swarm W4, 2026-10-10).
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
+    - RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230   # Remedy-Q copy (WW-REMEDY-Q (a), owner 2026-11-20): FIRST (Workbench rule 5: copies at the top)
     - L3-gap-slope-fromopen-FD-WB4   # workbench copy, owner 2026-11-16 "L3 WB4 yes": FIRST
     - MF2-open-rsimidhi-flowsell-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - RW6G1-ns2-up3-vwap2sd-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
@@ -1681,3 +1682,18 @@ strategies:
         max_overlap: 0.346
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
+  RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230:
+    # Remedy-Q copy (WW-REMEDY-Q item (a); owner 2026-11-20 "remedy-q yes absolutely and quickly", conditional on the
+    # re-check): the Primary parent RW3-gapdn-rsi5pop-flowsell-short-FD exactly (same module, filters, min_adv, refire, t1s1 exits)
+    # with NO new entries after 12:30 ET: window [950, 1230] = last entry on the 5-min bar that closes at 12:30; open
+    # lots still exit by their own rules. Cut-off from the re-check (live plateau 12:15-13:00, lab FIT plateau 12:15-12:45,
+    # CHECK scored once): research/remedyq_1120/verdicts.json. Parent in Primary unchanged. Effective session 2026-11-23
+    # (ledger 2026-11-23-remedyq-testing-copies). Testing copy, scored on later sessions only.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW3-gapdn-rsi5pop-flowsell-short-FD.py
+    min_adv: 95000000
+    window: [950, 1230]
+    scale_out_r: null
+    remedy_q: "(a) no new entries after 12:30 ET; parent RW3-gapdn-rsi5pop-flowsell-short-FD (Primary)"
+    tags: [remedy_q, "Remedy-Q", workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]

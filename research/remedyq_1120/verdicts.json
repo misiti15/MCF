@@ -1,0 +1,77 @@
+{
+ "note": "Educational only - not financial advice. REMEDY-Q re-check 2026-11-20 (owner request). R after costs (live LR8; lab LR8 + borrow, 1-min exits, live book). Scripts: live_tod.py, live_salvage.py, lab_tod.py (this folder).",
+ "verdicts": {
+  "a_cut_1300": "not confirmed: live better for all 3 setups, but lab CHECK per-trade quality worse for all 3 (Primary book d avg L3 -0.0004, RW3 -0.0029, RW5 -0.0085; excess vs random -28.0R)",
+  "a_cut_1230": "confirmed (weak): live and lab CHECK agree in sign for all 3 setups (Primary book); live plateau 12:15-13:00, lab FIT plateau peak 12:30; CHECK d avg +0.0047/+0.0071/+0.0039, paired t 1.94 < bar 2.89; Testing book mixed (L3 -0.0078)",
+  "cutoff_time": "12:30 (never later than 13:00; 13:05 / 13:15 worse than 13:00 live)",
+  "salvage": "none qualifies: best on FIT (stop cost <= 0.08R after 12:30) beats the plain cut on lab CHECK in the Primary book but hurts 2 of 3 in the Testing book and its kept afternoon trades lost live (85 tr, -0.068R)",
+  "b_l3_gap_atr": "not confirmed: FIT d avg +0.033 (Primary book) vs -0.048 (Testing book); CHECK +0.023 / +0.005; t < bar",
+  "c_rw_gap_le_1": "not confirmed: FIT d avg RW3 -0.094, RW5 -0.051 (Primary book), -0.090 / -0.019 (Testing book)"
+ },
+ "prior_research": {
+  "lines_up": [
+   "research/whatworks_1120/REPORT.md P5 (core <13:00 +0.207 vs >=13:00 -0.148)",
+   "research/crunch/w7_primaryday/RESULTS.md #5 (current five >=13:00 -18.0R)",
+   "research/l3_bespoke_1117/L3AM_RESULTS.md live/FWD/replay favour AM"
+  ],
+  "does_not_line_up": [
+   "research/l3_bespoke_1117/L3AM_RESULTS.md 2-year VALID FAIL (-0.047 vs -0.043, t 0.36)",
+   "research/crunch/w7_primaryday/RESULTS.md H13 FAIL (RW3/RW5 afternoon not replicated in other accounts)",
+   "research/giveback_1119/REPORT.md (lab L3 >= 13:30 +0.173R)",
+   "research/outsider_1120/qa.json Q24 (bleed worst after the open; midday window a coin flip per setup)"
+  ]
+ },
+ "live": {
+  "trades": 825,
+  "window": "2026-10-12..2026-11-20",
+  "pooled_le_1300": {
+   "n": 687,
+   "avg": 0.2246,
+   "tot": 154.31,
+   "wo_best": 0.1801,
+   "t_day": 2.51
+  },
+  "pooled_gt_1300": {
+   "n": 138,
+   "avg": -0.2001,
+   "tot": -27.61,
+   "wo_best": -0.2355,
+   "t_day": -1.92
+  },
+  "pooled_total_by_cut": {
+   "1200": 113.97,
+   "1215": 141.8,
+   "1230": 150.88,
+   "1245": 149.07,
+   "1300": 154.31,
+   "1305": 149.72,
+   "1315": 147.31,
+   "1330": 140.28,
+   "1400": 136.7,
+   "1430": 129.97,
+   "none": 126.7
+  },
+  "kept_pct_1230": {
+   "L3": 84.4,
+   "RW3": 72.5,
+   "RW5": 64.3,
+   "pooled": 76.2
+  }
+ },
+ "lab": {
+  "chosen_cutoff_fit": 1230,
+  "configs_per_setup": 22,
+  "configs_total": 66,
+  "t_bar": 2.89,
+  "fit_sessions": 169,
+  "check_sessions": 274,
+  "signals": 55030
+ },
+ "built": {
+  "L3-gap-slope-fromopen-FD-RQa-1230": "testingf",
+  "RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230": "testing2",
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230": "explore1",
+  "effective": "2026-11-23"
+ },
+ "rule_changes_in_live_window": "L3 Primary 10-21, demoted 10-22, re-promoted 10-30; RW3/RW5 Primary from 10-16; Primary size 10-28; Primary -2R latch 10-29; Testing CF 10-30; TEAM-6 11-11; LR3+LR8 costs 11-12; WB4 copies 11-17; C3 Epoch 1 11-19; stop rounding + BRAKE-BURST 11-20; none changed entry timing"
+}

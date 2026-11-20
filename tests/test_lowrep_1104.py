@@ -75,6 +75,7 @@ C3_OUT = {"GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0
 C3_IN = {"L3-gap-slope-rsi5hi-FD-WB5": "livelab"}
 from tests.test_ult1119_deploy import ULT_1120  # noqa: E402  ultimate_1119 admissions, effective 2026-11-20
 from tests.test_beg1120_deploy import BEG_1123  # noqa: E402  beginner_1120 admissions, effective 2026-11-23
+from tests.test_remedyq_1120 import COPIES as RQ_1123  # noqa: E402  Remedy-Q (a) copies, effective 2026-11-23
 # ROT block 2 (2026-11-19, from session 2026-11-20): arena moves, setup -> (from key, to key)
 _KEY = {"Testing A": "testing2", "Testing B": "explore1", "Testing C": "livelab", "Testing D": "testingd", "Testing E": "testinge",
         "Testing F": "testingf", "Setup Generator": "gen"}
@@ -102,6 +103,7 @@ def test_moves_are_moves(monkeypatch):
         want = (want - set(C3_OUT)) | {k for k, a in C3_IN.items() if a == acct}
         want = _rot2(want | {k for k, a in ULT_1120.items() if a == acct}, acct)
         want = want | {k for k, a in BEG_1123.items() if a == acct}
+        want = want | {k for k, (_, a) in RQ_1123.items() if a == acct}
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -147,7 +149,7 @@ def test_assignments_and_ledger():
     d = json.loads((ROOT / "docs/live/assignments.json").read_text())
     for acct, base in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         assert {k for k, a in BEG_1123.items() if a == acct} <= set(d["accounts"][acct]), acct
-        assert set(d["accounts"][acct]) - set(BEG_1123) == _rot2((base | {k for k, a in FROM_GY.items() if a == acct}
+        assert set(d["accounts"][acct]) - set(BEG_1123) - set(RQ_1123) == _rot2((base | {k for k, a in FROM_GY.items() if a == acct}
                                              | {k for k, a in FROM_GEN.items() if a == acct}
                                              | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
                                             | {k for k, a in C3_IN.items() if a == acct}
