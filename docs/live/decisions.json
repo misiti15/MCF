@@ -2529,5 +2529,91 @@
   "link": "research/owner_inbox/2026-11-20.md",
   "status": "answered",
   "answered": "yes, 2026-11-20"
+ },
+ {
+  "code": "OUT-EPOCH",
+  "title": "One clean rule epoch 11-23..12-18",
+  "what": "No rule edits for 4 weeks (bug fixes, rotation and Friday moves only); epoch id on every trade; volume and admissions held flat.",
+  "recommend": "Yes (outsider review)",
+  "numbers": [
+   "0 setups have 20+ trades under current rules",
+   "236 ledger entries in 7 weeks",
+   "daily R -76 -> -145R/day as volume doubled"
+  ],
+  "why": "No setup has a clean sample; growing volume is the main driver of worse daily R. May conflict with the owner's exposure/playing-time goals and new-admission flow — owner to confirm.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OUT-NULL",
+  "title": "Matched random-entry null as the promotion screen",
+  "what": "Build a per-setup random-entry null (same symbols, time ±30 min, side, geometry, LR8); show it beside the one-big-day column; promotions must beat it.",
+  "recommend": "Yes (research build first)",
+  "numbers": [
+   "10 survivors observed vs ~13 expected under a no-edge null",
+   "rank persistence Spearman -0.11"
+  ],
+  "why": "Raw 'positive w/o best day' is not evidence on its own.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OUT-NMETF",
+  "title": "Pre-registered forward test for NM-ETF-late-dip",
+  "what": "~25 sessions frozen; pass = day-clustered t>=2 and w/o-best avg>0; size rule committed in advance (e.g. 0.25%->0.5% on pass).",
+  "recommend": "Yes",
+  "numbers": [
+   "33 trades +0.21R, t 3.5, best day 21% of R",
+   "only setup above the live-program bar"
+  ],
+  "why": "Best candidate, but not yet separable from best-of-220 noise.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OUT-RETIRE",
+  "title": "Study a terminal RETIRED state",
+  "what": "Backtest a permanent retire rule (report wrongful kills of later graduates); separate from low-activity trims, which still go to testing.",
+  "recommend": "Yes to the study",
+  "numbers": [
+   "0 setups ever retired",
+   "losers ~79% of recent net loss",
+   "23 setups already have 95% upper bound < 0"
+  ],
+  "why": "Losers are effectively immortal.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OUT-BRAKE",
+  "title": "System-wide cost-in brake study + watchdog in all accounts",
+  "what": "Replay a cross-account cost-in stop; report per-setup better/worse; watchdog 'act' everywhere before real money.",
+  "recommend": "Yes (research replay)",
+  "numbers": [
+   "11-17: one Gen setup -134.6R with no brake",
+   "per-account halts count raw R before costs"
+  ],
+  "why": "Pre-real-money safety item.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "OUT-SCORE",
+  "title": "Primary-only production scoreboard as the North Star line",
+  "what": "Chart Primary after-promotion R with rule-change epochs; show other accounts as research spend; pre-declared pass/kill bars for the current 5.",
+  "recommend": "Yes",
+  "numbers": [
+   "-3,500R headline is 97.5% exploration",
+   "Primary +70R over 556 trades since promotion (RW3/RW5 one-day flag)"
+  ],
+  "why": "Separates a deployable book from tuition.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
  }
 ]
