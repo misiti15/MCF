@@ -60,7 +60,8 @@ INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy
 # kept where they are: mid-observation by owner decision, or a Graveyard setup with >= 10 live trades
 # (RW3S-gapdn-flowsell-short-FD stayed on 11-04 and moved on to Testing E on 2026-11-12;
 #  ST4-emadn-long-am-t1s05-FD stayed on 11-04 and moved on to Testing B on 2026-11-13, see FROM_GY)
-STAY = {"testing2": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"}}
+# PDL-1a R2A legs stayed in Testing 2 at ROLL1 (11-04); FOOTRACE-EXIT moved them to the Graveyard (Friday review 2026-11-20, from 11-23)
+STAY = {"graveyard": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"}}
 
 
 def _cfg(monkeypatch, acct):
@@ -73,6 +74,11 @@ def _cfg(monkeypatch, acct):
 # C3 2026-11-18 (effective 2026-11-19): C3-EXIT100 moved these to the Graveyard; C3-WB5 added a Workbench copy
 C3_OUT = {"GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long": "explore1", "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long": "livelab"}
 C3_IN = {"L3-gap-slope-rsi5hi-FD-WB5": "livelab"}
+# FOOTRACE-EXIT (Friday review 2026-11-20, from session 2026-11-23): moved to the Graveyard
+FR_OUT = {"GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long": "explore1",
+          "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long": "explore1",
+          "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short": "livelab",
+          "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab"}
 from tests.test_ult1119_deploy import ULT_1120  # noqa: E402  ultimate_1119 admissions, effective 2026-11-20
 from tests.test_beg1120_deploy import BEG_1123  # noqa: E402  beginner_1120 admissions, effective 2026-11-23
 from tests.test_remedyq_1120 import COPIES as RQ_1123  # noqa: E402  Remedy-Q (a) copies, effective 2026-11-23
@@ -104,6 +110,7 @@ def test_moves_are_moves(monkeypatch):
         want = _rot2(want | {k for k, a in ULT_1120.items() if a == acct}, acct)
         want = want | {k for k, a in BEG_1123.items() if a == acct}
         want = want | {k for k, (_, a) in RQ_1123.items() if a == acct}
+        want = want - set(FR_OUT)
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
@@ -153,7 +160,7 @@ def test_assignments_and_ledger():
                                              | {k for k, a in FROM_GEN.items() if a == acct}
                                              | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
                                             | {k for k, a in C3_IN.items() if a == acct}
-                                            | {k for k, a in ULT_1120.items() if a == acct}, acct), acct
+                                            | {k for k, a in ULT_1120.items() if a == acct}, acct) - set(FR_OUT), acct
     assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")

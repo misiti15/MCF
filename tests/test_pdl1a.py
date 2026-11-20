@@ -21,7 +21,7 @@ def _spy(prng: float):
     return SimpleNamespace(prev_high=100.0 + prng * 5.0, prev_low=100.0, atr=5.0)
 
 
-def _cfg(monkeypatch, acct="testing2"):
+def _cfg(monkeypatch, acct="graveyard"):   # FOOTRACE-EXIT 2026-11-20: Testing A -> Graveyard from 2026-11-23
     from mcf.config import load_config
 
     monkeypatch.setenv("MCF_ACCOUNT", acct)
@@ -51,13 +51,17 @@ def test_add_context_sets_the_daily_value_or_nan():
 def test_config_testing2_only_and_labeled(monkeypatch):
     t2 = (ROOT / "config/account_testing2.yaml").read_text()
     assert "owner exception PDL-1a 2026-10-30: below the BAR90 bar (t 1.14 vs 4.355), forward observation" in t2
+    t2cfg = _cfg(monkeypatch, "testing2")
     cfg = _cfg(monkeypatch)
     for n in NAMES:
+        # FOOTRACE-EXIT (Friday review 2026-11-20, from session 2026-11-23): off in Testing A, on in the Graveyard
+        assert not t2cfg["strategies"][n]["enabled"] and n not in t2cfg["live"]["setup_order"]
         s = cfg["strategies"][n]
-        assert s["enabled"] and s["context"] == ["spy_prng"] and s["live_scale_out"]
+        assert s["enabled"] and s["context"] == ["spy_prng"] and not s.get("live_scale_out")   # Graveyard: no live scale-out
+        assert not s.get("scale_out_cap_exempt")
         assert abs(s["scale_out_r"] - 0.25 / 3) < 1e-12 and "owner-exception" in s["tags"]
         assert n in cfg["live"]["setup_order"]
-    for f in ("default.yaml", "account_testing.yaml", "account_gen.yaml", "account_graveyard.yaml"):
+    for f in ("default.yaml", "account_testing.yaml", "account_gen.yaml"):
         st = yaml.safe_load((ROOT / "config" / f).read_text()).get("strategies") or {}
         assert not any(n in st for n in NAMES), f                  # Primary and the other accounts untouched
 

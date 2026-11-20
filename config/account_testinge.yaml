@@ -63,7 +63,6 @@ live:
     - GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long   # 7 traded sessions / 13 trades (live, all accounts, to 11-19)
     - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long   # 7 traded sessions / 17 trades (live, all accounts, to 11-19)
     - GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short   # 7 traded sessions / 68 trades (live, all accounts, to 11-19)
-    - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 8 traded sessions / 92 trades (live, all accounts, to 11-19)
     - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 10 traded sessions / 56 trades (live, all accounts, to 11-19)
     - NS3-failed-vwap-reclaim-short   # 17 traded sessions / 89 trades (live, all accounts, to 11-19)
     - ULT-05-withgap-cont-long   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
@@ -685,7 +684,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261022-08-emadchg-lo-am-short.py
     context:

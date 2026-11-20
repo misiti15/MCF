@@ -58,6 +58,26 @@ MOVED_C3 = {
     "MF5-flowsell-vwapup-rsi5hi": "testing2",
     "GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long": "gen",
 }
+# FOOTRACE-EXIT (owner FOOTRACE 2026-11-19, applied at the Friday review 2026-11-20, effective 2026-11-23; ledger
+# 2026-11-23-friday-review-1120): arena setup -> home it left
+MOVED_FR = {
+    "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long": "explore1",
+    "CWT14-failbrk-pdl-p05-R2A-long": "testing2",
+    "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long": "explore1",
+    "GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long": "testingf",
+    "intraday_momentum": "testingf",
+    "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short": "livelab",
+    "GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long": "gen",
+    "CWT13-vwapstretch-z075-short": "testing2",
+    "CWT14-failbrk-pdl-p05-R2A-short": "testing2",
+    "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab",
+    "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": "testing2",
+    "GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short": "testinge",
+}
+# RETIRE-R3 (owner 2026-11-20, applied at the Friday review 2026-11-20, effective 2026-11-23): terminal, block kept
+# (enabled false + retired marker), out of setup_order
+RETIRED = {k for k, v in (yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"] or {}).items()
+           if isinstance(v, dict) and v.get("retired")}
 # combined live win rate > 50% on 2026-10-20 (owner rule): stayed in Testing 1 (exhaustion_short-FD later left by C3-EXIT100)
 STAYED_T1 = {"L3-gap-slope-lowdist-FD"}   # L3-gap-slope-fromopen-FD: promoted to Primary 2026-10-21
 # exhaustion_short-FD: single home Testing A from 2026-11-12 (ONDECK dual-home fix) - still a testing account, never the Graveyard
@@ -103,11 +123,13 @@ def test_only_its_own_setups_run(monkeypatch):
     own = set(raw) - guests
     rot = cfg["rotation"]
     on = _on(cfg)
-    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) and on == (own - set(MOVED_OUT) - ARCHIVED - set(rot["benched"])) | set(rot["guests"])
+    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR)
+    assert on == (own - set(MOVED_OUT) - ARCHIVED - RETIRED - set(rot["benched"])) | set(rot["guests"])
+    assert len(RETIRED) == 11 and not (RETIRED & ARCHIVED)
     assert len(ARCHIVED) == 18
     st = build_strategies(cfg)
     assert {s.name for s in st} == on
-    assert sorted(cfg["live"]["setup_order"]) == sorted((own - set(MOVED_OUT)) | guests)   # every setup has a priority
+    assert sorted(cfg["live"]["setup_order"]) == sorted((own - set(MOVED_OUT) - RETIRED) | guests)   # every setup has a priority (retired: none)
 
 
 def test_exclusive_switches_off_future_default_setups(monkeypatch, tmp_path):
@@ -134,6 +156,14 @@ def test_moves_switched_off_at_source(monkeypatch):
     for k, acct in MOVED_C3.items():    # C3-EXIT100: off at home, out of its order, on in the Graveyard
         c = _cfg(monkeypatch, acct)
         assert k not in _on(c) and k not in c["live"]["setup_order"], k
+    for k, acct in MOVED_FR.items():    # FOOTRACE-EXIT: off at home, out of its order, on in the Graveyard
+        c = _cfg(monkeypatch, acct)
+        assert k not in _on(c) and k not in c["live"]["setup_order"], k
+    gy_on = _on(_cfg(monkeypatch))
+    assert set(MOVED_FR) <= gy_on and not (RETIRED & gy_on)
+    for acct in ("testing", "testing2", "explore1", "livelab", "testingd", "testinge", "testingf", "gen"):
+        assert not (RETIRED & _on(_cfg(monkeypatch, acct))), acct                # retired: out of every account
+    assert "exhaustion_short" not in _on(_cfg(monkeypatch, "testingf"))       # RETIRE-R3 (its only home)
     for k, acct in MOVED_OUT.items():   # one home: on in the arena account, off in the Graveyard
         assert k in _on(_cfg(monkeypatch, acct)) and k in _cfg(monkeypatch, acct)["live"]["setup_order"], k
     grave = yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"]
@@ -182,4 +212,4 @@ def test_dashboard_and_assignments_know_the_graveyard():
     bench = set(A.resting({"graveyard": st}, d.get("asof_session")))
     guests = {k for k, v in st.items() if isinstance(v, dict) and v.get("guest") and v.get("enabled")}
     assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == \
-        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3)) - set(MOVED_OUT) - ARCHIVED - bench) | guests
+        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR)) - set(MOVED_OUT) - ARCHIVED - RETIRED - bench) | guests

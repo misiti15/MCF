@@ -54,11 +54,8 @@ live:
     - GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long   # 5 traded sessions / 14 trades
     - GEN-261029-04-Ret15mge0p54-RVolDayle0p59-VWAPcrossesle1-LUNCH-SPYgt0p25-hold-long   # 5 traded sessions / 14 trades
     - GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long   # 5 traded sessions / 25 trades
-    - CWT14-failbrk-pdl-p05-R2A-long   # 5 traded sessions / 136 trades
-    - CWT14-failbrk-pdl-p05-R2A-short   # 5 traded sessions / 138 trades
     - GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short   # 6 traded sessions / 15 trades
     - GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long   # 6 traded sessions / 20 trades
-    - CWT13-vwapstretch-z075-short   # 7 traded sessions / 25 trades
     - NM-MF3-qqqdn-gapdn-FD   # 7 traded sessions / 35 trades
     - MF4-h40-open-flowsell   # 8 traded sessions / 25 trades
     - NS3V1-am-widestop-short   # 9 traded sessions / 56 trades
@@ -66,7 +63,6 @@ live:
     - ULT-13-st7-sharp-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
     - ULT-HV1-etf-late-pop-fade-short-X   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - ULT-07-pm-volatile-dip-long   # NEW 2026-11-20 ultimate_1119 (Tier B); moved from Testing F 2026-11-19 BATCH trim, siblings apart from ULT-14; appended last so existing setups keep their priority
-    - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
 # REPS2-LANE (owner yes 2026-11-18, research/reps2/NOTES.md section 3): the low-rep fast lane's rare-trigger setups
 # (< 0.5 signals/session where they live) run SHADOW-ONLY in Testing A (full universe since 11-12): no orders, slots,
 # latch or halt, never counted as live reps or toward On Deck / Primary minimums (SRCV1 weight 0). The list is
@@ -522,7 +518,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B2-z0.5-Uall-sidelong-t05s1-guest", fill: false}
   # Stretched Above VWAP Fade (far): CWT package B B2-z0.75-Uall-sideshort-t1s1-guest (id 67); open history n 2614, exp -0.0772R, t -1.73, 6.14/day; verdict retire
   CWT13-vwapstretch-z075-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z075-short.py
     min_adv: 95000000
@@ -548,7 +544,7 @@ strategies:
   # 54.3 trades/session; 152 configurations tried in pdl1030 (lineage N 121,611). Parity: research/bdi/pdl1030/pdl1a/.
   # scale_out_r is in units of the 0.75 ATR stop distance: 1/12 = +0.25 R1 (0.0625 ATR), as scored.
   CWT14-failbrk-pdl-p05-R2A-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-long.py
     context: [spy_prng]
@@ -559,7 +555,7 @@ strategies:
     scale_out_cap_exempt: true   # owner SO-1A 2026-11-02: outside the 2/day cap (R2A's edge is the half-off; research/bdi/pdl1030/so1a)
     tags: [owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   CWT14-failbrk-pdl-p05-R2A-short:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-short.py
     context: [spy_prng]
@@ -1616,7 +1612,7 @@ strategies:
     scale_out_r: null
     tags: [ultimate_1119, tierB, "parent:NM-ETF-late-dip (loose"]
   GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long:   # moved from Testing D 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: setup-count rebalance (D/E take the spotlight) (moved from Testing D, block copied unchanged)
+    enabled: false   # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261019-03-ret15matr-lo-pm-long.py
     context:
