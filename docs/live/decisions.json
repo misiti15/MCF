@@ -2615,5 +2615,49 @@
   "link": "research/owner_inbox/2026-11-20.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "LPB-UNBLOCK",
+  "title": "Keep Late Pullback Buy in Testing E as is; split arena_reps blocked% (capacity vs filter, report only)",
+  "what": "No priority / cap / spread / cost-filter exemption, no 2nd lot, no move for GEN-261027-01 (Late Pullback Buy). Optional report-only split of blocked_pct into capacity vs quality-filter skips.",
+  "recommend": "Yes",
+  "numbers": [
+   "84 signals, 67 blocked: 42 Gen-account (11-04 halt 21, buying-power rejects 21), 20 spread, 2 cost filter, 3 other",
+   "Testing E: 12 signals, 3 taken, 0 capacity blocks; unblock levers free 0 trades",
+   "spread 30-50 bps: 9 trades -0.056R after spread; cost exemption: 2 trades -0.50R"
+  ],
+  "why": "Testing E already takes every clean signal; the remaining blocks are quality filters that removed losers.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LPB-WIDE",
+  "title": "Loosen Late Pullback Buy's signal for more trades?",
+  "what": "Window 13:30 start, MACD-hist 0.08/0.04, Ret15m -0.04/-0.02, ADV $10M/$5M (54 configs, bench10 normal way, LR8, locked block not read).",
+  "recommend": "No",
+  "numbers": [
+   "0 of 53 variants clear bar 2.82 (max FIT t 1.20)",
+   "parent on bench: FIT -0.021R, CHECK -0.026R; all variants <= 0R on CHECK",
+   "MACD 0.08: 15.6 vs 8.2 trades/session, CHECK -0.008R, FIT paired -0.17R/day"
+  ],
+  "why": "More trades at ~0R; no variant improves the edge. Parked in the backlog.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LPB-WB5-OFF",
+  "title": "Retire the Late Pullback Buy WB5 child (Testing D, 0 signals in 3 sessions)?",
+  "what": "Recommendation is to keep it, revisit at 10 active sessions, and run a one-off parity check on 11-18 OSCR (br_chg / 09:50 breadth live).",
+  "recommend": "No (keep)",
+  "numbers": [
+   "parent signalled on 1 of the 3 sessions; only OSCR fit WB5 (spread-blocked anyway)",
+   "backtest trade-session rate 37%: P(3 empty) ~25%"
+  ],
+  "why": "Too few sessions to call starvation; trimmed-setups rule says low-activity setups are never just switched off.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
  }
 ]
