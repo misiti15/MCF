@@ -1,0 +1,111 @@
+== ST7-FD configs (2-year lab, first fire per symbol-day, prod costs)
+            n   days     win    avgR     t  totR  woBest  bestShare  worstDay  early   late  n1045
+base   1114.0  338.0  0.5413  0.0449  1.01  50.0  0.0366       0.19     -26.1 -0.023  0.093  651.0
+SR      810.0  326.0  0.4988 -0.0392 -1.06 -31.7 -0.0519        NaN      -7.1 -0.019 -0.057    0.0
+GA      469.0  261.0  0.5203  0.0267  0.59  12.5  0.0062       0.77      -3.5  0.036  0.018    0.0
+BWIN    176.0  120.0  0.5795  0.1332  1.68  23.4  0.0764       0.46      -2.4  0.116  0.148    0.0
+CSKIP   466.0  263.0  0.5258  0.0340  0.74  15.8  0.0136       0.61      -4.3  0.047  0.022    0.0
+candidate setups scanned 65
+
+== A-SR: affected 46; better 6 (+54.9R), worse 40 (-14415.9R), net -14361.0R; not worse share 0.13
+   early: better 8 worse 38 net -10745.5
+   late: better 6 worse 39 net -3615.5
+   by side: {'long': {'size': 13, '<lambda_0>': 2, '<lambda_1>': 11, 'sum': -656.6}, 'short': {'size': 33, '<lambda_0>': 4, '<lambda_1>': 29, 'sum': -13704.4}}
+                                                                           setup  side   n_b   n_v  avg_b  avg_v     delta   d_early   d_late
+                                                             exhaustion_short-FD short 30403 44000 -0.068 -0.075 -1246.742 -1100.722 -146.019
+                                                      MF1-945-flowsell-vwapup-FD short 11012 23888 -0.079 -0.084 -1147.800  -726.711 -421.089
+                                                   MF5-flowsell-vwapup-rsi5hi-FD short  7142 20413 -0.056 -0.070 -1034.616  -718.902 -315.714
+                                                      MF5-flowsell-vwapup-rsi5hi short  7142 20413 -0.056 -0.070 -1034.616  -718.902 -315.714
+                                      RW5-heat30-flowsell-rsi5pop-gapdn-short-FD short  5879 16328 -0.049 -0.079 -1001.932  -633.527 -368.405
+                                                     MF3-open-flowsell-rsi5hi-FD short 11058 24315 -0.070 -0.073  -997.095  -686.956 -310.140
+                                                    RW3S-gapdn-flowsell-short-FD short 32790 40271 -0.042 -0.056  -856.078  -352.195 -503.883
+                                              NS2-sma50break-overbought-short-FD short  8613 11232 -0.052 -0.108  -769.276  -728.928  -40.349
+                                                 NS2-sma50break-overbought-short short  3321  6329  0.002 -0.120  -764.141  -721.953  -42.188
+                                                            RW6-ns2-up3-short-FD short  3817  5079 -0.021 -0.146  -663.339  -604.642  -58.697
+                                                 RW7-gapdn-bounce-early-short-FD short 27456 31880 -0.053 -0.065  -614.028  -454.669 -159.359
+                                                NM-RWN4-ns2-spyup05-notfri-short short   953  1715  0.105 -0.258  -543.087  -506.264  -36.823
+                                             RW3-gapdn-rsi5pop-flowsell-short-FD short  6306 12045 -0.059 -0.075  -534.481  -338.885 -195.596
+                                             NM-RWR4-ns2-up3-qqqup-slopedn-short short   678  1833  0.093 -0.245  -511.972  -460.639  -51.333
+ GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short short   136  4194  0.247 -0.096  -434.411  -237.254 -197.156
+                                                        MF4-h40-open-flowsell-FD short  7586 13660 -0.077 -0.073  -407.465  -229.166 -178.299
+                                              RW1-gapdn-bounce-flowsell-short-FD short  7829 10464 -0.043 -0.065  -348.863  -235.856 -113.007
+GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long  long  1942  3697  0.088 -0.012  -213.093  -367.671  154.578
+                                             RW7-gapdn-bounce-early-short-FD-WB3 short  5383  8078  0.025 -0.007  -187.059  -184.651   -2.408
+                                                           NM-MF3-qqqdn-gapdn-FD short  2256  6514  0.005 -0.024  -171.324   -96.095  -75.228
+                                          RW1-gapdn-bounce-flowsell-short-FD-WB3 short  2266  3521 -0.012 -0.053  -158.606  -135.211  -23.395
+                                                 ST7-rsi50dn-long-pm-t1s1-FD-WB1  long   761   598  0.108 -0.071  -125.075   -36.811  -88.264
+                     GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short short  1797  1543  0.041 -0.028  -117.703   -82.298  -35.404
+                                          ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD  long   567   450  0.150 -0.040  -102.759   -48.879  -53.879
+                                                   MF2-open-rsimidhi-flowsell-FD short  4739  5990 -0.042 -0.050  -101.055   -49.820  -51.235
+                                                     ST7-rsi50dn-long-pm-t1s1-FD  long  1114   810  0.045 -0.039   -81.731     3.354  -85.085
+                                                NS5-sma50-flush-oversold-long-FD  long  3267  5986 -0.053 -0.038   -56.326  -173.769  117.443
+                                               MF2-open-rsimidhi-flowsell-FD-WB3 short  1920  2624 -0.005 -0.021   -46.935   -25.550  -21.385
+                                         RW3-gapdn-rsi5pop-flowsell-short-FD-WB4 short  4297  4783 -0.046 -0.048   -34.398   -29.609   -4.790
+                                                   ULT-HV2-shock-snap-etf-long-K  long   274   139  0.107 -0.026   -33.019    -7.312  -25.707
+                                                      ST4-emadn-long-am-t1s05-FD  long  1372  1270  0.015 -0.004   -25.427   -11.070  -14.356
+                                  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4 short  2832  4062  0.015  0.007   -14.035   -84.583   70.548
+                                           NS4-pm-vwap-reclaim-oversold-short-FD short  1826  1676 -0.051 -0.062   -10.962    -9.902   -1.061
+               GEN-261021-09-RSIslopelem19-ORHdistlem0p73-AM-BRvwgt0p7-t1s1-long  long   825   543 -0.001 -0.016    -8.272    -0.048   -8.224
+                                                    LD4-st4-breadthup-t1s05-long  long    22     6  0.348  0.018    -7.544    -3.072   -4.472
+              GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long  long   803   802  0.050  0.045    -3.644    -2.418   -1.226
+                                                      L3-gap-slope-rsi5hi-FD-WB4 short  2157  2162  0.032  0.030    -3.498    -1.997   -1.501
+                                                     L3-gap-slope-lowdist-FD-WB4 short  3242  3239 -0.033 -0.034    -1.729    -1.999    0.271
+                   GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long  long  2530  2531  0.058  0.057    -1.034    -1.034    0.000
+                                                     ST3-rsi5up-short-pm-t1s1-FD short   700   697  0.004  0.003    -0.704     1.920   -2.624
+                                                    LD1-ns1-breadthup-t05s1-long  long   138    84  0.109  0.185     0.563     2.304   -1.741
+                                                      NS1-rsidip-rsi5pop-long-FD  long  2616  2469 -0.068 -0.072     0.762     5.656   -4.894
+                     GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short short   903   820 -0.001  0.007     6.158    12.364   -6.206
+                                                      L3-gap-slope-rsi5hi-FD-WB5 short  6010  6027 -0.037 -0.035    12.117     7.128    4.990
+                                                          L3-gap-slope-rsi5hi-FD short  6010  6027 -0.037 -0.035    12.117     7.128    4.990
+   GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short short   501   933  0.066  0.060    23.138    24.645   -1.506
+
+== A-GA: affected 45; better 14 (+936.4R), worse 31 (-4331.0R), net -3394.6R; not worse share 0.31
+   early: better 16 worse 29 net -3157.6
+   late: better 16 worse 29 net -237.0
+   by side: {'long': {'size': 12, '<lambda_0>': 3, '<lambda_1>': 9, 'sum': -223.7}, 'short': {'size': 33, '<lambda_0>': 11, '<lambda_1>': 22, 'sum': -3170.9}}
+                                                                           setup  side   n_b   n_v  avg_b  avg_v    delta  d_early   d_late
+                                                 NS2-sma50break-overbought-short short  3321  6470  0.002 -0.106 -691.878 -698.394    6.515
+                                              NS2-sma50break-overbought-short-FD short  8613 11313 -0.052 -0.100 -682.764 -689.788    7.024
+                                                            RW6-ns2-up3-short-FD short  3817  5125 -0.021 -0.134 -607.370 -567.594  -39.775
+                                                NM-RWN4-ns2-spyup05-notfri-short short   953  1687  0.105 -0.221 -473.513 -443.236  -30.277
+                                             NM-RWR4-ns2-up3-qqqup-slopedn-short short   678  1822  0.093 -0.218 -461.101 -424.908  -36.192
+                                                    RW3S-gapdn-flowsell-short-FD short 32790 37123 -0.042 -0.048 -386.726 -213.867 -172.860
+                                                 RW7-gapdn-bounce-early-short-FD short 27456 30600 -0.053 -0.052 -152.777 -151.622   -1.154
+                                             RW3-gapdn-rsi5pop-flowsell-short-FD short  6306  7410 -0.059 -0.068 -137.603  -68.738  -68.865
+                                              RW1-gapdn-bounce-flowsell-short-FD short  7829  9090 -0.043 -0.049 -108.692  -94.540  -14.152
+                                                 ST7-rsi50dn-long-pm-t1s1-FD-WB1  long   761   280  0.108  0.033  -73.170  -15.313  -57.857
+                                          RW1-gapdn-bounce-flowsell-short-FD-WB3 short  2266  2870 -0.012 -0.033  -69.446  -68.186   -1.259
+                                          ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD  long   567   239  0.150  0.066  -69.126  -20.140  -48.986
+                                      RW5-heat30-flowsell-rsi5pop-gapdn-short-FD short  5879  7102 -0.049 -0.050  -67.567  -94.382   26.815
+                     GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short short  1797   589  0.041  0.037  -52.958  -41.190  -11.768
+                                                NS5-sma50-flush-oversold-long-FD  long  3267  5484 -0.053 -0.040  -47.512 -145.651   98.138
+                                                     ST7-rsi50dn-long-pm-t1s1-FD  long  1114   469  0.045  0.027  -37.494   18.742  -56.236
+                                                   ULT-HV2-shock-snap-etf-long-K  long   274   139  0.107 -0.020  -32.200   -7.540  -24.660
+                                                   MF2-open-rsimidhi-flowsell-FD short  4739  4964 -0.042 -0.046  -30.400  -28.871   -1.528
+                                         RW3-gapdn-rsi5pop-flowsell-short-FD-WB4 short  4297  4536 -0.046 -0.049  -28.676  -15.939  -12.737
+                                                      ST4-emadn-long-am-t1s05-FD  long  1372  1263  0.015 -0.004  -24.953  -10.710  -14.243
+                                             RW7-gapdn-bounce-early-short-FD-WB3 short  5383  7280  0.025  0.015  -21.485  -76.486   55.001
+   GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHODle0-LAM-SPYltm0p25-t1s1-short short   501   479  0.066  0.040  -14.136   -7.561   -6.575
+                                                           NM-MF3-qqqdn-gapdn-FD short  2256  2685  0.005 -0.000  -13.312  -16.921    3.609
+                                           NS4-pm-vwap-reclaim-oversold-short-FD short  1826  1610 -0.051 -0.064   -9.614   -5.918   -3.696
+                                  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4 short  2832  3098  0.015  0.011   -9.224  -21.808   12.584
+               GEN-261021-09-RSIslopelem19-ORHdistlem0p73-AM-BRvwgt0p7-t1s1-long  long   825   518 -0.001 -0.014   -6.655    0.980   -7.635
+                                                    LD4-st4-breadthup-t1s05-long  long    22     4  0.348  0.290   -6.490   -2.558   -3.932
+                                               MF2-open-rsimidhi-flowsell-FD-WB3 short  1920  2141 -0.005 -0.007   -5.509    2.374   -7.883
+              GEN-261021-05-RSIslopelem14-ORHdistge0p42-LAM-BRvwlt0p3-t1s05-long  long   803   788  0.050  0.045   -3.992   -1.964   -2.028
+                                                      L3-gap-slope-rsi5hi-FD-WB4 short  2157  2165  0.032  0.030   -3.947   -4.118    0.171
+                                                     ST3-rsi5up-short-pm-t1s1-FD short   700   744  0.004  0.003   -0.734    0.985   -1.719
+                                                     L3-gap-slope-lowdist-FD-WB4 short  3242  3243 -0.033 -0.033    0.904    0.904   -0.000
+                                                    LD1-ns1-breadthup-t05s1-long  long   138    90  0.109  0.187    1.855    1.676    0.179
+                     GEN-261020-04-MACDhge0p12-BullDiv-MID-SPYgt0p25-t05s1-short short   903   828 -0.001  0.003    3.332    7.411   -4.079
+                                                      NS1-rsidip-rsi5pop-long-FD  long  2616  2478 -0.068 -0.070    3.518    5.136   -1.619
+ GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short short   136   410  0.247  0.133   20.911  -20.323   41.235
+                                                      L3-gap-slope-rsi5hi-FD-WB5 short  6010  6039 -0.037 -0.032   30.777   14.096   16.681
+                                                          L3-gap-slope-rsi5hi-FD short  6010  6039 -0.037 -0.032   30.777   14.096   16.681
+GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long  long  1942  3795  0.088  0.064   72.520   -4.416   76.936
+                                                   MF5-flowsell-vwapup-rsi5hi-FD short  7142  6267 -0.056 -0.048   97.635   97.848   -0.213
+                                                      MF5-flowsell-vwapup-rsi5hi short  7142  6267 -0.056 -0.048   97.635   97.848   -0.213
+                                                      MF1-945-flowsell-vwapup-FD short 11012  9847 -0.079 -0.077  108.142   72.576   35.567
+                                                        MF4-h40-open-flowsell-FD short  7586  7349 -0.077 -0.062  129.872  117.237   12.635
+                                                             exhaustion_short-FD short 30403 29311 -0.068 -0.065  140.346  213.928  -73.582
+                                                     MF3-open-flowsell-rsi5hi-FD short 11058  9960 -0.070 -0.058  198.182  139.268   58.914

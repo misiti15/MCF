@@ -2082,5 +2082,216 @@
   "link": "research/reps2/NOTES.md",
   "status": "answered",
   "answered": "yes, 2026-11-18"
+ },
+ {
+  "code": "INV",
+  "title": "Short setups skip inverse ETFs / long-vol products (root cause R1)",
+  "what": "Backlog item + journal-only shadow column blocked_inverse_short from 11-20; live only outside market hours after >= 10 passing sessions (Primary only in the Friday epoch window). Reply INV yes / INV live-epoch / INV no.",
+  "recommend": "Yes",
+  "numbers": [
+   "Live G1 +78.8R (+55.9R w/o 11-19); 50 setup-accounts better (+99.3R), 24 worse (-20.6R, worst -2.65R)",
+   "2-year with borrow proxy +79.6R, 36 better / 20 worse, both halves > 0",
+   "Conflicts: backlog + no market-hours change; 3 low-rep L3 WB copies lose most trades (playing-time rule)"
+  ],
+  "why": "Fixes the 11-19 L3 defect (shorting SPXS/SQQQ = long the market) where it occurs; L3 family +30.4R, 7 of 8 better.",
+  "link": "research/crunch/wave2/inverse_guard/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "ST7-A",
+  "title": "Keep the shared RSI code as is; log the RSI warm-up fix as tested and failed",
+  "what": "Do not apply a session-reset or gap-adjusted RSI to all RSI setups. Root cause R2-(i) and PKT-RSI closed as failed.",
+  "recommend": "Yes",
+  "numbers": [
+   "Session reset: 6 better / 40 worse, -14,361R (2-year)",
+   "Gap-adjusted: 14 better / 31 worse, -3,395R; worse in both halves",
+   "NS5-FD -56R / -47R"
+  ],
+  "why": "A broad fix that hurts many setups breaks the remedies rule (2026-11-05).",
+  "link": "research/crunch/wave2/st7_fix/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "ST7-B",
+  "title": "Run ST7 in its 13:35-15:00 source window as a new testing copy",
+  "what": "New testing copy (labelled debatable / derived); ST7-FD itself is unchanged and reviewed under -10R / BAR2. Conflicts: 10-09 full-day-first policy, 11-18 tweaked copies are new setups, 11-17 promotion hold, C3-WB 100-trade check.",
+  "recommend": "No - park in the backlog (Skeptic: the window is in-sample)",
+  "numbers": [
+   "2-year n 176, +0.133R, t 1.68 (search t_required 4.84), w/o best day +0.076 (46%)",
+   "Live under the window: 11 trades, -4.34R",
+   "ST7-FD w/o the artifact: 10:50-13:30 part -0.033R"
+  ],
+  "why": "Skeptic downgrade from Optional: the 13:35-15:00 window was searched on this same 2-year history (swarm1010/w2_neutral NOTES), so its 'both halves positive' is not independent evidence; t 1.68 vs bar 4.84, live 11 trades -4.34R, and the 2023-24 round-5 read of FD was -0.016R.",
+  "link": "research/crunch/wave2/st7_fix/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WB2-Y1-SHADOW",
+  "title": "Target 1.25x on RW3 / RW5 as a journal-only paired shadow",
+  "what": "Paired overlay on RW3/RW5's own signals; confirm at >= 120 paired trades / >= 15 sessions, early stop for harm. Needs the WB2 hold (11-18) lifted for this one overlay. A real exit change would be Friday-epoch only.",
+  "recommend": "Optional - only if you lift the WB2 hold for this one overlay (Skeptic downgrade from Yes)",
+  "numbers": [
+   "+0.044R/trade, t 2.58, perm p 0.002, 6/6 weeks > 0, both halves > 0",
+   "RW3 +11.7R (69 better / 13 worse), RW5 +5.7R (68 / 16); 0 of 5 setups worse",
+   "Avg R w/o best day +0.051 -> +0.087 (best day 31% of gain)"
+  ],
+  "why": "Skeptic: the idea came from W5's look at the same 27 sessions (16 configs) plus 15 looks here; at N 31 the bar is 2.62 and t is 2.58. RW5 alone is t 1.67, and the gain leans on 42 trades flattened at 15:55 in a down tape. A journal-only shadow is cheap and is the real test, so it stays optional, not recommended.",
+  "link": "research/crunch/wave2/exits/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "EARN-CLOSE",
+  "title": "Do not start EARN-GO; withdraw C3-EARN's blackout exception",
+  "what": "Park EARN-GO in the backlog. Reverses part of your C3-EARN approval (2026-11-18), so asked, not acted on. Reply EARN-CLOSE yes / no.",
+  "recommend": "Yes",
+  "numbers": [
+   "2 years: 1,110 trades, -0.070R, t -2.44, both halves < 0",
+   "0.125R worse than a random bar on the same names",
+   "Still -0.058R with costs removed"
+  ],
+  "why": "Never traded live; the 4-day earnings blackout stays for every setup.",
+  "link": "research/crunch/wave2/earn/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PKT-FX",
+  "title": "Friday review: apply FOOTRACE-EXIT with 11-20 included",
+  "what": "Run the approved FOOTRACE-EXIT at the Friday review; the 8 flagged arena setups are the preliminary list (moves to the Graveyard, assignments.json regenerated).",
+  "recommend": "Yes",
+  "numbers": [
+   "8 arena setups (7 GEN + intraday_momentum): 543 trades, -184.8R, -9.4 account R",
+   "16 young WB copies exempt; 11-20 admissions untouched"
+  ],
+  "why": "Applies an approved rule; exits, not low-activity trims.",
+  "link": "research/crunch/wave2/packet/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "TAGS1-WHATIF",
+  "title": "Housekeeping: TAGS1 counts only paper/live runs, and the nightly tagger runs",
+  "what": "Fix tags1.decisions() so what-if runs are not counted live; make sure the nightly tagger runs, seeded with the 11-19 table. No trading effect.",
+  "recommend": "Yes",
+  "numbers": [
+   "1,664 what-if rows counted as live on 11-19",
+   "No caller and no tags/ folder found"
+  ],
+  "why": "Keeps the TAGS1 score-once on 12-17 honest.",
+  "link": "research/crunch/wave2/fresh_tags/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "CORR1",
+  "title": "Correct the W6 correlation and count RW3+RW5 and the two L3s as about one bet each",
+  "what": "Reporting fix: W6's L3-fromopen vs RW3 0.74 was a labelling bug (real 0.05-0.17). Not a cap (STOP2).",
+  "recommend": "Yes",
+  "numbers": [
+   "Real high pairs: RW3 vs RW5 0.76, L3-fromopen vs L3-rsi5hi 0.74",
+   "W6 method re-run: 0.07 / 0.01"
+  ],
+  "why": "Resolves the WAVE1 4.7 conflict.",
+  "link": "research/crunch/wave2/fresh_tags/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "TAGS1-HOLD",
+  "title": "Keep FLAT25 and MFGAP frozen until their single 12-17 score",
+  "what": "No change; note the weight-0 2-year result against both. Dropping early would break the TAGS1 pre-registration.",
+  "recommend": "Yes",
+  "numbers": [
+   "2-year: FLAT25 4.8th pct vs random removal, MFGAP 44th",
+   "11-19: MFGAP would have cost 13.6R (0 better / 5 worse)"
+  ],
+  "why": "Score-once rule.",
+  "link": "research/crunch/wave2/fresh_tags/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PKT-LOT",
+  "title": "Show $ per trade R per setup in the review (display only)",
+  "what": "Display column only; no sizing change (sizing tilts are on GUARDRAILS; any sizing change is Friday-epoch Primary material).",
+  "recommend": "Optional",
+  "numbers": [
+   "L3 lots ~$78 risk vs $25-31 for RW3/RW5",
+   "Primary lots < $25: 61% of trade-R loss but -5.8 account R"
+  ],
+  "why": "Explains why trade R and account R disagree (33 sessions: -133.4 vs -10.0).",
+  "link": "research/crunch/wave2/packet/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WB4-SPY-READ",
+  "title": "RW3-WB4 / RW5-WB4 SPY-exit copies: no promotion credit before a 120-trade paired read",
+  "what": "Keep both running. May conflict with 11-18 'tweaked copies are new setups judged on their own record' - asked first.",
+  "recommend": "No - FYI only while the 11-17 promotion hold stands (Skeptic downgrade from Optional)",
+  "numbers": [
+   "Paired SPY-exit delta +0.015R, t 0.83 (RW5 gain 53% one day)",
+   "3 live sessions: RW3-WB4 -1.04R vs parent +0.22R; RW5-WB4 +2.34R vs +4.70R"
+  ],
+  "why": "Skeptic: no promotion can happen under the 11-17 hold, so the ask is moot now and it conflicts with the 11-18 tweaked-copies rule; re-raise only if the hold is lifted before a 120-trade paired read exists.",
+  "link": "research/crunch/wave2/exits/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "UPDAY-PIT",
+  "title": "Backlog: point-in-time version of the RW3/RW5 SPY-up-day profile",
+  "what": "Pre-registered backlog item only. GUARDRAILS lists day-type switches and gates on proven setups (prior: W4 0 of 31 bespoke rules pass); STOP2 applies. Primary use only in a Friday epoch window.",
+  "recommend": "Optional",
+  "numbers": [
+   "Hindsight profile: -0.211R up days vs +0.078R down days, Welch t 7.0, both halves"
+  ],
+  "why": "Strong profile, but it uses a hindsight label.",
+  "link": "research/crunch/wave2/fresh_tags/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WB2-NEXT-2",
+  "title": "One more exit class: target 1.5x on RW3 / RW5 (research)",
+  "what": "Single pre-registered class on the calibrated 1-minute replay; any pass still needs a forward shadow.",
+  "recommend": "No - not on the same 27 sessions; only on the 2-year replay (weight 0) or after the Y1 shadow reads (Skeptic downgrade from Optional)",
+  "numbers": [
+   "Y1: 124 of 166 parent-target trades reached 1.25x; 42 flattened at 15:55 (-13.0R)"
+  ],
+  "why": "Skeptic: another class on the same 27 sessions raises the lineage count and pushes Y1 further under its bar; a 1.5x target also adds 15:55-flatten exposure, the regime-dependent part of Y1's gain.",
+  "link": "research/crunch/wave2/exits/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PAPERS-FADE",
+  "title": "Research: fade families measure the stretch from today's open",
+  "what": "Up to 2 pre-registered configs on the 2-year data, per-setup better/worse. Research only.",
+  "recommend": "Optional",
+  "numbers": [
+   "Miwa: overnight returns do not reverse; W6 MF gap-up fades -0.558R/trade"
+  ],
+  "why": "Targeted family-level remedy idea (backlog papers-1119-fade-intraday-component).",
+  "link": "research/crunch/wave2/papers/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "PAPERS-YEAR",
+  "title": "Add per-year R and best-year share to fade-family reviews",
+  "what": "Reporting only; extends the one-big-day rule to years.",
+  "recommend": "Optional",
+  "numbers": [
+   "End-of-day reversal: 6.62 bps 2023 vs 0.85-2.58 bps 2024-26; 2023 = 56% of the estimate"
+  ],
+  "why": "Older records may be flattered by 2023.",
+  "link": "research/crunch/wave2/papers/RESULTS.md",
+  "status": "open",
+  "answered": null
  }
 ]
