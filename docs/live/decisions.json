@@ -2669,10 +2669,10 @@
    "65 findings, 56 upheld, 7 strong",
    "strongest: spread<=25% of stop gate (Primary blocked -0.41R vs taken -0.12R)"
   ],
-  "why": "Protects what works from casual change, matching 'consistency over churn'.",
+  "why": "Answered 2026-11-20: YES.",
   "link": "research/whatworks_1120/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "WW-CLUSTER",
@@ -2682,10 +2682,10 @@
   "numbers": [
    "trio t 3.2-3.8 trade-level vs 0.97 day-level"
   ],
-  "why": "Trade-level t overstated Primary's core.",
+  "why": "Answered 2026-11-20: YES.",
   "link": "research/whatworks_1120/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "WW-REMEDY-Q",
@@ -2695,7 +2695,7 @@
   "numbers": [
    "core before 13:00 +0.207R vs after -0.148R"
   ],
-  "why": "Cut points chosen in-sample; must be proven forward.",
+  "why": "Owner 2026-11-20: confusing — asked for a plain-language explanation; re-asked.",
   "link": "research/whatworks_1120/REPORT.md",
   "status": "open",
   "answered": null
@@ -2709,10 +2709,10 @@
    "fails null (p~0.10)",
    "no compensating source record"
   ],
-  "why": "Promotion = move / trimmed-setups rule.",
+  "why": "Answered 2026-11-20: YES — thorough review; give the owner ST7's numbers directly (don't make him look them up on the leaderboard).",
   "link": "research/whatworks_1120/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "RETIRE-R3",
@@ -2723,10 +2723,10 @@
    "walk-forward: 26 retired, 0 wrongful kills",
    "retired later -0.129R/trade vs -0.073 kept"
   ],
-  "why": "Frees slots/buying power for low-rep setups.",
+  "why": "Answered 2026-11-20: YES with condition — only after >= 20 active sessions AND >= 150 trades (plus the w/o-best-day <= -0.10 and last-10-session R <= 0 tests); never Primary; low-activity trims still go to testing.",
   "link": "research/whatworks_1120/retire/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "BRAKE-BURST",
@@ -2737,10 +2737,10 @@
    "never fires in Primary (32 sessions)",
    "catches ~103R of the 11-17 Gen -134.6R case"
   ],
-  "why": "Loss brakes could not catch 143 entries in 6 minutes.",
+  "why": "Answered 2026-11-20: YES.",
   "link": "research/whatworks_1120/brake/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "BRAKE-WATCHDOG",
@@ -2750,10 +2750,10 @@
   "numbers": [
    "Gen/Graveyard carried positions overnight 11-13..11-16"
   ],
-  "why": "Pre-real-money safety.",
+  "why": "Answered 2026-11-20: YES if low usage. Check: the watchdog already runs every 10 min in all 10 accounts in dry mode; 'act' adds no runs, so usage is unchanged.",
   "link": "research/whatworks_1120/brake/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "2026-11-20"
  },
  {
   "code": "NMETF-SIZE",
@@ -2764,7 +2764,7 @@
    "Primary slice: 15 trades +0.075R t 1.18 (1-day tag)",
    "whole record 33 trades +0.21R t 3.5"
   ],
-  "why": "Protocol frozen from 11-23; scored on Primary only.",
+  "why": "Owner 2026-11-20: asked for a plain-language breakdown; re-asked.",
   "link": "research/whatworks_1120/nmetf/REPORT.md",
   "status": "open",
   "answered": null
