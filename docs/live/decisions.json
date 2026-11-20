@@ -2659,5 +2659,114 @@
   "link": "research/owner_inbox/2026-11-20.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "WW-PROTECT",
+  "title": "Protected list as an evidence gate (not a freeze)",
+  "what": "docs/PROTECTED.md (PROT-01..32) + tests/test_protected.py: ledger entries touching a protected item must cite guard evidence + owner approval; Primary items only in a Friday epoch window.",
+  "recommend": "Yes",
+  "numbers": [
+   "65 findings, 56 upheld, 7 strong",
+   "strongest: spread<=25% of stop gate (Primary blocked -0.41R vs taken -0.12R)"
+  ],
+  "why": "Protects what works from casual change, matching 'consistency over churn'.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WW-CLUSTER",
+  "title": "Day-clustered t + 'w/o top 2 days' in every review",
+  "what": "Add day-clustered t and avg R without top 2 days beside 'w/o best day' in promotions/demotions/reviews.",
+  "recommend": "Yes",
+  "numbers": [
+   "trio t 3.2-3.8 trade-level vs 0.97 day-level"
+  ],
+  "why": "Trade-level t overstated Primary's core.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WW-REMEDY-Q",
+  "title": "Three slice ideas to backlog as Workbench copies",
+  "what": "(a) 13:00 entry cut-off for L3/RW3/RW5; (b) gap > -5% & ATR >= 5% gate on L3-fromopen; (c) gap <= -1% on RW3/RW5 — Testing copies only, scored on later sessions.",
+  "recommend": "Yes",
+  "numbers": [
+   "core before 13:00 +0.207R vs after -0.148R"
+  ],
+  "why": "Cut points chosen in-sample; must be proven forward.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WW-ST7",
+  "title": "Review ST7-FD at the next Friday epoch",
+  "what": "Only Primary member with failing evidence; would move to a testing account (not switched off).",
+  "recommend": "Yes (review)",
+  "numbers": [
+   "fails null (p~0.10)",
+   "no compensating source record"
+  ],
+  "why": "Promotion = move / trimmed-setups rule.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "RETIRE-R3",
+  "title": "Adopt RETIRE-R3 at the Friday review",
+  "what": "Retire when trades>=150, active days>=15, avg R w/o best day <= -0.10 and last-10-session R <= 0; Compass exemptions kept; never Primary; low-activity trims still go to testing.",
+  "recommend": "Yes",
+  "numbers": [
+   "walk-forward: 26 retired, 0 wrongful kills",
+   "retired later -0.129R/trade vs -0.073 kept"
+  ],
+  "why": "Frees slots/buying power for low-rep setups.",
+  "link": "research/whatworks_1120/retire/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BRAKE-BURST",
+  "title": "Runaway-entry brake in every account",
+  "what": "Max 30 new entries per setup in any 10 minutes, then pause.",
+  "recommend": "Yes",
+  "numbers": [
+   "never fires in Primary (32 sessions)",
+   "catches ~103R of the 11-17 Gen -134.6R case"
+  ],
+  "why": "Loss brakes could not catch 143 entries in 6 minutes.",
+  "link": "research/whatworks_1120/brake/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BRAKE-WATCHDOG",
+  "title": "Watchdog 'act' mode in all accounts now",
+  "what": "Extend the after-flatten watchdog action to every account.",
+  "recommend": "Yes",
+  "numbers": [
+   "Gen/Graveyard carried positions overnight 11-13..11-16"
+  ],
+  "why": "Pre-real-money safety.",
+  "link": "research/whatworks_1120/brake/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "NMETF-SIZE",
+  "title": "Allow the NM-ETF size-up exception to C3-BAR2",
+  "what": "If NM-ETF passes its frozen 25-session Primary test (t>=2, w/o best>0, best day<50%), double risk cap AND notional (2 slots). Conflicts with C3-BAR2 'per-setup risk stays flat'.",
+  "recommend": "Your call",
+  "numbers": [
+   "Primary slice: 15 trades +0.075R t 1.18 (1-day tag)",
+   "whole record 33 trades +0.21R t 3.5"
+  ],
+  "why": "Protocol frozen from 11-23; scored on Primary only.",
+  "link": "research/whatworks_1120/nmetf/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
