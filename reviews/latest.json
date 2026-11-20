@@ -180,10 +180,10 @@
   "skipped": 59
  },
  "health": {
-  "polls": 79,
-  "last_poll_s": 7.2,
-  "symbols_last_bar": 4106,
-  "last_bar": "15:53",
+  "polls": 0,
+  "last_poll_s": null,
+  "symbols_last_bar": 0,
+  "last_bar": null,
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
@@ -193,32 +193,7 @@
   "session_close": "16:00",
   "flatten_at": "15:55",
   "early_close": false,
-  "kill": null,
-  "borrow_list": {
-   "symbols": 14437,
-   "at": "2026-11-20 15:19:15.413220-05:00"
-  },
-  "shadow": {
-   "run_id": 3,
-   "of_live": true,
-   "only_setups": 0,
-   "open_lots": 9,
-   "entered": 7,
-   "closed": 28,
-   "polls": 79,
-   "avg_ms": 28.8,
-   "live_avg_ms": 11152.6,
-   "share_of_poll": 0.003,
-   "only_every_n_polls": 1,
-   "quote_calls": 0,
-   "errors": 0
-  },
-  "position_mismatch": [],
-  "position_check": {
-   "at": "2026-11-20 15:54:15.701354-05:00",
-   "symbols": 9,
-   "blocked": []
-  },
+  "flatten_failed": [],
   "partial_lots": [],
   "risk_state": {
    "halted": false,
@@ -229,8 +204,7 @@
    "open_r": 0.0,
    "halt_counts_open": false,
    "realized_r_after_costs": 8.61
-  },
-  "flatten_failed": []
+  }
  },
  "findings": [
   "Entry slippage averaged 15.2 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency."
