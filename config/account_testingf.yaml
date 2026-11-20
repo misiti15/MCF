@@ -62,6 +62,7 @@ live:
     - ULT-14-snap-long   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
+    - BEG-ORB-orb15-inplay-stopOR   # NEW 2026-11-23 beginner_1120 (owner BEG-ORB yes; meets top-10 standard); appended last so existing setups keep their priority
 strategies:
   L3-gap-slope-lowdist-FD-WB4:
     # Workbench copy of L3-gap-slope-lowdist-FD (On Deck), Mechanic 2026-11-16: dist from low > 0.82 ATR + rsi5 >= 50 + every lot closed 75 min after entry;
@@ -1081,3 +1082,25 @@ strategies:
         max_overlap: 0.206
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
+  BEG-ORB-orb15-inplay-stopOR:
+    # NEW setup (research/beginner_1120 BEG-01, tweak stopOR), owner 2026-11-20 "BEG-ORB yes"; testing-admission rule
+    # (ledger 2026-11-19-testing-admission): meets the top-10 standard (beginner_1120), Skeptic upheld; no MCF parent.
+    # ORB-15 on stocks in play (rank by 09:30-09:49 rvol <= 20, rvol >= 2, price >= $10, ADV >= $20M, ATR >= $0.50); 09:30-09:44
+    # candle sets the side; stop-entry at the OR15 extreme +-1c on 09:50-11:29; stop = far side of OR15; target 2R; BE at +1R; flat 15:55.
+    # Normal-way backtest (LR8 + borrow, testing book): CHECK -0.026R (3,101 trades; w/o best day -0.029), T1 comb -0.009, T2 -0.029;
+    # random entries -0.032 (gross ~0): MEETS = no worse than the live leaders, NOT profitable. ~11 trades/session.
+    # Duplicate test (symbol-days, T1): 52% of its days are orb20_a's (< 70%); 80% of orb20_a's days are its - kept out of
+    # On Deck / Testing C (orb20_a / orb20_a-WB3). Judged as a brand-new setup under FOOTRACE-EXIT; promotion hold applies.
+    # Effective session 2026-11-23 (ledger 2026-11-23-beg1120-testing-admissions). research/beginner_1120/REPORT.md.
+    enabled: true
+    class: beg_orb15
+    rank_max: 20
+    min_rvol: 2.0
+    min_price: 10.0
+    min_adv: 20000000
+    min_atr: 0.50
+    target_r: 2.0
+    order_until: 1130
+    be_at_r: 1.0
+    scale_out_r: null
+    tags: [beginner_1120, "meets top-10 standard (beginner_1120)"]

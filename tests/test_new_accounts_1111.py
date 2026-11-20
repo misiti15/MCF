@@ -17,7 +17,7 @@ DEF = {"testingd": ("Testing D", "mtd-", "TESTINGD"), "testinge": ("Testing E", 
        "testingf": ("Testing F", "mtf-", "TESTINGF")}
 ALL = {**EXPECT, **{k: (p, f"mcf-data-{k}", f"mcf-trade-{k}", s) for k, (_, p, s) in DEF.items()}}
 # setups per account: 10 each from 11-12; from 11-16 RW3S leaves E (Graveyard) and RW7 joins F (owner 2026-11-13)
-N_SETUPS = {"testingd": 28, "testinge": 29, "testingf": 23}   # ROT block 2 2026-11-19 (from 11-20): +3 D, +5 E, -3 F (ledger 2026-11-20-rot-arena-block2); ultimate_1119 2026-11-20 after the BATCH trim: +2 D, +2 E, +2 F (ledgers 2026-11-20-ult1119-testing-admissions, -batch-trim);   # C3-EXIT100 2026-11-18: -2 D, -3 E, -1 F to the Graveyard (ledger 2026-11-19-c3-exit100);   # ROT1 block 1 + Workbench copies 2026-11-17 (3 each; ledger 2026-11-16-wb-*) + ETFDIP WB4 in E (2026-11-17-wb-etfdip-wb4)
+N_SETUPS = {"testingd": 28, "testinge": 29, "testingf": 24}   # beginner_1120 2026-11-23: +1 F (BEG-ORB; ledger 2026-11-23-beg1120-testing-admissions);   # ROT block 2 2026-11-19 (from 11-20): +3 D, +5 E, -3 F (ledger 2026-11-20-rot-arena-block2); ultimate_1119 2026-11-20 after the BATCH trim: +2 D, +2 E, +2 F (ledgers 2026-11-20-ult1119-testing-admissions, -batch-trim);   # C3-EXIT100 2026-11-18: -2 D, -3 E, -1 F to the Graveyard (ledger 2026-11-19-c3-exit100);   # ROT1 block 1 + Workbench copies 2026-11-17 (3 each; ledger 2026-11-16-wb-*) + ETFDIP WB4 in E (2026-11-17-wb-etfdip-wb4)
 SPOTLIGHT_CAP = {}   # TSZ1 2026-11-17: every Testing A-F account runs per-setup cap 100 (ledger 2026-11-16-tsz1-testing-sizing); ROT1 spotlight 50 superseded
 MATRIX = "account: [primary, testing, testing2, gen, graveyard, livelab, explore1, testingd, testinge, testingf]"
 WF = ROOT / ".github/workflows"
