@@ -2323,5 +2323,91 @@
   "link": "research/owner_inbox/2026-11-19.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "GB-NOEXIT",
+  "title": "No new trade-path exit rule for any account",
+  "what": "Add no time cut, breakeven, trail, partial, target cap, clock or SPY-turn exit; log the giveback investigation's 3,836 configs as tested and failed.",
+  "recommend": "Yes",
+  "numbers": [
+   "3,836 configs in 5 groups on 2 years, 0 pass (bar t 4.14)",
+   "partials -3,527 to -4,247R; caps -1,136 to -1,623R; O1-O4 -238 to -481R",
+   "effect per setup: none (no change)"
+  ],
+  "why": "Nothing in a trade's own path predicts the reversal; early exits pay extra costs and cut the winners. Keeps room to breathe; -2R latch (kept 11-17) untouched.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-NOLOCK",
+  "title": "No day-level profit lock (Primary included)",
+  "what": "Do not add a block / tighten / half off / flatten rule after a +5R or +8R account peak gives back 30-50%.",
+  "recommend": "Yes",
+  "numbers": [
+   "16 configs, 0 pass; best A1 block +408R but excess vs same-time control +139R (t 0.99), -160R on fit",
+   "Primary flatten: 11-19 +19.9R but 11-12 -40.8R, 11-16 -24.0R"
+  ],
+  "why": "The gains come from trading less, not from the lock. Overlaps the Primary -2R latch and R2 (no new daily stop).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-GENTRAIL",
+  "title": "Research: trail / 1R target for GEN hold setups",
+  "what": "Score a 1R target and a 1R-activated trail (2 configs) on GEN hold setups in the generator's own lab, WB2 paired, per setup, costs in. No live change.",
+  "recommend": "Yes",
+  "numbers": [
+   "live GEN hold: 3,406 trades, -0.231R, 538R given back after +0.8R",
+   "only giveback pocket with no 2-year test (lab has no hold lists)",
+   "prior against: every trail tested so far lost"
+  ],
+  "why": "Research only (10-19: no GEN setup change without consent). If it passes: 15-session journal-only shadow in Gen, then a decision outside market hours.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-BRAKE",
+  "title": "Research: exposure brake scored against a control",
+  "what": "Test a net-beta / one-side exposure brake (swing1103-L4, <= 3 configs) against the same action at the same clock time on non-trigger days. No live change.",
+  "recommend": "Optional",
+  "numbers": [
+   "majority-side lots on 70 reversal days: -1,029R",
+   "base rate: books 77% one-sided at random minutes vs 83% at peaks (hindsight)",
+   "priors: R2 0 of 44, sat1024 0 of 6, REGSW 0 of 74"
+  ],
+  "why": "Conflicts: R2 no new daily stop; -2R latch kept 11-17; Testing 1 first; Primary only in the Friday epoch window; needs a calibrated book harness (replay2y 79%).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-BLPARK",
+  "title": "Park 2 backlog exit ideas these tests cover",
+  "what": "Park xa-1105-hwm-giveback-exit and nightly-1014-fd-short-late-giveback with the giveback evidence; both come back at the biweekly parked review.",
+  "recommend": "Yes",
+  "numbers": [
+   "O1 chandelier -379R (0 better / 8 worse); Wave 2 trail and L16 failed",
+   "O4 clock exits -481R (6 better / 21 worse)"
+  ],
+  "why": "Backlog housekeeping only (PARK1: parked, not failed).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-READ",
+  "title": "Reporting: read giveback figures with base rates",
+  "what": "Show 'stopped after +0.8R' as the cost of the 2:1 payoff next to the 2R-hit share, and add the one-side base rate and a 'peak picked in hindsight' note to peak-to-close FYIs.",
+  "recommend": "Optional",
+  "numbers": [
+   "closer targets on the 4 far-target setups: -106 to -561R each"
+  ],
+  "why": "Display only; stops hindsight peaks from being read as a fixable signal.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
