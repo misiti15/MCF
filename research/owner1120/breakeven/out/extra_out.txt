@@ -1,0 +1,85 @@
+side cells 432 full>0 0 fit>0&chk>0 0 t>=bar 0 cand 0
+itype cells 648 full>0 21 fit>0&chk>0 14 t>=bar 0 cand 6
+family cells 7776 full>0 519 fit>0&chk>0 168 t>=bar 0 cand 10
+                     cfg   delta       t     chk   chk_t    live  live_n
+unit                                                                    
+etf     m1.0|BES|D0|PM|F -0.0002 -1.1641 -0.0004 -1.7087  0.0007    6797
+invvol  m1.0|BE0|D0|PM|F  0.0012  2.3258  0.0016  2.4130 -0.0092     803
+long    m1.0|BES|D0|PM|F -0.0001 -1.3459 -0.0002 -2.2589 -0.0003   15380
+short   m1.0|BES|D0|PM|F -0.0000 -0.3042 -0.0002 -0.7851 -0.0008   12574
+stock   m1.0|BES|D0|PM|F -0.0001 -1.1326 -0.0002 -2.1002 -0.0004   20354
+families whose best cell is >0: 20 of 36
+   unit                cfg     n  delta      t   fit_t     chk   chk_t    live  live_n
+  NS4_S  m0.75|BE0|D0|PM|F  1826 0.0148 0.6860  1.6043 -0.0131 -0.8309  0.0492     104
+  NS5_L m0.3|BES|D30|ALL|F  4603 0.0098 0.4732  1.0635 -0.0126 -1.1050  0.1028     175
+  NS2_S m0.3|BE0|D30|SPY|F 11934 0.0077 0.8626 -0.2089  0.0123  1.0732 -0.0423     358
+  MF2_S   m1.0|BES|D0|PM|F  5497 0.0068 0.9054  0.4852  0.0076  0.7917 -0.0005     259
+  ST1_L  t50|BEC|D30|SPY|F  1803 0.0063 0.7952 -0.5318  0.0130  1.5467  0.0424      77
+   NM_S  m0.75|BEC|D0|PM|F  2256 0.0055 1.0002  0.8923  0.0038  0.5927 -0.0027     177
+  RW6_S   m0.3|BE0|D0|PM|F  4734 0.0045 0.4720  0.6527  0.0023  0.1893 -0.0293     198
+   NM_L   m0.5|BES|D0|PM|F  3773 0.0043 1.8185  0.6154  0.0056  1.7160 -0.0044     184
+NS3V1_S   m0.3|BE0|SW|PM|F  2504 0.0025 0.5740  1.4927  0.0001  0.0215  0.0125      86
+  MF3_S  m0.5|BES|D0|SPY|F 11058 0.0019 0.5827  0.7469  0.0006  0.1586  0.0184     394
+
+t80|BE0|D0|ALL: book -0.0070R/trade (t -8.5771), total -8154R, fit -0.0098 chk -0.0056; w/o best -0.0071; top-decile days -3125R; changed 10.9%
+  families: 1 better (+11R) / 35 worse (-8165R), worst -0.0209 (ST4_L)
+  setups n>=300: 6 better (+17R) / 85 worse (-8164R); unchanged 0
+  live: n 27954, +0.0011R/trade, total +29.9R, best day 2026-10-16 +21.6R (72% of total), w/o best +0.0003; days +15/-18
+  live families n>=100: 14 better (+105.4R) / 17 worse (-92.9R)
+  live by account {'Explore1': 1.7999999523162842, 'Gen': 20.700000762939453, 'Graveyard': 9.800000190734863, 'LiveLab': -2.299999952316284, 'Primary': 17.399999618530273, 'Testing1': 11.199999809265137, 'Testing2': -5.599999904632568, 'TestingD': -7.400000095367432, 'TestingE': -3.5, 'TestingF': -12.100000381469727}
+
+m0.5|BE0|D0|ALL: book -0.0079R/trade (t -4.8231), total -9164R, fit -0.0114 chk -0.0061; w/o best -0.0081; top-decile days -5107R; changed 9.0%
+  families: 0 better (+0R) / 27 worse (-9164R), worst -0.1213 (ST4_L)
+  setups n>=300: 0 better (+0R) / 55 worse (-9091R); unchanged 36
+  live: n 27954, +0.0051R/trade, total +143.1R, best day 2026-10-15 +31.4R (22% of total), w/o best +0.0040; days +20/-13
+  live families n>=100: 15 better (+249.2R) / 16 worse (-111.3R)
+  live by account {'Explore1': 1.2999999523162842, 'Gen': 57.5, 'Graveyard': 77.9000015258789, 'LiveLab': 0.8999999761581421, 'Primary': 20.600000381469727, 'Testing1': 5.800000190734863, 'Testing2': -3.299999952316284, 'TestingD': -15.600000381469727, 'TestingE': 4.0, 'TestingF': -6.099999904632568}
+
+m0.3|BEC|D0|ALL: book -0.0368R/trade (t -13.6328), total -42863R, fit -0.0490 chk -0.0306; w/o best -0.0372; top-decile days -14358R; changed 42.0%
+  families: 0 better (+0R) / 36 worse (-42863R), worst -0.1536 (ST4_L)
+  setups n>=300: 0 better (+0R) / 91 worse (-42686R); unchanged 0
+  live: n 27954, +0.0159R/trade, total +444.4R, best day 2026-11-17 +73.0R (16% of total), w/o best +0.0133; days +23/-10
+  live families n>=100: 20 better (+641.0R) / 11 worse (-201.7R)
+  live by account {'Explore1': 13.300000190734863, 'Gen': 127.0999984741211, 'Graveyard': 191.8000030517578, 'LiveLab': 0.8999999761581421, 'Primary': 38.900001525878906, 'Testing1': 40.70000076293945, 'Testing2': 44.79999923706055, 'TestingD': -18.799999237060547, 'TestingE': 11.800000190734863, 'TestingF': -6.099999904632568}
+
+m1.0|BES|D0|PM: book -0.0001R/trade (t -1.0812), total -87R, fit +0.0001 chk -0.0002; w/o best -0.0001; top-decile days -67R; changed 0.3%
+  families: 2 better (+56R) / 6 worse (-144R), worst -0.0063 (ST4_L)
+  setups n>=300: 2 better (+56R) / 7 worse (-141R); unchanged 82
+  live: n 27954, -0.0005R/trade, total -14.6R, best day 2026-11-13 +3.4R (-23% of total), w/o best -0.0006; days +21/-10
+  live families n>=100: 12 better (+19.4R) / 14 worse (-30.6R)
+  live by account {'Explore1': 0.4000000059604645, 'Gen': -4.599999904632568, 'Graveyard': -1.0, 'LiveLab': -1.100000023841858, 'Primary': 3.5, 'Testing1': -0.20000000298023224, 'Testing2': -11.0, 'TestingD': -0.800000011920929, 'TestingE': -0.5, 'TestingF': 0.6000000238418579}
+
+m0.75|BES|SW|ALL: book -0.0015R/trade (t -3.4798), total -1765R, fit -0.0017 chk -0.0014; w/o best -0.0016; top-decile days -1184R; changed 2.6%
+  families: 5 better (+73R) / 22 worse (-1837R), worst -0.0513 (ST4_L)
+  setups n>=300: 14 better (+126R) / 41 worse (-1893R); unchanged 36
+  live: n 27954, +0.0025R/trade, total +70.5R, best day 2026-11-02 +17.9R (25% of total), w/o best +0.0019; days +22/-11
+  live families n>=100: 19 better (+99.7R) / 10 worse (-34.8R)
+  live by account {'Explore1': 1.899999976158142, 'Gen': -5.0, 'Graveyard': 46.79999923706055, 'LiveLab': 2.0, 'Primary': 24.100000381469727, 'Testing1': -11.5, 'Testing2': 16.100000381469727, 'TestingD': -1.7999999523162842, 'TestingE': -0.4000000059604645, 'TestingF': -1.5}
+
+t50|BE0|D10|SPY: book -0.0091R/trade (t -7.0592), total -10643R, fit -0.0151 chk -0.0061; w/o best -0.0094; top-decile days -4931R; changed 16.0%
+  families: 4 better (+70R) / 32 worse (-10713R), worst -0.0304 (ST7_L)
+  setups n>=300: 9 better (+94R) / 82 worse (-10728R); unchanged 0
+  live: n 27954, +0.0016R/trade, total +43.6R, best day 2026-11-17 +47.2R (108% of total), w/o best -0.0001; days +18/-15
+  live families n>=100: 14 better (+148.4R) / 17 worse (-117.2R)
+  live by account {'Explore1': -4.199999809265137, 'Gen': -16.600000381469727, 'Graveyard': 53.0, 'LiveLab': -0.800000011920929, 'Primary': 22.200000762939453, 'Testing1': 2.299999952316284, 'Testing2': 12.5, 'TestingD': -9.399999618530273, 'TestingE': 5.800000190734863, 'TestingF': -21.200000762939453}
+
+live m0.3|BEC by date (top 5 / bottom 3):
+                    v      R
+date                        
+2026-11-04  58.299999 -312.3
+2026-10-15  60.000000 -300.7
+2026-11-09  60.700001 -191.8
+2026-11-02  61.099998 -206.6
+2026-11-17  73.000000 -432.8
+                    v     R
+date                       
+2026-11-12 -71.900002  23.0
+2026-11-13 -69.099998 -65.8
+2026-11-06 -32.900002 -53.7
+live days where book R>0: delta -95.9  book R<0 days: 540.4
+live hold (no target) trades 3391 m0.3|BEC delta on them 157.3
+live hold trades 3391 avg R -0.219 days 29
+m0.3|BEC|D0|ALL hold 0.0464 157.3 best day share 0.27 | targeted 0.0117 287.1
+m0.5|BE0|D0|ALL hold 0.0226 76.8 best day share 0.37 | targeted 0.0027 66.3
+m1.0|BE0|D0|ALL hold 0.0002 0.8 best day share 15.62 | targeted 0.0022 54.1
+m1.0|BES|SW|ALL hold -0.0052 -17.7 best day share None | targeted 0.0016 39.3

@@ -996,8 +996,8 @@
   ],
   "why": "Owner 11-11: live reps, not setup ideas, are the bottleneck.",
   "link": "research/bdi/reddit_1110/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "superseded 2026-11-19: owner chose a daily outside-ideas scout while usage allows (scale-back asked on low yield)"
  },
  {
   "code": "MF4-OK",
@@ -2095,8 +2095,8 @@
   ],
   "why": "Fixes the 11-19 L3 defect (shorting SPXS/SQQQ = long the market) where it occurs; L3 family +30.4R, 7 of 8 better.",
   "link": "research/crunch/wave2/inverse_guard/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "owner 2026-11-19 ~21:50 ET: \"Inv yes - as long as its not beneficial to short or buy an inverse. I don't want to rule these out completely unless you think we can afford to.\" + all setups must buy/short inverse tickers correctly -> journal-only shadow from 11-20 + per-setup direction-correct test (keep inverse trades where beneficial)"
  },
  {
   "code": "ST7-A",
@@ -2110,8 +2110,8 @@
   ],
   "why": "A broad fix that hurts many setups breaks the remedies rule (2026-11-05).",
   "link": "research/crunch/wave2/st7_fix/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"rsi keep the code\" / \"St7 test keep as long as its not restricting or limiting setups\" -> yes (shared RSI code unchanged; ST7-FD kept)"
  },
  {
   "code": "ST7-B",
@@ -2125,8 +2125,8 @@
   ],
   "why": "Skeptic downgrade from Optional: the 13:35-15:00 window was searched on this same 2-year history (swarm1010/w2_neutral NOTES), so its 'both halves positive' is not independent evidence; t 1.68 vs bar 4.84, live 11 trades -4.34R, and the 2023-24 round-5 read of FD was -0.016R.",
   "link": "research/crunch/wave2/st7_fix/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "owner 2026-11-19: keep the code; no afternoon copy -> no"
  },
  {
   "code": "WB2-Y1-SHADOW",
@@ -2155,8 +2155,8 @@
   ],
   "why": "Never traded live; the 4-day earnings blackout stays for every setup.",
   "link": "research/crunch/wave2/earn/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"Earnings yes\" -> EARN-GO closed"
  },
  {
   "code": "PKT-FX",
@@ -2169,8 +2169,8 @@
   ],
   "why": "Applies an approved rule; exits, not low-activity trims.",
   "link": "research/crunch/wave2/packet/RESULTS.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"Yes\" -> apply FOOTRACE-EXIT at Friday 11-20 review"
  },
  {
   "code": "TAGS1-WHATIF",
@@ -2291,6 +2291,242 @@
   ],
   "why": "Older records may be flattered by 2023.",
   "link": "research/crunch/wave2/papers/RESULTS.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "CONS-PMX",
+  "title": "Exit-timing study for Primary shorts: close at 15:00 / 15:30 vs the 15:55 flatten (research only)",
+  "what": "Pre-registered 2-config study on the Primary journal 10-23..11-18 (fit / check halves, costs in), per-setup better/worse for L3-fromopen, RW3, RW5; a pass becomes a testing copy only, Primary only through the Friday epoch window. L3-fromopen protected.",
+  "recommend": "Optional - expect a small effect",
+  "numbers": [
+   "Since 11-11 RW3/RW5 flatten exits cost only -4.5R (64 lots)",
+   "RW5 flatten winners (HIMS) lifted the 11-19 close",
+   "Adds evidence to backlog nightly-1027-flatten-1545 (no new id)"
+  ],
+  "why": "Consultant 11-18 one action; the 11-19 check-in found today's data does not support it.",
+  "link": "research/owner_inbox/2026-11-18.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "G261019-04",
+  "title": "Move Generated: Midday Oversold Buy (RSI < 22) Gen -> testing? (OD+ G261019-04)",
+  "what": "Your 11-15 deferral of the rotation block 1 suggestion asked again at >= 11 traded sessions and >= 110 trades (now met); your 11-18 keep was conditional on positive total R, which turned negative on 11-19. Reply 'OD+ G261019-04 yes / no'.",
+  "recommend": "No - keep in Gen (its home) and keep watching",
+  "numbers": [
+   "130 trades / 12 sessions -0.006R (total -0.76R)",
+   "w/o best day -0.111R (11-13 +11.78R)",
+   "11-19: 11 trades -9.54R"
+  ],
+  "why": "Record is flat-to-negative without its best day; Gen is its home, never removed.",
+  "link": "research/owner_inbox/2026-11-19.md",
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"Keep in gen\" -> no move"
+ },
+ {
+  "code": "GB-NOEXIT",
+  "title": "No new trade-path exit rule for any account",
+  "what": "Add no time cut, breakeven, trail, partial, target cap, clock or SPY-turn exit; log the giveback investigation's 3,836 configs as tested and failed.",
+  "recommend": "Yes",
+  "numbers": [
+   "3,836 configs in 5 groups on 2 years, 0 pass (bar t 4.14)",
+   "partials -3,527 to -4,247R; caps -1,136 to -1,623R; O1-O4 -238 to -481R",
+   "effect per setup: none (no change)"
+  ],
+  "why": "Nothing in a trade's own path predicts the reversal; early exits pay extra costs and cut the winners. Keeps room to breathe; -2R latch (kept 11-17) untouched.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"No exit rule or day level lock\" -> yes"
+ },
+ {
+  "code": "GB-NOLOCK",
+  "title": "No day-level profit lock (Primary included)",
+  "what": "Do not add a block / tighten / half off / flatten rule after a +5R or +8R account peak gives back 30-50%.",
+  "recommend": "Yes",
+  "numbers": [
+   "16 configs, 0 pass; best A1 block +408R but excess vs same-time control +139R (t 0.99), -160R on fit",
+   "Primary flatten: 11-19 +19.9R but 11-12 -40.8R, 11-16 -24.0R"
+  ],
+  "why": "The gains come from trading less, not from the lock. Overlaps the Primary -2R latch and R2 (no new daily stop).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"No exit rule or day level lock\" -> yes"
+ },
+ {
+  "code": "GB-GENTRAIL",
+  "title": "Research: trail / 1R target for GEN hold setups",
+  "what": "Score a 1R target and a 1R-activated trail (2 configs) on GEN hold setups in the generator's own lab, WB2 paired, per setup, costs in. No live change.",
+  "recommend": "Yes",
+  "numbers": [
+   "live GEN hold: 3,406 trades, -0.231R, 538R given back after +0.8R",
+   "only giveback pocket with no 2-year test (lab has no hold lists)",
+   "prior against: every trail tested so far lost"
+  ],
+  "why": "Research only (10-19: no GEN setup change without consent). If it passes: 15-session journal-only shadow in Gen, then a decision outside market hours.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "answered",
+  "answered": "owner 2026-11-19: \"Research gentrail\" -> yes (research only)"
+ },
+ {
+  "code": "GB-BRAKE",
+  "title": "Research: exposure brake scored against a control",
+  "what": "Test a net-beta / one-side exposure brake (swing1103-L4, <= 3 configs) against the same action at the same clock time on non-trigger days. No live change.",
+  "recommend": "Optional",
+  "numbers": [
+   "majority-side lots on 70 reversal days: -1,029R",
+   "base rate: books 77% one-sided at random minutes vs 83% at peaks (hindsight)",
+   "priors: R2 0 of 44, sat1024 0 of 6, REGSW 0 of 74"
+  ],
+  "why": "Conflicts: R2 no new daily stop; -2R latch kept 11-17; Testing 1 first; Primary only in the Friday epoch window; needs a calibrated book harness (replay2y 79%).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-BLPARK",
+  "title": "Park 2 backlog exit ideas these tests cover",
+  "what": "Park xa-1105-hwm-giveback-exit and nightly-1014-fd-short-late-giveback with the giveback evidence; both come back at the biweekly parked review.",
+  "recommend": "Yes",
+  "numbers": [
+   "O1 chandelier -379R (0 better / 8 worse); Wave 2 trail and L16 failed",
+   "O4 clock exits -481R (6 better / 21 worse)"
+  ],
+  "why": "Backlog housekeeping only (PARK1: parked, not failed).",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GB-READ",
+  "title": "Reporting: read giveback figures with base rates",
+  "what": "Show 'stopped after +0.8R' as the cost of the 2:1 payoff next to the 2R-hit share, and add the one-side base rate and a 'peak picked in hindsight' note to peak-to-close FYIs.",
+  "recommend": "Optional",
+  "numbers": [
+   "closer targets on the 4 far-target setups: -106 to -561R each"
+  ],
+  "why": "Display only; stops hindsight peaks from being read as a fixable signal.",
+  "link": "research/giveback_1119/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INV-H1",
+  "title": "All setups skip shorts on inverse / long-vol funds",
+  "what": "Short setups stop shorting SQQQ/SPXS/SOXS/VXX-type funds (a short there is long the market). Journal-only shadow from 11-20; live only after >= 10 passing sessions, outside market hours; Primary only in the Friday epoch window.",
+  "recommend": "Yes",
+  "numbers": [
+   "live 224 trades -78.8R in 51 setups (-55.9R w/o 11-19)",
+   "50 setup-accounts better (+99.3R) / 24 worse (-20.6R, worst -2.65R); 2-year borrow proxy +79.6R",
+   "L3 +30.4R is 64% one day (11-19); 3 low-rep L3 WB copies lose most trades"
+  ],
+  "why": "Fixes wrong-direction exposure where it occurs, in every setup; shorts on the underlying are untouched. Live check is not held out, so the forward shadow decides.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INV-LONGS",
+  "title": "Keep inverse / long-vol longs in play",
+  "what": "No block on long trades in inverse or long-vol funds (status quo); the shadow watches them (bar: net >= 0).",
+  "recommend": "Yes",
+  "numbers": [
+   "live +20.5R (587) is all 11-02; -5.2R without it",
+   "lab loses both halves (-0.154 / -0.208R per trade)",
+   "blocking costs -20.5R live, 80 setup-accounts worse"
+  ],
+  "why": "Evidence is undetermined, so 'don't rule out unless we can afford' keeps them; the CWT14-heavy block list is not proposed.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INV-BUY",
+  "title": "Do not buy the inverse instead of shorting the underlying",
+  "what": "Reject the substitution (buy SQQQ when a QQQ short is skipped) and the duplicate-inverse variant.",
+  "recommend": "No (do not add)",
+  "numbers": [
+   "94 substitutions -20.6R",
+   "duplicate inverse for every underlying short -103R live / -140R lab",
+   "engine has no cross-symbol order path"
+  ],
+  "why": "The underlying short signals are not good enough to express twice, and the trade cannot be built today.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BE-NO",
+  "title": "Keep breakeven (stop to entry) off everywhere",
+  "what": "No stop-to-entry rule in any account; log the 18,144-config grid as tested and failed (consistent with GB-NOEXIT).",
+  "recommend": "Yes",
+  "numbers": [
+   "0 of 18,144 cells pass (9,072 independent; bar t 4.43)",
+   "all 216 whole-position rules lose on 2 years; none positive on check",
+   "top-10% days take 30-80% of each rule's loss"
+  ],
+  "why": "Breakeven turns target days into scratches; the live replay gain is a red-day regime (lab/live corr -0.58).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GT-KEEP",
+  "title": "Keep GEN hold / holdtr exits unchanged",
+  "what": "GB-GENTRAIL research failed: no trail, 1R target, chandelier or partial for GEN hold setups. Backlog parked.",
+  "recommend": "Yes",
+  "numbers": [
+   "hold fit pick on check -0.049R/trade (t -2.61)",
+   "4 setups better / 21 worse; 0 of 10 families better",
+   "holdtr neutral (+0.004R, one day 75%)"
+  ],
+  "why": "Every alternative loses on both halves; no GEN change without consent (10-19).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GT-BE",
+  "title": "Research: early breakeven on GEN hold setups",
+  "what": "Score stop-to-entry at +0.3R / +0.5R on the 25 GEN hold specs in the generator lab (2 configs, WB2 paired, costs in). No live change.",
+  "recommend": "Optional (research only)",
+  "numbers": [
+   "only untested breakeven pocket: live replay 157R from GEN hold",
+   "gentrail tested breakeven only at +1R (lost)",
+   "prior strongly against"
+  ],
+  "why": "Closes the last gap in the owner's 'test breakeven extensively' ask.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BEG-ORB",
+  "title": "Admit beginner ORB-15 (stocks in play) to a testing arena",
+  "what": "Admit BEG-01 ORB-15 on stocks in play, with the stop at the far side of OR15, to a testing arena as a new setup labelled 'meets top-10 standard (beginner_1120)'. First run the 70% duplicate test against MCF's orb, check arena slots, and deploy outside market hours.",
+  "recommend": "Yes (after the duplicate check; testing arena only)",
+  "numbers": [
+   "CHECK 3,101 trades -0.026R (w/o best day -0.029), T2 -0.029",
+   "T1 combined -0.009, FIT best-day share 0.23; all Tier A legs pass",
+   "random entries -0.032; gross about 0, so MEETS is not profitable"
+  ],
+  "why": "It is the only beginner setup that meets the top-10 standard with a record spread over many days.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BEG-GNG",
+  "title": "Admit beginner gap-and-go to a testing arena",
+  "what": "Admit BEG-03 gap-and-go (long, as written) to a testing arena as a new setup labelled 'meets top-10 standard (beginner_1120)'. First run the 70% duplicate test against MCF's gap_and_go and check arena slots.",
+  "recommend": "Optional",
+  "numbers": [
+   "CHECK 595 trades +0.006R, T1 combined -0.017, T2 -0.084",
+   "CHECK is a 1-day record (share 1.77; -0.004 w/o that day)",
+   "level with fair random entries; about 2 trades a session"
+  ],
+  "why": "It passes every Tier A leg, but the CHECK record rests on one day.",
+  "link": "research/owner_inbox/2026-11-20.md",
   "status": "open",
   "answered": null
  }
