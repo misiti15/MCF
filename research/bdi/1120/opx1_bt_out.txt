@@ -1,0 +1,33 @@
+OPX1 | E2 2-year screen (lab frames + gates), production + TOD costs | configs 2 | t_required(76) 2.94, near-miss 1.35
+trigger sessions: A 26, B 26; trigger tod A {950: 5, 955: 4, 1000: 3, 1005: 3, 1010: 1, 1015: 2, 1020: 3, 1025: 4, 1030: 1}
+== OPX1-A rule: ETPs ['PSQ', 'QID', 'SDOW', 'SDS', 'SPDN', 'SPXS', 'SPXU', 'SQQQ', 'UVXY', 'VXX']
+  ALL: n 256 sessions 26 avg -0.0035 t -0.02 win 0.5391 green 0.5 w/o best -0.0416
+  TRAIN: n 136 sessions 14 avg -0.4097 t -1.81 w/o best -0.5163
+  VALID: n 120 sessions 12 avg 0.4568 t 2.72 w/o best 0.4165
+  LATE: n 0 sessions None avg None t None w/o best None
+  by SPY open->close: down sess 13 n 129 +0.382, quiet sess 5 n 50 -0.236, up sess 8 n 77 -0.498
+  as one bet per session: mean -0.020R, sessions 26, green 50%, t -0.12
+  by ETP: PSQ 26 +0.028, QID 26 +0.095, SDOW 23 -0.004, SDS 26 -0.009, SPDN 25 -0.597, SPXS 26 -0.011, SPXU 26 +0.008, SQQQ 26 +0.109, UVXY 26 +0.116, VXX 26 +0.207
+== OPX1-A control: ETPs ['PSQ', 'QID', 'SDOW', 'SDS', 'SPDN', 'SPXS', 'SPXU', 'SQQQ', 'UVXY', 'VXX']
+  ALL: n 3962 sessions 420 avg -0.2669 t -6.14 win 0.4634 green 0.438 w/o best -0.27
+  TRAIN: n 2024 sessions 220 avg -0.2051 t -3.49 w/o best -0.211
+  VALID: n 1724 sessions 178 avg -0.2964 t -4.37 w/o best -0.3035
+  LATE: n 214 sessions 22 avg -0.6128 t -3.35 w/o best -0.6837
+  by SPY open->close: down sess 123 n 1159 +0.333, quiet sess 143 n 1333 -0.247, up sess 154 n 1470 -0.758
+== OPX1-B rule: ETPs ['QLD', 'SPXL', 'SSO', 'TNA', 'TQQQ', 'UDOW', 'UPRO']
+  ALL: n 182 sessions 26 avg -0.0924 t -0.54 win 0.489 green 0.462 w/o best -0.135
+  TRAIN: n 140 sessions 20 avg 0.0149 t 0.08 w/o best -0.0355
+  VALID: n 42 sessions 6 avg -0.4502 t -1.43 w/o best -0.7336
+  LATE: n 0 sessions None avg None t None w/o best None
+  by SPY open->close: down sess 5 n 35 -0.429, quiet sess 11 n 77 -0.305, up sess 10 n 70 +0.309
+  as one bet per session: mean -0.092R, sessions 26, green 46%, t -0.53
+  by ETP: QLD 26 -0.083, SPXL 26 -0.027, SSO 26 -0.186, TNA 26 -0.158, TQQQ 26 -0.072, UDOW 26 +0.000, UPRO 26 -0.121
+== OPX1-B control: ETPs ['QLD', 'SPXL', 'SSO', 'TNA', 'TQQQ', 'UDOW', 'UPRO']
+  ALL: n 2921 sessions 420 avg -0.1119 t -2.7 win 0.4855 green 0.467 w/o best -0.1146
+  TRAIN: n 1498 sessions 214 avg -0.1484 t -2.54 w/o best -0.1537
+  VALID: n 1269 sessions 184 avg -0.0871 t -1.39 w/o best -0.093
+  LATE: n 154 sessions 22 avg 0.0387 t 0.22 w/o best -0.0052
+  by SPY open->close: down sess 131 n 911 -0.670, quiet sess 137 n 949 -0.165, up sess 152 n 1061 +0.415
+OPX1-A: PASS False; near-miss False
+OPX1-B: PASS False; near-miss False
+Educational only - not financial advice.

@@ -1,0 +1,14 @@
+swing1120-L17 | E2 2-year screen (lab frames + gates; module mask unchanged), production + TOD costs | configs 1 | t_required(33) 2.64
+all module trades: n 578, sessions 177, avg +0.1532; SPY fo missing 0
+ALL: A n 121 sess 15 avg 0.3136 w/o best 0.1747 | B n 457 sess 168 avg 0.1107 | A-B 0.203 t 2.24
+TRAIN: A n 101 sess 10 avg 0.3513 w/o best 0.1998 | B n 235 sess 72 avg 0.1966 | A-B 0.1548 t 1.85
+VALID: A n 14 sess 4 avg 0.2946 w/o best 0.1502 | B n 200 sess 86 avg 0.0086 | A-B 0.286 t 2.27
+LATE: A n 6 sess 1 avg -0.2769 w/o best 0.0 | B n 22 sess 10 avg 0.1206 | A-B -0.3975 t -3.06
+B split: long-exposure, SPY > -1%: n 261 avg 0.1093
+B split: inverse / long-vol entries: n 196 avg 0.1124
+  inverse entries on the same deep-down bars: n 28 avg 0.16
+report only: A w/o its worst session +0.3444 (worst 2026-10-16 -1.66R)
+A by burst size (same-bar long-exposure signals): (0, 1] n 12 -0.062, (1, 3] n 28 +0.266, (3, 7] n 15 -0.029, (7, 999] n 66 +0.480
+long-exposure by SPY fo bucket: (-99.0, -2.0] n 63 +0.332, (-2.0, -1.5] n 26 +0.422, (-1.5, -1.0] n 32 +0.189, (-1.0, -0.5] n 40 -0.173, (-0.5, 0.0] n 75 +0.022, (0.0, 0.5] n 45 +0.251, (0.5, 99.0] n 101 +0.223
+PASS False
+Educational only - not financial advice.

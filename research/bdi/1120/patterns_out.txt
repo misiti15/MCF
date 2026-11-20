@@ -1,0 +1,83 @@
+2026-11-20: 957 trades, 426 losers appended to patterns.csv
+account                            ondeck  primary  testing_a  testing_b  testing_c  testing_d  testing_e  testing_f
+ltype                                                                                                               
+gave_back_gains                       0.0      0.0       -0.1       -3.3      -20.1       -6.8       -1.4       -3.1
+late_hold                             0.0      0.0      -18.8       -2.2       -3.5       -2.1        0.0       -3.5
+near_target_then_stopped              0.0      0.0        0.0       -3.9        0.0       -4.5        0.0       -2.1
+never_worked                         -2.5     -2.1      -17.7      -12.6      -39.5       -8.1       -5.0       -9.1
+small MFE then failed (0.15-0.5R)     0.0      0.0       -6.9      -16.0      -48.3      -11.3       -2.2       -9.5
+stopped_then_reversed                 0.0      0.0       -1.1       -2.2        0.0       -1.4        0.0       -1.1
+wrong_side_after_big_swing           -1.2    -10.5      -12.2      -20.9      -34.6      -12.8      -15.9      -11.0
+
+loss type totals: {'gave_back_gains': {'size': 42, 'sum': -34.69}, 'late_hold': {'size': 48, 'sum': -30.1}, 'near_target_then_stopped': {'size': 9, 'sum': -10.6}, 'never_worked': {'size': 103, 'sum': -96.64}, 'small MFE then failed (0.15-0.5R)': {'size': 89, 'sum': -94.12}, 'stopped_then_reversed': {'size': 5, 'sum': -5.77}, 'wrong_side_after_big_swing': {'size': 130, 'sum': -119.04}}
+
+same-symbol stacking (lot = nth entry of the same setup on the symbol today):
+        size     sum   mean
+stack                     
+lot1    948  60.896  0.064
+lot2+     9   2.458  0.273
+
+leveraged/inverse ETPs by underlying (exposure = market sign of the position):
+                         size   sum
+lev  exposure account              
+DIA  -1       testing_a     1  0.23
+              testing_b     1  0.16
+              testing_e     1  0.07
+      1       testing_a     1 -0.04
+              testing_d     1 -1.06
+              testing_f     1 -1.07
+GDX  -1       testing_a     2  0.81
+              testing_e     2  1.31
+      1       primary       1 -1.04
+              testing_c     1 -0.65
+              testing_e     1 -1.04
+IWM  -1       testing_d     1  0.20
+      1       primary       1 -1.04
+              testing_a     1  0.05
+              testing_c     2 -2.09
+              testing_e     1 -1.05
+MSTR  1       testing_f     1 -1.07
+MU    1       testing_b     1 -1.08
+NVDA  1       ondeck        1 -1.04
+              testing_c     1 -1.04
+              testing_d     1 -1.05
+QQQ  -1       testing_a     2  0.55
+              testing_b     1  0.18
+              testing_c     3  1.76
+              testing_e     2  1.03
+      1       primary       2 -2.06
+              testing_a     3 -3.18
+              testing_c     5 -5.39
+              testing_d     2 -2.17
+              testing_e     2 -2.05
+              testing_f     1 -1.03
+SOXX -1       testing_b     1  0.42
+              testing_c     2 -0.03
+              testing_e     2  0.82
+      1       primary       1 -1.02
+              testing_a     1 -1.05
+              testing_b     1 -1.03
+              testing_c     1 -0.41
+              testing_e     2 -2.07
+SPY  -1       testing_a     2  0.37
+              testing_b     1  0.27
+              testing_c     3  2.16
+              testing_e     2  0.05
+      1       primary       2 -2.12
+              testing_a     2 -2.22
+              testing_b     3 -3.05
+              testing_c     8 -8.50
+              testing_d     3 -3.42
+              testing_e     3 -3.21
+              testing_f     2  0.59
+VIX  -1       testing_e     2  0.10
+      1       testing_a     1 -1.05
+XLK  -1       testing_a     2  0.66
+              testing_e     1  1.01
+              testing_f     1  1.42
+      1       primary       1 -1.04
+              testing_b     1 -1.09
+              testing_c     1 -1.05
+              testing_e     1 -1.04
+
+all trades by market exposure sign: {-1: {'size': 501, 'sum': 398.452, 'mean': 0.795}, 1: {'size': 456, 'sum': -335.098, 'mean': -0.735}}
