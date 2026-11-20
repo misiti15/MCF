@@ -2409,5 +2409,95 @@
   "link": "research/giveback_1119/REPORT.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "INV-H1",
+  "title": "All setups skip shorts on inverse / long-vol funds",
+  "what": "Short setups stop shorting SQQQ/SPXS/SOXS/VXX-type funds (a short there is long the market). Journal-only shadow from 11-20; live only after >= 10 passing sessions, outside market hours; Primary only in the Friday epoch window.",
+  "recommend": "Yes",
+  "numbers": [
+   "live 224 trades -78.8R in 51 setups (-55.9R w/o 11-19)",
+   "50 setup-accounts better (+99.3R) / 24 worse (-20.6R, worst -2.65R); 2-year borrow proxy +79.6R",
+   "L3 +30.4R is 64% one day (11-19); 3 low-rep L3 WB copies lose most trades"
+  ],
+  "why": "Fixes wrong-direction exposure where it occurs, in every setup; shorts on the underlying are untouched. Live check is not held out, so the forward shadow decides.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INV-LONGS",
+  "title": "Keep inverse / long-vol longs in play",
+  "what": "No block on long trades in inverse or long-vol funds (status quo); the shadow watches them (bar: net >= 0).",
+  "recommend": "Yes",
+  "numbers": [
+   "live +20.5R (587) is all 11-02; -5.2R without it",
+   "lab loses both halves (-0.154 / -0.208R per trade)",
+   "blocking costs -20.5R live, 80 setup-accounts worse"
+  ],
+  "why": "Evidence is undetermined, so 'don't rule out unless we can afford' keeps them; the CWT14-heavy block list is not proposed.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "INV-BUY",
+  "title": "Do not buy the inverse instead of shorting the underlying",
+  "what": "Reject the substitution (buy SQQQ when a QQQ short is skipped) and the duplicate-inverse variant.",
+  "recommend": "No (do not add)",
+  "numbers": [
+   "94 substitutions -20.6R",
+   "duplicate inverse for every underlying short -103R live / -140R lab",
+   "engine has no cross-symbol order path"
+  ],
+  "why": "The underlying short signals are not good enough to express twice, and the trade cannot be built today.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BE-NO",
+  "title": "Keep breakeven (stop to entry) off everywhere",
+  "what": "No stop-to-entry rule in any account; log the 18,144-config grid as tested and failed (consistent with GB-NOEXIT).",
+  "recommend": "Yes",
+  "numbers": [
+   "0 of 18,144 cells pass (9,072 independent; bar t 4.43)",
+   "all 216 whole-position rules lose on 2 years; none positive on check",
+   "top-10% days take 30-80% of each rule's loss"
+  ],
+  "why": "Breakeven turns target days into scratches; the live replay gain is a red-day regime (lab/live corr -0.58).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GT-KEEP",
+  "title": "Keep GEN hold / holdtr exits unchanged",
+  "what": "GB-GENTRAIL research failed: no trail, 1R target, chandelier or partial for GEN hold setups. Backlog parked.",
+  "recommend": "Yes",
+  "numbers": [
+   "hold fit pick on check -0.049R/trade (t -2.61)",
+   "4 setups better / 21 worse; 0 of 10 families better",
+   "holdtr neutral (+0.004R, one day 75%)"
+  ],
+  "why": "Every alternative loses on both halves; no GEN change without consent (10-19).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "GT-BE",
+  "title": "Research: early breakeven on GEN hold setups",
+  "what": "Score stop-to-entry at +0.3R / +0.5R on the 25 GEN hold specs in the generator lab (2 configs, WB2 paired, costs in). No live change.",
+  "recommend": "Optional (research only)",
+  "numbers": [
+   "only untested breakeven pocket: live replay 157R from GEN hold",
+   "gentrail tested breakeven only at +1R (lost)",
+   "prior strongly against"
+  ],
+  "why": "Closes the last gap in the owner's 'test breakeven extensively' ask.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
  }
 ]
