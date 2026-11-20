@@ -161,10 +161,10 @@
   "rejected": 1
  },
  "health": {
-  "polls": 88,
-  "last_poll_s": 5.7,
-  "symbols_last_bar": 4106,
-  "last_bar": "15:53",
+  "polls": 0,
+  "last_poll_s": null,
+  "symbols_last_bar": 0,
+  "last_bar": null,
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
@@ -174,38 +174,7 @@
   "session_close": "16:00",
   "flatten_at": "15:55",
   "early_close": false,
-  "kill": null,
-  "market_daily": {
-   "disp_prev": 2.5896
-  },
-  "index_priors": [
-   "__market__"
-  ],
-  "borrow_list": {
-   "symbols": 14437,
-   "at": "2026-11-20 15:19:08.838289-05:00"
-  },
-  "shadow": {
-   "run_id": 3,
-   "of_live": true,
-   "only_setups": 0,
-   "open_lots": 34,
-   "entered": 51,
-   "closed": 58,
-   "polls": 88,
-   "avg_ms": 36.5,
-   "live_avg_ms": 6193.9,
-   "share_of_poll": 0.006,
-   "only_every_n_polls": 1,
-   "quote_calls": 1,
-   "errors": 0
-  },
-  "position_mismatch": [],
-  "position_check": {
-   "at": "2026-11-20 15:54:08.275490-05:00",
-   "symbols": 34,
-   "blocked": []
-  },
+  "flatten_failed": [],
   "partial_lots": [],
   "risk_state": {
    "halted": false,
@@ -216,8 +185,7 @@
    "open_r": 0.0,
    "halt_counts_open": false,
    "realized_r_after_costs": -9.434
-  },
-  "flatten_failed": []
+  }
  },
  "findings": [
   "'cost filter: stop-exit cost #R > #R' (skipped) blocked 28 names that would have made +1.1R (corrected what-if). Track it for 20 sessions before loosening it.",
