@@ -290,10 +290,10 @@
   "skipped": 212
  },
  "health": {
-  "polls": 85,
-  "last_poll_s": 3.6,
-  "symbols_last_bar": 4106,
-  "last_bar": "15:53",
+  "polls": 0,
+  "last_poll_s": null,
+  "symbols_last_bar": 0,
+  "last_bar": null,
   "data_stale": null,
   "data_outages": [],
   "outage_actions": [],
@@ -303,35 +303,7 @@
   "session_close": "16:00",
   "flatten_at": "15:55",
   "early_close": false,
-  "kill": null,
-  "index_priors": [
-   "SPY"
-  ],
-  "borrow_list": {
-   "symbols": 14437,
-   "at": "2026-11-20 15:19:08.984619-05:00"
-  },
-  "shadow": {
-   "run_id": 3,
-   "of_live": true,
-   "only_setups": 24,
-   "open_lots": 110,
-   "entered": 30,
-   "closed": 58,
-   "polls": 85,
-   "avg_ms": 190.7,
-   "live_avg_ms": 8609.0,
-   "share_of_poll": 0.022,
-   "only_every_n_polls": 1,
-   "quote_calls": 2,
-   "errors": 0
-  },
-  "position_mismatch": [],
-  "position_check": {
-   "at": "2026-11-20 15:54:14.674119-05:00",
-   "symbols": 105,
-   "blocked": []
-  },
+  "flatten_failed": [],
   "partial_lots": [],
   "risk_state": {
    "halted": false,
@@ -342,28 +314,7 @@
    "open_r": 0.0,
    "halt_counts_open": false,
    "realized_r_after_costs": 67.88
-  },
-  "scale_outs": [
-   {
-    "symbol": "BLDR",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-long",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-long-BLDR-20261120-1439",
-    "qty": 3,
-    "left": 4,
-    "stop": 55.56,
-    "at": "2026-11-20 15:22:16.238338-05:00"
-   },
-   {
-    "symbol": "MSGK",
-    "strategy": "CWT14-failbrk-pdl-p05-R2A-long",
-    "coid": "mt2-CWT14-failbrk-pdl-p05-R2A-long-MSGK-20261120-1444",
-    "qty": 1,
-    "left": 1,
-    "stop": 304.41,
-    "at": "2026-11-20 15:49:12.007771-05:00"
-   }
-  ],
-  "flatten_failed": []
+  }
  },
  "findings": [
   "Entry slippage averaged 14.6 bps against the signal price. Candidates: resting stop-entry orders at the broker, or streaming bars to cut polling latency.",
