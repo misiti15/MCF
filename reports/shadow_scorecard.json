@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-19T15:59-05:00",
+ "generated": "2026-11-20T16:00-05:00",
  "account": "testingd",
  "weights": {
   "live_weight": 1.0,
@@ -24,19 +24,19 @@
  },
  "calibration": {
   "overall": {
-   "days": 3,
-   "live_entries": 312,
-   "shadow_entries": 315,
-   "matched": 312,
+   "days": 4,
+   "live_entries": 413,
+   "shadow_entries": 417,
+   "matched": 413,
    "missing": 0,
    "extra": 0,
-   "resource_blocked": 3,
+   "resource_blocked": 4,
    "match": 1.0,
    "extra_rate": 0.0,
-   "r_pairs": 312,
-   "bias_r": -0.0463,
-   "bias_t": -4.33,
-   "daily_r_corr": 0.984
+   "r_pairs": 413,
+   "bias_r": -0.0389,
+   "bias_t": -4.28,
+   "daily_r_corr": 0.993
   },
   "families": {
    "CWT04": {
@@ -59,7 +59,7 @@
     "haircut_r": 0.02
    },
    "CWT05": {
-    "days": 3,
+    "days": 4,
     "live_entries": 1,
     "shadow_entries": 1,
     "matched": 1,
@@ -78,45 +78,64 @@
     "haircut_r": 0.0317
    },
    "CWT14": {
-    "days": 3,
-    "live_entries": 171,
-    "shadow_entries": 172,
-    "matched": 171,
+    "days": 4,
+    "live_entries": 172,
+    "shadow_entries": 173,
+    "matched": 172,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 1,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 171,
+    "r_pairs": 172,
     "bias_r": -0.0331,
-    "bias_t": -2.9,
-    "daily_r_corr": 0.99,
+    "bias_t": -2.91,
+    "daily_r_corr": 0.989,
     "optimistic": false,
     "tier": "calibrated",
     "weight": 0.35,
     "haircut_r": 0.02
    },
-   "GEN": {
-    "days": 3,
-    "live_entries": 91,
-    "shadow_entries": 93,
-    "matched": 91,
+   "ETFDISP": {
+    "days": 1,
+    "live_entries": 0,
+    "shadow_entries": 0,
+    "matched": 0,
     "missing": 0,
     "extra": 0,
-    "resource_blocked": 2,
+    "resource_blocked": 0,
+    "match": null,
+    "extra_rate": null,
+    "r_pairs": 0,
+    "bias_r": null,
+    "bias_t": null,
+    "daily_r_corr": null,
+    "optimistic": false,
+    "tier": "uncalibrated",
+    "weight": 0.0,
+    "haircut_r": 0.02
+   },
+   "GEN": {
+    "days": 4,
+    "live_entries": 178,
+    "shadow_entries": 181,
+    "matched": 178,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 3,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 91,
-    "bias_r": -0.0552,
-    "bias_t": -1.97,
-    "daily_r_corr": 0.956,
+    "r_pairs": 178,
+    "bias_r": -0.0277,
+    "bias_t": -1.62,
+    "daily_r_corr": 0.998,
     "optimistic": false,
     "tier": "calibrated",
     "weight": 0.35,
     "haircut_r": 0.02
    },
    "IDX2": {
-    "days": 3,
+    "days": 4,
     "live_entries": 0,
     "shadow_entries": 0,
     "matched": 0,
@@ -135,7 +154,7 @@
     "haircut_r": 0.02
    },
    "LD4": {
-    "days": 3,
+    "days": 4,
     "live_entries": 0,
     "shadow_entries": 0,
     "matched": 0,
@@ -154,7 +173,7 @@
     "haircut_r": 0.02
    },
    "NM": {
-    "days": 3,
+    "days": 4,
     "live_entries": 0,
     "shadow_entries": 0,
     "matched": 0,
@@ -173,7 +192,7 @@
     "haircut_r": 0.02
    },
    "NS4": {
-    "days": 3,
+    "days": 4,
     "live_entries": 1,
     "shadow_entries": 1,
     "matched": 1,
@@ -192,38 +211,57 @@
     "haircut_r": 0.0999
    },
    "RW1": {
-    "days": 3,
-    "live_entries": 35,
-    "shadow_entries": 35,
-    "matched": 35,
+    "days": 4,
+    "live_entries": 42,
+    "shadow_entries": 42,
+    "matched": 42,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 0,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 35,
-    "bias_r": -0.0692,
-    "bias_t": -2.92,
-    "daily_r_corr": 0.991,
+    "r_pairs": 42,
+    "bias_r": -0.0739,
+    "bias_t": -3.71,
+    "daily_r_corr": 0.996,
     "optimistic": false,
     "tier": "calibrated",
     "weight": 0.35,
     "haircut_r": 0.02
    },
    "RW5": {
-    "days": 3,
-    "live_entries": 13,
-    "shadow_entries": 13,
-    "matched": 13,
+    "days": 4,
+    "live_entries": 19,
+    "shadow_entries": 19,
+    "matched": 19,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 0,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 13,
-    "bias_r": -0.1087,
-    "bias_t": -5.66,
-    "daily_r_corr": 1.0,
+    "r_pairs": 19,
+    "bias_r": -0.127,
+    "bias_t": -5.94,
+    "daily_r_corr": 0.993,
+    "optimistic": false,
+    "tier": "uncalibrated",
+    "weight": 0.0,
+    "haircut_r": 0.02
+   },
+   "ULT": {
+    "days": 1,
+    "live_entries": 0,
+    "shadow_entries": 0,
+    "matched": 0,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 0,
+    "match": null,
+    "extra_rate": null,
+    "r_pairs": 0,
+    "bias_r": null,
+    "bias_t": null,
+    "daily_r_corr": null,
     "optimistic": false,
     "tier": "uncalibrated",
     "weight": 0.0,
@@ -259,7 +297,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 1,
@@ -283,24 +322,25 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 76,
+   "trades": 77,
    "trades_only": 0,
-   "trades_of_live": 76,
-   "total_r": 5.499,
-   "avg_r": 0.0724,
-   "n_win": 58,
+   "trades_of_live": 77,
+   "total_r": 5.672,
+   "avg_r": 0.0737,
+   "n_win": 59,
    "haircut_r": 0.02,
-   "avg_r_haircut": 0.0524,
+   "avg_r_haircut": 0.0537,
    "tier": "calibrated",
    "weight": 0.35,
    "gap_r": -0.0285,
-   "gap_n": 75,
+   "gap_n": 76,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-18"
+   "last": "2026-11-20"
   },
   "CWT14-failbrk-pdl-p10-lowvol-long": {
    "family": "CWT14",
@@ -324,6 +364,28 @@
    "match": 1.0,
    "first": "2026-11-17",
    "last": "2026-11-18"
+  },
+  "ETFDISP-late-dip-hidisp-long": {
+   "family": "ETFDISP",
+   "live_days": [
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.0,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
   },
   "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": {
    "family": "GEN",
@@ -372,29 +434,52 @@
    "first": null,
    "last": null
   },
+  "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "calibrated",
+   "weight": 0.35,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
   "GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short": {
    "family": "GEN",
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 4,
+   "trades": 7,
    "trades_only": 0,
-   "trades_of_live": 4,
-   "total_r": 0.47,
-   "avg_r": 0.1176,
+   "trades_of_live": 7,
+   "total_r": -4.763,
+   "avg_r": -0.6804,
    "n_win": 3,
    "haircut_r": 0.02,
-   "avg_r_haircut": 0.0976,
+   "avg_r_haircut": -0.7004,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": 0.3544,
-   "gap_n": 4,
+   "gap_r": 0.2433,
+   "gap_n": 6,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-19"
+   "last": "2026-11-20"
   },
   "GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short": {
    "family": "GEN",
@@ -447,31 +532,33 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 16,
+   "trades": 61,
    "trades_only": 0,
-   "trades_of_live": 16,
-   "total_r": -4.709,
-   "avg_r": -0.2943,
-   "n_win": 5,
+   "trades_of_live": 61,
+   "total_r": -39.296,
+   "avg_r": -0.6442,
+   "n_win": 8,
    "haircut_r": 0.02,
-   "avg_r_haircut": -0.3143,
+   "avg_r_haircut": -0.6642,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": -0.0211,
-   "gap_n": 15,
+   "gap_r": 0.0566,
+   "gap_n": 60,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-19"
+   "last": "2026-11-20"
   },
   "GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short": {
    "family": "GEN",
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 4,
@@ -495,7 +582,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -519,7 +607,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -543,7 +632,30 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "calibrated",
+   "weight": 0.35,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -566,6 +678,28 @@
    "family": "GEN",
    "live_days": [
     "2026-11-17"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "calibrated",
+   "weight": 0.35,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -611,24 +745,47 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 47,
+   "trades": 87,
    "trades_only": 0,
-   "trades_of_live": 47,
-   "total_r": 4.773,
-   "avg_r": 0.1016,
-   "n_win": 28,
+   "trades_of_live": 87,
+   "total_r": 23.08,
+   "avg_r": 0.2653,
+   "n_win": 62,
    "haircut_r": 0.02,
-   "avg_r_haircut": 0.0816,
+   "avg_r_haircut": 0.2453,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": -0.0873,
-   "gap_n": 47,
+   "gap_r": -0.0893,
+   "gap_n": 87,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-19"
+   "last": "2026-11-20"
+  },
+  "GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short": {
+   "family": "GEN",
+   "live_days": [
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "calibrated",
+   "weight": 0.35,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
   },
   "GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short": {
    "family": "GEN",
@@ -657,7 +814,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -681,7 +839,30 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.0,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
+  },
+  "NM-RWN4-ns2-spyup05-notfri-short": {
+   "family": "NM",
+   "live_days": [
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -705,7 +886,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 0,
@@ -751,7 +933,8 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
    "trades": 1,
@@ -775,48 +958,72 @@
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 35,
+   "trades": 42,
    "trades_only": 0,
-   "trades_of_live": 35,
-   "total_r": -9.661,
-   "avg_r": -0.276,
-   "n_win": 14,
+   "trades_of_live": 42,
+   "total_r": -4.293,
+   "avg_r": -0.1022,
+   "n_win": 21,
    "haircut_r": 0.02,
-   "avg_r_haircut": -0.296,
+   "avg_r_haircut": -0.1222,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": -0.0692,
-   "gap_n": 35,
+   "gap_r": -0.0739,
+   "gap_n": 42,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-19"
+   "last": "2026-11-20"
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4": {
    "family": "RW5",
    "live_days": [
     "2026-11-17",
     "2026-11-18",
-    "2026-11-19"
+    "2026-11-19",
+    "2026-11-20"
    ],
    "shadow_days": [],
-   "trades": 13,
+   "trades": 19,
    "trades_only": 0,
-   "trades_of_live": 13,
-   "total_r": 1.659,
-   "avg_r": 0.1276,
-   "n_win": 6,
+   "trades_of_live": 19,
+   "total_r": 3.476,
+   "avg_r": 0.183,
+   "n_win": 10,
    "haircut_r": 0.02,
-   "avg_r_haircut": 0.1076,
+   "avg_r_haircut": 0.163,
    "tier": "uncalibrated",
    "weight": 0.0,
-   "gap_r": -0.1087,
-   "gap_n": 13,
+   "gap_r": -0.127,
+   "gap_n": 19,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-19"
+   "last": "2026-11-20"
+  },
+  "ULT-HV2-shock-snap-etf-long-K": {
+   "family": "ULT",
+   "live_days": [
+    "2026-11-20"
+   ],
+   "shadow_days": [],
+   "trades": 0,
+   "trades_only": 0,
+   "trades_of_live": 0,
+   "total_r": 0.0,
+   "avg_r": null,
+   "n_win": 0,
+   "haircut_r": 0.02,
+   "avg_r_haircut": null,
+   "tier": "uncalibrated",
+   "weight": 0.0,
+   "gap_r": null,
+   "gap_n": 0,
+   "match": null,
+   "first": null,
+   "last": null
   }
  },
  "note": "Shadow = the setup's rules on the live polls with no orders; not live trading. Live wins any disagreement. Educational only - not financial advice."
