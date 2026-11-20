@@ -28,7 +28,7 @@ Dashboard: https://misiti15.github.io/MCF/live/ (GitHub Pages; reads status.json
 3. Optional: Actions → trade → Run workflow (dry run) to watch one job end to end.
 
 ## Setup Generator account and the generator (owner 2026-10-19)
-- **Account:** 5th Alpaca paper account "Setup Generator" (`MCF_ACCOUNT=gen`): `config/account_gen.yaml`, orders `mcg-*`, state branch `mcf-data-gen`, 80 slots on $100k. Secrets **`ALPACA_GEN_API_KEY`** and **`ALPACA_GEN_SECRET_KEY`** (repository secrets). Without them the trade / watchdog jobs for `gen` log "gen account keys not set: skipped" and do nothing; they never fall back to the primary keys. Market data always uses the primary SIP keys. The EOD report is built for the dashboard but not emailed. The watchdog covers it (same mode as the other accounts, dry unless `MCF_WATCHDOG_MODE=act`).
+- **Account:** 5th Alpaca paper account "Setup Generator" (`MCF_ACCOUNT=gen`): `config/account_gen.yaml`, orders `mcg-*`, state branch `mcf-data-gen`, 80 slots on $100k. Secrets **`ALPACA_GEN_API_KEY`** and **`ALPACA_GEN_SECRET_KEY`** (repository secrets). Without them the trade / watchdog jobs for `gen` log "gen account keys not set: skipped" and do nothing; they never fall back to the primary keys. Market data always uses the primary SIP keys. The EOD report is built for the dashboard but not emailed. The watchdog covers it (same mode as the other accounts: `act` by default since 2026-11-20, BRAKE-WATCHDOG).
 - **Only GEN-* setups run there** (`strategies_exclusive: true` in the overlay; the loader switches off every config/default.yaml setup, also ones added later). The other four accounts are unaffected.
 - **Generator** (`mcf/research/generator/`): `python -m mcf.research.generator run --date YYYY-MM-DD --n 10 [--apply]`.
   - Proposes random-but-sensible specs (default 3,000 per run): 3-5 conditions = a time window + one market-context filter (`spy_fo` / `qqq_fo` / `breadth` / `breadth_open`) + 1-2 triggers + 0-2 state filters from the arena indicator library (live-computable only), a side, a lab geometry (t05s1, t1s1, t1s05, t05s05, hold, holdtr) and a liquidity floor ($20M-$150M adv20). 5-minute decision bars only (multi-timeframe live is not built).
@@ -66,8 +66,10 @@ No emails or alerts at any step; everything is logged in `status.json` (`health.
 5. **Independent watchdog** (`.github/workflows/watchdog.yml`, every 10 min 09:35-15:55 ET, per account): if
    `status.json` is more than 15 min old while MCF positions/orders are open (trading run dead), or `data_stale` has
    lasted more than 30 min, it cancels the account's open MCF orders and flattens its MCF positions (prefix
-   `mcf-`/`mct-`/`mt2-` only; never `mcl-` or anything else). **Default mode `dry`**: it only writes what it would do to
-   the job summary. To arm it set the repository variable `MCF_WATCHDOG_MODE=act` (or run it manually with mode `act`).
+   `mcf-`/`mct-`/`mt2-` only; never `mcl-` or anything else). **Default mode `act` in every account** (BRAKE-WATCHDOG,
+   owner 2026-11-20; Primary since 2026-11-12): it cancels and flattens that account's own MCF orders/positions when
+   triggered. Same 10-minute schedule as before (no extra runs). To make it log only, set the repository variable
+   `MCF_WATCHDOG_MODE=dry` (or run it manually with mode `dry`).
    It has its own concurrency group and never writes to the state branches.
 6. **Session guard** (owner 2026-10-26, after GitHub fired no scheduled run that day): `.github/workflows/session-guard.yml`
    + `mcf/execution/session_guard.py`. On a market day 08:40-15:30 ET, every account with keys must have a queued or

@@ -641,6 +641,9 @@ from .research_setups import RESEARCH_REGISTRY  # noqa: E402
 
 REGISTRY.update(RESEARCH_REGISTRY)
 REGISTRY[IndexDipBounce.name] = IndexDipBounce
+from .beginner_setups import BEGINNER_REGISTRY  # noqa: E402  beginner_1120 (owner BEG-ORB / BEG-GNG 2026-11-20)
+
+REGISTRY.update(BEGINNER_REGISTRY)
 
 
 def _build_one(name: str, params: dict, cfg: dict, top_n: int) -> Strategy | None:

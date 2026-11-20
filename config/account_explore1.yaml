@@ -46,6 +46,7 @@ live:
   # Priority: narrowest (fewest expected trades/session) first, as in Testing 1/2.
   setup_order:
     # ROT1 2026-11-15 (from session 2026-11-16): fewest traded sessions first, then fewest trades (live, all accounts, to 11-13)
+    - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230   # Remedy-Q copy (WW-REMEDY-Q (a), owner 2026-11-20): FIRST (Workbench rule 5: copies at the top)
     - NM-ETF-late-dip-di-long-WB1   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - L3-gap-slope-rsi5hi-FD-WB4   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short-WB4   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
@@ -69,6 +70,7 @@ live:
     - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
     - ULT-09-failed-vwap-reclaim-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
+    - BEG-GNG-gap-and-go-long   # NEW 2026-11-23 beginner_1120 (owner BEG-GNG yes; meets top-10 standard, 1 day); appended last so existing setups keep their priority
 strategies:
   NM-ETF-late-dip-di-long-WB1:
     # Workbench copy of NM-ETF-late-dip-di-long (Primary), Mechanic 2026-11-16: + ret12 >= +0.5% (dip inside an up-hour);
@@ -1102,3 +1104,36 @@ strategies:
         max_overlap: 0.155
         overlap_with: CWT13-vwapstretch-z05-short
         n_tried_in_run: 3000
+  BEG-GNG-gap-and-go-long:
+    # NEW setup (research/beginner_1120 BEG-03, as written), owner 2026-11-20 "BEG-GNG yes"; testing-admission rule
+    # (ledger 2026-11-19-testing-admission): meets the top-10 standard (beginner_1120), Skeptic upheld; no MCF parent.
+    # Gap-and-go, long only: prior close $5-$200, ADV >= $20M, gap >= +3%, rvol(09:30-09:49) >= 3; buy-stop at the 09:30-09:49
+    # high + 1c on 09:50-10:59, each bar armed only when the prior close is above VWAP; stop max(R20 low, VWAP) - 2c (0.4%-3%);
+    # target 2R; 1R trail after +1R; time exit 12:00 (runner: clock time stop to 12:00).
+    # Normal-way backtest (LR8, testing book): CHECK +0.006R (595 trades) - `1 day` record: 2026-04-23 is +5.8R of +3.3R
+    # (share 1.77), -0.004 w/o that day; T1 comb -0.017, T2 -0.084; level with fair random entries; SPY-down days -0.19R.
+    # Duplicate test (symbol-days, T1): max 50% (gap_and_go, off), 44% gap_continuation (off), 40% orb20_a (< 70%).
+    # Placed in Testing B (new setup = 0 live reps; Testing A runs lab setups only; D / E are the ROT block-2 spotlight
+    # accounts; E holds ULT-05 with-gap continuation). ~2 trades/session. FOOTRACE-EXIT as a new setup; promotion hold.
+    # Effective session 2026-11-23 (ledger 2026-11-23-beg1120-testing-admissions). research/beginner_1120/REPORT.md.
+    enabled: true
+    class: beg_gap_and_go
+    trail_r: 1.0
+    trail_after_r: 1.0
+    scale_out_r: null
+    tags: [beginner_1120, "meets top-10 standard (beginner_1120)", "1 day"]
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230:
+    # Remedy-Q copy (WW-REMEDY-Q item (a); owner 2026-11-20 "remedy-q yes absolutely and quickly", conditional on the
+    # re-check): the Primary parent RW5-heat30-flowsell-rsi5pop-gapdn-short-FD exactly (same module, filters, min_adv, refire, t1s1 exits)
+    # with NO new entries after 12:30 ET: window [950, 1230] = last entry on the 5-min bar that closes at 12:30; open
+    # lots still exit by their own rules. Cut-off from the re-check (live plateau 12:15-13:00, lab FIT plateau 12:15-12:45,
+    # CHECK scored once): research/remedyq_1120/verdicts.json. Parent in Primary unchanged. Effective session 2026-11-23
+    # (ledger 2026-11-23-remedyq-testing-copies). Testing copy, scored on later sessions only.
+    enabled: true
+    type: lab
+    module: research/bdi/fullday/RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.py
+    min_adv: 95000000
+    window: [950, 1230]
+    scale_out_r: null
+    remedy_q: "(a) no new entries after 12:30 ET; parent RW5-heat30-flowsell-rsi5pop-gapdn-short-FD (Primary)"
+    tags: [remedy_q, "Remedy-Q", workbench, "parent:RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"]

@@ -1124,3 +1124,31 @@ ULT-07-pm-volatile-dip-long:
   side: "long"
   what: "14:00-15:00: the NM-ETF late-dip chassis broadened to volatile stocks (ADV $20M+) with a SPY 60-min guard; buy; +0.5R / -1R, out after 45 min."
   account: "testing2"
+BEG-ORB-orb15-inplay-stopOR:
+  name: "15-Minute Opening Range Breakout, Wide Stop (beginner)"
+  side: "both"
+  what: "Stocks in play (top 20 by 09:30-09:49 relative volume): the 09:30-09:44 candle sets the side; enter on a break of the 15-minute high or low 09:50-11:29; stop at the other side of the range, target 2R, breakeven at +1R."
+  account: "testingf"
+BEG-GNG-gap-and-go-long:
+  name: "Gap-and-Go Breakout (beginner)"
+  side: "long"
+  what: "Gap up 3%+ on 3x volume: buy a break of the 09:30-09:49 high 09:50-10:59 while price holds above VWAP; stop below VWAP / the range low, target 2R, 1R trail, out at 12:00."
+  account: "explore1"
+L3-gap-slope-fromopen-FD-RQa-1230:
+  name: "Remedy-Q: Gap-Down Recovery Fade, no entries after 12:30"
+  side: "short"
+  what: "09:50-12:30: a stock that gapped down 2.7%+ has rallied more than 3.5% from its open with its 20-bar average turning up; short the rally. The Primary setup with no new entries after 12:30 (remedy_q (a))."
+  account: "testingf"
+  remedy_q: true
+RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230:
+  name: "Remedy-Q: Gap-Down Pop Fade, Heavy Selling, no entries after 12:30"
+  side: "short"
+  what: "09:50-12:30: stock gapped down, bearish heat <= -20, heavy net selling, and RSI(5) pops above 80; short the pop. The Primary setup with no new entries after 12:30 (remedy_q (a))."
+  account: "testing2"
+  remedy_q: true
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230:
+  name: "Remedy-Q: Gap-Down Pop Fade, no entries after 12:30"
+  side: "short"
+  what: "09:50-12:30: stock gapped down, bearish heat <= -30, net selling, and RSI(5) pops above 80; short the pop. The Primary setup with no new entries after 12:30 (remedy_q (a))."
+  account: "explore1"
+  remedy_q: true

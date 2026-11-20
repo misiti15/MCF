@@ -143,6 +143,12 @@ class PaperRunner:
         self._held_pos: dict = {}
         self._alerted: set[str] = set()
         self.no_entry_before = t(self.live.get("no_entry_before", "09:30"))
+        # BRAKE-BURST (owner 2026-11-20, research/whatworks_1120/brake/REPORT.md): runaway-entry brake in every account.
+        # At most live.burst_max_entries new entries per setup in any rolling live.burst_window_min minutes; further
+        # signals of that setup are skipped "burst brake" until the oldest entry leaves the window. 0 / null = off.
+        self.burst_max = int(self.live.get("burst_max_entries") or 0)
+        self.burst_window = pd.Timedelta(minutes=float(self.live.get("burst_window_min") or 10))
+        self._burst: dict[str, list] = {}                # setup -> entry times today (submitted / dry-run)
         self.fired: set[tuple[str, str]] = set()
         self.seen: set[tuple[str, str]] = set()      # signals already journaled today
         # GX1 clock gate (owner 2026-10-26): symbol -> (start of its latest decided 5-minute bucket, the lab setups that
@@ -260,6 +266,7 @@ class PaperRunner:
     def restore(self, today):
         """Rebuild per-day state after a restart (second CI job, crash)."""
         self.today = today
+        self._burst = {}                              # BRAKE-BURST window rebuilt from today's journaled entries below
         sig = self.journal.signals(self.run_id, str(today))
         for r in sig.itertuples():
             key = (r.symbol, r.strategy)
@@ -275,6 +282,7 @@ class PaperRunner:
                         bt = "2359"                                      # unknown: no re-entry today (safe side)
                 self.moments.add((*key, bt))
             if r.status in ("submitted", "dry_run"):
+                self._burst_note(r.strategy, getattr(r, "ts", None))
                 self.fired.add(key)
                 self.open_strategy[r.symbol] = r.strategy
                 coid = info.get("coid") or f"{COID_PREFIX}{r.strategy}-{r.symbol}-{pd.Timestamp(str(today)):%Y%m%d}"
@@ -1603,6 +1611,24 @@ class PaperRunner:
             return False
         return (symbol, strat.name, str(today)) in self.__dict__.get("_etb_logged", ())
 
+    def _burst_note(self, strategy: str, ts) -> None:
+        """Record one entry of `strategy` at `ts` for the burst brake (restart: from today's journaled entries)."""
+        try:
+            t = pd.Timestamp(ts)
+            t = t.tz_localize(NY) if t.tzinfo is None else t.tz_convert(NY)
+        except (TypeError, ValueError):
+            return
+        self.__dict__.setdefault("_burst", {}).setdefault(str(strategy), []).append(t)
+
+    def _burst_count(self, strategy: str, now) -> int:
+        """Entries of `strategy` in the rolling window ending at `now` (older ones are dropped)."""
+        q = self.__dict__.get("_burst", {}).get(str(strategy))
+        if not q:
+            return 0
+        lo = pd.Timestamp(now) - self.burst_window
+        q[:] = [t for t in q if t > lo]
+        return len(q)
+
     def _enter(self, sig, px, key, ctx, now):
         coid = self._coid(sig, ctx, now)
         if self.same_setup_reentry:
@@ -1615,6 +1641,11 @@ class PaperRunner:
             return
         if sig.symbol in self.mismatch_block:             # LR5: broker vs journal mismatch on this symbol
             return self._log(sig, "skipped", "position mismatch", px, now)
+        if getattr(self, "burst_max", 0) > 0:             # BRAKE-BURST: runaway entries of one setup
+            nb = self._burst_count(sig.strategy, now)
+            if nb >= self.burst_max:
+                return self._log(sig, "skipped", "burst brake", px, now,
+                                 {"burst_entries": nb, "burst_window_min": self.burst_window.total_seconds() / 60})
         if sig.side == -1:
             sh = self.cfg.get("shorts", {})
             if not sh.get("enabled", True):
@@ -1698,6 +1729,7 @@ class PaperRunner:
 
     def _entered(self, sig, coid, ctx, now):
         self.entered.add(coid)
+        self._burst_note(sig.strategy, now)
         if self.same_setup_reentry:
             k = (sig.symbol, sig.strategy)
             self.last_entry[k] = max(self.last_entry.get(k, ""), self._moment(sig, ctx, now))

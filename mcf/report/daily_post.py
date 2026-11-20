@@ -321,6 +321,14 @@ def best_day(r: dict) -> tuple:
     return ((tot - br) / (n - bn) if n - bn > 0 else None), d, (br / tot if tot > 0 and br > 0 else None)
 
 
+def cluster(r: dict) -> tuple:
+    """(avg R without the 2 best sessions, day-clustered t) from the merged daily record - owner WW-CLUSTER 2026-11-20."""
+    from ..analytics.robust import by_day, day_t_daily, wo_top_days
+
+    by = by_day(r.get("daily") or [])
+    return wo_top_days(by, 2), day_t_daily(by)
+
+
 def _last4(r: dict, sessions: list[str]):
     d = [x for x in r.get("daily") or [] if x[0] in sessions]
     n = sum(x[1] for x in d)
@@ -370,7 +378,7 @@ def leaderboard(date: str, gen: bool = False, top: int = 10) -> list[dict]:
                                           "testinge": "Testing E", "testingf": "Testing F"}.get(x, x) for x in a["accounts"]),
                          best=(reg.get(code) or {}).get("best"), ls_n=ls[1] if ls else None, ls_r=ls[2] if ls else None,
                          ls_pnl=ls[3] if ls else None, trades=n, sessions=r.get("sessions_traded"), per_day=(n / r["sessions_traded"]) if r.get("sessions_traded") else None,   # trades per session it traded
-                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), exmkt=r.get("exmkt_r"), beta=r.get("beta"), t=r.get("t_stat"),
+                         win=r.get("win_rate"), be=r.get("breakeven_wr"), avg_r=r.get("avg_r"), exbest=best_day(r), cluster=cluster(r), exmkt=r.get("exmkt_r"), beta=r.get("beta"), t=r.get("t_stat"),
                          total_r=r.get("total_r"), pnl=r.get("pnl"), pf=r.get("profit_factor"),
                          last4=r.get("recent_avg_r") if len(rs) == 1 and r.get("recent_avg_r") is not None else _last4(r, last4),
                          screen=((nm.get("screen") or {}).get("train_exp_r"), (nm.get("screen") or {}).get("valid_exp_r")),
@@ -834,6 +842,7 @@ def facts_text(date: str, fx: dict, accts: list[dict] | None = None, gs: dict | 
            "- Avg R? Average result per trade in units of the risk taken, after costs, fees and slippage.",
            "- Break-even win rate? The win rate a setup needs just to not lose money.",
            "- Avg R w/o best day? Same, with its single best session removed - spots records carried by one big day.",
+           "- Avg R w/o top 2 days / Day t? Avg R with its 2 best sessions removed, and the t-stat of its per-session average (sessions, not trades, counted as the independent units).",
            "- Avg R ex-market? Avg R with the market's move taken out (each trade's R regressed on SPY's move over the same minutes).",
            "- Real money yet? No - paper until M1 (3 green days in a row) and M2 (8 green of the last 10).",
            "Not financial advice."]
@@ -863,23 +872,25 @@ def post_text(date: str, accts: list[dict], top: list[dict], words: dict, day_n:
 def html_lb(date: str, rows: list[dict], gen: bool) -> str:
     if gen:
         head = ["#", "Setup", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades", "Trades/day", "Win rate",
-                "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R ex-market", "Confidence (t)", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
+                "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R w/o top 2 days", "Avg R ex-market", "Confidence (t)", "Day t", "Total R", "P/L", "Last 4 avg R", "Screen train R", "Screen valid R"]
     else:
         head = ["#", "Setup", "Account", "Best conditions", "Last-session trades", "Last-session R", "Last-session P/L", "Live trades",
-                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R ex-market", "Confidence (t)", "Total R", "P/L", "PF", "Last 4 avg R"]
+                "Sessions", "Trades per session", "Win rate", "Break-even win rate", "Avg R", "Avg R w/o best day", "Avg R w/o top 2 days", "Avg R ex-market", "Confidence (t)", "Day t", "Total R", "P/L", "PF", "Last 4 avg R"]
     ls_cols = {"Last-session trades", "Last-session R", "Last-session P/L"}
     th = "".join(f'<th class="{"l" if h in ("Setup", "Account", "Best conditions") else ""}{" ls" if h in ls_cols else ""}">{h}</th>' for h in head)
     trs = []
     for x in rows:
         edge = None if x["win"] is None or x["be"] is None else x["win"] - x["be"]
+        cl = x.get("cluster") or (None, None)     # WW-CLUSTER (owner 2026-11-20): w/o top 2 days, day-clustered t
         be = _pc(x["be"]) + (f' <span style="font-size:10.5px">({edge * 100:+.0f})</span>' if edge is not None else "")
         nm = (f'<td class="l nm">{"<span class=gb>GENERATED</span>" if gen else ""}{_e(x["name"])}<div>{_e(x["setup"])}</div></td>')
         ls = (f'<td class="ls">{x["ls_n"] or "—"}</td><td class="ls {_cls(x["ls_r"]) if x["ls_n"] else ""}">{_f(x["ls_r"]) if x["ls_n"] else "—"}</td>'
               f'<td class="ls {_cls(x["ls_pnl"]) if x["ls_n"] else ""}">{_money(x["ls_pnl"]) if x["ls_n"] else "—"}</td>')
         common = (f'<td>{_pc(x["win"])}</td><td class="{_cls(edge)}">{be}</td><td class="{_cls(x["avg_r"])}">{_f(x["avg_r"])}</td>'
                   f'<td class="{_cls(x["exbest"][0])}">{_f(x["exbest"][0])}{ONE_DAY if (x["exbest"][2] or 0) >= 0.5 else ""}</td>'
+                  f'<td class="{_cls(cl[0])}">{_f(cl[0])}</td>'
                   f'<td class="{_cls(x.get("exmkt"))}">{_f(x.get("exmkt"))}</td>'
-                  f'<td>{_f(x["t"], 1, False)}</td><td class="{_cls(x["total_r"])}">{_f(x["total_r"], 1)}</td><td class="{_cls(x["pnl"])}">{_money(x["pnl"])}</td>')
+                  f'<td>{_f(x["t"], 1, False)}</td><td>{_f(cl[1], 1, False)}</td><td class="{_cls(x["total_r"])}">{_f(x["total_r"], 1)}</td><td class="{_cls(x["pnl"])}">{_money(x["pnl"])}</td>')
         if gen:
             trs.append(f'<tr><td>{x["rank"]}</td>{nm}{ls}<td>{x["trades"]}</td><td>{_f(x["per_day"], 1, False)}</td>{common}'
                        f'<td class="{_cls(x["last4"])}">{_f(x["last4"])}</td><td class="{_cls(x["screen"][0])}">{_f(x["screen"][0], 3)}</td>'

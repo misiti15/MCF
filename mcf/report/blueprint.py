@@ -313,7 +313,10 @@ def summarize(trades: list[dict]) -> dict:
     nb = sum(1 for t in trades if t["date"] != best)
     wo = (tot - by_day[best]) / nb if nb else None
     share = by_day[best] / tot if tot > 0 else None
-    return dict(trades=n, sessions=len(by_day), avg_r=tot / n, total_r=tot, win=sum(t["r"] > 0 for t in trades) / n,
+    from ..analytics.robust import by_day as _by_day, day_t_daily, wo_top_days    # WW-CLUSTER (owner 2026-11-20)
+
+    days = _by_day([(t["date"], 1, t["r"]) for t in trades])
+    return dict(avg_wo_top2=wo_top_days(days, 2), t_day=day_t_daily(days),trades=n, sessions=len(by_day), avg_r=tot / n, total_r=tot, win=sum(t["r"] > 0 for t in trades) / n,
                 avg_wo_best=wo, best_day=best, best_share=share, one_day=bool(share is not None and share >= 0.5),
                 first=min(by_day), last=max(by_day), pnl=sum(t["pnl"] for t in trades),
                 by_acct={a: dict(trades=len(v), avg_r=sum(v) / len(v)) for a, v in by_acct.items()})
@@ -485,6 +488,9 @@ def extract(setup_id: str, with_record: bool = True) -> dict:
         wo = "n/a" if rec["avg_wo_best"] is None else f"{rec['avg_wo_best']:+.3f}R"
         sh = "" if rec["best_share"] is None else f"; best day {rec['best_day']} = {rec['best_share']:.0%} of R" + (" (1 day)" if rec["one_day"] else "")
         S["RECORD"].append(("Avg R w/o best day", wo, sh.lstrip("; ")))
+        wo2 = "n/a" if rec.get("avg_wo_top2") is None else f"{rec['avg_wo_top2']:+.3f}R"
+        td = "n/a" if rec.get("t_day") is None else f"{rec['t_day']:+.2f}"
+        S["RECORD"].append(("Avg R w/o top 2 days / day t", f"{wo2} / {td}", "day t = t of the per-session mean R"))
         if len(rec["by_acct"]) > 1:
             S["RECORD"].append(("By account", ", ".join(f"{names.get(a, a)} {v['trades']} tr {v['avg_r']:+.2f}R" for a, v in rec["by_acct"].items()), ""))
         rc = rule_changes(setup_id, sorted(rec["by_acct"]), rec["first"], rec["last"])

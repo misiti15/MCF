@@ -371,9 +371,11 @@ def test_lr7_flatten_failure_alerts_after_the_deadline(tmp_path, monkeypatch):
     assert d["action"] == "flatten" and any(x.startswith("flatten_failed") for x in d["reasons"])
 
 
-def test_lr7_watchdog_acts_on_primary_until_1605():
+def test_lr7_watchdog_acts_until_1605_in_every_account():
+    """LR7 (Primary 2026-11-12) + BRAKE-WATCHDOG (owner 2026-11-20): 'act' in every account, schedule unchanged."""
     wf = (ROOT / ".github/workflows/watchdog.yml").read_text()
-    assert "matrix.account == 'primary' && 'act' || 'dry'" in wf and "13-21 * * 1-5" in wf and "1606" in wf
+    assert "vars.MCF_WATCHDOG_MODE || 'act' }}" in wf and "'dry') }}" not in wf
+    assert '"5-55/10 13-21 * * 1-5"' in wf and "1606" in wf and wf.count("cron:") == 1
 
 
 # ------------------------------------------------------------------------------------------------ LR8 cost model

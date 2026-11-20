@@ -2510,10 +2510,10 @@
    "T1 combined -0.009, FIT best-day share 0.23; all Tier A legs pass",
    "random entries -0.032; gross about 0, so MEETS is not profitable"
   ],
-  "why": "It is the only beginner setup that meets the top-10 standard with a record spread over many days.",
+  "why": "Answered yes 2026-11-20: BEG-01 ORB-15 (stop at the far side of OR15) added to Testing F as BEG-ORB-orb15-inplay-stopOR from session 2026-11-23 (ledger 2026-11-23-beg1120-testing-admissions). Duplicate test: 52% of its symbol-days are orb20_a's (< 70%); kept out of On Deck / Testing C.",
   "link": "research/owner_inbox/2026-11-20.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-20"
  },
  {
   "code": "BEG-GNG",
@@ -2525,8 +2525,262 @@
    "CHECK is a 1-day record (share 1.77; -0.004 w/o that day)",
    "level with fair random entries; about 2 trades a session"
   ],
-  "why": "It passes every Tier A leg, but the CHECK record rests on one day.",
+  "why": "Answered yes 2026-11-20: BEG-03 gap-and-go (long, as written) added to Testing B as BEG-GNG-gap-and-go-long from session 2026-11-23 (ledger 2026-11-23-beg1120-testing-admissions), tagged `1 day` (CHECK +0.006R rests on 2026-04-23, share 1.77). Duplicate test: max 50% (gap_and_go, off) < 70%.",
   "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-20"
+ },
+ {
+  "code": "OUT-EPOCH",
+  "title": "One clean rule epoch 11-23..12-18",
+  "what": "No rule edits for 4 weeks (bug fixes, rotation and Friday moves only); epoch id on every trade; volume and admissions held flat.",
+  "recommend": "Yes (outsider review)",
+  "numbers": [
+   "0 setups have 20+ trades under current rules",
+   "236 ledger entries in 7 weeks",
+   "daily R -76 -> -145R/day as volume doubled"
+  ],
+  "why": "Answered 2026-11-20: NO freeze. But weigh every future change heavily — lean on consistency and giving rules a chance.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "OUT-NULL",
+  "title": "Matched random-entry null as the promotion screen",
+  "what": "Build a per-setup random-entry null (same symbols, time ±30 min, side, geometry, LR8); show it beside the one-big-day column; promotions must beat it.",
+  "recommend": "Yes (research build first)",
+  "numbers": [
+   "10 survivors observed vs ~13 expected under a no-edge null",
+   "rank persistence Spearman -0.11"
+  ],
+  "why": "Answered 2026-11-20: YES — test very thoroughly across every setup; present results very simply in an easy-to-view image.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "OUT-NMETF",
+  "title": "Pre-registered forward test for NM-ETF-late-dip",
+  "what": "~25 sessions frozen; pass = day-clustered t>=2 and w/o-best avg>0; size rule committed in advance (e.g. 0.25%->0.5% on pass).",
+  "recommend": "Yes",
+  "numbers": [
+   "33 trades +0.21R, t 3.5, best day 21% of R",
+   "only setup above the live-program bar"
+  ],
+  "why": "Answered 2026-11-20: YES.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "OUT-RETIRE",
+  "title": "Study a terminal RETIRED state",
+  "what": "Backtest a permanent retire rule (report wrongful kills of later graduates); separate from low-activity trims, which still go to testing.",
+  "recommend": "Yes to the study",
+  "numbers": [
+   "0 setups ever retired",
+   "losers ~79% of recent net loss",
+   "23 setups already have 95% upper bound < 0"
+  ],
+  "why": "Answered 2026-11-20: YES (study, then adoption on results).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "OUT-BRAKE",
+  "title": "System-wide cost-in brake study + watchdog in all accounts",
+  "what": "Replay a cross-account cost-in stop; report per-setup better/worse; watchdog 'act' everywhere before real money.",
+  "recommend": "Yes (research replay)",
+  "numbers": [
+   "11-17: one Gen setup -134.6R with no brake",
+   "per-account halts count raw R before costs"
+  ],
+  "why": "Answered 2026-11-20: YES (study).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "OUT-SCORE",
+  "title": "Primary-only production scoreboard as the North Star line",
+  "what": "Chart Primary after-promotion R with rule-change epochs; show other accounts as research spend; pre-declared pass/kill bars for the current 5.",
+  "recommend": "Yes",
+  "numbers": [
+   "-3,500R headline is 97.5% exploration",
+   "Primary +70R over 556 trades since promotion (RW3/RW5 one-day flag)"
+  ],
+  "why": "Answered 2026-11-20: already the standard — MCF success is measured only by Primary's figures; global / Graveyard / Testing totals are never a concern (bad setups there are being sniffed out, which is good).",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "LPB-UNBLOCK",
+  "title": "Keep Late Pullback Buy in Testing E as is; split arena_reps blocked% (capacity vs filter, report only)",
+  "what": "No priority / cap / spread / cost-filter exemption, no 2nd lot, no move for GEN-261027-01 (Late Pullback Buy). Optional report-only split of blocked_pct into capacity vs quality-filter skips.",
+  "recommend": "Yes",
+  "numbers": [
+   "84 signals, 67 blocked: 42 Gen-account (11-04 halt 21, buying-power rejects 21), 20 spread, 2 cost filter, 3 other",
+   "Testing E: 12 signals, 3 taken, 0 capacity blocks; unblock levers free 0 trades",
+   "spread 30-50 bps: 9 trades -0.056R after spread; cost exemption: 2 trades -0.50R"
+  ],
+  "why": "Testing E already takes every clean signal; the remaining blocks are quality filters that removed losers.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LPB-WIDE",
+  "title": "Loosen Late Pullback Buy's signal for more trades?",
+  "what": "Window 13:30 start, MACD-hist 0.08/0.04, Ret15m -0.04/-0.02, ADV $10M/$5M (54 configs, bench10 normal way, LR8, locked block not read).",
+  "recommend": "No",
+  "numbers": [
+   "0 of 53 variants clear bar 2.82 (max FIT t 1.20)",
+   "parent on bench: FIT -0.021R, CHECK -0.026R; all variants <= 0R on CHECK",
+   "MACD 0.08: 15.6 vs 8.2 trades/session, CHECK -0.008R, FIT paired -0.17R/day"
+  ],
+  "why": "More trades at ~0R; no variant improves the edge. Parked in the backlog.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "LPB-WB5-OFF",
+  "title": "Retire the Late Pullback Buy WB5 child (Testing D, 0 signals in 3 sessions)?",
+  "what": "Recommendation is to keep it, revisit at 10 active sessions, and run a one-off parity check on 11-18 OSCR (br_chg / 09:50 breadth live).",
+  "recommend": "No (keep)",
+  "numbers": [
+   "parent signalled on 1 of the 3 sessions; only OSCR fit WB5 (spread-blocked anyway)",
+   "backtest trade-session rate 37%: P(3 empty) ~25%"
+  ],
+  "why": "Too few sessions to call starvation; trimmed-setups rule says low-activity setups are never just switched off.",
+  "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "WW-PROTECT",
+  "title": "Protected list as an evidence gate (not a freeze)",
+  "what": "docs/PROTECTED.md (PROT-01..32) + tests/test_protected.py: ledger entries touching a protected item must cite guard evidence + owner approval; Primary items only in a Friday epoch window.",
+  "recommend": "Yes",
+  "numbers": [
+   "65 findings, 56 upheld, 7 strong",
+   "strongest: spread<=25% of stop gate (Primary blocked -0.41R vs taken -0.12R)"
+  ],
+  "why": "Answered 2026-11-20: YES.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "WW-CLUSTER",
+  "title": "Day-clustered t + 'w/o top 2 days' in every review",
+  "what": "Add day-clustered t and avg R without top 2 days beside 'w/o best day' in promotions/demotions/reviews.",
+  "recommend": "Yes",
+  "numbers": [
+   "trio t 3.2-3.8 trade-level vs 0.97 day-level"
+  ],
+  "why": "Answered 2026-11-20: YES.",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "WW-REMEDY-Q",
+  "title": "Three slice ideas to backlog as Workbench copies",
+  "what": "(a) 13:00 entry cut-off for L3/RW3/RW5; (b) gap > -5% & ATR >= 5% gate on L3-fromopen; (c) gap <= -1% on RW3/RW5 — Testing copies only, scored on later sessions.",
+  "recommend": "Yes",
+  "numbers": [
+   "core before 13:00 +0.207R vs after -0.148R"
+  ],
+  "why": "Answered 2026-11-20: YES, conditional on a re-check (\"if all is true, remedy-q yes absolutely and quickly\"). Re-check research/remedyq_1120/verdicts.json: (a) holds at 12:30 (not 13:00) -> 3 Testing copies from 2026-11-23; (b) and (c) not confirmed.",
+  "link": "research/remedyq_1120/verdicts.json",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "WW-ST7",
+  "title": "Review ST7-FD at the next Friday epoch",
+  "what": "Only Primary member with failing evidence; would move to a testing account (not switched off).",
+  "recommend": "Yes (review)",
+  "numbers": [
+   "fails null (p~0.10)",
+   "no compensating source record"
+  ],
+  "why": "Answered 2026-11-20: YES — thorough review; give the owner ST7's numbers directly (don't make him look them up on the leaderboard).",
+  "link": "research/whatworks_1120/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "RETIRE-R3",
+  "title": "Adopt RETIRE-R3 at the Friday review",
+  "what": "Retire when trades>=150, active days>=15, avg R w/o best day <= -0.10 and last-10-session R <= 0; Compass exemptions kept; never Primary; low-activity trims still go to testing.",
+  "recommend": "Yes",
+  "numbers": [
+   "walk-forward: 26 retired, 0 wrongful kills",
+   "retired later -0.129R/trade vs -0.073 kept"
+  ],
+  "why": "Answered 2026-11-20: YES with condition — only after >= 20 active sessions AND >= 150 trades (plus the w/o-best-day <= -0.10 and last-10-session R <= 0 tests); never Primary; low-activity trims still go to testing.",
+  "link": "research/whatworks_1120/retire/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "BRAKE-BURST",
+  "title": "Runaway-entry brake in every account",
+  "what": "Max 30 new entries per setup in any 10 minutes, then pause.",
+  "recommend": "Yes",
+  "numbers": [
+   "never fires in Primary (32 sessions)",
+   "catches ~103R of the 11-17 Gen -134.6R case"
+  ],
+  "why": "Answered 2026-11-20: YES.",
+  "link": "research/whatworks_1120/brake/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "BRAKE-WATCHDOG",
+  "title": "Watchdog 'act' mode in all accounts now",
+  "what": "Extend the after-flatten watchdog action to every account.",
+  "recommend": "Yes",
+  "numbers": [
+   "Gen/Graveyard carried positions overnight 11-13..11-16"
+  ],
+  "why": "Answered 2026-11-20: YES if low usage. Check: the watchdog already runs every 10 min in all 10 accounts in dry mode; 'act' adds no runs, so usage is unchanged.",
+  "link": "research/whatworks_1120/brake/REPORT.md",
+  "status": "answered",
+  "answered": "2026-11-20"
+ },
+ {
+  "code": "NMETF-SIZE",
+  "title": "Allow the NM-ETF size-up exception to C3-BAR2",
+  "what": "If NM-ETF passes its frozen 25-session Primary test (t>=2, w/o best>0, best day<50%), double risk cap AND notional (2 slots). Conflicts with C3-BAR2 'per-setup risk stays flat'.",
+  "recommend": "Optional (your call; conflicts with C3-BAR2)",
+  "numbers": [
+   "Primary slice: 15 trades +0.075R t 1.18 (1-day tag)",
+   "whole record 33 trades +0.21R t 3.5"
+  ],
+  "why": "Owner 2026-11-20: asked for a plain-language breakdown; re-asked.",
+  "link": "research/whatworks_1120/nmetf/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "ST7-MOVE",
+  "title": "Move ST7-FD from Primary to On Deck tonight (unchanged)",
+  "what": "Friday epoch move: switch ST7-FD off in Primary and run it unchanged in On Deck; it returns only at +15R total plus the PRIME-RULES entry tests. Alternative: keep it in Primary on probation; it auto-moves at -10R (2.7R away).",
+  "recommend": "Yes (move tonight)",
+  "numbers": [
+   "Primary 42 trades -7.3R, avg -0.17R, w/o best day -0.31, 38% green days",
+   "without 11-19: +0.04R/trade (flat)",
+   "fails random-entry null; 11-19 burst -8.7R; latch can't stop same-bar bursts"
+  ],
+  "why": "Every independent check fails; discretionary under WW-ST7, against 'consistency over churn'.",
+  "link": "research/st7_review_1120/REVIEW.md",
   "status": "open",
   "answered": null
  }
