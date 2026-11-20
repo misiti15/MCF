@@ -21,7 +21,7 @@ Entry long at the 09:50 decision bar; exit at 15:55 (time exit) or a stop at the
 - Engine: an EXISTING one (ENG1-A), namely the MCF 2-year lab frames with the production cost model, as used by the mh-* tests. No new simulator.
 - Controls: (a) random same-day in-play longs matched on the 09:30-09:50 return bucket (the competitor); (b) ex-market (beta x SPY over the hold).
 - Report: gross, then net; day-clustered t; avg w/o best day and best-day share; TRAIN / VALID split; per-month signs.
-- **Power, stated before any look:** with ~102 qualifying days and ICC ~0.22, the MDE floor is (2.66 + 0.84) x 1.0 x sqrt(0.22/102)
+- **Power, stated before any look:** with ~102 qualifying days and ICC ~0.22, the MDE floor is (2.64 + 0.84) x 1.0 x sqrt(0.22/102)
   = **~0.16R per trade**. Smaller effects are invisible here. A close says 'nothing above ~0.16R'.
 - Configs: 1. Lineage: relative-strength longs (t4-rel-strength 30 + rw-t4 long variants 2 + this 1 = **N 33**) -> bar max(1.5,
   sqrt(2 ln 33)) = **2.64**.
