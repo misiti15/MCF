@@ -303,7 +303,7 @@ def test_leaderboard_r_columns_grouped_with_last10_and_per_session():
     per-session record (same R after costs as Total R); every R column side by side; last-session band unchanged."""
     lb = _lb_script()
     cols = re.findall(r'\["(\w+)", "[^"]+"\]', lb[lb.index("const COLS = ["):lb.index("const BAND = ")])
-    group = ["total_r", "avg_r", "exbest_r", "best_share", "recent_avg_r", "last10_avg_r", "r_per_session", "exmkt_r"]
+    group = ["total_r", "avg_r", "exbest_r", "exbest2_r", "best_share", "recent_avg_r", "last10_avg_r", "r_per_session", "exmkt_r"]
     i = cols.index("total_r")
     assert cols[i:i + len(group)] == group, cols
     assert cols[cols.index("ls_trades"):cols.index("ls_trades") + 3] == ["ls_trades", "ls_r", "ls_pnl"]

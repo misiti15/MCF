@@ -156,11 +156,13 @@ def test_run_loop_survives_clock_failures(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------- step 5: watchdog workflow
-def test_watchdog_workflow_is_dry_by_default_and_separate_from_trade():
+def test_watchdog_workflow_acts_by_default_and_separate_from_trade():
     wf = yaml.safe_load(open(ROOT / ".github/workflows/watchdog.yml"))
     tr = yaml.safe_load(open(ROOT / ".github/workflows/trade.yml"))
     job = wf["jobs"]["watch"]
-    assert "'dry'" in job["env"]["MCF_WATCHDOG_MODE"] and wf["permissions"] == {"contents": "read"}
+    # BRAKE-WATCHDOG (owner 2026-11-20): 'act' by default in every account; input / repo variable still override
+    assert job["env"]["MCF_WATCHDOG_MODE"] == "${{ inputs.mode || vars.MCF_WATCHDOG_MODE || 'act' }}"
+    assert wf["permissions"] == {"contents": "read"}
     assert job["concurrency"]["group"].startswith("mcf-watchdog-") and "mcf-watchdog" not in tr["jobs"]["session"]["concurrency"]["group"]
     assert job["env"]["MCF_COID_PREFIX"] == tr["jobs"]["session"]["env"]["MCF_COID_PREFIX"]
     assert job["env"]["ALPACA_TRADE_API_KEY"] == tr["jobs"]["session"]["env"]["ALPACA_TRADE_API_KEY"]

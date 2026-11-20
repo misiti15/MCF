@@ -549,7 +549,9 @@ def render_engine(bp: dict, stages: list[dict], heat: dict | None, path: Path) -
         extra.append(f"Live: {rec['trades']} trades / {rec['sessions']} sessions ({rec['first']} to {rec['last']}) · "
                      f"avg {rec['avg_r']:+.3f}R after costs · win {rec['win']:.0%}")
         bs = "" if rec.get("best_share") is None else f" (best day {rec['best_day']} = {rec['best_share']:.0%} of R){tag}"
-        extra.append(f"Avg R w/o best day {wo}{bs}")
+        wo2 = "n/a" if rec.get("avg_wo_top2") is None else f"{rec['avg_wo_top2']:+.3f}R"
+        td = "" if rec.get("t_day") is None else f" · day t {rec['t_day']:+.2f}"
+        extra.append(f"Avg R w/o best day {wo}{bs} · w/o top 2 days {wo2}{td}")
     hdr, top = _header(bp, "ENGINE VIEW", W_ENG, extra)
     rc = rec.get("rule_changes") or []
     rc_lines = []

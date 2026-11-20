@@ -21,6 +21,14 @@ across accounts counted once):
                       never an in-session throttle), filled to <= 85% of the Graveyard's slots, and never benched more
                       than 2 sessions in a row (>= 1 session in 3). Rare / day-gated setups and setups the plan does not
                       know (new entrants) always play.
+  (d) RETIRE-R3       (owner 2026-11-20, research/whatworks_1120/retire/REPORT.md, with the owner's condition) a
+                      terminal RETIRED state, applied only at the Friday-after-close review: a non-Primary setup (Testing
+                      A-F, Gen, Graveyard, Explore 1, Live Lab) is listed in `retire_review` when, on its whole live
+                      record (identical signals once), it has >= 20 active sessions (sessions it traded) AND >= 150
+                      trades AND avg R w/o best day <= -0.10 AND total R over its last 10 active sessions <= 0. Never a
+                      setup enabled in Primary; the GY-LIFE Compass exemptions are kept; low-activity trims are
+                      untouched (they still go to testing). The Friday review moves each listed setup to the retired
+                      list (out of every account). Effective from the review of 2026-11-20.
 
 The plan for the next 3 sessions is written to docs/live/footrace.json by the nightly job (research/reps2/nightly.py
 step 5, or `python -m mcf.report.footrace`); the trade run applies it once, before the open, when it writes the session's
@@ -59,6 +67,11 @@ ARENA = ("testing2", "explore1", "livelab", "testingd", "testinge", "testingf", 
 ARCHIVE_MAX = 4
 COMPASS_EXEMPT = ("CWT14-failbrk-orl-p05-long", "heat_fade_short-FD")
 
+# (d) RETIRE-R3 (owner 2026-11-20: "only after >= 20 active sessions AND >= 150 trades")
+RETIRE_MIN_SESSIONS, RETIRE_MIN_TRADES, RETIRE_MAX_WO, RETIRE_MAX_LAST10 = 20, 150, -0.10, 0.0
+RETIRE_FROM = "2026-11-20"
+RETIRE_ACCOUNTS = ARENA + ("graveyard",)
+
 # (c) GY foot race
 GY_LEADERS, GY_MIN_TRADES, GY_SLOT_LINE, GY_MAX_BENCH_RUN, GY_HORIZON = 15, 10, 0.85, 2, 3
 # peak concurrent lots per trade of the session, Graveyard 11-17 (374 trades -> 239 lots peak; the only busy unsaturated
@@ -75,16 +88,15 @@ def _shrink_n() -> int:
 # ------------------------------------------------------------------------------------------------------- stats
 def day_t(day_means: pd.Series) -> float:
     """Day-clustered t: mean of the per-day mean R over its standard error (0 with <= 2 days or no spread)."""
-    x = day_means.astype(float)
-    if len(x) <= 2:
-        return 0.0
-    sd = float(x.std(ddof=1))
-    return 0.0 if not sd > 0 else float(x.mean() / (sd / math.sqrt(len(x))))
+    from ..analytics.robust import day_t as _t
+
+    return float(_t(day_means.astype(float).tolist()))
 
 
 def setup_stats(trades: pd.DataFrame) -> pd.DataFrame:
     """Per setup from live trades (columns strategy, date, r): n, days, total, avg, w/o best day (total, avg), best-day
-    share and `1 day` tag (>= 50%), day-clustered t, last-10-day total and the foot-race score inputs."""
+    share and `1 day` tag (>= 50%), w/o top 2 days (total, avg; WW-CLUSTER 2026-11-20), day-clustered t, last-10-day
+    total and the foot-race score inputs."""
     k = _shrink_n()
     rows = []
     for s, g in trades.groupby("strategy"):
@@ -93,16 +105,19 @@ def setup_stats(trades: pd.DataFrame) -> pd.DataFrame:
         dsum, dmean = day.sum(), day.mean()
         best = dsum.idxmax()
         wo = g.loc[g["date"].astype(str) != best, "r"].astype(float)
+        top2 = set(dsum.sort_values(ascending=False, kind="stable").index[:2]) if len(dsum) > 2 else set(dsum.index)
+        wo2 = g.loc[~g["date"].astype(str).isin(top2), "r"].astype(float)
         tot = float(r.sum())
         share = float(dsum.max()) / tot if tot > 0 else None
         rows.append({"setup": s, "n": int(len(r)), "days": int(len(dsum)), "total_r": tot, "avg_r": float(r.mean()),
                      "wo_total_r": float(wo.sum()), "wo_avg_r": float(wo.mean()) if len(wo) else 0.0,
+                     "wo2_total_r": float(wo2.sum()), "wo2_avg_r": float(wo2.mean()) if len(wo2) else None,
                      "best_share": share, "one_day": bool(share is not None and share >= 0.5),
                      "t_day": day_t(dmean), "last10_r": float(dsum.sort_index().tail(10).sum()),
                      "shrunk_wo": float(wo.sum()) / (len(wo) + k),
                      "big_days": int((dsum >= 10).sum()), "big_sum": float(dsum[dsum >= 10].sum())})
     t = pd.DataFrame(rows).set_index("setup") if rows else pd.DataFrame(
-        columns=["n", "days", "total_r", "avg_r", "wo_total_r", "wo_avg_r", "best_share", "one_day", "t_day",
+        columns=["n", "days", "total_r", "avg_r", "wo_total_r", "wo_avg_r", "wo2_total_r", "wo2_avg_r", "best_share", "one_day", "t_day",
                  "last10_r", "shrunk_wo", "big_days", "big_sum"])
     return t
 
@@ -141,8 +156,8 @@ def exit_review(t: pd.DataFrame, arena: dict[str, str], reps: dict, exempt: set 
         if exit_flag(row, rp, exempt=s in exempt or wb_young):
             out.append({"setup": s, "account": acct, "active_days": int(rp.get("active_days") or 0), "trades": int(row["n"]),
                         "total_r": round(row["total_r"], 1), "avg_r": round(row["avg_r"], 3),
-                        "wo_avg_r": round(row["wo_avg_r"], 3), "t_day": round(row["t_day"], 2),
-                        "one_day": bool(row["one_day"])})
+                        "wo_avg_r": round(row["wo_avg_r"], 3), "wo2_avg_r": _r3(row.get("wo2_avg_r")),
+                        "t_day": round(row["t_day"], 2), "one_day": bool(row["one_day"])})
     return sorted(out, key=lambda x: x["t_day"])
 
 
@@ -165,8 +180,48 @@ def archive_review(gy: pd.DataFrame, whole: pd.DataFrame, residents: list[str], 
             continue
         out.append({"setup": s, "gy_trades": int(g["n"]), "gy_avg_r": round(float(g["avg_r"]), 3),
                     "gy_wo_avg_r": round(float(g["wo_avg_r"]), 3), "trades": int(w["n"]),
-                    "wo_avg_r": round(float(w["wo_avg_r"]), 3), "last10_r": round(float(w["last10_r"]), 1)})
+                    "wo_avg_r": round(float(w["wo_avg_r"]), 3), "wo2_avg_r": _r3(w.get("wo2_avg_r")),
+                    "t_day": _r3(w.get("t_day"), 2), "last10_r": round(float(w["last10_r"]), 1)})
     return sorted(out, key=lambda x: x["last10_r"])[:max_n]
+
+
+def _r3(v, nd: int = 3):
+    """Rounded float, None for a missing / NaN value (frames built without the WW-CLUSTER columns)."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return None if math.isnan(f) else round(f, nd)
+
+
+# ------------------------------------------------------------------------------------------- (d) RETIRE-R3
+def retire_flag(row: dict) -> bool:
+    """RETIRE-R3 thresholds on one whole-record setup_stats row (n, days, wo_avg_r, last10_r)."""
+    return (int(row.get("days") or 0) >= RETIRE_MIN_SESSIONS and int(row.get("n") or 0) >= RETIRE_MIN_TRADES
+            and float(row["wo_avg_r"]) <= RETIRE_MAX_WO and float(row["last10_r"]) <= RETIRE_MAX_LAST10)
+
+
+def retire_review(whole: pd.DataFrame, accounts: dict[str, list[str]], primary: set | None = None) -> list[dict]:
+    """RETIRE-R3 candidates for the Friday-after-close review (terminal RETIRED). whole: setup_stats of the whole live
+    record (deduplicated); accounts: setup -> the non-Primary accounts (RETIRE_ACCOUNTS) it is enabled in; primary:
+    setups enabled in Primary (never retired). Compass exemptions kept (the two named setups and any high-volume
+    big-day-cluster setup). Low-activity setups cannot reach the thresholds, so the trim-to-testing rule is untouched."""
+    primary = set(primary or ())
+    out = []
+    for s, accts in sorted(accounts.items()):
+        if not accts or s in primary or s in COMPASS_EXEMPT or s not in whole.index:
+            continue
+        w = whole.loc[s].to_dict()
+        if compass_exempt(int(w["n"]) / max(1, int(w["days"])), int(w.get("big_days") or 0), float(w.get("big_sum") or 0)):
+            continue
+        if not retire_flag(w):
+            continue
+        out.append({"setup": s, "accounts": sorted(accts), "sessions": int(w["days"]), "trades": int(w["n"]),
+                    "total_r": round(float(w["total_r"]), 1), "avg_r": round(float(w["avg_r"]), 3),
+                    "wo_avg_r": round(float(w["wo_avg_r"]), 3), "wo2_avg_r": _r3(w.get("wo2_avg_r")),
+                    "t_day": _r3(w.get("t_day"), 2), "last10_r": round(float(w["last10_r"]), 1),
+                    "one_day": bool(w.get("one_day")), "state": "RETIRED (proposed at the Friday review)"})
+    return sorted(out, key=lambda x: (x["wo_avg_r"], x["setup"]))
 
 
 def compass_exempt(trades_per_session: float, big_days: int, big_sum: float) -> bool:
@@ -363,10 +418,21 @@ def build(trades: pd.DataFrame, reps: dict, asof: date, prev: dict | None = None
     gt = setup_stats(trades[trades["account"] == "graveyard"])
     residents = [k for k, v in (gcfg.get("strategies") or {}).items() if isinstance(v, dict) and v.get("enabled")
                  and not v.get("guest")]
+    retire_accts: dict[str, list[str]] = {}
+    for a in RETIRE_ACCOUNTS:
+        st = gcfg if a == "graveyard" else _enabled(a, sessions[0])
+        for k, v in (st.get("strategies") or {}).items():
+            if isinstance(v, dict) and v.get("enabled"):
+                retire_accts.setdefault(k, []).append(a)
+    primary = {k for k, v in (_enabled("primary", sessions[0]).get("strategies") or {}).items()
+               if isinstance(v, dict) and v.get("enabled")}
     return {"note": "FOOTRACE (owner 2026-11-19): GY foot race plan (read by the Graveyard trade run before the open), "
-                    "FOOTRACE-EXIT watch list and GY-LIFE archive candidates for the Friday review. " + DISCLAIMER,
+                    "FOOTRACE-EXIT watch list, GY-LIFE archive candidates and RETIRE-R3 retire candidates (owner "
+                    "2026-11-20; terminal, moved to the retired list at the Friday-after-close review) for the Friday "
+                    "review. " + DISCLAIMER,
             "asof": asof.isoformat(), "gy": gy, "exit_review": exit_review(whole, arena, reps),
-            "archive_review": archive_review(gt, whole, residents)}
+            "archive_review": archive_review(gt, whole, residents),
+            "retire_review": retire_review(whole, retire_accts, primary)}
 
 
 def main(argv=None):
@@ -390,7 +456,8 @@ def main(argv=None):
     print(f"GY foot race {asof}: {len(g['leaders'])} leaders, {len(g['always'])} always-on (low-rep / rare / new), "
           f"{len(g['rotation'])} rotating; " + "; ".join(f"{d}: {e['playing']} play, {e['benched']} benched, "
                                                          f"~{e['est_slot_pct']}% slots" for d, e in g["estimate"].items()))
-    print(f"FOOTRACE-EXIT watch: {len(doc['exit_review'])}; GY-LIFE archive candidates: {len(doc['archive_review'])} -> {a.out}")
+    print(f"FOOTRACE-EXIT watch: {len(doc['exit_review'])}; GY-LIFE archive candidates: {len(doc['archive_review'])}; "
+          f"RETIRE-R3 candidates: {len(doc['retire_review'])} -> {a.out}")
     print(DISCLAIMER)
 
 

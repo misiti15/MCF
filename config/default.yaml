@@ -616,6 +616,13 @@ live:
   max_spread_bps: 30             # live SIP quote at decision time
   max_spread_risk_frac: 0.25     # spread must be <= 25% of the stop distance (else the spread eats R)
   max_participation: 0.10        # order <= 10% of the symbol's average 1-minute volume (last 5 bars)
+  # BRAKE-BURST (owner 2026-11-20, research/whatworks_1120/brake/REPORT.md): runaway-entry brake, every account (the
+  # account files do not override it). At most burst_max_entries new entries per setup in any rolling burst_window_min
+  # minutes; further signals of that setup are journaled "burst brake" (skipped) until the window clears. It never fired
+  # in Primary's 32 sessions (10-06..11-19); it would have stopped 114 of the 144 entries of the 11-17 Gen runaway
+  # (GEN-261022-09, -134.6R in 6 minutes). 0 = off.
+  burst_max_entries: 30
+  burst_window_min: 10
   # Pre-entry cross-check (owner 2026-10-16, outage plan step 3): skip a new entry ("crosscheck: ..." in the journal)
   # when the signal's reference price is more than max_dev_pct from the live SIP quote mid, the quote is older than
   # max_age_s, or the decision bar is older than max_bar_age_min. Set above everything seen in normal operation

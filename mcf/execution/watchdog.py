@@ -14,8 +14,8 @@ decides:
 Any one -> cancel this account's open MCF orders and flatten its MCF positions through the same broker code as the
 runner's flatten (prefix mcf- / mct- / mt2- / mcg- / mgy- / mll- / mx1- / mtd- / mte- / mtf- only; the long-hold mcl- book and anything else are never touched).
 
-mode "dry" (the default) only logs what it would do; "act" does it (watchdog.yml: Primary runs in act from 2026-11-12,
-LR7). Window: 09:35 ET to the calendar close + 5 min (LR1: 13:05 on a half day). No emails or alerts. Educational only -
+mode "dry" (the CLI default without MCF_WATCHDOG_MODE) only logs what it would do; "act" does it (watchdog.yml sets
+"act" for every account from 2026-11-20, BRAKE-WATCHDOG; Primary from 2026-11-12, LR7). Window: 09:35 ET to the calendar close + 5 min (LR1: 13:05 on a half day). No emails or alerts. Educational only -
 not financial advice."""
 
 from __future__ import annotations

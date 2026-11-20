@@ -190,7 +190,8 @@ def footrace_step(day: str) -> str:
         e = g["estimate"].get(nxt) or {}
         return (f"- FYI | GY foot race (FOOTRACE): {len(g['leaders'])} leaders, {len(g['rotation'])} rotating; {nxt}: "
                 f"{e.get('playing')} play, {e.get('benched')} benched, ~{e.get('est_slot_pct')}% of slots. Friday watch: "
-                f"FOOTRACE-EXIT {len(d['exit_review'])}, GY-LIFE archive {len(d['archive_review'])} (docs/live/footrace.json).")
+                f"FOOTRACE-EXIT {len(d['exit_review'])}, GY-LIFE archive {len(d['archive_review'])}, "
+                f"RETIRE-R3 {len(d.get('retire_review') or [])} (docs/live/footrace.json).")
     except Exception as e:   # the plan file stays as it was; past its last session the Graveyard plays every setup
         return f"- ALERT | GY foot race plan not refreshed ({type(e).__name__}: {e})."
 
