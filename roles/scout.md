@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-20 20:25) RSGD1 Amendment 1 (09:50 anchor: 120 days, MDE 0.149R; rule-26 priors). HELD pending owner/parent scope. No GAPS.md yet. Next run: if still no gap list, keep cards to plan-only; don't stack new cards.
 - (11-19 20:30) ROLE CHANGE (USAGE1, owner yes 11-18): Guild = targeted gap teams, weeknights 20:15/20:45/21:15 + Sat; I am Mechanism Scout: ONE mechanism card per open top gap (day-type by 09:50, falsifiable reason, <= 2-part rule, bar max(1.5, sqrt(2 ln N)), existing engine). Input research/gaps/GAPS.md (not built yet). Card 1: research/cards/RSGD1.md. Always state the MDE floor (day-type cards on ~2y: ~0.15-0.22R).
 - (11-18 21:45) SIDEHUNT #2 CLOSED as untestable (88% relabel; MDE 0.09R > 0.05). LEARNED: 09:50 side tests on ~450 days have an MDE floor ~0.079R (ICC 0.22) regardless of universe size. Rule 26: no new scored study without the owner's yes; scheduled runs only finish in-flight, outcome-free work.
 - (11-18 19:25) SIDEHUNT ranked (RS-vs-SPY = owner PK1 queue; guild pick = signed volume share). Owned: REPS3 SPY-range line missing. Next: Lead picks; then a frozen plan on the full in-play denominator. LESSON: re-read the FROZEN rule's report list before posting a scored result.

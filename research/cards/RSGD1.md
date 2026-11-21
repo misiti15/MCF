@@ -31,3 +31,15 @@ Entry long at the 09:50 decision bar; exit at 15:55 (time exit) or a stop at the
 ## Guardrail check (rule 26)
 Not a day-type switch on a live setup: the day type is part of a NEW setup's entry (allowed by C3-MECH). Not a CWT variant, sizing
 tilt, cap, or GEN output. Long side (live shorts' ETB gate does not apply).
+
+## Amendment 1 (2026-11-20 ~20:25 ET, before any look; Skeptic skeptic-20261120-0156-2)
+- **Day type re-anchored to the 09:50 state (owner anchor rule):** SPY at 09:50 (close of its 09:45 bar) is BELOW the prior close AND
+  BELOW its own 09:30 open. Counted outcome-free on the 2-year 5-min bars: **120 of 450 sessions** (the gap-only rule gave 103, and
+  both together give just 40, so most gap-down opens have recovered by 09:50). The mechanism reads better this way: the market is
+  still selling at the decision time, and the candidate is the name holding up against it.
+  Stock part unchanged: stock open >= prior close AND 09:50 price > its 09:30 open.
+- **Power:** MDE floor (2.64 + 0.84) x sqrt(0.22 / 120) = **0.149R per trade**. Stated up front: **'closed, nothing above ~0.15R' is the likely read.**
+- **Rule 26 priors for the owner (day-type conditions):** REGSW GAP-U (gap-day switch, failed its shared-day null); DIPTURN (closed, t
+  0.92); MOMSIDE's lone up-day cell (a direction effect). RSGD1 differs: the day type is part of a NEW setup's entry (C3-MECH),
+  not an on/off switch on a live setup. But it is ask-first all the same.
+- Status: HELD (Builder builder-20261119-rsgd-2) until the owner or parent session confirms guild scope (rule 26). Configs still 1, N 33, bar 2.64.
