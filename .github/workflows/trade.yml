@@ -165,6 +165,10 @@ jobs:
           # - 20, MCF_JOB_T0), so GitHub's 355-min kill never cuts off the final push; then this job ends and the successor runs.
           nohup python -m mcf.execution.handover trade --account "$MCF_ACCOUNT" --job-start "$MCF_JOB_T0" \
             --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.dry_run && 'dry' || 'act' }}" > handover.log 2>&1 &
+          # QA-1121 M2: the watchdog's own 10-min cron barely fires (0 runs 11-16..11-19), so every trade job also starts
+          # watchdog.yml about every 10 min in 09:35-16:06 ET unless one is queued / running / started < 8 min ago (cap 45/day).
+          nohup python -m mcf.execution.handover watchdog --account "$MCF_ACCOUNT" \
+            --ref "${{ github.event.repository.default_branch }}" --mode "${{ inputs.dry_run && 'dry' || 'act' }}" > watchdog-start.log 2>&1 &
           python -m mcf.cli live --state-dir state ${{ inputs.dry_run && '--dry-run' || '' }}
 
   # HK-EOD-CHAIN (2026-11-09): start EOD from the closing run itself. A trade run dispatched by a bot (session guard /

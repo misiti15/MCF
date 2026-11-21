@@ -121,3 +121,5 @@ P1's best day (11-12) is the first session after the gate change. Before 11-12, 
 - No config reached its WB2 bar (2.18-2.70). No test read the locked block (2024-11..2025-02). Live overlap is 22 sessions, because the 1-min data cache ends 2026-11-04.
 
 **Educational only — not financial advice.**
+## Erratum (QA 2026-11-21, research/qa_1121/REPORT.md C2)
+`scripts/promo-pipe/load_live.py` read the journals without the exit-side cost columns, so live trades before 11-12 were overstated by ~0.045R each. Corrected: **P1 +23.1R, best-day share 79%** (was +26.3R / 69%); **P2 +13.2R, share 100%** (was +16.0R); **RW7 under Primary book +4.4R** (was +18.1R); **X1 -0.9R** (was +2.3R); average live cost ~0.042R/trade (not 0.013R). No conclusion changes: every candidate is weaker, so "do not promote" is firmer. FP-A / FP-C cards restated.

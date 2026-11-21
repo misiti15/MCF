@@ -27,8 +27,8 @@ def test_slot_ends_20_min_before_the_job_limit():
 def test_successor_needed_when_the_job_stops_before_1550():
     own = [{"id": 1, "status": "in_progress"}]
     # limit 15:55 -> stops 15:35: a successor must cover the 15:55 flatten
-    assert ho.decide_trade(at("15:27"), at("15:55"), "primary", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "dispatch"
-    assert ho.decide_trade(at("15:50"), at("16:15"), "primary", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "none"
+    assert ho.decide_trade(at("2026-11-13 15:27"), at("2026-11-13 15:55"), "primary", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "dispatch"
+    assert ho.decide_trade(at("2026-11-13 15:50"), at("2026-11-13 16:15"), "primary", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "none"
     wf = yaml.safe_load((ROOT / ".github/workflows/trade.yml").read_text())
     assert wf["jobs"]["session"]["timeout-minutes"] == JOB_LIMIT_MIN
     assert "default=28" in (ROOT / "mcf/execution/handover.py").read_text()
@@ -119,8 +119,8 @@ def test_late_start_window_is_flatten_only():
     assert '-lt 1605' in run
     # a job stopping at 15:52 (before the flatten) gets a successor; one stopping at 15:55 does not
     own = [{"id": 1, "status": "in_progress"}]
-    assert ho.decide_trade(at("15:40"), at("16:12"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "dispatch"
-    assert ho.decide_trade(at("15:40"), at("16:15"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "none"
+    assert ho.decide_trade(at("2026-11-13 15:40"), at("2026-11-13 16:12"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "dispatch"
+    assert ho.decide_trade(at("2026-11-13 15:40"), at("2026-11-13 16:15"), "testingd", own, {}, 1, 0, FINAL_PUSH_LEAD_MIN)["action"] == "none"
 
 
 def test_late_successor_takes_no_entries_but_flattens_adopted_lots(tmp_path, monkeypatch):

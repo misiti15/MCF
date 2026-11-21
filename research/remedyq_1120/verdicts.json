@@ -2,7 +2,7 @@
  "note": "Educational only - not financial advice. REMEDY-Q re-check 2026-11-20 (owner request). R after costs (live LR8; lab LR8 + borrow, 1-min exits, live book). Scripts: live_tod.py, live_salvage.py, lab_tod.py (this folder).",
  "verdicts": {
   "a_cut_1300": "not confirmed: live better for all 3 setups, but lab CHECK per-trade quality worse for all 3 (Primary book d avg L3 -0.0004, RW3 -0.0029, RW5 -0.0085; excess vs random -28.0R)",
-  "a_cut_1230": "confirmed (weak): live and lab CHECK agree in sign for all 3 setups (Primary book); live plateau 12:15-13:00, lab FIT plateau peak 12:30; CHECK d avg +0.0047/+0.0071/+0.0039, paired t 1.94 < bar 2.89; Testing book mixed (L3 -0.0078)",
+  "a_cut_1230": "NOT CONFIRMED - live test copy (QA 2026-11-21: t 1.94 below the 2.89 bar; Testing-rules lab -14.6R vs random removal; owner's 'if all is true' condition not met; re-asked as QA-REMQ). Original: confirmed (weak): live and lab CHECK agree in sign for all 3 setups (Primary book); live plateau 12:15-13:00, lab FIT plateau peak 12:30; CHECK d avg +0.0047/+0.0071/+0.0039, paired t 1.94 < bar 2.89; Testing book mixed (L3 -0.0078)",
   "cutoff_time": "12:30 (never later than 13:00; 13:05 / 13:15 worse than 13:00 live)",
   "salvage": "none qualifies: best on FIT (stop cost <= 0.08R after 12:30) beats the plain cut on lab CHECK in the Primary book but hurts 2 of 3 in the Testing book and its kept afternoon trades lost live (85 tr, -0.068R)",
   "b_l3_gap_atr": "not confirmed: FIT d avg +0.033 (Primary book) vs -0.048 (Testing book); CHECK +0.023 / +0.005; t < bar",

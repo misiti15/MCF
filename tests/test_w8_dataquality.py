@@ -128,3 +128,25 @@ def test_cost_r_lr8_restates_only_pre_model_rows():
     # pre-model row re-costed: stop max(0.02, 4bp x 99 = 0.0396) x 10 + entry 1bp x 100 x 10 = 0.396 + 0.1
     assert r8.iloc[0] == pytest.approx((-10.0 - 0.396 - 0.1) / 10.0)
     assert r8.iloc[1] == pytest.approx(-1.07)                  # on/after the model date: the booked value
+
+
+def test_cost_r_lr8_raises_on_missing_columns_for_pre_model_rows():
+    # QA 11-21 C1: live_trades dropped side/exit/target/meta and pre-11-12 rows silently kept the old cost
+    cfg = {"costs": {"stop_slippage_per_share": 0.02, "live_model": {
+        "effective_from": "2026-11-12", "stop_min_per_share": 0.02, "stop_bps": 4.0, "entry_bps": 1.0,
+        "market_exit_min_per_share": 0.01, "market_exit_bps": 1.0, "target_at_limit": True, "fees": {}}}}
+    df = pd.DataFrame([{"date": "2026-11-10", "entry": 100.0, "stop": 99.0, "shares": 10, "pnl": -10.0,
+                        "pnl_adj": -10.2, "r_multiple": -1.0}])
+    with pytest.raises(KeyError):
+        costs.cost_r_lr8(df, cfg)
+    post = df.assign(date="2026-11-13")            # post-model rows need no re-costing: no error
+    assert costs.cost_r_lr8(post, cfg).iloc[0] == pytest.approx(-1.02)
+
+
+def test_live_trades_reads_cost_columns():
+    import inspect
+
+    from mcf.report import footrace
+    src = inspect.getsource(footrace.live_trades)
+    for col in ("side", "target", "exit,", "exit_reason", "meta"):
+        assert col in src

@@ -48,6 +48,13 @@ TRADE_END = time(15, 55)            # HK-FLAT-1113b: a job that stops before the
 HUNCH_WINDOW = (time(9, 45), time(15, 50))   # watchdog start check (owner 2026-11-05)
 HUNCH_RELAY_END = time(15, 55)      # after this a hunch successor has nothing left to guess
 HUNCH_MAX_DISPATCHES = 4
+# QA-1121 M2: GitHub's 10-min watchdog cron fired at most once a day from 11-05 (0 runs 11-16..11-19), so the trade jobs
+# also start it: every WATCHDOG_EVERY_MIN during WATCHDOG_WINDOW each running trade job dispatches watchdog.yml unless a
+# watchdog run is queued / in progress or one was created in the last WATCHDOG_MIN_GAP_MIN. Capped per day.
+WATCHDOG_WINDOW = (time(9, 35), time(16, 6))
+WATCHDOG_EVERY_MIN = 10
+WATCHDOG_MIN_GAP_MIN = 8
+WATCHDOG_MAX_DISPATCHES = 45
 EOD_WINDOW = (time(15, 55), time(20, 0))   # after the flatten (config session.flatten_by) until well past the EOD backups
 EOD_SINCE = time(15, 50)            # an EOD run created from here on covers today's close
 EOD_MAX_DISPATCHES = 3
@@ -117,6 +124,52 @@ def decide_hunch(now: pd.Timestamp, market_open_today: bool, runs: list[dict], d
         out["action"] = "dispatch"
         out["reasons"].append("no hunch run queued or in progress")
     return out
+
+
+def decide_watchdog(now: pd.Timestamp, market_open_today: bool, runs: list[dict], dispatches_today: int,
+                    window=WATCHDOG_WINDOW, min_gap_min: int = WATCHDOG_MIN_GAP_MIN) -> dict:
+    """Pure: dispatch watchdog.yml when none is queued / in progress and none was created in the last min_gap_min."""
+    now = now.tz_convert(NY)
+    out = {"at": str(now), "action": "none", "reasons": []}
+    recent = [pd.Timestamp(r["created_at"]).tz_convert(NY) for r in runs if r.get("created_at")]
+    if now.weekday() >= 5 or not (window[0] <= now.time() < window[1]):
+        out["reasons"].append(f"outside {window[0]:%H:%M}-{window[1]:%H:%M} ET weekdays")
+    elif not market_open_today:
+        out["reasons"].append("not a market day")
+    elif any(r.get("status") in ACTIVE for r in runs):
+        out["reasons"].append("a watchdog run is queued or in progress")
+    elif recent and (now - max(recent)) < pd.Timedelta(minutes=min_gap_min):
+        out["reasons"].append(f"a watchdog run started less than {min_gap_min} min ago")
+    elif dispatches_today >= WATCHDOG_MAX_DISPATCHES:
+        out["action"] = "capped"
+        out["reasons"].append(f"{dispatches_today} bot dispatches of watchdog.yml today (cap {WATCHDOG_MAX_DISPATCHES})")
+    else:
+        out["action"] = "dispatch"
+        out["reasons"].append("no recent watchdog run")
+    return out
+
+
+def run_watchdog_loop(account: str, ref: str | None, mode: str, every_min: int = WATCHDOG_EVERY_MIN) -> dict:
+    """Background helper in each trade job: until 16:06 ET, every every_min (staggered by account) start watchdog.yml if
+    needed. Never raises (a hiccup must not touch trading); the loop dies with the job."""
+    idx = sg.ACCOUNTS.index(account) if account in sg.ACCOUNTS else 0
+    _time.sleep(idx * every_min * 60 / max(1, len(sg.ACCOUNTS)))
+    last = {"action": "none"}
+    while True:
+        now = pd.Timestamp.now(tz=NY)
+        if now.time() >= WATCHDOG_WINDOW[1]:
+            return last
+        try:
+            runs = _runs_today("watchdog.yml", now)
+            last = decide_watchdog(now, sg.market_open_today(now.strftime("%Y-%m-%d")), runs, bot_dispatches(runs))
+            last["mode"] = mode
+            if last["action"] == "dispatch" and mode == "act":
+                _dispatch("watchdog.yml", _ref(ref), {"mode": "act"})
+                last["dispatched"] = True
+            print("handover watchdog " + json.dumps(last, default=str), flush=True)
+        except Exception as e:  # noqa: BLE001
+            print(f"::warning::handover watchdog failed: {e}", flush=True)
+        _time.sleep(every_min * 60)
 
 
 def other_trade_active(runs: list[dict], jobs: dict, own_run_id) -> bool:
@@ -258,7 +311,9 @@ def main(argv=None):
     h = sub.add_parser("hunch", help="dispatch hunch.yml when no hunch run is queued / in progress")
     h.add_argument("--relay", action="store_true", help="called from a hunch run that is ending (ignore own run)")
     e = sub.add_parser("eod", help="after the closing trade run: dispatch eod.yml unless EOD already ran / is running")
-    for p in (t, h, e):
+    w = sub.add_parser("watchdog", help="loop: start watchdog.yml every ~10 min in market hours unless one ran recently")
+    w.add_argument("--account", default="primary")
+    for p in (t, h, e, w):
         p.add_argument("--ref", default=None, help="branch to dispatch on (default: the repo's default branch)")
         p.add_argument("--mode", default="act", choices=["dry", "act"])
     a = ap.parse_args(argv)
@@ -267,6 +322,8 @@ def main(argv=None):
             return run_trade(a.account, a.job_start, a.limit_min, a.lead_min, a.ref, a.mode)
         if a.cmd == "eod":
             return run_eod(a.ref, a.mode)
+        if a.cmd == "watchdog":
+            return run_watchdog_loop(a.account, a.ref, a.mode)
         return run_hunch(a.ref, a.mode, a.relay)
     except Exception as e:  # noqa: BLE001 - a hand-over hiccup must never fail the trading / research job
         print(f"::warning::handover {a.cmd} failed: {e}")
