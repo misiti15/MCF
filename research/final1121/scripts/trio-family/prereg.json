@@ -1,0 +1,17 @@
+{
+ "note": "Educational only - not financial advice. Trio-family (gap-down short) sibling pre-registration, written 2026-11-21 before any outcome was looked at. Engine = bench10 conventions (lab frames, 1-min walk, LR8 costs + 1.2bp borrow, testing book cap 100 / cf 0.15 / 3 lots per symbol / $5 / ETB>=0.9). t1s1 geometry (R = 0.25 x daily ATR) for all.",
+ "fit": "2024-10 + 2025-03-01..2025-09-30", "check": "2025-10-01..latest, scored ONCE per finalist", "locked": "2024-11-01..2025-02-28 never read",
+ "configs": {
+  "S1-tier2": "RW3 mask (heat<=-20, bp<-0.35, rsi5>80, gap<0) on 2nd-tier liquidity: adv20 in [A, 95M); A in {20M, 40M}. first hit per symbol-day. parent RW3-FD",
+  "S2-flatslope": "L3 mask with the sma20 slope layer inverted: gap<=-2.657, fromOpen>3.46, sma20_slope_pct<=0.3724; variant {all slopes <=0.3724, 0<slope<=0.3724}. refire cooldown 1 (as L3). parent L3-fromopen-FD",
+  "S3-noflow": "gap<=G, rsi5>80, adv20>=95M, and NOT the RW3 or RW5 mask on that bar; G in {-1, -2}. first hit. parent RW3/RW5-FD (keeps RSI5 pop, drops flow)",
+  "S4-popfail": "gap<=-1, adv20>=20M; rsi5 was >80 on one of the previous 6 bars of the symbol-day, rsi5 now < X and close < prior bar low (pop exhausted: enter after the turn, not into the pop); X in {60, 50}. first hit. parent trio (extension condition, later entry)",
+  "S5-etf": "sector/index ETF list, gap<=G, rsi5>80; G in {-0.5, -1.0}. first hit. parent RW3-FD (pop into a gap-down, ETF universe)",
+  "S6-pdlreject": "gap<=-2, rsi5>70, dist_pdl_atr in [B, 0.05] (the bounce reached the prior-day low from below = gap resistance); B in {-0.15, -0.30}. first hit. parent L3-fromopen-FD (recovery fade)",
+  "S7-delay": "the trio union first signal per symbol-day (raw, parents' own masks/filters), entry delayed by D 5-min bars (same symbol-day, tod<=1500); D in {3, 6}. parent trio (null study: random later entry did as well)"
+ },
+ "n_configs": 14, "wb2_bar_t": "max(1.5, sqrt(2 ln 14)) = 2.30 (day-clustered t, FIT)",
+ "selection": "per sibling: config with higher FIT avg R (testing book) among those with >=30 FIT trades -> finalist unless REALLY BAD on FIT (avg R <= -0.05 with t <= -2). Every finalist then scored once on CHECK and T2 and reported. Tier A/B per research/ultimate_1119/top10/PLAN.md.",
+ "nulls": "matched random-entry nulls per finalist on the same symbol-days: (a) random bar 09:50-15:00 same symbol-day, (b) random bar +1..+6 bars after the real entry; 5 reps each, same geometry/costs/filters (ETB, $5, cf), unbooked per-trade comparison.",
+ "overlap": "symbol-day overlap with the trio's raw T1 signals and with booked trio trades (top10w)."
+}

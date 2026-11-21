@@ -2794,7 +2794,7 @@
    "same bar in Testing E (WB4 copy, 15 lots -15.8R) and Testing C (ULT-22, 11 lots -10.1R)",
    "all accounts 11-20: 98 ETF longs -75.0R; backlog nightly-1117-etp-twin-groups"
   ],
-  "why": "Targeted at the failure mode (same-bar correlated ETF lots in one setup), not tailored to one setup and not a book-wide cap.",
+  "why": "Targeted at the failure mode (same-bar correlated ETF lots in one setup), not tailored to one setup and not a book-wide cap. Counter-evidence (BDI L17, 2y lab): NM-ETF's 8+-lot same-bar bursts were its BEST history (+0.48R on 66 trades); entries with SPY <= -1% made +0.31R vs +0.11R — a lot limit could cut that pocket. The study must weigh both.",
   "link": "research/owner_inbox/2026-11-20.md",
   "status": "open",
   "answered": null
@@ -2811,6 +2811,94 @@
   ],
   "why": "The record was flat until one runaway burst day; the burst brake already approved for 11-23 targets that failure mode, and FOOTRACE-EXIT is the agreed exit rule (consistency over churn).",
   "link": "research/owner_inbox/2026-11-20.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-A",
+  "title": "P1 (L3-lowdist): add a no-order Primary shadow after its On Deck stage?",
+  "what": "L3-gap-slope-lowdist-FD is the best promotion candidate but 69% of its R is one day (11-12, first session after the On Deck split-tape gate went off). A Primary shadow (no orders) builds the overlap record the promotion bar needs. Reply 'FP-A yes/no'. After-hours change with ledger + assignments.",
+  "recommend": "Optional - cheap evidence-gathering, no live risk; earliest realistic promotion is mid/late December",
+  "numbers": [
+   "live 111 trades, avg +0.237R, w/o best day +0.103R (best-day share 69%)",
+   "before 11-12 w/o best day -0.042R; all 7 lab neighbours negative",
+   "strict non-overlap shrunk -0.016R"
+  ],
+  "why": "Needs a clean record without the 11-12 day before it can compete for Primary.",
+  "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-B",
+  "title": "Count the two L3-FD children as one slot in promotion rankings?",
+  "what": "L3-gap-slope-lowdist-FD and L3-gap-slope-rsi5hi-FD move together and both rely on 11-12. Ranking them as one stops one day's gain being counted twice. Reply 'FP-B yes/no'. Process only.",
+  "recommend": "Yes - avoids double-counting the same trade idea",
+  "numbers": [
+   "daily correlation 0.75",
+   "both carried by 11-12 (69% / 82% best-day share)"
+  ],
+  "why": "Process rule; no setup change.",
+  "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-C",
+  "title": "Add a 'Primary-book replay' gate to the promotion bar?",
+  "what": "Before promotion, replay the candidate under Primary's actual rules (burst cap 30, -2R latch) and require it to stay positive without its best day and beat random entries. Reply 'FP-C yes/no'. Process only.",
+  "recommend": "Yes - RW7 looks good alone but collapses under Primary's rules",
+  "numbers": [
+   "RW7 raw +60.1R -> +18.1R under Primary book",
+   "RW7 w/o best day under Primary book -0.027R",
+   "RW7 vs random entry: worse (p 0.83)"
+  ],
+  "why": "Primary is the scoreboard, so candidates must be judged the way Primary would trade them.",
+  "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-D",
+  "title": "NM-ETF burst: tally an index-flush skip rule in shadow only?",
+  "what": "Rule V30A3: skip an NM-ETF burst when SPY dropped >= 0.30 ATR in the last 15 min. Shadow tally only, no live change. Reply 'FP-D yes/no'.",
+  "recommend": "Optional (lean No) - fires about twice a year, would not have fired on 11-20, threshold set with hindsight",
+  "numbers": [
+   "improved 5 of 5 burst events (dev +18.1R)",
+   "CHECK +8.9R from a single bar",
+   "CHECK was seen early (contaminated)"
+  ],
+  "why": "Too rare and too fitted to justify even monitoring effort; listed for completeness.",
+  "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-E",
+  "title": "Backlog 'VWAP-hold timing in an index-down state' as an entry-quality idea?",
+  "what": "Entering on a VWAP hold inside an index-down state beat random down-state entries. Backlog only, for existing index-short setups; any test needs a fresh holdout. Reply 'FP-E yes/no'.",
+  "recommend": "Optional - real timing effect but only lifts a losing base to about zero",
+  "numbers": [
+   "+0.19R vs random down-state entries (t 4.5, CHECK)",
+   "base setup CHECK avg +0.030R (t 0.44)"
+  ],
+  "why": "Backlog entry only; no setup change.",
+  "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "FP-F",
+  "title": "Owner's C1A1 burst rule (one lot per group below VWAP): deploy?",
+  "what": "Tested your one-lot-per-group-below-VWAP idea for NM-ETF bursts. It would have saved 11-20 but loses money over the fit period. Reply 'FP-F no' to drop it.",
+  "recommend": "No - effect flips sign between periods (net -8.2R)",
+  "numbers": [
+   "CHECK +7.1R; live replay +21.6R (all on 11-20)",
+   "FIT -12.8R",
+   "net -8.2R"
+  ],
+  "why": "Helps the day it was designed on, hurts elsewhere; fails the targeted-remedy rule.",
+  "link": "research/final1121/REPORT.md",
   "status": "open",
   "answered": null
  }
