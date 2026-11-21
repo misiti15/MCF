@@ -29,6 +29,7 @@ ACCOUNTS = {"mcf-data": "primary", "mcf-data-testing": "testing", "mcf-data-test
             "mcf-data-testinge": "testinge", "mcf-data-testingf": "testingf", "mcf-data-gen": "gen",
             "mcf-data-graveyard": "graveyard"}
 REL = "https://github.com/misiti15/MCF/releases/download"
+LIVE_KINDS = frozenset({"paper", "live"})   # run kinds counted as live trades (TAGS1-WHATIF)
 NY = "America/New_York"
 ETF_RE = re.compile(r"\bETF\b|\bFund\b|ProShares|iShares|Direxion|SPDR|Invesco QQQ|\b[23]X\b|Leveraged|Ultra|Bull|Bear|"
                     r"Trust Series|ETN", re.I)
@@ -50,8 +51,13 @@ def decisions(jdir: Path, day: str) -> pd.DataFrame:
             c.close()
         if t.empty:
             continue
-        kind = dict(zip(runs.id, runs.kind))
-        t["source"] = t.run_id.map(lambda r: "shadow" if kind.get(r) == "shadow" else "live")
+        kind = t.run_id.map(dict(zip(runs.id, runs.kind)))
+        # TAGS1-WHATIF (owner yes 2026-11-21): only run kind paper/live is "live" and shadow is "shadow"; what-if,
+        # backtest and reference runs are dropped (1,664 what-if rows were labelled live on 11-19 before this fix)
+        t = t[kind.isin(LIVE_KINDS | {"shadow"})].copy()
+        if t.empty:
+            continue
+        t["source"] = kind[t.index].map(lambda k: "shadow" if k == "shadow" else "live")
         t["acct"] = acct
         out.append(t)
     return pd.concat(out, ignore_index=True) if out else pd.DataFrame()

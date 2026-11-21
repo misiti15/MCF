@@ -53,7 +53,6 @@ live:
     - NM-PM-gapdn-above-pdh-rvol-short   # 3 traded sessions / 3 trades
     - GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short   # 3 traded sessions / 19 trades
     - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long   # 3 traded sessions / 35 trades
-    - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long   # 4 traded sessions / 55 trades
     - ST5-pdbrkup-short-mid-t05s1-FD   # 5 traded sessions / 6 trades
     - GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short   # 5 traded sessions / 26 trades
     - LD2-qqq-dip015-breadthturn-tqqq-t05s1-long   # 6 traded sessions / 6 trades
@@ -840,7 +839,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3082
   GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-21 (owner QA-EXIT2: FOOTRACE-EXIT on the corrected LR8 cost basis; from session 2026-11-23)
     type: lab
     module: research/generator/modules/GEN-261027-06-orbfailup-mid-long.py
     context:

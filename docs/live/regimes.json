@@ -38,7 +38,12 @@
    "class": "loser",
    "avg_r": -0.03,
    "trades": 25124,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "L3-gap-slope-lowdist-FD": {
    "best": "Bear",
@@ -64,7 +69,12 @@
    "class": "loser",
    "avg_r": -0.129,
    "trades": 4156,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "L3-gap-slope-rsi5hi-FD": {
    "best": "Bear",
@@ -90,7 +100,12 @@
    "class": "loser",
    "avg_r": -0.041,
    "trades": 9985,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "LD1-ns1-breadthup-t05s1-long": {
    "best": "Bull",
@@ -142,7 +157,12 @@
    "class": "loser",
    "avg_r": -0.078,
    "trades": 2389,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "live only (in-sample, no 2-year list)",
+    "source": "live only"
+   }
   },
   "MF1-945-flowsell-vwapup-FD": {
    "best": "Bear",
@@ -168,7 +188,12 @@
    "class": "regime specialist",
    "avg_r": -0.079,
    "trades": 10540,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "MF2-open-rsimidhi-flowsell": {
    "best": "Choppy",
@@ -220,7 +245,12 @@
    "class": "loser",
    "avg_r": -0.043,
    "trades": 5223,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "MF3-open-flowsell-rsi5hi": {
    "best": "Bear",
@@ -246,7 +276,12 @@
    "class": "regime specialist",
    "avg_r": -0.086,
    "trades": 4136,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "too few eligible LIVE cells (1)",
+    "source": "live only"
+   }
   },
   "MF3-open-flowsell-rsi5hi-FD": {
    "best": "Bear",
@@ -272,7 +307,12 @@
    "class": "regime specialist",
    "avg_r": -0.076,
    "trades": 10564,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "MF4-h40-open-flowsell": {
    "best": "Bear",
@@ -324,7 +364,12 @@
    "class": "loser",
    "avg_r": -0.085,
    "trades": 7273,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "MF5-flowsell-vwapup-rsi5hi": {
    "best": "Bear",
@@ -350,7 +395,12 @@
    "class": "regime specialist",
    "avg_r": -0.057,
    "trades": 6827,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "live only (in-sample, no 2-year list)",
+    "source": "live only"
+   }
   },
   "MF5-flowsell-vwapup-rsi5hi-FD": {
    "best": "Bear",
@@ -376,7 +426,12 @@
    "class": "regime specialist",
    "avg_r": -0.057,
    "trades": 6827,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "NM-AMS-N1-quiet-morning-short": {
    "best": "Bear",
@@ -428,7 +483,12 @@
    "class": "regime specialist",
    "avg_r": 0.262,
    "trades": 1588,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "NM-HL-T75-pm-long": {
    "best": "Choppy",
@@ -454,7 +514,12 @@
    "class": "all-weather",
    "avg_r": 0.044,
    "trades": 1860,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "TRAIN t 1.62<2; VALID t 0.06<1",
+    "source": "2-year TRAIN"
+   }
   },
   "NM-MF3-qqqdn-gapdn-FD": {
    "best": "Bear",
@@ -740,7 +805,12 @@
    "class": "regime specialist",
    "avg_r": -0.07,
    "trades": 2490,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "NS2-sma50break-overbought-short": {
    "best": "Bear",
@@ -766,7 +836,12 @@
    "class": "loser",
    "avg_r": 0.001,
    "trades": 3124,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "NS2-sma50break-overbought-short-FD": {
    "best": "Bear",
@@ -792,7 +867,12 @@
    "class": "loser",
    "avg_r": -0.059,
    "trades": 8151,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "TRAIN t 1.22<2; VALID t 0.77<1",
+    "source": "2-year TRAIN"
+   }
   },
   "NS3-failed-vwap-reclaim-short": {
    "best": "Bear",
@@ -818,7 +898,12 @@
    "class": "regime specialist",
    "avg_r": 0.046,
    "trades": 1510,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "too few eligible LIVE cells (1)",
+    "source": "live only"
+   }
   },
   "NS3-failed-vwap-reclaim-short-FD": {
    "best": "Bear",
@@ -844,7 +929,12 @@
    "class": "loser",
    "avg_r": -0.015,
    "trades": 16955,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "NS4-pm-vwap-reclaim-oversold-short": {
    "best": "Bear",
@@ -922,7 +1012,12 @@
    "class": "regime specialist",
    "avg_r": -0.042,
    "trades": 1305,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "NS5-sma50-flush-oversold-long-FD": {
    "best": "Bull",
@@ -948,7 +1043,12 @@
    "class": "loser",
    "avg_r": -0.045,
    "trades": 3139,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "TRAIN t 1.90<2; VALID t 0.51<1",
+    "source": "2-year TRAIN"
+   }
   },
   "RW1-gapdn-bounce-flowsell-short-FD": {
    "best": "Bear",
@@ -974,7 +1074,12 @@
    "class": "regime specialist",
    "avg_r": -0.049,
    "trades": 7474,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "RW2-exhaustion-noon-adv150-short-FD": {
    "best": "Bear",
@@ -1000,7 +1105,12 @@
    "class": "regime specialist",
    "avg_r": -0.062,
    "trades": 22187,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "RW3-gapdn-rsi5pop-flowsell-short-FD": {
    "best": "Bear",
@@ -1026,7 +1136,12 @@
    "class": "regime specialist",
    "avg_r": -0.071,
    "trades": 5995,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "RW4-ns3-adv150-short-FD": {
    "best": "Bear",
@@ -1052,7 +1167,12 @@
    "class": "loser",
    "avg_r": -0.011,
    "trades": 13511,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "VALID t 0.81<1",
+    "source": "2-year TRAIN"
+   }
   },
   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
    "best": "Bear",
@@ -1078,7 +1198,12 @@
    "class": "regime specialist",
    "avg_r": -0.06,
    "trades": 5598,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "RW6-ns2-up3-short-FD": {
    "best": "Bear",
@@ -1104,7 +1229,12 @@
    "class": "loser",
    "avg_r": -0.016,
    "trades": 4480,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "RW7-gapdn-bounce-early-short-FD": {
    "best": "Bear",
@@ -1130,7 +1260,12 @@
    "class": "regime specialist",
    "avg_r": -0.061,
    "trades": 26164,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   },
   "ST1-ordn-long-pm-t05s1-FD": {
    "best": "Bull",
@@ -1156,7 +1291,12 @@
    "class": "loser",
    "avg_r": -0.058,
    "trades": 1726,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "TRAIN t 1.45<2",
+    "source": "2-year TRAIN"
+   }
   },
   "ST2-slope20up-long-am-t05s1-FD": {
    "best": "Bull",
@@ -1182,7 +1322,12 @@
    "class": "regime specialist",
    "avg_r": -0.019,
    "trades": 10956,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "VALID t 0.47<1",
+    "source": "2-year TRAIN"
+   }
   },
   "ST3-rsi5up-short-pm-t1s1-FD": {
    "best": "Choppy",
@@ -1312,7 +1457,12 @@
    "class": "regime specialist",
    "avg_r": 0.024,
    "trades": 1035,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "false",
+    "reason": "flips on VALID",
+    "source": "2-year TRAIN"
+   }
   },
   "ST8-volspikedn-long-pm-t1s1-FD": {
    "best": "Bear",
@@ -1364,7 +1514,12 @@
    "class": "loser",
    "avg_r": -0.007,
    "trades": 7406,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "weak",
+    "reason": "live only (in-sample, no 2-year list)",
+    "source": "live only"
+   }
   },
   "exhaustion_short-FD": {
    "best": "Bear",
@@ -1390,7 +1545,18 @@
    "class": "regime specialist",
    "avg_r": -0.067,
    "trades": 28458,
-   "source": "2-year as-run backtest"
+   "source": "2-year as-run backtest",
+   "regx": {
+    "verdict": "trustworthy",
+    "reason": "TRAIN t>=2, VALID t>=1 (w/o best day too), live cells too thin",
+    "source": "2-year TRAIN"
+   }
   }
+ },
+ "hindsight": "hindsight (known at close)",
+ "regx": {
+  "tagged": "2026-11-21",
+  "source": "research/bdi/regx (table.csv, scheme DASH)",
+  "note": "REGX reliability of the best / worst rating: trustworthy = TRAIN t >= 2 and VALID t >= 1 (w/o best day too) and live agrees; weak = below those bars; false = best / worst flips out of sample. The labels are hindsight (SPY at the close): never an entry filter. Setups without a tag were not in REGX scope."
  }
 }

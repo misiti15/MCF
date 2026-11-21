@@ -78,7 +78,9 @@ C3_IN = {"L3-gap-slope-rsi5hi-FD-WB5": "livelab"}
 FR_OUT = {"GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long": "explore1",
           "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long": "explore1",
           "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short": "livelab",
-          "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab"}
+          "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab",
+          # QA-EXIT2 2026-11-21 (from 11-23)
+          "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": "livelab"}
 from tests.test_ult1119_deploy import ULT_1120  # noqa: E402  ultimate_1119 admissions, effective 2026-11-20
 from tests.test_beg1120_deploy import BEG_1123  # noqa: E402  beginner_1120 admissions, effective 2026-11-23
 from tests.test_remedyq_1120 import COPIES as RQ_1123  # noqa: E402  Remedy-Q (a) copies, effective 2026-11-23

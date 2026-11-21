@@ -369,7 +369,7 @@ def test_st7q_and_ns3v1_configured(monkeypatch):
     b = x1["strategies"]["ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD"]
     assert b["enabled"] and b["context"] == ["qqq_vwap"] and b["module"] == ST7Q and b["window"] == [950, 1500]
     assert b["min_adv"] == 95000000 and b["refire"] is False and b["scale_out_r"] is None
-    assert not t1["strategies"]["ST7-rsi50dn-long-pm-t1s1-FD"]["enabled"]   # parent promoted to Primary 2026-10-25 (owner)
+    assert t1["strategies"]["ST7-rsi50dn-long-pm-t1s1-FD"]["enabled"]   # parent promoted to Primary 2026-10-25, back in On Deck 2026-11-21 (ST7-MOVE)
     o1 = x1["live"]["setup_order"]
     # ROT1 2026-11-15: arena setup_order = fewest traded sessions first (ST7Q 6 < ST8 14 to 11-13); both still listed
     assert o1.index("ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD") < o1.index("ST8-volspikedn-long-pm-t1s1-FD")

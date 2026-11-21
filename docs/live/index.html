@@ -784,6 +784,9 @@ window.MCF = window.MCF || {};
 .chip.rg-Bull { color: var(--good); border-color: currentColor; } .chip.rg-Bear { color: var(--bad); border-color: currentColor; }
 .chip.rg-Choppy { color: #b45309; border-color: currentColor; } .chip.rg-Quiet { color: var(--ink-2); border-color: currentColor; }
 .chip.shadow { border-style: dashed; }
+/* REGX reliability tag of the Best-conditions rating (owner yes 2026-11-21, display only; research/bdi/regx) */
+.rx { font-size: 10px; margin-left: 4px; color: var(--ink-2); } .rx.rx-trustworthy { color: var(--good); } .rx.rx-false { color: var(--bad); text-decoration: line-through; }
+.hs { font-size: 10px; margin-left: 3px; color: var(--ink-2); font-style: italic; }
 .cmp td:nth-child(2), .cmp th:nth-child(2) { font-weight: 600; }
 .lab td.l { white-space: normal; min-width: 220px; }
 #live .msg { color: var(--ink-2); font-size: 13px; }
@@ -1709,7 +1712,7 @@ window.MCF_SHADOW = (() => {
         rank: `<td>${x.rank ?? "–"}</td>`,
         name: `<td class="l nmc" title="${e(x.name)} · ${e(x.setup)}"><span class="nm">${e(x.name)}</span>${chips}<span class="sid">${e(x.setup)}</span></td>`,
         acctLabel: `<td class="l">${e(x.acctLabel)}${x.statsFrom ? `<div style="font-size:11px;color:var(--muted)" title="Trades in each account that make up this full record">record: ${e(x.statsFrom)}</div>` : ""}</td>`,
-        best_reg: `<td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source})` + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span>` : "—"}</td>`,
+        best_reg: `<td class="l">${x.rg ? `<span class="chip rg-${e(x.rg.best)}" title="${e(`Best: ${x.rg.best} · worst: ${x.rg.worst} · ${x.rg.class} (${x.rg.source}) · ${(RG && RG.hindsight) || "hindsight (known at close)"}` + (x.rg.regx ? `\nREGX reliability: ${x.rg.regx.verdict} (${x.rg.regx.reason})` : "\nREGX reliability: not rated") + Object.entries(x.rg.by_regime || {}).map(([k, v]) => `\n${k}: ${v.trades} trades, ${f(v.avg_r, 3)}R`).join(""))}">${e(x.rg.best)}</span><span class="hs" title="hindsight (known at close): SPY's open-to-close move is only known after the session, so this is never an entry filter">hindsight</span>${x.rg.regx ? `<span class="rx rx-${e(x.rg.regx.verdict)}" title="${e(`REGX reliability of this rating: ${x.rg.regx.verdict} - ${x.rg.regx.reason}`)}">${e(x.rg.regx.verdict)}</span>` : ""}` : "—"}</td>`,
         ls_trades: `<td class="bd-last">${x.ls_trades || "—"}${lsOld}</td>`,
         ls_r: `<td class="bd-last ${x.ls_trades ? cls(x.ls_r) : ""}">${x.ls_trades ? f(x.ls_r) : "—"}</td>`,
         ls_pnl: `<td class="bd-last ${x.ls_trades ? cls(x.ls_pnl) : ""}">${x.ls_trades ? money(x.ls_pnl) : "—"}</td>`,
@@ -2061,7 +2064,7 @@ window.MCF_SHADOW = (() => {
     "vs backtest": "Live Avg R minus backtest R. Negative = doing worse live than history suggested.",
     "Sim. trades / sim avg R (SIMULATED)": "What-if replays of signals the setup could not take (slot, symbol or cap blocked). Simulated only; never counted in live stats.",
     "Playing time": "Does the setup get enough chances to trade? ok, slow, starved (signals blocked), crowded-out (another setup held the symbol), silent (no signals).",
-    "Best conditions": "The market condition in which this setup did best on its 2-year backtest (after costs); hover the chip for the worst one and every condition. Bull = SPY closed >= +0.5% above its open; Bear = SPY closed <= -0.5% below its open; Choppy = SPY within +-0.5% but a wide day (range at or above its 20-day median); Quiet = SPY within +-0.5% and a narrow day. \"—\" = not scored.",
+    "Best conditions": "The market condition in which this setup did best on its 2-year backtest (after costs); hover the chip for the worst one and every condition. Bull = SPY closed >= +0.5% above its open; Bear = SPY closed <= -0.5% below its open; Choppy = SPY within +-0.5% but a wide day (range at or above its 20-day median); Quiet = SPY within +-0.5% and a narrow day. \"—\" = not scored. These labels are hindsight (known at close): SPY's move is only known after the session, so they are never an entry filter (REGX). The small tag is the REGX reliability of the rating: trustworthy (held out of sample and live), weak (below the bars) or false (best / worst flipped out of sample); no tag = not rated.",
     "Bull": "Market condition: SPY closed at least +0.5% above its open.",
     "Bear": "Market condition: SPY closed at least 0.5% below its open.",
     "Choppy": "Market condition: SPY ended within +-0.5% of its open, but the day's high-low range was at or above its 20-day median.",
@@ -2391,7 +2394,7 @@ window.MCF_SHADOW = (() => {
       <div class="sect" id="sd-watch"></div>
       <div class="two" style="margin-top:10px" id="sd-days"><div><div class="k">Today</div><div class="v">…</div></div><div><div class="k">Previous session</div><div class="v">…</div></div></div>
       <div class="sect"><h4>Record — live · replay · backtest</h4><div class="tablewrap" id="sd-rec"><div class="empty" style="padding:10px">Loading…</div></div></div>
-      <div class="sect"><h4>Market conditions — 2-year backtest</h4><div class="tablewrap" id="sd-reg"><div class="empty" style="padding:10px">Loading…</div></div></div>
+      <div class="sect"><h4>Market conditions — 2-year backtest · hindsight (known at close)</h4><div class="tablewrap" id="sd-reg"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="sect"><h4>Daily R since start</h4><div id="sd-spark"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="sect"><h4>Last 10 sessions it traded</h4><div id="sd-recent"><div class="empty" style="padding:10px">Loading…</div></div></div>
       <div class="note">Paper results; few trades prove nothing. Educational only — not financial advice.</div>`;
@@ -2406,7 +2409,8 @@ window.MCF_SHADOW = (() => {
     q("#sd-reg").innerHTML = rg ? `<table><thead><tr><th class="l">Condition</th><th>Trades</th><th>Avg R</th></tr></thead><tbody>` +
       (RG.labels || Object.keys(rg.by_regime)).map(k => { const v = rg.by_regime[k] || {};
         return `<tr><td class="l"><span class="chip rg-${e(k)}" title="${e((RG.definitions || {})[k] || "")}">${e(k)}</span>${k === rg.best ? " best" : k === rg.worst ? " worst" : ""}</td><td>${v.trades ?? 0}</td><td class="${cls(v.avg_r)}">${f(v.avg_r, 3)}</td></tr>`; }).join("") +
-      `</tbody></table><div class="lg">${e(rg.class)} · ${e(rg.source)} · after costs · generated ${e(RG.generated || "")}</div>`
+      `</tbody></table><div class="lg">${e(rg.class)} · ${e(rg.source)} · after costs · generated ${e(RG.generated || "")} · ${e(RG.hindsight || "hindsight (known at close)")}: SPY at the close, never an entry filter</div>` +
+      `<div class="lg">REGX reliability: ${rg.regx ? `<span class="rx rx-${e(rg.regx.verdict)}">${e(rg.regx.verdict)}</span> · ${e(rg.regx.reason)} (${e(rg.regx.source)})` : "not rated"}</div>`
       : `<div class="empty" style="padding:10px">Not scored on the 2-year backtest.</div>`;
     q("#sd-days").innerHTML = dayBox(today.phase && today.phase !== "closed" ? "Today" : "Today (closed)", today) + dayBox("Previous session", prev);
     const lbRow = ((M.lb || {}).rows || []).find(r => r.setup === code);

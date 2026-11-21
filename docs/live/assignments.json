@@ -6,8 +6,7 @@
    "L3-gap-slope-fromopen-FD",
    "NM-ETF-late-dip-di-long",
    "RW3-gapdn-rsi5pop-flowsell-short-FD",
-   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
-   "ST7-rsi50dn-long-pm-t1s1-FD"
+   "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"
   ],
   "testing": [
    "CWT05-flush-m05-v5-long",
@@ -21,6 +20,7 @@
    "NS5-sma50-flush-oversold-long",
    "RW1-gapdn-bounce-flowsell-short-FD",
    "ST6-volspikeup-short-mid-t1s1-FD",
+   "ST7-rsi50dn-long-pm-t1s1-FD",
    "orb20_a"
   ],
   "testing2": [
@@ -60,6 +60,7 @@
   ],
   "graveyard": [
    "CWT04-backside-vwaptest-a25-short",
+   "CWT05-flush-m05-v3-long",
    "CWT13-vwapstretch-z075-short",
    "CWT14-failbrk-pdl-p05-R2A-long",
    "CWT14-failbrk-pdl-p05-R2A-short",
@@ -88,6 +89,7 @@
    "GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long",
    "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long",
    "GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long",
+   "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long",
    "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short",
    "GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long",
    "GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long",
@@ -119,7 +121,6 @@
    "GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short",
    "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long",
    "GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short",
-   "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long",
    "GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short",
    "IDX1-qqq100-0955-TQQQ-trail",
    "L3-gap-slope-rsi5hi-FD-WB5",
@@ -209,7 +210,6 @@
   ],
   "testingf": [
    "BEG-ORB-orb15-inplay-stopOR",
-   "CWT05-flush-m05-v3-long",
    "CWT09-gapdn-vwaploss-g10-short-WB4",
    "CWT14-failbrk-pdl-p10-lowvol-long-WB3",
    "GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short",
@@ -312,14 +312,14 @@
   },
   "CWT05-flush-m05-v3-long": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-21 08:35 ET",
+   "from": [
     "testingf"
    ],
-   "since": "2026-11-11 16:21 ET",
-   "from": [
-    "testing"
-   ],
-   "last_old_session": "2026-11-11",
-   "first_session": "2026-11-12"
+   "last_old_session": "2026-11-20",
+   "first_session": "2026-11-23"
   },
   "CWT05-flush-m05-v5-long": {
    "accounts": [
@@ -1460,14 +1460,14 @@
   },
   "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": {
    "accounts": [
+    "graveyard"
+   ],
+   "since": "2026-11-21 08:35 ET",
+   "from": [
     "livelab"
    ],
-   "since": "2026-11-15 10:15 ET",
-   "from": [
-    "gen"
-   ],
-   "last_old_session": "2026-11-13",
-   "first_session": "2026-11-16"
+   "last_old_session": "2026-11-20",
+   "first_session": "2026-11-23"
   },
   "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short": {
    "accounts": [
@@ -2694,15 +2694,14 @@
   },
   "ST7-rsi50dn-long-pm-t1s1-FD": {
    "accounts": [
+    "testing"
+   ],
+   "since": "2026-11-21 08:35 ET",
+   "from": [
     "primary"
    ],
-   "since": "2026-10-25 21:30 ET",
-   "from": [
-    "primary",
-    "testing2"
-   ],
-   "last_old_session": "2026-10-23",
-   "first_session": "2026-10-26"
+   "last_old_session": "2026-11-20",
+   "first_session": "2026-11-23"
   },
   "ST7-rsi50dn-long-pm-t1s1-FD-WB1": {
    "accounts": [
@@ -2906,92 +2905,10 @@
   }
  },
  "last_change": {
-  "at": "2026-11-20 16:55 ET",
+  "at": "2026-11-21 08:35 ET",
   "changes": [
    {
-    "setup": "CWT09-gapdn-bounce-g5-lowerhalf-short",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "CWT13-vwapstretch-z05-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "CWT13-vwapstretch-z075-short",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p05-R2A-long",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p05-R2A-short",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p10-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "CWT14-failbrk-pdl-p10-lowvol-long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long",
-    "from": [
-     "testing2"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long",
-    "from": [
-     "gen"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "GEN-261022-06-NewLOD-ORBfailUp-BuyPresslem0p49-PM-SPYltm0p5-t1s1-long",
+    "setup": "CWT05-flush-m05-v3-long",
     "from": [
      "testingf"
     ],
@@ -3000,16 +2917,7 @@
     ]
    },
    {
-    "setup": "GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short",
-    "from": [
-     "testinge"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long",
+    "setup": "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long",
     "from": [
      "livelab"
     ],
@@ -3018,86 +2926,12 @@
     ]
    },
    {
-    "setup": "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short",
+    "setup": "ST7-rsi50dn-long-pm-t1s1-FD",
     "from": [
-     "livelab"
+     "primary"
     ],
     "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long",
-    "from": [
-     "explore1"
-    ],
-    "to": [
-     "graveyard"
-    ]
-   },
-   {
-    "setup": "MF1-945-flowsell-vwapup-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "MF2-open-rsimidhi-flowsell-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "MF3-open-flowsell-rsi5hi-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "MF4-h40-open-flowsell-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "MF5-flowsell-vwapup-rsi5hi-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "NS3-failed-vwap-reclaim-short-FD",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "exhaustion_short",
-    "from": [
-     "testingf"
-    ],
-    "to": []
-   },
-   {
-    "setup": "heat_fade_long",
-    "from": [
-     "graveyard"
-    ],
-    "to": []
-   },
-   {
-    "setup": "intraday_momentum",
-    "from": [
-     "testingf"
-    ],
-    "to": [
-     "graveyard"
+     "testing"
     ]
    }
   ]

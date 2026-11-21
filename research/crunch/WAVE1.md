@@ -41,7 +41,7 @@ Housekeeping note: `docs/live/decisions.json` still lists the C3 codes, W1-BAR a
 
 **W5 Workbench (16 configs).** Tunes fail out of sample because selection picks noise (fit gain vs check gain Spearman −0.26; 17 chosen tunes fit +63.6R → check −45.3R). Unpaired copies need 1,000+ sessions to show +0.05R; paired exit overlays need 255-320 trades. WB2 protocol cuts false passes 15% → 3%. Demo: three earlier-exit classes hurt gap-down short fades (−0.025 to −0.030R/trade, 14 of 15 pairs worse); the old protocol would have shipped one. L3-rsi5hi-WB5 refire-off: +0.003R, t 0.11 on the full paired record.
 
-**W6 external (35 configs, bar 2.67).** Vol-managed sizing, late-day SPY momentum, squeeze filter and gap-fade-by-liquidity all failed. PBO: ranking by avg R/trade overfits (0.74) vs by total R (0.24). 0 of 114 setups reach t 3.27 (best L3-fromopen 1.70). Post-hoc lead: MF-family shorts fading a ≥ 2% gap-up, 127 tr −0.558R, skip +70.9R, t 2.14 (below bar), 9 better / 1 worse. L3-fromopen vs RW3 daily R corr 0.74 pooled (conflicts with Part 3's 0-0.03). Outside pages could not be opened (network allowlist); citations rest on abstracts.
+**W6 external (35 configs, bar 2.67).** Vol-managed sizing, late-day SPY momentum, squeeze filter and gap-fade-by-liquidity all failed. PBO: ranking by avg R/trade overfits (0.74) vs by total R (0.24). 0 of 114 setups reach t 3.27 (best L3-fromopen 1.70). Post-hoc lead: MF-family shorts fading a ≥ 2% gap-up, 127 tr −0.558R, skip +70.9R, t 2.14 (below bar), 9 better / 1 worse. ~~L3-fromopen vs RW3 daily R corr 0.74 pooled (conflicts with Part 3's 0-0.03).~~ **CORR1 correction (2026-11-21, owner yes; reporting only, not a cap — STOP2):** that 0.74 was a column-labelling bug in W6 X7; the real L3-fromopen vs RW3 correlation is 0.05-0.17 (W6's own method re-run: 0.07; L3-rsi5hi vs NS1 0.01). The real high pairs are RW3 vs RW5 0.76 and L3-fromopen vs L3-rsi5hi 0.74 (research/crunch/wave2/fresh_tags/RESULTS.md item 6). Outside pages could not be opened (network allowlist); citations rest on abstracts.
 
 **W7 Primary day (26 configs, bar 2.55).** Red days are short squeezes on SPY-up days; −85.6R of the −145.7R red-day loss came from setups already removed (MF2/MF4 −75R). Red days never went green first (giveback is not the problem). RW3+RW5 −25.0R on 12 SPY-up days vs +19.4R on 7 down days. Every structural cap costs L3-fromopen (−2.8 to −31.6R). FLAT25 (+35.9R, green 42 → 58%) is in-sample and negative on the clean early sessions: FAIL.
 
@@ -72,7 +72,7 @@ Housekeeping note: `docs/live/decisions.json` still lists the C3 codes, W1-BAR a
 4. **Reps:** W2-REPS (rotation priority) vs W3 (signals, not slots, are the limit) → **W2-REPS dropped**: C3-ROT already picks fewest-reps-first and slots are not binding.
 5. **WB shadow:** W3-WBSHADOW and WB2-OVERLAY are one idea → merged into **WB2-OVERLAY**.
 6. **MF gap-up skip vs no filters:** W6-MFGAP (t 2.14, below bar) vs W4-NOFILTER → consistent as a **shadow tag only** (TAGS1). Primary has no MF setup after C3-EXIT100, so its Primary effect is 0 today.
-7. **L3/RW3 correlation:** W6 0.74 pooled vs Part 3 0-0.03 Primary-only → unresolved; Wave 2 item.
+7. **L3/RW3 correlation:** W6 0.74 pooled vs Part 3 0-0.03 Primary-only → ~~unresolved; Wave 2 item~~ **resolved 2026-11-21 (CORR1):** W6's 0.74 was a labelling bug; L3-fromopen vs RW3 is 0.05-0.17 (near-independent in both views). The real high pairs are RW3 vs RW5 (0.76) and L3-fromopen vs L3-rsi5hi (0.74): count each pair as about one bet in breadth and red-day reviews. Reporting only, not a cap (STOP2).
 8. **Earlier vs later exits:** W5 shows earlier exits hurt the gap-down family; W7-UPDAY points at RW3/RW5 SPY-since-entry exits (also an earlier-exit class) → read the RW3/RW5-WB4 copies paired before any up-day work (C3-MECH).
 
 **Dropped as weak or superseded:** W2-EXIT17, W2-ODOUT (MF2/MF4 part), W2-REPS, RT-LEAN, RT-WB5 (folded into WBQ1), W3-WBSHADOW (into WB2-OVERLAY), W7-UPDAY (into C3-MECH), W6-BREADTH and W6-HKS/SIP (Wave 2 studies, not decisions), W3-SHADOW-INFO / W3-REPCOL / W4-TAGS / W2-HOLDLIST / W2-PRIM / W6-DSR (folded into reporting items or FYI).
@@ -134,6 +134,7 @@ Still open from before and directly relevant: **GY-LIFE / GY-ARCHIVE-20** (the l
 | B7 | win rate / profit factor on raw $ next to after-cost avg R | label fix inside DQ-P3 |
 | self | W3 first paired on UTC vs ET; W4 merged on id only; W7 latch re-applied on absolute R | each fixed and re-run before write-up |
 | P2 vs W2 | EXIT100 count 31 (−1,251R) vs 18 (−760R) | W2 uses per-session snapshots for active days and GY-BENCH moves |
+| CORR1 (added 2026-11-21) | W6 X7 printed L3-fromopen ↔ RW3 0.74 and L3-rsi5hi ↔ NS1 0.76: `B.corr()` columns are alphabetical but were relabelled in `six` order | Real values 0.07 / 0.01 (W6 method), 0.05-0.17 / ≈0 (Wave 2 item 6). The printed cells are L3-fromopen ↔ L3-rsi5hi 0.74 and RW3 ↔ RW5 0.76. Average ρ 0.091 and breadth 5.5 unaffected. Reporting only (CORR1) |
 
 ---
 

@@ -120,6 +120,8 @@ live:
     - GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long   # 41 live trades, -9.2R (moved from Testing C 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
     - GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long   # 61 live trades, -10.5R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
     - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 92 live trades, -24.5R (moved from Testing E 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
+    - CWT05-flush-m05-v3-long   # 119 live trades, -17.3R (moved from Testing F 2026-11-21, QA-EXIT2; from session 2026-11-23)
+    - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long   # 205 live trades, -135.1R (moved from Testing C 2026-11-21, QA-EXIT2; from session 2026-11-23)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -2486,3 +2488,82 @@ strategies:
         max_overlap: 0.186
         overlap_with: CWT14-failbrk-pdh-p05-lowvol-short
         n_tried_in_run: 3000
+  CWT05-flush-m05-v3-long:
+    # moved to Graveyard 2026-11-21 (owner QA-EXIT2: FOOTRACE-EXIT from Testing F on the corrected LR8 cost basis; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 119 trades, 30 active days, -17.3R, avg -0.145R, w/o best day -0.179R, day t -1.64
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: B5-m0.5-v3-Dnone-t05s1-full, fill: false}
+    tags: [graveyard, "moved from Testing F 2026-11-21 (FOOTRACE-EXIT, QA-EXIT2)"]
+  GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long:
+    # moved to Graveyard 2026-11-21 (owner QA-EXIT2: FOOTRACE-EXIT from Testing C on the corrected LR8 cost basis; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 205 trades, 19 active days, -135.1R, avg -0.659R, w/o best day -0.793R, day t -1.59
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261027-06-orbfailup-mid-long.py
+    context:
+    - breadth_open
+    min_adv: 95000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing C 2026-11-21 (FOOTRACE-EXIT, QA-EXIT2)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: long
+        window: MID
+        geom: holdtr
+        min_adv: 95000000.0
+        conds:
+        - - bars_since_lod
+          - <=
+          - 5.0
+        - - breadth_open
+          - <
+          - 0.35
+        - - orb_fail_up
+          - ==
+          - 1.0
+      key: fafa22f6a76610b3
+      screen:
+        train:
+          n: 2154
+          exp_r: 0.0425
+          t: 0.29
+          win: 0.498
+          days: 84
+        valid:
+          n: 958
+          exp_r: 0.0084
+          t: 0.08
+          win: 0.51
+          days: 48
+        all:
+          n: 3112
+          exp_r: 0.032
+          t: 0.3
+          win: 0.502
+          days: 132
+        per_day: 7.305
+        per_day_valid: 4.99
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 1.5405
+        exp_down: -0.2776
+        exp_flat: 0.5401
+        excess_train: 0.0908
+        excess_valid: 0.0694
+        tier1: true
+        score: 0.33
+        max_overlap: 0.438
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3082
