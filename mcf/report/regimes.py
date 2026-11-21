@@ -11,6 +11,8 @@ from pathlib import Path
 PATH = Path(__file__).resolve().parents[2] / "docs" / "live" / "regimes.json"
 LABELS = ("Bull", "Bear", "Choppy", "Quiet")
 CLASSES = ("regime specialist", "all-weather", "loser")
+HINDSIGHT = "hindsight (known at close)"   # REGX (owner yes 2026-11-21): the labels use SPY's close, never known at entry
+REGX = ("trustworthy", "weak", "false")     # REGX reliability tag of a setup's best / worst rating (research/bdi/regx)
 
 
 def validate(d: dict) -> list[str]:
@@ -37,6 +39,8 @@ def validate(d: dict) -> list[str]:
         if s["best"] not in LABELS or s["worst"] not in LABELS:
             err.append(f"{name}: best/worst must be a label")
             continue
+        if "regx" in s and (not isinstance(s["regx"], dict) or s["regx"].get("verdict") not in REGX):
+            err.append(f"{name}: regx verdict must be one of {REGX}")
         if s["class"] not in CLASSES:
             err.append(f"{name}: class {s['class']!r}")
         br = s["by_regime"]

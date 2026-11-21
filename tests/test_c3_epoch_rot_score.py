@@ -21,7 +21,8 @@ def test_ns5_left_primary_and_runs_in_on_deck_only(monkeypatch):
     monkeypatch.delenv("MCF_ACCOUNT", raising=False)
     p = load_config(asof="2026-11-19")
     on = sorted(k for k, v in p["strategies"].items() if v.get("enabled"))
-    assert "NS5-sma50-flush-oversold-long" not in on and len(on) == 5
+    assert "NS5-sma50-flush-oversold-long" not in on and len(on) == 4   # ST7-MOVE 2026-11-21: ST7 left Primary too
+    assert "ST7-rsi50dn-long-pm-t1s1-FD" not in on
     assert "NS5-sma50-flush-oversold-long" not in p["live"]["setup_order"]
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
     t = load_config(asof="2026-11-19")["strategies"]["NS5-sma50-flush-oversold-long"]

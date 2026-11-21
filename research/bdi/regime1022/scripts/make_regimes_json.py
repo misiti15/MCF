@@ -1,6 +1,7 @@
 """regime1022 Part D: write docs/live/regimes.json from classes.csv (2-year as-run backtest, by hindsight market
 condition), one entry per live setup name that was scored, then validate it (mcf.report.regimes). Best / worst are
-taken among conditions with >= 30 trades. Educational only - not financial advice."""
+taken among conditions with >= 30 trades. After a re-run, run research/bdi/regx/tag_regimes.py again (REGX
+reliability tags + hindsight label, owner yes 2026-11-21). Educational only - not financial advice."""
 from __future__ import annotations
 
 import json

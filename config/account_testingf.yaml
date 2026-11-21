@@ -55,7 +55,6 @@ live:
     - GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRoplt0p5-t1s1-short   # 10 traded sessions / 85 trades
     - MF1-945-flowsell-vwapup   # 14 traded sessions / 31 trades
     - NS4-pm-vwap-reclaim-oversold-short-FD   # 15 traded sessions / 50 trades
-    - CWT05-flush-m05-v3-long   # 18 traded sessions / 79 trades
     - RW7-gapdn-bounce-early-short-FD   # 23 traded sessions / 567 trades
     - ULT-14-snap-long   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
@@ -106,7 +105,7 @@ strategies:
     window: [950, 1500]
     scale_out_r: null
   CWT05-flush-m05-v3-long:   # moved from On Deck 2026-11-11 after the close (ONDECK OD-OUT (fails OD-IN)); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-21 (owner QA-EXIT2: FOOTRACE-EXIT on the corrected LR8 cost basis; from session 2026-11-23)
     type: lab
     module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
     min_adv: 95000000

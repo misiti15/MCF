@@ -154,7 +154,7 @@ strategies:
   ST7-rsi50dn-long-pm-t1s1-FD:
     # RSI Collapse Dip Buy (all day): promoted from Testing 1 2026-10-25 (owner); promotion = move (off in Testing 1).
     # Its variant ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD stays in Testing 1 (independent setup).
-    enabled: true
+    enabled: false   # moved Primary -> On Deck 2026-11-21 (owner ST7-MOVE; from session 2026-11-23): runs unchanged there; returns only at +15R total plus the PRIME-RULES entry tests
     type: lab
     module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
     min_adv: 95000000
@@ -598,7 +598,6 @@ live:
     - NM-ETF-late-dip-di-long   # promoted from Live Lab 2026-11-10 (~1.1/session, 14:00-15:00 ETFs: narrowest, so first)
     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD   # promoted 2026-10-15
     - RW3-gapdn-rsi5pop-flowsell-short-FD   # promoted 2026-10-15
-    - ST7-rsi50dn-long-pm-t1s1-FD   # promoted 2026-10-25 (~2.4/day: narrow, so early)
     - L3-gap-slope-fromopen-FD   # re-promoted 2026-10-30 (~19/day live)
     - intraday_momentum
     - orb20_a

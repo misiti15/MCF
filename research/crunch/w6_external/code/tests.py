@@ -130,4 +130,5 @@ P('== X7 implied breadth')
 B=t[t.strategy.isin(six)].pivot_table(index='date',columns='strategy',values='R',aggfunc='sum').reindex(S).fillna(0)
 C=B.corr().values; n=len(six); rho=(C.sum()-n)/(n*(n-1))
 P(f'current Primary setups n={n}, avg pairwise corr of daily R {rho:.3f}, implied breadth {n/(1+(n-1)*rho):.2f}')
-P(pd.DataFrame(C,index=six,columns=six).round(2).to_string())
+# CORR1 (2026-11-21): label with B.columns (alphabetical pivot order), not `six` - the old labels were wrong
+P(pd.DataFrame(C,index=B.columns,columns=B.columns).round(2).to_string())

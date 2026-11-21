@@ -1,0 +1,75 @@
+# TAGS1 nightly tagger (owner yes 2026-11-18 TAGS1; wired by TAGS1-WHATIF, owner yes 2026-11-21).
+# REPORT ONLY - journal-only would-skip tags: no order, slot, latch, halt or trading config is read or written, and no
+# link to trade.yml. After store-bars has published the session's bar pack, it reads every account journal (read-only,
+# from the mcf-data* state branches) and runs research/tags1/tags1.py (live = run kind paper/live, shadow = shadow;
+# what-if / backtest runs are not counted) for each fresh session of the last 7 days that has no tags file yet, then
+# commits research/tags1/tags/<date>.csv.gz. Seeded with the 11-19 table (research/crunch/wave2/fresh_tags).
+# research/tags1/score.py stays sealed until 20 fresh sessions (2026-12-17) and is never run here.
+# Bars come from the bars-YYYY-MM release (store-bars, 16:40 ET EST / 17:40 ET EDT); a session whose pack is not yet
+# published is skipped with a warning and caught up the next night. Educational only - not financial advice.
+name: tags1
+
+on:
+  schedule:
+    - cron: "47 23 * * 1-5"      # 18:47 ET during EST, 19:47 ET during EDT (after store-bars)
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "one session YYYY-MM-DD to (re)tag; empty = every untagged session of the last 7 days"
+        default: ""
+
+permissions:
+  contents: write     # research/tags1/tags/<date>.csv.gz only
+
+concurrency:
+  group: mcf-tags1
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -e .
+      - name: Account journals (read-only copies)
+        run: |
+          mkdir -p j
+          for b in mcf-data mcf-data-testing mcf-data-testing2 mcf-data-explore1 mcf-data-livelab mcf-data-testingd \
+                   mcf-data-testinge mcf-data-testingf mcf-data-gen mcf-data-graveyard; do
+            git fetch -q --depth 1 origin "$b" && git show FETCH_HEAD:journal.db > "j/$b.db" || { echo "::warning::$b journal not read"; rm -f "j/$b.db"; }
+          done
+          git fetch -q --depth 1 origin mcf-data && git show FETCH_HEAD:universe.csv > universe.csv || rm -f universe.csv
+      - name: Tag fresh sessions
+        run: |
+          if [ -n "${{ inputs.day }}" ]; then days="${{ inputs.day }}"; else
+            days=$(python -c "import pandas as pd; e = pd.Timestamp.now(tz='America/New_York').normalize(); print(' '.join(d.strftime('%F') for d in pd.bdate_range(e - pd.Timedelta(days=7), e)))"); fi
+          first=$(python -c "import json; print(json.load(open('research/tags1/rules.json'))['first_session'])")
+          uni=""; [ -f universe.csv ] && uni="--universe universe.csv"
+          for d in $days; do
+            [[ "$d" < "$first" ]] && continue
+            if [ -z "${{ inputs.day }}" ] && [ -f "research/tags1/tags/$d.csv.gz" ]; then echo "$d already tagged"; continue; fi
+            tag=$(python -c "import sys; from mcf.replay import store; print(store.release_tag(sys.argv[1]))" "$d")
+            mkdir -p bars
+            if ! gh release download "$tag" -p "1min-$d.parquet" -p "1day-$d.parquet" -D bars --clobber 2> /dev/null; then
+              echo "::warning::$d bar pack not on $tag yet - caught up next night"; rm -f bars/*; continue; fi
+            python research/tags1/tags1.py --date "$d" --jdir j --bars bars $uni || echo "::warning::$d tagging failed"
+            rm -f bars/*
+          done
+      - name: Save tags (research/tags1/tags)
+        run: |
+          git config user.name mcf-bot; git config user.email mcf-bot@users.noreply.github.com
+          git add research/tags1/tags
+          git diff --cached --quiet && { echo "no new tags"; exit 0; }
+          git commit -q -m "tags1: nightly would-skip tags (report only)"
+          for i in 1 2 3; do
+            git pull -q --rebase origin "${{ github.ref_name }}" && git push -q origin "HEAD:${{ github.ref_name }}" && exit 0
+            git rebase --abort 2> /dev/null || true; sleep 10
+          done
+          echo "::warning::tags not pushed - the next night re-tags the missing sessions"

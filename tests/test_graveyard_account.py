@@ -73,6 +73,9 @@ MOVED_FR = {
     "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab",
     "GEN-261019-03-Ret15mATRlem0p12-FromOpenATRlem0p34-SMA20slopege0p29-PM-BRoplt0p5-t05s1-long": "testing2",
     "GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short": "testinge",
+    # QA-EXIT2 (owner 2026-11-21, FOOTRACE-EXIT on the corrected LR8 cost basis; ledger 2026-11-23-st7-move-qa-exit2)
+    "CWT05-flush-m05-v3-long": "testingf",
+    "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": "livelab",
 }
 # RETIRE-R3 (owner 2026-11-20, applied at the Friday review 2026-11-20, effective 2026-11-23): terminal, block kept
 # (enabled false + retired marker), out of setup_order

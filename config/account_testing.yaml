@@ -46,6 +46,7 @@ live:
     - orb20_a   # 18 traded sessions to 11-11
     - RW1-gapdn-bounce-flowsell-short-FD   # 22 traded sessions to 11-11
     - NS5-sma50-flush-oversold-long   # from Primary 2026-11-18 (C3-NS5); 17 traded sessions in Primary
+    - ST7-rsi50dn-long-pm-t1s1-FD   # from Primary 2026-11-21 (ST7-MOVE); 43 Primary trades -7.08R (LR8)
 strategies:
   # ---- Index open-dip bounce V1: QQQ down >= 1.0% from the open by 09:55 (owner 2026-10-15, research/bdi/idxdip1015). Long only.
   IDX1-qqq100-0955-TQQQ-trail:
@@ -416,7 +417,7 @@ strategies:
     scale_out_r: null
   # from ST7-rsi50dn-long-pm-t1s1 (testing; source window 1335-1500); ~2.43/day full-day [timeofday results.csv full, exp +0.033R]
   ST7-rsi50dn-long-pm-t1s1-FD:
-    enabled: false   # promoted to Primary 2026-10-25 (owner); promotion = move. Its Testing 1 record stays here.
+    enabled: true   # moved back from Primary 2026-11-21 (owner ST7-MOVE; from session 2026-11-23), unchanged; was promoted to Primary 2026-10-25
     type: lab
     module: research/bdi/fullday/ST7-rsi50dn-long-pm-t1s1-FD.py
     min_adv: 95000000

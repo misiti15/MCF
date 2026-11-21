@@ -80,3 +80,35 @@ def test_rules_are_frozen_and_scorer_refuses_early(tmp_path):
         S.main(["--tags", str(tmp_path)])
     res = S.score(S.load(tmp_path))                                             # the function itself works on the frame
     assert res["MFGAP"]["n"] == 1
+
+
+def test_decisions_count_only_paper_live_runs(tmp_path):
+    # TAGS1-WHATIF (owner yes 2026-11-21): what-if / backtest / reference runs are never counted as live
+    import sqlite3
+    c = sqlite3.connect(tmp_path / "mcf-data.db")
+    c.execute("CREATE TABLE runs (id INTEGER, kind TEXT)")
+    c.executemany("INSERT INTO runs VALUES (?, ?)", [(1, "paper"), (2, "shadow"), (3, "whatif"), (4, "backtest"),
+                                                     (5, "live"), (6, "reference")])
+    c.execute("CREATE TABLE trades (id INTEGER, run_id INTEGER, date TEXT, symbol TEXT)")
+    c.executemany("INSERT INTO trades VALUES (?, ?, ?, ?)", [(i, i, DAY, "AAA") for i in range(1, 7)] + [(7, 1, "2026-11-18", "AAA")])
+    c.commit()
+    c.close()
+    d = T.decisions(tmp_path, DAY)
+    assert dict(zip(d.run_id, d.source)) == {1: "live", 2: "shadow", 5: "live"}
+    assert set(d.acct) == {"primary"}
+
+
+def test_nightly_tagger_is_wired_report_only_and_seeded():
+    import yaml
+    wf = (ROOT / ".github/workflows/tags1.yml").read_text()
+    y = yaml.safe_load(wf)
+    assert y[True]["schedule"]                                         # nightly cron (yaml reads `on:` as True)
+    assert "research/tags1/tags1.py" in wf and "score.py --" not in wf and "python research/tags1/score.py" not in wf
+    steps = " ".join(str(st.get("run", "")) for st in y["jobs"]["tag"]["steps"])
+    assert "ALPACA" not in wf and "trade" not in steps and "mcf.cli" not in steps      # no keys, no trading path
+    assert y["concurrency"]["group"] == "mcf-tags1"
+    S = _mod("score")
+    seed = S.load(ROOT / "research/tags1/tags")
+    assert set(seed.date) >= {"2026-11-19"} and set(seed.source) == {"live", "shadow"}
+    s19 = seed[seed.date.eq("2026-11-19") & seed.source.eq("live")]
+    assert len(s19) == 1066 and round(float(S.r_after_costs(s19[s19.MFGAP.astype(bool)]).sum()), 2) == 13.61
