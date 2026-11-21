@@ -73,6 +73,10 @@ def selftest():
     t = tally(T)   # deltas d1 +0.300, d2 -0.800, d3 +0.400 -> mean -0.033, without best (d3) -0.250, share 57%
     assert "mean -0.033" in t and "(d3, +0.400) -0.250" in t and "57%" in t and "d1 +0.300" in t, t
     print("selftest ok: tally (with / without best session)")
+    T2 = T.assign(symbol=["a", "b", "c", "e"], ctl=["X", "SPY", "Y", "Z"])
+    v = etf_view(T2, {"SPY"})   # d1 drops row b -> 0.5; (a) mean of 0.5,-0.8,0.4 = +0.033; (b) d2,d3 -> -0.200
+    assert "1 of 4 (b->SPY)" in v and "rows +0.033 R (3" in v and "one -0.200 R (2" in v, v
+    print("selftest ok: ETF-control view")
     print("selftest ok: fade trade (time exit, 1-ATR stop, gap-through fill, costs), gap buckets, e-process hook")
 
 
@@ -86,6 +90,23 @@ def tally(F: pd.DataFrame) -> str:
     return (f"FAMC tally: {len(x)} scored sessions; raw net per session " + ", ".join(f"{d} {v:+.3f}" for d, v in net.items()) +
             f"; ex-market delta mean {x.mean():+.3f} R, without best session ({b}, {x[b]:+.3f}) {xb.mean() if len(xb) else float('nan'):+.3f} R; "
             f"best session = {share:.0%} of positive delta. K_edge < 1 = no evidence either way.")
+
+
+def etf_view(F: pd.DataFrame, etfs: set) -> str:
+    """Skeptic 11-20 01:55 (descriptive, beside the frozen tally; the frozen rule is unchanged): ETF share of controls, and the
+    session delta mean (a) dropping ETF-controlled rows and (b) dropping sessions with any ETF control."""
+    G = F.dropna(subset=["ctl_ex"]).copy(); G["etf"] = G.ctl.isin(etfs)
+    d = lambda X: X.groupby("date").apply(lambda g: g.ex.mean() - g.ctl_ex.mean())  # noqa: E731
+    a = d(G[~G.etf]); bad = set(G.loc[G.etf, "date"]); b = d(G[~G.date.isin(bad)])
+    return (f"ETF controls: {int(G.etf.sum())} of {len(G)} ({', '.join(G.loc[G.etf, 'symbol'] + '->' + G.loc[G.etf, 'ctl'])}); "
+            f"delta mean without ETF-controlled rows {a.mean():+.3f} R ({len(a)} sessions); without sessions holding one "
+            f"{b.mean() if len(b) else float('nan'):+.3f} R ({len(b)} sessions). Descriptive; frozen tally above is the record.")
+
+
+
+def _etfs() -> set:
+    sys.path.insert(0, str(ROOT)); from mcf.longhold.signals import etf_set   # MCF's ETF tags (assets_meta is_etf + extras)
+    return etf_set()
 
 
 _LOOKUP = object()
@@ -197,12 +218,12 @@ def main():
           f"RAW mean delta {x.mean():+.3f} R (unclipped; fix 5) vs clipped at cap {CAP}: {np.clip(x, -CAP, CAP).mean():+.3f}; "
           f"gross mean {F.gross.mean():+.3f}" + (f"; K_edge {st['K_edge']} K_harm {st['K_harm']} "
           f"(alarms at 20: edge day {st['edge_alarm_day']}, harm day {st['harm_alarm_day']})" if st else ""))
-    print(tally(F))
+    print(tally(F)); print(etf_view(F, _etfs()))
     print("Journal-only shadow; nothing trades. Educational only - not financial advice.")
 
 
 if __name__ == "__main__":
     if "--tally" in sys.argv:
-        print(tally(pd.read_csv(HERE / "famc_forward.csv"))); print("Educational only - not financial advice.")
+        _F = pd.read_csv(HERE / "famc_forward.csv"); print(tally(_F)); print(etf_view(_F, _etfs())); print("Educational only - not financial advice.")
     else:
         selftest() if "--selftest" in sys.argv else main()
