@@ -179,6 +179,11 @@ def cost_r_lr8(df: pd.DataFrame, cfg: dict | None) -> pd.Series:
     if model is None or df is None or not len(df) or "pnl_adj" not in df:
         return out
     eff = str(model.get("effective_from") or "0000")[:10]
+    pre = df["pnl_adj"].notna() & (df["date"].astype(str).str[:10] < eff) if "date" in df else df["pnl_adj"].notna()
+    need = [c for c in ("side", "entry", "stop", "shares", "pnl", "exit", "date") if c not in df]
+    if need and pre.any():
+        # QA 11-21 C1: a caller that drops these columns silently kept the old cost basis on every pre-11-12 row
+        raise KeyError(f"cost_r_lr8 needs columns {need} to re-cost pre-{eff} live rows")
     for i, row in df.iterrows():
         if pd.isna(row.get("pnl_adj")) or str(row.get("date"))[:10] >= eff:
             continue

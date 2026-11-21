@@ -800,10 +800,10 @@
    "1 of 2 green sessions",
    "11-06 no trade (buying-power reject)"
   ],
-  "why": "The owner condition is not met yet.",
+  "why": "Overtaken (QA 2026-11-21): the setup already moved Gen -> Testing D on 11-12.",
   "link": "research/bdi/nightly1106/NOTES.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "closed as overtaken, 2026-11-21 (QA)"
  },
  {
   "code": "REGX",
@@ -1007,10 +1007,10 @@
   "numbers": [
    "MF4 base signalled 14 of 16 days, submitted 0 (twin block)"
   ],
-  "why": "Twin block starved the base slot.",
+  "why": "Overtaken (QA 2026-11-21): MF4-FD was retired on 11-20.",
   "link": "research/ondeck_build/PLAN.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "closed as overtaken, 2026-11-21 (QA)"
  },
  {
   "code": "SIP-DEF",
@@ -1020,10 +1020,10 @@
   "numbers": [
    "30 setups (10 each) wait on it"
   ],
-  "why": "D/E/F have no data yet.",
+  "why": "Overtaken (QA 2026-11-21): Testing D/E/F have traded since 11-12.",
   "link": "research/owner_inbox/2026-11-11.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "closed as overtaken, 2026-11-21 (QA)"
  },
  {
   "code": "PROMO2",
@@ -2002,7 +2002,7 @@
  {
   "code": "EXIT-MF5",
   "title": "Return MF5 to Testing A",
-  "what": "C3-EXIT100 moved MF5-flowsell-vwapup-rsi5hi to the Graveyard although its Testing A record recovered (W2 held it back). CWT13-z05-long and GEN-261021-06 also had positive last-5 R.",
+  "what": "C3-EXIT100 moved MF5-flowsell-vwapup-rsi5hi to the Graveyard although its Testing A record recovered (W2 held it back). (CWT13-z05-long, also named before, was retired on 11-20; only MF5 and GEN-261021-06 remain in question.)",
   "recommend": "Optional",
   "numbers": [
    "MF5 in Testing A: 31 trades +0.258",
@@ -2759,12 +2759,13 @@
   "code": "NMETF-SIZE",
   "title": "Allow the NM-ETF size-up exception to C3-BAR2",
   "what": "If NM-ETF passes its frozen 25-session Primary test (t>=2, w/o best>0, best day<50%), double risk cap AND notional (2 slots). Conflicts with C3-BAR2 'per-setup risk stays flat'.",
-  "recommend": "Optional (your call; conflicts with C3-BAR2)",
+  "recommend": "No - Primary record turned negative after the 11-20 burst; revisit only if the frozen 25-session test passes",
   "numbers": [
-   "Primary slice: 15 trades +0.075R t 1.18 (1-day tag)",
-   "whole record 33 trades +0.21R t 3.5"
+   "Primary through 11-20: 27 trades -11.45R, -0.424R/trade",
+   "11-20 burst: 12 ETF lots -12.57R",
+   "before 11-19 in Primary: 12 trades +2.01R (the old 33-trade figure was all accounts)"
   ],
-  "why": "Owner 2026-11-20: asked for a plain-language breakdown; re-asked.",
+  "why": "Card refreshed by QA 2026-11-21: it showed stale positive figures. Owner 2026-11-20 asked for a plain-language breakdown; re-asked.",
   "link": "research/whatworks_1120/nmetf/REPORT.md",
   "status": "open",
   "answered": null
@@ -2772,14 +2773,14 @@
  {
   "code": "ST7-MOVE",
   "title": "Move ST7-FD from Primary to On Deck tonight (unchanged)",
-  "what": "Friday epoch move: switch ST7-FD off in Primary and run it unchanged in On Deck; it returns only at +15R total plus the PRIME-RULES entry tests. Alternative: keep it in Primary on probation; it auto-moves at -10R (2.7R away).",
+  "what": "Friday epoch move: switch ST7-FD off in Primary and run it unchanged in On Deck; it returns only at +15R total plus the PRIME-RULES entry tests. Alternative: keep it in Primary on probation; it auto-moves at -10R (2.9R away on the corrected cost basis).",
   "recommend": "Yes (move tonight)",
   "numbers": [
-   "Primary 42 trades -7.3R, avg -0.17R, w/o best day -0.31, 38% green days",
-   "without 11-19: +0.04R/trade (flat)",
+   "Primary 43 trades -7.08R, -0.165R/trade (LR8 cost basis, through 11-20); 2.9R from the -10R auto-move",
+   "without 11-19: about flat",
    "fails random-entry null; 11-19 burst -8.7R; latch can't stop same-bar bursts"
   ],
-  "why": "Every independent check fails; discretionary under WW-ST7, against 'consistency over churn'.",
+  "why": "Every independent check fails; discretionary under WW-ST7, against 'consistency over churn'. Numbers restated on one cost basis after the QA 11-21 cost fix (brief/nightly showed -0.149).",
   "link": "research/st7_review_1120/REVIEW.md",
   "status": "open",
   "answered": null
@@ -2820,9 +2821,9 @@
   "what": "L3-gap-slope-lowdist-FD is the best promotion candidate but 69% of its R is one day (11-12, first session after the On Deck split-tape gate went off). A Primary shadow (no orders) builds the overlap record the promotion bar needs. Reply 'FP-A yes/no'. After-hours change with ledger + assignments.",
   "recommend": "Optional - cheap evidence-gathering, no live risk; earliest realistic promotion is mid/late December",
   "numbers": [
-   "live 111 trades, avg +0.237R, w/o best day +0.103R (best-day share 69%)",
+   "live 111 trades +23.1R; best-day share 79% (11-12); corrected for missing exit costs (QA 11-21)",
    "before 11-12 w/o best day -0.042R; all 7 lab neighbours negative",
-   "strict non-overlap shrunk -0.016R"
+   "strict non-overlap shrunk below 0"
   ],
   "why": "Needs a clean record without the 11-12 day before it can compete for Primary.",
   "link": "research/final1121/REPORT.md",
@@ -2849,8 +2850,8 @@
   "what": "Before promotion, replay the candidate under Primary's actual rules (burst cap 30, -2R latch) and require it to stay positive without its best day and beat random entries. Reply 'FP-C yes/no'. Process only.",
   "recommend": "Yes - RW7 looks good alone but collapses under Primary's rules",
   "numbers": [
-   "RW7 raw +60.1R -> +18.1R under Primary book",
-   "RW7 w/o best day under Primary book -0.027R",
+   "RW7 raw +60.1R -> +4.4R under Primary's rules (cost-corrected, QA 11-21)",
+   "RW7 w/o best day under Primary book below 0",
    "RW7 vs random entry: worse (p 0.83)"
   ],
   "why": "Primary is the scoreboard, so candidates must be judged the way Primary would trade them.",
@@ -2899,6 +2900,36 @@
   ],
   "why": "Helps the day it was designed on, hurts elsewhere; fails the targeted-remedy rule.",
   "link": "research/final1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "QA-REMQ",
+  "title": "Remedy-Q 12:30 copies: keep them running in Testing, or switch off?",
+  "what": "You said 'if all is true, remedy-q yes'. QA re-check: the 1pm theory did not pass the lab check, so a 12:30 cut-off was used instead (weak: t 1.94 vs bar 2.89), and in the Testing accounts the lab result is worse than the parents (-14.6R vs random removal). The 3 copies (L3/RW3/RW5, window 09:50-12:30) start 11-23 in Testing F, A and B. Primary is not affected either way. Reply 'QA-REMQ keep' or 'QA-REMQ off'.",
+  "recommend": "Optional - keep as a clearly labelled live test (Primary untouched, more exposure), or off because your condition was not met",
+  "numbers": [
+   "1pm cut-off: failed lab check on all 3 setups",
+   "12:30 cut-off: t 1.94 (bar 2.89)",
+   "Testing-rules lab: -14.6R vs random removal"
+  ],
+  "why": "QA 2026-11-21 found the copies were built although the owner's condition was not fully met; re-asked with the real result. Verdict relabelled 'not confirmed - live test copy'.",
+  "link": "research/qa_1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "QA-EXIT2",
+  "title": "Two setups now meet the agreed exit rule after the cost fix: move to Graveyard?",
+  "what": "With the cost bug fixed, the Friday exit review (FOOTRACE-EXIT, rule you agreed) finds 2 setups instead of 0: CWT05-flush-m05-v3-long (Testing F) and GEN-261027-06 ORB-fail-up long (Testing C). Reply 'QA-EXIT2 yes' to move both to the Graveyard after hours (ledger + assignments in the same change), or 'no'. Primary not affected.",
+  "recommend": "Yes - both meet the rule you already agreed, on the correct cost basis",
+  "numbers": [
+   "CWT05-flush-m05-v3-long: 119 trades -17.3R, w/o best day -0.179R, day t -1.64",
+   "GEN-261027-06: 205 trades -135.1R, w/o best day -0.793R, day t -1.59",
+   "old cost basis showed 0 exit candidates"
+  ],
+  "why": "Applying an agreed rule on corrected numbers (consistency over churn); it is a setup move, so it waits for your yes and goes in outside market hours.",
+  "link": "docs/live/footrace.json",
   "status": "open",
   "answered": null
  }

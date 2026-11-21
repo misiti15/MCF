@@ -355,7 +355,8 @@ def live_trades(remote: str = "origin") -> pd.DataFrame:
             f.write(raw)
             f.flush()
             con = sqlite3.connect(f.name)
-            x = pd.read_sql("SELECT strategy, symbol, date, entry_time, entry, stop, shares, pnl, pnl_adj, r_multiple "
+            x = pd.read_sql("SELECT strategy, symbol, side, date, entry_time, entry, stop, target, exit, exit_reason, meta, shares, pnl, "
+                            "pnl_adj, r_multiple "
                             "FROM trades WHERE run_id=1 AND exit_time IS NOT NULL", con)
             con.close()
         x["account"] = acct
