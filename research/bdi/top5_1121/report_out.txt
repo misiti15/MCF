@@ -1,0 +1,279 @@
+PARITY MF4-h40-open-flowsell n 2656 mean|d| 4e-05 share<0.01 1.0
+PARITY NM-MF3-qqqdn-gapdn-FD n 1692 mean|d| 4e-05 share<0.01 1.0
+PARITY NS3V1-am-widestop-short n 1560 mean|d| 3e-05 share<0.01 1.0
+PARITY L3-gap-slope-rsi5hi-FD n 8383 mean|d| 3e-05 share<0.01 1.0
+PARITY NS5-sma50-flush-oversold-long n 1053 mean|d| 5e-05 share<0.01 1.0
+                        setup var                      knob  n_tv  win_tv  be_win  exp_tv  t_tv  exp_train  exp_valid  t_valid  wf_pos      up    down  ex_best_day  excess_vs_random  d_train  d_valid  t_improve  kept  top_kept beats_parent testing_bar
+       L3-gap-slope-rsi5hi-FD   P                    parent  8383  0.6652  0.6964 -0.0468 -1.06    -0.0838     0.0109     0.30   0.294 -0.0779  0.0030      -0.0655            0.0116      NaN      NaN        NaN   NaN       NaN          NaN         NaN
+       L3-gap-slope-rsi5hi-FD G02                stop_x0.75  8383  0.6141  0.6589 -0.0797 -1.56    -0.1282    -0.0041    -0.10   0.294 -0.1128 -0.0268      -0.0988           -0.0214  -0.0444  -0.0150      -3.66 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G03              target_x0.75  8383  0.7074  0.7523 -0.0619 -1.73    -0.0994    -0.0033    -0.11   0.294 -0.0894 -0.0178      -0.0715           -0.0035  -0.0156  -0.0143      -1.47 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G06         timestop30_lt0.25  8383  0.5777  0.6285 -0.0600 -1.59    -0.0777    -0.0324    -1.10   0.176 -0.0848 -0.0202      -0.0781           -0.0016   0.0061  -0.0433      -0.92 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G07         timestop60_lt0.25  8383  0.6238  0.6642 -0.0540 -1.32    -0.0836    -0.0079    -0.27   0.353 -0.0794 -0.0133      -0.0725            0.0043   0.0002  -0.0188      -0.90 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G09           limit_entry_0.1  5060  0.6409  0.7030 -0.0957 -1.97    -0.1307    -0.0366    -0.93   0.235 -0.1191 -0.0611      -0.1104           -0.0013   0.0025  -0.0320      -0.66 0.604     0.495        False       False
+       L3-gap-slope-rsi5hi-FD G05         half_at_0.5tgt_be  8383  0.7380  0.7791 -0.0507 -1.64    -0.0893     0.0097     0.42   0.294 -0.0646 -0.0282      -0.0600            0.0077  -0.0055  -0.0013      -0.25 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G10            next_bar_entry  8383  0.6599  0.6917 -0.0468 -0.95    -0.0748    -0.0030    -0.08   0.235 -0.0755 -0.0007      -0.0737            0.0116   0.0090  -0.0140       0.00 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G08           clock_exit_1300  8383  0.6167  0.6532 -0.0444 -1.22    -0.0696    -0.0051    -0.26   0.294 -0.0690 -0.0051      -0.0637            0.0139   0.0142  -0.0160       0.16 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G11                    lt1230  4326  0.6535  0.7042 -0.0787 -2.02    -0.0891    -0.0649    -1.35   0.294 -0.1071 -0.0315      -0.0918           -0.0121   0.0407  -0.0477       0.19 0.516     0.501        False       False
+       L3-gap-slope-rsi5hi-FD G20   first_signal_per_symday  4794  0.6516  0.6996 -0.0726 -1.84    -0.1021    -0.0294    -0.69   0.294 -0.1303  0.0103      -0.0829           -0.0029   0.0269  -0.0284       0.21 0.572     0.502        False       False
+       L3-gap-slope-rsi5hi-FD G17      skip_against_compass  4473  0.6427  0.6930 -0.0744 -1.19    -0.1379     0.0292     0.67   0.412 -0.1853 -0.0135      -0.0929            0.0078   0.0090   0.0042       0.23 0.534     0.555        False       False
+       L3-gap-slope-rsi5hi-FD G18 half_size_against_compass  8383  0.6652  0.7025 -0.0432 -1.19    -0.0793     0.0130     0.45   0.353 -0.0674 -0.0046      -0.0531            0.0151   0.0045   0.0021       0.23 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G16           spy_side_filter  2610  0.6364  0.6946 -0.0871 -0.85    -0.1590     0.0607     1.05   0.294 -0.4668 -0.0353      -0.1188           -0.0149   0.0292   0.0049       0.70 0.311     0.362        False       False
+       L3-gap-slope-rsi5hi-FD G15        first5_per_session  1409  0.6402  0.7006 -0.0921 -3.87    -0.0978    -0.0828    -2.30   0.118 -0.1178 -0.0667      -0.0939           -0.0096   0.0670  -0.0244       0.72 0.168     0.169        False       False
+       L3-gap-slope-rsi5hi-FD G21       skip_spy_below_0.10  6090  0.6777  0.6974 -0.0295 -0.74    -0.0498    -0.0022    -0.05   0.353 -0.0575  0.0883      -0.0553            0.0235   0.0497  -0.0126       0.82 0.726     0.692        False       False
+       L3-gap-slope-rsi5hi-FD G04               target_x1.5  8383  0.5902  0.6049 -0.0245 -0.41    -0.0470     0.0107     0.22   0.294 -0.0747  0.0560      -0.0615            0.0339   0.0368  -0.0002       1.11 1.000     1.000        False       False
+       L3-gap-slope-rsi5hi-FD G12                    ge1230  4057  0.6776  0.6865 -0.0128 -0.19    -0.0788     0.1100     2.21   0.471 -0.0457  0.0380      -0.0438            0.0367   0.0431   0.0368       2.10 0.484     0.499        False       False
+       L3-gap-slope-rsi5hi-FD G01                 stop_x1.5  8383  0.7160  0.7305 -0.0162 -0.47    -0.0379     0.0177     0.66   0.353 -0.0449  0.0298      -0.0339            0.0421   0.0459   0.0067       2.65 1.000     1.000         True       False
+       L3-gap-slope-rsi5hi-FD G19                 adv_ge95M  6150  0.6722  0.6740 -0.0025 -0.06    -0.0213     0.0215     0.55   0.294 -0.0309  0.0446      -0.0243            0.0590   0.0694   0.0067       3.13 0.734     0.944         True       False
+       L3-gap-slope-rsi5hi-FD G14           skip_price_lt20  5920  0.6769  0.6680  0.0125  0.28     0.0089     0.0179     0.45   0.294 -0.0180  0.0611      -0.0177            0.0652   0.0900   0.0020       3.40 0.706     0.990         True       False
+       L3-gap-slope-rsi5hi-FD G13        cf_stopcost_le0.15  6801  0.6749  0.6655  0.0132  0.30     0.0014     0.0299     0.77   0.353 -0.0187  0.0638      -0.0131            0.0700   0.0849   0.0147       4.57 0.811     1.000         True       False
+        MF4-h40-open-flowsell   P                    parent  2656  0.6265  0.7054 -0.1190 -3.50    -0.1462    -0.0724    -1.97   0.118 -0.2314  0.0124      -0.1225           -0.0175      NaN      NaN        NaN   NaN       NaN          NaN         NaN
+        MF4-h40-open-flowsell G20   first_signal_per_symday  2656  0.6265  0.7054 -0.1190 -3.50    -0.1462    -0.0724    -1.97   0.118 -0.2314  0.0124      -0.1225           -0.0175   0.0000   0.0000        NaN 1.000     1.000        False       False
+        MF4-h40-open-flowsell G02                stop_x0.75  2656  0.5764  0.6611 -0.1483 -3.96    -0.1745    -0.1036    -2.46   0.118 -0.2648 -0.0123      -0.1533           -0.0469  -0.0283  -0.0312      -3.26 1.000     1.000        False       False
+        MF4-h40-open-flowsell G04               target_x1.5  2656  0.5252  0.6065 -0.1389 -3.49    -0.1802    -0.0685    -1.44   0.118 -0.3108  0.0619      -0.1446           -0.0374  -0.0339   0.0040      -1.62 1.000     1.000        False       False
+        MF4-h40-open-flowsell G06         timestop30_lt0.25  2656  0.5361  0.6373 -0.1211 -3.80    -0.1499    -0.0721    -2.30   0.118 -0.2040 -0.0243      -0.1250           -0.0197  -0.0036   0.0003      -0.23 1.000     1.000        False       False
+        MF4-h40-open-flowsell G10            next_bar_entry  2656  0.6261  0.7035 -0.1156 -4.20    -0.1582    -0.0429    -1.17   0.118 -0.2140 -0.0007      -0.1192           -0.0141  -0.0119   0.0295       0.17 1.000     1.000        False       False
+        MF4-h40-open-flowsell G07         timestop60_lt0.25  2656  0.5825  0.6693 -0.1157 -3.49    -0.1406    -0.0732    -2.12   0.118 -0.2124 -0.0027      -0.1196           -0.0142   0.0057  -0.0008       0.45 1.000     1.000        False       False
+        MF4-h40-open-flowsell G03              target_x0.75  2656  0.6886  0.7696 -0.1136 -3.75    -0.1343    -0.0784    -2.36   0.118 -0.2057 -0.0060      -0.1162           -0.0121   0.0120  -0.0059       0.67 1.000     1.000        False       False
+        MF4-h40-open-flowsell G08           clock_exit_1200  2656  0.5768  0.6637 -0.1085 -3.21    -0.1312    -0.0699    -2.03   0.176 -0.2065  0.0059      -0.1123           -0.0071   0.0151   0.0025       0.94 1.000     1.000        False       False
+        MF4-h40-open-flowsell G09           limit_entry_0.1  1634  0.5967  0.7093 -0.1727 -3.24    -0.2011    -0.1295    -2.94   0.176 -0.3021 -0.0251      -0.1764           -0.0335   0.0277  -0.0130       1.04 0.615     0.508        False       False
+        MF4-h40-open-flowsell G21          skip_price_ge150  1899  0.6198  0.7157 -0.1464 -4.18    -0.1699    -0.1065    -2.67   0.235 -0.2425 -0.0324      -0.1501           -0.0370   0.0251  -0.0041       1.21 0.715     0.489        False       False
+        MF4-h40-open-flowsell G17      skip_against_compass  2015  0.6189  0.7080 -0.1354 -3.25    -0.1615    -0.0950    -2.31   0.118 -0.2915 -0.0068      -0.1396           -0.0216   0.0281  -0.0040       1.62 0.759     0.812        False       False
+        MF4-h40-open-flowsell G18 half_size_against_compass  2656  0.6265  0.7095 -0.1109 -3.36    -0.1322    -0.0745    -2.13   0.118 -0.2084  0.0031      -0.1142           -0.0094   0.0141  -0.0020       1.62 1.000     1.000        False       False
+        MF4-h40-open-flowsell G05         half_at_0.5tgt_be  2656  0.6721  0.7610 -0.0969 -3.58    -0.1155    -0.0650    -2.24   0.118 -0.1811  0.0016      -0.0991            0.0046   0.0307   0.0074       1.92 1.000     1.000        False       False
+        MF4-h40-open-flowsell G15        first5_per_session  1380  0.6594  0.7175 -0.0902 -3.47    -0.1197    -0.0377    -0.91   0.235 -0.2066  0.0191      -0.0920           -0.0072   0.0832   0.0533       2.41 0.520     0.496        False       False
+        MF4-h40-open-flowsell G12                    ge1015  2100  0.6171  0.6968 -0.1188 -2.98    -0.1267    -0.1048    -2.42   0.176 -0.2271  0.0183      -0.1230           -0.0164   0.0449  -0.0087       2.83 0.791     0.872        False       False
+        MF4-h40-open-flowsell G16           spy_side_filter  1102  0.6361  0.7022 -0.1010 -3.26    -0.1064    -0.0940    -2.03   0.235 -0.2664 -0.0417      -0.1073           -0.0246   0.1067   0.0266       2.48 0.415     0.602         True       False
+        MF4-h40-open-flowsell G19            adv_floor_x1.2  2359  0.6278  0.7044 -0.1154 -3.38    -0.1389    -0.0750    -1.92   0.176 -0.2311  0.0195      -0.1193           -0.0161   0.0226   0.0061       2.57 0.888     0.944         True       False
+        MF4-h40-open-flowsell G11                    lt1015   556  0.6619  0.7376 -0.1198 -2.83    -0.2244     0.0388     0.67   0.235 -0.2513 -0.0060      -0.1276           -0.0215   0.1014   0.0812       2.95 0.209     0.128         True       False
+        MF4-h40-open-flowsell G14           skip_price_lt20  2430  0.6309  0.7030 -0.1079 -3.06    -0.1400    -0.0501    -1.30   0.118 -0.2196  0.0262      -0.1118           -0.0096   0.0156   0.0282       3.96 0.915     0.977         True       False
+        MF4-h40-open-flowsell G01                 stop_x1.5  2656  0.6762  0.7480 -0.0840 -2.70    -0.0995    -0.0575    -1.83   0.176 -0.1814  0.0299      -0.0864            0.0175   0.0468   0.0150       4.02 1.000     1.000         True       False
+        MF4-h40-open-flowsell G13        cf_stopcost_le0.15  1856  0.6277  0.6813 -0.0788 -1.85    -0.1087    -0.0320    -0.82   0.294 -0.2035  0.0586      -0.0844            0.0214   0.0728   0.0488       5.55 0.699     1.000         True       False
+        NM-MF3-qqqdn-gapdn-FD   P                    parent  1692  0.5165  0.5191 -0.0041 -0.12    -0.0101     0.0044     0.08   0.471 -0.1786  0.0444      -0.0151            0.0420      NaN      NaN        NaN   NaN       NaN          NaN         NaN
+        NM-MF3-qqqdn-gapdn-FD G20   first_signal_per_symday  1692  0.5165  0.5191 -0.0041 -0.12    -0.0101     0.0044     0.08   0.471 -0.1786  0.0444      -0.0151            0.0420   0.0000   0.0000        NaN 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G02                stop_x0.75  1692  0.4634  0.4866 -0.0474 -1.10    -0.0531    -0.0394    -0.57   0.412 -0.2829  0.0181      -0.0584           -0.0013  -0.0430  -0.0438      -2.67 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G06         timestop30_lt0.25  1692  0.4285  0.4449 -0.0222 -0.77    -0.0280    -0.0139    -0.29   0.412 -0.1569  0.0153      -0.0313            0.0239  -0.0179  -0.0183      -1.30 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G10            next_bar_entry  1692  0.5077  0.5214 -0.0221 -0.68    -0.0234    -0.0203    -0.35   0.353 -0.2337  0.0367      -0.0328            0.0240  -0.0133  -0.0247      -1.26 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G04               target_x1.5  1692  0.4592  0.4724 -0.0230 -0.58    -0.0293    -0.0141    -0.21   0.294 -0.2379  0.0367      -0.0364            0.0231  -0.0192  -0.0185      -1.14 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G09           limit_entry_0.1   889  0.5028  0.5291 -0.0440 -1.15    -0.0378    -0.0527    -0.76   0.412 -0.1916  0.0026      -0.0545            0.0494  -0.0099  -0.0320      -0.96 0.525     0.471        False       False
+        NM-MF3-qqqdn-gapdn-FD G03              target_x0.75  1692  0.5609  0.5692 -0.0124 -0.43    -0.0253     0.0058     0.11   0.412 -0.1602  0.0286      -0.0219            0.0337  -0.0152   0.0014      -0.84 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G07         timestop60_lt0.25  1692  0.4758  0.4834 -0.0115 -0.37    -0.0147    -0.0069    -0.13   0.412 -0.1721  0.0332      -0.0212            0.0347  -0.0046  -0.0113      -0.77 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G12                    ge1230   814  0.4840  0.5128 -0.0411 -0.84    -0.0350    -0.0506    -0.59   0.529 -0.2699  0.0057      -0.0519            0.0134  -0.0074  -0.0274      -0.71 0.481     0.359        False       False
+        NM-MF3-qqqdn-gapdn-FD G08           clock_exit_1300  1692  0.5071  0.5190 -0.0148 -0.50    -0.0196    -0.0080    -0.14   0.471 -0.1446  0.0213      -0.0251            0.0313  -0.0095  -0.0124      -0.63 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G19            adv_floor_x1.2  1477  0.5152  0.5203 -0.0082 -0.23    -0.0065    -0.0106    -0.16   0.412 -0.1677  0.0358      -0.0198            0.0370   0.0045  -0.0137      -0.39 0.873     0.918        False       False
+        NM-MF3-qqqdn-gapdn-FD G16           spy_side_filter  1376  0.5116  0.5175 -0.0094 -0.25    -0.0223     0.0082     0.12   0.471 -0.3091  0.0289      -0.0216            0.0267  -0.0078   0.0024      -0.28 0.813     0.818        False       False
+        NM-MF3-qqqdn-gapdn-FD G17      skip_against_compass  1562  0.5141  0.5174 -0.0054 -0.15    -0.0172     0.0118     0.18   0.471 -0.2065  0.0373      -0.0174            0.0396  -0.0060   0.0062      -0.12 0.923     0.924        False       False
+        NM-MF3-qqqdn-gapdn-FD G18 half_size_against_compass  1692  0.5165  0.5195 -0.0045 -0.14    -0.0131     0.0076     0.13   0.471 -0.1662  0.0404      -0.0156            0.0416  -0.0030   0.0031      -0.12 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G05         half_at_0.5tgt_be  1692  0.6483  0.6520 -0.0049 -0.19    -0.0080    -0.0004    -0.01   0.412 -0.1109  0.0246      -0.0140            0.0413   0.0021  -0.0048      -0.05 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G15        first5_per_session   801  0.5356  0.5195  0.0280  0.76     0.0329     0.0198     0.37   0.588 -0.1657  0.0929       0.0218            0.0856   0.0267   0.0041       0.70 0.473     0.471        False       False
+        NM-MF3-qqqdn-gapdn-FD G01                 stop_x1.5  1692  0.5538  0.5490  0.0054  0.22     0.0045     0.0067     0.15   0.529 -0.1453  0.0473      -0.0027            0.0515   0.0145   0.0023       0.78 1.000     1.000        False       False
+        NM-MF3-qqqdn-gapdn-FD G11                    lt1230   878  0.5467  0.5299  0.0302  0.70     0.0148     0.0501     0.79   0.353 -0.1238  0.0849       0.0162            0.0686   0.0175   0.0229       0.83 0.519     0.641        False       False
+        NM-MF3-qqqdn-gapdn-FD G21         skip_compass_down   848  0.5448  0.5269  0.0307  0.67     0.0454     0.0085     0.10   0.471 -0.1303  0.1313       0.0191            0.0790   0.0335  -0.0004       0.85 0.501     0.488        False       False
+        NM-MF3-qqqdn-gapdn-FD G14           skip_price_lt20  1549  0.5165  0.5152  0.0021  0.06     0.0039    -0.0006    -0.01   0.471 -0.1681  0.0506      -0.0090            0.0490   0.0137  -0.0050       0.90 0.915     0.965        False       False
+        NM-MF3-qqqdn-gapdn-FD G13        cf_stopcost_le0.15  1304  0.5307  0.5063  0.0390  1.09     0.0520     0.0205     0.35   0.706 -0.1382  0.0817       0.0279            0.0813   0.0503   0.0113       2.47 0.771     1.000         True       False
+      NS3V1-am-widestop-short   P                    parent  1560  0.6583  0.5940  0.0693  2.39     0.0404     0.1064     3.04   0.706 -0.0149  0.1295       0.0552            0.1060      NaN      NaN        NaN   NaN       NaN          NaN         NaN
+      NS3V1-am-widestop-short G15        first5_per_session   861  0.6237  0.6159  0.0091  0.31    -0.0304     0.0754     1.75   0.588 -0.0599  0.0655       0.0063            0.0972  -0.0591  -0.0709      -3.23 0.552     0.436        False       False
+      NS3V1-am-widestop-short G06         timestop30_lt0.25  1560  0.5167  0.4942  0.0166  0.87     0.0198     0.0124     0.49   0.529 -0.0108  0.0361       0.0091            0.0532  -0.0206  -0.0940      -3.14 1.000     1.000        False       False
+      NS3V1-am-widestop-short G12                    gt1030   908  0.6167  0.5752  0.0411  1.43    -0.0235     0.1084     3.26   0.588 -0.0451  0.1081       0.0323            0.0855  -0.0528  -0.0359      -2.55 0.582     0.615        False       False
+      NS3V1-am-widestop-short G07         timestop60_lt0.25  1560  0.5808  0.5348  0.0395  1.65     0.0386     0.0407     1.36   0.647  0.0068  0.0629       0.0270            0.0762  -0.0017  -0.0657      -2.47 1.000     1.000        False       False
+      NS3V1-am-widestop-short G08           clock_exit_1200  1560  0.5782  0.5282  0.0382  1.57     0.0562     0.0152     0.49   0.647  0.0128  0.0564       0.0258            0.0749   0.0158  -0.0912      -1.94 1.000     1.000        False       False
+      NS3V1-am-widestop-short G16           spy_side_filter   778  0.6658  0.6064  0.0669  1.62     0.0297     0.1153     2.21   0.647 -0.1033  0.1106       0.0426            0.0954  -0.0255  -0.0494      -1.89 0.499     0.564        False       False
+      NS3V1-am-widestop-short G01                 stop_x1.5  1560  0.6769  0.6134  0.0477  2.37     0.0277     0.0734     3.06   0.706 -0.0100  0.0890       0.0383            0.0844  -0.0127  -0.0330      -1.88 1.000     1.000        False       False
+      NS3V1-am-widestop-short G09           limit_entry_0.1   708  0.6949  0.6333  0.0757  2.19     0.0403     0.1277     2.59   0.706  0.0670  0.0830       0.0603            0.1562  -0.0210  -0.0528      -1.79 0.454     0.346        False       False
+      NS3V1-am-widestop-short G21          skip_before_1000  1479  0.6531  0.5921  0.0653  2.27     0.0373     0.1001     2.81   0.706 -0.0169  0.1241       0.0529            0.1009  -0.0055  -0.0099      -1.79 0.948     0.974        False       False
+      NS3V1-am-widestop-short G10            next_bar_entry  1560  0.6487  0.6000  0.0524  1.92     0.0412     0.0667     2.01   0.765 -0.0316  0.1124       0.0392            0.0890   0.0008  -0.0397      -1.47 1.000     1.000        False       False
+      NS3V1-am-widestop-short G20   first_signal_per_symday  1031  0.6693  0.5983  0.0773  2.66     0.0461     0.1163     3.36   0.706  0.0031  0.1341       0.0619            0.1212  -0.0102  -0.0286      -1.44 0.661     0.635        False       False
+      NS3V1-am-widestop-short G11                    le1030   652  0.7163  0.6281  0.1086  2.72     0.1120     0.1027     1.78   0.824  0.0325  0.1569       0.0829            0.1344   0.0124  -0.0705      -1.42 0.418     0.385        False       False
+      NS3V1-am-widestop-short G19            adv_floor_x1.2  1450  0.6579  0.5948  0.0679  2.28     0.0319     0.1134     3.28   0.706 -0.0226  0.1309       0.0530            0.0990  -0.0109  -0.0002      -1.35 0.929     0.936        False       False
+      NS3V1-am-widestop-short G05         half_at_0.5tgt_be  1560  0.7801  0.7211  0.0526  2.70     0.0296     0.0820     3.24   0.765  0.0180  0.0773       0.0440            0.0892  -0.0107  -0.0244      -1.28 1.000     1.000        False       False
+      NS3V1-am-widestop-short G17      skip_against_compass  1317  0.6667  0.5934  0.0784  2.48     0.0545     0.1085     2.83   0.647 -0.0261  0.1335       0.0617            0.1109   0.0052  -0.0138      -0.36 0.844     0.853        False       False
+      NS3V1-am-widestop-short G18 half_size_against_compass  1560  0.6583  0.5896  0.0678  2.45     0.0430     0.0995     2.98   0.706 -0.0166  0.1280       0.0536            0.1044   0.0026  -0.0069      -0.36 1.000     1.000        False       False
+      NS3V1-am-widestop-short G03              target_x0.75  1560  0.7173  0.6480  0.0677  2.98     0.0449     0.0969     3.29   0.882  0.0069  0.1111       0.0572            0.1043   0.0045  -0.0095      -0.16 1.000     1.000        False       False
+      NS3V1-am-widestop-short G02                stop_x0.75  1560  0.6282  0.5756  0.0724  1.97     0.0453     0.1070     2.33   0.647 -0.0344  0.1487       0.0546            0.1090   0.0050   0.0006       0.26 1.000     1.000        False       False
+      NS3V1-am-widestop-short G14           skip_price_lt20  1270  0.6661  0.5825  0.0886  3.25     0.0767     0.1023     2.93   0.647  0.0227  0.1363       0.0768            0.1250   0.0191  -0.0180       0.27 0.814     1.000        False       False
+      NS3V1-am-widestop-short G04               target_x1.5  1560  0.5949  0.5247  0.0837  2.36     0.0684     0.1031     2.64   0.647 -0.0214  0.1587       0.0621            0.1203   0.0281  -0.0033       1.05 1.000     1.000        False       False
+      NS3V1-am-widestop-short G13        cf_stopcost_le0.15  1528  0.6630  0.5892  0.0787  2.74     0.0587     0.1039     2.94   0.706  0.0034  0.1314       0.0643            0.1144   0.0165  -0.0034       1.86 0.979     1.000        False       False
+NS5-sma50-flush-oversold-long   P                    parent  1053  0.4976  0.5242 -0.0498 -0.51    -0.1738     0.1626     2.43   0.529  0.1753 -0.1326      -0.0774            0.1096      NaN      NaN        NaN   NaN       NaN          NaN         NaN
+NS5-sma50-flush-oversold-long G20   first_signal_per_symday  1053  0.4976  0.5242 -0.0498 -0.51    -0.1738     0.1626     2.43   0.529  0.1753 -0.1326      -0.0774            0.1096   0.0000   0.0000        NaN 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G17      skip_against_compass   718  0.4387  0.5222 -0.1580 -1.33    -0.2836     0.0480     0.65   0.353  0.1832 -0.3661      -0.1985            0.0637  -0.0164  -0.1290      -1.75 0.682     0.547        False       False
+NS5-sma50-flush-oversold-long G18 half_size_against_compass  1053  0.4976  0.5473 -0.0788 -0.88    -0.1820     0.0981     1.75   0.471  0.1757 -0.1723      -0.1063            0.0807  -0.0082  -0.0645      -1.75 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G04               target_x1.5  1053  0.4141  0.4726 -0.1198 -0.95    -0.2886     0.1695     2.09   0.529  0.2197 -0.2446      -0.1502            0.0396  -0.1148   0.0068      -1.74 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G01                 stop_x1.5  1053  0.5394  0.5880 -0.0697 -0.75    -0.1810     0.1209     2.52   0.529  0.1532 -0.1517      -0.0887            0.0897  -0.0071  -0.0418      -1.07 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G10            next_bar_entry  1053  0.4872  0.5249 -0.0705 -0.72    -0.1669     0.0946     1.36   0.471  0.1601 -0.1553      -0.1018            0.0889   0.0069  -0.0680      -0.95 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G09           limit_entry_0.1   691  0.4689  0.5308 -0.1187 -1.13    -0.2437     0.1287     1.60   0.471  0.1194 -0.2044      -0.1431            0.0948   0.0056  -0.0857      -0.76 0.656     0.491        False       False
+NS5-sma50-flush-oversold-long G14           skip_price_lt20   899  0.4828  0.5207 -0.0708 -0.68    -0.2120     0.1702     2.74   0.412  0.1391 -0.1486      -0.0981            0.0931  -0.0069  -0.0170      -0.69 0.854     0.991        False       False
+NS5-sma50-flush-oversold-long G13        cf_stopcost_le0.15   907  0.4851  0.5174 -0.0596 -0.58    -0.1920     0.1655     2.69   0.471  0.1561 -0.1385      -0.0864            0.1055   0.0089  -0.0193      -0.09 0.861     1.000        False       False
+NS5-sma50-flush-oversold-long G03              target_x0.75  1053  0.5603  0.5890 -0.0483 -0.63    -0.1473     0.1213     2.14   0.529  0.1281 -0.1132      -0.0696            0.1111   0.0265  -0.0413       0.05 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G05         half_at_0.5tgt_be  1053  0.6401  0.6708 -0.0459 -0.69    -0.1324     0.1025     1.80   0.588  0.1092 -0.1029      -0.0644            0.1136   0.0414  -0.0602       0.08 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G07         timestop60_lt0.25  1053  0.4862  0.5124 -0.0476 -0.49    -0.1796     0.1788     2.76   0.588  0.1719 -0.1282      -0.0722            0.1119  -0.0058   0.0162       0.21 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G06         timestop30_lt0.25  1053  0.4672  0.4937 -0.0451 -0.51    -0.1631     0.1570     2.51   0.588  0.1460 -0.1154      -0.0647            0.1143   0.0107  -0.0056       0.26 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G21            index_veto_0.5   716  0.4944  0.5218 -0.0511 -0.59    -0.1684     0.0924     1.33   0.353  0.1788 -0.1979      -0.0916            0.0914   0.0741  -0.0860       0.27 0.680     0.632        False       False
+NS5-sma50-flush-oversold-long G08           clock_exit_1200  1053  0.5214  0.5370 -0.0224 -0.33    -0.1357     0.1718     2.55   0.588  0.0854 -0.0620      -0.0361            0.1371   0.0381   0.0092       0.38 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G11                    le1030   148  0.4932  0.5281 -0.0677 -0.57    -0.2239     0.1264     0.69   0.312  0.5644 -0.1389      -0.1183            0.2149   0.1462  -0.1411       0.41 0.141     0.104        False       False
+NS5-sma50-flush-oversold-long G12                    gt1030   905  0.4983  0.5235 -0.0469 -0.41    -0.1668     0.1701     2.20   0.529  0.1535 -0.1313      -0.0790            0.0924   0.0276  -0.0215       0.52 0.859     0.896        False       False
+NS5-sma50-flush-oversold-long G15        first5_per_session   574  0.5192  0.5218 -0.0049 -0.09    -0.1192     0.1474     1.72   0.529  0.0672 -0.0514      -0.0135            0.0823   0.1150  -0.0692       0.55 0.545     0.443        False       False
+NS5-sma50-flush-oversold-long G16           spy_side_filter   276  0.5326  0.5019  0.0551  0.79    -0.0371     0.1600     1.71   0.529  0.0648  0.0298       0.0378            0.1244   0.1656  -0.1094       0.70 0.262     0.179        False       False
+NS5-sma50-flush-oversold-long G02                stop_x0.75  1053  0.4511  0.4653 -0.0323 -0.31    -0.1808     0.2223     2.62   0.529  0.1799 -0.1102      -0.0631            0.1272  -0.0070   0.0596       0.85 1.000     1.000        False       False
+NS5-sma50-flush-oversold-long G19            adv_floor_x1.2   975  0.5056  0.5226 -0.0316 -0.32    -0.1545     0.1773     2.60   0.529  0.1580 -0.1020      -0.0603            0.1268   0.0312   0.0023       1.84 0.926     0.962        False       False
+{'N_study': 105, 'bar_study': 3.05, 'bar_setup': {'MF4-h40-open-flowsell': 2.47, 'NM-MF3-qqqdn-gapdn-FD': 2.47, 'NS3V1-am-widestop-short': 2.47, 'L3-gap-slope-rsi5hi-FD': 2.47, 'NS5-sma50-flush-oversold-long': 2.47}, 'bar90': {'L3-gap-slope-rsi5hi-FD': 4.504, 'NS3V1-am-widestop-short': 4.41, 'NS5-sma50-flush-oversold-long': 4.719, 'MF4-h40-open-flowsell': 4.719, 'NM-MF3-qqqdn-gapdn-FD': 4.719}, 'lineage_N': {'L3-gap-slope-rsi5hi-FD': 274378, 'NS3V1-am-widestop-short': 163132, 'NS5-sma50-flush-oversold-long': 935009, 'MF4-h40-open-flowsell': 935043, 'NM-MF3-qqqdn-gapdn-FD': 935064}, 'beats_parent': 11, 'testing_bar': 0, 'exp_pos': 30, 'exp_pos_train_and_valid': 26, 'locked_block_loaded': False, 'hold_scored': False}
+Educational only - not financial advice. BACKTEST parents (open history, TRAIN+VALID, costs in).
+=== MF4-h40-open-flowsell  n 2656  exp -0.1190  win 0.627
+losers 992: never reached +0.2R 546, reached +0.5R 0; med MFE 0.53 med MAE -0.49
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   367 -0.162       0.643
+10:00-10:30   791 -0.060       0.674
+10:30-11:30  1498 -0.139       0.597
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     682  0.025
+      True      993 -0.264
+valid False     543 -0.003
+      True      438 -0.159
+by W60 compass at signal:
+                   size   mean
+sp                            
+train DOWN          229 -0.096
+      UP            450 -0.105
+      unconfirmed   996 -0.177
+valid DOWN          198 -0.129
+      UP            191  0.021
+      unconfirmed   592 -0.084
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     1633  0.449
+2      880 -1.141
+6      143 -0.318
+
+=== NM-MF3-qqqdn-gapdn-FD  n 1692  exp -0.0041  win 0.517
+losers 818: never reached +0.2R 316, reached +0.5R 238; med MFE 0.70 med MAE -0.57
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00    45  0.148       0.622
+10:00-10:30    47  0.302       0.638
+10:30-11:30   435  0.011       0.533
+11:30-13:00   617 -0.019       0.511
+13:00-14:00   277 -0.078       0.498
+14:00-16:00   271  0.003       0.483
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     751  0.052
+      True      240 -0.204
+valid False     573  0.035
+      True      128 -0.131
+by W60 compass at signal:
+                   size   mean
+sp                            
+train DOWN          480 -0.069
+      UP             65  0.092
+      unconfirmed   446  0.039
+valid DOWN          364  0.001
+      UP             65 -0.067
+      unconfirmed   272  0.027
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1      614  0.963
+2      504 -1.121
+6      574 -0.058
+
+=== NS3V1-am-widestop-short  n 1560  exp +0.0693  win 0.658
+losers 533: never reached +0.2R 271, reached +0.5R 2; med MFE 0.51 med MAE -0.32
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   135  0.172       0.756
+10:00-10:30   517  0.092       0.706
+10:30-11:30   908  0.041       0.617
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     535  0.141
+      True      341 -0.117
+valid False     375  0.113
+      True      309  0.098
+by W60 compass at signal:
+                   size   mean
+sp                            
+train DOWN          213 -0.010
+      UP            143 -0.032
+      unconfirmed   520  0.081
+valid DOWN          112  0.094
+      UP            100  0.094
+      unconfirmed   472  0.112
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1      882  0.484
+2      240 -1.062
+6      438 -0.146
+
+=== L3-gap-slope-rsi5hi-FD  n 8383  exp -0.0468  win 0.665
+losers 2807: never reached +0.2R 1503, reached +0.5R 71; med MFE 0.54 med MAE -0.43
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00   182 -0.092       0.665
+10:00-10:30   405 -0.245       0.585
+10:30-11:30  1041  0.019       0.708
+11:30-13:00  3844 -0.077       0.649
+13:00-14:00  1739 -0.021       0.677
+14:00-16:00  1172  0.031       0.689
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False    2088 -0.051
+      True     3021 -0.107
+valid False    1134  0.102
+      True     2140 -0.037
+by W60 compass at signal:
+                   size   mean
+sp                            
+train DOWN          675 -0.041
+      UP           2336 -0.020
+      unconfirmed  2098 -0.169
+valid DOWN          306 -0.003
+      UP           1574 -0.009
+      unconfirmed  1394  0.036
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1     5425  0.453
+2     2239 -1.187
+6      719 -0.263
+
+=== NS5-sma50-flush-oversold-long  n 1053  exp -0.0498  win 0.498
+losers 529: never reached +0.2R 216, reached +0.5R 156; med MFE 0.80 med MAE -0.77
+by entry time:
+             size   mean  <lambda_0>
+tb                                  
+09:50-10:00    61 -0.360       0.344
+10:00-10:30    87  0.137       0.598
+10:30-11:30   905 -0.047       0.498
+by split / SPY session:
+               size   mean
+sp    spy_o2c             
+train False     511 -0.276
+      True      154  0.164
+valid False     259  0.150
+      True      129  0.189
+by W60 compass at signal:
+                   size   mean
+sp                            
+train DOWN          219  0.050
+      UP             71 -0.144
+      unconfirmed   375 -0.310
+valid DOWN          116  0.432
+      UP             50  0.147
+      unconfirmed   222  0.026
+by exit code (1 tgt, 2 stop, 6 flat):
+      size   mean
+code             
+1      460  0.970
+2      452 -1.088
+6      141 -0.049
+
