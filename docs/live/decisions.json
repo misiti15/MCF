@@ -2962,5 +2962,50 @@
   "link": "docs/live/monitor.json",
   "status": "answered",
   "answered": "no, 2026-11-21"
+ },
+ {
+  "code": "BDI-RW1121",
+  "title": "Park both reworked near misses (BEG-06, BEG-04)?",
+  "what": "Rule-18 rework of the two closest failed beginner ideas: 16 pre-registered configs, normal-way backtest with costs. Neither passed; every FIT gain was the April-2025 tariff week. Reply 'BDI-RW1121 yes/no'.",
+  "recommend": "Yes - park both; no Testing slot",
+  "numbers": [
+   "BEG-06 CHECK -0.088R (n 331)",
+   "BEG-04 CHECK -0.034R (n 3,375), near the top-10 standard by 0.009R",
+   "12 configs per lineage, 3 CHECK looks used"
+  ],
+  "why": "No variant survives; more tries would be data-mining.",
+  "link": "research/bdi/1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BDI-GBCAP",
+  "title": "Cap correlated ETF lots as one symbol (NM-ETF burst remedy)?",
+  "what": "Tested counting highly correlated symbols (>= 0.85) as one for the lot cap, against the 11-20 NM-ETF stack. It would have helped Friday but cuts NM-ETF's best two-year trades. Reply 'BDI-GBCAP yes/no'.",
+  "recommend": "No - do not deploy",
+  "numbers": [
+   "NM-ETF at 1 lot/group: FIT -38.6R / CHECK -6.6R",
+   "2 lots/group: 9 of 11 setups worse, 2 better (CHECK -14.5R)",
+   "burst brake would not have bound in Primary this week (max 13 / 10 min)"
+  ],
+  "why": "Fails the targeted-remedy rule (hurts more setups than it helps).",
+  "link": "research/bdi/1121/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "BDI-MH4",
+  "title": "Screen two new Move Hunt ideas next week?",
+  "what": "From this week's big moves: crypto funds following bitcoin (11-20: 5 crypto ETFs top-25 shorts, 2 inverse crypto ETPs top-25 longs) and peer-group laggards (managed care moved as a group 11-18/11-19). Research time only. Reply 'BDI-MH4 yes/no'.",
+  "recommend": "Yes - research only; nothing goes live without the usual bars",
+  "numbers": [
+   "long-side capture 1 of 100 big moves",
+   "short-side capture 10 of 100",
+   "4 ideas filed in the backlog"
+  ],
+  "why": "Targets the coverage gap (big moves no setup catches).",
+  "link": "research/bdi/1121/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
