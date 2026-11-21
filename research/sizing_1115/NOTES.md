@@ -123,3 +123,19 @@ CWT09-gapdn-vwaploss-g10-short is the On Deck name to carry the same size if pro
 3. Halt / latch: decide whether the account −20R halt and the −2R latch count `size_mult × R` (keeps them in dollar
    terms; recommended) — today they count each trade's own R.
 4. `mcf/report/team.py` already strips `size_mult` (Team sizes every trade the same) — no change. Tests for 1-3.
+
+## Re-run 2026-11-21 (owner: "reevaluate next weekend"); live records to 11-20, all accounts, LR8 basis
+Same rule A (configurations tried: +0, same 6). Results:
+| setup | trades | sessions | green % | worst session | avg R | w/o best day | rule A |
+|---|---|---|---|---|---|---|---|
+| NM-ETF-late-dip-di-long | 45 | 16 | 81 | **−12.57** (11-20 burst) | −0.134 | −0.179 | fail |
+| ST7-rsi50dn-long-pm-t1s1-FD | 59 | 20 | 55 | −8.66 (11-19) | −0.075 | −0.152 | fail (and left Primary 11-23, ST7-MOVE) |
+| CWT09-gapdn-vwaploss-g10-short (On Deck) | 24 | 13 | 77 | −1.37 | +0.218 | +0.141 | pass (best-day share 49%), but not in Primary |
+| L3 / RW3 / RW5 | 410 / 211 / 217 | 26-29 | 54-59 | −13.7 / −10.2 / −15.5 | +0.196 / +0.156 / +0.106 | +0.148 / +0.051 / +0.022 | fail (frequency) |
+
+**No Primary setup qualifies for a size-up any more.** NM-ETF, the only rule-A pass on 11-15, failed on the
+11-20 same-bar burst (12 lots −12.57R). Its size-up is now owner-conditional on the frozen 25-session test (NMETF-SIZE,
+2026-11-21). Recommendation: SIZEUP1 **no** (re-ask only if a Primary setup passes rule A).
+
+Rule-change context in the window: 11-12 LR8 cost basis (all rows restated, QA 11-21 fix); 11-17 testing sizing TSZ1
+(R comparable); 11-23 BRAKE-BURST (30 entries / 10 min) and ST7-MOVE take effect after this window.
