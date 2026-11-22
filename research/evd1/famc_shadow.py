@@ -77,6 +77,12 @@ def selftest():
     v = etf_view(T2, {"SPY"})   # d1 drops row b -> 0.5; (a) mean of 0.5,-0.8,0.4 = +0.033; (b) d2,d3 -> -0.200
     assert "1 of 4 (b->SPY)" in v and "rows +0.033 R (3" in v and "one -0.200 R (2" in v, v
     print("selftest ok: ETF-control view")
+    LG = pd.DataFrame(dict(report_date=["2026-11-19", "2026-11-25"], n_flags=[0, 2]))
+    assert prev_session("2026-11-23") == "2026-11-20" and prev_session("2026-11-27") == "2026-11-25"   # weekend; Thanksgiving
+    assert calendar_built("2026-11-20", LG) == []                       # built with 0 flags -> ok (scorable as no events)
+    assert calendar_built("2026-11-23", LG)                             # 11-20 never built -> refuse
+    assert calendar_built("2026-11-27", LG) == []                       # holiday skipped back to 11-25
+    print("selftest ok: calendar build-log guard (weekend, holiday, 0-flag build)")
     print("selftest ok: fade trade (time exit, 1-ATR stop, gap-through fill, costs), gap buckets, e-process hook")
 
 
@@ -109,6 +115,31 @@ def _etfs() -> set:
     return etf_set()
 
 
+BUILD_LOG = HERE / "famc_build_log.csv"   # Observer's build_famc_cal.py: one row per night, 0 flags included (Skeptic 11-21)
+
+
+def prev_session(day: str) -> str:
+    sys.path.insert(0, str(HERE.parent / "fwdcal"))
+    _a = sys.argv; sys.argv = [sys.argv[0]]; import mirror as M; sys.argv = _a  # noqa: E402,E702  (NYSE_CLOSED, one source)
+    d = pd.Timestamp(day) - pd.offsets.BDay(1)
+    while d.strftime("%Y-%m-%d") in M.NYSE_CLOSED:
+        d -= pd.offsets.BDay(1)
+    return d.strftime("%Y-%m-%d")
+
+
+def calendar_built(day: str, log=None) -> list[str]:
+    """Skeptic 11-21 01:55: refuse unless the calendar for the PREVIOUS session (the AMC report date) has a build-log row,
+    so 'built, 0 flags' (scorable as no events) and 'never built' (refuse) stay apart."""
+    p = prev_session(day)
+    if log is None:
+        if not BUILD_LOG.exists():
+            return [f"no calendar build log ({BUILD_LOG.name}); cannot tell 'built, 0 flags' from 'never built' for {p}"]
+        log = pd.read_csv(BUILD_LOG)
+    if not (log["report_date"].astype(str) == p).any():
+        return [f"no calendar build-log row for report date {p}"]
+    return []
+
+
 _LOOKUP = object()
 
 
@@ -139,6 +170,8 @@ def main():
     import lib
     from eproc import eprocess
     Dd = lib.daily().sort_values(["symbol", "date"]); Dd = Dd[Dd.date <= D1]
+    cb = calendar_built(a.date); print(f"guard calendar build: {'ok' if not cb else cb}")
+    assert not cb, "refusing: " + "; ".join(cb)
     why = journal_final(a.date); print(f"guard mcf-data journal: {'ok' if not why else why}")
     assert not why, "refusing: journal not final - " + "; ".join(why)
     assert (Dd.date == D1).sum() > 100, f"refusing: daily data has no {D1} rows - run append_day.py {D1} first (a missing day must not read as 0 events)"

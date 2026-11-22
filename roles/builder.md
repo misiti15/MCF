@@ -7,7 +7,8 @@ Educational only — not financial advice.
   days listed apart; 5 zero-signal, 3 blocked, 7 rare. 2-year column 1/15 (guild file lacks IDX/LD/GEN/WB). Rerun: python spotc.py.
 - FAMC 11-19 DONE: raw net +0.249R but ex-market -0.744R (down tape); 4 sessions, mean -0.089R, w/o 11-11 -0.323R, K_edge 0.388.
 - 11-20 famc_shadow prints etf_view (MCF etf_set): 1/9 ETF controls; w/o row -0.116R, w/o session +0.129R. Amendment = Lead.
-- FAMC 11-20: waits for Observer's 11-19 calendar row (none at 20:36 ET 11-20).
+- 11-21 famc_shadow refuses without a build-log row for the previous session (research/evd1/famc_build_log.csv, Observer
+  writes it; 0-flag builds pass). FAMC 11-20 still unbuilt; all FAMC runs refuse until the log exists.
 - RSGD1 (Scout card): HOLD until Lead/parent confirms on the board (owner rule 26: no new scored study without owner yes).
 - famc_shadow.py prints tally() every run (+ --tally): raw net per session, mean with/without best session (11-11 is best:
   +0.129 -> -0.112R), share; selftest exact. Fixed journal_final selftest (None looked up the real commit; sentinel now).
