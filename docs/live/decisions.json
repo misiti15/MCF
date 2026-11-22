@@ -3022,5 +3022,20 @@
   "link": "docs/RESEARCH_RULES.md",
   "status": "answered",
   "answered": "keep, 2026-11-22 (owner: keep given its record before 11-20, unless bursts prove regular; first live burst in 16 sessions; creative ETF loss-limit study running)"
+ },
+ {
+  "code": "ETF-STOP50",
+  "title": "Late-Day ETF Dip Buy: tighter stop only on 'burst' trades to cap disaster days?",
+  "what": "Best of 21 tested protections: when 4+ NM-ETF signals fire within 10 minutes, those burst trades use half the normal stop distance (same shares). Normal trades unchanged. It is tail insurance, not an edge. Primary exit change, NM-ETF only (setup-specific: conflicts with the 'not tailored to one setup' remedy rule; your call). Reply 'ETF-STOP50 yes/no'; if yes it goes in after hours with the usual review.",
+  "recommend": "Optional - halves the worst day for a small R cost; G2 (close the rest when 2 burst lots stop) is free but cuts less",
+  "numbers": [
+   "2-year worst day -8.21R -> -4.21R; days <= -4R 4 -> 2",
+   "cost -7.65R over 3.5 years (about -13% of its backtest R)",
+   "live 11-20 replay: -12.57R -> about -6.4R"
+  ],
+  "why": "You asked to limit big losses without limiting R; every option costs some R, and this one buys the most tail cut per R.",
+  "link": "research/rules_1122/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
