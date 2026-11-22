@@ -9,7 +9,7 @@
 
 - **+4.1R / +$756** this week on 193 trades; 2 of 5 days green.
 - Mon did the heavy lifting: **+25.3R / +$1,475**, 82% of trades won.
-- **Since Day 1 (10-23): +$313** (Alpaca, our paper broker), but **-66.0R**; 7 of 21 days green. R and $ differ because some setups carry more $ per R. (11-05/11-06 broker glitch excluded.)
+- **Since Day 1 (10-23): +$313** (Alpaca, our paper broker), but **-87.8R** (corrected 11-22 to one cost basis; first shown as -66.0R); 7 of 21 days green. R and $ differ because some setups carry more $ per R. (11-05/11-06 broker glitch excluded.)
 - **Fri, honest version:** Late-Day ETF Dip Buy bought 12 ETFs within minutes; all 12 stopped out: **-12.6R**. Primary still closed **+3.00R**, because our shorts won **20 of 20**.
 - **On Deck** (next in line for Primary): -45.4R / -$425.
 - **Testing (all A–F): -228R / -$405** on 3,563 trades. Not a verdict: their job is to sniff out what doesn't work, fast.

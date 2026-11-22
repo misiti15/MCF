@@ -490,7 +490,10 @@ shadow:
     A: {through_min_ps: 0.02, through_bps: 2.0, entry_slip_mult: 1.75, entry_min_extra_ps: 0.02, stop_extra_bps: 2.0}
     B: {through_min_ps: 0.02, through_bps: 3.0, entry_slip_mult: 2.0, entry_min_extra_ps: 0.02, stop_extra_bps: 3.0}
     C: {through_min_ps: 0.03, through_bps: 5.0, entry_slip_mult: 2.5, entry_min_extra_ps: 0.02, stop_extra_bps: 5.0}
-shadow_setups: []
+# PSHADOW 2026-11-22 (owner "shadow proceed"; RESEARCH_RULES 34(a) exception, ledger 2026-11-23-pshadow-l3rsi5hi-rw6): no orders, slots,
+# latch or halt; a Primary-rules shadow record for the two up-and-coming setups while they still trade in their own homes.
+# Every account overlay sets its own shadow_setups (default [] there), so this list applies to Primary only.
+shadow_setups: [L3-gap-slope-rsi5hi-FD, RW6-ns2-up3-short-FD]
 
 # BASE1 baseline twin (owner C3-EPOCH + BASE1 yes 2026-11-18; research/consultant_p3/RESULTS.md #3, docs/RESEARCH_RULES.md
 # rule 25). The Primary book exactly as it ran in session 2026-11-18 (Epoch 0: TEAM-6 lineup incl. NS5, same blocks, same
