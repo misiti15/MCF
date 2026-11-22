@@ -18,8 +18,8 @@
 
 - **Outsider pressure test:** a fresh-eyes review threw 36 hard questions at the system. Takeaways: Primary is the only scoreboard, and every future change gets weighed heavily.
 - **Random-entry test:** 165 setups (27,383 live trades) vs random entries on the same stock, same day, same stop. **32 of 165 beat random** (luck alone gives ~8). Our three Primary shorts are in the 32.
-- **Where Primary's money comes from:** the gap-down shorts (Gap-Down Recovery Fade, Gap-Down Pop Fade x2: short a stock that gapped down and bounced). **+88.8R** on 550 trades since 10-06 (through 11-20); everything else that's run in Primary: **-173R**. *(Corrected 11-21 by QA: the first version stopped at 11-19 and showed +73.4R / 530 / -161R.)*
-- ***Honest: that +88.8R leans on two big days.***
+- **Where Primary's money comes from:** the gap-down shorts (Gap-Down Recovery Fade, Gap-Down Pop Fade x2: short a stock that gapped down and bounced). **+77.1R** on 550 trades since 10-06 (through 11-20); everything else that's run in Primary: **-207.5R**. *(Corrected 11-22: same cost basis for every trade after the QA cost fix; earlier versions showed +73.4R / -161R and +88.8R / -173R.)*
+- ***Honest: that +77.1R leans on two big days.***
 - **"What works" protected list:** 32 things that work (spread filter, clean booking, 15:55 close-out, the three shorts...). They change only with evidence. Not a freeze.
 
 **What changes Monday:**
