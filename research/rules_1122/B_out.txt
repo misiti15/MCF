@@ -1,0 +1,79 @@
+  account  trades  R_without  R_with    dR  blocked  blocked_R  whatif_admitted  admitted_R  blocked_on_green_days  blocked_R_green  blocked_on_red_days  blocked_R_red  days_changed  worst_day_without  worst_day_with  max_group_lots_without grp_without date_without  max_group_lots_with grp_with  date_with
+ explore1     623       41.9    -6.0 -47.9       39       49.4                5         1.5                     39             49.4                    0            0.0             1              -31.4           -31.4                       6         GDX   2026-11-18                  6.0      GDX 2026-11-18
+      gen    4253     -873.6  -720.3 153.3      396     -165.4               57       -12.2                     84             41.1                  312         -206.6            12             -185.2          -182.4                      20         GDX   2026-11-18                 17.0      GDX 2026-11-18
+graveyard   10078    -1605.8 -1490.0 115.8      205     -115.8                0         0.0                      0              0.0                  205         -115.8             5             -191.0          -171.0                      24         SPY   2026-11-12                 22.0      SPY 2026-11-12
+  livelab     526     -154.9  -126.3  28.5       50      -51.3               21       -22.7                      0              0.0                   50          -51.3             1             -120.3           -91.7                      11         GDX   2026-11-18                 11.0      GDX 2026-11-18
+  primary    1430     -130.4  -130.4   0.0        0        0.0                0         0.0                      0              0.0                    0            0.0             0              -34.8           -34.8                      14         SPY   2026-10-22                 14.0      SPY 2026-10-22
+  testing    4410     -647.9  -640.7   7.2       33       -7.2                0         0.0                      0              0.0                   33           -7.2             2             -172.4          -172.4                      19         SPY   2026-10-19                  9.0      GDX 2026-10-15
+ testing2    6568     -985.5  -973.7  11.8       80      -17.3               12        -5.5                      0              0.0                   80          -17.3             6             -153.6          -144.9                      16         SPY   2026-10-14                 16.0      SPY 2026-10-14
+ testingd     601      -23.4   -21.0   2.4       27       -0.2               15         2.2                     20              4.8                    7           -5.0             2              -33.1           -33.1                       8         SPY   2026-11-12                  8.0      SPY 2026-11-12
+ testinge     377      -54.9   -54.9   0.0        0        0.0                0         0.0                      0              0.0                    0            0.0             0              -21.1           -21.1                       6         SPY   2026-11-20                  6.0      SPY 2026-11-20
+ testingf     719      -10.9    -6.6   4.3        5       -4.3                0         0.0                      0              0.0                    5           -4.3             1              -17.5           -17.5                       6         SPY   2026-11-19                  6.0      SPY 2026-11-19
+                                                                                                                       size    sum
+account   date       strategy                                                                          day_type                   
+explore1  2026-11-20 GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short profitable day    39   49.4
+gen       2026-10-29 GEN-261020-07-RSIslopege19-LowWickge0p33-ATRdge4p4-AM-BRvwgt0p7-hold-long         losing day        17  -16.5
+          2026-11-02 GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                          losing day         6   -6.4
+          2026-11-04 GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long             losing day        19    2.0
+                     GEN-261029-08-Ret15mlem0p36-Flow3lem0p54-RSI14ge65-AM-SPYgt0p5-hold-short         losing day        10  -11.7
+          2026-11-05 GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long  losing day         1   -1.1
+                     GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short   losing day        27  -20.6
+          2026-11-06 GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long             losing day        32   12.6
+                     GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long                             losing day         7   -6.3
+          2026-11-10 GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short                       losing day        18  -13.5
+                     GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long                   losing day        18   -4.1
+          2026-11-11 GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long                          profitable day     5   -1.4
+          2026-11-12 GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long             profitable day    30   17.6
+                     GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long                                profitable day    14   -1.8
+          2026-11-13 GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long  profitable day    32   25.8
+                     GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long                  profitable day     3    0.9
+          2026-11-17 GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short   losing day       114 -103.4
+          2026-11-18 GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long                        losing day        18  -12.5
+          2026-11-20 GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long                     losing day        25  -25.1
+graveyard 2026-11-12 CWT14-failbrk-orl-p05-long                                                        losing day        31   -3.5
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day        26   -3.7
+                     CWT14-failbrk-pdh-p05-lowvol-short                                                losing day         2   -2.4
+                     NS2-sma50break-overbought-short-FD                                                losing day         2    1.3
+                     RW6-ns2-up3-short-FD                                                              losing day         2    1.9
+          2026-11-13 CWT12-coil-k4-long                                                                losing day         3   -2.8
+                     CWT14-failbrk-orl-p05-long                                                        losing day         7   -1.8
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day         4   -1.7
+                     CWT14-failbrk-orl-p10-long                                                        losing day        10    1.0
+                     CWT14-failbrk-orl-p10-lowvol-long                                                 losing day         2    0.5
+          2026-11-16 CWT09-gapdn-vwaploss-g5-short                                                     losing day         9  -11.5
+                     CWT14-failbrk-orl-p05-long                                                        losing day        10   -5.5
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day         3   -0.1
+          2026-11-17 CWT14-failbrk-pdl-p05-long                                                        losing day        14   -6.4
+          2026-11-20 CWT13-vwapstretch-z05-long                                                        losing day         8   -8.6
+                     GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long  losing day        45  -46.9
+                     GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long                   losing day        27  -25.8
+livelab   2026-11-20 GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long                losing day        50  -51.3
+testing   2026-10-19 heat_fade_short                                                                   losing day        15   -1.9
+                     heat_fade_short-FD                                                                losing day        15   -1.9
+          2026-11-10 GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long             losing day         3   -3.4
+testing2  2026-10-13 CWT14-failbrk-orl-p05-long                                                        losing day         4   -0.9
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day         1    0.8
+                     CWT14-failbrk-orl-p10-long                                                        losing day         3   -0.4
+          2026-10-14 CWT14-failbrk-orl-p05-long                                                        losing day        25    2.6
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day        14   -4.1
+                     CWT14-failbrk-pdl-p05-long                                                        losing day         6   -9.5
+          2026-10-19 CWT14-failbrk-orl-p05-long                                                        losing day         2   -0.7
+                     CWT14-failbrk-orl-p05-lowvol-long                                                 losing day         3   -1.7
+          2026-10-26 CWT12-coil-k4-long                                                                losing day         4   -4.6
+          2026-11-17 CWT13-vwapstretch-z05-long                                                        losing day         9    2.0
+                     CWT14-failbrk-pdl-p05-R2A-long                                                    losing day         5   -0.1
+                     CWT14-failbrk-pdl-p10-long                                                        losing day         2   -0.7
+          2026-11-19 CWT14-failbrk-pdl-p05-R2A-short                                                   losing day         2    0.0
+testingd  2026-11-16 GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short         profitable day    20    4.8
+          2026-11-20 GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long losing day         6   -5.8
+                     GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short         losing day         1    0.8
+testingf  2026-11-17 RW7-gapdn-bounce-early-short-FD                                                   losing day         5   -4.3
+      date  max_group_lots_without group_without  open_lots_then_without  max_group_lots_with group_with  open_lots_then_with account
+2026-11-12                       4           GLD                      45                  4.0        GLD                   45 primary
+2026-11-16                       4           GLD                      34                  4.0        GLD                   34 primary
+2026-11-04                       5           KRE                      18                  5.0        KRE                   18 primary
+2026-11-20                       5           SPY                      21                  5.0        SPY                   21 primary
+2026-10-19                       6           SPY                      12                  6.0        SPY                   12 primary
+2026-11-19                       7           SPY                      17                  7.0        SPY                   17 primary
+2026-11-06                       9          SOXL                      38                  9.0       SOXL                   38 primary
+2026-10-22                      14           SPY                      79                 14.0        SPY                   79 primary
