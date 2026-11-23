@@ -3037,5 +3037,35 @@
   "link": "research/etfstop_1123/REPORT.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "ODP2-G261027-01",
+  "title": "On Deck: Late Pullback Buy (GEN-261027-01, late-day MACD long) from Testing E? (your 11-15 re-ask mark is met)",
+  "what": "Move Late Pullback Buy `GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long` from Testing E to On Deck, switched off in Testing E (promotion = move), after a close. Its WB5 tune copy stays in Testing D. You deferred this on 11-15 (ODP-G261027-01: 'ask again at 8 traded sessions and >= 30 trades'); it now has 8 / 31. No Primary change (promotion hold on). Reply 'ODP2-G261027-01 yes / no / wait'.",
+  "recommend": "Yes - but its best day is today's gap-up session (58% of R, `1 day` tag); without it the record is still positive and day-consistent",
+  "numbers": [
+   "8 traded sessions / 31 trades (20 active days), avg +0.265R after costs, win rate 84% vs break-even 58%, 7 of 8 days green; OD-IN shrunk n/(n+20) +0.161; C3-BAR2 shrunk -0.037 (Primary bar, not needed now)",
+   "w/o best day (11-23, 14 tr +4.80R = 58%, `1 day`) +0.201R; w/o top 2 days +0.160R; day t 3.93; last-4 +6.36R; busiest-3 avg +0.276R",
+   "72% of its signals blocked in the arena (capacity/filter) - On Deck gives more exposure; rules in window: Gen -> Testing E from 11-13 (Gen graduation 11-12), WB5 copy 11-17, BRAKE-BURST 11-23"
+  ],
+  "why": "Your own re-ask condition is met; the record is positive on every robust cut, but one big gap-up day carries over half of it, so it is a judgement call on a small sample.",
+  "link": "research/owner_inbox/2026-11-23.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "HARDSTOP-A12",
+  "title": "Automatic hard stop for Primary's truly bad days: flatten at -12R?",
+  "what": "Best of 17 tested rules: when Primary's closed + open R after costs reaches -12R, close everything and take no new entries for the day. Fully automatic (no human call); the monitor only sends an FYI that it fired. Would not have fired today (low -4.1R). Primary rule change: Friday epoch, skeptic review, ledger. Reply 'HARDSTOP-A12 yes/no'.",
+  "recommend": "Yes - tail insurance, not an edge: the only rule that improved the worst day in every test period and held up when the book's own loss was removed",
+  "numbers": [
+   "2-yr worst day FIT -48 -> -19R, T2 -36 -> -16R (CHECK one-minute shock -40.7R not caught)",
+   "fires ~45 days/yr; bootstrap +38 to +164R/yr (P>0 99.6%), t 2.63 (bar 2.38; lineage bar 2.86 missed)",
+   "live since 10-23: -87.3R -> -51.4R (most from setups no longer in Primary)"
+  ],
+  "why": "Owner asked for automatic, data-based hard stops on truly detrimental days; smaller stops (-6/-8R) cut too many recovery days; per-setup and no-new-entry variants only reduce exposure.",
+  "link": "research/hardstop_1123/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
