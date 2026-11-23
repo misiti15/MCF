@@ -429,13 +429,13 @@ window.MCF_TOTALS = (() => {
     });
     const keep = x => x.sign > 0 || !gy(x.s);
     const live = id => ((((asg || {}).setups || {})[id] || {}).accounts || []).length > 0;   // trend lists: setups running in some account
-    const line = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.run} ${x.missed ? "traded sessions" : "sessions"}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · <b>${rfmt(x.pnl)}</b>${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
+    const line = x => `<div class="sl sl-click" data-setup="${e(x.s)}" title="Click for this setup's details"><b class="${x.sign > 0 ? "up" : "down"}">${x.run} ${x.missed ? "traded sessions" : "sessions"}</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · <b>${rfmt(x.pnl)}</b>${x.missed ? ` · ${x.missed} session${x.missed > 1 ? "s" : ""} not traded` : ""}</div>`;
     // owner 2026-11-03: each streak list says plainly how it counts (every session in a row / traded sessions only / most of last N)
     // same order in every list: longest first, then larger total R
     // owner 2026-11-16: no cap on the streak lists (long-term streaks stay visible); every entry listed, the list scrolls
     const block = (title, list, sign, how) => { const l = list.filter(x => x.sign === sign && keep(x)).sort((a, b) => b.run - a.run || Math.abs(b.pnl) - Math.abs(a.pnl));
       return `<div class="eb"><h3>${title} (${l.length})</h3><div class="sid" style="margin:-3px 0 5px">${how}</div>${l.length ? `<div style="max-height:340px;overflow-y:auto">${l.map(line).join("")}</div>` : `<div class="sid">None at 3+ in a row.</div>`}</div>`; };
-    const tline = x => `<div class="sl"><b class="${x.sign > 0 ? "up" : "down"}">${x.k} of last ${x.n} traded</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · <b>${rfmt(x.pnl)}</b></div>`;
+    const tline = x => `<div class="sl sl-click" data-setup="${e(x.s)}" title="Click for this setup's details"><b class="${x.sign > 0 ? "up" : "down"}">${x.k} of last ${x.n} traded</b> ${e(nm(x.s))}${nm(x.s) !== x.s ? ` <span class="sid">${e(x.s)}</span>` : ""} · <b>${e(where(x.s))}</b> · <b>${rfmt(x.pnl)}</b></div>`;
     const tblock = (title, sign, how) => { const l = trend.filter(x => x.sign === sign && keep(x) && live(x.s)).sort((a, b) => b.k - a.k || b.z - a.z || Math.abs(b.pnl) - Math.abs(a.pnl));
       return `<div class="eb"><h3>${title} (${l.length})</h3><div class="sid" style="margin:-3px 0 5px">${how}</div>${l.length ? `<div style="max-height:340px;overflow-y:auto">${l.map(tline).join("")}</div>` : `<div class="sid">None.</div>`}</div>`; };
     // changes that started with this session (research/ledger.jsonl `effective` = the last closed session), owner 2026-10-28
@@ -2171,6 +2171,8 @@ window.MCF_SHADOW = (() => {
      Esc or a click outside closes; Prev / Next and the arrow keys step through the table's current order;
      #setup=<code> deep-links it (Back closes). Phone: full-width bottom sheet. Paper results. -->
 <style>
+.sl-click { cursor: pointer; border-radius: 4px; }
+.sl-click:hover { background: var(--hover, rgba(42,120,214,.08)); }
 #sd-back { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 40; display: none; }
 #sd-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(460px, 100vw); z-index: 41; background: var(--page);
   border-left: 1px solid var(--border); box-shadow: -8px 0 24px rgba(0,0,0,.15); overflow-y: auto; padding: 14px 16px 28px;
@@ -2239,7 +2241,7 @@ window.MCF_SHADOW = (() => {
     const d = el.closest("[data-setup]"); if (d) return d.dataset.setup;
     const toks = (el.textContent || "").match(/[A-Za-z0-9_][A-Za-z0-9_.\-]*[A-Za-z0-9_]/g) || [];
     return toks.filter(t => KNOWN.has(t)).sort((a, b) => b.length - a.length)[0] || null; };
-  const rowsOf = wrap => [...wrap.querySelectorAll("tbody tr")].map(tr => codeIn(tr)).filter(Boolean)
+  const rowsOf = wrap => [...wrap.querySelectorAll("tbody tr, .sl[data-setup]")].map(tr => codeIn(tr)).filter(Boolean)
     .filter((c, i, a) => a.indexOf(c) === i);
   const mark = () => document.querySelectorAll(ROWTABLES.map(id => `#${id} tbody tr`).join(",")).forEach(tr => {
     tr.classList.add("sd-row"); tr.classList.toggle("sd-cur", !!cur && codeIn(tr) === cur); });
@@ -2251,6 +2253,9 @@ window.MCF_SHADOW = (() => {
     if (panel.contains(ev.target)) return;
     if (ev.target === back) { close(); return; }
     if (ev.target.closest("a, button, select, input, summary, th, .gl-tip")) return;
+    // owner 2026-11-23: a setup in any streak / trend list opens the same drill-down as a leaderboard row
+    const sl = ev.target.closest(".sl[data-setup]");
+    if (sl) { src = sl.parentNode; list = rowsOf(src); open(sl.dataset.setup, true); return; }
     const td = ev.target.closest("td"); if (!td) return;
     const wrap = td.closest(".tablewrap"); if (!wrap) return;
     const rowTable = ROWTABLES.includes(wrap.id);
@@ -2270,7 +2275,7 @@ window.MCF_SHADOW = (() => {
     if (src && document.contains(src)) list = rowsOf(src);   // follow the table's current sort
     const i = list.indexOf(cur); if (i < 0 || !list[i + d]) return;
     open(list[i + d], false);
-    const tr = src && [...src.querySelectorAll("tbody tr")].find(r => codeIn(r) === cur);
+    const tr = src && [...src.querySelectorAll("tbody tr, .sl[data-setup]")].find(r => codeIn(r) === cur);
     if (tr) tr.scrollIntoView({ block: "nearest" });
   }
   function fromHash() {
