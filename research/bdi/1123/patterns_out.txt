@@ -1,0 +1,75 @@
+2026-11-23: 943 trades, 460 losers appended to patterns.csv
+account                            ondeck  primary  testing_a  testing_b  testing_c  testing_d  testing_e  testing_f
+ltype                                                                                                               
+gave_back_gains                      -5.8     -0.4       -0.9       -1.3       -1.1       -3.4       -1.7       -2.4
+late_hold                            -3.3     -3.1       -6.1       -6.0       -1.4       -8.9       -1.3       -5.0
+near_target_then_stopped             -2.1      0.0       -1.1        0.0       -2.3        0.0       -1.1        0.0
+never_worked                         -4.5     -2.1       -1.8       -3.3       -2.3       -7.6      -33.8       -6.8
+small MFE then failed (0.15-0.5R)    -4.4     -2.3       -1.1       -6.9       -2.3       -9.5      -21.0       -6.2
+stopped_then_reversed                 0.0      0.0        0.0        0.0       -1.0       -2.1       -4.3        0.0
+wrong_side_after_big_swing            0.0      0.0       -0.3       -2.5       -1.7       -2.3       -0.1       -1.6
+
+loss type totals: {'gave_back_gains': {'size': 35, 'sum': -16.96}, 'late_hold': {'size': 98, 'sum': -35.19}, 'near_target_then_stopped': {'size': 6, 'sum': -6.59}, 'never_worked': {'size': 197, 'sum': -62.29}, 'small MFE then failed (0.15-0.5R)': {'size': 98, 'sum': -53.77}, 'stopped_then_reversed': {'size': 7, 'sum': -7.45}, 'wrong_side_after_big_swing': {'size': 19, 'sum': -8.41}}
+
+same-symbol stacking (lot = nth entry of the same setup on the symbol today):
+        size     sum   mean
+stack                     
+lot1    828  51.318  0.062
+lot2+   115   3.453  0.030
+
+leveraged/inverse ETPs by underlying (exposure = market sign of the position):
+                         size   sum
+lev  exposure account              
+DIA  -1       testing_a     1  1.13
+              testing_e     1  0.65
+GDX  -1       testing_a     1  0.10
+              testing_d     1  0.15
+              testing_e     2  0.51
+IWM  -1       testing_c     2  0.76
+              testing_d     1  0.50
+              testing_e     1  0.53
+              testing_f     1  0.12
+      1       testing_e     1  0.25
+NVDA -1       testing_d     1  0.25
+              testing_e     1  0.42
+      1       testing_b     1 -1.05
+QQQ  -1       primary       1  0.47
+              testing_a     2  1.08
+              testing_c     1  0.61
+              testing_d     1 -1.03
+              testing_e     4  0.67
+              testing_f     1  0.19
+      1       ondeck        2 -0.05
+              testing_a     1 -1.02
+              testing_b     2  3.13
+              testing_c     2  1.37
+              testing_d     1  0.46
+              testing_e     1 -1.09
+              testing_f     2 -0.50
+SOXX -1       primary       1  0.90
+              testing_e     3  1.36
+      1       primary       1  0.11
+              testing_b     1  0.21
+SPY  -1       primary       2  1.03
+              testing_a     3  1.49
+              testing_c     3  1.41
+              testing_d     1  0.51
+              testing_e     2  0.91
+              testing_f     1  0.16
+      1       testing_c     1  0.29
+              testing_d     1  0.33
+              testing_e     4  1.12
+              testing_f     1  0.55
+VIX  -1       testing_a     3  2.88
+              testing_d     1  0.20
+              testing_e     3  1.38
+              testing_f     2  0.20
+      1       testing_e     1 -0.24
+XBI  -1       primary       1  0.48
+XLK  -1       testing_a     3  0.33
+              testing_d     1 -1.01
+              testing_e     2 -0.83
+              testing_f     1  0.15
+      1       testing_b     1  0.18
+
+all trades by market exposure sign: {-1: {'size': 518, 'sum': 72.728, 'mean': 0.14}, 1: {'size': 425, 'sum': -17.957, 'mean': -0.042}}
