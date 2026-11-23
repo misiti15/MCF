@@ -1,0 +1,41 @@
+IGR1 + swing1123-L18 | E2 2-year screen (lab frames + gates), production + TOD costs | configs 8 (IGR1) + 1 (L18) = 9
+sessions 446; SPY gap >= +0.75%: 37, >= +1.00%: 19, |gap| < 0.25%: 194
+IGR1 bar t_required(12) 2.23, near-miss 1.35; L18 bar t_required(34) 2.66
+
+== IGR1 (long; rule = SPY gap >= G, stock gap <= 0 and gap - SPY gap <= -K)
+-- G0.75-K2.0-E1: n 2137 sess 37 avg -0.1599 t -1.57 win 0.4665 w/o best -0.2176 | TRAIN -0.1139 (20) VALID -0.1166 (16) LATE -0.655 | control ALL -0.1259 TRAIN -0.0518 VALID -0.1791 (n 5723)
+   per-session bet mean -0.126 green 41%; trades/session median 42; by SPY o->c: down sess 14 n 788 +0.029, quiet sess 10 n 502 +0.062, up sess 13 n 847 -0.467
+   verdict FAIL
+-- G0.75-K2.0-E2: n 1297 sess 37 avg -0.1243 t -1.39 win 0.4827 w/o best -0.1846 | TRAIN -0.2032 (20) VALID -0.0203 (16) LATE -0.4856 | control ALL -0.098 TRAIN -0.2077 VALID -0.0612 (n 3263)
+   per-session bet mean -0.196 green 27%; trades/session median 21; by SPY o->c: down sess 14 n 554 -0.040, quiet sess 10 n 312 -0.005, up sess 13 n 431 -0.320
+   verdict FAIL
+-- G0.75-K3.5-E1: n 754 sess 37 avg -0.1582 t -1.12 win 0.4655 w/o best -0.2703 | TRAIN -0.1826 (20) VALID -0.0177 (16) LATE -0.6207 | control ALL -0.1629 TRAIN -0.0309 VALID -0.2528 (n 2015)
+   per-session bet mean -0.187 green 35%; trades/session median 9; by SPY o->c: down sess 14 n 226 +0.052, quiet sess 10 n 226 +0.078, up sess 13 n 302 -0.492
+   verdict FAIL
+-- G0.75-K3.5-E2: n 451 sess 37 avg -0.0742 t -0.52 win 0.5122 w/o best -0.1788 | TRAIN -0.2847 (20) VALID 0.1838 (16) LATE -0.4977 | control ALL -0.1079 TRAIN -0.1794 VALID -0.0811 (n 1095)
+   per-session bet mean -0.236 green 32%; trades/session median 5; by SPY o->c: down sess 14 n 164 +0.069, quiet sess 10 n 134 +0.067, up sess 13 n 153 -0.351
+   verdict FAIL
+-- G1.0-K2.0-E1: n 1278 sess 19 avg -0.1137 t -0.85 win 0.4906 w/o best -0.2093 | TRAIN -0.1213 (12) VALID 0.0868 (6) LATE -0.655 | control ALL -0.1259 TRAIN -0.0518 VALID -0.1791 (n 5723)
+   per-session bet mean -0.111 green 32%; trades/session median 56; by SPY o->c: down sess 7 n 445 +0.040, quiet sess 3 n 306 +0.195, up sess 9 n 527 -0.423
+   verdict FAIL
+-- G1.0-K2.0-E2: n 813 sess 19 avg -0.0624 t -0.52 win 0.5141 w/o best -0.1543 | TRAIN -0.2136 (12) VALID 0.1872 (6) LATE -0.4856 | control ALL -0.098 TRAIN -0.2077 VALID -0.0612 (n 3263)
+   per-session bet mean -0.147 green 26%; trades/session median 28; by SPY o->c: down sess 7 n 311 +0.002, quiet sess 3 n 195 +0.168, up sess 9 n 307 -0.274
+   verdict FAIL
+-- G1.0-K3.5-E1: n 520 sess 19 avg -0.0199 t -0.11 win 0.5346 w/o best -0.1641 | TRAIN -0.0873 (12) VALID 0.3273 (6) LATE -0.6207 | control ALL -0.1629 TRAIN -0.0309 VALID -0.2528 (n 2015)
+   per-session bet mean -0.028 green 42%; trades/session median 9; by SPY o->c: down sess 7 n 148 +0.220, quiet sess 3 n 184 +0.192, up sess 9 n 188 -0.416
+   verdict FAIL
+-- G1.0-K3.5-E2: n 332 sess 19 avg 0.0499 t 0.3 win 0.5753 w/o best -0.0682 | TRAIN -0.1824 (12) VALID 0.4146 (6) LATE -0.4977 | control ALL -0.1079 TRAIN -0.1794 VALID -0.0811 (n 1095)
+   per-session bet mean -0.051 green 53%; trades/session median 7; by SPY o->c: down sess 7 n 113 +0.272, quiet sess 3 n 108 +0.148, up sess 9 n 111 -0.272
+   verdict FAIL
+IGR1 verdicts: G0.75-K2.0-E1 FAIL, G0.75-K2.0-E2 FAIL, G0.75-K3.5-E1 FAIL, G0.75-K3.5-E2 FAIL, G1.0-K2.0-E1 FAIL, G1.0-K2.0-E2 FAIL, G1.0-K3.5-E1 FAIL, G1.0-K3.5-E2 FAIL
+
+== swing1123-L18 (RW3-FD + RW5-FD shorts; A = SPY gap >= +0.75% sessions)
+ALL: A n 476 sess 36 avg -0.0288 w/o best -0.0741 | B n 11709 sess 408 avg -0.0548 | A-B 0.026 t 0.31
+TRAIN: A n 233 sess 19 avg -0.0667 w/o best -0.1728 | B n 5773 sess 213 avg -0.0729 | A-B 0.0062 t 0.05
+VALID: A n 221 sess 16 avg 0.008 w/o best -0.0226 | B n 5280 sess 174 avg -0.0573 | A-B 0.0653 t 0.66
+LATE: A n 22 sess 1 avg 0.0026 w/o best 0.0 | B n 656 sess 21 avg 0.1251 | A-B -0.1225 t -1.53
+  RW3-gapdn-rsi5pop-flowsell-short-FD: A n 239 avg -0.019 | B n 6067 avg -0.060 | A-B +0.041 t 0.49
+  RW5-heat30-flowsell-rsi5pop-gapdn-short-FD: A n 237 avg -0.039 | B n 5642 avg -0.049 | A-B +0.010 t 0.10
+  A by SPY o->c: down sess 13 n 162 +0.194, quiet sess 10 n 120 +0.040, up sess 13 n 194 -0.257
+L18 PASS False
+Educational only - not financial advice.

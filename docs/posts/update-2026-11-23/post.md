@@ -28,24 +28,23 @@ Both are young, so promising, not proven. And to be clear, this is paper trading
 
 **Top 10 with tougher stats (image 2):**
 
-New columns this time:
+New columns: without its best day (more than one lucky day?), last 10 days (still working?) and worst day. The ones I trust most stay green on all of them, like Gap-Down Recovery Fade (Primary).
 
-- **Without its best day:** is it more than one lucky day?
-- **Last 10 days:** is it still working?
-- **Worst day:** how bad does a bad day get?
+**Fun fact: why signals get skipped:**
 
-The ones I trust most stay green on all of them, like Gap-Down Recovery Fade (Primary).
+- Primary spotted 75 signals today and took 24. Normal, not a glitch.
+- #1 reason: no shares available to borrow for a short. With Nvidia up 31%, the funds betting against Nvidia dropped, our setup wanted to short them, and there was nothing to borrow.
+- Those 47 skips saved about 27R.
+- Runner-up: the gap between buy and sell prices was too wide.
 
 **Quick facts:**
 
 - 10 practice accounts, all paper money (Alpaca).
-- A "setup" is one rule for when to get in and out of a trade.
-- R = what you risked. +1R means you made what you risked.
+- A "setup" is one rule for getting in and out of a trade. R = what you risked.
 - Every number is after trading costs.
 - Primary is the main account and the real scoreboard. Everything else is testing.
 - Setups move up or down based on results. Weak ones go to the Graveyard, which never deletes anything.
 - Big losing days are handled by automatic rules, not by me jumping in.
-- We've screened about 27,000 ideas to get to 4 setups in Primary.
 
 Thanks as always!
 
