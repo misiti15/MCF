@@ -3052,5 +3052,20 @@
   "link": "research/owner_inbox/2026-11-23.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "HARDSTOP-A12",
+  "title": "Automatic hard stop for Primary's truly bad days: flatten at -12R?",
+  "what": "Best of 17 tested rules: when Primary's closed + open R after costs reaches -12R, close everything and take no new entries for the day. Fully automatic (no human call); the monitor only sends an FYI that it fired. Would not have fired today (low -4.1R). Primary rule change: Friday epoch, skeptic review, ledger. Reply 'HARDSTOP-A12 yes/no'.",
+  "recommend": "Yes - tail insurance, not an edge: the only rule that improved the worst day in every test period and held up when the book's own loss was removed",
+  "numbers": [
+   "2-yr worst day FIT -48 -> -19R, T2 -36 -> -16R (CHECK one-minute shock -40.7R not caught)",
+   "fires ~45 days/yr; bootstrap +38 to +164R/yr (P>0 99.6%), t 2.63 (bar 2.38; lineage bar 2.86 missed)",
+   "live since 10-23: -87.3R -> -51.4R (most from setups no longer in Primary)"
+  ],
+  "why": "Owner asked for automatic, data-based hard stops on truly detrimental days; smaller stops (-6/-8R) cut too many recovery days; per-setup and no-new-entry variants only reduce exposure.",
+  "link": "research/hardstop_1123/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
