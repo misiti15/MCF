@@ -1,0 +1,169 @@
+{
+ "date": "2026-11-23",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 24,
+  "win_rate": 0.583,
+  "exp_r": 0.021,
+  "total_r": 0.49,
+  "pnl": 185.38,
+  "stop_exit_share": 0.167,
+  "pnl_adj": 157.67,
+  "slip_bps": -1.3
+ },
+ "yesterday": {
+  "trades": 33,
+  "win_rate": 0.636,
+  "exp_r": 0.091,
+  "total_r": 3.0,
+  "pnl": 214.16,
+  "stop_exit_share": 0.364,
+  "pnl_adj": 161.91,
+  "slip_bps": 3.5
+ },
+ "rolling5": {
+  "exp_r": -0.039,
+  "win_rate": 0.558,
+  "pnl": 153.322,
+  "slip_bps": 2.08,
+  "stop_exit_share": 0.296
+ },
+ "rolling20": {
+  "exp_r": -0.154,
+  "win_rate": 0.497,
+  "pnl": 22.236,
+  "slip_bps": 2.905,
+  "stop_exit_share": 0.385
+ },
+ "beat_rolling5": {
+  "exp_r": true,
+  "win_rate": true,
+  "slip_bps": true,
+  "stop_exit_share": true
+ },
+ "by_setup": {
+  "L3-gap-slope-fromopen-FD": {
+   "trades": 5,
+   "win_rate": 0.2,
+   "exp_r": -0.553,
+   "total_r": -2.77,
+   "pnl": -112.8,
+   "stop_exit_share": 0.4,
+   "pnl_adj": -118.33,
+   "slip_bps": 9.0
+  },
+  "NM-ETF-late-dip-di-long": {
+   "trades": 6,
+   "win_rate": 1.0,
+   "exp_r": 0.5,
+   "total_r": 3.0,
+   "pnl": 312.02,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 303.28,
+   "slip_bps": -19.5
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 6,
+   "win_rate": 0.833,
+   "exp_r": 0.601,
+   "total_r": 3.61,
+   "pnl": 66.26,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 61.52,
+   "slip_bps": -2.5
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 7,
+   "win_rate": 0.286,
+   "exp_r": -0.478,
+   "total_r": -3.35,
+   "pnl": -80.1,
+   "stop_exit_share": 0.286,
+   "pnl_adj": -88.8,
+   "slip_bps": 8.0
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 49,
+   "whatif_exp_r": -0.515,
+   "whatif_raw_total_r": -25.25,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 2,
+   "whatif_exp_r": -0.584,
+   "whatif_raw_total_r": -1.17,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  }
+ ],
+ "signals": {
+  "skipped": 51,
+  "submitted": 24
+ },
+ "health": {
+  "polls": 97,
+  "last_poll_s": 4.8,
+  "symbols_last_bar": 3706,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 148,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "session_close": "16:00",
+  "flatten_at": "15:55",
+  "early_close": false,
+  "kill": null,
+  "borrow_list": {
+   "symbols": 14451,
+   "at": "2026-11-23 15:18:12.019535-05:00"
+  },
+  "shadow": {
+   "run_id": 3,
+   "of_live": true,
+   "only_setups": 8,
+   "open_lots": 25,
+   "entered": 4,
+   "closed": 15,
+   "polls": 97,
+   "avg_ms": 187.5,
+   "live_avg_ms": 7482.2,
+   "share_of_poll": 0.025,
+   "only_every_n_polls": 1,
+   "quote_calls": 0,
+   "errors": 0
+  },
+  "position_mismatch": [],
+  "position_check": {
+   "at": "2026-11-23 15:54:12.791650-05:00",
+   "symbols": 9,
+   "blocked": []
+  },
+  "partial_lots": [],
+  "risk_state": {
+   "halted": false,
+   "setup_stopped": [
+    "L3-gap-slope-fromopen-FD",
+    "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD"
+   ],
+   "trades_today": 24,
+   "realized_r": 0.493,
+   "r_basis": "R after costs",
+   "open_r": 0.0,
+   "halt_counts_open": true,
+   "realized_r_after_costs": 0.493
+  },
+  "flatten_failed": []
+ },
+ "findings": []
+}
