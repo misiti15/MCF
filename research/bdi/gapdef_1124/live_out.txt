@@ -1,0 +1,115 @@
+family trades 2927, after identical-signal dedupe 2927; blocked family signals 8493 (2832 symbol-days)
+gap re-measured: trades 2920/2927 (missing 09:30 bar or prior close: 7, kept as is)
+first print vs first-minute VWAP: sign differs on 64 trades (44 symbol-days), |diff| > 1pp on 106; own rule fails on VWAP gap: 148 trades, -11.17R on sign flips
+      date acct symbol                                            strategy  gap_print  gapV     R
+2026-10-28    p    XLU          RW5-heat30-flowsell-rsi5pop-gapdn-short-FD      -0.05  0.07  0.98
+2026-10-30    p    TOL                 RW3-gapdn-rsi5pop-flowsell-short-FD      -0.06  0.80 -1.12
+2026-11-02    p   SOXS                            L3-gap-slope-fromopen-FD      -3.25 -2.41 -1.02
+2026-11-02    p   SOXS                            L3-gap-slope-fromopen-FD      -3.25 -2.41 -1.02
+2026-11-02    p   SOXS                            L3-gap-slope-fromopen-FD      -3.25 -2.41 -1.04
+2026-11-02    p   SOXS                            L3-gap-slope-fromopen-FD      -3.25 -2.41 -1.02
+2026-11-02    p   SOXS                              L3-gap-slope-rsi5hi-FD      -3.25 -2.41 -1.03
+2026-11-02    p   SOXS                              L3-gap-slope-rsi5hi-FD      -3.25 -2.41 -1.01
+2026-11-04    p   ORCL                            L3-gap-slope-fromopen-FD      -3.49 -2.54  0.58
+2026-11-04    p   ORCL                            L3-gap-slope-fromopen-FD      -3.49 -2.54 -1.11
+2026-11-04    p   ORCL                            L3-gap-slope-fromopen-FD      -3.49 -2.54  0.97
+2026-11-04    p   ORCL                            L3-gap-slope-fromopen-FD      -3.49 -2.54  1.18
+2026-11-04    p   ORCL                            L3-gap-slope-fromopen-FD      -3.49 -2.54  1.06
+2026-11-09    p   COIN                            L3-gap-slope-fromopen-FD      -2.69 -2.52 -1.02
+2026-11-09    p    ASA                            L3-gap-slope-fromopen-FD      -2.93  1.45 -1.30
+2026-11-09    p   ACGL          RW5-heat30-flowsell-rsi5pop-gapdn-short-FD      -1.69  0.04 -1.07
+2026-11-09    p   COIN                            L3-gap-slope-fromopen-FD      -2.69 -2.52  0.44
+2026-11-09    p   COIN                            L3-gap-slope-fromopen-FD      -2.69 -2.52  0.53
+2026-11-09    p   COIN                            L3-gap-slope-fromopen-FD      -2.69 -2.52  0.76
+2026-11-10    p    YUM                 RW3-gapdn-rsi5pop-flowsell-short-FD      -0.01  0.07 -1.05
+2026-11-10    p   ALAB                            L3-gap-slope-fromopen-FD      -1.62 -1.93  1.00
+2026-11-10    p   ALAB                            L3-gap-slope-fromopen-FD      -1.62 -1.93  0.91
+2026-11-10    p   MRVL                            L3-gap-slope-fromopen-FD      -2.77 -2.59  0.80
+2026-11-10    p    TEN                            L3-gap-slope-fromopen-FD      -2.70 -2.64  0.70
+2026-11-10    p    RES                            L3-gap-slope-fromopen-FD      -2.66 -2.54 -0.09
+2026-11-10    p    RES                              L3-gap-slope-rsi5hi-FD      -2.66 -2.54  0.00
+2026-11-10    p    RES                            L3-gap-slope-fromopen-FD      -2.66 -2.54  0.20
+2026-11-11    p    FDX                 RW3-gapdn-rsi5pop-flowsell-short-FD      -0.01  0.01 -0.52
+2026-11-11    p    IBB          RW5-heat30-flowsell-rsi5pop-gapdn-short-FD      -0.16  0.02 -0.22
+2026-11-11    p    AEP          RW5-heat30-flowsell-rsi5pop-
+
+== config A
+                                              setup                     accts    n  kept  removed  rm_avgR    dR  avgR_before  avgR_after  dR_wo_best_day dR_best_day  wo_best_before  best_share_before  wo_best_after  best_share_after  t_day sessions_pos blocked_also_removed
+                           L3-gap-slope-fromopen-FD                      od,p  267   225       42    0.073 -3.08        0.234       0.264           -7.41                       0.147               0.50          0.181              0.46    NaN          NaN                  NaN
+                  L3-gap-slope-fromopen-FD-RQa-1230                        tf   10     9        1    0.785 -0.79       -0.875      -1.059            0.00                      -1.025                NaN         -1.025               NaN    NaN          NaN                  NaN
+                       L3-gap-slope-fromopen-FD-WB4                        ta   31    21       10   -0.228  2.28       -0.178      -0.155           -0.40  11-17 117%          -0.294                NaN         -0.338               NaN    NaN          NaN                  NaN
+                            L3-gap-slope-lowdist-FD                        od   80    71        9    0.646 -5.81        0.245       0.194           -5.97                       0.029               0.93         -0.018              1.06    NaN          NaN                  NaN
+                        L3-gap-slope-lowdist-FD-WB4                        tf    4     3        1    0.834 -0.83       -0.455      -0.885            0.00                      -0.885                NaN         -1.175               NaN    NaN          NaN                  NaN
+                             L3-gap-slope-rsi5hi-FD                   od,p,ta  180   168       12   -0.120  1.43        0.106       0.122           -0.60  11-02 142%           0.041               0.69          0.058              0.63    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB4                        tb   29    28        1    0.662 -0.66        0.233       0.218            0.00                      -0.153               1.07         -0.153              1.08    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB5                        tc   32    31        1    0.389 -0.39        0.107       0.098            0.00                      -0.103               1.18         -0.201              1.33    NaN          NaN                  NaN
+                              NM-MF3-qqqdn-gapdn-FD                        ta   63    37       26   -0.124  3.23       -0.083      -0.054           -0.28  11-10 109%          -0.188                NaN         -0.156               NaN    NaN          NaN                  NaN
+                 RW1-gapdn-bounce-flowsell-short-FD                     od,ta  231   105      126   -0.043  5.39       -0.010       0.029           -0.65  11-17 112%          -0.055                NaN         -0.037              2.14    NaN          NaN                  NaN
+             RW1-gapdn-bounce-flowsell-short-FD-WB3                        td   67    29       38   -0.196  7.43       -0.110       0.002            2.95   11-17 60%          -0.224                NaN         -0.138             64.03    NaN          NaN                  NaN
+                RW3-gapdn-rsi5pop-flowsell-short-FD                         p  156    71       85   -0.136 11.54        0.018       0.202            3.88   11-10 66%          -0.096               5.88         -0.038              1.16    NaN          NaN                  NaN
+       RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230                        ta   13     7        6   -0.041  0.25       -0.258      -0.444           -2.14  11-24 964%          -0.554                NaN         -0.526               NaN    NaN          NaN                  NaN
+            RW3-gapdn-rsi5pop-flowsell-short-FD-WB4                        tc   37    19       18   -0.023  0.42        0.013       0.047           -1.80  11-18 528%          -0.077               6.06         -0.077              2.30    NaN          NaN                  NaN
+                       RW3S-gapdn-flowsell-short-FD                  gy,ta,te  605   318      287   -0.091 26.24       -0.184      -0.267            2.25   11-24 91%          -0.227                NaN         -0.306               NaN    NaN          NaN                  NaN
+         RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                         p  156    65       91   -0.001  0.12       -0.046      -0.109           -8.64 11-11 7296%          -0.123                NaN         -0.170               NaN    NaN          NaN                  NaN
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230                        tb    8     4        4   -0.483  1.93       -0.329      -0.175            0.62   11-24 68%          -0.336                NaN            NaN               NaN    NaN          NaN                  NaN
+     RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4                        td   26    17        9    0.349 -3.14        0.179       0.088           -3.66                       0.064               0.70         -0.139              2.11    NaN          NaN                  NaN
+                    RW7-gapdn-bounce-early-short-FD                     od,tf  781   387      394    0.021 -8.39        0.050       0.079          -24.90                      -0.002               1.03          0.023              0.74    NaN          NaN                  NaN
+                RW7-gapdn-bounce-early-short-FD-WB3                        te  151    87       64   -0.077  4.93       -0.090      -0.099            0.03   11-24 99%          -0.187                NaN         -0.233               NaN    NaN          NaN                  NaN
+                                                ALL gy,od,p,ta,tb,tc,td,te,tf 2927  1702     1225   -0.034 42.11       -0.004       0.019          -20.17  11-24 148%          -0.042                NaN         -0.025              2.26   0.45        12/23            1768/8493
+A: setups improve 12 (+65.19R), worse 8 (-23.09R), largest worsening -8.39R
+A: removed R by date: 10-23 +6.8, 10-26 -1.6, 10-27 +1.1, 10-28 +3.4, 10-29 -3.8, 10-30 -0.4, 11-02 -6.3, 11-03 +11.6, 11-04 +1.4, 11-05 -5.1, 11-06 +0.0, 11-09 -2.2, 11-10 -31.2, 11-11 -24.3, 11-12 +28.5, 11-13 -15.2, 11-16 +10.1, 11-17 -0.6, 11-18 -11.9, 11-19 +20.7, 11-20 +33.7, 11-23 +5.5, 11-24 -62.3
+A: Primary removed 216 tr, -11.61R (dR +11.61); 11-24 Primary removed 11 tr -8.07R
+
+== config B
+                                              setup                     accts    n  kept  removed  rm_avgR     dR  avgR_before  avgR_after  dR_wo_best_day dR_best_day  wo_best_before  best_share_before  wo_best_after  best_share_after  t_day sessions_pos blocked_also_removed
+                           L3-gap-slope-fromopen-FD                      od,p  267   119      148    0.407 -60.19        0.234       0.020          -64.28                       0.147               0.50         -0.114              5.49    NaN          NaN                  NaN
+                  L3-gap-slope-fromopen-FD-RQa-1230                        tf   10     2        8   -0.799   6.39       -0.875      -1.180           -0.79  11-24 112%          -1.025                NaN            NaN               NaN    NaN          NaN                  NaN
+                       L3-gap-slope-fromopen-FD-WB4                        ta   31    16       15   -0.029   0.44       -0.178      -0.318           -2.24  11-17 610%          -0.294                NaN         -0.338               NaN    NaN          NaN                  NaN
+                            L3-gap-slope-lowdist-FD                        od   80    56       24    0.493 -11.84        0.245       0.138          -12.85                       0.029               0.93         -0.140              1.58    NaN          NaN                  NaN
+                        L3-gap-slope-lowdist-FD-WB4                        tf    4     3        1    0.834  -0.83       -0.455      -0.885            0.00                      -0.885                NaN         -1.175               NaN    NaN          NaN                  NaN
+                             L3-gap-slope-rsi5hi-FD                   od,p,ta  180    79      101    0.117 -11.77        0.106       0.092          -14.27                       0.041               0.69         -0.010              1.07    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB4                        tb   29    11       18    0.277  -4.99        0.233       0.162            0.00                      -0.153               1.07         -0.153              1.26    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB5                        tc   32     8       24    0.153  -3.68        0.107      -0.030           -2.23                      -0.103               1.18         -1.029               NaN    NaN          NaN                  NaN
+                              NM-MF3-qqqdn-gapdn-FD                        ta   63    15       48   -0.007   0.32       -0.083      -0.326           -3.61 11-10 1223%          -0.188                NaN         -0.506               NaN    NaN          NaN                  NaN
+                 RW1-gapdn-bounce-flowsell-short-FD                     od,ta  231    31      200   -0.028   5.59       -0.010       0.105           -2.44  11-24 144%          -0.055                NaN         -0.054              1.45    NaN          NaN                  NaN
+             RW1-gapdn-bounce-flowsell-short-FD-WB3                        td   67     4       63   -0.117   7.35       -0.110      -0.007            1.16   11-24 84%          -0.224                NaN         -0.317               NaN    NaN          NaN                  NaN
+                RW3-gapdn-rsi5pop-flowsell-short-FD                         p  156    31      125   -0.057   7.15        0.018       0.321           -1.68  11-10 124%          -0.096               5.88         -0.046              1.11    NaN          NaN                  NaN
+       RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230                        ta   13     2       11   -0.363   3.99       -0.258       0.317           -2.14  11-24 154%          -0.554                NaN          0.051              0.92    NaN          NaN                  NaN
+            RW3-gapdn-rsi5pop-flowsell-short-FD-WB4                        tc   37     3       34    0.042  -1.43        0.013      -0.319           -4.91                      -0.077               6.06         -0.504               NaN    NaN          NaN                  NaN
+                       RW3S-gapdn-flowsell-short-FD                  gy,ta,te  605   109      496   -0.122  60.41       -0.184      -0.465           19.50   11-24 68%          -0.227                NaN         -0.478               NaN    NaN          NaN                  NaN
+         RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                         p  156    34      122    0.004  -0.55       -0.046      -0.227          -12.58                      -0.123                NaN         -0.327               NaN    NaN          NaN                  NaN
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230                        tb    8     0        8   -0.329   2.63       -0.329         NaN            0.62   11-24 77%          -0.336                NaN            NaN               NaN    NaN          NaN                  NaN
+     RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4                        td   26     6       20    0.287  -5.75        0.179      -0.184           -6.99                       0.064               0.70         -0.355               NaN    NaN          NaN                  NaN
+                    RW7-gapdn-bounce-early-short-FD                     od,tf  781   167      614    0.012  -7.31        0.050       0.190          -37.33                      -0.002               1.03          0.116              0.50    NaN          NaN                  NaN
+                RW7-gapdn-bounce-early-short-FD-WB3                        te  151    16      135   -0.088  11.86       -0.090      -0.107           -7.47  11-24 163%          -0.187                NaN         -0.297               NaN    NaN          NaN                  NaN
+                                                ALL gy,od,p,ta,tb,tc,td,te,tf 2927   712     2215    0.001  -2.21       -0.004      -0.018         -128.83                      -0.042                NaN         -0.085               NaN  -0.01        10/23            5273/8493
+B: setups improve 10 (+106.13R), worse 10 (-108.34R), largest worsening -60.19R
+B: removed R by date: 10-23 +5.3, 10-26 +19.4, 10-27 -1.5, 10-28 +2.1, 10-29 +13.5, 10-30 -5.6, 11-02 -2.9, 11-03 +13.7, 11-04 +3.8, 11-05 -4.5, 11-06 +2.7, 11-09 -0.9, 11-10 -55.4, 11-11 -36.5, 11-12 +49.4, 11-13 -46.6, 11-16 +34.7, 11-17 +13.3, 11-18 -5.4, 11-19 +35.2, 11-20 +89.8, 11-23 +5.2, 11-24 -126.6
+B: Primary removed 364 tr, +25.48R (dR -25.48); 11-24 Primary removed 22 tr -12.64R
+
+== config C
+                                              setup                     accts    n  kept  removed  rm_avgR     dR  avgR_before  avgR_after  dR_wo_best_day dR_best_day  wo_best_before  best_share_before  wo_best_after  best_share_after  t_day sessions_pos blocked_also_removed
+                           L3-gap-slope-fromopen-FD                      od,p  267    88      179    0.374 -66.90        0.234      -0.049          -73.38                       0.147               0.50         -0.186               NaN    NaN          NaN                  NaN
+                  L3-gap-slope-fromopen-FD-RQa-1230                        tf   10     2        8   -0.824   6.59       -0.875      -1.080            1.57   11-24 76%          -1.025                NaN            NaN               NaN    NaN          NaN                  NaN
+                       L3-gap-slope-fromopen-FD-WB4                        ta   31    11       20   -0.235   4.70       -0.178      -0.075            0.45   11-19 91%          -0.294                NaN         -0.210               NaN    NaN          NaN                  NaN
+                            L3-gap-slope-lowdist-FD                        od   80    23       57    0.390 -22.24        0.245      -0.115          -24.37                       0.029               0.93         -0.217               NaN    NaN          NaN                  NaN
+                        L3-gap-slope-lowdist-FD-WB4                        tf    4     1        3   -0.505   1.52       -0.455      -0.305           -0.83  11-19 155%          -0.885                NaN            NaN               NaN    NaN          NaN                  NaN
+                             L3-gap-slope-rsi5hi-FD                   od,p,ta  180   111       69    0.204 -14.09        0.106       0.044          -16.19                       0.041               0.69         -0.032              1.43    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB4                        tb   29    28        1   -1.079   1.08        0.233       0.280            0.00  11-24 100%          -0.153               1.07         -0.153              1.06    NaN          NaN                  NaN
+                         L3-gap-slope-rsi5hi-FD-WB5                        tc   32    29        3   -1.049   3.15        0.107       0.227            1.09   11-19 65%          -0.103               1.18          0.361              0.78    NaN          NaN                  NaN
+                              NM-MF3-qqqdn-gapdn-FD                        ta   63    41       22   -0.249   5.48       -0.083       0.007            3.29   11-18 40%          -0.188                NaN         -0.135             18.09    NaN          NaN                  NaN
+                 RW1-gapdn-bounce-flowsell-short-FD                     od,ta  231   123      108   -0.134  14.44       -0.010       0.098            2.79   11-24 81%          -0.055                NaN          0.077              0.34    NaN          NaN                  NaN
+             RW1-gapdn-bounce-flowsell-short-FD-WB3                        td   67    33       34   -0.174   5.92       -0.110      -0.044           -1.93  11-24 133%          -0.224                NaN         -0.148               NaN    NaN          NaN                  NaN
+                RW3-gapdn-rsi5pop-flowsell-short-FD                         p  156    69       87    0.086  -7.46        0.018      -0.067          -14.53                      -0.096               5.88         -0.131               NaN    NaN          NaN                  NaN
+       RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230                        ta   13     2       11   -0.318   3.50       -0.258       0.074           -2.19  11-24 162%          -0.554                NaN            NaN              1.00    NaN          NaN                  NaN
+            RW3-gapdn-rsi5pop-flowsell-short-FD-WB4                        tc   37    19       18   -0.428   7.70        0.013       0.430            3.35   11-24 56%          -0.077               6.06          0.341              0.42    NaN          NaN                  NaN
+                       RW3S-gapdn-flowsell-short-FD                  gy,ta,te  605    91      514   -0.191  98.08       -0.184      -0.143           53.38   11-24 46%          -0.227                NaN         -0.236               NaN    NaN          NaN                  NaN
+         RW5-heat30-flowsell-rsi5pop-gapdn-short-FD                         p  156    95       61   -0.011   0.66       -0.046      -0.069           -5.77  11-11 970%          -0.123                NaN         -0.120               NaN    NaN          NaN                  NaN
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-RQa-1230                        tb    8     6        2   -0.309   0.62       -0.329      -0.336            0.00  11-23 100%          -0.336                NaN            NaN               NaN    NaN          NaN                  NaN
+     RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4                        td   26    23        3    0.483  -1.45        0.179       0.139           -0.77                       0.064               0.70         -0.002              1.01    NaN          NaN                  NaN
+                    RW7-gapdn-bounce-early-short-FD                     od,tf  781   446      335    0.026  -8.69        0.050       0.068          -41.50                      -0.002               1.03          0.009              0.87    NaN          NaN                  NaN
+                RW7-gapdn-bounce-early-short-FD-WB3                        te  151    74       77   -0.200  15.40       -0.090       0.025           -2.78  11-24 118%          -0.187                NaN         -0.012              1.44    NaN          NaN                  NaN
+                                                ALL gy,od,p,ta,tb,tc,td,te,tf 2927  1315     1612   -0.030  48.02       -0.004       0.028          -98.52  11-24 305%          -0.042                NaN         -0.013              1.43   0.25        11/23            4332/8493
+C: setups improve 14 (+168.84R), worse 6 (-120.83R), largest worsening -66.90R
+C: removed R by date: 10-23 -3.8, 10-26 +29.5, 10-27 -0.6, 10-28 +1.9, 10-29 +15.6, 10-30 +15.4, 11-02 +1.8, 11-03 +6.9, 11-04 +2.3, 11-05 +7.8, 11-06 -4.9, 11-09 +0.1, 11-10 -10.4, 11-11 -24.5, 11-12 +74.0, 11-13 -44.1, 11-16 +29.6, 11-17 -1.8, 11-18 -37.0, 11-19 -5.2, 11-20 +51.2, 11-23 -5.3, 11-24 -146.5
+Educational only - not financial advice.
