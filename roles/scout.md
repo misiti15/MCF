@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-23 Mon) Still idle by design: no GAPS.md, rule 26 hold, RSGD1 held; nothing addressed to Scout. No board post (avoid noise).
 - (11-21 Sat) Idle by design: rule 26 + no GAPS.md + owner 'consistency over churn'. Next card only from a gap row.
 - (11-20 20:25) RSGD1 Amendment 1 (09:50 anchor: 120 days, MDE 0.149R; rule-26 priors). HELD pending owner/parent scope. No GAPS.md yet. Next run: if still no gap list, keep cards to plan-only; don't stack new cards.
 - (11-19 20:30) ROLE CHANGE (USAGE1, owner yes 11-18): Guild = targeted gap teams, weeknights 20:15/20:45/21:15 + Sat; I am Mechanism Scout: ONE mechanism card per open top gap (day-type by 09:50, falsifiable reason, <= 2-part rule, bar max(1.5, sqrt(2 ln N)), existing engine). Input research/gaps/GAPS.md (not built yet). Card 1: research/cards/RSGD1.md. Always state the MDE floor (day-type cards on ~2y: ~0.15-0.22R).
