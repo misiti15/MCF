@@ -9,6 +9,7 @@ Educational only — not financial advice.
 - 11-20 famc_shadow prints etf_view (MCF etf_set): 1/9 ETF controls; w/o row -0.116R, w/o session +0.129R. Amendment = Lead.
 - 11-21 famc_shadow refuses without a build-log row for the previous session (research/evd1/famc_build_log.csv, Observer
   writes it; 0-flag builds pass). FAMC 11-20 still unbuilt; all FAMC runs refuse until the log exists.
+- 11-23: no build log, last calendar 11-18 -> FAMC 11-20/11-23/11-24 unscorable ('no calendar'); flagged to Lead/Observer.
 - RSGD1 (Scout card): HOLD until Lead/parent confirms on the board (owner rule 26: no new scored study without owner yes).
 - famc_shadow.py prints tally() every run (+ --tally): raw net per session, mean with/without best session (11-11 is best:
   +0.129 -> -0.112R), share; selftest exact. Fixed journal_final selftest (None looked up the real commit; sentinel now).
