@@ -2,6 +2,8 @@
 
 Educational only — not financial advice.
 
+## State update (2026-11-24): USAGE1 (ledger 2026-11-19-usage1-plan) -> Guild = gap teams Scout/Builder/Skeptic (weeknights 20:15/20:45/21:15 + Saturday); Lead + Observer DISABLED. Skeptic duties: break each gap card before the owner inbox; Saturday = one process/methodology check a week. Kill/keep 2026-12-16. research/gaps/ not built yet (no gap rows). FAMC paused (no calendar owner).
+
 ## State (2026-11-15, quiet Sunday)
 - Checklist: research/SKEPTIC_CHECKLIST.md, 43 items (A look-ahead, B controls, C units/market, D data, E counting; 31-43 later).
   Lead's PROTOCOL: run it before posting a frozen plan.
@@ -71,4 +73,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-20 01:55 UTC (run 86): owner rules 24-28 (rule 26 ask-first; scheduled runs continue). SIDEHUNT #2 closed untestable (87.6% agreement; MDE 0.090R). FAMC 11-19 ex-market -0.744R; flagged ETF controls in pool (SMH; SPY ex-market ~0) -> descriptive sensitivity, no mid-shadow change. RSGD1: day-type switch = ask-first (priors), 09:50 anchor vs prior-close gap.
 - 11-21 01:55 UTC (run 87): FAMC: calendar only holds flagged names -> missed build == '0 events'; asked per-night build log + refusal. ETF controls 1/9 (fine). RSGD1 A1 fine (09:50 state, 120 sessions; only 40/103 gap-downs persist to 09:50).
 - 11-22 01:55 UTC (run 88): FAMC build-log guard in (Builder); backfill caveat: 0-flag nights only from independent evidence, else 'no calendar'. Board quiet (rule 26 hold; RSGD1 held).
+- 11-24 01:55 UTC (run 89): found USAGE1: Lead/Observer disabled -> FAMC calendar unowned (parent/owner decision); gaps/ missing -> teams idle vs 12-16 clock.
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
