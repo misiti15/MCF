@@ -1,0 +1,191 @@
+{
+ "date": "2026-11-24",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 25,
+  "win_rate": 0.32,
+  "exp_r": -0.468,
+  "total_r": -11.71,
+  "pnl": -600.04,
+  "stop_exit_share": 0.44,
+  "pnl_adj": -678.16,
+  "slip_bps": -4.0
+ },
+ "yesterday": {
+  "trades": 24,
+  "win_rate": 0.583,
+  "exp_r": 0.021,
+  "total_r": 0.49,
+  "pnl": 185.38,
+  "stop_exit_share": 0.167,
+  "pnl_adj": 157.67,
+  "slip_bps": -1.3
+ },
+ "rolling5": {
+  "exp_r": -0.124,
+  "win_rate": 0.51,
+  "pnl": -105.338,
+  "slip_bps": 0.44,
+  "stop_exit_share": 0.326
+ },
+ "rolling20": {
+  "exp_r": -0.143,
+  "win_rate": 0.501,
+  "pnl": 29.514,
+  "slip_bps": 2.72,
+  "stop_exit_share": 0.373
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "L3-gap-slope-fromopen-FD": {
+   "trades": 3,
+   "win_rate": 0.0,
+   "exp_r": -1.288,
+   "total_r": -3.87,
+   "pnl": -186.7,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -222.47,
+   "slip_bps": -15.3
+  },
+  "NM-ETF-late-dip-di-long": {
+   "trades": 2,
+   "win_rate": 0.5,
+   "exp_r": 0.2,
+   "total_r": 0.4,
+   "pnl": -19.5,
+   "stop_exit_share": 0.0,
+   "pnl_adj": -21.49,
+   "slip_bps": 12.5
+  },
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": {
+   "trades": 12,
+   "win_rate": 0.25,
+   "exp_r": -0.587,
+   "total_r": -7.05,
+   "pnl": -336.92,
+   "stop_exit_share": 0.583,
+   "pnl_adj": -365.23,
+   "slip_bps": 3.1
+  },
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": {
+   "trades": 8,
+   "win_rate": 0.5,
+   "exp_r": -0.149,
+   "total_r": -1.19,
+   "pnl": -56.92,
+   "stop_exit_share": 0.125,
+   "pnl_adj": -68.96,
+   "slip_bps": -14.7
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 8,
+   "whatif_exp_r": -0.907,
+   "whatif_raw_total_r": -7.26,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "setup daily loss limit",
+   "signals": 86,
+   "whatif_exp_r": -0.063,
+   "whatif_raw_total_r": -5.43,
+   "whatif_total_r": 0.35,
+   "whatif_n": 15,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 15,
+   "whatif_exp_r": -0.281,
+   "whatif_raw_total_r": -4.22,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 3,
+   "whatif_exp_r": -0.738,
+   "whatif_raw_total_r": -2.21,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  }
+ ],
+ "signals": {
+  "skipped": 112,
+  "submitted": 25
+ },
+ "health": {
+  "polls": 93,
+  "last_poll_s": 7.3,
+  "symbols_last_bar": 3803,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 124,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "session_close": "16:00",
+  "flatten_at": "15:55",
+  "early_close": false,
+  "kill": null,
+  "borrow_list": {
+   "symbols": 14448,
+   "at": "2026-11-24 15:19:11.846906-05:00"
+  },
+  "shadow": {
+   "run_id": 3,
+   "of_live": true,
+   "only_setups": 8,
+   "open_lots": 26,
+   "entered": 3,
+   "closed": 20,
+   "polls": 93,
+   "avg_ms": 189.7,
+   "live_avg_ms": 8213.2,
+   "share_of_poll": 0.023,
+   "only_every_n_polls": 1,
+   "quote_calls": 5,
+   "errors": 0
+  },
+  "position_mismatch": [],
+  "position_check": {
+   "at": "2026-11-24 15:54:14.080163-05:00",
+   "symbols": 10,
+   "blocked": []
+  },
+  "partial_lots": [],
+  "risk_state": {
+   "halted": false,
+   "setup_stopped": [
+    "L3-gap-slope-fromopen-FD",
+    "RW3-gapdn-rsi5pop-flowsell-short-FD"
+   ],
+   "trades_today": 25,
+   "realized_r": -11.707,
+   "r_basis": "R after costs",
+   "open_r": 0.0,
+   "halt_counts_open": true,
+   "realized_r_after_costs": -11.707
+  },
+  "flatten_failed": []
+ },
+ "findings": [
+  "'setup daily loss limit' (skipped) blocked 15 names that would have made +0.3R (corrected what-if). Track it for 20 sessions before loosening it."
+ ]
+}
