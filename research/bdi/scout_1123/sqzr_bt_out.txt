@@ -1,0 +1,66 @@
+SQZR1 | E2 2-year screen (lab frames + gates), production + TOD costs | configs 8 | Testing bar t 1.835 (full bar 2.039) | sessions 446 | stocks in universe.csv non-ETP 3218 | locked block not read
+== short_J8_T0: n 4971 sessions 419 (11.15/session) avg -0.022 t -0.31 win 0.5172 green 0.372 w/o best -0.083 best-day share nan%
+   TRAIN: n 2179 avg 0.0577 t 0.45 w/o best -0.0808
+   VALID: n 2609 avg -0.0811 t -1.39 w/o best -0.1143
+   LATE: n 183 avg -0.1222 t -0.76 w/o best -0.2164
+   SPY day type: {'down': (1819, np.float64(0.256)), 'quiet': (1492, np.float64(-0.176)), 'up': (1528, np.float64(-0.157)), 'up>1%': (132, np.float64(-0.539))} | WF positive months 23% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.056 p90 -0.043 -> rule pct 100%
+   excess over day-matched 09:50 baseline (all eligible names, same side): +0.011R
+   PASS (Testing bar) False
+== short_J8_T1: n 3469 sessions 401 (7.78/session) avg +0.021 t 0.29 win 0.5382 green 0.399 w/o best -0.048 best-day share 303%
+   TRAIN: n 1639 avg 0.0843 t 0.66 w/o best -0.0672
+   VALID: n 1688 avg -0.0256 t -0.42 w/o best -0.0707
+   LATE: n 142 avg -0.1486 t -0.75 w/o best -0.2622
+   SPY day type: {'down': (1452, np.float64(0.245)), 'quiet': (1013, np.float64(-0.172)), 'up': (938, np.float64(-0.079)), 'up>1%': (66, np.float64(-0.506))} | WF positive months 32% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.047 p90 -0.031 -> rule pct 100%
+   excess over day-matched 09:50 baseline (all eligible names, same side): -0.002R
+   PASS (Testing bar) False
+== short_J15_T0: n 1091 sessions 288 (2.45/session) avg +0.053 t 0.51 win 0.5536 green 0.378 w/o best -0.027 best-day share 144%
+   TRAIN: n 617 avg 0.1594 t 1.14 w/o best 0.0292
+   VALID: n 446 avg -0.0908 t -0.96 w/o best -0.1627
+   LATE: n 28 avg 0.0072 t 0.03 w/o best -0.16
+   SPY day type: {'down': (487, np.float64(0.321)), 'quiet': (247, np.float64(-0.129)), 'up': (335, np.float64(-0.164)), 'up>1%': (22, np.float64(-0.521))} | WF positive months 32% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.117 p90 -0.087 -> rule pct 100%
+   excess over day-matched 09:50 baseline (all eligible names, same side): +0.017R
+   PASS (Testing bar) False
+== short_J15_T1: n 782 sessions 225 (1.75/session) avg +0.122 t 1.38 win 0.5857 green 0.431 w/o best +0.045 best-day share 69%
+   TRAIN: n 484 avg 0.1564 t 1.3 w/o best 0.0282
+   VALID: n 274 avg 0.0856 t 0.84 w/o best -0.0075
+   LATE: n 24 avg -0.1678 t -1.09 w/o best -0.3182
+   SPY day type: {'down': (403, np.float64(0.269)), 'quiet': (163, np.float64(-0.028)), 'up': (204, np.float64(-0.014)), 'up>1%': (12, np.float64(-0.474))} | WF positive months 50% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.111 p90 -0.073 -> rule pct 100%
+   excess over day-matched 09:50 baseline (all eligible names, same side): +0.020R
+   PASS (Testing bar) False
+== long_J8_T0: n 4188 sessions 399 (9.39/session) avg -0.152 t -2.38 win 0.4475 green 0.388 w/o best -0.195 best-day share nan%
+   TRAIN: n 1820 avg -0.1657 t -1.3 w/o best -0.2726
+   VALID: n 2002 avg -0.136 t -2.17 w/o best -0.161
+   LATE: n 366 avg -0.1702 t -2.04 w/o best -0.2504
+   SPY day type: {'down': (1628, np.float64(-0.447)), 'quiet': (963, np.float64(-0.075)), 'up': (1135, np.float64(-0.038)), 'up>1%': (462, np.float64(0.447))} | WF positive months 23% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.019 p90 -0.005 -> rule pct 0%
+   excess over day-matched 09:50 baseline (all eligible names, same side): -0.039R
+   PASS (Testing bar) False
+== long_J8_T1: n 2662 sessions 356 (5.97/session) avg -0.075 t -1.01 win 0.4812 green 0.413 w/o best -0.138 best-day share nan%
+   TRAIN: n 1102 avg -0.0689 t -0.44 w/o best -0.2357
+   VALID: n 1311 avg -0.072 t -1.03 w/o best -0.0998
+   LATE: n 249 avg -0.1183 t -0.87 w/o best -0.2542
+   SPY day type: {'down': (816, np.float64(-0.409)), 'quiet': (645, np.float64(-0.029)), 'up': (791, np.float64(-0.05)), 'up>1%': (410, np.float64(0.468))} | WF positive months 18% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean +0.000 p90 +0.017 -> rule pct 0%
+   excess over day-matched 09:50 baseline (all eligible names, same side): -0.010R
+   PASS (Testing bar) False
+== long_J15_T0: n 588 sessions 208 (1.32/session) avg -0.236 t -3.45 win 0.4031 green 0.389 w/o best -0.249 best-day share nan%
+   TRAIN: n 342 avg -0.3485 t -4.68 w/o best -0.372
+   VALID: n 215 avg -0.0698 t -0.83 w/o best -0.0949
+   LATE: n 31 avg -0.1566 t -0.81 w/o best -0.2782
+   SPY day type: {'down': (306, np.float64(-0.479)), 'quiet': (97, np.float64(-0.031)), 'up': (148, np.float64(-0.09)), 'up>1%': (37, np.float64(0.643))} | WF positive months 36% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean -0.005 p90 +0.035 -> rule pct 0%
+   excess over day-matched 09:50 baseline (all eligible names, same side): -0.034R
+   PASS (Testing bar) False
+== long_J15_T1: n 343 sessions 163 (0.77/session) avg -0.125 t -1.76 win 0.449 green 0.417 w/o best -0.145 best-day share nan%
+   TRAIN: n 178 avg -0.2028 t -2.08 w/o best -0.2437
+   VALID: n 139 avg -0.0336 t -0.36 w/o best -0.0702
+   LATE: n 26 avg -0.0862 t -0.44 w/o best -0.2251
+   SPY day type: {'down': (153, np.float64(-0.491)), 'quiet': (68, np.float64(0.107)), 'up': (88, np.float64(0.026)), 'up>1%': (34, np.float64(0.662))} | WF positive months 45% (22)
+   random entry bar (same symbol-days, 10:00-15:00, 200 draws): mean +0.047 p90 +0.090 -> rule pct 0%
+   excess over day-matched 09:50 baseline (all eligible names, same side): +0.041R
+   PASS (Testing bar) False
+Educational only - not financial advice.
