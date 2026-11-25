@@ -43,12 +43,7 @@ live:
     - RW7-gapdn-bounce-early-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - NM-RWN5-ns3-mon-weakrs-short-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short-WB1   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
-    - GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long   # SPOTLIGHT 2026-11-20..11-25, 3 traded sessions / 7 trades (live, all accounts, to 11-19)
-    - GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long   # SPOTLIGHT 2026-11-20..11-25, 4 traded sessions / 18 trades (live, all accounts, to 11-19)
     - NM-RWR4-ns2-up3-qqqup-slopedn-short   # SPOTLIGHT 2026-11-20..11-25, 4 traded sessions / 32 trades (live, all accounts, to 11-19)
-    - CWT04-backside-vwaptest-a15-short   # SPOTLIGHT 2026-11-20..11-25, 5 traded sessions / 8 trades (live, all accounts, to 11-19)
-    - GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long   # SPOTLIGHT 2026-11-20..11-25, 5 traded sessions / 8 trades (live, all accounts, to 11-19)
-    - RW6G1-ns2-up3-vwap2sd-short   # SPOTLIGHT 2026-11-20..11-25, 5 traded sessions / 9 trades (live, all accounts, to 11-19)
     - CWT04-backside-lh-a25-short   # 0 traded sessions / 0 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - IDX5-spy050-0945-3x-trail   # 0 traded sessions / 0 trades (live, all accounts, to 11-19)
     - GEN-261026-09-BBpctle0p3-SMA20slopege0p46-FromPCATRge0p45-LATE-BRvwgt0p6-t05s05-long   # 1 traded sessions / 1 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
@@ -175,7 +170,7 @@ strategies:
     # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 4 live trades so far; ~0.40/session lab.
     refire: true
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Testing B 2026-11-25 after the close (ROT-B3 rebalance); from session 2026-11-27
     type: lab
     module: research/bdi/live1009/RW6G1-ns2-up3-vwap2sd-short.py
     min_adv: 95000000
@@ -1187,7 +1182,7 @@ strategies:
     tags: [ultimate_1119, tierB, "parent:the L3-gap-slope family (loose"]
   CWT04-backside-vwaptest-a15-short:   # moved from Testing C 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~4.76/session lab.
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing C, block copied unchanged)
+    enabled: false   # moved to Testing A 2026-11-25 after the close (ROT-B3 rebalance); from session 2026-11-27
     type: lab
     module: research/bdi/cwt/live/CWT04-backside-vwaptest-a15-short.py
     min_adv: 95000000
@@ -1206,7 +1201,7 @@ strategies:
     scale_out_r: null
     tags: [near-miss, swarm1017, forward-observation, q8]
   GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long:   # moved from Testing A 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing A, block copied unchanged)
+    enabled: false   # moved to Testing A 2026-11-25 after the close (ROT-B3 rebalance); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261028-01-macdh-hi-late-long.py
     context:
@@ -1272,7 +1267,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
   GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long:   # moved from Testing C 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing C, block copied unchanged)
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261019-06-vwapx-pm-long.py
     context:
@@ -1336,7 +1331,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long:   # moved from Testing F 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing F, block copied unchanged)
+    enabled: false   # moved to Testing A 2026-11-25 after the close (ROT-B3 rebalance); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261028-04-orbfailup-late-long.py
     context:

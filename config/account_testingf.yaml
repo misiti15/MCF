@@ -60,6 +60,7 @@ live:
     - ULT-14-snap-short   # NEW 2026-11-20 ultimate_1119 (debatable / derived from WB4 (loose); meets the top-10 standard by the letter (skeptic); appended last so existing setups keep their priority
     - GEN-261022-07-Z12lem1p9-FlowShiftlem0p96-ATRdge3p6-AM-BRopgt0p5-t1s1-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
     - BEG-ORB-orb15-inplay-stopOR   # NEW 2026-11-23 beginner_1120 (owner BEG-ORB yes; meets top-10 standard); appended last so existing setups keep their priority
+    - GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short   # moved in 2026-11-25 (ROT-B3 contender spread; to 11-25: 70 tr, 7/20 traded/active days, +4.9R, avg +0.070, w/o best day +0.007); appended last
 strategies:
   L3-gap-slope-lowdist-FD-WB4:
     # Workbench copy of L3-gap-slope-lowdist-FD (On Deck), Mechanic 2026-11-16: dist from low > 0.82 ATR + rsi5 >= 50 + every lot closed 75 min after entry;
@@ -1120,5 +1121,71 @@ strategies:
     scale_out_r: null
     remedy_q: "(a) no new entries after 12:30 ET; parent L3-gap-slope-fromopen-FD (Primary)"
     tags: [remedy_q, "Remedy-Q", workbench, "parent:L3-gap-slope-fromopen-FD"]
+  GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short:   # moved from Testing C 2026-11-25 after the close (ROT-B3 contender spread; OD-IN contender; Testing C held 6 of 24 OD-IN contenders, Testing F 1); from session 2026-11-27
+    enabled: true   # ROT-B3 contender spread: block copied unchanged from Testing C. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 70 tr, 7 traded / 20 active days, +4.9R, avg +0.070, shrunk +0.054, w/o best day +0.007 (best-day share 92%), w/o top 2 -0.061, day t +0.08, last-5 +0.103; 11-25 alone +0.0R
+    type: lab
+    module: research/generator/modules/GEN-261029-07-upwick-hi-late-short.py
+    context:
+    - spy_fo
+    min_adv: 150000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-29
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: short
+        window: LATE
+        geom: t05s1
+        min_adv: 150000000.0
+        conds:
+        - - day_vs_prev_range
+          - <=
+          - 0.42
+        - - spy_fo
+          - <
+          - -0.5
+        - - upper_wick
+          - '>='
+          - 0.59
+      key: 29cb3f8b0133e677
+      screen:
+        train:
+          n: 645
+          exp_r: 0.0106
+          t: 0.13
+          win: 0.612
+          days: 53
+        valid:
+          n: 361
+          exp_r: 0.0066
+          t: 0.15
+          win: 0.596
+          days: 30
+        all:
+          n: 1006
+          exp_r: 0.0092
+          t: 0.16
+          win: 0.606
+          days: 83
+        per_day: 2.362
+        per_day_valid: 1.88
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: -0.2939
+        exp_down: 0.0538
+        exp_flat: -0.2824
+        excess_train: 0.0261
+        excess_valid: 0.0006
+        tier1: true
+        score: 0.38
+        max_overlap: 0.385
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

@@ -5,6 +5,7 @@ Graveyard). Each move is a move: on in the new account, off (and out of setup_or
 show on the leaderboard with the account tag (a Graveyard-origin setup stays off); the two accounts' totals never show
 in the daily post. Educational only - not financial advice."""
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -102,6 +103,16 @@ _ROT2 = next(json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text()
 ROT2 = {m.split(":")[0]: (_KEY[m.split(": ", 1)[1].split(" -> ")[0]], m.rsplit("(", 1)[1].rstrip(")")) for m in _ROT2["moves"]}
 
 
+# ROT-B3 arena rotation block 3 (2026-11-25, from session 2026-11-27): setup -> (from key, to key)
+_ROTB3 = next(json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines()
+              if x.strip() and json.loads(x)["id"] == "2026-11-27-rot-b3")
+ROTB3 = {m.split(":")[0]: tuple(re.findall(r"\((\w+)\)", m.split(";")[0])) for m in _ROTB3["moves"]}
+
+
+def _rotb3(want: set, acct: str) -> set:
+    return (want - {k for k, (f, t) in ROTB3.items() if f == acct}) | {k for k, (f, t) in ROTB3.items() if t == acct}
+
+
 def _rot2(want: set, acct: str) -> set:
     return (want - {k for k, (f, t) in ROT2.items() if f == acct}) | {k for k, (f, t) in ROT2.items() if t == acct}
 
@@ -122,16 +133,17 @@ def test_moves_are_moves(monkeypatch):
         want = _rot2(want | {k for k, a in ULT_1120.items() if a == acct}, acct)
         want = want | {k for k, a in BEG_1123.items() if a == acct}
         want = want | {k for k, (_, a) in RQ_1123.items() if a == acct}
-        want = want - set(FR_OUT)
+        want = _rotb3(want - set(FR_OUT), acct)
         cfg = _cfg(monkeypatch, acct)
         assert _on(cfg) == want, acct
         assert sorted(cfg["live"]["setup_order"]) == sorted(want), acct      # every setup has a priority
         assert {s.name for s in build_strategies(cfg)} == want, acct
     for acct in ("testing", "testing2", "graveyard"):
         cfg = _cfg(monkeypatch, acct)
-        back = TO_ONDECK if acct == "testing" else set()                       # On Deck from 2026-11-12
+        back = TO_ONDECK - {k for k, (f, t) in ROTB3.items() if f == "testing"} if acct == "testing" else set()   # On Deck from 2026-11-12 (ROT-B3 OD-OUT 11-27)
         guests = {k for k, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("guest")}   # GY-BENCH 11-18..11-24
         gyh = set(GYH_V1) if acct == "graveyard" else set()                      # GYH V1 2026-11-25: Graveyard floor moves
+        gyh |= {k for k, (f, t) in ROTB3.items() if t == acct}                     # ROT-B3 2026-11-25: moves into this account
         assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back - guests - gyh), acct     # switched off where they came from
         assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back - guests - gyh), acct
         assert back <= _on(cfg), acct
@@ -169,11 +181,11 @@ def test_assignments_and_ledger():
     d = json.loads((ROOT / "docs/live/assignments.json").read_text())
     for acct, base in (("explore1", EXPLORE1), ("livelab", LIVELAB)):
         assert {k for k, a in BEG_1123.items() if a == acct} <= set(d["accounts"][acct]), acct
-        assert set(d["accounts"][acct]) - set(BEG_1123) - set(RQ_1123) == _rot2((base | {k for k, a in FROM_GY.items() if a == acct}
+        assert set(d["accounts"][acct]) - set(BEG_1123) - set(RQ_1123) == _rotb3(_rot2((base | {k for k, a in FROM_GY.items() if a == acct}
                                              | {k for k, a in FROM_GEN.items() if a == acct}
                                              | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
                                             | {k for k, a in C3_IN.items() if a == acct}
-                                            | {k for k, a in ULT_1120.items() if a == acct}, acct) - set(FR_OUT), acct
+                                            | {k for k, a in ULT_1120.items() if a == acct}, acct) - set(FR_OUT), acct) - set(BEG_1123) - set(RQ_1123), acct
     assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY) - set(GYH_V1)   # only the Graveyard-origin ones (ST4 back in the Graveyard, GYH V1)
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")

@@ -47,13 +47,11 @@ live:
     - L3-gap-slope-fromopen-FD-WB4   # workbench copy, owner 2026-11-16 "L3 WB4 yes": FIRST
     - MF2-open-rsimidhi-flowsell-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
     - RW6G1-ns2-up3-vwap2sd-short-FD-WB3   # workbench copy, owner 2026-11-16 "Yes to all 15 WB copies" (Workbench rule 5: top)
-    - GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short   # 3 traded sessions / 11 trades
     - GEN-261023-08-RSIslopelem5p5-VWAPcrossesge8-SMA50dlem1p7-LATE-SPYltm0p5-t1s1-long   # 3 traded sessions / 18 trades
     - GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short   # 4 traded sessions / 75 trades
     - GEN-261026-04-ORBfailDn-Ret15mlem0p55-SMA50dlem0p3-OPEN-BRvwgt0p5-holdtr-short   # 5 traded sessions / 10 trades
     - GEN-261020-08-FlowShiftlem0p41-Compress6le0p077-OPEN-QQQup-t05s05-long   # 5 traded sessions / 14 trades
     - GEN-261029-04-Ret15mge0p54-RVolDayle0p59-VWAPcrossesle1-LUNCH-SPYgt0p25-hold-long   # 5 traded sessions / 14 trades
-    - GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long   # 5 traded sessions / 25 trades
     - GEN-261026-01-UpWickge0p59-Since950ATRlem0p61-AM-BRopgt0p5-holdtr-short   # 6 traded sessions / 15 trades
     - GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long   # 6 traded sessions / 20 trades
     - NM-MF3-qqqdn-gapdn-FD   # 7 traded sessions / 35 trades
@@ -63,6 +61,9 @@ live:
     - ULT-13-st7-sharp-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
     - ULT-HV1-etf-late-pop-fade-short-X   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - ULT-07-pm-volatile-dip-long   # NEW 2026-11-20 ultimate_1119 (Tier B); moved from Testing F 2026-11-19 BATCH trim, siblings apart from ULT-14; appended last so existing setups keep their priority
+    - GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long   # moved in 2026-11-25 (ROT-B3 rebalance; to 11-25: 24 tr, 5/21 traded/active days, -2.9R, avg -0.122, w/o best day -0.178); appended last
+    - GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long   # moved in 2026-11-25 (ROT-B3 rebalance; to 11-25: 18 tr, 7/21 traded/active days, -1.2R, avg -0.069, w/o best day -0.166); appended last
+    - CWT04-backside-vwaptest-a15-short   # moved in 2026-11-25 (ROT-B3 rebalance; to 11-25: 8 tr, 5/33 traded/active days, -6.2R, avg -0.777, w/o best day -1.332); appended last
 # REPS2-LANE (owner yes 2026-11-18, research/reps2/NOTES.md section 3): the low-rep fast lane's rare-trigger setups
 # (< 0.5 signals/session where they live) run SHADOW-ONLY in Testing A (full universe since 11-12): no orders, slots,
 # latch or halt, never counted as live reps or toward On Deck / Primary minimums (SRCV1 weight 0). The list is
@@ -489,14 +490,19 @@ strategies:
     scale_out_r: null
     testing2: {batch: cwt-2026-10-12, source: "B1-a2.5-trigT1-t1s1-full", fill: false}
   # Backside VWAP-Test Short: CWT package B B1-a1.5-trigT1-t1s05-full (id 6); open history n 2026, exp -0.1718R, t -3.74, 4.76/day; verdict retire
-  CWT04-backside-vwaptest-a15-short:
-    enabled: false   # moved to Live Lab 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
+  CWT04-backside-vwaptest-a15-short:   # moved from Testing E 2026-11-25 after the close (ROT-B3 rebalance; setup count E -> A; twin vwaptest-a25 stays in D); from session 2026-11-27
+    enabled: true   # ROT-B3 rebalance: block copied unchanged from Testing E. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 8 tr, 5 traded / 33 active days, -6.2R, avg -0.777, shrunk -0.222, w/o best day -1.332 (best-day share n/a), w/o top 2 -1.379, day t -3.06, last-5 -0.777; 11-25 alone +0.0R
     type: lab
     module: research/bdi/cwt/live/CWT04-backside-vwaptest-a15-short.py
     min_adv: 95000000
-    window: [950, 1500]
+    window:
+    - 950
+    - 1500
     scale_out_r: null
-    testing2: {batch: cwt-2026-10-12, source: "B1-a1.5-trigT1-t1s05-full", fill: false}
+    testing2:
+      batch: cwt-2026-10-12
+      source: B1-a1.5-trigT1-t1s05-full
+      fill: false
   # Stretched Below VWAP Bounce (far): CWT package B B2-z0.75-Uall-sidelong-t1s1-full (id 74); open history n 3933, exp -0.0460R, t -1.52, 9.23/day; verdict retire
   CWT13-vwapstretch-z075-long:
     enabled: false   # moved to Explore 1 2026-11-04 (owner, low-rep rotation); from session 2026-11-05
@@ -829,7 +835,7 @@ strategies:
     prefilter: new_high_100m
     scale_out_r: null
   GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261019-01-vwapx-open-long.py
     context:
@@ -1360,8 +1366,8 @@ strategies:
         max_overlap: 0.366
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3082
-  GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: false   # moved to Testing E 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
+  GEN-261028-01-MACDhge0p12-Since950ATRlem0p25-LATE-SPYgt0p5-holdtr-long:   # moved from Testing E 2026-11-25 after the close (ROT-B3 rebalance; setup count E 26 -> 22, A 18 -> 21; back to its block-2 home); from session 2026-11-27
+    enabled: true   # ROT-B3 rebalance: block copied unchanged from Testing E. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 24 tr, 5 traded / 21 active days, -2.9R, avg -0.122, shrunk -0.066, w/o best day -0.178 (best-day share n/a), w/o top 2 -0.200, day t -0.05, last-5 -0.122; 11-25 alone -3.3R
     type: lab
     module: research/generator/modules/GEN-261028-01-macdh-hi-late-long.py
     context:
@@ -1427,7 +1433,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
   GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 Graveyard floor); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261028-07-z12-hi-mid-short.py
     context:
@@ -1693,5 +1699,74 @@ strategies:
     scale_out_r: null
     remedy_q: "(a) no new entries after 12:30 ET; parent RW3-gapdn-rsi5pop-flowsell-short-FD (Primary)"
     tags: [remedy_q, "Remedy-Q", workbench, "parent:RW3-gapdn-rsi5pop-flowsell-short-FD"]
+  GEN-261028-04-ORBfailUp-RSI14le22-Gaplem1p2-LATE-BRvwgt0p5-holdtr-long:   # moved from Testing E 2026-11-25 after the close (ROT-B3 rebalance; setup count E -> A); from session 2026-11-27
+    enabled: true   # ROT-B3 rebalance: block copied unchanged from Testing E. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 18 tr, 7 traded / 21 active days, -1.2R, avg -0.069, shrunk -0.033, w/o best day -0.166 (best-day share n/a), w/o top 2 -0.235, day t +1.16, last-5 -0.108; 11-25 alone +0.0R
+    type: lab
+    module: research/generator/modules/GEN-261028-04-orbfailup-late-long.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - generated
+    - gen-2026-10-28
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: long
+        window: LATE
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth
+          - '>'
+          - 0.5
+        - - gap
+          - <=
+          - -1.2
+        - - orb_fail_up
+          - ==
+          - 1.0
+        - - rsi
+          - <=
+          - 22.0
+      key: e82ffa0b92fc3cf2
+      screen:
+        train:
+          n: 288
+          exp_r: 0.0605
+          t: 0.6
+          win: 0.573
+          days: 78
+        valid:
+          n: 462
+          exp_r: 0.0265
+          t: 0.17
+          win: 0.487
+          days: 83
+        all:
+          n: 750
+          exp_r: 0.0396
+          t: 0.38
+          win: 0.52
+          days: 161
+        per_day: 1.761
+        per_day_valid: 2.406
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.214
+        exp_down: -0.2498
+        exp_flat: -0.2159
+        excess_train: 0.0489
+        excess_valid: 0.0051
+        tier1: true
+        score: 0.42
+        max_overlap: 0.535
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3000
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

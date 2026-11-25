@@ -34,11 +34,8 @@ live:
   # Priority when several setups fire on one symbol in the same poll: narrowest (fewest expected trades/day, 
   # research/bdi/timeofday/results.csv) first, so subsets are not starved by supersets (swarm W4, 2026-10-10).
   setup_order:
-    - ST6-volspikeup-short-mid-t1s1-FD   # 6 traded sessions to 11-11
     - CWT09-gapdn-bounce-g10-lowerhalf-short   # 7 traded sessions to 11-11
-    - CWT05-flush-m05-v5-long   # 8 traded sessions to 11-11
     - CWT09-gapdn-vwaploss-g10-short   # 9 traded sessions to 11-11
-    - MF3-open-flowsell-rsi5hi   # 11 traded sessions to 11-11
     - NM-HL-T75-pm-long   # 11 traded sessions to 11-11
     - NS1-rsidip-rsi5pop-long   # 11 traded sessions to 11-11
     - L3-gap-slope-lowdist-FD   # 15 traded sessions to 11-11
@@ -169,7 +166,7 @@ strategies:
   CWT13-vwapstretch-z05-long: {enabled: false}   # runs in Testing 2 (back from Primary 2026-10-26)
   MF2-open-rsimidhi-flowsell: {enabled: false}   # replaced by MF2-open-rsimidhi-flowsell-FD
   MF3-open-flowsell-rsi5hi:
-    enabled: true
+    enabled: false   # moved to Testing C 2026-11-25 after the close (ROT-B3 OD-OUT); from session 2026-11-27
     former_primary: {demoted: "2026-10-20", first_testing_session: "2026-10-20", review_after_sessions: 10}
   MF4-h40-open-flowsell: {enabled: false}   # replaced by MF4-h40-open-flowsell-FD
   MF5-flowsell-vwapup-rsi5hi:
@@ -409,7 +406,7 @@ strategies:
     # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~1.24/session lab.
     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
     refire_cooldown: 1
-    enabled: true
+    enabled: false   # moved to Testing C 2026-11-25 after the close (ROT-B3 OD-OUT); from session 2026-11-27
     type: lab
     module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
     min_adv: 95000000
@@ -636,7 +633,7 @@ strategies:
     tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
   CWT05-flush-m05-v5-long:   # moved from Testing B 2026-11-11 after the close (ONDECK OD-FILL); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 7 live trades so far; ~2.93/session lab.
-    enabled: true
+    enabled: false   # moved to Testing B 2026-11-25 after the close (ROT-B3 OD-OUT); from session 2026-11-27
     type: lab
     module: research/bdi/cwt/live/CWT05-flush-m05-v5-long.py
     min_adv: 95000000

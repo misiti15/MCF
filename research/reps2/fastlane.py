@@ -175,12 +175,29 @@ def write_lane(df, out: Path, asof: str) -> None:
     import json
 
     names = sorted(df.loc[df["route"] == "full-universe", "setup"].astype(str)) if len(df) else []
+    rare = rare_setups()
+    names = sorted(set(names) | set(rare))
     (out / "lane.json").write_text(json.dumps({
         "note": "REPS2-LANE shadow-only lane for Testing A (owner yes 2026-11-18): current setups with 0-10 live trades "
                 "whose route is 'full-universe' (rare trigger, < 0.5 signals/session where they live). Re-picked nightly "
-                "by research/reps2/fastlane.py. Shadow reps are a separate column (SRCV1 weight 0), never live reps. "
+                "by research/reps2/fastlane.py, plus the ROT3 'rare' arena tags (research/rotation/rare_lane.json). Shadow reps are a separate column (SRCV1 weight 0), never live reps. "
                 "Educational only - not financial advice.",
-        "asof": asof, "account": "testing2", "route": "full-universe", "setups": names}, indent=1) + "\n")
+        "asof": asof, "account": "testing2", "route": "full-universe", "rare": rare, "rare_from": str(RARE.relative_to(HERE.parents[1])),
+        "setups": names}, indent=1) + "\n")
+
+
+RARE = HERE.parents[0] / "rotation" / "rare_lane.json"
+
+
+def rare_setups() -> list[str]:
+    """ROT3 rare lane (owner ROT3 yes 2026-11-25): arena setups tagged "rare" (< 0.5 signals per active day) at the last
+    arena re-score (research/rotation/rare_lane.json) also get the shadow lane, whatever their live trade count. Missing
+    or bad file -> none."""
+    try:
+        d = json.loads(RARE.read_text())
+        return sorted(str(n) for n in (d.get("setups") or {}) if isinstance(n, str) and n)
+    except Exception:
+        return []
 
 
 def main(argv=None):
