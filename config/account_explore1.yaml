@@ -57,15 +57,11 @@ live:
     - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short   # 3 traded sessions / 41 trades
     - GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short   # 3 traded sessions / 60 trades
     - NM1-cwt09-g10-vwaploss-short   # 4 traded sessions / 6 trades
-    - GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long   # 4 traded sessions / 30 trades
     - ST7Q-rsi50dn-qqqbelowvwap-long-t1s1-FD   # 6 traded sessions / 11 trades
     - NM-RWN3-ns3-spyup-early-short   # 6 traded sessions / 13 trades
-    - GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long   # 6 traded sessions / 61 trades
     - MF2-open-rsimidhi-flowsell   # 7 traded sessions / 17 trades
     - GEN-261026-08-RSIslopege19-Ret5mge0p063-DayRngVsPrevge1p2-OPEN-SPYup-holdtr-short   # 7 traded sessions / 20 trades
-    - CWT13-vwapstretch-z075-long   # 9 traded sessions / 40 trades
     - ST8-volspikedn-long-pm-t1s1-FD   # 14 traded sessions / 30 trades
-    - ST4-emadn-long-am-t1s05-FD   # 15 traded sessions / 41 trades
     - ULT-09-failed-vwap-reclaim-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - GEN-261019-08-NewHOD-Slope6ge0p03-DayRngVsPrevge1p5-AM-SPYdn-hold-short   # moved in 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; setup-count rebalance (D/E take the spotlight)); appended last so existing setups keep their priority
     - BEG-GNG-gap-and-go-long   # NEW 2026-11-23 beginner_1120 (owner BEG-GNG yes; meets top-10 standard, 1 day); appended last so existing setups keep their priority
@@ -108,7 +104,7 @@ strategies:
     tags: [workbench, "parent:GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short"]
   ST4-emadn-long-am-t1s05-FD:   # moved from Graveyard 2026-11-12 after the close (owner GY-RW6/ST4 arena); from session 2026-11-13
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 15 trades -0.578R (-0.737R w/o best day).
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py
     min_adv: 95000000
@@ -341,7 +337,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B5-m0.5-v5-Dnone-t05s1-full", fill: false}
   CWT13-vwapstretch-z075-long:
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 16 live trades so far; ~9.23/session lab.
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/bdi/cwt/live/CWT13-vwapstretch-z075-long.py
     min_adv: 95000000
@@ -547,7 +543,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261023-04-emadchg-lo-pm-long.py
     context:
@@ -951,7 +947,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261029-03-macdh-lo-pm-long.py
     context:

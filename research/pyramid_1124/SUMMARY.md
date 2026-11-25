@@ -21,3 +21,9 @@ Shorts: L3-gap-slope-fromopen-FD; GEN-261029-06. Longs: NM-ETF-late-dip-di-long 
 
 ## Honest read
 On the data we have, no rule-based intraday long beats our top 10 after costs in both halves of the backtest. Every long candidate's R is driven by whether the market turns up, so the most promising path is a well-tested long-side *market gate* plus the few longs already working live, grown by forward testing — not a new backtest-built "ultimate". Next steps (backlog): re-score the gap-down short family with live-LR8 costs; journal-only forward tags for NM-ETF + gate and the day-owner rule; extended-hours data only if a pre-open predictor is wanted.
+
+## Round 3 (2026-11-25) — R3B_REPORT.md, R3N_REPORT.md, R3C_REPORT.md
+- B (best 5-setup book vs the top 10): no book clearly beats the top 10 out of sample (best book one-day carried; worse worst-5 days; paired t 1.18–1.33). The long/short hedge exists only against the gap-down shorts.
+- N (300-draw generator search with honest fitness): 0 of 300 pass; "SPY ≥ open at entry" does not stop gated longs losing on down-closing days; non-gap-down shorts show no edge.
+- C (live-calibrated costs): corrects round 2 G — overall the research cost model is ~0.042R per trade too LENIENT (too harsh only on $5–20 names). No verdict improves; 5 drop to FAIL. Survivor: NM-ETF + "SPY ≥ open" gate (check +0.117, 2023-24 −0.056, 0.33 trades/session).
+- Running tally: ~400 pre-registered candidates across rounds 1-3 (+35 in ultimate_1119); 0 reach the ultimate bar. Missing piece: a market gate that predicts the CLOSE (needs breadth data for 2023-24), or Primary's shorts + 2 gated longs as a hedge test.

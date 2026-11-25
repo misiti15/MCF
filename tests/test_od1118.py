@@ -51,7 +51,8 @@ def test_default_config_rot2_and_resources_file_keep_caps_off_today():
 
 def test_gy_archive_20_blocks_disabled_marked_and_exempt_kept():
     st = yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"]
-    arch = [k for k, v in st.items() if isinstance(v, dict) and v.get("archived")]
+    arch = [k for k, v in st.items() if isinstance(v, dict) and v.get("archived")
+            and v["archived"].get("code") == "GY-ARCHIVE-20"]        # GYH-V3 archives (2026-11-27) are separate
     assert len(arch) == 18
     for k in arch:
         v = st[k]

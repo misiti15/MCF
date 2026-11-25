@@ -73,7 +73,7 @@ def test_other_accounts_unchanged_by_the_loader(monkeypatch):
         cfg = _cfg(monkeypatch, acct)
         # GY-BENCH guests, and C3-EXIT100 / FOOTRACE-EXIT moves to the Graveyard (owner yes 2026-11-18 / 2026-11-19, tags)
         assert not any(k.startswith("GEN-") and not (v or {}).get("guest")
-                       and not (acct == "graveyard" and any("C3-EXIT100" in str(t) or "FOOTRACE-EXIT" in str(t) for t in (v or {}).get("tags") or []))
+                       and not (acct == "graveyard" and any("C3-EXIT100" in str(t) or "FOOTRACE-EXIT" in str(t) or "GYH V1" in str(t) for t in (v or {}).get("tags") or []))
                        for k, v in cfg["strategies"].items()), acct
     # GEN-GRAD (owner 2026-11-11): graduates run only in the testing areas (never Primary / On Deck / Graveyard), off in Gen;
     # testing arena (owner 2026-11-12): Testing A-F + Gen are one arena, so Testing A (testing2) takes Gen moves too (ROT1)

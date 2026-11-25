@@ -3035,8 +3035,8 @@
   ],
   "why": "You asked to limit big losses without limiting R; every option costs some R, and this one buys the most tail cut per R.",
   "link": "research/etfstop_1123/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "yes, 2026-11-24 ~20:30 ET (owner: \"yes so long as testing shows it only costs ~2.2R a year\") - variant AV50 per recommendation (study: ~+1.0R/yr, within the limit; Q50 -2.21R/yr is at the limit). Primary exit change: Friday 11-27 epoch window after the close, skeptic review + ledger first."
  },
  {
   "code": "ODP2-G261027-01",
@@ -3065,8 +3065,8 @@
   ],
   "why": "Owner asked for automatic, data-based hard stops on truly detrimental days; smaller stops (-6/-8R) cut too many recovery days; per-setup and no-new-entry variants only reduce exposure.",
   "link": "research/hardstop_1123/REPORT.md",
-  "status": "open",
-  "answered": null
+  "status": "answered",
+  "answered": "wait, 2026-11-24 ~20:30 ET (owner: \"HS wait for the scaling version... don't want to stop the account prematurely but don't want it to crash due to a bug or glitch; lean into the setup caps too\") - study HARDSTOP-SCALE launched."
  },
  {
   "code": "PRIM-ADD2",
@@ -3080,6 +3080,105 @@
   ],
   "why": "Owner 11-24 asked what stops us from moving the confirmed setups into Primary; this is the targeted version that respects concentration risk (6 of 7 are gap-down shorts that lose together on rotation/squeeze days: 11-24 -36R, 11-10 -50R).",
   "link": "research/progress_1124/REPORT.md",
+  "status": "answered",
+  "answered": "wait, 2026-11-24 ~20:30 ET (owner: \"re-evaluate after Friday's session; most great players in Primary but not premature decisions\") - re-evaluate after the 11-27 close with options one / yes / four."
+ },
+ {
+  "code": "HS-SCALE",
+  "title": "One safety package for Primary (Friday epoch): lineup-scaled account stop + glitch failsafe, keep the -2R latch - with or without a -10R per-setup crash cap?",
+  "what": "Package: SCALED-K4 (flatten + no new entries at -X, X = clip(4 sigma, 2.5R x N, 8R x N); ~ -32R today, ~ -72R for 9 setups, recomputed weekly and at lineup changes) + SHOCK-V (sharp R drop within 2-10 min -> no new entries + alert, no flatten) + keep the -2R per-setup latch + keep the fixed -20R no-new-entries halt + bug guards (broker-vs-journal $ mismatch -> entries off + alert; order-size guard). Optional insurance C10L: per-setup -10R closed+open cap (latch kept). Reply 'HS-SCALE yes' (package), 'HS-SCALE +C10' (package + per-setup cap), or 'no'.",
+  "recommend": "Yes, the package without the per-setup cap - no per-setup cap passed the pre-registered test (s8cap_1125: R saved on bad days = R lost on days that recovered); C10L is cheap insurance if you want it",
+  "numbers": [
+   "Account stop fires ~7.5 days/yr (4 setups) vs 46 for a fixed -12R; ~1.5/yr for 9 setups",
+   "Per-setup caps cut the worst-5 days (-34.9 -> -24..-32R) at ~3-90R/yr cost; C10L costs ~3R/yr (4 setups), live Primary +18R",
+   "Dropping the -2R latch loses in every bench test (-40R/yr 4 setups)"
+  ],
+  "why": "Owner 11-24: don't stop the account prematurely, but never crash from a bug or glitch; a fixed stop gets too tight as Primary grows.",
+  "link": "research/s8cap_1125/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "ROT3",
+  "title": "Stop the spotlight moves and put rare-trigger setups on the shadow fast lane?",
+  "what": "Keep the 4-session re-score / contenders / rebalance cycle; stop spotlight moves (no lift vs a control); rare-trigger setups (< 0.5 signals per active day, 20 now) go to the existing shadow fast lane tagged rare; the 39 slowest become setup-design backlog items; nobody switched off. Reply 'ROT3 yes / no'.",
+  "recommend": "Yes - the spotlight showed no measurable lift (0.24 vs control 0.26); slow setups are limited by how rarely they fire, not by exposure",
+  "numbers": [
+   "arena traded-session rate 0.29 -> 0.51 since 10-19",
+   "39 of 137 arena setups > 40 sessions from REPS-MIN 8/30"
+  ],
+  "why": "Owner 11-25: is the rotation working and getting every setup as many reps as possible?",
+  "link": "research/repsrot_1125/REPORT.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-25 (owner: \"Stop the spotlight\") - rotation routine updated (rare lane, no spotlight)."
+ },
+ {
+  "code": "GEN2",
+  "title": "Restart the Setup Generator with stricter admission?",
+  "what": "5 setups a week (not 10 a night); each must name its mechanism; gen2 grammar judged on the worst day type; pass the 11-19 testing-admission rule; capped entries in its first 5 sessions; owner pre-consents that GEN setups meeting FOOTRACE-EXIT go to the Graveyard. Reverses the owner's 10-28 pause (overcrowding is gone). Reply 'GEN2 yes / no'.",
+  "recommend": "Yes - the generator supplies 10 of today's top-20 front-runners (15% hit rate vs 9% for everything else) and the arena has room",
+  "numbers": [
+   "90 GEN setups: 10 positive w/o best day, 16 meet OD-IN, 28 hit the Graveyard floor",
+   "a batch of 5-10 adds ~4% to arena flow; arena 18-37% of slots"
+  ],
+  "why": "Owner 11-25: may need to restart the Setup Generator so front-runners keep coming.",
+  "link": "research/repsrot_1125/REPORT.md",
+  "status": "answered",
+  "answered": "yes with change, 2026-11-25 (owner: \"Start it but do 10 initially then 5 a week after that. The first generator parameters DID end up producing a few quality setups... don't be too quick to change up its generation process\") - restart with the SAME generation process/parameters; 10 initially, then 5 a week; mechanism-naming and admission rules apply only as review gates, not changes to generation."
+ },
+ {
+  "code": "GYH",
+  "title": "Harsher dead-weight exit: move 13 arena setups to the Graveyard and archive 18 Graveyard setups?",
+  "what": "V1: move the 13 arena setups at the Graveyard floor (>= 40 trades, shrunk avg <= -0.10, w/o best day < 0, last-5 < 0) at Friday's review, incl. GEN-261019-04 (231 tr, -103R). V3: archive 18 Graveyard setups (>= 100 trades, w/o best day <= -0.10, last-10 R <= 0; disabled + marker, never deleted). V2 (47 setups) not recommended. Reply 'GYH V1 / V1+V3 / V2 / no'.",
+  "recommend": "Yes, V1+V3 - clears dead weight and review load; note it frees ~0 reps for front-runners (the arena is mostly idle)",
+  "numbers": [
+   "V1: 13 arena setups, ~64 losing trades per session",
+   "V3: 18 Graveyard setups, e.g. GEN-261022-09 w/o best day -0.874 on 225 tr"
+  ],
+  "why": "Owner 11-25: be harsher on who goes to the Graveyard / gets archived.",
+  "link": "research/repsrot_1125/REPORT.md",
+  "status": "answered",
+  "answered": "yes (V1+V3), 2026-11-25 - after the close: move the 13 arena setups at the Graveyard floor (incl. GEN-261019-04) and archive the 18 Graveyard setups (disabled + marker, never deleted); then an image of all archived setups with stats incl. testing exposure."
+ },
+ {
+  "code": "SPRD",
+  "title": "Research-only study: would a wider spread cap for arena contenders add reps without losing R?",
+  "what": "Spread/quote skips are 19% of contender signals; measure with shadow fills whether a wider spread cap only for arena contenders adds reps without losing R. No live change; overlaps the LR6 entry-cost review (11-27). Reply 'SPRD study yes / no'.",
+  "recommend": "Optional - it is the largest rep leak left for contenders, but execution tuning is a guarded category",
+  "numbers": [
+   "904 contender signals skipped for spread since 11-12 vs 2,478 taken",
+   "raw what-if +0.27R (optimistic) vs taken +0.245R"
+  ],
+  "why": "Owner 11-25: more reps for front-runners.",
+  "link": "research/repsrot_1125/REPORT.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-25 - research-only spread study launched."
+ },
+ {
+  "code": "REPS-LINE",
+  "title": "Add a 4-line Reps & rotation block to the nightly brief?",
+  "what": "Nightly: arena traded-session rate (last 5 vs prior 5 sessions) and % of setups with 0 traded sessions; front-runners that traded today and resource-blocked signals; OD-IN contenders; verdict clock; room and rotation block. Replaces the current one-line Reps item. Reply 'REPS-LINE yes / no'.",
+  "recommend": "Yes - shows every night whether rotation is working, as the owner asked",
+  "numbers": [
+   "drafted in research/repsrot_1125/REPORT.md"
+  ],
+  "why": "Owner 11-25: wants to see in the nightly review whether rotation is getting setups reps.",
+  "link": "research/repsrot_1125/REPORT.md",
+  "status": "answered",
+  "answered": "yes, 2026-11-25 - nightly brief routine updated with the 4-line Reps & rotation block."
+ },
+ {
+  "code": "LATCH-OPEN",
+  "title": "Make the -2R per-setup stop count open losses too (no new entries once a setup is down 2R incl. open trades)?",
+  "what": "Change the existing -2R per-setup latch to count closed + open R after costs: once a setup is down 2R including its open trades, it takes no new entries for the day; open trades keep their own stops; nothing is sold. Pairs with HS-SCALE. Primary change: apply after the close with skeptic review + ledger, either tonight as an owner-chosen stopgap (effective Fri 11-27) or at the Friday epoch (effective Mon 11-30). Reply 'LATCH-OPEN now / friday / -3R / no'.",
+  "recommend": "Yes - the most targeted fix for 11-25 (L3 kept shorting while its open losses piled up): replay -37.4R -> -8.3R; insurance, not edge",
+  "numbers": [
+   "Live worst-5 days -28.2 -> -17.0R; bench days <= -20R cut ~75% (33 -> 8 in 2.9 yrs)",
+   "Cost: ~20% fewer lots; if the book were profitable (+0.10R/lot) ~ -87R/yr; cuts some recovery days (11-12 L3 +31R -> +1R)",
+   "-3R variant: 11-25 -37 -> -23R at a third of that cost"
+  ],
+  "why": "Owner 11-25: a day like today cannot happen again; targeted remedy for the failure mode (closed-R-only latch).",
+  "link": "research/neveragain_1125/REPORT.md",
   "status": "open",
   "answered": null
  }

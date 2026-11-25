@@ -77,7 +77,8 @@ def test_graveyard_bench_list_and_rules_untouched():
     benched = sorted(k for k, v in st.items() if isinstance(v, dict) and isinstance(v.get("benched"), dict))
     # GY-ARCHIVE-20 (owner yes 2026-11-18, from 11-19): 15 of the 18 benched setups were archived (enabled false, bench
     # window dropped); the 3 left keep their 11-18..11-24 rest (incl. the two owner-exception exempt setups)
-    archived = sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("archived"))
+    archived = sorted(k for k, v in st.items() if isinstance(v, dict) and v.get("archived")
+                      and v["archived"].get("code") == "GY-ARCHIVE-20")   # GYH-V3 (2026-11-27) archives are separate
     assert len(benched) == 3 and len(archived) == 18
     assert {"CWT14-failbrk-orl-p05-long", "heat_fade_short-FD"} <= set(benched)
     for k in benched:

@@ -31,7 +31,7 @@ MOVED_T1 = {"CWT14-failbrk-pdh-p05-lowvol-short",   # owner 2026-10-22 (N6)
 # moved in from the testing arena (owner RW3S-GY drop 2026-11-13, effective 2026-11-16): off in Testing E
 MOVED_TE = {"RW3S-gapdn-flowsell-short-FD"}
 # moved out of the Graveyard to the testing arena (owner GY-RW6/ST4 arena 2026-11-12, effective 2026-11-13): block kept, disabled
-MOVED_OUT = {"RW6-ns2-up3-short-FD": "livelab", "ST4-emadn-long-am-t1s05-FD": "explore1"}
+MOVED_OUT = {"RW6-ns2-up3-short-FD": "livelab"}   # ST4-emadn-long-am-t1s05-FD came back 2026-11-25 (GYH V1)
 # GY-ARCHIVE-20 (owner yes 2026-11-18, from 2026-11-19): archived residents stay in the file (enabled false + marker)
 ARCHIVED = {k for k, v in (yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"] or {}).items()
             if isinstance(v, dict) and v.get("archived")}
@@ -76,6 +76,18 @@ MOVED_FR = {
     # QA-EXIT2 (owner 2026-11-21, FOOTRACE-EXIT on the corrected LR8 cost basis; ledger 2026-11-23-st7-move-qa-exit2)
     "CWT05-flush-m05-v3-long": "testingf",
     "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": "livelab",
+}
+# GYH V1 (owner 2026-11-25, Graveyard floor, effective 2026-11-27; ledger 2026-11-27-gyh-v1-v3): setup -> home it left
+MOVED_GYH = {
+    "CWT13-vwapstretch-z075-long": "explore1",
+    "GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long": "gen",
+    "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long": "explore1",
+    "GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long": "testingd",
+    "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long": "livelab",
+    "GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long": "testingd",
+    "GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short": "testinge",
+    "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long": "explore1",
+    "ST4-emadn-long-am-t1s05-FD": "explore1",
 }
 # RETIRE-R3 (owner 2026-11-20, applied at the Friday review 2026-11-20, effective 2026-11-23): terminal, block kept
 # (enabled false + retired marker), out of setup_order
@@ -126,10 +138,10 @@ def test_only_its_own_setups_run(monkeypatch):
     own = set(raw) - guests
     rot = cfg["rotation"]
     on = _on(cfg)
-    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR)
+    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH)
     assert on == (own - set(MOVED_OUT) - ARCHIVED - RETIRED - set(rot["benched"])) | set(rot["guests"])
     assert len(RETIRED) == 11 and not (RETIRED & ARCHIVED)
-    assert len(ARCHIVED) == 18
+    assert len(ARCHIVED) == 36   # GY-ARCHIVE-20 18 (2026-11-19) + GYH V3 18 (2026-11-27)
     st = build_strategies(cfg)
     assert {s.name for s in st} == on
     assert sorted(cfg["live"]["setup_order"]) == sorted((own - set(MOVED_OUT) - RETIRED) | guests)   # every setup has a priority (retired: none)
@@ -162,8 +174,12 @@ def test_moves_switched_off_at_source(monkeypatch):
     for k, acct in MOVED_FR.items():    # FOOTRACE-EXIT: off at home, out of its order, on in the Graveyard
         c = _cfg(monkeypatch, acct)
         assert k not in _on(c) and k not in c["live"]["setup_order"], k
+    for k, acct in MOVED_GYH.items():   # GYH V1: off at home, out of its order, on in the Graveyard
+        c = _cfg(monkeypatch, acct)
+        assert k not in _on(c) and k not in c["live"]["setup_order"], k
     gy_on = _on(_cfg(monkeypatch))
-    assert set(MOVED_FR) <= gy_on and not (RETIRED & gy_on)
+    assert set(MOVED_GYH) <= gy_on and not (ARCHIVED & gy_on)
+    assert set(MOVED_FR) - ARCHIVED <= gy_on and not (RETIRED & gy_on)
     for acct in ("testing", "testing2", "explore1", "livelab", "testingd", "testinge", "testingf", "gen"):
         assert not (RETIRED & _on(_cfg(monkeypatch, acct))), acct                # retired: out of every account
     assert "exhaustion_short" not in _on(_cfg(monkeypatch, "testingf"))       # RETIRE-R3 (its only home)
@@ -215,4 +231,4 @@ def test_dashboard_and_assignments_know_the_graveyard():
     bench = set(A.resting({"graveyard": st}, d.get("asof_session")))
     guests = {k for k, v in st.items() if isinstance(v, dict) and v.get("guest") and v.get("enabled")}
     assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == \
-        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR)) - set(MOVED_OUT) - ARCHIVED - RETIRED - bench) | guests
+        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH)) - set(MOVED_OUT) - ARCHIVED - RETIRED - bench) | guests

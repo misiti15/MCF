@@ -57,13 +57,18 @@ def test_config_testing2_only_and_labeled(monkeypatch):
         # FOOTRACE-EXIT (Friday review 2026-11-20, from session 2026-11-23): off in Testing A, on in the Graveyard
         assert not t2cfg["strategies"][n]["enabled"] and n not in t2cfg["live"]["setup_order"]
         s = cfg["strategies"][n]
-        assert s["enabled"] and s["context"] == ["spy_prng"] and not s.get("live_scale_out")   # Graveyard: no live scale-out
+        # GYH V3 (owner 2026-11-25, from 11-27): the long leg is archived (enabled false + archived marker, block kept)
+        assert s["enabled"] is (n not in ARCHIVED_GYH) and (n not in ARCHIVED_GYH or s["archived"]["code"] == "GYH-V3")
+        assert s["context"] == ["spy_prng"] and not s.get("live_scale_out")   # Graveyard: no live scale-out
         assert not s.get("scale_out_cap_exempt")
         assert abs(s["scale_out_r"] - 0.25 / 3) < 1e-12 and "owner-exception" in s["tags"]
         assert n in cfg["live"]["setup_order"]
     for f in ("default.yaml", "account_testing.yaml", "account_gen.yaml"):
         st = yaml.safe_load((ROOT / "config" / f).read_text()).get("strategies") or {}
         assert not any(n in st for n in NAMES), f                  # Primary and the other accounts untouched
+
+
+ARCHIVED_GYH = {"CWT14-failbrk-pdl-p05-R2A-long"}
 
 
 def _bars(lo_poke=98.5, reclaim=99.6, price_scale=1.0):
@@ -90,7 +95,10 @@ def _ctx(bars, spy, atr=5.0, s=1.0):
 def _legs(monkeypatch):
     from mcf.strategies.setups import build_strategies
 
-    st = {s.name: s for s in build_strategies(_cfg(monkeypatch)) if s.name in NAMES}
+    cfg = _cfg(monkeypatch)
+    for n in NAMES:                       # the mechanism is tested with both legs on (the long leg is archived, GYH V3)
+        cfg["strategies"][n]["enabled"] = True
+    st = {s.name: s for s in build_strategies(cfg) if s.name in NAMES}
     assert set(st) == set(NAMES)
     return st[NAMES[0]], st[NAMES[1]]
 

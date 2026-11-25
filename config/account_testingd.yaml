@@ -57,10 +57,8 @@ live:
     - NM-RWR1-exh150-gapdn-spyup-pm-short   # 2 traded sessions / 2 trades (live, all accounts, to 11-19)
     - GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short   # 3 traded sessions / 10 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short   # 4 traded sessions / 8 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
-    - GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long   # 4 traded sessions / 29 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - CWT05-flush-m075-v5-long   # 5 traded sessions / 7 trades (live, all accounts, to 11-19)
     - GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long   # 5 traded sessions / 17 trades (live, all accounts, to 11-19)
-    - GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long   # 5 traded sessions / 50 trades (live, all accounts, to 11-19)
     - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short   # 6 traded sessions / 25 trades (live, all accounts, to 11-19)
     - GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short   # 9 traded sessions / 182 trades (live, all accounts, to 11-19)
     - NS4-pm-vwap-reclaim-oversold-short   # 16 traded sessions / 52 trades (live, all accounts, to 11-19)
@@ -609,7 +607,7 @@ strategies:
         overlap_with: GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long
         n_tried_in_run: 3000
   GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, spotlight); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261026-02-volratio-hi-late-long.py
     context:
@@ -757,7 +755,7 @@ strategies:
           test_n: 429
           test_exp_r: 0.02
   GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261027-03-newlod-lam-long.py
     context:
