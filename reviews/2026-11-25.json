@@ -1,0 +1,308 @@
+{
+ "date": "2026-11-25",
+ "disclaimer": "Educational only \u2014 not financial advice.",
+ "today": {
+  "trades": 545,
+  "win_rate": 0.149,
+  "exp_r": -0.717,
+  "total_r": -390.81,
+  "pnl": -6183.02,
+  "stop_exit_share": 0.545,
+  "pnl_adj": -6469.72,
+  "slip_bps": 1.9
+ },
+ "yesterday": {
+  "trades": 98,
+  "win_rate": 0.612,
+  "exp_r": -0.053,
+  "total_r": -5.24,
+  "pnl": 3.87,
+  "stop_exit_share": 0.204,
+  "pnl_adj": -37.16,
+  "slip_bps": 9.7
+ },
+ "rolling5": {
+  "exp_r": -0.022,
+  "win_rate": 0.561,
+  "pnl": -12.292,
+  "slip_bps": 10.06,
+  "stop_exit_share": 0.276
+ },
+ "rolling20": {
+  "exp_r": -0.127,
+  "win_rate": 0.491,
+  "pnl": -72.438,
+  "slip_bps": 7.2,
+  "stop_exit_share": 0.315
+ },
+ "beat_rolling5": {
+  "exp_r": false,
+  "win_rate": false,
+  "slip_bps": true,
+  "stop_exit_share": false
+ },
+ "by_setup": {
+  "CWT09-gapdn-bounce-g10-lowerhalf-short": {
+   "trades": 3,
+   "win_rate": 0.0,
+   "exp_r": -1.029,
+   "total_r": -3.09,
+   "pnl": -194.68,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -196.63,
+   "slip_bps": 33.2
+  },
+  "CWT09-gapdn-vwaploss-g10-short": {
+   "trades": 3,
+   "win_rate": 0.0,
+   "exp_r": -1.032,
+   "total_r": -3.1,
+   "pnl": -172.56,
+   "stop_exit_share": 1.0,
+   "pnl_adj": -174.51,
+   "slip_bps": -74.2
+  },
+  "L3-gap-slope-lowdist-FD": {
+   "trades": 198,
+   "win_rate": 0.111,
+   "exp_r": -0.73,
+   "total_r": -144.62,
+   "pnl": -1738.64,
+   "stop_exit_share": 0.53,
+   "pnl_adj": -1832.11,
+   "slip_bps": -0.5
+  },
+  "L3-gap-slope-rsi5hi-FD": {
+   "trades": 311,
+   "win_rate": 0.167,
+   "exp_r": -0.704,
+   "total_r": -219.08,
+   "pnl": -3726.64,
+   "stop_exit_share": 0.524,
+   "pnl_adj": -3899.44,
+   "slip_bps": 3.2
+  },
+  "MF3-open-flowsell-rsi5hi": {
+   "trades": 4,
+   "win_rate": 0.25,
+   "exp_r": -0.594,
+   "total_r": -2.37,
+   "pnl": -43.59,
+   "stop_exit_share": 0.75,
+   "pnl_adj": -45.11,
+   "slip_bps": 0.5
+  },
+  "NM-HL-T75-pm-long": {
+   "trades": 4,
+   "win_rate": 1.0,
+   "exp_r": 0.529,
+   "total_r": 2.12,
+   "pnl": 75.32,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 74.62,
+   "slip_bps": -3.4
+  },
+  "RW1-gapdn-bounce-flowsell-short-FD": {
+   "trades": 21,
+   "win_rate": 0.048,
+   "exp_r": -1.03,
+   "total_r": -21.63,
+   "pnl": -409.59,
+   "stop_exit_share": 0.952,
+   "pnl_adj": -423.33,
+   "slip_bps": 13.6
+  },
+  "ST7-rsi50dn-long-pm-t1s1-FD": {
+   "trades": 1,
+   "win_rate": 1.0,
+   "exp_r": 0.962,
+   "total_r": 0.96,
+   "pnl": 27.36,
+   "stop_exit_share": 0.0,
+   "pnl_adj": 26.79,
+   "slip_bps": 5.5
+  }
+ },
+ "decisions": [
+  {
+   "status": "skipped",
+   "reason": "burst brake",
+   "signals": 1210,
+   "whatif_exp_r": -0.606,
+   "whatif_raw_total_r": -733.57,
+   "whatif_total_r": -531.41,
+   "whatif_n": 664,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "cost filter: stop-exit cost #R > #R",
+   "signals": 209,
+   "whatif_exp_r": -0.767,
+   "whatif_raw_total_r": -160.32,
+   "whatif_total_r": -132.91,
+   "whatif_n": 157,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "crosscheck: quote #s old > #s",
+   "signals": 1,
+   "whatif_exp_r": 0.224,
+   "whatif_raw_total_r": 0.22,
+   "whatif_total_r": 0.17,
+   "whatif_n": 1,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "lot cap",
+   "signals": 1,
+   "whatif_exp_r": -1.061,
+   "whatif_raw_total_r": -1.06,
+   "whatif_total_r": -1.11,
+   "whatif_n": 1,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "max positions for this setup",
+   "signals": 108,
+   "whatif_exp_r": 0.311,
+   "whatif_raw_total_r": 33.61,
+   "whatif_total_r": 28.21,
+   "whatif_n": 108,
+   "verdict": "rule cost us R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "not shortable/ETB",
+   "signals": 314,
+   "whatif_exp_r": -0.744,
+   "whatif_raw_total_r": -233.61,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "position mismatch",
+   "signals": 4,
+   "whatif_exp_r": -0.54,
+   "whatif_raw_total_r": -2.16,
+   "whatif_total_r": -0.91,
+   "whatif_n": 2,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "size < # share after liquidity cap",
+   "signals": 7,
+   "whatif_exp_r": -0.198,
+   "whatif_raw_total_r": -1.38,
+   "whatif_total_r": -1.75,
+   "whatif_n": 5,
+   "verdict": "rule saved R today"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread #bps > max",
+   "signals": 451,
+   "whatif_exp_r": -0.527,
+   "whatif_raw_total_r": -237.47,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  },
+  {
+   "status": "skipped",
+   "reason": "spread is #% of stop distance",
+   "signals": 12,
+   "whatif_exp_r": -0.809,
+   "whatif_raw_total_r": -9.7,
+   "whatif_total_r": null,
+   "whatif_n": 0,
+   "verdict": "not tradable (unfillable skip)"
+  }
+ ],
+ "signals": {
+  "skipped": 2322,
+  "submitted": 545
+ },
+ "health": {
+  "polls": 87,
+  "last_poll_s": 5.4,
+  "symbols_last_bar": 3736,
+  "last_bar": "15:53",
+  "data_stale": null,
+  "data_outages": [],
+  "outage_actions": [],
+  "earnings_excluded": 116,
+  "earnings_source": "nasdaq",
+  "earnings_complete": true,
+  "session_close": "16:00",
+  "flatten_at": "15:55",
+  "early_close": false,
+  "kill": null,
+  "borrow_list": {
+   "symbols": 14450,
+   "at": "2026-11-25 15:20:12.843198-05:00"
+  },
+  "shadow": {
+   "run_id": 3,
+   "of_live": true,
+   "only_setups": 0,
+   "open_lots": 460,
+   "entered": 107,
+   "closed": 218,
+   "polls": 87,
+   "avg_ms": 58.0,
+   "live_avg_ms": 8055.1,
+   "share_of_poll": 0.007,
+   "only_every_n_polls": 1,
+   "quote_calls": 9,
+   "errors": 0
+  },
+  "position_mismatch": [
+   {
+    "symbol": "SOXX",
+    "broker_qty": 12.0,
+    "journal_qty": 0.0,
+    "avg_entry_price": 0.0,
+    "kind": "unknown_symbol",
+    "since": "2026-11-25 14:19:14.419873-05:00",
+    "polls": 87
+   }
+  ],
+  "position_check": {
+   "at": "2026-11-25 15:54:11.138014-05:00",
+   "symbols": 159,
+   "blocked": [
+    "SOXX"
+   ]
+  },
+  "partial_lots": [],
+  "risk_state": {
+   "halted": false,
+   "setup_stopped": [],
+   "trades_today": 545,
+   "realized_r": -372.525,
+   "r_basis": "raw R",
+   "open_r": 0.0,
+   "halt_counts_open": false,
+   "realized_r_after_costs": -390.807
+  },
+  "alerts": [
+   {
+    "at": "2026-11-25 14:24:14.559068-05:00",
+    "kind": "position_mismatch",
+    "account": "testing",
+    "text": "SOXX: broker 12 vs journal lots 0 (unknown_symbol); new entries in SOXX blocked; no automatic close"
+   }
+  ],
+  "flatten_failed": []
+ },
+ "findings": [
+  "'max positions for this setup' (skipped) blocked 108 names that would have made +28.2R (corrected what-if). Track it for 20 sessions before loosening it."
+ ]
+}
