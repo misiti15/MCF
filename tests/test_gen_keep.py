@@ -27,8 +27,9 @@ def test_every_generated_setup_is_in_the_gen_account_and_enabled():
     gy = (yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text()) or {}).get("strategies") or {}
     # FOOTRACE-EXIT (owner FOOTRACE 2026-11-19, covers the Setup Generator; Friday review 2026-11-20): tag "FOOTRACE-EXIT"
     grads |= {k for k, v in gy.items() if (v or {}).get("enabled")
-              and any("C3-EXIT100" in str(t) or "FOOTRACE-EXIT" in str(t) or "GYH V1" in str(t) for t in (v or {}).get("tags") or [])}
-    # GYH V1+V3 (owner 2026-11-25): floor moves tagged "GYH V1"; Graveyard archives (archived marker, owner consent) count too
+              and any("C3-EXIT100" in str(t) or "FOOTRACE-EXIT" in str(t) or "GYH V1" in str(t) or "ROT-B3" in str(t) for t in (v or {}).get("tags") or [])}
+    # GYH V1+V3 (owner 2026-11-25): floor moves tagged "GYH V1"; ROT-B3 (2026-11-25, from 11-27; owner pre-consent for GEN
+    # FOOTRACE-EXIT / floor moves): tagged "ROT-B3"; Graveyard archives (archived marker, owner consent) count too
     grads |= {k for k, v in gy.items() if isinstance((v or {}).get("archived"), dict) or isinstance((v or {}).get("retired"), dict)}
     disabled = sorted(n for n in picked if n in strat and not (strat[n] or {}).get("enabled") and n not in grads)
     assert picked, "registry has no generated setups"

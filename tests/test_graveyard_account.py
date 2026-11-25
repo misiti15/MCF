@@ -89,6 +89,18 @@ MOVED_GYH = {
     "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long": "explore1",
     "ST4-emadn-long-am-t1s05-FD": "explore1",
 }
+# ROT-B3 (arena rotation block 3, 2026-11-25, effective 2026-11-27; ledger 2026-11-27-rot-b3): FOOTRACE-EXIT / Graveyard
+# floor moves (GEN ones under the owner's 2026-11-25 pre-consent): setup -> home it left
+MOVED_ROTB3 = {
+    "GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long": "testing2",
+    "GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short": "testing2",
+    "GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short": "explore1",
+    "GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short": "livelab",
+    "NM-RWR1-exh150-gapdn-spyup-pm-short": "testingd",
+    "GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long": "testingd",
+    "GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long": "testingd",
+    "GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long": "testinge",
+}
 # RETIRE-R3 (owner 2026-11-20, applied at the Friday review 2026-11-20, effective 2026-11-23): terminal, block kept
 # (enabled false + retired marker), out of setup_order
 RETIRED = {k for k, v in (yaml.safe_load((ROOT / "config/account_graveyard.yaml").read_text())["strategies"] or {}).items()
@@ -138,7 +150,7 @@ def test_only_its_own_setups_run(monkeypatch):
     own = set(raw) - guests
     rot = cfg["rotation"]
     on = _on(cfg)
-    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH)
+    assert own == MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH) | set(MOVED_ROTB3)
     assert on == (own - set(MOVED_OUT) - ARCHIVED - RETIRED - set(rot["benched"])) | set(rot["guests"])
     assert len(RETIRED) == 11 and not (RETIRED & ARCHIVED)
     assert len(ARCHIVED) == 36   # GY-ARCHIVE-20 18 (2026-11-19) + GYH V3 18 (2026-11-27)
@@ -177,7 +189,11 @@ def test_moves_switched_off_at_source(monkeypatch):
     for k, acct in MOVED_GYH.items():   # GYH V1: off at home, out of its order, on in the Graveyard
         c = _cfg(monkeypatch, acct)
         assert k not in _on(c) and k not in c["live"]["setup_order"], k
+    for k, acct in MOVED_ROTB3.items():   # ROT-B3: off at home, out of its order, on in the Graveyard
+        c = _cfg(monkeypatch, acct)
+        assert k not in _on(c) and k not in c["live"]["setup_order"], k
     gy_on = _on(_cfg(monkeypatch))
+    assert set(MOVED_ROTB3) <= gy_on
     assert set(MOVED_GYH) <= gy_on and not (ARCHIVED & gy_on)
     assert set(MOVED_FR) - ARCHIVED <= gy_on and not (RETIRED & gy_on)
     for acct in ("testing", "testing2", "explore1", "livelab", "testingd", "testinge", "testingf", "gen"):
@@ -231,4 +247,4 @@ def test_dashboard_and_assignments_know_the_graveyard():
     bench = set(A.resting({"graveyard": st}, d.get("asof_session")))
     guests = {k for k, v in st.items() if isinstance(v, dict) and v.get("guest") and v.get("enabled")}
     assert d["labels"]["graveyard"] == "Graveyard" and set(d["accounts"]["graveyard"]) == \
-        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH)) - set(MOVED_OUT) - ARCHIVED - RETIRED - bench) | guests
+        ((MOVED_T1 | MOVED_T2 | MOVED_TE | set(MOVED_C3) | set(MOVED_FR) | set(MOVED_GYH) | set(MOVED_ROTB3)) - set(MOVED_OUT) - ARCHIVED - RETIRED - bench) | guests

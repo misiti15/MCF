@@ -86,7 +86,6 @@ live:
     - GEN-261028-10-BarRngATRge0p18-Flow3lem0p54-FromPCATRge0p28-PM-SPYgt0p5-hold-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
     - GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt0p7-holdtr-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
     - GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long   # GY-BENCH guest (b) from Setup Generator, 11-18..11-24
-    - NM-RWR1-exh150-gapdn-spyup-pm-short   # GY-BENCH guest (b) from Testing D, 11-18..11-24
     - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long   # GY-BENCH guest (b) from Setup Generator, 11-18..11-24
     - LIQ-pdl-sweep-open15-vwap-long   # GY-BENCH guest (b) from Testing E, 11-18..11-24
     - GEN-261021-03-RSI5le34-Ret15mATRge0p12-DayRngVsPrevge1p2-LUNCH-SPYltm0p25-t05s1-short   # GY-BENCH guest (b) from Testing E, 11-18..11-24
@@ -131,6 +130,14 @@ live:
     - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 72 live trades, -23.5R (moved from Testing E 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
     - GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long   # 88 live trades, -41.8R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
     - ST4-emadn-long-am-t1s05-FD   # 71 live trades, -9.2R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor; to 11-25: 65 tr, 9/28 traded/active days, -54.8R, avg -0.843, w/o best day -0.921); appended last
+    - GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short   # moved in 2026-11-25 (ROT-B3 Graveyard floor; to 11-25: 43 tr, 9/21 traded/active days, -15.0R, avg -0.349, w/o best day -0.451); appended last
+    - GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short   # moved in 2026-11-25 (ROT-B3 Graveyard floor; to 11-25: 110 tr, 10/22 traded/active days, -17.1R, avg -0.155, w/o best day -0.257); appended last
+    - GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT; to 11-25: 35 tr, 10/24 traded/active days, -10.1R, avg -0.288, w/o best day -0.385); appended last
+    - NM-RWR1-exh150-gapdn-spyup-pm-short   # moved in 2026-11-25 (ROT-B3 Graveyard floor; to 11-25: 65 tr, 4/28 traded/active days, -29.6R, avg -0.455, w/o best day -0.493); appended last
+    - GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor; to 11-25: 42 tr, 7/22 traded/active days, -16.9R, avg -0.402, w/o best day -0.418); appended last
+    - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor; to 11-25: 48 tr, 4/28 traded/active days, -9.4R, avg -0.196, w/o best day -0.441); appended last
+    - GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT; to 11-25: 36 tr, 5/28 traded/active days, -9.2R, avg -0.257, w/o best day -0.280); appended last
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -1080,18 +1087,24 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   # guest from Testing D (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
-  NM-RWR1-exh150-gapdn-spyup-pm-short:
-    enabled: true
-    guest: {from: '2026-11-18', until: '2026-11-24', home: testingd, reason: 'GY-BENCH (b: low exposure); back to Testing D 2026-11-25'}
-    max_stop_cost_r: 0.15
-    max_setup_daily_loss_r: null
+  NM-RWR1-exh150-gapdn-spyup-pm-short:   # moved from Testing D 2026-11-25 after the close (ROT-B3 Graveyard floor; ROT3 lane 3); from session 2026-11-27
+    enabled: true   # ROT-B3 Graveyard floor: block copied unchanged from Testing D. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 65 tr, 4 traded / 28 active days, -29.6R, avg -0.455, shrunk -0.348, w/o best day -0.493 (best-day share n/a), w/o top 2 -0.510, day t +0.79, last-5 -0.455; 11-25 alone -31.5R
     type: lab
     module: research/swarm1017/rework-rw/modules/RWR1-exh150-gapdn-spyup-pm-short-t05s1.py
-    context: [spy_fo]
+    context:
+    - spy_fo
     min_adv: 150000000
-    window: [1300, 1500]
+    window:
+    - 1300
+    - 1500
     scale_out_r: null
-    tags: [near-miss, swarm1017, forward-observation, q8, gy-guest, 'home:testingd']
+    tags:
+    - graveyard
+    - moved from Testing D 2026-11-25 (ROT-B3 Graveyard floor)
+    - near-miss
+    - swarm1017
+    - forward-observation
+    - q8
   # guest from Setup Generator (b), sessions 2026-11-18..2026-11-24 only; its home block is benched away for the window
   GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long:
     enabled: true
@@ -3104,6 +3117,495 @@ strategies:
         score: 0.3
         max_overlap: 0.522
         overlap_with: ST5-pdbrkup-short-mid-t05s1-FD
+        n_tried_in_run: 3000
+  GEN-261019-01-VWAPxUp-ATRdge3p6-FromPCATRlem0p68-OPEN-BRvwgt0p7-t05s05-long:   # moved from Testing A 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 FOOTRACE-EXIT + Graveyard floor: block copied unchanged from Testing A. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 65 tr, 9 traded / 28 active days, -54.8R, avg -0.843, shrunk -0.645, w/o best day -0.921 (best-day share n/a), w/o top 2 -0.941, day t -2.27, last-5 -1.039; 11-25 alone -35.9R
+    type: lab
+    module: research/generator/modules/GEN-261019-01-vwapx-open-long.py
+    context:
+    - breadth
+    min_adv: 95000000
+    window:
+    - 950
+    - 1030
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing A 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor)
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: OPEN
+        geom: t05s05
+        min_adv: 95000000.0
+        conds:
+        - - atr_d_pct
+          - '>='
+          - 3.6
+        - - breadth
+          - '>'
+          - 0.7
+        - - from_pc_atr
+          - <=
+          - -0.68
+        - - vwapReclaim
+          - ==
+          - 1.0
+      key: 7d1ee3901dcafa66
+      screen:
+        train:
+          n: 469
+          exp_r: 0.1006
+          t: 1.63
+          win: 0.667
+          days: 62
+        valid:
+          n: 517
+          exp_r: 0.0612
+          t: 1.16
+          win: 0.611
+          days: 43
+        all:
+          n: 986
+          exp_r: 0.0799
+          t: 1.91
+          win: 0.638
+          days: 105
+        per_day: 2.315
+        per_day_valid: 2.693
+        exp_up: 0.1376
+        exp_down: -0.135
+        exp_flat: -0.0175
+        excess_train: 0.0816
+        excess_valid: 0.1071
+        tier1: true
+        score: 1.41
+        max_overlap: 0.287
+        overlap_with: CWT09-gapdn-bounce-g5-lowerhalf-short
+        n_tried_in_run: 3000
+  GEN-261028-07-Z12ge1p6-Eff6le0p034-MID-SPYltm0p25-hold-short:   # moved from Testing A 2026-11-25 after the close (ROT-B3 Graveyard floor; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 Graveyard floor: block copied unchanged from Testing A. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 43 tr, 9 traded / 21 active days, -15.0R, avg -0.349, shrunk -0.239, w/o best day -0.451 (best-day share n/a), w/o top 2 -0.556, day t +0.84, last-5 -0.562; 11-25 alone -15.7R
+    type: lab
+    module: research/generator/modules/GEN-261028-07-z12-hi-mid-short.py
+    context:
+    - spy_fo
+    min_adv: 50000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing A 2026-11-25 (ROT-B3 Graveyard floor)
+    - generated
+    - gen-2026-10-28
+    gen:
+      date: '2026-10-28'
+      spec:
+        side: short
+        window: MID
+        geom: hold
+        min_adv: 50000000.0
+        conds:
+        - - eff6
+          - <=
+          - 0.034
+        - - spy_fo
+          - <
+          - -0.25
+        - - z12
+          - '>='
+          - 1.6
+      key: da5ba68862e630ba
+      screen:
+        train:
+          n: 256
+          exp_r: 0.0224
+          t: 0.15
+          win: 0.465
+          days: 67
+        valid:
+          n: 200
+          exp_r: 0.0169
+          t: 0.12
+          win: 0.44
+          days: 57
+        all:
+          n: 456
+          exp_r: 0.02
+          t: 0.19
+          win: 0.454
+          days: 124
+        per_day: 1.07
+        per_day_valid: 1.042
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: -0.6822
+        exp_down: 0.2007
+        exp_flat: -0.2811
+        excess_train: 0.0373
+        excess_valid: 0.0586
+        tier1: true
+        score: 0.37
+        max_overlap: 0.558
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261027-08-ORBfailDn-FromPCATRlem0p96-LUNCH-QQQltm0p6-hold-short:   # moved from Testing B 2026-11-25 after the close (ROT-B3 Graveyard floor; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 Graveyard floor: block copied unchanged from Testing B. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 110 tr, 10 traded / 22 active days, -17.1R, avg -0.155, shrunk -0.131, w/o best day -0.257 (best-day share n/a), w/o top 2 -0.346, day t +0.04, last-5 -0.637; 11-25 alone -19.9R
+    type: lab
+    module: research/generator/modules/GEN-261027-08-orbfaildn-lunch-short.py
+    context:
+    - qqq_fo
+    min_adv: 95000000
+    window:
+    - 1130
+    - 1400
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing B 2026-11-25 (ROT-B3 Graveyard floor)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: short
+        window: LUNCH
+        geom: hold
+        min_adv: 95000000.0
+        conds:
+        - - from_pc_atr
+          - <=
+          - -0.96
+        - - orb_fail_dn
+          - ==
+          - 1.0
+        - - qqq_fo
+          - <
+          - -0.6
+      key: 3ff5cc36f1c208d1
+      screen:
+        train:
+          n: 890
+          exp_r: 0.0096
+          t: 0.04
+          win: 0.387
+          days: 58
+        valid:
+          n: 497
+          exp_r: 0.0085
+          t: 0.04
+          win: 0.427
+          days: 53
+        all:
+          n: 1387
+          exp_r: 0.0092
+          t: 0.06
+          win: 0.401
+          days: 111
+        per_day: 3.256
+        per_day_valid: 2.589
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: -0.6434
+        exp_down: 0.1241
+        exp_flat: -0.1431
+        excess_train: -0.1798
+        excess_valid: 0.1117
+        tier1: true
+        score: 0.04
+        max_overlap: 0.515
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3082
+  GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short:   # moved from Testing C 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 FOOTRACE-EXIT: block copied unchanged from Testing C. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 35 tr, 10 traded / 24 active days, -10.1R, avg -0.288, shrunk -0.183, w/o best day -0.385 (best-day share n/a), w/o top 2 -0.457, day t -1.89, last-5 -0.104; 11-25 alone +0.0R
+    type: lab
+    module: research/generator/modules/GEN-261023-03-rsi5-lo-open-short.py
+    context:
+    - breadth
+    min_adv: 150000000
+    window:
+    - 950
+    - 1030
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing C 2026-11-25 (ROT-B3 FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-23
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: short
+        window: OPEN
+        geom: holdtr
+        min_adv: 150000000.0
+        conds:
+        - - breadth
+          - '>'
+          - 0.6
+        - - rsi5
+          - <=
+          - 13.0
+        - - vwap_atr
+          - <=
+          - -0.34
+      key: 247ae028e0d70f0f
+      screen:
+        train:
+          n: 1122
+          exp_r: 0.0417
+          t: 0.33
+          win: 0.459
+          days: 137
+        valid:
+          n: 1193
+          exp_r: 0.0391
+          t: 0.37
+          win: 0.478
+          days: 100
+        all:
+          n: 2315
+          exp_r: 0.0403
+          t: 0.5
+          win: 0.469
+          days: 237
+        per_day: 5.434
+        per_day_valid: 6.214
+        exp_up: 0.0194
+        exp_down: 0.0246
+        exp_flat: 0.089
+        excess_train: 0.2387
+        excess_valid: 0.1795
+        tier1: true
+        score: 1.08
+        max_overlap: 0.5
+        overlap_with: CWT04-backside-lh-a25-short
+        n_tried_in_run: 3000
+  GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long:   # moved from Testing D 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 FOOTRACE-EXIT + Graveyard floor: block copied unchanged from Testing D. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 42 tr, 7 traded / 22 active days, -16.9R, avg -0.402, shrunk -0.272, w/o best day -0.418 (best-day share n/a), w/o top 2 -0.581, day t -1.70, last-5 -0.533; 11-25 alone -14.9R
+    type: lab
+    module: research/generator/modules/GEN-261027-02-newlod-pm-long.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing D 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: long
+        window: PM
+        geom: holdtr
+        min_adv: 20000000.0
+        conds:
+        - - gap
+          - '>'
+          - 2.0
+        - - new_lod
+          - ==
+          - 1.0
+        - - rsi
+          - <
+          - 35.0
+        - - spy_fo
+          - '>'
+          - 0.0
+      key: 063067d2aabf2b86
+      screen:
+        train:
+          n: 207
+          exp_r: 0.0412
+          t: 0.44
+          win: 0.517
+          days: 87
+        valid:
+          n: 397
+          exp_r: 0.0268
+          t: 0.39
+          win: 0.476
+          days: 96
+        all:
+          n: 604
+          exp_r: 0.0317
+          t: 0.57
+          win: 0.49
+          days: 183
+        per_day: 1.418
+        per_day_valid: 2.068
+        per_day_median60: 0.5
+        expected_live_per_day: 0.55
+        exp_up: 0.1447
+        exp_down: -0.0919
+        exp_flat: -0.054
+        excess_train: 0.0654
+        excess_valid: 0.1572
+        tier1: true
+        score: 0.64
+        max_overlap: 0.208
+        overlap_with: LD8-spy-dip030-breadthturn-spxl-holdtr-long
+        n_tried_in_run: 3082
+      seed:
+        source: discovery 2026-10-24
+        layers:
+        - RSI14 < 35
+        - gap up > 2%
+        - new low of day
+        side: long
+        lab:
+          train_n: 890
+          train_exp_r: 0.054
+          test_n: 429
+          test_exp_r: 0.02
+  GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long:   # moved from Testing D 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 FOOTRACE-EXIT + Graveyard floor: block copied unchanged from Testing D. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 48 tr, 4 traded / 28 active days, -9.4R, avg -0.196, shrunk -0.138, w/o best day -0.441 (best-day share n/a), w/o top 2 -0.408, day t -2.10, last-5 -0.196; 11-25 alone -0.1R
+    type: lab
+    module: research/generator/modules/GEN-261019-07-volratio-hi-late-long.py
+    context:
+    - spy_fo
+    min_adv: 50000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing D 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor)
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: LATE
+        geom: t05s1
+        min_adv: 50000000.0
+        conds:
+        - - day_vs_prev_range
+          - '>='
+          - 1.5
+        - - spy_fo
+          - '>'
+          - 0.5
+        - - upper_wick
+          - '>='
+          - 0.59
+        - - volumeRatio
+          - '>='
+          - 2.0
+      key: 70ec895c21c1c754
+      screen:
+        train:
+          n: 739
+          exp_r: 0.0387
+          t: 0.65
+          win: 0.656
+          days: 58
+        valid:
+          n: 636
+          exp_r: 0.0097
+          t: 0.3
+          win: 0.616
+          days: 45
+        all:
+          n: 1375
+          exp_r: 0.0253
+          t: 0.7
+          win: 0.638
+          days: 103
+        per_day: 3.228
+        per_day_valid: 3.312
+        exp_up: 0.039
+        exp_down: null
+        exp_flat: -0.0827
+        excess_train: 0.0471
+        excess_valid: 0.0264
+        tier1: true
+        score: 0.55
+        max_overlap: 0.315
+        overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long:   # moved from Testing E 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT; GEN, owner pre-consent 2026-11-25); from session 2026-11-27
+    enabled: true   # ROT-B3 FOOTRACE-EXIT: block copied unchanged from Testing E. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 36 tr, 5 traded / 28 active days, -9.2R, avg -0.257, shrunk -0.165, w/o best day -0.280 (best-day share n/a), w/o top 2 -0.323, day t -2.37, last-5 -0.257; 11-25 alone +0.0R
+    type: lab
+    module: research/generator/modules/GEN-261019-06-vwapx-pm-long.py
+    context:
+    - spy_fo
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing E 2026-11-25 (ROT-B3 FOOTRACE-EXIT)
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: PM
+        geom: holdtr
+        min_adv: 20000000.0
+        conds:
+        - - emaDiff
+          - '>='
+          - 0.29
+        - - spy_fo
+          - '>'
+          - 0.5
+        - - vwapReclaim
+          - ==
+          - 1.0
+      key: 7368f86b5542d42c
+      screen:
+        train:
+          n: 845
+          exp_r: 0.1941
+          t: 0.75
+          win: 0.604
+          days: 59
+        valid:
+          n: 727
+          exp_r: 0.1896
+          t: 0.94
+          win: 0.571
+          days: 51
+        all:
+          n: 1572
+          exp_r: 0.192
+          t: 1.15
+          win: 0.588
+          days: 110
+        per_day: 3.69
+        per_day_valid: 3.786
+        exp_up: 0.2105
+        exp_down: -0.287
+        exp_flat: -0.0235
+        excess_train: -0.0191
+        excess_valid: 0.2447
+        tier1: true
+        score: 0.75
+        max_overlap: 0.422
+        overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

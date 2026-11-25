@@ -90,7 +90,8 @@ def test_guest_pairs_consistent_across_accounts():
     by = A._strategies("2026-11-17")
     assert R.window_violations(by) == []
     g = R.guests(by["graveyard"])
-    assert len(g) == 20 and all(x["home"] != "graveyard" for x in g.values())
+    # 20 guests 11-18..11-24; NM-RWR1's guest block became its resident block when it moved to the Graveyard (ROT-B3, 11-27)
+    assert len(g) == 19 and all(x["home"] != "graveyard" for x in g.values())
     for k, x in g.items():                               # guests carry no Graveyard tag (not Graveyard-origin)
         assert "graveyard" not in (by["graveyard"][k].get("tags") or [])
     for day in ("2026-11-17", "2026-11-18", "2026-11-24", "2026-11-25"):

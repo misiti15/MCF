@@ -51,18 +51,17 @@ live:
     - LD6-spy-dip020atr-breadthturn-spxl-holdtr-long   # 2 traded sessions / 2 trades
     - LD7-ns1-idxturn-holdtr-long   # 2 traded sessions / 2 trades
     - NM-PM-gapdn-above-pdh-rvol-short   # 3 traded sessions / 3 trades
-    - GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short   # 3 traded sessions / 19 trades
     - ST5-pdbrkup-short-mid-t05s1-FD   # 5 traded sessions / 6 trades
     - GEN-261027-04-VWAPatrge0-Gaplem2-FromOpenlem2-PM-SPYdn-t1s1-short   # 5 traded sessions / 26 trades
     - LD2-qqq-dip015-breadthturn-tqqq-t05s1-long   # 6 traded sessions / 6 trades
     - NM-RWR3-ns3-qqqup-early-short   # 6 traded sessions / 11 trades
-    - GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short   # 6 traded sessions / 25 trades
-    - ST3-rsi5up-short-pm-t1s1-FD   # 7 traded sessions / 15 trades
     - GEN-261022-04-RSI2le0-Eff6ge0p83-SMA20dge0p59-OPEN-BRvwlt0p5-t1s1-short   # 7 traded sessions / 25 trades
     - CWT05-flush-m075-v3-long   # 12 traded sessions / 24 trades
     - CWT12-flag-s1-long   # 14 traded sessions / 23 trades
     - RW6-ns2-up3-short-FD   # 22 traded sessions / 189 trades
     - ULT-22-wb4-wide-etf-long   # NEW 2026-11-20 ultimate_1119 (Tier A); appended last so existing setups keep their priority
+    - MF3-open-flowsell-rsi5hi   # moved in 2026-11-25 (ROT-B3 OD-OUT; to 11-25: 112 tr, 20/35 traded/active days, -7.4R, avg -0.066, w/o best day -0.103); appended last
+    - ST6-volspikeup-short-mid-t1s1-FD   # moved in 2026-11-25 (ROT-B3 OD-OUT; to 11-25: 53 tr, 12/33 traded/active days, -5.4R, avg -0.102, w/o best day -0.187); appended last
 strategies:
   L3-gap-slope-rsi5hi-FD-WB5:
     # Workbench copy of L3-gap-slope-rsi5hi-FD (On Deck), C3-WB5 item 5 (owner yes 2026-11-18): ONE change, refire off (first
@@ -281,15 +280,16 @@ strategies:
     tags: [near-miss, swarm1017, forward-observation]   # owner 2026-10-17 Q3: Testing 2
   # NM-ETF-late-dip-di-long: promoted to Primary 2026-11-10 (owner Team yes 2026-11-10, TEAM-6; from session 2026-11-11);
   # promotion = move, so its block is gone from this exclusive overlay (off here). Ran here 2026-11-05..11-10.
-  ST6-volspikeup-short-mid-t1s1-FD:
-    # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 6 live trades so far; ~1.24/session lab.
-    refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+  ST6-volspikeup-short-mid-t1s1-FD:   # moved from On Deck 2026-11-25 after the close (ROT-B3 OD-OUT; On Deck segment avg < 0 and w/o best day < -0.10 at the 11-23 and 11-25 re-tiers; back to the testing area it came from); from session 2026-11-27
+    enabled: true   # ROT-B3 OD-OUT: block copied unchanged from On Deck. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 53 tr, 12 traded / 33 active days, -5.4R, avg -0.102, shrunk -0.074, w/o best day -0.187 (best-day share n/a), w/o top 2 -0.217, day t +1.14, last-5 -0.146; 11-25 alone +0.0R
+    refire: true
     refire_cooldown: 1
-    enabled: false   # moved to On Deck 2026-11-11 after the close (ONDECK OD-IN); from session 2026-11-12
     type: lab
     module: research/bdi/fullday/ST6-volspikeup-short-mid-t1s1-FD.py
     min_adv: 95000000
-    window: [950, 1500]
+    window:
+    - 950
+    - 1500
     scale_out_r: null
   CWT09-gapdn-vwaploss-g10-short:
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 11 live trades so far; ~1.29/session lab.
@@ -302,7 +302,7 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "A7 gap<=-10 E=out T1 S guest", fill: false}
   ST3-rsi5up-short-pm-t1s1-FD:
     # moved from Testing 1 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 2 live trades so far; ~1.35/session lab.
-    enabled: true
+    enabled: false   # moved to Testing B 2026-11-25 after the close (ROT-B3 contender spread); from session 2026-11-27
     type: lab
     module: research/bdi/fullday/ST3-rsi5up-short-pm-t1s1-FD.py
     min_adv: 95000000
@@ -496,7 +496,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261023-03-RSI5le13-VWAPatrlem0p34-OPEN-BRvwgt0p6-holdtr-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261023-03-rsi5-lo-open-short.py
     context:
@@ -973,7 +973,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3082
   GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LATE-SPYltm0p5-t05s1-short:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Testing F 2026-11-25 after the close (ROT-B3 contender spread); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261029-07-upwick-hi-late-short.py
     context:
@@ -1055,5 +1055,11 @@ strategies:
     time_stop_min_r: 99
     scale_out_r: null
     tags: [ultimate_1119, tierA, "parent:NM-ETF-late-dip / WB4 (check flat"]
+  MF3-open-flowsell-rsi5hi:   # moved from On Deck 2026-11-25 after the close (ROT-B3 OD-OUT; fails OD-IN at the 11-23 and 11-25 re-tiers; ex-Primary, no testing-area origin, Testing C has no MF-family twin); from session 2026-11-27
+    enabled: true   # ROT-B3 OD-OUT: block copied unchanged from On Deck. live to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 112 tr, 20 traded / 35 active days, -7.4R, avg -0.066, shrunk -0.056, w/o best day -0.103 (best-day share n/a), w/o top 2 -0.142, day t +0.07, last-5 +0.064; 11-25 alone -2.4R
+    former_primary:
+      demoted: '2026-10-20'
+      first_testing_session: '2026-10-20'
+      review_after_sessions: 10
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

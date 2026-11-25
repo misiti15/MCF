@@ -45,20 +45,16 @@ live:
     - NM-RWN4-ns2-spyup05-notfri-short   # SPOTLIGHT 2026-11-20..11-25, 2 traded sessions / 40 trades (live, all accounts, to 11-19)
     - GEN-261029-09-RangeExpge1p6-Since950ATRlem0p43-OPEN-BRvwgt0p5-hold-short   # SPOTLIGHT 2026-11-20..11-25, 3 traded sessions / 6 trades (live, all accounts, to 11-19)
     - NM-RWN5-ns3-mon-weakrs-short   # SPOTLIGHT 2026-11-20..11-25, 3 traded sessions / 8 trades (live, all accounts, to 11-19)
-    - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # SPOTLIGHT 2026-11-20..11-25, 3 traded sessions / 21 trades (live, all accounts, to 11-19)
     - GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long   # SPOTLIGHT 2026-11-20..11-25, 3 traded sessions / 29 trades (live, all accounts, to 11-19)
-    - GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long   # SPOTLIGHT 2026-11-20..11-25, 4 traded sessions / 25 trades (live, all accounts, to 11-19)
     - CWT04-backside-vwaptest-a25-short   # 0 traded sessions / 0 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - IDX2-spy075-0945-3x-trail   # 0 traded sessions / 0 trades (live, all accounts, to 11-19)
     - LD4-st4-breadthup-t1s05-long   # 0 traded sessions / 0 trades (live, all accounts, to 11-19)
     - GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short   # 1 traded sessions / 1 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - GEN-261029-10-RSIslopege19-Ret5mlem0p21-EMAdiffge0p29-OPEN-BRvwgt0p5-t1s1-short   # 1 traded sessions / 2 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - GEN-261028-03-EMAdChgge0p15-VWAPxUp-Since950ATRlem0p43-LUNCH-SPYgt0p25-hold-long   # 1 traded sessions / 3 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
-    - NM-RWR1-exh150-gapdn-spyup-pm-short   # 2 traded sessions / 2 trades (live, all accounts, to 11-19)
     - GEN-261028-06-RSI5le13-VWAPatrlem0p15-DayRngVsPrevle0p34-MID-BRoplt0p35-hold-short   # 3 traded sessions / 10 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - GEN-261019-09-EMAdChgge0p15-Since950ATRge0p6-PM-SPYltm0p5-t05s1-short   # 4 traded sessions / 8 trades (live, all accounts, to 11-19) (ROT1 spotlight 11-16..11-19 ended)
     - CWT05-flush-m075-v5-long   # 5 traded sessions / 7 trades (live, all accounts, to 11-19)
-    - GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long   # 5 traded sessions / 17 trades (live, all accounts, to 11-19)
     - GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem0p78-LUNCH-BRopgt0p5-holdtr-short   # 6 traded sessions / 25 trades (live, all accounts, to 11-19)
     - GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-LATE-QQQltm0p3-t1s1-short   # 9 traded sessions / 182 trades (live, all accounts, to 11-19)
     - NS4-pm-vwap-reclaim-oversold-short   # 16 traded sessions / 52 trades (live, all accounts, to 11-19)
@@ -200,8 +196,8 @@ strategies:
     testing2: {batch: cwt-2026-10-12, source: "B5-m0.75-v5-Dnone-t05s1-full", fill: false}
   NM-RWR1-exh150-gapdn-spyup-pm-short:   # moved from Testing C 2026-11-11 after the close (D/E/F fill (low-rep)); from session 2026-11-12
     # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 1 live trades so far; ~1.36/session lab.
-    enabled: true
-    benched: {from: "2026-11-18", until: "2026-11-24", away: graveyard, reason: "GY-BENCH guest in the Graveyard; back here 2026-11-25"}
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 Graveyard floor); from session 2026-11-27
+    # GY-BENCH 2026-11-18..11-24 (away in the Graveyard as a guest) ended; its Graveyard guest block became its resident block (ROT-B3)
     type: lab
     module: research/swarm1017/rework-rw/modules/RWR1-exh150-gapdn-spyup-pm-short-t05s1.py
     context: [spy_fo]
@@ -674,7 +670,7 @@ strategies:
         overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
         n_tried_in_run: 3000
   GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long:   # moved from Setup Generator 2026-11-15 (arena rotation ROT1 block 1, 2026-11-16..11-19, rebalance); from session 2026-11-16
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261027-02-newlod-pm-long.py
     context:
@@ -1211,7 +1207,7 @@ strategies:
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3000
   GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long:   # moved from Testing B 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing B, block copied unchanged)
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (ROT-B3 FOOTRACE-EXIT + Graveyard floor); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261019-07-volratio-hi-late-long.py
     context:
@@ -1347,7 +1343,7 @@ strategies:
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3082
   GEN-261028-05-EMAdChgge0p093-ORLdistlem0p42-LAM-QQQgt0p6-holdtr-long:   # moved from Testing B 2026-11-19 (arena rotation ROT block 2, spotlight 2026-11-20..11-25; spotlight); from session 2026-11-20
-    enabled: true   # arena rotation ROT block 2, spotlight 2026-11-20..11-25: spotlight (moved from Testing B, block copied unchanged)
+    enabled: false   # moved to Testing B 2026-11-25 after the close (ROT-B3 rebalance); from session 2026-11-27
     type: lab
     module: research/generator/modules/GEN-261028-05-emadchg-hi-lam-long.py
     context:
