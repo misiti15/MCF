@@ -43,7 +43,6 @@ live:
   - GEN-261020-02-RSIslopelem19-BarRngATRge0p14-BuyPressge0p17-LATE-BRvwgt0p7-t05s1-short
   - GEN-261023-02-Ret15mATRlem0p068-EMAdChgge0p028-ATRdge6-PM-BRopgt0p65-hold-long
   - GEN-261022-02-ORBfailUp-EMAdChglem0p094-ADX7ge57-LATE-BRvwgt0p7-t05s1-long
-  - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long
   - GEN-POD1022-01-thrasher-breadth-thrust-stocks-holdtr-long
   - GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short
   - GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long
@@ -249,7 +248,7 @@ strategies:
         overlap_with: CWT14-failbrk-orl-p05-long
         n_tried_in_run: 3000
   GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261019-04-emadchg-hi-mid-long.py
     context:

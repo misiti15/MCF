@@ -61,7 +61,7 @@ INACT2 = {"IDX1-qqq100-0955-TQQQ-trail", "IDX1-qqq100-0955-TQQQ-hold", "IDX2-spy
 # (RW3S-gapdn-flowsell-short-FD stayed on 11-04 and moved on to Testing E on 2026-11-12;
 #  ST4-emadn-long-am-t1s05-FD stayed on 11-04 and moved on to Testing B on 2026-11-13, see FROM_GY)
 # PDL-1a R2A legs stayed in Testing 2 at ROLL1 (11-04); FOOTRACE-EXIT moved them to the Graveyard (Friday review 2026-11-20, from 11-23)
-STAY = {"graveyard": {"CWT14-failbrk-pdl-p05-R2A-long", "CWT14-failbrk-pdl-p05-R2A-short"}}
+STAY = {"graveyard": {"CWT14-failbrk-pdl-p05-R2A-short"}}   # the -long leg archived 2026-11-25 (GYH V3, from 11-27)
 
 
 def _cfg(monkeypatch, acct):
@@ -80,7 +80,17 @@ FR_OUT = {"GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long"
           "GEN-261027-09-ORBfailDn-Gapge2-Slope6ge0p03-LAM-BRvwlt0p5-t05s05-short": "livelab",
           "GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long": "livelab",
           # QA-EXIT2 2026-11-21 (from 11-23)
-          "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": "livelab"}
+          "GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long": "livelab",
+          # GYH V1 2026-11-25 (owner, Graveyard floor; from 11-27; ledger 2026-11-27-gyh-v1-v3)
+          "CWT13-vwapstretch-z075-long": "explore1",
+          "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long": "explore1",
+          "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long": "explore1",
+          "ST4-emadn-long-am-t1s05-FD": "explore1",
+          "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long": "livelab"}
+GYH_V1 = {k: a for k, a in FR_OUT.items() if k in ("CWT13-vwapstretch-z075-long", "ST4-emadn-long-am-t1s05-FD",
+          "GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long",
+          "GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long",
+          "GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long")}
 from tests.test_ult1119_deploy import ULT_1120  # noqa: E402  ultimate_1119 admissions, effective 2026-11-20
 from tests.test_beg1120_deploy import BEG_1123  # noqa: E402  beginner_1120 admissions, effective 2026-11-23
 from tests.test_remedyq_1120 import COPIES as RQ_1123  # noqa: E402  Remedy-Q (a) copies, effective 2026-11-23
@@ -121,8 +131,9 @@ def test_moves_are_moves(monkeypatch):
         cfg = _cfg(monkeypatch, acct)
         back = TO_ONDECK if acct == "testing" else set()                       # On Deck from 2026-11-12
         guests = {k for k, v in cfg["strategies"].items() if isinstance(v, dict) and v.get("guest")}   # GY-BENCH 11-18..11-24
-        assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back - guests), acct     # switched off where they came from
-        assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back - guests), acct
+        gyh = set(GYH_V1) if acct == "graveyard" else set()                      # GYH V1 2026-11-25: Graveyard floor moves
+        assert not (_on(cfg) & (MOVED_X1 | MOVED_LL) - back - guests - gyh), acct     # switched off where they came from
+        assert not (set(cfg["live"]["setup_order"]) & (MOVED_X1 | MOVED_LL) - back - guests - gyh), acct
         assert back <= _on(cfg), acct
         assert STAY.get(acct, set()) <= _on(cfg), acct
     txt = (ROOT / "config/account_testing2.yaml").read_text()
@@ -163,7 +174,7 @@ def test_assignments_and_ledger():
                                              | {k for k, a in WB_1116.items() if a == acct}) - set(C3_OUT)
                                             | {k for k, a in C3_IN.items() if a == acct}
                                             | {k for k, a in ULT_1120.items() if a == acct}, acct) - set(FR_OUT), acct
-    assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY)   # only the Graveyard-origin ones
+    assert {k for k, v in d["setups"].items() if v.get("no_leaderboard")} == set(FROM_GY) - set(GYH_V1)   # only the Graveyard-origin ones (ST4 back in the Graveyard, GYH V1)
     led = [json.loads(x) for x in (ROOT / "research/ledger.jsonl").read_text().splitlines() if x.strip()]
     e = next(x for x in led if x["id"] == "2026-11-04-lowrep-explore1-livelab")
     assert e["effective"] == "2026-11-05" and "owner" in e["approved_by"]

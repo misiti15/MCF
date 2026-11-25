@@ -122,6 +122,15 @@ live:
     - GEN-261022-08-EMAdChglem0p094-Flow3ge1-RVolDayle0p59-AM-SPYgt0p25-holdtr-short   # 92 live trades, -24.5R (moved from Testing E 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
     - CWT05-flush-m05-v3-long   # 119 live trades, -17.3R (moved from Testing F 2026-11-21, QA-EXIT2; from session 2026-11-23)
     - GEN-261027-06-ORBfailUp-BarsSinceLODle5-MID-BRoplt0p35-holdtr-long   # 205 live trades, -135.1R (moved from Testing C 2026-11-21, QA-EXIT2; from session 2026-11-23)
+    - CWT13-vwapstretch-z075-long   # 82 live trades, -38.5R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long   # 261 live trades, -74.0R (moved from Setup Generator 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long   # 71 live trades, -25.6R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long   # 74 live trades, -37.4R (moved from Testing D 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long   # 96 live trades, -26.8R (moved from Testing C 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long   # 50 live trades, -16.3R (moved from Testing D 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 72 live trades, -23.5R (moved from Testing E 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long   # 88 live trades, -41.8R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
+    - ST4-emadn-long-am-t1s05-FD   # 71 live trades, -9.2R (moved from Testing B 2026-11-25, GYH V1 Graveyard floor; from session 2026-11-27)
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -499,7 +508,8 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-11-02 (owner)"]
   NS5-sma50-flush-oversold-long-FD:
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1 + 2 split copies; the dashboard merges them). 44 trades -0.384R (-0.469R w/o best day; 3 busiest -0.699R); 2-yr base -0.039R.
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 32 active days, 141 trades, avg R w/o best day -0.346 (<= -0.10), last-10-session R -19.2 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/bdi/fullday/NS5-sma50-flush-oversold-long-FD.py
     min_adv: 95000000
@@ -509,14 +519,15 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
   ST4-emadn-long-am-t1s05-FD:
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 15 trades -0.578R (-0.737R w/o best day).
-    enabled: false   # moved to Testing B 2026-11-12 after the close (owner GY-RW6/ST4 arena); from session 2026-11-13
+    # moved to Graveyard from Testing B 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 71 trades, 33 active days, -9.2R, avg -0.130R, shrunk -0.101, w/o best day -0.261R, last-5 avg -0.323R
+    enabled: true
     type: lab
     module: research/bdi/fullday/ST4-emadn-long-am-t1s05-FD.py
     min_adv: 95000000
     window: [950, 1500]
     scale_out_r: null
     live_scale_out: false
-    tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
+    tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)", "moved to Testing B 2026-11-12 (owner GY-RW6/ST4 arena)", "moved from Testing B 2026-11-25 (GYH V1)"]
   RW6G1-ns2-up3-vwap2sd-short-FD:
     # moved to Graveyard 2026-11-03 (owner DM-N3; earlier trades stay in Testing 1; the dashboard merges them). 28 trades -0.237R (-0.277R w/o best day).
     enabled: true
@@ -531,7 +542,8 @@ strategies:
     tags: [graveyard, "moved to Graveyard 2026-11-03 (owner)"]
   RW3S-gapdn-flowsell-short-FD:
     # moved to Graveyard 2026-11-13 (owner RW3S-GY drop; earlier trades stay in Testing 2 / Testing E; the dashboard merges them). 297 trades / 9 sessions -0.289R (-0.352R w/o best day), 2 green.
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 17 active days, 613 trades, avg R w/o best day -0.249 (<= -0.10), last-10-session R -49.8 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/bdi/night1102/simple/modules/RW3S-gapdn-flowsell-short-FD.py
     min_adv: 95000000
@@ -1320,7 +1332,8 @@ strategies:
   #      sessions, avg R <= -0.05 and avg R w/o best day <= 0 (covers W7-DRAIN). Blocks copied unchanged (Graveyard caps and -2R latch apply).
   GEN-261022-09-Ret15mATRlem0p16-BarRngATRge0p11-ADX7ge64-AM-BRvwlt0p3-hold-short:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 211 trades, 20 live sessions (3 traded), -181.8R, avg -0.862R, w/o best day -0.882R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 23 active days, 225 trades, avg R w/o best day -0.874 (<= -0.10), last-10-session R -182.6 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261022-09-ret15matr-lo-am-short.py
     context: [breadth]
@@ -1413,7 +1426,8 @@ strategies:
         n_tried_in_run: 3000
   GEN-261019-05-RSIslopelem9-PDLdistle0p14-EMAdifflem0p46-OPEN-SPYltm0p5-t1s1-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 103 trades, 23 live sessions (4 traded), -57.2R, avg -0.555R, w/o best day -0.617R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 26 active days, 201 trades, avg R w/o best day -0.773 (<= -0.10), last-10-session R -147.3 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261019-05-rsislope-lo-open-long.py
     context: [spy_fo]
@@ -1517,7 +1531,8 @@ strategies:
         n_tried_in_run: 3146
   GEN-261021-06-ORBfailUp-Gapge1p2-MID-BRopgt0p5-hold-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 237 trades, 21 live sessions (11 traded), -41.6R, avg -0.176R, w/o best day -0.258R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 25 active days, 297 trades, avg R w/o best day -0.315 (<= -0.10), last-10-session R -84.5 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261021-06-orbfailup-mid-long.py
     context: [breadth_open]
@@ -1582,7 +1597,8 @@ strategies:
     tags: [graveyard, moved from On Deck 2026-11-18 (owner C3-EXIT100)]
   GEN-261028-09-FlowShiftlem0p65-ADX7le23-AM-BRoplt0p35-t05s1-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 136 trades, 16 live sessions (7 traded), -30.7R, avg -0.226R, w/o best day -0.251R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 21 active days, 156 trades, avg R w/o best day -0.257 (<= -0.10), last-10-session R -37.0 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261028-09-flowshift-lo-am-long.py
     context: [breadth_open]
@@ -1623,7 +1639,8 @@ strategies:
         n_tried_in_run: 3000
   GEN-261021-07-VWAPxUp-ORBfailUp-AM-SPYgt0p5-hold-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 143 trades, 21 live sessions (6 traded), -27.6R, avg -0.193R, w/o best day -0.339R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 26 active days, 148 trades, avg R w/o best day -0.322 (<= -0.10), last-10-session R -28.0 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261021-07-vwapx-am-long.py
     context: [spy_fo]
@@ -1662,7 +1679,8 @@ strategies:
         n_tried_in_run: 3000
   GEN-261028-08-Ret5mge0p21-SMA20dlem0p16-Compress6le0p11-LUNCH-BRoplt0p35-holdtr-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 132 trades, 16 live sessions (5 traded), -27.2R, avg -0.206R, w/o best day -0.230R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 20 active days, 157 trades, avg R w/o best day -0.365 (<= -0.10), last-10-session R -52.5 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261028-08-ret5m-hi-lunch-long.py
     context: [breadth_open]
@@ -1704,7 +1722,8 @@ strategies:
         n_tried_in_run: 3000
   GEN-261027-05-VolRatioge1p5-ORLdistge0p41-ATRdge6-MID-BRvwgt0p7-t05s1-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 107 trades, 17 live sessions (5 traded), -23.5R, avg -0.219R, w/o best day -0.281R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 22 active days, 195 trades, avg R w/o best day -0.262 (<= -0.10), last-10-session R -11.3 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261027-05-volratio-hi-mid-long.py
     context: [breadth]
@@ -1786,7 +1805,8 @@ strategies:
         n_tried_in_run: 3000
   GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 123 trades, 22 live sessions (9 traded), -19.4R, avg -0.158R, w/o best day -0.203R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 27 active days, 133 trades, avg R w/o best day -0.242 (<= -0.10), last-10-session R -26.6 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261020-05-orbfaildn-lunch-long.py
     context: [spy_fo]
@@ -1828,7 +1848,8 @@ strategies:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 109 trades, 28 live sessions (24 traded), -17.8R, avg -0.163R, w/o best day -0.246R
     refire: true
     refire_cooldown: 3
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 33 active days, 117 trades, avg R w/o best day -0.258 (<= -0.10), last-10-session R -11.5 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/bdi/fullday/NS1-rsidip-rsi5pop-long-FD.py
     min_adv: 95000000
@@ -1857,7 +1878,8 @@ strategies:
     tags: [graveyard, moved from Testing A 2026-11-18 (owner C3-EXIT100)]
   GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long:
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 131 trades, 16 live sessions (6 traded), -8.8R, avg -0.067R, w/o best day -0.174R
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 21 active days, 131 trades, avg R w/o best day -0.185 (<= -0.10), last-10-session R -10.9 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261028-02-vwapx-am-long.py
     context: [qqq_fo]
@@ -1900,7 +1922,8 @@ strategies:
   #      (>= 15 active days, >= 30 trades, avg R <= 0, w/o best day <= 0, day t <= -1.5; ledger 2026-11-23-friday-review-1120)
   GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long:
     # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing B, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 103 trades, 24 active days, -41.5R, avg -0.403R, w/o best day -0.745R, day t -2.93
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 27 active days, 103 trades, avg R w/o best day -0.782 (<= -0.10), last-10-session R -43.9 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261020-03-macdh-hi-mid-long.py
     context:
@@ -1967,7 +1990,8 @@ strategies:
         n_tried_in_run: 3146
   CWT14-failbrk-pdl-p05-R2A-long:
     # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing A, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 433 trades, 15 active days, -65.1R, avg -0.150R, w/o best day -0.158R, day t -2.88
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 18 active days, 449 trades, avg R w/o best day -0.157 (<= -0.10), last-10-session R -67.2 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/bdi/cwt/live/CWT14-failbrk-pdl-p05-R2A-long.py
     context: [spy_prng]
@@ -1977,7 +2001,8 @@ strategies:
     tags: [graveyard, moved from Testing A 2026-11-20 (FOOTRACE-EXIT), owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   GEN-261029-02-RSI2le0-VWAPcrossesge9-DayRngVsPrevle0p52-MID-BRvwlt0p4-hold-long:
     # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing B, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 79 trades, 17 active days, -27.3R, avg -0.346R, w/o best day -0.393R, day t -2.63
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 20 active days, 114 trades, avg R w/o best day -0.359 (<= -0.10), last-10-session R -16.5 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261029-02-rsi2-lo-mid-long.py
     context:
@@ -2196,7 +2221,8 @@ strategies:
         n_tried_in_run: 3082
   GEN-261020-01-MACDhge0p12-RSI5le25-PM-BRvwgt0p6-t1s05-long:
     # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Setup Generator, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 55 trades, 24 active days, -15.9R, avg -0.289R, w/o best day -0.305R, day t -1.80
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 27 active days, 102 trades, avg R w/o best day -0.211 (<= -0.10), last-10-session R -7.3 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261020-01-macdh-hi-pm-long.py
     context:
@@ -2283,7 +2309,8 @@ strategies:
     tags: [graveyard, moved from Testing A 2026-11-20 (FOOTRACE-EXIT), owner-exception, below-bar, forward-observation, pdl1030, PDL-1a]
   GEN-261026-10-ORBfailDn-EMAdChglem0p051-PM-BRopgt0p65-t1s1-long:
     # moved to Graveyard 2026-11-20 after the close (FOOTRACE-EXIT from Testing C, Friday review; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 41 trades, 20 active days, -9.2R, avg -0.224R, w/o best day -0.425R, day t -1.62
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 23 active days, 226 trades, avg R w/o best day -0.298 (<= -0.10), last-10-session R -31.0 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/generator/modules/GEN-261026-10-orbfaildn-pm-long.py
     context:
@@ -2490,7 +2517,8 @@ strategies:
         n_tried_in_run: 3000
   CWT05-flush-m05-v3-long:
     # moved to Graveyard 2026-11-21 (owner QA-EXIT2: FOOTRACE-EXIT from Testing F on the corrected LR8 cost basis; from session 2026-11-23). Live record to 11-20 (all accounts, run 1, LR8 R after costs, identical signals once): 119 trades, 30 active days, -17.3R, avg -0.145R, w/o best day -0.179R, day t -1.64
-    enabled: true
+    enabled: false   # ARCHIVED 2026-11-25 after the close (owner GYH V3; from session 2026-11-27): record kept, re-testable, never deleted (rule 20)
+    archived: {from: "2026-11-27", code: GYH-V3, reason: "GYH V3 dead-weight archive: whole live record to 11-25: 33 active days, 123 trades, avg R w/o best day -0.212 (<= -0.10), last-10-session R -7.4 (<= 0); not a Compass exemption (research/repsrot_1125/REPORT.md)"}
     type: lab
     module: research/bdi/cwt/live/CWT05-flush-m05-v3-long.py
     min_adv: 95000000
@@ -2567,5 +2595,515 @@ strategies:
         max_overlap: 0.438
         overlap_with: CWT14-failbrk-pdl-p05-long
         n_tried_in_run: 3082
+  CWT13-vwapstretch-z075-long:
+    # moved to Graveyard from Testing B 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 82 trades, 33 active days, -38.5R, avg -0.469R, shrunk -0.377, w/o best day -0.527R, last-5 avg -0.781R
+    # moved from Testing 2 2026-11-04 (owner, low-rep rotation; from session 2026-11-05). 16 live trades so far; ~9.23/session lab.
+    enabled: true
+    type: lab
+    module: research/bdi/cwt/live/CWT13-vwapstretch-z075-long.py
+    min_adv: 95000000
+    window: [950, 1500]
+    scale_out_r: null
+    testing2: {batch: cwt-2026-10-12, source: "B2-z0.75-Uall-sidelong-t1s1-full", fill: false}
+    tags: [graveyard, "moved from Testing B 2026-11-25 (GYH V1)"]
+  GEN-261019-04-EMAdChgge0p15-RSI14le22-MID-BRoplt0p5-t1s1-long:
+    # moved to Graveyard from Setup Generator 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 261 trades, 28 active days, -74.0R, avg -0.284R, shrunk -0.264, w/o best day -0.446R, last-5 avg -0.536R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261019-04-emadchg-hi-mid-long.py
+    context:
+    - breadth_open
+    min_adv: 20000000
+    window:
+    - 1100
+    - 1300
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Setup Generator 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-19
+    gen:
+      date: '2026-10-19'
+      spec:
+        side: long
+        window: MID
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth_open
+          - <
+          - 0.5
+        - - emaDiff_chg3
+          - '>='
+          - 0.15
+        - - rsi
+          - <=
+          - 22.0
+      key: 69186cc84b480af6
+      screen:
+        train:
+          n: 1002
+          exp_r: 0.1353
+          t: 1.09
+          win: 0.605
+          days: 108
+        valid:
+          n: 1004
+          exp_r: 0.0065
+          t: 0.08
+          win: 0.523
+          days: 113
+        all:
+          n: 2006
+          exp_r: 0.0708
+          t: 0.89
+          win: 0.564
+          days: 221
+        per_day: 4.709
+        per_day_valid: 5.229
+        exp_up: 0.4609
+        exp_down: 0.0324
+        exp_flat: 0.0718
+        excess_train: 0.1389
+        excess_valid: 0.06
+        tier1: true
+        score: 0.83
+        max_overlap: 0.283
+        overlap_with: ST2-slope20up-long-am-t05s1-FD
+        n_tried_in_run: 3000
+  GEN-261023-04-EMAdChglem0p028-PDHdistle0p074-EMAdifflem0p46-PM-QQQltm0p6-t1s1-long:
+    # moved to Graveyard from Testing B 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 71 trades, 24 active days, -25.6R, avg -0.361R, shrunk -0.282, w/o best day -0.378R, last-5 avg -0.434R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261023-04-emadchg-lo-pm-long.py
+    context:
+    - qqq_fo
+    min_adv: 20000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing B 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-23
+    gen:
+      date: '2026-10-23'
+      spec:
+        side: long
+        window: PM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - dist_pdh_atr
+          - <=
+          - 0.074
+        - - emaDiff
+          - <=
+          - -0.46
+        - - emaDiff_chg3
+          - <=
+          - -0.028
+        - - qqq_fo
+          - <
+          - -0.6
+      key: dfc44add58041678
+      screen:
+        train:
+          n: 338
+          exp_r: 0.1044
+          t: 0.82
+          win: 0.601
+          days: 53
+        valid:
+          n: 358
+          exp_r: 0.0498
+          t: 0.71
+          win: 0.564
+          days: 51
+        all:
+          n: 696
+          exp_r: 0.0763
+          t: 1.08
+          win: 0.582
+          days: 104
+        per_day: 1.634
+        per_day_valid: 1.865
+        exp_up: 0.0067
+        exp_down: -0.0503
+        exp_flat: 0.2606
+        excess_train: 0.1255
+        excess_valid: 0.0086
+        tier1: true
+        score: 0.96
+        max_overlap: 0.6
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261026-02-VolRatioge2-SMA20dlem0p58-BarsSinceLODle1-LATE-BRoplt0p35-t1s1-long:
+    # moved to Graveyard from Testing D 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 74 trades, 23 active days, -37.4R, avg -0.506R, shrunk -0.398, w/o best day -0.707R, last-5 avg -0.506R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-02-volratio-hi-late-long.py
+    context:
+    - breadth_open
+    min_adv: 95000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing D 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: long
+        window: LATE
+        geom: t1s1
+        min_adv: 95000000.0
+        conds:
+        - - bars_since_lod
+          - <=
+          - 1.0
+        - - breadth_open
+          - <
+          - 0.35
+        - - sma20_dist_pct
+          - <=
+          - -0.58
+        - - volumeRatio
+          - '>='
+          - 2.0
+      key: e3c79a9a89641463
+      screen:
+        train:
+          n: 720
+          exp_r: 0.0432
+          t: 0.49
+          win: 0.581
+          days: 63
+        valid:
+          n: 394
+          exp_r: 0.0156
+          t: 0.17
+          win: 0.533
+          days: 31
+        all:
+          n: 1114
+          exp_r: 0.0335
+          t: 0.51
+          win: 0.564
+          days: 94
+        per_day: 2.615
+        per_day_valid: 2.052
+        exp_up: null
+        exp_down: 0.0048
+        exp_flat: 0.7657
+        excess_train: 0.089
+        excess_valid: 0.1879
+        tier1: true
+        score: 0.42
+        max_overlap: 0.379
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261026-06-NewLOD-SMA20slopelem0p28-LATE-SPYltm0p25-t1s1-long:
+    # moved to Graveyard from Testing C 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 96 trades, 23 active days, -26.8R, avg -0.279R, shrunk -0.231, w/o best day -0.442R, last-5 avg -0.490R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261026-06-newlod-late-long.py
+    context:
+    - spy_fo
+    min_adv: 150000000
+    window:
+    - 1400
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing C 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-26
+    gen:
+      date: '2026-10-26'
+      spec:
+        side: long
+        window: LATE
+        geom: t1s1
+        min_adv: 150000000.0
+        conds:
+        - - new_lod
+          - ==
+          - 1.0
+        - - sma20_slope_pct
+          - <=
+          - -0.28
+        - - spy_fo
+          - <
+          - -0.25
+      key: 90d6f97570064307
+      screen:
+        train:
+          n: 847
+          exp_r: 0.0011
+          t: 0.01
+          win: 0.54
+          days: 67
+        valid:
+          n: 552
+          exp_r: 0.0025
+          t: 0.03
+          win: 0.533
+          days: 61
+        all:
+          n: 1399
+          exp_r: 0.0016
+          t: 0.03
+          win: 0.537
+          days: 128
+        per_day: 3.284
+        per_day_valid: 2.875
+        exp_up: 0.2304
+        exp_down: -0.0766
+        exp_flat: 0.3467
+        excess_train: 0.0971
+        excess_valid: 0.1019
+        tier1: true
+        score: 0.26
+        max_overlap: 0.317
+        overlap_with: LD2-qqq-dip015-breadthturn-tqqq-t05s1-long
+        n_tried_in_run: 3000
+  GEN-261027-03-NewLOD-DayPosle0p19-SMA20dlem0p59-LAM-SPYgt0p5-hold-long:
+    # moved to Graveyard from Testing D 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 50 trades, 22 active days, -16.3R, avg -0.326R, shrunk -0.233, w/o best day -0.438R, last-5 avg -0.326R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261027-03-newlod-lam-long.py
+    context:
+    - spy_fo
+    min_adv: 95000000
+    window:
+    - 1030
+    - 1200
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing D 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: long
+        window: LAM
+        geom: hold
+        min_adv: 95000000.0
+        conds:
+        - - day_pos
+          - <=
+          - 0.19
+        - - new_lod
+          - ==
+          - 1.0
+        - - sma20_dist_pct
+          - <=
+          - -0.59
+        - - spy_fo
+          - '>'
+          - 0.5
+      key: c2360bbea772cff0
+      screen:
+        train:
+          n: 490
+          exp_r: 0.2263
+          t: 0.65
+          win: 0.412
+          days: 45
+        valid:
+          n: 681
+          exp_r: 0.0099
+          t: 0.12
+          win: 0.457
+          days: 40
+        all:
+          n: 1171
+          exp_r: 0.1005
+          t: 0.65
+          win: 0.438
+          days: 85
+        per_day: 2.749
+        per_day_valid: 3.547
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.1389
+        exp_down: 0.6265
+        exp_flat: -0.171
+        excess_train: -0.0265
+        excess_valid: 0.0976
+        tier1: true
+        score: 0.62
+        max_overlap: 0.225
+        overlap_with: CWT14-failbrk-pdl-p05-long
+        n_tried_in_run: 3082
+  GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short:
+    # moved to Graveyard from Testing E 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 72 trades, 22 active days, -23.5R, avg -0.326R, shrunk -0.255, w/o best day -0.438R, last-5 avg -0.405R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261027-07-rsi14-lo-am-short.py
+    context:
+    - breadth
+    min_adv: 20000000
+    window:
+    - 950
+    - 1100
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing E 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-27
+    gen:
+      date: '2026-10-27'
+      spec:
+        side: short
+        window: AM
+        geom: t1s1
+        min_adv: 20000000.0
+        conds:
+        - - breadth
+          - <
+          - 0.5
+        - - fromOpen
+          - '>'
+          - 2.0
+        - - rsi
+          - <
+          - 35.0
+      key: cd793e360709658d
+      screen:
+        train:
+          n: 482
+          exp_r: 0.1164
+          t: 1.74
+          win: 0.591
+          days: 131
+        valid:
+          n: 676
+          exp_r: 0.0025
+          t: 0.03
+          win: 0.537
+          days: 141
+        all:
+          n: 1158
+          exp_r: 0.0499
+          t: 0.89
+          win: 0.56
+          days: 272
+        per_day: 2.718
+        per_day_valid: 3.521
+        per_day_median60: 2.0
+        expected_live_per_day: 2.2
+        exp_up: -0.1039
+        exp_down: 0.177
+        exp_flat: -0.0561
+        excess_train: 0.0806
+        excess_valid: 0.0703
+        tier1: true
+        score: 0.28
+        max_overlap: 0.422
+        overlap_with: L3-gap-slope-fromopen-FD
+        n_tried_in_run: 3082
+      seed:
+        source: discovery 2026-10-24
+        layers:
+        - RSI14 < 35
+        - up > 2% from open
+        - 09:50-11:00
+        side: short
+        lab:
+          train_n: 188
+          train_exp_r: 0.01
+          test_n: 107
+          test_exp_r: 0.158
+  GEN-261029-03-MACDhlem0p12-Ret5mlem0p062-Gapge2-PM-QQQup-hold-long:
+    # moved to Graveyard from Testing B 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27). Live record to 11-25 (all accounts, run 1, LR8 R after costs, identical signals once): 88 trades, 20 active days, -41.8R, avg -0.476R, shrunk -0.387, w/o best day -0.509R, last-5 avg -0.702R
+    enabled: true
+    type: lab
+    module: research/generator/modules/GEN-261029-03-macdh-lo-pm-long.py
+    context:
+    - qqq_fo
+    min_adv: 50000000
+    window:
+    - 1300
+    - 1500
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Testing B 2026-11-25 (GYH V1)
+    - generated
+    - gen-2026-10-29
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: PM
+        geom: hold
+        min_adv: 50000000.0
+        conds:
+        - - gap
+          - '>='
+          - 2.0
+        - - macd_hist
+          - <=
+          - -0.12
+        - - qqq_fo
+          - '>'
+          - 0.0
+        - - ret1
+          - <=
+          - -0.062
+      key: b3fc6947e29eb4eb
+      screen:
+        train:
+          n: 2221
+          exp_r: 0.0087
+          t: 0.19
+          win: 0.5
+          days: 151
+        valid:
+          n: 3767
+          exp_r: 0.0036
+          t: 0.05
+          win: 0.469
+          days: 118
+        all:
+          n: 5988
+          exp_r: 0.0055
+          t: 0.12
+          win: 0.48
+          days: 269
+        per_day: 14.056
+        per_day_valid: 19.62
+        per_day_median60: 4.0
+        expected_live_per_day: 4.4
+        exp_up: 0.1427
+        exp_down: -0.1679
+        exp_flat: -0.1113
+        excess_train: 0.032
+        excess_valid: 0.0745
+        tier1: true
+        score: 0.3
+        max_overlap: 0.522
+        overlap_with: ST5-pdbrkup-short-mid-t05s1-FD
+        n_tried_in_run: 3000
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

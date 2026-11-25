@@ -63,7 +63,6 @@ live:
     - GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-QQQdn-t05s1-long   # 7 traded sessions / 13 trades (live, all accounts, to 11-19)
     - GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long   # 7 traded sessions / 17 trades (live, all accounts, to 11-19)
     - GEN-261026-05-Ret15mATRge0p042-FromPCATRge0p28-ORHdistlem0p38-OPEN-BRopgt0p5-hold-short   # 7 traded sessions / 68 trades (live, all accounts, to 11-19)
-    - GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short   # 10 traded sessions / 56 trades (live, all accounts, to 11-19)
     - NS3-failed-vwap-reclaim-short   # 17 traded sessions / 89 trades (live, all accounts, to 11-19)
     - ULT-05-withgap-cont-long   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
     - ULT-05-withgap-cont-short   # NEW 2026-11-20 ultimate_1119 (Tier B); appended last so existing setups keep their priority
@@ -271,7 +270,7 @@ strategies:
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3082
   GEN-261027-07-RSI14le35-FromOpenge2-AM-BRvwlt0p5-t1s1-short:   # moved from Setup Generator 2026-11-11 after the close (Gen graduate (GEN-GRAD)); from session 2026-11-12
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-25 after the close (owner GYH V1, Graveyard floor; from session 2026-11-27)
     type: lab
     module: research/generator/modules/GEN-261027-07-rsi14-lo-am-short.py
     context:
