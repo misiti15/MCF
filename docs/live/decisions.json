@@ -3181,5 +3181,20 @@
   "link": "research/neveragain_1125/REPORT.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "T1X2",
+  "title": "On Deck again holds 12 SOXX shares MCF never bought - close them on Friday?",
+  "what": "Since midday 11-25 (first SOXX entry blocked 12:50 ET) the On Deck paper account (the old Testing 1 account) holds SOXX +12 sh that are not in MCF's journal, so the 15:55 flatten does not close them and they are held over Thanksgiving. Same symbol and size as T1X (bogus Alpaca SOXX split 11-05, closed 11-10), so most likely Alpaca reversed that booking. Claude would run the t1x workflow on Fri 11-27: inspect (read-only), then one DAY market sell of 12 SOXX after the open (client id owner-t1x-SOXX-20261127). Reply 'T1X2 yes' / 'T1X2 no'.",
+  "recommend": "Yes - close the phantom position on Friday so On Deck's dollars and SOXX entries are clean",
+  "numbers": [
+   "Broker SOXX +12 sh vs journal 0 (position check 'unknown_symbol', 87 polls)",
+   "Cash $88,262 vs equity $89,797 at the 11-25 close (~$1,535 = 12 x ~$128)",
+   "4 On Deck SOXX entries skipped 11-25 ('position mismatch')"
+  ],
+  "why": "MCF never closes a position it did not open (LR5: the owner decides).",
+  "link": "research/owner_inbox/2026-11-25.md",
+  "status": "open",
+  "answered": null
  }
 ]
