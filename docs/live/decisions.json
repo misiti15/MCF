@@ -3085,16 +3085,16 @@
  },
  {
   "code": "HS-SCALE",
-  "title": "Replace the fixed -12R idea with a lineup-scaled account stop + a glitch failsafe in Primary (Friday epoch)?",
-  "what": "Layer 2 SCALED-K4: flatten + no new entries when Primary's closed + open R <= -X, X = clip(4 sigma, 2.5R x N, 8R x N) recomputed weekly and at any lineup change (today ~ -32R; ~ -72R for 9 setups). Layer 1 SHOCK-V: R drop >= max(8, 0.5X) in 2 min or >= max(12, 0.75X) in 10 min, confirmed 2 polls -> no new entries + alert (no flatten). Plus bug guards: MISMATCH-$ (broker vs journal) entries-off + alert, order-size guard at submit. Reply 'HS-SCALE yes / layer1 / no'.",
-  "recommend": "Yes - insurance, not edge: fires ~7.5 days/yr for today's 4 setups vs 46 for fixed -12R, and ~1.5/yr for 9 setups vs 132; caught the 11-17 and 11-20 runaway crashes in testing with 2 false fires in 118 account-days",
+  "title": "One safety package for Primary (Friday epoch): lineup-scaled account stop + glitch failsafe, keep the -2R latch - with or without a -10R per-setup crash cap?",
+  "what": "Package: SCALED-K4 (flatten + no new entries at -X, X = clip(4 sigma, 2.5R x N, 8R x N); ~ -32R today, ~ -72R for 9 setups, recomputed weekly and at lineup changes) + SHOCK-V (sharp R drop within 2-10 min -> no new entries + alert, no flatten) + keep the -2R per-setup latch + keep the fixed -20R no-new-entries halt + bug guards (broker-vs-journal $ mismatch -> entries off + alert; order-size guard). Optional insurance C10L: per-setup -10R closed+open cap (latch kept). Reply 'HS-SCALE yes' (package), 'HS-SCALE +C10' (package + per-setup cap), or 'no'.",
+  "recommend": "Yes, the package without the per-setup cap - no per-setup cap passed the pre-registered test (s8cap_1125: R saved on bad days = R lost on days that recovered); C10L is cheap insurance if you want it",
   "numbers": [
-   "4 setups: K4 7.5 fires/yr, dR +13R, 0 positive days turned negative; fixed -12R 46/yr, 3 turned negative",
-   "9 setups: K4 1.3/yr; fixed -12R 132/yr, 49 positive days turned negative",
-   "No account stop catches a one-minute shock (07-29: -10 -> -40.7R in a minute)"
+   "Account stop fires ~7.5 days/yr (4 setups) vs 46 for a fixed -12R; ~1.5/yr for 9 setups",
+   "Per-setup caps cut the worst-5 days (-34.9 -> -24..-32R) at ~3-90R/yr cost; C10L costs ~3R/yr (4 setups), live Primary +18R",
+   "Dropping the -2R latch loses in every bench test (-40R/yr 4 setups)"
   ],
   "why": "Owner 11-24: don't stop the account prematurely, but never crash from a bug or glitch; a fixed stop gets too tight as Primary grows.",
-  "link": "research/hsscale_1125/REPORT.md",
+  "link": "research/s8cap_1125/REPORT.md",
   "status": "open",
   "answered": null
  },
