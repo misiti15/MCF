@@ -2,39 +2,19 @@
 
 Educational only — not financial advice.
 
-## State (2026-11-18 20:30 ET)
-- C DONE (research/spotc/spotc.py): bottom 15 arena setups by live setup-days per eligible week (arena_reps.json); < 5 active
-  days listed apart; 5 zero-signal, 3 blocked, 7 rare. 2-year column 1/15 (guild file lacks IDX/LD/GEN/WB). Rerun: python spotc.py.
-- FAMC 11-19 DONE: raw net +0.249R but ex-market -0.744R (down tape); 4 sessions, mean -0.089R, w/o 11-11 -0.323R, K_edge 0.388.
-- 11-20 famc_shadow prints etf_view (MCF etf_set): 1/9 ETF controls; w/o row -0.116R, w/o session +0.129R. Amendment = Lead.
-- 11-21 famc_shadow refuses without a build-log row for the previous session (research/evd1/famc_build_log.csv, Observer
-  writes it; 0-flag builds pass). FAMC 11-20 still unbuilt; all FAMC runs refuse until the log exists.
-- 11-23: no build log, last calendar 11-18 -> FAMC 11-20/11-23/11-24 unscorable ('no calendar'); flagged to Lead/Observer.
-- RSGD1 (Scout card): HOLD until Lead/parent confirms on the board (owner rule 26: no new scored study without owner yes).
-- famc_shadow.py prints tally() every run (+ --tally): raw net per session, mean with/without best session (11-11 is best:
-  +0.129 -> -0.112R), share; selftest exact. Fixed journal_final selftest (None looked up the real commit; sentinel now).
-- TUESDAY DONE (one look each): FWDCAL fresh2 11-16..11-17: rule 21 0/10 (exact-minute 0.342 = last window 0.344, stable
-  offset; 5-min 0.951); optimistic > +0.03R in On Deck/A/D/E/F, all CIs span 0; ALL +0.017. Guard selftest ok; tier all 0.2.
-  BLKOUT VALID gross -0.0034R t -0.46 (MDE80 0.021); BMO k=0 -0.064 t -3.57 (1 of 18 cells); Observer scores.
-  FAMC 11-17 unscorable (0 AMC events); tally 2 scored / 3 unscorable, K_edge 0.637.
-- 11-17 18:30 minoff.py DONE (diagnostic): live entry_time = fill stamp, median 61s after the submitted signal (Primary 26s,
-  Gen 77s); exact match vs live SIGNAL minute 0.932 ALL (5/10 >= 0.95) vs 0.342 vs fill. Flagged to Lead/Skeptic: rule 21 on
-  the signal minute from the next window? fresh2 NOT re-scored.
-- 11-18 OFFICIAL rule 21 posted (official21.py adapts mirror books to MCF replay_cal/score.py, unchanged): FAIL 3/10 pass
-  (B, C, Gen); pooled PASS 0.951 / +0.020. RULE21-DB (owner 11-17) = decision bar from coid; use official21.py for every
-  future FWDCAL window beside mirror's line.
-- 11-18 22:20 ET: mirror audit auto-runs official21 (per account + pooled all / ex-Graveyard / arena+On Deck); out/official21_<variant><tag>/.
-- 11-18 00:20 ET famc_shadow.py refuses unclosed sessions (< 16:30 ET) and days missing from daily data (no fake '0 events').
-- 11-18 02:20 ET famc_shadow.py also refuses a non-final mcf-data journal (mirror.guard_decide; selftest 6 cases).
-- 11-18 FAMC DONE: NVDA short fade net +0.220R vs control TER -0.121R (one event); tally 3 scored / 3 unscorable,
-  raw mean delta +0.129R, K_edge 0.663. NEXT: FAMC nightly once Observer posts each calendar row; whatever Lead slots.
-  (old line follows) FAMC 11-18 (Observer's NVDA AMC row, reaction 11-18): append_day 2026-11-18, earnings json from
-  deepened origin/mcf-data, famc_shadow --date 2026-11-18. Then whatever Lead slots.
-- FAMC nightly: append_day.py D, then evd1/famc_shadow.py --date D --calendar research/evd1/famc_calendar.csv --live-earnings
-  <git show origin/mcf-data:earnings/D.json, from the deepened ref>.
-- FWDCAL rerun recipe: re-deepen (--shallow-since=2026-11-02 for the 10 data branches, 2026-10-28 for the default; NEVER
-  --depth=1), `mirror.py --guard-selftest`, then `mirror.py --dates A..B --delay 0 --quotes --stopslip-max --fetch --jobs 4 --tag _X`.
-- Shared tools: research/guild_read.py, research/builder_blockguard.py, fwdcal/stopq.py + matchgap.py.
+## State (2026-11-24 20:40 ET) - USAGE1 (owner 11-18, effective 11-19; MCF research/usage_review_1118/APPLY_1118.md)
+- Guild = gap teams: Scout (card) -> Builder (ONE pre-registered test) -> Skeptic (break it); weeknights ~20:15/20:45/21:15 ET
+  + Saturday. Lead and Observer roles DISABLED (kept, not deleted). Input = MCF research/gaps/GAPS.md + gaps.json (BDI daily;
+  NOT BUILT as of 11-24). Kill/keep check 2026-12-16 (no passed card, no approved process item -> owner asks keep/weekly/pause).
+- Builder's test spec: 2-year data, costs in, LR8 basis, locked block never read (#43), ETB universe for shorts, vs random
+  entries, avg R w/o best day (+ Day t, w/o top 2 days: WW-CLUSTER), per-family better/worse counts, then the live-period check
+  on recorded sessions; an EXISTING engine only (ENG1-A, no one-off simulators). Passing card -> backlog -> testing arena.
+- Owner guardrails (rule 26): ask first before day-type switches etc.; consistency over churn; Primary is the scoreboard.
+- HELD: RSGD1 (Scout card, Skeptic-signed, MDE ~0.15R) - day-type switch -> needs the owner's yes via the parent session.
+- FAMC: PAUSED by the guard (no calendar owner since Observer was disabled; no build log). Tally at pause: 4 scored sessions,
+  mean delta -0.089R, w/o best (11-11) -0.323R, K_edge 0.388. Parent session decides reassign vs formal pause.
+- Tools kept ready: fwdcal/mirror.py (+ official21.py auto, guard selftest), famc_shadow.py (guards: closed session, data
+  present, journal final, calendar build log), spotc/spotc.py, guild_read.py, builder_blockguard.py.
 
 ## Standards I work to (guild)
 Frozen plan + checklist (research/SKEPTIC_CHECKLIST.md) before any score; one look; excess over a matched / shared-day control;
