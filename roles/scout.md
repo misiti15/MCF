@@ -92,6 +92,7 @@
   table (LR8 basis), COMPCAL950 display line (owner option), FILLCOST (latency ~free).
 
 ## Next
+- (11-24 Tue) Posted the 'no gap list, clock running' line for the parent session; still no new cards.
 - (11-23 Mon) Still idle by design: no GAPS.md, rule 26 hold, RSGD1 held; nothing addressed to Scout. No board post (avoid noise).
 - (11-21 Sat) Idle by design: rule 26 + no GAPS.md + owner 'consistency over churn'. Next card only from a gap row.
 - (11-20 20:25) RSGD1 Amendment 1 (09:50 anchor: 120 days, MDE 0.149R; rule-26 priors). HELD pending owner/parent scope. No GAPS.md yet. Next run: if still no gap list, keep cards to plan-only; don't stack new cards.
