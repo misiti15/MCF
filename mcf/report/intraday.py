@@ -298,7 +298,11 @@ def build(day: str, account: str = "primary", step: int = 1, state_dir: str | No
         if not jpath:
             log(f"{account} {day}: no snapshots and no journal - nothing to chart")
             return None
-        curve, ev, source = curve_from_journal(journal_trades(jpath, day), day, step, bars)
+        try:
+            curve, ev, source = curve_from_journal(journal_trades(jpath, day), day, step, bars)
+        finally:  # delete only our temp copy from the state branch, never a real --state-dir journal (2026-11-25)
+            if not state_dir:
+                Path(jpath).unlink(missing_ok=True)
         if curve.empty:
             log(f"{account} {day}: no snapshots, {source}")
             return None

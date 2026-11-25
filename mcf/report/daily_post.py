@@ -464,10 +464,18 @@ def _journal(branch: str):
         raw = subprocess.run(["git", "-C", str(ROOT), "show", f"origin/{branch}:journal.db"], capture_output=True, check=True).stdout
     except Exception:
         return None
+    import os
     f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
     f.write(raw)
     f.close()
-    return sqlite3.connect(f.name)
+    try:  # copy into memory and delete the temp file (leftover copies filled the disk, 2026-11-25)
+        disk = sqlite3.connect(f.name)
+        mem = sqlite3.connect(":memory:")
+        disk.backup(mem)
+        disk.close()
+    finally:
+        os.unlink(f.name)
+    return mem
 
 
 # sessions that were cut short for every account (no signal on these days may be the outage, not the setup)
