@@ -1,0 +1,96 @@
+2026-11-25: 2172 trades, 1694 losers appended to patterns.csv
+account                            ondeck  primary  testing_a  testing_b  testing_c  testing_d  testing_e  testing_f
+ltype                                                                                                               
+gave_back_gains                      -9.2     -1.2       -9.0      -13.0       -3.8       -4.4       -5.5      -16.1
+late_hold                           -53.9     -0.4       -0.8      -23.0      -25.0      -15.4       -6.1       -0.4
+near_target_then_stopped             -8.8     -4.6       -8.2       -1.3       -9.8       -1.0       -1.0       -9.1
+never_worked                       -106.0    -11.1      -50.6      -65.8      -65.1       -9.8      -26.2      -78.3
+small MFE then failed (0.15-0.5R)   -87.3     -6.9      -29.7      -37.8      -39.8      -10.6      -10.2      -60.6
+stopped_then_reversed                -1.0      0.0      -31.1        0.0       -1.0        0.0        0.0        0.0
+wrong_side_after_big_swing         -153.9    -20.0     -105.3      -62.6      -55.9      -25.9      -15.6     -120.9
+
+loss type totals: {'gave_back_gains': {'size': 97, 'sum': -62.19}, 'late_hold': {'size': 191, 'sum': -124.84}, 'near_target_then_stopped': {'size': 39, 'sum': -43.84}, 'never_worked': {'size': 406, 'sum': -412.94}, 'small MFE then failed (0.15-0.5R)': {'size': 283, 'sum': -282.87}, 'stopped_then_reversed': {'size': 28, 'sum': -33.15}, 'wrong_side_after_big_swing': {'size': 650, 'sum': -560.01}}
+
+same-symbol stacking (lot = nth entry of the same setup on the symbol today):
+        size       sum   mean
+stack                       
+lot1   1864 -1015.242 -0.545
+lot2+   308  -217.395 -0.706
+
+leveraged/inverse ETPs by underlying (exposure = market sign of the position):
+                         size   sum
+lev  exposure account              
+DIA  -1       ondeck        1 -1.13
+              testing_a     1 -1.27
+              testing_b     2 -1.69
+              testing_c     1  0.11
+              testing_d     2 -1.60
+              testing_e     2 -0.46
+              testing_f     1 -1.08
+      1       testing_f     1  0.21
+FXI  -1       testing_d     1 -1.13
+              testing_e     1 -1.12
+GDX  -1       ondeck        3 -3.16
+              testing_a     5 -5.34
+              testing_b     1 -1.00
+              testing_c     2 -2.02
+              testing_d     1 -0.94
+              testing_e     3 -1.48
+              testing_f     4 -4.31
+      1       testing_d     1  1.53
+IWM  -1       testing_b     3 -2.55
+              testing_d     2  0.22
+              testing_e     7 -2.44
+MU    1       testing_d     1  0.95
+NVDA -1       testing_b     1 -0.47
+              testing_e     1  0.15
+QQQ  -1       ondeck        1  0.30
+              testing_a     1 -1.06
+              testing_b     3 -3.15
+              testing_e     3 -0.79
+              testing_f     1 -0.14
+      1       testing_a     1 -0.99
+              testing_b     1  8.40
+              testing_c     4  1.47
+              testing_d     1 -0.26
+              testing_e     1  0.43
+SOXX -1       ondeck        3 -1.59
+              testing_a     1 -0.57
+              testing_b     1 -1.03
+              testing_e     3 -0.26
+              testing_f     2 -2.04
+      1       testing_b     1  0.05
+              testing_c     2  0.23
+              testing_d     1 -0.09
+SPY  -1       ondeck        3 -3.13
+              testing_b     8 -6.13
+              testing_d     1 -0.84
+              testing_e     7 -2.07
+              testing_f     3 -3.15
+      1       testing_c     1 -0.28
+              testing_d     1  1.09
+              testing_e     2  1.47
+              testing_f     1  1.70
+TSLA -1       testing_b     1 -1.08
+              testing_d     1 -0.33
+              testing_e     3 -0.44
+VIX  -1       ondeck        1  0.93
+              testing_b     4 -4.39
+              testing_d     1  0.49
+              testing_e    10 -0.26
+      1       testing_d     1  0.37
+XLF  -1       ondeck        2 -1.62
+              testing_b     3 -2.79
+              testing_c     1  0.29
+              testing_d     1 -0.47
+              testing_e     2 -1.50
+XLK  -1       ondeck        2 -2.07
+              testing_d     1 -0.91
+              testing_e     1 -0.91
+              testing_f     1 -1.04
+      1       testing_b     1  0.43
+              testing_c     2  0.08
+              testing_d     1 -0.22
+              testing_e     1  0.49
+
+all trades by market exposure sign: {-1: {'size': 1792, 'sum': -1349.621, 'mean': -0.753}, 1: {'size': 380, 'sum': 116.984, 'mean': 0.308}}
