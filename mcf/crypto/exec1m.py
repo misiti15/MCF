@@ -93,6 +93,14 @@ def clean_prints(b: pd.DataFrame, window: int = 60, band: float = 0.25) -> pd.Da
     return out
 
 
+def clean_traded(b: pd.DataFrame, window: int = 60, band: float = 0.25) -> pd.DataFrame:
+    """Round-3 clean signal bars: the Amendment-1 bad-print filter, then only minutes with a real trade
+    (volume > 0). Zero-volume (quote-derived) minutes, 49-88% of Alpaca's minutes since 2023, never enter a signal
+    bar. Fills still use every minute via `Minutes` (traded flag), as in round 2."""
+    out = clean_prints(b, window, band)
+    return out[out["v"] > 0] if "v" in out else out
+
+
 def to_min(idx: pd.DatetimeIndex) -> np.ndarray:
     return np.asarray((idx - pd.Timestamp("1970-01-01", tz="UTC")) // pd.Timedelta("1min"), dtype=np.int64)
 
