@@ -75,6 +75,13 @@ def _score_fit(s: Setup) -> dict:
     return r
 
 
+def _score_fit_maker(s: Setup) -> dict:
+    """Sensitivity only (never used to choose): the same draw with maker-fee entries and no entry spread."""
+    r = summarize(trades_for(s, "fit", costs=CostModel.maker()))
+    return {"draw_id": s.draw_id, "mk_n": r["n"], "mk_avg_r": r["avg_r"], "mk_wo_best": r["avg_r_wo_best"],
+            "mk_t": r["day_t"]}
+
+
 def eligible(r: dict) -> bool:
     return (r["side"] > 0 and r["n"] >= MIN_TRADES and r["best_day_share"] < MAX_SHARE and r["avg_r_wo_best"] > 0)
 
@@ -85,19 +92,28 @@ def fit() -> None:
     t0 = time.time()
     with mp.get_context("fork").Pool(4) as pool:
         res = pool.map(_score_fit, setups, chunksize=4)
+        mk = pool.map(_score_fit_maker, setups, chunksize=4)
     print(f"scored {len(res)} draws in {time.time()-t0:.0f}s", flush=True)
-    df = pd.DataFrame(res).sort_values("draw_id")
+    df = pd.DataFrame(res).merge(pd.DataFrame(mk), on="draw_id").sort_values("draw_id")
     df.to_csv(HERE / "fit_all.csv", index=False, float_format="%.4f")
     el = df[df.apply(eligible, axis=1)].copy()
     el["rank_score"] = el[["avg_r", "avg_r_wo_best"]].min(axis=1)
     el = el.sort_values("rank_score", ascending=False)
-    top = el.head(TOP)
+    el["eligible"] = True
+    # Pre-declared fallback (2026-11-26, before CHECK was read): if fewer than 10 draws are eligible, the rest of the
+    # top 10 are the best NEAR-MISSES (long, n >= 100, same ranking), flagged eligible=False. They are scored on CHECK
+    # for information only and can never become survivors.
+    near = df[(df.side > 0) & (df.n >= MIN_TRADES) & ~df.draw_id.isin(el.draw_id)].copy()
+    near["rank_score"] = near[["avg_r", "avg_r_wo_best"]].min(axis=1)
+    near["eligible"] = False
+    top = pd.concat([el, near.sort_values("rank_score", ascending=False)]).head(TOP)
     by_id = {s.draw_id: s for s in setups}
     frozen = {"frozen_utc": pd.Timestamp.now(tz="UTC").isoformat(), "seed": SEED, "draws": N_DRAWS,
               "eligible": int(len(el)), "rule": "long, n>=100, best-day share<0.5, avg R w/o best day>0; "
                                                 "top 10 by min(avg R, avg R w/o best day)",
-              "finalists": [{"spec": by_id[int(i)].spec(), "draw_id": int(i), "fit": df.set_index("draw_id")
-                             .loc[int(i)].drop(["label", "key"]).to_dict()} for i in top["draw_id"]]}
+              "finalists": [{"spec": by_id[int(i)].spec(), "draw_id": int(i), "eligible": bool(e),
+                             "fit": df.set_index("draw_id").loc[int(i)].drop(["label", "key"]).to_dict()}
+                            for i, e in zip(top["draw_id"], top["eligible"])]}
     (HERE / "finalists.json").write_text(json.dumps(frozen, indent=1, default=float))
     stats = {"draws": N_DRAWS, "long": int((df.side > 0).sum()), "short_flagged": int((df.side < 0).sum()),
              "with_trades": int((df.n > 0).sum()), "n_ge_100": int((df.n >= 100).sum()),
@@ -105,6 +121,9 @@ def fit() -> None:
              "net_pos_n100": int(((df.n >= 100) & (df.avg_r > 0)).sum()), "eligible": int(len(el)),
              "max_t_n100": float(df[df.n >= 100].day_t.max()),
              "median_cost_r_n100": float(df[df.n >= 100].avg_cost_r.median()),
+             "maker_pos_n100": int(((df.mk_n >= 100) & (df.mk_avg_r > 0)).sum()),
+             "maker_max_t_n100": float(df[df.mk_n >= 100].mk_t.max()),
+             "median_gross_r_n100": float(df[df.n >= 100].avg_gross_r.median()),
              "noise_bar": float(np.sqrt(2 * np.log(N_DRAWS)))}
     (HERE / "fit_stats.json").write_text(json.dumps(stats, indent=1))
     print(json.dumps(stats, indent=1))
@@ -142,7 +161,7 @@ def check() -> None:
         sp = item["spec"]
         s = Setup(item["draw_id"], sp["tf"], sp["side"], [tuple(c) for c in sp["conds"]], sp["window"],
                   sp["days"], sp["stop_atr"], sp["target_atr"], sp["hold_h"])
-        row = {"draw_id": s.draw_id, "label": s.label()}
+        row = {"draw_id": s.draw_id, "eligible": item["eligible"], "label": s.label()}
         for split in ("fit", "check"):
             tr = trades_for(s, split)
             sm = summarize(tr)

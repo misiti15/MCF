@@ -93,6 +93,6 @@ def build(b: pd.DataFrame, tf: int, btc: pd.DataFrame | None = None) -> pd.DataF
             f[f"btc{m}"] = (bc / bc.shift(k) - 1) / bpct
             f[f"lag{m}"] = f[f"btc{m}"] - f[f"ret{m}"]
     num = [k for k in f.columns if k not in ("filled", "mod", "dow")]
-    f[num] = f[num].replace([np.inf, -np.inf], np.nan)
+    f[num] = f[num].replace([np.inf, -np.inf], np.nan).clip(-1e30, 1e30)
     out = f.astype({k: "float32" for k in f.columns if k not in ("filled", "mod", "dow")})
     return out

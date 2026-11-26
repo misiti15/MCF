@@ -1,0 +1,458 @@
+{
+ "frozen_utc": "2026-11-26T06:39:34.076402+00:00",
+ "seed": 20261126,
+ "draws": 500,
+ "eligible": 0,
+ "rule": "long, n>=100, best-day share<0.5, avg R w/o best day>0; top 10 by min(avg R, avg R w/o best day)",
+ "finalists": [
+  {
+   "spec": {
+    "tf": 15,
+    "side": 1,
+    "conds": [
+     [
+      "volsurge",
+      {
+       "k": 3.0
+      }
+     ],
+     [
+      "round",
+      {
+       "pos": "below",
+       "d": 0.25
+      }
+     ]
+    ],
+    "window": "asia_open",
+    "days": "all",
+    "stop_atr": 4.0,
+    "target_atr": 6.0,
+    "hold_h": 24
+   },
+   "draw_id": 31,
+   "eligible": false,
+   "fit": {
+    "n": 113,
+    "avg_r": -0.04720872986620417,
+    "avg_r_wo_best": -0.07480697153390475,
+    "best_day_share": 1.0,
+    "day_t": -0.32659746306897885,
+    "days": 107,
+    "total_r": -5.334586474881071,
+    "avg_cost_r": 0.32092441954883705,
+    "avg_gross_r": 0.2737156896826328,
+    "win": 0.49557522123893805,
+    "side": 1,
+    "tf": 15,
+    "pairs": 18,
+    "mk_n": 113,
+    "mk_avg_r": 0.06946608211363993,
+    "mk_wo_best": 0.04386619366036864,
+    "mk_t": 0.7085464048525967
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "round",
+      {
+       "pos": "above",
+       "d": 0.5
+      }
+     ]
+    ],
+    "window": "us",
+    "days": "weekday",
+    "stop_atr": 3.0,
+    "target_atr": 6.0,
+    "hold_h": 24
+   },
+   "draw_id": 477,
+   "eligible": false,
+   "fit": {
+    "n": 1771,
+    "avg_r": -0.07217680919324382,
+    "avg_r_wo_best": -0.07680526141629038,
+    "best_day_share": 1.0,
+    "day_t": -3.6214829336957557,
+    "days": 823,
+    "total_r": -127.82512908123479,
+    "avg_cost_r": 0.2284714821450754,
+    "avg_gross_r": 0.1562946729518316,
+    "win": 0.4280067758328628,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 1771,
+    "mk_avg_r": 0.010803655824722447,
+    "mk_wo_best": 0.006303647037372852,
+    "mk_t": -0.8660938408670124
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "round",
+      {
+       "pos": "above",
+       "d": 0.5
+      }
+     ]
+    ],
+    "window": "us",
+    "days": "weekday",
+    "stop_atr": 4.0,
+    "target_atr": 3.0,
+    "hold_h": 12
+   },
+   "draw_id": 459,
+   "eligible": false,
+   "fit": {
+    "n": 1894,
+    "avg_r": -0.09172062532768749,
+    "avg_r_wo_best": -0.09461251539861358,
+    "best_day_share": 1.0,
+    "day_t": -7.1693933563694365,
+    "days": 851,
+    "total_r": -173.7188643706401,
+    "avg_cost_r": 0.1713312161294953,
+    "avg_gross_r": 0.07961059080180784,
+    "win": 0.428194297782471,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 1894,
+    "mk_avg_r": -0.028978546802039613,
+    "mk_wo_best": -0.031722768905880945,
+    "mk_t": -3.047288136418014
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "breakout",
+      {
+       "H": 4
+      }
+     ],
+     [
+      "vwap",
+      {
+       "kind": "sess",
+       "dir": "above",
+       "k": 3.0
+      }
+     ],
+     [
+      "volsurge",
+      {
+       "k": 2.0
+      }
+     ]
+    ],
+    "window": "us",
+    "days": "all",
+    "stop_atr": 3.0,
+    "target_atr": 4.0,
+    "hold_h": 8
+   },
+   "draw_id": 52,
+   "eligible": false,
+   "fit": {
+    "n": 337,
+    "avg_r": -0.12223248442204733,
+    "avg_r_wo_best": -0.14168967703021806,
+    "best_day_share": 1.0,
+    "day_t": -2.6627310861980007,
+    "days": 201,
+    "total_r": -41.19234725022995,
+    "avg_cost_r": 0.30749043797919456,
+    "avg_gross_r": 0.18525795355714722,
+    "win": 0.42729970326409494,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 337,
+    "mk_avg_r": -0.012716886093384686,
+    "mk_wo_best": -0.03149840156390817,
+    "mk_t": -0.7105729293572589
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "round",
+      {
+       "pos": "above",
+       "d": 0.25
+      }
+     ]
+    ],
+    "window": "any",
+    "days": "weekday",
+    "stop_atr": 3.0,
+    "target_atr": 4.0,
+    "hold_h": 6
+   },
+   "draw_id": 209,
+   "eligible": false,
+   "fit": {
+    "n": 3905,
+    "avg_r": -0.1663102000888158,
+    "avg_r_wo_best": -0.17017917823862944,
+    "best_day_share": 1.0,
+    "day_t": -16.32231721563307,
+    "days": 998,
+    "total_r": -649.4413313468257,
+    "avg_cost_r": 0.23165686538813718,
+    "avg_gross_r": 0.06534666529932134,
+    "win": 0.3241997439180538,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 3905,
+    "mk_avg_r": -0.08152368108126867,
+    "mk_wo_best": -0.08510948969991591,
+    "mk_t": -9.964718798234038
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "rsi",
+      {
+       "dir": "low",
+       "lvl": 30
+      }
+     ]
+    ],
+    "window": "any",
+    "days": "weekday",
+    "stop_atr": 4.0,
+    "target_atr": 3.0,
+    "hold_h": 4
+   },
+   "draw_id": 452,
+   "eligible": false,
+   "fit": {
+    "n": 6429,
+    "avg_r": -0.18289863047502883,
+    "avg_r_wo_best": -0.18554770141628643,
+    "best_day_share": 1.0,
+    "day_t": -10.225392092757733,
+    "days": 613,
+    "total_r": -1175.8552953239603,
+    "avg_cost_r": 0.20593648324502456,
+    "avg_gross_r": 0.023037852769995728,
+    "win": 0.30175766060040443,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 6429,
+    "mk_avg_r": -0.10813788913933314,
+    "mk_wo_best": -0.1105532562913087,
+    "mk_t": -2.575027980538872
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "btc_lead",
+      {
+       "m": 30,
+       "k": 2.0,
+       "g": 2.0
+      }
+     ]
+    ],
+    "window": "any",
+    "days": "weekday",
+    "stop_atr": 2.0,
+    "target_atr": 3.0,
+    "hold_h": 24
+   },
+   "draw_id": 228,
+   "eligible": false,
+   "fit": {
+    "n": 477,
+    "avg_r": -0.1640792620200155,
+    "avg_r_wo_best": -0.1927768280648594,
+    "best_day_share": 1.0,
+    "day_t": -2.105325955460566,
+    "days": 121,
+    "total_r": -78.26580798354739,
+    "avg_cost_r": 0.3945021516926644,
+    "avg_gross_r": 0.23042288967264885,
+    "win": 0.4528301886792453,
+    "side": 1,
+    "tf": 60,
+    "pairs": 18,
+    "mk_n": 477,
+    "mk_avg_r": -0.01935103422558122,
+    "mk_wo_best": -0.04628051585830077,
+    "mk_t": -0.7027397227748048
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "asia_break",
+      {
+       "k": 5.0
+      }
+     ],
+     [
+      "round",
+      {
+       "pos": "below",
+       "d": 0.5
+      }
+     ]
+    ],
+    "window": "any",
+    "days": "all",
+    "stop_atr": 4.0,
+    "target_atr": 3.0,
+    "hold_h": 2
+   },
+   "draw_id": 116,
+   "eligible": false,
+   "fit": {
+    "n": 673,
+    "avg_r": -0.19342197848149625,
+    "avg_r_wo_best": -0.1955896339084199,
+    "best_day_share": 1.0,
+    "day_t": -16.721061544116843,
+    "days": 392,
+    "total_r": -130.17299151804698,
+    "avg_cost_r": 0.1954261672003645,
+    "avg_gross_r": 0.002004188718868231,
+    "win": 0.1827637444279346,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 673,
+    "mk_avg_r": -0.12160874479646092,
+    "mk_wo_best": -0.12375125274887587,
+    "mk_t": -11.65994825423797
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "trend",
+      {
+       "dir": "up"
+      }
+     ],
+     [
+      "stretch",
+      {
+       "dir": "up",
+       "k": 3.0
+      }
+     ]
+    ],
+    "window": "us",
+    "days": "weekday",
+    "stop_atr": 3.0,
+    "target_atr": 2.0,
+    "hold_h": 24
+   },
+   "draw_id": 373,
+   "eligible": false,
+   "fit": {
+    "n": 828,
+    "avg_r": -0.18529820472417036,
+    "avg_r_wo_best": -0.1958552424912912,
+    "best_day_share": 1.0,
+    "day_t": -6.017156926486542,
+    "days": 304,
+    "total_r": -153.42691351161307,
+    "avg_cost_r": 0.3062271468237044,
+    "avg_gross_r": 0.12092894209953399,
+    "win": 0.5905797101449275,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 828,
+    "mk_avg_r": -0.07573628300167225,
+    "mk_wo_best": -0.08632151426292245,
+    "mk_t": -3.508725327864026
+   }
+  },
+  {
+   "spec": {
+    "tf": 60,
+    "side": 1,
+    "conds": [
+     [
+      "round",
+      {
+       "pos": "above",
+       "d": 0.5
+      }
+     ],
+     [
+      "rsi",
+      {
+       "dir": "low",
+       "lvl": 80
+      }
+     ]
+    ],
+    "window": "any",
+    "days": "weekday",
+    "stop_atr": 2.5,
+    "target_atr": 6.0,
+    "hold_h": 6
+   },
+   "draw_id": 320,
+   "eligible": false,
+   "fit": {
+    "n": 5648,
+    "avg_r": -0.2035958745057307,
+    "avg_r_wo_best": -0.20614948607317143,
+    "best_day_share": 1.0,
+    "day_t": -16.149618403873127,
+    "days": 1051,
+    "total_r": -1149.909499208367,
+    "avg_cost_r": 0.28260355573495166,
+    "avg_gross_r": 0.07900768122922096,
+    "win": 0.3178116147308782,
+    "side": 1,
+    "tf": 60,
+    "pairs": 19,
+    "mk_n": 5648,
+    "mk_avg_r": -0.10031383168563511,
+    "mk_wo_best": -0.10268234704994829,
+    "mk_t": -9.275440533442719
+   }
+  }
+ ]
+}
