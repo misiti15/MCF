@@ -303,7 +303,7 @@ def test_trend_missed_maker_is_not_chased_and_signals():
     dec = np.array([0, 10, 20, 30], np.int64)
     tr = TR.simulate("X", dec, np.full(4, 100.0), np.ones(4, bool), np.zeros(4, bool), m, CostModel(),
                      expiry=10)
-    assert tr.empty
+    assert tr.empty and tr.attrs["missed"] == 3                 # last decision never opens a trade
     d = pd.DataFrame({"o": 1.0, "h": 1.0, "l": 1.0, "c": np.r_[np.full(60, 10.0), np.arange(11, 31)]},
                      index=pd.date_range("2021-01-01", periods=80, freq="D", tz="UTC"))
     f = TR.indicators(d)

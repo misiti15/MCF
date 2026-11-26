@@ -108,7 +108,9 @@ def trend_run(rule: TR.TrendRule, split: str, mode: str | None = None, tier: int
                          max_hold=mh, tier=tier, atr=f["atr"].to_numpy(np.float64))
         trades.append(tr)
         eqs.append(TR.sleeve_equity(tr, dec, close))
+    missed = sum(t.attrs.get("missed", 0) for t in trades)
     tr = pd.concat(trades, ignore_index=True)
+    tr.attrs["missed"] = missed
     eq = np.mean(eqs, axis=0)
     return tr, eq, eqs, len(dec)
 
@@ -121,7 +123,8 @@ def trend_summary(rule, split, mode=None, tier=1) -> dict:
     out = {"draw_id": rule.draw_id, "label": rule.label(), **{f"pf_{k}": v for k, v in m.items()},
            "exposure": expo, **{k: sm[k] for k in ("n", "avg_r", "avg_r_wo_best", "best_day_share", "day_t",
                                                    "avg_cost_r", "avg_gross_r")},
-           "avg_net_ret": float(tr["net"].mean()) if len(tr) else np.nan}
+           "avg_net_ret": float(tr["net"].mean()) if len(tr) else np.nan,
+           "fill_rate": len(tr) / max(1, len(tr) + tr.attrs.get("missed", 0))}
     for p, e in zip(PAIRS, eqs):
         pm = TR.metrics(e)
         out.update({f"{p}_total": pm["total"], f"{p}_sharpe": pm["sharpe"], f"{p}_maxdd": pm["maxdd"],

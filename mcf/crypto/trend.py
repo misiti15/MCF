@@ -70,11 +70,13 @@ def simulate(pair: str, dec_t: np.ndarray, close: np.ndarray, enter: np.ndarray,
              mins: Minutes, costs: CostModel, mode: str = "maker", expiry: int = 1440, max_hold: int = 0,
              tier: int = 1, atr: np.ndarray | None = None) -> pd.DataFrame:
     """Trades of one sleeve. dec_t: decision times (minutes since epoch, ascending, one per day). A position open
-    at the last decision is closed there (taker). Returns one row per trade with entry/exit decision indices."""
+    at the last decision is closed there (taker). Returns one row per trade with entry/exit decision indices;
+    `df.attrs['missed']` counts maker orders that expired unfilled."""
     mk_fee, tk_fee = FEE_TIERS[tier]
     t, o, lo, trd = mins.t, mins.o, mins.l, mins.traded
     n = len(t)
     rows = []
+    missed = 0
     k_in = -1
     e = t_in = 0.0
     cin = 0.0
@@ -107,6 +109,7 @@ def simulate(pair: str, dec_t: np.ndarray, close: np.ndarray, enter: np.ndarray,
             z = np.searchsorted(t, dec_t[k] + expiry)
             hit = np.flatnonzero(trd[j:z] & (lo[j:z] < close[k]))
             if len(hit) == 0:
+                missed += 1
                 continue
             e, t_in, cin = close[k], t[j + hit[0]], mk_fee
         else:
@@ -116,6 +119,7 @@ def simulate(pair: str, dec_t: np.ndarray, close: np.ndarray, enter: np.ndarray,
     cols = ["k_in", "k_out", "t_in", "t_out", "entry", "exit", "cost_in", "cost_out", "net", "atr_pct"]
     df = pd.DataFrame(rows, columns=cols)
     df["pair"] = pair
+    df.attrs["missed"] = missed                      # maker orders that never traded through (not chased)
     return df
 
 
