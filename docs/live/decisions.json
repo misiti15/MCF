@@ -3301,5 +3301,20 @@
   "link": "research/rotation/block3_1125.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "B8-SHADOW",
+  "title": "Book balance cap B8 (block new same-direction entries once Primary's net market risk exceeds 8R per 1% SPY): shadow first or enforce?",
+  "what": "Option A: log B8 as a shadow in Primary and Testing 1/2 (no trade changes), review after 20 Primary sessions. Option B: enforce B8 in Primary on top of LATCH-OPEN, labelled insurance. Friday epoch window only, ledger entry + tests. Reply 'B8 shadow / enforce / no'.",
+  "recommend": "Yes - shadow first (Option A): it passed the pre-registered bar but is on ~185 of 252 sessions a year and most of its gain comes from trading a losing book less (zero-mean book: 3 of 4 setups worse) - insurance, not edge",
+  "numbers": [
+   "On top of LATCH-OPEN: worst-5 days +47% CHECK / +22% T2; days <= -10R 38->15 / 21->4; live 10-23..11-25 +27.9R, worst-5 -16.8 -> -11.8R",
+   "Per setup (raw): all 4 better (L3 +121, RW3 +73, RW5 +133, NM-ETF +4R); zero-mean book: L3 -27, RW3 -43, RW5 -76 per period; best day 11% of gain",
+   "11-25: LATCH-OPEN alone -40.1 -> -8.3R; B8 adds nothing on top. 5 configs tried (cumulative N ~2,269); B12/B16/squeeze-exit failed"
+  ],
+  "why": "Owner 11-25: explore unforeseen tactics; the midday-flip swing (11-10, 11-25) is Primary's worst failure type.",
+  "link": "research/squeeze_1125/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
