@@ -35,6 +35,24 @@ def risk_cfg(cfg: dict) -> dict:
     return (cfg or {}).get("risk") or {}
 
 
+def cost_basis(cfg: dict) -> bool:
+    """True when the account's loss stops count R after costs (account.loss_stops_cost_r_accounts), i.e. realized R is
+    on the same basis as the open marks (always R after costs). LATCH-OPEN / HS-SCALE / SHOCK-V add the two, so they run
+    only in such accounts; elsewhere they stay off with a warning (mixed raw + cost R would be wrong)."""
+    acct = str((cfg or {}).get("account_name", "primary"))
+    return acct in {str(a) for a in (((cfg or {}).get("account") or {}).get("loss_stops_cost_r_accounts") or [])}
+
+
+def gate_cost_basis(cfg: dict, name: str, on: bool) -> tuple[bool, str | None]:
+    """(active, why-not) for a switch that adds realized + open R: refused (warning printed) outside cost-R accounts."""
+    if on and not cost_basis(cfg):
+        why = (f"{name} switched on but account {(cfg or {}).get('account_name', 'primary')!r} is not in "
+               f"account.loss_stops_cost_r_accounts (realized R raw, open marks R after costs): kept OFF")
+        print(f"WARNING: {why}")
+        return False, why
+    return on, None
+
+
 def latch_open_on(cfg: dict) -> bool:
     rk = risk_cfg(cfg)
     acct = str((cfg or {}).get("account_name", "primary"))

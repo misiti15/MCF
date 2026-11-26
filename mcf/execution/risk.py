@@ -81,6 +81,7 @@ def setup_cost_limits(cfg: dict) -> dict[str, float | None]:
 
 
 SETUP_LOT_CAP = "max lots per symbol for this setup"
+SETUP_STOP_OPEN = "setup daily loss limit (open)"   # LATCH-OPEN: the latch fired on closed + open R
 
 
 class RiskManager:
@@ -110,9 +111,16 @@ class RiskManager:
         self.include_open = False
         # Friday 11-27 switches, all OFF by default (config `risk:`; mcf/execution/safety.py). Never flatten.
         acct = str(cfg.get("account_name", "primary"))
-        self.latch_counts_open = _safety.latch_open_on(cfg)      # LATCH-OPEN
+        # LATCH-OPEN / HS-SCALE add realized + open R: only in cost-R accounts (same basis), else kept off + warning
+        self.safety_refused: dict[str, str] = {}
+        self.latch_counts_open, why = _safety.gate_cost_basis(cfg, "LATCH-OPEN", _safety.latch_open_on(cfg))
+        if why:
+            self.safety_refused["latch_counts_open"] = why
         self.latch_open_r = _safety.latch_open_r(cfg)           # optional closed+open threshold (e.g. 3); None = setup's
         self.scaled = _safety.ScaledHalt(_safety.risk_cfg(cfg).get("scaled_halt"), acct)   # HS-SCALE
+        self.scaled.enabled, why = _safety.gate_cost_basis(cfg, "HS-SCALE", self.scaled.enabled)
+        if why:
+            self.safety_refused["scaled_halt"] = why
         self._open_fallback_logged: set[str] = set()
         self.latch_open_hits: dict[str, float] = {}             # setup -> closed+open R when LATCH-OPEN latched it
         self.state = RiskState()
@@ -180,6 +188,8 @@ class RiskManager:
         d = {"latch_counts_open": {"enabled": bool(self.latch_counts_open), "latch_open_r": self.latch_open_r,
                                    "hits": dict(self.latch_open_hits)},
              "scaled_halt": self.scaled.status()}
+        if self.safety_refused:
+            d["refused"] = dict(self.safety_refused)
         if self.latch_counts_open:
             d["latch_counts_open"].update(
                 open_r_by_strategy={k: round(float(v), 3) for k, v in s.open_r_by_strategy.items()},
@@ -215,7 +225,8 @@ class RiskManager:
         if self.setup_loss_limit is not None or self.setup_loss_limits:
             self.latch_setup_losses()
             if sig.strategy in s.setup_stopped:
-                return False, "setup daily loss limit"
+                # LATCH-OPEN latches carry their own reason (same prefix: restore / reports match by prefix)
+                return False, SETUP_STOP_OPEN if sig.strategy in self.latch_open_hits else "setup daily loss limit"
         if s.trades_today >= self.a["max_trades_per_day"]:
             return False, "max trades/day"
         if (len(s.open_symbols) if self.max_lots <= 1 else self.open_lots()) >= self.a["max_concurrent_positions"]:

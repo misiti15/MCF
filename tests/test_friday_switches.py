@@ -1,6 +1,8 @@
 """Friday 11-27 safety switches (mcf/execution/safety.py, config `risk:`): LATCH-OPEN, HS-SCALE, SHOCK-V, B8 shadow.
 Every switch defaults OFF in every account; none ever flattens. Educational only - not financial advice."""
+import glob
 import json
+import os
 
 import pandas as pd
 import pytest
@@ -11,7 +13,9 @@ from mcf.execution.risk import RiskManager
 from mcf.strategies.base import Signal
 from tests.test_live_ready_lr import CTX, NY, _runner
 
-ACCTS = ["primary", "testing", "testing2", "gen", "graveyard", "livelab", "explore1", "testingd", "testinge", "testingf"]
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ACCTS = ["primary"] + sorted(os.path.basename(p)[len("account_"):-len(".yaml")]
+                             for p in glob.glob(os.path.join(ROOT, "config", "account_*.yaml")))
 
 
 def at(s):
@@ -45,14 +49,6 @@ def test_every_switch_defaults_off_in_every_account(acct, monkeypatch):
     assert not S.ShockV(rk["shock_v"], acct).enabled and not S.NetBetaShadow(rk["netbeta_shadow"], acct).enabled
 
 
-def test_default_off_is_a_noop_on_check():
-    """Default config: an open loss far past every new threshold changes nothing the loss stops decide."""
-    rm = _rm()
-    rm.state.open_r, rm.state.open_r_by_strategy = -60.0, {"S1": -50.0}
-    rm.state.realized_r, rm.state.realized_r_by_strategy = -1.0, {"S1": -1.0}
-    assert rm.check(_sig(), 50.0) == (True, "ok")
-
-
 def test_default_off_runner_noop(tmp_path, monkeypatch):
     r, b = _runner(tmp_path, monkeypatch)
     assert not r.shock.enabled and not r.netbeta.enabled
@@ -71,10 +67,10 @@ def test_latch_open_blocks_on_closed_plus_open():
     rm = _rm({"latch_counts_open": True})
     rm.state.realized_r_by_strategy = {"S1": -1.0}
     rm.state.open_r_by_strategy = {"S1": -1.2, "S2": -0.5}
-    assert rm.check(_sig(setup="S1"), 50.0) == (False, "setup daily loss limit")
+    assert rm.check(_sig(setup="S1"), 50.0) == (False, "setup daily loss limit (open)")
     assert rm.check(_sig("BBB", setup="S2"), 50.0) == (True, "ok")
     rm.state.open_r_by_strategy = {"S1": +5.0}           # latched: a recovery does not undo it
-    assert rm.check(_sig("CCC", setup="S1"), 50.0)[1] == "setup daily loss limit"
+    assert rm.check(_sig("CCC", setup="S1"), 50.0)[1] == "setup daily loss limit (open)"
 
 
 def test_latch_open_off_counts_closed_only():
@@ -88,7 +84,7 @@ def test_latch_open_minus_3r_and_other_accounts():
     rm.state.realized_r_by_strategy, rm.state.open_r_by_strategy = {"S1": -1.0}, {"S1": -1.5}
     assert rm.check(_sig(), 50.0) == (True, "ok")         # -2.5 > -3
     rm.state.open_r_by_strategy = {"S1": -2.0}
-    assert rm.check(_sig(), 50.0)[1] == "setup daily loss limit"
+    assert rm.check(_sig(), 50.0)[1] == "setup daily loss limit (open)"
     other = _rm({"latch_counts_open": True}, account="testing")   # accounts list = [primary]
     assert not other.latch_counts_open
 
@@ -251,19 +247,207 @@ def test_netbeta_missing_file_and_unpriced_lots():
     assert nb.net([("A", 1, None, 49.0, 1.0), ("B", 1, 50.0, 50.0, 1.0), ("C", 1, 50.0, 49.0, 1.0)]) == (0.5, 2)
 
 
-def test_shock_v_carries_lots_gone_before_reconcile(tmp_path, monkeypatch):
-    """A losing lot that goes flat at the broker leaves self.lots before reconcile books its R: no false fall."""
+
+# ------------------------------------------------------------------------------------------------ review fixes
+def test_latch_open_reason_is_distinct_and_restored(tmp_path, monkeypatch):
+    rm = _rm({"latch_counts_open": True})
+    rm.state.realized_r_by_strategy = {"S1": -2.5, "S2": -1.0}
+    rm.state.open_r_by_strategy = {"S2": -1.5}
+    assert rm.check(_sig(setup="S1"), 50.0)[1] == "setup daily loss limit"         # closed latch: old reason
+    assert rm.check(_sig("B", setup="S2"), 50.0)[1] == "setup daily loss limit (open)"
+    r, _ = _runner(tmp_path, monkeypatch)
+    sig = pd.DataFrame({"status": ["skipped"], "reason": ["setup daily loss limit (open)"], "strategy": ["S2"],
+                        "symbol": ["AAA"]})
+    r._restore_latches(sig)
+    assert r.risk.state.setup_stopped == {"S2"}
+    from mcf.report.playing_time import classify
+    assert classify("skipped", "setup daily loss limit (open)") == "daily_loss"
+
+
+def test_reporting_knows_new_reasons():
+    from mcf.execution.shadow import RESOURCE_REASONS
+    from mcf.report.daily_post import INTENDED
+    from mcf.research.shadow_calib import RESOURCE
+    for why in ("scaled loss limit", "shock-v failsafe"):
+        assert why in RESOURCE_REASONS and why in RESOURCE and any(k in why for k in INTENDED)
+    assert any(k in "setup daily loss limit (open)" for k in INTENDED)
+    from mcf.report.playing_time import classify
+    assert classify("skipped", "scaled loss limit") == classify("skipped", "shock-v failsafe") == "daily_loss"
+
+
+@pytest.mark.parametrize("acct", [a for a in ACCTS if a != "primary"])
+def test_switches_refused_outside_cost_r_accounts(acct, monkeypatch, capsys):
+    """Realized R is raw outside account.loss_stops_cost_r_accounts while open marks are R after costs: the switches that
+    add the two stay off there (warning), even when switched on and listed for the account."""
+    monkeypatch.setenv("MCF_ACCOUNT", acct)
+    cfg = load_config()
+    if acct in (cfg["account"].get("loss_stops_cost_r_accounts") or []):
+        pytest.skip("cost-R account")
+    cfg["risk"] = {**cfg["risk"], "latch_counts_open": True, "latch_counts_open_accounts": [acct],
+                   "scaled_halt": {**cfg["risk"]["scaled_halt"], "enabled": True, "accounts": [acct]}}
+    rm = RiskManager(cfg, 100000)
+    assert not rm.latch_counts_open and not rm.scaled.enabled
+    assert set(rm.safety_refused) == {"latch_counts_open", "scaled_halt"} and "WARNING" in capsys.readouterr().out
+
+
+def test_cost_basis_primary_accepted():
+    rm = _rm({"latch_counts_open": True, "scaled_halt": {"enabled": True}})
+    assert rm.latch_counts_open and rm.scaled.enabled and not rm.safety_refused
+
+
+def _shock_runner(tmp_path, monkeypatch):
     r, _ = _runner(tmp_path, monkeypatch)
     r.shock = S.ShockV({"enabled": True}, "primary")
-    t0 = at("2026-11-27 11:00")
-    st = r.risk.state
+    r.lots = {"AAA": {"c1": {"strategy": "S1", "side": 1, "qty": 10, "order_id": "o1"}}}
+    return r
+
+
+def test_shock_v_no_bar_poll_is_not_double_counted(tmp_path, monkeypatch):
+    """Reviewer case: a lot without a bar for one poll keeps its last mark and is not carried, so its return does not
+    double-count it."""
+    r = _shock_runner(tmp_path, monkeypatch)
+    st, t0 = r.risk.state, at("2026-11-27 11:00")
+    seq = [({"c1": -10.0}, -10.0), ({}, 0.0), ({"c1": -10.0}, -10.0), ({"c1": -10.0}, -10.0)]
+    for i, (marks, open_r) in enumerate(seq):
+        r._lot_marks, st.open_r = marks, open_r
+        r._shock_poll(t0 + pd.Timedelta(minutes=i), stale=False)
+        assert r.shock.last["r"] == -10.0
+    assert r.shock.fired is None and not st.halted and not r._shock_carry
+
+
+def test_shock_v_carry_kept_until_exit_paired(tmp_path, monkeypatch):
+    """A lot gone flat before reconcile stays carried across a reconcile that has not paired its exit (journal order
+    still open), and leaves the carry once it is paired (order closed, R in closed R)."""
+    r = _shock_runner(tmp_path, monkeypatch)
+    st, t0 = r.risk.state, at("2026-11-27 11:00")
+    open_ids = {"o1"}
+    monkeypatch.setattr(r.journal, "open_orders",
+                        lambda run_id: pd.DataFrame({"broker_order_id": sorted(open_ids)}))
+    r._lot_marks, st.open_r = {"c1": +6.0}, 6.0
+    r._shock_poll(t0, stale=False)
+    r.lots, r._lot_marks, st.open_r = {}, {}, 0.0         # flat at the broker; exit not booked yet
+    r._shock_poll(t0 + pd.Timedelta(minutes=1), stale=False)
+    r._shock_after_reconcile()                           # reconcile ran but did not pair it: carry kept
+    r._shock_poll(t0 + pd.Timedelta(minutes=2), stale=False)
+    assert r.shock.last["r"] == 6.0 and "c1" in r._shock_carry
+    open_ids.clear()
+    st.realized_r = 6.0                                  # paired: booked in closed R
+    r._shock_after_reconcile()
+    r._shock_poll(t0 + pd.Timedelta(minutes=3), stale=False)
+    assert r.shock.last["r"] == 6.0 and not r._shock_carry and r.shock.fired is None
+
+
+def test_shock_v_released_in_reconcile_not_carried(tmp_path, monkeypatch):
+    """A lot released by reconcile itself (paired in the same call) must not be carried on top of its closed R."""
+    r = _shock_runner(tmp_path, monkeypatch)
+    st, t0 = r.risk.state, at("2026-11-27 11:00")
+    monkeypatch.setattr(r.journal, "open_orders", lambda run_id: pd.DataFrame({"broker_order_id": []}))
     r._lot_marks, st.open_r = {"c1": -10.0}, -10.0
     r._shock_poll(t0, stale=False)
-    r._lot_marks, st.open_r = {}, 0.0                    # lot gone, reconcile not yet run: carried at -10
-    r._shock_poll(t0 + pd.Timedelta(minutes=1), stale=False)
-    assert r.shock.last["r"] == -10.0
-    st.realized_r = -10.0                                # reconcile booked it
+    r.lots, st.realized_r = {}, -10.0                   # reconcile paired + released it
     r._shock_after_reconcile()
-    for i in (2, 3):
+    r._lot_marks, st.open_r = {}, 0.0
+    for i in (1, 2):
         r._shock_poll(t0 + pd.Timedelta(minutes=i), stale=False)
-    assert r.shock.last["r"] == -10.0 and r.shock.fired is None and not st.halted
+    assert r.shock.last["r"] == -10.0 and r.shock.fired is None
+
+
+# ------------------------------------------------------------------------------------------------ flags-off golden run
+# Full runner.step polls (4 symbols, 3 setups, prices falling until the Primary -20R halt fires on open marks). The golden
+# file was produced by this same scenario on the PRE-CHANGE code (commit cde9a46c53): with every switch off the
+# decisions, orders and status risk_state must be identical, and none of the new hooks may run.
+from types import SimpleNamespace  # noqa: E402
+
+from mcf.execution import runner as R  # noqa: E402
+
+GOLDEN = os.path.join(ROOT, "tests", "data", "friday_switches_noop_golden.json")
+
+
+
+class _GBroker:
+    def __init__(self):
+        self.submitted, self.held = [], {}
+
+    def equity(self):
+        return 1e5
+
+    def can_short(self, symbol):
+        return True
+
+    def positions(self):
+        return dict(self.held)
+
+    def submit_bracket(self, sig, qty, coid):
+        self.submitted.append(coid)
+        self.held[sig.symbol] = SimpleNamespace(avg_entry_price=10.0)
+        return SimpleNamespace(id=f"o{len(self.submitted)}")
+
+
+class _GStrat:
+    def __init__(self, name, side):
+        self.name, self.side, self.params = name, side, {}
+
+    def eligible(self, ctx):
+        return True
+
+    def signals(self, ctx):
+        last = len(ctx.bars) - 1
+        px = float(ctx.bars["close"].iloc[-1])
+        return [Signal(ctx.symbol, self.name, self.side, last, stop=px - 0.2 * self.side)]
+
+
+SYMS = ("AAA", "BBB", "CCC", "DDD")
+
+
+def _bars(n, sym):
+    idx = pd.date_range("2026-11-27 10:00", periods=n, freq="1min", tz=NY)
+    k = SYMS.index(sym)
+    close = [20.0 + k - 0.15 * i for i in range(n)]
+    return pd.DataFrame({"open": close, "high": [c + 0.05 for c in close], "low": [c - 0.05 for c in close],
+                         "close": close, "volume": 1e6}, index=idx)
+
+
+def _golden_run(tmp_path, monkeypatch, mutate=None, polls=12):
+    cfg = load_config()
+    cfg["account_name"] = "primary"
+    cfg["data"]["journal_path"] = str(tmp_path / "j.db")
+    cfg["account"].update(max_daily_loss_r=20, max_setup_daily_loss_r=2.0, max_concurrent_positions=77, max_positions_per_strategy=30, max_trades_per_day=1000, risk_per_trade_pct=0.25, loss_stops_cost_r_accounts=["primary"])
+    cfg["live"].update(max_lots_per_symbol=3, same_setup_reentry=True, burst_max_entries=30, retry_after_release=False, longs_first_on_ties=False, no_entry_before="09:50", lot_cap_ignore_residual_frac=0.25)   # pinned: the golden's rules
+    cfg["shadow_setups"] = []
+    if mutate:
+        mutate(cfg)
+    b = _GBroker()
+    strats = [_GStrat("LONGA", 1), _GStrat("LONGB", 1), _GStrat("SHORTC", -1)]
+    r = R.PaperRunner(cfg, strats, {}, broker=b)
+    r._sleep = lambda s: None
+    monkeypatch.setattr(r, "_realism", lambda sig, ctx, px, quote=None: (True, "ok", {}))
+    monkeypatch.setattr(r, "manage", lambda now, bars: None)
+    state = {"n": 1}
+    monkeypatch.setattr(r, "fetch", lambda now: {s: _bars(state["n"], s) for s in SYMS})
+    monkeypatch.setattr(r, "_contexts", lambda bars, today: [SimpleNamespace(symbol=s, bars=bars[s], avg_dollar_volume=5e8)
+                                                             for s in SYMS])
+    r.today = pd.Timestamp("2026-11-27").date()
+    for n in range(1, polls + 1):
+        state["n"] = n
+        now = pd.Timestamp("2026-11-27 10:00", tz=NY) + pd.Timedelta(minutes=n, seconds=5)
+        r.step(now)
+        r._sync_open()
+    r.write_status(now, "trading")
+    rows = [(x.symbol, x.strategy, x.status, x.reason, json.loads(x.info or "{}").get("netbeta_shadow"))
+            for x in r.journal.signals(r.run_id).itertuples()]
+    rs = {k: v for k, v in r.health["risk_state"].items() if k != "safety"}
+    return {"rows": rows, "submitted": list(b.submitted), "risk_state": rs}
+
+
+def test_flags_off_full_poll_matches_pre_change_golden(tmp_path, monkeypatch):
+    def boom(*a, **k):
+        raise AssertionError("a Friday switch hook ran with every switch off")
+    for name in ("_shock_poll", "_shock_value", "_shock_after_reconcile", "_netbeta_tag"):
+        monkeypatch.setattr(R.PaperRunner, name, boom)
+    monkeypatch.setattr(RiskManager, "_latch_open", boom)
+    monkeypatch.setattr(RiskManager, "scaled_check", boom)
+    got = json.loads(json.dumps(_golden_run(tmp_path, monkeypatch), default=str))
+    with open(GOLDEN) as f:
+        want = json.load(f)
+    assert got == want
+    assert want["risk_state"]["halted"] is True and len(want["submitted"]) == 12   # the scenario reaches the halt

@@ -2,7 +2,9 @@
 Code: `mcf/execution/safety.py`, `risk.py`, `runner.py`; config block `risk:` in `config/default.yaml`. None of them
 flattens: each blocks NEW entries only (B8 only logs). Each applies only in its `accounts:` list (default `[primary]`).
 Flip only after the 13:00 ET close, on the owner's yes; skeptic review; `docs/live/assignments.json` is untouched.
-State after the flip: status.json `health.risk_state.safety`.
+State after the flip: status.json `health.risk_state.safety`. LATCH-OPEN / HS-SCALE / SHOCK-V add realized + open R, so they
+run only in `account.loss_stops_cost_r_accounts` (Primary); elsewhere they stay off with a warning (`safety.refused`).
+Skip reasons: `setup daily loss limit (open)`, `scaled loss limit`, `shock-v failsafe` (restored after a restart).
 
 | Decision | Exact config change (`config/default.yaml`, `risk:`) |
 |---|---|

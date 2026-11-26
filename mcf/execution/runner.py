@@ -133,6 +133,9 @@ class PaperRunner:
         if self.risk.scaled.n <= 0:                      # HS-SCALE N = setups trading live here (config n_setups wins)
             self.risk.scaled.n = len({getattr(s, "name", None) for s in strategies} - {None})
         self.shock = _safety.ShockV(_safety.risk_cfg(cfg).get("shock_v"), acct_name)          # SHOCK-V
+        self.shock.enabled, why = _safety.gate_cost_basis(cfg, "SHOCK-V", self.shock.enabled)   # adds realized + open R
+        if why:
+            self.risk.safety_refused["shock_v"] = why
         self.netbeta = _safety.NetBetaShadow(_safety.risk_cfg(cfg).get("netbeta_shadow"), acct_name)   # B8 shadow
         # LR4 kill switch / LR5 position check / LR7 alerts (see _kill_check, _check_positions, _notify)
         self.kill: dict | None = None
@@ -357,7 +360,7 @@ class PaperRunner:
             if not self.risk.state.halted:
                 print("restore: account daily-loss halt fired earlier today - staying halted (no new entries)")
             self.risk.state.halted = True
-        stopped = set(skipped.loc[reasons == self.SETUP_STOP_REASON, "strategy"].astype(str))
+        stopped = set(skipped.loc[reasons.str.startswith(self.SETUP_STOP_REASON), "strategy"].astype(str))   # + "(open)"
         if stopped - self.risk.state.setup_stopped:
             print(f"restore: setup daily-loss latch already fired today for {sorted(stopped)}")
         self.risk.state.setup_stopped |= stopped
@@ -2284,17 +2287,7 @@ class PaperRunner:
         try:
             st = self.risk.state
             ok = not stale and st.open_marks_ok
-            # a lot that went flat at the broker leaves self.lots (_sync_open, every poll) before reconcile (every
-            # status_every_min) books its R: carry its last mark until then, so the sample does not jump up and back
-            # down (a false fall). Cleared after each reconcile (_shock_after_reconcile).
-            cur = self.__dict__.get("_lot_marks") or {}
-            prev = self.__dict__.get("_shock_prev_marks") or {}
-            carry = self.__dict__.setdefault("_shock_carry", {})
-            for coid, r in prev.items():
-                if coid not in cur and coid not in carry:
-                    carry[coid] = r
-            self._shock_prev_marks = dict(cur)
-            val = float(st.realized_r) + float(st.open_r) + sum(carry.values()) if ok else None
+            val = self._shock_value() if ok else None
             x = self.risk.scaled.level()[0] if self.risk.scaled.enabled else None
             rec = self.shock.update(now, val, x)
             if rec is not None:
@@ -2308,11 +2301,42 @@ class PaperRunner:
         except Exception as e:
             print(f"SHOCK-V check failed: {type(e).__name__}: {e} (no effect on trading)")
 
+    def _shock_value(self) -> float:
+        """Account closed + open R for SHOCK-V, with two corrections so a sample never jumps for bookkeeping reasons:
+        - a lot still held but without a mark this poll (no bar) keeps its last mark (open_r counts it 0);
+        - a lot that left self.lots before its exit is booked in closed R (_sync_open drops it once flat at the broker,
+          reconcile books it every status_every_min) is carried at its last mark until reconcile has PAIRED its exit
+          (its journal order closed: _shock_after_reconcile). A carried lot that is back in self.lots leaves the carry."""
+        st = self.risk.state
+        cur = self.__dict__.get("_lot_marks") or {}
+        live = {str(c): lot for lots in self.lots.values() for c, lot in lots.items()}
+        last = self.__dict__.setdefault("_shock_last", {})        # coid -> (last mark, order_id), lots in self.lots
+        carry = self.__dict__.setdefault("_shock_carry", {})      # coid -> (last mark, order_id), gone, exit not booked
+        for c, r in cur.items():
+            last[c] = (float(r), live.get(c, {}).get("order_id"))
+        for c in [c for c in last if c not in live]:
+            carry[c] = last.pop(c)
+        for c in [c for c in carry if c in live]:
+            last[c] = carry.pop(c)
+        held = sum(last[c][0] for c in live if c not in cur and c in last)
+        return float(st.realized_r) + float(st.open_r) + held + sum(m for m, _ in carry.values())
+
     def _shock_after_reconcile(self):
-        """SHOCK-V: reconcile booked the closed lots' R, so the carried marks (and the marks of lots it released) go."""
-        self._shock_carry = {}
+        """SHOCK-V: after reconcile, lots gone from self.lots whose journal order is closed (exit paired, so in closed R,
+        or never filled) leave the carry; gone lots still open in the journal stay carried. Journal unreadable: keep."""
+        try:
+            open_ids = set(self.journal.open_orders(self.run_id).broker_order_id.astype(str))
+        except Exception as e:
+            print(f"SHOCK-V carry kept: {type(e).__name__}")
+            return
         live = {str(c) for lots in self.lots.values() for c in lots}
-        self._shock_prev_marks = {c: r for c, r in (self.__dict__.get("_shock_prev_marks") or {}).items() if c in live}
+        last = self.__dict__.setdefault("_shock_last", {})
+        carry = self.__dict__.setdefault("_shock_carry", {})
+        for c in [c for c in last if c not in live]:
+            carry[c] = last.pop(c)
+        for c, (_, oid) in list(carry.items()):
+            if oid is None or str(oid) not in open_ids:
+                carry.pop(c)
 
     def _netbeta_lots(self):
         """(symbol, side, entry, stop, frac) of every open / pending lot, entry = the parent fill when known."""
