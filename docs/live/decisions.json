@@ -3316,5 +3316,35 @@
   "link": "research/squeeze_1125/REPORT.md",
   "status": "open",
   "answered": null
+ },
+ {
+  "code": "L3-OUT",
+  "title": "Move Gap-Down Recovery Fade (`L3-gap-slope-fromopen-FD`) from Primary to On Deck, together with LATCH-OPEN?",
+  "what": "Friday 11-27 epoch, after the 13:00 close: L3-fromopen switched off in Primary and placed in On Deck (promotion = move); it can return under the C3-BAR2 standard. RW3/RW5 stay, re-checked at 20 Primary sessions. Ledger entry + assignments.json + tests. Reply 'L3-OUT yes / half / no'.",
+  "recommend": "Yes - every bench window is negative at live-calibrated costs and removing it improves Primary book R per session (CHECK +0.77, T2 +0.36, t 3.4 / 3.7); its live Primary record is -0.024R over 231 trades (-0.204R w/o best day, 10-20 = 81% of its R)",
+  "numbers": [
+   "Live-calibrated costs (32,131 live trades): L3-fromopen CHECK -0.100R (w/o best -0.111), T2 -0.126R (-0.134); live all accounts +0.086R (+0.019)",
+   "Options vs keep (LATCH-OPEN on), Primary R/session CHECK/T2: out +0.77/+0.36; half size +0.37/+0.18 (needs a size multiplier, not ready for 11-27); latch-open only = keep. Live 18-session replay: noise (t <= 0.19)",
+   "Rule-change context: 11-19 C3 Epoch 1, 11-20 stop rounding, 11-21 cost fix, 11-23 ST7 out + burst brake; 0 setup configs, 2 cost-model versions tried (1 kept)"
+  ],
+  "why": "Nightly loop 11-25: L3's place in Primary on Friday's agenda (11-25: -34.97R on 35 lots).",
+  "link": "research/primshorts_1126/REPORT.md",
+  "status": "open",
+  "answered": null
+ },
+ {
+  "code": "CRYPTO-SCOPE",
+  "title": "Is swing / daily crypto (BTC/ETH/SOL trend overlay) in scope, or park crypto for now?",
+  "what": "Intraday crypto on Alpaca failed 3 rounds (997 configs, 0 survivors after costs). The only lead is a daily trend overlay (hold BTC/ETH/SOL only while above the 50-day average / 20-day breakout), which is swing trading, outside MCF's intraday charter. If 'swing', pre-register ONE trend overlay and score it once on the locked last 6 months; no live trading without a separate account and your yes. Reply 'CRYPTO swing / park'.",
+  "recommend": "Optional - the trend overlay cut CHECK drawdown from 59% to 23-32% and beat buy-and-hold's Sharpe in 8 of 9 configs, but it rests on 15-47 trades and trade t <= 2.22 vs a 3.82 bar; parking costs nothing",
+  "numbers": [
+   "CHECK 2025-01..2026-05: buy-and-hold -37.6% (Sharpe -0.25, max DD 59%); MA50 filter +7.6% (0.32, 32%); 20-day breakout +10.9% (0.42, 23%)",
+   "FIT 2021-24: buy-and-hold +3,546% vs trend at most +285% (bull markets favour holding)",
+   "Intraday rounds: r1 500 draws 0 after costs (cost 0.70R/trade); r2 480, 0 eligible (cost 0.13R, gross edge ~0); r3 17, 0 eligible; cumulative N 1,477"
+  ],
+  "why": "Owner 11-25: build the crypto foundation with massive research and random setup generation.",
+  "link": "research/crypto_r3/REPORT.md",
+  "status": "open",
+  "answered": null
  }
 ]
