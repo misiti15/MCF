@@ -83,3 +83,10 @@ Goal metrics (unsteered / constant / steered): red days per 21 sessions, worst-5
 rolling R floor, avg R/day without best day.
 If (and only if) all pass: the locked block is scored once at the very end (look 1, bar t >= 1.0), then a DECISION draft
 (journal-only shadow first) in REPORT.md. Otherwise the locked block stays unread.
+
+## Addendum A (2026-11-26, before any score; coordinator note on compass_rd_1126)
+- COMPASS-RD-1126 counted N = 4,762 condition cells (none clears ~t 4.3). Added to the lineage: N_lineage = 4,129 + 4,762 =
+  8,891 -> bar = sqrt(2 ln 8,903) = **4.26** (replaces 4.08; 3.46 still reported). Cumulative program N unchanged in kind.
+- Information only (not configs, not used for selection): bench W60 first-confirmed side vs the day's close side (SPY close vs
+  open) by month and by confirmation time, with the base rate; share of base-book entries made at/after the day's first
+  W60 confirmation and with a confirmed side at the entry mark.
