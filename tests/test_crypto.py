@@ -257,3 +257,76 @@ def test_amendment1_bad_prints_and_traded_only_maker_fills():
     m.traded = np.array([True, False, True, True])
     tr, _, missed = _run(m, t0, Plan("maker", 0.0, 4, 1.0, 0.0, None, 2))
     assert len(tr) == 0 and missed == 1
+
+
+# ---- round 3: clean traded-only bars and the daily trend engine (research/crypto_r3/PREREG.md) ----
+from mcf.crypto import trend as TR  # noqa: E402
+from mcf.crypto.exec1m import clean_traded  # noqa: E402
+
+
+def test_clean_traded_drops_zero_volume_and_bad_prints():
+    idx = pd.date_range("2024-01-01", periods=80, freq="1min", tz="UTC")
+    b = pd.DataFrame({"o": 100.0, "h": 100.5, "l": 99.5, "c": 100.0, "v": 1.0}, index=idx)
+    b.iloc[70, b.columns.get_loc("v")] = 0.0                       # quote-derived minute
+    b.iloc[75, b.columns.get_loc("c")] = 200.0                     # bad print
+    out = clean_traded(b)
+    assert idx[70] not in out.index and idx[75] not in out.index and len(out) == 78
+
+
+def _tmins(lows, opens=None, traded=None, t0=0):
+    n = len(lows)
+    lo = np.asarray(lows, float)
+    op = np.asarray(opens if opens is not None else lows, float)
+    return Minutes(np.arange(t0, t0 + n, dtype=np.int64), op, op + 1, lo, op,
+                   None if traded is None else np.asarray(traded, bool))
+
+
+def test_trend_maker_entry_needs_traded_through_and_taker_exit_costs():
+    zero = CostModel(slip_bps=0.0, spreads={"X": {"2023": 0.0}})
+    # decisions every 10 min; close 100 at k=0; minute lows: touch 100 (no fill), zero-volume 99 (no fill), 99 fills
+    lows = [100, 99, 99, 101, 101, 101, 101, 101, 101, 101] + [110] * 20
+    traded = [1, 0, 1, 1, 1, 1, 1, 1, 1, 1] + [1] * 20
+    m = _tmins(lows, traded=traded)
+    dec = np.array([0, 10, 20], np.int64)
+    close = np.array([100.0, 105.0, 110.0])
+    tr = TR.simulate("X", dec, close, np.array([1, 0, 0], bool), np.array([0, 1, 1], bool), m, zero,
+                     expiry=10)
+    assert len(tr) == 1
+    row = tr.iloc[0]
+    assert row.t_in == 2 and row.entry == 100.0 and row.cost_in == FEE_TIERS[1][0]
+    assert row.k_out == 1 and row.exit == 110.0 and row.cost_out == pytest.approx(FEE_TIERS[1][1])
+    assert row.net == pytest.approx(1.1 * (1 - 0.0015) * (1 - 0.0025) - 1)
+
+
+def test_trend_missed_maker_is_not_chased_and_signals():
+    m = _tmins([101] * 40)
+    dec = np.array([0, 10, 20, 30], np.int64)
+    tr = TR.simulate("X", dec, np.full(4, 100.0), np.ones(4, bool), np.zeros(4, bool), m, CostModel(),
+                     expiry=10)
+    assert tr.empty
+    d = pd.DataFrame({"o": 1.0, "h": 1.0, "l": 1.0, "c": np.r_[np.full(60, 10.0), np.arange(11, 31)]},
+                     index=pd.date_range("2021-01-01", periods=80, freq="D", tz="UTC"))
+    f = TR.indicators(d)
+    en, ex = TR.signals(TR.TrendRule("A", 50), f)
+    assert not en[:49].any() and en[60:].all() and ex[60:].sum() == 0
+    en, ex = TR.signals(TR.TrendRule("B", 50), f)
+    assert en[61:].all()                                         # each new close is a 20-day high
+
+
+def test_sleeve_equity_and_metrics():
+    dec = np.array([10, 20, 30, 40], np.int64)
+    close = np.array([100.0, 110.0, 121.0, 121.0])
+    tr = pd.DataFrame({"t_in": [5], "t_out": [30], "entry": [100.0], "exit": [121.0], "cost_in": [0.0],
+                       "cost_out": [0.0]})
+    eq = TR.sleeve_equity(tr, dec, close)
+    assert eq[-1] == pytest.approx(1.21) and eq[2] == pytest.approx(1.21)
+    mt = TR.metrics(np.array([1.0, 0.5, 1.0]))
+    assert mt["maxdd"] == pytest.approx(0.5) and mt["total"] == pytest.approx(0.0)
+
+
+def test_random_windows_non_overlapping_same_durations():
+    rng = np.random.default_rng(1)
+    en, ex = TR.random_windows(rng, [3, 5, 2], 30)
+    assert en.sum() == 10 and not (en & ex).any()
+    runs = np.diff(np.r_[0, en.astype(int), 0])
+    assert sorted(np.flatnonzero(runs == -1) - np.flatnonzero(runs == 1)) == [2, 3, 5]
