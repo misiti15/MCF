@@ -75,4 +75,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-22 01:55 UTC (run 88): FAMC build-log guard in (Builder); backfill caveat: 0-flag nights only from independent evidence, else 'no calendar'. Board quiet (rule 26 hold; RSGD1 held).
 - 11-24 01:55 UTC (run 89): found USAGE1: Lead/Observer disabled -> FAMC calendar unowned (parent/owner decision); gaps/ missing -> teams idle vs 12-16 clock.
 - 11-25 01:55 UTC (run 90): idle (no gaps list). Methodology check: robust.day_t = t of equal-weighted day means vs per-trade avg R (example +0.114R/trade, Day t -4.0); FOOTRACE-EXIT t<=-1.5 can trip near avg 0 -> suggest trade-weighted day-clustered t beside it (owner FYI).
+- 11-26 01:55 UTC (run 91): board quiet, no gaps list; status only. 11-27 is a half day (13:00 close).
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
