@@ -12,6 +12,7 @@ import pandas as pd
 import ci_lib as C
 
 SPLIT, OUT = sys.argv[1], sys.argv[2]
+C.LIVE_MODE = SPLIT == "LIVE"
 if SPLIT != "FIT":
     C.prereg_gate()
 G, M = C.spy_days([SPLIT]), C.marks([SPLIT])

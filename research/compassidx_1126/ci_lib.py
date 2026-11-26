@@ -28,15 +28,18 @@ def no_locked(dates):
     S.no_locked(dates)
 
 
+LIVE_MODE = False   # set True (alone) to score the live window 10-23..11-25 from live marks / Alpaca bars
+
+
 def period(d):
+    if LIVE_MODE:
+        return "LIVE" if "2026-10-23" <= d <= "2026-11-25" else "none"
     if ("2024-10-01" <= d <= "2024-10-31") or ("2025-03-01" <= d <= "2025-09-30"):
         return "FIT"
     if "2025-10-01" <= d <= "2026-11-04":
         return "CHECK"
     if "2023-01-03" <= d <= "2024-09-13":
         return "T2"
-    if "2026-10-23" <= d <= "2026-11-25":
-        return "LIVE"
     return "none"
 
 
