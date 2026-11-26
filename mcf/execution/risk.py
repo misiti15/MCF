@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..strategies.base import Signal
+from . import safety as _safety
 
 
 @dataclass
@@ -30,6 +31,12 @@ class RiskState:
     # R after costs, always (reports / status / the intraday tracker), whichever basis the loss stops use
     realized_cost_r: float = 0.0
     realized_cost_r_by_strategy: dict[str, float] = field(default_factory=dict)
+    # Friday 11-27 switches (mcf/execution/safety.py; all OFF by default). Filled by the runner every poll; read by the
+    # loss stops only when risk.latch_counts_open / risk.scaled_halt are on.
+    open_r_by_strategy: dict[str, float] = field(default_factory=dict)   # setup -> open lots' marks (cost R)
+    unmarked_setups: set[str] = field(default_factory=set)               # setups with >= 1 open lot lacking a mark
+    open_marks_ok: bool = True                                           # False when the last marking pass failed
+    halt_reason: str | None = None   # set only by the scaled halt / SHOCK-V (None: the "halted" reason, as before)
 
 
 def twin_key(name: str | None, groups: dict[str, str] | None = None) -> str:
@@ -101,6 +108,13 @@ class RiskManager:
         # LR3: the account halt also counts the open lots' marks (state.open_r); set by the runner for the accounts in
         # account.loss_stops_cost_r_accounts (whose realized R is then R after costs too)
         self.include_open = False
+        # Friday 11-27 switches, all OFF by default (config `risk:`; mcf/execution/safety.py). Never flatten.
+        acct = str(cfg.get("account_name", "primary"))
+        self.latch_counts_open = _safety.latch_open_on(cfg)      # LATCH-OPEN
+        self.latch_open_r = _safety.latch_open_r(cfg)           # optional closed+open threshold (e.g. 3); None = setup's
+        self.scaled = _safety.ScaledHalt(_safety.risk_cfg(cfg).get("scaled_halt"), acct)   # HS-SCALE
+        self._open_fallback_logged: set[str] = set()
+        self.latch_open_hits: dict[str, float] = {}             # setup -> closed+open R when LATCH-OPEN latched it
         self.state = RiskState()
 
     def loss_limit_for(self, setup: str) -> float | None:
@@ -116,6 +130,61 @@ class RiskManager:
             lim = self.setup_loss_limits.get(k, self.setup_loss_limit)
             if lim is not None and v <= -lim:
                 self.state.setup_stopped.add(k)
+        if by is None and self.latch_counts_open:
+            self._latch_open()
+
+    def _latch_open(self):
+        """LATCH-OPEN (neveragain_1125 G1-2): a setup whose closed + open R today <= -limit takes no new entries for the
+        rest of the day (latched like the closed latch). Blocks entries only; open lots keep their own exits. The limit
+        is risk.latch_open_r when set, else the setup's own loss stop; a setup with no loss stop (null) is never latched.
+        A setup with an open lot lacking a mark (no bar / no entry or stop), or a failed marking pass, falls back to
+        closed R only for that check (logged once per setup)."""
+        s = self.state
+        for k in set(s.realized_r_by_strategy) | set(s.open_r_by_strategy):
+            base = self.loss_limit_for(k)
+            if base is None or k in s.setup_stopped:
+                continue
+            lim = self.latch_open_r if self.latch_open_r is not None else base
+            closed = float(s.realized_r_by_strategy.get(k, 0.0))
+            if not s.open_marks_ok or k in s.unmarked_setups:
+                if k not in self._open_fallback_logged:
+                    self._open_fallback_logged.add(k)
+                    why = "marking failed" if not s.open_marks_ok else "an open lot has no mark"
+                    print(f"LATCH-OPEN: {k} uses closed R only ({why})")
+                v = closed
+            else:
+                v = closed + float(s.open_r_by_strategy.get(k, 0.0))
+            if v <= -lim:
+                s.setup_stopped.add(k)
+                self.latch_open_hits[k] = round(v, 3)
+
+    def scaled_check(self) -> bool:
+        """HS-SCALE: True (and halted for the day) once the account's closed + open R <= -X. Blocks entries only.
+        A failed marking pass counts closed R only."""
+        if not self.scaled.enabled:
+            return False
+        x, _ = self.scaled.level()
+        if x is None:
+            return False
+        s = self.state
+        v = s.realized_r + (s.open_r if s.open_marks_ok else 0.0)
+        if v <= -x:
+            s.halted = True
+            s.halt_reason = "scaled loss limit"
+            return True
+        return False
+
+    def safety_status(self) -> dict:
+        """health.risk_state.safety: each Friday switch's state (off = enabled false)."""
+        s = self.state
+        d = {"latch_counts_open": {"enabled": bool(self.latch_counts_open), "latch_open_r": self.latch_open_r,
+                                   "hits": dict(self.latch_open_hits)},
+             "scaled_halt": self.scaled.status()}
+        if self.latch_counts_open:
+            d["latch_counts_open"].update(
+                open_r_by_strategy={k: round(float(v), 3) for k, v in s.open_r_by_strategy.items()},
+                unmarked_setups=sorted(s.unmarked_setups), open_marks_ok=bool(s.open_marks_ok))
+        return d
 
     def open_lots(self) -> int:
         """Slots in use: every lot counts (a symbol held without lot detail counts as one)."""
@@ -135,12 +204,14 @@ class RiskManager:
     def check(self, sig: Signal, ref_price: float) -> tuple[bool, str]:
         s = self.state
         if s.halted:
-            return False, "halted"
+            return False, s.halt_reason or "halted"
         if ref_price < self.min_price:
             return False, "price below minimum"
         if s.realized_r + (s.open_r if self.include_open else 0.0) <= -self.a["max_daily_loss_r"]:
             s.halted = True
             return False, "daily loss limit"
+        if self.scaled.enabled and self.scaled_check():        # HS-SCALE (off by default): the earlier of the two fires
+            return False, "scaled loss limit"
         if self.setup_loss_limit is not None or self.setup_loss_limits:
             self.latch_setup_losses()
             if sig.strategy in s.setup_stopped:

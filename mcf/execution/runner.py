@@ -34,6 +34,7 @@ from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
 from .alpaca_broker import AlpacaBroker, stop_px
 from .outage import outage_cfg, protect_open_lots
+from . import safety as _safety
 from .risk import SETUP_LOT_CAP, RiskManager
 
 NY = TZ
@@ -128,6 +129,11 @@ class PaperRunner:
         acct_name = cfg.get("account_name", "primary")
         self.cost_r_stops = acct_name in set((cfg.get("account") or {}).get("loss_stops_cost_r_accounts") or [])
         self.risk.include_open = self.cost_r_stops
+        # Friday 11-27 switches (config `risk:`, mcf/execution/safety.py): all OFF by default; none ever flattens
+        if self.risk.scaled.n <= 0:                      # HS-SCALE N = setups trading live here (config n_setups wins)
+            self.risk.scaled.n = len({getattr(s, "name", None) for s in strategies} - {None})
+        self.shock = _safety.ShockV(_safety.risk_cfg(cfg).get("shock_v"), acct_name)          # SHOCK-V
+        self.netbeta = _safety.NetBetaShadow(_safety.risk_cfg(cfg).get("netbeta_shadow"), acct_name)   # B8 shadow
         # LR4 kill switch / LR5 position check / LR7 alerts (see _kill_check, _check_positions, _notify)
         self.kill: dict | None = None
         # HK-FLAT-1113b: a job started 15:50 ET or later (until close + 5 min) only closes: no new entries, the closing
@@ -330,7 +336,7 @@ class PaperRunner:
                 print(f"shadow restore failed: {type(e).__name__}: {e} (shadow starts empty)")
 
     # reasons risk.check() journals once a latch has fired; their presence in today's signals is the persisted record
-    HALT_REASONS = ("daily loss limit", "halted")
+    HALT_REASONS = ("daily loss limit", "halted", "scaled loss limit", "shock-v failsafe")
     SETUP_STOP_REASON = "setup daily loss limit"
 
     def _restore_latches(self, sig: pd.DataFrame):
@@ -1263,6 +1269,8 @@ class PaperRunner:
         self.manage(now, bars)
         self.scale_outs(now, bars)
         stale = self._check_data(now, bars)
+        if getattr(getattr(self, "shock", None), "enabled", False):
+            self._shock_poll(now, stale)              # SHOCK-V (off by default): entries off + alert, never a flatten
         if self.poll_log_dir:
             self._log_poll(now, bars, stale)
         self._escalate(now, stale)
@@ -1684,6 +1692,8 @@ class PaperRunner:
             return self._log(sig, "skipped", "size < 1 share after liquidity cap", px, now, info)
         if is_extended(ctx, self.cfg):
             info["tier"] = "extended"
+        if getattr(getattr(self, "netbeta", None), "enabled", False):
+            self._netbeta_tag(sig, info, px)            # B8 shadow (off by default): journal tag only, never blocks
         info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
         self._mtm_lot[coid] = (px, sig.stop)              # intraday tracker only (poll snapshot); never read by trading
         if self.dry_run:
@@ -1821,6 +1831,7 @@ class PaperRunner:
                 self.session_done = True
                 if not self.health.get("flatten_failed"):
                     self.risk.state.open_r = 0.0          # flat: no open marks left (status only)
+                    self.risk.state.open_r_by_strategy = {}
                 self._sleep(20)  # let the closing market orders fill before reconciling
                 break
             self._kill_check(now)
@@ -2103,6 +2114,8 @@ class PaperRunner:
                     byc[str(k)] = byc.get(str(k), 0.0) + float(vc)
                     self.risk.latch_setup_losses({str(k): by[str(k)]})   # LL-LATCH: touching the limit latches
             print(f"reconciled {len(trades)} trades for {day}")
+        if getattr(getattr(self, "shock", None), "enabled", False):
+            self._shock_after_reconcile()
 
     def _note_residuals(self, residual: dict):
         """Status only: lots still open after a partial exit (e.g. a target leg that filled part of the lot and keeps
@@ -2229,25 +2242,114 @@ class PaperRunner:
             m = (self.cfg.get("costs") or {}).get("live_model") or {}
             mmin, mbps = float(m.get("market_exit_min_per_share", 0.01)), float(m.get("market_exit_bps", 1.0))
             tot = 0.0
+            by: dict[str, float] = {}                 # Friday switches: per-setup marks / unmarked setups (state only)
+            unmarked: set[str] = set()
+            marks: dict[str, float] = {}              # coid -> mark (SHOCK-V carry of lots gone before reconcile)
             for sym, lots in self.lots.items():
                 b = bars.get(sym)
                 if b is None or not len(b):
+                    unmarked |= {str(lot.get("strategy")) for lot in lots.values()}
                     continue
                 last = float(b["close"].iloc[-1])
                 for coid, lot in lots.items():
                     entry, stop = self._mtm_lot.get(coid, (None, None))
                     entry = self._fill_px.get(str(lot.get("order_id"))) or entry
                     if entry is None or stop is None or not abs(float(entry) - float(stop)) > 0:
+                        unmarked.add(str(lot.get("strategy")))
                         continue
                     left, orig = lot.get("left"), lot.get("orig_qty")
                     frac = (float(left) / float(orig)) if left is not None and orig else 1.0
                     rps = abs(float(entry) - float(stop))
                     side = int(lot.get("side") or 0)
-                    tot += (side * (last - float(entry)) - max(mmin, mbps * last / 1e4)) / rps * frac
+                    r = (side * (last - float(entry)) - max(mmin, mbps * last / 1e4)) / rps * frac
+                    tot += r
+                    k = str(lot.get("strategy"))
+                    by[k] = by.get(k, 0.0) + r
+                    marks[str(coid)] = r
             self.risk.state.open_r = tot
+            self.risk.state.open_r_by_strategy = by
+            self.risk.state.unmarked_setups = unmarked
+            self.risk.state.open_marks_ok = True
+            self._lot_marks = marks
         except Exception as e:
+            self.risk.state.open_marks_ok = False     # LATCH-OPEN / HS-SCALE then count closed R only
             print(f"open marks failed: {type(e).__name__}: {e}")
         return self.risk.state.open_r
+
+    # ---------------------------------------------------------------- Friday 11-27 switches (all OFF by default)
+    def _shock_poll(self, now: pd.Timestamp, stale: bool):
+        """SHOCK-V: one sample of the account's closed + open R per poll (skipped when the data is stale or the marking
+        pass failed). On a fire: no new entries for the rest of the session (sticky; restored after a restart from the
+        journaled skip reason) + alert. Never flattens. Never raises."""
+        try:
+            st = self.risk.state
+            ok = not stale and st.open_marks_ok
+            # a lot that went flat at the broker leaves self.lots (_sync_open, every poll) before reconcile (every
+            # status_every_min) books its R: carry its last mark until then, so the sample does not jump up and back
+            # down (a false fall). Cleared after each reconcile (_shock_after_reconcile).
+            cur = self.__dict__.get("_lot_marks") or {}
+            prev = self.__dict__.get("_shock_prev_marks") or {}
+            carry = self.__dict__.setdefault("_shock_carry", {})
+            for coid, r in prev.items():
+                if coid not in cur and coid not in carry:
+                    carry[coid] = r
+            self._shock_prev_marks = dict(cur)
+            val = float(st.realized_r) + float(st.open_r) + sum(carry.values()) if ok else None
+            x = self.risk.scaled.level()[0] if self.risk.scaled.enabled else None
+            rec = self.shock.update(now, val, x)
+            if rec is not None:
+                if not st.halted:
+                    st.halt_reason = "shock-v failsafe"
+                st.halted = True
+                print(f"SHOCK-V fired: {rec} - no new entries for the session (open lots keep their exits)")
+                self._notify("shock-v", f"SHOCK-V glitch failsafe fired ({rec['rule']}: R {rec['r']:+.1f}, fall "
+                             f"{max(rec['drop_v1'], rec['drop_v2']):.1f}R); no new entries for the session, nothing "
+                             f"flattened", key="shock-v")
+        except Exception as e:
+            print(f"SHOCK-V check failed: {type(e).__name__}: {e} (no effect on trading)")
+
+    def _shock_after_reconcile(self):
+        """SHOCK-V: reconcile booked the closed lots' R, so the carried marks (and the marks of lots it released) go."""
+        self._shock_carry = {}
+        live = {str(c) for lots in self.lots.values() for c in lots}
+        self._shock_prev_marks = {c: r for c, r in (self.__dict__.get("_shock_prev_marks") or {}).items() if c in live}
+
+    def _netbeta_lots(self):
+        """(symbol, side, entry, stop, frac) of every open / pending lot, entry = the parent fill when known."""
+        for sym, lots in self.lots.items():
+            for coid, lot in lots.items():
+                entry, stop = self._mtm_lot.get(coid, (None, None))
+                entry = self._fill_px.get(str(lot.get("order_id"))) or entry
+                left, orig = lot.get("left"), lot.get("orig_qty")
+                frac = (float(left) / float(orig)) if left is not None and orig else 1.0
+                yield sym, int(lot.get("side") or 0), entry, stop, frac
+
+    def _netbeta_tag(self, sig, info: dict, px: float):
+        """B8 shadow: tags the entry it WOULD block (info.netbeta_shadow, journaled with the signal) and counts it in
+        status. Never blocks, never raises."""
+        try:
+            nb, skipped = self.netbeta.net(self._netbeta_lots())
+            self.netbeta.evaluated += 1
+            block = self.netbeta.judge(int(sig.side), nb)
+            self.netbeta.last = {"at": str(self._now), "setup": sig.strategy, "symbol": sig.symbol,
+                                 "side": int(sig.side), "nb": round(nb, 3), "would_block": bool(block),
+                                 "unpriced_lots": skipped}
+            if block:
+                self.netbeta.would_block += 1
+                self.netbeta.by_setup[sig.strategy] = self.netbeta.by_setup.get(sig.strategy, 0) + 1
+                info["netbeta_shadow"] = {"nb": round(nb, 3), "budget": self.netbeta.budget, "would_block": True,
+                                          "unpriced_lots": skipped}
+        except Exception as e:
+            print(f"B8 shadow failed: {type(e).__name__}: {e} (no effect on trading)")
+
+    def _safety_status(self) -> dict:
+        try:
+            d = self.risk.safety_status()
+            d["shock_v"] = self.shock.status()
+            d["netbeta_shadow"] = self.netbeta.status()
+            return d
+        except Exception as e:
+            return {"error": type(e).__name__}
 
     def _mtm_snapshot(self, bars: dict) -> dict:
         """The poll's marked-to-market snapshot (see mtm_snapshot). Lot entry/stop of lots this process did not enter
@@ -2296,7 +2398,9 @@ class PaperRunner:
                                      # LR3: what the loss stops count, and R after costs for display
                                      "r_basis": "R after costs" if self.cost_r_stops else "raw R",
                                      "open_r": round(float(rs.open_r), 3), "halt_counts_open": bool(self.risk.include_open),
-                                     "realized_r_after_costs": round(float(rs.realized_cost_r), 3)}
+                                     "realized_r_after_costs": round(float(rs.realized_cost_r), 3),
+                                     # Friday 11-27 switches (all off by default): each one's state
+                                     "safety": self._safety_status()}
         if not (self.status_path or self.on_status):
             return
         from ..report.live_status import build_status
