@@ -79,7 +79,8 @@ def classify(status: str, reason: str | None) -> str:
         return "setup_cap"
     if r.startswith("max trades/day"):
         return "trades_cap"
-    if r.startswith(("daily loss limit", "setup daily loss limit")) or r == "halted":
+    # "setup daily loss limit" also covers LATCH-OPEN's "setup daily loss limit (open)"; the last two: Friday 11-27 switches
+    if r.startswith(("daily loss limit", "setup daily loss limit", "scaled loss limit", "shock-v failsafe")) or r == "halted":
         return "daily_loss"
     if r.startswith("missed"):
         return "missed_trigger"

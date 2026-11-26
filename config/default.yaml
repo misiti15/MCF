@@ -584,6 +584,37 @@ report:
   scorecard_sessions: 4          # owner 2026-10-09: a setup's testing phase is 4 sessions before a removal decision
   dashboard_url: https://claude.ai/artifact/LxSZBti7GjRxzKncf4Q1ow   # private Claude artifact (free)
 
+# Friday 11-27 safety switches (pre-built 2026-11-26, owner decisions HS-SCALE / LATCH-OPEN / B8-SHADOW pending). EVERY
+# switch is OFF: with these defaults nothing changes. None of them ever flattens: they block new entries (B8: logs only).
+# Each applies only in the accounts it lists. How to flip: docs/live/FRIDAY_SWITCHES.md (mcf/execution/safety.py).
+risk:
+  latch_counts_open: false       # LATCH-OPEN (neveragain_1125 G1-2): per-setup latch on closed + open R (no new entries)
+  latch_counts_open_accounts: [primary]
+  latch_open_r: null             # closed + open threshold (R); null = the setup's max_setup_daily_loss_r (2). 3 = G1-3
+  scaled_halt:                   # HS-SCALE (hsscale_1125 SCALED-K4): no new entries at closed + open R <= -X
+    enabled: false               # X = clip(k x sigma, floor x N, cap x N); the fixed -20R halt stays (earlier fires)
+    accounts: [primary]
+    k: 4
+    floor_per_setup: 2.5
+    cap_per_setup: 8
+    sigma_r: null                # std of the lineup's simulated daily closed R (trailing 250 sessions, min 120); null -> cap x N
+    n_setups: null               # null = the setups trading live in the account
+  shock_v:                       # SHOCK-V glitch failsafe (hsscale_1125 Layer 1): no new entries + alert, never a flatten
+    enabled: false
+    accounts: [primary]
+    v1_min: 2                    # V1: closed + open R falls >= max(8, 0.5 X) within 2 minutes
+    v1_floor_r: 8
+    v1_frac_x: 0.5
+    v2_min: 10                   # V2: falls >= max(12, 0.75 X) within 10 minutes
+    v2_floor_r: 12
+    v2_frac_x: 0.75
+    confirm_polls: 2
+  netbeta_shadow:                # B8 shadow (squeeze_1125 R1-B8): journal tag + status only, never blocks
+    enabled: false
+    accounts: [primary, testing, testing2]
+    budget_r_per_pct: 8
+    betas_path: null             # JSON {symbol: shrunk 60-day beta} (safety.shrunk_beta); null / missing -> beta 1.0
+
 data:
   cache_dir: data/cache
   journal_path: data/journal.db

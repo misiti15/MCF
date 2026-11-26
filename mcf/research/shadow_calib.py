@@ -37,7 +37,8 @@ from . import effective as E
 
 ROOT = Path(__file__).resolve().parents[2]
 RESOURCE = ("halted", "daily loss limit", "max trades/day", "max concurrent positions", "max positions for this setup",
-            "twin held", "already in symbol", "opposite side held", "lot cap", "position mismatch")
+            "twin held", "already in symbol", "opposite side held", "lot cap", "position mismatch",
+            "scaled loss limit", "shock-v failsafe")   # Friday 11-27 switches (off by default)
 BRANCHES = {"primary": "mcf-data", "testing": "mcf-data-testing", "testing2": "mcf-data-testing2", "gen": "mcf-data-gen",
             "graveyard": "mcf-data-graveyard", "livelab": "mcf-data-livelab", "explore1": "mcf-data-explore1",
             "testingd": "mcf-data-testingd", "testinge": "mcf-data-testinge", "testingf": "mcf-data-testingf"}

@@ -60,7 +60,8 @@ FILL_PROFILES = {
 # trade "extra" when live skipped the same signal for one of these)
 RESOURCE_REASONS = ("halted", "daily loss limit", "max trades/day", "max concurrent positions",
                     "max positions for this setup", "twin held", "already in symbol", "opposite side held", "lot cap",
-                    "position mismatch", "rejected", "same setup, same moment")
+                    "position mismatch", "rejected", "same setup, same moment",
+                    "scaled loss limit", "shock-v failsafe")   # Friday 11-27 switches (off by default)
 
 
 def ensure_run(journal) -> int:
