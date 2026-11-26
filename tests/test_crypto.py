@@ -146,3 +146,97 @@ def test_masks_run_on_features():
     s = Setup(0, 15, 1, [("rsi", {"dir": "low", "lvl": 30})], "any", "all")
     m = mask(s, f)
     assert m.any() and (f["rsi"].to_numpy()[m] <= 30).all()
+
+
+# ---------------------------------------------------------------- round 2: 1-min fills, maker realism, tiers
+from mcf.crypto.costs import FEE_TIERS  # noqa: E402
+from mcf.crypto.exec1m import Minutes, Plan, reprice, run, to_min  # noqa: E402
+from mcf.crypto import generator2 as G2  # noqa: E402
+
+ZERO2 = CostModel(slip_bps=0, stop_extra_bps=0, spreads={"X": {"2024": 0.0}})
+
+
+def _mins(o, h, l, c, start="2024-03-04 00:00"):
+    idx = pd.date_range(start, periods=len(o), freq="1min", tz="UTC")
+    return Minutes(to_min(idx), *(np.asarray(x, float) for x in (o, h, l, c))), int(to_min(idx)[0])
+
+
+def _run(m, t0, plan, ref=100.0, atr=1.0, costs=ZERO2, tier=1):
+    return run("X", m, np.array([t0]), np.array([ref]), np.array([atr]), plan, costs, tier)
+
+
+def test_maker_fills_only_when_traded_through():
+    plan = Plan("maker", 0.0, 3, 1.0, 0.0, None, 2)
+    m, t0 = _mins([100] * 5, [100.5] * 5, [100, 100, 100, 100, 100], [100] * 5)        # touches 100, never below
+    tr, _, missed = _run(m, t0, plan)
+    assert len(tr) == 0 and missed == 1
+    m, t0 = _mins([100] * 5, [100.5] * 5, [100, 99.9, 100, 100, 100], [100] * 5)       # trades through on minute 1
+    tr, _, missed = _run(m, t0, plan)
+    assert missed == 0 and len(tr) == 1
+    assert tr["entry"].iloc[0] == 100.0 and tr["maker_in"].iloc[0]
+    assert tr["entry_time"].iloc[0] == pd.Timestamp("2024-03-04 00:01", tz="UTC")
+
+
+def test_maker_expiry_and_offset():
+    plan = Plan("maker", 0.5, 2, 1.0, 0.0, None, 2)                                     # limit 99.5, 2-minute life
+    m, t0 = _mins([100] * 5, [100] * 5, [100, 99.6, 99.4, 99.0, 99.0], [100] * 5)
+    tr, _, missed = _run(m, t0, plan)
+    assert len(tr) == 0 and missed == 1                                                # through only at minute 2
+    tr, _, _ = _run(m, t0, Plan("maker", 0.5, 3, 1.0, 0.0, None, 2))
+    assert len(tr) == 1 and tr["entry"].iloc[0] == 99.5
+
+
+def test_stop_on_maker_fill_minute_and_min_stop_pct():
+    m, t0 = _mins([100, 100, 100], [100, 100, 100], [100, 96.0, 100], [100, 97, 100])
+    tr, _, _ = _run(m, t0, Plan("maker", 0.0, 3, 1.0, 0.03, 2.0, 10))
+    assert tr["kind"].iloc[0] == 1 and tr["risk"].iloc[0] == pytest.approx(3.0)         # 3% floor beats 1 ATR
+    assert tr["exit"].iloc[0] == pytest.approx(97.0) and tr["gross_r"].iloc[0] == pytest.approx(-1.0)
+    assert tr["cost_r"].iloc[0] == pytest.approx((0.0015 + 0.0025) * 100 / 3.0)
+
+
+def test_target_needs_trade_through_and_is_maker():
+    plan = Plan("taker", 0.0, 0, 1.0, 0.0, 2.0, 100)                                    # risk 1, target 102
+    m, t0 = _mins([100] * 4, [100, 102, 102.01, 100], [100, 100, 100, 100], [100] * 4)
+    tr, _, _ = _run(m, t0, plan)
+    assert tr["kind"].iloc[0] == 2 and tr["exit_time"].iloc[0] == pd.Timestamp("2024-03-04 00:02", tz="UTC")
+    assert tr["maker_out"].iloc[0] and not tr["maker_in"].iloc[0]
+    fees = FEE_TIERS[1][1] + FEE_TIERS[1][0]
+    assert tr["cost_r"].iloc[0] == pytest.approx(fees * 100 / 1.0)
+
+
+def test_time_exit_on_first_print_after_hold_and_thin_entry():
+    idx = pd.DatetimeIndex(["2024-03-04 00:02", "2024-03-04 00:03", "2024-03-04 00:09"], tz="UTC")
+    m = Minutes(to_min(idx), np.array([100, 101, 103.0]), np.array([100, 101, 103.0]),
+                np.array([100, 101, 103.0]), np.array([100, 101, 103.0]))
+    t0 = int(to_min(pd.DatetimeIndex(["2024-03-04 00:00"], tz="UTC"))[0])
+    tr, _, _ = _run(m, t0, Plan("taker", 0.0, 0, 5.0, 0.0, None, 5))
+    assert tr["thin"].iloc[0] and tr["entry"].iloc[0] == 100 and tr["exit"].iloc[0] == 103 and tr["kind"].iloc[0] == 0
+
+
+def test_fee_tiers_reprice_without_resimulating():
+    m, t0 = _mins([100] * 4, [100] * 4, [100] * 4, [100] * 4)
+    tr, _, _ = _run(m, t0, Plan("taker", 0.0, 0, 1.0, 0.0, None, 2))
+    r1 = tr["r"].iloc[0]
+    reprice(tr, 3)
+    assert tr["r"].iloc[0] - r1 == pytest.approx((0.0050 - 0.0040) * 100)
+    assert FEE_TIERS[2] == (0.0012, 0.0022)
+
+
+def test_generator2_counted_seeds_and_masks():
+    a, b = G2.generate(40, 5, start_id=500), G2.generate(40, 5, start_id=500)
+    assert [s.label() for s in a] == [s.label() for s in b] and a[0].draw_id == 500
+    assert all(s.hold_h * 60 >= s.tf and s.min_stop_pct >= 0.03 for s in a)
+    g = G2.seed_grid(900)
+    assert len(g) == 80 and [s.draw_id for s in g] == list(range(900, 980))
+    rng = np.random.default_rng(1)
+    p = 100 * np.exp(np.cumsum(rng.normal(0, 0.003, 6000)))
+    bars = _bars(p, start="2024-03-04", freq="15min")
+    bars["filled"] = False
+    btc = G2.build2(bars, 15)
+    f = G2.build2(bars, 15, btc=btc)
+    for s in g + [x for x in G2.generate(80, 2) if x.tf == 15]:
+        m = G2.mask(s, f, "ETH")
+        assert m.dtype == bool and len(m) == len(f) and not (m & ~G2.time_mask(s, f)).any()
+    s = G2.Setup2(0, 15, [("rsi", {"dir": "low", "lvl": 30})])
+    m = G2.mask(s, f, "ETH")
+    assert m.any() and (f["rsi"].to_numpy()[m] <= 30).all()

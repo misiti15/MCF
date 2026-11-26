@@ -31,6 +31,7 @@ SLIP_BPS = 2.0
 STOP_EXTRA_BPS = 5.0
 THIN_MULT = 3.0
 DEFAULT_SPREAD = 0.0030          # 30 bps quoted spread when a pair has no sample (conservative)
+FEE_TIERS = {1: (0.0015, 0.0025), 2: (0.0012, 0.0022), 3: (0.0010, 0.0020)}   # (maker, taker) per volume tier
 SPREADS_FILE = Path(__file__).resolve().parents[2] / "research" / "crypto_r1" / "spreads.json"
 
 
@@ -54,6 +55,18 @@ class CostModel:
     @classmethod
     def maker(cls, **kw) -> "CostModel":
         return cls(fee_entry=FEE_MAKER, maker_entry=True, **kw)
+
+    def leg(self, pair: str, year: int, *, maker: bool, entry: bool, stop_exit: bool = False,
+            thin: bool = False) -> tuple[float, bool]:
+        """Non-fee cost of one fill (fraction of price) and whether the fee is the maker fee (round 2 engine,
+        mcf/crypto/exec1m.py). A maker fill (resting limit that was traded THROUGH) crosses no spread and pays no
+        slippage; a taker fill pays the half-spread + slippage (x thin_mult on a no-print minute, + stop extra on
+        a stop exit). Fees are kept apart so fee tiers can be re-priced without re-simulating."""
+        if maker:
+            return 0.0, True
+        slip = self.slip_bps / 1e4 * (self.thin_mult if thin else 1.0)
+        extra = self.stop_extra_bps / 1e4 if (stop_exit and not entry) else 0.0
+        return self.spread(pair, year) / 2 + slip + extra, False
 
     def spread(self, pair: str, year: int) -> float:
         tab = self.spreads.get(pair)
