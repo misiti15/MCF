@@ -9,10 +9,7 @@ Pre-registered: PREREG.md (sha256 f5717830…882, addendum A before any score). 
   - Against a constant cut to the same exposure (mean weight 0.148): +0.118R/day, t 1.23 (needs t ≥ 2). It does not beat a plain size cut.
   - **PBO 0.13** (passes). **Hansen SPA p 0.061**, White RC p 0.083 (fail). Deflated Sharpe ≈ 0 at both N = 2,271 and N = 8,897.
   - It passes both halves (+0.04 / +0.10), 24 of 40 months positive, worst-5 vs unsteered, and no setup worse by more than 2R/month (RW5 −0.11 vs constant). It fails the best-day share (13.7% against < 10%).
-- **The other 5 configs:**
-  - S1 OFF/HALF: +0.057 (t 1.81).
-  - S2 (W60) OFF: +0.033 (t 1.05). S2 OFF/HALF: +0.034 (t 1.13; vs constant t 2.45).
-  - S1+S2 OFF: −0.114 (t −2.35). S1+S2 OFF/HALF: −0.080 (t −1.99).
+- **The other 5 configs:** S1 OFF/HALF +0.057 (t 1.81); S2 (W60) OFF +0.033 (t 1.05); S2 OFF/HALF +0.034 (t 1.13; vs constant t 2.45); S1+S2 OFF −0.114 (t −2.35); S1+S2 OFF/HALF −0.080 (t −1.99).
   - S2 sets L3 and RW3 weight to about 0 almost everywhere, because the rule cuts cells by their absolute mean and the shorts lose in nearly every cell.
 ## Goal metrics (OOS, Primary book; the steered book trades 4–30% of lots, so its red-day count mostly counts days it sat out)
 | Book | Mean R/day | Red days / 21 | Worst-5 sum | Worst trailing-60 worst-5 | 20-session floor | Avg w/o best day |
@@ -27,7 +24,6 @@ Every arm stays negative. The steered tails are no better than the size cut's, a
 - **First-confirmed side vs the close side:** right on 70.4% of 875 days, against a 53.3% base rate. Right in 41 of 43 months; by half-year 0.61–0.77. Median confirmation is 10:00. By confirmation time: ≤10:00 0.67 (488 days), 10:15–10:30 0.74, 10:45–11:30 0.77, 11:45–13:00 0.63, 13:15+ 0.82 (11 days).
 - **Entries vs confirmation (REGSTEER rules):** 81.8% of base entries come after the day's first confirmation, and 57.4% have a confirmed side at the entry mark (27.9% aligned, 29.5% against). Even so, S2 adds no edge beyond the cut in exposure. The compass reads where the day stands, not the R that follows an entry (as compass_rd_1126 found).
 ## Caveats and rule-change context
-- Live data is 10-06..11-25; 11-13 has no SPY gap row.
-- GEN short contenders have no T2 lots, because their breadth context columns are missing from the T2 frames.
+- Live data is 10-06..11-25; 11-13 has no SPY gap row. GEN short contenders have no T2 lots (their breadth context columns are missing from the T2 frames).
 - Ledger changes inside the live window: 10-28 sizing, 10-29 −2R latch, 11-11 TEAM-6, 11-12 LR8/LR3, 11-17 TSZ1, 11-19 Epoch 1, 11-20 stop rounding, 11-21 cost-basis fix, 11-23 burst brake / ST7 out.
 - Read for the owner: the lever is the edge per lot and the hedge or size balance (A's HEDGE-B, squeeze B8), not on/off by state. No DECISION draft. Scripts: rs_*.py.
