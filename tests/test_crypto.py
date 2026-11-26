@@ -240,3 +240,20 @@ def test_generator2_counted_seeds_and_masks():
     s = G2.Setup2(0, 15, [("rsi", {"dir": "low", "lvl": 30})])
     m = G2.mask(s, f, "ETH")
     assert m.any() and (f["rsi"].to_numpy()[m] <= 30).all()
+
+
+def test_amendment1_bad_prints_and_traded_only_maker_fills():
+    from mcf.crypto.exec1m import clean_prints
+    idx = pd.date_range("2024-03-04", periods=80, freq="1min", tz="UTC")
+    b = pd.DataFrame({"o": 100.0, "h": 100.5, "l": 99.5, "c": 100.0, "v": 1.0}, index=idx)
+    b.iloc[70, b.columns.get_loc("h")] = 400.0            # spike high -> cut to the body
+    b.iloc[72, b.columns.get_loc("c")] = 300.0            # bad close -> bar dropped
+    b.iloc[74, b.columns.get_loc("l")] = 50.0             # spike low -> raised to the body
+    cl = clean_prints(b)
+    assert len(cl) == 79 and idx[72] not in cl.index
+    assert cl.loc[idx[70], "h"] == 100.0 and cl.loc[idx[74], "l"] == 100.0 and cl.loc[idx[10], "h"] == 100.5
+    # a zero-volume (quote-derived) minute trading through the limit does not fill a maker order
+    m, t0 = _mins([100] * 4, [100] * 4, [100, 99, 100, 100], [100] * 4)
+    m.traded = np.array([True, False, True, True])
+    tr, _, missed = _run(m, t0, Plan("maker", 0.0, 4, 1.0, 0.0, None, 2))
+    assert len(tr) == 0 and missed == 1

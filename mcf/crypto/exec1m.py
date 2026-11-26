@@ -8,6 +8,9 @@ Entry modes
           a later 1-min bar trades THROUGH the limit (low < L, strictly); a touch (low == L) does not fill. Fill
           price = L. Orders that never trade through are MISSED (counted, no trade). This makes the entry pay its
           own adverse selection: a limit only fills when price comes down to it.
+          Amendment 1 (PREREG_AMEND1.md): only a minute with a real trade (volume > 0) can fill a maker order or a
+          maker target; zero-volume (quote-derived) minutes, which Alpaca includes since 2023, can still trigger
+          stops and time exits.
   naive   (sensitivity only) round-1 assumption: maker fee, filled at the first print's open with certainty.
 Exits
   stop    risk = max(stop_atr * ATR(tf), min_stop_pct * entry); stop = entry - risk. Taker. Fills at the stop, or at
@@ -52,6 +55,11 @@ class Minutes:
     h: np.ndarray
     l: np.ndarray
     c: np.ndarray
+    traded: np.ndarray | None = None        # volume > 0 (a real trade); None = every minute counts as traded
+
+    def __post_init__(self):
+        if self.traded is None:
+            self.traded = np.ones(len(self.t), np.bool_)
 
     @classmethod
     def from_bars(cls, b: pd.DataFrame) -> "Minutes":
@@ -59,11 +67,30 @@ class Minutes:
             b = b[~b["filled"]]
         t = to_min(b.index)
         f = lambda k: np.ascontiguousarray(b[k].to_numpy(np.float64))  # noqa: E731
-        return cls(t, f("o"), f("h"), f("l"), f("c"))
+        tr = (b["v"].to_numpy() > 0) if "v" in b else None
+        return cls(t, f("o"), f("h"), f("l"), f("c"), tr)
 
     def slice(self, a: int, z: int) -> "Minutes":
         i, j = np.searchsorted(self.t, [a, z])
-        return Minutes(self.t[i:j], self.o[i:j], self.h[i:j], self.l[i:j], self.c[i:j])
+        return Minutes(self.t[i:j], self.o[i:j], self.h[i:j], self.l[i:j], self.c[i:j], self.traded[i:j])
+
+
+def clean_prints(b: pd.DataFrame, window: int = 60, band: float = 0.25) -> pd.DataFrame:
+    """Amendment 1 bad-print filter on raw 1-min bars (trailing only, no look-ahead). ref = median close of the
+    previous `window` bars. A bar whose close is outside [ref/(1+band), ref*(1+band)] is dropped; a high above
+    ref*(1+band) is cut to max(open, close) and a low below ref/(1+band) is raised to min(open, close)."""
+    if b.empty:
+        return b
+    ref = b["c"].rolling(window, min_periods=5).median().shift()
+    up, dn = ref * (1 + band), ref / (1 + band)
+    bad_c = (b["c"] > up) | (b["c"] < dn)
+    out = b[~bad_c.fillna(False)].copy()
+    up, dn = up[out.index], dn[out.index]
+    hi_cut = out["h"] > up
+    lo_cut = out["l"] < dn
+    out.loc[hi_cut, "h"] = out.loc[hi_cut, ["o", "c"]].max(axis=1)
+    out.loc[lo_cut, "l"] = out.loc[lo_cut, ["o", "c"]].min(axis=1)
+    return out
 
 
 def to_min(idx: pd.DatetimeIndex) -> np.ndarray:
@@ -71,7 +98,7 @@ def to_min(idx: pd.DatetimeIndex) -> np.ndarray:
 
 
 @numba.njit(cache=True)
-def _sim(t, o, h, l, c, st, sref, satr, mode, off, expiry, stop_atr, min_pct, tgt_r, hold):
+def _sim(t, o, h, l, c, trd, st, sref, satr, mode, off, expiry, stop_atr, min_pct, tgt_r, hold):
     n_sig = len(st)
     n = len(t)
     out = np.empty((n_sig, 9))     # sig, t_in, t_out, entry, exit, risk, kind, maker_in, thin
@@ -92,7 +119,7 @@ def _sim(t, o, h, l, c, st, sref, satr, mode, off, expiry, stop_atr, min_pct, tg
             f = -1
             q = j
             while q < n and t[q] < ts + expiry:
-                if l[q] < lim:
+                if trd[q] and l[q] < lim:
                     f = q
                     break
                 q += 1
@@ -129,7 +156,7 @@ def _sim(t, o, h, l, c, st, sref, satr, mode, off, expiry, stop_atr, min_pct, tg
                     px = min(o[m], stop)
                 x, kind = m, 1
                 break
-            if m > j and h[m] > tgt:
+            if m > j and trd[m] and h[m] > tgt:
                 x, px, kind = m, tgt, 2
                 break
         if x < 0:
@@ -162,7 +189,7 @@ def run(pair: str, mins: Minutes, sig_t: np.ndarray, sig_ref: np.ndarray, sig_at
     mode = {"taker": 0, "maker": 1, "naive": 2}[plan.mode]
     if len(sig_t) == 0 or len(mins.t) == 0:
         return pd.DataFrame(columns=COLS), 0, 0
-    out, missed = _sim(mins.t, mins.o, mins.h, mins.l, mins.c, np.ascontiguousarray(sig_t, np.int64),
+    out, missed = _sim(mins.t, mins.o, mins.h, mins.l, mins.c, np.ascontiguousarray(mins.traded, np.bool_), np.ascontiguousarray(sig_t, np.int64),
                        np.ascontiguousarray(sig_ref, np.float64), np.ascontiguousarray(sig_atr, np.float64), mode,
                        float(plan.off_atr), int(plan.expiry_min), float(plan.stop_atr), float(plan.min_stop_pct),
                        float(plan.target_r or 0.0), int(plan.hold_min))

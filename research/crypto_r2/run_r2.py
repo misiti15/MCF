@@ -2,6 +2,8 @@
 
     python research/crypto_r2/run_r2.py fit     # 400 random draws + 80 seed-grid configs on FIT -> finalists.json
     python research/crypto_r2/run_r2.py check   # the 10 frozen finalists scored ONCE on CHECK + random baselines
+Amendment 1 (PREREG_AMEND1.md, after v1 showed bad prints): bad-print filter on the 1-min data and maker fills only
+on minutes with a real trade. v1 outputs (pre-amendment) are kept in research/crypto_r2/v1_badprints/.
 
 Engine "E5b crypto 1-min fills" (mcf/crypto/exec1m.py): signals on 15m/1h/4h/1d bars, fills and exits on real
 1-min prints; realistic maker entries (a limit fills only when traded through). Costs: mcf/crypto/costs.py at fee
@@ -25,12 +27,14 @@ from mcf.crypto import data as D  # noqa: E402
 from mcf.crypto import splits as S  # noqa: E402
 from mcf.crypto.backtest import summarize  # noqa: E402
 from mcf.crypto.costs import CostModel  # noqa: E402
-from mcf.crypto.exec1m import Minutes, reprice, run, to_min  # noqa: E402
+from mcf.crypto.exec1m import Minutes, clean_prints, reprice, run, to_min  # noqa: E402
 from mcf.crypto.generator2 import ALTS, CORE, UNIVERSES, Setup2, build2, generate, mask, seed_grid, time_mask  # noqa
 
 HERE = Path(__file__).parent
 SEED = 20261127
 R1_DRAWS = 500
+N_PRIOR = 980                       # round 1 (500) + round-2 v1 (480, bad-print data; research/crypto_r2/v1_badprints)
+V1_CHECKED = {742, 515, 891, 797, 743, 582, 588, 881, 754, 555}   # seen once on CHECK in v1 -> look 2 (t >= 1.5)
 N_RANDOM = 400
 MIN_TRADES, MAX_SHARE = 60, 0.5
 TOP, FAMILY_CAP = 10, 3
@@ -44,7 +48,7 @@ COSTS = CostModel()
 def load(tfs=(15, 60, 240, 1440)) -> None:
     t0 = time.time()
     for p in CORE + ALTS:
-        raw = D.load_bars(p)
+        raw = clean_prints(D.load_bars(p))     # amendment 1 (PREREG_AMEND1.md)
         if raw.empty:
             continue
         MINS[p] = Minutes.from_bars(raw)
@@ -158,7 +162,7 @@ def fit() -> None:
     print(f"scored {len(res)} configs in {time.time()-t0:.0f}s", flush=True)
     df = pd.DataFrame(res).sort_values("draw_id")
     df.to_csv(HERE / "fit_all.csv", index=False, float_format="%.4f")
-    n_cum = R1_DRAWS + len(setups)
+    n_cum = N_PRIOR + len(setups)
     bar = noise_bar(n_cum)
     df["elig"] = df.apply(lambda r: eligible(r, bar), axis=1)
     taken: dict = {}
@@ -239,7 +243,7 @@ def _check_one(args):
         row[f"{split}_rand_pct"] = float(np.nanmean(rb < r["avg_r"])) if r["n"] else float("nan")
     row["survivor"] = bool(row["eligible"] and row["check_n"] >= 20 and row["check_avg_r"] > 0
                            and row["check_avg_r_wo_best"] > 0 and row["check_best_day_share"] < MAX_SHARE
-                           and row["check_day_t"] >= CHECK_T and row["check_rand_pct"] > 0.5)
+                           and row["check_day_t"] >= (1.5 if s.draw_id in V1_CHECKED else CHECK_T) and row["check_rand_pct"] > 0.5)
     print(json.dumps(row, default=float), flush=True)
     return row
 
