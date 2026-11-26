@@ -330,3 +330,102 @@ def test_random_windows_non_overlapping_same_durations():
     assert en.sum() == 10 and not (en & ex).any()
     runs = np.diff(np.r_[0, en.astype(int), 0])
     assert sorted(np.flatnonzero(runs == -1) - np.flatnonzero(runs == 1)) == [2, 3, 5]
+
+
+# ------------------------------------------------------------------ crypto_setups1 (first hand-built setups)
+from mcf.crypto import setups1 as S1  # noqa: E402
+
+
+def _lv_mins(prices, start="2024-03-04 00:00", traded=None):
+    idx = pd.date_range(start, periods=len(prices), freq="1min", tz="UTC")
+    p = np.asarray(prices, float)
+    return Minutes(to_min(idx), p.copy(), p * 1.001, p * 0.999, p.copy(),
+                   None if traded is None else np.asarray(traded, bool)), idx
+
+
+def _lv_sig(t, lim, risk, tgt=np.nan, expiry=60, hold=600, ref=None):
+    return pd.DataFrame({"t": [int(t)], "ref": [ref or lim], "lim": [lim], "risk": [risk], "tgt": [tgt],
+                         "expiry": [expiry], "hold": [hold]})
+
+
+def test_levels_maker_needs_trade_through_and_target():
+    px = [100.0] * 5 + [98.0] * 5 + [100.0] * 5 + [104.0] * 5
+    m, idx = _lv_mins(px)
+    tr, off, missed = S1.run_levels("BTC", m, _lv_sig(m.t[0], 99.0, 3.0, tgt=103.0))
+    assert off == 1 and missed == 0 and len(tr) == 1
+    assert tr.kind.iloc[0] == 2 and tr.entry.iloc[0] == 99.0 and tr.exit.iloc[0] == 103.0
+    assert tr.maker_in.iloc[0] and tr.maker_out.iloc[0]
+    assert abs(tr.gross_r.iloc[0] - 4 / 3) < 1e-9 and tr.r.iloc[0] < tr.gross_r.iloc[0]
+
+
+def test_levels_missed_when_untraded_or_not_through():
+    px = [100.0] * 30
+    m, _ = _lv_mins(px)
+    tr, off, missed = S1.run_levels("BTC", m, _lv_sig(m.t[0], 99.0, 3.0))       # low 99.9 never below 99
+    assert len(tr) == 0 and missed == 1
+    px = [100.0] * 5 + [97.0] * 5 + [100.0] * 20
+    m, _ = _lv_mins(px, traded=[True] * 5 + [False] * 5 + [True] * 20)
+    tr, _, missed = S1.run_levels("BTC", m, _lv_sig(m.t[0], 99.0, 3.0))         # dip only on zero-volume minutes
+    assert len(tr) == 0 and missed == 1
+
+
+def test_levels_stop_gap_and_time_exit():
+    px = [100.0] * 3 + [98.5] + [98.5] * 3 + [90.0] * 3
+    m, _ = _lv_mins(px)
+    tr, _, _ = S1.run_levels("ETH", m, _lv_sig(m.t[0], 99.0, 3.0))
+    assert tr.kind.iloc[0] == 1 and tr.exit.iloc[0] == 90.0                  # gap through 96 fills at the open
+    px = [100.0] * 3 + [98.5] * 30
+    m, _ = _lv_mins(px)
+    tr, _, _ = S1.run_levels("ETH", m, _lv_sig(m.t[0], 99.0, 3.0, hold=10))
+    assert tr.kind.iloc[0] == 0 and (tr.exit_time.iloc[0] - tr.entry_time.iloc[0]) == pd.Timedelta("10min")
+
+
+def test_levels_one_position_per_pair():
+    px = [100.0] * 3 + [98.5] * 40
+    m, _ = _lv_mins(px)
+    s = pd.concat([_lv_sig(m.t[0], 99.0, 3.0, hold=30), _lv_sig(m.t[5], 99.0, 3.0, hold=30)], ignore_index=True)
+    tr, off, _ = S1.run_levels("ETH", m, s)
+    assert off == 2 and len(tr) == 1
+
+
+def test_daily_gate_uses_completed_day_only():
+    d = pd.DataFrame({"up": [False, True]}, index=pd.date_range("2024-01-01", periods=2, freq="D", tz="UTC"))
+    taus = pd.DatetimeIndex(["2024-01-02 00:00", "2024-01-02 23:00", "2024-01-03 00:00"], tz="UTC")
+    assert list(S1.daily_at(d, "up", taus)) == [False, False, True]
+
+
+def test_friday_close_dst():
+    t = S1.friday_close_times(pd.Timestamp("2024-01-01", tz="UTC"), pd.Timestamp("2024-07-31", tz="UTC"))
+    assert t[0] == pd.Timestamp("2024-01-05 21:00", tz="UTC")
+    assert pd.Timestamp("2024-07-05 20:00", tz="UTC") in t
+
+
+def _prep_synth():
+    idx = pd.date_range("2024-01-01", periods=60 * 24 * 70, freq="1min", tz="UTC")
+    rng = np.random.default_rng(1)
+    c = 100 * np.exp(np.cumsum(rng.normal(0, 0.0007, len(idx))))
+    c[60 * 24 * 60 + 600: 60 * 24 * 60 + 660] *= 0.93                      # a one-hour flush on day 60
+    b = pd.DataFrame({"o": c, "h": c * 1.0005, "l": c * 0.9995, "c": c, "v": 1.0, "vw": c}, index=idx)
+    return {"BTC": S1.prep_pair(b, idx[-1] + pd.Timedelta("1min"))}
+
+
+def test_flush_signal_no_lookahead_and_levels():
+    P = _prep_synth()
+    sg = S1.sig_flush(P, "BTC", {"gate": None})
+    flush_hour = pd.Timestamp("2024-01-01", tz="UTC") + pd.Timedelta(days=60, hours=10)
+    t_dec = int(to_min(pd.DatetimeIndex([flush_hour + pd.Timedelta("60min")]))[0])
+    assert t_dec in set(sg["t"])
+    row = sg[sg["t"] == t_dec].iloc[0]
+    assert row.lim < row.ref and row.risk >= 0.03 * row.lim and row.hold == 720 and row.expiry == 120
+    # truncating the data after the decision does not change the signal
+    H = P["BTC"]["H"]
+    assert np.isfinite(H.loc[flush_hour, "z"]) and H.loc[flush_hour, "z"] <= -3
+
+
+def test_random_signals_keep_geometry():
+    P = _prep_synth()
+    sg = S1.sig_flush(P, "BTC", {"gate": None})
+    a, z = pd.Timestamp("2024-01-10", tz="UTC"), pd.Timestamp("2024-03-10", tz="UTC")
+    r = S1.random_signals(np.random.default_rng(0), sg, P["BTC"]["H"], a, z)
+    assert len(r) == len(sg) and np.allclose(r["risk"] / r["lim"], (sg["risk"] / sg["lim"]).iloc[0], rtol=0.5)
+    assert (r["lim"] < r["ref"]).all()
