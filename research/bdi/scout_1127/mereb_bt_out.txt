@@ -1,0 +1,39 @@
+SCOUT-1127 MEREB1 | SPY 1-min 2016-01..2026-11-04 (lock dropped) | events 124 month-ends | configs 8 (run total 14; bar 2.067, within-lineage 1.835) | LIVE-L costs, LR8 alongside
+S (SPY MTD - TLT MTD at prior close): mean +0.0148, share < 0 35%, share < -2% 19%, > +2% 47%
+-- control (a) all non-event days, LONG 14:00: n 2491 avg -0.257 (gross +0.008, LR8 -0.104) t -13.54
+== MEREB1|L|th0%|14:00: n 44 avg +0.051 t 0.26 | gross +0.280 LR8 +0.186 | stops 16 | w/o best day -0.047 best share 191%
+   EARLY (28, np.float64(-0.415), np.float64(-2.59)) T2 (9, np.float64(1.167), np.float64(2.04)) RECENT (7, np.float64(0.478), np.float64(0.87)) | positive years 45% {'2016': -0.294, '2017': -0.057, '2018': -0.465, '2019': -0.369, '2020': -0.47, '2021': -0.801, '2022': 0.855, '2023': 0.783, '2024': 0.546, '2025': 0.91, '2026': 0.154}
+   control (b) random non-event days (500 draws): mean -0.262 p95 -0.035 -> pct 98% | complement event days avg -0.246 (n 79)
+   PASS (Testing bar t 2.067) False
+== MEREB1|L|th2%|14:00: n 24 avg +0.107 t 0.4 | gross +0.315 LR8 +0.237 | stops 7 | w/o best day -0.074 best share 167%
+   EARLY (14, np.float64(-0.443), np.float64(-2.28)) T2 (6, np.float64(1.358), np.float64(1.93)) RECENT (4, np.float64(0.154), np.float64(0.3)) | positive years 67% {'2016': 0.251, '2017': 0.347, '2018': -0.429, '2019': -0.369, '2020': -1.026, '2022': 1.355, '2023': 0.787, '2024': 0.061, '2026': 0.154}
+   control (b) random non-event days (500 draws): mean -0.243 p95 +0.085 -> pct 95% | complement event days avg -0.199 (n 99)
+   PASS (Testing bar t 2.067) False
+-- control (a) all non-event days, SHORT 14:00: n 2491 avg -0.272 (gross -0.008, LR8 -0.168) t -12.71
+== MEREB1|S|th0%|14:00: n 79 avg -0.239 t -1.71 | gross +0.047 LR8 -0.131 | stops 29 | w/o best day -0.319 best share nan%
+   EARLY (51, np.float64(-0.149), np.float64(-0.79)) T2 (15, np.float64(-0.288), np.float64(-1.21)) RECENT (13, np.float64(-0.538), np.float64(-1.62)) | positive years 27% {'2016': -0.401, '2017': -0.5, '2018': 0.375, '2019': 0.329, '2020': -0.91, '2021': -0.415, '2022': 0.544, '2023': -0.248, '2024': -0.548, '2025': -0.441, '2026': -0.516}
+   control (b) random non-event days (500 draws): mean -0.267 p95 -0.079 -> pct 60% | complement event days avg -0.503 (n 44)
+   PASS (Testing bar t 2.067) False
+== MEREB1|S|th2%|14:00: n 57 avg -0.161 t -0.93 | gross +0.131 LR8 -0.048 | stops 21 | w/o best day -0.271 best share nan%
+   EARLY (36, np.float64(-0.023), np.float64(-0.1)) T2 (12, np.float64(-0.297), np.float64(-1.16)) RECENT (9, np.float64(-0.531), np.float64(-1.14)) | positive years 36% {'2016': 0.095, '2017': -0.317, '2018': 0.581, '2019': 0.329, '2020': -0.993, '2021': -0.481, '2022': 0.896, '2023': -0.194, '2024': -0.741, '2025': -0.438, '2026': -0.444}
+   control (b) random non-event days (500 draws): mean -0.283 p95 -0.056 -> pct 80% | complement event days avg -0.482 (n 66)
+   PASS (Testing bar t 2.067) False
+-- control (a) all non-event days, LONG 15:00: n 2486 avg -0.285 (gross -0.014, LR8 -0.123) t -18.87
+== MEREB1|L|th0%|15:00: n 44 avg -0.089 t -0.59 | gross +0.143 LR8 +0.051 | stops 10 | w/o best day -0.138 best share nan%
+   EARLY (28, np.float64(-0.493), np.float64(-3.97)) T2 (9, np.float64(0.503), np.float64(1.11)) RECENT (7, np.float64(0.765), np.float64(2.55)) | positive years 36% {'2016': -0.388, '2017': -0.403, '2018': -0.603, '2019': -0.435, '2020': -0.555, '2021': -0.685, '2022': 0.557, '2023': -0.28, '2024': 0.689, '2025': 0.779, '2026': 0.755}
+   control (b) random non-event days (500 draws): mean -0.284 p95 -0.100 -> pct 96% | complement event days avg -0.135 (n 79)
+   PASS (Testing bar t 2.067) False
+== MEREB1|L|th2%|15:00: n 24 avg -0.179 t -0.86 | gross +0.028 LR8 -0.049 | stops 6 | w/o best day -0.273 best share nan%
+   EARLY (14, np.float64(-0.574), np.float64(-4.1)) T2 (6, np.float64(0.121), np.float64(0.2)) RECENT (4, np.float64(0.755), np.float64(1.68)) | positive years 22% {'2016': -0.289, '2017': -0.375, '2018': -0.637, '2019': -0.435, '2020': -1.01, '2022': 0.866, '2023': -0.553, '2024': -1.193, '2026': 0.755}
+   control (b) random non-event days (500 draws): mean -0.291 p95 -0.056 -> pct 79% | complement event days avg -0.104 (n 99)
+   PASS (Testing bar t 2.067) False
+-- control (a) all non-event days, SHORT 15:00: n 2486 avg -0.247 (gross +0.025, LR8 -0.132) t -15.24
+== MEREB1|S|th0%|15:00: n 79 avg -0.474 t -4.48 | gross -0.195 LR8 -0.378 | stops 33 | w/o best day -0.516 best share nan%
+   EARLY (51, np.float64(-0.6), np.float64(-5.17)) T2 (15, np.float64(-0.059), np.float64(-0.24)) RECENT (13, np.float64(-0.459), np.float64(-1.33)) | positive years 9% {'2016': -1.126, '2017': -0.942, '2018': -0.093, '2019': -0.791, '2020': -0.787, '2021': -0.356, '2022': 0.073, '2023': -0.244, '2024': -0.049, '2025': -0.023, '2026': -0.763}
+   control (b) random non-event days (500 draws): mean -0.251 p95 -0.093 -> pct 1% | complement event days avg -0.272 (n 44)
+   PASS (Testing bar t 2.067) False
+== MEREB1|S|th2%|15:00: n 57 avg -0.344 t -2.66 | gross -0.055 LR8 -0.236 | stops 18 | w/o best day -0.399 best share nan%
+   EARLY (36, np.float64(-0.503), np.float64(-3.64)) T2 (12, np.float64(0.077), np.float64(0.28)) RECENT (9, np.float64(-0.269), np.float64(-0.57)) | positive years 27% {'2016': -1.042, '2017': -0.676, '2018': -0.194, '2019': -0.791, '2020': -0.63, '2021': -0.422, '2022': 0.796, '2023': -0.168, '2024': 0.139, '2025': 0.224, '2026': -0.515}
+   control (b) random non-event days (500 draws): mean -0.246 p95 -0.083 -> pct 17% | complement event days avg -0.452 (n 66)
+   PASS (Testing bar t 2.067) False
+Educational only - not financial advice.

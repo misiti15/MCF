@@ -1,0 +1,44 @@
+SCOUT-1127 ASYMREV1 | E2 2-year screen (lab frames + gates), production + TOD costs | configs 6 (run total 14; bar 2.067, within-lineage 1.704) | sessions 446 | locked block not read
+== ASYMREV1|RAW|CLOSE|1100: n 3913 sessions 442 (8.77/session) avg -0.063 t -2.73 win 0.5073 w/o best -0.066 best-day share nan%
+   TRAIN: n 1945 avg -0.0654 t -2.0 w/o best -0.0708
+   VALID: n 1753 avg -0.0284 t -0.83 w/o best -0.0341
+   LATE: n 215 avg -0.3214 t -3.85 w/o best -0.3539
+   SPY day type {'down': (1237, np.float64(-0.14)), 'quiet': (1334, np.float64(-0.102)), 'up': (1185, np.float64(0.043)), 'up>1%': (157, np.float64(0.08))} | WF positive months 27% (22)
+   excess over day-matched all-stock long @1100: +0.015R | random entry bar 10:00-15:00 (200): mean -0.132 p90 -0.115 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False (RAW-L is a control, not a candidate)
+== ASYMREV1|L|CLOSE|1100: n 3648 sessions 402 (8.18/session) avg -0.071 t -3.11 win 0.503 w/o best -0.074 best-day share nan%
+   TRAIN: n 1653 avg -0.0809 t -2.42 w/o best -0.0872
+   VALID: n 1780 avg -0.0419 t -1.25 w/o best -0.0475
+   LATE: n 215 avg -0.2376 t -3.02 w/o best -0.266
+   SPY day type {'down': (1073, np.float64(-0.154)), 'quiet': (1267, np.float64(-0.103)), 'up': (1148, np.float64(0.02)), 'up>1%': (160, np.float64(0.08))} | WF positive months 24% (21)
+   excess over day-matched all-stock long @1100: +0.005R | random entry bar 10:00-15:00 (200): mean -0.128 p90 -0.109 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False
+== ASYMREV1|L|OPEN|1100: n 2924 sessions 391 (6.56/session) avg -0.081 t -3.24 win 0.4962 w/o best -0.084 best-day share nan%
+   TRAIN: n 1261 avg -0.106 t -2.8 w/o best -0.1145
+   VALID: n 1464 avg -0.0514 t -1.44 w/o best -0.0576
+   LATE: n 199 avg -0.1366 t -1.63 w/o best -0.163
+   SPY day type {'down': (852, np.float64(-0.147)), 'quiet': (1023, np.float64(-0.103)), 'up': (934, np.float64(-0.021)), 'up>1%': (115, np.float64(0.122))} | WF positive months 38% (21)
+   excess over day-matched all-stock long @1100: -0.006R | random entry bar 10:00-15:00 (200): mean -0.143 p90 -0.122 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False
+== ASYMREV1|L|CLOSE|1300: n 3800 sessions 401 (8.52/session) avg -0.067 t -2.91 win 0.4961 w/o best -0.069 best-day share nan%
+   TRAIN: n 1731 avg -0.0968 t -2.87 w/o best -0.103
+   VALID: n 1849 avg -0.0376 t -1.17 w/o best -0.0428
+   LATE: n 220 avg -0.0732 t -0.67 w/o best -0.1135
+   SPY day type {'down': (1118, np.float64(-0.231)), 'quiet': (1299, np.float64(-0.047)), 'up': (1203, np.float64(0.028)), 'up>1%': (180, np.float64(0.184))} | WF positive months 29% (21)
+   excess over day-matched all-stock long @1300: +0.007R | random entry bar 10:00-15:00 (200): mean -0.252 p90 -0.236 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False
+== ASYMREV1|L|OPEN|1300: n 3447 sessions 398 (7.73/session) avg -0.080 t -3.59 win 0.4906 w/o best -0.083 best-day share nan%
+   TRAIN: n 1516 avg -0.0868 t -2.61 w/o best -0.0939
+   VALID: n 1716 avg -0.0737 t -2.28 w/o best -0.0798
+   LATE: n 215 avg -0.0861 t -1.04 w/o best -0.1244
+   SPY day type {'down': (1025, np.float64(-0.235)), 'quiet': (1195, np.float64(-0.071)), 'up': (1086, np.float64(0.031)), 'up>1%': (141, np.float64(0.11))} | WF positive months 19% (21)
+   excess over day-matched all-stock long @1300: -0.001R | random entry bar 10:00-15:00 (200): mean -0.322 p90 -0.305 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False
+== ASYMREV1|S|CLOSE|1100: n 3828 sessions 404 (8.58/session) avg -0.076 t -3.55 win 0.4982 w/o best -0.079 best-day share nan%
+   TRAIN: n 1751 avg -0.1221 t -3.99 w/o best -0.1272
+   VALID: n 1867 avg -0.0205 t -0.65 w/o best -0.0259
+   LATE: n 210 avg -0.192 t -2.23 w/o best -0.2285
+   SPY day type {'down': (1123, np.float64(-0.009)), 'quiet': (1313, np.float64(-0.06)), 'up': (1226, np.float64(-0.14)), 'up>1%': (166, np.float64(-0.196))} | WF positive months 38% (21)
+   excess over day-matched all-stock long @1100: +nanR | random entry bar 10:00-15:00 (200): mean -0.136 p90 -0.119 -> pct 100% | RAW-L avg -0.063
+   PASS (Testing bar t 2.067) False
+Educational only - not financial advice.
