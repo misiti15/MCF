@@ -40,6 +40,13 @@ LOCK_A, LOCK_B = "2024-11-01", "2025-02-28"
 MULT = 1.25                                               # wide target = 1.25 x the live target distance
 THR_BPS, THR_MIN = 3.0, 0.01                              # a limit fills only on a touch-through of max(1c, 3 bp)
 FLAT_MIN = 385                                            # 15:55 flatten (minute index 0 = the 09:30 bar)
+FLAT_LEAD = 5                                             # LR1: live flattens at min(15:55, calendar close - 5 min)
+
+
+def flat_min(day: str) -> int:
+    """The live flatten minute of `day` (index 0 = the 09:30 bar): 385 (15:55), or 205 (12:55) on a 13:00 half day."""
+    from mcf.data.bars import close_min
+    return min(FLAT_MIN, int(close_min(day)) - 570 - FLAT_LEAD)
 PARENTS = {"RW3-gapdn-rsi5pop-flowsell-short-FD": "RW3", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": "RW5"}
 SPY_EXIT = {"RW3-gapdn-rsi5pop-flowsell-short-FD-WB4": 0.30,     # copies with an SPY-since-entry exit (config, frozen)
             "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4": 0.40}
@@ -85,7 +92,8 @@ def _minute(ts: pd.Timestamp) -> float:
 
 
 def walk(bars: pd.DataFrame, side: int, stop: float, wide: float, start_min: float, spy: pd.DataFrame | None = None,
-         spy_ref: float | None = None, spy_pct: float | None = None) -> tuple[float, str, int] | None:
+         spy_ref: float | None = None, spy_pct: float | None = None,
+         flat: int = FLAT_MIN) -> tuple[float, str, int] | None:
     """Continue a lot whose live target filled in minute `start_min`, now aiming at `wide`. Per bar, from the fill bar:
     SPY-since-entry exit at the bar open (copies with spy_exit_pct; from the next bar), stop (fill bar: at the stop
     price; later bars: at the stop or the open if it gapped through), wide target (touch-through), 15:55 flatten at
@@ -98,7 +106,7 @@ def walk(bars: pd.DataFrame, side: int, stop: float, wide: float, start_min: flo
     for m, o, h, l in zip(mi, bars.open.to_numpy(float), bars.high.to_numpy(float), bars.low.to_numpy(float)):
         if m < m0:
             continue
-        if m >= FLAT_MIN:
+        if m >= flat:
             return float(o), "flatten", int(m)
         if m > m0 and spy_pct and spy_ref:
             sp = spyc.get(int(m) - 1)
@@ -152,6 +160,7 @@ def journal_trades(day: str) -> pd.DataFrame:
 def fetch_bars(day: str, syms: list[str]) -> dict[str, pd.DataFrame]:
     """symbol -> RTH 1-minute SIP bars (ET index); read-only Alpaca market data."""
     from mcf.replay.store import _fetch_bars              # read-only market data (GET), no trading endpoint
+    from mcf.data.bars import close_min                   # half days: drop the after-close prints
     x = _fetch_bars(sorted(set(syms)), f"{day}T13:30:00Z", f"{day}T21:00:00Z", "1Min")
     if not len(x):
         return {}
@@ -159,7 +168,7 @@ def fetch_bars(day: str, syms: list[str]) -> dict[str, pd.DataFrame]:
     out = {}
     for s, g in x.groupby("symbol"):
         mm = g.index.hour * 60 + g.index.minute
-        out[str(s)] = g[(mm >= 570) & (mm < 960)][["open", "high", "low", "close"]].astype(float).sort_index()
+        out[str(s)] = g[(mm >= 570) & (mm < close_min(day))][["open", "high", "low", "close"]].astype(float).sort_index()
     return out
 
 
@@ -219,7 +228,7 @@ def score_lot(t, bars: dict[str, pd.DataFrame], model: dict) -> dict:
         if spy is not None:
             s = spy[((spy.index.hour * 60 + spy.index.minute) - 570) == em]
             spy_ref = float(s.close.iloc[0]) if len(s) else None
-    w = walk(b, side, stop, wide, fm, spy, spy_ref, pct)
+    w = walk(b, side, stop, wide, fm, spy, spy_ref, pct, flat_min(str(t.date)))
     if w is None:
         row.update(status="pending: bars end before the lot closes")
         return row
