@@ -1,0 +1,272 @@
+{
+ "branch_tip": "5b9bc5c599",
+ "as_of": "2026-11-27",
+ "confirmed": [
+  {
+   "dim": "integrity",
+   "title": "L3-OUT recommendation selective: RW3/RW5 as bad or worse on bench; their removal never scored",
+   "claimed_severity": "high",
+   "severity": "low",
+   "where": "research/primshorts_1126/REPORT.md:10-28; decisions.json L3-OUT",
+   "fix": "Disclose on the card; add RW3-out/RW5-out options",
+   "skeptic_note": "Report discloses it; like-for-like Primary records still make L3 the worst (w/o best -0.204 vs -0.037/-0.057)"
+  },
+  {
+   "dim": "integrity",
+   "title": "NETBETA-B8 PASS has no size-matched random-block or constant-cut control",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "research/squeeze_1125/PREREG.md:53-59, REPORT.md:8,20; decisions.json B8-SHADOW",
+   "fix": "Score against 20 same-share random blocks + constant 0.71 cut on CHECK/T2; drop Option B until then",
+   "skeptic_note": "Heavy disclosure, and the card recommends shadow; Option B still offered"
+  },
+  {
+   "dim": "integrity",
+   "title": "PREREG committed together with REPORT for 5 studies",
+   "claimed_severity": "medium",
+   "severity": "low",
+   "where": "31133ea1dd, 6ddf89fb3e, d10c34bca1, 0dff8ef6c0, bb3f848ba2",
+   "fix": "CI/ledger check: PREREG commit precedes REPORT",
+   "skeptic_note": "All 5 were FAIL/no change; there is no rule requiring a separate commit; ticksel has no sha256"
+  },
+  {
+   "dim": "integrity",
+   "title": "PREREGs and scripts behind open cards exist only in the scratchpad",
+   "claimed_severity": "medium",
+   "severity": "medium",
+   "where": "research/pyramid_1124, neveragain_1125, s8cap_1125, hsscale_1125, capfit_1125, ticksel_1125, sprd_1125, longs_1125",
+   "fix": "Commit scripts, PLAN/PREREG + sha256 and score outputs now (no parquets)",
+   "skeptic_note": "Files still exist in the scratchpad; not lost yet"
+  },
+  {
+   "dim": "claims",
+   "title": "LATCH-OPEN headline uses the partial-day replay (-37.4R); B8 card uses -40.1R",
+   "claimed_severity": "high",
+   "severity": "low",
+   "where": "research/neveragain_1125 (b0a213a8a2); decisions.json LATCH-OPEN, B8-SHADOW; inbox 11-25:65,96",
+   "fix": "Restate as -40.1 -> -8.3R (engine), journal -42.30R LR8, citing squeeze_1125",
+   "skeptic_note": "squeeze_1125 re-scored the full day; the saving is larger, not smaller"
+  },
+  {
+   "dim": "claims",
+   "title": "B8 card's live +27.9R comes from departed MF2/MF4; current lineup about -26.6R",
+   "claimed_severity": "medium",
+   "severity": "medium",
+   "where": "decisions.json B8-SHADOW numbers[0]; squeeze_1125 REPORT:18",
+   "fix": "Split live dR into current vs departed setups; add rule-change context",
+   "skeptic_note": "Confirmed against assignments.json"
+  },
+  {
+   "dim": "claims",
+   "title": "Two 'day t' definitions shown under one label",
+   "claimed_severity": "medium",
+   "severity": "medium",
+   "where": "inbox 2026-11-25.md:45,46,64; decisions.json ODP2-G261027-01",
+   "fix": "Use footrace day_t everywhere; label the daily-sum t separately",
+   "skeptic_note": "Recomputed: ODP2 2.53 vs 1.42; L3 -0.90 vs +0.59"
+  },
+  {
+   "dim": "claims",
+   "title": "Since-Day-1 figures missing 10-23..10-27 rule-change context",
+   "claimed_severity": "medium",
+   "severity": "low",
+   "where": "inbox 2026-11-25.md:44,103",
+   "fix": "Start the in-window list at 10-23",
+   "skeptic_note": "Most of the window is already listed in the brief"
+  },
+  {
+   "dim": "livecode",
+   "title": "HS-SCALE as built is a no-op in Primary and differs from the approved package",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "decisions.json HS-SCALE; mcf/execution/risk.py scaled_check; docs/live/FRIDAY_SWITCHES.md:33-34",
+   "fix": "Amend the card; build the flatten and guards separately, or re-scope to SHOCK-V",
+   "skeptic_note": "LR5 per-symbol mismatch check exists; the account $ guard does not"
+  },
+  {
+   "dim": "livecode",
+   "title": "LATCH-OPEN falls back to closed R for the whole setup if one lot is unmarked",
+   "claimed_severity": "medium",
+   "severity": "low",
+   "where": "mcf/execution/risk.py _latch_open; mcf/execution/runner.py _open_marks 2239-2280",
+   "fix": "Carry the last mark as SHOCK-V does; count fallbacks; add a test",
+   "skeptic_note": "Rare: bars accumulate; off by default"
+  },
+  {
+   "dim": "livecode+ops",
+   "title": "intraday.build leaks its mkstemp journal copy on the snapshot path",
+   "claimed_severity": "medium",
+   "severity": "low-medium",
+   "where": "mcf/report/intraday.py:66-74, 291-306",
+   "fix": "try/finally over build(), or an in-memory copy",
+   "skeptic_note": "Manual tool only; ~160 MB per all-account run"
+  },
+  {
+   "dim": "compliance",
+   "title": "LATCH-OPEN recommended 'now' (off-epoch) against C3-EPOCH/PROT-21",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "decisions.json LATCH-OPEN; inbox 2026-11-25.md:96; OPEN_ITEMS.md:105",
+   "fix": "Drop 'now'; recommend 'friday'; the recommend field picks one option",
+   "skeptic_note": "No harm; 'now' is moot from 11-27"
+  },
+  {
+   "dim": "compliance",
+   "title": "L3-OUT skips the PRIME-RULES probation path; conflict not named",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "decisions.json L3-OUT (cde9a46c53)",
+   "fix": "Restate with probation status and a 'keep on probation' option",
+   "skeptic_note": "Bench evidence is not only the 11-25 loss"
+  },
+  {
+   "dim": "compliance",
+   "title": "PRIM-ADD2 candidates fail the PRIME-RULES ENTRY / C3-BAR2 best-day caps; not flagged",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "decisions.json PRIM-ADD2; trig_01Y92BPhVjeVwBjQSkSscsv6 (21:10Z 11-27)",
+   "fix": "Per-criterion pass/fail; name the PROT-21 exemption",
+   "skeptic_note": "RW7 had ~2 On Deck sessions, not 0"
+  },
+  {
+   "dim": "compliance",
+   "title": "End-of-week post task prompt is stale",
+   "claimed_severity": "high",
+   "severity": "low",
+   "where": "trig_01SdRzMScyrFVKuNJnsVGWMZ (00:47Z 11-28)",
+   "fix": "Drop Team; 10 accounts; add STYLE.md; Graveyard line",
+   "skeptic_note": "The 11-21 run self-corrected; owner posts manually"
+  },
+  {
+   "dim": "engines",
+   "title": "LATCH-OPEN/HS-SCALE engines only in the scratchpad (dup of integrity #4)",
+   "claimed_severity": "medium",
+   "severity": "medium",
+   "where": "research/neveragain_1125, hsscale_1125, s8cap_1125",
+   "fix": "Commit scripts; re-run rerun.sh once",
+   "skeptic_note": "Breaks the house convention"
+  },
+  {
+   "dim": "engines",
+   "title": "L3-OUT omits the survivorship / ETB look-ahead bias",
+   "claimed_severity": "medium",
+   "severity": "low",
+   "where": "research/primshorts_1126/bench_build.py:103-105; decisions.json L3-OUT",
+   "fix": "Add a caveat; lead with the relative and live evidence",
+   "skeptic_note": "Bias mostly cancels in the relative delta"
+  },
+  {
+   "dim": "ops",
+   "title": "Half day: compass marks and compass_cond row built from after-hours prints",
+   "claimed_severity": "high",
+   "severity": "medium",
+   "where": "mcf/report/compass_live.py:57,222-240; mcf/report/compass_cond.py:188-209; mcf/replay/store.py:343",
+   "fix": "Cap at the calendar close; purge 2025-07-03, 2025-11-28, 2025-12-24 rows",
+   "skeptic_note": "Already live on 3 past half days (108 rows)"
+  },
+  {
+   "dim": "ops",
+   "title": "Half day: Hunch guesses, scores and learns on after-hours bars; saves the model",
+   "claimed_severity": "medium",
+   "severity": "medium",
+   "where": "mcf/data/bars.py:29; mcf/hunch/data.py:121-129; mcf/hunch/live.py:113,183,363",
+   "fix": "session_close into run_live; drop bars at or after the close",
+   "skeptic_note": "Must land before the 09:40 ET start on 11-27"
+  },
+  {
+   "dim": "ops",
+   "title": "inverse/shadow.py leaves /tmp/invshadow_*.db (146 MB)",
+   "claimed_severity": "medium",
+   "severity": "low",
+   "where": "research/owner1120/inverse/shadow.py:157-168",
+   "fix": "Unlink in finally; delete the files",
+   "skeptic_note": "Fixed filenames: overwritten, not accumulating"
+  }
+ ],
+ "unverified": [
+  {
+   "title": "GEN-261023-06 On Deck card omits the R3B bench result of -0.40R/trade on 2023-24",
+   "status": "unverified"
+  },
+  {
+   "title": "Crypto LOCKED window lightly contaminated (coverage() not clipped; KNOWLEDGE.md describes LOCKED)",
+   "status": "unverified"
+  },
+  {
+   "title": "CRYPTO-SCOPE card stale (N 1,491 / 4 rounds; drawdown range)",
+   "status": "unverified"
+  },
+  {
+   "title": "Blocked-signal 'saved' figures are uncapped what-ifs",
+   "status": "unverified"
+  },
+  {
+   "title": "ODP2 recommend text stale (58% vs 62% best day)",
+   "status": "unverified"
+  },
+  {
+   "title": "11-25 inbox figure mismatches (On Deck $, longs R, Testing A-F sum, SPY close, compass times)",
+   "status": "unverified"
+  },
+  {
+   "title": "longs_1125 +264R does not add up (252.1 or 267.9)",
+   "status": "unverified"
+  },
+  {
+   "title": "SYNTHESIS: REGSTEER 7 configs not 6; B8 worst-5 sign",
+   "status": "unverified"
+  },
+  {
+   "title": "IDX3-P forward figures missing the `1 day` tag (91% on 11-25)",
+   "status": "unverified"
+  },
+  {
+   "title": "setup-freeze CI ignores config/account_*.yaml and the risk: block",
+   "status": "unverified"
+  },
+  {
+   "title": "assignments.json first_session on the 11-26 holiday",
+   "status": "unverified"
+  },
+  {
+   "title": "GYH V1: 13 approved vs 9 moved, unexplained",
+   "status": "unverified"
+  },
+  {
+   "title": "Cards answer either/or questions with 'Yes'; LATCH-OPEN/HS-SCALE lack per-setup effects",
+   "status": "unverified"
+  },
+  {
+   "title": "Research engines: exit-in-minute-m look-ahead (no decision change)",
+   "status": "unverified"
+  },
+  {
+   "title": "Sim open marks use the full round-trip cost vs live 1bp",
+   "status": "unverified"
+  },
+  {
+   "title": "PRIMSHORTS parity 0.013R, not ±0.005R; 38 T2 trades missing",
+   "status": "unverified"
+  },
+  {
+   "title": "HEDGE-B 1bp/side ETF cost too high (T2 verdict flips)",
+   "status": "unverified"
+  },
+  {
+   "title": "test_poll_log wall-clock assert load-sensitive; no CI runs pytest",
+   "status": "unverified"
+  },
+  {
+   "title": "Half day: entries allowed up to the 12:55 flatten",
+   "status": "unverified"
+  },
+  {
+   "title": "Stray 450 MB worktree /home/user/MCF/insp_engine; ~4.9 GB free",
+   "status": "unverified"
+  },
+  {
+   "title": "PRE1 borrow recorder dead since 11-05 (late cron exits outside 08:45-10:00 ET with 'success')",
+   "status": "unverified"
+  }
+ ]
+}
