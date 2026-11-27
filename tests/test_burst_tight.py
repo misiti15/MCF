@@ -288,3 +288,15 @@ def test_config_primary_nmetf_only(monkeypatch):
             assert BT.settings(cfg["strategies"][SETUP]) == {**{k: v for k, v in ON.items() if k != "enabled"},
                                                              "burst_window_min": 10.0, "spy_max_stale_min": 3.0}
             assert BT.KEY not in cfg["baseline"]["setups"][SETUP]   # BASE1 is the frozen control (never edited)
+
+
+def test_ledger_entry_reverts_cleanly():
+    """The AV50 ledger entry (prose notes for the code files next to the config pair) must not break ledger check."""
+    from mcf.research import ledger as L
+    e = [x for x in L.entries() if x["id"] == "2026-11-30-etf-stop50-av50"]
+    assert len(e) == 1 and e[0]["effective"] == "2026-11-30"
+    assert "research/etfstop_1123/REPORT.md" in e[0]["evidence"]
+    assert "research/etfstop_1123/SKEPTIC_1127.md" in e[0]["evidence"]
+    cfg = load_config()
+    for x in L.entries():
+        L.revert(cfg, x)
