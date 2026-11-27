@@ -37,10 +37,14 @@ def test_baseline_is_the_frozen_epoch0_book_and_primary_only(monkeypatch):
     assert b["setup_order"] == ["NM-ETF-late-dip-di-long", "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD",
                                 "RW3-gapdn-rsi5pop-flowsell-short-FD", "ST7-rsi50dn-long-pm-t1s1-FD",
                                 "L3-gap-slope-fromopen-FD", "NS5-sma50-flush-oversold-long"]
-    # the five still in Primary carry exactly Primary's blocks (the baseline is a copy, not a variant)
+    # the five still in Primary carry exactly Primary's blocks (the baseline is a copy, not a variant), except for later
+    # Primary epoch changes, which BASE1 never follows: AV50 burst_tight_stop on NM-ETF (epoch 3, from 2026-11-30;
+    # ledger 2026-11-30-etf-stop50-av50) - BASE1's NM-ETF keeps the unchanged exit so the epoch pair measures AV50
+    later = {"burst_tight_stop"}
     for k in b["setup_order"][:5]:
-        live = {x: y for x, y in cfg["strategies"][k].items() if x != "enabled"}
+        live = {x: y for x, y in cfg["strategies"][k].items() if x != "enabled" and x not in later}
         assert b["setups"][k] == live, k
+        assert not later & set(b["setups"][k]), k
     names = [s.name for s in SH.baseline_strategies(cfg)]
     assert names == [f"BASE1:{k}" for k in b["setup_order"]]
     monkeypatch.setenv("MCF_ACCOUNT", "testing")
