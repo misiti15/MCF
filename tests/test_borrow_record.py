@@ -179,10 +179,61 @@ def test_workflow_is_one_short_job_off_the_peaks():
     assert "strategy" not in jobs["record"]                      # no matrix: one runner
     assert jobs["record"]["env"]["STATE_BRANCH"] == "mcf-data-borrow"
     crons = [c["cron"] for c in wf[True]["schedule"]]
-    assert crons == ["8 13,14 * * 1-5"]
-    # 13:08 / 14:08 UTC -> 08:08 / 09:08 / 10:08 ET across EST/EDT: none in 09:30-09:50 or 14:30-14:40
-    for hhmm in ("0808", "0908", "1008"):
-        assert not ("0930" <= hhmm < "0950" or "1430" <= hhmm < "1440")
+    assert crons == ["8 13,14 * * 1-5", "18 15-21 * * 1-5"]
+    # 13:08 / 14:08 UTC and the :18 retries (15-21 UTC) across EST (-5) / EDT (-4): none in 09:30-09:50 or 14:30-14:40
+    hours = [h - off for h in (13, 14) for off in (4, 5)]
+    times = [f"{h:02d}08" for h in hours] + [f"{h - off:02d}18" for h in range(15, 22) for off in (4, 5)]
+    for hhmm in times:
+        assert not ("0930" <= hhmm < "0950" or "1430" <= hhmm < "1440"), hhmm
     assert "borrow" not in (ROOT / ".github/workflows/trade.yml").read_text()
     text = (ROOT / ".github/workflows/borrow-record.yml").read_text()
     assert "run: pip" not in text and "Educational only" in text
+
+
+def test_late_same_day_run_still_records_and_says_so(tmp_path, capsys):
+    """OPS-PRE1 (inspector 11-27): GitHub delivered the 09:08 cron at 15:00-19:00 ET from 11-06; the old window skipped
+    every one of those runs with a green tick. A late run on the same ET weekday now records, tagged and warned."""
+    late = datetime(2026, 11, 3, 20, 56, tzinfo=timezone.utc)      # 15:56 ET, as the 11-06 run
+    res = br.record(str(tmp_path), None, now=late, get=_get([]), fetch=lambda u: (200, FINRA))
+    assert res["day"] == "2026-11-03" and res["rows"] == 3
+    assert res["timing"] == "late" and res["late_min"] == 356
+    assert "::warning::" in capsys.readouterr().out
+    assert (tmp_path / "borrow" / "2026-11-03.csv.gz").exists()
+    # evening run (23:45 ET) is still the same ET day; just after midnight ET is the next day, before 08:45 -> skip
+    ev = br.record(str(tmp_path / "e"), None, now=datetime(2026, 11, 4, 4, 45, tzinfo=timezone.utc), get=_get([]),
+                   fetch=lambda u: (200, FINRA))
+    assert ev["day"] == "2026-11-03" and ev["timing"] == "late"
+    calls = []
+    skip = br.record(str(tmp_path / "m"), None, now=datetime(2026, 11, 4, 5, 30, tzinfo=timezone.utc), get=_get(calls))
+    assert "outside" in skip["skipped"] and calls == []
+
+
+def test_on_time_run_and_missing_prior_session_is_flagged(tmp_path, capsys):
+    res = br.record(str(tmp_path), None, now=NOW, get=_get([]), fetch=lambda u: (200, FINRA))
+    assert res["timing"] == "on_time" and res["late_min"] == 0 and res["prior_recorded"] is True   # first file ever
+    # next session with the 11-03 file present: prior recorded
+    cal = CAL + [{"date": "2026-11-04"}, {"date": "2026-11-05"}]
+    nxt = br.record(str(tmp_path), None, now=datetime(2026, 11, 4, 14, 8, tzinfo=timezone.utc), get=_get([], cal=cal),
+                    fetch=lambda u: (200, FINRA))
+    assert nxt["prior_recorded"] is True
+    capsys.readouterr()
+    # 11-05 after a lost 11-04... simulate by removing the 11-04 file: a gap is warned about and logged
+    (tmp_path / "borrow" / "2026-11-04.csv.gz").unlink()
+    gap = br.record(str(tmp_path), None, now=datetime(2026, 11, 5, 14, 8, tzinfo=timezone.utc), get=_get([], cal=cal),
+                    fetch=lambda u: (200, FINRA))
+    assert gap["prior_recorded"] is False and "missing for the prior session 2026-11-04" in capsys.readouterr().out
+    back = br.record(str(tmp_path), None, day=date(2026, 11, 4), force=True, now=datetime(2026, 11, 5, 15, 0,
+                     tzinfo=timezone.utc), get=_get([], cal=cal), fetch=lambda u: (200, FINRA))
+    assert back["timing"] == "backfill"
+
+
+def test_workflow_records_late_runs_and_skips_cheaply_once_done():
+    text = (ROOT / ".github/workflows/borrow-record.yml").read_text()
+    assert '[ "$now" -lt 1000 ]' not in text                       # the old window that dropped late runs
+    assert '[ "$now" -ge 0845 ]' in text and "::warning::" in text
+    wf = yaml.safe_load(text)
+    steps = wf["jobs"]["record"]["steps"]
+    names = [s.get("name") or s.get("uses") for s in steps]
+    assert names.index("Already recorded?") < names.index("actions/checkout@v4")
+    for s in steps[names.index("Already recorded?") + 1:]:
+        assert "steps.done.outputs.skip != 'true'" in s["if"]
