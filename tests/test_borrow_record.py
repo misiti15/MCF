@@ -237,3 +237,13 @@ def test_workflow_records_late_runs_and_skips_cheaply_once_done():
     assert names.index("Already recorded?") < names.index("actions/checkout@v4")
     for s in steps[names.index("Already recorded?") + 1:]:
         assert "steps.done.outputs.skip != 'true'" in s["if"]
+
+
+def test_timing_tags_early_manual_runs():
+    """Reviewer nit 11-27: a manual (--ignore-window) run before 08:45 ET or on a weekend is 'early', not 'late'."""
+    from zoneinfo import ZoneInfo
+    ny = ZoneInfo("America/New_York")
+    assert br.timing(datetime(2026, 11, 3, 7, 30, tzinfo=ny)) == ("early", 0)
+    assert br.timing(datetime(2026, 11, 3, 9, 8, tzinfo=ny)) == ("on_time", 0)
+    assert br.timing(datetime(2026, 11, 3, 10, 30, tzinfo=ny)) == ("late", 30)
+    assert br.timing(datetime(2026, 11, 7, 11, 0, tzinfo=ny)) == ("early", 0)          # Saturday

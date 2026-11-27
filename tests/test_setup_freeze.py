@@ -108,3 +108,37 @@ def test_workflow_runs_the_module_on_pull_requests():
     assert len(accts) >= 5
     read = lambda p: (ROOT / p).read_text() if (ROOT / p).exists() else None    # noqa: E731
     assert sf.setup_changes([], read, read, accts) == []
+
+
+def test_live_setup_module_files_are_covered():
+    """OPS-FREEZE2 (reviewer 11-27): live setups load code from research/... module files named in the configs; an
+    edit to one (base or PR side) counts, an unrelated research file does not."""
+    acct = ACCT + "  gen1:\n    enabled: true\n    module: research/generator/modules/G1.py\n"
+    dflt = _with(DEFAULT, strategies={"x": {"module": "./research/bdi/x.py"}})
+    old = {"config/default.yaml": dflt, "config/account_testing.yaml": acct}
+    assert _check(old, dict(old), changed=["research/generator/modules/G1.py"]) == ["research/generator/modules/G1.py"]
+    assert _check(old, dict(old), changed=["research/bdi/x.py"]) == ["research/bdi/x.py"]
+    assert _check(old, dict(old), changed=["research/generator/modules/G2.py", "research/bdi/notes.md"]) == []
+    # removed from the config in the same PR: still counts (the base side ran it)
+    new = dict(old, **{"config/account_testing.yaml": ACCT})
+    assert "research/generator/modules/G1.py" in _check(old, new, changed=["research/generator/modules/G1.py"])
+    assert sf.module_paths("a: [1, {module: m.py}]\nb: {c: {module: ''}}\n") == {"m.py"}
+    assert sf.module_paths(None) == set() and sf.module_paths(": : bad") == set()
+
+
+def test_arena_rotation_and_risk_rotation_code_are_covered():
+    old = {"config/default.yaml": _with(DEFAULT, arena_rotation={"enabled": True}),
+           "docs/live/arena_reps.json": '{"A": 3}'}
+    new = dict(old, **{"config/default.yaml": _with(DEFAULT, arena_rotation={"enabled": False}),
+                       "docs/live/arena_reps.json": '{"A": 4}'})
+    out = _check(old, new)
+    assert "config/default.yaml: arena_rotation" in out and "docs/live/arena_reps.json" in out
+    assert _check(old, dict(old, **{"docs/live/arena_reps.json": '{ "A" : 3 }\n'})) == []
+    assert _check(old, dict(old), changed=["mcf/execution/risk.py", "mcf/rotation.py", "mcf/execution/drill.py"]) \
+        == ["mcf/execution/risk.py", "mcf/rotation.py"]
+
+
+def test_git_errors_are_printed(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    assert sf._git("show", "deadbeef:nope") == ""
+    assert "setup-freeze: git show" in capsys.readouterr().err

@@ -202,9 +202,12 @@ def in_window(now_et: datetime, window=RECORD_WINDOW) -> bool:
 
 
 def timing(now_et: datetime) -> tuple[str, int]:
-    """("on_time", 0) inside the 08:45-10:00 ET slot, else ("late", minutes past 10:00 ET)."""
+    """("on_time", 0) inside the 08:45-10:00 ET slot; ("early", 0) before 08:45 ET or on a weekend (a manual
+    workflow_dispatch run with --ignore-window); else ("late", minutes past 10:00 ET)."""
     if in_window(now_et, WINDOW):
         return "on_time", 0
+    if now_et.weekday() >= 5 or now_et.strftime("%H:%M") < WINDOW[0]:
+        return "early", 0
     end = now_et.replace(hour=int(WINDOW[1][:2]), minute=int(WINDOW[1][3:]), second=0, microsecond=0)
     return "late", max(0, int((now_et - end).total_seconds() // 60))
 
