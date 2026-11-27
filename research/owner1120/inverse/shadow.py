@@ -169,7 +169,7 @@ def _journal(branch: str, git_dir: str) -> Path | None:
     except BaseException:
         p.unlink(missing_ok=True)
         raise
-    return p  # the caller unlinks it (rows_for: finally; leftover copies filled /tmp, inspector 11-27 #15)
+    return p  # the caller unlinks it (rows_for: finally; leftover copies filled /tmp, inspector 11-27 #19)
 
 
 def rows_for(dates: list[str], git_dir: str = str(ROOT)) -> pd.DataFrame:

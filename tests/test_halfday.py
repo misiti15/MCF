@@ -189,3 +189,29 @@ def test_seed_has_no_half_days():
 def test_display_modules_import_no_trading_code(mod):
     src = (cl.ROOT / mod).read_text()
     assert "mcf.execution" not in src and "submit_order" not in src
+
+
+def test_bars_imports_only_the_calendar_from_execution():
+    """mcf.data.bars is imported by the display modules above: its only mcf.execution import is market_calendar."""
+    import re
+    src = (cl.ROOT / "mcf/data/bars.py").read_text()
+    mods = set(re.findall(r"(?:from|import)\s+(?:mcf|\.\.)\.?execution(?:\.(\w+)|\s+import\s+(\w+))", src))
+    names = {a or b for a, b in mods}
+    assert names == {"market_calendar"}, names
+    assert "submit_order" not in src
+    mc_src = (cl.ROOT / "mcf/execution/market_calendar.py").read_text()
+    assert "submit_order" not in mc_src and "import mcf.execution" not in mc_src and "from ." not in mc_src
+
+
+def test_close_min_does_not_memoise_a_fallback_for_today(monkeypatch):
+    from mcf.execution import market_calendar as mc
+    today = str(pd.Timestamp.now(tz=B.TZ).date())
+    monkeypatch.setattr(B, "_CLOSE_MIN", {})
+    monkeypatch.setattr(B, "_CLOSE_RETRY", {})
+    monkeypatch.setattr(mc, "_cache", {})
+    monkeypatch.setattr(mc, "_from_http", lambda d: None)          # calendar unreachable
+    m = B.close_min(today)
+    assert m in (780, 960) and today not in B._CLOSE_MIN and today in B._CLOSE_RETRY
+    monkeypatch.setattr(mc, "_from_http", lambda d: mc._t("13:00"))  # calendar back: answer cached after the retry wait
+    monkeypatch.setattr(B, "_CLOSE_RETRY", {})
+    assert B.close_min(today) == 780 and B._CLOSE_MIN[today] == 780

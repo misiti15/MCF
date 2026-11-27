@@ -152,3 +152,10 @@ version of COMPASS-LEARN's D1 flip detector).
   caps each day at the calendar close. Not re-run: `study.py` (horizons.csv / side.csv) and `plain_table.py`
   (compass_plain.json) read a separate scratch panel (research/compass_learn/panel.py, deleted), not checked here for
   half days; at most 3 of ~460 sessions.
+- Expected blanks, not a bug: the session after every listed early close has its previous-close cells (prev_close,
+  vs_prev, gap, eod_prev) blank in the nightly `cond_obs.csv` and on the Compass conditional view, by design (same as
+  `build_cond.py`). First live case: **Mon 2026-11-30**, after the Fri 2026-11-27 13:00 half day; the old code would
+  have taken Wednesday 11-25's close as the previous close (within 5 days). The same applies after 2026-12-24.
+- `mcf.data.bars.close_min` memoises a close only when it is authoritative (a past day, or an Alpaca calendar answer);
+  a fallback for today (calendar unreachable) is retried every 10 minutes, so an unlisted early close cannot stay
+  stuck at 16:00 for the rest of the process.
