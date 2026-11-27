@@ -1,0 +1,93 @@
+live trades 34868 -> used 32131 dates 2026-10-14 2026-11-25
+non-GY live trades 20974 days 31 setups 229 R clip (report both) -1.623599754244886 2.3983913457073505
+
+== by bp
+                          n      R  R_clip  liveL    lr8  gross   cost
+w_bps                                                                 
+[0.0, 25.0)              78 -0.499  -0.467 -0.413 -0.467 -0.115  0.384
+[25.0, 50.0)           1931 -0.283  -0.283 -0.310 -0.311 -0.137  0.146
+[50.0, 75.0)           3285 -0.183  -0.189 -0.179 -0.179 -0.043  0.140
+[75.0, 100.0)          2955 -0.208  -0.215 -0.192 -0.192 -0.070  0.139
+[100.0, 150.0)         4452 -0.217  -0.219 -0.203 -0.204 -0.097  0.119
+[150.0, 250.0)         4674 -0.178  -0.180 -0.183 -0.172 -0.093  0.085
+[250.0, 1000000000.0)  3599 -0.141  -0.142 -0.161 -0.135 -0.091  0.051
+
+== by cents
+                         n      R  R_clip  liveL    lr8  gross   cost
+cents                                                                
+[0.0, 0.1)             392 -0.293  -0.289 -0.272 -0.283 -0.036  0.257
+[0.1, 0.2)            1516 -0.188  -0.191 -0.188 -0.186 -0.042  0.146
+[0.2, 0.35)           2553 -0.189  -0.193 -0.197 -0.189 -0.081  0.109
+[0.35, 0.6)           3892 -0.215  -0.221 -0.212 -0.206 -0.108  0.107
+[0.6, 1000000000.0)  12621 -0.189  -0.191 -0.191 -0.183 -0.088  0.101
+
+== by spreads
+                         n      R  R_clip  liveL    lr8  gross   cost
+nspr                                                                 
+[0.0, 6.0)            2422 -0.310  -0.310 -0.222 -0.275 -0.096  0.215
+[6.0, 8.0)            2188 -0.264  -0.266 -0.221 -0.245 -0.099  0.165
+[8.0, 12.0)           3760 -0.242  -0.244 -0.231 -0.237 -0.114  0.129
+[12.0, 20.0)          4751 -0.170  -0.174 -0.181 -0.168 -0.071  0.099
+[20.0, 1000000000.0)  7842 -0.135  -0.139 -0.175 -0.140 -0.076  0.058
+
+== account x bp                                 size   mean
+account  w_bps                             
+explore1 [0.0, 50.0)              20 -0.651
+         [50.0, 100.0)           191 -0.255
+         [100.0, 1000000000.0)   736 -0.130
+gen      [0.0, 50.0)             412 -0.376
+         [50.0, 100.0)          1366 -0.172
+         [100.0, 1000000000.0)  2535 -0.189
+livelab  [0.0, 50.0)              26 -1.051
+         [50.0, 100.0)           176 -0.552
+         [100.0, 1000000000.0)   634 -0.374
+primary  [0.0, 50.0)             235 -0.195
+         [50.0, 100.0)           402 -0.159
+         [100.0, 1000000000.0)   658 -0.096
+testing  [0.0, 50.0)             519 -0.362
+         [50.0, 100.0)          1265 -0.212
+         [100.0, 1000000000.0)  2657 -0.219
+testing2 [0.0, 50.0)             716 -0.215
+         [50.0, 100.0)          2100 -0.167
+         [100.0, 1000000000.0)  2872 -0.172
+testingd [0.0, 50.0)              21 -0.077
+         [50.0, 100.0)           261 -0.186
+         [100.0, 1000000000.0)   759  0.000
+testinge [0.0, 50.0)               7 -0.284
+         [50.0, 100.0)           133 -0.173
+         [100.0, 1000000000.0)   959 -0.106
+testingf [0.0, 50.0)              53  0.018
+         [50.0, 100.0)           346 -0.232
+         [100.0, 1000000000.0)   915 -0.277
+
+ L-bp50 {"share": 0.096, "n_skip": 2009, "skipped_avgR": -0.2914, "kept_avgR": -0.1856, "skipped_gross": -0.1361, "kept_gross": -0.0811, "skipped_avgR_clip": -0.2901, "dR": {"days": 31, "tot": 585.5, "t": 5.42, "best_share": 0.127, "wo_best": 511.25}, "rnd_mean": 460.5, "rnd_p95": 517.71, "pct": 100.0, "setups_affected": 68, "improve": 55, "worsen": 13, "improve_R": 640.5, "worsen_R": -74.4, "by_account": {"explore1": 13.0, "gen": 154.8, "livelab": 27.3, "primary": 45.8, "testing": 187.7, "testing2": 154.3, "testingd": 1.6, "testinge": 2.0, "testingf": -1.0}}
+
+ L-bp75 {"share": 0.252, "n_skip": 5294, "skipped_avgR": -0.2239, "kept_avgR": -0.1862, "skipped_gross": -0.0782, "kept_gross": -0.0891, "skipped_avgR_clip": -0.2271, "dR": {"days": 31, "tot": 1185.48, "t": 6.23, "best_share": 0.108, "wo_best": 1057.86}, "rnd_mean": 1061.78, "rnd_p95": 1146.8, "pct": 99.8, "setups_affected": 112, "improve": 91, "worsen": 21, "improve_R": 1287.5, "worsen_R": -130.1, "by_account": {"explore1": 47.3, "gen": 258.6, "livelab": 71.1, "primary": 74.4, "testing": 320.4, "testing2": 348.3, "testingd": 30.5, "testinge": 4.9, "testingf": 30.0}}
+
+ L-bp100 {"share": 0.393, "n_skip": 8249, "skipped_avgR": -0.2183, "kept_avgR": -0.1811, "skipped_gross": -0.0751, "kept_gross": -0.0937, "skipped_avgR_clip": -0.2228, "dR": {"days": 31, "tot": 1800.75, "t": 6.68, "best_share": 0.105, "wo_best": 1611.58}, "rnd_mean": 1610.76, "rnd_p95": 1690.13, "pct": 100.0, "setups_affected": 143, "improve": 118, "worsen": 25, "improve_R": 1957.5, "worsen_R": -196.5, "by_account": {"explore1": 61.7, "gen": 390.0, "livelab": 124.5, "primary": 109.8, "testing": 455.9, "testing2": 504.4, "testingd": 50.3, "testinge": 25.0, "testingf": 79.2}}
+
+ L-k6 {"share": 0.115, "n_skip": 2422, "skipped_avgR": -0.3103, "kept_avgR": -0.1807, "skipped_gross": -0.0957, "kept_gross": -0.0852, "skipped_avgR_clip": -0.3097, "dR": {"days": 31, "tot": 751.52, "t": 4.95, "best_share": 0.176, "wo_best": 619.04}, "rnd_mean": 502.89, "rnd_p95": 567.34, "pct": 100.0, "setups_affected": 120, "improve": 101, "worsen": 19, "improve_R": 752.1, "worsen_R": -33.8, "by_account": {"explore1": 26.8, "gen": 199.2, "livelab": 32.7, "primary": 35.5, "testing": 180.0, "testing2": 203.8, "testingd": 26.3, "testinge": 6.9, "testingf": 40.4}}
+
+ L-k8 {"share": 0.22, "n_skip": 4610, "skipped_avgR": -0.2884, "kept_avgR": -0.1696, "skipped_gross": -0.0972, "kept_gross": -0.0833, "skipped_avgR_clip": -0.2889, "dR": {"days": 31, "tot": 1329.68, "t": 4.89, "best_share": 0.191, "wo_best": 1075.97}, "rnd_mean": 940.65, "rnd_p95": 1016.65, "pct": 100.0, "setups_affected": 147, "improve": 122, "worsen": 25, "improve_R": 1378.6, "worsen_R": -72.4, "by_account": {"explore1": 68.7, "gen": 311.6, "livelab": 77.9, "primary": 67.1, "testing": 291.3, "testing2": 329.4, "testingd": 47.0, "testinge": 27.2, "testingf": 109.6}}
+
+ L-k12 {"share": 0.399, "n_skip": 8370, "skipped_avgR": -0.2678, "kept_avgR": -0.1479, "skipped_gross": -0.1047, "kept_gross": -0.0742, "skipped_avgR_clip": -0.2687, "dR": {"days": 31, "tot": 2241.13, "t": 4.28, "best_share": 0.229, "wo_best": 1727.37}, "rnd_mean": 1711.22, "rnd_p95": 1812.22, "pct": 100.0, "setups_affected": 172, "improve": 146, "worsen": 26, "improve_R": 2364.1, "worsen_R": -150.4, "by_account": {"explore1": 100.7, "gen": 515.0, "livelab": 153.7, "primary": 109.4, "testing": 511.3, "testing2": 573.8, "testingd": 49.6, "testinge": 50.7, "testingf": 176.8}}
+
+ L-c10 {"share": 0.019, "n_skip": 392, "skipped_avgR": -0.2931, "kept_avgR": -0.1939, "skipped_gross": -0.0361, "kept_gross": -0.0873, "skipped_avgR_clip": -0.2886, "dR": {"days": 31, "tot": 114.9, "t": 3.66, "best_share": 0.152, "wo_best": 97.43}, "rnd_mean": 89.1, "rnd_p95": 118.76, "pct": 93.0, "setups_affected": 29, "improve": 20, "worsen": 9, "improve_R": 95.1, "worsen_R": -32.8, "by_account": {"explore1": -0.0, "gen": 50.0, "livelab": -0.0, "primary": 6.9, "testing": 32.9, "testing2": 25.2, "testingd": -0.0, "testinge": -0.0, "testingf": -0.0}}
+
+ L-c20 {"share": 0.091, "n_skip": 1908, "skipped_avgR": -0.2092, "kept_avgR": -0.1944, "skipped_gross": -0.0407, "kept_gross": -0.0909, "skipped_avgR_clip": -0.211, "dR": {"days": 31, "tot": 399.17, "t": 4.62, "best_share": 0.129, "wo_best": 347.62}, "rnd_mean": 381.46, "rnd_p95": 438.84, "pct": 68.2, "setups_affected": 88, "improve": 67, "worsen": 21, "improve_R": 453.1, "worsen_R": -67.4, "by_account": {"explore1": -0.0, "gen": 158.7, "livelab": -0.0, "primary": 32.1, "testing": 105.6, "testing2": 102.8, "testingd": -0.0, "testinge": -0.0, "testingf": -0.0}}
+
+family L-bp50 improve 9 worsen 3 {'RW': (208, -20.1), 'NM': (8, -3.8), 'RWS': (5, -1.3), 'ST': (7, 4.1), 'orb_a': (6, 4.2), 'LIQ': (8, 6.2), 'heat_fade_short': (41, 12.6), 'NS': (22, 13.2), 'intraday_momentum': (56, 22.5), 'MF': (303, 162.6), 'GEN': (476, 189.2), 'CWT': (864, 195.6)}
+
+family L-k6 improve 12 worsen 2 {'STQ': (6, -3.1), 'exhaustion_short': (17, -0.4), 'NM': (27, 0.7), 'RWG': (7, 2.2), 'heat_fade_short': (48, 7.1), 'ST': (34, 9.9), 'NS': (64, 12.6), 'heat_fade_long': (29, 16.1), 'RWS': (42, 16.9), 'MF': (155, 48.3), 'RW': (291, 58.3), 'L': (156, 112.2), 'CWT': (746, 225.5), 'GEN': (793, 243.7)}
+
+family L-k8 improve 13 worsen 3 {'LIQ': (9, -1.7), 'STQ': (9, -0.9), 'ULT': (14, -0.8), 'exhaustion_short': (52, 1.2), 'RWG': (12, 2.1), 'heat_fade_short': (92, 12.9), 'ST': (53, 15.2), 'NM': (79, 15.8), 'RWS': (80, 18.9), 'heat_fade_long': (59, 24.8), 'NS': (130, 30.3), 'MF': (268, 90.0), 'RW': (557, 105.4), 'L': (325, 220.4), 'CWT': (1317, 369.2), 'GEN': (1549, 425.0)}
+
+family L-c20 improve 9 worsen 0 {'NM': (16, 0.0), 'orb_a': (6, 4.5), 'exhaustion_short': (28, 5.6), 'ST': (25, 6.1), 'L': (148, 7.3), 'RW': (142, 14.9), 'NS': (79, 15.2), 'MF': (142, 59.7), 'CWT': (643, 133.3), 'GEN': (673, 158.7)}
+
+== cost by spreads                            n  realized_cost  liveL_cost  liveL_minus_real
+nspr                                                                     
+[0.0, 6.0)            2422.0          0.215       0.126            -0.088
+[6.0, 8.0)            2188.0          0.165       0.122            -0.043
+[8.0, 12.0)           3760.0          0.129       0.117            -0.011
+[12.0, 20.0)          4751.0          0.099       0.111             0.012
+[20.0, 1000000000.0)  7842.0          0.058       0.098             0.040
