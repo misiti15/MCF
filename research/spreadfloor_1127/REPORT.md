@@ -10,7 +10,7 @@ Educational only — not financial advice
   written after sizing and nothing reads them. Any error is caught and printed.
 - **Why:** stopfloor_1127 found a live lead. Trades with a stop under 6–8 spreads lose more (−0.31 vs −0.18 R) and
   the skip beat random skips live. There is no spread history to backtest that, so evidence has to build up from now on.
-- **Tests: 8 new, all pass. Full suite: 1049 passed, 1 skipped** (9 min 12 s).
+- **Tests: 8 new, all pass. Full suite after merging the branch head (incl. AV50): 1062 passed, 1 skipped** (11 min 16 s).
 - **Configs scored: 0.** Cumulative N stays ≈ 9,176. PREREG.md fixes the later test now: 2 configs (F6, F8), run at ≥ 20
   and again at 40 logged sessions.
 - This is not a setup or exit change. It touches execution code by one guarded call.
@@ -24,6 +24,8 @@ Educational only — not financial advice
 | `tests/test_spreadfloor_log.py` | 8 tests (below) |
 
 - Quote source: the quote `_realism` already fetched for that entry. No extra API call.
+- Stop used: the journal stop (the R basis, the same as the stopfloor study). When AV50 (effective 2026-11-30) gives a
+  burst lot a tighter bracket stop, the tag adds `bracket` with the same fields on the broker stop.
 - Entries only: skipped signals, the shadow book and what-if runs are not tagged.
 - No quote (bid/ask missing or crossed) → `{"quote": false}`, with no floor verdict.
 - Locked quote (spread 0) → stop_spreads null, would_skip false.
@@ -39,7 +41,7 @@ produce the same decisions, orders and risk state in each of these cases:
 3. Logger crashing (`fields` raises). The exception is swallowed and printed.
 4. Kill switch off. Nothing is written.
 
-Two more tests check the field math and floors (long, short, missing, crossed and locked quotes) and that the tag
+Two more tests check the field math and floors (long, short, missing, crossed and locked quotes), the AV50 `bracket` sub-record, and that the tag
 touches no other info key (e.g. `cap_qty`). Two report tests check the per-setup summary, would-skip counts and R join,
 and the empty-journal case.
 

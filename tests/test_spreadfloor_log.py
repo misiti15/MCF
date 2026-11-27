@@ -112,6 +112,11 @@ def test_tag_never_touches_other_info_keys(tmp_path, monkeypatch):
     R.PaperRunner._spreadfloor_tag(r, SimpleNamespace(stop=9.9), info, 10.0)
     assert info["cap_qty"] == 7 and info["bid"] == 9.99 and set(info) == {"bid", "ask", "cap_qty", SF.KEY}
     assert info[SF.KEY]["stop_spreads"] == pytest.approx(5.0) and info[SF.KEY]["would_skip_6"] is True
+    assert "bracket" not in info[SF.KEY]
+    info2 = {"bid": 9.99, "ask": 10.01}
+    R.PaperRunner._spreadfloor_tag(r, SimpleNamespace(stop=9.8), info2, 10.0, 9.95)   # AV50-style tight bracket stop
+    assert info2[SF.KEY]["stop_spreads"] == pytest.approx(10.0)
+    assert info2[SF.KEY]["bracket"]["stop_spreads"] == pytest.approx(2.5) and info2[SF.KEY]["bracket"]["would_skip_6"]
 
 
 # ------------------------------------------------------------------------------------------------ report

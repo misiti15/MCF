@@ -251,3 +251,18 @@ print("PASS" if (tday >= 2 and wo > 0 and share < 0.5) else "not passing (yet)",
 - **Lineage try count:** not recorded (outsider_1120 qa.json). Treat the lineage N as unknown or large.
 
 Files: `/tmp/claude-0/-home-user/9c6fc50d-b94d-5471-ba1f-4c82eb058810/scratchpad/ww_scratch/nmetf/track.py`, `/tmp/claude-0/-home-user/9c6fc50d-b94d-5471-ba1f-4c82eb058810/scratchpad/ww_scratch/nmetf/base.py`. The temporary journal copy was deleted; scratch is 12 KB.
+
+---
+
+## Addendum 2026-11-27: AV50 splits the record (not part of the frozen text above)
+
+Educational only — not financial advice.
+
+- **What changed:** owner ETF-STOP50 yes (2026-11-24, variant AV50), skeptic cleared it 2026-11-27 (research/etfstop_1123/SKEPTIC_1127.md). From session **2026-11-30**, NM-ETF burst lots (A + B >= 4 by decision bar, see `mcf/burst_tight.py`) get half the stop distance when SPY's m-1 close is below its session VWAP. Shares, target and the R basis (the original stop) are unchanged. Ledger `2026-11-30-etf-stop50-av50`.
+- **Protocol status:** this edits the frozen block (§6 A1, an exit change), so by the letter of §6 it would void the test. By owner instruction it is handled as a **split**, not a void, and flagged in every report:
+  - **Segment 1:** 2026-11-23..2026-11-25 (3 eligible sessions, unchanged exit).
+  - **Segment 2:** 2026-11-30 onward (AV50 exit): the remaining 22 eligible sessions to 2026-12-31; the extension rules of §2 are unchanged.
+  - **Scoring:** bars (a)-(c) are computed on segment 2 and on the whole window; both are reported, with the split named. NMETF-SIZE's "pass" must say which one it rests on; the owner decides.
+- **Integrity check:** from 2026-11-30 the block hash 59dc73e86a810174 is superseded by the block that carries `burst_tight_stop` (the module and `indicators.py` are unchanged; their hashes still apply).
+- **Tracker:** run the §8 query twice: `track.py 2026-11-23 2026-11-25` and `track.py 2026-11-30 2026-12-31`. Note that R stays in original risk units: a tight lot stopped out books about -0.5R.
+
