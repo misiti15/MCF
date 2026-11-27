@@ -2239,7 +2239,10 @@ class PaperRunner:
     def _open_marks(self, bars: dict) -> float:
         """LR3: R after costs of the open lots, marked at the last completed bar: side x (last - entry) / |entry - stop|
         x share still held, less a market exit (max($0.01, 1 bp x last) per share, costs.live_model) per lot. Lots
-        without a bar or a stop count 0. Sets risk.state.open_r. Never raises."""
+        without a bar or a stop count 0. Sets risk.state.open_r. Never raises.
+        LATCH-OPEN (risk.state.open_r_by_strategy only, read only when risk.latch_counts_open is on): a lot still held but
+        without a mark this poll keeps its last mark (like SHOCK-V); a setup is unmarked only when such a lot never had
+        one (inspector 11-27 #15). open_r (the LR3 halt) is unchanged: unmarked lots still count 0 there."""
         try:
             self._mtm_restore()
             m = (self.cfg.get("costs") or {}).get("live_model") or {}
@@ -2248,17 +2251,30 @@ class PaperRunner:
             by: dict[str, float] = {}                 # Friday switches: per-setup marks / unmarked setups (state only)
             unmarked: set[str] = set()
             marks: dict[str, float] = {}              # coid -> mark (SHOCK-V carry of lots gone before reconcile)
+            prev = self.__dict__.get("_latch_last") or {}  # coid -> last real mark (LATCH-OPEN carry, state only)
+            carried = 0
+
+            def _miss(coid, lot):
+                nonlocal carried
+                k = str(lot.get("strategy"))
+                if str(coid) in prev:                 # held, no mark this poll: keep its last mark
+                    by[k] = by.get(k, 0.0) + prev[str(coid)]
+                    carried += 1
+                else:
+                    unmarked.add(k)
+
             for sym, lots in self.lots.items():
                 b = bars.get(sym)
                 if b is None or not len(b):
-                    unmarked |= {str(lot.get("strategy")) for lot in lots.values()}
+                    for coid, lot in lots.items():
+                        _miss(coid, lot)
                     continue
                 last = float(b["close"].iloc[-1])
                 for coid, lot in lots.items():
                     entry, stop = self._mtm_lot.get(coid, (None, None))
                     entry = self._fill_px.get(str(lot.get("order_id"))) or entry
                     if entry is None or stop is None or not abs(float(entry) - float(stop)) > 0:
-                        unmarked.add(str(lot.get("strategy")))
+                        _miss(coid, lot)
                         continue
                     left, orig = lot.get("left"), lot.get("orig_qty")
                     frac = (float(left) / float(orig)) if left is not None and orig else 1.0
@@ -2274,6 +2290,10 @@ class PaperRunner:
             self.risk.state.unmarked_setups = unmarked
             self.risk.state.open_marks_ok = True
             self._lot_marks = marks
+            live = {str(c) for lots in self.lots.values() for c in lots}
+            self._latch_last = {c: m for c, m in {**prev, **marks}.items() if c in live}
+            self.risk.state.carried_marks = carried
+            self.risk.state.carried_marks_total += carried
         except Exception as e:
             self.risk.state.open_marks_ok = False     # LATCH-OPEN / HS-SCALE then count closed R only
             print(f"open marks failed: {type(e).__name__}: {e}")
