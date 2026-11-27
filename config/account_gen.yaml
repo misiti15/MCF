@@ -47,7 +47,6 @@ live:
   - GEN-261020-10-BBpctge0p81-ORBfailDn-AM-BRvwlt0p3-hold-short
   - GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long
   - GEN-261021-02-BarRngATRge0p14-PDLdistlem0p045-OPEN-SPYgt0p5-t1s1-long
-  - GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long
   - GEN-261125-01-RSI2le15-Gaplem2-Since950ATRge0p44-OPEN-QQQgt0p6-t1s1-long   # NEW 2026-11-25 GEN2 restart batch (from session 2026-11-27); appended last so existing setups keep their priority
   - GEN-261125-02-UpWickge0p71-Slope6ge0p03-PDLdistlem0p59-MID-BRvwlt0p5-t1s05-long   # NEW 2026-11-25 GEN2 restart batch (from session 2026-11-27); appended last so existing setups keep their priority
   - GEN-261125-03-RangeExpge1p9-Slope6lem0p043-LATE-BRopgt0p65-t1s1-long   # NEW 2026-11-25 GEN2 restart batch (from session 2026-11-27); appended last so existing setups keep their priority
@@ -5569,7 +5568,7 @@ strategies:
         overlap_with: GEN-261021-08-RSI2le0-Ret15mATRge0p16-ATRdge3p6-LUNCH-QQQgt0p6-holdtr-long
         n_tried_in_run: 3000
   GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long:
-    enabled: true
+    enabled: false   # moved to Graveyard 2026-11-27 after the close (FOOTRACE-EXIT, Friday review; from session 2026-11-30)
     type: lab
     module: research/generator/modules/GEN-261029-01-orbfailup-lam-long.py
     context:
