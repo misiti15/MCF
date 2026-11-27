@@ -42,8 +42,10 @@ def _set(cfg: dict, dotted: str, value):
 
 def revert(cfg: dict, entry: dict) -> dict:
     out = copy.deepcopy(cfg)
-    for path, (before, _after) in entry["patch"].items():
-        _set(out, path, before)
+    for path, pair in (entry.get("patch") or {}).items():
+        if not (isinstance(pair, (list, tuple)) and len(pair) == 2):
+            continue             # a prose note (e.g. a code file changed), not a config [before, after] pair
+        _set(out, path, pair[0])
     return out
 
 

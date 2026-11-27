@@ -14,3 +14,5 @@ Verdicts in weeks, not months; no direct R is claimed for any epoch until its pa
 |---|---|---|---|
 | 0 | 2026-11-11 | TEAM-6 lineup (L3-fromopen, NM-ETF, ST7, RW5, RW3, NS5) — the BASE1 book | owner Team yes 2026-11-10 |
 | 1 | 2026-11-19 | C3-NS5: NS5-sma50-flush-oversold-long Primary -> On Deck (2026-11-19-c3-ns5); BASE1 twin on (2026-11-19-c3-epoch-base1) | owner 2026-11-18 (set up the Wednesday evening by owner instruction, outside the Friday window) |
+| 2 | 2026-11-23 | ST7-MOVE: ST7-rsi50dn-long-pm-t1s1-FD Primary -> On Deck, unchanged (2026-11-23-st7-move-qa-exit2; row added 2026-11-27) | owner 2026-11-21 |
+| 3 | 2026-11-30 | ETF-STOP50 / AV50: NM-ETF-late-dip-di-long burst lots (4+ signals within 10 min by decision bar) get half the stop distance when SPY is below its session VWAP; shares and R on the original stop (2026-11-30-etf-stop50-av50). BASE1's NM-ETF stays unchanged, so the pair measures AV50; Primary's of_live shadow lots apply it | owner 2026-11-24 (ETF-STOP50 yes, AV50); skeptic cleared 2026-11-27; applied Fri 11-27 after the close |

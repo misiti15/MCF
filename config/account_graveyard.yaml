@@ -48,7 +48,6 @@ live:
   # One position per symbol across setups: narrowest (fewest expected trades/day) first.
   setup_order:
     - ST1-ordn-long-pm-t05s1-FD             # ~3.81/day full-day
-    - NS2-sma50break-overbought-short-FD    # ~19.13/day
     - NS2-sma50break-overbought-short       # former primary (windowed 09:50-11:30)
     - ST2-slope20up-long-am-t05s1-FD        # ~25.72/day
     - LIQ-orl-sweep-open15-s25-long         # ~31.3/day
@@ -104,8 +103,6 @@ live:
     - GEN-261022-01-ORBfailUp-ATRdge7p9-Eff6ge0p55-AM-SPYdn-hold-long   # 161 live trades, -19.6R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261020-05-ORBfailDn-VWAPcrossesge4-SMA20dlem0p31-LUNCH-SPYgt0p25-holdtr-long   # 123 live trades, -19.4R (moved from Testing F 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - NS1-rsidip-rsi5pop-long-FD   # 109 live trades, -17.8R (moved from Testing E 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - exhaustion_short-FD   # 248 live trades, -12.7R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
-    - MF5-flowsell-vwapup-rsi5hi   # 140 live trades, -9.9R (moved from Testing A 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261028-02-VWAPxDn-NewLOD-AM-QQQgt0p6-t1s1-long   # 131 live trades, -8.8R (moved from Setup Generator 2026-11-18, C3-EXIT100; from session 2026-11-19)
     - GEN-261020-03-MACDhge0p079-BarsSinceLODle5-MID-BRvwlt0p3-t05s05-long   # 103 live trades, -41.5R (moved from Testing B 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
     - CWT14-failbrk-pdl-p05-R2A-long   # 433 live trades, -65.1R (moved from Testing A 2026-11-20, FOOTRACE-EXIT; from session 2026-11-23)
@@ -138,6 +135,7 @@ live:
     - GEN-261027-02-NewLOD-RSI14le35-Gapge2-PM-SPYup-holdtr-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor; to 11-25: 42 tr, 7/22 traded/active days, -16.9R, avg -0.402, w/o best day -0.418); appended last
     - GEN-261019-07-VolRatioge2-UpWickge0p59-DayRngVsPrevge1p5-LATE-SPYgt0p5-t05s1-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT + Graveyard floor; to 11-25: 48 tr, 4/28 traded/active days, -9.4R, avg -0.196, w/o best day -0.441); appended last
     - GEN-261019-06-VWAPxUp-EMAdiffge0p29-PM-SPYgt0p5-holdtr-long   # moved in 2026-11-25 (ROT-B3 FOOTRACE-EXIT; to 11-25: 36 tr, 5/28 traded/active days, -9.2R, avg -0.257, w/o best day -0.280); appended last
+    - GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long   # moved in 2026-11-27 (FOOTRACE-EXIT; to 11-27: 129 tr, 21 active days, -11.8R, avg -0.092, w/o best day -0.456, day t -1.71); appended last
 strategies:
   # ---- from Testing 2 (there since 2026-10-20, moved from Testing 1)
   heat_fade_long:   # ex-primary "Midday Gap-Up Dip Buy" (default.yaml block, enabled here)
@@ -255,8 +253,9 @@ strategies:
   # ---- from Testing 1: full-day versions (window [950, 1500], scale_out_r null; blocks as in Testing 1)
   # from NS2-sma50break-overbought-short (primary; source window 950-1130); ~19.13/day full-day [exp -0.054R]
   NS2-sma50break-overbought-short-FD:
+    retired: {from: "2026-11-30", code: RETIRE-R3, reason: "whole live record to 11-27: 28 sessions, 315 trades, avg R w/o best day -0.358 (<= -0.10), last-10-session R -4.6 (<= 0)"}
     # moved to Graveyard 2026-10-21 (owner)
-    enabled: true
+    enabled: false   # RETIRED 2026-11-27 after the close (owner RETIRE-R3, Friday review; from session 2026-11-30): terminal, record kept, never deleted
     benched: {from: "2026-11-18", until: "2026-11-24", reason: "GY-BENCH owner 2026-11-16: > 150 Graveyard trades; rests 5 sessions, record kept, back by itself 2026-11-25"}
     type: lab
     module: research/bdi/fullday/NS2-sma50break-overbought-short-FD.py
@@ -1870,8 +1869,9 @@ strategies:
     scale_out_r: null
     tags: [graveyard, moved from Testing E 2026-11-18 (owner C3-EXIT100)]
   exhaustion_short-FD:
+    retired: {from: "2026-11-30", code: RETIRE-R3, reason: "whole live record to 11-27: 32 sessions, 358 trades, avg R w/o best day -0.162 (<= -0.10), last-10-session R -36.2 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 248 trades, 28 live sessions (26 traded), -12.7R, avg -0.051R, w/o best day -0.102R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-27 after the close (owner RETIRE-R3, Friday review; from session 2026-11-30): terminal, record kept, never deleted
     type: lab
     module: research/bdi/fullday/exhaustion_short-FD.py
     min_adv: 95000000
@@ -1880,8 +1880,9 @@ strategies:
     scale_out_r: null
     tags: [graveyard, moved from Testing A 2026-11-18 (owner C3-EXIT100)]
   MF5-flowsell-vwapup-rsi5hi:
+    retired: {from: "2026-11-30", code: RETIRE-R3, reason: "whole live record to 11-27: 33 sessions, 203 trades, avg R w/o best day -0.109 (<= -0.10), last-10-session R -2.5 (<= 0)"}
     # moved to Graveyard 2026-11-18 after the close (owner C3-EXIT100 yes; from session 2026-11-19). Live record to 11-18 (all accounts, run_id 1, de-duplicated): 140 trades, 30 live sessions (29 traded), -9.9R, avg -0.071R, w/o best day -0.136R
-    enabled: true
+    enabled: false   # RETIRED 2026-11-27 after the close (owner RETIRE-R3, Friday review; from session 2026-11-30): terminal, record kept, never deleted
     type: lab
     module: research/primitives/marcoflow/MF-flowsell-vwapup-rsi5hi.py
     min_adv: 95000000
@@ -3606,6 +3607,75 @@ strategies:
         score: 0.75
         max_overlap: 0.422
         overlap_with: CWT14-failbrk-orl-p05-long
+        n_tried_in_run: 3000
+  GEN-261029-01-ORBfailUp-RSI14le41-ADX7le29-LAM-QQQgt0p3-hold-long:   # moved from Setup Generator 2026-11-27 after the close (FOOTRACE-EXIT, Friday review); from session 2026-11-30
+    enabled: true   # FOOTRACE-EXIT: block copied unchanged from Setup Generator. live to 11-27 (all accounts, run 1, LR8 R after costs, identical signals once): 129 tr, 21 active days, -11.8R, avg -0.092, w/o best day -0.456, w/o top 2 -0.501, day t -1.71
+    type: lab
+    module: research/generator/modules/GEN-261029-01-orbfailup-lam-long.py
+    context:
+    - qqq_fo
+    min_adv: 20000000
+    window:
+    - 1030
+    - 1200
+    refire: false
+    scale_out_r: null
+    tags:
+    - graveyard
+    - moved from Setup Generator 2026-11-27 (FOOTRACE-EXIT)
+    gen:
+      date: '2026-10-29'
+      spec:
+        side: long
+        window: LAM
+        geom: hold
+        min_adv: 20000000.0
+        conds:
+        - - adx7
+          - <=
+          - 29.0
+        - - orb_fail_up
+          - ==
+          - 1.0
+        - - qqq_fo
+          - '>'
+          - 0.3
+        - - rsi
+          - <=
+          - 41.0
+      key: 88c4ab0d015ccaec
+      screen:
+        train:
+          n: 4618
+          exp_r: 0.4058
+          t: 1.06
+          win: 0.493
+          days: 103
+        valid:
+          n: 4303
+          exp_r: 0.0708
+          t: 0.54
+          win: 0.47
+          days: 94
+        all:
+          n: 8921
+          exp_r: 0.2442
+          t: 1.16
+          win: 0.482
+          days: 197
+        per_day: 20.941
+        per_day_valid: 22.411
+        per_day_median60: 0.0
+        expected_live_per_day: 0.0
+        exp_up: 0.6715
+        exp_down: -0.5436
+        exp_flat: -0.1041
+        excess_train: 0.0598
+        excess_valid: 0.0577
+        tier1: true
+        score: 0.79
+        max_overlap: 0.292
+        overlap_with: GEN-261023-01-VWAPxUp-VWAPatrge0p33-LAM-SPYgt0p5-t05s05-short
         n_tried_in_run: 3000
 # PSHADOW 2026-11-22: Primary-only shadow list (config/default.yaml); this account shadows none of those.
 shadow_setups: []

@@ -20,6 +20,7 @@ import json
 import os
 import re
 import time as _time
+from dataclasses import replace as _replace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -29,6 +30,7 @@ import pandas as pd
 from ..backtest.engine import Costs, in_play_filter, is_extended, rank_contexts, simulate, universe_ok
 from ..costs import cost_r
 from ..data.bars import TZ, normalize, rth
+from .. import burst_tight as _bt
 from .. import spy_exit as _spy_exit
 from ..journal import Journal
 from ..strategies.base import DayContext, Strategy, t
@@ -96,6 +98,13 @@ class PaperRunner:
         self.spy_exit = _spy_exit.enabled(strategies)
         if self.spy_exit:
             ctx_syms = ctx_syms | {_spy_exit.SPY}
+        # AV50 burst tight stop (opt-in burst_tight_stop, owner ETF-STOP50 2026-11-24; mcf/burst_tight.py): SPY 1-minute
+        # bars from 09:30 for the SPY-below-VWAP gate
+        self.burst_tight = _bt.enabled(strategies)
+        if self.burst_tight:
+            ctx_syms = ctx_syms | {_bt.SPY}
+        self._bt_n: dict = {}                             # (setup, decision time) -> signals of this poll (B)
+        self._bt_sigs: dict = {}                          # (symbol, setup) -> (last bar ts, signals) from the B pre-count
         self._spy_warned: set = set()                     # lots whose missing / stale SPY was logged (once each)
         self.watchlist = sorted(set(priors) | (set(SPLIT_TAPE_SYMBOLS) if self.split_gate else set()) | ctx_syms)
         self._split_cache: tuple | None = None
@@ -442,8 +451,11 @@ class PaperRunner:
             stop = next((float(l.stop_price) for l in (o.legs or []) if getattr(l, "stop_price", None)), float("nan"))
             tgt = next((float(l.limit_price) for l in (o.legs or []) if getattr(l, "limit_price", None)), None)
             ref = float(o.filled_avg_price) if o.filled_avg_price else float("nan")
+            meta = {"restored_from_broker": True}
+            if _bt.of(self._strategy(strategy)) is not None:   # AV50: the broker leg may be the tight stop, not the R basis
+                meta["stop_may_be_burst_tight"] = True
             self.journal.record_order(self.run_id, symbol, strategy, side, int(float(o.qty or 0)), ref, stop, tgt,
-                                      str(o.id), "submitted", '{"restored_from_broker": true}')
+                                      str(o.id), "submitted", json.dumps(meta))
             added += 1
         if added:
             print(f"restored {added} MCF orders from the broker that the journal had not saved yet")
@@ -1286,6 +1298,7 @@ class PaperRunner:
         self.ctxs = {c.symbol: c for c in self._contexts(bars, today)}
         self._step_entries = True
         self._refresh_borrow(now)                     # U9-ETB: bulk borrow list (off unless shorts.borrow_prefetch)
+        self._bt_precount(now)                        # AV50: B = this poll's signals per setup and decision bar
         for ctx in self.ctxs.values():
             last = len(ctx.bars) - 1
             px = float(ctx.bars["close"].iloc[-1])
@@ -1305,7 +1318,7 @@ class PaperRunner:
                     continue   # U9-ETB: short-only setup, name not shortable/ETB, already journaled once today
                 if self._bucket_done(strat, key, ctx):
                     continue   # lab setup: this 5-minute bucket was already evaluated for this symbol
-                for sig in self._tap(strat, ctx, strat.signals(ctx), last, px):
+                for sig in self._tap(strat, ctx, self._signals_of(strat, ctx, key), last, px):
                     if retry:
                         # only a fresh market signal on the latest bar, later than the blocked one; never a stale price
                         if sig.entry_type != "market" or sig.bar_index != last or sig.bar_index <= self.blocked[key]["bar"]:
@@ -1343,6 +1356,79 @@ class PaperRunner:
             # stable sort: longs before shorts, setup_order (scan order) kept within each side
             for sig, key in sorted(ties, key=lambda x: x[0].side != 1):
                 self._enter(sig, px, key, ctx, now)
+
+    # ---------------------------------------------------------------- AV50 burst tight stop (mcf/burst_tight.py)
+    def _bucket_seen(self, strat, key, ctx) -> bool:
+        """_bucket_done without recording: True when this lab setup already evaluated the latest bucket here."""
+        db = getattr(strat, "decision_bucket", None)
+        b = db(ctx) if db is not None else None
+        if b is None:
+            return False
+        cur = self.lab_bucket.get(key[0])
+        return cur is not None and cur[0] == b and key[1] in cur[1]
+
+    def _bt_precount(self, now):
+        """B of the AV50 burst test: every signal of a burst_tight_stop setup on the latest bar in this poll, per
+        decision time (counted before any of them enters, so a lot sees the signals after it too). Uses the main loop's
+        pre-filters without side effects; the signals are kept for the main loop (same objects, no second scan)."""
+        self._bt_n, self._bt_sigs = {}, {}
+        if not getattr(self, "burst_tight", False):
+            return
+        for strat in self.strategies:
+            if _bt.of(strat) is None:
+                continue
+            for ctx in self.ctxs.values():
+                if getattr(strat, "ticker_split", None) and not strat.trades_symbol(ctx.symbol):
+                    continue
+                key = (ctx.symbol, strat.name)
+                if key in self.seen and not self.same_setup_reentry:
+                    continue
+                if not strat.eligible(ctx) or self._bucket_seen(strat, key, ctx):
+                    continue
+                last = len(ctx.bars) - 1
+                sigs = list(strat.signals(ctx))
+                self._bt_sigs[key] = (ctx.bars.index[-1], sigs)
+                for sig in sigs:
+                    if sig.entry_type != "market" or sig.bar_index != last:
+                        continue
+                    if self.same_setup_reentry and self._handled(key, sig, ctx, now):
+                        continue
+                    k = (strat.name, self._bt_time(sig, ctx, now))
+                    self._bt_n[k] = self._bt_n.get(k, 0) + 1
+
+    def _signals_of(self, strat, ctx, key):
+        """strat.signals(ctx), reusing the AV50 pre-count's list for this symbol and bar."""
+        hit = self._bt_sigs.pop(key, None) if getattr(self, "_bt_sigs", None) else None
+        if hit is not None and len(ctx.bars) and hit[0] == ctx.bars.index[-1]:
+            return hit[1]
+        return strat.signals(ctx)
+
+    def _bt_time(self, sig, ctx, now) -> pd.Timestamp:
+        """Decision time m of the signal (the end of the 5-minute bucket its decision bar decides)."""
+        return _bt.decision_time(_bt.hhmm_time(now.date(), self._moment(sig, ctx, now), NY))
+
+    def _bt_booked(self, strategy: str, today) -> list:
+        """Decision times of the lots of `strategy` booked today (submitted / dry-run, restored ones included), from
+        their entry client ids (<setup>-<symbol>-<day>-<HHMM of the decision bar>; needs live.same_setup_reentry)."""
+        out = []
+        for coid in self.entered:
+            p = parse_coid(coid)
+            if p is None or p[0] != strategy or not p[3] or p[2] != f"{today:%Y%m%d}":
+                continue
+            out.append(_bt.decision_time(_bt.hhmm_time(today, p[3], NY)))
+        return out
+
+    def _bt_decide(self, sig, ctx, px, now) -> tuple[float | None, dict | None]:
+        """(bracket stop for a burst lot when SPY is below VWAP, else None; journal tag or None for setups without
+        burst_tight_stop). Sizing and the journal's R basis stay on sig.stop."""
+        s = _bt.settings(getattr(self._strategy(sig.strategy), "params", None)) if getattr(self, "burst_tight", False) else None
+        if s is None:
+            return None, None
+        m = self._bt_time(sig, ctx, now)
+        prior = _bt.booked_before(self._bt_booked(sig.strategy, now.date()), m, s["burst_window_min"])
+        n_now = (getattr(self, "_bt_n", None) or {}).get((sig.strategy, m), 1)
+        spy = (getattr(self, "_step_bars", None) or {}).get(_bt.SPY)
+        return _bt.decide(s, px, sig.stop, m, prior, n_now, spy)
 
     def _bucket_done(self, strat, key, ctx) -> bool:
         """GX1: True when this lab setup already evaluated the bucket the latest bar decides on this symbol; otherwise
@@ -1697,6 +1783,13 @@ class PaperRunner:
             info["tier"] = "extended"
         if getattr(getattr(self, "netbeta", None), "enabled", False):
             self._netbeta_tag(sig, info, px)            # B8 shadow (off by default): journal tag only, never blocks
+        # AV50: a burst lot with SPY below VWAP gets the tight bracket stop; qty (above) and the journal's stop (the R
+        # basis cost_r reads) stay on the ORIGINAL stop - the tight one is only in the tag and the broker order
+        stop_tight, bt_tag = self._bt_decide(sig, ctx, px, now)
+        if bt_tag is not None:
+            info.update(bt_tag)
+        order_sig = sig if stop_tight is None else _replace(sig, stop=stop_tight)
+        self._spreadfloor_tag(sig, info, px, order_sig.stop)   # SPREADFLOOR log only (research/spreadfloor_1127): never blocks
         info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
         self._mtm_lot[coid] = (px, sig.stop)              # intraday tracker only (poll snapshot); never read by trading
         if self.dry_run:
@@ -1705,10 +1798,10 @@ class PaperRunner:
             self._entered(sig, coid, ctx, now)
             self.lots.setdefault(sig.symbol, {})[coid] = {"strategy": sig.strategy, "side": sig.side, "qty": qty,
                                                           "order_id": None, "coid": coid}
-            print(f"DRY {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f} {info}")
+            print(f"DRY {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={order_sig.stop:.2f} {info}")
             return self._log(sig, "dry_run", "dry run", px, now, info, qty)
         try:
-            o = self.broker.submit_bracket(sig, qty, coid)
+            o = self.broker.submit_bracket(order_sig, qty, coid)
         except Exception as e:  # broker rejects are journaled, not fatal
             return self._log(sig, "rejected", str(e)[:200], px, now, info, qty)
         self.fired.add(key)
@@ -1723,7 +1816,7 @@ class PaperRunner:
         self.journal.record_order(self.run_id, sig.symbol, sig.strategy, sig.side, qty, px, sig.stop,
                                   sig.target, str(o.id), "submitted", json.dumps(info, default=str))
         if sig.be_at_r is not None or sig.trail_r is not None or sig.time_stop_min or sig.spy_exit_pct:
-            m = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": sig.stop,
+            m = {"side": sig.side, "entry": px, "risk": abs(px - sig.stop), "stop": order_sig.stop,
                  "t0": now, "be_at_r": sig.be_at_r, "trail_r": sig.trail_r,
                  "trail_after_r": sig.trail_after_r, "time_stop_min": sig.time_stop_min,
                  "time_stop_min_r": sig.time_stop_min_r, "best": 0.0}
@@ -1738,7 +1831,8 @@ class PaperRunner:
             self.scaling[(sig.symbol, coid)] = self._scale_state(sig.side, sig.stop, sig.target, sig.scale_out_r,
                                                                  sig.scale_out_frac, now, sig.strategy)
         self._log(sig, "submitted", "ok", px, now, info, qty, str(o.id))
-        print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}")
+        print(f"ENTER {sig.strategy} {sig.symbol} side={sig.side} qty={qty} ref={px:.2f} stop={sig.stop:.2f}"
+              + (f" (burst tight stop {stop_tight:.2f})" if stop_tight is not None else ""))
 
     def _entered(self, sig, coid, ctx, now):
         self.entered.add(coid)
@@ -2387,6 +2481,24 @@ class PaperRunner:
                                           "unpriced_lots": skipped}
         except Exception as e:
             print(f"B8 shadow failed: {type(e).__name__}: {e} (no effect on trading)")
+
+    def _spreadfloor_tag(self, sig, info: dict, px: float, bracket_stop=None):
+        """SPREADFLOOR shadow logger (mcf/execution/spreadfloor.py): tags the entry with its decision-time quoted spread,
+        stop distance in spreads / bp / cents and whether a 6- / 8-spread floor WOULD have skipped it. Log only: runs
+        after sizing, nothing reads it, never blocks, never raises. live.spreadfloor_log: false switches it off.
+        bracket_stop: the broker order's stop when it differs from the journal stop (AV50 tight stop): logged as
+        `bracket` alongside, the main fields stay on the journal stop."""
+        try:
+            if not self.live.get("spreadfloor_log", True):
+                return
+            from . import spreadfloor as _sf
+
+            tag = _sf.fields(info.get("bid"), info.get("ask"), px, sig.stop)   # journal stop (the R basis)
+            if bracket_stop is not None and bracket_stop != sig.stop and tag.get("quote"):   # AV50 tight bracket stop
+                tag["bracket"] = _sf.fields(info.get("bid"), info.get("ask"), px, bracket_stop)
+            info[_sf.KEY] = tag
+        except Exception as e:
+            print(f"spreadfloor log failed: {type(e).__name__}: {e} (no effect on trading)")
 
     def _safety_status(self) -> dict:
         try:

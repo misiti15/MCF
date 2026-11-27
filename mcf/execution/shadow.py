@@ -43,7 +43,10 @@ import time as _time
 import numpy as np
 import pandas as pd
 
+from .. import burst_tight as _bt
 from ..costs import pnl_adj as _pnl_adj
+from ..data.bars import TZ
+from .alpaca_broker import stop_px
 
 NY = "America/New_York"
 SHADOW_KIND = "shadow"
@@ -437,9 +440,40 @@ class ShadowBook:
     def _moment(self, sig, ctx, now) -> str:
         return self.r._moment(sig, ctx, now)
 
+    def _bt_count(self, now: pd.Timestamp) -> dict:
+        """AV50 B for of_live lots: this poll's signals of each burst_tight_stop setup on the latest bar, per decision
+        time (the runner's _bt_precount on the shadow's own dedupe state)."""
+        r, out = self.r, {}
+        for strat, ctx, sig, last, px, mode in self.cands:
+            if mode != "of_live" or _bt.of(strat) is None:
+                continue
+            if sig.entry_type != "market" or sig.bar_index != last:
+                continue
+            key = (ctx.symbol, strat.name)
+            if key in self.seen and not r.same_setup_reentry:
+                continue
+            m = self._moment(sig, ctx, now)
+            if r.same_setup_reentry and ((*key, m) in self.moments or (key in self.last_entry and m <= self.last_entry[key])):
+                continue
+            k = (strat.name, _bt.decision_time(_bt.hhmm_time(now.date(), m, TZ)))
+            out[k] = out.get(k, 0) + 1
+        return out
+
+    def _bt_booked(self, strategy: str, today) -> list:
+        """Decision times of today's shadow lots of `strategy` (from their ids shadow-<setup>-<symbol>-<day>-<HHMM>)."""
+        from .runner import _COID_RE
+        out = []
+        for sid in self.entered:
+            x = _COID_RE.match(sid[len("shadow-"):]) if str(sid).startswith("shadow-") else None
+            if x is None or x["setup"] != strategy or not x["hhmm"] or x["day"] != f"{today:%Y%m%d}":
+                continue
+            out.append(_bt.decision_time(_bt.hhmm_time(today, x["hhmm"], TZ)))
+        return out
+
     def _process(self, now: pd.Timestamp):
         r = self.r
         want = []
+        self._bt_n = self._bt_count(now) if getattr(r, "burst_tight", False) else {}
         for strat, ctx, sig, last, px, mode in self.cands:
             key = (ctx.symbol, strat.name)
             if key in self.seen and not r.same_setup_reentry:
@@ -585,9 +619,19 @@ class ShadowBook:
         params = getattr(strat, "params", None) or {}
         scale = bool(params.get("live_scale_out")) and bool(sig.scale_out_r)
         managed = sig.be_at_r is not None or sig.trail_r is not None or bool(sig.time_stop_min) or bool(sig.spy_exit_pct)
+        stop = float(sig.stop)                            # AV50 (of_live only): the tight stop works, stop0 stays the R basis
+        bts = _bt.settings(params) if mode == "of_live" else None
+        if bts is not None:
+            bm = _bt.decision_time(_bt.hhmm_time(now.date(), m, TZ))
+            prior = _bt.booked_before(self._bt_booked(sig.strategy, now.date()), bm, bts["burst_window_min"])
+            spy = (getattr(self.r, "_step_bars", None) or self._poll_bars or {}).get(_bt.SPY)
+            tight, tag = _bt.decide(bts, px, sig.stop, bm, prior, (getattr(self, "_bt_n", None) or {}).get((sig.strategy, bm), 1), spy)
+            info.update(tag)
+            if tight is not None:
+                stop = float(stop_px(tight, int(sig.side) == 1))   # broker cent rounding, as the live bracket
         lot = {"sid": sid, "day": str(now.date()), "mode": mode, "symbol": sig.symbol, "strategy": sig.strategy,
                "side": side, "qty": int(qty), "left": int(qty), "ref": float(px), "entry": float(fill),
-               "half_spread": float(max(0.0, (ask - bid) / 2)), "quote": float(q0), "stop0": float(sig.stop), "stop": float(sig.stop),
+               "half_spread": float(max(0.0, (ask - bid) / 2)), "quote": float(q0), "stop0": float(sig.stop), "stop": stop,
                "target": None if sig.target is None else float(sig.target), "t0": now.isoformat(), "bar_time": m,
                "last_ns": None, "best": 0.0, "mfe": 0.0, "mae": 0.0, "parts": [],
                "managed": managed, "be_at_r": _f(sig.be_at_r), "trail_r": _f(sig.trail_r),
