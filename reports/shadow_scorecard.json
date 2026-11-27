@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-26T16:53-05:00",
+ "generated": "2026-11-27T12:58-05:00",
  "account": "livelab",
  "weights": {
   "live_weight": 1.0,
@@ -24,19 +24,19 @@
  },
  "calibration": {
   "overall": {
-   "days": 7,
-   "live_entries": 741,
-   "shadow_entries": 865,
-   "matched": 741,
+   "days": 8,
+   "live_entries": 777,
+   "shadow_entries": 901,
+   "matched": 777,
    "missing": 0,
    "extra": 96,
    "resource_blocked": 28,
    "match": 1.0,
-   "extra_rate": 0.1147,
-   "r_pairs": 741,
-   "bias_r": -0.0075,
-   "bias_t": -1.11,
-   "daily_r_corr": 0.987
+   "extra_rate": 0.11,
+   "r_pairs": 777,
+   "bias_r": -0.0051,
+   "bias_t": -0.78,
+   "daily_r_corr": 0.986
   },
   "families": {
    "CWT04": {
@@ -59,7 +59,7 @@
     "haircut_r": 0.02
    },
    "CWT05": {
-    "days": 7,
+    "days": 8,
     "live_entries": 4,
     "shadow_entries": 5,
     "matched": 4,
@@ -78,7 +78,7 @@
     "haircut_r": 0.02
    },
    "CWT12": {
-    "days": 7,
+    "days": 8,
     "live_entries": 10,
     "shadow_entries": 10,
     "matched": 10,
@@ -97,7 +97,7 @@
     "haircut_r": 0.02
    },
    "GEN": {
-    "days": 7,
+    "days": 8,
     "live_entries": 314,
     "shadow_entries": 328,
     "matched": 314,
@@ -116,7 +116,7 @@
     "haircut_r": 0.02
    },
    "IDX1": {
-    "days": 7,
+    "days": 8,
     "live_entries": 3,
     "shadow_entries": 3,
     "matched": 3,
@@ -135,26 +135,45 @@
     "haircut_r": 0.02
    },
    "L3": {
-    "days": 5,
-    "live_entries": 214,
-    "shadow_entries": 315,
-    "matched": 214,
+    "days": 6,
+    "live_entries": 215,
+    "shadow_entries": 316,
+    "matched": 215,
     "missing": 0,
     "extra": 96,
     "resource_blocked": 5,
     "match": 1.0,
-    "extra_rate": 0.3097,
-    "r_pairs": 214,
-    "bias_r": 0.0264,
-    "bias_t": 2.6,
+    "extra_rate": 0.3087,
+    "r_pairs": 215,
+    "bias_r": 0.0266,
+    "bias_t": 2.63,
     "daily_r_corr": 1.0,
     "optimistic": true,
     "tier": "partial",
     "weight": 0.2,
-    "haircut_r": 0.0464
+    "haircut_r": 0.0466
    },
    "LD2": {
-    "days": 7,
+    "days": 8,
+    "live_entries": 5,
+    "shadow_entries": 5,
+    "matched": 5,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 0,
+    "match": 1.0,
+    "extra_rate": 0.0,
+    "r_pairs": 5,
+    "bias_r": -0.0247,
+    "bias_t": -1.13,
+    "daily_r_corr": 0.997,
+    "optimistic": false,
+    "tier": "uncalibrated",
+    "weight": 0.0,
+    "haircut_r": 0.02
+   },
+   "LD6": {
+    "days": 8,
     "live_entries": 4,
     "shadow_entries": 4,
     "matched": 4,
@@ -164,27 +183,8 @@
     "match": 1.0,
     "extra_rate": 0.0,
     "r_pairs": 4,
-    "bias_r": -0.0092,
-    "bias_t": -0.46,
-    "daily_r_corr": 0.998,
-    "optimistic": false,
-    "tier": "uncalibrated",
-    "weight": 0.0,
-    "haircut_r": 0.02
-   },
-   "LD6": {
-    "days": 7,
-    "live_entries": 3,
-    "shadow_entries": 3,
-    "matched": 3,
-    "missing": 0,
-    "extra": 0,
-    "resource_blocked": 0,
-    "match": 1.0,
-    "extra_rate": 0.0,
-    "r_pairs": 3,
-    "bias_r": -0.0217,
-    "bias_t": -1.19,
+    "bias_r": -0.0401,
+    "bias_t": -1.78,
     "daily_r_corr": 1.0,
     "optimistic": false,
     "tier": "uncalibrated",
@@ -192,7 +192,7 @@
     "haircut_r": 0.02
    },
    "LD7": {
-    "days": 7,
+    "days": 8,
     "live_entries": 2,
     "shadow_entries": 2,
     "matched": 2,
@@ -210,8 +210,27 @@
     "weight": 0.0,
     "haircut_r": 0.02
    },
+   "MF3": {
+    "days": 1,
+    "live_entries": 7,
+    "shadow_entries": 7,
+    "matched": 7,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 0,
+    "match": 1.0,
+    "extra_rate": 0.0,
+    "r_pairs": 7,
+    "bias_r": 0.0654,
+    "bias_t": 1.98,
+    "daily_r_corr": null,
+    "optimistic": true,
+    "tier": "uncalibrated",
+    "weight": 0.0,
+    "haircut_r": 0.0854
+   },
    "NM": {
-    "days": 7,
+    "days": 8,
     "live_entries": 28,
     "shadow_entries": 28,
     "matched": 28,
@@ -230,26 +249,26 @@
     "haircut_r": 0.02
    },
    "RW3": {
-    "days": 7,
-    "live_entries": 42,
-    "shadow_entries": 42,
-    "matched": 42,
+    "days": 8,
+    "live_entries": 44,
+    "shadow_entries": 44,
+    "matched": 44,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 0,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 42,
-    "bias_r": -0.0687,
-    "bias_t": -2.77,
-    "daily_r_corr": 0.974,
+    "r_pairs": 44,
+    "bias_r": -0.0651,
+    "bias_t": -2.73,
+    "daily_r_corr": 0.973,
     "optimistic": false,
     "tier": "calibrated",
     "weight": 0.35,
     "haircut_r": 0.02
    },
    "RW6": {
-    "days": 7,
+    "days": 8,
     "live_entries": 32,
     "shadow_entries": 35,
     "matched": 32,
@@ -287,26 +306,45 @@
     "haircut_r": 0.02
    },
    "ST5": {
-    "days": 7,
-    "live_entries": 23,
-    "shadow_entries": 25,
-    "matched": 23,
+    "days": 8,
+    "live_entries": 43,
+    "shadow_entries": 45,
+    "matched": 43,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 2,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 23,
-    "bias_r": 0.0041,
-    "bias_t": 0.24,
-    "daily_r_corr": 0.998,
-    "optimistic": false,
+    "r_pairs": 43,
+    "bias_r": 0.031,
+    "bias_t": 2.41,
+    "daily_r_corr": 1.0,
+    "optimistic": true,
+    "tier": "partial",
+    "weight": 0.2,
+    "haircut_r": 0.051
+   },
+   "ST6": {
+    "days": 1,
+    "live_entries": 3,
+    "shadow_entries": 3,
+    "matched": 3,
+    "missing": 0,
+    "extra": 0,
+    "resource_blocked": 0,
+    "match": 1.0,
+    "extra_rate": 0.0,
+    "r_pairs": 3,
+    "bias_r": 0.0561,
+    "bias_t": 1.53,
+    "daily_r_corr": null,
+    "optimistic": true,
     "tier": "uncalibrated",
     "weight": 0.0,
-    "haircut_r": 0.0241
+    "haircut_r": 0.0761
    },
    "ST7": {
-    "days": 7,
+    "days": 8,
     "live_entries": 10,
     "shadow_entries": 10,
     "matched": 10,
@@ -325,26 +363,26 @@
     "haircut_r": 0.1064
    },
    "ULT": {
-    "days": 4,
-    "live_entries": 34,
-    "shadow_entries": 36,
-    "matched": 34,
+    "days": 5,
+    "live_entries": 35,
+    "shadow_entries": 37,
+    "matched": 35,
     "missing": 0,
     "extra": 0,
     "resource_blocked": 2,
     "match": 1.0,
     "extra_rate": 0.0,
-    "r_pairs": 34,
-    "bias_r": 0.0058,
-    "bias_t": 0.25,
+    "r_pairs": 35,
+    "bias_r": 0.0014,
+    "bias_t": 0.06,
     "daily_r_corr": 0.999,
     "optimistic": false,
     "tier": "calibrated",
     "weight": 0.35,
-    "haircut_r": 0.0258
+    "haircut_r": 0.0214
    },
    "orb20_a": {
-    "days": 7,
+    "days": 8,
     "live_entries": 2,
     "shadow_entries": 2,
     "matched": 2,
@@ -398,7 +436,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 5,
@@ -426,7 +465,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 10,
@@ -478,7 +518,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 9,
@@ -587,7 +628,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 34,
@@ -716,7 +758,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 3,
@@ -742,24 +785,25 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 315,
+   "trades": 316,
    "trades_only": 0,
-   "trades_of_live": 315,
-   "total_r": -244.256,
-   "avg_r": -0.7754,
+   "trades_of_live": 316,
+   "total_r": -245.309,
+   "avg_r": -0.7763,
    "n_win": 42,
-   "haircut_r": 0.0464,
-   "avg_r_haircut": -0.8218,
+   "haircut_r": 0.0466,
+   "avg_r_haircut": -0.8229,
    "tier": "partial",
    "weight": 0.2,
-   "gap_r": 0.0264,
-   "gap_n": 214,
+   "gap_r": 0.0266,
+   "gap_n": 215,
    "match": 1.0,
    "first": "2026-11-19",
-   "last": "2026-11-25"
+   "last": "2026-11-27"
   },
   "LD2-qqq-dip015-breadthturn-tqqq-t05s1-long": {
    "family": "LD2",
@@ -770,24 +814,25 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 4,
+   "trades": 5,
    "trades_only": 0,
-   "trades_of_live": 4,
-   "total_r": -0.348,
-   "avg_r": -0.087,
-   "n_win": 3,
+   "trades_of_live": 5,
+   "total_r": 0.166,
+   "avg_r": 0.0333,
+   "n_win": 4,
    "haircut_r": 0.02,
-   "avg_r_haircut": -0.107,
+   "avg_r_haircut": 0.0133,
    "tier": "uncalibrated",
    "weight": 0.0,
-   "gap_r": -0.0092,
-   "gap_n": 4,
+   "gap_r": -0.0247,
+   "gap_n": 5,
    "match": 1.0,
    "first": "2026-11-18",
-   "last": "2026-11-25"
+   "last": "2026-11-27"
   },
   "LD6-spy-dip020atr-breadthturn-spxl-holdtr-long": {
    "family": "LD6",
@@ -798,24 +843,25 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 3,
+   "trades": 4,
    "trades_only": 0,
-   "trades_of_live": 3,
-   "total_r": -0.253,
-   "avg_r": -0.0844,
-   "n_win": 1,
+   "trades_of_live": 4,
+   "total_r": 0.569,
+   "avg_r": 0.1422,
+   "n_win": 2,
    "haircut_r": 0.02,
-   "avg_r_haircut": -0.1044,
+   "avg_r_haircut": 0.1222,
    "tier": "uncalibrated",
    "weight": 0.0,
-   "gap_r": -0.0217,
-   "gap_n": 3,
+   "gap_r": -0.0401,
+   "gap_n": 4,
    "match": 1.0,
    "first": "2026-11-18",
-   "last": "2026-11-25"
+   "last": "2026-11-27"
   },
   "LD7-ns1-idxturn-holdtr-long": {
    "family": "LD7",
@@ -826,7 +872,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 2,
@@ -845,6 +892,28 @@
    "first": "2026-11-23",
    "last": "2026-11-24"
   },
+  "MF3-open-flowsell-rsi5hi": {
+   "family": "MF3",
+   "live_days": [
+    "2026-11-27"
+   ],
+   "shadow_days": [],
+   "trades": 7,
+   "trades_only": 0,
+   "trades_of_live": 7,
+   "total_r": -2.881,
+   "avg_r": -0.4115,
+   "n_win": 3,
+   "haircut_r": 0.0854,
+   "avg_r_haircut": -0.4969,
+   "tier": "uncalibrated",
+   "weight": 0.0,
+   "gap_r": 0.0654,
+   "gap_n": 7,
+   "match": 1.0,
+   "first": "2026-11-27",
+   "last": "2026-11-27"
+  },
   "NM-PM-gapdn-above-pdh-rvol-short": {
    "family": "NM",
    "live_days": [
@@ -854,7 +923,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 24,
@@ -882,7 +952,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 4,
@@ -910,24 +981,25 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 42,
+   "trades": 44,
    "trades_only": 0,
-   "trades_of_live": 42,
-   "total_r": -5.403,
-   "avg_r": -0.1286,
+   "trades_of_live": 44,
+   "total_r": -6.278,
+   "avg_r": -0.1427,
    "n_win": 14,
    "haircut_r": 0.02,
-   "avg_r_haircut": -0.1486,
+   "avg_r_haircut": -0.1627,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": -0.0687,
-   "gap_n": 42,
+   "gap_r": -0.0651,
+   "gap_n": 44,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-25"
+   "last": "2026-11-27"
   },
   "RW6-ns2-up3-short-FD": {
    "family": "RW6",
@@ -938,7 +1010,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 35,
@@ -994,24 +1067,47 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 25,
+   "trades": 45,
    "trades_only": 0,
-   "trades_of_live": 25,
-   "total_r": 3.29,
-   "avg_r": 0.1316,
-   "n_win": 17,
-   "haircut_r": 0.0241,
-   "avg_r_haircut": 0.1075,
-   "tier": "uncalibrated",
-   "weight": 0.0,
-   "gap_r": 0.0041,
-   "gap_n": 23,
+   "trades_of_live": 45,
+   "total_r": -7.327,
+   "avg_r": -0.1628,
+   "n_win": 20,
+   "haircut_r": 0.051,
+   "avg_r_haircut": -0.2138,
+   "tier": "partial",
+   "weight": 0.2,
+   "gap_r": 0.031,
+   "gap_n": 43,
    "match": 1.0,
    "first": "2026-11-17",
-   "last": "2026-11-23"
+   "last": "2026-11-27"
+  },
+  "ST6-volspikeup-short-mid-t1s1-FD": {
+   "family": "ST6",
+   "live_days": [
+    "2026-11-27"
+   ],
+   "shadow_days": [],
+   "trades": 3,
+   "trades_only": 0,
+   "trades_of_live": 3,
+   "total_r": 0.15,
+   "avg_r": 0.05,
+   "n_win": 1,
+   "haircut_r": 0.0761,
+   "avg_r_haircut": -0.0261,
+   "tier": "uncalibrated",
+   "weight": 0.0,
+   "gap_r": 0.0561,
+   "gap_n": 3,
+   "match": 1.0,
+   "first": "2026-11-27",
+   "last": "2026-11-27"
   },
   "ST7-rsi50dn-long-pm-t1s1-FD-WB1": {
    "family": "ST7",
@@ -1022,7 +1118,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 10,
@@ -1047,24 +1144,25 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
-   "trades": 36,
+   "trades": 37,
    "trades_only": 0,
-   "trades_of_live": 36,
-   "total_r": -8.114,
-   "avg_r": -0.2254,
-   "n_win": 14,
-   "haircut_r": 0.0258,
-   "avg_r_haircut": -0.2512,
+   "trades_of_live": 37,
+   "total_r": -8.071,
+   "avg_r": -0.2181,
+   "n_win": 15,
+   "haircut_r": 0.0214,
+   "avg_r_haircut": -0.2395,
    "tier": "calibrated",
    "weight": 0.35,
-   "gap_r": 0.0058,
-   "gap_n": 34,
+   "gap_r": 0.0014,
+   "gap_n": 35,
    "match": 1.0,
    "first": "2026-11-20",
-   "last": "2026-11-25"
+   "last": "2026-11-27"
   },
   "orb20_a-WB3": {
    "family": "orb20_a",
@@ -1075,7 +1173,8 @@
     "2026-11-20",
     "2026-11-23",
     "2026-11-24",
-    "2026-11-25"
+    "2026-11-25",
+    "2026-11-27"
    ],
    "shadow_days": [],
    "trades": 2,
