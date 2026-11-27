@@ -1,0 +1,730 @@
+{
+ "parity": {
+  "CHECK": {
+   "lots": 26191,
+   "xm_match": 1.0,
+   "avgR_cand": -0.0728,
+   "avgR_base": -0.0728
+  },
+  "FIT": {
+   "lots": 16484,
+   "xm_match": 1.0,
+   "avgR_cand": -0.0082,
+   "avgR_base": -0.0082
+  },
+  "T2": {
+   "lots": 9869,
+   "xm_match": 1.0,
+   "avgR_cand": -0.0954,
+   "avgR_base": -0.0954
+  }
+ },
+ "configs": {
+  "BASE": {
+   "FIT": {
+    "book": {
+     "R_per_session": -2.781,
+     "wo_best_day": -3.001,
+     "best_day_share": null,
+     "worst5": -115.4,
+     "red_per_21": 13.3,
+     "floor20": -130.9
+    },
+    "lots_per_session": 21.2,
+    "paired_lots": 3609,
+    "avgR_base": -0.131,
+    "avgR_cfg": -0.131
+   },
+   "CHECK": {
+    "book": {
+     "R_per_session": -2.044,
+     "wo_best_day": -2.175,
+     "best_day_share": null,
+     "worst5": -128.4,
+     "red_per_21": 12.7,
+     "floor20": -161.9
+    },
+    "lots_per_session": 23.9,
+    "paired_lots": 6605,
+    "avgR_base": -0.0854,
+    "avgR_cfg": -0.0854
+   },
+   "T2": {
+    "book": {
+     "R_per_session": -1.533,
+     "wo_best_day": -1.567,
+     "best_day_share": null,
+     "worst5": -72.4,
+     "red_per_21": 12.4,
+     "floor20": -87.2
+    },
+    "lots_per_session": 10.4,
+    "paired_lots": 4421,
+    "avgR_base": -0.1481,
+    "avgR_cfg": -0.1481
+   }
+  },
+  "C1": {
+   "FIT": {
+    "book": {
+     "R_per_session": -2.591,
+     "wo_best_day": -2.81,
+     "best_day_share": null,
+     "worst5": -119.1,
+     "red_per_21": 13.6,
+     "floor20": -129.2
+    },
+    "lots_per_session": 21.3,
+    "paired_lots": 3609,
+    "avgR_base": -0.131,
+    "avgR_cfg": -0.1205,
+    "dR_trade": 0.0104,
+    "t": 1.97,
+    "dR_trade_market_cost": 0.0126,
+    "t_market_cost": 2.37,
+    "per_setup": {
+     "L3": {
+      "n": 1011,
+      "dR": 0.0207,
+      "t": 1.5,
+      "base": -0.1427,
+      "cfg": -0.122,
+      "wo_best_day_cfg": -0.1462,
+      "stop_share_base": 0.435,
+      "stop_share_cfg": 0.399
+     },
+     "NM-ETF": {
+      "n": 166,
+      "dR": 0.0295,
+      "t": 1.33,
+      "base": 0.2227,
+      "cfg": 0.2521,
+      "wo_best_day_cfg": 0.2317,
+      "stop_share_base": 0.108,
+      "stop_share_cfg": 0.084
+     },
+     "RW3": {
+      "n": 1256,
+      "dR": 0.0063,
+      "t": 0.87,
+      "base": -0.1635,
+      "cfg": -0.1572,
+      "wo_best_day_cfg": -0.1667,
+      "stop_share_base": 0.358,
+      "stop_share_cfg": 0.339
+     },
+     "RW5": {
+      "n": 1176,
+      "dR": 0.0034,
+      "t": 0.6,
+      "base": -0.1361,
+      "cfg": -0.1327,
+      "wo_best_day_cfg": -0.147,
+      "stop_share_base": 0.329,
+      "stop_share_cfg": 0.313
+     }
+    },
+    "book_dR_session": 0.19,
+    "book_t": 1.28,
+    "book_dR_best_day_share": 0.362,
+    "worst5_base": -115.4,
+    "worst5_cfg": -119.1
+   },
+   "CHECK": {
+    "book": {
+     "R_per_session": -2.085,
+     "wo_best_day": -2.217,
+     "best_day_share": null,
+     "worst5": -127.5,
+     "red_per_21": 13.1,
+     "floor20": -167.5
+    },
+    "lots_per_session": 23.9,
+    "paired_lots": 6605,
+    "avgR_base": -0.0854,
+    "avgR_cfg": -0.089,
+    "dR_trade": -0.0035,
+    "t": -1.18,
+    "dR_trade_market_cost": 0.0003,
+    "t_market_cost": 0.09,
+    "per_setup": {
+     "L3": {
+      "n": 1900,
+      "dR": -0.0059,
+      "t": -0.81,
+      "base": -0.1168,
+      "cfg": -0.1226,
+      "wo_best_day_cfg": -0.1331,
+      "stop_share_base": 0.444,
+      "stop_share_cfg": 0.422
+     },
+     "NM-ETF": {
+      "n": 248,
+      "dR": -0.0091,
+      "t": -3.13,
+      "base": 0.0325,
+      "cfg": 0.0233,
+      "wo_best_day_cfg": 0.0138,
+      "stop_share_base": 0.149,
+      "stop_share_cfg": 0.149
+     },
+     "RW3": {
+      "n": 2355,
+      "dR": -0.0048,
+      "t": -1.24,
+      "base": -0.0904,
+      "cfg": -0.0953,
+      "wo_best_day_cfg": -0.1064,
+      "stop_share_base": 0.346,
+      "stop_share_cfg": 0.33
+     },
+     "RW5": {
+      "n": 2102,
+      "dR": 0.0007,
+      "t": 0.19,
+      "base": -0.0654,
+      "cfg": -0.0647,
+      "wo_best_day_cfg": -0.0725,
+      "stop_share_base": 0.323,
+      "stop_share_cfg": 0.303
+     }
+    },
+    "book_dR_session": -0.04,
+    "book_t": -0.45,
+    "book_dR_best_day_share": null,
+    "worst5_base": -128.4,
+    "worst5_cfg": -127.5,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": true,
+     "best_day_share_lt_50": false
+    }
+   },
+   "T2": {
+    "book": {
+     "R_per_session": -1.575,
+     "wo_best_day": -1.608,
+     "best_day_share": null,
+     "worst5": -78.8,
+     "red_per_21": 12.4,
+     "floor20": -86.8
+    },
+    "lots_per_session": 10.3,
+    "paired_lots": 4421,
+    "avgR_base": -0.1481,
+    "avgR_cfg": -0.1516,
+    "dR_trade": -0.0035,
+    "t": -0.97,
+    "dR_trade_market_cost": -0.002,
+    "t_market_cost": -0.55,
+    "per_setup": {
+     "L3": {
+      "n": 1107,
+      "dR": -0.0006,
+      "t": -0.06,
+      "base": -0.1405,
+      "cfg": -0.1411,
+      "wo_best_day_cfg": -0.1534,
+      "stop_share_base": 0.429,
+      "stop_share_cfg": 0.398
+     },
+     "NM-ETF": {
+      "n": 255,
+      "dR": -0.0163,
+      "t": -1.39,
+      "base": -0.0499,
+      "cfg": -0.0663,
+      "wo_best_day_cfg": -0.0861,
+      "stop_share_base": 0.235,
+      "stop_share_cfg": 0.224
+     },
+     "RW3": {
+      "n": 1464,
+      "dR": -0.0048,
+      "t": -1.18,
+      "base": -0.1478,
+      "cfg": -0.1525,
+      "wo_best_day_cfg": -0.1605,
+      "stop_share_base": 0.363,
+      "stop_share_cfg": 0.346
+     },
+     "RW5": {
+      "n": 1595,
+      "dR": -0.0024,
+      "t": -0.57,
+      "base": -0.1693,
+      "cfg": -0.1717,
+      "wo_best_day_cfg": -0.1785,
+      "stop_share_base": 0.345,
+      "stop_share_cfg": 0.324
+     }
+    },
+    "book_dR_session": -0.041,
+    "book_t": -0.95,
+    "book_dR_best_day_share": null,
+    "worst5_base": -72.4,
+    "worst5_cfg": -78.8,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": false,
+     "best_day_share_lt_50": false
+    }
+   },
+   "PASS": false
+  },
+  "C2": {
+   "FIT": {
+    "book": {
+     "R_per_session": -2.591,
+     "wo_best_day": -2.81,
+     "best_day_share": null,
+     "worst5": -119.1,
+     "red_per_21": 13.6,
+     "floor20": -129.2
+    },
+    "lots_per_session": 21.3,
+    "paired_lots": 3609,
+    "avgR_base": -0.131,
+    "avgR_cfg": -0.1205,
+    "dR_trade": 0.0104,
+    "t": 1.97,
+    "dR_trade_market_cost": 0.0126,
+    "t_market_cost": 2.37,
+    "per_setup": {
+     "L3": {
+      "n": 1011,
+      "dR": 0.0207,
+      "t": 1.5,
+      "base": -0.1427,
+      "cfg": -0.122,
+      "wo_best_day_cfg": -0.1462,
+      "stop_share_base": 0.435,
+      "stop_share_cfg": 0.399
+     },
+     "NM-ETF": {
+      "n": 166,
+      "dR": 0.0295,
+      "t": 1.33,
+      "base": 0.2227,
+      "cfg": 0.2521,
+      "wo_best_day_cfg": 0.2317,
+      "stop_share_base": 0.108,
+      "stop_share_cfg": 0.084
+     },
+     "RW3": {
+      "n": 1256,
+      "dR": 0.0063,
+      "t": 0.87,
+      "base": -0.1635,
+      "cfg": -0.1572,
+      "wo_best_day_cfg": -0.1667,
+      "stop_share_base": 0.358,
+      "stop_share_cfg": 0.339
+     },
+     "RW5": {
+      "n": 1176,
+      "dR": 0.0034,
+      "t": 0.6,
+      "base": -0.1361,
+      "cfg": -0.1327,
+      "wo_best_day_cfg": -0.147,
+      "stop_share_base": 0.329,
+      "stop_share_cfg": 0.313
+     }
+    },
+    "book_dR_session": 0.19,
+    "book_t": 1.28,
+    "book_dR_best_day_share": 0.362,
+    "worst5_base": -115.4,
+    "worst5_cfg": -119.1
+   },
+   "CHECK": {
+    "book": {
+     "R_per_session": -2.09,
+     "wo_best_day": -2.222,
+     "best_day_share": null,
+     "worst5": -127.5,
+     "red_per_21": 13.1,
+     "floor20": -168.4
+    },
+    "lots_per_session": 23.9,
+    "paired_lots": 6605,
+    "avgR_base": -0.0854,
+    "avgR_cfg": -0.0891,
+    "dR_trade": -0.0036,
+    "t": -1.21,
+    "dR_trade_market_cost": 0.0002,
+    "t_market_cost": 0.06,
+    "per_setup": {
+     "L3": {
+      "n": 1900,
+      "dR": -0.0057,
+      "t": -0.79,
+      "base": -0.1168,
+      "cfg": -0.1225,
+      "wo_best_day_cfg": -0.1329,
+      "stop_share_base": 0.444,
+      "stop_share_cfg": 0.422
+     },
+     "NM-ETF": {
+      "n": 248,
+      "dR": -0.0091,
+      "t": -3.13,
+      "base": 0.0325,
+      "cfg": 0.0233,
+      "wo_best_day_cfg": 0.0138,
+      "stop_share_base": 0.149,
+      "stop_share_cfg": 0.149
+     },
+     "RW3": {
+      "n": 2355,
+      "dR": -0.0054,
+      "t": -1.37,
+      "base": -0.0904,
+      "cfg": -0.0959,
+      "wo_best_day_cfg": -0.107,
+      "stop_share_base": 0.346,
+      "stop_share_cfg": 0.33
+     },
+     "RW5": {
+      "n": 2102,
+      "dR": 0.0009,
+      "t": 0.25,
+      "base": -0.0654,
+      "cfg": -0.0645,
+      "wo_best_day_cfg": -0.0723,
+      "stop_share_base": 0.323,
+      "stop_share_cfg": 0.303
+     }
+    },
+    "book_dR_session": -0.046,
+    "book_t": -0.51,
+    "book_dR_best_day_share": null,
+    "worst5_base": -128.4,
+    "worst5_cfg": -127.5,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": true,
+     "best_day_share_lt_50": false
+    }
+   },
+   "T2": {
+    "book": {
+     "R_per_session": -1.575,
+     "wo_best_day": -1.609,
+     "best_day_share": null,
+     "worst5": -78.8,
+     "red_per_21": 12.4,
+     "floor20": -86.8
+    },
+    "lots_per_session": 10.3,
+    "paired_lots": 4421,
+    "avgR_base": -0.1481,
+    "avgR_cfg": -0.1516,
+    "dR_trade": -0.0035,
+    "t": -0.98,
+    "dR_trade_market_cost": -0.002,
+    "t_market_cost": -0.56,
+    "per_setup": {
+     "L3": {
+      "n": 1107,
+      "dR": -0.0007,
+      "t": -0.07,
+      "base": -0.1405,
+      "cfg": -0.1412,
+      "wo_best_day_cfg": -0.1535,
+      "stop_share_base": 0.429,
+      "stop_share_cfg": 0.398
+     },
+     "NM-ETF": {
+      "n": 255,
+      "dR": -0.0163,
+      "t": -1.39,
+      "base": -0.0499,
+      "cfg": -0.0663,
+      "wo_best_day_cfg": -0.0861,
+      "stop_share_base": 0.235,
+      "stop_share_cfg": 0.224
+     },
+     "RW3": {
+      "n": 1464,
+      "dR": -0.0048,
+      "t": -1.18,
+      "base": -0.1478,
+      "cfg": -0.1525,
+      "wo_best_day_cfg": -0.1605,
+      "stop_share_base": 0.363,
+      "stop_share_cfg": 0.346
+     },
+     "RW5": {
+      "n": 1595,
+      "dR": -0.0024,
+      "t": -0.57,
+      "base": -0.1693,
+      "cfg": -0.1717,
+      "wo_best_day_cfg": -0.1785,
+      "stop_share_base": 0.345,
+      "stop_share_cfg": 0.324
+     }
+    },
+    "book_dR_session": -0.042,
+    "book_t": -0.96,
+    "book_dR_best_day_share": null,
+    "worst5_base": -72.4,
+    "worst5_cfg": -78.8,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": false,
+     "best_day_share_lt_50": false
+    }
+   },
+   "PASS": false
+  },
+  "C3": {
+   "FIT": {
+    "book": {
+     "R_per_session": -2.652,
+     "wo_best_day": -2.872,
+     "best_day_share": null,
+     "worst5": -134.2,
+     "red_per_21": 13.2,
+     "floor20": -131.9
+    },
+    "lots_per_session": 21.2,
+    "paired_lots": 3609,
+    "avgR_base": -0.131,
+    "avgR_cfg": -0.1239,
+    "dR_trade": 0.0071,
+    "t": 0.94,
+    "dR_trade_market_cost": 0.0091,
+    "t_market_cost": 1.21,
+    "per_setup": {
+     "L3": {
+      "n": 1011,
+      "dR": 0.0047,
+      "t": 0.26,
+      "base": -0.1427,
+      "cfg": -0.138,
+      "wo_best_day_cfg": -0.1625,
+      "stop_share_base": 0.435,
+      "stop_share_cfg": 0.382
+     },
+     "NM-ETF": {
+      "n": 166,
+      "dR": 0.0458,
+      "t": 1.33,
+      "base": 0.2227,
+      "cfg": 0.2685,
+      "wo_best_day_cfg": 0.2503,
+      "stop_share_base": 0.108,
+      "stop_share_cfg": 0.066
+     },
+     "RW3": {
+      "n": 1256,
+      "dR": 0.0071,
+      "t": 0.7,
+      "base": -0.1635,
+      "cfg": -0.1564,
+      "wo_best_day_cfg": -0.1655,
+      "stop_share_base": 0.358,
+      "stop_share_cfg": 0.32
+     },
+     "RW5": {
+      "n": 1176,
+      "dR": 0.0037,
+      "t": 0.41,
+      "base": -0.1361,
+      "cfg": -0.1324,
+      "wo_best_day_cfg": -0.1467,
+      "stop_share_base": 0.329,
+      "stop_share_cfg": 0.289
+     }
+    },
+    "book_dR_session": 0.128,
+    "book_t": 0.6,
+    "book_dR_best_day_share": 0.633,
+    "worst5_base": -115.4,
+    "worst5_cfg": -134.2
+   },
+   "CHECK": {
+    "book": {
+     "R_per_session": -2.166,
+     "wo_best_day": -2.309,
+     "best_day_share": null,
+     "worst5": -137.4,
+     "red_per_21": 12.9,
+     "floor20": -178.9
+    },
+    "lots_per_session": 23.4,
+    "paired_lots": 6605,
+    "avgR_base": -0.0854,
+    "avgR_cfg": -0.0885,
+    "dR_trade": -0.0031,
+    "t": -0.61,
+    "dR_trade_market_cost": 0.0005,
+    "t_market_cost": 0.1,
+    "per_setup": {
+     "L3": {
+      "n": 1900,
+      "dR": -0.0074,
+      "t": -0.56,
+      "base": -0.1168,
+      "cfg": -0.1242,
+      "wo_best_day_cfg": -0.1386,
+      "stop_share_base": 0.444,
+      "stop_share_cfg": 0.391
+     },
+     "NM-ETF": {
+      "n": 248,
+      "dR": -0.0294,
+      "t": -2.33,
+      "base": 0.0325,
+      "cfg": 0.003,
+      "wo_best_day_cfg": -0.007,
+      "stop_share_base": 0.149,
+      "stop_share_cfg": 0.145
+     },
+     "RW3": {
+      "n": 2355,
+      "dR": 0.0001,
+      "t": 0.02,
+      "base": -0.0904,
+      "cfg": -0.0903,
+      "wo_best_day_cfg": -0.1014,
+      "stop_share_base": 0.346,
+      "stop_share_cfg": 0.307
+     },
+     "RW5": {
+      "n": 2102,
+      "dR": 0.0004,
+      "t": 0.07,
+      "base": -0.0654,
+      "cfg": -0.0651,
+      "wo_best_day_cfg": -0.0731,
+      "stop_share_base": 0.323,
+      "stop_share_cfg": 0.285
+     }
+    },
+    "book_dR_session": -0.122,
+    "book_t": -0.85,
+    "book_dR_best_day_share": null,
+    "worst5_base": -128.4,
+    "worst5_cfg": -137.4,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": false,
+     "best_day_share_lt_50": false
+    }
+   },
+   "T2": {
+    "book": {
+     "R_per_session": -1.457,
+     "wo_best_day": -1.49,
+     "best_day_share": null,
+     "worst5": -80.9,
+     "red_per_21": 12.3,
+     "floor20": -89.2
+    },
+    "lots_per_session": 10.2,
+    "paired_lots": 4421,
+    "avgR_base": -0.1481,
+    "avgR_cfg": -0.1454,
+    "dR_trade": 0.0027,
+    "t": 0.43,
+    "dR_trade_market_cost": 0.0041,
+    "t_market_cost": 0.65,
+    "per_setup": {
+     "L3": {
+      "n": 1107,
+      "dR": 0.0212,
+      "t": 1.32,
+      "base": -0.1405,
+      "cfg": -0.1193,
+      "wo_best_day_cfg": -0.1313,
+      "stop_share_base": 0.429,
+      "stop_share_cfg": 0.362
+     },
+     "NM-ETF": {
+      "n": 255,
+      "dR": -0.015,
+      "t": -0.56,
+      "base": -0.0499,
+      "cfg": -0.065,
+      "wo_best_day_cfg": -0.0847,
+      "stop_share_base": 0.235,
+      "stop_share_cfg": 0.204
+     },
+     "RW3": {
+      "n": 1464,
+      "dR": -0.0053,
+      "t": -0.8,
+      "base": -0.1478,
+      "cfg": -0.1531,
+      "wo_best_day_cfg": -0.161,
+      "stop_share_base": 0.363,
+      "stop_share_cfg": 0.324
+     },
+     "RW5": {
+      "n": 1595,
+      "dR": 0.0001,
+      "t": 0.02,
+      "base": -0.1693,
+      "cfg": -0.1692,
+      "wo_best_day_cfg": -0.176,
+      "stop_share_base": 0.345,
+      "stop_share_cfg": 0.296
+     }
+    },
+    "book_dR_session": 0.076,
+    "book_t": 1.12,
+    "book_dR_best_day_share": 0.365,
+    "worst5_base": -72.4,
+    "worst5_cfg": -80.9,
+    "pass": {
+     "dR_t": false,
+     "setups_2of3": false,
+     "none_worse_003": true,
+     "worst5_le_5pct": false,
+     "best_day_share_lt_50": true
+    }
+   },
+   "PASS": false
+  }
+ },
+ "base_LO_off": {
+  "FIT": {
+   "R_per_session": -4.238,
+   "wo_best_day": -4.483,
+   "best_day_share": null,
+   "worst5": -204.5,
+   "red_per_21": 13.2,
+   "floor20": -201.0
+  },
+  "CHECK": {
+   "R_per_session": -3.034,
+   "wo_best_day": -3.246,
+   "best_day_share": null,
+   "worst5": -178.1,
+   "red_per_21": 13.1,
+   "floor20": -237.2
+  },
+  "T2": {
+   "R_per_session": -1.751,
+   "wo_best_day": -1.791,
+   "best_day_share": null,
+   "worst5": -122.0,
+   "red_per_21": 12.2,
+   "floor20": -123.5
+  }
+ }
+}
