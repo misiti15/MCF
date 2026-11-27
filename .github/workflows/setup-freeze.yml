@@ -16,5 +16,6 @@ jobs:
       - name: Setup changes outside market hours only
         # Logic and the list of watched paths / config blocks: mcf/research/setup_freeze.py (tests/test_setup_freeze.py).
         # OPS-FREEZE (inspector 11-27): also config/account_*.yaml, config/longhold.yaml and the default.yaml blocks
-        # risk / account / costs / session. Window unchanged: 09:30-16:00 ET weekdays.
+        # risk / account / costs / session. OPS-FREEZE2: every config `module:` file, arena_rotation (+ its reps file),
+        # mcf/execution/risk.py and mcf/rotation.py. Window unchanged: 09:30-16:00 ET weekdays.
         run: python3 -m mcf.research.setup_freeze --base "${{ github.event.pull_request.base.sha }}"
