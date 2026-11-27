@@ -1,0 +1,91 @@
+{
+ "cands": 52544,
+ "by_setup": {
+  "L3-gap-slope-fromopen-FD": 36563,
+  "RW3-gapdn-rsi5pop-flowsell-short-FD": 7694,
+  "RW5-heat30-flowsell-rsi5pop-gapdn-short-FD": 7536,
+  "NM-ETF-late-dip-di-long": 751
+ },
+ "days": {
+  "FIT": 170,
+  "CHECK": 276,
+  "T2": 415
+ },
+ "parity_mode0_vs_e4nb": {
+  "BASE": {
+   "max_abs_day": 0.0,
+   "lots_equal": true
+  },
+  "LO": {
+   "max_abs_day": 0.0,
+   "lots_equal": true
+  }
+ },
+ "rule30": {
+  "BASE|OPEN1": {
+   "l3_keep_share": 0.6192570869990225,
+   "top_decile_kept": 0.48048780487804876
+  },
+  "BASE|OPEN2": {
+   "l3_keep_share": 0.8558162267839687,
+   "top_decile_kept": 0.7853658536585366
+  },
+  "BASE|GAP30": {
+   "l3_keep_share": 0.7810361681329423,
+   "top_decile_kept": 0.43414634146341463
+  },
+  "BASE|GAP60": {
+   "l3_keep_share": 0.6187683284457478,
+   "top_decile_kept": 0.36097560975609755
+  },
+  "BASE|GAP120": {
+   "l3_keep_share": 0.4980449657869013,
+   "top_decile_kept": 0.3463414634146341
+  },
+  "BASE|NOSTOP": {
+   "l3_keep_share": 0.8944281524926686,
+   "top_decile_kept": 0.8439024390243902
+  },
+  "BASE|FIRST1": {
+   "l3_keep_share": 0.4274193548387097,
+   "top_decile_kept": 0.33170731707317075
+  },
+  "LO|OPEN1": {
+   "l3_keep_share": 0.6980379115397406,
+   "top_decile_kept": 0.5481727574750831
+  },
+  "LO|OPEN2": {
+   "l3_keep_share": 0.8932490854672431,
+   "top_decile_kept": 0.840531561461794
+  },
+  "LO|GAP30": {
+   "l3_keep_share": 0.7811772530761556,
+   "top_decile_kept": 0.49169435215946844
+  },
+  "LO|GAP60": {
+   "l3_keep_share": 0.6484868639840372,
+   "top_decile_kept": 0.4219269102990033
+  },
+  "LO|GAP120": {
+   "l3_keep_share": 0.5453940804788826,
+   "top_decile_kept": 0.4119601328903654
+  },
+  "LO|NOSTOP": {
+   "l3_keep_share": 0.8742933155969405,
+   "top_decile_kept": 0.893687707641196
+  },
+  "LO|FIRST1": {
+   "l3_keep_share": 0.4718989025606917,
+   "top_decile_kept": 0.39867109634551495
+  }
+ },
+ "verdict_bench": {
+  "OPEN1": "FAIL",
+  "OPEN2": "FAIL",
+  "GAP30": "FAIL",
+  "GAP60": "FAIL",
+  "GAP120": "FAIL",
+  "NOSTOP": "FAIL",
+  "FIRST1": "LEAD-bench"
+ }
+}

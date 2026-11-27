@@ -1,0 +1,36 @@
+2026-11-27: 444 trades, 262 losers appended to patterns.csv
+account                            ondeck  primary  testing_a  testing_b  testing_c  testing_d  testing_e  testing_f
+ltype                                                                                                               
+gave_back_gains                      -0.3     -1.0       -0.4       -0.2       -1.7        0.0       -1.5       -2.6
+late_hold                            -1.2     -2.2      -31.6       -1.0       -6.6       -1.8       -7.7       -4.2
+near_target_then_stopped              0.0      0.0        0.0        0.0       -1.0        0.0        0.0        0.0
+never_worked                         -2.3     -2.2       -5.9       -2.2       -6.5        0.0       -8.2       -3.4
+small MFE then failed (0.15-0.5R)    -3.2     -2.2       -3.3       -1.2       -3.0        0.0       -7.7       -2.2
+wrong_side_after_big_swing            0.0      0.0       -1.8        0.0        0.0        0.0        0.0       -0.8
+
+loss type totals: {'gave_back_gains': {'size': 18, 'sum': -7.77}, 'late_hold': {'size': 162, 'sum': -56.4}, 'near_target_then_stopped': {'size': 1, 'sum': -1.04}, 'never_worked': {'size': 52, 'sum': -30.64}, 'small MFE then failed (0.15-0.5R)': {'size': 26, 'sum': -22.85}, 'wrong_side_after_big_swing': {'size': 3, 'sum': -2.58}}
+
+same-symbol stacking (lot = nth entry of the same setup on the symbol today):
+        size     sum   mean
+stack                     
+lot1    381 -60.706 -0.159
+lot2+    63 -12.957 -0.206
+
+leveraged/inverse ETPs by underlying (exposure = market sign of the position):
+                         size   sum
+lev  exposure account              
+IWM   1       testing_e     1  0.22
+NVDA  1       testing_b     1  0.16
+QQQ  -1       testing_a     2 -1.19
+      1       testing_c     1  0.60
+              testing_e     2  0.69
+SOXX -1       testing_a     1 -0.35
+              testing_e     1 -0.61
+SPY  -1       testing_a     2 -0.90
+      1       testing_a     1 -0.11
+              testing_c     1  0.92
+              testing_e     2  1.16
+XLK  -1       testing_a     1 -0.45
+      1       testing_e     1  0.24
+
+all trades by market exposure sign: {-1: {'size': 239, 'sum': -83.456, 'mean': -0.349}, 1: {'size': 205, 'sum': 9.793, 'mean': 0.048}}
