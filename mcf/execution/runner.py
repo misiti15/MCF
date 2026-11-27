@@ -1697,6 +1697,7 @@ class PaperRunner:
             info["tier"] = "extended"
         if getattr(getattr(self, "netbeta", None), "enabled", False):
             self._netbeta_tag(sig, info, px)            # B8 shadow (off by default): journal tag only, never blocks
+        self._spreadfloor_tag(sig, info, px)              # SPREADFLOOR log only (research/spreadfloor_1127): never blocks
         info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
         self._mtm_lot[coid] = (px, sig.stop)              # intraday tracker only (poll snapshot); never read by trading
         if self.dry_run:
@@ -2387,6 +2388,19 @@ class PaperRunner:
                                           "unpriced_lots": skipped}
         except Exception as e:
             print(f"B8 shadow failed: {type(e).__name__}: {e} (no effect on trading)")
+
+    def _spreadfloor_tag(self, sig, info: dict, px: float):
+        """SPREADFLOOR shadow logger (mcf/execution/spreadfloor.py): tags the entry with its decision-time quoted spread,
+        stop distance in spreads / bp / cents and whether a 6- / 8-spread floor WOULD have skipped it. Log only: runs
+        after sizing, nothing reads it, never blocks, never raises. live.spreadfloor_log: false switches it off."""
+        try:
+            if not self.live.get("spreadfloor_log", True):
+                return
+            from . import spreadfloor as _sf
+
+            info[_sf.KEY] = _sf.fields(info.get("bid"), info.get("ask"), px, sig.stop)
+        except Exception as e:
+            print(f"spreadfloor log failed: {type(e).__name__}: {e} (no effect on trading)")
 
     def _safety_status(self) -> dict:
         try:
