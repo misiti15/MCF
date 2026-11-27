@@ -53,3 +53,8 @@ Mean net/gross bps per split, daily t per split and pooled, avg w/o best day + b
 decile monotonicity (Spearman of decile mean vs decile rank, CHECK), LIVE-L stress, mean names per decile.
 Goal metrics for any passing cell (or the best cell if none): red days per 21, worst-5 sessions, 20-session floor (bps).
 DECISION draft only if a cell passes; it would go to research/backlog.jsonl as a setup idea, never straight to config.
+
+## Addendum A (2026-11-26 ~22:05 ET, after the build and before any score)
+The bar caches carry post-13:00 prints on half days, so "SPY's last bar < 15:00" found no half day. Half days now come
+from the NYSE list (mcf/execution/market_calendar.PAST_EARLY_CLOSES + 2022-11-25, 2023-07-03, 2023-11-24); exit 12:55
+and no 14:00 cell on them, as registered. Nothing else changes.
