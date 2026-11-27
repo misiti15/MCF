@@ -72,3 +72,11 @@ REPORT (no direct backlog / config edit).
 * No live trades are used, so no live-window ledger rule changes enter the figures.
 * Dividend ex-dates lower the gap part of R1 on raw prices (~4 days a year per ETF); accepted, noted as a caveat.
 * Results by year and the gross-vs-cost decomposition are reported for every finalist.
+
+## Addendum A (2026-11-27, after a code dry run on IDX4 rows and before any config / split was scored)
+The registered half-day detector (SPY volume 13:05-15:54 < 3% of the session) found only 1 half day: the bar data carry
+heavy post-13:00 prints on half days (shares 2-20%), overlapping normal days. Half days now come from the fixed NYSE
+early-close list: 2016-11-25; 2017-07-03, 11-24; 2018-07-03, 11-23, 12-24; 2019-07-03, 11-29, 12-24; 2020-11-27,
+12-24; 2021-11-26; 2022-11-25; 2023-07-03, 11-24; 2024-07-03 (+ 2024-11-29 / 12-24 inside the locked block) and
+mcf/execution/market_calendar.PAST_EARLY_CLOSES for 2025-2026. The dry run (code check) printed only unconditional
+pooled row means (always-long / always-short gross on IDX4, all splits together); nothing else changes.
