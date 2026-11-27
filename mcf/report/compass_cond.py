@@ -13,7 +13,12 @@ move to the close, next 5 / 10 / 30 / 60-min direction). Cells: time x from-open
 Baseline = the 2-year history (locked block 2024-11-01..2025-02-28 never read; research/compass_5m/build_cond.py
 writes research/compass_5m/conditional_obs.csv.gz). The data branch mcf-data-compass carries compass/cond_obs.csv
 (seeded from the baseline, one session appended per night; idempotent), compass/cond_stats.csv and
-compass/cond_stats.json (the dashboard / compass_live read the JSON). Educational only - not financial advice.
+compass/cond_stats.json (the dashboard / compass_live read the JSON).
+Half days (inspector 11-27): a 13:00 early close is not a full session. fetch_spy stops at the market-calendar close
+(Alpaca prints after-hours trades until 16:00, which used to pass the full-session check and store 16:00 "closes"),
+so update() skips the day; read_obs() drops any stored row of a known early-close day (EARLY_CLOSE_DAYS: 2025-07-03,
+2025-11-28, 2025-12-24 were in the seed and the data branch), so the nightly run rewrites cond_obs.csv clean.
+Educational only - not financial advice.
 """
 
 from __future__ import annotations
@@ -26,6 +31,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from ..data.bars import close_min, early_close_days, next_trading_day
 from . import compass_live as CL
 
 ROOT = CL.ROOT
@@ -40,6 +46,11 @@ OBS_COLS = ["date", "T", "open", "px", "close", "prev_close", "fo", "vs_prev", "
             "eod_prev", "next5", "next10", "next30", "next60"]
 
 lab = CL.lab
+EARLY_CLOSE_DAYS = early_close_days()                       # the market calendar's known early closes
+# the session after an early close: its previous close is unknown (research/compass_5m/build_cond.py: "no previous
+# close across" a dropped half day), so its vs-previous-close fields are blank
+AFTER_EARLY_CLOSE = frozenset(next_trading_day(d) for d in EARLY_CLOSE_DAYS)
+PREV_COLS = ["prev_close", "vs_prev", "gap", "eod_prev"]
 
 
 def bucket(fo: float) -> str:
@@ -160,12 +171,28 @@ def to_json(C: pd.DataFrame, obs: pd.DataFrame) -> dict:
 
 
 def read_obs(path: Path) -> pd.DataFrame:
+    """Stored observations (the data-branch file, else the seed), without early-close days (not full sessions)."""
     if path.exists():
-        return pd.read_csv(path, dtype={"date": str, "T": str})
-    if SEED.exists():
+        obs = pd.read_csv(path, dtype={"date": str, "T": str})
+    elif SEED.exists():
         with gzip.open(SEED, "rt") as f:
-            return pd.read_csv(f, dtype={"date": str, "T": str})
-    return pd.DataFrame(columns=OBS_COLS)
+            obs = pd.read_csv(f, dtype={"date": str, "T": str})
+    else:
+        return pd.DataFrame(columns=OBS_COLS)
+    return drop_half_days(obs)
+
+
+def drop_half_days(obs: pd.DataFrame) -> pd.DataFrame:
+    """Rows of early-close sessions removed (their 13:00-16:00 marks / closes were after-hours prints), and the next
+    session's previous-close fields blanked (they used the half day's 16:00 after-hours print as its close)."""
+    d = obs["date"].astype(str)
+    bad = d.isin(EARLY_CLOSE_DAYS)
+    nxt = d.isin(AFTER_EARLY_CLOSE)
+    if not bad.any() and not (nxt.any() and obs.loc[nxt, PREV_COLS].notna().any().any()):
+        return obs
+    obs = obs.copy()
+    obs.loc[nxt, PREV_COLS] = np.nan
+    return obs[~bad].reset_index(drop=True)
 
 
 def lookup(cond: dict | None, T: int, fo: float, px: float | None) -> dict | None:
@@ -188,13 +215,15 @@ def lookup(cond: dict | None, T: int, fo: float, px: float | None) -> dict | Non
 def fetch_spy(day: str, log=print) -> pd.DataFrame | None:
     from ..replay import store
 
-    start, end = pd.Timestamp(f"{day} 09:30", tz=NY), pd.Timestamp(f"{day} 16:00", tz=NY)
+    c = close_min(day)                                       # 16:00, or 13:00 on a half day: no after-hours prints
+    start, end = pd.Timestamp(f"{day} 09:30", tz=NY), pd.Timestamp(f"{day} {c // 60:02d}:{c % 60:02d}", tz=NY)
     log(f"compass_cond: fetching SPY 1-minute bars {day}")
     df = store._fetch_bars(["SPY"], start.tz_convert("UTC").isoformat(), end.tz_convert("UTC").isoformat(), "1Min")
     if not len(df):
         return None
     df = df.set_index("ts")
     df.index = df.index.tz_convert(NY)
+    df = df[df.index < end]
     return df[["open", "high", "low", "close", "volume"]].astype(float).sort_index()
 
 
@@ -211,7 +240,7 @@ def update(out: Path, day: str, spy_fn=fetch_spy, log=print) -> int:
     else:
         prev = obs[obs.date < day].sort_values(["date", "T"])
         pc = None
-        if len(prev):
+        if len(prev) and day not in AFTER_EARLY_CLOSE:          # no previous close across a dropped half day
             pd_, pcl = str(prev.date.iloc[-1]), float(prev.close.iloc[-1])
             if (pd.Timestamp(day) - pd.Timestamp(pd_)).days <= 5:          # previous session, not across a hole
                 pc = pcl
@@ -235,7 +264,8 @@ def missing_days(out: Path, day: str, lookback: int = 10) -> list[str]:
     last = str(obs.date.max())
     lo = max(pd.Timestamp(last) + pd.Timedelta(days=1), pd.Timestamp(day) - pd.Timedelta(days=lookback))
     have = set(obs.date.astype(str))
-    return [str(d.date()) for d in pd.bdate_range(lo, pd.Timestamp(day) - pd.Timedelta(days=1)) if str(d.date()) not in have]
+    return [str(d.date()) for d in pd.bdate_range(lo, pd.Timestamp(day) - pd.Timedelta(days=1))
+            if str(d.date()) not in have and str(d.date()) not in EARLY_CLOSE_DAYS]   # a half day is never stored
 
 
 def catch_up(out: Path, day: str, spy_fn=fetch_spy, log=print) -> int:

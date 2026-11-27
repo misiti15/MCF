@@ -26,7 +26,7 @@ assert not ((h.index >= pd.Timestamp("2024-11-01", tz=CC.NY)) & (h.index < pd.Ti
 rows, prev = [], None
 for d, g in h.groupby(h.index.strftime("%Y-%m-%d")):
     m = g.index.hour * 60 + g.index.minute
-    g = g[(m >= 570) & (m < 960)]
+    g = g[(m >= 570) & (m < min(960, CC.close_min(d)))]   # inspector 11-27: a half day stops at 13:00 (no after-hours)
     if not len(g) or (g.index.hour * 60 + g.index.minute).max() < 955:
         prev = None                                    # half day / partial: dropped, and no previous close across it
         continue
