@@ -123,3 +123,40 @@ def test_reader_falls_back_to_journal_and_bars():
     assert c.loc[pd.Timestamp(f"{day} 10:10", tz=NY), "total_r"] == 0.9          # booked R from the exit minute
     c2, _, src2 = I.curve_from_journal(t, day, 5, {})
     assert src2 == "journal (no bars: realized only)" and c2["total_r"].iloc[-1] == 0.9
+
+
+def test_branch_journal_copy_removed_on_every_path(tmp_path, monkeypatch):
+    """Inspector 11-27 #11: the temp journal copy from the state branch is deleted on the snapshot path too (it used to
+    be removed only on the journal fallback), and on the no-curve path; a real --state-dir journal is never touched."""
+    import tempfile
+    day = "2026-10-13"
+    _write_fixture(tmp_path, day)
+    from mcf.execution.runner import read_poll_log
+    recs = read_poll_log(str(tmp_path / "polls"), day)
+    made = []
+    real_load = I.load_state
+
+    def fake_load(account, d, state_dir):
+        fd, p = tempfile.mkstemp(suffix=".db", dir=str(tmp_path))
+        os.close(fd)
+        made.append(p)
+        return (recs if len(made) == 1 else []), p
+
+    monkeypatch.setattr(I, "load_state", fake_load)
+    res = I.build(day, "primary", 1, out=str(tmp_path / "out" / "p.png"), log=lambda *a: None)
+    assert res["source"] == "snapshots" and not os.path.exists(made[0])      # snapshot path: copy removed
+    monkeypatch.setattr(I, "journal_trades", lambda j, d: pd.DataFrame())
+    assert I.build(day, "primary", 1, out=str(tmp_path / "out" / "q.png"), log=lambda *a: None) is None
+    assert not os.path.exists(made[1])                                       # no-curve journal path: removed
+    monkeypatch.setattr(I, "journal_trades", lambda j, d: 1 / 0)
+    try:
+        I.build(day, "primary", 1, out=str(tmp_path / "out" / "r.png"), log=lambda *a: None)
+    except ZeroDivisionError:
+        pass
+    assert not os.path.exists(made[2])                                       # error path: removed
+    # a real --state-dir journal stays
+    monkeypatch.setattr(I, "load_state", real_load)
+    j = tmp_path / "journal.db"
+    j.write_bytes(b"x")
+    res = I.build(day, "primary", 1, state_dir=str(tmp_path), out=str(tmp_path / "out" / "s.png"), log=lambda *a: None)
+    assert res["source"] == "snapshots" and j.exists()
