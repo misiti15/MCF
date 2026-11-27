@@ -149,4 +149,3 @@ Both were carried by 11-20 (before BRAKE-BURST) and have made 0 trades since. Ke
 
 ## Concentration
 All four candidates and three of Primary's four members are gap-down / overbought short fades. On 11-25 the family lost together: L3-fromopen hit its cap, its latch and the −20R halt in Primary, while the same family lost −144.6R / −219.1R / −52.4R outside Primary.
-===== end REPORT.md =====
