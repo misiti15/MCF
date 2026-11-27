@@ -1789,6 +1789,7 @@ class PaperRunner:
         if bt_tag is not None:
             info.update(bt_tag)
         order_sig = sig if stop_tight is None else _replace(sig, stop=stop_tight)
+        self._spreadfloor_tag(sig, info, px, order_sig.stop)   # SPREADFLOOR log only (research/spreadfloor_1127): never blocks
         info["coid"] = coid                               # restart: the lot's id (several per setup/symbol/day)
         self._mtm_lot[coid] = (px, sig.stop)              # intraday tracker only (poll snapshot); never read by trading
         if self.dry_run:
@@ -2480,6 +2481,24 @@ class PaperRunner:
                                           "unpriced_lots": skipped}
         except Exception as e:
             print(f"B8 shadow failed: {type(e).__name__}: {e} (no effect on trading)")
+
+    def _spreadfloor_tag(self, sig, info: dict, px: float, bracket_stop=None):
+        """SPREADFLOOR shadow logger (mcf/execution/spreadfloor.py): tags the entry with its decision-time quoted spread,
+        stop distance in spreads / bp / cents and whether a 6- / 8-spread floor WOULD have skipped it. Log only: runs
+        after sizing, nothing reads it, never blocks, never raises. live.spreadfloor_log: false switches it off.
+        bracket_stop: the broker order's stop when it differs from the journal stop (AV50 tight stop): logged as
+        `bracket` alongside, the main fields stay on the journal stop."""
+        try:
+            if not self.live.get("spreadfloor_log", True):
+                return
+            from . import spreadfloor as _sf
+
+            tag = _sf.fields(info.get("bid"), info.get("ask"), px, sig.stop)   # journal stop (the R basis)
+            if bracket_stop is not None and bracket_stop != sig.stop and tag.get("quote"):   # AV50 tight bracket stop
+                tag["bracket"] = _sf.fields(info.get("bid"), info.get("ask"), px, bracket_stop)
+            info[_sf.KEY] = tag
+        except Exception as e:
+            print(f"spreadfloor log failed: {type(e).__name__}: {e} (no effect on trading)")
 
     def _safety_status(self) -> dict:
         try:
