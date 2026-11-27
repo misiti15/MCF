@@ -31,6 +31,7 @@ live R on one basis across LR8 (#37). Every number in a post comes from an out f
 - Never `git stash` while jobs write into the worktree; never `git fetch --depth=1` on data branches; keep background jobs < 2 h.
 
 ## Failed (owned)
+- 11-26 guard_decide hard-coded the 15:55 close; on half days (11-27, 12-24) it would refuse forever. Fixed: NYSE_HALF, 12:55.
 - 11-18 famc journal_final selftest 'no journal' case used commit=None = live lookup; passed by luck until the 11-18 commit.
 - 11-12 03:45 claimed buying power drove Gen's early halt; the cap test disproved it (corrected the same night).
 - 11-13 nearly ran a --depth=1 fetch on a data branch mid-run (caught before it executed).

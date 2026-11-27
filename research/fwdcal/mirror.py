@@ -683,12 +683,13 @@ def guard_decide(days, now, commits: dict) -> list[str]:
         return out
     if td in days and now.tz_convert(NY).strftime("%H:%M") < "16:30":
         out.append(f"window includes today ({td}); before 16:30 ET")
-    close = pd.Timestamp(f"{max(days)} 15:55", tz=NY)    # Skeptic 23:50 / Lead 19:00: last commit at or after the last day's close
+    cl = "12:55" if max(days) in NYSE_HALF else "15:55"   # Builder 11-26: early-close sessions (13:00) flatten at 12:55
+    close = pd.Timestamp(f"{max(days)} {cl}", tz=NY)    # Skeptic 23:50 / Lead 19:00: last commit at or after the last day's close
     for acc, t in commits.items():
         if t is None:
             out.append(f"{acc}: no journal.db"); continue
         if t < close:
-            out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} is before {max(days)} 15:55 ET (dead EOD job / pre-close)")
+            out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} is before {max(days)} {cl} ET (dead EOD job / pre-close)")
         elif td in days and (now - t).total_seconds() / 60 < 10:
             out.append(f"{acc}: last journal commit {t.tz_convert(NY):%Y-%m-%d %H:%M} is < 10 min old")
     return out
@@ -707,7 +708,9 @@ def guard_selftest():
              ("past window, dead EOD job (last commit 11:00)", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-13 16:06"), "b": N("2026-11-13 11:00")}, True),
              ("past window, last commit the day before", ["2026-11-12", "2026-11-13"], N("2026-11-14 01:00"), {"a": N("2026-11-12 16:01")}, True),
              ("today, pre-close commit 15:40 (old enough)", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 15:40")}, True),
-             ("today, commit 15:56", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 15:56")}, False)]
+             ("today, commit 15:56", ["2026-11-17"], N("2026-11-17 16:40"), {"a": N("2026-11-17 15:56")}, False),
+             ("half day 11-27, commit 13:02", ["2026-11-27"], N("2026-11-27 16:40"), {"a": N("2026-11-27 13:02")}, False),
+             ("half day 11-27, pre-close commit 12:30", ["2026-11-27"], N("2026-11-27 16:40"), {"a": N("2026-11-27 12:30")}, True)]
     for name, days, now, com, refuse in cases:
         r = guard_decide(days, now, com)
         assert bool(r) == refuse, (name, r)
@@ -719,6 +722,7 @@ def guard_selftest():
     print("guard selftest: skipped-session refusal ok. all cases ok")
 
 
+NYSE_HALF = {"2026-11-27", "2026-12-24"}   # 13:00 early closes (checklist 42: studies drop or flag them)
 NYSE_CLOSED = {"2026-11-26", "2026-12-25", "2027-01-01", "2027-01-18", "2027-02-15"}
 
 
