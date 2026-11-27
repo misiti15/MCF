@@ -1,0 +1,58 @@
+BASE keep R/day {'FIT': -4.238, 'CHECK': -3.034, 'T2': -1.751}
+BASE G05 done
+BASE G07 done
+BASE G37 done
+LO keep R/day {'FIT': -2.781, 'CHECK': -2.045, 'T2': -1.533}
+LO G05 done
+LO G07 done
+LO G37 done
+     ctx       config period  days   ref     dR      t  best_share  dR_wo_best  own_R_day  own_lots_day  ctrl_mean  ctrl_p95    pct  p4_spill_day  dR_vs_xout  t_vs_xout  xout_dR    bar
+1   BASE      ADD-G05  CHECK   276  keep -0.085 -0.287         NaN      -0.200     -0.068         3.598     -0.189    -0.139  100.0        -0.017         NaN        NaN      NaN  False
+2   BASE      ADD-G05     T2   427  keep -0.267 -1.762         NaN      -0.309     -0.260         2.351     -0.105    -0.064    0.0        -0.007         NaN        NaN      NaN  False
+4   BASE   REP-L3-G05  CHECK   276  keep  0.890  1.978       0.128       0.779     -0.061         3.649        NaN       NaN    NaN           NaN      -0.063     -0.215    0.953  False
+5   BASE   REP-L3-G05     T2   427  keep  0.125  0.638       0.376       0.078     -0.260         2.351        NaN       NaN    NaN           NaN      -0.267     -1.762    0.392  False
+7   BASE  REP-RW3-G05  CHECK   276  keep  0.860  2.298       0.125       0.755     -0.069         3.696        NaN       NaN    NaN           NaN      -0.089     -0.297    0.948  False
+8   BASE  REP-RW3-G05     T2   427  keep  0.269  1.609       0.116       0.238     -0.293         2.396        NaN       NaN    NaN           NaN      -0.297     -1.921    0.566  False
+10  BASE  REP-RW5-G05  CHECK   276  keep  0.825  2.126       0.138       0.714     -0.069         3.696        NaN       NaN    NaN           NaN      -0.083     -0.281    0.909  False
+11  BASE  REP-RW5-G05     T2   427  keep  0.476  2.685       0.076       0.441     -0.298         2.400        NaN       NaN    NaN           NaN      -0.298     -1.936    0.774  False
+13  BASE      ADD-G07  CHECK   276  keep -0.385 -1.408         NaN      -0.469     -0.392         4.873     -0.115    -0.055    0.0         0.007         NaN        NaN      NaN  False
+14  BASE      ADD-G07     T2   427  keep -1.035 -3.915         NaN      -1.097     -1.046         4.731     -0.318    -0.267    0.0         0.012         NaN        NaN      NaN  False
+16  BASE   REP-L3-G07  CHECK   276  keep  0.588  1.355       0.146       0.504     -0.369         4.902        NaN       NaN    NaN           NaN      -0.366     -1.330    0.953  False
+17  BASE   REP-L3-G07     T2   427  keep -0.646 -2.205         NaN      -0.707     -1.046         4.731        NaN       NaN    NaN           NaN      -1.038     -3.918    0.392  False
+19  BASE  REP-RW3-G07  CHECK   276  keep  0.549  1.547       0.109       0.491     -0.406         5.007        NaN       NaN    NaN           NaN      -0.399     -1.445    0.948  False
+20  BASE  REP-RW3-G07     T2   427  keep -0.468 -1.658         NaN      -0.529     -1.046         4.731        NaN       NaN    NaN           NaN      -1.034     -3.910    0.566  False
+22  BASE  REP-RW5-G07  CHECK   276  keep  0.510  1.381       0.131       0.444     -0.409         5.000        NaN       NaN    NaN           NaN      -0.399     -1.449    0.909  False
+23  BASE  REP-RW5-G07     T2   427  keep -0.268 -0.917         NaN      -0.324     -1.046         4.731        NaN       NaN    NaN           NaN      -1.042     -3.929    0.774  False
+25  BASE      ADD-G37  CHECK   276  keep -0.704 -1.720         NaN      -0.880     -0.705         5.036     -0.157    -0.074    0.0         0.001         NaN        NaN      NaN  False
+26  BASE      ADD-G37     T2   427  keep -0.523 -1.748         NaN      -0.613     -0.537         5.407      0.082     0.145    0.0         0.014         NaN        NaN      NaN  False
+28  BASE   REP-L3-G37  CHECK   276  keep  0.253  0.460       0.705       0.075     -0.695         5.678        NaN       NaN    NaN           NaN      -0.700     -1.584    0.953  False
+29  BASE   REP-L3-G37     T2   427  keep -0.139 -0.425         NaN      -0.236     -0.545         5.415        NaN       NaN    NaN           NaN      -0.530     -1.782    0.392  False
+31  BASE  REP-RW3-G37  CHECK   276  keep  0.165  0.312       1.111      -0.018     -0.791         5.384        NaN       NaN    NaN           NaN      -0.784     -1.871    0.948  False
+32  BASE  REP-RW3-G37     T2   427  keep  0.025  0.073       3.924      -0.072     -0.552         5.431        NaN       NaN    NaN           NaN      -0.542     -1.814    0.566  False
+34  BASE  REP-RW5-G37  CHECK   276  keep  0.121  0.229       1.421      -0.051     -0.782         5.453        NaN       NaN    NaN           NaN      -0.787     -1.863    0.909  False
+35  BASE  REP-RW5-G37     T2   427  keep  0.229  0.653       0.420       0.133     -0.552         5.431        NaN       NaN    NaN           NaN      -0.545     -1.821    0.774  False
+37    LO      ADD-G05  CHECK   276  keep -0.137 -0.627         NaN      -0.238     -0.121         2.424     -0.150    -0.100   68.0        -0.015         NaN        NaN      NaN  False
+38    LO      ADD-G05     T2   427  keep -0.197 -1.802         NaN      -0.227     -0.197         1.740     -0.132    -0.086    2.0         0.000         NaN        NaN      NaN  False
+40    LO   REP-L3-G05  CHECK   276  keep  0.635  2.041       0.159       0.535     -0.121         2.424        NaN       NaN    NaN           NaN      -0.131     -0.619    0.766  False
+41    LO   REP-L3-G05     T2   427  keep  0.167  1.124       0.178       0.138     -0.197         1.740        NaN       NaN    NaN           NaN      -0.197     -1.802    0.364  False
+43    LO  REP-RW3-G05  CHECK   276  keep  0.608  2.113       0.124       0.534     -0.121         2.424        NaN       NaN    NaN           NaN      -0.145     -0.668    0.752  False
+44    LO  REP-RW3-G05     T2   427  keep  0.310  2.291       0.085       0.284     -0.197         1.740        NaN       NaN    NaN           NaN      -0.197     -1.803    0.507  False
+46    LO  REP-RW5-G05  CHECK   276  keep  0.345  1.220       0.227       0.267     -0.121         2.424        NaN       NaN    NaN           NaN      -0.148     -0.679    0.493  False
+47    LO  REP-RW5-G05     T2   427  keep  0.436  3.133       0.065       0.408     -0.197         1.740        NaN       NaN    NaN           NaN      -0.197     -1.803    0.632  False
+49    LO      ADD-G07  CHECK   276  keep -0.184 -0.866         NaN      -0.256     -0.184         3.634     -0.091    -0.034    1.0         0.000         NaN        NaN      NaN  False
+50    LO      ADD-G07     T2   427  keep -0.636 -3.942         NaN      -0.676     -0.636         2.902     -0.210    -0.170    0.0         0.000         NaN        NaN      NaN  False
+52    LO   REP-L3-G07  CHECK   276  keep  0.581  1.886       0.115       0.516     -0.184         3.634        NaN       NaN    NaN           NaN      -0.184     -0.866    0.766  False
+53    LO   REP-L3-G07     T2   427  keep -0.271 -1.423         NaN      -0.311     -0.636         2.902        NaN       NaN    NaN           NaN      -0.636     -3.942    0.364  False
+55    LO  REP-RW3-G07  CHECK   276  keep  0.568  1.994       0.086       0.521     -0.184         3.634        NaN       NaN    NaN           NaN      -0.184     -0.866    0.752  False
+56    LO  REP-RW3-G07     T2   427  keep -0.129 -0.702         NaN      -0.165     -0.636         2.902        NaN       NaN    NaN           NaN      -0.636     -3.942    0.507  False
+58    LO  REP-RW5-G07  CHECK   276  keep  0.308  1.054       0.181       0.253     -0.184         3.634        NaN       NaN    NaN           NaN      -0.184     -0.866    0.493  False
+59    LO  REP-RW5-G07     T2   427  keep -0.003 -0.017         NaN      -0.041     -0.636         2.902        NaN       NaN    NaN           NaN      -0.636     -3.942    0.632  False
+61    LO      ADD-G37  CHECK   276  keep -0.432 -1.148         NaN      -0.607     -0.428         4.199     -0.083    -0.014    0.0        -0.003         NaN        NaN      NaN  False
+62    LO      ADD-G37     T2   427  keep -0.554 -2.317         NaN      -0.627     -0.549         4.251      0.122     0.183    0.0        -0.005         NaN        NaN      NaN  False
+64    LO   REP-L3-G37  CHECK   276  keep  0.283  0.647       0.631       0.105     -0.480         4.395        NaN       NaN    NaN           NaN      -0.482     -1.251    0.766  False
+65    LO   REP-L3-G37     T2   427  keep -0.184 -0.715         NaN      -0.254     -0.549         4.251        NaN       NaN    NaN           NaN      -0.548     -2.311    0.364  False
+67    LO  REP-RW3-G37  CHECK   276  keep  0.253  0.543       0.725       0.070     -0.511         4.362        NaN       NaN    NaN           NaN      -0.500     -1.300    0.752  False
+68    LO  REP-RW3-G37     T2   427  keep -0.044 -0.164         NaN      -0.124     -0.549         4.251        NaN       NaN    NaN           NaN      -0.551     -2.314    0.507  False
+70    LO  REP-RW5-G37  CHECK   276  keep -0.021 -0.048         NaN      -0.194     -0.512         4.297        NaN       NaN    NaN           NaN      -0.514     -1.337    0.493  False
+71    LO  REP-RW5-G37     T2   427  keep  0.078  0.281       1.057      -0.004     -0.549         4.251        NaN       NaN    NaN           NaN      -0.554     -2.320    0.632  False
+{'ADD-G05': False, 'ADD-G07': False, 'ADD-G37': False, 'REP-L3-G05': False, 'REP-L3-G07': False, 'REP-L3-G37': False, 'REP-RW3-G05': False, 'REP-RW3-G07': False, 'REP-RW3-G37': False, 'REP-RW5-G05': False, 'REP-RW5-G07': False, 'REP-RW5-G37': False}
