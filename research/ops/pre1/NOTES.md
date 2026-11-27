@@ -59,6 +59,8 @@ force: that would file TODAY's flags under a past date (such a run is tagged tim
   the day before checkout, so the extra lines cost a few seconds each.
 - Research caveat: a late record's flags are as of `fetched_at_et`, not ~09:08. A study of the ETB/shortable flip
   (BORROW-FLIP, ideas.json) should use `timing` to separate morning and late snapshots.
+  `timing` values: on_time (08:45-10:00 ET), late (+ late_min past 10:00), early (a manual run before 08:45 ET or on a
+  weekend, late_min 0), backfill (another day).
 - Tests: tests/test_borrow_record.py (late same-day run records + warns; evening run is still the same ET day; after
   midnight ET skips; missing prior session flagged; workflow no longer drops late runs and skips cheaply once done).
 
