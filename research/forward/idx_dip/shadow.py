@@ -28,6 +28,8 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
+sys.path.insert(0, str(ROOT))
+from mcf.data.bars import cap_at_close, close_min  # noqa: E402  calendar only (no order / trading code)
 OUT = HERE / "forward.csv"
 TZ = "America/New_York"
 FROZEN = "2026-11-27"
@@ -39,7 +41,7 @@ RULES = {
     "IDX6": dict(sig="QQQ", trd="TQQQ", X=1.5, T=595, B=0.20, trail=True),
     "IWM45": dict(sig="IWM", trd="TNA", X=0.75, T=585, B=0.20, trail=True),
 }
-EXIT_MIN, HALF_BUF = 955, 5                      # flat 15:55; half days: last bar close - 5 min
+EXIT_MIN, HALF_BUF = 955, 5                      # flat 15:55; half days: exchange close - 5 min (12:55 on 13:00)
 STOP_FRAC = 0.10
 COLS = ["date", "rule", "sig", "trd", "signal", "idx_low_pct", "trigger_time", "entry_time", "entry", "stop",
         "stop_pct", "exit_time", "exit", "kind", "R_gross", "R_livel", "R_lr8", "R_s12", "status", "frozen"]
@@ -57,13 +59,16 @@ def tmin(idx) -> np.ndarray:
     return np.array([x.hour * 60 + x.minute for x in idx])
 
 
-def _session(df: pd.DataFrame | None) -> pd.DataFrame | None:
+def _session(df: pd.DataFrame | None, close_m: int | None = None) -> pd.DataFrame | None:
+    """RTH bars of one session. Bars starting at/after the exchange close are dropped (mcf.data.bars.cap_at_close):
+    on a half day SIP prints after-hours trades 13:00-16:00, which the fixed 15:59 window kept (IDXFWD fix 11-27)."""
     if df is None or df.empty:
         return None
     df = df[["open", "high", "low", "close"]].copy()
     df.index = pd.DatetimeIndex(df.index).tz_convert(TZ)
     df = df[~df.index.duplicated(keep="last")].sort_index().between_time("09:30", "15:59")
-    return df
+    df = cap_at_close(df, close_for=(lambda d: close_m) if close_m is not None else close_min)
+    return df if len(df) else None
 
 
 def simulate(o, h, l, c, mins, j, fill, stop, side, exit_min, trail):
@@ -110,12 +115,16 @@ def costs(entry, exit_px, risk, kind, tod, cells=None):
     return c_livel, c_lr8, c_2bp
 
 
-def evaluate(ix: pd.DataFrame | None, tx: pd.DataFrame | None, rule: str, cells=None, complete: bool = True) -> dict:
-    """The frozen rule on one session (index bars ix, traded 3x ETF bars tx). Returns the forward.csv fields."""
+def evaluate(ix: pd.DataFrame | None, tx: pd.DataFrame | None, rule: str, cells=None, complete: bool = True,
+             close_m: int | None = None) -> dict:
+    """The frozen rule on one session (index bars ix, traded 3x ETF bars tx). Returns the forward.csv fields.
+    close_m = the exchange close in minutes ET (default: mcf.data.bars.close_min of the session's date)."""
     cf = RULES[rule]
     row = {k: "" for k in COLS}
     row.update(rule=rule, sig=cf["sig"], trd=cf["trd"])
-    ix, tx = _session(ix), _session(tx)
+    if close_m is None and ix is not None and not ix.empty:
+        close_m = close_min(pd.DatetimeIndex(ix.index[:1]).tz_convert(TZ)[0].date())
+    ix, tx = _session(ix, close_m), _session(tx, close_m)
     if ix is None or tx is None:
         row.update(signal="", status="no bars (holiday or not yet open)")
         return row
@@ -137,7 +146,8 @@ def evaluate(ix: pd.DataFrame | None, tx: pd.DataFrame | None, rule: str, cells=
     if len(ix) < 60 or len(tx) < 60:
         row.update(signal="", status="skipped: < 60 bars")
         return row
-    exit_min = min(EXIT_MIN, max(imin[-1], tmn[-1]) + 1 - HALF_BUF)
+    # flat at 15:55, or exchange close - 5 min on a half day (calendar); the study's last-bar rule kept as a floor
+    exit_min = min(EXIT_MIN, close_m - HALF_BUF, max(imin[-1], tmn[-1]) + 1 - HALF_BUF)
     dipped = (run_lo <= O * (1 - X / 100)) & (ends <= T)
     if not dipped.any():
         row.update(signal="no", status=f"no signal: {cf['sig']} low by {T // 60:02d}:{T % 60:02d} not >= {X}% below open")
@@ -200,7 +210,6 @@ def evaluate(ix: pd.DataFrame | None, tx: pd.DataFrame | None, rule: str, cells=
 
 
 def fetch(day: str) -> dict:
-    sys.path.insert(0, str(ROOT))
     from mcf.replay.store import _fetch_bars       # read-only market data GET
     syms = sorted({s for r in RULES.values() for s in (r["sig"], r["trd"])})
     df = _fetch_bars(syms, f"{day}T13:00:00Z", f"{day}T21:30:00Z", "1Min")
@@ -226,7 +235,7 @@ def upsert(rows: list[dict], path: Path = OUT) -> None:
 
 def _complete(day: str) -> bool:
     now = pd.Timestamp.now(tz=TZ)
-    return day < now.strftime("%Y-%m-%d") or (now.hour * 60 + now.minute) >= 16 * 60 + 15
+    return day < now.strftime("%Y-%m-%d") or (now.hour * 60 + now.minute) >= close_min(day) + 15
 
 
 def run(day: str, path: Path = OUT, bars: dict | None = None) -> list[dict]:
@@ -234,9 +243,10 @@ def run(day: str, path: Path = OUT, bars: dict | None = None) -> list[dict]:
     assert day >= FIRST_DAY, "forward log starts 2026-11-05 (after the CHECK end)"
     bars = fetch(day) if bars is None else bars
     cells = _cells()
+    cm = close_min(day)
     rows = []
     for name, cf in RULES.items():
-        r = evaluate(bars.get(cf["sig"]), bars.get(cf["trd"]), name, cells, complete=_complete(day))
+        r = evaluate(bars.get(cf["sig"]), bars.get(cf["trd"]), name, cells, complete=_complete(day), close_m=cm)
         r.update(date=day, frozen=FROZEN)
         rows.append(r)
     upsert(rows, path)
@@ -249,11 +259,12 @@ def _st(x, d):
         return dict(n=0, days=0)
     s = pd.Series(x).groupby(np.asarray(d)).sum()
     tot = float(x.sum()); best = float(s.max()); nd = len(s)
+    n_best = int((np.asarray(d) == s.idxmax()).sum())  # all of the best day's trades leave the count, not one
     sd = s.std(ddof=1) if nd > 1 else np.nan
     return dict(n=len(x), days=nd, mean=round(float(x.mean()), 3), tot=round(tot, 2),
                 t=round(float(s.mean() / (sd / np.sqrt(nd))), 2) if nd > 1 and sd > 0 else None,
                 best_share=round(best / tot, 3) if tot > 0 else None,
-                wo_best=round((tot - best) / (len(x) - 1), 3) if len(x) > 1 else None,
+                wo_best=round((tot - best) / (len(x) - n_best), 3) if len(x) > n_best else None,
                 best_day=str(s.idxmax()))
 
 

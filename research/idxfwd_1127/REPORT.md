@@ -15,7 +15,8 @@ config/, setups, exits, assignments.json, decisions.json or the ledger. Rules fr
   CHECK 9 trades at +0.261R). So the forward numbers really are these two rules.
 - **Backfill 2026-11-05..11-27 (16 sessions, 11-27 a half day): 5 trades on 3 days, +1.43R in total after LIVE-L.**
   IDX6 2 trades, +0.63R and +1.48R, avg +1.06R. IWM45 3 trades: -1.10R, -1.12R, +1.54R, avg -0.23R. Book avg +0.29R
-  per trade, day t 0.37. One day (11-25) carries more than all of it (best-day share 211%; avg w/o best day -0.40R).
+  per trade, day t 0.37. One day (11-25) carries more than all of it (best-day share 211%; avg w/o best day -0.53R,
+  corrected 11-27 from -0.40R: see Fixes).
   With +1 min entry and +2 bp a side: +0.18R avg.
 - **That is 3 of the 15 signal days the pass bar needs.** Nothing can be concluded yet. IDX6 fired twice in three weeks,
   more than its ~1 a year since 2023, because November 2026 has been very volatile (QQQ -5% on 11-20, swings of 2-3%
@@ -37,12 +38,12 @@ config/, setups, exits, assignments.json, decisions.json or the ledger. Rules fr
 | 2026-11-25 | IWM45 | -0.84% | 09:47 | 45.86 | 0.81 | 10:01 | trail stop | +1.67 | +1.54 | +1.49 | +0.28 |
 
 Other sessions: 26 rule-days with no dip deep enough by the check time, 1 with a dip but no bounce in the window
-(no row is dropped). 11-26 (Thanksgiving) has no bars. 11-27 (13:00 close): no signal; the half-day exit would have
-been 12:55.
+(no row is dropped). 11-26 (Thanksgiving) has no bars. 11-27 (13:00 close): no signal; the half-day exit is 12:55
+(after the fix below; before it, the script would have held to 15:55).
 
 | | trades | days | avg R LIVE-L | t (day) | best-day share | avg w/o best day | LR8 | S12 |
 |---|---|---|---|---|---|---|---|---|
-| Book | 5 | 3 | +0.29 | 0.37 | 211% | -0.40 | +0.28 | +0.18 |
+| Book | 5 | 3 | +0.29 | 0.37 | 211% | -0.53 | +0.28 | +0.18 |
 | IDX6 | 2 | 2 | +1.06 | – | 70% | +0.63 | +1.07 | – |
 | IWM45 | 3 | 3 | -0.23 | – | – | -1.11 | -0.25 | – |
 
@@ -54,6 +55,35 @@ These are shadow trades of fixed rules; no live account trades them and no ledge
 setups (IDX1-IDX5) and the 11-17..11-25 live rule changes are separate (research/wave3_1127/SUMMARY.md).
 BDI 11-27 context: today's longs-vs-shorts gap is unrelated; neither rule fired on 11-27.
 
+## Fixes (2026-11-27, after a skeptic review; the frozen rule in RULE.md is unchanged)
+
+Two implementation bugs, both fixed in `shadow.py`; RULE.md already says "half days: close - 5 min", so the rule did
+not change and the freeze date stands. Configurations: still 2.
+
+1. **Half-day exit.** On a 13:00 close, SIP prints after-hours trades until 16:00, and the script's fixed 09:30-15:59
+   window kept them, so its "last bar close - 5 min" rule put the flat at 15:55 (after hours) instead of 12:55. On
+   11-27 the fetched bars ran to 15:59 for all four symbols (QQQ 177 bars after 13:00). Fix: the exchange close comes
+   from the market calendar (`mcf.data.bars.close_min` -> `market_calendar.close_minutes`: PAST_EARLY_CLOSES /
+   Alpaca calendar / EARLY_CLOSES), bars at or after it are dropped (`cap_at_close`), and the exit is
+   min(15:55, close - 5 min, last bar close - 5 min). "Session finished" is now close + 15 min, not a fixed 16:15.
+   **Backfill effect: none.** No backfill trade was open at 12:55 on a half day (11-27 had no signal), so
+   forward.csv is byte-identical after the re-run (re-run twice: same md5, idempotent). `--verify` still matches the
+   study exactly (IDX6 FIT +4.293 / CHECK +0.015; IWM45 FIT n 10 +1.148 / CHECK n 9 +0.261).
+2. **Avg R without the best day.** The best day's R was removed but only one trade left the count. Fix: all of that
+   day's trades leave the count. Book: (1.43 - 3.03) / 3 = **-0.53R** (was -0.40R = / 4); S12 -0.50; IDX6 +0.63 and
+   IWM45 -1.11 unchanged (one trade on their best day). The pass bar needs this > 0 either way, so no verdict changes
+   (WAITING, 3 of 15 signal days).
+
+**The study engine (research/idxdip_1127/idx_sim.py) had the same half-day bug**, and half days were study days: 19
+sessions per index pair (2016-11-25 .. 2025-12-24; the 2024-11-29 and 2024-12-24 half days are in the locked block and
+were never read), and the data carry after-hours bars on them (e.g. QQQ 2018-12-24: 134 bars after 13:00). Fixed the
+same way (`cap_at_close` + close - 5 min; a local list of the 2016-2023 NYSE half days, since PAST_EARLY_CLOSES starts
+in 2024). Re-ran only the affected sessions (all 40 configs, all 19 half days per pair): 36 trade rows before and
+after (18 BASE + 18 S1, on 2018-12-24 and 2021-11-26 only), **every one identical** (max |gross diff| 6e-17, same
+entries, same exit minutes). All of them stopped out by 11:15, before any 12:55 flat, and the change cannot touch a
+regular day. Neither frozen rule (G1 QQQ 1.5% 09:55, G1 IWM 0.75% 09:45) traded on a half day. **Delta: 0 on every
+study number; results.json, REPORT and the verdicts of idxdip_1127 stand.**
+
 ## Files
 
 - `research/forward/idx_dip/RULE.md` — frozen rules, costs, pass bar, harm stop, time cap (the pre-registration).
@@ -61,5 +91,8 @@ BDI 11-27 context: today's longs-vs-shorts gap is unrelated; neither rule fired 
   (mcf.replay.store._fetch_bars); upserts by date (idempotent); locked block asserted never read.
 - `research/forward/idx_dip/forward.csv` — the log (one row per session per rule, no-signal days included).
 - `tests/test_idx_dip_shadow.py` — 4 synthetic-session tests (signal + trail + costs, no-signal / IWM window,
-  half-day exit at close - 5 min, idempotent upsert + score + lock assert). `pytest -q tests/test_idx_dip_shadow.py`: 4 passed.
+  half-day exit at close - 5 min, idempotent upsert + score + lock assert; since the 11-27 fixes also: half day with
+  after-hours prints to 15:59 flat at 12:55 (2025-11-28, 2024-07-03) vs 15:55 on a regular day, close override +
+  session cap, w/o-best-day count). `pytest -q tests/test_idx_dip_shadow.py`: 8 passed (the 4 new ones fail on the
+  pre-fix script).
 - `research/idxfwd_1127/PREREG.md` — pointer + config count.
