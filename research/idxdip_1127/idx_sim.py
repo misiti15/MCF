@@ -15,8 +15,22 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "qqqopen_1127"))
 import qo_sim  # noqa: E402
 
+sys.path.insert(0, str(HERE.parents[1]))
+from mcf.data.bars import cap_at_close  # noqa: E402  calendar only
+from mcf.execution.market_calendar import close_minutes  # noqa: E402
+
 MAIN = Path("/home/user/MCF")
 LOCK = qo_sim.LOCK
+# NYSE 13:00 early closes before mcf.execution.market_calendar.PAST_EARLY_CLOSES (which starts 2024). Fix 2026-11-27:
+# SIP prints after-hours trades until 16:00 on these days, so the last-bar exit rule put the half-day flat at 15:55.
+HALF_DAYS_PRE2024 = {"2016-11-25", "2017-07-03", "2017-11-24", "2018-07-03", "2018-11-23", "2018-12-24", "2019-07-03",
+                     "2019-11-29", "2019-12-24", "2020-11-27", "2020-12-24", "2021-11-26", "2022-11-25", "2023-07-03",
+                     "2023-11-24"}
+
+
+def close_for(day: str) -> int:
+    """Exchange close in minutes ET (780 on a half day, else 960); offline, deterministic."""
+    return 780 if str(day) in HALF_DAYS_PRE2024 else close_minutes(day, use_http=False)
 PAIRS = {"SPY": "SPXL", "QQQ": "TQQQ", "IWM": "TNA", "DIA": "UDOW"}
 
 
@@ -52,6 +66,7 @@ def load(sym: str, raws) -> pd.DataFrame:
         out.append(p)
     df = pd.concat(out).sort_index()
     df = df[~df.index.duplicated(keep="last")].between_time("09:30", "15:59")
+    df = cap_at_close(df, close_for=close_for)        # drop bars at/after a half-day 13:00 close
     d = df.index.date
     df = df[~((d >= LOCK[0]) & (d <= LOCK[1]))]
     df = df[df.index.date <= pd.Timestamp("2026-11-04").date()]
@@ -92,7 +107,7 @@ def day_rows(ix, tx, cfgs):
     imin = qo_sim.tmin(ix.index); tmn = qo_sim.tmin(tx.index)
     if imin[0] != 570 or tmn[0] != 570:
         return rows
-    exit_min = min(955, max(imin[-1], tmn[-1]) + 1 - 5)
+    exit_min = min(955, close_for(str(ix.index[0].date())) - 5, max(imin[-1], tmn[-1]) + 1 - 5)
     io, ih, il, ic = (ix[k].to_numpy(float) for k in ("open", "high", "low", "close"))
     to_, th, tl, tc = (tx[k].to_numpy(float) for k in ("open", "high", "low", "close"))
     O = io[0]; tO = to_[0]; ends = imin + 1
