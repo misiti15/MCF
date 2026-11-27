@@ -222,9 +222,10 @@ def journal_day(acct: str, date: str, state_dir: str | None = None) -> dict:
         raw = _git("show", f"origin/{BRANCH[acct]}:journal.db")
     if not raw:
         return {}
-    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-        f.write(raw)
-    try:
+    f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+    try:  # write inside the try: a failed write (ENOSPC) must not leak the partial file
+        with f:
+            f.write(raw)
         db = sqlite3.connect(f.name)
         rows = db.execute("SELECT t.symbol, t.pnl, t.pnl_adj FROM trades t JOIN runs r ON r.id = t.run_id "
                           "WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? AND t.exit_time IS NOT NULL", (date,)).fetchall()

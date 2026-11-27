@@ -408,9 +408,10 @@ def actual_primary(day) -> dict:
     out = {"r": None, "trades": 0, "pnl_journal": None, "pnl_alpaca": None, "alpaca_source": None, "by_setup": {}}
     raw = _git("show", "origin/mcf-data:journal.db", text=False)
     if raw:
-        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-            f.write(raw)
-        try:
+        f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+        try:  # write inside the try: a failed write (ENOSPC) must not leak the partial file
+            with f:
+                f.write(raw)
             c = sqlite3.connect(f.name)
             t = pd.read_sql("SELECT t.strategy, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj FROM trades t JOIN runs r "
                             "ON r.id = t.run_id WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? AND t.exit_time IS NOT NULL",
@@ -537,9 +538,10 @@ def crosscheck(picks: dict, day: str, team_trades: list[dict]) -> list[dict]:
             raw = _git("show", f"origin/{br}:journal.db", text=False)
             t = None
             if raw:
-                with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-                    f.write(raw)
-                try:
+                f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+                try:  # write inside the try: a failed write (ENOSPC) must not leak the partial file
+                    with f:
+                        f.write(raw)
                     c = sqlite3.connect(f.name)
                     t = pd.read_sql("SELECT t.strategy, t.symbol, t.entry, t.stop, t.shares, t.pnl, t.pnl_adj FROM trades t "
                                     "JOIN runs r ON r.id = t.run_id WHERE r.kind NOT IN ('whatif', 'shadow') AND t.date = ? "

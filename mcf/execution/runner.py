@@ -2251,7 +2251,9 @@ class PaperRunner:
             by: dict[str, float] = {}                 # Friday switches: per-setup marks / unmarked setups (state only)
             unmarked: set[str] = set()
             marks: dict[str, float] = {}              # coid -> mark (SHOCK-V carry of lots gone before reconcile)
-            prev = self.__dict__.get("_latch_last") or {}  # coid -> last real mark (LATCH-OPEN carry, state only)
+            # coid -> last real mark (LATCH-OPEN carry, state only). In memory only: after a restart held lots
+            # are "unmarked" (closed R only, the pre-carry behaviour) until their next fresh mark.
+            prev = self.__dict__.get("_latch_last") or {}
             carried = 0
 
             def _miss(coid, lot):
