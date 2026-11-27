@@ -1,0 +1,43 @@
+
+=== MAE angle, lab (bench10 lots, 2023-24 + FIT + CHECK, 1-min bars, LR8) ===
+                         setup     n   avgR  P(>=0)  T0.25  P0.25  dR0.25  win_cut0.25  T0.5  P0.5  dR0.5  win_cut0.5  T0.75  P0.75  dR0.75  win_cut0.75
+GEN-261023-06-RSI7le38-Ret15mg   322  0.094    0.40   0.83   0.28   -17.0           76  0.75  0.21  -26.5          52   0.69   0.14   -27.4           30
+GEN-261029-06-EMAdChgge0p092-D  5900 -0.019    0.49   0.71   0.32  -217.5         1347  0.46  0.18 -109.3         487   0.30   0.08   -40.3          144
+      L3-gap-slope-fromopen-FD 13785 -0.083    0.50   0.77   0.36   -35.3         3791  0.63  0.24 -104.6        2046   0.51   0.12   -37.7          848
+       NM-ETF-late-dip-di-long   749  0.078    0.67   0.56   0.44   -41.3          186  0.35  0.26  -16.1          69   0.25   0.13   -14.7           25
+RW3-gapdn-rsi5pop-flowsell-sho  7641 -0.086    0.48   0.75   0.32    43.7         1859  0.57  0.19  125.2         844   0.44   0.09    73.8          309
+RW5-heat30-flowsell-rsi5pop-ga  7513 -0.099    0.48   0.75   0.32    20.2         1822  0.57  0.19   82.4         831   0.43   0.09    62.9          300
+ST5-pdbrkup-short-mid-t05s1-FD   591 -0.060    0.62   0.68   0.45    -2.8          179  0.51  0.29   -9.3          89   0.39   0.14    -6.5           31
+0.25 setups where tighter stop at -x would add R: 2 of 7 ; total dR -250.0
+0.5 setups where tighter stop at -x would add R: 2 of 7 ; total dR -58.2
+0.75 setups where tighter stop at -x would add R: 2 of 7 ; total dR 10.1
+T2 {'GEN-261023-06-RSI7le38-Ret15mg': (np.float64(0.09), np.float64(8.2)), 'GEN-261029-06-EMAdChgge0p092-D': (np.float64(0.17), np.float64(-24.4)), 'L3-gap-slope-fromopen-FD': (np.float64(0.25), np.float64(-94.7)), 'NM-ETF-late-dip-di-long': (np.float64(0.21), np.float64(-2.6)), 'RW3-gapdn-rsi5pop-flowsell-sho': (np.float64(0.18), np.float64(44.4)), 'RW5-heat30-flowsell-rsi5pop-ga': (np.float64(0.18), np.float64(51.7)), 'ST5-pdbrkup-short-mid-t05s1-FD': (np.float64(0.25), np.float64(1.5))}
+FIT {'GEN-261023-06-RSI7le38-Ret15mg': (np.float64(0.28), np.float64(-16.7)), 'GEN-261029-06-EMAdChgge0p092-D': (np.float64(0.19), np.float64(-44.4)), 'L3-gap-slope-fromopen-FD': (np.float64(0.23), np.float64(-16.1)), 'NM-ETF-late-dip-di-long': (np.float64(0.35), np.float64(-4.7)), 'RW3-gapdn-rsi5pop-flowsell-sho': (np.float64(0.18), np.float64(53.4)), 'RW5-heat30-flowsell-rsi5pop-ga': (np.float64(0.19), np.float64(23.4)), 'ST5-pdbrkup-short-mid-t05s1-FD': (np.float64(0.31), np.float64(-2.0))}
+CHECK {'GEN-261023-06-RSI7le38-Ret15mg': (np.float64(0.22), np.float64(-18.0)), 'GEN-261029-06-EMAdChgge0p092-D': (np.float64(0.17), np.float64(-40.4)), 'L3-gap-slope-fromopen-FD': (np.float64(0.23), np.float64(6.2)), 'NM-ETF-late-dip-di-long': (np.float64(0.28), np.float64(-8.7)), 'RW3-gapdn-rsi5pop-flowsell-sho': (np.float64(0.2), np.float64(27.3)), 'RW5-heat30-flowsell-rsi5pop-ga': (np.float64(0.21), np.float64(7.3)), 'ST5-pdbrkup-short-mid-t05s1-FD': (np.float64(0.3), np.float64(-8.8))}
+live coverage 0.38659531090723753
+
+=== MAE angle, live (journals 10-06..11-24, 1-min bars where cached) ===
+                         setup   n   avgR  P(>=0)  T0.25  P0.25  dR0.25  win_cut0.25  T0.5  P0.5  dR0.5  win_cut0.5  T0.75  P0.75  dR0.75  win_cut0.75
+CWT09-gapdn-vwaploss-g10-short  11  0.018    0.64   0.91   0.60    -2.8            6  0.64  0.43   -2.2           3   0.36   0.25    -0.2            1
+GEN-261019-02-BBpctle0p017-SMA   4  0.099    0.75   0.75   0.67    -0.7            2  0.50  0.50   -0.4           1   0.25   0.00     0.5            0
+GEN-261019-10-FlowShiftge0p42-  40 -0.340    0.42   0.85   0.32     7.1           11  0.62  0.08    7.9           2   0.50   0.00     5.5            0
+GEN-261020-09-EMAdChgge0p093-Z   9 -0.822    0.11   1.00   0.11     4.7            1  0.89  0.12    2.9           1   0.89   0.12     0.9            1
+GEN-261023-06-RSI7le38-Ret15mg   1 -1.062    0.00   1.00   0.00     0.8            0  1.00  0.00    0.5           0   1.00   0.00     0.3            0
+GEN-261026-07-Flow3ge0p56-BBpc  29 -0.160    0.41   0.83   0.33    -0.5            8  0.59  0.18   -1.3           3   0.34   0.00     1.6            0
+GEN-261027-01-MACDhge0p12-Ret1  35  0.277    0.83   0.40   0.57    -3.6            8  0.26  0.44   -3.4           4   0.11   0.25    -1.0            1
+GEN-261027-08-ORBfailDn-FromPC  23  0.211    0.65   0.61   0.57    -5.0            8  0.35  0.50   -3.1           4   0.13   0.00     0.8            0
+GEN-261029-06-EMAdChgge0p092-D  20 -0.189    0.45   0.80   0.31     0.6            5  0.50  0.00    1.8           0   0.35   0.00     0.5            0
+      L3-gap-slope-fromopen-FD 418  0.177    0.64   0.71   0.49   -67.7          144  0.47  0.31  -27.7          61   0.32   0.17    -3.3           22
+       L3-gap-slope-lowdist-FD  91  0.230    0.63   0.64   0.45   -14.3           26  0.52  0.32  -12.7          15   0.32   0.17    -4.2            5
+        L3-gap-slope-rsi5hi-FD 127  0.092    0.74   0.61   0.57   -13.7           44  0.38  0.31   -1.3          15   0.27   0.18    -0.5            6
+       NM-ETF-late-dip-di-long  15  0.298    0.73   0.47   0.43    -2.3            3  0.20  0.33   -1.4           1   0.13   0.50    -1.9            1
+ NM-RWN3-ns3-spyup-early-short   7 -0.304    0.43   0.86   0.33     1.0            2  0.86  0.33   -0.5           2   0.86   0.33    -2.0            2
+RW3-gapdn-rsi5pop-flowsell-sho  98  0.256    0.68   0.64   0.52   -16.3           33  0.37  0.28   -0.7          10   0.28   0.15     0.7            4
+RW5-heat30-flowsell-rsi5pop-ga 109  0.340    0.72   0.58   0.52   -20.3           33  0.32  0.26   -2.2           9   0.21   0.09     3.4            2
+RW7-gapdn-bounce-early-short-F 330 -0.022    0.52   0.70   0.32     9.2           74  0.51  0.20    8.4          33   0.35   0.06    13.1            7
+   ST3-rsi5up-short-pm-t1s1-FD   2 -0.276    0.50   1.00   0.50    -0.0            1  0.50  0.00    0.5           0   0.50   0.00     0.3            0
+ST5-pdbrkup-short-mid-t05s1-FD   3  1.346    1.00   0.33   1.00    -0.9            1  0.00   NaN    0.0           0   0.00    NaN     0.0            0
+           exhaustion_short-FD 145 -0.110    0.48   0.82   0.36    -0.4           43  0.68  0.25   -8.3          25   0.48   0.07     5.1            5
+0.25 setups where tighter stop at -x would add R: 6 of 20 ; total dR -125.1
+0.5 setups where tighter stop at -x would add R: 6 of 20 ; total dR -43.2
+0.75 setups where tighter stop at -x would add R: 12 of 20 ; total dR 19.6

@@ -1,0 +1,416 @@
+{
+ "GEN-261027-01": {
+  "A_trades": {
+   "n": 39,
+   "dates": [
+    "2026-10-27",
+    "2026-11-24"
+   ],
+   "live_net_R": 0.29256228434048587,
+   "live_gross_R": 0.31415725392946253,
+   "live_cost_R": 0.02159496958897664,
+   "engine_from_ref_net": 0.2994859259673799,
+   "engine_from_ref_gross": 0.3330020639070247,
+   "engine_from_fill_net": 0.3102946780342784,
+   "engine_from_fill_gross": 0.3440754499643489,
+   "engine_from_fill_touch_net": 0.3463122695495223,
+   "engine_from_fill_touch_gross": 0.37806391313768883,
+   "engine_cost_R_from_fill": 0.03378077193007058,
+   "entry_slip_R_med": 0.05106776410105926,
+   "entry_slip_R_mean": 0.016808461800443934,
+   "ref_vs_bar_close_R_mean": 1.2107255159298217e-07,
+   "live_exit_mix": {
+    "target": 0.718,
+    "flatten": 0.256,
+    "stop": 0.026
+   },
+   "engine_exit_mix": {
+    "target": 0.692,
+    "flat": 0.282,
+    "stop": 0.026
+   },
+   "touch_vs_through_R": 0.036017591515243925,
+   "path_residual_gross": -0.06390665920822637,
+   "share_lab_universe": 0.46153846153846156,
+   "live_R_lab_universe": 0.3303567602319664,
+   "live_R_non_lab": 0.2601670192906453,
+   "n_lab": 18,
+   "live_R_by_window": {
+    "<=11-04": 0.1434286592236473,
+    ">11-04": 0.3373023718755374
+   },
+   "engine_fill_net_by_window": {
+    "<=11-04": 0.15594433862029766,
+    ">11-04": 0.3565997798584727
+   },
+   "per_account": {
+    "gen": {
+     "n": 14,
+     "live": 0.19,
+     "eng": 0.227
+    },
+    "testingd": {
+     "n": 4,
+     "live": 0.43,
+     "eng": 0.464
+    },
+    "testinge": {
+     "n": 21,
+     "live": 0.335,
+     "eng": 0.336
+    }
+   }
+  },
+  "B_signals": {
+   "buying power": {
+    "n": 21,
+    "eng_net": 0.328,
+    "eng_touch": 0.362,
+    "lab": 0.429
+   },
+   "cost filter": {
+    "n": 8,
+    "eng_net": 0.161,
+    "eng_touch": 0.161,
+    "lab": 0.25
+   },
+   "crosscheck": {
+    "n": 1,
+    "eng_net": 0.478,
+    "eng_touch": 0.478,
+    "lab": 0.0
+   },
+   "halted": {
+    "n": 21,
+    "eng_net": 0.006,
+    "eng_touch": 0.006,
+    "lab": 0.333
+   },
+   "other": {
+    "n": 1,
+    "eng_net": 0.494,
+    "eng_touch": 0.494,
+    "lab": 1.0
+   },
+   "price below": {
+    "n": 3,
+    "eng_net": 0.392,
+    "eng_touch": 0.392,
+    "lab": 0.0
+   },
+   "spread": {
+    "n": 33,
+    "eng_net": 0.152,
+    "eng_touch": 0.152,
+    "lab": 0.152
+   },
+   "taken": {
+    "n": 39,
+    "eng_net": 0.299,
+    "eng_touch": 0.341,
+    "lab": 0.462
+   }
+  },
+  "B_all_signals_eng_net": 0.2137,
+  "B_spread_bps_taken_vs_skipped": [
+   11.6,
+   51.9
+  ],
+  "C_selection": {
+   "window": [
+    "2026-10-27",
+    "2026-11-04"
+   ],
+   "live_trades": 9,
+   "live_R": 0.1434,
+   "live_engine_replay_R": 0.1559,
+   "engine_raw_signals": 53,
+   "engine_raw_R": 0.0062,
+   "engine_booked_home": 47,
+   "engine_booked_home_R": -0.0139,
+   "engine_booked_testing": 47,
+   "engine_booked_testing_R": -0.0139,
+   "live_trades_in_lab_universe": 5,
+   "live_symday_with_engine_signal": 4,
+   "live_signal_symdays": 35,
+   "live_signal_symdays_in_lab": 12,
+   "live_signal_symdays_in_lab_with_engine_signal": 11,
+   "engine_symdays_with_live_signal": 11,
+   "engine_symdays": 53,
+   "engine_R_symdays_live_traded": 0.0562,
+   "n_engine_symdays_live_traded": 4,
+   "engine_R_symdays_live_signalled_not_traded": 0.1169,
+   "n_engine_live_sig_not_traded": 7,
+   "engine_R_symdays_no_live_signal": -0.017,
+   "n_engine_no_live_signal": 42,
+   "engine_booked_R_no_live_signal": -0.0347,
+   "n_engine_booked_no_live_signal": 37,
+   "engine_booked_R_with_live_signal": 0.0629,
+   "n_engine_booked_with_live_signal": 10,
+   "daily_corr_live_vs_engine": null,
+   "n_days_both": 2,
+   "engine_check_half_R_noETB": -0.0256,
+   "engine_check_half_R": -0.0256,
+   "engine_check_half_n": 2271
+  },
+  "C_tod": {
+   "live": {
+    "13.0": {
+     "size": 3,
+     "mean": -0.519
+    },
+    "14.0": {
+     "size": 6,
+     "mean": 0.475
+    }
+   },
+   "engine_check": {
+    "14": {
+     "size": 2162,
+     "mean": -0.022
+    },
+    "15": {
+     "size": 109,
+     "mean": -0.103
+    }
+   }
+  }
+ },
+ "L3-fromopen": {
+  "A_trades": {
+   "n": 444,
+   "dates": [
+    "2026-10-14",
+    "2026-11-24"
+   ],
+   "live_net_R": 0.13627438781091772,
+   "live_gross_R": 0.17878171899696338,
+   "live_cost_R": 0.04250733118604569,
+   "engine_from_ref_net": 0.13692976297922585,
+   "engine_from_ref_gross": 0.22483048964306018,
+   "engine_from_fill_net": 0.11240066866850763,
+   "engine_from_fill_gross": 0.1991583109869683,
+   "engine_from_fill_touch_net": 0.12242888686961151,
+   "engine_from_fill_touch_gross": 0.2073732214737022,
+   "engine_cost_R_from_fill": 0.08675764231846067,
+   "entry_slip_R_med": 0.035254263064161934,
+   "entry_slip_R_mean": -0.11779704694001855,
+   "ref_vs_bar_close_R_mean": -0.15115069336025397,
+   "live_exit_mix": {
+    "target": 0.403,
+    "flatten": 0.318,
+    "stop": 0.25,
+    "timestop": 0.029
+   },
+   "engine_exit_mix": {
+    "target": 0.423,
+    "flat": 0.331,
+    "stop": 0.245
+   },
+   "touch_vs_through_R": 0.010028218201103884,
+   "path_residual_gross": -0.028591502476738796,
+   "share_lab_universe": 0.6373873873873874,
+   "live_R_lab_universe": 0.2201248955009239,
+   "live_R_non_lab": -0.011115013905055872,
+   "n_lab": 283,
+   "live_R_by_window": {
+    "<=11-04": 0.15329522538381665,
+    ">11-04": 0.1160673835987569
+   },
+   "engine_fill_net_by_window": {
+    "<=11-04": 0.11432065963670787,
+    ">11-04": 0.11012127052399404
+   },
+   "per_account": {
+    "primary": {
+     "n": 196,
+     "live": 0.15,
+     "eng": 0.114
+    },
+    "testing": {
+     "n": 207,
+     "live": 0.219,
+     "eng": 0.181
+    },
+    "testing2": {
+     "n": 31,
+     "live": -0.178,
+     "eng": -0.067
+    },
+    "testingf": {
+     "n": 10,
+     "live": -0.875,
+     "eng": -0.797
+    }
+   }
+  },
+  "B_signals": {
+   "cost filter": {
+    "n": 34,
+    "eng_net": -0.697,
+    "eng_touch": -0.697,
+    "lab": 0.0
+   },
+   "crosscheck": {
+    "n": 8,
+    "eng_net": 0.394,
+    "eng_touch": 0.394,
+    "lab": 0.0
+   },
+   "halted": {
+    "n": 539,
+    "eng_net": -0.763,
+    "eng_touch": -0.737,
+    "lab": 0.705
+   },
+   "lot cap": {
+    "n": 233,
+    "eng_net": 0.339,
+    "eng_touch": 0.34,
+    "lab": 0.682
+   },
+   "max positions": {
+    "n": 648,
+    "eng_net": 0.599,
+    "eng_touch": 0.599,
+    "lab": 0.684
+   },
+   "not shortable/ETB": {
+    "n": 3614,
+    "eng_net": -0.516,
+    "eng_touch": -0.51,
+    "lab": 0.158
+   },
+   "other": {
+    "n": 14,
+    "eng_net": -0.1,
+    "eng_touch": -0.1,
+    "lab": 0.357
+   },
+   "price below": {
+    "n": 10,
+    "eng_net": 0.341,
+    "eng_touch": 0.341,
+    "lab": 0.0
+   },
+   "setup daily loss": {
+    "n": 180,
+    "eng_net": -0.162,
+    "eng_touch": -0.162,
+    "lab": 0.45
+   },
+   "spread": {
+    "n": 277,
+    "eng_net": 0.221,
+    "eng_touch": 0.223,
+    "lab": 0.238
+   },
+   "taken": {
+    "n": 444,
+    "eng_net": 0.137,
+    "eng_touch": 0.146,
+    "lab": 0.637
+   }
+  },
+  "B_all_signals_eng_net": -0.2892,
+  "B_spread_bps_taken_vs_skipped": [
+   12.8,
+   47.6
+  ],
+  "C_selection": {
+   "window": [
+    "2026-10-13",
+    "2026-11-04"
+   ],
+   "live_trades": 256,
+   "live_R": 0.1405,
+   "live_engine_replay_R": 0.1143,
+   "engine_raw_signals": 1970,
+   "engine_raw_R": -0.2452,
+   "engine_booked_home": 286,
+   "engine_booked_home_R": 0.1216,
+   "engine_booked_testing": 641,
+   "engine_booked_testing_R": -0.1489,
+   "live_trades_in_lab_universe": 183,
+   "live_symday_with_engine_signal": 183,
+   "live_signal_symdays": 479,
+   "live_signal_symdays_in_lab": 155,
+   "live_signal_symdays_in_lab_with_engine_signal": 154,
+   "engine_symdays_with_live_signal": 154,
+   "engine_symdays": 271,
+   "engine_R_symdays_live_traded": -0.063,
+   "n_engine_symdays_live_traded": 513,
+   "engine_R_symdays_live_signalled_not_traded": -0.43,
+   "n_engine_live_sig_not_traded": 758,
+   "engine_R_symdays_no_live_signal": -0.1699,
+   "n_engine_no_live_signal": 785,
+   "engine_booked_R_no_live_signal": 0.0195,
+   "n_engine_booked_no_live_signal": 160,
+   "engine_booked_R_with_live_signal": 0.2512,
+   "n_engine_booked_with_live_signal": 126,
+   "daily_corr_live_vs_engine": 0.271,
+   "n_days_both": 15,
+   "engine_check_half_R_noETB": -0.0494,
+   "engine_check_half_R": -0.0685,
+   "engine_check_half_n": 3457
+  },
+  "C_tod": {
+   "live": {
+    "9.0": {
+     "size": 4,
+     "mean": -0.761
+    },
+    "10.0": {
+     "size": 43,
+     "mean": 0.317
+    },
+    "11.0": {
+     "size": 142,
+     "mean": 0.277
+    },
+    "12.0": {
+     "size": 22,
+     "mean": 0.036
+    },
+    "13.0": {
+     "size": 9,
+     "mean": -0.901
+    },
+    "14.0": {
+     "size": 21,
+     "mean": -0.27
+    }
+   },
+   "engine_check": {
+    "9": {
+     "size": 168,
+     "mean": -0.032
+    },
+    "10": {
+     "size": 952,
+     "mean": -0.014
+    },
+    "11": {
+     "size": 1149,
+     "mean": -0.119
+    },
+    "12": {
+     "size": 537,
+     "mean": -0.099
+    },
+    "13": {
+     "size": 336,
+     "mean": -0.012
+    },
+    "14": {
+     "size": 297,
+     "mean": -0.102
+    },
+    "15": {
+     "size": 18,
+     "mean": 0.288
+    }
+   }
+  }
+ }
+}

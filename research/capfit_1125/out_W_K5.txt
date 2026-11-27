@@ -1,0 +1,62 @@
+
+=== walk-forward K=5 variant=_W: 204 setup-days, 20 setups, 27 dates ===
+ pol  trades     R  worst  best  best_share   avg  avg_wo_best  t_vs_none  t_vs_u2
+none    2836 248.3  -61.2  90.0        0.36 0.088        0.060        NaN     0.63
+  u2    2063 200.9  -45.4  73.5        0.37 0.097        0.066      -0.63      NaN
+  P1    2389 225.8  -61.2  72.1        0.32 0.094        0.069      -0.34     0.56
+  P2    2443 254.2  -61.2  90.0        0.35 0.104        0.073       0.10     1.16
+  P3    2409 244.9  -61.2  90.0        0.37 0.102        0.070      -0.06     0.97
+u2 vs none: improve 4 (+64.7), worse 4 (-112.1), same 12; worst setup -85.6
+P1 vs none: improve 3 (+24.1), worse 3 (-46.7), same 14; worst setup -38.6
+P1 vs u2: improve 5 (+65.7), worse 4 (-40.9), same 11; worst setup -30.4
+P2 vs none: improve 2 (+54.2), worse 3 (-48.3), same 15; worst setup -38.6
+P2 vs u2: improve 4 (+63.7), worse 3 (-10.5), same 13; worst setup -7.5
+P3 vs none: improve 2 (+48.7), worse 4 (-52.1), same 14; worst setup -38.6
+P3 vs u2: improve 4 (+65.3), worse 4 (-21.4), same 12; worst setup -12.9
+                                    none    u2    P1    P2    P3
+CWT09-gapdn-vwaploss-g10-short       0.0   0.0   0.0   0.0   0.0
+GEN-261019-02-BBpctle0p017-SMA20sl   0.1   0.1   0.1   0.1   0.1
+GEN-261019-10-FlowShiftge0p42-SMA5  19.3  19.3  19.7  19.3  19.3
+GEN-261020-09-EMAdChgge0p093-Z12le  26.0  26.0  26.0  26.0  26.0
+GEN-261020-10-BBpctge0p81-ORBfailD  10.1  10.1  10.1  10.1  10.1
+GEN-261023-06-RSI7le38-Ret15mge0p5  11.1  11.1  11.1  11.1  11.1
+GEN-261027-01-MACDhge0p12-Ret15mAT   7.1   7.1   7.1   7.1   7.1
+GEN-261027-08-ORBfailDn-FromPCATRl   0.5   0.5   0.5   0.5   0.5
+GEN-261029-06-EMAdChgge0p092-DayRn  46.0  46.0  46.0  46.0  46.0
+L3-gap-slope-fromopen-FD            10.1  58.6  28.2  58.6  58.0
+L3-gap-slope-lowdist-FD             20.1  20.1  20.1  20.1  20.1
+L3-gap-slope-rsi5hi-FD              27.6  16.9  20.2  18.6  20.2
+NM-ETF-late-dip-di-long             -5.0  -3.5  -5.0  -5.0  -5.0
+NM-RWN3-ns3-spyup-early-short        3.2   3.2   3.2   3.2   3.2
+RW3-gapdn-rsi5pop-flowsell-short-F  27.6  16.9  26.8  26.8  26.8
+RW5-heat30-flowsell-rsi5pop-gapdn- -16.4  -8.9 -16.4 -16.4 -21.8
+RW7-gapdn-bounce-early-short-FD     57.8 -27.8  19.3  19.3  19.3
+ST3-rsi5up-short-pm-t1s1-FD          2.7   2.7   2.7   2.7   2.7
+ST5-pdbrkup-short-mid-t05s1-FD       2.8  -2.3   2.8   2.8   2.8
+exhaustion_short-FD                 -2.5   4.8   3.3   3.3  -1.7
+
+levels chosen (P1) per setup by week:
+wk                                  2026-43  2026-44  2026-45  2026-46  2026-47  2026-48
+setup                                                                                   
+CWT09-gapdn-vwaploss-g10-short          NaN      NaN      NaN      NaN      NaN      NaN
+GEN-261019-02-BBpctle0p017-SMA20sl      NaN      NaN      NaN      NaN      NaN      NaN
+GEN-261019-10-FlowShiftge0p42-SMA5      NaN      NaN    -1.00     -1.0     -1.0     -1.0
+GEN-261020-09-EMAdChgge0p093-Z12le      NaN      NaN      NaN      NaN      NaN     -1.0
+GEN-261020-10-BBpctge0p81-ORBfailD      NaN      NaN      NaN      NaN      NaN      NaN
+GEN-261023-06-RSI7le38-Ret15mge0p5      NaN      NaN      NaN      NaN      NaN      NaN
+GEN-261027-01-MACDhge0p12-Ret15mAT      NaN      NaN      NaN      NaN      NaN      NaN
+GEN-261027-08-ORBfailDn-FromPCATRl      NaN      NaN      NaN      NaN      NaN     -2.5
+GEN-261029-06-EMAdChgge0p092-DayRn      NaN      NaN      NaN      NaN     -1.0     -1.0
+L3-gap-slope-fromopen-FD                NaN    -1.25    -1.25     -1.0     -1.5     -1.0
+L3-gap-slope-lowdist-FD                 NaN      NaN    -1.00     -1.0     -1.0     -1.0
+L3-gap-slope-rsi5hi-FD                  NaN    -1.00    -1.00      NaN      NaN      NaN
+NM-ETF-late-dip-di-long                 NaN      NaN      NaN      NaN      NaN      NaN
+NM-RWN3-ns3-spyup-early-short           NaN      NaN      NaN      NaN      NaN      NaN
+RW3-gapdn-rsi5pop-flowsell-short-F    -1.25      NaN      NaN      NaN     -3.0     -3.0
+RW5-heat30-flowsell-rsi5pop-gapdn-      NaN      NaN      NaN      NaN      NaN      NaN
+RW7-gapdn-bounce-early-short-FD       -2.50      NaN      NaN      NaN      NaN      NaN
+ST3-rsi5up-short-pm-t1s1-FD             NaN      NaN      NaN      NaN     -1.0     -1.0
+ST5-pdbrkup-short-mid-t05s1-FD          NaN      NaN      NaN      NaN      NaN      NaN
+exhaustion_short-FD                     NaN      NaN    -2.00     -2.0     -2.0     -1.0
+
+P1 level distribution: {nan: 35, -1.0: 18, -1.25: 3, -2.0: 3, -2.5: 2, -3.0: 2, -1.5: 1}

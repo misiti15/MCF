@@ -1,0 +1,33 @@
+PYRAMID team S (shorts) - pre-registration, written 2026-11-24 before any lab scoring and before the latch/VWAP live replays.
+Educational only - not financial advice. Research only; no config/ledger/account change.
+
+Already seen before this file (disclosed): live pooled survey of all shorts >= 20 trades (survey.py), replay7 results
+(latch costs RW7/RW6, helps L3-fromopen +6.4R), GAPDEF-1124 FAIL notes, top10 benchmark.json (L3-fromopen lab rows).
+
+BLADE G (gap-down family): L3-gap-slope-fromopen-FD. Chosen on live: highest live avg R w/o best day in the gap-down
+family (+0.125; RW3 +0.029, L3-lowdist +0.045, L3-rsi5hi +0.034, RW5 -0.002, RW7 -0.028) and the only one with
+best-day share < 50% (43%).
+  G1 latch -2R per setup per day (current Primary rule)    G2 no latch    G3 latch -4R
+  G4 = chosen latch + first-minute-VWAP gap with own threshold (gapV <= -2.657%) (the one open GAPDEF salvage; live only,
+     gaps re-used from research/bdi/gapdef_1124/live_gaps.csv.gz; lab has no first-minute VWAP).
+BLADE N (non-gap mechanism, low corr with the book): candidates, testing-arena rules, no latch
+  N1 GEN-261029-06 Late Quiet-Day Short (QQQ down, 14:00-15:00)  N2 GEN-261023-06 Late-AM Pop Fade (SPY down, 10:30-12:00)
+  N3 ST5-pdbrkup-short-mid-t05s1-FD (prior-day-high break-up short, non-gap)
+  then for the chosen N: N4 latch -2R, N5 latch -4R.
+TOTAL configs = 9 (G1-G4, N1-N5). Random-entry controls reported, not counted. ETB filter (>= 90% of universe snapshots
+shortable & ETB) on every lab book; live shorts were ETB at order time by construction.
+
+Splits: lab = bench10 conventions: T1_fit 2024-10 + 2025-03..09 (170 s), T1_check 2025-10-01..2026-11-04 (276 s),
+T2 = 2023-01-03..2024-09-13 (427 s) = the 2023-24 half; T1 ~ 2025-26 half. Locked block never read.
+GEN setups were mined on the 2-year (T1) data -> T1 is in-sample for N1/N2; T2 is their only clean lab test.
+Live = 10 journals 2026-10-06..11-24, deduped setup|symbol|date|minute, LR8 R.
+
+Selection rules:
+- N pick: among N1-N3 with lab T1_combined >= -0.038 and T2 >= -0.105 (the top10 'meets the standard' bar, the
+  engine under-reads live for this book) AND live avg R w/o best day > 0 AND live daily-R corr with Primary book < 0.30:
+  highest live avg R w/o best day. If none passes the lab bar, pick the one with best T2 avg R and mark it TIER B max.
+- Latch policy (each blade): pick by highest live-replay total R w/o best day; accept only if lab T1_check avg R of
+  that policy is not worse than the current policy by > 0.010R; else keep the current policy.
+- G4 VWAP gap: adopt only if live dR > 0 w/o the best day of dR, removed trades avg R < 0, best-day share of dR < 50%.
+Tiers (brief): TIER A = live avg R > 0 and w/o best day > 0 and best-day share < 50% and lab meets the standard on
+check and T2 and >= 2 trades/session lab check; TIER B = live positive but one-day or lab below standard; else FAIL.
