@@ -86,7 +86,7 @@ def test_overhead_and_size_on_a_live_sized_universe():
     full session stays far below 10-20 MB compressed."""
     rng = np.random.default_rng(1)
     syms = [f"S{i:04d}" for i in range(4900)]
-    lines, worst = [], 0.0
+    lines, cpu, wall = [], [], []
     idx_all = pd.date_range(pd.Timestamp(f"{DAY} 09:30", tz=NY), periods=390, freq="1min")
     base = pd.DataFrame({"open": 1.0, "high": 1.0, "low": 1.0, "close": 1.0, "volume": 1.0}, index=idx_all)
     thin = {s: np.sort(rng.choice(390, 250, replace=False)) for s in syms[:735]}
@@ -99,10 +99,16 @@ def test_overhead_and_size_on_a_live_sized_universe():
                 bars[s] = base.iloc[k]
             else:
                 bars[s] = base.iloc[: m - (2 if rng.random() < 0.02 else 0)]
-        t0 = time.perf_counter()
+        t0, c0 = time.perf_counter(), time.process_time()
         rec = poll_record(now, bars, syms, {"last_poll_s": 2.0}, False)
         lines.append(__import__("json").dumps(rec, separators=(",", ":")))
-        worst = max(worst, time.perf_counter() - t0)
-    assert worst < 0.25, worst                                 # typically ~10-20 ms; the poll itself takes seconds
+        cpu.append(time.process_time() - c0)
+        wall.append(time.perf_counter() - t0)
+    # OPS-POLL (inspector 11-27): the worst poll is bounded in CPU time (this process's own work, same 0.25 s bound as
+    # before; typically ~10-20 ms), which a loaded machine / parallel suite cannot inflate by descheduling the test.
+    # Wall clock is still checked, on the median of the 30 polls: one preempted poll no longer fails the test, while
+    # a real slowdown (every poll slower) still does. The poll itself takes seconds.
+    assert max(cpu) < 0.25, max(cpu)
+    assert sorted(wall)[len(wall) // 2] < 0.25, sorted(wall)
     day_bytes = len(gzip.compress("\n".join(lines).encode(), 9)) * 390 / len(lines)
     assert day_bytes < 10e6, day_bytes

@@ -451,3 +451,51 @@ def test_flags_off_full_poll_matches_pre_change_golden(tmp_path, monkeypatch):
         want = json.load(f)
     assert got == want
     assert want["risk_state"]["halted"] is True and len(want["submitted"]) == 12   # the scenario reaches the halt
+
+
+# ------------------------------------------------------------------------------------------------ LATCH-OPEN mark carry
+def test_open_marks_carry_last_mark_for_unmarked_held_lot(tmp_path, monkeypatch):
+    """Inspector 11-27 #15: a held lot without a mark this poll keeps its last mark for LATCH-OPEN (per-setup marks),
+    instead of the whole setup falling back to closed R; open_r (LR3 halt) still counts it 0, as before."""
+    r, _ = _runner(tmp_path, monkeypatch)
+    r.lots = {"AAA": {"c1": {"strategy": "S1", "side": 1, "qty": 10, "order_id": "o1"}},
+              "BBB": {"c2": {"strategy": "S1", "side": 1, "qty": 10, "order_id": "o2"}}}
+    r._mtm_lot = {"c1": (50.0, 49.0), "c2": (50.0, 49.0)}
+    bar = lambda px: pd.DataFrame({"close": [px]})
+    r._open_marks({"AAA": bar(48.0), "BBB": bar(49.0)})
+    st = r.risk.state
+    assert st.open_r_by_strategy["S1"] == pytest.approx(-2.01 - 1.01, abs=1e-6) and st.unmarked_setups == set()
+    tot = r._open_marks({"BBB": bar(48.5)})                 # AAA: no bar this poll
+    assert tot == pytest.approx(-1.51, abs=1e-6)            # LR3 open_r unchanged: the unmarked lot counts 0
+    assert st.open_r_by_strategy["S1"] == pytest.approx(-2.01 - 1.51, abs=1e-6)   # AAA carried at its last mark
+    assert st.unmarked_setups == set() and st.carried_marks == 1 and st.carried_marks_total == 1
+    r._mtm_lot.pop("c2")                                    # no entry/stop any more: carried too
+    r._open_marks({"AAA": bar(47.0)})
+    assert st.open_r_by_strategy["S1"] == pytest.approx(-3.01 - 1.51, abs=1e-6) and st.carried_marks == 1
+    r.lots["CCC"] = {"c3": {"strategy": "S2", "side": 1, "qty": 10, "order_id": "o3"}}   # never marked
+    r._open_marks({"AAA": bar(47.0)})
+    assert st.unmarked_setups == {"S2"} and "S2" not in st.open_r_by_strategy
+    del r.lots["AAA"]                                       # gone lots leave the carry
+    r._open_marks({})
+    assert set(r._latch_last) == {"c2"} and st.carried_marks_total == 4
+
+
+def test_latch_open_latches_with_carried_mark_and_counts_fallbacks(tmp_path, monkeypatch):
+    r, _ = _runner(tmp_path, monkeypatch)
+    rm = _rm({"latch_counts_open": True})
+    r.risk = rm
+    r.lots = {"AAA": {"c1": {"strategy": "S1", "side": 1, "qty": 10, "order_id": "o1"}}}
+    r._mtm_lot = {"c1": (50.0, 49.0)}
+    rm.state.realized_r_by_strategy = {"S1": -1.0}
+    r._open_marks({"AAA": pd.DataFrame({"close": [48.5]})})            # -1.51
+    r._open_marks({})                                                   # no bar: carried
+    assert rm.check(_sig("BBB"), 50.0) == (False, "setup daily loss limit (open)")
+    assert rm.latch_open_hits["S1"] == pytest.approx(-2.51, abs=1e-3)
+    rm2 = _rm({"latch_counts_open": True})
+    rm2.state.realized_r_by_strategy, rm2.state.unmarked_setups = {"S1": -1.0}, {"S1"}
+    rm2.check(_sig(), 50.0)
+    rm2.check(_sig("BBB"), 50.0)
+    sf = rm2.safety_status()["latch_counts_open"]
+    assert sf["fallbacks"] == {"S1": 2} and sf["fallbacks_total"] == 2 and sf["carried_marks_total"] == 0
+    off = _rm({"latch_counts_open": False}).safety_status()["latch_counts_open"]
+    assert "fallbacks" not in off                                      # flags off: status shape unchanged

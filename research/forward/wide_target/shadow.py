@@ -130,9 +130,10 @@ def journal_trades(day: str) -> pd.DataFrame:
         raw = _git_show(f"origin/{br}:journal.db")
         if not raw:
             continue
-        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-            f.write(raw)
-        try:
+        f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+        try:  # write inside the try: a failed write (ENOSPC) must not leak the partial file
+            with f:
+                f.write(raw)
             c = sqlite3.connect(f.name)
             t = pd.read_sql("SELECT t.id, t.date, t.symbol, t.strategy, t.side, t.signal_time, t.entry_time, t.exit_time, "
                             "t.entry, t.stop, t.target, t.exit, t.exit_reason, t.shares, t.pnl, t.pnl_adj, t.meta "

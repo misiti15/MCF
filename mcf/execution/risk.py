@@ -36,6 +36,8 @@ class RiskState:
     open_r_by_strategy: dict[str, float] = field(default_factory=dict)   # setup -> open lots' marks (cost R)
     unmarked_setups: set[str] = field(default_factory=set)               # setups with >= 1 open lot lacking a mark
     open_marks_ok: bool = True                                           # False when the last marking pass failed
+    carried_marks: int = 0          # LATCH-OPEN: held lots without a mark this poll that kept their last mark
+    carried_marks_total: int = 0    # the same, summed over the day's polls (health.risk_state.safety)
     halt_reason: str | None = None   # set only by the scaled halt / SHOCK-V (None: the "halted" reason, as before)
 
 
@@ -123,6 +125,7 @@ class RiskManager:
             self.safety_refused["scaled_halt"] = why
         self._open_fallback_logged: set[str] = set()
         self.latch_open_hits: dict[str, float] = {}             # setup -> closed+open R when LATCH-OPEN latched it
+        self.latch_open_fallbacks: dict[str, int] = {}          # setup -> checks that fell back to closed R only
         self.state = RiskState()
 
     def loss_limit_for(self, setup: str) -> float | None:
@@ -145,8 +148,9 @@ class RiskManager:
         """LATCH-OPEN (neveragain_1125 G1-2): a setup whose closed + open R today <= -limit takes no new entries for the
         rest of the day (latched like the closed latch). Blocks entries only; open lots keep their own exits. The limit
         is risk.latch_open_r when set, else the setup's own loss stop; a setup with no loss stop (null) is never latched.
-        A setup with an open lot lacking a mark (no bar / no entry or stop), or a failed marking pass, falls back to
-        closed R only for that check (logged once per setup)."""
+        An open lot lacking a mark this poll (no bar / no entry or stop) keeps its last mark (runner._open_marks, like
+        SHOCK-V); only a setup with a lot that never had a mark, or a failed marking pass, falls back to closed R for
+        that check (logged once per setup, counted in latch_open_fallbacks)."""
         s = self.state
         for k in set(s.realized_r_by_strategy) | set(s.open_r_by_strategy):
             base = self.loss_limit_for(k)
@@ -159,6 +163,7 @@ class RiskManager:
                     self._open_fallback_logged.add(k)
                     why = "marking failed" if not s.open_marks_ok else "an open lot has no mark"
                     print(f"LATCH-OPEN: {k} uses closed R only ({why})")
+                self.latch_open_fallbacks[k] = self.latch_open_fallbacks.get(k, 0) + 1
                 v = closed
             else:
                 v = closed + float(s.open_r_by_strategy.get(k, 0.0))
@@ -193,7 +198,9 @@ class RiskManager:
         if self.latch_counts_open:
             d["latch_counts_open"].update(
                 open_r_by_strategy={k: round(float(v), 3) for k, v in s.open_r_by_strategy.items()},
-                unmarked_setups=sorted(s.unmarked_setups), open_marks_ok=bool(s.open_marks_ok))
+                unmarked_setups=sorted(s.unmarked_setups), open_marks_ok=bool(s.open_marks_ok),
+                fallbacks=dict(self.latch_open_fallbacks), fallbacks_total=sum(self.latch_open_fallbacks.values()),
+                carried_marks=int(s.carried_marks), carried_marks_total=int(s.carried_marks_total))
         return d
 
     def open_lots(self) -> int:

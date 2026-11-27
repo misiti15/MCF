@@ -46,7 +46,12 @@ ALPACA = "https://paper-api.alpaca.markets/v2"
 FINRA_URL = "https://cdn.finra.org/equity/regsho/daily/CNMSshvol{d}.txt"
 EXCHANGES = {"NYSE", "NASDAQ", "ARCA", "AMEX", "BATS"}       # as mcf.data.universe
 BAD_SUFFIX = ("W", "WS", "U", "R")
-WINDOW = ("08:45", "10:00")                                  # ET; outside it a scheduled run does nothing
+WINDOW = ("08:45", "10:00")                                  # ET; the intended morning slot (on time)
+# OPS-PRE1 (inspector 11-27): GitHub ran the 09:08 cron 6-9 hours late every day from 11-06 (15:00-19:00 ET), so the
+# old "outside 08:45-10:00 -> do nothing" rule skipped every session after 11-05 while the job showed success. A late
+# run on the same ET weekday now still records, tagged timing="late" (+ late_min) in index.jsonl, and prints a
+# GitHub ::warning:: so the delay is visible. Before 08:45 ET (the off-season cron line, 08:08 ET in EST) still skips.
+RECORD_WINDOW = ("08:45", "24:00")                           # ET; a scheduled run records anywhere in it
 COLUMNS = ["symbol", "exchange", "shortable", "easy_to_borrow", "borrow_status", "marginable", "margin_req_short",
            "maint_margin_req", "ptp", "in_universe", "tier", "adv_rank", "short_volume", "short_exempt_volume",
            "total_volume", "finra_market"]
@@ -191,9 +196,20 @@ def write_gz_csv(path: Path, rows: list[dict]) -> int:
     return path.stat().st_size
 
 
-def in_window(now_et: datetime, window=WINDOW) -> bool:
+def in_window(now_et: datetime, window=RECORD_WINDOW) -> bool:
     hm = now_et.strftime("%H:%M")
     return now_et.weekday() < 5 and window[0] <= hm < window[1]
+
+
+def timing(now_et: datetime) -> tuple[str, int]:
+    """("on_time", 0) inside the 08:45-10:00 ET slot; ("early", 0) before 08:45 ET or on a weekend (a manual
+    workflow_dispatch run with --ignore-window); else ("late", minutes past 10:00 ET)."""
+    if in_window(now_et, WINDOW):
+        return "on_time", 0
+    if now_et.weekday() >= 5 or now_et.strftime("%H:%M") < WINDOW[0]:
+        return "early", 0
+    end = now_et.replace(hour=int(WINDOW[1][:2]), minute=int(WINDOW[1][3:]), second=0, microsecond=0)
+    return "late", max(0, int((now_et - end).total_seconds() // 60))
 
 
 def record(state_dir: str, universe: str | None = None, day: date | None = None, force: bool = False,
@@ -203,7 +219,7 @@ def record(state_dir: str, universe: str | None = None, day: date | None = None,
     now = (now or datetime.now(timezone.utc)).astimezone(NY)
     day = day or now.date()
     if check_window and not force and not in_window(now):
-        return {"skipped": f"outside {WINDOW[0]}-{WINDOW[1]} ET weekdays ({now:%a %H:%M} ET)"}
+        return {"skipped": f"outside {RECORD_WINDOW[0]}-{RECORD_WINDOW[1]} ET weekdays ({now:%a %H:%M} ET)"}
     out = Path(state_dir) / "borrow" / f"{day.isoformat()}.csv.gz"
     if out.exists() and not force:
         return {"skipped": f"{out.name} already recorded"}
@@ -215,6 +231,14 @@ def record(state_dir: str, universe: str | None = None, day: date | None = None,
         raise RuntimeError("empty asset list")
     finra_status, finra = fetch_finra(prior, fetch)
     uni, built = load_universe(universe)
+    when, late_min = timing(now) if day == now.date() else ("backfill", 0)
+    if when == "late":
+        print(f"::warning::PRE1 borrow record for {day} taken late ({now:%H:%M} ET, {late_min} min after "
+              f"{WINDOW[1]} ET): GitHub cron delay; flags are as of the run time (fetched_at_et)")
+    prior_file = out.parent / f"{prior.isoformat()}.csv.gz"
+    prior_missing = out.parent.exists() and any(out.parent.glob("*.csv.gz")) and not prior_file.exists()
+    if prior_missing:
+        print(f"::warning::PRE1 borrow record missing for the prior session {prior} (lost; flags have no history)")
     rows = build_rows(flags, finra, uni)
     size = write_gz_csv(out, rows)
     line = {"day": day.isoformat(), "fetched_at_et": now.strftime("%Y-%m-%d %H:%M:%S"), "rows": len(rows),
@@ -222,7 +246,8 @@ def record(state_dir: str, universe: str | None = None, day: date | None = None,
             "universe_rows": sum(r["in_universe"] == "1" for r in rows), "universe_built_at": built,
             "finra_date": prior.isoformat(), "finra_status": finra_status, "finra_rows": len(finra),
             "finra_matched": sum(r["total_volume"] != "" for r in rows), "bytes": size,
-            "runtime_s": round(time.monotonic() - t0, 1), "calendar": "ok" if is_open is not None else "unreachable"}
+            "runtime_s": round(time.monotonic() - t0, 1), "calendar": "ok" if is_open is not None else "unreachable",
+            "timing": when, "late_min": late_min, "prior_recorded": not prior_missing}
     with open(out.parent / "index.jsonl", "a") as f:
         f.write(json.dumps(line) + "\n")
     readme = Path(state_dir) / "README.md"

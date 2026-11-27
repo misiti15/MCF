@@ -13,6 +13,7 @@ handling's verdict (block / keep / inverse_buy) and the trade's R after costs. E
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sqlite3
 import subprocess
@@ -160,9 +161,15 @@ def _journal(branch: str, git_dir: str) -> Path | None:
     r = subprocess.run(["git", "-C", git_dir, "show", f"origin/{branch}:journal.db"], capture_output=True)
     if r.returncode or not r.stdout:
         return None
-    p = Path(tempfile.gettempdir()) / f"invshadow_{branch}.db"
-    p.write_bytes(r.stdout)
-    return p
+    fd, name = tempfile.mkstemp(prefix=f"invshadow_{branch}_", suffix=".db")
+    p = Path(name)
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(r.stdout)
+    except BaseException:
+        p.unlink(missing_ok=True)
+        raise
+    return p  # the caller unlinks it (rows_for: finally; leftover copies filled /tmp, inspector 11-27 #19)
 
 
 def rows_for(dates: list[str], git_dir: str = str(ROOT)) -> pd.DataFrame:
@@ -173,30 +180,35 @@ def rows_for(dates: list[str], git_dir: str = str(ROOT)) -> pd.DataFrame:
         p = _journal(br, git_dir)
         if p is None:
             continue
-        c = sqlite3.connect(p)
-        q = ",".join("?" * len(dates))
-        t = pd.read_sql(f"select * from trades where run_id=1 and exit is not null and shares>0 and entry!=stop "
-                        f"and date in ({q})", c, params=dates)
-        if len(t):
-            t = with_cost_r(t)
-            t = t[t.symbol.map(lambda s: pclass(s) in ("inv_broad", "inv_sector", "inv_single", "inv_crypto",
-                                                            "inv_name", "long_vol", "lev_long"))]
-            for r in t.itertuples():
-                out.append(dict(date=r.date, account=acct, setup=r.strategy, family=family_of(r.strategy),
-                                kind="trade", symbol=r.symbol, side=int(r.side), pclass=pclass(r.symbol),
-                                exposure=int(r.side) * beta_sign(r.symbol),
-                                thesis_match=int(int(r.side) * beta_sign(r.symbol) == int(r.side)),
-                                verdict=verdict(r.strategy, int(r.side), r.symbol), R=round(float(r.r_multiple), 4),
-                                reason="", frozen=FROZEN))
-        s = pd.read_sql(f"select day,symbol,strategy,side,status,reason from signals where run_id=1 and side=-1 "
-                        f"and day in ({q})", c, params=dates)
-        s = s[s.symbol.isin(INVERSE_OF) & (s.status == "skipped") & s.reason.fillna("").str.contains(INVBUY_REASONS)]
-        for (d, sym, st), g in s.groupby(["day", "symbol", "strategy"]):
-            out.append(dict(date=d, account=acct, setup=st, family=family_of(st), kind="inverse_buy_opportunity",
-                            symbol=sym, side=-1, pclass="underlying", exposure=-1, thesis_match=1,
-                            verdict="inverse_buy:" + "/".join(INVERSE_OF[sym]), R=float("nan"),
-                            reason=str(g.reason.iloc[0]), frozen=FROZEN))
-        c.close()
+        c = None
+        try:
+            c = sqlite3.connect(p)
+            q = ",".join("?" * len(dates))
+            t = pd.read_sql(f"select * from trades where run_id=1 and exit is not null and shares>0 and entry!=stop "
+                            f"and date in ({q})", c, params=dates)
+            if len(t):
+                t = with_cost_r(t)
+                t = t[t.symbol.map(lambda s: pclass(s) in ("inv_broad", "inv_sector", "inv_single", "inv_crypto",
+                                                                "inv_name", "long_vol", "lev_long"))]
+                for r in t.itertuples():
+                    out.append(dict(date=r.date, account=acct, setup=r.strategy, family=family_of(r.strategy),
+                                    kind="trade", symbol=r.symbol, side=int(r.side), pclass=pclass(r.symbol),
+                                    exposure=int(r.side) * beta_sign(r.symbol),
+                                    thesis_match=int(int(r.side) * beta_sign(r.symbol) == int(r.side)),
+                                    verdict=verdict(r.strategy, int(r.side), r.symbol), R=round(float(r.r_multiple), 4),
+                                    reason="", frozen=FROZEN))
+            s = pd.read_sql(f"select day,symbol,strategy,side,status,reason from signals where run_id=1 and side=-1 "
+                            f"and day in ({q})", c, params=dates)
+            s = s[s.symbol.isin(INVERSE_OF) & (s.status == "skipped") & s.reason.fillna("").str.contains(INVBUY_REASONS)]
+            for (d, sym, st), g in s.groupby(["day", "symbol", "strategy"]):
+                out.append(dict(date=d, account=acct, setup=st, family=family_of(st), kind="inverse_buy_opportunity",
+                                symbol=sym, side=-1, pclass="underlying", exposure=-1, thesis_match=1,
+                                verdict="inverse_buy:" + "/".join(INVERSE_OF[sym]), R=float("nan"),
+                                reason=str(g.reason.iloc[0]), frozen=FROZEN))
+        finally:
+            if c is not None:
+                c.close()
+            p.unlink(missing_ok=True)
     return pd.DataFrame(out)
 
 

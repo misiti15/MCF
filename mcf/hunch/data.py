@@ -108,11 +108,23 @@ def load_1min(symbol: str, cache: str | os.PathLike | None = None) -> pd.DataFra
     return df
 
 
-def bars3(m1: pd.DataFrame) -> pd.DataFrame:
-    """3-min RTH bars from 1-min bars (index tz-aware ET). Columns: date, b, o, h, l, c, v, pv (sum tp*v), filled."""
+def n_buckets(close_min: int) -> int:
+    """3-min buckets in a session closing at `close_min` (minutes since midnight ET): 130 at 16:00, 70 at 13:00."""
+    return max(0, min(N_BUCKETS, (int(close_min) - 570) // 3))
+
+
+def bars3(m1: pd.DataFrame, close_for=None) -> pd.DataFrame:
+    """3-min RTH bars from 1-min bars (index tz-aware ET). Columns: date, b, o, h, l, c, v, pv (sum tp*v), filled.
+    `close_for(date) -> close in minutes since midnight ET` (the live shadow passes mcf.data.bars.close_min, inspector
+    11-27): 1-min bars at / after a half-day close are dropped and that session has only its n_buckets(close) buckets,
+    so after-hours prints are never guessed, scored or learned. None = the fixed 16:00 grid (the frozen replay)."""
     idx = m1.index.tz_convert(TZ) if m1.index.tz is not None else m1.index.tz_localize(TZ)
     mins = idx.hour * 60 + idx.minute - 570
     keep = (mins >= 0) & (mins < 390)
+    if close_for is not None:
+        days = np.asarray(idx.date)
+        lim = {d: int(close_for(str(d))) - 570 for d in set(days)}
+        keep = keep & (np.asarray(mins) < np.array([lim[d] for d in days], dtype=int))
     m = m1.loc[keep]
     mins = np.asarray(mins[keep])
     date = np.asarray(idx[keep].date)
@@ -123,7 +135,11 @@ def bars3(m1: pd.DataFrame) -> pd.DataFrame:
     g = df.groupby(["date", "b"], sort=True)
     out = g.agg(o=("o", "first"), h=("h", "max"), l=("l", "min"), c=("c", "last"), v=("v", "sum"), pv=("pv", "sum"))
     dates = out.index.get_level_values(0).unique()
-    full = pd.MultiIndex.from_product([dates, range(N_BUCKETS)], names=["date", "b"])
+    if close_for is None:
+        full = pd.MultiIndex.from_product([dates, range(N_BUCKETS)], names=["date", "b"])
+    else:
+        full = pd.MultiIndex.from_tuples([(d, b) for d in dates for b in range(n_buckets(close_for(str(d))))],
+                                         names=["date", "b"])
     out = out.reindex(full)
     out["filled"] = out["c"].isna().astype(np.int8)
     out["c"] = out.groupby(level=0)["c"].ffill().bfill()
@@ -216,10 +232,10 @@ def _own_segment(d: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
-def build_panel(symbols=None, cache=None, verbose: bool = False, loader=None) -> pd.DataFrame:
+def build_panel(symbols=None, cache=None, verbose: bool = False, loader=None, close_for=None) -> pd.DataFrame:
     """Feature panel for the universe: one row per (symbol, date, b) for every bar 0..129 (labels in metrics).
     `loader(symbol) -> 1-min DataFrame` replaces the cache read (the live shadow passes its fetched bars); a symbol
-    with no bars is skipped."""
+    with no bars is skipped. `close_for` caps each session at its exchange close (see bars3; live shadow only)."""
     symbols = list(symbols or UNIVERSE)
     load = loader or (lambda s: load_1min(s, cache))
     ctx = {}
@@ -227,7 +243,7 @@ def build_panel(symbols=None, cache=None, verbose: bool = False, loader=None) ->
     def context(s):
         if s not in ctx:
             m1 = load(s)
-            ctx[s] = (own_features(bars3(m1)).set_index(["date", "b"])[["bret", "fo_pct"]]
+            ctx[s] = (own_features(bars3(m1, close_for)).set_index(["date", "b"])[["bret", "fo_pct"]]
                       if m1 is not None and len(m1) else None)
         return ctx[s]
 
@@ -238,7 +254,7 @@ def build_panel(symbols=None, cache=None, verbose: bool = False, loader=None) ->
         m1 = load(s)
         if m1 is None or not len(m1):
             continue
-        f = own_features(bars3(m1))
+        f = own_features(bars3(m1, close_for))
         key = pd.MultiIndex.from_arrays([f["date"], f["b"]])
         for name, src in (("spy", "SPY"), ("qqq", "QQQ"), ("sector", SECTOR.get(s, "SPY"))):
             c = context(src)

@@ -49,10 +49,12 @@ def no_leaderboard(entry: dict) -> bool:
 
 
 def next_session(now: datetime | None = None) -> str:
-    """The session a change stamped `now` (ET) applies to: today before 16:00 on a weekday, else the next weekday."""
+    """The session a change stamped `now` (ET) applies to: today before 16:00 on a trading day, else the next trading
+    day (weekends and NYSE holidays skipped: mcf.execution.market_calendar.HOLIDAYS, inspector 11-27 - a move stamped
+    on Wed 2026-11-25 evening was dated Thanksgiving 2026-11-26)."""
     now = now or datetime.now(ZoneInfo("America/New_York"))
     d = now.date()
-    if d.weekday() >= 5 or (now.hour, now.minute) >= (16, 0):
+    if not _is_session(d) or (now.hour, now.minute) >= (16, 0):
         d = _wd(d, 1)
     return d.isoformat()
 
@@ -125,9 +127,16 @@ def shadow_lane() -> dict[str, str]:
     return out
 
 
+def _is_session(d: date) -> bool:
+    from ..execution.market_calendar import is_trading_day   # offline holiday list; no calendar call
+
+    return is_trading_day(d)
+
+
 def _wd(d: date, step: int) -> date:
+    """The next (step 1) / previous (step -1) trading day: weekends and NYSE holidays skipped."""
     d += timedelta(days=step)
-    while d.weekday() >= 5:
+    while not _is_session(d):
         d += timedelta(days=step)
     return d
 
@@ -136,7 +145,7 @@ def sessions_around(since: str | None) -> tuple[str | None, str | None]:
     """(last session in the old account, first session in the new one) for a move stamped `since` ("YYYY-MM-DD HH:MM ET").
     Owner 2026-10-30: a moved setup's tag must say which session it moved around, so 'last session' numbers are never
     read as the new account's. Moves happen outside market hours: before 09:30 on a weekday -> that day's session is the
-    first one in the new account; otherwise the next weekday. Weekdays only (a holiday shifts it by a day at most)."""
+    first one in the new account; otherwise the next trading day (weekends and NYSE holidays skipped)."""
     if not since:
         return None, None
     try:
@@ -144,7 +153,7 @@ def sessions_around(since: str | None) -> tuple[str | None, str | None]:
     except ValueError:
         return None, None
     d = t.date()
-    first = d if d.weekday() < 5 and (t.hour, t.minute) < (9, 30) else _wd(d, 1)
+    first = d if _is_session(d) and (t.hour, t.minute) < (9, 30) else _wd(d, 1)
     return _wd(first, -1).isoformat(), first.isoformat()
 
 
@@ -246,7 +255,7 @@ if __name__ == "__main__":
     ap.add_argument("--at", help="effective time 'YYYY-MM-DD HH:MM' (ET) for the stamp; default now. A move stamped at "
                                  "or after 16:00 shows on the dashboard as taking effect the next session.")
     ap.add_argument("--asof", help="session date YYYY-MM-DD the assignments are resolved for (benched / guest windows); "
-                                   "default: today before 16:00 ET on a weekday, else the next weekday")
+                                   "default: today before 16:00 ET on a trading day, else the next trading day")
     a = ap.parse_args()
     at = datetime.strptime(a.at, "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/New_York")) if a.at else None
     d = write(now=at, asof=a.asof)

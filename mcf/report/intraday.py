@@ -67,8 +67,12 @@ def load_state(account: str, day: str, state_dir: str | None = None) -> tuple[li
     try:
         blob = _git("show", f"{br}:journal.db", binary=True)
         fd, jpath = tempfile.mkstemp(suffix=".db")
-        with os.fdopen(fd, "wb") as f:
-            f.write(blob)
+        try:
+            with os.fdopen(fd, "wb") as f:
+                f.write(blob)
+        except BaseException:
+            Path(jpath).unlink(missing_ok=True)
+            raise
     except subprocess.CalledProcessError:
         pass
     return sorted(recs, key=lambda r: r["t"]), jpath
@@ -292,20 +296,21 @@ def build(day: str, account: str = "primary", step: int = 1, state_dir: str | No
           bars: dict | None = None, log=print):
     step = max(1, min(5, int(step)))
     recs, jpath = load_state(account, day, state_dir)
-    curve, ev = curve_from_snapshots(recs, day, step)
-    source = "snapshots"
-    if curve.empty:
-        if not jpath:
-            log(f"{account} {day}: no snapshots and no journal - nothing to chart")
-            return None
-        try:
-            curve, ev, source = curve_from_journal(journal_trades(jpath, day), day, step, bars)
-        finally:  # delete only our temp copy from the state branch, never a real --state-dir journal (2026-11-25)
-            if not state_dir:
-                Path(jpath).unlink(missing_ok=True)
+    try:
+        curve, ev = curve_from_snapshots(recs, day, step)
+        source = "snapshots"
         if curve.empty:
-            log(f"{account} {day}: no snapshots, {source}")
-            return None
+            if not jpath:
+                log(f"{account} {day}: no snapshots and no journal - nothing to chart")
+                return None
+            curve, ev, source = curve_from_journal(journal_trades(jpath, day), day, step, bars)
+            if curve.empty:
+                log(f"{account} {day}: no snapshots, {source}")
+                return None
+    finally:  # delete only our temp copy from the state branch, never a real --state-dir journal; on every path,
+        # the snapshot one included (leftover copies filled the disk, 2026-11-25; inspector 11-27 #11)
+        if jpath and not state_dir:
+            Path(jpath).unlink(missing_ok=True)
     png, csv = write_outputs(curve, ev, source, day, account, out, step)
     log(f"{account} {day}: source {source}; end {curve['total_r'].dropna().iloc[-1]:+.2f}R; wrote {png} and {csv}. "
         f"{DISCLAIMER}")

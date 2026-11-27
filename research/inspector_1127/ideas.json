@@ -1,0 +1,98 @@
+[
+ {
+  "rank": 1,
+  "name": "CF-PRIMARY",
+  "panel": "structure",
+  "judge_score": 8,
+  "test": "Part A: score the overdue CF forward test (Testing 1/2 + On Deck skip rows 10-30..11-25). Part B: CF-15 and CF-LL15 on the E4 book (BASE/LO/LO+L3-OUT) vs 500 same-share random removals + a constant cut; CHECK and T2 separately",
+  "pass_bar": "dR/day>0; >95th pct random, paired t>=2.8 (3.93 global shown); red days/month down >=0.5; worst-5 <=5% worse; best-day share <25%; every Primary setup >= -2R/month"
+ },
+ {
+  "rank": 2,
+  "name": "STOPX",
+  "panel": "edge",
+  "judge_score": 7,
+  "test": "Step 0 live stop-slippage audit; Step 1 C1 close-confirmed stop, C2 +2x catastrophe stop, C3 5-min close trigger; bench LIVE-L, Primary rules + LO",
+  "pass_bar": "Paired dR/trade>0 on CHECK and T2, t>=~3.4; >=2/3 of setups improve; none worse >0.03R; worst-5 <=5% deeper; best-day share <50%"
+ },
+ {
+  "rank": 3,
+  "name": "TAILEFF",
+  "panel": "structure",
+  "judge_score": 6.5,
+  "test": "LO, G1-3, LO+B8, LO+K4+SHOCK-V, LO+S8, LO+B8+K4 vs an exposure-matched constant cut; Z/RAW/P books; CHECK/T2",
+  "pass_bar": "Z: E>=1.25, 20-session floor and days<=-10R beat the matched cut; P: red days +<=1/month, dR>=-40R/yr; no setup < -10R/yr on Z"
+ },
+ {
+  "rank": 4,
+  "name": "BORROW-FLIP",
+  "panel": "edge",
+  "judge_score": 6.5,
+  "test": "Fix the recorder now; pre-register the ETB/shortable flip study; score once at 60 sessions",
+  "pass_bar": "Residual short net>0, t>=1.5, same sign on SPY-up/down days, w/o best day >0; filter beats random skip at 95th pct"
+ },
+ {
+  "rank": 5,
+  "name": "RESID-MAP",
+  "panel": "edge",
+  "judge_score": 6,
+  "test": "20 cells (09:45/10:30/12:00/14:00 x 5 residual features), decile spread in bps net of LR8, FIT/CHECK/T2",
+  "pass_bar": "Net>0 on all 3 splits; t>=2.45; w/o best day>0; best-day share<50%; same sign on SPY-up/down days"
+ },
+ {
+  "rank": 6,
+  "name": "EARN-PRE",
+  "panel": "edge",
+  "judge_score": 5.5,
+  "test": "D-1 09:35/10:00 -> 15:55 long, no stop vs 1xATR stop; vs matched non-event control",
+  "pass_bar": "Net residual>0 on 3 splits; t>=1.67; >=95th pct vs control; needs a blackout exception"
+ },
+ {
+  "rank": 7,
+  "name": "SYMCOST",
+  "panel": "structure",
+  "judge_score": 4.5,
+  "test": "0-config persistence gate on 32,131 live trades; then CF-LL15+SYM",
+  "pass_bar": "Spearman>=0.3, CI>0 in both families; incremental dR>0, t>=2.0"
+ },
+ {
+  "rank": 8,
+  "name": "RGAP-CROWD",
+  "panel": "structure",
+  "judge_score": 4.5,
+  "test": "Residual gap for L3/RW3/RW5 on |SPY gap|>=0.5% days; 1 config",
+  "pass_bar": "Removed lots below random 10th pct; worst-5 better; Z cost>=-15R/yr"
+ },
+ {
+  "rank": 9,
+  "name": "BLACKOUT-SURV",
+  "panel": "edge",
+  "judge_score": 4.5,
+  "test": "Lift blackout days 0/+1 for the trio; (b) |residual gap|>=2%",
+  "pass_bar": "Added trades avg R and residual R>0 on CHECK/T2; worst-5 not >10% deeper"
+ },
+ {
+  "rank": 10,
+  "name": "EXCESS-BOOK",
+  "panel": "edge",
+  "judge_score": 4,
+  "test": "Frozen excess legs + netted SPY/IWM overlay (6R band); random-book placebo",
+  "pass_bar": "Book R/session>0 on CHECK/T2; t>=~2.8; >95th pct vs placebo"
+ },
+ {
+  "rank": 11,
+  "name": "RESID-RANK",
+  "panel": "structure",
+  "judge_score": 4,
+  "test": "Rank setups on shrunk beta-stripped intercepts; top-4 vs total-R top-4 and 500 random lineups",
+  "pass_bar": "Spearman>=0.3; paired t>=2.0; >95th pct; PBO<=0.20"
+ },
+ {
+  "rank": 12,
+  "name": "RISKBUDGET",
+  "panel": "structure",
+  "judge_score": 3.5,
+  "test": "RB-VOL / RB-ALPHA exposure-neutral weights; 24-permutation null; owner yes first (rule 26)",
+  "pass_bar": "Z worst-5 >=15% better; RAW dR>=0; best of 24 permutations"
+ }
+]

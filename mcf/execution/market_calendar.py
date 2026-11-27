@@ -24,6 +24,21 @@ REGULAR_CLOSE = time(16, 0)
 # NYSE published early closes (13:00 ET). Fallback only: the Alpaca calendar is read first.
 # Source: NYSE holidays & trading hours (nyse.com/markets/hours-calendars), read 2026-11-11.
 EARLY_CLOSES = {"2026-11-27": time(13, 0), "2026-12-24": time(13, 0)}
+# Past early closes, for research / display readers of history only (close_minutes: Hunch, Compass, compass_cond;
+# inspector 11-27). session_close() - the runner, watchdog, handover and the replay harness - does not read this list,
+# so no trading or replay decision changes.
+PAST_EARLY_CLOSES = {"2024-07-03": time(13, 0), "2024-11-29": time(13, 0), "2024-12-24": time(13, 0),
+                     "2025-07-03": time(13, 0), "2025-11-28": time(13, 0), "2025-12-24": time(13, 0)}
+# NYSE full-day closures (weekdays with no session), 2024-2027: same source. Used by calendar helpers that must skip a
+# holiday (e.g. mcf.report.assignments.next_session); session_close() itself is unchanged by this list.
+HOLIDAYS = {"2024-01-01", "2024-01-15", "2024-02-19", "2024-03-29", "2024-05-27", "2024-06-19", "2024-07-04",
+            "2024-09-02", "2024-11-28", "2024-12-25",
+            "2025-01-01", "2025-01-09", "2025-01-20", "2025-02-17", "2025-04-18", "2025-05-26", "2025-06-19",
+            "2025-07-04", "2025-09-01", "2025-11-27", "2025-12-25",
+            "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25", "2026-06-19", "2026-07-03",
+            "2026-09-07", "2026-11-26", "2026-12-25",
+            "2027-01-01", "2027-01-18", "2027-02-15", "2027-03-26", "2027-05-31", "2027-06-18", "2027-07-05",
+            "2027-09-06", "2027-11-25", "2027-12-24"}
 DEFAULT_LEAD_MIN = 5
 
 _cache: dict[str, time] = {}
@@ -111,3 +126,26 @@ def flatten_time(configured, close: time, lead_min: float = DEFAULT_LEAD_MIN) ->
 
 def plus(t0: time, minutes: float) -> time:
     return (datetime.combine(date(2000, 1, 3), t0) + timedelta(minutes=float(minutes))).time()
+
+
+def is_trading_day(day) -> bool:
+    """A weekday that is not a listed NYSE full-day closure (HOLIDAYS). Offline: no calendar call."""
+    d = pd.Timestamp(str(day)).date()
+    return d.weekday() < 5 and d.isoformat() not in HOLIDAYS
+
+
+def next_trading_day(day, step: int = 1) -> date:
+    """The next (step=1) or previous (step=-1) trading day after / before `day` (weekends and HOLIDAYS skipped)."""
+    d = pd.Timestamp(str(day)).date()
+    while True:
+        d += timedelta(days=step)
+        if is_trading_day(d):
+            return d
+
+
+def close_minutes(day, broker=None, use_http: bool = True) -> int:
+    """The close of `day` as minutes since midnight ET (960 on a regular day, 780 on a 13:00 half day): a listed past
+    early close (PAST_EARLY_CLOSES), else session_close(day). For research / display code reading history."""
+    d = str(pd.Timestamp(str(day)).date())
+    c = PAST_EARLY_CLOSES.get(d) or session_close(d, broker=broker, use_http=use_http)
+    return c.hour * 60 + c.minute

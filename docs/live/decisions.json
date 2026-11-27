@@ -3042,10 +3042,10 @@
   "code": "ODP2-G261027-01",
   "title": "On Deck: Late Pullback Buy (GEN-261027-01, late-day MACD long) from Testing E? (your 11-15 re-ask mark is met)",
   "what": "Move Late Pullback Buy `GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE-BRvwgt0p5-t05s1-long` from Testing E to On Deck, switched off in Testing E (promotion = move), after a close. Its WB5 tune copy stays in Testing D. You deferred this on 11-15 (ODP-G261027-01: 'ask again at 8 traded sessions and >= 30 trades'); it now has 8 / 31. No Primary change (promotion hold on). Reply 'ODP2-G261027-01 yes / no / wait'.",
-  "recommend": "Yes - but its best day is today's gap-up session (58% of R, `1 day` tag); without it the record is still positive and day-consistent — CAVEAT (Pyramid G, 11-25): 22 of its 39 live trades are inverse/volatility ETPs (+0.493R) and 11-23/11-24 carry 73% of its R; its 17 stock trades make +0.033R. Fine as an On Deck test, not proof of an edge.",
+  "recommend": "Yes - but its best day (11-23, a gap-up session) carries 62% of R (`1 day`); without it the record is still positive and day-consistent - CAVEAT (Pyramid G, 11-25): 22 of its 39 live trades are inverse/volatility ETPs (+0.493R) and 11-23/11-24 carry 73% of its R; its 17 stock trades make +0.033R. Fine as an On Deck test, not proof of an edge.",
   "numbers": [
    "10 traded sessions / 42 trades (22 active days), avg +0.185R after costs (LR8, all accounts, identical signals once), +7.7R; OD-IN shrunk +0.125, last-5 +0.182; 80% green days",
-   "w/o best day (11-23, 62% of R, `1 day`) +0.105R; w/o top 2 days +0.046R; day t +2.53; 11-25 squeeze day -1.9R",
+   "w/o best day (11-23, 62% of R, `1 day`) +0.105R; w/o top 2 days +0.046R; footrace day_t +2.53 (per-day mean R, mcf.report.footrace; the 11-25 brief's 'day t 1.42' is a different calculation); 11-25 squeeze day -1.9R",
    "refreshed 2026-11-25 (ROT-B3 re-score, data to 11-25; was 8 sess / 31 tr +0.265R, w/o best +0.201R when raised 11-23): still meets OD-IN, 5th of 8 open seats; Pyramid G caveat stands (much of its R from inverse/volatility ETP trades)"
   ],
   "why": "Your own re-ask condition is met; the record is positive on every robust cut, but one big gap-up day carries over half of it, so it is a judgement call on a small sample.",
@@ -3085,16 +3085,16 @@
  },
  {
   "code": "HS-SCALE",
-  "title": "One safety package for Primary (Friday epoch): lineup-scaled account stop + glitch failsafe, keep the -2R latch - with or without a -10R per-setup crash cap?",
-  "what": "Package: SCALED-K4 (flatten + no new entries at -X, X = clip(4 sigma, 2.5R x N, 8R x N); ~ -32R today, ~ -72R for 9 setups, recomputed weekly and at lineup changes) + SHOCK-V (sharp R drop within 2-10 min -> no new entries + alert, no flatten) + keep the -2R per-setup latch + keep the fixed -20R no-new-entries halt + bug guards (broker-vs-journal $ mismatch -> entries off + alert; order-size guard). Optional insurance C10L: per-setup -10R closed+open cap (latch kept). Reply 'HS-SCALE yes' (package), 'HS-SCALE +C10' (package + per-setup cap), or 'no'.",
-  "recommend": "Yes, the package without the per-setup cap - no per-setup cap passed the pre-registered test (s8cap_1125: R saved on bad days = R lost on days that recovered); C10L is cheap insurance if you want it",
+  "title": "Primary safety switches (Friday epoch): as built only SHOCK-V acts - turn on SHOCK-V alone, have the flatten and bug guards built first, or no?",
+  "what": "What is built (mcf/execution/risk.py scaled_check + safety.py; docs/live/FRIDAY_SWITCHES.md) differs from the researched package. The scaled halt blocks NEW entries only once closed + open R <= -X; it does not flatten. With N = 4 Primary setups X = clip(4 sigma, 2.5R x N, 8R x N) is about -32R, beyond the fixed -20R no-new-entries halt, so it never fires first and changes nothing today. SHOCK-V (closed + open R drops sharply within 2-10 min -> no new entries + alert, no flatten) is built and does act. NOT built: the K4 flatten at -X that the research scored, the broker-vs-journal $ mismatch guard and the order-size guard. So a 'yes' to the old package would effectively add SHOCK-V only. The -2R latch and the -20R halt stay either way; no per-setup cap is offered (none passed s8cap_1125). SHOCK-V's thresholds are max(8R, 0.5X) in 2 min and max(12R, 0.75X) in 10 min, but it only gets X when the scaled halt is on; with the halt off it runs on its bare 8R / 12R floors, which were never scored. So 'shock-only' sets the floors to the scored level for N = 4 (X = 32R): v1_floor_r 16, v2_floor_r 24. Reply 'HS-SCALE shock-only' (SHOCK-V on in Primary with 16R / 24R floors, scaled halt stays off), 'HS-SCALE build-flatten' (Claude builds the K4 flatten + $-mismatch and order-size guards with tests for a later epoch; nothing switched on now) or 'HS-SCALE no'.",
+  "recommend": "Yes - 'HS-SCALE shock-only' (SHOCK-V on in Primary, floors 16R in 2 min / 24R in 10 min): it is the one built piece that acts. The research scored SHOCK-V at X = 8R x N for that day (Primary 32-64R, so 16-32R / 24-48R): 0 Primary fires on 13 days, and it caught Gen 11-17 and Live Lab 11-20 with 2 false fires in 118 account-days. A fixed 16R / 24R is not re-scored: Primary's 13 days pass it once (11-06, 10-min drop -40.7R, if the 2-poll confirm holds). The bare 8R / 12R floors would pass on 3 of 13 Primary days (11-06, 11-12 = the L3 +31R recovery day, 11-19), so they are not offered. The entries-only scaled halt adds nothing while the -20R halt stays, and the flatten and bug guards need their own build and tests before they can be chosen",
   "numbers": [
-   "Account stop fires ~7.5 days/yr (4 setups) vs 46 for a fixed -12R; ~1.5/yr for 9 setups",
-   "Per-setup caps cut the worst-5 days (-34.9 -> -24..-32R) at ~3-90R/yr cost; C10L costs ~3R/yr (4 setups), live Primary +18R",
-   "Dropping the -2R latch loses in every bench test (-40R/yr 4 setups)"
+   "As built: scaled halt X ~ -32R at N = 4 (~ -72R at N = 9) vs the fixed -20R halt -> 0 extra fires. Research K4 (with a flatten, not built) fired ~7.5 days/yr for 4 setups, dR +13R, worst day -48.1 -> -40.6R (hsscale_1125 bench, LR8 + borrow)",
+   "SHOCK-V live (scored at X = 8R x N per day, thresholds 16-32R / 24-48R on Primary): 0 fires on Primary's 13 snapshot days; at fixed 16R / 24R, 1 Primary day passes (11-06); at the bare 8R / 12R floors, 3 of 13 Primary days (11-06 -15.1 / -40.7R, 11-12 10-min -13.8R, 11-19 -11.0 / -17.2R) and 54 of 118 account-days pass (before the 2-poll confirm; research/hsscale_1125/l1_live_days.csv); across 118 account-days it caught Gen 11-17 (-127R, 143 lots in 5 min) and Live Lab 11-20 (-116R) with 2 false fires; it does not flatten (a flatten after a shock locks in the low)",
+   "Not built: K4 flatten, MISMATCH-$ guard, LR10 order-size guard. Per-setup caps: none passed (s8cap_1125: R saved on bad days = R lost on days that recovered), so C10L is no longer offered; per setup, no setup hurt by more than ~10R under K4"
   ],
-  "why": "Owner 11-24: don't stop the account prematurely, but never crash from a bug or glitch; a fixed stop gets too tight as Primary grows.",
-  "link": "research/s8cap_1125/REPORT.md",
+  "why": "Owner 11-24: don't stop the account prematurely, but never crash from a bug or glitch; a fixed stop gets too tight as Primary grows. Restated 11-26 night (inspector_1127 #1): the earlier card described the researched package, not the built switch. Rule-change context since Day 1 (10-23): a selection of the 164 research/ledger.jsonl entries effective 10-23..11-27 (the rest are Testing / Graveyard / tooling; see the ledger): 10-23 LL-LATCH, ST-A; 10-26/27 MF1 out, CWT13 in/out, ST7 in; 10-28 Primary sizing in two steps (~$5,000 then ~$4,000 per position; slots 160 -> 61 -> 77, per-setup cap 30); 10-29 -2R latch; 10-30 L3-gap-slope-fromopen-FD re-promoted Testing 1 -> Primary (start of its Primary record) and L3-rsi5hi promoted Testing 2 -> Primary; 10-30 CF in Testing; 11-11 TEAM-6 in Primary (NM-ETF, MF2, MF4 and others; open-ended from 11-16, L3 cap 30); 11-12 LR1 (half-day flatten 5 min before the close) and LR3 (Primary's -20R halt and -2R latch count R after costs; the halt also counts open marks), LR8; 11-17 TSZ1; 11-19 Epoch 1 and DQ-P4 (open marks and the -20R halt's open term use the entry fill); 11-20 stop rounding; 11-21 cost-basis fix; 11-23 ST7 out + burst brake, PSHADOW (Primary no-order shadow of L3-rsi5hi and RW6) and Remedy-Q (Testing copies of the Primary trio, no entries after 12:30 ET); 11-27 ROT-B3 and GYH V1/V3 moves (effective 11-27).",
+  "link": "research/hsscale_1125/REPORT.md",
   "status": "open",
   "answered": null
  },
@@ -3170,14 +3170,14 @@
  {
   "code": "LATCH-OPEN",
   "title": "Make the -2R per-setup stop count open losses too (no new entries once a setup is down 2R incl. open trades)?",
-  "what": "Change the existing -2R per-setup latch to count closed + open R after costs: once a setup is down 2R including its open trades, it takes no new entries for the day; open trades keep their own stops; nothing is sold. Pairs with HS-SCALE. Primary change: apply after the close with skeptic review + ledger, either tonight as an owner-chosen stopgap (effective Fri 11-27) or at the Friday epoch (effective Mon 11-30). Reply 'LATCH-OPEN now / friday / -3R / no'.",
-  "recommend": "Yes - the most targeted fix for 11-25 (L3 kept shorting while its open losses piled up): replay -37.4R -> -8.3R; insurance, not edge",
+  "what": "Change the existing -2R per-setup latch to count closed + open R after costs: once a setup is down 2R including its open trades, it takes no new entries for the day; open trades keep their own stops; nothing is sold. Primary change, Friday epoch only: applied after the 13:00 ET close on Fri 11-27 (effective Mon 11-30) with skeptic review + ledger; no mid-week change to a protected Primary latch (C3-EPOCH, PROT-21), so the earlier 'now' option is withdrawn. Reply 'LATCH-OPEN friday / -3R / no'.",
+  "recommend": "Yes - 'LATCH-OPEN friday': the most targeted fix for 11-25 (L3 kept shorting while its open losses piled up): full-day engine replay -40.1R -> -8.3R (the journal day was -42.30R after costs, LR8); insurance, not edge",
   "numbers": [
-   "Live worst-5 days -28.2 -> -17.0R; bench days <= -20R cut ~75% (33 -> 8 in 2.9 yrs)",
-   "Cost: ~20% fewer lots; if the book were profitable (+0.10R/lot) ~ -87R/yr; cuts some recovery days (11-12 L3 +31R -> +1R)",
-   "-3R variant: 11-25 -37 -> -23R at a third of that cost"
+   "11-25 on the full-day base (squeeze_1125 minute engine, LR8 + borrow): -40.1 -> -8.3R; journal -42.30R after costs (LR8). The -37.4R base shown earlier was a partial day (to 13:00) and is retired",
+   "Live worst-5 days -28.2 -> -17.0R; bench days <= -20R cut ~75% (33 -> 8 in 2.9 yrs); all 4 Primary setups better at zero expectancy. Cost: ~20% fewer lots, ~ -87R/yr if the book earned +0.10R/lot; cuts recovery days (11-12 L3 +31R -> +1R)",
+   "-3R variant: 11-25 -37 -> -23R on the partial-day base (not re-scored on the full day), at about a third of the cost"
   ],
-  "why": "Owner 11-25: a day like today cannot happen again; targeted remedy for the failure mode (closed-R-only latch).",
+  "why": "Owner 11-25: a day like today cannot happen again; targeted remedy for the failure mode (closed-R-only latch). Restated 11-26 night (inspector_1127 #6, #14). Rule-change context since Day 1 (10-23): a selection of the 164 research/ledger.jsonl entries effective 10-23..11-27 (the rest are Testing / Graveyard / tooling; see the ledger): 10-23 LL-LATCH, ST-A; 10-26/27 MF1 out, CWT13 in/out, ST7 in; 10-28 Primary sizing in two steps (~$5,000 then ~$4,000 per position; slots 160 -> 61 -> 77, per-setup cap 30); 10-29 -2R latch; 10-30 L3-gap-slope-fromopen-FD re-promoted Testing 1 -> Primary (start of its Primary record) and L3-rsi5hi promoted Testing 2 -> Primary; 10-30 CF in Testing; 11-11 TEAM-6 in Primary (NM-ETF, MF2, MF4 and others; open-ended from 11-16, L3 cap 30); 11-12 LR1 (half-day flatten 5 min before the close) and LR3 (Primary's -20R halt and -2R latch count R after costs; the halt also counts open marks), LR8; 11-17 TSZ1; 11-19 Epoch 1 and DQ-P4 (open marks and the -20R halt's open term use the entry fill); 11-20 stop rounding; 11-21 cost-basis fix; 11-23 ST7 out + burst brake, PSHADOW (Primary no-order shadow of L3-rsi5hi and RW6) and Remedy-Q (Testing copies of the Primary trio, no entries after 12:30 ET); 11-27 ROT-B3 and GYH V1/V3 moves (effective 11-27).",
   "link": "research/neveragain_1125/REPORT.md",
   "status": "open",
   "answered": null
@@ -3204,7 +3204,7 @@
   "recommend": "Yes - meets OD-IN (On Deck is for reps, not proof); positive without its best day, but its best day carries 64% of R (`1 day`)",
   "numbers": [
    "10 traded sessions / 32 trades (24 active days), avg +0.746R after costs (LR8, all accounts, identical signals once), +23.9R; OD-IN shrunk +0.459, last-5 +1.153; 50% green days",
-   "w/o best day (11-18, 64% of R, `1 day`) +0.286R; w/o top 2 days -0.193R; day t +0.52; 11-25 squeeze day -1.2R",
+   "w/o best day (11-18, 64% of R, `1 day`) +0.286R; w/o top 2 days -0.193R; footrace day_t +0.52; 11-25 squeeze day -1.2R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3219,7 +3219,7 @@
   "recommend": "Optional - meets OD-IN (w/o best day >= -0.20), but it is negative without its best day (-0.179R; best day 122% of R, `1 day`): a weaker seat",
   "numbers": [
    "7 traded sessions / 223 trades (25 active days), avg +0.445R after costs (LR8, all accounts, identical signals once), +99.3R; OD-IN shrunk +0.409, last-5 +0.742; 57% green days",
-   "w/o best day (11-20, 122% of R, `1 day`) -0.179R; w/o top 2 days -0.349R; day t -0.01; 11-25 squeeze day +0.0R",
+   "w/o best day (11-20, 122% of R, `1 day`) -0.179R; w/o top 2 days -0.349R; footrace day_t -0.01; 11-25 squeeze day +0.0R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3234,7 +3234,7 @@
   "recommend": "Yes - meets OD-IN (On Deck is for reps, not proof); positive without its best day, but its best day carries 95% of R (`1 day`)",
   "numbers": [
    "8 traded sessions / 238 trades (23 active days), avg +0.416R after costs (LR8, all accounts, identical signals once), +98.9R; OD-IN shrunk +0.383, last-5 +0.600; 50% green days",
-   "w/o best day (11-20, 95% of R, `1 day`) +0.029R; w/o top 2 days -0.008R; day t +0.92; 11-25 squeeze day +0.0R",
+   "w/o best day (11-20, 95% of R, `1 day`) +0.029R; w/o top 2 days -0.008R; footrace day_t +0.92; 11-25 squeeze day +0.0R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3249,7 +3249,7 @@
   "recommend": "Yes - meets OD-IN (On Deck is for reps, not proof); positive without its best day, but its best day carries 96% of R (`1 day`)",
   "numbers": [
    "12 traded sessions / 259 trades (27 active days), avg +0.293R after costs (LR8, all accounts, identical signals once), +76.0R; OD-IN shrunk +0.272, last-5 +0.231; 50% green days",
-   "w/o best day (11-13, 96% of R, `1 day`) +0.018R; w/o top 2 days -0.156R; day t +0.03; 11-25 squeeze day +6.1R",
+   "w/o best day (11-13, 96% of R, `1 day`) +0.018R; w/o top 2 days -0.156R; footrace day_t +0.03; 11-25 squeeze day +6.1R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3264,7 +3264,7 @@
   "recommend": "Yes - meets OD-IN (On Deck is for reps, not proof); positive without its best day, but its best day carries 67% of R (`1 day`)",
   "numbers": [
    "12 traded sessions / 295 trades (20 active days), avg +0.111R after costs (LR8, all accounts, identical signals once), +32.6R; OD-IN shrunk +0.104, last-5 +0.223; 67% green days",
-   "w/o best day (11-20, 67% of R, `1 day`) +0.042R; w/o top 2 days +0.007R; day t +1.23; 11-25 squeeze day +0.0R",
+   "w/o best day (11-20, 67% of R, `1 day`) +0.042R; w/o top 2 days +0.007R; footrace day_t +1.23; 11-25 squeeze day +0.0R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3279,7 +3279,7 @@
   "recommend": "Optional - meets OD-IN (w/o best day >= -0.20), but it is negative without its best day (-0.168R; best day 221% of R, `1 day`): a weaker seat",
   "numbers": [
    "7 traded sessions / 92 trades (26 active days), avg +0.117R after costs (LR8, all accounts, identical signals once), +10.7R; OD-IN shrunk +0.096, last-5 +0.071; 57% green days",
-   "w/o best day (11-20, 221% of R, `1 day`) -0.168R; w/o top 2 days -0.251R; day t +0.94; 11-25 squeeze day -16.3R",
+   "w/o best day (11-20, 221% of R, `1 day`) -0.168R; w/o top 2 days -0.251R; footrace day_t +0.94; 11-25 squeeze day -16.3R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3294,7 +3294,7 @@
   "recommend": "Optional - meets OD-IN (w/o best day >= -0.20), but it is negative without its best day (-0.014R; best day 104% of R, `1 day`): a weaker seat",
   "numbers": [
    "7 traded sessions / 37 trades (28 active days), avg +0.134R after costs (LR8, all accounts, identical signals once), +5.0R; OD-IN shrunk +0.087, last-5 +0.255; 71% green days",
-   "w/o best day (11-12, 104% of R, `1 day`) -0.014R; w/o top 2 days -0.093R; day t +0.97; 11-25 squeeze day +0.2R",
+   "w/o best day (11-12, 104% of R, `1 day`) -0.014R; w/o top 2 days -0.093R; footrace day_t +0.97; 11-25 squeeze day +0.2R",
    "rules in window: 11-12 accounts, 11-17 TSZ1 (half-size lots, R comparable), 11-19 C3-ROT/ROT2, 11-20 FOOTRACE-EXIT + block 2, 11-23 burst brake; seat ranking by shrunk avg R (On Deck cap 18, 10 seated after 3 OD-OUT exits)"
   ],
   "why": "ROT3 routine: arena setups at OD-IN get a card; Arena -> On Deck needs your yes.",
@@ -3304,30 +3304,30 @@
  },
  {
   "code": "B8-SHADOW",
-  "title": "Book balance cap B8 (block new same-direction entries once Primary's net market risk exceeds 8R per 1% SPY): shadow first or enforce?",
-  "what": "Option A: log B8 as a shadow in Primary and Testing 1/2 (no trade changes), review after 20 Primary sessions. Option B: enforce B8 in Primary on top of LATCH-OPEN, labelled insurance. Friday epoch window only, ledger entry + tests. Reply 'B8 shadow / enforce / no'.",
-  "recommend": "Yes - shadow first (Option A): it passed the pre-registered bar but is on ~185 of 252 sessions a year and most of its gain comes from trading a losing book less (zero-mean book: 3 of 4 setups worse) - insurance, not edge",
+  "title": "Book balance cap B8 (block new same-direction entries once Primary's net market risk exceeds 8R per 1% SPY): log it as a shadow, or no?",
+  "what": "Log B8 as a shadow in Primary and Testing 1/2 (a journal tag wherever B8 would block an entry; no trade changes), review after 20 Primary sessions. Enforcing B8 is not offered: it has not been scored against a size-matched random block or a constant cut, and on a losing book trading ~29% less always 'wins'; enforce comes back as an option only if B8 beats both controls on CHECK and T2. Friday epoch window, ledger entry + tests. Reply 'B8 shadow / no'.",
+  "recommend": "Yes - 'B8 shadow': it passed the pre-registered bar but fires on ~185 of 252 sessions a year and most of its gain comes from trading a losing book less (zero-mean book: 3 of 4 setups worse); a shadow costs no trades while the controls are run - insurance, not edge",
   "numbers": [
-   "On top of LATCH-OPEN: worst-5 days +47% CHECK / +22% T2; days <= -10R 38->15 / 21->4; live 10-23..11-25 +27.9R, worst-5 -16.8 -> -11.8R",
-   "Per setup (raw): all 4 better (L3 +121, RW3 +73, RW5 +133, NM-ETF +4R); zero-mean book: L3 -27, RW3 -43, RW5 -76 per period; best day 11% of gain",
-   "11-25: LATCH-OPEN alone -40.1 -> -8.3R; B8 adds nothing on top. 5 configs tried (cumulative N ~2,269); B12/B16/squeeze-exit failed"
+   "On top of LATCH-OPEN (bench): worst-5 days +47% CHECK / +22% T2; days <= -10R 38->15 / 21->4. No size-matched random-block or constant-cut control yet (inspector repro: a 29% random block improves CHECK worst-5 only 7-14%, so B8's CHECK tail gain is more than size; T2 uncontrolled)",
+   "Live 10-23..11-25 dR +27.9R, split: today's Primary trio L3 -10.3, RW5 -16.2, RW3 -0.1 = about -26.6R; departed MF2 +39.2 / MF4 +10.6 = +49.8R; rest +4.7R. For today's book the live evidence reads negative",
+   "Per setup (bench RAW): all 4 better (L3 +121, RW3 +73, RW5 +133, NM-ETF +4R); zero-mean book: L3 -27, RW3 -43, RW5 -76. 11-25: LATCH-OPEN alone -40.1 -> -8.3R, B8 adds nothing. 5 configs tried (cumulative N ~2,269)"
   ],
-  "why": "Owner 11-25: explore unforeseen tactics; the midday-flip swing (11-10, 11-25) is Primary's worst failure type.",
+  "why": "Owner 11-25: explore unforeseen tactics; the midday-flip swing (11-10, 11-25) is Primary's worst failure type. Restated 11-26 night (inspector_1127 #7, #8). Rule-change context since Day 1 (10-23): a selection of the 164 research/ledger.jsonl entries effective 10-23..11-27 (the rest are Testing / Graveyard / tooling; see the ledger): 10-23 LL-LATCH, ST-A; 10-26/27 MF1 out, CWT13 in/out, ST7 in; 10-28 Primary sizing in two steps (~$5,000 then ~$4,000 per position; slots 160 -> 61 -> 77, per-setup cap 30); 10-29 -2R latch; 10-30 L3-gap-slope-fromopen-FD re-promoted Testing 1 -> Primary (start of its Primary record) and L3-rsi5hi promoted Testing 2 -> Primary; 10-30 CF in Testing; 11-11 TEAM-6 in Primary (NM-ETF, MF2, MF4 and others; open-ended from 11-16, L3 cap 30); 11-12 LR1 (half-day flatten 5 min before the close) and LR3 (Primary's -20R halt and -2R latch count R after costs; the halt also counts open marks), LR8; 11-17 TSZ1; 11-19 Epoch 1 and DQ-P4 (open marks and the -20R halt's open term use the entry fill); 11-20 stop rounding; 11-21 cost-basis fix; 11-23 ST7 out + burst brake, PSHADOW (Primary no-order shadow of L3-rsi5hi and RW6) and Remedy-Q (Testing copies of the Primary trio, no entries after 12:30 ET); 11-27 ROT-B3 and GYH V1/V3 moves (effective 11-27).",
   "link": "research/squeeze_1125/REPORT.md",
   "status": "open",
   "answered": null
  },
  {
   "code": "L3-OUT",
-  "title": "Move Gap-Down Recovery Fade (`L3-gap-slope-fromopen-FD`) from Primary to On Deck, together with LATCH-OPEN?",
-  "what": "Friday 11-27 epoch, after the 13:00 close: L3-fromopen switched off in Primary and placed in On Deck (promotion = move); it can return under the C3-BAR2 standard. RW3/RW5 stay, re-checked at 20 Primary sessions. Ledger entry + assignments.json + tests. Reply 'L3-OUT yes / half / no'.",
-  "recommend": "Yes - every bench window is negative at live-calibrated costs and removing it improves Primary book R per session (CHECK +0.77, T2 +0.36, t 3.4 / 3.7); its live Primary record is -0.024R over 231 trades (-0.204R w/o best day, 10-20 = 81% of its R)",
+  "title": "Gap-Down Recovery Fade (`L3-gap-slope-fromopen-FD`) in Primary: move it to On Deck, keep it on probation, or no change?",
+  "what": "PRIME-RULES status: L3-fromopen's Primary record is 18 sessions / 231 trades -0.024R (about -5.5R): it has not crossed the -10R demotion line and is short of the ~20-session PRIME-RULES decision point, so the rule path is probation, not demotion. Moving it now skips that probation step and is your discretionary call (as with ST7-MOVE). Options, Friday 11-27 epoch after the 13:00 close: 'out' = switched off in Primary and placed in On Deck (promotion = move; it can return under C3-BAR2 + the PRIME-RULES entry tests; ledger + assignments.json + tests); 'probation' = keep it in Primary on probation with LATCH-OPEN, re-decided at 20 Primary sessions or at -10R; 'no' = no change. Half size is not offered (needs a size multiplier, not built). RW3/RW5 stay either way; their removal was never scored. Reply 'L3-OUT out / probation / no'.",
+  "recommend": "Yes - 'L3-OUT out', as a discretionary move that skips probation. No written exemption allows that: PROT-21 covers the -2R latch / -20R halt, not the lineup, and PRIME-RULES / C3-BAR2 (RESEARCH_RULES 23) keep a setup above -10R on probation; it needs your explicit override of the probation step, as ST7-MOVE had under WW-ST7 (owner yes 11-20, ledger 2026-11-23-st7-move-qa-exit2), made in the C3-EPOCH Friday window (rule 25). The case: relative to RW3/RW5 the like-for-like live Primary record singles L3 out (w/o best day -0.204R vs -0.037 / -0.057R) and removing it lifts Primary book R per session (CHECK +0.77, T2 +0.36, t 3.4 / 3.7); 'probation' is the rule-default alternative if you prefer not to skip the step",
   "numbers": [
-   "Live-calibrated costs (32,131 live trades): L3-fromopen CHECK -0.100R (w/o best -0.111), T2 -0.126R (-0.134); live all accounts +0.086R (+0.019)",
-   "Options vs keep (LATCH-OPEN on), Primary R/session CHECK/T2: out +0.77/+0.36; half size +0.37/+0.18 (needs a size multiplier, not ready for 11-27); latch-open only = keep. Live 18-session replay: noise (t <= 0.19)",
-   "Rule-change context: 11-19 C3 Epoch 1, 11-20 stop rounding, 11-21 cost fix, 11-23 ST7 out + burst brake; 0 setup configs, 2 cost-model versions tried (1 kept)"
+   "Relative (E4 minute book, LATCH-OPEN on): removing L3 lifts Primary R/session CHECK +0.77 / T2 +0.36 (t 3.4 / 3.7); like-for-like live Primary, avg w/o best day: L3 -0.204R, RW3 -0.037R, RW5 -0.057R; live 18-session replay: noise (t <= 0.19)",
+   "Live: Primary 231 tr -0.024R (w/o best day -0.204R); all accounts 453 tr +0.086R (w/o best +0.019R; 10-20 = 81% of R, `1 day`); 11-25 -34.97R on 35 lots",
+   "Absolute bench (LIVE-L costs): L3 CHECK -0.100 / T2 -0.126R, but RW3 -0.088 / -0.142 and RW5 -0.092 / -0.177 are as negative and their removal was not scored; bench lots carry survivorship + ETB look-ahead bias (mostly cancels in the relative delta, not in the absolute 'every window negative'). 0 setup configs, 2 cost models tried (1 kept)"
   ],
-  "why": "Nightly loop 11-25: L3's place in Primary on Friday's agenda (11-25: -34.97R on 35 lots).",
+  "why": "Nightly loop 11-25: L3's place in Primary on Friday's agenda (11-25: -34.97R on 35 lots). Restated 11-26 night (inspector_1127 #5, #12, #13): probation path, RW3/RW5 parity and the bench bias are now on the card. Rule-change context since Day 1 (10-23): a selection of the 164 research/ledger.jsonl entries effective 10-23..11-27 (the rest are Testing / Graveyard / tooling; see the ledger): 10-23 LL-LATCH, ST-A; 10-26/27 MF1 out, CWT13 in/out, ST7 in; 10-28 Primary sizing in two steps (~$5,000 then ~$4,000 per position; slots 160 -> 61 -> 77, per-setup cap 30); 10-29 -2R latch; 10-30 L3-gap-slope-fromopen-FD re-promoted Testing 1 -> Primary (start of its Primary record) and L3-rsi5hi promoted Testing 2 -> Primary; 10-30 CF in Testing; 11-11 TEAM-6 in Primary (NM-ETF, MF2, MF4 and others; open-ended from 11-16, L3 cap 30); 11-12 LR1 (half-day flatten 5 min before the close) and LR3 (Primary's -20R halt and -2R latch count R after costs; the halt also counts open marks), LR8; 11-17 TSZ1; 11-19 Epoch 1 and DQ-P4 (open marks and the -20R halt's open term use the entry fill); 11-20 stop rounding; 11-21 cost-basis fix; 11-23 ST7 out + burst brake, PSHADOW (Primary no-order shadow of L3-rsi5hi and RW6) and Remedy-Q (Testing copies of the Primary trio, no entries after 12:30 ET); 11-27 ROT-B3 and GYH V1/V3 moves (effective 11-27).",
   "link": "research/primshorts_1126/REPORT.md",
   "status": "open",
   "answered": null
@@ -3335,12 +3335,12 @@
  {
   "code": "CRYPTO-SCOPE",
   "title": "Is swing / daily crypto (BTC/ETH/SOL trend overlay) in scope, or park crypto for now?",
-  "what": "Intraday crypto on Alpaca failed 3 rounds (997 configs, 0 survivors after costs). The only lead is a daily trend overlay (hold BTC/ETH/SOL only while above the 50-day average / 20-day breakout), which is swing trading, outside MCF's intraday charter. If 'swing', pre-register ONE trend overlay and score it once on the locked last 6 months; no live trading without a separate account and your yes. Reply 'CRYPTO swing / park'.",
-  "recommend": "Optional - the trend overlay cut CHECK drawdown from 59% to 23-32% and beat buy-and-hold's Sharpe in 8 of 9 configs, but it rests on 15-47 trades and trade t <= 2.22 vs a 3.82 bar; parking costs nothing",
+  "what": "Intraday crypto on Alpaca failed 4 rounds (r1 500, r2 480, r3 17, crypto_setups1 14 = 1,011 configs; cumulative N 1,491), 0 survivors after costs. The only lead is a daily trend overlay (hold BTC/ETH/SOL only while above the 50-day average / 20-day breakout), which is swing trading, outside MCF's intraday charter. If 'swing', pre-register ONE trend overlay and score it once on the locked last 6 months; no live trading without a separate account and your yes. Reply 'CRYPTO swing / park'.",
+  "recommend": "Optional - the trend overlay cut CHECK max drawdown from 59% to 10-34% across the 9 configs (MA50 32%, 20-day breakout 23%) and beat buy-and-hold's Sharpe in 8 of 9 configs, but it rests on 15-47 trades and trade t <= 2.22 vs a 3.82 bar; parking costs nothing",
   "numbers": [
    "CHECK 2025-01..2026-05: buy-and-hold -37.6% (Sharpe -0.25, max DD 59%); MA50 filter +7.6% (0.32, 32%); 20-day breakout +10.9% (0.42, 23%)",
    "FIT 2021-24: buy-and-hold +3,546% vs trend at most +285% (bull markets favour holding)",
-   "Intraday rounds: r1 500 draws 0 after costs (cost 0.70R/trade); r2 480, 0 eligible (cost 0.13R, gross edge ~0); r3 17, 0 eligible; cumulative N 1,477"
+   "Intraday rounds: r1 500 draws 0 after costs (cost 0.70R/trade); r2 480, 0 eligible (cost 0.13R, gross edge ~0); r3 17, 0 eligible; crypto_setups1 14 hand-built, 0 eligible (best FIT t 1.16 vs 3.82); cumulative N 1,491"
   ],
   "why": "Owner 11-25: build the crypto foundation with massive research and random setup generation.",
   "link": "research/crypto_r3/REPORT.md",

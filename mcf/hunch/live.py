@@ -10,7 +10,12 @@ Each trading day (.github/workflows/hunch.yml, one light job, concurrency group 
     per ticker, each on its own guesses) and the pooled model (all tickers), then guess bar b+1
   * a guess is written to guesses/<day>.csv the first time it is made and never revised (`guessed_at`); outcomes
     and hits are filled in when the next bar closes. scoreboard.csv / scoreboard.md keep the running record.
-  * after 16:00 ET the end-of-day model is saved as state/model.npz (+ state/model_<day>.npz) for the next day.
+  * after the session's last scored bar (15:54 ET; 12:54 on a 13:00 half day) the end-of-day model is saved as
+    state/model.npz (+ state/model_<day>.npz) for the next day.
+  * half days (inspector 11-27): the session ends at the market-calendar close (mcf.data.bars.close_min), not a fixed
+    16:00. Bars at / after the close are dropped (Alpaca prints after-hours trades until 16:00), the last guessed bar
+    is the one closing 9 minutes before the close (as 15:51 on a regular day) and the day completes at close - 6 min,
+    so after-hours bars are never guessed, scored, learned or saved into the model.
 Restart-safe: each tick recomputes today from the start-of-day model, so a crash or the 6-hour job hand-over costs
 nothing but the minutes it was down. Live shadow results are labelled as such and kept apart from replay results
 (RESEARCH_RULES 7). Educational only - not financial advice.
@@ -25,6 +30,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from mcf.data.bars import close_min
 
 from . import data as D
 from . import learners as Lr
@@ -87,14 +94,15 @@ def extend_model(m: dict, feats: list) -> dict:
     return m
 
 
-def catch_up(model: dict, panel: pd.DataFrame, today: str) -> tuple[dict, list]:
+def catch_up(model: dict, panel: pd.DataFrame, today: str, close_for=close_min) -> tuple[dict, list]:
     """Learn every session in `panel` after the model's last_date and before `today` that was never finalised (e.g. a
     run that died before 16:00, as 2026-11-11): walk it as the live shadow would have, all bars closed. Point in time:
     those sessions are complete before today's first guess. Returns (model, days learned)."""
     days = sorted({str(d) for d in panel["date"].astype(str) if model["last_date"] < str(d) < today})
     done = []
     for d in days:
-        _, m2, complete = walk_day(model, panel, d, bar_close(d, D.GUESS_LAST + 2) + pd.Timedelta(minutes=5))
+        _, m2, complete = walk_day(model, panel, d, bar_close(d, D.GUESS_LAST + 2) + pd.Timedelta(minutes=5),
+                                   close_for=close_for)
         if complete and m2["tot_n"] > model["tot_n"]:
             model = {**m2, "last_date": d}
             done.append(d)
@@ -114,9 +122,18 @@ def bar_close(day: str, b: int) -> pd.Timestamp:
     return pd.Timestamp(f"{day} 09:30", tz=ET) + pd.Timedelta(minutes=3 * (b + 1))
 
 
-def walk_day(model: dict, panel: pd.DataFrame, day: str, now: pd.Timestamp) -> tuple[pd.DataFrame, dict, bool]:
-    """Walk today's closed bars from the start-of-day `model` (copied; the input is not changed).
+def guess_last(day: str, close_for=close_min) -> int:
+    """The last guessed bar of `day`: D.GUESS_LAST (closes 15:51) on a regular day, the bar closing 9 min before an
+    early close otherwise (12:51 on a 13:00 half day: b = 66)."""
+    return D.GUESS_LAST - (D.N_BUCKETS - D.n_buckets(close_for(day)))
+
+
+def walk_day(model: dict, panel: pd.DataFrame, day: str, now: pd.Timestamp,
+             close_for=close_min) -> tuple[pd.DataFrame, dict, bool]:
+    """Walk today's closed bars from the start-of-day `model` (copied; the input is not changed). The session ends at
+    its calendar close (`close_for`): on a half day no bar at / after the close is guessed or learned.
     Returns (guesses with outcomes so far, the model after the last scored bar, whether the day is complete)."""
+    last = guess_last(day, close_for)
     m = _copy_model(model)
     met, feats, syms = m["metric"], m["feats"], m["symbols"]
     sidx = {s: i for i, s in enumerate(syms)}
@@ -126,7 +143,7 @@ def walk_day(model: dict, panel: pd.DataFrame, day: str, now: pd.Timestamp) -> t
     p["mom20"] = M.mom20(p, met)
     p["next_filled"] = p.groupby(["symbol", "date"], sort=False)["filled"].shift(-1).fillna(1).to_numpy()
     t = p[p["date"].astype(str) == day]
-    closed_b = [b for b in range(D.GUESS_FIRST, D.GUESS_LAST + 1) if bar_close(day, b) + pd.Timedelta(seconds=LAG_S) <= now]
+    closed_b = [b for b in range(D.GUESS_FIRST, last + 1) if bar_close(day, b) + pd.Timedelta(seconds=LAG_S) <= now]
     out = []
     pending = None  # (rows, X, idx) guessed at the previous bar, waiting for their answer
     for b in closed_b:
@@ -180,7 +197,7 @@ def walk_day(model: dict, panel: pd.DataFrame, day: str, now: pd.Timestamp) -> t
     for c in ("guess_pooled", "guess_own", "same_last", "mom20", "base_rate"):
         g[f"hit_{c.replace('guess_', '')}"] = np.where(np.isfinite(yk), (g[c].to_numpy(dtype=float) == yk).astype(float), np.nan)
     g = g.drop(columns=["_y", "_nf"])
-    complete = bar_close(day, D.GUESS_LAST + 1) + pd.Timedelta(seconds=LAG_S) <= now
+    complete = bar_close(day, last + 1) + pd.Timedelta(seconds=LAG_S) <= now
     return g, m, complete
 
 
@@ -343,7 +360,7 @@ def run_live(state: Path, seed: Path | None, do_push: bool = False, max_minutes:
         if (spy is None or not (spy.index.strftime("%Y-%m-%d") == day).any()) and now.hour * 60 + now.minute > 10 * 60 + 15:
             return "no SPY bars today after 10:15 ET (market holiday?)"
         syms = [s for s in model["symbols"] if s in bars.data]
-        panel = D.build_panel(syms, loader=bars.loader)
+        panel = D.build_panel(syms, loader=bars.loader, close_for=close_min)   # half days end at the calendar close
         if not caught:  # a missed day (job died before the close) is learned before today's first guess
             model, missed = catch_up(model, panel, day)
             caught = True

@@ -466,9 +466,9 @@ def _journal(branch: str):
         return None
     import os
     f = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
-    f.write(raw)
-    f.close()
-    try:  # copy into memory and delete the temp file (leftover copies filled the disk, 2026-11-25)
+    try:  # copy into memory and delete the temp file (leftover copies filled the disk, 2026-11-25; write inside, 11-27)
+        f.write(raw)
+        f.close()
         disk = sqlite3.connect(f.name)
         mem = sqlite3.connect(":memory:")
         disk.backup(mem)

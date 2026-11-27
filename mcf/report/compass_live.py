@@ -29,6 +29,10 @@ by it), it records:
 Research evidence: "staying" (SPY closes on the same side of its open) is readable; "heading" (where it goes from here)
 is a coin flip on every clock. So the card shows where the day stands, not where it goes.
 
+Half days (inspector 11-27): the session ends at the market-calendar close (mcf.data.bars.close_min; 13:00 on a half
+day), not a fixed 16:00. Bars are fetched only up to the close (Alpaca prints after-hours trades until 16:00) and no
+mark at or after the close is recorded (a 13:15 .. 15:45 mark would repeat the 12:59 state as a fake reading).
+
 Output: compass/<date>.csv (one row per mark, appended; a mark computed more than 10 minutes late is tagged
 backfilled) and compass/latest.json. Idempotent: rerunning computes only the missing marks (catch-up after a missed
 cron run); the hourly BDI monitor can run the same command to backfill. Educational only — not financial advice.
@@ -45,6 +49,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from ..data.bars import close_min
 
 ROOT = Path(__file__).resolve().parents[2]
 NY = "America/New_York"
@@ -140,9 +146,18 @@ def level(v: int, p: int, ok: bool = True) -> int:
     return 0
 
 
-def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = None, skip=()) -> list[dict]:
-    """Rows for every 15-min mark that is closed by `now` (mark + 1 min) and not in `skip`. Pure: point-in-time only."""
+def marks_for(day: str, close_for=close_min) -> list[int]:
+    """The 15-min marks of `day` before its exchange close (09:45 .. 15:45; 09:45 .. 12:45 on a 13:00 half day)."""
+    c = close_for(day)
+    return [T for T in MARKS if T < c]
+
+
+def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = None, skip=(),
+            close_for=close_min) -> list[dict]:
+    """Rows for every 15-min mark that is closed by `now` (mark + 1 min), before the day's close, and not in `skip`.
+    Pure: point-in-time only."""
     names = universe() if names is None else names
+    day_marks = marks_for(day, close_for)
     now = pd.Timestamp(now)
     now = now.tz_localize(NY) if now.tzinfo is None else now.tz_convert(NY)
     t_now = now.hour * 60 + now.minute if str(now.date()) == day else (9999 if str(now.date()) > day else -1)
@@ -184,7 +199,7 @@ def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = N
         return "MIXED"
 
     rows = []
-    for T in MARKS:
+    for T in day_marks:
         if T in skip or t_now < T + 1:
             continue
         y = state(T)
@@ -219,11 +234,13 @@ def compute(bars: dict, day: str, now: pd.Timestamp, names: list[str] | None = N
 
 
 # ------------------------------------------------------------------------------------------------------------- data
-def fetch(day: str, syms: list[str], now: pd.Timestamp, log=print) -> dict[str, pd.DataFrame]:
-    """symbol -> 1-minute RTH SIP bars of `day` that started before min(now, 16:00) ET (read-only market data GET)."""
+def fetch(day: str, syms: list[str], now: pd.Timestamp, log=print, close_for=close_min) -> dict[str, pd.DataFrame]:
+    """symbol -> 1-minute RTH SIP bars of `day` that started before min(now, the calendar close) ET (16:00, or 13:00
+    on a half day; read-only market data GET)."""
     from ..replay import store
 
-    end = min(pd.Timestamp(now).tz_convert(NY), pd.Timestamp(f"{day} 16:00", tz=NY))
+    c = close_for(day)
+    end = min(pd.Timestamp(now).tz_convert(NY), pd.Timestamp(f"{day} {c // 60:02d}:{c % 60:02d}", tz=NY))
     start = pd.Timestamp(f"{day} 09:30", tz=NY)
     if end <= start:
         return {}
@@ -336,7 +353,7 @@ def latest(day: str, rows: list[dict], now: pd.Timestamp, cond: dict | None = No
                                  "w60_low_conf", "c30", "checkpoint", "gate1_state", "backfilled")} for r in rows]
     last = rows[-1] if rows else {}
     t = now.hour * 60 + now.minute
-    phase = "pre-open" if not rows else ("closed" if str(now.date()) > day or t >= 960 else "intraday")
+    phase = "pre-open" if not rows else ("closed" if str(now.date()) > day or t >= close_min(day) else "intraday")
     return dict(date=day, asof=last.get("T"), phase=phase, computed_at=f"{now:%Y-%m-%d %H:%M} ET", latest=last,
                 timeline=tl, plain=plain(rows, day, cond), label=LABEL, disclaimer=DISCLAIMER,
                 method="research/bdi/gate1/NOTES.md (30-min compass, checkpoint = SPY >= 0.30% from open), "
@@ -350,7 +367,7 @@ def update(out: Path, day: str, now: pd.Timestamp, bars_fn=fetch, names: list[st
     done = {int(r["T"][:2]) * 60 + int(r["T"][3:]) for r in have}
     names = universe() if names is None else names
     t_now = now.hour * 60 + now.minute if str(now.date()) == day else 9999
-    due = [T for T in MARKS if T not in done and t_now >= T + 1]
+    due = [T for T in marks_for(day) if T not in done and t_now >= T + 1]   # none at / after a half-day close
     new = []
     if due:
         bars = bars_fn(day, list(dict.fromkeys(["SPY", "QQQ", "IWM"] + names + SECTORS)), now, log=log)
