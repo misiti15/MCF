@@ -169,3 +169,90 @@ Rule: setup s trades on day d only if the sum of its R over its last K sessions 
 - Equity-curve trading practitioner tests: https://www.r-bloggers.com/2014/10/structural-arbitrage-trading-the-equity-curve/ ; https://www.elitetrader.com/et/threads/trading-the-equity-curve-doesnt-seem-to-work.295776 ; https://in.tradingview.com/script/QLDOWdxE-Equity-Curve-Trading-with-EMA
 
 Educational only — not financial advice.
+
+## Reviewer notes
+
+Reviewer: review_outside, 2026-11-28 about 00:50 ET. Re-check scripts: `exploration/sandbox/outside/review_recheck.py` and `review_live_recheck.py`, with outputs `*_out.txt`. These are controls on the same 5 configs, so the config count does not change.
+
+**Reproduced exactly:**
+- Live load: 28,799 lots; Primary 943 lots and −147.0R.
+- Bench base: CHECK −2.88 R/day, T2 −1.81 R/day.
+- k = 0.25 lock red days: bench CHECK 168 → 142, bench T2 244 → 233, live 99 → 88 (pooled dR +533.7R).
+
+**Hygiene checks:**
+- Branch vs base: compared with its merge-base on the default branch (be8e648c04), the explore branch changes only paths under `exploration/`.
+- Track commit: 5a662708e7 touches only `exploration/findings/outside.md` and `exploration/sandbox/outside/`.
+- Remote branches: the only `explore*` or `*outside*` branch on the remote is explore/2026-11-27.
+- Costs: costs are in on both sides (LR8 live, LIVE-L bench).
+- Locked holdout: absence is asserted in `bench_book.load`.
+- Lookahead: none found. The lock uses only lots with exit time ≤ the entry time. The live sd is expanding and shifted by one day. The governor's trailing sum uses `.shift(1)`.
+
+**Process caveat that applies to every finding:**
+- The pre-registered pass rule for idea A was based on R: dR > 0 with t ≥ 2 on both bench splits, above p95 of both controls. **Idea A failed it** (T2 t 1.33; 7th / 82nd percentile vs random).
+- The finding does not say this. The red-day framing, and its random-skip control (`lock_redday_ctrl.py`), came after the first scoring. "Red days" was listed in PREREG only as a score, not as a pass test.
+- `PREREG.md` says "written 2026-11-28 00:40 ET", but the commit that added it is dated 00:26 ET. So the file itself cannot confirm that it was written before scoring (most likely the time is a typo).
+- Treat the red-day result as **exploratory and post-hoc**.
+
+### Finding 1a: the profit lock cuts red days. Verdict: HOLDS, but WEAKENED in strength
+- **New path control (reviewer).** I capped each day at its first N base lots, with N chosen so the same total number of lots is removed (CHECK N = 27, 2,450 lots; T2 N = 19, 460 lots).
+  - Red days with this cap: CHECK 164 and T2 244, against 142 and 233 with the lock.
+  - So the trigger itself (closed R ≥ X) matters. Stopping early in general does not do this. This part holds.
+- **Transitions on CHECK:**
+  - 27 days go from red to green, and 1 goes from green to red.
+  - The price is a smaller right tail: the average green day falls from +7.87R to +5.43R on CHECK, and from +3.23R to +2.94R on T2.
+  - Red weeks do not move.
+- **Only 1 of the 2 tested thresholds passes.** k = 0.5 fails the same red-day control on live data (98 vs p5 97) and only reaches p5 on T2 (242 vs 242).
+- **The live sample is small.** The lock removes 11 red account-days out of 140 eligible:
+  - Primary 14 → 10 (20 eligible days)
+  - Testing F 4 → 2, Testing D 2 → 1, Testing E 4 → 3 (6 eligible days each)
+  - Gen, Graveyard and Testing 1 no change.
+- **Rule-change context is incomplete.** The track's list leaves out several changes inside the live window, including exit changes:
+  - 11-17: giveback / SPY-exit (WB / SPYEXIT) exits on L3, RW3, RW5, NM-ETF, MF2 and others; KILL-FLAT-OPEN; shadow mode.
+  - 11-12: account halt at −300, the LR1 half-day flatten, and the testing generic cap of 30.
+  - 10-29: the bar90 and reps-replay filters.
+  - Many setup moves: the 10-30 L3 re-promotions, Graveyard moves on 10-30, 11-01, 11-02, 11-03 and 11-16, and 11-16 RW7 → Testing F.
+  - These change the lots that make up live account-days. The bench is not affected.
+- **Confidence: MEDIUM-LOW.** The track said MEDIUM. The direction is solid on the bench, but the result is post-hoc, the threshold is fragile, and the live numbers are small.
+
+### Finding 1b: the profit lock adds no R beyond trading less. Verdict: HOLDS, and is strengthened
+- With the same number of lots removed, the plain first-N cap does *better* than the lock: +1.00 vs +0.93 R/day on CHECK, and +0.19 vs +0.10 on T2. The lock costs a little R compared with a simple cut.
+- **One big day carries the pooled live R, and the track did not flag it.**
+  - One account-day, Testing F on 11-25, gives +265.4R. That is **49.7%** of the pooled +534R.
+  - Without Testing F the pooled gain is +231R. Live dR is only at the 13th percentile of random.
+  - The Primary carry (11-10 and 11-06 give 90% of +79R) was reported correctly.
+- **Confidence: HIGH.**
+
+### Finding 2: the equity-curve governor fails. Verdict: HOLDS that it fails; the claim "worse than random / anti-informative" is WEAKENED
+- **How "worse" was measured.** The live gap (kept −0.203 vs skipped −0.122 R/lot at K = 5) is weighted by lots.
+  - Measured per setup-day, the Welch t is **+0.05**, so kept days are not worse.
+  - At K = 10 it is −1.38, which is not significant.
+- **Why the 0th percentile appears.** The random control skips setup-days, not lots, so the 0th-percentile result reflects heavy-lot days.
+- **Fair wording:** "no better than random". The review guidance in P2 is still right.
+- **Sample and rule caveats:**
+  - Live K = 5 leaves only about 20 eligible sessions per setup.
+  - Deduped live trades span the LR8 cost basis and the 11-17 exit changes.
+- **Confidence: HIGH that it fails as a gate.**
+
+### Finding 3: outside evidence. Verdict: HOLDS as context, with one point WEAKENED
+- The Kelly arithmetic is correct: −0.156 / 0.89² = −0.197.
+- **The AM/PM point is understated.** Live Spearman is +0.17 on 182 account-days, which is nominally p ≈ 0.02. Afternoon lots after a red morning are worse: −0.170 vs −0.128 R/lot, from 7,776 vs 2,505 lots.
+  - "Barely predicts" is too strong a dismissal.
+  - The direction is the one a daily loss limit relies on. Loss limits were already tested (0/18 book stops), but this live pattern deserves a mention, not a dismissal.
+  - The bench shows no effect (+0.03).
+- The citations are used for what they support. No outside claim is turned into a numeric promise.
+
+### Proposals
+- **P1 (profit-lock shadow):** fine as a log-only nightly computation with no rule change.
+  - Its success test is sound, but needs two additions:
+    - the reviewer's first-N path control, next to random skip;
+    - the change in average green-day size.
+  - Expect fewer than 1 extra green day a week on Primary.
+- **P2 (review rule):** fine. Reword the reason to "own recent results are no better than random", not "worse than random".
+- **P3 (Kelly framing):** fine as a review rule. It only restates that the per-lot edge is negative.
+
+**Final confidence:**
+- Overall the track's analysis is technically clean: no leakage, costs in, holdout untouched, numbers reproduce.
+- Its headline should be read as "the profit lock is a small, post-hoc red-day lever with an R cost compared with a plain cut; the governor is a null".
+- Neither finding moves weekly R toward green.
+
+Educational only — not financial advice.
