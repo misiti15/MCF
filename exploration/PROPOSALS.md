@@ -41,7 +41,7 @@ Not proposed (failed tonight, do not re-run): **cycle 2:** the RW3/RW5 1.25x tar
   - Account: Primary.
   - Baseline: BASE1 twin shadow / journal counterfactual of the skipped lots (what-if rows, LIVE-L costed).
   - Duration: 20 sessions.
-  - Success: no day below −20R caused by a setup that LATCH-OPEN latched; skipped lots average ≤ 0R after costs; R given up on recovery days reported per setup.
+  - Success: no day below −20R caused by a setup that LATCH-OPEN latched, and worst-5 beats a constant size cut of the same lots on fire days (≥ 80th percentile). Skipped lots are also compared with a same-day random skip of equal size (400 draws), reported beside it; "skipped lots ≤ 0R" alone is near-automatic in a losing book. R given up on recovery days reported per setup. (DECISIONS, "Forward bars".)
   - Paired read via PAIRED-CARD at 12-11.
 - **Reviewer status:** card reviewed by inspector_1127 (#6, #14). Tonight: supported, no new counter-evidence beyond rules_1122.
 
@@ -57,7 +57,7 @@ Not proposed (failed tonight, do not re-run): **cycle 2:** the RW3/RW5 1.25x tar
   - Skips the PRIME-RULES probation step, so it needs your override.
 - **Experiment:** Primary without L3 vs the roster shadow, plus On Deck's L3 record.
   - 20 sessions.
-  - Success: Primary day sd ≤ 10R and worst day ≥ −25R, with total R no worse than the live roster shadow by more than 5R.
+  - Success: Primary day sd ≤ 10R and worst day ≥ −25R, with total R no worse than the live roster shadow by more than 5R, **and** day sd and worst-5 at or above the median of a random removal of the same share of lots (about 37%) on the same days (400 draws). The sd bar alone is already met in-sample (9.1).
   - L3's On Deck record is re-scored for C3-BAR2 at 20 sessions.
 - **Reviewer status:** consistent with every review tonight. Both live records are `1 day`, so the bench drives the call.
 
@@ -83,12 +83,13 @@ Not proposed (failed tonight, do not re-run): **cycle 2:** the RW3/RW5 1.25x tar
   - Account: Testing F. Baseline: what-if add-back costed with LIVE-L.
   - Controls: same-account-day random cut of equal size, and a constant cut on fire days.
   - Duration: 11-30..12-11.
-  - Success: worst-5 improves ≥ 40% and total R ≥ the same-day random cut; per-setup better/worse counts reported.
-- **Reviewer status:** shorts reviewer "tail insurance only; add a same-day control". Added.
+  - Success: worst-5 improves ≥ 40% and beats a constant cut on fire days; total R vs the same-day random cut reported (it failed that in-sample); per-setup better/worse counts reported.
+- **Reviewer status:** shorts reviewer "tail insurance only; add a same-day control". Added. In-sample it already sits at the 0th / 14th / 41st percentile against that same-day control, so it is tail insurance only. Alternative (DECISIONS D5): put the latch in On Deck, where L3 lands, instead of Testing F.
 
 ## 5. B8-SHADOW: net-beta cap as a journal tag (existing card)
 - **Evidence:** [squeeze_1125](../research/squeeze_1125/REPORT.md): on top of LATCH-OPEN, worst-5 +47% on CHECK / +22% on T2; fires about 185 of 252 days; live today's trio −26.6R.
 - **Expected:** 0 (log). **Risk:** code path only.
+- **Parity:** the shadow must use the shrunk 60-day beta that passed on the bench, not beta 1.0. B8 already fails T2's constant cut and adds nothing on 11-25 once LATCH-OPEN is on, so it stays log-only.
 - **Experiment:**
   - Accounts: Primary, On Deck, Testing A. 20 Primary sessions.
   - Enforce only if it beats both a size-matched random block and a constant cut on CHECK and T2, plus the forward tags.

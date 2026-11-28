@@ -22,9 +22,9 @@ Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the e
 ## How to answer (one line, copy and edit)
 
 ```
-LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | ARENA-LATCH-F yes | FROZEN-BLOCKS yes | REPORTS go | HS-SCALE shock-only friday | GOAL-STAGES yes | T1X2 yes | PRIM-ADD3 no | ODP2/ODB3 as recommended | CRYPTO park
+LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | ARENA-LATCH-F yes (or ARENA-LATCH-ONDECK yes) | FROZEN-BLOCKS yes | REPORTS go | HS-SCALE shock-only friday | GOAL-STAGES yes | T1X2 yes | PRIM-ADD3 no | ODP2/ODB3 as recommended | CRYPTO park
 ```
-Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch write `LATCH-OPEN -3R monday` (or `friday`). Any item left out stays open. `ODP2/ODB3 as recommended` means the 5 yes / 3 wait split in D12. `ARENA-LATCH-F yes` also grants the time-boxed playing-time exception described in D5.
+Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch write `LATCH-OPEN -3R monday` (or `friday`). Any item left out stays open. `ODP2/ODB3 as recommended` means the 5 yes / 3 wait split in D12. `ARENA-LATCH-F yes` also grants the time-boxed playing-time exception described in D5. `ARENA-LATCH-ONDECK yes` puts the same latch in On Deck (where L3 lands) instead of Testing F; write one, not both.
 
 ## Dry-run status (cycle 2, 02:00 ET): every draft applies and passes the tests
 
@@ -46,9 +46,9 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 |---|---|---|---|---|---|
 | D1 | **LATCH-OPEN** (tapped *friday*) | Latch counts open R too | **Yes, apply for Monday 11-30** (override) | Roster A (L3 out): about +1 to +4 R/wk, all from trading 13-23% fewer lots; the book stays about −6 R/wk on the bench. Main value: days ≤ −20R about 8 → 2 a year on CHECK (pooled about 3.7 → 0.7); an 11-25-type day −40R → about −8R (4-setup book) | Owner override of the Friday rule |
 | D2 | **L3-OUT** (tapped *out*) | Move L3 to On Deck | **Yes, out, for Monday 11-30** (override) | Live total about unchanged (+0.6 R/wk). Day swings −42%, worst-5 −108 → −69R. Bench +1.8 to +3.9 R/wk, size effect | Override of PRIME-RULES probation and the Friday rule |
-| D3 | **B8-SHADOW** (tapped *shadow*) | Log the net-beta cap | **Yes, from Monday** (log only) | 0 (log) | Your yes; arguably not a rule change |
+| D3 | **B8-SHADOW** (tapped *shadow*) | Log the net-beta cap | **Yes, from Monday, log only**, with the shrunk 60-day beta that passed on the bench | 0 (log). Already fails T2's constant cut; adds nothing on 11-25 once LATCH-OPEN is on | Your yes; arguably not a rule change |
 | D4 | TAGS2 (new) | Freeze 7 would-skip rules from tonight and score once at 20 sessions | **Go** | 0 now; it can only produce candidates | One word |
-| D5 | ARENA-LATCH-F (new) | Closed −2R latch in Testing F for one 2-week block | **Yes** | 0 on Primary. Testing F: tail cut, R effect about 0 outside squeeze days | Testing config change, by Sunday |
+| D5 | ARENA-LATCH-F (new) | Closed −2R latch in Testing F (or On Deck) for one 2-week block | **Yes, as tail insurance only** | 0 on Primary. Already failed its same-day random-cut control in-sample (0th / 14th / 41st pct); tail cut only | Testing config change, by Sunday |
 | D6 | FROZEN-BLOCKS (new, structure) | No rule changes inside 2-week blocks in testing accounts | **Yes** | 0 direct; faster, cleaner verdicts | Process rule |
 | D7 | REPORTS (new) | PAIRED-CARD, LONG-SURVIVORS, weekly Stage-1 scorecard, review rules | **Go** | 0 direct | One word |
 | D8 | HS-SCALE (open) | SHOCK-V failsafe only | **shock-only, at 12-04** | 0 (glitch failsafe) | Your yes |
@@ -64,7 +64,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 **You tapped:** `friday`. **Question now:** apply for **Monday 11-30** (override the Friday-epoch rule), or at the **12-04** Friday window?
 
 **Recommendation: Monday 11-30.**
-- Monday is already an epoch start. AV50 is "epoch 3", effective 11-30. So applying it now does not split an epoch. It only skips the "decided at the Friday close" step, and the reason that step was missed is that you wanted to ask questions first.
+- Monday is already an epoch start. AV50 is "epoch 3", effective 11-30. So applying it now does not split an epoch. It only skips the "decided at the Friday close" step. Your words on that: "Some decisions were made but I want a chance to ask more questions about the decision".
 - Waiting a week has a cost, but a smaller one with L3 out. On the 4-setup book the bench had about 11 days a year at −20R or worse (33 in 2.9 years), cut to about 3 with LATCH-OPEN. **Re-replayed on the Monday roster (cycle 3, [latchopen_monday](findings/latchopen_monday.md)):** roster A (RW3, RW5, NM-ETF) has about 8 a year on CHECK (9 in 276 sessions), 1 in 408 T2 sessions; LATCH-OPEN cuts this to about 1.8 a year on CHECK (2 days) and 0 on T2. Pooled, that is about 3.7 → 0.7 a year, so a week's wait carries about a 7% (pooled) to 15% (CHECK alone) chance of a −20R day on roster A, not 20%. With L3 kept (roster B) it is about 8.4 → 2.6 a year.
 
 **Options and prepared work** (identical change, different date; `sandbox/decisions/LATCH-OPEN/`):
@@ -134,7 +134,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 3. *What does Primary lose?* L3's windfall days: 11-12 (+31.0R), 11-16 (+16.4R), 11-20 (+6.0R), 11-10 (+5.8R). The table shows total R is about unchanged without it. What drops is the swing.
 4. *Does L3 keep playing?* Yes. In On Deck it gets full reps under On Deck rules, and it can return under C3-BAR2 plus the PRIME-RULES entry tests.
    - **Risk to flag:** On Deck has no per-setup stop and only a 300R account backstop. On 11-25 On Deck lost −391R, and seven arena L3 copies lost −1,037R between them.
-   - Moving L3 adds an eighth L3 copy to the arena. That is paper risk only, but it enlarges the arena tail on the next squeeze day. D5 (a latch in Testing F only, not On Deck where L3 would land) and D6 (a freeze, not a loss guard) do not cover this; see [critic](findings/critic.md).
+   - Moving L3 adds an eighth L3 copy to the arena. That is paper risk only, but it enlarges the arena tail on the next squeeze day. D5 (a latch in Testing F only, not On Deck where L3 would land) and D6 (a freeze, not a loss guard) do not cover this; see [critic](findings/critic.md). If that matters to you, choose `ARENA-LATCH-ONDECK yes` in D5: the same latch, in On Deck instead of Testing F.
 5. *Side effects on running tests?*
    - The L3 leash shadow (K11/K12, Primary basis, currently hurting: dK11 −15.5R, dK12 −28.0R) loses its Primary basis.
    - GAP-U and the regime-switch shadows should be reported on the new roster from 11-30.
@@ -142,21 +142,36 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 
 **Evidence:** [primshorts_1126](../research/primshorts_1126/REPORT.md), rwout_1127, [shorts_autopsy](findings/shorts_autopsy.md) §4 (verdict "restrict"), [metrics](findings/metrics.md) (lots per day persists), [loss_anatomy](findings/loss_anatomy.md) §1. Reviewer status: the shorts reviewer calls "L3 restrict" reasonable. Both the live (+0.063) and Primary (−0.9 R/wk) records carry the `1 day` tag, so the bench should drive the decision, which it does.
 
+## Forward bars for LATCH-OPEN and L3-OUT, with controls (critic gaps 2-3)
+Neither forward bar means much alone: in a book losing −0.156R per lot, almost any cut "helps". So each is read against a cut of the same size. No approval needed; this is how the 20-session read (12-29) and the 12-11 PAIRED-CARD will score them.
+
+| Change | Old bar (mostly automatic) | Control added | Pass |
+|---|---|---|---|
+| LATCH-OPEN | Skipped lots average ≤ 0R | (1) **Same-day random skip:** the same number of lots skipped at random on the same days, 400 draws. (2) **Constant size cut** of the same number of lots on fire days | Beats the constant cut on worst-5 (≥ 80th percentile) and no day below −20R from a latched setup. Its R percentile against the same-day random skip is reported beside it; in-sample it sat at the 16th / 0th / 20th (CHECK / T2 / live), so a low reading is expected and is not a fail by itself (D1 Q5) |
+| L3-OUT | Primary day sd ≤ 10R (already 9.1 in-sample once L3's lots are removed) | **Random removal:** the same share of lots (215 of 576, about 37%) removed at random from the 4-setup roster shadow on the same days, 400 draws | Day sd and worst-5 at or above the median random removal. Below the 25th percentile means L3 was not the right setup to remove (rwout: any short's removal helps about equally) |
+
+Both are exposure-matched in the D7.4a sense. Configs: these are controls, not new rules; they add 0 to the count.
+
 ## D3. B8-SHADOW: log the net-beta cap (journal tag only)
 **You tapped:** `shadow`. **Recommendation:** start **Monday 11-30**.
 - It changes no trade, slot, latch or halt, so it is a log, not a Primary trading rule.
 - If you consider any Primary config edit to be a rule change, choose `friday`.
+- **Plainly, before you say yes (critic gap 5):**
+  - The rule that passed on the bench used a **shrunk 60-day beta** per symbol (squeeze_1125 caveats). The drafted shadow uses beta 1.0 for every symbol, which was never scored. **The shadow must use the shrunk 60-day beta**, so the betas JSON ships with it (or the start waits until it does).
+  - B8 already **fails the constant-cut test on T2** (PRIOR_RESEARCH).
+  - On 11-25 it **adds nothing once LATCH-OPEN is on** (the day was already −8.3R; squeeze_1125).
+  - So the recommendation stays **log only**. It is unlikely to become a live rule.
 
 | Option | What is done | Files |
 |---|---|---|
-| **shadow monday** | `risk.netbeta_shadow.enabled: true` (Primary, On Deck, Testing A), `betas_path: null` (beta 1.0 for every symbol). Ledger, tests | `apply_draft.py --code B8-SHADOW` (ledger line now drafted) |
+| **shadow monday** | `risk.netbeta_shadow.enabled: true` (Primary, On Deck, Testing A). `betas_path` must point to the shrunk 60-day beta JSON, not `null` (beta 1.0, the draft today). Ledger, tests | `apply_draft.py --code B8-SHADOW` (ledger line drafted; the betas JSON and its path still have to be added before Monday) |
 | shadow friday | Same at 12-04, effective 12-07 | same |
 | no | Nothing | — |
 
 **Likely questions:**
 - *Why log it?* The midday-flip day (11-10, 11-25) is Primary's worst failure type. On top of LATCH-OPEN, the bench shows worst-5 +47% on CHECK and +22% on T2.
 - *Why not enforce it?* It would fire on about 185 of 252 days, which makes it a large size cut. Live, for today's trio, it reads negative (−26.6R). Tonight's metrics track (P3) adds a standing rule: a "red days" lever is adopted only if it beats an exposure-matched size cut. Enforcement comes back only if B8 beats that cut and a size-matched random block on CHECK and T2, plus 20 sessions of tags.
-- *What is the risk?* A new code path in the live runner, already covered by tests. Beta 1.0 is crude; a shrunk-beta JSON can follow.
+- *What is the risk?* A new code path in the live runner, already covered by tests. A beta-1.0 log would score a different rule from the one that passed, so it would not count as evidence.
 
 ## D4. TAGS2 (new): freeze tonight's surviving shadow ideas now, score once after 20 sessions
 **Recommendation: go.** It is the cheapest way to turn tonight's in-sample hints into an honest forward test. Freezing the rules **before** 11-30 data exists is what makes them a forward test.
@@ -174,7 +189,17 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 - **Expected effect:** 0 R now. Prior chance that any rule clears both its control and t 2: about 10-20% (tonight's reviewers rated all of them low). Cycle-2 update: GAPSWITCH found the SPY gap-up short switch no better than random day-skips on the bench (0/5 configs, p 0.42-0.999; [gapswitch](findings/gapswitch.md)), so the prior for GAPU_GD25 / GAPU_GD50 is lower still.
 
 ## D5. ARENA-LATCH-F (new): closed −2R per-setup latch in Testing F for one frozen 2-week block
-**Recommendation: yes**, as a tail test in the arena. Primary is untouched.
+**Recommendation: yes, as tail insurance only.** Primary is untouched.
+
+- **Plainly (critic gap 4):** it has **already failed its same-day random-cut control in-sample**. Against a random cut of the same number of lots on the same account-days, the latch sat at the **0th / 14th / 41st percentile** (gap-down / long / other families; shorts_autopsy reviewer, row L). Once a day has gone bad, cutting any lots that day does as well. So its only job is to stop a squeeze-day tail; do not expect it to pick better lots or add R.
+- **Wrong account? (critic gap 6):** L3 moves to **On Deck** if D2 is approved. On Deck lost −391R on 11-25 and has no per-setup stop. Neither D5 (Testing F) nor D6 (a freeze) guards it.
+- **Your choice:**
+
+| Reply | Where the latch goes | Trade-off |
+|---|---|---|
+| `ARENA-LATCH-F yes` | Testing F (22 setups) | As drafted and dry-run tested. Leaves On Deck, and L3's new home, unguarded |
+| `ARENA-LATCH-ONDECK yes` | On Deck instead of Testing F | Guards L3's new home. Not drafted yet: same one-line change in On Deck's account config, plus the same exception, ledger line and test edit, and a dry run before the weekend merge. Same 2-week block and same controls |
+| `no` | Nowhere | The arena tail stays as it is |
 
 - **Why:**
   - On 11-25 the arena lost −1,160R, and the accounts had no per-setup stop.
@@ -189,9 +214,9 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
   - Baseline: the same account with latched lots added back from what-if, costed with LIVE-L.
   - Controls: (a) a same-account-day random cut of equal size; (b) a constant size cut on latch-fire days.
   - Duration: 11-30..12-11 if approved by Sunday, else 12-07..12-18.
-  - Success: worst-5 days improve ≥ 40%; total R is no worse than the same-day random cut; per-setup better/worse counts reported (remedy rule).
+  - Success: worst-5 days improve ≥ 40% and beat the constant cut on fire days; per-setup better/worse counts reported (remedy rule). Total R against the same-day random cut is reported, not required: it already failed that in-sample.
 - **Conflict to weigh (explicit):** your playing-time rule (11-03) says starvation is fixed by session rotation, "never by in-session throttling in Primary/Testing". A per-setup latch that stops a setup's entries for the rest of the day **is** in-session throttling in a testing account. It is a loss guard, not a starvation fix, but it still takes reps from setups that start the day badly. So `yes` here means a **time-boxed exception** to that rule for Testing F only, 11-30..12-11; under the 11-19 conflict-check rule this needs your explicit yes.
-- **Prepared work:** `apply_draft.py --code ARENA-LATCH-F` sets `account.max_setup_daily_loss_r: null → 2.0` in config/account_testingf.yaml. It reaches all 22 Testing F setups and works on raw R. The ledger line is drafted and names PROT-21 ("No latch in Testing"), so your yes must be explicit. One test edit is included, and the dry run passed. The scoring script still has to be written before the block starts.
+- **Prepared work (Testing F option):** `apply_draft.py --code ARENA-LATCH-F` sets `account.max_setup_daily_loss_r: null → 2.0` in config/account_testingf.yaml. It reaches all 22 Testing F setups and works on raw R. The ledger line is drafted and names PROT-21 ("No latch in Testing"), so your yes must be explicit. One test edit is included, and the dry run passed. The scoring script still has to be written before the block starts, and it must state the in-sample 0th-percentile result up front so the read is tail-only. For the On Deck option the draft itself still has to be written.
 
 ## D6. FROZEN-BLOCKS (new, account structure / process)
 **Recommendation: yes.**
