@@ -245,3 +245,32 @@ Sources:
 - **Can start Monday:** yes. It is review process only.
 
 Educational only — not financial advice.
+
+## Reviewer notes
+
+Reviewer: review_metrics, 2026-11-28 00:40 ET. Re-loaded all 10 journals with `load.py` (35,519 deduped trades, 10-06..11-27) and re-ran `green_math.py` and `risk_persist.py`: **both outputs match the committed `_out.txt` files exactly.** Extra check script: `exploration/sandbox/review_metrics/risk_partial.py` (+ `_out.txt`), 4 more configs (cumulative ~9,436). Educational only — not financial advice.
+
+**Scope / hygiene.** Commit 25cf39862e touches 13 files, all under `exploration/`. The explore branch vs its merge-base with the default branch changes 0 files outside `exploration/`. No other branch with a metrics/explore name exists on origin apart from explore/2026-11-27. Locked holdout not read (journals start 10-06). Costs: LR8 applied to every row; holds.
+
+**Window / rule-change context — weakened (wording).** `setup_metrics.py` filters to 10-23+, but `predict_roll.py`, `risk_persist.py` and the RISK-BUDGET past-sd history use the **full journal from 10-06** (13 extra sessions, 6,720 trades, mostly Testing/T2/Primary). The rolling-fold numbers therefore span 10-06..11-27, and the ledger has ~20 entries effective 10-06..10-22 (screen/heat/slots, testing full-day 10-12, TOD costs 10-12, setup order, etc.) that are not in the rule table. Does not change a conclusion, but the folds are not "10-23..11-27" as the Data line says.
+
+**F1a "no ranking metric predicts next week" — holds (medium).** No lookahead: metrics use only weeks before the target week. 6 folds, expanding window, overlapping setups, so fold t is optimistic; null result is robust to that. The H1->H2 negative rho (-0.33) is one split across the 11-19 regime/Epoch-1 break; treat as "no persistence", not "reversal". Short-side consistency hint (t ~2 in 30 tests) correctly labelled noise-level.
+
+**F1b "risk carries over" — weakened substantially.** Daily-R spread and worst day scale mechanically with lots per day, and lots/day persists at rho 0.73. Controlling for past lots/day (partial rank correlation, same folds):
+- worst day -> worst day: +0.28 (t 3.1) becomes **+0.06 (t 0.86)**; from 10-23 only: +0.04 (t 0.32).
+- daily sd -> daily sd: +0.40 (t 6.8) becomes **+0.09 (t 1.66)**; from 10-23 only: +0.00.
+- Per-lot versions persist weakly: worst day per lot +0.17 (t 3.5), sd per sqrt(lot) +0.21 (t 2.3).
+So what carries over is mostly **how often a setup trades**, not a setup-specific tail. This also explains why RISK-BUDGET (sizing by past daily sd) behaved like a disguised exposure cut.
+
+**F1c RISK-BUDGET "do not adopt" — holds.** Walk-forward weights, exposure-matched uniform-cut control and per-setup counts (68 better / 107 worse) are correct per the remedy rule. Minor: docstring says 500 shuffles, code runs 200; the matched cut uses the same week's realised mean weight (harmless to the conclusion). Not re-run (low stakes; the conclusion is a rejection).
+
+**F2 "36/36 positive setups carry the 1-day tag" — holds as a count, reinterpret.** With ~7-12 sessions per setup and per-day t near 0, a small positive total is almost always smaller than the single best day, so this is the expected signature of **no demonstrated edge**, not a special fragility of these setups. Flip table is in-sample and descriptive (author says so). GEN-261023-06 / NM-RWN5 / GEN-261023-09 rest on 3-10 sessions (NM-RWN5-WB3 has 1 session).
+
+**F3 green-day arithmetic — holds (high), one inconsistency.** Reproduced: N 37.7, s 0.890, rho 0.185, red day 65% model vs 68% actual. Headline says 5% red needs mu >= +0.63, section 4 says +0.67 at N 38 (+0.63 is the large-N limit); use +0.67 for Primary. Caveats: normal approximation (skew +0.32, kurtosis 1.5); rho is a book property (Testing D/E/GEN/T2 sit at 0.02-0.06), so "impossible" means "impossible at the current edge and correlation". Even at rho 0.03 and 100 lots/day, 5% red days needs mu ~ +0.29, i.e. ~6x the best live edge, so the conclusion stands. The "red-day count is perverse while mu < 0" point is correct.
+
+**Proposals.**
+- P1 WEEKLY-SCORECARD-S1 — holds. Report-only, no R effect, sound staging.
+- P2 CONSIST-SHADOW — **weakened.** (i) List B was selected partly on in-sample worst day (gate: worst day >= -10R), and per-lot worst-day persistence is only +0.17 after the lots/day control, so the expected "30-60% smaller worst day" is overstated; expect regression to the mean. (ii) Lists overlap (NM-RWN5 and GEN-261021-01 are in both), so A vs B compares 6 vs 3 distinct setups. (iii) Lots/day are similar (A 17.2, B 16.8 since 10-23), so exposure is not the confound for now — but the success test must report worst day **per lot** and lots/day next to raw worst day, per P3. Run it with A-only vs B-only distinct setups and a size-matched random list as control.
+- P3 EXPOSURE-FLOOR-CHECK — holds, and is strengthened by F1b: most "tail persistence" is exposure.
+
+**Final confidence:** green-day arithmetic HIGH; "no metric predicts next week" MEDIUM; "risk persists" LOW-MEDIUM as a setup property (HIGH only as "lots/day persists"); P1/P3 ready to start Monday; P2 can start only with the per-lot/distinct-list/random-control fixes above.
