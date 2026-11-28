@@ -156,3 +156,73 @@ Educational only — not financial advice.
 - Scripts and outputs: `exploration/sandbox/regime_filters/`. Files: `PREREG.md`, `extract.py`, `common.py`, `q1_firsthour.py`, `q2_budget.py`, `q2b_on_latch.py`, `q3_regime_family.py`, `q3b_o30_check.py`, `q4_daycarry.py`, with `*_out.txt`, `q2_budget.csv` and `q3_cells.csv`.
 
 Educational only — not financial advice.
+
+---
+
+## Reviewer notes (review_regime_filters, 2026-11-28 ~00:50 ET)
+
+Educational only — not financial advice. Reviewer configs: 3 diagnostic re-cuts (no new rules); script and output in `exploration/sandbox/regime_filters/review/`.
+
+**What I re-ran:** I re-extracted the run-1 lots from the 9 journals (read-only `git show`, LR8 costs; SPY not re-fetched).
+- `q2b_on_latch.py` reproduces **exactly**: arena DISC latch alone +1,352.8R; BS30+latch +300.9R, U 218.2, neutral +82.2, day t 3.15, best share 0.243, 7/1 accounts.
+- Primary DISC reproduces exactly: BR30 −20.5R (92 lots blocked, +0.223 vs −0.156), SIDE20 −9.7R, FH05 −8.0R. All BR30 firings fall in the post-latch window (10-29 on, 21 sessions).
+
+**Hygiene checks, all pass:**
+- **Scope:** nothing outside `exploration/` differs between origin/explore/2026-11-27 and its merge-base with the default branch (be8e648c04). Commit a47a791c23 touches only `exploration/` and is contained only in origin/explore/2026-11-27.
+- **Costs:** LR8 costs are in. No backtest data was used, and the locked holdout was not read.
+- **Duplicates:** the arena dedup on key `k` removes 0 lots, so the per-account books are intact.
+- **Timing:** there is no minute-level lookahead in the book rules. A trigger at exit minute τ blocks only entries after τ.
+
+### Per finding
+
+**F1. A bad first hour does not predict the rest of the day: HOLDS (confidence medium).**
+- There is no lookahead: X uses exits ≤ T and Y uses entries > T, and L is point-in-time.
+- The weak spot is sample size. The Primary contrast rests on 5 bad days per cut-off. The only out-of-sample contrary sign (arena HOLD 11:00, rho +0.58) is on 4 days.
+- The finding is "no evidence for a first-hour stop", not "evidence against first-hour effects". FH05 losing on Primary (−8.0R DISC, −2.3R HOLD) confirms this.
+
+**F2a. A book budget is useless for the current Primary: HOLDS (confidence medium-high, down from high).**
+- The mechanism (the latch already takes single-setup baskets, and the lots blocked after a drawdown are better than average) reproduces.
+- I lowered the confidence because it rests on 21 post-latch sessions and about 50-150 blocked lots per rule.
+
+**F2b. A book budget on top of a latch adds a little in the arena: WEAKENED (confidence low).**
+
+The +301R is real but almost entirely a size cut. The "beyond size" evidence does not reach significance:
+1. **Post-hoc.** Q2b (4 configs) was designed after Q2 had been scored. Its headline rule is the best of 4 on DISC.
+2. **The TT control is biased toward the rule.** TT moves the trigger time to a *non-trigger* day, and non-trigger days are good days by construction. Late lots (after the median τ ≈ 13:12) are **+0.026 R/lot on non-trigger days vs −0.103 on trigger days** (BS30+latch, DISC; HOLD +0.044 vs −0.099). So "100th percentile vs TT" says little. It should be dropped from the success bar.
+3. **The U control is lot-level, not day-clustered.** Lots on the same day move together, so its percentiles overstate how significant the result is.
+4. **The non-size part has day t 1.07, not 3.15.** The neutral +82.2R has a 61% best-day share and is positive on 8 of 20 days. The 3.15 and the 24% belong to the gross saving, which is mostly size. SIDE20+latch neutral: +89R, t 0.55, **95% from one day**.
+5. **Within the same day the blocked lots are no worse.** Re-priced against each account's mean *for that day*, the neutral part is **−94.9R (t −1.43)** for BS30 and −74R for SIDE20. Post-TSZ1 (11-17..11-27) it is −69R.
+   - So the rule works only by flagging bad days, after which the rest of the day stays about as bad as the morning. That is a day-level exposure cut, and it overlaps with the existing account halts.
+6. **HOLD:**
+   - BS30 is at the 50th percentile vs U.
+   - SIDE20 is at 95th vs U but **87th vs TT**, so it fails the pre-registered bar even with the biased TT. It rests on 9 days, and only 2 accounts change.
+   - SIDE20 HOLD same-day neutral is +34.8R (t 2.17), but DISC is −74R. The sign flips, so this is not a replication.
+7. **Rule-change context missed:**
+   - The arena already has a **book-level daily halt**: 120R, raised to 300R on 11-12 (ledger 2026-11-12-account-halt-300). Account-days at or beyond −120R occur in DISC: gen 10-29 and 11-04, and five accounts on 11-25 (testing −390.8, overshooting the 300R halt).
+   - Not listed either: **BRAKE-BURST** (11-23, a per-setup entry cap), many composition moves (ROT3, GYH 11-27), and the **owner's 11-22 approval of a "per-setup −2R latch for every setup" study**. Of the arena gain, the simulated latch carries +1,353R. The book rule on top is the small part, and it is that latch study, not this one, that should own the question.
+8. **Remedy rule:** setups helped/hurt are not reported for the Q2/Q2b rules, only accounts.
+
+**F3. Vol / gap / first-30-minute regimes do not split the book: HOLDS (confidence medium).**
+- Vol terciles were fixed on 08-03..10-22, before the window, and the gap and open→10:00 features are point-in-time. I found no leakage.
+- I did not re-run this (SPY was not re-fetched).
+- The persistence test is a single H1/H2 split on few cells (9 and 7). That is weak in both directions, but it agrees with about 4,100 earlier REGX configs.
+- The "up-open longs" item rests on 7 days. Correctly labelled a watch item.
+
+**Q4 cool-off is a size cut: HOLDS.** It is correctly called out as one-day carried (97% of the Primary excess comes from one day).
+
+### Proposals
+- **P1 BUDGET-SHADOW: keep as a shadow only, and fix its bar.**
+  - Drop TT, or replace it with a trigger time moved to *any* random day of the account.
+  - Require the **day-clustered neutral** (account-mean re-pricing) at t ≥ 2 **and** a non-negative same-day neutral.
+  - Lower the expected beyond-size effect to **0 to +15R/wk across the arena (DISC point estimate ~+16R/wk, t 1.07)**.
+  - Better: fold it into the owner-approved latch-per-setup study rather than run it as a separate line.
+  - A live version still conflicts with the playing-time rule.
+- **P2: holds.** Closing these lines for Primary is supported, and a re-check at 50 Primary sessions is reasonable.
+- **P3: holds as reporting-only.** The expected value is near 0 and n is tiny.
+
+### Final confidence
+- Track conclusion ("timing filters do not rescue a no-edge book; Primary needs no book budget"): **medium-high**.
+- Arena "beyond size" benefit: **low, not established** (day t 1.07, same-day neutral negative).
+- Numbers: reproduced exactly where re-run.
+
+Educational only — not financial advice.
