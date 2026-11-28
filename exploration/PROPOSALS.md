@@ -21,7 +21,9 @@ Educational only — not financial advice. Data, cost basis, configuration count
 | 10 | Stage-1 scorecard + review rules (new) | 0 (stops variance-driven decisions) | — | Metrics/outside reviewers: hold | Yes |
 | 11 | HS-SCALE shock-only (card) | 0 | Glitch failsafe | Reviewed earlier | 12-04 |
 
-Not proposed (failed tonight, do not re-run): basket cap as a Primary rule (58th percentile vs random on the 11-30 roster, day t 0.30), RISK-BUDGET sizing, setup equity-curve governor, first-hour stop, Primary book budget, vol-regime switches, condition filters for shorts (0/8 on 71k bench lots), long cell filters (0 positive cells with ≥ 300 lots).
+Dry run (cycle 2): LATCH-OPEN, L3-OUT, B8-SHADOW, ARENA-LATCH-F and HS-SCALE now apply cleanly with `sandbox/decisions/apply_draft.py`, alone, as the Monday combo or all five stacked, and the full test suite passes ([DRYRUN.md](sandbox/decisions/DRYRUN.md)). `ledger check` was not run. That is a mechanics check, not evidence.
+
+Not proposed (failed tonight, do not re-run): **cycle 2:** the RW3/RW5 1.25x target (LIVE-L re-check CHECK +0.007 / T2 +0.003 R/lot, gain in-sample only; dropped, DECISIONS D13), and the SPY gap-up short-switch day rule (0 of 5 configs beat same-count random day-skips, best p 0.42). **Cycle 1:** basket cap as a Primary rule (58th percentile vs random on the 11-30 roster, day t 0.30), RISK-BUDGET sizing, setup equity-curve governor, first-hour stop, Primary book budget, vol-regime switches, condition filters for shorts (0/8 on 71k bench lots), long cell filters (0 positive cells with ≥ 300 lots).
 
 ---
 

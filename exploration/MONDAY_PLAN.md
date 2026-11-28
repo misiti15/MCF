@@ -27,10 +27,12 @@ Educational only — not financial advice. Nothing here is applied by the explor
 | −20R halt, sizing, exits | Unchanged | Unchanged | — |
 
 **How an override would be applied (Sat/Sun, outside market hours):**
-1. Apply the drafts in `exploration/sandbox/decisions/{LATCH-OPEN,L3-OUT,B8-SHADOW}/`, in a PR on the default branch.
-2. Run `python -m mcf.report.assignments` (for L3-OUT; commit the regenerated `docs/live/assignments.json` in the **same commit** as the config move) and `python -m mcf.research.ledger check`.
-3. Run the Friday-switch tests, then the full `pytest -q`.
-4. Merge before Monday's 09:30 open (setup-freeze allows weekends).
+1. On a branch cut from witis4, run `python exploration/sandbox/decisions/apply_draft.py --repo <checkout> --code COMBO --when monday --date <reply date> --where <chat|inbox>`. COMBO = LATCH-OPEN + L3-OUT + B8. For a partial yes use `--code LATCH-OPEN | L3-OUT | B8-SHADOW` one at a time; add `--code ARENA-LATCH-F` if D5 is approved. Use the script, not `git apply`: the `config.diff` files are a readable view only ([DRYRUN.md](sandbox/decisions/DRYRUN.md)).
+2. Run `python -m mcf.report.assignments` for L3-OUT, and commit the regenerated `docs/live/assignments.json` in the **same commit** as the config move. Then run `python -m mcf.research.ledger check`. The dry run could not run this check.
+3. Run the full `pytest -q` and expect 1,076 passed. If `test_poll_log` fails, re-run it alone: it is a known timing flake under load.
+4. Open a PR on the default branch and merge it before Monday's 09:30 open (setup-freeze allows weekends).
+
+Dry-run status: every draft, the combo and the all-five stack passed the full suite on a throwaway copy at f5a2626587. The test edits that come with it ("off unless approved", the 4 → 3 Primary count, the Testing F 2R exception) are part of the script.
 
 **Monday before the open:**
 - status.json `health.risk_state.safety` shows `latch_counts_open.enabled: true` (if approved).
@@ -53,6 +55,8 @@ Educational only — not financial advice. Nothing here is applied by the explor
 | LONG-SURVIVORS (GEN-261020-09, CWT14-orl-p10-long-WB5) | Monday night; score 12-28 | Their own live lots | `REPORTS go` |
 | Weekly Stage-1 scorecard | First full read Fri 12-04 | Journals | `REPORTS go` |
 | Already running, no action | SPREADFLOOR shadow (logs from 11-30), TAGS1 (score 12-17), GAP-U / IDX3-P / SPYO-P regime shadows (about 12-10; report on the new roster), MEREBFWD (first scored day **11-30**, month-end), Epoch 1 vs BASE1 twin, BRAKE-1, compass gate, inverse-short guard (about 12-04), L3 leash K11/K12 (loses its Primary basis if L3 moves) | | none |
+
+**Failed in cycle 2, so not part of Monday:** the RW 1.25x target (LIVE-L re-check: CHECK +0.007, T2 +0.003 R/lot; dropped, D13) and the SPY gap-up short switch (0 of 5 configs beat random day-skips). Neither adds a rule, shadow or card.
 
 ## Expected effect (honest ranges)
 

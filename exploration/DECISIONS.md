@@ -24,7 +24,21 @@ Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the e
 ```
 LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | ARENA-LATCH-F yes | FROZEN-BLOCKS yes | REPORTS go | HS-SCALE shock-only friday | GOAL-STAGES yes | T1X2 yes | PRIM-ADD3 no | ODP2/ODB3 as recommended | CRYPTO park
 ```
-Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out stays open. `ODP2/ODB3 as recommended` means the 5 yes / 3 wait split in D12. `ARENA-LATCH-F yes` also grants the time-boxed playing-time exception described in D5.
+Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch write `LATCH-OPEN -3R monday` (or `friday`). Any item left out stays open. `ODP2/ODB3 as recommended` means the 5 yes / 3 wait split in D12. `ARENA-LATCH-F yes` also grants the time-boxed playing-time exception described in D5.
+
+## Dry-run status (cycle 2, 02:00 ET): every draft applies and passes the tests
+
+- Each draft below was applied to a throwaway copy of `claude/intraday-trading-system-witis4` at f5a2626587 and the full `pytest -q` was run. Nothing was committed there. Details: [DRYRUN.md](sandbox/decisions/DRYRUN.md).
+- **As first written, none applied:** the `config.diff` files were not real patches, and each draft broke 1-12 tests. Both are fixed. **Apply with `sandbox/decisions/apply_draft.py`, not with `git apply`.** The script stops if any edit does not match exactly once, fills in the ledger line, and makes the matching test edits.
+- **Result after the fixes:** each of LATCH-OPEN, L3-OUT, B8-SHADOW, ARENA-LATCH-F and HS-SCALE, the Monday combo (LATCH-OPEN + L3-OUT + B8) and an all-five stack pass (baseline 1,076 passed, 1 skipped). One timing test, `test_poll_log`, failed twice under machine load and passed when re-run alone.
+- **Not checked:** `python -m mcf.research.ledger check` (needs the bar cache) and live behaviour.
+- **Exact steps** (on a branch cut from witis4, outside 09:30-16:00 ET):
+  ```
+  python exploration/sandbox/decisions/apply_draft.py --repo <checkout> --code COMBO --when monday --date <reply date> --where <chat|inbox>
+  python -m mcf.report.assignments      # same commit as the L3 move
+  python -m mcf.research.ledger check && pytest -q
+  ```
+  For a single item use `--code LATCH-OPEN [--variant 3R] | L3-OUT | B8-SHADOW | ARENA-LATCH-F | HS-SCALE`. `--when friday` makes it effective 12-07.
 
 ## Summary table
 
@@ -42,6 +56,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 | D10 | PRIM-EXPOSURE (heads-up for 12-04) | Also move RW5 out? | **Decide 12-04 on one more week of data** | +1 to +4 R/wk, size effect | Nothing now |
 | D11 | GOAL-STAGES (new) | Measure Stage-1 loss bars now, green weeks and days once the edge is positive | **Yes** | 0 (it changes what "progress" means) | Your yes |
 | D12 | Routine cards | T1X2, PRIM-ADD3, ODP2/ODB3 x7, CRYPTO, COMPASS-HALF | See D12 | 0 | One line each |
+| D13 | RW-TGT125 | 1.25x target for RW3/RW5 | **None: dropped** (failed its LIVE-L re-check) | about 0 | Nothing |
 
 ---
 
@@ -56,9 +71,9 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 
 | Option | What is done | Files |
 |---|---|---|
-| **monday** | Sat/Sun: `risk.latch_counts_open: true` in config/default.yaml (Primary only). Run the Friday-switch tests, then full pytest, flipping the default-off test expectation for primary. Ledger effective 2026-11-30. Card answered. | `config.diff`, `ledger_monday_1130.jsonl`, `APPLY.md` |
-| **friday** (12-04) | Same change after the 12-04 close, effective 12-07 | `config.diff`, `ledger_epoch_1204.jsonl` |
-| **-3R** | Also `latch_open_r: 3`: about a third of the cost, but a weaker 11-25 cut (−37 → −23R on the partial-day base; never re-scored on the full day) | `config.diff` (variant lines) |
+| **monday** | Sat/Sun: `risk.latch_counts_open: true` in config/default.yaml (Primary only). Run the Friday-switch tests, then full pytest, flipping the default-off test expectation for primary. Ledger effective 2026-11-30. Card answered. | `apply_draft.py --code LATCH-OPEN --when monday` (ledger `ledger_monday_1130.jsonl`; `config.diff` is the readable view) |
+| **friday** (12-04) | Same change after the 12-04 close, effective 12-07 | `apply_draft.py --code LATCH-OPEN --when friday` |
+| **-3R** | Also `latch_open_r: 3`: about a third of the cost, but a weaker 11-25 cut (−37 → −23R on the partial-day base; never re-scored on the full day) | add `--variant 3R` (3 more latch tests edited; passes) |
 | no | Nothing | — |
 
 **Questions you are likely to ask, answered in advance:**
@@ -92,7 +107,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 
 | Option | What is done | Files |
 |---|---|---|
-| **out monday** | Sat/Sun:<br>• config/default.yaml: L3 `enabled: false`, removed from Primary `setup_order`<br>• config/account_testing.yaml (On Deck): `enabled: true`, appended to `setup_order`<br>• `python -m mcf.report.assignments`, ledger `kind: move` naming your override of probation, `ledger check`, pytest<br>Merged outside 09:30-16:00 (setup-freeze) | `config.diff`, `ledger_out.jsonl` |
+| **out monday** | Sat/Sun:<br>• config/default.yaml: L3 `enabled: false`, removed from Primary `setup_order`<br>• config/account_testing.yaml (On Deck): `enabled: true`, appended to `setup_order`<br>• `python -m mcf.report.assignments`, ledger `kind: move` naming your override of probation, `ledger check`, pytest<br>Merged outside 09:30-16:00 (setup-freeze) | `apply_draft.py --code L3-OUT` (ledger `ledger_out.jsonl` now has the protected-list fields; 2 test edits for the 4 → 3 Primary count and Remedy-Q) |
 | **out friday** | Same after the 12-04 close, effective 12-07 | same |
 | probation | No config change. Ledger note: re-decided at the 12-04 review or at a −10R Primary record | `ledger_probation.jsonl` |
 | no | Nothing | — |
@@ -122,7 +137,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 
 | Option | What is done | Files |
 |---|---|---|
-| **shadow monday** | `risk.netbeta_shadow.enabled: true` (Primary, On Deck, Testing A), `betas_path: null` (beta 1.0 for every symbol). Ledger, tests | `B8-SHADOW/config.diff` |
+| **shadow monday** | `risk.netbeta_shadow.enabled: true` (Primary, On Deck, Testing A), `betas_path: null` (beta 1.0 for every symbol). Ledger, tests | `apply_draft.py --code B8-SHADOW` (ledger line now drafted) |
 | shadow friday | Same at 12-04, effective 12-07 | same |
 | no | Nothing | — |
 
@@ -164,7 +179,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
   - Duration: 11-30..12-11 if approved by Sunday, else 12-07..12-18.
   - Success: worst-5 days improve ≥ 40%; total R is no worse than the same-day random cut; per-setup better/worse counts reported (remedy rule).
 - **Conflict to weigh (explicit):** your playing-time rule (11-03) says starvation is fixed by session rotation, "never by in-session throttling in Primary/Testing". A per-setup latch that stops a setup's entries for the rest of the day **is** in-session throttling in a testing account. It is a loss guard, not a starvation fix, but it still takes reps from setups that start the day badly. So `yes` here means a **time-boxed exception** to that rule for Testing F only, 11-30..12-11; under the 11-19 conflict-check rule this needs your explicit yes.
-- **Prepared work:** `sandbox/decisions/ARENA-LATCH-F/config.diff`: `account.max_setup_daily_loss_r: null → 2.0` in config/account_testingf.yaml, plus a ledger line and a scoring script to be written before the block starts.
+- **Prepared work:** `apply_draft.py --code ARENA-LATCH-F` sets `account.max_setup_daily_loss_r: null → 2.0` in config/account_testingf.yaml. It reaches all 22 Testing F setups and works on raw R. The ledger line is drafted and names PROT-21 ("No latch in Testing"), so your yes must be explicit. One test edit is included, and the dry run passed. The scoring script still has to be written before the block starts.
 
 ## D6. FROZEN-BLOCKS (new, account structure / process)
 **Recommendation: yes.**
@@ -195,7 +210,7 @@ Each reads journals after the close. None touches the trading path. Recommendati
 
 ## D8. HS-SCALE (open card): SHOCK-V failsafe only
 **Recommendation: `shock-only` at the 12-04 epoch.** It is a glitch failsafe, not an R lever, so there is no reason to override the Friday rule for it.
-- `sandbox/decisions/HS-SCALE/config.diff`: `shock_v.enabled: true`, floors 16R / 24R. The scaled halt stays off.
+- `apply_draft.py --code HS-SCALE --when friday`: `shock_v.enabled: true`, floors 16R / 24R. The scaled halt stays off. The ledger line is drafted and the dry run passed.
 - With L3 out, N = 3. Keep 16R / 24R: fewer false fires; the lower floors are not scored.
 - `build-flatten` stays a separate build.
 
@@ -253,6 +268,14 @@ Each reads journals after the close. None touches the trading path. Recommendati
 | ODB3-G102205, -G102104, -RWR4 | **wait** | Negative without their best day. |
 | CRYPTO-SCOPE | **park** | Outside the intraday charter. 15-47 trades, t ≤ 2.22 vs a 3.82 bar. |
 | COMPASS-HALF | **no action from this session** | Named as new in the 11-27 brief but not in docs/live/decisions.json on the default branch. Its card text was not visible here. |
+
+## D13. RW-TGT125 (RW3/RW5 1.25x target): no decision, dropped
+- **Verdict:** the cycle-2 re-check failed under LIVE-L costs, so there is no 12-04 decision, config draft or ledger line, as its pre-registration said.
+- **Bench:** CHECK +0.007 R/lot (day t 1.47); T2 +0.003 (t 0.42); FIT −0.008.
+- **Live:** the +0.04 gain came from the original study window. On the 97 trades from 11-18..11-27 it was +0.001 R/trade.
+- **What is left:** a descriptive line on the PAIRED-CARD scoreboard, plus a possible backlog idea (extend the target only on SPY-down days) that must be pre-registered first. Details in [rw_target](findings/rw_target.md).
+
+**Also failed in cycle 2, so not proposed:** the SPY gap-up short-switch day rule (GAPSWITCH). Same-count random day-skips did as well (0 of 5 configs passed; best p 0.42; worst-5 days unchanged). It adds no TAGS2 rule and no new shadow. The existing TAGS2 GAPU_GD25 / GAPU_GD50 tags stay in the frozen set with a lower prior (D4). Details in [gapswitch](findings/gapswitch.md).
 
 ## Reviewer notes (cycle 2)
 
