@@ -1,0 +1,41 @@
+All accounts, deduped:
+            tr  sess         R  avgR  day_t  R_wo_best  green_days
+sidel                                                             
+long   15154.0  25.0 -2430.004 -0.16 -2.738  -2686.430         7.0
+short  13645.0  25.0 -2314.775 -0.17 -1.424  -2787.042         9.0
+
+Non-Graveyard:
+           tr  sess         R   avgR  day_t  R_wo_best  green_days
+sidel                                                             
+long   8695.0  25.0 -1408.418 -0.162 -2.735  -1540.768         5.0
+short  9312.0  25.0 -1774.888 -0.191 -1.241  -2185.189         7.0
+
+By account x side (R, trades):
+              sum        count      
+sidel        long  short  long short
+account                             
+explore1   -138.4   -6.8   419   582
+gen        -459.3 -400.4  2982  1561
+graveyard -1021.6 -539.9  6459  4333
+livelab    -173.8 -178.5   351   558
+primary     -22.4 -124.6   185   758
+testing    -115.7 -530.8   661  1930
+testing2   -311.1 -262.4  2382  1848
+testingd    -34.1   11.9   663   444
+testinge    -69.8  -53.2   696   610
+testingf    -83.8 -230.1   356  1021
+
+Since 11-19 (Epoch 1), non-Graveyard:
+           tr  sess        R   avgR  day_t  R_wo_best  green_days
+sidel                                                            
+long   2338.0   6.0  -434.03 -0.186 -0.941   -566.380         2.0
+short  4062.0   6.0 -1026.26 -0.253 -0.700  -1436.561         3.0
+
+Long setups (non-GY): 111; positive total 33; top 5:
+                                                                                       count    sum  mean
+strategy                                                                                                 
+IDX1-qqq100-0955-TQQQ-hold                                                                 3  10.52  3.51
+CWT14-failbrk-orl-p10-long-WB5                                                           148  11.22  0.08
+GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20dge0p59-LUNCH-BRopgt0p65-holdtr-long     176  25.78  0.15
+GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long    139  63.87  0.46
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long         259  75.95  0.29
