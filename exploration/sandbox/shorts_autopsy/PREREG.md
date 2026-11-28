@@ -29,3 +29,9 @@ Configs (3, counted): C5 / C10 / C20 = at most K open gap-down-family short lots
 (one account holding all clones; first-come by entry minute, then symbol; a lot frees its slot at its exit minute).
 Control: the same number of lots removed at random from the gap-down family, days kept (1,000 draws); also the
 exposure-matched constant cut. Same pass bar as above, plus worst-5 days must improve on both splits. Candidate level, LIVE-L.
+
+## Addendum B (2026-11-28 ~00:15 ET, after R1-R4 and C5-C20 scores were seen (all fail); before any dedupe number)
+Config (1, counted): D1 = across the 6 gap-down setups pooled, keep only the first lot per symbol per day (any setup, any refire);
+later lots in the same name that day are dropped. Control: same number of random family lots removed (1,000 draws) and the
+exposure-matched constant cut. Same pass bar (both CHECK and T2: dR > 0, t ≥ 2, ≥ 95th pct, best-day share < 50%).
+Builds on l3refire_1127 (repeats within L3 only, 0/7) — this is the cross-clone version.
