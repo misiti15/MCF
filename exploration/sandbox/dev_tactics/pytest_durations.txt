@@ -1,0 +1,33 @@
+============================= slowest 30 durations =============================
+69.91s call     tests/test_pollspeed.py::test_signals_identical_on_a_synthetic_day
+21.89s call     tests/test_engine.py::test_full_backtest_runs_and_no_lookahead
+19.68s call     tests/test_replay.py::test_synthetic_session_end_to_end_fast_equals_exact[long]
+16.80s call     tests/test_learn1.py::test_compass_cond_catches_up_missed_sessions
+12.43s call     tests/test_ult1119_deploy.py::test_each_new_setup_in_exactly_one_testing_area
+11.85s call     tests/test_hunch.py::test_live_loop_writes_frozen_guesses_and_final_state
+11.84s call     tests/test_ult1119_deploy.py::test_batch_trim_removed_everywhere
+9.73s call     tests/test_graveyard_account.py::test_moves_switched_off_at_source
+8.93s call     tests/test_allocate.py::test_apply_edits_only_testing_configs
+8.45s call     tests/test_poll_log.py::test_overhead_and_size_on_a_live_sized_universe
+7.11s call     tests/test_prereg_order.py::test_prereg_committed_before_report
+7.09s call     tests/test_replay.py::test_synthetic_session_end_to_end_fast_equals_exact[short]
+7.03s call     tests/test_rotation.py::test_guest_pairs_consistent_across_accounts
+6.92s call     tests/test_lab_context.py::test_lab_strategy_live_equals_backtest
+6.83s call     tests/test_lab_clock_gate.py::test_missing_minute_symbol_still_evaluated
+6.76s call     tests/test_assignments.py::test_build_stamps_only_real_changes
+6.57s call     tests/test_lab_refire.py::test_refire_live_latest_bar
+6.52s call     tests/test_longhold_runner.py::test_end_to_end_dry_book_tracks_backtest_replay
+6.09s call     tests/test_daily_post.py::test_leaderboard_image_fits_all_columns
+5.75s call     tests/test_pollspeed.py::test_key_walk_runs_once_per_poll
+4.68s call     tests/test_new_accounts_1111.py::test_labels_reports_and_dashboard
+4.67s call     tests/test_lots.py::test_restart_restores_two_lots_of_one_setup
+4.61s call     tests/test_blueprint.py::test_teardown_synthetic_trade_cites_engine_parts
+4.32s call     tests/test_lab_context.py::test_st7q_fires_with_qqq_vwap_parity
+4.21s call     tests/test_setup_freeze.py::test_workflow_runs_the_module_on_pull_requests
+4.12s call     tests/test_outage.py::test_fire_drill[broker_down]
+3.86s call     tests/test_dashboard.py::test_journal_roundtrip_and_dashboard
+3.66s call     tests/test_lab_clock_gate.py::test_missing_fourth_minute_decided_by_next_bar
+3.64s call     tests/test_remedyq_1120.py::test_each_copy_is_the_parent_with_only_the_window_cut
+3.64s call     tests/test_outage.py::test_drill_cli_all_pass
+1076 passed, 1 skipped, 1 warning in 637.05s (0:10:37)
+exit 0 wall 638s
