@@ -1,0 +1,55 @@
+Per-fold Spearman (metric before week -> setup avg R in week), N = setups in fold:
+                   wk grp   N  score  R_sess  med_day  worst_day  green_sh  day_t  ulcer_neg   wo1   wo2  shrunk_wo1
+2026-10-17/2026-10-23 all  43   0.27    0.23     0.21       0.27      0.14   0.14       0.26  0.22  0.06        0.32
+2026-10-17/2026-10-23   L  16   0.50    0.08     0.04       0.17      0.34   0.05       0.09  0.39  0.26        0.44
+2026-10-17/2026-10-23   S  27   0.26    0.31     0.33       0.33      0.07   0.25       0.37  0.19 -0.05        0.30
+2026-10-24/2026-10-30 all  50   0.06    0.05    -0.06      -0.02     -0.10   0.01      -0.04  0.07  0.09        0.05
+2026-10-24/2026-10-30   L  20  -0.57   -0.36    -0.28      -0.36     -0.38  -0.55      -0.42 -0.48 -0.38       -0.52
+2026-10-24/2026-10-30   S  30   0.33    0.32     0.08       0.10      0.12   0.35       0.15  0.26  0.24        0.25
+2026-10-31/2026-11-06 all  65  -0.09    0.06     0.09       0.03     -0.00   0.03       0.08 -0.16 -0.19       -0.09
+2026-10-31/2026-11-06   L  29  -0.05    0.02     0.03       0.03      0.04   0.04       0.09  0.11  0.13        0.10
+2026-10-31/2026-11-06   S  36  -0.14   -0.08     0.01      -0.04     -0.13  -0.02      -0.01 -0.23 -0.25       -0.12
+2026-11-07/2026-11-13 all  93  -0.03   -0.03    -0.06       0.13     -0.09  -0.13       0.07 -0.03  0.05       -0.02
+2026-11-07/2026-11-13   L  46  -0.03    0.04     0.05      -0.04     -0.07  -0.02      -0.05 -0.17 -0.15       -0.18
+2026-11-07/2026-11-13   S  47   0.14    0.17     0.16       0.38      0.01  -0.02       0.27  0.26  0.31        0.27
+2026-11-14/2026-11-20 all 101  -0.18   -0.02    -0.01       0.00     -0.04  -0.13       0.01 -0.13 -0.05       -0.16
+2026-11-14/2026-11-20   L  46  -0.07   -0.07    -0.03       0.06     -0.01  -0.13       0.00  0.06  0.13        0.03
+2026-11-14/2026-11-20   S  55  -0.20   -0.22    -0.18      -0.07     -0.07  -0.23      -0.14 -0.09 -0.04       -0.12
+2026-11-21/2026-11-27 all  81  -0.36   -0.33    -0.30      -0.22     -0.20  -0.27      -0.24 -0.32 -0.37       -0.35
+2026-11-21/2026-11-27   L  35  -0.33   -0.28    -0.40      -0.17     -0.11   0.05      -0.12 -0.26 -0.37       -0.32
+2026-11-21/2026-11-27   S  46  -0.12   -0.06     0.09      -0.03      0.04  -0.11      -0.16 -0.07 -0.15       -0.08
+
+Mean over folds (t over folds) of Spearman rho, and top-quintile excess next-week avg R (R/trade):
+  [all] folds 6
+    score       rho -0.056 (t -0.64)   top20% excess  0.034 R/trade (t  0.75)
+    R_sess      rho -0.007 (t -0.09)   top20% excess  0.024 R/trade (t  0.52)
+    med_day     rho -0.021 (t -0.29)   top20% excess -0.007 R/trade (t -0.20)
+    worst_day   rho  0.032 (t  0.49)   top20% excess  0.032 R/trade (t  0.61)
+    green_sh    rho -0.049 (t -1.04)   top20% excess  0.027 R/trade (t  0.99)
+    day_t       rho -0.058 (t -0.97)   top20% excess  0.005 R/trade (t  0.11)
+    ulcer_neg   rho  0.024 (t  0.35)   top20% excess -0.021 R/trade (t -0.51)
+    wo1         rho -0.057 (t -0.74)   top20% excess  0.012 R/trade (t  0.24)
+    wo2         rho -0.068 (t -0.93)   top20% excess  0.018 R/trade (t  0.31)
+    shrunk_wo1  rho -0.040 (t -0.44)   top20% excess  0.016 R/trade (t  0.37)
+  [L] folds 6
+    score       rho -0.093 (t -0.63)   top20% excess -0.019 R/trade (t -0.52)
+    R_sess      rho -0.094 (t -1.26)   top20% excess  0.020 R/trade (t  0.39)
+    med_day     rho -0.098 (t -1.25)   top20% excess -0.026 R/trade (t -0.38)
+    worst_day   rho -0.051 (t -0.66)   top20% excess -0.024 R/trade (t -0.35)
+    green_sh    rho -0.032 (t -0.34)   top20% excess -0.060 R/trade (t -1.21)
+    day_t       rho -0.093 (t -0.98)   top20% excess -0.045 R/trade (t -1.39)
+    ulcer_neg   rho -0.067 (t -0.87)   top20% excess  0.011 R/trade (t  0.36)
+    wo1         rho -0.056 (t -0.44)   top20% excess -0.041 R/trade (t -0.87)
+    wo2         rho -0.065 (t -0.58)   top20% excess  0.003 R/trade (t  0.07)
+    shrunk_wo1  rho -0.075 (t -0.54)   top20% excess -0.016 R/trade (t -0.26)
+  [S] folds 6
+    score       rho  0.044 (t  0.47)   top20% excess  0.047 R/trade (t  0.70)
+    R_sess      rho  0.072 (t  0.79)   top20% excess  0.046 R/trade (t  0.71)
+    med_day     rho  0.081 (t  1.18)   top20% excess  0.084 R/trade (t  2.19)
+    worst_day   rho  0.112 (t  1.38)   top20% excess  0.101 R/trade (t  1.99)
+    green_sh    rho  0.006 (t  0.17)   top20% excess  0.103 R/trade (t  2.36)
+    day_t       rho  0.038 (t  0.42)   top20% excess  0.034 R/trade (t  0.47)
+    ulcer_neg   rho  0.079 (t  0.89)   top20% excess  0.011 R/trade (t  0.27)
+    wo1         rho  0.053 (t  0.62)   top20% excess  0.083 R/trade (t  1.22)
+    wo2         rho  0.010 (t  0.11)   top20% excess  0.077 R/trade (t  1.06)
+    shrunk_wo1  rho  0.086 (t  1.01)   top20% excess  0.076 R/trade (t  1.38)
