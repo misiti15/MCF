@@ -1,6 +1,6 @@
 # Proposals from the 2026-11-27 exploration night, ranked by expected effect on weekly R
 
-Educational only — not financial advice. Data, cost basis, configuration count (about 9,650 cumulative) and the rule changes inside the 10-23..11-27 window are as stated at the top of [DECISIONS.md](DECISIONS.md). All weekly-R figures are for **Primary** unless marked arena. Each figure is an honest range, and most of each range is "trading less", not edge.
+Educational only — not financial advice. Data, cost basis, configuration count (about 9,656 cumulative, including cycle 2) and the rule changes inside the 10-23..11-27 window are as stated at the top of [DECISIONS.md](DECISIONS.md). All weekly-R figures are for **Primary** unless marked arena. Each figure is an honest range, and most of each range is "trading less", not edge.
 
 **One-paragraph verdict of the night.**
 - Seven tracks and seven reviews found no positive edge after costs, long or short, in any condition. Friction is about 0.13R per lot, against a gross edge of about −0.02 to +0.03R.
@@ -76,7 +76,7 @@ Not proposed (failed tonight, do not re-run): basket cap as a Primary rule (58th
   - [loss_anatomy](findings/loss_anatomy.md): arena 11-25 −1,160R; arena latch +1,221R, 100th percentile vs random lots, but random lots in the same setup-days save more (1,599R).
   - Owner 11-22 approved a latch-for-every-setup study.
 - **Expected:** Primary 0. Testing F: tail cut; R about 0 outside squeeze days (rules_1122: size trim, −68R vs random).
-- **Risk:** fewer live reps for setups that start the day badly (the what-if run still records them, as a gross bar simulation); playing-time rule. One account only, time-boxed.
+- **Risk:** fewer live reps for setups that start the day badly (the what-if run still records them, as a gross bar simulation). It is in-session throttling in a testing account, so it needs an explicit, time-boxed owner exception to the playing-time rule. One account only.
 - **Experiment:**
   - Account: Testing F. Baseline: what-if add-back costed with LIVE-L.
   - Controls: same-account-day random cut of equal size, and a constant cut on fire days.
@@ -99,7 +99,7 @@ Not proposed (failed tonight, do not re-run): basket cap as a Primary rule (58th
   - PLOCK25 ([outside](findings/outside.md) P1, with the reviewer's first-N path control).
   - SIDE20 / BS30 ([regime_filters](findings/regime_filters.md) P1, with TT dropped and same-day neutral).
   - LONGF1 ([long_edge](findings/long_edge.md) P2, tested against F5).
-- **Expected:** 0 now. In-sample hints were +10 R/wk (GAPU on the current roster, `1 day`) down to about 0. Prior chance any rule passes: about 10-20%.
+- **Expected:** 0 now. In-sample hints were +10 R/wk (GAPU on the current roster, `1 day`) down to about 0. Prior chance any rule passes: about 10-20%. Cycle 2: the GAPU switch failed a random day-skip control on the bench (0/5, [gapswitch](findings/gapswitch.md)), so GAPU's prior is lower.
 - **Risk:** none (offline). The multiplicity count rises by 7.
 - **Experiment:**
   - Accounts: all journals, read-only. Baseline: untagged lots plus each rule's control.
@@ -110,14 +110,14 @@ Not proposed (failed tonight, do not re-run): basket cap as a Primary rule (58th
 ## 7. PAIRED-CARD scoreboard (new)
 - **Evidence:** [dev_tactics](findings/dev_tactics.md) E5: paired tests need about 3x fewer sessions than split-account A/Bs; reviewer fix: skip rules scored same-day/same-side on net R.
 - **Expected:** 0 direct; +0 to +1.5 R/wk per card that is real, adopted 3-6 weeks sooner.
-- **Experiment:** cards LATCH-OPEN, RW 1.25x target, L3 first-lot-only, SPREADFLOOR. 10 sessions, one report on 12-11.
+- **Experiment:** cards LATCH-OPEN, RW 1.25x target (descriptive only: it failed the cycle-2 LIVE-L re-check, [rw_target](findings/rw_target.md)), L3 first-lot-only, SPREADFLOOR. 10 sessions, one report on 12-11.
   - Success: paired day t ≥ 2 in the bench direction, sign holds without the best day, ≥ 60% of affected setups improve, within 2 SE of the bench.
 - **Prepared:** [PLAN.md](sandbox/decisions/PAIRED-CARD/PLAN.md).
 
 ## 8. FROZEN-BLOCKS and GY-SHADOW + TWIN (structure, new)
 - **Evidence:** [dev_tactics](findings/dev_tactics.md) E2/E4/E9: 23 rule-change dates in 25 sessions; records 3-12% signal; promotions +0.190 → −0.197.
 - **Expected:** 0 direct; 0 to +3 R/wk after 4-6 weeks through faster, cleaner verdicts.
-- **Risk:** organisational (owner rules on copies and the Graveyard); shadow bias −0.047R must be corrected; some execution-cost data lost if Graveyard orders stop (keep 1-2 live).
+- **Risk:** organisational (owner rules on copies and the Graveyard; FROZEN-BLOCKS amends the 11-20 "no freeze" rule and must exempt the playing-time session rotation); shadow bias −0.047R must be corrected; some execution-cost data lost if Graveyard orders stop (keep 1-2 live).
 - **Experiment:** blocks from 11-30 (process only). Twin from 12-07: one candidate change per block. Success: at least one paired verdict per block at t ≥ 2 or a decisive null.
 - **Prepared:** [RULE_DRAFT.md](sandbox/decisions/FROZEN-BLOCKS/RULE_DRAFT.md), [OUTLINE.md](sandbox/decisions/GY-SHADOW-TWIN/OUTLINE.md).
 

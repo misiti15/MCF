@@ -2,9 +2,9 @@
 
 Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the exploration session (decisions key). **Nothing here is applied.** Every "prepared work" item is a draft under `exploration/sandbox/decisions/<code>/`. A change happens only after the owner's reply, outside market hours, with tests, a ledger entry and (for setup moves) `docs/live/assignments.json` regenerated in the same commit.
 
-**Where the numbers come from.** Live journals, 10-23..11-27 (25 sessions), run 1, R after LR8 costs. The bench is the 2-year minute engine with LIVE-L costs. The locked holdout (2024-11-01..2025-02-28) was never read. About **9,650 configurations** have been tried so far: about 9,363 before tonight, about 280 from tonight's tracks and reviewers, and 4 descriptive lineup cuts in this file.
+**Where the numbers come from.** Live journals, 10-23..11-27 (25 sessions), run 1, R after LR8 costs. The bench is the 2-year minute engine with LIVE-L costs. The locked holdout (2024-11-01..2025-02-28) was never read. About **9,656 configurations** have been tried so far: about 9,363 before tonight, about 280 from tonight's tracks and reviewers, 4 descriptive lineup cuts in this file, and 6 from cycle 2 (GAPSWITCH 5, RW-TGT125 1).
 
-**Rule changes inside the 10-23..11-27 window** (ledger; they affect every number below):
+**Rule changes inside the 10-23..11-27 window** (ledger; they affect every number below; this is a selection: the ledger has 23 distinct effective dates in the window):
 - 10-23: ST-A (no per-setup stop in the arena).
 - 10-28: Primary size about $4k.
 - 10-29: −2R latch on closed R.
@@ -22,9 +22,9 @@ Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the e
 ## How to answer (one line, copy and edit)
 
 ```
-LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | ARENA-LATCH-F yes | FROZEN-BLOCKS yes | REPORTS go | HS-SCALE shock-only friday | T1X2 yes | PRIM-ADD3 no | ODB3 as recommended | CRYPTO park
+LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | ARENA-LATCH-F yes | FROZEN-BLOCKS yes | REPORTS go | HS-SCALE shock-only friday | GOAL-STAGES yes | T1X2 yes | PRIM-ADD3 no | ODP2/ODB3 as recommended | CRYPTO park
 ```
-Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out stays open.
+Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out stays open. `ODP2/ODB3 as recommended` means the 5 yes / 3 wait split in D12. `ARENA-LATCH-F yes` also grants the time-boxed playing-time exception described in D5.
 
 ## Summary table
 
@@ -65,7 +65,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 1. *Would it have saved 11-25?* Mostly. On the full-day minute replay, −40.1R becomes −8.3R (the journal day was −42.3R). Tonight's loss anatomy shows why the current latch could not act: Primary's L3 had **30 lots open** before the first stop cluster (12:00-13:00), so closed R was still above −2R while open R was far below it.
 2. *Does it sell anything?* No. It only blocks **new** entries for that setup for the rest of the day. Open lots keep their own stops and targets.
 3. *What does it cost on good days?* About 20% fewer lots. It trims recovery days: 11-12 L3 goes from +31R to about +1R. On a book earning +0.10R per lot that would be about −87R a year. On today's book (−0.156R per lot) the lots it skips are losing lots on average.
-4. *Is it an edge?* No, it is insurance. On CHECK it scores the same as a plain size cut (E = 1.00). Tonight's testing-account replay agrees: once a day has gone bad, cutting *any* lots that day does as well as the latch's choice (shorts_autopsy reviewer). What it buys is acting **during** the day, before the whole basket is on.
+4. *Is it an edge?* No, it is insurance. (Playing time: it extends the Primary latch you approved on 10-29 and blocks about 20% of Primary lots within the day. It is a loss guard, not a starvation fix, but see the reviewer notes at the end.) On CHECK it scores the same as a plain size cut (E = 1.00). Tonight's testing-account replay agrees: once a day has gone bad, cutting *any* lots that day does as well as the latch's choice (shorts_autopsy reviewer). What it buys is acting **during** the day, before the whole basket is on.
 5. *If L3 goes out too, is it still worth it?* Yes, but it is worth less. RW3 and RW5 build the same baskets: 11-10 and 11-11 had 35-39 lots and about −24R each day. NM-ETF had 12 lots open at once on 11-20. Not re-replayed tonight on the 3-setup roster.
 6. *What if marks fail?* That setup falls back to closed R for that check, and it is logged (`latch_open_fallbacks`). A restart re-derives the latch from marks.
 7. *Is anything else changing Monday that would blur the read?* AV50 changes NM-ETF exits only. LATCH-OPEN blocks show their own skip reason (`setup daily loss limit (open)`), so the two can be told apart in the journal.
@@ -102,7 +102,8 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 2. *Why L3 and not RW3 or RW5?*
    - Removing any one short helps about equally on the bench (rwout: no short is special).
    - L3 is singled out by its live record without its best day (−0.204 vs −0.037 / −0.057).
-   - L3 is also the **basket generator**: 19 lots a day and 35 lots on 11-25, and lots per day is the one setup trait that predicts next week's worst day (metrics track, rho −0.36).
+   - Window note: −0.204 / −0.037 / −0.057 are the Primary records since each setup's first Primary session (231 / 199 / 202 lots; RW3/RW5 include their 10-22 best day). On the 10-23..11-27 window used elsewhere in this file they are −0.209 / −0.155 / −0.144 (PRIOR_RESEARCH): L3 is still the worst, but by less.
+   - L3 is also the **basket generator**: about 13 lots a session in Primary (215 lots in 17 sessions) and 35 lots on 11-25. Lots per day is the one setup trait that predicts next week's worst day (metrics track, rho −0.36, though the reviewer found this is largely mechanical: more lots, bigger swings).
 3. *What does Primary lose?* L3's windfall days: 11-12 (+31.0R), 11-16 (+16.4R), 11-20 (+6.0R), 11-10 (+5.8R). The table shows total R is about unchanged without it. What drops is the swing.
 4. *Does L3 keep playing?* Yes. In On Deck it gets full reps under On Deck rules, and it can return under C3-BAR2 plus the PRIME-RULES entry tests.
    - **Risk to flag:** On Deck has no per-setup stop and only a 300R account backstop. On 11-25 On Deck lost −391R, and seven arena L3 copies lost −1,037R between them.
@@ -143,7 +144,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 - **Each rule carries its reviewer-corrected control:** a day-block random cut for BASKET5X; a same-day random switch for GAPU; the first-N path control for PLOCK25; same-day neutral for SIDE20/BS30 (no TT); F5 for LONGF1.
 - **Window:** 11-30..12-29 (20 sessions). 12-24 is a half day and is reported separately. Bar: day-clustered t ≥ 2. A pass is a candidate for a pre-registered bench test, never an adoption.
 - **Prepared work:** `sandbox/decisions/TAGS2/rules_draft.json`. On "go", copy it to `research/tags2/rules.json` with `frozen` set, plus a scorer modelled on `research/tags1/score.py`. Research-only commit, outside the trading path.
-- **Expected effect:** 0 R now. Prior chance that any rule clears both its control and t 2: about 10-20% (tonight's reviewers rated all of them low).
+- **Expected effect:** 0 R now. Prior chance that any rule clears both its control and t 2: about 10-20% (tonight's reviewers rated all of them low). Cycle-2 update: GAPSWITCH found the SPY gap-up short switch no better than random day-skips on the bench (0/5 configs, p 0.42-0.999; [gapswitch](findings/gapswitch.md)), so the prior for GAPU_GD25 / GAPU_GD50 is lower still.
 
 ## D5. ARENA-LATCH-F (new): closed −2R per-setup latch in Testing F for one frozen 2-week block
 **Recommendation: yes**, as a tail test in the arena. Primary is untouched.
@@ -157,12 +158,12 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
   - rules_1122 found the latch was a size trim (−68R vs random) to 11-20.
   - So expect **about 0 R outside squeeze days**, plus a real tail cut.
 - **Experiment:**
-  - Account: Testing F. Blocked signals are still recorded by the what-if run (run_id 2), so reps are not lost.
+  - Account: Testing F. Blocked signals are still recorded by the what-if run (run_id 2), but only as bar-simulated rows without live fills, so live reps on latch days are lost.
   - Baseline: the same account with latched lots added back from what-if, costed with LIVE-L.
   - Controls: (a) a same-account-day random cut of equal size; (b) a constant size cut on latch-fire days.
   - Duration: 11-30..12-11 if approved by Sunday, else 12-07..12-18.
   - Success: worst-5 days improve ≥ 40%; total R is no worse than the same-day random cut; per-setup better/worse counts reported (remedy rule).
-- **Conflict to weigh:** your playing-time rule says no in-session throttling in Primary/Testing. This is a single-account, time-boxed test of exactly that trade-off.
+- **Conflict to weigh (explicit):** your playing-time rule (11-03) says starvation is fixed by session rotation, "never by in-session throttling in Primary/Testing". A per-setup latch that stops a setup's entries for the rest of the day **is** in-session throttling in a testing account. It is a loss guard, not a starvation fix, but it still takes reps from setups that start the day badly. So `yes` here means a **time-boxed exception** to that rule for Testing F only, 11-30..12-11; under the 11-19 conflict-check rule this needs your explicit yes.
 - **Prepared work:** `sandbox/decisions/ARENA-LATCH-F/config.diff`: `account.max_setup_daily_loss_r: null → 2.0` in config/account_testingf.yaml, plus a ledger line and a scoring script to be written before the block starts.
 
 ## D6. FROZEN-BLOCKS (new, account structure / process)
@@ -171,6 +172,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch. Any item left out st
 - **Why:**
   - There were 23 distinct rule-change dates in 25 sessions, so no testing comparison is clean.
   - Live setup records are 3-12% signal (dev_tactics E2). Paired, frozen designs read a +0.05R/trade change about 3x faster.
+- **Conflicts to weigh:** (a) your 11-20 rule "No freeze, but weigh every change heavily" (OUT-EPOCH). This is a freeze inside testing blocks, so it needs your explicit yes as an amendment. (b) The playing-time session rotation (ROT blocks in Testing A-F, about every 4 sessions) must stay exempt, or low-activity setups would be starved for two weeks. The draft should say so before it is applied.
 - **Prepared work:** `sandbox/decisions/FROZEN-BLOCKS/RULE_DRAFT.md` (proposed RESEARCH_RULES text, ledger `kind: process`). No config change.
 - **First block:** 11-30..12-11, with D5 as Testing F's question.
 
@@ -180,6 +182,7 @@ Each reads journals after the close. None touches the trading path. Recommendati
    - Paired day-clustered scores of the pending cards on all ~1,150 live trades a session: LATCH-OPEN (skipped lots, if it is live), RW 1.25x target, L3 first-lot-only, SPREADFLOOR.
    - Skip rules are compared same day, same side, on net R.
    - Reported once on 12-11.
+   - Cycle-2 update: the RW 1.25x target failed its re-check under LIVE-L costs on the bench (CHECK +0.007, T2 +0.003 R/lot, both below the bar; the live gain is in-sample only: +0.001 R/trade on the 97 trades after the study window; [rw_target](findings/rw_target.md)). Keep it on the scoreboard as a descriptive read only; it is not a card.
 2. **LONG-SURVIVORS** ([long_edge](findings/long_edge.md) P1):
    - GEN-261020-09 and CWT14-orl-p10-long-WB5 scored forward 11-30..12-28.
    - Pass needs: avg R without best day > +0.05, best-day share < 35%, day t ≥ 2, above the random p95.
@@ -200,7 +203,7 @@ Each reads journals after the close. None touches the trading path. Recommendati
 **Recommendation: discuss.** Approve the direction now, build for 12-04.
 - **(1) Graveyard to shadow-only.** Keep 1-2 leaders live as a cost sample. Correct the shadow's −0.047R per trade bias before any foot race.
 - **(2) The freed paper account becomes TWIN:** an exact copy of Primary plus **one** candidate change per block, read against Primary as a real-fill paired test.
-  - First candidate: whichever of LATCH-OPEN / L3-OUT you did *not* apply, or the RW 1.25x target.
+  - First candidate: whichever of LATCH-OPEN / L3-OUT you did *not* apply. (The RW 1.25x target is no longer a candidate: it failed the cycle-2 re-check.)
 - **Needs** your explicit exception to "promotion = move" (TWIN is a copy) and new GY-LIFE / GY-FOOTRACE wording.
 - **Speed:** reviewer-corrected, about 4-8 sessions to read +0.10R per trade.
 - **Prepared work:** `sandbox/decisions/GY-SHADOW-TWIN/OUTLINE.md`, which lists the files, the order and the controls. The full build is its own PR outside market hours.
@@ -213,7 +216,7 @@ Each reads journals after the close. None touches the trading path. Recommendati
   - Removing it cuts day sd from 9.1 to 5.5 on top of L3-out.
 - **Against:**
   - It is a size cut; no short is special (rwout).
-  - It cut green weeks from 2/6 to 1/6 in the live table.
+  - It cut green weeks from 2/6 to 1/6 in the live table (one week's difference in 6, so this is noise either way).
   - It was positive on flat-open days (+21.1R).
 - **Recommendation:** decide at 12-04 with the first week of LATCH-OPEN / L3-OUT data.
 - **Prepared work:** `sandbox/decisions/PRIM-EXPOSURE/config.diff` (outline mirroring L3-OUT).
@@ -223,7 +226,7 @@ Each reads journals after the close. None touches the trading path. Recommendati
 
 **The evidence** ([metrics](findings/metrics.md) §4; the reviewer reproduced it exactly):
 - At Primary's lot correlation (0.185) and 38 lots a day, being red on no more than 1 day in 20 needs **+0.67R per lot**.
-- Even at correlation 0.03 and 100 lots a day it needs about +0.29R per lot. That is about 6x the best live edge (about +0.01 to +0.12R per lot without the best day).
+- Even at correlation 0.03 and 100 lots a day it needs about +0.29R per lot (recomputed: 1.645 x 0.89 x sqrt(3.97/100) = 0.29). That is about 2.5x the best live edge (about +0.01 to +0.12R per lot without the best day); the +0.67 at Primary's numbers is about 6x.
 - Today: −0.156R per lot, 68% red days, 1 green week in 6.
 
 | Edge per lot | Red days | Red weeks |
@@ -250,5 +253,58 @@ Each reads journals after the close. None touches the trading path. Recommendati
 | ODB3-G102205, -G102104, -RWR4 | **wait** | Negative without their best day. |
 | CRYPTO-SCOPE | **park** | Outside the intraday charter. 15-47 trades, t ≤ 2.22 vs a 3.82 bar. |
 | COMPASS-HALF | **no action from this session** | Named as new in the 11-27 brief but not in docs/live/decisions.json on the default branch. Its card text was not visible here. |
+
+## Reviewer notes (cycle 2)
+
+Educational only — not financial advice. Adversarial review of MONDAY_PLAN.md, DECISIONS.md and PROPOSALS.md, 2026-11-28 ~02:00 ET. Read-only on everything outside exploration/; no new configurations scored (count unchanged by this review).
+
+**1. Numbers traced (40 spot-checks; all found or recomputed unless listed under corrections).**
+- Primary −147.0R, weekly sum −3.3/−10.1/−33.9/−44.7/+4.1/−59.2 = −147.1, 1 green week of 6, 17/25 red (68%), −0.156R per lot (−147/943): PRIOR_RESEARCH, metrics.
+- The roster table (576 lots, −30.1R, sd 15.8, worst −42.3, worst-5 −108.1, w/o best −70.8; L3 out 361 / −27.0 / 9.1 / −25.7 / −68.7 / −45.9; L3+RW5 out 201 / −15.7 / 5.5 / −10.2 / −39.5; green weeks 2/6, 2/6, 1/6; red 14/25) matches `sandbox/decisions/roster_options_out.txt` line for line. Derived: +0.6 R/wk = 3.1R / 5 weeks; sd −42% = 9.1/15.8.
+- L3 windfalls 11-12 +31.0, 11-16 +16.4, 11-20 +6.0, 11-10 +5.8; 11-25 35 lots −35.0R (roster_options_out). L3 Primary w/o best day −0.209 = (−3.07 − 31.0)/163 (recomputed).
+- L3 all accounts +0.086 / 453 lots / +0.019 w/o best / 81% on 10-20; Primary 231 lots −0.204; RW3 −0.037, RW5 −0.057 (Primary): research/primshorts_1126/rescore.json. Bench L3 CHECK/T2 −0.100 / −0.126 and +0.77 / +0.36 R/session (t 3.4 / 3.7): primshorts REPORT; ×5 = +1.8..+3.9 R/wk.
+- 11-25 full day −40.1 → −8.3R: research/squeeze_1125/REPORT.md (neveragain's −37.4 is the partial day); bench ≤ −20R days 33 → 8 in 2.9 years; recovery day 11-12 +31 → +1R; −87R/yr on a +0.10 book (/52 = −1.7 R/wk): neveragain_1125.
+- CHECK −3.03 → −2.05 R/day (×5 = +4.9 R/wk): PRIOR_RESEARCH.
+- rules_1122: −68.3R vs random trim; gap-down family −103.7R. squeeze_1125: B8 fires 185/252, worst-5 +47% / +22%, live trio −26.6R (RW5 −16.2, L3 −10.3, RW3 −0.1).
+- rwout_1127 RW5-out +0.91 / +0.80 R/day. Testing F −261 → −63R, +36 R/wk; On Deck −391 → −49R: shorts_autopsy. Arena 11-25 −1,160R, seven L3 copies −1,037R, worst-5 = 64% of losing-day R, friction about 0.13R per lot: loss_anatomy.
+- Green-day maths: +0.67 (N 38, rho 0.185) and +0.29 (N 100, rho 0.03) recomputed from sd_day = s·sqrt(N(1+(N−1)rho)); week-level "30-40% green" recomputed as P(N(−5.4, 20.3) > 0) = 39%.
+- 23 distinct ledger effective dates 10-23..11-27 (recounted from research/ledger.jsonl); AV50 is ledger epoch 3, effective 11-30; promotions +0.190 → −0.197; reliability 3-12%; Graveyard shadow bias −0.047 (overall −0.037); dK11 −15.5 / dK12 −28.0; lots/day → worst day rho −0.36.
+
+**2. Corrected in this pass (small edits).**
+- D11: "+0.29 is about 6x the best live edge" → about 2.5x (the 6x belongs to +0.67).
+- D2 Q2: "19 lots a day" for L3 had no source (19.4 is L3-rsi5hi across accounts) → about 13 a session in Primary (215 / 17). Added the window note: the −0.204 / −0.037 / −0.057 comparison uses each setup's whole Primary record; on 10-23..11-27 it is −0.209 / −0.155 / −0.144, so L3 is worst by less. Added the reviewer caveat that lots/day → worst day is largely mechanical.
+- D5 / PROPOSALS #4: "reps are not lost" overstated → what-if rows are bar-simulated, live reps on latch days are lost.
+- MONDAY_PLAN: FROZEN-BLOCKS scope said "Testing A-E, Explore 1, Live Lab, Gen"; D6 says Testing A-F + On Deck. Fixed to match D6; Explore 1 / Live Lab / Gen are outside the blocks.
+- MONDAY_PLAN step 2: assignments.json must be committed in the same commit as the L3 move (owner 10-20).
+- One-line reply: `ODB3 as recommended` did not clearly cover ODP2-G261027-01 → `ODP2/ODB3 as recommended`; D11 (recommended yes) was missing → added `GOAL-STAGES yes`.
+- Cycle-2 results folded in: the RW 1.25x target failed its LIVE-L re-check (rw_target), so it is a descriptive read only in PAIRED-CARD and no longer a TWIN candidate; GAPSWITCH failed its random control (0/5), lowering the TAGS2 GAPU prior.
+- Config count 9,650 → about 9,656 (cycle 2 added 6). The rule-change list is now labelled as a selection of the 23 dates.
+
+**3. Under-a-minute check.** Each D1-D12 item has one recommendation and one token in the reply line; `monday` / `friday` is the only switch. Remaining ambiguity: `LATCH-OPEN -3R` has no date token in the example (write `LATCH-OPEN -3R monday` or `... friday`).
+
+**4. Owner rules.**
+- Promotion = move: L3-OUT and the RW5 outline disable in Primary and enable in On Deck with `mcf.report.assignments` in the same commit. OK. TWIN (D9) is a copy and is correctly flagged as needing an exception.
+- Trimmed setups go to testing: L3 and RW5 go to On Deck, never switched off. OK. GY-SHADOW stops Graveyard paper orders; already flagged as needing new GY-LIFE / GY-FOOTRACE wording.
+- Testing 1 = Testing 2: B8-SHADOW covers On Deck and Testing A equally; nothing ranks one testing account below another. OK.
+- Setup-freeze and the Friday epoch rule (RESEARCH_RULES 25): LATCH-OPEN and L3-OUT on `monday` are correctly marked as owner overrides; all merges are planned for the weekend. OK.
+- Rule-change context: present in all three files and the Monday brief line. OK.
+
+**5. Open conflicts the owner must resolve.**
+- **ARENA-LATCH-F vs playing time: conflicts.** A per-setup daily latch in Testing F is in-session throttling in a testing account, which the 11-03 rule forbids as a way to fix starvation and which costs reps. It is now worded as a time-boxed exception that needs your explicit yes.
+- **LATCH-OPEN vs playing time: a softer conflict.** Primary already has an owner-approved closed latch (ST-P 10-29), so this extends an existing loss guard rather than adding a starvation fix. It still blocks about 20% of Primary lots within the day. Please confirm that loss latches sit outside the playing-time rule.
+- **FROZEN-BLOCKS vs "No freeze" (OUT-EPOCH, owner 11-20):** an amendment that needs your yes. It must also exempt the ROT session rotation, or it would starve low-activity setups.
+- **PRIM-EXPOSURE at 12-04:** it would move RW5 into On Deck inside the first frozen block. D6 allows moves at the Friday epoch, so this is consistent only if FROZEN-BLOCKS keeps that wording.
+
+**6. Lookahead, overfitting and small samples.**
+- The 11-25 figures (LATCH-OPEN −40 → −8, Testing F −261 → −63, arena +1,221R) are scored on the day that prompted the rules. The bench (33 → 8) is the fair evidence, and it says insurance (E = 1.00), not edge. The files say so.
+- The live roster table is 25 sessions and 6 weeks: a green-week count moving by 1 is noise.
+- All live records cited for decisions carry the `1 day` tag. The decisions lean on the bench as they should.
+- No holdout reads were found. Costs are LR8 (live) or LIVE-L (bench) throughout.
+- The shorts_autopsy table header says "all accounts, deduped", but its RW3 / RW5 lot counts (166 / 160) equal the Primary-only roster. That label may be wrong. Not edited here: it does not change any decision.
+
+**7. Do-no-harm (git).**
+- `git diff --stat be8e648c04 origin/explore/2026-11-27 -- . ':!exploration'` is empty: nothing outside exploration/ changed.
+- Since 23:30 ET, origin/claude/intraday-trading-system-witis4 has one new commit: f5a2626587 by mcf-bot at 00:00 ET ("tags1: nightly would-skip tags"). That is the scheduled job, not this session.
+- Every commit carrying this session's trailer since 23:00 ET is an ancestor of origin/explore/2026-11-27, so none landed on another branch.
 
 Educational only — not financial advice.
