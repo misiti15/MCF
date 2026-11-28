@@ -1,0 +1,56 @@
+
+##### A Primary+arena  base lots 8695 avg -0.162
+                                        lots share_of_lots   avgR base_avg  gross R_per_day  day_t best_share avg_h1 avg_h2 avg_wo_1125 green_days ctrl_pct ctrl_p95 setups_up/down median_d_avgR
+F1 prev>+1% & stop>=12 spreads          1526         0.176  0.003   -0.162  0.036     0.192  0.048      7.876  0.007 -0.001       0.023      13/25  100.000   -0.105          40/17         0.103
+F2 5d>+3% & stop>=12 spreads            1245         0.143 -0.032   -0.162  0.003    -1.614 -0.373        NaN -0.117  0.070      -0.006       8/25  100.000   -0.068          39/19         0.095
+F3 prev>+1% & stop>=200bp                824         0.095 -0.009   -0.162  0.012    -0.310 -0.138        NaN -0.012 -0.008       0.015      15/25  100.000   -0.078          29/13         0.158
+F4 (prev>+1% or 5d>+3%) & stop>=12 spr  2176         0.250 -0.016   -0.162  0.018    -1.352 -0.277        NaN -0.069  0.043      -0.002      11/25  100.000   -0.092          49/16         0.138
+F5 stop>=12 spreads only                5486         0.631 -0.110   -0.162 -0.074   -24.207 -1.702        NaN -0.127 -0.096      -0.138       9/25  100.000   -0.153          52/18         0.036
+F6 prev>+1% only                        2415         0.278 -0.080   -0.162 -0.038    -7.775 -1.113        NaN -0.102 -0.053      -0.075      11/25  100.000   -0.126          47/20         0.084
+
+exit style (descriptive):
+              lots   avgR  gross  avg_wo_1125  setups
+exit_style                                           
+hold        1253.0 -0.167 -0.118       -0.231    16.0
+holdtr      1116.0 -0.111 -0.069       -0.182    16.0
+other       4190.0 -0.129 -0.091       -0.142    43.0
+target      2136.0 -0.250 -0.197       -0.262    36.0
+
+GEN only, exit style x F4:
+                  count   mean
+exit_style F4                 
+hold       False    909 -0.189
+           True     344 -0.110
+holdtr     False    758 -0.203
+           True     341  0.076
+other      False      2  0.604
+           True       1  0.550
+target     False   1460 -0.310
+           True     476 -0.107
+
+##### B Graveyard  base lots 6459 avg -0.158
+                                        lots share_of_lots   avgR base_avg  gross R_per_day  day_t best_share avg_h1 avg_h2 avg_wo_1125 green_days setups_up/down median_d_avgR
+F1 prev>+1% & stop>=12 spreads           987         0.153 -0.061   -0.158 -0.017    -2.409 -0.843        NaN -0.057 -0.067      -0.056      13/25           14/6         0.103
+F2 5d>+3% & stop>=12 spreads             871         0.135 -0.057   -0.158 -0.015    -1.988 -1.152        NaN -0.055 -0.060      -0.049      14/25           12/7         0.078
+F3 prev>+1% & stop>=200bp                263         0.041 -0.004   -0.158  0.022    -0.042 -0.046        NaN -0.009 -0.001       0.021      12/22           11/6         0.083
+F4 (prev>+1% or 5d>+3%) & stop>=12 spr  1460         0.226 -0.068   -0.158 -0.025    -3.959 -1.342        NaN -0.053 -0.088      -0.062      12/25           15/5         0.072
+F5 stop>=12 spreads only                3569         0.553 -0.150   -0.158 -0.104   -21.396 -1.963        NaN -0.069 -0.232      -0.186       9/25           19/9         0.019
+F6 prev>+1% only                        1888         0.292 -0.076   -0.158 -0.027    -5.743 -0.988        NaN -0.096 -0.044      -0.086      14/25           14/8         0.039
+
+exit style (descriptive):
+              lots   avgR  gross  avg_wo_1125  setups
+exit_style                                           
+hold         297.0 -0.079 -0.031       -0.474     8.0
+holdtr        35.0 -0.819 -0.769       -0.826     2.0
+other       5350.0 -0.160 -0.105       -0.164    20.0
+target       777.0 -0.147 -0.110       -0.234    12.0
+
+GEN only, exit style x F4:
+                  count   mean
+exit_style F4                 
+hold       False    258 -0.082
+           True      39 -0.061
+holdtr     False     28 -0.890
+           True       7 -0.535
+target     False    324 -0.258
+           True     133 -0.130
