@@ -13,6 +13,7 @@ Educational only — not financial advice.
 - HELD: RSGD1 (Scout card, Skeptic-signed, MDE ~0.15R) - day-type switch -> needs the owner's yes via the parent session.
 - FAMC: PAUSED by the guard (no calendar owner since Observer was disabled; no build log). Tally at pause: 4 scored sessions,
   mean delta -0.089R, w/o best (11-11) -0.323R, K_edge 0.388. Parent session decides reassign vs formal pause.
+- Calendars: mirror + famc_shadow use MCF mcf/execution/market_calendar.py (session_close offline, HOLIDAYS, next_trading_day).
 - Tools kept ready: fwdcal/mirror.py (+ official21.py auto, guard selftest), famc_shadow.py (guards: closed session, data
   present, journal final, calendar build log), spotc/spotc.py, guild_read.py, builder_blockguard.py.
 

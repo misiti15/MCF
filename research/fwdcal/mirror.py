@@ -683,7 +683,7 @@ def guard_decide(days, now, commits: dict) -> list[str]:
         return out
     if td in days and now.tz_convert(NY).strftime("%H:%M") < "16:30":
         out.append(f"window includes today ({td}); before 16:30 ET")
-    cl = "12:55" if max(days) in NYSE_HALF else "15:55"   # Builder 11-26: early-close sessions (13:00) flatten at 12:55
+    cl = MC.plus(MC.session_close(max(days), use_http=False), -MC.DEFAULT_LEAD_MIN).strftime("%H:%M")   # live's calendar: 15:55 / 12:55
     close = pd.Timestamp(f"{max(days)} {cl}", tz=NY)    # Skeptic 23:50 / Lead 19:00: last commit at or after the last day's close
     for acc, t in commits.items():
         if t is None:
@@ -722,8 +722,8 @@ def guard_selftest():
     print("guard selftest: skipped-session refusal ok. all cases ok")
 
 
-NYSE_HALF = {"2026-11-27", "2026-12-24"}   # 13:00 early closes (checklist 42: studies drop or flag them)
-NYSE_CLOSED = {"2026-11-26", "2026-12-25", "2027-01-01", "2027-01-18", "2027-02-15"}
+sys.path.insert(0, "/home/user/MCF"); from mcf.execution import market_calendar as MC  # noqa: E402  live's own calendar (Skeptic 11-27: one source)
+NYSE_CLOSED = set(MC.HOLIDAYS)   # alias kept for callers; early closes come from MC.session_close (offline: EARLY_CLOSES)
 
 
 def calendar_gaps(a: str, b: str, days) -> list[str]:

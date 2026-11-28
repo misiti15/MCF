@@ -119,12 +119,8 @@ BUILD_LOG = HERE / "famc_build_log.csv"   # Observer's build_famc_cal.py: one ro
 
 
 def prev_session(day: str) -> str:
-    sys.path.insert(0, str(HERE.parent / "fwdcal"))
-    _a = sys.argv; sys.argv = [sys.argv[0]]; import mirror as M; sys.argv = _a  # noqa: E402,E702  (NYSE_CLOSED, one source)
-    d = pd.Timestamp(day) - pd.offsets.BDay(1)
-    while d.strftime("%Y-%m-%d") in M.NYSE_CLOSED:
-        d -= pd.offsets.BDay(1)
-    return d.strftime("%Y-%m-%d")
+    sys.path.insert(0, str(ROOT)); from mcf.execution import market_calendar as MC   # live's calendar, one source (Skeptic 11-27)
+    return MC.next_trading_day(day, -1).isoformat()
 
 
 def calendar_built(day: str, log=None) -> list[str]:
