@@ -11,7 +11,7 @@ Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the e
 - 10-30: L3 re-promoted to Primary.
 - 11-11: TEAM-6.
 - 11-12: LR8 costs, LR3, the 300R arena halt and the half-day flatten.
-- 11-17: TSZ1 (half lots, 2x slots in testing) and giveback/SPY exits.
+- 11-17: TSZ1 (half lots, 2x slots in testing) and giveback/SPY exits (on the WB4 workbench copies in testing only; the Primary parents kept t1s1 exits, per rw_target).
 - 11-19: Epoch 1 and C3-EXIT100.
 - 11-20: stop rounding, FOOTRACE-EXIT, and MF2/MF4 out of Primary.
 - 11-21: cost-basis fix.
@@ -122,7 +122,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 3. *What does Primary lose?* L3's windfall days: 11-12 (+31.0R), 11-16 (+16.4R), 11-20 (+6.0R), 11-10 (+5.8R). The table shows total R is about unchanged without it. What drops is the swing.
 4. *Does L3 keep playing?* Yes. In On Deck it gets full reps under On Deck rules, and it can return under C3-BAR2 plus the PRIME-RULES entry tests.
    - **Risk to flag:** On Deck has no per-setup stop and only a 300R account backstop. On 11-25 On Deck lost −391R, and seven arena L3 copies lost −1,037R between them.
-   - Moving L3 adds an eighth L3 copy to the arena. That is paper risk only, but it enlarges the arena tail on the next squeeze day. D5 (a latch in one testing account) and D6 are the cheap guards.
+   - Moving L3 adds an eighth L3 copy to the arena. That is paper risk only, but it enlarges the arena tail on the next squeeze day. D5 (a latch in Testing F only, not On Deck where L3 would land) and D6 (a freeze, not a loss guard) do not cover this; see [critic](findings/critic.md).
 5. *Side effects on running tests?*
    - The L3 leash shadow (K11/K12, Primary basis, currently hurting: dK11 −15.5R, dK12 −28.0R) loses its Primary basis.
    - GAP-U and the regime-switch shadows should be reported on the new roster from 11-30.
@@ -323,7 +323,7 @@ Educational only — not financial advice. Adversarial review of MONDAY_PLAN.md,
 - The live roster table is 25 sessions and 6 weeks: a green-week count moving by 1 is noise.
 - All live records cited for decisions carry the `1 day` tag. The decisions lean on the bench as they should.
 - No holdout reads were found. Costs are LR8 (live) or LIVE-L (bench) throughout.
-- The shorts_autopsy table header says "all accounts, deduped", but its RW3 / RW5 lot counts (166 / 160) equal the Primary-only roster. That label may be wrong. Not edited here: it does not change any decision.
+- The shorts_autopsy table header says "all accounts, deduped", but its RW3 / RW5 lot counts (166 / 160) equal the Primary-only roster. That label may be wrong. Not edited here: it does not change any decision. *Critic check:* the label is consistent. The exact names RW3-...-FD and RW5-...-FD are enabled only in Primary (config/account_testing.yaml: "promotion = move; runs in Primary only from 2026-10-21"); their testing copies carry -WB4 / -RQa-1230 suffixes and count as different setups.
 
 **7. Do-no-harm (git).**
 - `git diff --stat be8e648c04 origin/explore/2026-11-27 -- . ':!exploration'` is empty: nothing outside exploration/ changed.
