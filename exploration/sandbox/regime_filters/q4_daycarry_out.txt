@@ -1,0 +1,12 @@
+arena: acct-days 155 rho(prev R/lot, today R/lot) +0.076 (p 0.346); after red day -0.178/lot (105 d) vs after green -0.169/lot (50 d)
+primary: acct-days 37 rho(prev R/lot, today R/lot) -0.068 (p 0.688); after red day -0.072/lot (26 d) vs after green -0.308/lot (11 d)
+primary DISC: setup-days 140; after a <= -2R day: 42 setup-days, 393 lots, avg R/lot -0.245 vs other -0.086; skipping them saves +96.3R; pct vs random setup-day skip 94; lot-matched expectation +60.3R
+primary HOLD: setup-days 79; after a <= -2R day: 13 setup-days, 111 lots, avg R/lot -0.272 vs other -0.000; skipping them saves +30.2R; pct vs random setup-day skip 88; lot-matched expectation +7.3R
+arena DISC: setup-days 1291; after a <= -2R day: 341 setup-days, 4949 lots, avg R/lot -0.232 vs other -0.159; skipping them saves +1146.3R; pct vs random setup-day skip 96; lot-matched expectation +905.8R
+arena HOLD: setup-days 339; after a <= -2R day: 125 setup-days, 2497 lots, avg R/lot -0.161 vs other -0.209; skipping them saves +402.0R; pct vs random setup-day skip 91; lot-matched expectation +455.0R
+
+--- cool-off rule (skip a setup's next active session after a <= -2R session): lot-matched excess, day-clustered ---
+primary DISC: saved +96.3R (day t 1.28); excess over lot-matched size cut +35.9R (day t 0.48); best-day share of excess 0.97; setups helped/hurt 7/4 (hurt total -6.4R)
+primary HOLD: saved +30.2R (day t 2.21); excess over lot-matched size cut +22.9R (day t 2.07); best-day share of excess 0.33; setups helped/hurt 8/2 (hurt total -3.9R)
+arena DISC: saved +1146.3R (day t 2.83); excess over lot-matched size cut +256.4R (day t 0.83); best-day share of excess 0.73; setups helped/hurt 88/45 (hurt total -232.5R)
+arena HOLD: saved +402.0R (day t 2.41); excess over lot-matched size cut -54.6R (day t -0.40); best-day share of excess nan; setups helped/hurt 34/14 (hurt total -61.3R)

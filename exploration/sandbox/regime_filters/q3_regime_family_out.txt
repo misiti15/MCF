@@ -1,0 +1,87 @@
+RV20 tercile cut points (fixed on 08-03..10-22, n 37): 8.9 / 10.4 (ann. %)
+             rv20      rvb   gap     gapb   o30     o30b
+2026-10-06  10.52  highvol  0.41    gapup  0.21    o30up
+2026-10-07  10.44  highvol -0.43    gapdn -0.12  o30flat
+2026-10-08  10.31   midvol -0.29  gapflat  0.06  o30flat
+2026-10-09  10.17   midvol  0.31    gapup -0.03  o30flat
+2026-10-12   9.99   midvol  0.03  gapflat -0.02  o30flat
+2026-10-13   9.81   midvol -0.09  gapflat  0.10  o30flat
+2026-10-14   9.60   midvol -0.40    gapdn -0.22    o30dn
+2026-10-15  10.35   midvol -0.44    gapdn -0.10  o30flat
+2026-10-16   9.64   midvol  0.18  gapflat -0.22    o30dn
+2026-10-19  10.47  highvol  0.52    gapup -0.10  o30flat
+2026-10-20   8.93   lowvol -0.12  gapflat  0.30    o30up
+2026-10-21   9.02   midvol  0.27  gapflat -0.05  o30flat
+2026-10-22   8.84   lowvol -0.88    gapdn  0.10  o30flat
+2026-10-23   9.84   midvol -0.54    gapdn  0.14  o30flat
+2026-10-26   9.79   midvol  0.32    gapup  0.07  o30flat
+2026-10-27   9.81   midvol  0.29  gapflat -0.16  o30flat
+2026-10-28  10.01   midvol  0.21  gapflat -0.10  o30flat
+2026-10-29   9.99   midvol -0.45    gapdn -0.01  o30flat
+2026-10-30  10.09   midvol -1.06    gapdn -0.02  o30flat
+2026-11-02  11.67  highvol  0.50    gapup  0.13  o30flat
+2026-11-03  11.37  highvol  0.08  gapflat  0.16  o30flat
+2026-11-04  11.22  highvol  1.14    gapup  0.56    o30up
+2026-11-05  12.87  highvol -0.16  gapflat -1.48    o30dn
+2026-11-06  20.17  highvol  0.19  gapflat  0.75    o30up
+2026-11-09  20.02  highvol  0.89    gapup  0.79    o30up
+2026-11-10  22.06  highvol -0.59    gapdn  0.32    o30up
+2026-11-11  22.06  highvol  0.91    gapup -0.05  o30flat
+2026-11-12  22.40  highvol -0.77    gapdn  0.51    o30up
+2026-11-13  22.39  highvol  0.37    gapup -0.73    o30dn
+2026-11-16  22.10  highvol -0.61    gapdn -0.42    o30dn
+2026-11-17  22.95  highvol -0.21  gapflat  0.11  o30flat
+2026-11-18  23.07  highvol  0.14  gapflat  0.03  o30flat
+2026-11-19  22.89  highvol  0.99    gapup -0.18  o30flat
+2026-11-20  23.49  highvol -0.32    gapdn  0.52    o30up
+2026-11-23  26.18  highvol  4.87    gapup -0.43    o30dn
+2026-11-24  31.42  highvol -1.00    gapdn  0.64    o30up
+2026-11-25  31.26  highvol -2.19    gapdn  0.06  o30flat
+2026-11-27  31.16  highvol  1.28    gapup -0.80    o30dn
+
+=== DISC, all non-Graveyard accounts, R/lot by side x regime (lots; day t of daily side R) ===
+               size   mean       sum  days
+sidel rvb                                 
+long  highvol  6877 -0.162 -1112.671    19
+      midvol   1818 -0.163  -295.759     6
+short highvol  8333 -0.191 -1589.847    19
+      midvol    979 -0.189  -185.031     6
+               size   mean       sum  days
+sidel gapb                                
+long  gapdn    3380 -0.184  -620.542     9
+      gapflat  2894 -0.185  -536.031     7
+      gapup    2421 -0.104  -251.857     9
+short gapdn    4601 -0.231 -1064.730     9
+      gapflat  2238 -0.139  -310.197     7
+      gapup    2473 -0.162  -399.950     9
+               size   mean       sum  days
+sidel o30b                                
+long  o30dn    1828 -0.054   -98.062     5
+      o30flat  4057 -0.152  -617.232    13
+      o30up    2105 -0.295  -621.145     7
+short o30dn    1884 -0.017   -32.499     5
+      o30flat  4608 -0.374 -1724.976    13
+      o30up    2597 -0.004   -11.556     7
+
+rvb: family x side cells with a comparable best/worst in both halves: 0; best-minus-worst sign kept H1->H2: 0 (0%)
+
+gapb: family x side cells with a comparable best/worst in both halves: 9; best-minus-worst sign kept H1->H2: 1 (11%)
+
+o30b: family x side cells with a comparable best/worst in both halves: 7; best-minus-worst sign kept H1->H2: 3 (43%)
+     var            family   side     best    worst  h1_spread  h2_spread   kept
+0   gapb             CWT13   long    gapdn  gapflat      0.238     -0.806  False
+1   gapb             CWT14   long    gapdn    gapup      0.276     -0.155  False
+2   gapb               GEN   long  gapflat    gapdn      0.243     -0.080  False
+3   gapb               GEN  short  gapflat    gapup      0.533     -0.286  False
+4   gapb                L3  short    gapdn  gapflat      0.402     -0.552  False
+5   gapb               MF4  short  gapflat    gapup      0.442      0.250   True
+6   gapb                NM   long    gapdn    gapup      0.396     -0.374  False
+7   gapb               RW7  short    gapdn  gapflat      0.011     -0.164  False
+8   gapb  exhaustion_short  short    gapdn  gapflat      0.855     -0.205  False
+9   o30b             CWT14   long  o30flat    o30dn      0.370     -0.132  False
+10  o30b               GEN   long    o30dn  o30flat      0.103      0.146   True
+11  o30b               GEN  short    o30dn    o30up      0.514     -0.336  False
+12  o30b                L3  short  o30flat    o30up      0.131     -1.062  False
+13  o30b               MF4  short  o30flat    o30up      0.540     -0.358  False
+14  o30b               RW7  short    o30dn  o30flat      0.220      0.046   True
+15  o30b  exhaustion_short  short  o30flat    o30up      0.049      0.357   True
