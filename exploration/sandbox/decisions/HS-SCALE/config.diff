@@ -1,0 +1,13 @@
+# DRAFT ONLY - never applied. Educational only - not financial advice. Option 'shock-only' (the card's recommendation).
+--- a/config/default.yaml
++++ b/config/default.yaml
+@@ risk: shock_v:
+-    enabled: false
++    enabled: true                # HS-SCALE shock-only, owner <DATE>: no new entries + alert on a sharp drop; never flattens
+@@
+-    v1_floor_r: 8
++    v1_floor_r: 16               # scored level at N = 4, X = 32R (hsscale_1125); with L3 out N = 3 -> X = 24R would give 12 / 18 (not scored)
+@@
+-    v2_floor_r: 12
++    v2_floor_r: 24
+# scaled_halt stays enabled: false. Ledger patch keys: risk.shock_v.enabled [false,true], risk.shock_v.v1_floor_r [8,16], risk.shock_v.v2_floor_r [12,24].

@@ -1,0 +1,14 @@
+# DRAFT ONLY - never applied. Educational only - not financial advice.
+# NEW proposal ARENA-LATCH-F: closed-R -2R per-setup latch in ONE testing account (Testing F) for one frozen 2-week block
+# (sessions 11-30..12-11 if approved by Sunday, else 12-07..12-18). Skipped signals keep being recorded by the what-if run
+# (run_id 2), so promotion data are not lost. This is the owner-approved 11-22 "latch for every setup" study run forward.
+--- a/config/account_testingf.yaml
++++ b/config/account_testingf.yaml
+@@ account:
+   max_daily_loss_r: 300   # owner 2026-11-11 after close; from session 2026-11-12: account catastrophe backstop (was 120)
+-  max_setup_daily_loss_r: null
++  max_setup_daily_loss_r: 2.0   # ARENA-LATCH-F (owner <DATE>): forward block <start>..<end>, then re-decided; raw R (not in loss_stops_cost_r_accounts)
+# Ledger: {"id": "<EFFECTIVE>-arena-latch-f", "kind": "risk", "code": "ARENA-LATCH-F", "patch": {"account.max_setup_daily_loss_r (testingf)": [null, 2.0]},
+#   "note": "testing account only; Primary untouched; frozen block, no other Testing F rule change during the block"}
+# Scoring script to write before the block starts (research-only): latch-skipped what-if lots costed with LIVE-L, compared with
+#   (a) a same-account-day random cut of equal size and (b) a constant size cut on latch-fire days (shorts_autopsy reviewer fix).

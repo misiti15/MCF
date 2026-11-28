@@ -1,0 +1,13 @@
+# DRAFT ONLY - never applied. Educational only - not financial advice. Log-only: never blocks an entry.
+--- a/config/default.yaml
++++ b/config/default.yaml
+@@ risk:
+   netbeta_shadow:                # B8 shadow (squeeze_1125 R1-B8): journal tag + status only, never blocks
+-    enabled: false
++    enabled: true                # B8-SHADOW owner <DATE>; review after 20 Primary sessions (with size-matched random + constant-cut controls)
+     accounts: [primary, testing, testing2]
+     budget_r_per_pct: 8
+     betas_path: null             # beta 1.0 for every symbol until a shrunk-beta JSON is built (safety.shrunk_beta)
+# Ledger: {"id": "<EFFECTIVE>-b8-shadow", "kind": "risk", "code": "B8-SHADOW", "patch": {"risk.netbeta_shadow.enabled": [false, true]},
+#          "note": "journal tag only; no order, slot, latch or halt change", "evidence": ["research/squeeze_1125/REPORT.md"]}
+# Tests: pytest -q tests/test_friday_switches.py, then pytest -q (update the default-off expectation for netbeta_shadow).

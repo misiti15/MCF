@@ -1,0 +1,17 @@
+{
+ "note": "TAGS2 DRAFT (exploration 2026-11-28; not frozen until the owner says 'TAGS2 go'). Journal-only would-skip scoring of tonight's surviving shadow ideas: NO order, slot, latch or halt change; computed after the close from the journals (as TAGS1). Thresholds copied from exploration/findings/*.md and fixed before any 11-30 data exists. Scored ONCE after 20 sessions. Educational only - not financial advice.",
+ "first_session": "2026-11-30",
+ "sessions_to_score": 20,
+ "score_on_or_after": "2026-12-29",
+ "half_day_note": "2026-12-24 is a half day: reported separately, included in totals",
+ "rules": {
+  "BASKET5X": {"desc": "a setup's 6th and later lots of the session (entry order, per account)", "scope": "all non-Graveyard accounts; Primary reported separately", "source": "exploration/findings/loss_anatomy.md P1 + reviewer re-scope", "test": "EXCESS over an exposure-matched random cut drawn by whole setup-days (day-block), not saving vs actual"},
+  "GAPU_GD25": {"desc": "gap-down-family short (L3*, RW1/3/5/7*, RW3S*, CWT09-gapdn*) on a day SPY opened >= +0.25% above the prior close", "scope": "all", "source": "exploration/findings/shorts_autopsy.md P1", "test": "same-day random-switch control (consultants_1126 C)"},
+  "GAPU_GD50": {"desc": "as GAPU_GD25 at SPY gap >= +0.50%", "scope": "all", "source": "exploration/findings/shorts_autopsy.md P1 / loss_anatomy.md P2"},
+  "PLOCK25": {"desc": "lots entered after the account's closed day R >= +0.25 x its expanding daily sd (shifted one day)", "scope": "all", "source": "exploration/findings/outside.md P1", "test": "random skip of the same lot count AND the first-N path control; also report the change in average green-day size"},
+  "SIDE20": {"desc": "lots of one side entered after that side's closed day R <= -20R x (account lots/day / Primary lots/day), on top of a simulated -2R per-setup latch where the account has none", "scope": "all", "source": "exploration/findings/regime_filters.md P1", "test": "day-clustered neutral (account-mean re-pricing) t >= 2 AND same-day neutral >= 0; TT control dropped (reviewer)"},
+  "BS30": {"desc": "lots entered after the account's stop count for the day >= 30 x (account lots/day / Primary lots/day), same latch base as SIDE20", "scope": "all", "source": "exploration/findings/regime_filters.md P1", "test": "as SIDE20"},
+  "LONGF1": {"desc": "long lot with prior-day close > +1% and stop >= 12 spreads", "scope": "all", "source": "exploration/findings/long_edge.md P2", "test": "against F5 (stop >= 12 spreads only) on the same days, single stocks and inverse/vol ETFs split"}
+ },
+ "score": {"configs": 7, "bar_t": "max(2.0, sqrt(2 ln 7) = 1.97) = 2.0 on day-clustered t (exploratory; any pass is a candidate for a pre-registered bench test, never an adoption by itself)", "always_report": "R after costs (LR8) of tagged lots vs untagged; percentile vs the rule's control (2,000 draws); avg R w/o best day and best-day share; per-setup and per-family better / worse counts (remedy rule); lots per day; the ledger rule changes inside the window"}
+}

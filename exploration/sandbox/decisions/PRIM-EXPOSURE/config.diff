@@ -1,0 +1,7 @@
+# DRAFT ONLY - never applied. Educational only - not financial advice. NEW question for the 12-04 epoch (not Monday):
+# option 'rw5-out' = RW5-heat30-flowsell-rsi5pop-gapdn-short-FD Primary -> On Deck (move), mirroring L3-OUT's diff:
+#   config/default.yaml   strategies.RW5-heat30-flowsell-rsi5pop-gapdn-short-FD.enabled: true -> false; drop it from live.setup_order
+#   config/account_testing.yaml  same key enabled: false -> true (add the block if missing); append to live.setup_order
+#   python -m mcf.report.assignments; ledger kind "move"; pytest -q
+# Not drafted line-by-line: it is not proposed for Monday and its removal is a size cut (rwout_1127), decided on the
+# first week of data after L3-OUT / LATCH-OPEN.

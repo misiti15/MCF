@@ -1,0 +1,31 @@
+# DRAFT ONLY - never applied by the exploration session. Educational only - not financial advice.
+# Option 'out' (a move, never a copy): Primary off, On Deck (account 'testing') on. Same diff for 11-30 or 12-07.
+--- a/config/default.yaml
++++ b/config/default.yaml
+@@ strategies:
+   L3-gap-slope-fromopen-FD:
+     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+     refire_cooldown: 1
+-    enabled: true    # re-promoted from Testing 1 2026-10-30 (owner); promotion = move. Demoted 10-22 after 23 Primary trades -0.308R
++    enabled: false   # L3-OUT (owner <DATE>, override of PRIME-RULES probation): moved to On Deck; Primary record 10-30..11-27 stays here
+@@ live: setup_order:
+     - NM-ETF-late-dip-di-long
+     - RW5-heat30-flowsell-rsi5pop-gapdn-short-FD
+     - RW3-gapdn-rsi5pop-flowsell-short-FD
+-    - L3-gap-slope-fromopen-FD   # re-promoted 2026-10-30 (~19/day live)
+--- a/config/account_testing.yaml
++++ b/config/account_testing.yaml
+@@ strategies:
+   L3-gap-slope-fromopen-FD:
+     refire: true             # owner 2026-10-14 option B (research/bdi/refire1014)
+     refire_cooldown: 1
+-    enabled: false   # re-promoted to Primary 2026-10-30 (owner); its Testing 1 record stays here
++    enabled: true    # L3-OUT (owner <DATE>): back from Primary (move); On Deck rules (no per-setup stop, 300R account backstop)
+@@ live: setup_order:
+     - ST7-rsi50dn-long-pm-t1s1-FD   # from Primary 2026-11-21 (ST7-MOVE); 43 Primary trades -7.08R (LR8)
++    - L3-gap-slope-fromopen-FD   # from Primary <DATE> (L3-OUT); Primary 10-30..11-27: 215 lots -3.1R (LR8, from 10-23 basis), w/o best day -0.204R/lot
+# Then, in the same commit (owner rule 2026-10-20):
+#   python -m mcf.report.assignments        # regenerates docs/live/assignments.json (tests/test_assignments.py enforces)
+#   python -m mcf.research.ledger check
+#   pytest -q
+# PRs touching setups merge only outside 09:30-16:00 ET (setup-freeze check): Sat/Sun or after the Friday close are fine.

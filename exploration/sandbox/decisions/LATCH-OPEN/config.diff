@@ -1,0 +1,12 @@
+# DRAFT ONLY - never applied by the exploration session. Educational only - not financial advice.
+# Same config change for both timing options (Monday 11-30 override, or the 12-04 Friday epoch).
+--- a/config/default.yaml
++++ b/config/default.yaml
+@@ risk:
+-  latch_counts_open: false       # LATCH-OPEN (neveragain_1125 G1-2): per-setup latch on closed + open R (no new entries)
++  latch_counts_open: true        # LATCH-OPEN (neveragain_1125 G1-2): per-setup latch on closed + open R (no new entries); owner <DATE> (<where>)
+   latch_counts_open_accounts: [primary]
+   latch_open_r: null             # closed + open threshold (R); null = the setup's max_setup_daily_loss_r (2). 3 = G1-3
+# Variant '-3R' only: also
+-  latch_open_r: null
++  latch_open_r: 3
