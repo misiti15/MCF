@@ -1,0 +1,21 @@
+                               n  sess  avg_gross  day_t  wo_worst  wo_best
+grp                                                                        
+not shortable/ETB         7781.0  25.0     -0.112 -1.094    -0.026   -0.139
+other                     9839.0  25.0     -0.318 -0.982     0.002   -0.355
+shortable, capacity skip  7985.0  24.0     -0.228 -0.870     0.027   -0.278
+                                                 n  sess  avg_gross  day_t  wo_worst  wo_best
+grp                      px                                                                  
+not shortable/ETB        (0.0, 5.0]          265.0  19.0     -0.312 -1.644    -0.153   -0.335
+                         (5.0, 10.0]        2273.0  25.0     -0.169 -1.349    -0.060   -0.189
+                         (10.0, 20.0]       2157.0  25.0     -0.066 -0.714    -0.004   -0.110
+                         (20.0, 50.0]       2211.0  25.0     -0.127 -1.198    -0.042   -0.156
+                         (50.0, 1000000.0]   875.0  25.0      0.028  0.284     0.085   -0.031
+shortable, capacity skip (5.0, 10.0]        1000.0  15.0     -0.307 -0.842     0.052   -0.341
+                         (10.0, 20.0]       1323.0  20.0     -0.341 -0.933     0.021   -0.376
+                         (20.0, 50.0]       1926.0  20.0     -0.290 -0.938     0.013   -0.338
+                         (50.0, 1000000.0]  3736.0  24.0     -0.135 -0.753     0.030   -0.196
+
+Top not-shortable symbols: {'UVIX': 131, 'SNDQ': 125, 'GDXU': 98, 'CORD': 96, 'AAOZ': 93, 'NVD': 92, 'NBIZ': 91, 'MUU': 91, 'SOXS': 85, 'BEZ': 82, 'SKDD': 81, 'MSTU': 79}
+
+Paired by day (ETB minus capacity), mean -0.033, t -0.32, n days 24
+['not shortable/ETB', 'shortable, capacity skip']
