@@ -2,7 +2,7 @@
 
 Educational only — not financial advice. Written 2026-11-28 ~01:30 ET by the exploration session (decisions key). **Nothing here is applied.** Every "prepared work" item is a draft under `exploration/sandbox/decisions/<code>/`. A change happens only after the owner's reply, outside market hours, with tests, a ledger entry and (for setup moves) `docs/live/assignments.json` regenerated in the same commit.
 
-**Where the numbers come from.** Live journals, 10-23..11-27 (25 sessions), run 1, R after LR8 costs. The bench is the 2-year minute engine with LIVE-L costs. The locked holdout (2024-11-01..2025-02-28) was never read. About **9,656 configurations** have been tried so far: about 9,363 before tonight, about 280 from tonight's tracks and reviewers, 4 descriptive lineup cuts in this file, and 6 from cycle 2 (GAPSWITCH 5, RW-TGT125 1).
+**Where the numbers come from.** Live journals, 10-23..11-27 (25 sessions), run 1, R after LR8 costs. The bench is the 2-year minute engine with LIVE-L costs. The locked holdout (2024-11-01..2025-02-28) was never read. About **9,660 configurations** have been tried so far: about 9,363 before tonight, about 280 from tonight's tracks and reviewers, 4 descriptive lineup cuts in this file, 6 from cycle 2 (GAPSWITCH 5, RW-TGT125 1) and 4 from the cycle-3 roster replay (latchopen_monday).
 
 **Rule changes inside the 10-23..11-27 window** (ledger; they affect every number below; this is a selection: the ledger has 23 distinct effective dates in the window):
 - 10-23: ST-A (no per-setup stop in the arena).
@@ -44,7 +44,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 
 | # | Code | Question | Recommendation | Weekly-R effect on Primary (honest) | Needs |
 |---|---|---|---|---|---|
-| D1 | **LATCH-OPEN** (tapped *friday*) | Latch counts open R too | **Yes, apply for Monday 11-30** (override) | +1 to +5 R/wk on today's losing book, all from trading less. Main value: an 11-25-type day goes from −40R to about −8R | Owner override of the Friday rule |
+| D1 | **LATCH-OPEN** (tapped *friday*) | Latch counts open R too | **Yes, apply for Monday 11-30** (override) | Roster A (L3 out): about +1 to +4 R/wk, all from trading 13-23% fewer lots; the book stays about −6 R/wk on the bench. Main value: days ≤ −20R about 8 → 2 a year on CHECK (pooled about 3.7 → 0.7); an 11-25-type day −40R → about −8R (4-setup book) | Owner override of the Friday rule |
 | D2 | **L3-OUT** (tapped *out*) | Move L3 to On Deck | **Yes, out, for Monday 11-30** (override) | Live total about unchanged (+0.6 R/wk). Day swings −42%, worst-5 −108 → −69R. Bench +1.8 to +3.9 R/wk, size effect | Override of PRIME-RULES probation and the Friday rule |
 | D3 | **B8-SHADOW** (tapped *shadow*) | Log the net-beta cap | **Yes, from Monday** (log only) | 0 (log) | Your yes; arguably not a rule change |
 | D4 | TAGS2 (new) | Freeze 7 would-skip rules from tonight and score once at 20 sessions | **Go** | 0 now; it can only produce candidates | One word |
@@ -65,7 +65,7 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 
 **Recommendation: Monday 11-30.**
 - Monday is already an epoch start. AV50 is "epoch 3", effective 11-30. So applying it now does not split an epoch. It only skips the "decided at the Friday close" step, and the reason that step was missed is that you wanted to ask questions first.
-- Waiting a week has a cost. Before LATCH-OPEN, the bench had about 11 days a year at −20R or worse (33 in 2.9 years), roughly a 20% chance in any given week. With it, about 3 a year.
+- Waiting a week has a cost, but a smaller one with L3 out. On the 4-setup book the bench had about 11 days a year at −20R or worse (33 in 2.9 years), cut to about 3 with LATCH-OPEN. **Re-replayed on the Monday roster (cycle 3, [latchopen_monday](findings/latchopen_monday.md)):** roster A (RW3, RW5, NM-ETF) has about 8 a year on CHECK (9 in 276 sessions), 1 in 408 T2 sessions; LATCH-OPEN cuts this to about 1.8 a year on CHECK (2 days) and 0 on T2. Pooled, that is about 3.7 → 0.7 a year, so a week's wait carries about a 7% (pooled) to 15% (CHECK alone) chance of a −20R day on roster A, not 20%. With L3 kept (roster B) it is about 8.4 → 2.6 a year.
 
 **Options and prepared work** (identical change, different date; `sandbox/decisions/LATCH-OPEN/`):
 
@@ -80,8 +80,20 @@ Replace `monday` with `friday` to wait for the 12-04 epoch; for the softer latch
 1. *Would it have saved 11-25?* Mostly. On the full-day minute replay, −40.1R becomes −8.3R (the journal day was −42.3R). Tonight's loss anatomy shows why the current latch could not act: Primary's L3 had **30 lots open** before the first stop cluster (12:00-13:00), so closed R was still above −2R while open R was far below it.
 2. *Does it sell anything?* No. It only blocks **new** entries for that setup for the rest of the day. Open lots keep their own stops and targets.
 3. *What does it cost on good days?* About 20% fewer lots. It trims recovery days: 11-12 L3 goes from +31R to about +1R. On a book earning +0.10R per lot that would be about −87R a year. On today's book (−0.156R per lot) the lots it skips are losing lots on average.
-4. *Is it an edge?* No, it is insurance. (Playing time: it extends the Primary latch you approved on 10-29 and blocks about 20% of Primary lots within the day. It is a loss guard, not a starvation fix, but see the reviewer notes at the end.) On CHECK it scores the same as a plain size cut (E = 1.00). Tonight's testing-account replay agrees: once a day has gone bad, cutting *any* lots that day does as well as the latch's choice (shorts_autopsy reviewer). What it buys is acting **during** the day, before the whole basket is on.
-5. *If L3 goes out too, is it still worth it?* Yes, but it is worth less. RW3 and RW5 build the same baskets: 11-10 and 11-11 had 35-39 lots and about −24R each day. NM-ETF had 12 lots open at once on 11-20. Not re-replayed tonight on the 3-setup roster.
+4. *Is it an edge?* No, it is insurance (cycle 3: on roster A it beats a plain size cut but not a random same-day cut on R; see Q5). (Playing time: it extends the Primary latch you approved on 10-29 and blocks about 20% of Primary lots within the day. It is a loss guard, not a starvation fix, but see the reviewer notes at the end.) On CHECK it scores the same as a plain size cut (E = 1.00). Tonight's testing-account replay agrees: once a day has gone bad, cutting *any* lots that day does as well as the latch's choice (shorts_autopsy reviewer). What it buys is acting **during** the day, before the whole basket is on.
+5. *If L3 goes out too, is it still worth it?* Yes, but it is worth less. Replayed in cycle 3 on roster A, LIVE-L costs, 4 configs ([latchopen_monday](findings/latchopen_monday.md)):
+   - **Saving:** +0.80 R/day on CHECK (t 3.0), +0.20 on T2 (t 2.3), +0.72 on the live window (t 0.9, carries the `1 day` tag: 11-10 = 70%). Weekly that is about **+1 to +4 R/wk**: CHECK +4.0, T2 +1.0, live +1.1 without 11-10.
+   - **Days ≤ −20R:** CHECK 9 → 2, T2 1 → 0, live 2 → 0 (11-10 −21.7 → −9.1; 11-11 −25.4 → −13.8).
+   - **Days ≤ −10R:** CHECK 39 → 15, T2 18 → 9.
+   - **Worst-5:** CHECK −148 → −97, T2 −105 → −63.
+   - **Red days:** unchanged (+3 on each bench window).
+   - **Per setup:** RW3 and RW5 both improve in both windows; NM-ETF is unchanged. No setup gets worse.
+   - **Book after the change:** still negative, about −1.25 R/day (−6 R/wk) on the bench.
+   - **Exposure-matched control** (critic gap 2; 400 draws, the same number of lots removed at random on the same days):
+     - On total R, LATCH-OPEN is at the 16th / 0th / 20th percentile (CHECK / T2 / live). It does not pick better lots within a bad day; it picks the bad days.
+     - On the tail, it beats the random same-day cut on the bench (worst-5 at the 100th percentile on both windows) but not in the 25 live sessions (9th percentile).
+     - Against a plain size cut of equal lots, it wins: R/day at the 100th / 65th / 97th percentile, and worst-5 at the 100th percentile everywhere.
+   - **Forward bar:** "beats a constant cut on fire days, and is not behind a random same-day cut by more than its insurance value", not "skipped lots ≤ 0R".
 6. *What if marks fail?* That setup falls back to closed R for that check, and it is logged (`latch_open_fallbacks`). A restart re-derives the latch from marks.
 7. *Is anything else changing Monday that would blur the read?* AV50 changes NM-ETF exits only. LATCH-OPEN blocks show their own skip reason (`setup daily loss limit (open)`), so the two can be told apart in the journal.
 8. *Contrary evidence?* rules_1122 found that a closed latch for *every* setup was **−68R worse than a random trim** on live trades to 11-20. In the gap-down family it cost −104R before 11-25, because those setups often recover after a −2R start. LATCH-OPEN gives up the same recoveries. That is the price of the tail cut.

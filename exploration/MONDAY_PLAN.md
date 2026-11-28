@@ -12,7 +12,7 @@ Educational only — not financial advice. Nothing here is applied by the explor
 
 **So:**
 - **Monday can be made safer, not reliably green.** The realistic target for the first week is Stage 1: no day worse than −20R, and every day yields at least one measured verdict ("a winning day in some way", per the charter).
-- With L3 out and LATCH-OPEN on, a green week is still only about a 30-40% chance. The roster without L3 averaged about −1.1R a day with a day sd of about 9R, so a 5-day week has about −5R expected and an sd of about 20R.
+- With L3 out and LATCH-OPEN on, a green week is still only about a 30-40% chance. The roster without L3 averaged about −1.1R a day with a day sd of about 9R, so a 5-day week has about −5R expected and an sd of about 20R. The cycle-3 replay of exactly this book ([latchopen_monday](findings/latchopen_monday.md)) gives −0.31 R/day live (25 sessions, `1 day`) and about −1.25 R/day on the bench (CHECK −1.28, T2 −1.22).
 - Green **weeks** need a positive-edge sleeve. That is what TAGS2, PAIRED-CARD and LONG-SURVIVORS are searching for, as forward tests that cannot fool us.
 
 ## The plan by account
@@ -62,12 +62,14 @@ Dry-run status: every draft, the combo and the all-five stack passed the full su
 
 | Change | Red days | Worst day | Weekly R (Primary) |
 |---|---|---|---|
-| LATCH-OPEN | About unchanged | An 11-25-type day: −40 → about −8R | +1 to +5, from trading less |
-| L3-OUT | About unchanged (14/25 either way on the live roster) | −42 → −26R live; day sd 15.8 → 9.1 | 0 to +4 |
-| Both | About 55-65% red days | A day below −20R becomes rare (bench: about 3 a year vs about 11) | About +1 to +6; a green week is still only about a 30-40% chance |
+| LATCH-OPEN (on roster A, cycle 3 replay) | About unchanged (bench +3 red days per window; live 14/25 → 14/25) | Days ≤ −20R: CHECK 9 → 2 (about 8 → 1.8 a year), T2 1 → 0, live 2 → 0; worst-5 CHECK −148 → −97. An 11-25-type day: −40 → about −8R (4-setup book) | **+1 to +4** (CHECK +4.0, T2 +1.0, live +3.6 but +1.1 without 11-10), from trading 13-23% fewer lots |
+| L3-OUT | About unchanged (14/25 either way on the live roster) | −42 → −26R live; day sd 15.8 → 9.1 | 0 to +4 (bench CHECK +4.8, T2 +2.0) |
+| Both (roster A + LATCH-OPEN vs today's 4-setup closed-latch book) | About 55-65% red days | Bench days ≤ −20R about 8.4 → **0.7 a year** pooled (CHECK alone 17 → 1.8 a year) | Bench +2.9 (T2) to +8.8 (CHECK); live +3.3 (noise, t < 1). The book itself is still about **−6 R/wk** on the bench and −1.6 R/wk live; a green week is still only about a 30-40% chance |
 | Shadows, TAGS2, reports, frozen blocks | None now | None now | 0 now; they are how a positive edge could be found and proven in 2-6 weeks |
 
 The **arena** on a squeeze day remains the biggest absolute risk in paper R: −1,160R on 11-25, mostly no-stop L3 copies. ARENA-LATCH-F tests the guard in one account first, out of respect for the playing-time rule.
+
+**Control for the LATCH-OPEN read (cycle 3):** on roster A it beats a plain size cut of the same lots (R at the 100th / 65th percentile on CHECK / T2) but not a random cut of the same lots on the same days (16th / 0th percentile). So the forward bar is "beats a constant cut on fire days", with the random same-day cut reported beside it, not "skipped lots ≤ 0R".
 
 ## What will be measured by Monday night (posted in the nightly brief)
 
