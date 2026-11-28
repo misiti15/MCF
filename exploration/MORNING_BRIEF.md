@@ -25,7 +25,7 @@ Copy, edit and send in the chat:
 ```
 LATCH-OPEN monday | L3-OUT out monday | B8 shadow monday | TAGS2 go | REPORTS go | GOAL-STAGES yes | ARENA-LATCH-F no (or ARENA-LATCH-ONDECK yes) | FROZEN-BLOCKS discuss
 ```
-Write `friday` instead of `monday` to wait for the 12-04 window. Each item is explained in [DECISIONS.md](DECISIONS.md), D1-D13. Your three earlier desk taps (LATCH-OPEN *friday*, L3-OUT *out*, B8 *shadow*) are still **provisional**. Nothing changes until you confirm here.
+This short line is my final recommendation. It differs from the full line in DECISIONS.md on two items, because of the later reviews: ARENA-LATCH-F already failed its random-cut control and breaks the playing-time rule, and FROZEN-BLOCKS clashes with your 11-20 "no freeze" rule. The routine cards (HS-SCALE, T1X2, PRIM-ADD3, ODP2/ODB3, CRYPTO) are in the full line in DECISIONS.md. Write `friday` instead of `monday` to wait for the 12-04 window. Each item is explained in [DECISIONS.md](DECISIONS.md), D1-D13. Your three earlier desk taps (LATCH-OPEN *friday*, L3-OUT *out*, B8 *shadow*) are still **provisional**. Nothing changes until you confirm here.
 
 ## Top 5 findings
 1. **Losses come in clumps, and they are short "baskets".**
