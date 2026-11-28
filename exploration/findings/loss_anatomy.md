@@ -247,3 +247,110 @@ Not levers: restack bans and entry-burst caps are inside-the-day lot pickers (t 
 - Scripts, in run order: `extract.py`, `features.py`, `describe.py`, `levers.py`, `basket.py`, `daytype_levers.py`. Outputs: `*_out.txt`, `days_*.csv`.
 
 Educational only — not financial advice.
+
+---
+
+## Reviewer notes (review_loss_anatomy, 2026-11-28)
+
+Educational only — not financial advice.
+
+**What I checked.**
+- I read all six scripts.
+- I re-ran the Primary headline numbers with independent code (`exploration/sandbox/review_loss_anatomy/recheck.py`, 1,000 random draws).
+- I re-scored the two Primary levers on the setups that will actually be in Primary from 11-30 (`roster.py`).
+- Configs added by this review: 5 (2 re-checks and 3 roster replays). Cumulative is about 9,428. The holdout was not read.
+
+**Process and integrity.**
+- `git diff --name-only <merge-base with the default branch> HEAD` on explore/2026-11-27 shows no path outside `exploration/`. Commit 00b36d2d91 touches only `exploration/findings/loss_anatomy.md` and `exploration/sandbox/loss_anatomy/*`.
+- No remote branch other than explore/2026-11-27 points at 00b36d2d91 or ffc4ccfd1f.
+- Journals were read through `git show` and deleted after use, and SPY was read with a GET. The scripts contain no secrets.
+
+**Reproduction (exact match).**
+
+| Primary number | Track | Re-check |
+|---|---|---|
+| Lots / total R | 943 / −147.0R | 943 / −147.0R |
+| Red days | 17 of 25 | 17 of 25 |
+| Losing-day R | −235.6 | −235.6 |
+| Worst-5 | −151.5 (64%) | −151.5 (64%) |
+| L3 on 11-25 | 35 lots, 32 stops, −35.0R | 35 lots, 32 stops, −35.0R |
+| Cap-5 skip | +99.7R, dt 1.47, worst-5 → −56.1, red days → 15, green-day cost −46.1 | same |
+| Cap-5 half | +49.9R | +49.9R, but 88th percentile vs random on 1,000 draws (track: 92nd on 200) |
+| Gap-up shorts off | +85.1R, dt 2.31, 8 of 9 days red | same (from days_primary.csv) |
+
+**Method checks.**
+
+*Lookahead.* None found.
+- The lot cap uses entry order within the setup-day.
+- The spread floor uses the spread recorded at entry.
+- The SPY gap is known at 09:30.
+- The open-lot and closed-R counts use only earlier lots. Small caveat: they count lots the same lever would itself have skipped, so the replay is approximate.
+
+*Costs.* LR8 is applied to every lot through `cost_r_lr8`. Spread is already in the fills.
+- The claim that pre-friction edge is about −0.02R rests on a *median* spread/stop estimate. The mean is higher because of tight stops, so treat it as indicative.
+- Half-size replays scale R linearly, which ignores any fixed per-order cost. The effect is small.
+
+*Labels.*
+- The SPY bars were fetched with `feed="iex"` (regular hours via `rth()`), not SIP as the text says. That is fine for SPY day types.
+- The arena de-duplication key includes the strategy name, so copies of a setup under different names (for example, the seven L3 copies) are *not* merged.
+  - "No duplicate signals" is true only by exact key.
+  - Arena lot counts and per-setup better/worse counts overstate independent evidence. The day-clustered t is not affected.
+
+*Controls.* The U and W percentiles randomise at the lot level, not by day, so they overstate significance for a book whose losses cluster by day. The day-clustered t values are the honest test, and the track reports them.
+
+*Rule-change context.* The list is mostly right. Three items are missing, and they all change setup composition inside the window:
+- 11-19: C3-EXIT100 moved 20 arena setups to the Graveyard.
+- 11-20: Friday review. MF2-FD and MF4-FD left Primary; assignments show them as since 11-20, with first session 11-23. Also GY-FOOTRACE.
+- 11-23: FOOTRACE-EXIT moved 12 arena setups.
+- 11-27: ROT-B3 moved 8 arena setups.
+
+The arena and Primary rosters at the end of the window are therefore not the rosters that produced most of the losses.
+
+**Per finding.**
+
+1. **Losses are lumpy and driven by baskets: HOLDS** (descriptive). Reproduced exactly. Both books show it, and it is not a selection claim, so multiplicity does not apply.
+   - Caveats: one-big-day carry is real. 11-25 is 18% of Primary losing-day R and 37% of the arena's.
+   - The arena 11-25 size (87-311 lots per L3 copy) comes partly from the arena having no per-setup stop (ST-A) and from 2x slots (TSZ1, 11-17). It does not carry over one-for-one to Primary.
+
+2. **Costs are not what makes the worst days: HOLDS** (11% vs 20%).
+   - Part of this is arithmetic: stop-outs magnify gross R while cost per lot is flat.
+   - "Shorts underperform is mostly exposure": **weakened to partly**. Shorts are still worse per lot in both books (Primary −0.164 vs −0.121; arena −0.193 vs −0.163). The 25-day correlations depend on this window's market path.
+
+3. **Which lot inside a day does not matter: HOLDS** for the arena, where the estimates are tight (|diff| ≤ 0.02R).
+   - On Primary the point estimates are negative (−0.04 to −0.06R) and the test has little power. Read it as "no evidence", not "proven zero".
+   - "Big baskets lose across days" is a description in a book with a negative per-lot edge. Smaller K always saves more (K3 > K5 > K8 …), which is what a size cut does.
+
+**Levers and proposals.**
+
+- **Basket cap (P1): WEAKENED, with no forward Primary case.**
+  - *Size cut, not selection.* On the full window, the excess over a proportional size cut is only +29.6R (+5.9 R/wk) for skip and +14.3R (+2.9 R/wk) for half. The day-clustered t of that excess is **0.91**.
+  - *The saving came from setups that have already left Primary.* MF4 (+37.2R) and MF2 (+36.9R) give **74%** of the skip-variant saving, and both left Primary after 11-20.
+  - *On the roster that trades from 11-30 (L3-fromopen, NM-ETF, RW3, RW5):* 576 lots, −30.1R.
+    - Cap-5 skip saves +16.9R (+3.4 R/wk). That is the **58th percentile** vs random, with excess +0.4 R/wk and **dt 0.30**.
+    - **Without its best day (11-25) it is −14.5R.** Its best-day share is 186%, and its green-day cost is −58.5R.
+    - The half variant saves +1.7 R/wk at the 54th percentile.
+  - *The arena* says the same: K5 cuts 70% of exposure, and a random cut of 70% already saves about 2,125 of the 2,295R.
+  - *Verdict:* P1 as written would very likely fail its own success bar on Primary. A basket shadow is still cheap to keep as reporting, but the criteria should measure **excess over an exposure-matched cut** with a day-block random control, not saving vs actual. Do not expect a Primary decision from it.
+
+- **Gap-up shorts off (P2): WEAKENED** but still the best Primary lever.
+  - On the current roster: +51.3R (+10.3 R/wk), 100th percentile, excess +8.9 R/wk, dt **1.72** (down from 2.31). Ex-best-day +22.1R, best-day share **57%**, so it gets the `1 day` tag. Red days 14 → 14.
+  - It fails in the arena (0th percentile). Two thresholds were tried (0.3 / 0.5), and it overlaps the already-running GAP-U shadow, which limits the multiplicity cost.
+  - P2 as a reporting add-on (book split plus random control) is sound and can start Monday. The expected value should be +0 to +10 R/wk, not +5 to +17.
+
+- **Spread floor (P3): HOLDS.** It is the strongest result in the track.
+  - Arena: dt 3.45, 100th percentile vs both U and W, positive on green days, best-day share 24%.
+  - Primary: small (42nd percentile).
+  - It was pre-existing, so there is no new multiplicity. Scoring it as planned is right.
+
+- **LATCH-OPEN support: HOLDS** as a mechanism. All 30 L3 lots were on before the first stop, and the arena −2R latch beat random by day. It is not quantified for Primary here.
+
+- **Not levers (restack/burst bans, time cut-offs, gap-down long-off): HOLD.**
+
+- **Challenge to the goal: HOLDS.** Red days barely move under any lever. On the current roster even the best lever leaves 14 of 25 red. Green weeks need a positive per-lot edge, not tail trimming.
+
+**Final confidence.**
+- High in the anatomy: concentration, baskets, and the direction-times-size mechanism.
+- Low that the basket cap adds R in Primary going forward (current roster: 58th percentile, dt 0.30, carried by 11-25).
+- Low-medium for gap-up shorts off (Primary only, one-day tag).
+- Medium-high for the spread floor.
+- For Monday: keep P2 and P3 as reporting. Run P1 only as a re-scoped reporting shadow on excess over random.

@@ -1,0 +1,27 @@
+BASE FIT: days 170, lots 4589, R/day -4.13, sd 11.65, red 109, worst5 -199.2
+BASE CHECK: days 276, lots 8705, R/day -2.88, sd 12.07, red 168, worst5 -183.6
+BASE T2: days 415, lots 4965, R/day -1.81, sd 5.94, red 244, worst5 -122.3
+sd_day(FIT) = 11.65R  (reference e4nb BASE: CHECK -3.03 R/day, T2 -1.80)
+CHECK AM/PM: corr(am, pm/n) spearman +0.027; PM R/lot after AM green -0.090 (n 2156), after AM red -0.104 (n 1706)
+T2 AM/PM: corr(am, pm/n) spearman +0.030; PM R/lot after AM green -0.149 (n 955), after AM red -0.140 (n 1737)
+                     0        1        2        3        4        5
+k                 0.25     0.25      0.5      0.5      1.0      1.0
+X                 2.91     2.91     5.83     5.83    11.65    11.65
+per              CHECK       T2    CHECK       T2    CHECK       T2
+days               276      415      276      415      276      415
+locked_days        113       62       57       21       19        1
+lots_base         8705     4965     8705     4965     8705     4965
+lots_cut          2433      439     1149      125      325        1
+dR_day           0.927    0.098    0.278    0.016   -0.063    0.001
+t                2.169    1.332    0.831     0.61   -0.588      1.0
+removed_avgR    -0.105   -0.092   -0.067   -0.053    0.053   -0.221
+base_avgR       -0.091   -0.151   -0.091   -0.151   -0.091   -0.151
+pct_vs_random     82.3      7.2     16.2     10.3      0.0     51.8
+red_base           168      244      168      244      168      244
+red_new            142      233      157      242      167      244
+red_constcut       168      244      168      244      168      244
+w5_base       -183.573 -122.251 -183.573 -122.251 -183.573 -122.251
+w5_new        -180.857 -122.251 -180.857 -122.251 -183.573 -122.251
+w5_constcut   -132.265 -111.441 -159.342 -119.173 -176.719 -122.226
+dR_wo_best       0.774    0.062    0.124    0.001   -0.121      0.0
+best_share       0.167    0.367    0.557     0.92      NaN      1.0

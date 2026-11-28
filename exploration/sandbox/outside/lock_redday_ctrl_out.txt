@@ -1,0 +1,13 @@
+LIVE (account-days with known sd only):
+ k=0.25: account-days 140, lots removed 3198, red days base 99 -> lock 88; random skip red days mean 100.4 [p5 97, p95 104]; lock below p5: True
+   accounts better 9, worse 1; by account: {'explore1': -51.0, 'gen': 6.1, 'graveyard': 105.2, 'livelab': 10.1, 'primary': 79.3, 'testing': 9.3, 'testing2': 10.1, 'testingd': 49.3, 'testinge': 12.9, 'testingf': 302.4}
+   Primary: locked days 9, lots removed 210, removed avg R -0.378 vs Primary avg -0.156; removed R by day: {'2026-10-30': -5.6, '2026-11-03': 3.5, '2026-11-04': -15.1, '2026-11-05': -0.8, '2026-11-06': -29.8, '2026-11-10': -41.9, '2026-11-12': 6.6, '2026-11-16': 3.5, '2026-11-23': 0.4}
+ k=0.5: account-days 140, lots removed 1383, red days base 99 -> lock 98; random skip red days mean 99.5 [p5 97, p95 102]; lock below p5: False
+   accounts better 6, worse 2; by account: {'explore1': -56.7, 'gen': 0.0, 'graveyard': 22.3, 'livelab': 9.0, 'primary': 50.4, 'testing': 0.1, 'testing2': 0.2, 'testingd': 0.0, 'testinge': 12.4, 'testingf': -5.1}
+   Primary: locked days 6, lots removed 137, removed avg R -0.368 vs Primary avg -0.156; removed R by day: {'2026-11-03': 1.0, '2026-11-05': -0.8, '2026-11-06': -29.8, '2026-11-10': -30.7, '2026-11-12': 6.4, '2026-11-16': 3.5}
+
+BENCH:
+ k=0.25 CHECK: days 276, lots removed 2433, red days 168 -> 142; random skip mean 166.3 [p5 159]; red weeks 41 -> 39 of 58; per-month red 12.8 -> 10.8
+ k=0.25 T2: days 415, lots removed 439, red days 244 -> 233; random skip mean 248.4 [p5 243]; red weeks 66 -> 66 of 89; per-month red 12.3 -> 11.8
+ k=0.5 CHECK: days 276, lots removed 1149, red days 168 -> 157; random skip mean 167.3 [p5 162]; red weeks 41 -> 40 of 58; per-month red 12.8 -> 11.9
+ k=0.5 T2: days 415, lots removed 125, red days 244 -> 242; random skip mean 245.7 [p5 242]; red weeks 66 -> 67 of 89; per-month red 12.3 -> 12.2

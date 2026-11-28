@@ -216,3 +216,61 @@ F1 looks good on paper: break-even, better than random within the day, 40 setups
 - **Starts Monday: NO** (research first).
 
 Educational only — not financial advice.
+
+---
+
+## Reviewer notes (review_long_edge, 2026-11-28 ~00:50 ET)
+
+Educational only — not financial advice.
+
+**Scope checked.** I read the findings and every sandbox script. Branch hygiene: from the merge base with the default branch (be8e648c04), the 18 commits on `explore/2026-11-27` change only files under `exploration/` (checked with `git diff --name-only` and per-commit `diff-tree -m`). Commit 7d6566d206 adds 14 files, all under `exploration/`, and only `origin/explore/2026-11-27` contains it. No other branch was pushed.
+
+**Re-run.** `exploration/sandbox/review_long_edge/recheck.py` (output in `recheck_out.txt`) rebuilds the live long lots on its own from the 10 journals. It uses `mcf.costs.cost_r_lr8` and the `footrace.live_trades` dedup. SPY day type comes from Alpaca daily bars (GET only). Results:
+- Universe A: 8,695 lots, −1,408.4R, −0.162 per lot. Universe B: 6,459 lots, −1,021.6R, −0.158. Exact match.
+- SPY down days: 3,653 lots, −1,090.0R, −0.298, **77.4% of the loss**. Exact match.
+- The flat/up split is sensitive to how a day is classed. Daily-bar open→close gives 7 flat / 9 up days, against the track's 8 / 8 from minute bars. On that basis up days are −0.041, not −0.033, and −0.110 without 11-25, not −0.115. The conclusion does not change.
+- 44 setups have 50 or more lots. 5 are positive, and 2 stay positive without their best day. Exact match.
+- GEN-261020-09: 259 lots / 12 days, +76.0R, +3.4R without its best day, 96%, day t 0.96. CWT14-WB5: 148 / 7, +11.2R, +2.7R, 76%, day t 1.15. GEN-261023-07: −27.0R without best day (142%). GEN-261027-10: −31.9R (224%). All match.
+- Both survivors are still assigned on the default branch (`gen` and `testingd` in docs/live/assignments.json), so P1 needs no move.
+
+**Lookahead check.**
+- Live features (feat.py): gap, prior-day return, 5-day return and ATR are built from shifted daily bars. SPY-at-entry uses the close of the bar before the entry minute. SPY day type, hold length, the stock's day open→close and `spy_after` are labelled OUTCOME, and the text treats them as outcomes. No leak found.
+- History (up_build `daily`/`walk`): ATR and adv20 are shifted. Entry is at the bar open. The stop is checked first, and the trail only applies from the next bar. The locked block is filtered at load and asserted. No leak found.
+- History survivorship: the minute caches are likely current-universe names. That bias would *favour* longs, so it makes the negative history result stronger, not weaker.
+
+**Reproducibility gaps (minor).**
+- The script that builds `trades.parquet` (gross_r, stop_bp, stop_spreads, hold_min, emin) is not in the sandbox. Gross-R and stop-spread cells cannot be re-run from the branch alone. The net headline numbers were reproduced independently.
+- `hist_build.py` and `hist_score.py` import from a deleted worktree path. They need `research/upday_1127` and `research/primshorts_1126` from the repo instead.
+
+### Per finding
+
+1. **No broad long condition is positive after costs; 77% of the loss is on SPY down days: HOLDS.**
+   - Reproduced exactly. It agrees in both live universes and in history (two out-of-sample splits). Costs are in (LR8 live, LIVE-L history).
+   - Caveat: "77% on down days" is conditioned on the outcome. It only becomes actionable if down days can be seen before the trade. The pre-trade SPY cells (SPY gap, SPY at entry) found no positive long cell, so this is a diagnosis, not a lever.
+   - The window spans 13 rule changes (listed at the top). R per lot is the right unit across the 11-17 TSZ1 change. The finding is a sign result that holds in both halves, so the rule changes do not overturn it.
+2. **The best long records are one-day records; 2 survivors at about +0.01-0.02R per lot: HOLDS** (reproduced exactly).
+   - Add a multiplicity note. The 2 survivors are the best 2 of 44, so some winner's curse should be expected. Their without-best-day R (+3.4R and +2.7R) is within noise: day t is about 1, from 7-12 sessions.
+   - The track already rates them LOW and scores them forward only. That is the right design.
+   - GEN-261020-09 is a weak-QQQ dip buyer (its name includes QQQ below −0.3%). Its first half was −0.006 per lot, so its record is all from the second half.
+3. **Wide stops and prior-day strength beat a within-day random draw; F1 is not durable.**
+   - Wide-stop part: **HOLDS** as a cost effect. History shows gross R flat across stop widths in 3 of 3 splits while cost falls.
+   - Strength / F1 part: **WEAKENED further** than the track says:
+     - The Graveyard was used to *choose* the features ("beat control in both universes"), so B is not an independent replication of F1.
+     - The 6 combo filters were written after the cell scan, on the same data, so the 100th-percentile and 40/17 numbers are in-sample.
+     - The random draw is the wrong control for F1, because the stop-width cost effect alone beats it. The fair in-sample comparison is F1 against F5 (stop of 12 or more spreads only): about +0.11R per lot, and much of that is inverse/volatility ETFs (+41.8R).
+     - History shows no durable lift: FIT has the wrong sign in 4 of 4 tests, and none passes t 2.5 on both CHECK and T2.
+     - The track's "not a durable long edge" verdict is correct.
+   - Minor: P2's "+56R per day" is in-sample exposure removal (the −1,408R base removed), not an edge estimate. Read it that way only.
+
+### Proposals
+- **P1 (scoreboard): sound and ready for Monday.** It is read-only, the success bars are forward-only, and the one-big-day bars are included. Prior chance of passing is low, about 10-15% per setup given day t of about 1 so far.
+- **P2 (F1 tag): acceptable as logging.** Low value. Its success test should compare against wide-stop-only lots (F5) on the same day, not against all longs, or the cost effect will pass it.
+- **P3 (holdtr exits on longs): reasonable backlog item.** The live gap (−0.111 vs −0.250) mixes exit style with setup family and is conditioned on outcomes. Bench it before forming any expectation.
+
+**Final confidence.**
+- HIGH: no long entry edge after costs (finding 1).
+- HIGH: one-day records (finding 2), with the survivors themselves LOW.
+- MEDIUM: wide stop as a cost effect.
+- LOW, leaning refuted: the strength feature.
+- Overall, the track is honest and correctly hedged. No inflated claims were found beyond the in-sample framing of F1.
+- Configs added by this review: 0 new selection tests (re-checks only).

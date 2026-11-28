@@ -1,0 +1,39 @@
+                           0            1         2         3            4         5
+set                     live  bench CHECK  bench T2      live  bench CHECK  bench T2
+K                          5            5         5        10           10        10
+setups                   177            8         5       177            8         5
+elig_setup_days         1211         1188      1197       585         1148      1172
+skipped_days             808          756       814       438          786       882
+lots_skipped_share      0.68        0.657     0.684     0.764        0.692     0.757
+kept_R_per_lot        -0.203       -0.087    -0.128    -0.312       -0.105    -0.095
+skipped_R_per_lot     -0.122         -0.1    -0.144    -0.127       -0.087    -0.152
+welch_t                0.051        0.722     0.913    -1.376       -1.164     -0.55
+dR_total              1467.3      1026.34   613.174   989.476      910.549   698.456
+dR_day                58.692        3.719     1.463    39.579        3.299     1.667
+t_dateclust            3.311        4.402     5.689     2.813        3.615     5.872
+pct_vs_random            0.0         61.2      59.4       0.0         17.3      83.3
+random_mean         2178.166      990.684    599.11  1306.582     1015.863   646.623
+setups_better             81            8         5        54            6         4
+setups_worse              55            0         0        20            2         1
+worst_setup_dR      -129.987        7.035    13.038   -31.835      -41.907    -4.187
+dR_wo_best_day        47.627         3.49     1.373    30.688        3.069     1.576
+best_share             0.221        0.065     0.064     0.256        0.073     0.057
+
+Bench per-setup dR (K=5):
+bench CHECK
+                                                                                setup  elig_days  skipped_days     dR  R_elig
+     GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long        109            59  62.72 -128.41
+    GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistlem0p38-PM-BRoplt0p35-holdtr-short         56            30  18.84  -48.68
+GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWAPcrossesge8-LUNCH-BRvwgt0p7-hold-long         90            58  98.52 -198.13
+             GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-PM-BRvwlt0p3-holdtr-short         72            46  95.26 -109.63
+                                                             L3-gap-slope-fromopen-FD        215           148 135.45 -286.76
+                                                              NM-ETF-late-dip-di-long        107            43   7.04   10.21
+                                                  RW3-gapdn-rsi5pop-flowsell-short-FD        271           194 335.86 -361.43
+                                           RW5-heat30-flowsell-rsi5pop-gapdn-short-FD        268           178 272.65 -371.81
+bench T2
+                                                                           setup  elig_days  skipped_days     dR  R_elig
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcrossesle0-MID-QQQltm0p3-holdtr-long        128            78  74.08  -77.66
+                                                        L3-gap-slope-fromopen-FD        212           135  83.83 -148.00
+                                                         NM-ETF-late-dip-di-long        114            67  13.04  -16.26
+                                             RW3-gapdn-rsi5pop-flowsell-short-FD        371           259 179.33 -248.19
+                                      RW5-heat30-flowsell-rsi5pop-gapdn-short-FD        372           275 262.89 -374.80
