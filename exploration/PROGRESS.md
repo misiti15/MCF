@@ -14,5 +14,8 @@ Rules: this session is research and exploration only. Every existing branch, the
   - (c) **RW-TGT125 failed** under LIVE-L (CHECK +0.007, T2 +0.003 R/lot). It is dropped (D13) and stays a descriptive line only.
   - (d) **Plan review:** 40 numbers checked, 9 corrections, and playing-time / no-freeze conflicts flagged.
   - DECISIONS, PROPOSALS and MONDAY_PLAN now carry the exact apply steps. Configurations about 9,656 (cycle 2 +6).
+- Cycle 3 done, ~02:20 ET: EDGEHUNT pre-registered and scored, 0 of 20 cells pass (wide-stop / hold-to-close arms on 5 setups; no cell t >= 2 on CHECK). Completeness critic wrote findings/critic.md (9 gaps, 5 next steps, owner Q&A per provisional tap).
+- Cycle 4 done, ~02:45 ET: LATCH-OPEN replayed on the Monday roster (RW3, RW5, NM-ETF): CHECK -2.08 -> -1.28 R/day, days <= -20R 9 -> 2, worst-5 -148 -> -97; red days unchanged; vs same-day random cut only 16th/0th/20th pct (it finds bad days, not better lots). D1 and MONDAY_PLAN corrected. Critic gaps folded into D3/D5 and a forward-bar controls table; new option ARENA-LATCH-ONDECK (not drafted).
+- Wrap-up, ~02:55 ET: MORNING_BRIEF.md written; no new research started. Configurations tried, cumulative: about 9,680 (9,363 before tonight + ~317 tonight).
 
 Educational only — not financial advice.
