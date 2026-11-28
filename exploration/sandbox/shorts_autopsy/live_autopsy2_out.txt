@@ -1,0 +1,95 @@
+## Side / family, with and without 11-25
+all
+                         n  sess   avgR  gross         R  day_t  green     worst  wo_worst  wo_best
+fam                                                                                                
+long                8695.0  25.0 -0.162 -0.118 -1408.418 -2.735    5.0  -422.340    -0.113   -0.177
+short-gapdn-family  4268.0  25.0 -0.293 -0.257 -1248.793 -1.015   11.0 -1215.671    -0.008   -0.315
+short-other         5044.0  25.0 -0.104 -0.056  -526.095 -1.188    7.0  -159.878    -0.073   -0.167
+ex 11-25
+                         n  sess   avgR  gross         R  day_t  green    worst  wo_worst  wo_best
+fam                                                                                               
+long                8172.0  24.0 -0.189 -0.144 -1540.768 -3.234    4.0 -422.340    -0.137   -0.201
+short-gapdn-family  2740.0  24.0 -0.012  0.024   -33.122 -0.164   11.0  -84.481     0.019   -0.047
+short-other         4817.0  24.0 -0.084 -0.036  -407.006 -0.944    7.0 -159.878    -0.051   -0.150
+
+## Beta decomposition (r_gross on SPY % move during hold), per family; market-neutral gross = intercept
+all       long                 n  8695 slope +0.656 R/1%SPY  intercept -0.067  mean SPYhold -0.078%  beta-neutral gross -0.067 (day t -2.88)  cost 0.044
+all       short-gapdn-family   n  4268 slope -0.865 R/1%SPY  intercept -0.174  mean SPYhold +0.096%  beta-neutral gross -0.174 (day t -2.40)  cost 0.036
+all       short-other          n  5044 slope -0.745 R/1%SPY  intercept -0.160  mean SPYhold -0.140%  beta-neutral gross -0.160 (day t -3.56)  cost 0.048
+ex 11-25  long                 n  8172 slope +0.605 R/1%SPY  intercept -0.071  mean SPYhold -0.121%  beta-neutral gross -0.071 (day t -2.88)  cost 0.045
+ex 11-25  short-gapdn-family   n  2740 slope -0.753 R/1%SPY  intercept -0.085  mean SPYhold -0.146%  beta-neutral gross -0.085 (day t -1.94)  cost 0.036
+ex 11-25  short-other          n  4817 slope -0.786 R/1%SPY  intercept -0.174  mean SPYhold -0.176%  beta-neutral gross -0.174 (day t -3.62)  cost 0.049
+
+## Shorts by SPY gap x family (ex 11-25 shown separately)
+all
+                                       n  sess   avgR  gross         R  day_t  green     worst  wo_worst  wo_best
+fam                spygap_b                                                                                      
+short-gapdn-family SPY gap<=-0.5  2588.0   7.0 -0.476 -0.443 -1231.323 -1.006    3.0 -1215.671    -0.006   -0.509
+                   flat           1272.0  12.0  0.051  0.090    64.454  0.540    7.0   -49.474     0.090   -0.024
+                   SPY gap>=+0.5   408.0   6.0 -0.201 -0.157   -81.924 -1.763    1.0   -47.672    -0.084   -0.202
+short-other        SPY gap<=-0.5  1239.0   7.0 -0.159 -0.122  -197.542 -1.321    2.0  -119.089    -0.063   -0.198
+                   flat           2410.0  12.0 -0.027  0.031   -65.373 -0.173    3.0  -131.853     0.028   -0.158
+                   SPY gap>=+0.5  1395.0   6.0 -0.189 -0.148  -263.179 -1.352    2.0  -159.878    -0.074   -0.234
+ex 11-25
+                                       n  sess   avgR  gross        R  day_t  green    worst  wo_worst  wo_best
+fam                spygap_b                                                                                    
+short-gapdn-family SPY gap<=-0.5  1060.0   6.0 -0.015  0.015  -15.652 -0.095    3.0  -84.481     0.065   -0.097
+                   flat           1272.0  12.0  0.051  0.090   64.454  0.540    7.0  -49.474     0.090   -0.024
+                   SPY gap>=+0.5   408.0   6.0 -0.201 -0.157  -81.924 -1.763    1.0  -47.672    -0.084   -0.202
+short-other        SPY gap<=-0.5  1012.0   6.0 -0.078 -0.040  -78.453 -0.734    2.0  -83.452     0.005   -0.125
+                   flat           2410.0  12.0 -0.027  0.031  -65.373 -0.173    3.0 -131.853     0.028   -0.158
+                   SPY gap>=+0.5  1395.0   6.0 -0.189 -0.148 -263.179 -1.352    2.0 -159.878    -0.074   -0.234
+
+## Shorts by stock gap x family, ex 11-25
+                                        n  sess   avgR  gross        R  day_t  green    worst  wo_worst  wo_best
+fam                b                                                                                            
+short-gapdn-family (-100.0, -5.0]   379.0  21.0 -0.018  0.014   -6.948 -0.221    9.0  -13.072     0.016   -0.073
+                   (-5.0, -2.66]    693.0  23.0  0.063  0.093   43.853  0.767   12.0  -18.307     0.090    0.015
+                   (-2.66, -1.0]    652.0  24.0 -0.003  0.029   -1.825 -0.023   12.0  -38.015     0.056   -0.077
+                   (-1.0, 1.0]     1009.0  24.0 -0.065 -0.019  -65.336 -0.840   11.0  -40.115    -0.025   -0.095
+                   (1.0, 100.0]       7.0   3.0 -0.409 -0.385   -2.866 -0.860    1.0   -2.672    -0.028   -0.570
+short-other        (-100.0, -5.0]   267.0  19.0 -0.060 -0.036  -16.122 -0.665    8.0  -16.767     0.002   -0.099
+                   (-5.0, -2.66]    472.0  21.0  0.030  0.059   13.955  0.246    7.0  -14.071     0.059   -0.074
+                   (-2.66, -1.0]    531.0  24.0  0.137  0.178   72.529  0.753   11.0  -18.931     0.172   -0.033
+                   (-1.0, 1.0]     1685.0  24.0 -0.133 -0.065 -223.293 -1.095    9.0 -106.354    -0.069   -0.216
+                   (1.0, 100.0]    1862.0  24.0 -0.136 -0.094 -254.075 -1.229    8.0 -149.141    -0.056   -0.179
+
+## Shorts by entry hour, ex 11-25
+                                      n  sess   avgR  gross        R  day_t  green    worst  wo_worst  wo_best
+fam                b                                                                                          
+short-gapdn-family (900, 1030]    190.0  22.0  0.000  0.040    0.006  0.000   11.0  -10.213     0.054   -0.059
+                   (1030, 1200]  1296.0  24.0 -0.041 -0.004  -52.762 -0.327   10.0 -100.836     0.037   -0.100
+                   (1200, 1400]  1069.0  24.0  0.026  0.062   27.910  0.334   14.0  -53.334     0.076   -0.013
+                   (1400, 1600]   185.0  22.0 -0.045 -0.010   -8.276 -0.457    8.0   -8.792     0.003   -0.081
+short-other        (900, 1030]   1050.0  23.0 -0.189 -0.143 -198.872 -1.336   11.0 -112.242    -0.083   -0.222
+                   (1030, 1200]  1770.0  24.0 -0.167 -0.103 -295.677 -1.611   11.0 -140.411    -0.088   -0.190
+                   (1200, 1400]  1100.0  24.0  0.030  0.067   32.968  0.185    8.0  -28.359     0.056   -0.119
+                   (1400, 1600]   897.0  23.0  0.061  0.095   54.575  0.506   12.0  -24.586     0.088   -0.043
+
+## Day-level: short-book R vs SPY open->close (sessions)
+corr(short R/day, SPY oc) -0.50; corr with SPY PM leg -0.80
+                  R     n    oc   gap    pm
+date                                       
+2026-11-25 -1334.76  1755  1.93 -2.17  2.44
+2026-11-04  -161.37   262  0.48  1.15  0.02
+2026-11-10  -158.07   351  0.27 -0.63  0.28
+2026-11-17  -117.88   635 -0.81 -0.21  0.06
+2026-11-09   -91.80   174  1.44  0.91  0.18
+2026-11-24   -91.65   587  0.50 -0.99  0.67
+
+## 11-25 anatomy (shorts): by family and entry hour
+                         n         R    avg  stop_share
+fam                                                    
+short-gapdn-family  1528.0 -1215.671 -0.796       0.619
+short-other          227.0  -119.089 -0.525       0.471
+              size     sum  mean
+b                               
+(900, 1000]      5   -4.15 -0.83
+(1000, 1030]    31  -16.42 -0.53
+(1030, 1100]   110  -87.92 -0.80
+(1100, 1200]   211 -206.65 -0.98
+(1200, 1300]   615 -655.74 -1.07
+(1300, 1400]   526 -372.61 -0.71
+(1400, 1600]   257    8.74  0.03
+top setups 11-25: {'L3-gap-slope-rsi5hi-FD': -219.1, 'L3-gap-slope-rsi5hi-FD-WB5': -170.9, 'L3-gap-slope-fromopen-FD-WB4': -149.6, 'L3-gap-slope-lowdist-FD': -144.6, 'L3-gap-slope-rsi5hi-FD-WB4': -136.0, 'L3-gap-slope-lowdist-FD-WB4': -123.8, 'L3-gap-slope-fromopen-FD-RQa-1230': -93.1, 'RW7-gapdn-bounce-early-short-FD': -52.4}
+accounts 11-25: {'explore1': -167.1, 'gen': -17.0, 'livelab': -190.0, 'primary': -42.3, 'testing': -393.9, 'testing2': -193.1, 'testingd': -32.6, 'testinge': -23.3, 'testingf': -275.5}
