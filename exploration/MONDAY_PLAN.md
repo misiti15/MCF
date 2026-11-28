@@ -28,7 +28,7 @@ Educational only — not financial advice. Nothing here is applied by the explor
 
 **How an override would be applied (Sat/Sun, outside market hours):**
 1. Apply the drafts in `exploration/sandbox/decisions/{LATCH-OPEN,L3-OUT,B8-SHADOW}/`, in a PR on the default branch.
-2. Run `python -m mcf.report.assignments` (for L3-OUT) and `python -m mcf.research.ledger check`.
+2. Run `python -m mcf.report.assignments` (for L3-OUT; commit the regenerated `docs/live/assignments.json` in the **same commit** as the config move) and `python -m mcf.research.ledger check`.
 3. Run the Friday-switch tests, then the full `pytest -q`.
 4. Merge before Monday's 09:30 open (setup-freeze allows weekends).
 
@@ -39,16 +39,17 @@ Educational only — not financial advice. Nothing here is applied by the explor
 ### Testing accounts and arena
 | Account | Monday | Approval |
 |---|---|---|
-| On Deck | Receives L3 (if D2). Gets the ODB3/ODP2 admissions you say yes to. T1X2: one DAY market sell of the 12 phantom SOXX shares after the open | `T1X2 yes`, `ODB3 as recommended` |
-| Testing F | **ARENA-LATCH-F**: closed −2R per-setup latch, frozen block 11-30..12-11 (D5) | `ARENA-LATCH-F yes` by Sunday |
-| Testing A-E, Explore 1, Live Lab, Gen | Unchanged. **FROZEN-BLOCKS** first block 11-30..12-11: no rule changes inside it (D6) | `FROZEN-BLOCKS yes` |
+| On Deck | Receives L3 (if D2). Gets the ODB3/ODP2 admissions you say yes to. T1X2: one DAY market sell of the 12 phantom SOXX shares after the open | `T1X2 yes`, `ODP2/ODB3 as recommended` |
+| Testing F | **ARENA-LATCH-F**: closed −2R per-setup latch, frozen block 11-30..12-11 (D5). This is in-session throttling in a testing account, so `yes` is a time-boxed exception to the playing-time rule | `ARENA-LATCH-F yes` by Sunday |
+| Testing A-E, On Deck | Unchanged. **FROZEN-BLOCKS** first block 11-30..12-11: no rule changes inside it; the playing-time session rotation stays exempt (D6) | `FROZEN-BLOCKS yes` |
+| Explore 1, Live Lab, Gen | Unchanged (not in the frozen blocks; the low-rep rotation every ~2 sessions continues) | — |
 | Graveyard | Unchanged (GY-SHADOW / TWIN is a 12-04 discussion, D9) | — |
 
 ### Shadows and reports (no trading effect; one "go" each)
 | Item | Starts | Where it reads from | Approval |
 |---|---|---|---|
 | TAGS2: 7 frozen would-skip rules (basket, gap-up gap-down shorts, profit lock, side/stop budgets, long strength) | Rules frozen before the open; first rows Monday night | All journals, after the close | `TAGS2 go` |
-| PAIRED-CARD scoreboard (LATCH-OPEN skipped lots, RW 1.25x target, L3 first-lot-only, SPREADFLOOR) | Monday night; one report 12-11 | Journals + 1-minute bar packs | `REPORTS go` |
+| PAIRED-CARD scoreboard (LATCH-OPEN skipped lots, RW 1.25x target as a descriptive read only after its cycle-2 fail, L3 first-lot-only, SPREADFLOOR) | Monday night; one report 12-11 | Journals + 1-minute bar packs | `REPORTS go` |
 | LONG-SURVIVORS (GEN-261020-09, CWT14-orl-p10-long-WB5) | Monday night; score 12-28 | Their own live lots | `REPORTS go` |
 | Weekly Stage-1 scorecard | First full read Fri 12-04 | Journals | `REPORTS go` |
 | Already running, no action | SPREADFLOOR shadow (logs from 11-30), TAGS1 (score 12-17), GAP-U / IDX3-P / SPYO-P regime shadows (about 12-10; report on the new roster), MEREBFWD (first scored day **11-30**, month-end), Epoch 1 vs BASE1 twin, BRAKE-1, compass gate, inverse-short guard (about 12-04), L3 leash K11/K12 (loses its Primary basis if L3 moves) | | none |

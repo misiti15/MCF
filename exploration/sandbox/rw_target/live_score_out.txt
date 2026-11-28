@@ -1,0 +1,18 @@
+live RW3/RW5 Primary 2026-10-23..11-27, run 1, LR8; paired replay on Alpaca 1-min SIP
+replay calibration: parent arm within 0.10R of journal R on 81%; mean rg_p - r_live +0.040; journal exit target 29% vs replay 29%
+RW3              n 166 days 24 | live avg -0.046 (w/o best -0.155, share nan% 2026-11-05) -> var -0.009 (w/o best -0.135, share nan%) | d +0.0369 t +1.71 flip p 0.100 total +6.1R better/worse 42/9 weeks up 5/6 best-day share of gain 52%
+RW5              n 160 days 25 | live avg -0.071 (w/o best -0.144, share nan% 2026-11-03) -> var -0.051 (w/o best -0.124, share nan%) | d +0.0200 t +1.60 flip p 0.129 total +3.2R better/worse 37/8 weeks up 4/6 best-day share of gain 30%
+both             n 326 days 25 | live avg -0.058 (w/o best -0.122, share nan% 2026-11-05) -> var -0.029 (w/o best -0.103, share nan%) | d +0.0286 t +2.06 flip p 0.041 total +9.3R better/worse 79/17 weeks up 5/6 best-day share of gain 37%
+both ex 11-25    n 320 days 24 | live avg -0.036 (w/o best -0.100, share nan% 2026-11-05) -> var -0.002 (w/o best -0.076, share nan%) | d +0.0340 t +2.55 flip p 0.006 total +10.9R better/worse 79/16 weeks up 5/6 best-day share of gain 32%
+both calibrated  n 265 days 25 | live avg +0.008 (w/o best -0.057, share 756% 2026-11-05) -> var +0.053 (w/o best -0.024, share 143%) | d +0.0445 t +2.69 flip p 0.006 total +11.8R better/worse 79/14 weeks up 5/6 best-day share of gain 29%
+parent exit x variant exit (replay):
+ kind_v  market  stop  target
+kind_p                      
+market     148     0       0
+stop         0    82       0
+target      23     1      72
+parent-target trades: reach 1.25x 72 avg d +0.236 | flattened 23 avg d -0.267 | to stop 1 avg d -1.536
+weekly d sums: {'2026-10-19/2026-10-25': 0.62, '2026-10-26/2026-11-01': 1.6, '2026-11-02/2026-11-08': 4.31, '2026-11-09/2026-11-15': 0.98, '2026-11-16/2026-11-22': 3.91, '2026-11-23/2026-11-29': -2.08}
+daily d top/bottom: {'2026-11-25': -1.54, '2026-11-23': -1.18, '2026-11-04': -0.61, '2026-11-20': 1.08, '2026-11-03': 1.11, '2026-11-05': 3.43}
+inside original window (10-23..11-17, in-sample): n 229 d +0.0404 t +2.33 total +9.3R
+after original window (11-18..11-27, out-of-sample): n 97 d +0.0008 t +0.03 total +0.1R
