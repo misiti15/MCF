@@ -22,3 +22,10 @@ Pass bar (each config, each of CHECK and T2): dR/session > 0; day-clustered t of
 ≥ 95th percentile against 1,000 matched random removals (R1/R2/R4: the same number of random whole days, same family scope;
 R3: the same number of random lots from the same setups); best-day share of the gain < 50%; more setups improve than worsen.
 Also reported: worst-5 days, red days per month, avg R w/o best day.
+
+## Addendum A (2026-11-28 ~00:05 ET, after the CHECK/FIT part of R1-R4 was seen, before T2 and before any cap number)
+Live motivation: on 11-25 the testing accounts held 1,528 gap-down-family short lots from ~15 near-identical L3/RW clones (−1,216R).
+Configs (3, counted): C5 / C10 / C20 = at most K open gap-down-family short lots at once across all 6 gap-down setups pooled
+(one account holding all clones; first-come by entry minute, then symbol; a lot frees its slot at its exit minute).
+Control: the same number of lots removed at random from the gap-down family, days kept (1,000 draws); also the
+exposure-matched constant cut. Same pass bar as above, plus worst-5 days must improve on both splits. Candidate level, LIVE-L.
