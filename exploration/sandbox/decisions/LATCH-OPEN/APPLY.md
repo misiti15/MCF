@@ -14,3 +14,5 @@ Both options make the identical code/config change; only the date differs.
 | Rollback | set back to false after a close (one-line revert + ledger entry) | same |
 
 Variant '-3R': also `latch_open_r: 3` (closed latch stays 2R). Not re-scored on the full 11-25 day.
+
+Dry run 2026-11-28: apply with `python exploration/sandbox/decisions/apply_draft.py --code LATCH-OPEN --when monday|friday ...` (config + ledger + the test edit that flips the defaults-off expectation); results in ../DRYRUN.md.

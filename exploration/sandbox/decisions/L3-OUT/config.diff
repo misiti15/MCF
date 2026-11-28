@@ -1,4 +1,5 @@
 # DRAFT ONLY - never applied by the exploration session. Educational only - not financial advice.
+# APPLY WITH ../apply_draft.py (exact one-match replacements + ledger + test updates; dry-run 2026-11-28, see ../DRYRUN.md). This file is the readable view only: its "@@ section" hunks are not git-applicable.
 # Option 'out' (a move, never a copy): Primary off, On Deck (account 'testing') on. Same diff for 11-30 or 12-07.
 --- a/config/default.yaml
 +++ b/config/default.yaml
@@ -23,7 +24,7 @@
 +    enabled: true    # L3-OUT (owner <DATE>): back from Primary (move); On Deck rules (no per-setup stop, 300R account backstop)
 @@ live: setup_order:
      - ST7-rsi50dn-long-pm-t1s1-FD   # from Primary 2026-11-21 (ST7-MOVE); 43 Primary trades -7.08R (LR8)
-+    - L3-gap-slope-fromopen-FD   # from Primary <DATE> (L3-OUT); Primary 10-30..11-27: 215 lots -3.1R (LR8, from 10-23 basis), w/o best day -0.204R/lot
++    - L3-gap-slope-fromopen-FD   # from Primary <DATE> (L3-OUT); Primary 10-30..11-27: 215 lots -3.1R (LR8, from 10-23 basis), w/o best day -0.209R/lot
 # Then, in the same commit (owner rule 2026-10-20):
 #   python -m mcf.report.assignments        # regenerates docs/live/assignments.json (tests/test_assignments.py enforces)
 #   python -m mcf.research.ledger check
