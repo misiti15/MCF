@@ -1,0 +1,13 @@
+N=     1,000: median null max|t| 3.48; Bonferroni 5% bar 4.06
+N=     9,363: median null max|t| 4.04; Bonferroni 5% bar 4.55
+N=32,900,000: median null max|t| 5.66; Bonferroni 5% bar 6.04
+bench   500 trades, true edge +0.03R: mean t  0.9; P(pass t>=4.3)  0.0%; P(pass screen t>=2.5)  5.2%
+bench   500 trades, true edge +0.05R: mean t  1.5; P(pass t>=4.3)  0.2%; P(pass screen t>=2.5) 14.7%
+bench   500 trades, true edge +0.10R: mean t  2.9; P(pass t>=4.3)  8.1%; P(pass screen t>=2.5) 65.7%
+bench  2000 trades, true edge +0.03R: mean t  1.7; P(pass t>=4.3)  0.5%; P(pass screen t>=2.5) 22.4%
+bench  2000 trades, true edge +0.05R: mean t  2.9; P(pass t>=4.3)  8.1%; P(pass screen t>=2.5) 65.7%
+bench  2000 trades, true edge +0.10R: mean t  5.8; P(pass t>=4.3) 93.4%; P(pass screen t>=2.5) 100.0%
+bench  5000 trades, true edge +0.03R: mean t  2.8; P(pass t>=4.3)  6.1%; P(pass screen t>=2.5) 60.1%
+bench  5000 trades, true edge +0.05R: mean t  4.6; P(pass t>=4.3) 61.5%; P(pass screen t>=2.5) 98.2%
+bench  5000 trades, true edge +0.10R: mean t  9.2; P(pass t>=4.3) 100.0%; P(pass screen t>=2.5) 100.0%
+two-stage false-pass count at N=9,363 nulls: screen t>=2.5 two-sided keeps 116; forward one-sided 5% keeps 5.8
