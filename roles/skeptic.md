@@ -77,4 +77,5 @@ All four: count every config shown; check 'nothing above X; smaller unknown' wor
 - 11-25 01:55 UTC (run 90): idle (no gaps list). Methodology check: robust.day_t = t of equal-weighted day means vs per-trade avg R (example +0.114R/trade, Day t -4.0); FOOTRACE-EXIT t<=-1.5 can trip near avg 0 -> suggest trade-weighted day-clustered t beside it (owner FYI).
 - 11-26 01:55 UTC (run 91): board quiet, no gaps list; status only. 11-27 is a half day (13:00 close).
 - 11-27 01:55 UTC (run 92): Builder's half-day guard fix verified (selftest ok); suggested importing MCF market_calendar early closes instead of a second list.
+- 11-28 01:55 UTC (run 93, Saturday process check): guards now on MCF market_calendar (verified). Residual: offline EARLY_CLOSES only 2026 while HOLIDAYS to 2027 -> suggest coverage test (parent/live code).
 - Monday: audit each result against the pre-registered list above, in order, as it lands.
