@@ -1,0 +1,49 @@
+Account     sess  lots/day  mu/lot   sd/lot  rho_in_day  day_mean  day_sd  P(red) normal  P(red) actual
+explore1     16     62.6   -0.145   0.966      0.274     -9.08   53.08         0.57          0.50
+gen          25    181.7   -0.189   1.061      0.049    -34.39   57.76         0.72          0.68
+graveyard    25    431.7   -0.145   0.871      0.019    -62.46   54.36         0.87          0.88
+livelab      16     56.8   -0.388   0.727      0.209    -22.02   53.12         0.66          0.62
+primary      25     37.7   -0.156   0.890      0.185     -5.88   17.35         0.63          0.68
+testing      25    103.6   -0.250   0.809      0.223    -25.86   79.23         0.63          0.68
+testing2     25    169.2   -0.136   0.794      0.055    -22.94   39.52         0.72          0.80
+testingd     11    100.6   -0.020   0.711      0.021     -2.02   14.55         0.56          0.36
+testinge     11    118.7   -0.094   0.643      0.047    -11.18   19.41         0.72          0.82
+testingf     11    125.2   -0.228   0.782      0.193    -28.54   78.52         0.64          0.73
+
+Primary: N 37.7 lots/day, lot sd 0.890, in-day rho 0.185
+Required lot edge mu for target P(red day), by lots/day and in-day correlation (lot sd as Primary):
+  lots/day  rho   P(red)=30%  20%     10%     5%      1%   | P(green week) at mu=+0.05 / +0.10
+        10  0.00   0.148   0.237   0.361   0.463   0.655  |  0.65 / 0.79
+        10  0.19   0.241   0.387   0.589   0.756   1.069  |  0.60 / 0.69
+        10  0.15   0.226   0.363   0.553   0.710   1.004  |  0.60 / 0.70
+        20  0.00   0.104   0.168   0.255   0.328   0.463  |  0.71 / 0.87
+        20  0.19   0.222   0.356   0.542   0.696   0.984  |  0.60 / 0.70
+        20  0.15   0.205   0.329   0.501   0.643   0.909  |  0.61 / 0.72
+        38  0.00   0.076   0.122   0.185   0.238   0.336  |  0.78 / 0.94
+        38  0.19   0.212   0.341   0.519   0.666   0.941  |  0.61 / 0.71
+        38  0.15   0.194   0.311   0.474   0.608   0.860  |  0.62 / 0.73
+        60  0.00   0.060   0.097   0.147   0.189   0.267  |  0.83 / 0.97
+        60  0.19   0.208   0.334   0.509   0.653   0.923  |  0.61 / 0.71
+        60  0.15   0.189   0.304   0.462   0.593   0.839  |  0.62 / 0.73
+
+P(red day) / P(red week) / expected red days per 21-session month at Primary's N and rho, by lot edge:
+  mu -0.16: red day 0.65  red week 0.81  red days/month 13.7  20-session 5th-pct floor  -233.0R
+  mu -0.05: red day 0.55  red week 0.61  red days/month 11.5  20-session 5th-pct floor  -150.0R
+  mu +0.00: red day 0.50  red week 0.50  red days/month 10.5  20-session 5th-pct floor  -112.3R
+  mu +0.03: red day 0.47  red week 0.43  red days/month  9.9  20-session 5th-pct floor   -89.7R
+  mu +0.05: red day 0.45  red week 0.39  red days/month  9.5  20-session 5th-pct floor   -74.6R
+  mu +0.10: red day 0.40  red week 0.29  red days/month  8.5  20-session 5th-pct floor   -36.9R
+  mu +0.20: red day 0.31  red week 0.13  red days/month  6.5  20-session 5th-pct floor    38.6R
+  mu +0.50: red day 0.11  red week 0.00  red days/month  2.3  20-session 5th-pct floor   264.9R
+
+Primary weekly review metrics (R after costs):
+                       sess  total  median_day  worst  red
+date                                                      
+2026-10-17/2026-10-23     1   -3.3        -3.3   -3.3    1
+2026-10-24/2026-10-30     5  -10.1        -2.9  -11.8    3
+2026-10-31/2026-11-06     5  -33.9        -6.7  -26.1    3
+2026-11-07/2026-11-13     5  -44.7       -20.0  -34.8    4
+2026-11-14/2026-11-20     5    4.1        -2.5  -16.2    3
+2026-11-21/2026-11-27     4  -59.2        -8.7  -42.3    3
+20-session rolling R: min -142.7, last -136.6; median day overall -4.12; worst -42.3; days <= -20R: 5
+Primary daily R skew 0.32, excess kurtosis 1.52; share of total loss from worst 5 days 0.64

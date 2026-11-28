@@ -1,0 +1,135 @@
+Setups with >= 20 trades since 10-23: 177 (83 long, 94 short); trades 28347
+
+Distribution of metrics across setups (median [p10, p90]):
+  avgR           -0.155  [  -0.464,    0.119]
+  R_sess         -1.278  [  -7.071,    0.984]
+  med_day        -0.779  [  -3.776,    0.533]
+  worst_day     -12.401  [ -44.923,   -2.462]
+  green_sh        0.417  [   0.187,    0.639]
+  day_t          -0.890  [  -2.187,    0.715]
+  maxDD         -22.378  [-104.569,   -3.730]
+  ulcer          12.145  [   1.827,   51.885]
+  wo1            -0.256  [  -0.634,   -0.019]
+  wo2            -0.330  [  -0.703,   -0.112]
+  R_per_slot_h   -0.081  [  -0.399,    0.061]
+  gross          -0.113  [  -0.421,    0.161]
+  cost            0.040  [   0.022,    0.073]
+  cost_share      0.056  [   0.038,    0.087]
+
+Positive: avgR 36, wo1 15, wo2 5, day_t>2 1, gross>0 43, green_sh>=0.5 58
+
+Spearman rank correlation with leaderboard score, and top-15 overlap:
+  avgR         rho  0.98   top15 overlap 14/15
+  R_sess       rho  0.87   top15 overlap 12/15
+  med_day      rho  0.55   top15 overlap  8/15
+  worst_day    rho  0.56   top15 overlap  8/15
+  green_sh     rho  0.56   top15 overlap  6/15
+  day_t        rho  0.81   top15 overlap 11/15
+  ulcer_neg    rho  0.65   top15 overlap  8/15
+  wo1          rho  0.83   top15 overlap  9/15
+  wo2          rho  0.75   top15 overlap  7/15
+  R_per_slot_h rho  0.93   top15 overlap 13/15
+  R_per_10k_h  rho  0.88   top15 overlap 12/15
+  gross        rho  0.97   top15 overlap 14/15
+
+Top 20 by leaderboard score with alternative ranks:
+                                                       acct side    n  sess   avgR  score  R_sess  med_day  worst_day  green_sh  day_t   ulcer    wo1    wo2  best_sh  R_per_slot_h   cost  rk_wo2  rk_dayt  rk_ulcer
+short                                                                                                                                                                                                                
+GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p2        gen    S   32    10  0.746  0.459   2.386   -0.484     -1.962     0.500  1.270   1.831  0.286 -0.193    0.641         0.283  0.051      37        5        19
+GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistl   explore1    S  223     7  0.445  0.409  14.187    0.942    -19.423     0.571  0.781  26.283 -0.179 -0.349    1.220         0.234  0.026      93       17       134
+GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWA   testing2    L  139    11  0.460  0.402   5.806   -1.118    -19.368     0.455  0.668  11.923 -0.296 -0.349    1.422         0.164  0.042      92       19        87
+GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-P   testing2    S  238     8  0.416  0.383  12.363    0.926     -2.720     0.500  1.052   2.687  0.029 -0.008    0.954         0.219  0.037       6        9        26
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcros        gen    L  259    12  0.293  0.272   6.329   -0.393    -10.383     0.500  0.956  14.253  0.018 -0.156    0.956         0.088  0.036      25       11        99
+NM-RWN5-ns3-mon-weakrs-short-WB3                   testinge    S   32     1  0.352  0.217  11.259   11.259     11.259     1.000    NaN   0.000  0.000    NaN    1.000         0.112  0.021     176      176         1
+GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHOD        gen    S   27     7  0.318  0.183   1.227    0.561     -1.242     0.714  1.456   0.780  0.318  0.119    0.519         0.109  0.033       2        3         7
+RW6-ns2-up3-short-FD                              graveyard    S  177    22  0.202  0.182   1.628    0.127    -11.346     0.545  0.885   2.575 -0.022 -0.066    1.063         0.094  0.025      14       14        25
+GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem        gen    S   27     7  0.313  0.180   1.208    0.950     -2.117     0.714  1.166   1.009  0.127 -0.053    0.700         0.117  0.045       9        7        10
+NM-RWN3-ns3-spyup-early-short                      explore1    S   22     7  0.302  0.158   0.950    0.808     -2.126     0.571  0.950   1.013  0.051 -0.307    0.876         0.153  0.035      80       12        11
+NM-RWN4-ns2-spyup05-notfri-short                   testingf    S   40     2  0.223  0.149   4.460    4.460     -0.531     0.500  0.894   0.375 -0.066    NaN    1.059         0.142  0.022     176       13         4
+GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20   testingd    L  176     6  0.146  0.132   4.296   -1.062    -15.524     0.500  0.387  17.893 -0.409 -0.448    2.238         0.055  0.032     118       22       110
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE   testinge    L   42    10  0.185  0.125   0.775    0.342     -1.939     0.800  1.420   0.613  0.105  0.046    0.619         0.241  0.024       3        4         5
+GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt   testinge    S   82     4  0.149  0.120   3.054    2.344     -0.692     0.750  1.618   0.346  0.069  0.019    0.673         0.094  0.027       4        2         3
+NM-RWN5-ns3-mon-weakrs-short                       testingd    S   47     3  0.164  0.115   2.570    1.643      0.989     1.000  2.026   0.000  0.877  0.989    0.659         0.059  0.020       1        1         1
+GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-   testingd    S  295    12  0.111  0.104   2.719    2.545     -6.846     0.667  1.240   6.212  0.042  0.007    0.673         0.077  0.030       5        6        55
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4     testingd    S   26     5  0.179  0.101   0.929    1.016     -1.244     0.600  0.977   0.771  0.064 -0.088    0.697         0.072  0.024      16       10         6
+NM-RWR4-ns2-up3-qqqup-slopedn-short                explore1    S   37     7  0.134  0.087   0.710    0.414     -1.740     0.714  0.856   1.375 -0.014 -0.093    1.037         0.109  0.021      17       15        13
+GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p        gen    S   95     8  0.095  0.079   1.133   -0.494    -16.263     0.500  0.289  10.010 -0.183 -0.263    2.614         0.027  0.074      68       25        77
+CWT12-flag-s1-long                                  livelab    L   24    15  0.131  0.072   0.210    0.386     -1.431     0.667  0.850   0.936  0.027 -0.014    0.847         0.186  0.045       8       16         8
+
+Top 15 by avg R w/o best 2 days:
+                                                       acct side    n  sess   avgR  score  R_sess  med_day  worst_day  green_sh  day_t   ulcer    wo1    wo2  best_sh  R_per_slot_h   cost  rk_score
+short                                                                                                                                                                                               
+NM-RWN5-ns3-mon-weakrs-short                       testingd    S   47     3  0.164  0.115   2.570    1.643      0.989     1.000  2.026   0.000  0.877  0.989    0.659         0.059  0.020        15
+GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHOD        gen    S   27     7  0.318  0.183   1.227    0.561     -1.242     0.714  1.456   0.780  0.318  0.119    0.519         0.109  0.033         7
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE   testinge    L   42    10  0.185  0.125   0.775    0.342     -1.939     0.800  1.420   0.613  0.105  0.046    0.619         0.241  0.024        13
+GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt   testinge    S   82     4  0.149  0.120   3.054    2.344     -0.692     0.750  1.618   0.346  0.069  0.019    0.673         0.094  0.027        14
+GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-   testingd    S  295    12  0.111  0.104   2.719    2.545     -6.846     0.667  1.240   6.212  0.042  0.007    0.673         0.077  0.030        16
+GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-P   testing2    S  238     8  0.416  0.383  12.363    0.926     -2.720     0.500  1.052   2.687  0.029 -0.008    0.954         0.219  0.037         4
+CWT14-failbrk-orl-p10-long-WB5                     testingd    L  148     7  0.076  0.067   1.602    0.197     -2.210     0.571  1.145   1.504  0.035 -0.010    0.759         0.049  0.018        22
+CWT12-flag-s1-long                                  livelab    L   24    15  0.131  0.072   0.210    0.386     -1.431     0.667  0.850   0.936  0.027 -0.014    0.847         0.186  0.045        20
+GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem        gen    S   27     7  0.313  0.180   1.208    0.950     -2.117     0.714  1.166   1.009  0.127 -0.053    0.700         0.117  0.045         9
+GEN-261019-02-BBpctle0p017-SMA20slopege0p46-PM-Q   testinge    L   26     9  0.081  0.046   0.234    0.246     -1.252     0.667  0.651   0.954  0.023 -0.053    0.750         0.062  0.015        26
+GEN-261029-07-UpWickge0p59-DayRngVsPrevle0p42-LA    livelab    S   70     7  0.070  0.054   0.700    0.198     -2.106     0.571  0.747   1.835  0.007 -0.061    0.915         0.057  0.028        25
+ST3-rsi5up-short-pm-t1s1-FD                         livelab    S   35    11  0.050  0.032   0.158    0.056     -2.129     0.636  0.439   1.325 -0.024 -0.064    1.346         0.023  0.020        29
+ULT-05-withgap-cont-long                           testinge    L  467     5 -0.025 -0.024  -2.339    1.464    -20.508     0.600 -0.480  17.306 -0.056 -0.065      NaN        -0.034  0.010        40
+RW6-ns2-up3-short-FD                              graveyard    S  177    22  0.202  0.182   1.628    0.127    -11.346     0.545  0.885   2.575 -0.022 -0.066    1.063         0.094  0.025         8
+GEN-261019-10-FlowShiftge0p42-SMA50dge1p7-PM-BRo        gen    S  131    14  0.045  0.039   0.423    0.710     -9.020     0.500  0.331   6.807 -0.037 -0.082    1.760         0.027  0.025        27
+
+Top 15 by day t:
+                                                       acct side    n  sess   avgR  score  R_sess  med_day  worst_day  green_sh  day_t   ulcer    wo1    wo2  best_sh  R_per_slot_h   cost  rk_score
+short                                                                                                                                                                                               
+NM-RWN5-ns3-mon-weakrs-short                       testingd    S   47     3  0.164  0.115   2.570    1.643      0.989     1.000  2.026   0.000  0.877  0.989    0.659         0.059  0.020        15
+GEN-261023-09-ORBfailDn-Ret15mge0p54-LATE-BRvwgt   testinge    S   82     4  0.149  0.120   3.054    2.344     -0.692     0.750  1.618   0.346  0.069  0.019    0.673         0.094  0.027        14
+GEN-261021-01-BearDiv-RVolDayle0p47-BarsSinceHOD        gen    S   27     7  0.318  0.183   1.227    0.561     -1.242     0.714  1.456   0.780  0.318  0.119    0.519         0.109  0.033         7
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE   testinge    L   42    10  0.185  0.125   0.775    0.342     -1.939     0.800  1.420   0.613  0.105  0.046    0.619         0.241  0.024        13
+GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p2        gen    S   32    10  0.746  0.459   2.386   -0.484     -1.962     0.500  1.270   1.831  0.286 -0.193    0.641         0.283  0.051         1
+GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-   testingd    S  295    12  0.111  0.104   2.719    2.545     -6.846     0.667  1.240   6.212  0.042  0.007    0.673         0.077  0.030        16
+GEN-261026-03-NewLOD-Flow3lem0p37-FromOpenATRlem        gen    S   27     7  0.313  0.180   1.208    0.950     -2.117     0.714  1.166   1.009  0.127 -0.053    0.700         0.117  0.045         9
+CWT14-failbrk-orl-p10-long-WB5                     testingd    L  148     7  0.076  0.067   1.602    0.197     -2.210     0.571  1.145   1.504  0.035 -0.010    0.759         0.049  0.018        22
+GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-P   testing2    S  238     8  0.416  0.383  12.363    0.926     -2.720     0.500  1.052   2.687  0.029 -0.008    0.954         0.219  0.037         4
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4     testingd    S   26     5  0.179  0.101   0.929    1.016     -1.244     0.600  0.977   0.771  0.064 -0.088    0.697         0.072  0.024        17
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcros        gen    L  259    12  0.293  0.272   6.329   -0.393    -10.383     0.500  0.956  14.253  0.018 -0.156    0.956         0.088  0.036         5
+NM-RWN3-ns3-spyup-early-short                      explore1    S   22     7  0.302  0.158   0.950    0.808     -2.126     0.571  0.950   1.013  0.051 -0.307    0.876         0.153  0.035        10
+NM-RWN4-ns2-spyup05-notfri-short                   testingf    S   40     2  0.223  0.149   4.460    4.460     -0.531     0.500  0.894   0.375 -0.066    NaN    1.059         0.142  0.022        11
+RW6-ns2-up3-short-FD                              graveyard    S  177    22  0.202  0.182   1.628    0.127    -11.346     0.545  0.885   2.575 -0.022 -0.066    1.063         0.094  0.025         8
+NM-RWR4-ns2-up3-qqqup-slopedn-short                explore1    S   37     7  0.134  0.087   0.710    0.414     -1.740     0.714  0.856   1.375 -0.014 -0.093    1.037         0.109  0.021        18
+
+Pending-decision / Primary setups (rank of 177 ):
+                                                      acct side    n  sess   avgR  score  R_sess  med_day  worst_day  green_sh  day_t   ulcer    wo1    wo2  best_sh  R_per_slot_h   cost  rk_score  rk_wo2  rk_dayt  rk_ulcer
+short                                                                                                                                                                                                                         
+GEN-261027-01-MACDhge0p12-Ret15mATRlem0p069-LATE  testinge    L   42    10  0.185  0.125   0.775    0.342     -1.939     0.800  1.420   0.613  0.105  0.046    0.619         0.241  0.024        13       3        4         5
+GEN-261023-06-RSI7le38-Ret15mge0p54-EMAdiffge0p2       gen    S   32    10  0.746  0.459   2.386   -0.484     -1.962     0.500  1.270   1.831  0.286 -0.193    0.641         0.283  0.051         1      37        5        19
+GEN-261022-05-MACDhge0p079-UpWickge0p71-ORHdistl  explore1    S  223     7  0.445  0.409  14.187    0.942    -19.423     0.571  0.781  26.283 -0.179 -0.349    1.220         0.234  0.026         2      93       17       134
+GEN-261026-07-Flow3ge0p56-BBpctge0p98-ADX7le34-P  testing2    S  238     8  0.416  0.383  12.363    0.926     -2.720     0.500  1.052   2.687  0.029 -0.008    0.954         0.219  0.037         4       6        9        26
+GEN-261020-09-EMAdChgge0p093-Z12lem0p82-VWAPcros       gen    L  259    12  0.293  0.272   6.329   -0.393    -10.383     0.500  0.956  14.253  0.018 -0.156    0.956         0.088  0.036         5      25       11        99
+GEN-261029-06-EMAdChgge0p092-DayRngVsPrevle0p61-  testingd    S  295    12  0.111  0.104   2.719    2.545     -6.846     0.667  1.240   6.212  0.042  0.007    0.673         0.077  0.030        16       5        6        55
+GEN-261021-04-NewHOD-PDHdistlem0p65-LAM-QQQltm0p       gen    S   95     8  0.095  0.079   1.133   -0.494    -16.263     0.500  0.289  10.010 -0.183 -0.263    2.614         0.027  0.074        19      68       25        77
+NM-RWR4-ns2-up3-qqqup-slopedn-short               explore1    S   37     7  0.134  0.087   0.710    0.414     -1.740     0.714  0.856   1.375 -0.014 -0.093    1.037         0.109  0.021        18      17       15        13
+L3-gap-slope-fromopen-FD                           primary    S  309    22  0.063  0.059   0.881   -0.823    -34.975     0.455  0.349  15.485 -0.045 -0.124    1.598         0.032  0.042        24      20       23       103
+L3-gap-slope-fromopen-FD-RQa-1230                 testingf    S  103     4 -1.005 -0.842 -25.889   -4.459    -93.063     0.000 -1.154  72.747 -1.020 -1.066      NaN        -1.124  0.040       177     174      118       169
+L3-gap-slope-fromopen-FD-WB4                      testing2    S  179     7 -0.884 -0.796 -22.615   -2.679   -149.567     0.143 -1.068  83.843 -0.926 -0.946      NaN        -1.277  0.042       176     171      113       174
+RW3-gapdn-rsi5pop-flowsell-short-FD                primary    S  166    24 -0.046 -0.041  -0.317   -0.683    -10.217     0.458 -0.282  11.411 -0.155 -0.208      NaN        -0.020  0.048        47      42       45        82
+RW3-gapdn-rsi5pop-flowsell-short-FD-RQa-1230      testing2    S   22     4 -0.491 -0.257  -2.703   -2.970     -7.059     0.250 -1.248   9.467 -0.684 -0.788      NaN        -0.232  0.046       144     162      128        75
+RW3-gapdn-rsi5pop-flowsell-short-FD-WB4            livelab    S   44     8 -0.078 -0.053  -0.427   -0.638     -3.954     0.375 -0.440   4.313 -0.165 -0.275      NaN        -0.051  0.027        54      72       53        38
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD         primary    S  160    25 -0.071 -0.063  -0.454   -0.310    -15.502     0.480 -0.448  15.988 -0.144 -0.181      NaN        -0.027  0.048        59      32       54       106
+RW5-heat30-flowsell-rsi5pop-gapdn-short-FD-WB4    testingd    S   26     5  0.179  0.101   0.929    1.016     -1.244     0.600  0.977   0.771  0.064 -0.088    0.697         0.072  0.024        17      16       10         6
+NM-ETF-late-dip-di-long                            primary    L   48    16 -0.096 -0.068  -0.289    0.470    -12.573     0.812 -0.342   4.960 -0.181 -0.227      NaN        -0.113  0.022        63      50       49        46
+NM-ETF-late-dip-di-long-WB4                       testinge    L   42     6 -0.296 -0.201  -2.073    0.403    -17.884     0.667 -0.639  12.187 -0.496 -0.555      NaN        -0.393  0.021       125     144       68        90
+GEN-261023-07-RSIslopege9p1-BarRngATRge0p087-VWA  testing2    L  139    11  0.460  0.402   5.806   -1.118    -19.368     0.455  0.668  11.923 -0.296 -0.349    1.422         0.164  0.042         3      92       19        87
+GEN-261027-10-FlowShiftlem1p2-MACDhge0p079-SMA20  testingd    L  176     6  0.146  0.132   4.296   -1.062    -15.524     0.500  0.387  17.893 -0.409 -0.448    2.238         0.055  0.032        12     118       22       110
+
+Predictive validity: 101 setups with >= 20 trades in H1 (10-23..11-11) and >= 10 in H2 (11-12..11-27)
+  Spearman(H1 metric, H2 outcome)   [boot 95% CI over setups for avgR_2]
+  score        ->avgR -0.33 [-0.52,-0.12]  ->R/sess -0.26  ->worst day -0.25   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  avgR         ->avgR -0.33 [-0.51,-0.10]  ->R/sess -0.27  ->worst day -0.26   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  R_sess       ->avgR -0.24 [-0.43,-0.03]  ->R/sess -0.08  ->worst day -0.06   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  med_day      ->avgR -0.20 [-0.39,-0.00]  ->R/sess -0.05  ->worst day -0.02   top20% H2 avgR -0.246 R/sess  -2.61 pos 0.10
+  worst_day    ->avgR -0.10 [-0.27, 0.09]  ->R/sess  0.06  ->worst day  0.10   top20% H2 avgR -0.152 R/sess  -2.05 pos 0.20
+  green_sh     ->avgR -0.16 [-0.36, 0.06]  ->R/sess -0.01  ->worst day  0.01   top20% H2 avgR -0.237 R/sess  -3.73 pos 0.25
+  day_t        ->avgR -0.23 [-0.40,-0.06]  ->R/sess -0.10  ->worst day -0.11   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  ulcer_neg    ->avgR -0.13 [-0.32, 0.07]  ->R/sess  0.05  ->worst day  0.09   top20% H2 avgR -0.148 R/sess  -0.83 pos 0.20
+  wo1          ->avgR -0.38 [-0.56,-0.19]  ->R/sess -0.38  ->worst day -0.39   top20% H2 avgR -0.298 R/sess  -5.96 pos 0.05
+  wo2          ->avgR -0.37 [-0.54,-0.15]  ->R/sess -0.39  ->worst day -0.35   top20% H2 avgR -0.190 R/sess  -4.29 pos 0.10
+  R_per_slot_h ->avgR -0.24 [-0.43,-0.03]  ->R/sess -0.18  ->worst day -0.21   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  gross        ->avgR -0.35 [-0.52,-0.15]  ->R/sess -0.28  ->worst day -0.27   top20% H2 avgR -0.300 R/sess  -4.77 pos 0.10
+  random top-20 control: H2 avgR mean -0.139, 95% band [-0.285, 0.009]; all setups -0.138
